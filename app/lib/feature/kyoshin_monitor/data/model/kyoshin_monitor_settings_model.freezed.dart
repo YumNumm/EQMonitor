@@ -15,8 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-KyoshinMonitorSettingsModel
-_$KyoshinMonitorSettingsModelFromJson(
+KyoshinMonitorSettingsModel _$KyoshinMonitorSettingsModelFromJson(
   Map<String, dynamic> json,
 ) {
   return _KyoshinMonitorSettingsModel.fromJson(json);
@@ -25,8 +24,7 @@ _$KyoshinMonitorSettingsModelFromJson(
 /// @nodoc
 mixin _$KyoshinMonitorSettingsModel {
   /// 強震モニタの表示最低リアルタイム震度
-  double? get minRealtimeShindo =>
-      throw _privateConstructorUsedError;
+  double? get minRealtimeShindo => throw _privateConstructorUsedError;
 
   /// スケールを表示するかどうか
   bool get showScale => throw _privateConstructorUsedError;
@@ -39,27 +37,21 @@ mixin _$KyoshinMonitorSettingsModel {
       throw _privateConstructorUsedError;
 
   /// 強震モニタのリアルタイムデータの種類
-  RealtimeDataType get realtimeDataType =>
-      throw _privateConstructorUsedError;
+  RealtimeDataType get realtimeDataType => throw _privateConstructorUsedError;
 
   /// 強震モニタのリアルタイムデータのレイヤー
-  RealtimeLayer get realtimeLayer =>
-      throw _privateConstructorUsedError;
+  RealtimeLayer get realtimeLayer => throw _privateConstructorUsedError;
 
   /// 強震モニタ API関連の設定
-  KyoshinMonitorSettingsApiModel get api =>
-      throw _privateConstructorUsedError;
+  KyoshinMonitorSettingsApiModel get api => throw _privateConstructorUsedError;
 
   /// Serializes this KyoshinMonitorSettingsModel to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of KyoshinMonitorSettingsModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinMonitorSettingsModelCopyWith<
-    KyoshinMonitorSettingsModel
-  >
+  $KyoshinMonitorSettingsModelCopyWith<KyoshinMonitorSettingsModel>
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -93,10 +85,7 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<
   $Val extends KyoshinMonitorSettingsModel
 >
     implements $KyoshinMonitorSettingsModelCopyWith<$Res> {
-  _$KyoshinMonitorSettingsModelCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$KyoshinMonitorSettingsModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -163,19 +152,14 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $KyoshinMonitorSettingsApiModelCopyWith<$Res> get api {
-    return $KyoshinMonitorSettingsApiModelCopyWith<$Res>(
-      _value.api,
-      (value) {
-        return _then(_value.copyWith(api: value) as $Val);
-      },
-    );
+    return $KyoshinMonitorSettingsApiModelCopyWith<$Res>(_value.api, (value) {
+      return _then(_value.copyWith(api: value) as $Val);
+    });
   }
 }
 
 /// @nodoc
-abstract class _$$KyoshinMonitorSettingsModelImplCopyWith<
-  $Res
->
+abstract class _$$KyoshinMonitorSettingsModelImplCopyWith<$Res>
     implements $KyoshinMonitorSettingsModelCopyWith<$Res> {
   factory _$$KyoshinMonitorSettingsModelImplCopyWith(
     _$KyoshinMonitorSettingsModelImpl value,
@@ -204,8 +188,7 @@ class __$$KyoshinMonitorSettingsModelImplCopyWithImpl<$Res>
           $Res,
           _$KyoshinMonitorSettingsModelImpl
         >
-    implements
-        _$$KyoshinMonitorSettingsModelImplCopyWith<$Res> {
+    implements _$$KyoshinMonitorSettingsModelImplCopyWith<$Res> {
   __$$KyoshinMonitorSettingsModelImplCopyWithImpl(
     _$KyoshinMonitorSettingsModelImpl _value,
     $Res Function(_$KyoshinMonitorSettingsModelImpl) _then,
@@ -329,34 +312,19 @@ class _$KyoshinMonitorSettingsModelImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$KyoshinMonitorSettingsModelImpl &&
-            (identical(
-                  other.minRealtimeShindo,
-                  minRealtimeShindo,
-                ) ||
-                other.minRealtimeShindo ==
-                    minRealtimeShindo) &&
+            (identical(other.minRealtimeShindo, minRealtimeShindo) ||
+                other.minRealtimeShindo == minRealtimeShindo) &&
             (identical(other.showScale, showScale) ||
                 other.showScale == showScale) &&
             (identical(other.useKmoni, useKmoni) ||
                 other.useKmoni == useKmoni) &&
-            (identical(
-                  other.kmoniMarkerType,
-                  kmoniMarkerType,
-                ) ||
+            (identical(other.kmoniMarkerType, kmoniMarkerType) ||
                 other.kmoniMarkerType == kmoniMarkerType) &&
-            (identical(
-                  other.realtimeDataType,
-                  realtimeDataType,
-                ) ||
-                other.realtimeDataType ==
-                    realtimeDataType) &&
-            (identical(
-                  other.realtimeLayer,
-                  realtimeLayer,
-                ) ||
+            (identical(other.realtimeDataType, realtimeDataType) ||
+                other.realtimeDataType == realtimeDataType) &&
+            (identical(other.realtimeLayer, realtimeLayer) ||
                 other.realtimeLayer == realtimeLayer) &&
-            (identical(other.api, api) ||
-                other.api == api));
+            (identical(other.api, api) || other.api == api));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -377,13 +345,10 @@ class _$KyoshinMonitorSettingsModelImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$KyoshinMonitorSettingsModelImplCopyWith<
+  _$$KyoshinMonitorSettingsModelImplCopyWith<_$KyoshinMonitorSettingsModelImpl>
+  get copyWith => __$$KyoshinMonitorSettingsModelImplCopyWithImpl<
     _$KyoshinMonitorSettingsModelImpl
-  >
-  get copyWith =>
-      __$$KyoshinMonitorSettingsModelImplCopyWithImpl<
-        _$KyoshinMonitorSettingsModelImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -403,9 +368,8 @@ abstract class _KyoshinMonitorSettingsModel
     final KyoshinMonitorSettingsApiModel api,
   }) = _$KyoshinMonitorSettingsModelImpl;
 
-  factory _KyoshinMonitorSettingsModel.fromJson(
-    Map<String, dynamic> json,
-  ) = _$KyoshinMonitorSettingsModelImpl.fromJson;
+  factory _KyoshinMonitorSettingsModel.fromJson(Map<String, dynamic> json) =
+      _$KyoshinMonitorSettingsModelImpl.fromJson;
 
   /// 強震モニタの表示最低リアルタイム震度
   @override
@@ -439,14 +403,11 @@ abstract class _KyoshinMonitorSettingsModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$KyoshinMonitorSettingsModelImplCopyWith<
-    _$KyoshinMonitorSettingsModelImpl
-  >
+  _$$KyoshinMonitorSettingsModelImplCopyWith<_$KyoshinMonitorSettingsModelImpl>
   get copyWith => throw _privateConstructorUsedError;
 }
 
-KyoshinMonitorSettingsApiModel
-_$KyoshinMonitorSettingsApiModelFromJson(
+KyoshinMonitorSettingsApiModel _$KyoshinMonitorSettingsApiModelFromJson(
   Map<String, dynamic> json,
 ) {
   return _KyoshinMonitorSettingsApiModel.fromJson(json);
@@ -456,38 +417,30 @@ _$KyoshinMonitorSettingsApiModelFromJson(
 mixin _$KyoshinMonitorSettingsApiModel {
   /// 強震モニタ APIのベースURL
   @JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)
-  KyoshinMonitorEndpoint get endpoint =>
-      throw _privateConstructorUsedError;
+  KyoshinMonitorEndpoint get endpoint => throw _privateConstructorUsedError;
 
   /// 画像取得頻度
   @Assert(
     'imageFetchInterval.inSeconds > 1',
     'imageFetchInterval must be greater than 1 second',
   )
-  Duration get imageFetchInterval =>
-      throw _privateConstructorUsedError;
+  Duration get imageFetchInterval => throw _privateConstructorUsedError;
 
   /// 遅延調整間隔
-  Duration get delayAdjustInterval =>
-      throw _privateConstructorUsedError;
+  Duration get delayAdjustInterval => throw _privateConstructorUsedError;
 
   /// Serializes this KyoshinMonitorSettingsApiModel to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of KyoshinMonitorSettingsApiModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinMonitorSettingsApiModelCopyWith<
-    KyoshinMonitorSettingsApiModel
-  >
+  $KyoshinMonitorSettingsApiModelCopyWith<KyoshinMonitorSettingsApiModel>
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $KyoshinMonitorSettingsApiModelCopyWith<
-  $Res
-> {
+abstract class $KyoshinMonitorSettingsApiModelCopyWith<$Res> {
   factory $KyoshinMonitorSettingsApiModelCopyWith(
     KyoshinMonitorSettingsApiModel value,
     $Res Function(KyoshinMonitorSettingsApiModel) then,
@@ -514,12 +467,8 @@ class _$KyoshinMonitorSettingsApiModelCopyWithImpl<
   $Res,
   $Val extends KyoshinMonitorSettingsApiModel
 >
-    implements
-        $KyoshinMonitorSettingsApiModelCopyWith<$Res> {
-  _$KyoshinMonitorSettingsApiModelCopyWithImpl(
-    this._value,
-    this._then,
-  );
+    implements $KyoshinMonitorSettingsApiModelCopyWith<$Res> {
+  _$KyoshinMonitorSettingsApiModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -559,19 +508,12 @@ class _$KyoshinMonitorSettingsApiModelCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$KyoshinMonitorSettingsApiModelImplCopyWith<
-  $Res
->
-    implements
-        $KyoshinMonitorSettingsApiModelCopyWith<$Res> {
+abstract class _$$KyoshinMonitorSettingsApiModelImplCopyWith<$Res>
+    implements $KyoshinMonitorSettingsApiModelCopyWith<$Res> {
   factory _$$KyoshinMonitorSettingsApiModelImplCopyWith(
     _$KyoshinMonitorSettingsApiModelImpl value,
-    $Res Function(_$KyoshinMonitorSettingsApiModelImpl)
-    then,
-  ) =
-      __$$KyoshinMonitorSettingsApiModelImplCopyWithImpl<
-        $Res
-      >;
+    $Res Function(_$KyoshinMonitorSettingsApiModelImpl) then,
+  ) = __$$KyoshinMonitorSettingsApiModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -587,22 +529,16 @@ abstract class _$$KyoshinMonitorSettingsApiModelImplCopyWith<
 }
 
 /// @nodoc
-class __$$KyoshinMonitorSettingsApiModelImplCopyWithImpl<
-  $Res
->
+class __$$KyoshinMonitorSettingsApiModelImplCopyWithImpl<$Res>
     extends
         _$KyoshinMonitorSettingsApiModelCopyWithImpl<
           $Res,
           _$KyoshinMonitorSettingsApiModelImpl
         >
-    implements
-        _$$KyoshinMonitorSettingsApiModelImplCopyWith<
-          $Res
-        > {
+    implements _$$KyoshinMonitorSettingsApiModelImplCopyWith<$Res> {
   __$$KyoshinMonitorSettingsApiModelImplCopyWithImpl(
     _$KyoshinMonitorSettingsApiModelImpl _value,
-    $Res Function(_$KyoshinMonitorSettingsApiModelImpl)
-    _then,
+    $Res Function(_$KyoshinMonitorSettingsApiModelImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of KyoshinMonitorSettingsApiModel
@@ -686,18 +622,10 @@ class _$KyoshinMonitorSettingsApiModelImpl
             other is _$KyoshinMonitorSettingsApiModelImpl &&
             (identical(other.endpoint, endpoint) ||
                 other.endpoint == endpoint) &&
-            (identical(
-                  other.imageFetchInterval,
-                  imageFetchInterval,
-                ) ||
-                other.imageFetchInterval ==
-                    imageFetchInterval) &&
-            (identical(
-                  other.delayAdjustInterval,
-                  delayAdjustInterval,
-                ) ||
-                other.delayAdjustInterval ==
-                    delayAdjustInterval));
+            (identical(other.imageFetchInterval, imageFetchInterval) ||
+                other.imageFetchInterval == imageFetchInterval) &&
+            (identical(other.delayAdjustInterval, delayAdjustInterval) ||
+                other.delayAdjustInterval == delayAdjustInterval));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -717,16 +645,13 @@ class _$KyoshinMonitorSettingsApiModelImpl
   _$$KyoshinMonitorSettingsApiModelImplCopyWith<
     _$KyoshinMonitorSettingsApiModelImpl
   >
-  get copyWith =>
-      __$$KyoshinMonitorSettingsApiModelImplCopyWithImpl<
-        _$KyoshinMonitorSettingsApiModelImpl
-      >(this, _$identity);
+  get copyWith => __$$KyoshinMonitorSettingsApiModelImplCopyWithImpl<
+    _$KyoshinMonitorSettingsApiModelImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$KyoshinMonitorSettingsApiModelImplToJson(
-      this,
-    );
+    return _$$KyoshinMonitorSettingsApiModelImplToJson(this);
   }
 }
 
@@ -743,9 +668,8 @@ abstract class _KyoshinMonitorSettingsApiModel
     final Duration delayAdjustInterval,
   }) = _$KyoshinMonitorSettingsApiModelImpl;
 
-  factory _KyoshinMonitorSettingsApiModel.fromJson(
-    Map<String, dynamic> json,
-  ) = _$KyoshinMonitorSettingsApiModelImpl.fromJson;
+  factory _KyoshinMonitorSettingsApiModel.fromJson(Map<String, dynamic> json) =
+      _$KyoshinMonitorSettingsApiModelImpl.fromJson;
 
   /// 強震モニタ APIのベースURL
   @override

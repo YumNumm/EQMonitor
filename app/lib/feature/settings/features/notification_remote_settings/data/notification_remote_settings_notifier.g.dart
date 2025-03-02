@@ -13,20 +13,19 @@ String _$notificationRemoteSettingsNotifierHash() =>
 
 /// See also [NotificationRemoteSettingsNotifier].
 @ProviderFor(NotificationRemoteSettingsNotifier)
-final notificationRemoteSettingsNotifierProvider =
-    AsyncNotifierProvider<
-      NotificationRemoteSettingsNotifier,
-      NotificationRemoteSettingsState
-    >.internal(
-      NotificationRemoteSettingsNotifier.new,
-      name: r'notificationRemoteSettingsNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$notificationRemoteSettingsNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final notificationRemoteSettingsNotifierProvider = AsyncNotifierProvider<
+  NotificationRemoteSettingsNotifier,
+  NotificationRemoteSettingsState
+>.internal(
+  NotificationRemoteSettingsNotifier.new,
+  name: r'notificationRemoteSettingsNotifierProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$notificationRemoteSettingsNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 typedef _$NotificationRemoteSettingsNotifier =
     AsyncNotifier<NotificationRemoteSettingsState>;

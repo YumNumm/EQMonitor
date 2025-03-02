@@ -27,8 +27,7 @@ final kyoshinMonitorWebApiClientProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef KyoshinMonitorWebApiClientRef =
-    ProviderRef<KyoshinMonitorWebApiClient>;
+typedef KyoshinMonitorWebApiClientRef = ProviderRef<KyoshinMonitorWebApiClient>;
 String _$lpgmKyoshinMonitorWebApiClientHash() =>
     r'c26fd74259f37a16bb14dcf7705ab4bd62b09cab';
 

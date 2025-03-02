@@ -204,7 +204,7 @@ class _DebugModal extends ConsumerWidget {
                 eventId: Random().nextInt(1000000000),
                 type: 'type',
                 schemaType: 'schemaType',
-                status: '訓練',
+                status: 'TEST',
                 infoType: 'infoType',
                 reportTime: DateTime.now(),
                 isCanceled: false,

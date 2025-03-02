@@ -8,8 +8,7 @@ part of 'prefecture_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$calculatorHash() =>
-    r'04b6761f20dbdfc38319c53807b92dff5751d6b0';
+String _$calculatorHash() => r'04b6761f20dbdfc38319c53807b92dff5751d6b0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -19,8 +18,7 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash =
-        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -29,8 +27,7 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff &
-        (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
@@ -41,11 +38,7 @@ const _calculatorProvider = _CalculatorFamily();
 /// See also [_calculator].
 class _CalculatorFamily
     extends
-        Family<
-          AsyncValue<
-            Map<JmaIntensity, List<_MergedRegionIntensity>>
-          >
-        > {
+        Family<AsyncValue<Map<JmaIntensity, List<_MergedRegionIntensity>>>> {
   /// See also [_calculator].
   const _CalculatorFamily();
 
@@ -68,19 +61,15 @@ class _CalculatorFamily
     return call(provider.arg);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies =
-      null;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies =>
-      _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
 
-  static const Iterable<ProviderOrFamily>?
-  _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>?
-  get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
@@ -110,8 +99,7 @@ class _CalculatorProvider
                 ? null
                 : _$calculatorHash,
         dependencies: _CalculatorFamily._dependencies,
-        allTransitiveDependencies:
-            _CalculatorFamily._allTransitiveDependencies,
+        allTransitiveDependencies: _CalculatorFamily._allTransitiveDependencies,
         arg: arg,
       );
 
@@ -134,10 +122,9 @@ class _CalculatorProvider
 
   @override
   Override overrideWith(
-    FutureOr<
-      Map<JmaIntensity, List<_MergedRegionIntensity>>
-    >
-    Function(_CalculatorRef provider)
+    FutureOr<Map<JmaIntensity, List<_MergedRegionIntensity>>> Function(
+      _CalculatorRef provider,
+    )
     create,
   ) {
     return ProviderOverride(

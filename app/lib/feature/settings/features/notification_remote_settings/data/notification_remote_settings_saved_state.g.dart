@@ -8,19 +8,15 @@ part of 'notification_remote_settings_saved_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String
-_$notificationRemoteSettingsHasChangedFromSavedStateHash() =>
+String _$notificationRemoteSettingsHasChangedFromSavedStateHash() =>
     r'c04adf9bbda4cbfdbdfd8034f0604d332adaa85f';
 
 /// See also [notificationRemoteSettingsHasChangedFromSavedState].
-@ProviderFor(
-  notificationRemoteSettingsHasChangedFromSavedState,
-)
+@ProviderFor(notificationRemoteSettingsHasChangedFromSavedState)
 final notificationRemoteSettingsHasChangedFromSavedStateProvider =
     AutoDisposeProvider<bool>.internal(
       notificationRemoteSettingsHasChangedFromSavedState,
-      name:
-          r'notificationRemoteSettingsHasChangedFromSavedStateProvider',
+      name: r'notificationRemoteSettingsHasChangedFromSavedStateProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
@@ -33,8 +29,7 @@ final notificationRemoteSettingsHasChangedFromSavedStateProvider =
 // ignore: unused_element
 typedef NotificationRemoteSettingsHasChangedFromSavedStateRef =
     AutoDisposeProviderRef<bool>;
-String
-_$notificationRemoteSettingsSavedStateNotifierHash() =>
+String _$notificationRemoteSettingsSavedStateNotifierHash() =>
     r'025f0ceee184a458195f2fc5ed2a87e8c80efea4';
 
 /// See also [NotificationRemoteSettingsSavedStateNotifier].
@@ -45,8 +40,7 @@ final notificationRemoteSettingsSavedStateNotifierProvider =
       NotificationRemoteSettingsState
     >.internal(
       NotificationRemoteSettingsSavedStateNotifier.new,
-      name:
-          r'notificationRemoteSettingsSavedStateNotifierProvider',
+      name: r'notificationRemoteSettingsSavedStateNotifierProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null

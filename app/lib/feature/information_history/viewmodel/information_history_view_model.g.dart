@@ -13,20 +13,19 @@ String _$informationHistoryViewModelHash() =>
 
 /// See also [InformationHistoryViewModel].
 @ProviderFor(InformationHistoryViewModel)
-final informationHistoryViewModelProvider =
-    NotifierProvider<
-      InformationHistoryViewModel,
-      AsyncValue<List<InformationV3>>?
-    >.internal(
-      InformationHistoryViewModel.new,
-      name: r'informationHistoryViewModelProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$informationHistoryViewModelHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final informationHistoryViewModelProvider = NotifierProvider<
+  InformationHistoryViewModel,
+  AsyncValue<List<InformationV3>>?
+>.internal(
+  InformationHistoryViewModel.new,
+  name: r'informationHistoryViewModelProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$informationHistoryViewModelHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 typedef _$InformationHistoryViewModel =
     Notifier<AsyncValue<List<InformationV3>>?>;

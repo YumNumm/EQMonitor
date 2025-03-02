@@ -8,8 +8,7 @@ part of 'kyoshin_monitor_dio.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kyoshinMonitorDioHash() =>
-    r'ae8ea88e1a74bd51d5a2216c1b22cadd68b07bb9';
+String _$kyoshinMonitorDioHash() => r'ae8ea88e1a74bd51d5a2216c1b22cadd68b07bb9';
 
 /// See also [kyoshinMonitorDio].
 @ProviderFor(kyoshinMonitorDio)

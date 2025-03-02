@@ -8,8 +8,7 @@ part of 'periodic_timer.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$periodicTimerHash() =>
-    r'd0ba8e774a2bb19048648aa7512e8b18d5d28ba8';
+String _$periodicTimerHash() => r'd0ba8e774a2bb19048648aa7512e8b18d5d28ba8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -19,8 +18,7 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash =
-        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -29,8 +27,7 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff &
-        (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
@@ -62,19 +59,15 @@ class PeriodicTimerFamily extends Family<AsyncValue<void>> {
     return call(provider.key);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies =
-      null;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies =>
-      _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
 
-  static const Iterable<ProviderOrFamily>?
-  _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>?
-  get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
@@ -83,11 +76,7 @@ class PeriodicTimerFamily extends Family<AsyncValue<void>> {
 
 /// See also [PeriodicTimer].
 class PeriodicTimerProvider
-    extends
-        AutoDisposeStreamNotifierProviderImpl<
-          PeriodicTimer,
-          void
-        > {
+    extends AutoDisposeStreamNotifierProviderImpl<PeriodicTimer, void> {
   /// See also [PeriodicTimer].
   PeriodicTimerProvider(Key key)
     : this._internal(
@@ -117,9 +106,7 @@ class PeriodicTimerProvider
   final Key key;
 
   @override
-  Stream<void> runNotifierBuild(
-    covariant PeriodicTimer notifier,
-  ) {
+  Stream<void> runNotifierBuild(covariant PeriodicTimer notifier) {
     return notifier.build(key);
   }
 
@@ -140,18 +127,14 @@ class PeriodicTimerProvider
   }
 
   @override
-  AutoDisposeStreamNotifierProviderElement<
-    PeriodicTimer,
-    void
-  >
+  AutoDisposeStreamNotifierProviderElement<PeriodicTimer, void>
   createElement() {
     return _PeriodicTimerProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is PeriodicTimerProvider &&
-        other.key == key;
+    return other is PeriodicTimerProvider && other.key == key;
   }
 
   @override
@@ -165,18 +148,13 @@ class PeriodicTimerProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin PeriodicTimerRef
-    on AutoDisposeStreamNotifierProviderRef<void> {
+mixin PeriodicTimerRef on AutoDisposeStreamNotifierProviderRef<void> {
   /// The parameter `key` of this provider.
   Key get key;
 }
 
 class _PeriodicTimerProviderElement
-    extends
-        AutoDisposeStreamNotifierProviderElement<
-          PeriodicTimer,
-          void
-        >
+    extends AutoDisposeStreamNotifierProviderElement<PeriodicTimer, void>
     with PeriodicTimerRef {
   _PeriodicTimerProviderElement(super.provider);
 

@@ -8,22 +8,18 @@ part of 'ntp_config_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntpConfigHash() =>
-    r'ea839c3c8aa2d5b12e392bacb05eb123541d753b';
+String _$ntpConfigHash() => r'ea839c3c8aa2d5b12e392bacb05eb123541d753b';
 
 /// See also [NtpConfig].
 @ProviderFor(NtpConfig)
-final ntpConfigProvider =
-    NotifierProvider<NtpConfig, NtpConfigModel>.internal(
-      NtpConfig.new,
-      name: r'ntpConfigProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$ntpConfigHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final ntpConfigProvider = NotifierProvider<NtpConfig, NtpConfigModel>.internal(
+  NtpConfig.new,
+  name: r'ntpConfigProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$ntpConfigHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 typedef _$NtpConfig = Notifier<NtpConfigModel>;
 // ignore_for_file: type=lint

@@ -27,8 +27,7 @@ final estimatedIntensityCityProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef EstimatedIntensityCityRef =
-    StreamProviderRef<Map<String, double>>;
+typedef EstimatedIntensityCityRef = StreamProviderRef<Map<String, double>>;
 String _$estimatedIntensityRegionHash() =>
     r'bc6d5fcbeeb39c3b9705951ed3412df7bf83645e';
 
@@ -48,8 +47,7 @@ final estimatedIntensityRegionProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef EstimatedIntensityRegionRef =
-    StreamProviderRef<Map<String, double>>;
+typedef EstimatedIntensityRegionRef = StreamProviderRef<Map<String, double>>;
 String _$estimatedIntensityHash() =>
     r'd60154c92ffedbd45ee522e8f26d8000cc8c74fd';
 
@@ -69,7 +67,6 @@ final estimatedIntensityProvider = AsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$EstimatedIntensity =
-    AsyncNotifier<List<EstimatedIntensityPoint>>;
+typedef _$EstimatedIntensity = AsyncNotifier<List<EstimatedIntensityPoint>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

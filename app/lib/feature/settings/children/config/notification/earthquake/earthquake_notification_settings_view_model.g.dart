@@ -19,8 +19,7 @@ final earthquakeNotificationSettingsViewModelProvider =
       FcmEarthquakeTopic?
     >.internal(
       EarthquakeNotificationSettingsViewModel.new,
-      name:
-          r'earthquakeNotificationSettingsViewModelProvider',
+      name: r'earthquakeNotificationSettingsViewModelProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null

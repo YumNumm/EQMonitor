@@ -40,10 +40,7 @@ abstract class $TravelTimeTableCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TravelTimeTableCopyWithImpl<
-  $Res,
-  $Val extends TravelTimeTable
->
+class _$TravelTimeTableCopyWithImpl<$Res, $Val extends TravelTimeTable>
     implements $TravelTimeTableCopyWith<$Res> {
   _$TravelTimeTableCopyWithImpl(this._value, this._then);
 
@@ -104,11 +101,7 @@ abstract class _$$TravelTimeTableImplCopyWith<$Res>
 
 /// @nodoc
 class __$$TravelTimeTableImplCopyWithImpl<$Res>
-    extends
-        _$TravelTimeTableCopyWithImpl<
-          $Res,
-          _$TravelTimeTableImpl
-        >
+    extends _$TravelTimeTableCopyWithImpl<$Res, _$TravelTimeTableImpl>
     implements _$$TravelTimeTableImplCopyWith<$Res> {
   __$$TravelTimeTableImplCopyWithImpl(
     _$TravelTimeTableImpl _value,
@@ -183,25 +176,24 @@ class _$TravelTimeTableImpl implements _TravelTimeTable {
             other is _$TravelTimeTableImpl &&
             (identical(other.p, p) || other.p == p) &&
             (identical(other.s, s) || other.s == s) &&
-            (identical(other.depth, depth) ||
-                other.depth == depth) &&
+            (identical(other.depth, depth) || other.depth == depth) &&
             (identical(other.distance, distance) ||
                 other.distance == distance));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, p, s, depth, distance);
+  int get hashCode => Object.hash(runtimeType, p, s, depth, distance);
 
   /// Create a copy of TravelTimeTable
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl>
-  get copyWith => __$$TravelTimeTableImplCopyWithImpl<
-    _$TravelTimeTableImpl
-  >(this, _$identity);
+  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
+      __$$TravelTimeTableImplCopyWithImpl<_$TravelTimeTableImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _TravelTimeTable implements TravelTimeTable {
@@ -225,20 +217,19 @@ abstract class _TravelTimeTable implements TravelTimeTable {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 mixin _$TravelTimeTables {
-  List<TravelTimeTable> get table =>
-      throw _privateConstructorUsedError;
+  List<TravelTimeTable> get table => throw _privateConstructorUsedError;
 
   /// Create a copy of TravelTimeTables
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TravelTimeTablesCopyWith<TravelTimeTables>
-  get copyWith => throw _privateConstructorUsedError;
+  $TravelTimeTablesCopyWith<TravelTimeTables> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -246,20 +237,13 @@ abstract class $TravelTimeTablesCopyWith<$Res> {
   factory $TravelTimeTablesCopyWith(
     TravelTimeTables value,
     $Res Function(TravelTimeTables) then,
-  ) =
-      _$TravelTimeTablesCopyWithImpl<
-        $Res,
-        TravelTimeTables
-      >;
+  ) = _$TravelTimeTablesCopyWithImpl<$Res, TravelTimeTables>;
   @useResult
   $Res call({List<TravelTimeTable> table});
 }
 
 /// @nodoc
-class _$TravelTimeTablesCopyWithImpl<
-  $Res,
-  $Val extends TravelTimeTables
->
+class _$TravelTimeTablesCopyWithImpl<$Res, $Val extends TravelTimeTables>
     implements $TravelTimeTablesCopyWith<$Res> {
   _$TravelTimeTablesCopyWithImpl(this._value, this._then);
 
@@ -300,11 +284,7 @@ abstract class _$$TravelTimeTablesImplCopyWith<$Res>
 
 /// @nodoc
 class __$$TravelTimeTablesImplCopyWithImpl<$Res>
-    extends
-        _$TravelTimeTablesCopyWithImpl<
-          $Res,
-          _$TravelTimeTablesImpl
-        >
+    extends _$TravelTimeTablesCopyWithImpl<$Res, _$TravelTimeTablesImpl>
     implements _$$TravelTimeTablesImplCopyWith<$Res> {
   __$$TravelTimeTablesImplCopyWithImpl(
     _$TravelTimeTablesImpl _value,
@@ -331,9 +311,8 @@ class __$$TravelTimeTablesImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$TravelTimeTablesImpl implements _TravelTimeTables {
-  const _$TravelTimeTablesImpl({
-    required final List<TravelTimeTable> table,
-  }) : _table = table;
+  const _$TravelTimeTablesImpl({required final List<TravelTimeTable> table})
+    : _table = table;
 
   final List<TravelTimeTable> _table;
   @override
@@ -353,31 +332,26 @@ class _$TravelTimeTablesImpl implements _TravelTimeTables {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TravelTimeTablesImpl &&
-            const DeepCollectionEquality().equals(
-              other._table,
-              _table,
-            ));
+            const DeepCollectionEquality().equals(other._table, _table));
   }
 
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_table),
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_table));
 
   /// Create a copy of TravelTimeTables
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl>
-  get copyWith => __$$TravelTimeTablesImplCopyWithImpl<
-    _$TravelTimeTablesImpl
-  >(this, _$identity);
+  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
+      __$$TravelTimeTablesImplCopyWithImpl<_$TravelTimeTablesImpl>(
+        this,
+        _$identity,
+      );
 }
 
-abstract class _TravelTimeTables
-    implements TravelTimeTables {
+abstract class _TravelTimeTables implements TravelTimeTables {
   const factory _TravelTimeTables({
     required final List<TravelTimeTable> table,
   }) = _$TravelTimeTablesImpl;
@@ -389,6 +363,6 @@ abstract class _TravelTimeTables
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

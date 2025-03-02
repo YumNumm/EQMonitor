@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_content.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
@@ -12,11 +13,16 @@ class HomeMapView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const SafeArea(
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: _MapHeader(),
-      ),
+    return const Stack(
+      children: [
+        HomeMapContent(),
+        SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(8),
+            child: _MapHeader(),
+          ),
+        ),
+      ],
     );
   }
 }

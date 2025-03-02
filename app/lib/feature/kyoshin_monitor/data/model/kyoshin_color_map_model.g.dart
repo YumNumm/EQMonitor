@@ -8,17 +8,11 @@ part of 'kyoshin_color_map_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$KyoshinColorMapModelImpl
-_$$KyoshinColorMapModelImplFromJson(
+_$KyoshinColorMapModelImpl _$$KyoshinColorMapModelImplFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$KyoshinColorMapModelImpl', json, (
-  $checkedConvert,
-) {
+) => $checkedCreate(r'_$KyoshinColorMapModelImpl', json, ($checkedConvert) {
   final val = _$KyoshinColorMapModelImpl(
-    intensity: $checkedConvert(
-      'intensity',
-      (v) => (v as num).toDouble(),
-    ),
+    intensity: $checkedConvert('intensity', (v) => (v as num).toDouble()),
     r: $checkedConvert('r', (v) => (v as num).toInt()),
     g: $checkedConvert('g', (v) => (v as num).toInt()),
     b: $checkedConvert('b', (v) => (v as num).toInt()),

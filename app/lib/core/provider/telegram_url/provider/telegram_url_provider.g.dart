@@ -8,24 +8,21 @@ part of 'telegram_url_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$telegramUrlHash() =>
-    r'05cbe69b52b0f42c8223f0020694fbc29736faef';
+String _$telegramUrlHash() => r'05cbe69b52b0f42c8223f0020694fbc29736faef';
 
 /// See also [TelegramUrl].
 @ProviderFor(TelegramUrl)
-final telegramUrlProvider = NotifierProvider<
-  TelegramUrl,
-  TelegramUrlModel
->.internal(
-  TelegramUrl.new,
-  name: r'telegramUrlProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$telegramUrlHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final telegramUrlProvider =
+    NotifierProvider<TelegramUrl, TelegramUrlModel>.internal(
+      TelegramUrl.new,
+      name: r'telegramUrlProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$telegramUrlHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$TelegramUrl = Notifier<TelegramUrlModel>;
 // ignore_for_file: type=lint

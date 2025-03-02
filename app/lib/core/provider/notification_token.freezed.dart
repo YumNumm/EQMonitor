@@ -23,20 +23,17 @@ NotificationTokenModel _$NotificationTokenModelFromJson(
 
 /// @nodoc
 mixin _$NotificationTokenModel {
-  String? get fcmToken =>
-      throw _privateConstructorUsedError;
-  String? get apnsToken =>
-      throw _privateConstructorUsedError;
+  String? get fcmToken => throw _privateConstructorUsedError;
+  String? get apnsToken => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationTokenModel to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationTokenModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationTokenModelCopyWith<NotificationTokenModel>
-  get copyWith => throw _privateConstructorUsedError;
+  $NotificationTokenModelCopyWith<NotificationTokenModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -44,11 +41,7 @@ abstract class $NotificationTokenModelCopyWith<$Res> {
   factory $NotificationTokenModelCopyWith(
     NotificationTokenModel value,
     $Res Function(NotificationTokenModel) then,
-  ) =
-      _$NotificationTokenModelCopyWithImpl<
-        $Res,
-        NotificationTokenModel
-      >;
+  ) = _$NotificationTokenModelCopyWithImpl<$Res, NotificationTokenModel>;
   @useResult
   $Res call({String? fcmToken, String? apnsToken});
 }
@@ -59,10 +52,7 @@ class _$NotificationTokenModelCopyWithImpl<
   $Val extends NotificationTokenModel
 >
     implements $NotificationTokenModelCopyWith<$Res> {
-  _$NotificationTokenModelCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$NotificationTokenModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -73,10 +63,7 @@ class _$NotificationTokenModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? fcmToken = freezed,
-    Object? apnsToken = freezed,
-  }) {
+  $Res call({Object? fcmToken = freezed, Object? apnsToken = freezed}) {
     return _then(
       _value.copyWith(
             fcmToken:
@@ -110,10 +97,7 @@ abstract class _$$NotificationTokenModelImplCopyWith<$Res>
 /// @nodoc
 class __$$NotificationTokenModelImplCopyWithImpl<$Res>
     extends
-        _$NotificationTokenModelCopyWithImpl<
-          $Res,
-          _$NotificationTokenModelImpl
-        >
+        _$NotificationTokenModelCopyWithImpl<$Res, _$NotificationTokenModelImpl>
     implements _$$NotificationTokenModelImplCopyWith<$Res> {
   __$$NotificationTokenModelImplCopyWithImpl(
     _$NotificationTokenModelImpl _value,
@@ -124,10 +108,7 @@ class __$$NotificationTokenModelImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? fcmToken = freezed,
-    Object? apnsToken = freezed,
-  }) {
+  $Res call({Object? fcmToken = freezed, Object? apnsToken = freezed}) {
     return _then(
       _$NotificationTokenModelImpl(
         fcmToken:
@@ -155,9 +136,8 @@ class _$NotificationTokenModelImpl
     required this.apnsToken,
   });
 
-  factory _$NotificationTokenModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$NotificationTokenModelImplFromJson(json);
+  factory _$NotificationTokenModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NotificationTokenModelImplFromJson(json);
 
   @override
   final String? fcmToken;
@@ -165,24 +145,15 @@ class _$NotificationTokenModelImpl
   final String? apnsToken;
 
   @override
-  String toString({
-    DiagnosticLevel minLevel = DiagnosticLevel.info,
-  }) {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'NotificationTokenModel(fcmToken: $fcmToken, apnsToken: $apnsToken)';
   }
 
   @override
-  void debugFillProperties(
-    DiagnosticPropertiesBuilder properties,
-  ) {
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(
-        DiagnosticsProperty(
-          'type',
-          'NotificationTokenModel',
-        ),
-      )
+      ..add(DiagnosticsProperty('type', 'NotificationTokenModel'))
       ..add(DiagnosticsProperty('fcmToken', fcmToken))
       ..add(DiagnosticsProperty('apnsToken', apnsToken));
   }
@@ -200,21 +171,19 @@ class _$NotificationTokenModelImpl
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, fcmToken, apnsToken);
+  int get hashCode => Object.hash(runtimeType, fcmToken, apnsToken);
 
   /// Create a copy of NotificationTokenModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotificationTokenModelImplCopyWith<
-    _$NotificationTokenModelImpl
-  >
+  _$$NotificationTokenModelImplCopyWith<_$NotificationTokenModelImpl>
   get copyWith =>
-      __$$NotificationTokenModelImplCopyWithImpl<
-        _$NotificationTokenModelImpl
-      >(this, _$identity);
+      __$$NotificationTokenModelImplCopyWithImpl<_$NotificationTokenModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -222,16 +191,14 @@ class _$NotificationTokenModelImpl
   }
 }
 
-abstract class _NotificationTokenModel
-    implements NotificationTokenModel {
+abstract class _NotificationTokenModel implements NotificationTokenModel {
   const factory _NotificationTokenModel({
     required final String? fcmToken,
     required final String? apnsToken,
   }) = _$NotificationTokenModelImpl;
 
-  factory _NotificationTokenModel.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NotificationTokenModelImpl.fromJson;
+  factory _NotificationTokenModel.fromJson(Map<String, dynamic> json) =
+      _$NotificationTokenModelImpl.fromJson;
 
   @override
   String? get fcmToken;
@@ -242,8 +209,6 @@ abstract class _NotificationTokenModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NotificationTokenModelImplCopyWith<
-    _$NotificationTokenModelImpl
-  >
+  _$$NotificationTokenModelImplCopyWith<_$NotificationTokenModelImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

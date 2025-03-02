@@ -8,8 +8,7 @@ part of 'kyoshin_monitor_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$KyoshinMonitorStateImpl
-_$$KyoshinMonitorStateImplFromJson(
+_$KyoshinMonitorStateImpl _$$KyoshinMonitorStateImplFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
   r'_$KyoshinMonitorStateImpl',
@@ -18,62 +17,44 @@ _$$KyoshinMonitorStateImplFromJson(
     final val = _$KyoshinMonitorStateImpl(
       currentRealtimeDataType: $checkedConvert(
         'current_realtime_data_type',
-        (v) => $enumDecodeNullable(
-          _$RealtimeDataTypeEnumMap,
-          v,
-        ),
+        (v) => $enumDecodeNullable(_$RealtimeDataTypeEnumMap, v),
       ),
       currentRealtimeLayer: $checkedConvert(
         'current_realtime_layer',
-        (v) =>
-            $enumDecodeNullable(_$RealtimeLayerEnumMap, v),
+        (v) => $enumDecodeNullable(_$RealtimeLayerEnumMap, v),
       ),
       status: $checkedConvert(
         'status',
         (v) =>
-            $enumDecodeNullable(
-              _$KyoshinMonitorStatusEnumMap,
-              v,
-            ) ??
+            $enumDecodeNullable(_$KyoshinMonitorStatusEnumMap, v) ??
             KyoshinMonitorStatus.initializing,
       ),
       lastUpdatedAt: $checkedConvert(
         'last_updated_at',
-        (v) =>
-            v == null ? null : DateTime.parse(v as String),
+        (v) => v == null ? null : DateTime.parse(v as String),
       ),
       lastImageFetchTargetTime: $checkedConvert(
         'last_image_fetch_target_time',
-        (v) =>
-            v == null ? null : DateTime.parse(v as String),
+        (v) => v == null ? null : DateTime.parse(v as String),
       ),
       lastImageFetchDuration: $checkedConvert(
         'last_image_fetch_duration',
-        (v) =>
-            v == null
-                ? null
-                : Duration(
-                  microseconds: (v as num).toInt(),
-                ),
+        (v) => v == null ? null : Duration(microseconds: (v as num).toInt()),
       ),
       analyzedPoints: $checkedConvert(
         'analyzed_points',
         (v) =>
             (v as List<dynamic>?)
                 ?.map(
-                  (e) =>
-                      KyoshinMonitorImageParseObservationPoint.fromJson(
-                        e as Map<String, dynamic>,
-                      ),
+                  (e) => KyoshinMonitorImageParseObservationPoint.fromJson(
+                    e as Map<String, dynamic>,
+                  ),
                 )
                 .toList(),
       ),
       currentImageRaw: $checkedConvert(
         'current_image_raw',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map((e) => (e as num).toInt())
-                .toList(),
+        (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
       ),
     );
     return val;
@@ -82,8 +63,7 @@ _$$KyoshinMonitorStateImplFromJson(
     'currentRealtimeDataType': 'current_realtime_data_type',
     'currentRealtimeLayer': 'current_realtime_layer',
     'lastUpdatedAt': 'last_updated_at',
-    'lastImageFetchTargetTime':
-        'last_image_fetch_target_time',
+    'lastImageFetchTargetTime': 'last_image_fetch_target_time',
     'lastImageFetchDuration': 'last_image_fetch_duration',
     'analyzedPoints': 'analyzed_points',
     'currentImageRaw': 'current_image_raw',
@@ -94,17 +74,14 @@ Map<String, dynamic> _$$KyoshinMonitorStateImplToJson(
   _$KyoshinMonitorStateImpl instance,
 ) => <String, dynamic>{
   'current_realtime_data_type':
-      _$RealtimeDataTypeEnumMap[instance
-          .currentRealtimeDataType],
+      _$RealtimeDataTypeEnumMap[instance.currentRealtimeDataType],
   'current_realtime_layer':
       _$RealtimeLayerEnumMap[instance.currentRealtimeLayer],
   'status': _$KyoshinMonitorStatusEnumMap[instance.status]!,
-  'last_updated_at':
-      instance.lastUpdatedAt?.toIso8601String(),
+  'last_updated_at': instance.lastUpdatedAt?.toIso8601String(),
   'last_image_fetch_target_time':
       instance.lastImageFetchTargetTime?.toIso8601String(),
-  'last_image_fetch_duration':
-      instance.lastImageFetchDuration?.inMicroseconds,
+  'last_image_fetch_duration': instance.lastImageFetchDuration?.inMicroseconds,
   'analyzed_points': instance.analyzedPoints,
   'current_image_raw': instance.currentImageRaw,
 };
@@ -146,31 +123,25 @@ const _$KyoshinMonitorStatusEnumMap = {
 _$KyoshinMonitorImageParseObservationPointImpl
 _$$KyoshinMonitorImageParseObservationPointImplFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$KyoshinMonitorImageParseObservationPointImpl',
-  json,
-  ($checkedConvert) {
-    final val = _$KyoshinMonitorImageParseObservationPointImpl(
-      point: $checkedConvert(
-        'point',
-        (v) => _kyoshinObservationPointFromJson(
-          v as Map<String, dynamic>,
-        ),
+) => $checkedCreate(r'_$KyoshinMonitorImageParseObservationPointImpl', json, (
+  $checkedConvert,
+) {
+  final val = _$KyoshinMonitorImageParseObservationPointImpl(
+    point: $checkedConvert(
+      'point',
+      (v) => _kyoshinObservationPointFromJson(v as Map<String, dynamic>),
+    ),
+    observation: $checkedConvert(
+      'observation',
+      (v) => KyoshinMonitorObservationAnalyzedPoint.fromJson(
+        v as Map<String, dynamic>,
       ),
-      observation: $checkedConvert(
-        'observation',
-        (v) =>
-            KyoshinMonitorObservationAnalyzedPoint.fromJson(
-              v as Map<String, dynamic>,
-            ),
-      ),
-    );
-    return val;
-  },
-);
+    ),
+  );
+  return val;
+});
 
-Map<String, dynamic>
-_$$KyoshinMonitorImageParseObservationPointImplToJson(
+Map<String, dynamic> _$$KyoshinMonitorImageParseObservationPointImplToJson(
   _$KyoshinMonitorImageParseObservationPointImpl instance,
 ) => <String, dynamic>{
   'point': _kyoshinObservationPointToJson(instance.point),

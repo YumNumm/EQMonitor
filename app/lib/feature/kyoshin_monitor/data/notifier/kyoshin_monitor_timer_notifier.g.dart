@@ -34,20 +34,19 @@ String _$kyoshinMonitorTimerNotifierHash() =>
 
 /// See also [KyoshinMonitorTimerNotifier].
 @ProviderFor(KyoshinMonitorTimerNotifier)
-final kyoshinMonitorTimerNotifierProvider =
-    AutoDisposeStreamNotifierProvider<
-      KyoshinMonitorTimerNotifier,
-      KyoshinMonitorTimerState
-    >.internal(
-      KyoshinMonitorTimerNotifier.new,
-      name: r'kyoshinMonitorTimerNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$kyoshinMonitorTimerNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final kyoshinMonitorTimerNotifierProvider = AutoDisposeStreamNotifierProvider<
+  KyoshinMonitorTimerNotifier,
+  KyoshinMonitorTimerState
+>.internal(
+  KyoshinMonitorTimerNotifier.new,
+  name: r'kyoshinMonitorTimerNotifierProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$kyoshinMonitorTimerNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 typedef _$KyoshinMonitorTimerNotifier =
     AutoDisposeStreamNotifier<KyoshinMonitorTimerState>;

@@ -15,8 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-NotificationRemoteSettingsState
-_$NotificationRemoteSettingsStateFromJson(
+NotificationRemoteSettingsState _$NotificationRemoteSettingsStateFromJson(
   Map<String, dynamic> json,
 ) {
   return _NotificationRemoteSettingsState.fromJson(json);
@@ -24,28 +23,22 @@ _$NotificationRemoteSettingsStateFromJson(
 
 /// @nodoc
 mixin _$NotificationRemoteSettingsState {
-  NotificationRemoteSettingsEew get eew =>
-      throw _privateConstructorUsedError;
+  NotificationRemoteSettingsEew get eew => throw _privateConstructorUsedError;
   NotificationRemoteSettingsEarthquake get earthquake =>
       throw _privateConstructorUsedError;
 
   /// Serializes this NotificationRemoteSettingsState to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationRemoteSettingsState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationRemoteSettingsStateCopyWith<
-    NotificationRemoteSettingsState
-  >
+  $NotificationRemoteSettingsStateCopyWith<NotificationRemoteSettingsState>
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NotificationRemoteSettingsStateCopyWith<
-  $Res
-> {
+abstract class $NotificationRemoteSettingsStateCopyWith<$Res> {
   factory $NotificationRemoteSettingsStateCopyWith(
     NotificationRemoteSettingsState value,
     $Res Function(NotificationRemoteSettingsState) then,
@@ -61,8 +54,7 @@ abstract class $NotificationRemoteSettingsStateCopyWith<
   });
 
   $NotificationRemoteSettingsEewCopyWith<$Res> get eew;
-  $NotificationRemoteSettingsEarthquakeCopyWith<$Res>
-  get earthquake;
+  $NotificationRemoteSettingsEarthquakeCopyWith<$Res> get earthquake;
 }
 
 /// @nodoc
@@ -70,12 +62,8 @@ class _$NotificationRemoteSettingsStateCopyWithImpl<
   $Res,
   $Val extends NotificationRemoteSettingsState
 >
-    implements
-        $NotificationRemoteSettingsStateCopyWith<$Res> {
-  _$NotificationRemoteSettingsStateCopyWithImpl(
-    this._value,
-    this._then,
-  );
+    implements $NotificationRemoteSettingsStateCopyWith<$Res> {
+  _$NotificationRemoteSettingsStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -86,10 +74,7 @@ class _$NotificationRemoteSettingsStateCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? eew = null,
-    Object? earthquake = null,
-  }) {
+  $Res call({Object? eew = null, Object? earthquake = null}) {
     return _then(
       _value.copyWith(
             eew:
@@ -112,44 +97,32 @@ class _$NotificationRemoteSettingsStateCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $NotificationRemoteSettingsEewCopyWith<$Res> get eew {
-    return $NotificationRemoteSettingsEewCopyWith<$Res>(
-      _value.eew,
-      (value) {
-        return _then(_value.copyWith(eew: value) as $Val);
-      },
-    );
+    return $NotificationRemoteSettingsEewCopyWith<$Res>(_value.eew, (value) {
+      return _then(_value.copyWith(eew: value) as $Val);
+    });
   }
 
   /// Create a copy of NotificationRemoteSettingsState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $NotificationRemoteSettingsEarthquakeCopyWith<$Res>
-  get earthquake {
-    return $NotificationRemoteSettingsEarthquakeCopyWith<
-      $Res
-    >(_value.earthquake, (value) {
-      return _then(
-        _value.copyWith(earthquake: value) as $Val,
-      );
-    });
+  $NotificationRemoteSettingsEarthquakeCopyWith<$Res> get earthquake {
+    return $NotificationRemoteSettingsEarthquakeCopyWith<$Res>(
+      _value.earthquake,
+      (value) {
+        return _then(_value.copyWith(earthquake: value) as $Val);
+      },
+    );
   }
 }
 
 /// @nodoc
-abstract class _$$NotificationRemoteSettingsStateImplCopyWith<
-  $Res
->
-    implements
-        $NotificationRemoteSettingsStateCopyWith<$Res> {
+abstract class _$$NotificationRemoteSettingsStateImplCopyWith<$Res>
+    implements $NotificationRemoteSettingsStateCopyWith<$Res> {
   factory _$$NotificationRemoteSettingsStateImplCopyWith(
     _$NotificationRemoteSettingsStateImpl value,
-    $Res Function(_$NotificationRemoteSettingsStateImpl)
-    then,
-  ) =
-      __$$NotificationRemoteSettingsStateImplCopyWithImpl<
-        $Res
-      >;
+    $Res Function(_$NotificationRemoteSettingsStateImpl) then,
+  ) = __$$NotificationRemoteSettingsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -160,37 +133,27 @@ abstract class _$$NotificationRemoteSettingsStateImplCopyWith<
   @override
   $NotificationRemoteSettingsEewCopyWith<$Res> get eew;
   @override
-  $NotificationRemoteSettingsEarthquakeCopyWith<$Res>
-  get earthquake;
+  $NotificationRemoteSettingsEarthquakeCopyWith<$Res> get earthquake;
 }
 
 /// @nodoc
-class __$$NotificationRemoteSettingsStateImplCopyWithImpl<
-  $Res
->
+class __$$NotificationRemoteSettingsStateImplCopyWithImpl<$Res>
     extends
         _$NotificationRemoteSettingsStateCopyWithImpl<
           $Res,
           _$NotificationRemoteSettingsStateImpl
         >
-    implements
-        _$$NotificationRemoteSettingsStateImplCopyWith<
-          $Res
-        > {
+    implements _$$NotificationRemoteSettingsStateImplCopyWith<$Res> {
   __$$NotificationRemoteSettingsStateImplCopyWithImpl(
     _$NotificationRemoteSettingsStateImpl _value,
-    $Res Function(_$NotificationRemoteSettingsStateImpl)
-    _then,
+    $Res Function(_$NotificationRemoteSettingsStateImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of NotificationRemoteSettingsState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? eew = null,
-    Object? earthquake = null,
-  }) {
+  $Res call({Object? eew = null, Object? earthquake = null}) {
     return _then(
       _$NotificationRemoteSettingsStateImpl(
         eew:
@@ -235,18 +198,15 @@ class _$NotificationRemoteSettingsStateImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other
-                is _$NotificationRemoteSettingsStateImpl &&
-            (identical(other.eew, eew) ||
-                other.eew == eew) &&
+            other is _$NotificationRemoteSettingsStateImpl &&
+            (identical(other.eew, eew) || other.eew == eew) &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, eew, earthquake);
+  int get hashCode => Object.hash(runtimeType, eew, earthquake);
 
   /// Create a copy of NotificationRemoteSettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -256,16 +216,13 @@ class _$NotificationRemoteSettingsStateImpl
   _$$NotificationRemoteSettingsStateImplCopyWith<
     _$NotificationRemoteSettingsStateImpl
   >
-  get copyWith =>
-      __$$NotificationRemoteSettingsStateImplCopyWithImpl<
-        _$NotificationRemoteSettingsStateImpl
-      >(this, _$identity);
+  get copyWith => __$$NotificationRemoteSettingsStateImplCopyWithImpl<
+    _$NotificationRemoteSettingsStateImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationRemoteSettingsStateImplToJson(
-      this,
-    );
+    return _$$NotificationRemoteSettingsStateImplToJson(this);
   }
 }
 
@@ -273,13 +230,11 @@ abstract class _NotificationRemoteSettingsState
     implements NotificationRemoteSettingsState {
   const factory _NotificationRemoteSettingsState({
     required final NotificationRemoteSettingsEew eew,
-    required final NotificationRemoteSettingsEarthquake
-    earthquake,
+    required final NotificationRemoteSettingsEarthquake earthquake,
   }) = _$NotificationRemoteSettingsStateImpl;
 
-  factory _NotificationRemoteSettingsState.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NotificationRemoteSettingsStateImpl.fromJson;
+  factory _NotificationRemoteSettingsState.fromJson(Map<String, dynamic> json) =
+      _$NotificationRemoteSettingsStateImpl.fromJson;
 
   @override
   NotificationRemoteSettingsEew get eew;
@@ -296,8 +251,7 @@ abstract class _NotificationRemoteSettingsState
   get copyWith => throw _privateConstructorUsedError;
 }
 
-NotificationRemoteSettingsEew
-_$NotificationRemoteSettingsEewFromJson(
+NotificationRemoteSettingsEew _$NotificationRemoteSettingsEewFromJson(
   Map<String, dynamic> json,
 ) {
   return _NotificationRemoteSettingsEew.fromJson(json);
@@ -305,28 +259,22 @@ _$NotificationRemoteSettingsEewFromJson(
 
 /// @nodoc
 mixin _$NotificationRemoteSettingsEew {
-  JmaForecastIntensity? get global =>
-      throw _privateConstructorUsedError;
+  JmaForecastIntensity? get global => throw _privateConstructorUsedError;
   List<NotificationRemoteSettingsEewRegion> get regions =>
       throw _privateConstructorUsedError;
 
   /// Serializes this NotificationRemoteSettingsEew to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationRemoteSettingsEew
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationRemoteSettingsEewCopyWith<
-    NotificationRemoteSettingsEew
-  >
+  $NotificationRemoteSettingsEewCopyWith<NotificationRemoteSettingsEew>
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NotificationRemoteSettingsEewCopyWith<
-  $Res
-> {
+abstract class $NotificationRemoteSettingsEewCopyWith<$Res> {
   factory $NotificationRemoteSettingsEewCopyWith(
     NotificationRemoteSettingsEew value,
     $Res Function(NotificationRemoteSettingsEew) then,
@@ -347,12 +295,8 @@ class _$NotificationRemoteSettingsEewCopyWithImpl<
   $Res,
   $Val extends NotificationRemoteSettingsEew
 >
-    implements
-        $NotificationRemoteSettingsEewCopyWith<$Res> {
-  _$NotificationRemoteSettingsEewCopyWithImpl(
-    this._value,
-    this._then,
-  );
+    implements $NotificationRemoteSettingsEewCopyWith<$Res> {
+  _$NotificationRemoteSettingsEewCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -363,10 +307,7 @@ class _$NotificationRemoteSettingsEewCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? global = freezed,
-    Object? regions = null,
-  }) {
+  $Res call({Object? global = freezed, Object? regions = null}) {
     return _then(
       _value.copyWith(
             global:
@@ -378,9 +319,7 @@ class _$NotificationRemoteSettingsEewCopyWithImpl<
                 null == regions
                     ? _value.regions
                     : regions // ignore: cast_nullable_to_non_nullable
-                        as List<
-                          NotificationRemoteSettingsEewRegion
-                        >,
+                        as List<NotificationRemoteSettingsEewRegion>,
           )
           as $Val,
     );
@@ -388,18 +327,12 @@ class _$NotificationRemoteSettingsEewCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$NotificationRemoteSettingsEewImplCopyWith<
-  $Res
->
-    implements
-        $NotificationRemoteSettingsEewCopyWith<$Res> {
+abstract class _$$NotificationRemoteSettingsEewImplCopyWith<$Res>
+    implements $NotificationRemoteSettingsEewCopyWith<$Res> {
   factory _$$NotificationRemoteSettingsEewImplCopyWith(
     _$NotificationRemoteSettingsEewImpl value,
     $Res Function(_$NotificationRemoteSettingsEewImpl) then,
-  ) =
-      __$$NotificationRemoteSettingsEewImplCopyWithImpl<
-        $Res
-      >;
+  ) = __$$NotificationRemoteSettingsEewImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -409,30 +342,23 @@ abstract class _$$NotificationRemoteSettingsEewImplCopyWith<
 }
 
 /// @nodoc
-class __$$NotificationRemoteSettingsEewImplCopyWithImpl<
-  $Res
->
+class __$$NotificationRemoteSettingsEewImplCopyWithImpl<$Res>
     extends
         _$NotificationRemoteSettingsEewCopyWithImpl<
           $Res,
           _$NotificationRemoteSettingsEewImpl
         >
-    implements
-        _$$NotificationRemoteSettingsEewImplCopyWith<$Res> {
+    implements _$$NotificationRemoteSettingsEewImplCopyWith<$Res> {
   __$$NotificationRemoteSettingsEewImplCopyWithImpl(
     _$NotificationRemoteSettingsEewImpl _value,
-    $Res Function(_$NotificationRemoteSettingsEewImpl)
-    _then,
+    $Res Function(_$NotificationRemoteSettingsEewImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of NotificationRemoteSettingsEew
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? global = freezed,
-    Object? regions = null,
-  }) {
+  $Res call({Object? global = freezed, Object? regions = null}) {
     return _then(
       _$NotificationRemoteSettingsEewImpl(
         global:
@@ -444,9 +370,7 @@ class __$$NotificationRemoteSettingsEewImplCopyWithImpl<
             null == regions
                 ? _value._regions
                 : regions // ignore: cast_nullable_to_non_nullable
-                    as List<
-                      NotificationRemoteSettingsEewRegion
-                    >,
+                    as List<NotificationRemoteSettingsEewRegion>,
       ),
     );
   }
@@ -458,8 +382,7 @@ class _$NotificationRemoteSettingsEewImpl
     implements _NotificationRemoteSettingsEew {
   const _$NotificationRemoteSettingsEewImpl({
     required this.global,
-    required final List<NotificationRemoteSettingsEewRegion>
-    regions,
+    required final List<NotificationRemoteSettingsEewRegion> regions,
   }) : _regions = regions;
 
   factory _$NotificationRemoteSettingsEewImpl.fromJson(
@@ -471,8 +394,7 @@ class _$NotificationRemoteSettingsEewImpl
   final List<NotificationRemoteSettingsEewRegion> _regions;
   @override
   List<NotificationRemoteSettingsEewRegion> get regions {
-    if (_regions is EqualUnmodifiableListView)
-      return _regions;
+    if (_regions is EqualUnmodifiableListView) return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_regions);
   }
@@ -487,12 +409,8 @@ class _$NotificationRemoteSettingsEewImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationRemoteSettingsEewImpl &&
-            (identical(other.global, global) ||
-                other.global == global) &&
-            const DeepCollectionEquality().equals(
-              other._regions,
-              _regions,
-            ));
+            (identical(other.global, global) || other.global == global) &&
+            const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -511,10 +429,9 @@ class _$NotificationRemoteSettingsEewImpl
   _$$NotificationRemoteSettingsEewImplCopyWith<
     _$NotificationRemoteSettingsEewImpl
   >
-  get copyWith =>
-      __$$NotificationRemoteSettingsEewImplCopyWithImpl<
-        _$NotificationRemoteSettingsEewImpl
-      >(this, _$identity);
+  get copyWith => __$$NotificationRemoteSettingsEewImplCopyWithImpl<
+    _$NotificationRemoteSettingsEewImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -526,13 +443,11 @@ abstract class _NotificationRemoteSettingsEew
     implements NotificationRemoteSettingsEew {
   const factory _NotificationRemoteSettingsEew({
     required final JmaForecastIntensity? global,
-    required final List<NotificationRemoteSettingsEewRegion>
-    regions,
+    required final List<NotificationRemoteSettingsEewRegion> regions,
   }) = _$NotificationRemoteSettingsEewImpl;
 
-  factory _NotificationRemoteSettingsEew.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NotificationRemoteSettingsEewImpl.fromJson;
+  factory _NotificationRemoteSettingsEew.fromJson(Map<String, dynamic> json) =
+      _$NotificationRemoteSettingsEewImpl.fromJson;
 
   @override
   JmaForecastIntensity? get global;
@@ -550,12 +465,8 @@ abstract class _NotificationRemoteSettingsEew
 }
 
 NotificationRemoteSettingsEewRegion
-_$NotificationRemoteSettingsEewRegionFromJson(
-  Map<String, dynamic> json,
-) {
-  return _NotificationRemoteSettingsEewRegion.fromJson(
-    json,
-  );
+_$NotificationRemoteSettingsEewRegionFromJson(Map<String, dynamic> json) {
+  return _NotificationRemoteSettingsEewRegion.fromJson(json);
 }
 
 /// @nodoc
@@ -566,8 +477,7 @@ mixin _$NotificationRemoteSettingsEewRegion {
   String get name => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationRemoteSettingsEewRegion to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationRemoteSettingsEewRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -579,9 +489,7 @@ mixin _$NotificationRemoteSettingsEewRegion {
 }
 
 /// @nodoc
-abstract class $NotificationRemoteSettingsEewRegionCopyWith<
-  $Res
-> {
+abstract class $NotificationRemoteSettingsEewRegionCopyWith<$Res> {
   factory $NotificationRemoteSettingsEewRegionCopyWith(
     NotificationRemoteSettingsEewRegion value,
     $Res Function(NotificationRemoteSettingsEewRegion) then,
@@ -591,11 +499,7 @@ abstract class $NotificationRemoteSettingsEewRegionCopyWith<
         NotificationRemoteSettingsEewRegion
       >;
   @useResult
-  $Res call({
-    int regionId,
-    JmaForecastIntensity minJmaIntensity,
-    String name,
-  });
+  $Res call({int regionId, JmaForecastIntensity minJmaIntensity, String name});
 }
 
 /// @nodoc
@@ -603,12 +507,8 @@ class _$NotificationRemoteSettingsEewRegionCopyWithImpl<
   $Res,
   $Val extends NotificationRemoteSettingsEewRegion
 >
-    implements
-        $NotificationRemoteSettingsEewRegionCopyWith<$Res> {
-  _$NotificationRemoteSettingsEewRegionCopyWithImpl(
-    this._value,
-    this._then,
-  );
+    implements $NotificationRemoteSettingsEewRegionCopyWith<$Res> {
+  _$NotificationRemoteSettingsEewRegionCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -648,45 +548,28 @@ class _$NotificationRemoteSettingsEewRegionCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$NotificationRemoteSettingsEewRegionImplCopyWith<
-  $Res
->
-    implements
-        $NotificationRemoteSettingsEewRegionCopyWith<$Res> {
+abstract class _$$NotificationRemoteSettingsEewRegionImplCopyWith<$Res>
+    implements $NotificationRemoteSettingsEewRegionCopyWith<$Res> {
   factory _$$NotificationRemoteSettingsEewRegionImplCopyWith(
     _$NotificationRemoteSettingsEewRegionImpl value,
-    $Res Function(_$NotificationRemoteSettingsEewRegionImpl)
-    then,
-  ) =
-      __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl<
-        $Res
-      >;
+    $Res Function(_$NotificationRemoteSettingsEewRegionImpl) then,
+  ) = __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int regionId,
-    JmaForecastIntensity minJmaIntensity,
-    String name,
-  });
+  $Res call({int regionId, JmaForecastIntensity minJmaIntensity, String name});
 }
 
 /// @nodoc
-class __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl<
-  $Res
->
+class __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl<$Res>
     extends
         _$NotificationRemoteSettingsEewRegionCopyWithImpl<
           $Res,
           _$NotificationRemoteSettingsEewRegionImpl
         >
-    implements
-        _$$NotificationRemoteSettingsEewRegionImplCopyWith<
-          $Res
-        > {
+    implements _$$NotificationRemoteSettingsEewRegionImplCopyWith<$Res> {
   __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl(
     _$NotificationRemoteSettingsEewRegionImpl _value,
-    $Res Function(_$NotificationRemoteSettingsEewRegionImpl)
-    _then,
+    $Res Function(_$NotificationRemoteSettingsEewRegionImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of NotificationRemoteSettingsEewRegion
@@ -732,9 +615,7 @@ class _$NotificationRemoteSettingsEewRegionImpl
 
   factory _$NotificationRemoteSettingsEewRegionImpl.fromJson(
     Map<String, dynamic> json,
-  ) => _$$NotificationRemoteSettingsEewRegionImplFromJson(
-    json,
-  );
+  ) => _$$NotificationRemoteSettingsEewRegionImplFromJson(json);
 
   @override
   final int regionId;
@@ -752,27 +633,17 @@ class _$NotificationRemoteSettingsEewRegionImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other
-                is _$NotificationRemoteSettingsEewRegionImpl &&
+            other is _$NotificationRemoteSettingsEewRegionImpl &&
             (identical(other.regionId, regionId) ||
                 other.regionId == regionId) &&
-            (identical(
-                  other.minJmaIntensity,
-                  minJmaIntensity,
-                ) ||
+            (identical(other.minJmaIntensity, minJmaIntensity) ||
                 other.minJmaIntensity == minJmaIntensity) &&
-            (identical(other.name, name) ||
-                other.name == name));
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    regionId,
-    minJmaIntensity,
-    name,
-  );
+  int get hashCode => Object.hash(runtimeType, regionId, minJmaIntensity, name);
 
   /// Create a copy of NotificationRemoteSettingsEewRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -782,16 +653,13 @@ class _$NotificationRemoteSettingsEewRegionImpl
   _$$NotificationRemoteSettingsEewRegionImplCopyWith<
     _$NotificationRemoteSettingsEewRegionImpl
   >
-  get copyWith =>
-      __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl<
-        _$NotificationRemoteSettingsEewRegionImpl
-      >(this, _$identity);
+  get copyWith => __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl<
+    _$NotificationRemoteSettingsEewRegionImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationRemoteSettingsEewRegionImplToJson(
-      this,
-    );
+    return _$$NotificationRemoteSettingsEewRegionImplToJson(this);
   }
 }
 
@@ -825,24 +693,18 @@ abstract class _NotificationRemoteSettingsEewRegion
 }
 
 NotificationRemoteSettingsEarthquake
-_$NotificationRemoteSettingsEarthquakeFromJson(
-  Map<String, dynamic> json,
-) {
-  return _NotificationRemoteSettingsEarthquake.fromJson(
-    json,
-  );
+_$NotificationRemoteSettingsEarthquakeFromJson(Map<String, dynamic> json) {
+  return _NotificationRemoteSettingsEarthquake.fromJson(json);
 }
 
 /// @nodoc
 mixin _$NotificationRemoteSettingsEarthquake {
-  JmaForecastIntensity? get global =>
+  JmaForecastIntensity? get global => throw _privateConstructorUsedError;
+  List<NotificationRemoteSettingsEarthquakeRegion> get regions =>
       throw _privateConstructorUsedError;
-  List<NotificationRemoteSettingsEarthquakeRegion>
-  get regions => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationRemoteSettingsEarthquake to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationRemoteSettingsEarthquake
   /// with the given fields replaced by the non-null parameter values.
@@ -854,13 +716,10 @@ mixin _$NotificationRemoteSettingsEarthquake {
 }
 
 /// @nodoc
-abstract class $NotificationRemoteSettingsEarthquakeCopyWith<
-  $Res
-> {
+abstract class $NotificationRemoteSettingsEarthquakeCopyWith<$Res> {
   factory $NotificationRemoteSettingsEarthquakeCopyWith(
     NotificationRemoteSettingsEarthquake value,
-    $Res Function(NotificationRemoteSettingsEarthquake)
-    then,
+    $Res Function(NotificationRemoteSettingsEarthquake) then,
   ) =
       _$NotificationRemoteSettingsEarthquakeCopyWithImpl<
         $Res,
@@ -869,8 +728,7 @@ abstract class $NotificationRemoteSettingsEarthquakeCopyWith<
   @useResult
   $Res call({
     JmaForecastIntensity? global,
-    List<NotificationRemoteSettingsEarthquakeRegion>
-    regions,
+    List<NotificationRemoteSettingsEarthquakeRegion> regions,
   });
 }
 
@@ -879,14 +737,8 @@ class _$NotificationRemoteSettingsEarthquakeCopyWithImpl<
   $Res,
   $Val extends NotificationRemoteSettingsEarthquake
 >
-    implements
-        $NotificationRemoteSettingsEarthquakeCopyWith<
-          $Res
-        > {
-  _$NotificationRemoteSettingsEarthquakeCopyWithImpl(
-    this._value,
-    this._then,
-  );
+    implements $NotificationRemoteSettingsEarthquakeCopyWith<$Res> {
+  _$NotificationRemoteSettingsEarthquakeCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -897,10 +749,7 @@ class _$NotificationRemoteSettingsEarthquakeCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? global = freezed,
-    Object? regions = null,
-  }) {
+  $Res call({Object? global = freezed, Object? regions = null}) {
     return _then(
       _value.copyWith(
             global:
@@ -912,9 +761,7 @@ class _$NotificationRemoteSettingsEarthquakeCopyWithImpl<
                 null == regions
                     ? _value.regions
                     : regions // ignore: cast_nullable_to_non_nullable
-                        as List<
-                          NotificationRemoteSettingsEarthquakeRegion
-                        >,
+                        as List<NotificationRemoteSettingsEarthquakeRegion>,
           )
           as $Val,
     );
@@ -922,61 +769,38 @@ class _$NotificationRemoteSettingsEarthquakeCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$NotificationRemoteSettingsEarthquakeImplCopyWith<
-  $Res
->
-    implements
-        $NotificationRemoteSettingsEarthquakeCopyWith<
-          $Res
-        > {
+abstract class _$$NotificationRemoteSettingsEarthquakeImplCopyWith<$Res>
+    implements $NotificationRemoteSettingsEarthquakeCopyWith<$Res> {
   factory _$$NotificationRemoteSettingsEarthquakeImplCopyWith(
     _$NotificationRemoteSettingsEarthquakeImpl value,
-    $Res Function(
-      _$NotificationRemoteSettingsEarthquakeImpl,
-    )
-    then,
-  ) =
-      __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<
-        $Res
-      >;
+    $Res Function(_$NotificationRemoteSettingsEarthquakeImpl) then,
+  ) = __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
     JmaForecastIntensity? global,
-    List<NotificationRemoteSettingsEarthquakeRegion>
-    regions,
+    List<NotificationRemoteSettingsEarthquakeRegion> regions,
   });
 }
 
 /// @nodoc
-class __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<
-  $Res
->
+class __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<$Res>
     extends
         _$NotificationRemoteSettingsEarthquakeCopyWithImpl<
           $Res,
           _$NotificationRemoteSettingsEarthquakeImpl
         >
-    implements
-        _$$NotificationRemoteSettingsEarthquakeImplCopyWith<
-          $Res
-        > {
+    implements _$$NotificationRemoteSettingsEarthquakeImplCopyWith<$Res> {
   __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl(
     _$NotificationRemoteSettingsEarthquakeImpl _value,
-    $Res Function(
-      _$NotificationRemoteSettingsEarthquakeImpl,
-    )
-    _then,
+    $Res Function(_$NotificationRemoteSettingsEarthquakeImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of NotificationRemoteSettingsEarthquake
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? global = freezed,
-    Object? regions = null,
-  }) {
+  $Res call({Object? global = freezed, Object? regions = null}) {
     return _then(
       _$NotificationRemoteSettingsEarthquakeImpl(
         global:
@@ -988,9 +812,7 @@ class __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<
             null == regions
                 ? _value._regions
                 : regions // ignore: cast_nullable_to_non_nullable
-                    as List<
-                      NotificationRemoteSettingsEarthquakeRegion
-                    >,
+                    as List<NotificationRemoteSettingsEarthquakeRegion>,
       ),
     );
   }
@@ -1002,27 +824,19 @@ class _$NotificationRemoteSettingsEarthquakeImpl
     implements _NotificationRemoteSettingsEarthquake {
   const _$NotificationRemoteSettingsEarthquakeImpl({
     required this.global,
-    required final List<
-      NotificationRemoteSettingsEarthquakeRegion
-    >
-    regions,
+    required final List<NotificationRemoteSettingsEarthquakeRegion> regions,
   }) : _regions = regions;
 
   factory _$NotificationRemoteSettingsEarthquakeImpl.fromJson(
     Map<String, dynamic> json,
-  ) => _$$NotificationRemoteSettingsEarthquakeImplFromJson(
-    json,
-  );
+  ) => _$$NotificationRemoteSettingsEarthquakeImplFromJson(json);
 
   @override
   final JmaForecastIntensity? global;
-  final List<NotificationRemoteSettingsEarthquakeRegion>
-  _regions;
+  final List<NotificationRemoteSettingsEarthquakeRegion> _regions;
   @override
-  List<NotificationRemoteSettingsEarthquakeRegion>
-  get regions {
-    if (_regions is EqualUnmodifiableListView)
-      return _regions;
+  List<NotificationRemoteSettingsEarthquakeRegion> get regions {
+    if (_regions is EqualUnmodifiableListView) return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_regions);
   }
@@ -1036,14 +850,9 @@ class _$NotificationRemoteSettingsEarthquakeImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other
-                is _$NotificationRemoteSettingsEarthquakeImpl &&
-            (identical(other.global, global) ||
-                other.global == global) &&
-            const DeepCollectionEquality().equals(
-              other._regions,
-              _regions,
-            ));
+            other is _$NotificationRemoteSettingsEarthquakeImpl &&
+            (identical(other.global, global) || other.global == global) &&
+            const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1062,16 +871,13 @@ class _$NotificationRemoteSettingsEarthquakeImpl
   _$$NotificationRemoteSettingsEarthquakeImplCopyWith<
     _$NotificationRemoteSettingsEarthquakeImpl
   >
-  get copyWith =>
-      __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<
-        _$NotificationRemoteSettingsEarthquakeImpl
-      >(this, _$identity);
+  get copyWith => __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<
+    _$NotificationRemoteSettingsEarthquakeImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationRemoteSettingsEarthquakeImplToJson(
-      this,
-    );
+    return _$$NotificationRemoteSettingsEarthquakeImplToJson(this);
   }
 }
 
@@ -1079,10 +885,7 @@ abstract class _NotificationRemoteSettingsEarthquake
     implements NotificationRemoteSettingsEarthquake {
   const factory _NotificationRemoteSettingsEarthquake({
     required final JmaForecastIntensity? global,
-    required final List<
-      NotificationRemoteSettingsEarthquakeRegion
-    >
-    regions,
+    required final List<NotificationRemoteSettingsEarthquakeRegion> regions,
   }) = _$NotificationRemoteSettingsEarthquakeImpl;
 
   factory _NotificationRemoteSettingsEarthquake.fromJson(
@@ -1092,8 +895,7 @@ abstract class _NotificationRemoteSettingsEarthquake
   @override
   JmaForecastIntensity? get global;
   @override
-  List<NotificationRemoteSettingsEarthquakeRegion>
-  get regions;
+  List<NotificationRemoteSettingsEarthquakeRegion> get regions;
 
   /// Create a copy of NotificationRemoteSettingsEarthquake
   /// with the given fields replaced by the non-null parameter values.
@@ -1109,9 +911,7 @@ NotificationRemoteSettingsEarthquakeRegion
 _$NotificationRemoteSettingsEarthquakeRegionFromJson(
   Map<String, dynamic> json,
 ) {
-  return _NotificationRemoteSettingsEarthquakeRegion.fromJson(
-    json,
-  );
+  return _NotificationRemoteSettingsEarthquakeRegion.fromJson(json);
 }
 
 /// @nodoc
@@ -1122,8 +922,7 @@ mixin _$NotificationRemoteSettingsEarthquakeRegion {
   String get name => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationRemoteSettingsEarthquakeRegion to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -1135,26 +934,17 @@ mixin _$NotificationRemoteSettingsEarthquakeRegion {
 }
 
 /// @nodoc
-abstract class $NotificationRemoteSettingsEarthquakeRegionCopyWith<
-  $Res
-> {
+abstract class $NotificationRemoteSettingsEarthquakeRegionCopyWith<$Res> {
   factory $NotificationRemoteSettingsEarthquakeRegionCopyWith(
     NotificationRemoteSettingsEarthquakeRegion value,
-    $Res Function(
-      NotificationRemoteSettingsEarthquakeRegion,
-    )
-    then,
+    $Res Function(NotificationRemoteSettingsEarthquakeRegion) then,
   ) =
       _$NotificationRemoteSettingsEarthquakeRegionCopyWithImpl<
         $Res,
         NotificationRemoteSettingsEarthquakeRegion
       >;
   @useResult
-  $Res call({
-    int regionId,
-    JmaForecastIntensity minJmaIntensity,
-    String name,
-  });
+  $Res call({int regionId, JmaForecastIntensity minJmaIntensity, String name});
 }
 
 /// @nodoc
@@ -1162,10 +952,7 @@ class _$NotificationRemoteSettingsEarthquakeRegionCopyWithImpl<
   $Res,
   $Val extends NotificationRemoteSettingsEarthquakeRegion
 >
-    implements
-        $NotificationRemoteSettingsEarthquakeRegionCopyWith<
-          $Res
-        > {
+    implements $NotificationRemoteSettingsEarthquakeRegionCopyWith<$Res> {
   _$NotificationRemoteSettingsEarthquakeRegionCopyWithImpl(
     this._value,
     this._then,
@@ -1209,51 +996,28 @@ class _$NotificationRemoteSettingsEarthquakeRegionCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$NotificationRemoteSettingsEarthquakeRegionImplCopyWith<
-  $Res
->
-    implements
-        $NotificationRemoteSettingsEarthquakeRegionCopyWith<
-          $Res
-        > {
+abstract class _$$NotificationRemoteSettingsEarthquakeRegionImplCopyWith<$Res>
+    implements $NotificationRemoteSettingsEarthquakeRegionCopyWith<$Res> {
   factory _$$NotificationRemoteSettingsEarthquakeRegionImplCopyWith(
     _$NotificationRemoteSettingsEarthquakeRegionImpl value,
-    $Res Function(
-      _$NotificationRemoteSettingsEarthquakeRegionImpl,
-    )
-    then,
-  ) =
-      __$$NotificationRemoteSettingsEarthquakeRegionImplCopyWithImpl<
-        $Res
-      >;
+    $Res Function(_$NotificationRemoteSettingsEarthquakeRegionImpl) then,
+  ) = __$$NotificationRemoteSettingsEarthquakeRegionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int regionId,
-    JmaForecastIntensity minJmaIntensity,
-    String name,
-  });
+  $Res call({int regionId, JmaForecastIntensity minJmaIntensity, String name});
 }
 
 /// @nodoc
-class __$$NotificationRemoteSettingsEarthquakeRegionImplCopyWithImpl<
-  $Res
->
+class __$$NotificationRemoteSettingsEarthquakeRegionImplCopyWithImpl<$Res>
     extends
         _$NotificationRemoteSettingsEarthquakeRegionCopyWithImpl<
           $Res,
           _$NotificationRemoteSettingsEarthquakeRegionImpl
         >
-    implements
-        _$$NotificationRemoteSettingsEarthquakeRegionImplCopyWith<
-          $Res
-        > {
+    implements _$$NotificationRemoteSettingsEarthquakeRegionImplCopyWith<$Res> {
   __$$NotificationRemoteSettingsEarthquakeRegionImplCopyWithImpl(
     _$NotificationRemoteSettingsEarthquakeRegionImpl _value,
-    $Res Function(
-      _$NotificationRemoteSettingsEarthquakeRegionImpl,
-    )
-    _then,
+    $Res Function(_$NotificationRemoteSettingsEarthquakeRegionImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
@@ -1299,10 +1063,7 @@ class _$NotificationRemoteSettingsEarthquakeRegionImpl
 
   factory _$NotificationRemoteSettingsEarthquakeRegionImpl.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$$NotificationRemoteSettingsEarthquakeRegionImplFromJson(
-        json,
-      );
+  ) => _$$NotificationRemoteSettingsEarthquakeRegionImplFromJson(json);
 
   @override
   final int regionId;
@@ -1320,27 +1081,17 @@ class _$NotificationRemoteSettingsEarthquakeRegionImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other
-                is _$NotificationRemoteSettingsEarthquakeRegionImpl &&
+            other is _$NotificationRemoteSettingsEarthquakeRegionImpl &&
             (identical(other.regionId, regionId) ||
                 other.regionId == regionId) &&
-            (identical(
-                  other.minJmaIntensity,
-                  minJmaIntensity,
-                ) ||
+            (identical(other.minJmaIntensity, minJmaIntensity) ||
                 other.minJmaIntensity == minJmaIntensity) &&
-            (identical(other.name, name) ||
-                other.name == name));
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    regionId,
-    minJmaIntensity,
-    name,
-  );
+  int get hashCode => Object.hash(runtimeType, regionId, minJmaIntensity, name);
 
   /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -1357,9 +1108,7 @@ class _$NotificationRemoteSettingsEarthquakeRegionImpl
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationRemoteSettingsEarthquakeRegionImplToJson(
-      this,
-    );
+    return _$$NotificationRemoteSettingsEarthquakeRegionImplToJson(this);
   }
 }
 
@@ -1373,8 +1122,7 @@ abstract class _NotificationRemoteSettingsEarthquakeRegion
 
   factory _NotificationRemoteSettingsEarthquakeRegion.fromJson(
     Map<String, dynamic> json,
-  ) =
-      _$NotificationRemoteSettingsEarthquakeRegionImpl.fromJson;
+  ) = _$NotificationRemoteSettingsEarthquakeRegionImpl.fromJson;
 
   @override
   int get regionId;
