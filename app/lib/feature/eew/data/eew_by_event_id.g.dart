@@ -8,8 +8,7 @@ part of 'eew_by_event_id.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewsByEventIdHash() =>
-    r'b57fe47c5a2108c48cec9ac7d79448bc48969b22';
+String _$eewsByEventIdHash() => r'b57fe47c5a2108c48cec9ac7d79448bc48969b22';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -19,8 +18,7 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash =
-        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -29,8 +27,7 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff &
-        (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
@@ -46,8 +43,7 @@ abstract class _$EewsByEventId
 const eewsByEventIdProvider = EewsByEventIdFamily();
 
 /// See also [EewsByEventId].
-class EewsByEventIdFamily
-    extends Family<AsyncValue<List<EewV1>>> {
+class EewsByEventIdFamily extends Family<AsyncValue<List<EewV1>>> {
   /// See also [EewsByEventId].
   const EewsByEventIdFamily();
 
@@ -63,19 +59,15 @@ class EewsByEventIdFamily
     return call(provider.eventId);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies =
-      null;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies =>
-      _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
 
-  static const Iterable<ProviderOrFamily>?
-  _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>?
-  get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
@@ -84,11 +76,7 @@ class EewsByEventIdFamily
 
 /// See also [EewsByEventId].
 class EewsByEventIdProvider
-    extends
-        AutoDisposeAsyncNotifierProviderImpl<
-          EewsByEventId,
-          List<EewV1>
-        > {
+    extends AutoDisposeAsyncNotifierProviderImpl<EewsByEventId, List<EewV1>> {
   /// See also [EewsByEventId].
   EewsByEventIdProvider(String eventId)
     : this._internal(
@@ -118,9 +106,7 @@ class EewsByEventIdProvider
   final String eventId;
 
   @override
-  FutureOr<List<EewV1>> runNotifierBuild(
-    covariant EewsByEventId notifier,
-  ) {
+  FutureOr<List<EewV1>> runNotifierBuild(covariant EewsByEventId notifier) {
     return notifier.build(eventId);
   }
 
@@ -141,18 +127,14 @@ class EewsByEventIdProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<
-    EewsByEventId,
-    List<EewV1>
-  >
+  AutoDisposeAsyncNotifierProviderElement<EewsByEventId, List<EewV1>>
   createElement() {
     return _EewsByEventIdProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is EewsByEventIdProvider &&
-        other.eventId == eventId;
+    return other is EewsByEventIdProvider && other.eventId == eventId;
   }
 
   @override
@@ -166,24 +148,18 @@ class EewsByEventIdProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin EewsByEventIdRef
-    on AutoDisposeAsyncNotifierProviderRef<List<EewV1>> {
+mixin EewsByEventIdRef on AutoDisposeAsyncNotifierProviderRef<List<EewV1>> {
   /// The parameter `eventId` of this provider.
   String get eventId;
 }
 
 class _EewsByEventIdProviderElement
-    extends
-        AutoDisposeAsyncNotifierProviderElement<
-          EewsByEventId,
-          List<EewV1>
-        >
+    extends AutoDisposeAsyncNotifierProviderElement<EewsByEventId, List<EewV1>>
     with EewsByEventIdRef {
   _EewsByEventIdProviderElement(super.provider);
 
   @override
-  String get eventId =>
-      (origin as EewsByEventIdProvider).eventId;
+  String get eventId => (origin as EewsByEventIdProvider).eventId;
 }
 
 // ignore_for_file: type=lint

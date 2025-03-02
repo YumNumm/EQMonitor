@@ -15,31 +15,25 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-PermissionStateModel _$PermissionStateModelFromJson(
-  Map<String, dynamic> json,
-) {
+PermissionStateModel _$PermissionStateModelFromJson(Map<String, dynamic> json) {
   return _PermissionStateModel.fromJson(json);
 }
 
 /// @nodoc
 mixin _$PermissionStateModel {
-  bool get notification =>
-      throw _privateConstructorUsedError;
-  bool get criticalAlert =>
-      throw _privateConstructorUsedError;
+  bool get notification => throw _privateConstructorUsedError;
+  bool get criticalAlert => throw _privateConstructorUsedError;
   bool get location => throw _privateConstructorUsedError;
-  bool get backgroundLocation =>
-      throw _privateConstructorUsedError;
+  bool get backgroundLocation => throw _privateConstructorUsedError;
 
   /// Serializes this PermissionStateModel to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of PermissionStateModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PermissionStateModelCopyWith<PermissionStateModel>
-  get copyWith => throw _privateConstructorUsedError;
+  $PermissionStateModelCopyWith<PermissionStateModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -47,11 +41,7 @@ abstract class $PermissionStateModelCopyWith<$Res> {
   factory $PermissionStateModelCopyWith(
     PermissionStateModel value,
     $Res Function(PermissionStateModel) then,
-  ) =
-      _$PermissionStateModelCopyWithImpl<
-        $Res,
-        PermissionStateModel
-      >;
+  ) = _$PermissionStateModelCopyWithImpl<$Res, PermissionStateModel>;
   @useResult
   $Res call({
     bool notification,
@@ -67,10 +57,7 @@ class _$PermissionStateModelCopyWithImpl<
   $Val extends PermissionStateModel
 >
     implements $PermissionStateModelCopyWith<$Res> {
-  _$PermissionStateModelCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$PermissionStateModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -134,11 +121,7 @@ abstract class _$$PermissionStateModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$PermissionStateModelImplCopyWithImpl<$Res>
-    extends
-        _$PermissionStateModelCopyWithImpl<
-          $Res,
-          _$PermissionStateModelImpl
-        >
+    extends _$PermissionStateModelCopyWithImpl<$Res, _$PermissionStateModelImpl>
     implements _$$PermissionStateModelImplCopyWith<$Res> {
   __$$PermissionStateModelImplCopyWithImpl(
     _$PermissionStateModelImpl _value,
@@ -184,8 +167,7 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PermissionStateModelImpl
-    implements _PermissionStateModel {
+class _$PermissionStateModelImpl implements _PermissionStateModel {
   const _$PermissionStateModelImpl({
     this.notification = false,
     this.criticalAlert = false,
@@ -193,9 +175,8 @@ class _$PermissionStateModelImpl
     this.backgroundLocation = false,
   });
 
-  factory _$PermissionStateModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$PermissionStateModelImplFromJson(json);
+  factory _$PermissionStateModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PermissionStateModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -222,19 +203,12 @@ class _$PermissionStateModelImpl
             other is _$PermissionStateModelImpl &&
             (identical(other.notification, notification) ||
                 other.notification == notification) &&
-            (identical(
-                  other.criticalAlert,
-                  criticalAlert,
-                ) ||
+            (identical(other.criticalAlert, criticalAlert) ||
                 other.criticalAlert == criticalAlert) &&
             (identical(other.location, location) ||
                 other.location == location) &&
-            (identical(
-                  other.backgroundLocation,
-                  backgroundLocation,
-                ) ||
-                other.backgroundLocation ==
-                    backgroundLocation));
+            (identical(other.backgroundLocation, backgroundLocation) ||
+                other.backgroundLocation == backgroundLocation));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -252,12 +226,12 @@ class _$PermissionStateModelImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PermissionStateModelImplCopyWith<
-    _$PermissionStateModelImpl
-  >
-  get copyWith => __$$PermissionStateModelImplCopyWithImpl<
-    _$PermissionStateModelImpl
-  >(this, _$identity);
+  _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
+  get copyWith =>
+      __$$PermissionStateModelImplCopyWithImpl<_$PermissionStateModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -265,8 +239,7 @@ class _$PermissionStateModelImpl
   }
 }
 
-abstract class _PermissionStateModel
-    implements PermissionStateModel {
+abstract class _PermissionStateModel implements PermissionStateModel {
   const factory _PermissionStateModel({
     final bool notification,
     final bool criticalAlert,
@@ -274,9 +247,8 @@ abstract class _PermissionStateModel
     final bool backgroundLocation,
   }) = _$PermissionStateModelImpl;
 
-  factory _PermissionStateModel.fromJson(
-    Map<String, dynamic> json,
-  ) = _$PermissionStateModelImpl.fromJson;
+  factory _PermissionStateModel.fromJson(Map<String, dynamic> json) =
+      _$PermissionStateModelImpl.fromJson;
 
   @override
   bool get notification;
@@ -291,8 +263,6 @@ abstract class _PermissionStateModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PermissionStateModelImplCopyWith<
-    _$PermissionStateModelImpl
-  >
+  _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

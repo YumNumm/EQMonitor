@@ -15,16 +15,13 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-MapCameraPosition _$MapCameraPositionFromJson(
-  Map<String, dynamic> json,
-) {
+MapCameraPosition _$MapCameraPositionFromJson(Map<String, dynamic> json) {
   return _MapCameraPosition.fromJson(json);
 }
 
 /// @nodoc
 mixin _$MapCameraPosition {
   /// カメラの中心座標
-  @LatLngConverter()
   LatLng get target => throw _privateConstructorUsedError;
 
   /// ズームレベル
@@ -37,14 +34,13 @@ mixin _$MapCameraPosition {
   double get bearing => throw _privateConstructorUsedError;
 
   /// Serializes this MapCameraPosition to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of MapCameraPosition
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $MapCameraPositionCopyWith<MapCameraPosition>
-  get copyWith => throw _privateConstructorUsedError;
+  $MapCameraPositionCopyWith<MapCameraPosition> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -52,25 +48,13 @@ abstract class $MapCameraPositionCopyWith<$Res> {
   factory $MapCameraPositionCopyWith(
     MapCameraPosition value,
     $Res Function(MapCameraPosition) then,
-  ) =
-      _$MapCameraPositionCopyWithImpl<
-        $Res,
-        MapCameraPosition
-      >;
+  ) = _$MapCameraPositionCopyWithImpl<$Res, MapCameraPosition>;
   @useResult
-  $Res call({
-    @LatLngConverter() LatLng target,
-    double zoom,
-    double tilt,
-    double bearing,
-  });
+  $Res call({LatLng target, double zoom, double tilt, double bearing});
 }
 
 /// @nodoc
-class _$MapCameraPositionCopyWithImpl<
-  $Res,
-  $Val extends MapCameraPosition
->
+class _$MapCameraPositionCopyWithImpl<$Res, $Val extends MapCameraPosition>
     implements $MapCameraPositionCopyWith<$Res> {
   _$MapCameraPositionCopyWithImpl(this._value, this._then);
 
@@ -126,21 +110,12 @@ abstract class _$$MapCameraPositionImplCopyWith<$Res>
   ) = __$$MapCameraPositionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @LatLngConverter() LatLng target,
-    double zoom,
-    double tilt,
-    double bearing,
-  });
+  $Res call({LatLng target, double zoom, double tilt, double bearing});
 }
 
 /// @nodoc
 class __$$MapCameraPositionImplCopyWithImpl<$Res>
-    extends
-        _$MapCameraPositionCopyWithImpl<
-          $Res,
-          _$MapCameraPositionImpl
-        >
+    extends _$MapCameraPositionCopyWithImpl<$Res, _$MapCameraPositionImpl>
     implements _$$MapCameraPositionImplCopyWith<$Res> {
   __$$MapCameraPositionImplCopyWithImpl(
     _$MapCameraPositionImpl _value,
@@ -188,19 +163,17 @@ class __$$MapCameraPositionImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MapCameraPositionImpl extends _MapCameraPosition {
   const _$MapCameraPositionImpl({
-    @LatLngConverter() required this.target,
+    required this.target,
     this.zoom = 5.0,
     this.tilt = 0.0,
     this.bearing = 0.0,
   }) : super._();
 
-  factory _$MapCameraPositionImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$MapCameraPositionImplFromJson(json);
+  factory _$MapCameraPositionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MapCameraPositionImplFromJson(json);
 
   /// カメラの中心座標
   @override
-  @LatLngConverter()
   final LatLng target;
 
   /// ズームレベル
@@ -228,30 +201,26 @@ class _$MapCameraPositionImpl extends _MapCameraPosition {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapCameraPositionImpl &&
-            (identical(other.target, target) ||
-                other.target == target) &&
-            (identical(other.zoom, zoom) ||
-                other.zoom == zoom) &&
-            (identical(other.tilt, tilt) ||
-                other.tilt == tilt) &&
-            (identical(other.bearing, bearing) ||
-                other.bearing == bearing));
+            (identical(other.target, target) || other.target == target) &&
+            (identical(other.zoom, zoom) || other.zoom == zoom) &&
+            (identical(other.tilt, tilt) || other.tilt == tilt) &&
+            (identical(other.bearing, bearing) || other.bearing == bearing));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, target, zoom, tilt, bearing);
+  int get hashCode => Object.hash(runtimeType, target, zoom, tilt, bearing);
 
   /// Create a copy of MapCameraPosition
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$MapCameraPositionImplCopyWith<_$MapCameraPositionImpl>
-  get copyWith => __$$MapCameraPositionImplCopyWithImpl<
-    _$MapCameraPositionImpl
-  >(this, _$identity);
+  _$$MapCameraPositionImplCopyWith<_$MapCameraPositionImpl> get copyWith =>
+      __$$MapCameraPositionImplCopyWithImpl<_$MapCameraPositionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -259,23 +228,20 @@ class _$MapCameraPositionImpl extends _MapCameraPosition {
   }
 }
 
-abstract class _MapCameraPosition
-    extends MapCameraPosition {
+abstract class _MapCameraPosition extends MapCameraPosition {
   const factory _MapCameraPosition({
-    @LatLngConverter() required final LatLng target,
+    required final LatLng target,
     final double zoom,
     final double tilt,
     final double bearing,
   }) = _$MapCameraPositionImpl;
   const _MapCameraPosition._() : super._();
 
-  factory _MapCameraPosition.fromJson(
-    Map<String, dynamic> json,
-  ) = _$MapCameraPositionImpl.fromJson;
+  factory _MapCameraPosition.fromJson(Map<String, dynamic> json) =
+      _$MapCameraPositionImpl.fromJson;
 
   /// カメラの中心座標
   @override
-  @LatLngConverter()
   LatLng get target;
 
   /// ズームレベル
@@ -294,6 +260,6 @@ abstract class _MapCameraPosition
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MapCameraPositionImplCopyWith<_$MapCameraPositionImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$MapCameraPositionImplCopyWith<_$MapCameraPositionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

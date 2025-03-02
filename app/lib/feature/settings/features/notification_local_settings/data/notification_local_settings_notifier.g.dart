@@ -13,20 +13,19 @@ String _$notificationLocalSettingsNotifierHash() =>
 
 /// See also [NotificationLocalSettingsNotifier].
 @ProviderFor(NotificationLocalSettingsNotifier)
-final notificationLocalSettingsNotifierProvider =
-    AsyncNotifierProvider<
-      NotificationLocalSettingsNotifier,
-      NotificationLocalSettingsModel
-    >.internal(
-      NotificationLocalSettingsNotifier.new,
-      name: r'notificationLocalSettingsNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$notificationLocalSettingsNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final notificationLocalSettingsNotifierProvider = AsyncNotifierProvider<
+  NotificationLocalSettingsNotifier,
+  NotificationLocalSettingsModel
+>.internal(
+  NotificationLocalSettingsNotifier.new,
+  name: r'notificationLocalSettingsNotifierProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$notificationLocalSettingsNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 typedef _$NotificationLocalSettingsNotifier =
     AsyncNotifier<NotificationLocalSettingsModel>;

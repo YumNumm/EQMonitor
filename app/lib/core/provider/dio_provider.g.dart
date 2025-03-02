@@ -8,8 +8,7 @@ part of 'dio_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() =>
-    r'923a78c40d3726e3c20d3e3e0b1afc689f56da7a';
+String _$dioHash() => r'923a78c40d3726e3c20d3e3e0b1afc689f56da7a';
 
 /// See also [dio].
 @ProviderFor(dio)
@@ -17,9 +16,7 @@ final dioProvider = Provider<Dio>.internal(
   dio,
   name: r'dioProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$dioHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$dioHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -27,8 +24,7 @@ final dioProvider = Provider<Dio>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DioRef = ProviderRef<Dio>;
-String _$isDioProxyEnabledHash() =>
-    r'716d5c817b377684285a697bf988ce19f0645c81';
+String _$isDioProxyEnabledHash() => r'716d5c817b377684285a697bf988ce19f0645c81';
 
 /// See also [IsDioProxyEnabled].
 @ProviderFor(IsDioProxyEnabled)

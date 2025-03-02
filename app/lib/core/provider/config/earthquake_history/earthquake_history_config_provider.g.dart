@@ -13,20 +13,19 @@ String _$earthquakeHistoryConfigHash() =>
 
 /// See also [EarthquakeHistoryConfig].
 @ProviderFor(EarthquakeHistoryConfig)
-final earthquakeHistoryConfigProvider =
-    AutoDisposeNotifierProvider<
-      EarthquakeHistoryConfig,
-      EarthquakeHistoryConfigModel
-    >.internal(
-      EarthquakeHistoryConfig.new,
-      name: r'earthquakeHistoryConfigProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$earthquakeHistoryConfigHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final earthquakeHistoryConfigProvider = AutoDisposeNotifierProvider<
+  EarthquakeHistoryConfig,
+  EarthquakeHistoryConfigModel
+>.internal(
+  EarthquakeHistoryConfig.new,
+  name: r'earthquakeHistoryConfigProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$earthquakeHistoryConfigHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 typedef _$EarthquakeHistoryConfig =
     AutoDisposeNotifier<EarthquakeHistoryConfigModel>;

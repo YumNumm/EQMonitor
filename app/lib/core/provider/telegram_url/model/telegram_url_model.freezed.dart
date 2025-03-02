@@ -15,29 +15,24 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-TelegramUrlModel _$TelegramUrlModelFromJson(
-  Map<String, dynamic> json,
-) {
+TelegramUrlModel _$TelegramUrlModelFromJson(Map<String, dynamic> json) {
   return _TelegramUrlModel.fromJson(json);
 }
 
 /// @nodoc
 mixin _$TelegramUrlModel {
-  String get restApiUrl =>
-      throw _privateConstructorUsedError;
+  String get restApiUrl => throw _privateConstructorUsedError;
   String get wsApiUrl => throw _privateConstructorUsedError;
-  String? get apiAuthorization =>
-      throw _privateConstructorUsedError;
+  String? get apiAuthorization => throw _privateConstructorUsedError;
 
   /// Serializes this TelegramUrlModel to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of TelegramUrlModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TelegramUrlModelCopyWith<TelegramUrlModel>
-  get copyWith => throw _privateConstructorUsedError;
+  $TelegramUrlModelCopyWith<TelegramUrlModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -45,24 +40,13 @@ abstract class $TelegramUrlModelCopyWith<$Res> {
   factory $TelegramUrlModelCopyWith(
     TelegramUrlModel value,
     $Res Function(TelegramUrlModel) then,
-  ) =
-      _$TelegramUrlModelCopyWithImpl<
-        $Res,
-        TelegramUrlModel
-      >;
+  ) = _$TelegramUrlModelCopyWithImpl<$Res, TelegramUrlModel>;
   @useResult
-  $Res call({
-    String restApiUrl,
-    String wsApiUrl,
-    String? apiAuthorization,
-  });
+  $Res call({String restApiUrl, String wsApiUrl, String? apiAuthorization});
 }
 
 /// @nodoc
-class _$TelegramUrlModelCopyWithImpl<
-  $Res,
-  $Val extends TelegramUrlModel
->
+class _$TelegramUrlModelCopyWithImpl<$Res, $Val extends TelegramUrlModel>
     implements $TelegramUrlModelCopyWith<$Res> {
   _$TelegramUrlModelCopyWithImpl(this._value, this._then);
 
@@ -112,20 +96,12 @@ abstract class _$$TelegramUrlModelImplCopyWith<$Res>
   ) = __$$TelegramUrlModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String restApiUrl,
-    String wsApiUrl,
-    String? apiAuthorization,
-  });
+  $Res call({String restApiUrl, String wsApiUrl, String? apiAuthorization});
 }
 
 /// @nodoc
 class __$$TelegramUrlModelImplCopyWithImpl<$Res>
-    extends
-        _$TelegramUrlModelCopyWithImpl<
-          $Res,
-          _$TelegramUrlModelImpl
-        >
+    extends _$TelegramUrlModelCopyWithImpl<$Res, _$TelegramUrlModelImpl>
     implements _$$TelegramUrlModelImplCopyWith<$Res> {
   __$$TelegramUrlModelImplCopyWithImpl(
     _$TelegramUrlModelImpl _value,
@@ -172,9 +148,8 @@ class _$TelegramUrlModelImpl implements _TelegramUrlModel {
     required this.apiAuthorization,
   });
 
-  factory _$TelegramUrlModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$TelegramUrlModelImplFromJson(json);
+  factory _$TelegramUrlModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramUrlModelImplFromJson(json);
 
   @override
   final String restApiUrl;
@@ -197,32 +172,25 @@ class _$TelegramUrlModelImpl implements _TelegramUrlModel {
                 other.restApiUrl == restApiUrl) &&
             (identical(other.wsApiUrl, wsApiUrl) ||
                 other.wsApiUrl == wsApiUrl) &&
-            (identical(
-                  other.apiAuthorization,
-                  apiAuthorization,
-                ) ||
-                other.apiAuthorization ==
-                    apiAuthorization));
+            (identical(other.apiAuthorization, apiAuthorization) ||
+                other.apiAuthorization == apiAuthorization));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    restApiUrl,
-    wsApiUrl,
-    apiAuthorization,
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, restApiUrl, wsApiUrl, apiAuthorization);
 
   /// Create a copy of TelegramUrlModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl>
-  get copyWith => __$$TelegramUrlModelImplCopyWithImpl<
-    _$TelegramUrlModelImpl
-  >(this, _$identity);
+  _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl> get copyWith =>
+      __$$TelegramUrlModelImplCopyWithImpl<_$TelegramUrlModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -230,17 +198,15 @@ class _$TelegramUrlModelImpl implements _TelegramUrlModel {
   }
 }
 
-abstract class _TelegramUrlModel
-    implements TelegramUrlModel {
+abstract class _TelegramUrlModel implements TelegramUrlModel {
   const factory _TelegramUrlModel({
     required final String restApiUrl,
     required final String wsApiUrl,
     required final String? apiAuthorization,
   }) = _$TelegramUrlModelImpl;
 
-  factory _TelegramUrlModel.fromJson(
-    Map<String, dynamic> json,
-  ) = _$TelegramUrlModelImpl.fromJson;
+  factory _TelegramUrlModel.fromJson(Map<String, dynamic> json) =
+      _$TelegramUrlModelImpl.fromJson;
 
   @override
   String get restApiUrl;
@@ -253,6 +219,6 @@ abstract class _TelegramUrlModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

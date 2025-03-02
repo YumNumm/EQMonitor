@@ -14,10 +14,7 @@ String _$mapConfigurationNotifierHash() =>
 /// See also [MapConfigurationNotifier].
 @ProviderFor(MapConfigurationNotifier)
 final mapConfigurationNotifierProvider =
-    AsyncNotifierProvider<
-      MapConfigurationNotifier,
-      MapConfiguration
-    >.internal(
+    AsyncNotifierProvider<MapConfigurationNotifier, MapConfiguration>.internal(
       MapConfigurationNotifier.new,
       name: r'mapConfigurationNotifierProvider',
       debugGetCreateSourceHash:
@@ -28,7 +25,6 @@ final mapConfigurationNotifierProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$MapConfigurationNotifier =
-    AsyncNotifier<MapConfiguration>;
+typedef _$MapConfigurationNotifier = AsyncNotifier<MapConfiguration>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -14,12 +14,9 @@ String _$notificationRemoteAuthenticateServiceHash() =>
 /// See also [notificationRemoteAuthenticateService].
 @ProviderFor(notificationRemoteAuthenticateService)
 final notificationRemoteAuthenticateServiceProvider =
-    Provider<
-      NotificationRemoteAuthenticationService
-    >.internal(
+    Provider<NotificationRemoteAuthenticationService>.internal(
       notificationRemoteAuthenticateService,
-      name:
-          r'notificationRemoteAuthenticateServiceProvider',
+      name: r'notificationRemoteAuthenticateServiceProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null

@@ -14,10 +14,7 @@ String _$fcmTokenChangeDetectorHash() =>
 /// See also [FcmTokenChangeDetector].
 @ProviderFor(FcmTokenChangeDetector)
 final fcmTokenChangeDetectorProvider =
-    AsyncNotifierProvider<
-      FcmTokenChangeDetector,
-      bool
-    >.internal(
+    AsyncNotifierProvider<FcmTokenChangeDetector, bool>.internal(
       FcmTokenChangeDetector.new,
       name: r'fcmTokenChangeDetectorProvider',
       debugGetCreateSourceHash:

@@ -19,8 +19,7 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash =
-        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -29,15 +28,13 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff &
-        (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
 /// See also [earthquakeHistoryEarlyEvent].
 @ProviderFor(earthquakeHistoryEarlyEvent)
-const earthquakeHistoryEarlyEventProvider =
-    EarthquakeHistoryEarlyEventFamily();
+const earthquakeHistoryEarlyEventProvider = EarthquakeHistoryEarlyEventFamily();
 
 /// See also [earthquakeHistoryEarlyEvent].
 class EarthquakeHistoryEarlyEventFamily
@@ -57,30 +54,24 @@ class EarthquakeHistoryEarlyEventFamily
     return call(provider.id);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies =
-      null;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies =>
-      _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
 
-  static const Iterable<ProviderOrFamily>?
-  _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>?
-  get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
-  String? get name =>
-      r'earthquakeHistoryEarlyEventProvider';
+  String? get name => r'earthquakeHistoryEarlyEventProvider';
 }
 
 /// See also [earthquakeHistoryEarlyEvent].
 class EarthquakeHistoryEarlyEventProvider
-    extends
-        AutoDisposeFutureProvider<EarthquakeEarlyEvent> {
+    extends AutoDisposeFutureProvider<EarthquakeEarlyEvent> {
   /// See also [earthquakeHistoryEarlyEvent].
   EarthquakeHistoryEarlyEventProvider(String id)
     : this._internal(
@@ -94,11 +85,9 @@ class EarthquakeHistoryEarlyEventProvider
             const bool.fromEnvironment('dart.vm.product')
                 ? null
                 : _$earthquakeHistoryEarlyEventHash,
-        dependencies:
-            EarthquakeHistoryEarlyEventFamily._dependencies,
+        dependencies: EarthquakeHistoryEarlyEventFamily._dependencies,
         allTransitiveDependencies:
-            EarthquakeHistoryEarlyEventFamily
-                ._allTransitiveDependencies,
+            EarthquakeHistoryEarlyEventFamily._allTransitiveDependencies,
         id: id,
       );
 
@@ -123,33 +112,26 @@ class EarthquakeHistoryEarlyEventProvider
   ) {
     return ProviderOverride(
       origin: this,
-      override:
-          EarthquakeHistoryEarlyEventProvider._internal(
-            (ref) => create(
-              ref as EarthquakeHistoryEarlyEventRef,
-            ),
-            from: from,
-            name: null,
-            dependencies: null,
-            allTransitiveDependencies: null,
-            debugGetCreateSourceHash: null,
-            id: id,
-          ),
+      override: EarthquakeHistoryEarlyEventProvider._internal(
+        (ref) => create(ref as EarthquakeHistoryEarlyEventRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<EarthquakeEarlyEvent>
-  createElement() {
-    return _EarthquakeHistoryEarlyEventProviderElement(
-      this,
-    );
+  AutoDisposeFutureProviderElement<EarthquakeEarlyEvent> createElement() {
+    return _EarthquakeHistoryEarlyEventProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is EarthquakeHistoryEarlyEventProvider &&
-        other.id == id;
+    return other is EarthquakeHistoryEarlyEventProvider && other.id == id;
   }
 
   @override
@@ -170,18 +152,12 @@ mixin EarthquakeHistoryEarlyEventRef
 }
 
 class _EarthquakeHistoryEarlyEventProviderElement
-    extends
-        AutoDisposeFutureProviderElement<
-          EarthquakeEarlyEvent
-        >
+    extends AutoDisposeFutureProviderElement<EarthquakeEarlyEvent>
     with EarthquakeHistoryEarlyEventRef {
-  _EarthquakeHistoryEarlyEventProviderElement(
-    super.provider,
-  );
+  _EarthquakeHistoryEarlyEventProviderElement(super.provider);
 
   @override
-  String get id =>
-      (origin as EarthquakeHistoryEarlyEventProvider).id;
+  String get id => (origin as EarthquakeHistoryEarlyEventProvider).id;
 }
 
 // ignore_for_file: type=lint

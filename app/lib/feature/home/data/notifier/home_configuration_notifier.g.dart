@@ -13,20 +13,19 @@ String _$homeConfigurationNotifierHash() =>
 
 /// See also [HomeConfigurationNotifier].
 @ProviderFor(HomeConfigurationNotifier)
-final homeConfigurationNotifierProvider =
-    AutoDisposeNotifierProvider<
-      HomeConfigurationNotifier,
-      HomeConfigurationModel
-    >.internal(
-      HomeConfigurationNotifier.new,
-      name: r'homeConfigurationNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$homeConfigurationNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final homeConfigurationNotifierProvider = AutoDisposeNotifierProvider<
+  HomeConfigurationNotifier,
+  HomeConfigurationModel
+>.internal(
+  HomeConfigurationNotifier.new,
+  name: r'homeConfigurationNotifierProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$homeConfigurationNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 typedef _$HomeConfigurationNotifier =
     AutoDisposeNotifier<HomeConfigurationModel>;

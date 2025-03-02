@@ -15,21 +15,17 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-NtpStateModel _$NtpStateModelFromJson(
-  Map<String, dynamic> json,
-) {
+NtpStateModel _$NtpStateModelFromJson(Map<String, dynamic> json) {
   return _NtpStateModel.fromJson(json);
 }
 
 /// @nodoc
 mixin _$NtpStateModel {
   int? get offset => throw _privateConstructorUsedError;
-  DateTime? get updatedAt =>
-      throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this NtpStateModel to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NtpStateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -49,10 +45,7 @@ abstract class $NtpStateModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$NtpStateModelCopyWithImpl<
-  $Res,
-  $Val extends NtpStateModel
->
+class _$NtpStateModelCopyWithImpl<$Res, $Val extends NtpStateModel>
     implements $NtpStateModelCopyWith<$Res> {
   _$NtpStateModelCopyWithImpl(this._value, this._then);
 
@@ -65,10 +58,7 @@ class _$NtpStateModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? offset = freezed,
-    Object? updatedAt = freezed,
-  }) {
+  $Res call({Object? offset = freezed, Object? updatedAt = freezed}) {
     return _then(
       _value.copyWith(
             offset:
@@ -101,11 +91,7 @@ abstract class _$$NtpStateModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$NtpStateModelImplCopyWithImpl<$Res>
-    extends
-        _$NtpStateModelCopyWithImpl<
-          $Res,
-          _$NtpStateModelImpl
-        >
+    extends _$NtpStateModelCopyWithImpl<$Res, _$NtpStateModelImpl>
     implements _$$NtpStateModelImplCopyWith<$Res> {
   __$$NtpStateModelImplCopyWithImpl(
     _$NtpStateModelImpl _value,
@@ -116,10 +102,7 @@ class __$$NtpStateModelImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? offset = freezed,
-    Object? updatedAt = freezed,
-  }) {
+  $Res call({Object? offset = freezed, Object? updatedAt = freezed}) {
     return _then(
       _$NtpStateModelImpl(
         offset:
@@ -142,9 +125,8 @@ class __$$NtpStateModelImplCopyWithImpl<$Res>
 class _$NtpStateModelImpl implements _NtpStateModel {
   const _$NtpStateModelImpl({this.offset, this.updatedAt});
 
-  factory _$NtpStateModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$NtpStateModelImplFromJson(json);
+  factory _$NtpStateModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NtpStateModelImplFromJson(json);
 
   @override
   final int? offset;
@@ -161,26 +143,22 @@ class _$NtpStateModelImpl implements _NtpStateModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NtpStateModelImpl &&
-            (identical(other.offset, offset) ||
-                other.offset == offset) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, offset, updatedAt);
+  int get hashCode => Object.hash(runtimeType, offset, updatedAt);
 
   /// Create a copy of NtpStateModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$NtpStateModelImplCopyWith<_$NtpStateModelImpl>
-  get copyWith => __$$NtpStateModelImplCopyWithImpl<
-    _$NtpStateModelImpl
-  >(this, _$identity);
+  _$$NtpStateModelImplCopyWith<_$NtpStateModelImpl> get copyWith =>
+      __$$NtpStateModelImplCopyWithImpl<_$NtpStateModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -189,14 +167,11 @@ class _$NtpStateModelImpl implements _NtpStateModel {
 }
 
 abstract class _NtpStateModel implements NtpStateModel {
-  const factory _NtpStateModel({
-    final int? offset,
-    final DateTime? updatedAt,
-  }) = _$NtpStateModelImpl;
+  const factory _NtpStateModel({final int? offset, final DateTime? updatedAt}) =
+      _$NtpStateModelImpl;
 
-  factory _NtpStateModel.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NtpStateModelImpl.fromJson;
+  factory _NtpStateModel.fromJson(Map<String, dynamic> json) =
+      _$NtpStateModelImpl.fromJson;
 
   @override
   int? get offset;
@@ -207,6 +182,6 @@ abstract class _NtpStateModel implements NtpStateModel {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NtpStateModelImplCopyWith<_$NtpStateModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$NtpStateModelImplCopyWith<_$NtpStateModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

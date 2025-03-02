@@ -15,14 +15,8 @@ _$TelegramUrlModelImpl _$$TelegramUrlModelImplFromJson(
   json,
   ($checkedConvert) {
     final val = _$TelegramUrlModelImpl(
-      restApiUrl: $checkedConvert(
-        'rest_api_url',
-        (v) => v as String,
-      ),
-      wsApiUrl: $checkedConvert(
-        'ws_api_url',
-        (v) => v as String,
-      ),
+      restApiUrl: $checkedConvert('rest_api_url', (v) => v as String),
+      wsApiUrl: $checkedConvert('ws_api_url', (v) => v as String),
       apiAuthorization: $checkedConvert(
         'api_authorization',
         (v) => v as String?,

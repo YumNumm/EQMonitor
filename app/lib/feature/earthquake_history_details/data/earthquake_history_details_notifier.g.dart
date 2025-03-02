@@ -19,8 +19,7 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash =
-        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -29,16 +28,12 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff &
-        (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
 
 abstract class _$EarthquakeHistoryDetailsNotifier
-    extends
-        BuildlessAutoDisposeAsyncNotifier<
-          EarthquakeV1Extended
-        > {
+    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeV1Extended> {
   late final int eventId;
 
   FutureOr<EarthquakeV1Extended> build(int eventId);
@@ -56,41 +51,30 @@ class EarthquakeHistoryDetailsNotifierFamily
   const EarthquakeHistoryDetailsNotifierFamily();
 
   /// See also [EarthquakeHistoryDetailsNotifier].
-  EarthquakeHistoryDetailsNotifierProvider call(
-    int eventId,
-  ) {
-    return EarthquakeHistoryDetailsNotifierProvider(
-      eventId,
-    );
+  EarthquakeHistoryDetailsNotifierProvider call(int eventId) {
+    return EarthquakeHistoryDetailsNotifierProvider(eventId);
   }
 
   @override
-  EarthquakeHistoryDetailsNotifierProvider
-  getProviderOverride(
-    covariant EarthquakeHistoryDetailsNotifierProvider
-    provider,
+  EarthquakeHistoryDetailsNotifierProvider getProviderOverride(
+    covariant EarthquakeHistoryDetailsNotifierProvider provider,
   ) {
     return call(provider.eventId);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies =
-      null;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies =>
-      _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
 
-  static const Iterable<ProviderOrFamily>?
-  _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>?
-  get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
-  String? get name =>
-      r'earthquakeHistoryDetailsNotifierProvider';
+  String? get name => r'earthquakeHistoryDetailsNotifierProvider';
 }
 
 /// See also [EarthquakeHistoryDetailsNotifier].
@@ -103,21 +87,16 @@ class EarthquakeHistoryDetailsNotifierProvider
   /// See also [EarthquakeHistoryDetailsNotifier].
   EarthquakeHistoryDetailsNotifierProvider(int eventId)
     : this._internal(
-        () =>
-            EarthquakeHistoryDetailsNotifier()
-              ..eventId = eventId,
+        () => EarthquakeHistoryDetailsNotifier()..eventId = eventId,
         from: earthquakeHistoryDetailsNotifierProvider,
         name: r'earthquakeHistoryDetailsNotifierProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
                 : _$earthquakeHistoryDetailsNotifierHash,
-        dependencies:
-            EarthquakeHistoryDetailsNotifierFamily
-                ._dependencies,
+        dependencies: EarthquakeHistoryDetailsNotifierFamily._dependencies,
         allTransitiveDependencies:
-            EarthquakeHistoryDetailsNotifierFamily
-                ._allTransitiveDependencies,
+            EarthquakeHistoryDetailsNotifierFamily._allTransitiveDependencies,
         eventId: eventId,
       );
 
@@ -141,21 +120,18 @@ class EarthquakeHistoryDetailsNotifierProvider
   }
 
   @override
-  Override overrideWith(
-    EarthquakeHistoryDetailsNotifier Function() create,
-  ) {
+  Override overrideWith(EarthquakeHistoryDetailsNotifier Function() create) {
     return ProviderOverride(
       origin: this,
-      override:
-          EarthquakeHistoryDetailsNotifierProvider._internal(
-            () => create()..eventId = eventId,
-            from: from,
-            name: null,
-            dependencies: null,
-            allTransitiveDependencies: null,
-            debugGetCreateSourceHash: null,
-            eventId: eventId,
-          ),
+      override: EarthquakeHistoryDetailsNotifierProvider._internal(
+        () => create()..eventId = eventId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        eventId: eventId,
+      ),
     );
   }
 
@@ -165,15 +141,12 @@ class EarthquakeHistoryDetailsNotifierProvider
     EarthquakeV1Extended
   >
   createElement() {
-    return _EarthquakeHistoryDetailsNotifierProviderElement(
-      this,
-    );
+    return _EarthquakeHistoryDetailsNotifierProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other
-            is EarthquakeHistoryDetailsNotifierProvider &&
+    return other is EarthquakeHistoryDetailsNotifierProvider &&
         other.eventId == eventId;
   }
 
@@ -189,10 +162,7 @@ class EarthquakeHistoryDetailsNotifierProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin EarthquakeHistoryDetailsNotifierRef
-    on
-        AutoDisposeAsyncNotifierProviderRef<
-          EarthquakeV1Extended
-        > {
+    on AutoDisposeAsyncNotifierProviderRef<EarthquakeV1Extended> {
   /// The parameter `eventId` of this provider.
   int get eventId;
 }
@@ -204,14 +174,11 @@ class _EarthquakeHistoryDetailsNotifierProviderElement
           EarthquakeV1Extended
         >
     with EarthquakeHistoryDetailsNotifierRef {
-  _EarthquakeHistoryDetailsNotifierProviderElement(
-    super.provider,
-  );
+  _EarthquakeHistoryDetailsNotifierProviderElement(super.provider);
 
   @override
   int get eventId =>
-      (origin as EarthquakeHistoryDetailsNotifierProvider)
-          .eventId;
+      (origin as EarthquakeHistoryDetailsNotifierProvider).eventId;
 }
 
 // ignore_for_file: type=lint

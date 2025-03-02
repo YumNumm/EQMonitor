@@ -24,18 +24,16 @@ HomeConfigurationModel _$HomeConfigurationModelFromJson(
 /// @nodoc
 mixin _$HomeConfigurationModel {
   /// 位置情報を表示するかどうか
-  bool get showLocation =>
-      throw _privateConstructorUsedError;
+  bool get showLocation => throw _privateConstructorUsedError;
 
   /// Serializes this HomeConfigurationModel to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeConfigurationModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $HomeConfigurationModelCopyWith<HomeConfigurationModel>
-  get copyWith => throw _privateConstructorUsedError;
+  $HomeConfigurationModelCopyWith<HomeConfigurationModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -43,11 +41,7 @@ abstract class $HomeConfigurationModelCopyWith<$Res> {
   factory $HomeConfigurationModelCopyWith(
     HomeConfigurationModel value,
     $Res Function(HomeConfigurationModel) then,
-  ) =
-      _$HomeConfigurationModelCopyWithImpl<
-        $Res,
-        HomeConfigurationModel
-      >;
+  ) = _$HomeConfigurationModelCopyWithImpl<$Res, HomeConfigurationModel>;
   @useResult
   $Res call({bool showLocation});
 }
@@ -58,10 +52,7 @@ class _$HomeConfigurationModelCopyWithImpl<
   $Val extends HomeConfigurationModel
 >
     implements $HomeConfigurationModelCopyWith<$Res> {
-  _$HomeConfigurationModelCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$HomeConfigurationModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -101,10 +92,7 @@ abstract class _$$HomeConfigurationModelImplCopyWith<$Res>
 /// @nodoc
 class __$$HomeConfigurationModelImplCopyWithImpl<$Res>
     extends
-        _$HomeConfigurationModelCopyWithImpl<
-          $Res,
-          _$HomeConfigurationModelImpl
-        >
+        _$HomeConfigurationModelCopyWithImpl<$Res, _$HomeConfigurationModelImpl>
     implements _$$HomeConfigurationModelImplCopyWith<$Res> {
   __$$HomeConfigurationModelImplCopyWithImpl(
     _$HomeConfigurationModelImpl _value,
@@ -130,15 +118,11 @@ class __$$HomeConfigurationModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$HomeConfigurationModelImpl
-    implements _HomeConfigurationModel {
-  const _$HomeConfigurationModelImpl({
-    this.showLocation = false,
-  });
+class _$HomeConfigurationModelImpl implements _HomeConfigurationModel {
+  const _$HomeConfigurationModelImpl({this.showLocation = false});
 
-  factory _$HomeConfigurationModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$HomeConfigurationModelImplFromJson(json);
+  factory _$HomeConfigurationModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$HomeConfigurationModelImplFromJson(json);
 
   /// 位置情報を表示するかどうか
   @override
@@ -161,21 +145,19 @@ class _$HomeConfigurationModelImpl
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, showLocation);
+  int get hashCode => Object.hash(runtimeType, showLocation);
 
   /// Create a copy of HomeConfigurationModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$HomeConfigurationModelImplCopyWith<
-    _$HomeConfigurationModelImpl
-  >
+  _$$HomeConfigurationModelImplCopyWith<_$HomeConfigurationModelImpl>
   get copyWith =>
-      __$$HomeConfigurationModelImplCopyWithImpl<
-        _$HomeConfigurationModelImpl
-      >(this, _$identity);
+      __$$HomeConfigurationModelImplCopyWithImpl<_$HomeConfigurationModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -183,15 +165,12 @@ class _$HomeConfigurationModelImpl
   }
 }
 
-abstract class _HomeConfigurationModel
-    implements HomeConfigurationModel {
-  const factory _HomeConfigurationModel({
-    final bool showLocation,
-  }) = _$HomeConfigurationModelImpl;
+abstract class _HomeConfigurationModel implements HomeConfigurationModel {
+  const factory _HomeConfigurationModel({final bool showLocation}) =
+      _$HomeConfigurationModelImpl;
 
-  factory _HomeConfigurationModel.fromJson(
-    Map<String, dynamic> json,
-  ) = _$HomeConfigurationModelImpl.fromJson;
+  factory _HomeConfigurationModel.fromJson(Map<String, dynamic> json) =
+      _$HomeConfigurationModelImpl.fromJson;
 
   /// 位置情報を表示するかどうか
   @override
@@ -201,8 +180,6 @@ abstract class _HomeConfigurationModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$HomeConfigurationModelImplCopyWith<
-    _$HomeConfigurationModelImpl
-  >
+  _$$HomeConfigurationModelImplCopyWith<_$HomeConfigurationModelImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

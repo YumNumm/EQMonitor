@@ -19,11 +19,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AnalyzedKmoniObservationPoint {
   KyoshinObservationPoint get point =>
       throw _privateConstructorUsedError; // ここから
-  double? get intensityValue =>
-      throw _privateConstructorUsedError;
+  double? get intensityValue => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color? get intensityColor =>
-      throw _privateConstructorUsedError;
+  Color? get intensityColor => throw _privateConstructorUsedError;
   double? get pga => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color? get pgaColor => throw _privateConstructorUsedError;
@@ -31,16 +29,12 @@ mixin _$AnalyzedKmoniObservationPoint {
   /// Create a copy of AnalyzedKmoniObservationPoint
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $AnalyzedKmoniObservationPointCopyWith<
-    AnalyzedKmoniObservationPoint
-  >
+  $AnalyzedKmoniObservationPointCopyWith<AnalyzedKmoniObservationPoint>
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AnalyzedKmoniObservationPointCopyWith<
-  $Res
-> {
+abstract class $AnalyzedKmoniObservationPointCopyWith<$Res> {
   factory $AnalyzedKmoniObservationPointCopyWith(
     AnalyzedKmoniObservationPoint value,
     $Res Function(AnalyzedKmoniObservationPoint) then,
@@ -56,8 +50,7 @@ abstract class $AnalyzedKmoniObservationPointCopyWith<
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
     Color? intensityColor,
     double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    Color? pgaColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
   });
 }
 
@@ -66,12 +59,8 @@ class _$AnalyzedKmoniObservationPointCopyWithImpl<
   $Res,
   $Val extends AnalyzedKmoniObservationPoint
 >
-    implements
-        $AnalyzedKmoniObservationPointCopyWith<$Res> {
-  _$AnalyzedKmoniObservationPointCopyWithImpl(
-    this._value,
-    this._then,
-  );
+    implements $AnalyzedKmoniObservationPointCopyWith<$Res> {
+  _$AnalyzedKmoniObservationPointCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -123,18 +112,12 @@ class _$AnalyzedKmoniObservationPointCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$AnalyzedKmoniObservationPointImplCopyWith<
-  $Res
->
-    implements
-        $AnalyzedKmoniObservationPointCopyWith<$Res> {
+abstract class _$$AnalyzedKmoniObservationPointImplCopyWith<$Res>
+    implements $AnalyzedKmoniObservationPointCopyWith<$Res> {
   factory _$$AnalyzedKmoniObservationPointImplCopyWith(
     _$AnalyzedKmoniObservationPointImpl value,
     $Res Function(_$AnalyzedKmoniObservationPointImpl) then,
-  ) =
-      __$$AnalyzedKmoniObservationPointImplCopyWithImpl<
-        $Res
-      >;
+  ) = __$$AnalyzedKmoniObservationPointImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -143,26 +126,21 @@ abstract class _$$AnalyzedKmoniObservationPointImplCopyWith<
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
     Color? intensityColor,
     double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    Color? pgaColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
   });
 }
 
 /// @nodoc
-class __$$AnalyzedKmoniObservationPointImplCopyWithImpl<
-  $Res
->
+class __$$AnalyzedKmoniObservationPointImplCopyWithImpl<$Res>
     extends
         _$AnalyzedKmoniObservationPointCopyWithImpl<
           $Res,
           _$AnalyzedKmoniObservationPointImpl
         >
-    implements
-        _$$AnalyzedKmoniObservationPointImplCopyWith<$Res> {
+    implements _$$AnalyzedKmoniObservationPointImplCopyWith<$Res> {
   __$$AnalyzedKmoniObservationPointImplCopyWithImpl(
     _$AnalyzedKmoniObservationPointImpl _value,
-    $Res Function(_$AnalyzedKmoniObservationPointImpl)
-    _then,
+    $Res Function(_$AnalyzedKmoniObservationPointImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of AnalyzedKmoniObservationPoint
@@ -215,11 +193,9 @@ class _$AnalyzedKmoniObservationPointImpl
   const _$AnalyzedKmoniObservationPointImpl({
     required this.point,
     this.intensityValue,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    this.intensityColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.intensityColor,
     this.pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    this.pgaColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.pgaColor,
   });
 
   @override
@@ -246,20 +222,12 @@ class _$AnalyzedKmoniObservationPointImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AnalyzedKmoniObservationPointImpl &&
-            (identical(other.point, point) ||
-                other.point == point) &&
-            (identical(
-                  other.intensityValue,
-                  intensityValue,
-                ) ||
+            (identical(other.point, point) || other.point == point) &&
+            (identical(other.intensityValue, intensityValue) ||
                 other.intensityValue == intensityValue) &&
-            (identical(
-                  other.intensityColor,
-                  intensityColor,
-                ) ||
+            (identical(other.intensityColor, intensityColor) ||
                 other.intensityColor == intensityColor) &&
-            (identical(other.pga, pga) ||
-                other.pga == pga) &&
+            (identical(other.pga, pga) || other.pga == pga) &&
             (identical(other.pgaColor, pgaColor) ||
                 other.pgaColor == pgaColor));
   }
@@ -282,10 +250,9 @@ class _$AnalyzedKmoniObservationPointImpl
   _$$AnalyzedKmoniObservationPointImplCopyWith<
     _$AnalyzedKmoniObservationPointImpl
   >
-  get copyWith =>
-      __$$AnalyzedKmoniObservationPointImplCopyWithImpl<
-        _$AnalyzedKmoniObservationPointImpl
-      >(this, _$identity);
+  get copyWith => __$$AnalyzedKmoniObservationPointImplCopyWithImpl<
+    _$AnalyzedKmoniObservationPointImpl
+  >(this, _$identity);
 }
 
 abstract class _AnalyzedKmoniObservationPoint

@@ -10,23 +10,16 @@ part of 'map_configuration.dart';
 
 _$MapConfigurationImpl _$$MapConfigurationImplFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$MapConfigurationImpl', json, (
-  $checkedConvert,
-) {
+) => $checkedCreate(r'_$MapConfigurationImpl', json, ($checkedConvert) {
   final val = _$MapConfigurationImpl(
-    theme: $checkedConvert(
-      'theme',
-      (v) => $enumDecode(_$MapThemeEnumMap, v),
-    ),
+    theme: $checkedConvert('theme', (v) => $enumDecode(_$MapThemeEnumMap, v)),
   );
   return val;
 });
 
 Map<String, dynamic> _$$MapConfigurationImplToJson(
   _$MapConfigurationImpl instance,
-) => <String, dynamic>{
-  'theme': _$MapThemeEnumMap[instance.theme]!,
-};
+) => <String, dynamic>{'theme': _$MapThemeEnumMap[instance.theme]!};
 
 const _$MapThemeEnumMap = {
   MapTheme.light: 'light',
@@ -34,51 +27,50 @@ const _$MapThemeEnumMap = {
   MapTheme.system: 'system',
 };
 
-_$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$MapColorSchemeImpl',
-  json,
-  ($checkedConvert) {
-    final val = _$MapColorSchemeImpl(
-      backgroundColor: $checkedConvert(
-        'background_color',
-        (v) => colorFromJson(v as String),
-      ),
-      worldLandColor: $checkedConvert(
-        'world_land_color',
-        (v) => colorFromJson(v as String),
-      ),
-      worldLineColor: $checkedConvert(
-        'world_line_color',
-        (v) => colorFromJson(v as String),
-      ),
-      japanLandColor: $checkedConvert(
-        'japan_land_color',
-        (v) => colorFromJson(v as String),
-      ),
-      japanLineColor: $checkedConvert(
-        'japan_line_color',
-        (v) => colorFromJson(v as String),
-      ),
+_$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$MapColorSchemeImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$MapColorSchemeImpl(
+          backgroundColor: $checkedConvert(
+            'background_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          worldLandColor: $checkedConvert(
+            'world_land_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          worldLineColor: $checkedConvert(
+            'world_line_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          japanLandColor: $checkedConvert(
+            'japan_land_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          japanLineColor: $checkedConvert(
+            'japan_line_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'backgroundColor': 'background_color',
+        'worldLandColor': 'world_land_color',
+        'worldLineColor': 'world_line_color',
+        'japanLandColor': 'japan_land_color',
+        'japanLineColor': 'japan_line_color',
+      },
     );
-    return val;
-  },
-  fieldKeyMap: const {
-    'backgroundColor': 'background_color',
-    'worldLandColor': 'world_land_color',
-    'worldLineColor': 'world_line_color',
-    'japanLandColor': 'japan_land_color',
-    'japanLineColor': 'japan_line_color',
-  },
-);
 
 Map<String, dynamic> _$$MapColorSchemeImplToJson(
   _$MapColorSchemeImpl instance,
 ) => <String, dynamic>{
-  'background_color': colorToJson(instance.backgroundColor),
-  'world_land_color': colorToJson(instance.worldLandColor),
-  'world_line_color': colorToJson(instance.worldLineColor),
-  'japan_land_color': colorToJson(instance.japanLandColor),
-  'japan_line_color': colorToJson(instance.japanLineColor),
+  'background_color': const ColorConverter().toJson(instance.backgroundColor),
+  'world_land_color': const ColorConverter().toJson(instance.worldLandColor),
+  'world_line_color': const ColorConverter().toJson(instance.worldLineColor),
+  'japan_land_color': const ColorConverter().toJson(instance.japanLandColor),
+  'japan_line_color': const ColorConverter().toJson(instance.japanLineColor),
 };

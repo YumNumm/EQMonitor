@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
@@ -54,13 +53,7 @@ final isInitializedStateProvider = StateProvider<bool>(
 GoRouter goRouter(Ref ref) => GoRouter(
   routes: $appRoutes,
   navigatorKey: App.navigatorKey,
-  initialLocation:
-      (ref
-                  .read(sharedPreferencesProvider)
-                  .getBool('isInitialized') ??
-              false)
-          ? const HomeRoute().location
-          : const SetupRoute().location,
+  initialLocation: const HomeRoute().location,
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(
