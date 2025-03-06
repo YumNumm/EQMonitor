@@ -27,9 +27,7 @@ class HomePage extends HookConsumerWidget {
             alignment: Alignment.centerRight,
             child: FloatingActionButton.small(
               onPressed:
-                  () async => Navigator.of(
-                    context,
-                  ).push<void>(
+                  () async => Navigator.of(context).push<void>(
                     ModalBottomSheetRoute(
                       isScrollControlled: false,
                       shape: const RoundedRectangleBorder(
@@ -37,8 +35,7 @@ class HomePage extends HookConsumerWidget {
                           top: Radius.circular(16),
                         ),
                       ),
-                      builder:
-                          (context) => const _DebugModal(),
+                      builder: (context) => const _DebugModal(),
                     ),
                   ),
               child: const Icon(Icons.bug_report),
@@ -70,38 +67,28 @@ class _Sheet extends StatelessWidget {
           final sheet = Sheet(
             elevation: 4,
             initialExtent: size.height * 0.2,
-            physics: const SnapSheetPhysics(
-              stops: [0.1, 0.2, 0.5, 0.8, 1],
-            ),
+            physics: const SnapSheetPhysics(stops: [0.1, 0.2, 0.5, 0.8, 1]),
             child: Material(
               color: colorScheme.surfaceContainer,
               clipBehavior: Clip.hardEdge,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: Column(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 8,
-                    ),
+                    margin: const EdgeInsets.symmetric(vertical: 8),
                     width: 36,
                     height: 4,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        8,
-                      ),
+                      borderRadius: BorderRadius.circular(8),
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 8),
                       child: _SheetBody(),
                     ),
                   ),
@@ -143,16 +130,12 @@ class _SheetBody extends ConsumerWidget {
             ListTile(
               title: const Text('設定'),
               leading: const Icon(Icons.settings),
-              onTap:
-                  () async => const SettingsRoute()
-                      .push<void>(context),
+              onTap: () async => const SettingsRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('デバッグページ'),
               leading: const Icon(Icons.bug_report),
-              onTap:
-                  () async => const DebuggerRoute()
-                      .push<void>(context),
+              onTap: () async => const DebuggerRoute().push<void>(context),
             ),
           ],
         ),
@@ -166,21 +149,13 @@ class _ShakeDetectionList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final shakeDetectionEvents = ref.watch(
-      shakeDetectionProvider,
-    );
+    final shakeDetectionEvents = ref.watch(shakeDetectionProvider);
 
     return switch (shakeDetectionEvents) {
-      AsyncData(:final value) when value.isNotEmpty =>
-        Column(
-          children:
-              value
-                  .map(
-                    (event) =>
-                        ShakeDetectionCard(event: event),
-                  )
-                  .toList(),
-        ),
+      AsyncData(:final value) when value.isNotEmpty => Column(
+        children:
+            value.map((event) => ShakeDetectionCard(event: event)).toList(),
+      ),
       _ => const SizedBox.shrink(),
     };
   }
@@ -216,14 +191,11 @@ class _DebugModal extends ConsumerWidget {
                 longitude: 130 + Random().nextDouble() * 10,
                 arrivalTime: DateTime.now(),
                 hypoName: 'テスト震源地',
-                magnitude:
-                    (Random().nextDouble() * 100).toInt() /
-                    10,
+                magnitude: (Random().nextDouble() * 100).toInt() / 10,
                 depth: Random().nextInt(100),
                 originTime: DateTime.now(),
                 forecastMaxIntensity:
-                    JmaForecastIntensity
-                        .values[Random().nextInt(
+                    JmaForecastIntensity.values[Random().nextInt(
                       JmaForecastIntensity.values.length,
                     )],
                 regions:
@@ -242,30 +214,20 @@ class _DebugModal extends ConsumerWidget {
                               isPlum: false,
                               isWarning: false,
                               forecastMaxInt: ForecastMaxInt(
-                                from:
-                                    JmaForecastIntensity
-                                        .one,
+                                from: JmaForecastIntensity.one,
                                 to:
                                     JmaForecastIntensityOver
-                                        .values[Random()
-                                        .nextInt(
-                                          JmaForecastIntensityOver
-                                              .values
-                                              .length,
-                                        )],
+                                        .values[Random().nextInt(
+                                      JmaForecastIntensityOver.values.length,
+                                    )],
                               ),
                               forecastMaxLgInt: ForecastMaxLgInt(
-                                from:
-                                    JmaForecastLgIntensity
-                                        .one,
+                                from: JmaForecastLgIntensity.one,
                                 to:
                                     JmaForecastLgIntensityOver
-                                        .values[Random()
-                                        .nextInt(
-                                          JmaForecastLgIntensityOver
-                                              .values
-                                              .length,
-                                        )],
+                                        .values[Random().nextInt(
+                                      JmaForecastLgIntensityOver.values.length,
+                                    )],
                               ),
                             );
                           }
