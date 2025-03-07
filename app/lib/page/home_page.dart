@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_widget.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
@@ -17,7 +18,9 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(body: Stack(children: [_Sheet(), _DebugButton()]));
+    return const Scaffold(
+      body: Stack(children: [HomeMapView(), _Sheet(), _DebugButton()]),
+    );
   }
 }
 
@@ -68,7 +71,6 @@ class _Sheet extends StatelessWidget {
             physics: const SnapSheetPhysics(stops: [0.1, 0.2, 0.5, 0.8, 1]),
             child: Material(
               color: colorScheme.surfaceContainer,
-              clipBehavior: Clip.hardEdge,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),

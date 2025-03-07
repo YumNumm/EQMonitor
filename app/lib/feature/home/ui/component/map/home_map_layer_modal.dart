@@ -32,7 +32,7 @@ class HomeMapLayerModal extends HookConsumerWidget {
     final backgroundColor = colorScheme.surfaceContainerLow;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.transparent,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(

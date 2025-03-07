@@ -7,10 +7,12 @@ class AppSheetRoute<T> extends SheetRoute<T> {
     : super(
         fit: SheetFit.loose,
         stops: [initialExtent, 1],
+        barrierColor: Colors.transparent,
         decorationBuilder:
             (context, child) => SafeArea(
               bottom: false,
               child: Material(
+                color: Colors.transparent,
                 elevation: 2,
                 clipBehavior: Clip.hardEdge,
                 shape: const RoundedRectangleBorder(
