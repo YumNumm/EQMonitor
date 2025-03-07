@@ -6,8 +6,7 @@ part 'earthquake_history_early_parameter.freezed.dart';
 part 'earthquake_history_early_parameter.g.dart';
 
 @freezed
-class EarthquakeHistoryEarlyParameter
-    with _$EarthquakeHistoryEarlyParameter {
+class EarthquakeHistoryEarlyParameter with _$EarthquakeHistoryEarlyParameter {
   const factory EarthquakeHistoryEarlyParameter({
     required EarthquakeEarlySortType sort,
     required bool ascending,
@@ -21,27 +20,21 @@ class EarthquakeHistoryEarlyParameter
     DateTime? originTimeGte,
   }) = _EarthquakeHistoryEarlyParameter;
 
-  factory EarthquakeHistoryEarlyParameter.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EarthquakeHistoryEarlyParameterFromJson(json);
+  factory EarthquakeHistoryEarlyParameter.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeHistoryEarlyParameterFromJson(json);
 }
 
-extension EarthquakeHistoryEarlyParameterEx
-    on EarthquakeHistoryEarlyParameter {
+extension EarthquakeHistoryEarlyParameterEx on EarthquakeHistoryEarlyParameter {
   EarthquakeHistoryEarlyParameter updateIntensity(
     JmaIntensity? min,
     JmaIntensity? max,
   ) => copyWith(intensityGte: min, intensityLte: max);
 
-  EarthquakeHistoryEarlyParameter updateMagnitude(
-    double? min,
-    double? max,
-  ) => copyWith(magnitudeGte: min, magnitudeLte: max);
+  EarthquakeHistoryEarlyParameter updateMagnitude(double? min, double? max) =>
+      copyWith(magnitudeGte: min, magnitudeLte: max);
 
-  EarthquakeHistoryEarlyParameter updateDepth(
-    double? min,
-    double? max,
-  ) => copyWith(depthGte: min, depthLte: max);
+  EarthquakeHistoryEarlyParameter updateDepth(double? min, double? max) =>
+      copyWith(depthGte: min, depthLte: max);
 
   EarthquakeHistoryEarlyParameter updateOriginTime(
     DateTime? min,

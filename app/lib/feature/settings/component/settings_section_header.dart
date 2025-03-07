@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SettingsSectionHeader extends StatelessWidget {
-  const SettingsSectionHeader({
-    required this.text,
-    super.key,
-  });
+  const SettingsSectionHeader({required this.text, super.key});
 
   final String text;
 

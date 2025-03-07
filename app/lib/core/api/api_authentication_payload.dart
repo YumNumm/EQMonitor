@@ -6,16 +6,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'api_authentication_payload.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<({String id, String role})> apiAuthenticationPayload(
-  Ref ref,
-) async {
-  final state = await ref.watch(
-    apiAuthenticationNotifierProvider.future,
-  );
+Future<({String id, String role})> apiAuthenticationPayload(Ref ref) async {
+  final state = await ref.watch(apiAuthenticationNotifierProvider.future);
   if (state == null) {
     throw UnauthorizedException();
   }
-  return ref
-      .read(apiAuthenticationNotifierProvider.notifier)
-      .extractPayload();
+  return ref.read(apiAuthenticationNotifierProvider.notifier).extractPayload();
 }

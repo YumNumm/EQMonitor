@@ -10,9 +10,8 @@ class AppInformation with _$AppInformation {
     required PlatformAppInformation android,
   }) = _AppInformation;
 
-  factory AppInformation.fromJson(
-    Map<String, dynamic> json,
-  ) => _$AppInformationFromJson(json);
+  factory AppInformation.fromJson(Map<String, dynamic> json) =>
+      _$AppInformationFromJson(json);
 }
 
 @freezed
@@ -23,9 +22,8 @@ class PlatformAppInformation with _$PlatformAppInformation {
     required String? downloadUrl,
   }) = _PlatformAppInformation;
 
-  factory PlatformAppInformation.fromJson(
-    Map<String, dynamic> json,
-  ) => _$PlatformAppInformationFromJson(json);
+  factory PlatformAppInformation.fromJson(Map<String, dynamic> json) =>
+      _$PlatformAppInformationFromJson(json);
 }
 
 @freezed

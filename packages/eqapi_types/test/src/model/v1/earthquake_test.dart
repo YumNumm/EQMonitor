@@ -32,11 +32,7 @@ void main() {
         {'code': '1720500', 'name': '珠洲市', 'maxInt': '1'},
       ],
       'intensity_stations': [
-        {
-          'code': '1720521',
-          'name': '珠洲市大谷町＊',
-          'maxInt': '1',
-        },
+        {'code': '1720521', 'name': '珠洲市大谷町＊', 'maxInt': '1'},
       ],
       'lpgm_intensity_prefectures': null,
       'lpgm_intensity_regions': null,
@@ -59,14 +55,8 @@ void main() {
       expect(object.longitude, 137.2);
       expect(object.epicenterCode, 390);
       expect(object.epicenterDetailCode, null);
-      expect(
-        object.arrivalTime,
-        DateTime.parse('2024-02-22T09:55:00.000Z'),
-      );
-      expect(
-        object.originTime,
-        DateTime.parse('2024-02-22T09:55:00.000Z'),
-      );
+      expect(object.arrivalTime, DateTime.parse('2024-02-22T09:55:00.000Z'));
+      expect(object.originTime, DateTime.parse('2024-02-22T09:55:00.000Z'));
       expect(object.headline, '２２日１８時５５分ころ、地震がありました。');
       expect(object.text, 'この地震による津波の心配はありません。');
       expect(object.maxIntensityRegionIds, [390]);

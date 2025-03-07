@@ -47,10 +47,7 @@ class _DebugWidget extends ConsumerWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -60,9 +57,8 @@ class _DebugWidget extends ConsumerWidget {
               subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
               value: isDebugEnabled,
               onChanged:
-                  (value) async => ref
-                      .read(debugProvider.notifier)
-                      .save(isEnabled: value),
+                  (value) async =>
+                      ref.read(debugProvider.notifier).save(isEnabled: value),
             ),
             ListTile(
               title: const Text('Flavor'),
@@ -72,48 +68,34 @@ class _DebugWidget extends ConsumerWidget {
             ListTile(
               title: const Text('ログ'),
               leading: const Icon(Icons.list),
-              onTap:
-                  () async => context.push(
-                    const TalkerRoute().location,
-                  ),
+              onTap: () async => context.push(const TalkerRoute().location),
             ),
             ListTile(
               title: const Text('REST APIエンドポイント'),
               leading: const Icon(Icons.http),
-              subtitle: Text(
-                ref.watch(telegramUrlProvider).restApiUrl,
-              ),
+              subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
               onTap:
                   () async =>
-                      const HttpApiEndpointSelectorRoute()
-                          .push<void>(context),
+                      const HttpApiEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('WebSocketエンドポイント'),
               leading: const Icon(Icons.http),
-              subtitle: Text(
-                ref.watch(telegramUrlProvider).wsApiUrl,
-              ),
+              subtitle: Text(ref.watch(telegramUrlProvider).wsApiUrl),
               onTap:
-                  () async =>
-                      const WebsocketEndpointSelectorRoute()
-                          .push<void>(context),
+                  () async => const WebsocketEndpointSelectorRoute().push<void>(
+                    context,
+                  ),
             ),
             ListTile(
               title: const Text('KyoshinMonitor'),
               leading: const Icon(Icons.list),
-              onTap:
-                  () async =>
-                      const DebugKyoshinMonitorRoute().push(
-                        context,
-                      ),
+              onTap: () async => const DebugKyoshinMonitorRoute().push(context),
             ),
             ListTile(
               title: const Text('Playground'),
               leading: const Icon(Icons.list),
-              onTap:
-                  () async =>
-                      const PlaygroundRoute().push(context),
+              onTap: () async => const PlaygroundRoute().push(context),
             ),
             ListTile(
               title: const Text('震源アイコン生成'),
@@ -121,9 +103,7 @@ class _DebugWidget extends ConsumerWidget {
               onTap:
                   () async => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder:
-                          (context) =>
-                              const HypocenterIconPage(),
+                      builder: (context) => const HypocenterIconPage(),
                     ),
                   ),
             ),
@@ -138,26 +118,17 @@ class _DebugWidget extends ConsumerWidget {
                     'null',
               ),
               onTap: () async {
-                final token =
-                    await FirebaseMessaging.instance
-                        .getToken();
-                await Clipboard.setData(
-                  ClipboardData(text: token ?? ''),
-                );
+                final token = await FirebaseMessaging.instance.getToken();
+                await Clipboard.setData(ClipboardData(text: token ?? ''));
               },
             ),
             BorderedContainer(
               child: Column(
                 children:
-                    ref
-                        .watch(goRouterProvider)
-                        .configuration
-                        .routes
-                        .map((e) {
-                          final route = e as GoRoute;
-                          return _Route(routes: [route]);
-                        })
-                        .toList(),
+                    ref.watch(goRouterProvider).configuration.routes.map((e) {
+                      final route = e as GoRoute;
+                      return _Route(routes: [route]);
+                    }).toList(),
               ),
             ),
           ],
@@ -168,10 +139,7 @@ class _DebugWidget extends ConsumerWidget {
 }
 
 class _Route extends StatelessWidget {
-  const _Route({
-    required this.routes,
-    this.parent = const [],
-  });
+  const _Route({required this.routes, this.parent = const []});
 
   final List<GoRoute> routes;
   final List<GoRoute> parent;
@@ -183,10 +151,7 @@ class _Route extends StatelessWidget {
           routes.map((route) {
             final currentPath = [...parent, route];
             if (route.routes.isEmpty) {
-              final path = [
-                ...parent,
-                route,
-              ].map((e) => e.path).join('/');
+              final path = [...parent, route].map((e) => e.path).join('/');
 
               return ListTile(
                 title: Text(path),
@@ -196,10 +161,7 @@ class _Route extends StatelessWidget {
             }
 
             return _Route(
-              routes:
-                  route.routes
-                      .whereType<GoRoute>()
-                      .toList(),
+              routes: route.routes.whereType<GoRoute>().toList(),
               parent: currentPath,
             );
           }).toList(),

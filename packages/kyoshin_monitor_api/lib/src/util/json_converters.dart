@@ -19,12 +19,10 @@ double? doubleOrNullFromString(String? value) =>
     value != null ? double.tryParse(value) : null;
 
 /// double型から文字列に変換
-String? doubleOrNullToString(double? value) =>
-    value?.toString();
+String? doubleOrNullToString(double? value) => value?.toString();
 
 /// 文字列からint型に変換
-int? intFromString(String? value) =>
-    value != null ? int.tryParse(value) : null;
+int? intFromString(String? value) => value != null ? int.tryParse(value) : null;
 
 /// int型から文字列に変換
 String? intToString(int? value) => value?.toString();

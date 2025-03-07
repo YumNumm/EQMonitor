@@ -5,13 +5,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'fcm_token_change_detector.g.dart';
 
 @Riverpod(keepAlive: true)
-class FcmTokenChangeDetector
-    extends _$FcmTokenChangeDetector {
+class FcmTokenChangeDetector extends _$FcmTokenChangeDetector {
   @override
   Future<bool> build() async {
-    final token = await ref.read(
-      notificationTokenProvider.future,
-    );
+    final token = await ref.read(notificationTokenProvider.future);
     final savedFcmToken = _load();
     if (token.fcmToken != savedFcmToken) {
       return false;

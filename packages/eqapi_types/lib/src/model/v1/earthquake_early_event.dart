@@ -21,9 +21,8 @@ class EarthquakeEarlyEvent with _$EarthquakeEarlyEvent {
     required List<EarthquakeEarlyCity> cities,
   }) = _EarthquakeEarlyEvent;
 
-  factory EarthquakeEarlyEvent.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EarthquakeEarlyEventFromJson(json);
+  factory EarthquakeEarlyEvent.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeEarlyEventFromJson(json);
 }
 
 @freezed
@@ -34,9 +33,8 @@ class EarthquakeEarlyRegion with _$EarthquakeEarlyRegion {
     required JmaForecastIntensity maxIntensity,
   }) = _EarthquakeEarlyRegion;
 
-  factory EarthquakeEarlyRegion.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EarthquakeEarlyRegionFromJson(json);
+  factory EarthquakeEarlyRegion.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeEarlyRegionFromJson(json);
 }
 
 @freezed
@@ -45,18 +43,15 @@ class EarthquakeEarlyCity with _$EarthquakeEarlyCity {
     required String name,
     required String? code,
     required JmaForecastIntensity maxIntensity,
-    required List<EarthquakeEarlyObservationPoint>
-    observationPoints,
+    required List<EarthquakeEarlyObservationPoint> observationPoints,
   }) = _EarthquakeEarlyCity;
 
-  factory EarthquakeEarlyCity.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EarthquakeEarlyCityFromJson(json);
+  factory EarthquakeEarlyCity.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeEarlyCityFromJson(json);
 }
 
 @freezed
-class EarthquakeEarlyObservationPoint
-    with _$EarthquakeEarlyObservationPoint {
+class EarthquakeEarlyObservationPoint with _$EarthquakeEarlyObservationPoint {
   const factory EarthquakeEarlyObservationPoint({
     required String name,
     required double lat,
@@ -64,7 +59,6 @@ class EarthquakeEarlyObservationPoint
     required JmaForecastIntensity intensity,
   }) = _EarthquakeEarlyObservationPoint;
 
-  factory EarthquakeEarlyObservationPoint.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EarthquakeEarlyObservationPointFromJson(json);
+  factory EarthquakeEarlyObservationPoint.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeEarlyObservationPointFromJson(json);
 }

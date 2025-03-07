@@ -31,18 +31,12 @@ class _PrivacyPolicyScreenBody extends HookWidget {
   Widget build(BuildContext context) {
     final markdownBody = useFuture(
       // ignore: discarded_futures
-      useMemoized(
-        () async => rootBundle.loadString(
-          Assets.docs.privacyPolicy,
-        ),
-      ),
+      useMemoized(() async => rootBundle.loadString(Assets.docs.privacyPolicy)),
       initialData: '',
     );
     final data = markdownBody.data;
     if (data == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
     return Markdown(
       data: data,

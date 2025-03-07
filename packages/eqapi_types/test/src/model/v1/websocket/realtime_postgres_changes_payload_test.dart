@@ -44,14 +44,8 @@ void main() {
           'report_time': '2024-03-29T00:14:33+09:00',
         },
       };
-      final result =
-          RealtimePostgresChangesPayloadBase.fromJson(
-            payload,
-          );
-      expect(
-        result,
-        isA<RealtimePostgresInsertPayload<EewV1>>(),
-      );
+      final result = RealtimePostgresChangesPayloadBase.fromJson(payload);
+      expect(result, isA<RealtimePostgresInsertPayload<EewV1>>());
     });
 
     test('ShakeDetectionEvent insert', () {
@@ -73,14 +67,8 @@ void main() {
                   ],
                 },
               ],
-              'top_left': {
-                'latitude': 34.9635,
-                'longitude': 136.7847,
-              },
-              'bottom_right': {
-                'latitude': 36.1537,
-                'longitude': 137.7268,
-              },
+              'top_left': {'latitude': 34.9635, 'longitude': 136.7847},
+              'bottom_right': {'latitude': 36.1537, 'longitude': 137.7268},
             },
           ],
         },
@@ -88,17 +76,10 @@ void main() {
         'table': 'shake_detection_events',
         'errors': <void>[],
       };
-      final result =
-          RealtimePostgresChangesPayloadBase.fromJson(
-            payload,
-          );
+      final result = RealtimePostgresChangesPayloadBase.fromJson(payload);
       expect(
         result,
-        isA<
-          RealtimePostgresInsertPayload<
-            ShakeDetectionWebSocketTelegram
-          >
-        >(),
+        isA<RealtimePostgresInsertPayload<ShakeDetectionWebSocketTelegram>>(),
       );
     });
   });

@@ -48,10 +48,7 @@ enum AreaInformationPrefectureEarthquake {
   $46('46', '鹿児島県'),
   $47('47', '沖縄県');
 
-  const AreaInformationPrefectureEarthquake(
-    this.code,
-    this.name,
-  );
+  const AreaInformationPrefectureEarthquake(this.code, this.name);
   final String code;
   final String name;
 }

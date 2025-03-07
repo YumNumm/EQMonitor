@@ -22,15 +22,12 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               onChanged:
                   (value) async => ref
                       .read(intensityColorProvider.notifier)
-                      .update(
-                        IntensityColorModel.eqmonitor(),
-                      ),
+                      .update(IntensityColorModel.eqmonitor()),
               title: const Text('EQMonitor'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
                 child: _IntensityWidgets(
-                  colorModel:
-                      IntensityColorModel.eqmonitor(),
+                  colorModel: IntensityColorModel.eqmonitor(),
                 ),
               ),
             ),
@@ -44,9 +41,7 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               title: const Text('気象庁配色'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
-                child: _IntensityWidgets(
-                  colorModel: IntensityColorModel.jma(),
-                ),
+                child: _IntensityWidgets(colorModel: IntensityColorModel.jma()),
               ),
             ),
             RadioListTile.adaptive(
@@ -55,21 +50,16 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               onChanged:
                   (value) async => ref
                       .read(intensityColorProvider.notifier)
-                      .update(
-                        IntensityColorModel.earthQuickly(),
-                      ),
+                      .update(IntensityColorModel.earthQuickly()),
               title: const Text('EarthQuickly'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
                 child: _IntensityWidgets(
-                  colorModel:
-                      IntensityColorModel.earthQuickly(),
+                  colorModel: IntensityColorModel.earthQuickly(),
                 ),
               ),
             ),
-            const SizedBox(
-              height: kFloatingActionButtonMargin * 4,
-            ),
+            const SizedBox(height: kFloatingActionButtonMargin * 4),
           ],
         ),
       ),

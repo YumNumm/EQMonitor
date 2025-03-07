@@ -57,11 +57,7 @@ enum AreaForecastLocalEew {
   $9473('9473', '宮古島', 'みやこじま'),
   $9474('9474', '八重山', 'やえやま');
 
-  const AreaForecastLocalEew(
-    this.code,
-    this.name,
-    this.kana,
-  );
+  const AreaForecastLocalEew(this.code, this.name, this.kana);
   final String code;
   final String name;
   final String kana;

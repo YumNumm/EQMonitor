@@ -7,8 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'information_history_view_model.g.dart';
 
 @Riverpod(keepAlive: true)
-class InformationHistoryViewModel
-    extends _$InformationHistoryViewModel {
+class InformationHistoryViewModel extends _$InformationHistoryViewModel {
   @override
   AsyncValue<List<InformationV3>>? build() => null;
 
@@ -17,24 +16,19 @@ class InformationHistoryViewModel
       return;
     }
     if (state != null) {
-      state = const AsyncLoading<List<InformationV3>>()
-          .copyWithPrevious(state!);
+      state = const AsyncLoading<List<InformationV3>>().copyWithPrevious(
+        state!,
+      );
     } else {
       state = const AsyncLoading<List<InformationV3>>();
     }
     final offset = state?.valueOrNull?.length ?? 0;
     final res = await ref
         .read(informationRepositoryProvider)
-        .fetchInformation(
-          limit: offset == 0 ? 10 : 50,
-          offset: offset,
-        );
+        .fetchInformation(limit: offset == 0 ? 10 : 50, offset: offset);
     final _ = switch (res) {
       Success(:final value) =>
-        state = AsyncData([
-          ...state?.valueOrNull ?? [],
-          ...value.items,
-        ]),
+        state = AsyncData([...state?.valueOrNull ?? [], ...value.items]),
       Failure(:final exception, :final stackTrace) =>
         state = AsyncError<List<InformationV3>>(
           exception,
@@ -49,21 +43,15 @@ class InformationHistoryViewModel
     }
   }
 
-  Future<void> onScrollPositionChanged(
-    ScrollController controller,
-  ) async {
+  Future<void> onScrollPositionChanged(ScrollController controller) async {
     // エラー発生時・リロード中は何もしない
     if (state == null) {
       return;
     }
-    if (state!.hasError ||
-        state!.isRefreshing ||
-        state!.isReloading) {
+    if (state!.hasError || state!.isRefreshing || state!.isReloading) {
       return;
     }
-    if (controller.position.maxScrollExtent -
-            controller.position.pixels <
-        20) {
+    if (controller.position.maxScrollExtent - controller.position.pixels < 20) {
       await update(loadMore: true);
     }
   }

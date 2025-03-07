@@ -15,26 +15,22 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-InformationV3Result _$InformationV3ResultFromJson(
-  Map<String, dynamic> json,
-) {
+InformationV3Result _$InformationV3ResultFromJson(Map<String, dynamic> json) {
   return _InformationV3Result.fromJson(json);
 }
 
 /// @nodoc
 mixin _$InformationV3Result {
-  List<InformationV3> get items =>
-      throw _privateConstructorUsedError;
+  List<InformationV3> get items => throw _privateConstructorUsedError;
 
   /// Serializes this InformationV3Result to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of InformationV3Result
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $InformationV3ResultCopyWith<InformationV3Result>
-  get copyWith => throw _privateConstructorUsedError;
+  $InformationV3ResultCopyWith<InformationV3Result> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -42,25 +38,15 @@ abstract class $InformationV3ResultCopyWith<$Res> {
   factory $InformationV3ResultCopyWith(
     InformationV3Result value,
     $Res Function(InformationV3Result) then,
-  ) =
-      _$InformationV3ResultCopyWithImpl<
-        $Res,
-        InformationV3Result
-      >;
+  ) = _$InformationV3ResultCopyWithImpl<$Res, InformationV3Result>;
   @useResult
   $Res call({List<InformationV3> items});
 }
 
 /// @nodoc
-class _$InformationV3ResultCopyWithImpl<
-  $Res,
-  $Val extends InformationV3Result
->
+class _$InformationV3ResultCopyWithImpl<$Res, $Val extends InformationV3Result>
     implements $InformationV3ResultCopyWith<$Res> {
-  _$InformationV3ResultCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$InformationV3ResultCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -99,11 +85,7 @@ abstract class _$$InformationV3ResultImplCopyWith<$Res>
 
 /// @nodoc
 class __$$InformationV3ResultImplCopyWithImpl<$Res>
-    extends
-        _$InformationV3ResultCopyWithImpl<
-          $Res,
-          _$InformationV3ResultImpl
-        >
+    extends _$InformationV3ResultCopyWithImpl<$Res, _$InformationV3ResultImpl>
     implements _$$InformationV3ResultImplCopyWith<$Res> {
   __$$InformationV3ResultImplCopyWithImpl(
     _$InformationV3ResultImpl _value,
@@ -129,15 +111,12 @@ class __$$InformationV3ResultImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$InformationV3ResultImpl
-    implements _InformationV3Result {
-  const _$InformationV3ResultImpl({
-    required final List<InformationV3> items,
-  }) : _items = items;
+class _$InformationV3ResultImpl implements _InformationV3Result {
+  const _$InformationV3ResultImpl({required final List<InformationV3> items})
+    : _items = items;
 
-  factory _$InformationV3ResultImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$InformationV3ResultImplFromJson(json);
+  factory _$InformationV3ResultImpl.fromJson(Map<String, dynamic> json) =>
+      _$$InformationV3ResultImplFromJson(json);
 
   final List<InformationV3> _items;
   @override
@@ -157,30 +136,24 @@ class _$InformationV3ResultImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InformationV3ResultImpl &&
-            const DeepCollectionEquality().equals(
-              other._items,
-              _items,
-            ));
+            const DeepCollectionEquality().equals(other._items, _items));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_items),
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_items));
 
   /// Create a copy of InformationV3Result
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$InformationV3ResultImplCopyWith<
-    _$InformationV3ResultImpl
-  >
-  get copyWith => __$$InformationV3ResultImplCopyWithImpl<
-    _$InformationV3ResultImpl
-  >(this, _$identity);
+  _$$InformationV3ResultImplCopyWith<_$InformationV3ResultImpl> get copyWith =>
+      __$$InformationV3ResultImplCopyWithImpl<_$InformationV3ResultImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -188,15 +161,13 @@ class _$InformationV3ResultImpl
   }
 }
 
-abstract class _InformationV3Result
-    implements InformationV3Result {
+abstract class _InformationV3Result implements InformationV3Result {
   const factory _InformationV3Result({
     required final List<InformationV3> items,
   }) = _$InformationV3ResultImpl;
 
-  factory _InformationV3Result.fromJson(
-    Map<String, dynamic> json,
-  ) = _$InformationV3ResultImpl.fromJson;
+  factory _InformationV3Result.fromJson(Map<String, dynamic> json) =
+      _$InformationV3ResultImpl.fromJson;
 
   @override
   List<InformationV3> get items;
@@ -205,15 +176,11 @@ abstract class _InformationV3Result
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$InformationV3ResultImplCopyWith<
-    _$InformationV3ResultImpl
-  >
-  get copyWith => throw _privateConstructorUsedError;
+  _$$InformationV3ResultImplCopyWith<_$InformationV3ResultImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-InformationV3 _$InformationV3FromJson(
-  Map<String, dynamic> json,
-) {
+InformationV3 _$InformationV3FromJson(Map<String, dynamic> json) {
   return _InformationV3.fromJson(json);
 }
 
@@ -225,15 +192,13 @@ mixin _$InformationV3 {
   @JsonKey(unknownEnumValue: Author.unknown)
   Author get author => throw _privateConstructorUsedError;
   @JsonKey(name: 'createdAt')
-  DateTime get createdAt =>
-      throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
   @JsonKey(unknownEnumValue: Level.info)
   Level get level => throw _privateConstructorUsedError;
   int? get eventId => throw _privateConstructorUsedError;
 
   /// Serializes this InformationV3 to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of InformationV3
   /// with the given fields replaced by the non-null parameter values.
@@ -253,8 +218,7 @@ abstract class $InformationV3CopyWith<$Res> {
     int id,
     String title,
     String body,
-    @JsonKey(unknownEnumValue: Author.unknown)
-    Author author,
+    @JsonKey(unknownEnumValue: Author.unknown) Author author,
     @JsonKey(name: 'createdAt') DateTime createdAt,
     @JsonKey(unknownEnumValue: Level.info) Level level,
     int? eventId,
@@ -262,10 +226,7 @@ abstract class $InformationV3CopyWith<$Res> {
 }
 
 /// @nodoc
-class _$InformationV3CopyWithImpl<
-  $Res,
-  $Val extends InformationV3
->
+class _$InformationV3CopyWithImpl<$Res, $Val extends InformationV3>
     implements $InformationV3CopyWith<$Res> {
   _$InformationV3CopyWithImpl(this._value, this._then);
 
@@ -343,8 +304,7 @@ abstract class _$$InformationV3ImplCopyWith<$Res>
     int id,
     String title,
     String body,
-    @JsonKey(unknownEnumValue: Author.unknown)
-    Author author,
+    @JsonKey(unknownEnumValue: Author.unknown) Author author,
     @JsonKey(name: 'createdAt') DateTime createdAt,
     @JsonKey(unknownEnumValue: Level.info) Level level,
     int? eventId,
@@ -353,11 +313,7 @@ abstract class _$$InformationV3ImplCopyWith<$Res>
 
 /// @nodoc
 class __$$InformationV3ImplCopyWithImpl<$Res>
-    extends
-        _$InformationV3CopyWithImpl<
-          $Res,
-          _$InformationV3Impl
-        >
+    extends _$InformationV3CopyWithImpl<$Res, _$InformationV3Impl>
     implements _$$InformationV3ImplCopyWith<$Res> {
   __$$InformationV3ImplCopyWithImpl(
     _$InformationV3Impl _value,
@@ -426,17 +382,14 @@ class _$InformationV3Impl implements _InformationV3 {
     required this.id,
     required this.title,
     required this.body,
-    @JsonKey(unknownEnumValue: Author.unknown)
-    required this.author,
+    @JsonKey(unknownEnumValue: Author.unknown) required this.author,
     @JsonKey(name: 'createdAt') required this.createdAt,
-    @JsonKey(unknownEnumValue: Level.info)
-    required this.level,
+    @JsonKey(unknownEnumValue: Level.info) required this.level,
     required this.eventId,
   });
 
-  factory _$InformationV3Impl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$InformationV3ImplFromJson(json);
+  factory _$InformationV3Impl.fromJson(Map<String, dynamic> json) =>
+      _$$InformationV3ImplFromJson(json);
 
   @override
   final int id;
@@ -467,18 +420,13 @@ class _$InformationV3Impl implements _InformationV3 {
         (other.runtimeType == runtimeType &&
             other is _$InformationV3Impl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.title, title) ||
-                other.title == title) &&
-            (identical(other.body, body) ||
-                other.body == body) &&
-            (identical(other.author, author) ||
-                other.author == author) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.body, body) || other.body == body) &&
+            (identical(other.author, author) || other.author == author) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            (identical(other.level, level) ||
-                other.level == level) &&
-            (identical(other.eventId, eventId) ||
-                other.eventId == eventId));
+            (identical(other.level, level) || other.level == level) &&
+            (identical(other.eventId, eventId) || other.eventId == eventId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -499,10 +447,8 @@ class _$InformationV3Impl implements _InformationV3 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$InformationV3ImplCopyWith<_$InformationV3Impl>
-  get copyWith => __$$InformationV3ImplCopyWithImpl<
-    _$InformationV3Impl
-  >(this, _$identity);
+  _$$InformationV3ImplCopyWith<_$InformationV3Impl> get copyWith =>
+      __$$InformationV3ImplCopyWithImpl<_$InformationV3Impl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -515,18 +461,14 @@ abstract class _InformationV3 implements InformationV3 {
     required final int id,
     required final String title,
     required final String body,
-    @JsonKey(unknownEnumValue: Author.unknown)
-    required final Author author,
-    @JsonKey(name: 'createdAt')
-    required final DateTime createdAt,
-    @JsonKey(unknownEnumValue: Level.info)
-    required final Level level,
+    @JsonKey(unknownEnumValue: Author.unknown) required final Author author,
+    @JsonKey(name: 'createdAt') required final DateTime createdAt,
+    @JsonKey(unknownEnumValue: Level.info) required final Level level,
     required final int? eventId,
   }) = _$InformationV3Impl;
 
-  factory _InformationV3.fromJson(
-    Map<String, dynamic> json,
-  ) = _$InformationV3Impl.fromJson;
+  factory _InformationV3.fromJson(Map<String, dynamic> json) =
+      _$InformationV3Impl.fromJson;
 
   @override
   int get id;
@@ -550,6 +492,6 @@ abstract class _InformationV3 implements InformationV3 {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$InformationV3ImplCopyWith<_$InformationV3Impl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$InformationV3ImplCopyWith<_$InformationV3Impl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

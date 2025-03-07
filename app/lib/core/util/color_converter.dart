@@ -3,8 +3,7 @@ import 'dart:ui';
 import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ColorConverter
-    implements JsonConverter<Color, String> {
+class ColorConverter implements JsonConverter<Color, String> {
   const ColorConverter();
 
   @override

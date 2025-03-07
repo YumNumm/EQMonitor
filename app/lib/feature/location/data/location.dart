@@ -10,23 +10,17 @@ part 'location.g.dart';
 @riverpod
 Stream<Position> locationStream(Ref ref) async* {
   final stream = Geolocator.getPositionStream(
-    locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.low,
-    ),
+    locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
   );
 
-  final lastKnownPosition =
-      await Geolocator.getLastKnownPosition();
+  final lastKnownPosition = await Geolocator.getLastKnownPosition();
   if (lastKnownPosition != null) {
     yield lastKnownPosition;
   }
 
-  final currentPosition =
-      await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.low,
-        ),
-      );
+  final currentPosition = await Geolocator.getCurrentPosition(
+    locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
+  );
   yield currentPosition;
 
   await for (final event in stream) {
@@ -36,28 +30,21 @@ Stream<Position> locationStream(Ref ref) async* {
 
 /// 近隣の強震観測点
 @riverpod
-Stream<(KyoshinObservationPoint, double km)>
-closestKmoniObservationPointStream(Ref ref) async* {
-  final kmoniObservationPoints = ref.watch(
-    kyoshinObservationPointsProvider,
-  );
+Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
+  Ref ref,
+) async* {
+  final kmoniObservationPoints = ref.watch(kyoshinObservationPointsProvider);
 
   final currentPosition = ref.watch(locationStreamProvider);
   if (currentPosition case AsyncData(:final value)) {
-    final currentPosition = LatLng(
-      value.latitude,
-      value.longitude,
-    );
+    final currentPosition = LatLng(value.latitude, value.longitude);
     final closest = kmoniObservationPoints.points
         .map(
           (e) => (
             e,
             const Distance().as(
               LengthUnit.Kilometer,
-              LatLng(
-                e.location.latitude,
-                e.location.longitude,
-              ),
+              LatLng(e.location.latitude, e.location.longitude),
               currentPosition,
             ),
           ),

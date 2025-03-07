@@ -28,8 +28,7 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
             FilledButton(
               onPressed:
                   () async =>
-                      const EarthquakeHistoryEarlyRoute()
-                          .push<void>(context),
+                      const EarthquakeHistoryEarlyRoute().push<void>(context),
               child: const Text('震度データベース'),
             ),
           ],
@@ -54,9 +53,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
               const Icon(Icons.search, size: 48),
               const Text(
                 '全件取得済みです',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
@@ -68,8 +65,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
               FilledButton(
                 onPressed:
                     () async =>
-                        const EarthquakeHistoryEarlyRoute()
-                            .push<void>(context),
+                        const EarthquakeHistoryEarlyRoute().push<void>(context),
                 child: const Text('震度データベース'),
               ),
             ],

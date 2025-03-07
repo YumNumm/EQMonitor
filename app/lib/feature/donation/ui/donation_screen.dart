@@ -24,10 +24,7 @@ class DonationScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             leading: IconButton(
-              icon: const Icon(
-                Icons.close,
-                color: Colors.white,
-              ),
+              icon: const Icon(Icons.close, color: Colors.white),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -47,9 +44,7 @@ class _Body extends StatelessWidget {
     const messageTextSpan = TextSpan(
       style: TextStyle(fontSize: 16, color: Colors.white),
       children: [
-        TextSpan(
-          text: 'このアプリケーションは、広告・有料プランなどの収益化を行っていません。\n',
-        ),
+        TextSpan(text: 'このアプリケーションは、広告・有料プランなどの収益化を行っていません。\n'),
         TextSpan(
           text:
               '開発者は、このアプリケーションを開発・運用するために、'
@@ -78,14 +73,8 @@ class _Body extends StatelessWidget {
                 width: 100,
                 height: 100,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(800),
-                  ),
-                  child: Image(
-                    image: AssetImage(
-                      'assets/images/icon.png',
-                    ),
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(800)),
+                  child: Image(image: AssetImage('assets/images/icon.png')),
                 ),
               ),
             ),
@@ -112,9 +101,7 @@ class _Body extends StatelessWidget {
                           // 画面中部のメッセージ
                           Padding(
                             padding: EdgeInsets.all(16),
-                            child: Text.rich(
-                              messageTextSpan,
-                            ),
+                            child: Text.rich(messageTextSpan),
                           ),
                           Spacer(),
                         ],
@@ -171,69 +158,44 @@ class _ShowDonationButton extends HookConsumerWidget {
                       context: context,
                       text: 'チップを贈る',
                       onPressed: () async {
-                        final item =
-                            await DonationChoiceModal.show(
-                              context,
-                              value,
-                            );
-                        if (item != null &&
-                            context.mounted) {
+                        final item = await DonationChoiceModal.show(
+                          context,
+                          value,
+                        );
+                        if (item != null && context.mounted) {
                           unawaited(
                             showDialog<void>(
                               context: context,
                               barrierDismissible: false,
                               builder:
                                   (context) => const Center(
-                                    child:
-                                        CircularProgressIndicator.adaptive(),
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
                             ),
                           );
                           try {
-                            log(
-                              '購入処理を開始します: ${item.identifier}',
+                            log('購入処理を開始します: ${item.identifier}');
+                            final purchaseResult = await ref.read(
+                              purchaseProvider(item).future,
                             );
-                            final purchaseResult = await ref
-                                .read(
-                                  purchaseProvider(
-                                    item,
-                                  ).future,
-                                );
-                            log(
-                              '購入処理が完了しました: ${item.identifier}',
-                            );
+                            log('購入処理が完了しました: ${item.identifier}');
 
                             if (context.mounted) {
                               Navigator.of(context).pop();
                               // 完了画面へ遷移
                               await DonationExecutedRoute(
-                                $extra: (
-                                  item,
-                                  purchaseResult,
-                                ),
+                                $extra: (item, purchaseResult),
                               ).push<void>(context);
                             }
                           } on PlatformException catch (e) {
-                            final code =
-                                PurchasesErrorHelper.getErrorCode(
-                                  e,
-                                );
+                            final code = PurchasesErrorHelper.getErrorCode(e);
                             final message = switch (code) {
-                              PurchasesErrorCode
-                                  .purchaseCancelledError =>
-                                null,
+                              PurchasesErrorCode.purchaseCancelledError => null,
                               _ => code.name,
                             };
-                            if (context.mounted &&
-                                message != null) {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'エラーが発生しました: $code',
-                                  ),
-                                ),
+                            if (context.mounted && message != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('エラーが発生しました: $code')),
                               );
                             }
                           } finally {
@@ -246,10 +208,7 @@ class _ShowDonationButton extends HookConsumerWidget {
                     ),
                     Text(
                       'ワンタイム ${cheapest.priceString}~',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ],
                 );

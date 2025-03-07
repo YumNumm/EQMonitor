@@ -13,10 +13,7 @@ void main() {
 
         final key = UniqueKey();
         final events = <void>[];
-        container.listen(periodicTimerProvider(key), (
-          previous,
-          next,
-        ) {
+        container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
             events.add(null);
           }
@@ -26,12 +23,8 @@ void main() {
         async.flushMicrotasks();
 
         // インターバルの設定
-        final notifier = container.read(
-          periodicTimerProvider(key).notifier,
-        );
-        notifier.setInterval(
-          const Duration(milliseconds: 100),
-        );
+        final notifier = container.read(periodicTimerProvider(key).notifier);
+        notifier.setInterval(const Duration(milliseconds: 100));
 
         // 時間を進める
         async.elapse(const Duration(milliseconds: 150));
@@ -49,10 +42,7 @@ void main() {
 
         final key = UniqueKey();
         final events = <void>[];
-        container.listen(periodicTimerProvider(key), (
-          previous,
-          next,
-        ) {
+        container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
             events.add(null);
           }
@@ -60,9 +50,7 @@ void main() {
 
         async.flushMicrotasks();
 
-        final notifier = container.read(
-          periodicTimerProvider(key).notifier,
-        );
+        final notifier = container.read(periodicTimerProvider(key).notifier);
 
         // 最初のインターバル設定
         notifier.setInterval(const Duration(seconds: 5));
@@ -87,10 +75,7 @@ void main() {
 
         final key = UniqueKey();
         final events = <void>[];
-        container.listen(periodicTimerProvider(key), (
-          previous,
-          next,
-        ) {
+        container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
             events.add(null);
           }
@@ -98,9 +83,7 @@ void main() {
 
         async.flushMicrotasks();
 
-        final notifier = container.read(
-          periodicTimerProvider(key).notifier,
-        );
+        final notifier = container.read(periodicTimerProvider(key).notifier);
 
         // 最初のインターバル設定
         notifier.setInterval(const Duration(seconds: 5));
@@ -127,10 +110,7 @@ void main() {
 
         final key = UniqueKey();
         final events = <void>[];
-        container.listen(periodicTimerProvider(key), (
-          previous,
-          next,
-        ) {
+        container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
             events.add(null);
           }
@@ -138,9 +118,7 @@ void main() {
 
         async.flushMicrotasks();
 
-        final notifier = container.read(
-          periodicTimerProvider(key).notifier,
-        );
+        final notifier = container.read(periodicTimerProvider(key).notifier);
 
         // 最初のインターバル設定
         notifier.setInterval(const Duration(seconds: 5));
@@ -163,10 +141,7 @@ void main() {
 
         final key = UniqueKey();
         final events = <void>[];
-        container.listen(periodicTimerProvider(key), (
-          previous,
-          next,
-        ) {
+        container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
             events.add(null);
           }
@@ -174,9 +149,7 @@ void main() {
 
         async.flushMicrotasks();
 
-        final notifier = container.read(
-          periodicTimerProvider(key).notifier,
-        );
+        final notifier = container.read(periodicTimerProvider(key).notifier);
 
         // 最初のインターバル設定 (5秒)
         notifier.setInterval(const Duration(seconds: 5));
@@ -185,9 +158,7 @@ void main() {
 
         // setIntervalWithoutCurrentTimerで新しいインターバル (2秒) を設定
         // 直近のタイマーは考慮されないため、1秒後に発火せず2秒後に発火する
-        notifier.setIntervalWithoutCurrentTimer(
-          const Duration(seconds: 2),
-        );
+        notifier.setIntervalWithoutCurrentTimer(const Duration(seconds: 2));
 
         // イベントがまだ発火していないことを確認
         expect(events, hasLength(0));

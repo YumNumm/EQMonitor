@@ -4,10 +4,7 @@ part 'replay_data.freezed.dart';
 part 'replay_data.g.dart';
 
 sealed class ReplayData {
-  const ReplayData({
-    required this.type,
-    required this.time,
-  });
+  const ReplayData({required this.type, required this.time});
 
   factory ReplayData.fromMsgPack(List<dynamic> data) {
     final type = data[0] as int;
@@ -16,20 +13,18 @@ sealed class ReplayData {
       (e) => e.value == type,
     );
     return switch (replayDataType) {
-      ReplayDataType.jmaXmlTelegram =>
-        JmaXmlTelegramReplayData.fromMsgPack(body),
+      ReplayDataType.jmaXmlTelegram => JmaXmlTelegramReplayData.fromMsgPack(
+        body,
+      ),
       ReplayDataType.jmaBinaryTelegram =>
         JmaBinaryTelegramReplayData.fromMsgPack(body),
       ReplayDataType.kyoshinMonitorImage =>
         KyoshinMonitorImageReplayData.fromMsgPack(body),
       ReplayDataType.kyoshinMonitorEewJson =>
         KyoshinMonitorEewJsonReplayData.fromMsgPack(body),
-      ReplayDataType.keviJson =>
-        KeviJsonReplayData.fromMsgPack(body),
-      ReplayDataType.snpLogEntry =>
-        SnpLogEntryReplayData.fromMsgPack(body),
-      ReplayDataType.axisJson =>
-        AxisJsonReplayData.fromMsgPack(body),
+      ReplayDataType.keviJson => KeviJsonReplayData.fromMsgPack(body),
+      ReplayDataType.snpLogEntry => SnpLogEntryReplayData.fromMsgPack(body),
+      ReplayDataType.axisJson => AxisJsonReplayData.fromMsgPack(body),
     };
   }
 
@@ -50,13 +45,10 @@ class JmaXmlTelegramReplayData
   }) = _JmaXmlTelegramReplayData;
   const JmaXmlTelegramReplayData._();
 
-  factory JmaXmlTelegramReplayData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$JmaXmlTelegramReplayDataFromJson(json);
+  factory JmaXmlTelegramReplayData.fromJson(Map<String, dynamic> json) =>
+      _$JmaXmlTelegramReplayDataFromJson(json);
 
-  factory JmaXmlTelegramReplayData.fromMsgPack(
-    List<dynamic> data,
-  ) {
+  factory JmaXmlTelegramReplayData.fromMsgPack(List<dynamic> data) {
     return JmaXmlTelegramReplayData(
       type: ReplayDataType.jmaXmlTelegram,
       time: data[0] as DateTime,
@@ -82,13 +74,10 @@ class JmaBinaryTelegramReplayData
   }) = _JmaBinaryTelegramReplayData;
   const JmaBinaryTelegramReplayData._();
 
-  factory JmaBinaryTelegramReplayData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$JmaBinaryTelegramReplayDataFromJson(json);
+  factory JmaBinaryTelegramReplayData.fromJson(Map<String, dynamic> json) =>
+      _$JmaBinaryTelegramReplayDataFromJson(json);
 
-  factory JmaBinaryTelegramReplayData.fromMsgPack(
-    List<dynamic> data,
-  ) {
+  factory JmaBinaryTelegramReplayData.fromMsgPack(List<dynamic> data) {
     return JmaBinaryTelegramReplayData(
       type: ReplayDataType.jmaBinaryTelegram,
       time: data[0] as DateTime,
@@ -113,22 +102,20 @@ class KyoshinMonitorImageReplayData
   }) = _KyoshinMonitorImageReplayData;
   const KyoshinMonitorImageReplayData._();
 
-  factory KyoshinMonitorImageReplayData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$KyoshinMonitorImageReplayDataFromJson(json);
+  factory KyoshinMonitorImageReplayData.fromJson(Map<String, dynamic> json) =>
+      _$KyoshinMonitorImageReplayDataFromJson(json);
 
-  factory KyoshinMonitorImageReplayData.fromMsgPack(
-    List<dynamic> data,
-  ) => KyoshinMonitorImageReplayData(
-    type: ReplayDataType.kyoshinMonitorImage,
-    time: data[0] as DateTime,
-    images: (data[1] as Map<dynamic, dynamic>).map(
-      (key, value) => MapEntry(
-        ImageType.values[key as int],
-        (value as List<dynamic>).cast<int>(),
-      ),
-    ),
-  );
+  factory KyoshinMonitorImageReplayData.fromMsgPack(List<dynamic> data) =>
+      KyoshinMonitorImageReplayData(
+        type: ReplayDataType.kyoshinMonitorImage,
+        time: data[0] as DateTime,
+        images: (data[1] as Map<dynamic, dynamic>).map(
+          (key, value) => MapEntry(
+            ImageType.values[key as int],
+            (value as List<dynamic>).cast<int>(),
+          ),
+        ),
+      );
 
   @override
   String toString() =>
@@ -147,13 +134,10 @@ class KyoshinMonitorEewJsonReplayData
   }) = _KyoshinMonitorEewJsonReplayData;
   const KyoshinMonitorEewJsonReplayData._();
 
-  factory KyoshinMonitorEewJsonReplayData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$KyoshinMonitorEewJsonReplayDataFromJson(json);
+  factory KyoshinMonitorEewJsonReplayData.fromJson(Map<String, dynamic> json) =>
+      _$KyoshinMonitorEewJsonReplayDataFromJson(json);
 
-  factory KyoshinMonitorEewJsonReplayData.fromMsgPack(
-    List<dynamic> data,
-  ) {
+  factory KyoshinMonitorEewJsonReplayData.fromMsgPack(List<dynamic> data) {
     return KyoshinMonitorEewJsonReplayData(
       type: ReplayDataType.kyoshinMonitorEewJson,
       time: data[0] as DateTime,
@@ -167,9 +151,7 @@ class KyoshinMonitorEewJsonReplayData
 }
 
 @freezed
-class KeviJsonReplayData
-    with _$KeviJsonReplayData
-    implements ReplayData {
+class KeviJsonReplayData with _$KeviJsonReplayData implements ReplayData {
   const factory KeviJsonReplayData({
     required ReplayDataType type,
     required DateTime time,
@@ -178,13 +160,10 @@ class KeviJsonReplayData
   }) = _KeviJsonReplayData;
   const KeviJsonReplayData._();
 
-  factory KeviJsonReplayData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$KeviJsonReplayDataFromJson(json);
+  factory KeviJsonReplayData.fromJson(Map<String, dynamic> json) =>
+      _$KeviJsonReplayDataFromJson(json);
 
-  factory KeviJsonReplayData.fromMsgPack(
-    List<dynamic> data,
-  ) {
+  factory KeviJsonReplayData.fromMsgPack(List<dynamic> data) {
     final jsonTypeIndex = data[1] as int;
     final jsonType = JsonType.values.firstWhere(
       (e) => e.value == jsonTypeIndex,
@@ -203,9 +182,7 @@ class KeviJsonReplayData
 }
 
 @freezed
-class SnpLogEntryReplayData
-    with _$SnpLogEntryReplayData
-    implements ReplayData {
+class SnpLogEntryReplayData with _$SnpLogEntryReplayData implements ReplayData {
   const factory SnpLogEntryReplayData({
     required ReplayDataType type,
     required DateTime time,
@@ -213,13 +190,10 @@ class SnpLogEntryReplayData
   }) = _SnpLogEntryReplayData;
   const SnpLogEntryReplayData._();
 
-  factory SnpLogEntryReplayData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$SnpLogEntryReplayDataFromJson(json);
+  factory SnpLogEntryReplayData.fromJson(Map<String, dynamic> json) =>
+      _$SnpLogEntryReplayDataFromJson(json);
 
-  factory SnpLogEntryReplayData.fromMsgPack(
-    List<dynamic> data,
-  ) {
+  factory SnpLogEntryReplayData.fromMsgPack(List<dynamic> data) {
     return SnpLogEntryReplayData(
       type: ReplayDataType.snpLogEntry,
       time: data[0] as DateTime,
@@ -233,9 +207,7 @@ class SnpLogEntryReplayData
 }
 
 @freezed
-class AxisJsonReplayData
-    with _$AxisJsonReplayData
-    implements ReplayData {
+class AxisJsonReplayData with _$AxisJsonReplayData implements ReplayData {
   const factory AxisJsonReplayData({
     required ReplayDataType type,
     required DateTime time,
@@ -243,13 +215,10 @@ class AxisJsonReplayData
   }) = _AxisJsonReplayData;
   const AxisJsonReplayData._();
 
-  factory AxisJsonReplayData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$AxisJsonReplayDataFromJson(json);
+  factory AxisJsonReplayData.fromJson(Map<String, dynamic> json) =>
+      _$AxisJsonReplayDataFromJson(json);
 
-  factory AxisJsonReplayData.fromMsgPack(
-    List<dynamic> data,
-  ) {
+  factory AxisJsonReplayData.fromMsgPack(List<dynamic> data) {
     return AxisJsonReplayData(
       type: ReplayDataType.axisJson,
       time: data[0] as DateTime,

@@ -16,26 +16,19 @@ class DonationChoiceModal extends HookConsumerWidget {
   ) => showModalBottomSheet<StoreProduct>(
     clipBehavior: Clip.antiAlias,
     context: context,
-    builder:
-        (context) =>
-            DonationChoiceModal._(choices: products),
+    builder: (context) => DonationChoiceModal._(choices: products),
   );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sortedChoices = useMemoized(
       () =>
-          choices
-              .sorted((a, b) => a.price.compareTo(b.price))
-              .map((choice) {
-                final matchedProduct = Products.values
-                    .firstWhereOrNull(
-                      (product) =>
-                          product.id == choice.identifier,
-                    );
-                return (choice, matchedProduct);
-              })
-              .whereType<(StoreProduct, Products)>(),
+          choices.sorted((a, b) => a.price.compareTo(b.price)).map((choice) {
+            final matchedProduct = Products.values.firstWhereOrNull(
+              (product) => product.id == choice.identifier,
+            );
+            return (choice, matchedProduct);
+          }).whereType<(StoreProduct, Products)>(),
       [choices],
     );
     final theme = Theme.of(context);
@@ -74,25 +67,18 @@ class DonationChoiceModal extends HookConsumerWidget {
                   choice.priceString,
                   style: theme.textTheme.titleSmall,
                 ),
-                leading: Text(
-                  emoji,
-                  style: const TextStyle(fontSize: 24),
-                ),
-                onTap:
-                    () => Navigator.of(context).pop(choice),
+                leading: Text(emoji, style: const TextStyle(fontSize: 24)),
+                onTap: () => Navigator.of(context).pop(choice),
               );
             }(),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
               children: [
                 const Spacer(),
                 TextButton(
                   child: const Text('キャンセル'),
-                  onPressed:
-                      () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),

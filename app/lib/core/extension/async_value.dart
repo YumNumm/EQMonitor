@@ -7,18 +7,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 extension AsyncValueX<T> on AsyncValue<T> {
   /// guard関数の拡張版
   /// 例外時に前回のデータを持たせてエラーを返す
-  Future<AsyncValue<T>> guardPlus(
-    Future<T> Function() future,
-  ) async {
+  Future<AsyncValue<T>> guardPlus(Future<T> Function() future) async {
     try {
       return AsyncValue.data(await future());
       // ignore: avoid_catches_without_on_clauses
     } catch (err, stack) {
       // 前回のデータを持たせてエラーを返す
-      return AsyncValue<T>.error(
-        err,
-        stack,
-      ).copyWithPrevious(this);
+      return AsyncValue<T>.error(err, stack).copyWithPrevious(this);
     }
   }
 
@@ -28,8 +23,7 @@ extension AsyncValueX<T> on AsyncValue<T> {
   /// ページングの2ページ目以降でエラー時に、取得ずみデータを表示する場合などに使用する
   R whenPlus<R>({
     required R Function(T data, bool hasError) data,
-    required R Function(Object error, StackTrace stackTrace)
-    error,
+    required R Function(Object error, StackTrace stackTrace) error,
     required R Function() loading,
     bool skipLoadingOnReload = false,
     bool skipLoadingOnRefresh = true,
@@ -58,9 +52,9 @@ extension AsyncValueX<T> on AsyncValue<T> {
     String defaultMessage = 'エラーが発生しました',
   }) {
     if (!isLoading && hasError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error!.toString())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error!.toString())));
     }
   }
 }

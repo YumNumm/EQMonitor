@@ -11,13 +11,11 @@ class MapConfiguration with _$MapConfiguration {
     required MapTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
     MapColorScheme? colorScheme,
-    @JsonKey(includeToJson: false, includeFromJson: false)
-    String? styleString,
+    @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
   }) = _MapConfiguration;
 
-  factory MapConfiguration.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MapConfigurationFromJson(json);
+  factory MapConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$MapConfigurationFromJson(json);
 }
 
 enum MapTheme { light, dark, system }
@@ -32,9 +30,8 @@ class MapColorScheme with _$MapColorScheme {
     @ColorConverter() required Color japanLineColor,
   }) = _MapColorScheme;
 
-  factory MapColorScheme.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MapColorSchemeFromJson(json);
+  factory MapColorScheme.fromJson(Map<String, dynamic> json) =>
+      _$MapColorSchemeFromJson(json);
 
   factory MapColorScheme.light() {
     const colorScheme = ColorScheme.light();

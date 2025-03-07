@@ -30,11 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = GoRouter(
       routes: [
-        GoRoute(
-          path: '/',
-          builder:
-              (context, state) => const PlaygroundPage(),
-        ),
+        GoRoute(path: '/', builder: (context, state) => const PlaygroundPage()),
       ],
     );
     return MaterialApp.router(
@@ -64,25 +60,17 @@ class PlaygroundPage extends StatelessWidget {
                   context: context,
                   builder:
                       (context) => Scaffold(
-                        appBar: AppBar(
-                          title: const Text(
-                            'ScaleCheckList',
-                          ),
-                        ),
+                        appBar: AppBar(title: const Text('ScaleCheckList')),
                         body: const ScaleCheckList(),
                       ),
                 ),
           ),
           ListTile(
-            title: const Text(
-              'KyoshinMonitorScaleColorPage',
-            ),
+            title: const Text('KyoshinMonitorScaleColorPage'),
             onTap:
                 () async => showDialog(
                   context: context,
-                  builder:
-                      (context) =>
-                          const KyoshinMonitorScaleColorPage(),
+                  builder: (context) => const KyoshinMonitorScaleColorPage(),
                 ),
           ),
         ],
@@ -99,10 +87,7 @@ enum ParamType { shindo, pga, pgv, pgd }
 
 class KyoshinMonitorScaleUtil {
   //==== (1) パラメータ (震度/PGA/PGV/PGD) -> p の変換 ====//
-  static double paramToScalePosition(
-    ParamType type,
-    double value,
-  ) {
+  static double paramToScalePosition(ParamType type, double value) {
     switch (type) {
       case ParamType.shindo:
         // p=(I+3)/10
@@ -151,12 +136,7 @@ class KyoshinMonitorScaleUtil {
       h = _solveMonotonicallyDecreasing(p, 0.1476, 1, _fA);
     } else if (p <= 0.90) {
       // B区間
-      h = _solveMonotonicallyDecreasing(
-        p,
-        0.001,
-        0.1476,
-        _fB,
-      );
+      h = _solveMonotonicallyDecreasing(p, 0.001, 0.1476, _fB);
     } else {
       // C区間
       h = 0.0;
@@ -263,31 +243,20 @@ class ScaleCheckList extends StatelessWidget {
       itemCount: pValues.length,
       itemBuilder: (context, index) {
         final p = pValues[index];
-        final color = KyoshinMonitorScaleUtil.scaleToColor(
-          p,
-        );
-        final p2 =
-            KyoshinMonitorScaleUtil.colorToScalePosition(
-              color,
-            );
+        final color = KyoshinMonitorScaleUtil.scaleToColor(p);
+        final p2 = KyoshinMonitorScaleUtil.colorToScalePosition(color);
         final diff = p2 - p;
 
         final absDiff = diff.abs();
         final textColor =
             (absDiff < 0.002)
                 ? Colors.green
-                : (absDiff < 0.01
-                    ? Colors.orange
-                    : Colors.red);
+                : (absDiff < 0.01 ? Colors.orange : Colors.red);
 
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 2),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black12),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
           child: Row(
             children: [
               Text('p=${p.toStringAsFixed(2)}  '),
@@ -299,8 +268,7 @@ class ScaleCheckList extends StatelessWidget {
               ),
               const Text('diff='),
               Text(
-                (diff > 0 ? '+' : '') +
-                    diff.toStringAsFixed(4),
+                (diff > 0 ? '+' : '') + diff.toStringAsFixed(4),
                 style: TextStyle(color: textColor),
               ),
             ],
@@ -317,9 +285,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     // ドロップダウンパラメータ
-    final selectedType = useState<ParamType>(
-      ParamType.shindo,
-    );
+    final selectedType = useState<ParamType>(ParamType.shindo);
 
     // 入力テキスト
     final inputText = useState<String>('');
@@ -338,29 +304,23 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
       final val = double.tryParse(inputText.value);
       if (val == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '入力値が数値ではありません: ${inputText.value}',
-            ),
-          ),
+          SnackBar(content: Text('入力値が数値ではありません: ${inputText.value}')),
         );
         return;
       }
 
       // 1) param->p
-      var pTmp =
-          KyoshinMonitorScaleUtil.paramToScalePosition(
-            selectedType.value,
-            val,
-          );
+      var pTmp = KyoshinMonitorScaleUtil.paramToScalePosition(
+        selectedType.value,
+        val,
+      );
       pTmp = pTmp.clamp(0.0, 1.0);
 
       // 2) p->color
       final c = KyoshinMonitorScaleUtil.scaleToColor(pTmp);
 
       // 3) color->p'
-      final pTmp2 =
-          KyoshinMonitorScaleUtil.colorToScalePosition(c);
+      final pTmp2 = KyoshinMonitorScaleUtil.colorToScalePosition(c);
 
       // 4) diff
       final d = pTmp2 - pTmp;
@@ -426,10 +386,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
             const SizedBox(height: 16),
 
             //=== 3) ボタン ===
-            ElevatedButton(
-              onPressed: onConvert,
-              child: const Text('変換して表示'),
-            ),
+            ElevatedButton(onPressed: onConvert, child: const Text('変換して表示')),
             const SizedBox(height: 24),
 
             //=== 4) 結果表示 ===
@@ -437,30 +394,17 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 色プレビュー
-                Container(
-                  width: 80,
-                  height: 80,
-                  color: color.value,
-                ),
+                Container(width: 80, height: 80, color: color.value),
                 const SizedBox(width: 16),
                 // テキスト情報
                 Expanded(
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '入力値 = ${valueParam.value} (${selectedType.value})',
-                      ),
-                      Text(
-                        'p = ${p.value.toStringAsFixed(4)}',
-                      ),
-                      Text(
-                        "p' = ${p2.value.toStringAsFixed(5)}",
-                      ),
-                      Text(
-                        "誤差 (p'-p) = ${diff.value.toStringAsFixed(6)}",
-                      ),
+                      Text('入力値 = ${valueParam.value} (${selectedType.value})'),
+                      Text('p = ${p.value.toStringAsFixed(4)}'),
+                      Text("p' = ${p2.value.toStringAsFixed(5)}"),
+                      Text("誤差 (p'-p) = ${diff.value.toStringAsFixed(6)}"),
                       Text(
                         "誤差 (param'-param) = ${diffParam.value.toStringAsFixed(6)}",
                       ),

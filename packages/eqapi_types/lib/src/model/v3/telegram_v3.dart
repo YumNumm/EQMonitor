@@ -30,9 +30,7 @@ enum SchemaType {
   earthquakeInformation('earthquake-information'),
   earthquakeExplanation('earthquake-explanation'),
   earthquakeCounts('earthquake-counts'),
-  earthquakeHypocenterUpdate(
-    'earthquake-hypocenter-update',
-  ),
+  earthquakeHypocenterUpdate('earthquake-hypocenter-update'),
   earthquakeNankai('earthquake-nankai'),
   tsunamiInformation('tsunami-information');
 

@@ -15,8 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-ShakeDetectionWebSocketTelegram
-_$ShakeDetectionWebSocketTelegramFromJson(
+ShakeDetectionWebSocketTelegram _$ShakeDetectionWebSocketTelegramFromJson(
   Map<String, dynamic> json,
 ) {
   return _ShakeDetectionWebSocketTelegram.fromJson(json);
@@ -24,26 +23,20 @@ _$ShakeDetectionWebSocketTelegramFromJson(
 
 /// @nodoc
 mixin _$ShakeDetectionWebSocketTelegram {
-  List<ShakeDetectionEvent> get events =>
-      throw _privateConstructorUsedError;
+  List<ShakeDetectionEvent> get events => throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionWebSocketTelegram to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionWebSocketTelegram
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionWebSocketTelegramCopyWith<
-    ShakeDetectionWebSocketTelegram
-  >
+  $ShakeDetectionWebSocketTelegramCopyWith<ShakeDetectionWebSocketTelegram>
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ShakeDetectionWebSocketTelegramCopyWith<
-  $Res
-> {
+abstract class $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
   factory $ShakeDetectionWebSocketTelegramCopyWith(
     ShakeDetectionWebSocketTelegram value,
     $Res Function(ShakeDetectionWebSocketTelegram) then,
@@ -61,12 +54,8 @@ class _$ShakeDetectionWebSocketTelegramCopyWithImpl<
   $Res,
   $Val extends ShakeDetectionWebSocketTelegram
 >
-    implements
-        $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
-  _$ShakeDetectionWebSocketTelegramCopyWithImpl(
-    this._value,
-    this._then,
-  );
+    implements $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
+  _$ShakeDetectionWebSocketTelegramCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -92,41 +81,28 @@ class _$ShakeDetectionWebSocketTelegramCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$ShakeDetectionWebSocketTelegramImplCopyWith<
-  $Res
->
-    implements
-        $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
+abstract class _$$ShakeDetectionWebSocketTelegramImplCopyWith<$Res>
+    implements $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
   factory _$$ShakeDetectionWebSocketTelegramImplCopyWith(
     _$ShakeDetectionWebSocketTelegramImpl value,
-    $Res Function(_$ShakeDetectionWebSocketTelegramImpl)
-    then,
-  ) =
-      __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<
-        $Res
-      >;
+    $Res Function(_$ShakeDetectionWebSocketTelegramImpl) then,
+  ) = __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<ShakeDetectionEvent> events});
 }
 
 /// @nodoc
-class __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<
-  $Res
->
+class __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>
     extends
         _$ShakeDetectionWebSocketTelegramCopyWithImpl<
           $Res,
           _$ShakeDetectionWebSocketTelegramImpl
         >
-    implements
-        _$$ShakeDetectionWebSocketTelegramImplCopyWith<
-          $Res
-        > {
+    implements _$$ShakeDetectionWebSocketTelegramImplCopyWith<$Res> {
   __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl(
     _$ShakeDetectionWebSocketTelegramImpl _value,
-    $Res Function(_$ShakeDetectionWebSocketTelegramImpl)
-    _then,
+    $Res Function(_$ShakeDetectionWebSocketTelegramImpl) _then,
   ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionWebSocketTelegram
@@ -161,8 +137,7 @@ class _$ShakeDetectionWebSocketTelegramImpl
   final List<ShakeDetectionEvent> _events;
   @override
   List<ShakeDetectionEvent> get events {
-    if (_events is EqualUnmodifiableListView)
-      return _events;
+    if (_events is EqualUnmodifiableListView) return _events;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_events);
   }
@@ -176,20 +151,14 @@ class _$ShakeDetectionWebSocketTelegramImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other
-                is _$ShakeDetectionWebSocketTelegramImpl &&
-            const DeepCollectionEquality().equals(
-              other._events,
-              _events,
-            ));
+            other is _$ShakeDetectionWebSocketTelegramImpl &&
+            const DeepCollectionEquality().equals(other._events, _events));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_events),
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_events));
 
   /// Create a copy of ShakeDetectionWebSocketTelegram
   /// with the given fields replaced by the non-null parameter values.
@@ -199,16 +168,13 @@ class _$ShakeDetectionWebSocketTelegramImpl
   _$$ShakeDetectionWebSocketTelegramImplCopyWith<
     _$ShakeDetectionWebSocketTelegramImpl
   >
-  get copyWith =>
-      __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<
-        _$ShakeDetectionWebSocketTelegramImpl
-      >(this, _$identity);
+  get copyWith => __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<
+    _$ShakeDetectionWebSocketTelegramImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionWebSocketTelegramImplToJson(
-      this,
-    );
+    return _$$ShakeDetectionWebSocketTelegramImplToJson(this);
   }
 }
 
@@ -218,9 +184,8 @@ abstract class _ShakeDetectionWebSocketTelegram
     required final List<ShakeDetectionEvent> events,
   }) = _$ShakeDetectionWebSocketTelegramImpl;
 
-  factory _ShakeDetectionWebSocketTelegram.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ShakeDetectionWebSocketTelegramImpl.fromJson;
+  factory _ShakeDetectionWebSocketTelegram.fromJson(Map<String, dynamic> json) =
+      _$ShakeDetectionWebSocketTelegramImpl.fromJson;
 
   @override
   List<ShakeDetectionEvent> get events;
@@ -235,9 +200,7 @@ abstract class _ShakeDetectionWebSocketTelegram
   get copyWith => throw _privateConstructorUsedError;
 }
 
-ShakeDetectionEvent _$ShakeDetectionEventFromJson(
-  Map<String, dynamic> json,
-) {
+ShakeDetectionEvent _$ShakeDetectionEventFromJson(Map<String, dynamic> json) {
   return _ShakeDetectionEvent.fromJson(json);
 }
 
@@ -248,35 +211,28 @@ mixin _$ShakeDetectionEvent {
   String get eventId => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: -1)
   int get serialNo => throw _privateConstructorUsedError;
-  DateTime get createdAt =>
-      throw _privateConstructorUsedError;
-  DateTime get insertedAt =>
-      throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get insertedAt => throw _privateConstructorUsedError;
 
   /// `Unknown`もしくは`Error`の場合、Nullにフォールバックされます
   @JsonKey(
     unknownEnumValue: JmaForecastIntensity.unknown,
     defaultValue: JmaForecastIntensity.unknown,
   )
-  JmaForecastIntensity get maxIntensity =>
-      throw _privateConstructorUsedError;
-  List<ShakeDetectionRegion> get regions =>
-      throw _privateConstructorUsedError;
-  ShakeDetectionLatLng get topLeft =>
-      throw _privateConstructorUsedError;
-  ShakeDetectionLatLng get bottomRight =>
-      throw _privateConstructorUsedError;
+  JmaForecastIntensity get maxIntensity => throw _privateConstructorUsedError;
+  List<ShakeDetectionRegion> get regions => throw _privateConstructorUsedError;
+  ShakeDetectionLatLng get topLeft => throw _privateConstructorUsedError;
+  ShakeDetectionLatLng get bottomRight => throw _privateConstructorUsedError;
   int get pointCount => throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionEvent to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionEventCopyWith<ShakeDetectionEvent>
-  get copyWith => throw _privateConstructorUsedError;
+  $ShakeDetectionEventCopyWith<ShakeDetectionEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -284,11 +240,7 @@ abstract class $ShakeDetectionEventCopyWith<$Res> {
   factory $ShakeDetectionEventCopyWith(
     ShakeDetectionEvent value,
     $Res Function(ShakeDetectionEvent) then,
-  ) =
-      _$ShakeDetectionEventCopyWithImpl<
-        $Res,
-        ShakeDetectionEvent
-      >;
+  ) = _$ShakeDetectionEventCopyWithImpl<$Res, ShakeDetectionEvent>;
   @useResult
   $Res call({
     @JsonKey(defaultValue: -1) int? id,
@@ -312,15 +264,9 @@ abstract class $ShakeDetectionEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ShakeDetectionEventCopyWithImpl<
-  $Res,
-  $Val extends ShakeDetectionEvent
->
+class _$ShakeDetectionEventCopyWithImpl<$Res, $Val extends ShakeDetectionEvent>
     implements $ShakeDetectionEventCopyWith<$Res> {
-  _$ShakeDetectionEventCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$ShakeDetectionEventCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -405,14 +351,9 @@ class _$ShakeDetectionEventCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $ShakeDetectionLatLngCopyWith<$Res> get topLeft {
-    return $ShakeDetectionLatLngCopyWith<$Res>(
-      _value.topLeft,
-      (value) {
-        return _then(
-          _value.copyWith(topLeft: value) as $Val,
-        );
-      },
-    );
+    return $ShakeDetectionLatLngCopyWith<$Res>(_value.topLeft, (value) {
+      return _then(_value.copyWith(topLeft: value) as $Val);
+    });
   }
 
   /// Create a copy of ShakeDetectionEvent
@@ -420,14 +361,9 @@ class _$ShakeDetectionEventCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $ShakeDetectionLatLngCopyWith<$Res> get bottomRight {
-    return $ShakeDetectionLatLngCopyWith<$Res>(
-      _value.bottomRight,
-      (value) {
-        return _then(
-          _value.copyWith(bottomRight: value) as $Val,
-        );
-      },
-    );
+    return $ShakeDetectionLatLngCopyWith<$Res>(_value.bottomRight, (value) {
+      return _then(_value.copyWith(bottomRight: value) as $Val);
+    });
   }
 }
 
@@ -465,11 +401,7 @@ abstract class _$$ShakeDetectionEventImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ShakeDetectionEventImplCopyWithImpl<$Res>
-    extends
-        _$ShakeDetectionEventCopyWithImpl<
-          $Res,
-          _$ShakeDetectionEventImpl
-        >
+    extends _$ShakeDetectionEventCopyWithImpl<$Res, _$ShakeDetectionEventImpl>
     implements _$$ShakeDetectionEventImplCopyWith<$Res> {
   __$$ShakeDetectionEventImplCopyWithImpl(
     _$ShakeDetectionEventImpl _value,
@@ -551,8 +483,7 @@ class __$$ShakeDetectionEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ShakeDetectionEventImpl
-    implements _ShakeDetectionEvent {
+class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
   const _$ShakeDetectionEventImpl({
     @JsonKey(defaultValue: -1) required this.id,
     required this.eventId,
@@ -570,9 +501,8 @@ class _$ShakeDetectionEventImpl
     required this.pointCount,
   }) : _regions = regions;
 
-  factory _$ShakeDetectionEventImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ShakeDetectionEventImplFromJson(json);
+  factory _$ShakeDetectionEventImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShakeDetectionEventImplFromJson(json);
 
   @override
   @JsonKey(defaultValue: -1)
@@ -597,8 +527,7 @@ class _$ShakeDetectionEventImpl
   final List<ShakeDetectionRegion> _regions;
   @override
   List<ShakeDetectionRegion> get regions {
-    if (_regions is EqualUnmodifiableListView)
-      return _regions;
+    if (_regions is EqualUnmodifiableListView) return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_regions);
   }
@@ -621,8 +550,7 @@ class _$ShakeDetectionEventImpl
         (other.runtimeType == runtimeType &&
             other is _$ShakeDetectionEventImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.eventId, eventId) ||
-                other.eventId == eventId) &&
+            (identical(other.eventId, eventId) || other.eventId == eventId) &&
             (identical(other.serialNo, serialNo) ||
                 other.serialNo == serialNo) &&
             (identical(other.createdAt, createdAt) ||
@@ -631,12 +559,8 @@ class _$ShakeDetectionEventImpl
                 other.insertedAt == insertedAt) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            const DeepCollectionEquality().equals(
-              other._regions,
-              _regions,
-            ) &&
-            (identical(other.topLeft, topLeft) ||
-                other.topLeft == topLeft) &&
+            const DeepCollectionEquality().equals(other._regions, _regions) &&
+            (identical(other.topLeft, topLeft) || other.topLeft == topLeft) &&
             (identical(other.bottomRight, bottomRight) ||
                 other.bottomRight == bottomRight) &&
             (identical(other.pointCount, pointCount) ||
@@ -664,12 +588,11 @@ class _$ShakeDetectionEventImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ShakeDetectionEventImplCopyWith<
-    _$ShakeDetectionEventImpl
-  >
-  get copyWith => __$$ShakeDetectionEventImplCopyWithImpl<
-    _$ShakeDetectionEventImpl
-  >(this, _$identity);
+  _$$ShakeDetectionEventImplCopyWith<_$ShakeDetectionEventImpl> get copyWith =>
+      __$$ShakeDetectionEventImplCopyWithImpl<_$ShakeDetectionEventImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -677,8 +600,7 @@ class _$ShakeDetectionEventImpl
   }
 }
 
-abstract class _ShakeDetectionEvent
-    implements ShakeDetectionEvent {
+abstract class _ShakeDetectionEvent implements ShakeDetectionEvent {
   const factory _ShakeDetectionEvent({
     @JsonKey(defaultValue: -1) required final int? id,
     required final String eventId,
@@ -696,9 +618,8 @@ abstract class _ShakeDetectionEvent
     required final int pointCount,
   }) = _$ShakeDetectionEventImpl;
 
-  factory _ShakeDetectionEvent.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ShakeDetectionEventImpl.fromJson;
+  factory _ShakeDetectionEvent.fromJson(Map<String, dynamic> json) =
+      _$ShakeDetectionEventImpl.fromJson;
 
   @override
   @JsonKey(defaultValue: -1)
@@ -733,15 +654,11 @@ abstract class _ShakeDetectionEvent
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ShakeDetectionEventImplCopyWith<
-    _$ShakeDetectionEventImpl
-  >
-  get copyWith => throw _privateConstructorUsedError;
+  _$$ShakeDetectionEventImplCopyWith<_$ShakeDetectionEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-ShakeDetectionRegion _$ShakeDetectionRegionFromJson(
-  Map<String, dynamic> json,
-) {
+ShakeDetectionRegion _$ShakeDetectionRegionFromJson(Map<String, dynamic> json) {
   return _ShakeDetectionRegion.fromJson(json);
 }
 
@@ -753,20 +670,17 @@ mixin _$ShakeDetectionRegion {
     unknownEnumValue: JmaForecastIntensity.unknown,
     defaultValue: JmaForecastIntensity.unknown,
   )
-  JmaForecastIntensity get maxIntensity =>
-      throw _privateConstructorUsedError;
-  List<ShakeDetectionPoint> get points =>
-      throw _privateConstructorUsedError;
+  JmaForecastIntensity get maxIntensity => throw _privateConstructorUsedError;
+  List<ShakeDetectionPoint> get points => throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionRegion to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionRegion
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionRegionCopyWith<ShakeDetectionRegion>
-  get copyWith => throw _privateConstructorUsedError;
+  $ShakeDetectionRegionCopyWith<ShakeDetectionRegion> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -774,11 +688,7 @@ abstract class $ShakeDetectionRegionCopyWith<$Res> {
   factory $ShakeDetectionRegionCopyWith(
     ShakeDetectionRegion value,
     $Res Function(ShakeDetectionRegion) then,
-  ) =
-      _$ShakeDetectionRegionCopyWithImpl<
-        $Res,
-        ShakeDetectionRegion
-      >;
+  ) = _$ShakeDetectionRegionCopyWithImpl<$Res, ShakeDetectionRegion>;
   @useResult
   $Res call({
     String name,
@@ -798,10 +708,7 @@ class _$ShakeDetectionRegionCopyWithImpl<
   $Val extends ShakeDetectionRegion
 >
     implements $ShakeDetectionRegionCopyWith<$Res> {
-  _$ShakeDetectionRegionCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$ShakeDetectionRegionCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -863,11 +770,7 @@ abstract class _$$ShakeDetectionRegionImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ShakeDetectionRegionImplCopyWithImpl<$Res>
-    extends
-        _$ShakeDetectionRegionCopyWithImpl<
-          $Res,
-          _$ShakeDetectionRegionImpl
-        >
+    extends _$ShakeDetectionRegionCopyWithImpl<$Res, _$ShakeDetectionRegionImpl>
     implements _$$ShakeDetectionRegionImplCopyWith<$Res> {
   __$$ShakeDetectionRegionImplCopyWithImpl(
     _$ShakeDetectionRegionImpl _value,
@@ -907,8 +810,7 @@ class __$$ShakeDetectionRegionImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ShakeDetectionRegionImpl
-    implements _ShakeDetectionRegion {
+class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
   const _$ShakeDetectionRegionImpl({
     required this.name,
     @JsonKey(
@@ -920,9 +822,8 @@ class _$ShakeDetectionRegionImpl
     required final List<ShakeDetectionPoint> points,
   }) : _points = points;
 
-  factory _$ShakeDetectionRegionImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ShakeDetectionRegionImplFromJson(json);
+  factory _$ShakeDetectionRegionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShakeDetectionRegionImplFromJson(json);
 
   @override
   final String name;
@@ -936,8 +837,7 @@ class _$ShakeDetectionRegionImpl
   final List<ShakeDetectionPoint> _points;
   @override
   List<ShakeDetectionPoint> get points {
-    if (_points is EqualUnmodifiableListView)
-      return _points;
+    if (_points is EqualUnmodifiableListView) return _points;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_points);
   }
@@ -952,14 +852,10 @@ class _$ShakeDetectionRegionImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ShakeDetectionRegionImpl &&
-            (identical(other.name, name) ||
-                other.name == name) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            const DeepCollectionEquality().equals(
-              other._points,
-              _points,
-            ));
+            const DeepCollectionEquality().equals(other._points, _points));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -976,12 +872,12 @@ class _$ShakeDetectionRegionImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ShakeDetectionRegionImplCopyWith<
-    _$ShakeDetectionRegionImpl
-  >
-  get copyWith => __$$ShakeDetectionRegionImplCopyWithImpl<
-    _$ShakeDetectionRegionImpl
-  >(this, _$identity);
+  _$$ShakeDetectionRegionImplCopyWith<_$ShakeDetectionRegionImpl>
+  get copyWith =>
+      __$$ShakeDetectionRegionImplCopyWithImpl<_$ShakeDetectionRegionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -989,8 +885,7 @@ class _$ShakeDetectionRegionImpl
   }
 }
 
-abstract class _ShakeDetectionRegion
-    implements ShakeDetectionRegion {
+abstract class _ShakeDetectionRegion implements ShakeDetectionRegion {
   const factory _ShakeDetectionRegion({
     required final String name,
     @JsonKey(
@@ -1002,9 +897,8 @@ abstract class _ShakeDetectionRegion
     required final List<ShakeDetectionPoint> points,
   }) = _$ShakeDetectionRegionImpl;
 
-  factory _ShakeDetectionRegion.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ShakeDetectionRegionImpl.fromJson;
+  factory _ShakeDetectionRegion.fromJson(Map<String, dynamic> json) =
+      _$ShakeDetectionRegionImpl.fromJson;
 
   @override
   String get name;
@@ -1022,15 +916,11 @@ abstract class _ShakeDetectionRegion
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ShakeDetectionRegionImplCopyWith<
-    _$ShakeDetectionRegionImpl
-  >
+  _$$ShakeDetectionRegionImplCopyWith<_$ShakeDetectionRegionImpl>
   get copyWith => throw _privateConstructorUsedError;
 }
 
-ShakeDetectionPoint _$ShakeDetectionPointFromJson(
-  Map<String, dynamic> json,
-) {
+ShakeDetectionPoint _$ShakeDetectionPointFromJson(Map<String, dynamic> json) {
   return _ShakeDetectionPoint.fromJson(json);
 }
 
@@ -1040,19 +930,17 @@ mixin _$ShakeDetectionPoint {
     unknownEnumValue: JmaForecastIntensity.unknown,
     defaultValue: JmaForecastIntensity.unknown,
   )
-  JmaForecastIntensity get intensity =>
-      throw _privateConstructorUsedError;
+  JmaForecastIntensity get intensity => throw _privateConstructorUsedError;
   String get code => throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionPoint to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionPoint
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionPointCopyWith<ShakeDetectionPoint>
-  get copyWith => throw _privateConstructorUsedError;
+  $ShakeDetectionPointCopyWith<ShakeDetectionPoint> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1060,11 +948,7 @@ abstract class $ShakeDetectionPointCopyWith<$Res> {
   factory $ShakeDetectionPointCopyWith(
     ShakeDetectionPoint value,
     $Res Function(ShakeDetectionPoint) then,
-  ) =
-      _$ShakeDetectionPointCopyWithImpl<
-        $Res,
-        ShakeDetectionPoint
-      >;
+  ) = _$ShakeDetectionPointCopyWithImpl<$Res, ShakeDetectionPoint>;
   @useResult
   $Res call({
     @JsonKey(
@@ -1077,15 +961,9 @@ abstract class $ShakeDetectionPointCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ShakeDetectionPointCopyWithImpl<
-  $Res,
-  $Val extends ShakeDetectionPoint
->
+class _$ShakeDetectionPointCopyWithImpl<$Res, $Val extends ShakeDetectionPoint>
     implements $ShakeDetectionPointCopyWith<$Res> {
-  _$ShakeDetectionPointCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$ShakeDetectionPointCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1096,10 +974,7 @@ class _$ShakeDetectionPointCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? intensity = null,
-    Object? code = null,
-  }) {
+  $Res call({Object? intensity = null, Object? code = null}) {
     return _then(
       _value.copyWith(
             intensity:
@@ -1139,11 +1014,7 @@ abstract class _$$ShakeDetectionPointImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ShakeDetectionPointImplCopyWithImpl<$Res>
-    extends
-        _$ShakeDetectionPointCopyWithImpl<
-          $Res,
-          _$ShakeDetectionPointImpl
-        >
+    extends _$ShakeDetectionPointCopyWithImpl<$Res, _$ShakeDetectionPointImpl>
     implements _$$ShakeDetectionPointImplCopyWith<$Res> {
   __$$ShakeDetectionPointImplCopyWithImpl(
     _$ShakeDetectionPointImpl _value,
@@ -1154,10 +1025,7 @@ class __$$ShakeDetectionPointImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? intensity = null,
-    Object? code = null,
-  }) {
+  $Res call({Object? intensity = null, Object? code = null}) {
     return _then(
       _$ShakeDetectionPointImpl(
         intensity:
@@ -1177,8 +1045,7 @@ class __$$ShakeDetectionPointImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ShakeDetectionPointImpl
-    implements _ShakeDetectionPoint {
+class _$ShakeDetectionPointImpl implements _ShakeDetectionPoint {
   const _$ShakeDetectionPointImpl({
     @JsonKey(
       unknownEnumValue: JmaForecastIntensity.unknown,
@@ -1188,9 +1055,8 @@ class _$ShakeDetectionPointImpl
     required this.code,
   });
 
-  factory _$ShakeDetectionPointImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ShakeDetectionPointImplFromJson(json);
+  factory _$ShakeDetectionPointImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShakeDetectionPointImplFromJson(json);
 
   @override
   @JsonKey(
@@ -1213,26 +1079,23 @@ class _$ShakeDetectionPointImpl
             other is _$ShakeDetectionPointImpl &&
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity) &&
-            (identical(other.code, code) ||
-                other.code == code));
+            (identical(other.code, code) || other.code == code));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, intensity, code);
+  int get hashCode => Object.hash(runtimeType, intensity, code);
 
   /// Create a copy of ShakeDetectionPoint
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ShakeDetectionPointImplCopyWith<
-    _$ShakeDetectionPointImpl
-  >
-  get copyWith => __$$ShakeDetectionPointImplCopyWithImpl<
-    _$ShakeDetectionPointImpl
-  >(this, _$identity);
+  _$$ShakeDetectionPointImplCopyWith<_$ShakeDetectionPointImpl> get copyWith =>
+      __$$ShakeDetectionPointImplCopyWithImpl<_$ShakeDetectionPointImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -1240,8 +1103,7 @@ class _$ShakeDetectionPointImpl
   }
 }
 
-abstract class _ShakeDetectionPoint
-    implements ShakeDetectionPoint {
+abstract class _ShakeDetectionPoint implements ShakeDetectionPoint {
   const factory _ShakeDetectionPoint({
     @JsonKey(
       unknownEnumValue: JmaForecastIntensity.unknown,
@@ -1251,9 +1113,8 @@ abstract class _ShakeDetectionPoint
     required final String code,
   }) = _$ShakeDetectionPointImpl;
 
-  factory _ShakeDetectionPoint.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ShakeDetectionPointImpl.fromJson;
+  factory _ShakeDetectionPoint.fromJson(Map<String, dynamic> json) =
+      _$ShakeDetectionPointImpl.fromJson;
 
   @override
   @JsonKey(
@@ -1268,33 +1129,27 @@ abstract class _ShakeDetectionPoint
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ShakeDetectionPointImplCopyWith<
-    _$ShakeDetectionPointImpl
-  >
-  get copyWith => throw _privateConstructorUsedError;
+  _$$ShakeDetectionPointImplCopyWith<_$ShakeDetectionPointImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-ShakeDetectionLatLng _$ShakeDetectionLatLngFromJson(
-  Map<String, dynamic> json,
-) {
+ShakeDetectionLatLng _$ShakeDetectionLatLngFromJson(Map<String, dynamic> json) {
   return _ShakeDetectionLatLng.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ShakeDetectionLatLng {
   double get latitude => throw _privateConstructorUsedError;
-  double get longitude =>
-      throw _privateConstructorUsedError;
+  double get longitude => throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionLatLng to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionLatLng
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionLatLngCopyWith<ShakeDetectionLatLng>
-  get copyWith => throw _privateConstructorUsedError;
+  $ShakeDetectionLatLngCopyWith<ShakeDetectionLatLng> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1302,11 +1157,7 @@ abstract class $ShakeDetectionLatLngCopyWith<$Res> {
   factory $ShakeDetectionLatLngCopyWith(
     ShakeDetectionLatLng value,
     $Res Function(ShakeDetectionLatLng) then,
-  ) =
-      _$ShakeDetectionLatLngCopyWithImpl<
-        $Res,
-        ShakeDetectionLatLng
-      >;
+  ) = _$ShakeDetectionLatLngCopyWithImpl<$Res, ShakeDetectionLatLng>;
   @useResult
   $Res call({double latitude, double longitude});
 }
@@ -1317,10 +1168,7 @@ class _$ShakeDetectionLatLngCopyWithImpl<
   $Val extends ShakeDetectionLatLng
 >
     implements $ShakeDetectionLatLngCopyWith<$Res> {
-  _$ShakeDetectionLatLngCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$ShakeDetectionLatLngCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1331,10 +1179,7 @@ class _$ShakeDetectionLatLngCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
+  $Res call({Object? latitude = null, Object? longitude = null}) {
     return _then(
       _value.copyWith(
             latitude:
@@ -1367,11 +1212,7 @@ abstract class _$$ShakeDetectionLatLngImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ShakeDetectionLatLngImplCopyWithImpl<$Res>
-    extends
-        _$ShakeDetectionLatLngCopyWithImpl<
-          $Res,
-          _$ShakeDetectionLatLngImpl
-        >
+    extends _$ShakeDetectionLatLngCopyWithImpl<$Res, _$ShakeDetectionLatLngImpl>
     implements _$$ShakeDetectionLatLngImplCopyWith<$Res> {
   __$$ShakeDetectionLatLngImplCopyWithImpl(
     _$ShakeDetectionLatLngImpl _value,
@@ -1382,10 +1223,7 @@ class __$$ShakeDetectionLatLngImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
+  $Res call({Object? latitude = null, Object? longitude = null}) {
     return _then(
       _$ShakeDetectionLatLngImpl(
         latitude:
@@ -1405,16 +1243,14 @@ class __$$ShakeDetectionLatLngImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ShakeDetectionLatLngImpl
-    implements _ShakeDetectionLatLng {
+class _$ShakeDetectionLatLngImpl implements _ShakeDetectionLatLng {
   const _$ShakeDetectionLatLngImpl({
     required this.latitude,
     required this.longitude,
   });
 
-  factory _$ShakeDetectionLatLngImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ShakeDetectionLatLngImplFromJson(json);
+  factory _$ShakeDetectionLatLngImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShakeDetectionLatLngImplFromJson(json);
 
   @override
   final double latitude;
@@ -1439,20 +1275,19 @@ class _$ShakeDetectionLatLngImpl
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, latitude, longitude);
+  int get hashCode => Object.hash(runtimeType, latitude, longitude);
 
   /// Create a copy of ShakeDetectionLatLng
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ShakeDetectionLatLngImplCopyWith<
-    _$ShakeDetectionLatLngImpl
-  >
-  get copyWith => __$$ShakeDetectionLatLngImplCopyWithImpl<
-    _$ShakeDetectionLatLngImpl
-  >(this, _$identity);
+  _$$ShakeDetectionLatLngImplCopyWith<_$ShakeDetectionLatLngImpl>
+  get copyWith =>
+      __$$ShakeDetectionLatLngImplCopyWithImpl<_$ShakeDetectionLatLngImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -1460,16 +1295,14 @@ class _$ShakeDetectionLatLngImpl
   }
 }
 
-abstract class _ShakeDetectionLatLng
-    implements ShakeDetectionLatLng {
+abstract class _ShakeDetectionLatLng implements ShakeDetectionLatLng {
   const factory _ShakeDetectionLatLng({
     required final double latitude,
     required final double longitude,
   }) = _$ShakeDetectionLatLngImpl;
 
-  factory _ShakeDetectionLatLng.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ShakeDetectionLatLngImpl.fromJson;
+  factory _ShakeDetectionLatLng.fromJson(Map<String, dynamic> json) =
+      _$ShakeDetectionLatLngImpl.fromJson;
 
   @override
   double get latitude;
@@ -1480,8 +1313,6 @@ abstract class _ShakeDetectionLatLng
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ShakeDetectionLatLngImplCopyWith<
-    _$ShakeDetectionLatLngImpl
-  >
+  _$$ShakeDetectionLatLngImplCopyWith<_$ShakeDetectionLatLngImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

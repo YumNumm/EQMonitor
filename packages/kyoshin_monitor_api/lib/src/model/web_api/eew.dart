@@ -10,18 +10,13 @@ part 'eew.g.dart';
 
 /// Web版APIでの緊急地震速報の情報
 @freezed
-class Eew
-    with _$Eew
-    implements KyoshinMonitorWebApiResponse {
+class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
   const factory Eew({
     /// リザルト
     Result? result,
 
     /// 発報時間
-    @JsonKey(
-      fromJson: dateTimeOrNullFromString,
-      toJson: dateTimeOrNullToString,
-    )
+    @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
     DateTime? reportTime,
 
     /// 地域コード
@@ -34,68 +29,42 @@ class Eew
     String? regionName,
 
     /// 経度
-    @JsonKey(
-      fromJson: doubleOrNullFromString,
-      toJson: doubleOrNullToString,
-    )
+    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
     double? longitude,
 
     /// キャンセル報か
-    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic)
-    bool? isCancel,
+    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic) bool? isCancel,
 
     /// 震源の深さ
-    @JsonKey(
-      fromJson: depthFromString,
-      toJson: depthToString,
-    )
-    int? depth,
+    @JsonKey(fromJson: depthFromString, toJson: depthToString) int? depth,
 
     /// 予想最大震度
-    @JsonKey(
-      name: 'calcintensity',
-      fromJson: JmaIntensity.fromString,
-    )
+    @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
     JmaIntensity? intensity,
 
     /// 最終報か
-    @JsonKey(name: 'is_final', fromJson: boolFromDynamic)
-    bool? isFinal,
+    @JsonKey(name: 'is_final', fromJson: boolFromDynamic) bool? isFinal,
 
     /// 訓練報か
-    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic)
-    bool? isTraining,
+    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic) bool? isTraining,
 
     /// 緯度
-    @JsonKey(
-      fromJson: doubleOrNullFromString,
-      toJson: doubleOrNullToString,
-    )
+    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
     double? latitude,
 
     /// 発生時間
-    @JsonKey(
-      name: 'origin_time',
-      fromJson: originTimeFromString,
-    )
+    @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
     DateTime? originTime,
 
     /// セキュリティ情報
     Security? security,
 
     /// マグニチュード
-    @JsonKey(
-      fromJson: doubleOrNullFromString,
-      toJson: doubleOrNullToString,
-    )
+    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
     double? magnitude,
 
     /// 発報番号
-    @JsonKey(
-      name: 'report_num',
-      fromJson: intFromString,
-      toJson: intToString,
-    )
+    @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
     int? reportNum,
 
     /// なにこれ?
@@ -109,8 +78,7 @@ class Eew
   }) = _Eew;
   const Eew._();
 
-  factory Eew.fromJson(Map<String, dynamic> json) =>
-      _$EewFromJson(json);
+  factory Eew.fromJson(Map<String, dynamic> json) => _$EewFromJson(json);
 
   /// 震源の座標
   Location? get location {

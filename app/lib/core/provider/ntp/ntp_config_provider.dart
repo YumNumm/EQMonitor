@@ -20,9 +20,7 @@ class NtpConfig extends _$NtpConfig {
       return const NtpConfigModel();
     }
     try {
-      return NtpConfigModel.fromJson(
-        jsonDecode(json) as Map<String, dynamic>,
-      );
+      return NtpConfigModel.fromJson(jsonDecode(json) as Map<String, dynamic>);
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       return const NtpConfigModel();
@@ -46,9 +44,6 @@ class NtpConfig extends _$NtpConfig {
 
   Future<void> _save(NtpConfigModel config) async {
     final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setString(
-      _prefsKey,
-      jsonEncode(config.toJson()),
-    );
+    await prefs.setString(_prefsKey, jsonEncode(config.toJson()));
   }
 }

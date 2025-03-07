@@ -5,8 +5,7 @@ part 'kyoshin_monitor_settings_model.freezed.dart';
 part 'kyoshin_monitor_settings_model.g.dart';
 
 @freezed
-class KyoshinMonitorSettingsModel
-    with _$KyoshinMonitorSettingsModel {
+class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
   const factory KyoshinMonitorSettingsModel({
     /// 強震モニタの表示最低リアルタイム震度
     @Default(null) double? minRealtimeShindo,
@@ -22,26 +21,22 @@ class KyoshinMonitorSettingsModel
     KyoshinMonitorMarkerType kmoniMarkerType,
 
     /// 強震モニタのリアルタイムデータの種類
-    @Default(RealtimeDataType.shindo)
-    RealtimeDataType realtimeDataType,
+    @Default(RealtimeDataType.shindo) RealtimeDataType realtimeDataType,
 
     /// 強震モニタのリアルタイムデータのレイヤー
-    @Default(RealtimeLayer.surface)
-    RealtimeLayer realtimeLayer,
+    @Default(RealtimeLayer.surface) RealtimeLayer realtimeLayer,
 
     /// 強震モニタ API関連の設定
     @Default(KyoshinMonitorSettingsApiModel())
     KyoshinMonitorSettingsApiModel api,
   }) = _KyoshinMonitorSettingsModel;
 
-  factory KyoshinMonitorSettingsModel.fromJson(
-    Map<String, dynamic> json,
-  ) => _$KyoshinMonitorSettingsModelFromJson(json);
+  factory KyoshinMonitorSettingsModel.fromJson(Map<String, dynamic> json) =>
+      _$KyoshinMonitorSettingsModelFromJson(json);
 }
 
 @freezed
-class KyoshinMonitorSettingsApiModel
-    with _$KyoshinMonitorSettingsApiModel {
+class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
   const factory KyoshinMonitorSettingsApiModel({
     /// 強震モニタ APIのベースURL
     @Default(KyoshinMonitorEndpoint.kmoni)
@@ -57,13 +52,11 @@ class KyoshinMonitorSettingsApiModel
     Duration imageFetchInterval,
 
     /// 遅延調整間隔
-    @Default(Duration(minutes: 10))
-    Duration delayAdjustInterval,
+    @Default(Duration(minutes: 10)) Duration delayAdjustInterval,
   }) = _KyoshinMonitorSettingsApiModel;
 
-  factory KyoshinMonitorSettingsApiModel.fromJson(
-    Map<String, dynamic> json,
-  ) => _$KyoshinMonitorSettingsApiModelFromJson(json);
+  factory KyoshinMonitorSettingsApiModel.fromJson(Map<String, dynamic> json) =>
+      _$KyoshinMonitorSettingsApiModelFromJson(json);
 }
 
 @JsonEnum(valueField: 'url')

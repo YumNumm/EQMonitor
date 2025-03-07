@@ -15,12 +15,9 @@ part 'map_style_util.g.dart';
 MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil();
 
 class MapStyleUtil {
-  Future<String> _saveStyleJson(
-    Map<String, dynamic> json,
-  ) async {
+  Future<String> _saveStyleJson(Map<String, dynamic> json) async {
     final jsonStr = jsonEncode(json);
-    final hash =
-        sha256.convert(utf8.encode(jsonStr)).toString();
+    final hash = sha256.convert(utf8.encode(jsonStr)).toString();
 
     final dir = await getApplicationDocumentsDirectory();
     final documentDir = dir.path;
@@ -32,9 +29,7 @@ class MapStyleUtil {
     return styleFile.path;
   }
 
-  Future<String> getStyle({
-    required MapColorScheme colorScheme,
-  }) async {
+  Future<String> getStyle({required MapColorScheme colorScheme}) async {
     if (kIsWeb) {
       return 'https://v2.map.eqmonitor.app/style-light.json';
     }
@@ -46,31 +41,25 @@ class MapStyleUtil {
       'sources': {
         'eqmonitor_map': {
           'type': 'vector',
-          'url':
-              'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
+          'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
           'attribution': '© 気象庁, Natural Earth',
         },
         'osm': {
           'type': 'raster',
-          'tiles': [
-            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          ],
+          'tiles': ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
           'tileSize': 256,
           'attribution': '© OpenStreetMap contributors',
           'maxzoom': 19,
         },
       },
       'sprite': '',
-      'glyphs':
-          'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
+      'glyphs': 'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
       'layers': [
         {
           'id': BaseLayer.background.name,
           'type': 'background',
           'paint': {
-            'background-color':
-                colorScheme.backgroundColor
-                    .toHexStringRGB(),
+            'background-color': colorScheme.backgroundColor.toHexStringRGB(),
           },
         },
         // {
@@ -87,10 +76,7 @@ class MapStyleUtil {
           'source-layer': 'countries',
           'type': 'fill',
           'layout': {'visibility': 'visible'},
-          'paint': {
-            'fill-color':
-                colorScheme.worldLandColor.toHexStringRGB(),
-          },
+          'paint': {'fill-color': colorScheme.worldLandColor.toHexStringRGB()},
         },
         {
           'id': BaseLayer.countriesLines.name,
@@ -99,8 +85,7 @@ class MapStyleUtil {
           'type': 'line',
           'layout': {'visibility': 'visible'},
           'paint': {
-            'line-color':
-                colorScheme.worldLineColor.toHexStringRGB(),
+            'line-color': colorScheme.worldLineColor.toHexStringRGB(),
             'line-width': [
               'interpolate',
               ['linear'],
@@ -117,10 +102,7 @@ class MapStyleUtil {
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'type': 'fill',
-          'paint': {
-            'fill-color':
-                colorScheme.japanLandColor.toHexStringRGB(),
-          },
+          'paint': {'fill-color': colorScheme.japanLandColor.toHexStringRGB()},
         },
         // areaForecastLocalEew_line
         {
@@ -128,13 +110,9 @@ class MapStyleUtil {
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalEew',
           'type': 'line',
-          'layout': {
-            'line-cap': 'round',
-            'line-join': 'round',
-          },
+          'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color':
-                colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
             'line-width': [
               'interpolate',
               ['linear'],
@@ -151,13 +129,9 @@ class MapStyleUtil {
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'type': 'line',
-          'layout': {
-            'line-cap': 'round',
-            'line-join': 'round',
-          },
+          'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color':
-                colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
             'line-opacity': [
               'interpolate',
               ['linear'],
@@ -178,13 +152,9 @@ class MapStyleUtil {
           'source': 'eqmonitor_map',
           'source-layer': 'areaInformationCityQuake',
           'type': 'line',
-          'layout': {
-            'line-cap': 'round',
-            'line-join': 'round',
-          },
+          'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color':
-                colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
             'line-width': 0.5,
             'line-opacity': [
               'interpolate',

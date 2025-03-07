@@ -99,21 +99,20 @@ enum JmaForecastIntensity {
     return index.compareTo(other.index);
   }
 
-  static JmaForecastIntensity? fromRealtimeIntensity(
-    double intensity,
-  ) => switch (intensity) {
-    < -0.5 => null,
-    < 0.5 => JmaForecastIntensity.zero,
-    < 1.5 => JmaForecastIntensity.one,
-    < 2.5 => JmaForecastIntensity.two,
-    < 3.5 => JmaForecastIntensity.three,
-    < 4.5 => JmaForecastIntensity.four,
-    < 5.0 => JmaForecastIntensity.fiveLower,
-    < 5.5 => JmaForecastIntensity.fiveUpper,
-    < 6.0 => JmaForecastIntensity.sixLower,
-    < 6.5 => JmaForecastIntensity.sixUpper,
-    _ => JmaForecastIntensity.seven,
-  };
+  static JmaForecastIntensity? fromRealtimeIntensity(double intensity) =>
+      switch (intensity) {
+        < -0.5 => null,
+        < 0.5 => JmaForecastIntensity.zero,
+        < 1.5 => JmaForecastIntensity.one,
+        < 2.5 => JmaForecastIntensity.two,
+        < 3.5 => JmaForecastIntensity.three,
+        < 4.5 => JmaForecastIntensity.four,
+        < 5.0 => JmaForecastIntensity.fiveLower,
+        < 5.5 => JmaForecastIntensity.fiveUpper,
+        < 6.0 => JmaForecastIntensity.sixLower,
+        < 6.5 => JmaForecastIntensity.sixUpper,
+        _ => JmaForecastIntensity.seven,
+      };
 }
 
 @JsonEnum(valueField: 'type')
@@ -135,33 +134,20 @@ enum JmaForecastIntensityOver {
   final String type;
 
   /// `over`の場合は`unknown`に変換されます
-  JmaForecastIntensity get toJmaForecastIntensity =>
-      switch (this) {
-        JmaForecastIntensityOver.zero =>
-          JmaForecastIntensity.zero,
-        JmaForecastIntensityOver.one =>
-          JmaForecastIntensity.one,
-        JmaForecastIntensityOver.two =>
-          JmaForecastIntensity.two,
-        JmaForecastIntensityOver.three =>
-          JmaForecastIntensity.three,
-        JmaForecastIntensityOver.four =>
-          JmaForecastIntensity.four,
-        JmaForecastIntensityOver.fiveLower =>
-          JmaForecastIntensity.fiveLower,
-        JmaForecastIntensityOver.fiveUpper =>
-          JmaForecastIntensity.fiveUpper,
-        JmaForecastIntensityOver.sixLower =>
-          JmaForecastIntensity.sixLower,
-        JmaForecastIntensityOver.sixUpper =>
-          JmaForecastIntensity.sixUpper,
-        JmaForecastIntensityOver.seven =>
-          JmaForecastIntensity.seven,
-        JmaForecastIntensityOver.unknown =>
-          JmaForecastIntensity.unknown,
-        JmaForecastIntensityOver.over =>
-          JmaForecastIntensity.unknown,
-      };
+  JmaForecastIntensity get toJmaForecastIntensity => switch (this) {
+    JmaForecastIntensityOver.zero => JmaForecastIntensity.zero,
+    JmaForecastIntensityOver.one => JmaForecastIntensity.one,
+    JmaForecastIntensityOver.two => JmaForecastIntensity.two,
+    JmaForecastIntensityOver.three => JmaForecastIntensity.three,
+    JmaForecastIntensityOver.four => JmaForecastIntensity.four,
+    JmaForecastIntensityOver.fiveLower => JmaForecastIntensity.fiveLower,
+    JmaForecastIntensityOver.fiveUpper => JmaForecastIntensity.fiveUpper,
+    JmaForecastIntensityOver.sixLower => JmaForecastIntensity.sixLower,
+    JmaForecastIntensityOver.sixUpper => JmaForecastIntensity.sixUpper,
+    JmaForecastIntensityOver.seven => JmaForecastIntensity.seven,
+    JmaForecastIntensityOver.unknown => JmaForecastIntensity.unknown,
+    JmaForecastIntensityOver.over => JmaForecastIntensity.unknown,
+  };
 }
 
 @JsonEnum(valueField: 'type')
@@ -225,23 +211,15 @@ enum JmaForecastLgIntensityOver {
   final String type;
 
   /// `over`の場合は`unknown`に変換されます
-  JmaForecastLgIntensity get toJmaForecastLgIntensity =>
-      switch (this) {
-        JmaForecastLgIntensityOver.zero =>
-          JmaForecastLgIntensity.zero,
-        JmaForecastLgIntensityOver.one =>
-          JmaForecastLgIntensity.one,
-        JmaForecastLgIntensityOver.two =>
-          JmaForecastLgIntensity.two,
-        JmaForecastLgIntensityOver.three =>
-          JmaForecastLgIntensity.three,
-        JmaForecastLgIntensityOver.four =>
-          JmaForecastLgIntensity.four,
-        JmaForecastLgIntensityOver.unknown =>
-          JmaForecastLgIntensity.unknown,
-        JmaForecastLgIntensityOver.over =>
-          JmaForecastLgIntensity.unknown,
-      };
+  JmaForecastLgIntensity get toJmaForecastLgIntensity => switch (this) {
+    JmaForecastLgIntensityOver.zero => JmaForecastLgIntensity.zero,
+    JmaForecastLgIntensityOver.one => JmaForecastLgIntensity.one,
+    JmaForecastLgIntensityOver.two => JmaForecastLgIntensity.two,
+    JmaForecastLgIntensityOver.three => JmaForecastLgIntensity.three,
+    JmaForecastLgIntensityOver.four => JmaForecastLgIntensity.four,
+    JmaForecastLgIntensityOver.unknown => JmaForecastLgIntensity.unknown,
+    JmaForecastLgIntensityOver.over => JmaForecastLgIntensity.unknown,
+  };
 }
 
 @JsonEnum(valueField: 'type')

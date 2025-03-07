@@ -20,35 +20,24 @@ class _Objects implements Objects {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<EarthquakeEarlyEvent>>
-  getEarthquakeEarlyEvent({required String id}) async {
+  Future<HttpResponse<EarthquakeEarlyEvent>> getEarthquakeEarlyEvent({
+    required String id,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options =
-        _setStreamType<HttpResponse<EarthquakeEarlyEvent>>(
-          Options(
-                method: 'GET',
-                headers: _headers,
-                extra: _extra,
-              )
-              .compose(
-                _dio.options,
-                '/earthquake-early/${id}.json',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(
-                  _dio.options.baseUrl,
-                  baseUrl,
-                ),
-              ),
-        );
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-      _options,
+    final _options = _setStreamType<HttpResponse<EarthquakeEarlyEvent>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/earthquake-early/${id}.json',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
     late EarthquakeEarlyEvent _value;
     try {
       _value = EarthquakeEarlyEvent.fromJson(_result.data!);
@@ -60,14 +49,10 @@ class _Objects implements Objects {
     return httpResponse;
   }
 
-  RequestOptions _setStreamType<T>(
-    RequestOptions requestOptions,
-  ) {
+  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
-        !(requestOptions.responseType ==
-                ResponseType.bytes ||
-            requestOptions.responseType ==
-                ResponseType.stream)) {
+        !(requestOptions.responseType == ResponseType.bytes ||
+            requestOptions.responseType == ResponseType.stream)) {
       if (T == String) {
         requestOptions.responseType = ResponseType.plain;
       } else {
@@ -77,10 +62,7 @@ class _Objects implements Objects {
     return requestOptions;
   }
 
-  String _combineBaseUrls(
-    String dioBaseUrl,
-    String? baseUrl,
-  ) {
+  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }

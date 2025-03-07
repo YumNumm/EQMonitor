@@ -15,34 +15,27 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-EarthquakeParameter _$EarthquakeParameterFromJson(
-  Map<String, dynamic> json,
-) {
+EarthquakeParameter _$EarthquakeParameterFromJson(Map<String, dynamic> json) {
   return _EarthquakeParameter.fromJson(json);
 }
 
 /// @nodoc
 mixin _$EarthquakeParameter {
-  String get responseId =>
-      throw _privateConstructorUsedError;
-  DateTime get responseTime =>
-      throw _privateConstructorUsedError;
+  String get responseId => throw _privateConstructorUsedError;
+  DateTime get responseTime => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  DateTime get changeTime =>
-      throw _privateConstructorUsedError;
+  DateTime get changeTime => throw _privateConstructorUsedError;
   String get version => throw _privateConstructorUsedError;
-  List<EarthquakeParmaeterItem> get items =>
-      throw _privateConstructorUsedError;
+  List<EarthquakeParmaeterItem> get items => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeParameter to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeParameter
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeParameterCopyWith<EarthquakeParameter>
-  get copyWith => throw _privateConstructorUsedError;
+  $EarthquakeParameterCopyWith<EarthquakeParameter> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -50,11 +43,7 @@ abstract class $EarthquakeParameterCopyWith<$Res> {
   factory $EarthquakeParameterCopyWith(
     EarthquakeParameter value,
     $Res Function(EarthquakeParameter) then,
-  ) =
-      _$EarthquakeParameterCopyWithImpl<
-        $Res,
-        EarthquakeParameter
-      >;
+  ) = _$EarthquakeParameterCopyWithImpl<$Res, EarthquakeParameter>;
   @useResult
   $Res call({
     String responseId,
@@ -67,15 +56,9 @@ abstract class $EarthquakeParameterCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EarthquakeParameterCopyWithImpl<
-  $Res,
-  $Val extends EarthquakeParameter
->
+class _$EarthquakeParameterCopyWithImpl<$Res, $Val extends EarthquakeParameter>
     implements $EarthquakeParameterCopyWith<$Res> {
-  _$EarthquakeParameterCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$EarthquakeParameterCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -153,11 +136,7 @@ abstract class _$$EarthquakeParameterImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeParameterImplCopyWithImpl<$Res>
-    extends
-        _$EarthquakeParameterCopyWithImpl<
-          $Res,
-          _$EarthquakeParameterImpl
-        >
+    extends _$EarthquakeParameterCopyWithImpl<$Res, _$EarthquakeParameterImpl>
     implements _$$EarthquakeParameterImplCopyWith<$Res> {
   __$$EarthquakeParameterImplCopyWithImpl(
     _$EarthquakeParameterImpl _value,
@@ -215,8 +194,7 @@ class __$$EarthquakeParameterImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EarthquakeParameterImpl
-    implements _EarthquakeParameter {
+class _$EarthquakeParameterImpl implements _EarthquakeParameter {
   const _$EarthquakeParameterImpl({
     required this.responseId,
     required this.responseTime,
@@ -226,9 +204,8 @@ class _$EarthquakeParameterImpl
     required final List<EarthquakeParmaeterItem> items,
   }) : _items = items;
 
-  factory _$EarthquakeParameterImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$EarthquakeParameterImplFromJson(json);
+  factory _$EarthquakeParameterImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeParameterImplFromJson(json);
 
   @override
   final String responseId;
@@ -262,16 +239,11 @@ class _$EarthquakeParameterImpl
                 other.responseId == responseId) &&
             (identical(other.responseTime, responseTime) ||
                 other.responseTime == responseTime) &&
-            (identical(other.status, status) ||
-                other.status == status) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.changeTime, changeTime) ||
                 other.changeTime == changeTime) &&
-            (identical(other.version, version) ||
-                other.version == version) &&
-            const DeepCollectionEquality().equals(
-              other._items,
-              _items,
-            ));
+            (identical(other.version, version) || other.version == version) &&
+            const DeepCollectionEquality().equals(other._items, _items));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -291,12 +263,11 @@ class _$EarthquakeParameterImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeParameterImplCopyWith<
-    _$EarthquakeParameterImpl
-  >
-  get copyWith => __$$EarthquakeParameterImplCopyWithImpl<
-    _$EarthquakeParameterImpl
-  >(this, _$identity);
+  _$$EarthquakeParameterImplCopyWith<_$EarthquakeParameterImpl> get copyWith =>
+      __$$EarthquakeParameterImplCopyWithImpl<_$EarthquakeParameterImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -304,8 +275,7 @@ class _$EarthquakeParameterImpl
   }
 }
 
-abstract class _EarthquakeParameter
-    implements EarthquakeParameter {
+abstract class _EarthquakeParameter implements EarthquakeParameter {
   const factory _EarthquakeParameter({
     required final String responseId,
     required final DateTime responseTime,
@@ -315,9 +285,8 @@ abstract class _EarthquakeParameter
     required final List<EarthquakeParmaeterItem> items,
   }) = _$EarthquakeParameterImpl;
 
-  factory _EarthquakeParameter.fromJson(
-    Map<String, dynamic> json,
-  ) = _$EarthquakeParameterImpl.fromJson;
+  factory _EarthquakeParameter.fromJson(Map<String, dynamic> json) =
+      _$EarthquakeParameterImpl.fromJson;
 
   @override
   String get responseId;
@@ -336,10 +305,8 @@ abstract class _EarthquakeParameter
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeParameterImplCopyWith<
-    _$EarthquakeParameterImpl
-  >
-  get copyWith => throw _privateConstructorUsedError;
+  _$$EarthquakeParameterImplCopyWith<_$EarthquakeParameterImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 EarthquakeParmaeterItem _$EarthquakeParmaeterItemFromJson(
@@ -350,37 +317,27 @@ EarthquakeParmaeterItem _$EarthquakeParmaeterItemFromJson(
 
 /// @nodoc
 mixin _$EarthquakeParmaeterItem {
-  ParameterRegion get region =>
-      throw _privateConstructorUsedError;
-  ParameterCity get city =>
-      throw _privateConstructorUsedError;
+  ParameterRegion get region => throw _privateConstructorUsedError;
+  ParameterCity get city => throw _privateConstructorUsedError;
   String get noCode => throw _privateConstructorUsedError;
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get kana => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get owner => throw _privateConstructorUsedError;
-  @JsonKey(
-    fromJson: doubleFromString,
-    toJson: doubleToString,
-  )
+  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
   double get latitude => throw _privateConstructorUsedError;
-  @JsonKey(
-    fromJson: doubleFromString,
-    toJson: doubleToString,
-  )
-  double get longitude =>
-      throw _privateConstructorUsedError;
+  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+  double get longitude => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeParmaeterItem to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeParmaeterItem
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeParmaeterItemCopyWith<EarthquakeParmaeterItem>
-  get copyWith => throw _privateConstructorUsedError;
+  $EarthquakeParmaeterItemCopyWith<EarthquakeParmaeterItem> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -388,11 +345,7 @@ abstract class $EarthquakeParmaeterItemCopyWith<$Res> {
   factory $EarthquakeParmaeterItemCopyWith(
     EarthquakeParmaeterItem value,
     $Res Function(EarthquakeParmaeterItem) then,
-  ) =
-      _$EarthquakeParmaeterItemCopyWithImpl<
-        $Res,
-        EarthquakeParmaeterItem
-      >;
+  ) = _$EarthquakeParmaeterItemCopyWithImpl<$Res, EarthquakeParmaeterItem>;
   @useResult
   $Res call({
     ParameterRegion region,
@@ -403,15 +356,9 @@ abstract class $EarthquakeParmaeterItemCopyWith<$Res> {
     String kana,
     String status,
     String owner,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     double latitude,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     double longitude,
   });
 
@@ -425,10 +372,7 @@ class _$EarthquakeParmaeterItemCopyWithImpl<
   $Val extends EarthquakeParmaeterItem
 >
     implements $EarthquakeParmaeterItemCopyWith<$Res> {
-  _$EarthquakeParmaeterItemCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$EarthquakeParmaeterItemCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -513,9 +457,7 @@ class _$EarthquakeParmaeterItemCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $ParameterRegionCopyWith<$Res> get region {
-    return $ParameterRegionCopyWith<$Res>(_value.region, (
-      value,
-    ) {
+    return $ParameterRegionCopyWith<$Res>(_value.region, (value) {
       return _then(_value.copyWith(region: value) as $Val);
     });
   }
@@ -525,9 +467,7 @@ class _$EarthquakeParmaeterItemCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $ParameterCityCopyWith<$Res> get city {
-    return $ParameterCityCopyWith<$Res>(_value.city, (
-      value,
-    ) {
+    return $ParameterCityCopyWith<$Res>(_value.city, (value) {
       return _then(_value.copyWith(city: value) as $Val);
     });
   }
@@ -551,15 +491,9 @@ abstract class _$$EarthquakeParmaeterItemImplCopyWith<$Res>
     String kana,
     String status,
     String owner,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     double latitude,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     double longitude,
   });
 
@@ -576,8 +510,7 @@ class __$$EarthquakeParmaeterItemImplCopyWithImpl<$Res>
           $Res,
           _$EarthquakeParmaeterItemImpl
         >
-    implements
-        _$$EarthquakeParmaeterItemImplCopyWith<$Res> {
+    implements _$$EarthquakeParmaeterItemImplCopyWith<$Res> {
   __$$EarthquakeParmaeterItemImplCopyWithImpl(
     _$EarthquakeParmaeterItemImpl _value,
     $Res Function(_$EarthquakeParmaeterItemImpl) _then,
@@ -658,8 +591,7 @@ class __$$EarthquakeParmaeterItemImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EarthquakeParmaeterItemImpl
-    implements _EarthquakeParmaeterItem {
+class _$EarthquakeParmaeterItemImpl implements _EarthquakeParmaeterItem {
   const _$EarthquakeParmaeterItemImpl({
     required this.region,
     required this.city,
@@ -669,21 +601,14 @@ class _$EarthquakeParmaeterItemImpl
     required this.kana,
     required this.status,
     required this.owner,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     required this.latitude,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     required this.longitude,
   });
 
-  factory _$EarthquakeParmaeterItemImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$EarthquakeParmaeterItemImplFromJson(json);
+  factory _$EarthquakeParmaeterItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeParmaeterItemImplFromJson(json);
 
   @override
   final ParameterRegion region;
@@ -702,16 +627,10 @@ class _$EarthquakeParmaeterItemImpl
   @override
   final String owner;
   @override
-  @JsonKey(
-    fromJson: doubleFromString,
-    toJson: doubleToString,
-  )
+  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
   final double latitude;
   @override
-  @JsonKey(
-    fromJson: doubleFromString,
-    toJson: doubleToString,
-  )
+  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
   final double longitude;
 
   @override
@@ -724,22 +643,14 @@ class _$EarthquakeParmaeterItemImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeParmaeterItemImpl &&
-            (identical(other.region, region) ||
-                other.region == region) &&
-            (identical(other.city, city) ||
-                other.city == city) &&
-            (identical(other.noCode, noCode) ||
-                other.noCode == noCode) &&
-            (identical(other.code, code) ||
-                other.code == code) &&
-            (identical(other.name, name) ||
-                other.name == name) &&
-            (identical(other.kana, kana) ||
-                other.kana == kana) &&
-            (identical(other.status, status) ||
-                other.status == status) &&
-            (identical(other.owner, owner) ||
-                other.owner == owner) &&
+            (identical(other.region, region) || other.region == region) &&
+            (identical(other.city, city) || other.city == city) &&
+            (identical(other.noCode, noCode) || other.noCode == noCode) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.kana, kana) || other.kana == kana) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.owner, owner) || other.owner == owner) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -767,13 +678,10 @@ class _$EarthquakeParmaeterItemImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeParmaeterItemImplCopyWith<
+  _$$EarthquakeParmaeterItemImplCopyWith<_$EarthquakeParmaeterItemImpl>
+  get copyWith => __$$EarthquakeParmaeterItemImplCopyWithImpl<
     _$EarthquakeParmaeterItemImpl
-  >
-  get copyWith =>
-      __$$EarthquakeParmaeterItemImplCopyWithImpl<
-        _$EarthquakeParmaeterItemImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -781,8 +689,7 @@ class _$EarthquakeParmaeterItemImpl
   }
 }
 
-abstract class _EarthquakeParmaeterItem
-    implements EarthquakeParmaeterItem {
+abstract class _EarthquakeParmaeterItem implements EarthquakeParmaeterItem {
   const factory _EarthquakeParmaeterItem({
     required final ParameterRegion region,
     required final ParameterCity city,
@@ -792,21 +699,14 @@ abstract class _EarthquakeParmaeterItem
     required final String kana,
     required final String status,
     required final String owner,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     required final double latitude,
-    @JsonKey(
-      fromJson: doubleFromString,
-      toJson: doubleToString,
-    )
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
     required final double longitude,
   }) = _$EarthquakeParmaeterItemImpl;
 
-  factory _EarthquakeParmaeterItem.fromJson(
-    Map<String, dynamic> json,
-  ) = _$EarthquakeParmaeterItemImpl.fromJson;
+  factory _EarthquakeParmaeterItem.fromJson(Map<String, dynamic> json) =
+      _$EarthquakeParmaeterItemImpl.fromJson;
 
   @override
   ParameterRegion get region;
@@ -825,24 +725,16 @@ abstract class _EarthquakeParmaeterItem
   @override
   String get owner;
   @override
-  @JsonKey(
-    fromJson: doubleFromString,
-    toJson: doubleToString,
-  )
+  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
   double get latitude;
   @override
-  @JsonKey(
-    fromJson: doubleFromString,
-    toJson: doubleToString,
-  )
+  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
   double get longitude;
 
   /// Create a copy of EarthquakeParmaeterItem
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeParmaeterItemImplCopyWith<
-    _$EarthquakeParmaeterItemImpl
-  >
+  _$$EarthquakeParmaeterItemImplCopyWith<_$EarthquakeParmaeterItemImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

@@ -27,18 +27,11 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   @override
   Future<List<EstimatedIntensityPoint>> build() async {
     ref.listen(eewAliveTelegramProvider, (_, next) async {
-      final parameter = await ref.read(
-        jmaParameterProvider.future,
-      );
-      final result = await calcInIsolate(
-        next ?? [],
-        parameter.earthquake,
-      );
+      final parameter = await ref.read(jmaParameterProvider.future);
+      final result = await calcInIsolate(next ?? [], parameter.earthquake);
       state = AsyncData(result.toList());
     });
-    final parameter = await ref.read(
-      jmaParameterProvider.future,
-    );
+    final parameter = await ref.read(jmaParameterProvider.future);
 
     final result = await calcInIsolate(
       ref.read(eewAliveTelegramProvider) ?? [],
@@ -56,20 +49,13 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   ) {
     // 計算前にPointを用意
     _cachedPoints ??= _generateCachedPoints(parameter);
-    _calculationPoints ??= _generateCalculationPoints(
-      _cachedPoints!,
-    );
+    _calculationPoints ??= _generateCalculationPoints(_cachedPoints!);
 
-    final calculator = ref.read(
-      estimatedIntensityDataSourceProvider,
-    );
+    final calculator = ref.read(estimatedIntensityDataSourceProvider);
     final results = <List<double>>[];
 
     final targetEews = eews.where(
-      (e) =>
-          !e.isCanceled &&
-          e.latitude != null &&
-          e.longitude != null,
+      (e) => !e.isCanceled && e.latitude != null && e.longitude != null,
     );
     if (targetEews.isEmpty) {
       return [];
@@ -82,10 +68,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
                 points: _calculationPoints!.toList(),
                 jmaMagnitude: eew.magnitude!,
                 depth: eew.depth!,
-                hypocenter: (
-                  lat: eew.latitude!,
-                  lon: eew.longitude!,
-                ),
+                hypocenter: (lat: eew.latitude!, lon: eew.longitude!),
               )
               .toList();
       results.add(result);
@@ -93,19 +76,13 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
     // resultsのIterableそれぞれは同じ長さであることを確認
     assert(
-      results.every(
-        (e) => e.length == _calculationPoints!.length,
-      ),
+      results.every((e) => e.length == _calculationPoints!.length),
       'results length must be same as calculationPoints length',
     );
 
     final result = <EstimatedIntensityPoint>[];
     // それぞれについて最大の値を取る
-    for (
-      var index = 0;
-      index < results.first.length;
-      index++
-    ) {
+    for (var index = 0; index < results.first.length; index++) {
       final values = results.map((e) => e[index]);
       final max = values.reduce(math.max);
       result.add(
@@ -127,9 +104,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   // TODO(YumNumm): 並列計算
   calc(eews, parameter);
 
-  List<_CachedPoint> _generateCachedPoints(
-    EarthquakeParameter earthquake,
-  ) {
+  List<_CachedPoint> _generateCachedPoints(EarthquakeParameter earthquake) {
     final result = <_CachedPoint>[];
     for (final region in earthquake.regions) {
       for (final city in region.cities) {
@@ -138,7 +113,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
             regionCode: region.code,
             cityCode: city.code,
             station: station,
-          ),);
+          ));
         }
       }
     }
@@ -154,18 +129,15 @@ class EstimatedIntensity extends _$EstimatedIntensity {
         lat: point.station.latitude,
         lon: point.station.longitude,
         arv400: point.station.arv400,
-      ),);
+      ));
     }
     return result;
   }
 }
 
 @Riverpod(keepAlive: true)
-Stream<Map<String, double>> estimatedIntensityCity(
-  Ref ref,
-) async* {
-  final estimatedIntensity =
-      ref.watch(estimatedIntensityProvider).valueOrNull;
+Stream<Map<String, double>> estimatedIntensityCity(Ref ref) async* {
+  final estimatedIntensity = ref.watch(estimatedIntensityProvider).valueOrNull;
   if (estimatedIntensity != null) {
     final map = <String, double>{};
     for (final item in estimatedIntensity) {
@@ -173,10 +145,7 @@ Stream<Map<String, double>> estimatedIntensityCity(
       if (currentValue == null) {
         map[item.cityCode] = item.intensity;
       } else {
-        map[item.cityCode] = math.max(
-          currentValue,
-          item.intensity,
-        );
+        map[item.cityCode] = math.max(currentValue, item.intensity);
       }
     }
     yield map;
@@ -184,11 +153,8 @@ Stream<Map<String, double>> estimatedIntensityCity(
 }
 
 @Riverpod(keepAlive: true)
-Stream<Map<String, double>> estimatedIntensityRegion(
-  Ref ref,
-) async* {
-  final estimatedIntensity =
-      ref.watch(estimatedIntensityProvider).valueOrNull;
+Stream<Map<String, double>> estimatedIntensityRegion(Ref ref) async* {
+  final estimatedIntensity = ref.watch(estimatedIntensityProvider).valueOrNull;
   log(
     'estimatedIntensityRegion: ${estimatedIntensity.runtimeType}, '
     '${estimatedIntensity?.length}',
@@ -201,10 +167,7 @@ Stream<Map<String, double>> estimatedIntensityRegion(
       if (currentValue == null) {
         map[item.regionCode] = item.intensity;
       } else {
-        map[item.regionCode] = math.max(
-          currentValue,
-          item.intensity,
-        );
+        map[item.regionCode] = math.max(currentValue, item.intensity);
       }
     }
     log('estimatedIntensityRegion: ${map.entries.length}');
@@ -213,8 +176,7 @@ Stream<Map<String, double>> estimatedIntensityRegion(
 }
 
 @Freezed(toJson: false)
-class EstimatedIntensityPoint
-    with _$EstimatedIntensityPoint {
+class EstimatedIntensityPoint with _$EstimatedIntensityPoint {
   const factory EstimatedIntensityPoint({
     required String regionCode,
     required String cityCode,

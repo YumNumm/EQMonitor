@@ -23,8 +23,7 @@ class EarthquakeV1Extended implements EarthquakeV1 {
   int? get epicenterCode => _earthquake.epicenterCode;
 
   @override
-  int? get epicenterDetailCode =>
-      _earthquake.epicenterDetailCode;
+  int? get epicenterDetailCode => _earthquake.epicenterDetailCode;
 
   @override
   int get eventId => _earthquake.eventId;
@@ -51,35 +50,28 @@ class EarthquakeV1Extended implements EarthquakeV1 {
   double? get longitude => _earthquake.longitude;
 
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityPrefectures =>
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityPrefectures =>
       _earthquake.lpgmIntensityPrefectures;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityRegions =>
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityRegions =>
       _earthquake.lpgmIntensityRegions;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntenstiyStations =>
+  List<ObservedRegionLpgmIntensity>? get lpgmIntenstiyStations =>
       _earthquake.lpgmIntenstiyStations;
   @override
   double? get magnitude => _earthquake.magnitude;
 
   @override
-  String? get magnitudeCondition =>
-      _earthquake.magnitudeCondition;
+  String? get magnitudeCondition => _earthquake.magnitudeCondition;
 
   @override
-  JmaIntensity? get maxIntensity =>
-      _earthquake.maxIntensity;
+  JmaIntensity? get maxIntensity => _earthquake.maxIntensity;
 
   @override
-  List<int>? get maxIntensityRegionIds =>
-      _earthquake.maxIntensityRegionIds;
+  List<int>? get maxIntensityRegionIds => _earthquake.maxIntensityRegionIds;
 
   @override
-  JmaLgIntensity? get maxLpgmIntensity =>
-      _earthquake.maxLpgmIntensity;
+  JmaLgIntensity? get maxLpgmIntensity => _earthquake.maxLpgmIntensity;
 
   @override
   DateTime? get originTime => _earthquake.originTime;

@@ -29,8 +29,7 @@ class CustomFeedbackForm extends HookConsumerWidget {
           Expanded(
             child: Stack(
               children: [
-                if (scrollController != null)
-                  const FeedbackSheetDragHandle(),
+                if (scrollController != null) const FeedbackSheetDragHandle(),
                 ListView(
                   controller: scrollController,
                   // Pad the top by 20 to match the corner radius if drag enabled.
@@ -59,21 +58,16 @@ class CustomFeedbackForm extends HookConsumerWidget {
                         dropdownMenuEntries:
                             FeedbackType.values
                                 .map(
-                                  (type) =>
-                                      DropdownMenuEntry(
-                                        value: type,
-                                        label: type.label,
-                                      ),
+                                  (type) => DropdownMenuEntry(
+                                    value: type,
+                                    label: type.label,
+                                  ),
                                 )
                                 .toList(),
                         onSelected:
                             (type) =>
-                                customFeedback
-                                    .value = customFeedback
-                                    .value
-                                    .copyWith(
-                                      feedbackType: type,
-                                    ),
+                                customFeedback.value = customFeedback.value
+                                    .copyWith(feedbackType: type),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -84,42 +78,28 @@ class CustomFeedbackForm extends HookConsumerWidget {
                       ),
                       // 改行OK
                       maxLines: null,
-                      onChanged:
-                          (value) =>
-                              feedbackText.value = value,
+                      onChanged: (value) => feedbackText.value = value,
                     ),
                     const SizedBox(height: 16),
                     CheckboxListTile(
-                      value:
-                          customFeedback
-                              .value
-                              .isReplyRequested ??
-                          false,
+                      value: customFeedback.value.isReplyRequested ?? false,
                       onChanged:
                           (value) =>
-                              customFeedback
-                                  .value = customFeedback
-                                  .value
-                                  .copyWith(
-                                    isReplyRequested: value,
-                                  ),
+                              customFeedback.value = customFeedback.value
+                                  .copyWith(isReplyRequested: value),
                       title: const Text('返信を希望する'),
                       visualDensity: VisualDensity.compact,
                     ),
                     CheckboxListTile(
-                      value:
-                          customFeedback
-                              .value
-                              .isScreenshotAttached,
+                      value: customFeedback.value.isScreenshotAttached,
                       onChanged: (value) {
                         if (value == null) {
                           return;
                         }
 
-                        customFeedback.value =
-                            customFeedback.value.copyWith(
-                              isScreenshotAttached: value,
-                            );
+                        customFeedback.value = customFeedback.value.copyWith(
+                          isScreenshotAttached: value,
+                        );
                       },
                       title: const Text('スクリーンショットを添付する'),
                       visualDensity: VisualDensity.compact,
@@ -146,9 +126,7 @@ class CustomFeedbackForm extends HookConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          SizedBox(
-            height: MediaQuery.paddingOf(context).bottom,
-          ),
+          SizedBox(height: MediaQuery.paddingOf(context).bottom),
         ],
       ),
     );

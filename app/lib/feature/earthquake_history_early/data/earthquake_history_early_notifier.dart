@@ -15,33 +15,28 @@ extension EarthquakeHistoryEarlyNotifierStateEx
 }
 
 @riverpod
-class EarthquakeHistoryEarlyNotifier
-    extends _$EarthquakeHistoryEarlyNotifier {
+class EarthquakeHistoryEarlyNotifier extends _$EarthquakeHistoryEarlyNotifier {
   @override
   Future<EarthquakeHistoryEarlyNotifierState> build(
     EarthquakeHistoryEarlyParameter parameter,
   ) => _fetchInitialData(parameter: parameter);
 
-  Future<EarthquakeHistoryEarlyNotifierState>
-  _fetchInitialData({
+  Future<EarthquakeHistoryEarlyNotifierState> _fetchInitialData({
     required EarthquakeHistoryEarlyParameter parameter,
   }) async {
-    final repository = ref.read(
-      earthquakeHistoryEarlyRepositoryProvider,
+    final repository = ref.read(earthquakeHistoryEarlyRepositoryProvider);
+    final response = await repository.fetchEarthquakeEarlyLists(
+      magnitudeLte: parameter.magnitudeLte,
+      magnitudeGte: parameter.magnitudeGte,
+      depthLte: parameter.depthLte,
+      depthGte: parameter.depthGte,
+      intensityLte: parameter.intensityLte,
+      intensityGte: parameter.intensityGte,
+      originTimeLte: parameter.originTimeLte,
+      originTimeGte: parameter.originTimeGte,
+      sort: parameter.sort,
+      ascending: parameter.ascending,
     );
-    final response = await repository
-        .fetchEarthquakeEarlyLists(
-          magnitudeLte: parameter.magnitudeLte,
-          magnitudeGte: parameter.magnitudeGte,
-          depthLte: parameter.depthLte,
-          depthGte: parameter.depthGte,
-          intensityLte: parameter.intensityLte,
-          intensityGte: parameter.intensityGte,
-          originTimeLte: parameter.originTimeLte,
-          originTimeGte: parameter.originTimeGte,
-          sort: parameter.sort,
-          ascending: parameter.ascending,
-        );
 
     return (response.items, response.count);
   }
@@ -55,34 +50,26 @@ class EarthquakeHistoryEarlyNotifier
     if (!(state.valueOrNull?.hasNext ?? false)) {
       return;
     }
-    state = const AsyncLoading<
-          (List<EarthquakeEarly>, int totalCount)
-        >()
+    state = const AsyncLoading<(List<EarthquakeEarly>, int totalCount)>()
         .copyWithPrevious(state);
     state = await state.guardPlus(() async {
-      final repository = ref.read(
-        earthquakeHistoryEarlyRepositoryProvider,
-      );
+      final repository = ref.read(earthquakeHistoryEarlyRepositoryProvider);
       final currentData = state.valueOrNull;
-      final result = await repository
-          .fetchEarthquakeEarlyLists(
-            depthGte: parameter.depthGte,
-            depthLte: parameter.depthLte,
-            intensityGte: parameter.intensityGte,
-            intensityLte: parameter.intensityLte,
-            magnitudeGte: parameter.magnitudeGte,
-            magnitudeLte: parameter.magnitudeLte,
-            originTimeLte: parameter.originTimeLte,
-            originTimeGte: parameter.originTimeGte,
-            offset: currentData?.$1.length ?? 0,
-            sort: parameter.sort,
-            ascending: parameter.ascending,
-          );
+      final result = await repository.fetchEarthquakeEarlyLists(
+        depthGte: parameter.depthGte,
+        depthLte: parameter.depthLte,
+        intensityGte: parameter.intensityGte,
+        intensityLte: parameter.intensityLte,
+        magnitudeGte: parameter.magnitudeGte,
+        magnitudeLte: parameter.magnitudeLte,
+        originTimeLte: parameter.originTimeLte,
+        originTimeGte: parameter.originTimeGte,
+        offset: currentData?.$1.length ?? 0,
+        sort: parameter.sort,
+        ascending: parameter.ascending,
+      );
       return (
-        <EarthquakeEarly>[
-          ...currentData?.$1 ?? [],
-          ...result.items,
-        ],
+        <EarthquakeEarly>[...currentData?.$1 ?? [], ...result.items],
         result.count,
       );
     });

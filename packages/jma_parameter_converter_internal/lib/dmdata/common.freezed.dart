@@ -15,9 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-ParameterRegion _$ParameterRegionFromJson(
-  Map<String, dynamic> json,
-) {
+ParameterRegion _$ParameterRegionFromJson(Map<String, dynamic> json) {
   return _ParameterRegion.fromJson(json);
 }
 
@@ -28,8 +26,7 @@ mixin _$ParameterRegion {
   String get kana => throw _privateConstructorUsedError;
 
   /// Serializes this ParameterRegion to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ParameterRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -49,10 +46,7 @@ abstract class $ParameterRegionCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ParameterRegionCopyWithImpl<
-  $Res,
-  $Val extends ParameterRegion
->
+class _$ParameterRegionCopyWithImpl<$Res, $Val extends ParameterRegion>
     implements $ParameterRegionCopyWith<$Res> {
   _$ParameterRegionCopyWithImpl(this._value, this._then);
 
@@ -65,11 +59,7 @@ class _$ParameterRegionCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
     return _then(
       _value.copyWith(
             code:
@@ -107,11 +97,7 @@ abstract class _$$ParameterRegionImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ParameterRegionImplCopyWithImpl<$Res>
-    extends
-        _$ParameterRegionCopyWithImpl<
-          $Res,
-          _$ParameterRegionImpl
-        >
+    extends _$ParameterRegionCopyWithImpl<$Res, _$ParameterRegionImpl>
     implements _$$ParameterRegionImplCopyWith<$Res> {
   __$$ParameterRegionImplCopyWithImpl(
     _$ParameterRegionImpl _value,
@@ -122,11 +108,7 @@ class __$$ParameterRegionImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
     return _then(
       _$ParameterRegionImpl(
         code:
@@ -158,9 +140,8 @@ class _$ParameterRegionImpl implements _ParameterRegion {
     required this.kana,
   });
 
-  factory _$ParameterRegionImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ParameterRegionImplFromJson(json);
+  factory _$ParameterRegionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ParameterRegionImplFromJson(json);
 
   @override
   final String code;
@@ -179,28 +160,25 @@ class _$ParameterRegionImpl implements _ParameterRegion {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ParameterRegionImpl &&
-            (identical(other.code, code) ||
-                other.code == code) &&
-            (identical(other.name, name) ||
-                other.name == name) &&
-            (identical(other.kana, kana) ||
-                other.kana == kana));
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.kana, kana) || other.kana == kana));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, code, name, kana);
+  int get hashCode => Object.hash(runtimeType, code, name, kana);
 
   /// Create a copy of ParameterRegion
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl>
-  get copyWith => __$$ParameterRegionImplCopyWithImpl<
-    _$ParameterRegionImpl
-  >(this, _$identity);
+  _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl> get copyWith =>
+      __$$ParameterRegionImplCopyWithImpl<_$ParameterRegionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -215,9 +193,8 @@ abstract class _ParameterRegion implements ParameterRegion {
     required final String kana,
   }) = _$ParameterRegionImpl;
 
-  factory _ParameterRegion.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ParameterRegionImpl.fromJson;
+  factory _ParameterRegion.fromJson(Map<String, dynamic> json) =
+      _$ParameterRegionImpl.fromJson;
 
   @override
   String get code;
@@ -230,13 +207,11 @@ abstract class _ParameterRegion implements ParameterRegion {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-ParameterCity _$ParameterCityFromJson(
-  Map<String, dynamic> json,
-) {
+ParameterCity _$ParameterCityFromJson(Map<String, dynamic> json) {
   return _ParameterCity.fromJson(json);
 }
 
@@ -247,8 +222,7 @@ mixin _$ParameterCity {
   String get kana => throw _privateConstructorUsedError;
 
   /// Serializes this ParameterCity to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ParameterCity
   /// with the given fields replaced by the non-null parameter values.
@@ -268,10 +242,7 @@ abstract class $ParameterCityCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ParameterCityCopyWithImpl<
-  $Res,
-  $Val extends ParameterCity
->
+class _$ParameterCityCopyWithImpl<$Res, $Val extends ParameterCity>
     implements $ParameterCityCopyWith<$Res> {
   _$ParameterCityCopyWithImpl(this._value, this._then);
 
@@ -284,11 +255,7 @@ class _$ParameterCityCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
     return _then(
       _value.copyWith(
             code:
@@ -326,11 +293,7 @@ abstract class _$$ParameterCityImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ParameterCityImplCopyWithImpl<$Res>
-    extends
-        _$ParameterCityCopyWithImpl<
-          $Res,
-          _$ParameterCityImpl
-        >
+    extends _$ParameterCityCopyWithImpl<$Res, _$ParameterCityImpl>
     implements _$$ParameterCityImplCopyWith<$Res> {
   __$$ParameterCityImplCopyWithImpl(
     _$ParameterCityImpl _value,
@@ -341,11 +304,7 @@ class __$$ParameterCityImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
     return _then(
       _$ParameterCityImpl(
         code:
@@ -377,9 +336,8 @@ class _$ParameterCityImpl implements _ParameterCity {
     required this.kana,
   });
 
-  factory _$ParameterCityImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ParameterCityImplFromJson(json);
+  factory _$ParameterCityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ParameterCityImplFromJson(json);
 
   @override
   final String code;
@@ -398,28 +356,22 @@ class _$ParameterCityImpl implements _ParameterCity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ParameterCityImpl &&
-            (identical(other.code, code) ||
-                other.code == code) &&
-            (identical(other.name, name) ||
-                other.name == name) &&
-            (identical(other.kana, kana) ||
-                other.kana == kana));
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.kana, kana) || other.kana == kana));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, code, name, kana);
+  int get hashCode => Object.hash(runtimeType, code, name, kana);
 
   /// Create a copy of ParameterCity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ParameterCityImplCopyWith<_$ParameterCityImpl>
-  get copyWith => __$$ParameterCityImplCopyWithImpl<
-    _$ParameterCityImpl
-  >(this, _$identity);
+  _$$ParameterCityImplCopyWith<_$ParameterCityImpl> get copyWith =>
+      __$$ParameterCityImplCopyWithImpl<_$ParameterCityImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -434,9 +386,8 @@ abstract class _ParameterCity implements ParameterCity {
     required final String kana,
   }) = _$ParameterCityImpl;
 
-  factory _ParameterCity.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ParameterCityImpl.fromJson;
+  factory _ParameterCity.fromJson(Map<String, dynamic> json) =
+      _$ParameterCityImpl.fromJson;
 
   @override
   String get code;
@@ -449,6 +400,6 @@ abstract class _ParameterCity implements ParameterCity {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ParameterCityImplCopyWith<_$ParameterCityImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$ParameterCityImplCopyWith<_$ParameterCityImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -23,12 +23,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class EarthquakeHistoryDetailsPage
-    extends HookConsumerWidget {
-  const EarthquakeHistoryDetailsPage({
-    required this.eventId,
-    super.key,
-  });
+class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
+  const EarthquakeHistoryDetailsPage({required this.eventId, super.key});
 
   final int eventId;
 
@@ -43,19 +39,14 @@ class EarthquakeHistoryDetailsPage
       return Scaffold(
         appBar: AppBar(),
         body: switch (detailsState) {
-          AsyncError(:final error)
-              when !detailsState.isLoading =>
-            ErrorCard(
-              error: error,
-              onReload:
-                  () async => ref.refresh(
-                    earthquakeHistoryDetailsNotifierProvider(
-                      eventId,
-                    ),
-                  ),
-            ),
-          AsyncLoading() ||
-          _ when detailsState.isLoading => Center(
+          AsyncError(:final error) when !detailsState.isLoading => ErrorCard(
+            error: error,
+            onReload:
+                () async => ref.refresh(
+                  earthquakeHistoryDetailsNotifierProvider(eventId),
+                ),
+          ),
+          AsyncLoading() || _ when detailsState.isLoading => Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -65,16 +56,12 @@ class EarthquakeHistoryDetailsPage
                   '各地の震度データを取得中...',
                   style: Theme.of(
                     context,
-                  ).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
           ),
-          _ => const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
+          _ => const Center(child: CircularProgressIndicator.adaptive()),
         },
       );
     }
@@ -82,15 +69,11 @@ class EarthquakeHistoryDetailsPage
     final maxLgIntensity = details.maxLpgmIntensity;
 
     final config = ref.watch(
-      earthquakeHistoryConfigProvider.select(
-        (value) => value.detail,
-      ),
+      earthquakeHistoryConfigProvider.select((value) => value.detail),
     );
 
     final sheetController = SheetController();
-    final navigateToHomeFunction = useState<VoidCallback?>(
-      null,
-    );
+    final navigateToHomeFunction = useState<VoidCallback?>(null);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -105,53 +88,36 @@ class EarthquakeHistoryDetailsPage
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: AnimatedSwitcher(
-                      duration: const Duration(
-                        milliseconds: 250,
-                      ),
+                      duration: const Duration(milliseconds: 250),
                       child: BorderedContainer(
-                        key: ValueKey((
-                          config,
-                          maxIntensity,
-                          maxLgIntensity,
-                        ),),
+                        key: ValueKey((config, maxIntensity, maxLgIntensity)),
                         margin: const EdgeInsets.all(4),
                         padding: const EdgeInsets.all(4),
-                        borderRadius: BorderRadius.circular(
-                          (25 / 5) + 5,
-                        ),
+                        borderRadius: BorderRadius.circular((25 / 5) + 5),
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            if (config
-                                    .showingLpgmIntensity &&
+                            if (config.showingLpgmIntensity &&
                                 maxLgIntensity != null)
                               for (final intensity in [
                                 ...JmaLgIntensity.values,
                               ].where(
                                 (e) =>
-                                    e !=
-                                        JmaLgIntensity
-                                            .zero &&
+                                    e != JmaLgIntensity.zero &&
                                     e <= maxLgIntensity,
                               ))
                                 JmaLgIntensityIcon(
-                                  type:
-                                      IntensityIconType
-                                          .filled,
+                                  type: IntensityIconType.filled,
                                   intensity: intensity,
                                   size: 25,
                                 )
                             else
                               for (final intensity in [
                                 ...JmaIntensity.values,
-                              ].where(
-                                (e) => e <= maxIntensity,
-                              ))
+                              ].where((e) => e <= maxIntensity))
                                 JmaIntensityIcon(
-                                  type:
-                                      IntensityIconType
-                                          .filled,
+                                  type: IntensityIconType.filled,
                                   intensity: intensity,
                                   size: 25,
                                 ),
@@ -172,34 +138,23 @@ class EarthquakeHistoryDetailsPage
                   // layer controller
                   if (details.maxIntensity != null)
                     FloatingActionButton.small(
-                      heroTag:
-                          'earthquake_history_details_layer_fab',
+                      heroTag: 'earthquake_history_details_layer_fab',
                       tooltip: '地図の表示レイヤーを切り替える',
                       onPressed:
-                          () async =>
-                              showEarthquakeHistoryDetailConfigDialog(
-                                context,
-                                showCitySelector:
-                                    details
-                                        .intensityCities !=
-                                    null,
-                                hasLpgmIntensity:
-                                    details
-                                        .maxLpgmIntensity !=
-                                    null,
-                              ),
+                          () async => showEarthquakeHistoryDetailConfigDialog(
+                            context,
+                            showCitySelector: details.intensityCities != null,
+                            hasLpgmIntensity: details.maxLpgmIntensity != null,
+                          ),
                       elevation: 4,
                       child: const Icon(Icons.layers),
                     ),
                   FloatingActionButton.small(
-                    heroTag:
-                        'earthquake_history_details_fab',
+                    heroTag: 'earthquake_history_details_fab',
                     tooltip: '表示領域を地図に合わせる',
                     onPressed: () {
-                      if (navigateToHomeFunction.value !=
-                          null) {
-                        navigateToHomeFunction.value!
-                            .call();
+                      if (navigateToHomeFunction.value != null) {
+                        navigateToHomeFunction.value!.call();
                       }
                     },
                     elevation: 4,
@@ -210,10 +165,7 @@ class EarthquakeHistoryDetailsPage
             ],
           ),
           // Sheet
-          _Sheet(
-            sheetController: sheetController,
-            item: details,
-          ),
+          _Sheet(sheetController: sheetController, item: details),
           if (Navigator.canPop(context))
             // 戻るボタン
             SafeArea(
@@ -222,12 +174,9 @@ class EarthquakeHistoryDetailsPage
                   shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
                       side: BorderSide(
-                        color: colorScheme.primary
-                            .withValues(alpha: 0.2),
+                        color: colorScheme.primary.withValues(alpha: 0.2),
                       ),
-                      borderRadius: BorderRadius.circular(
-                        128,
-                      ),
+                      borderRadius: BorderRadius.circular(128),
                     ),
                   ),
                 ),
@@ -243,10 +192,7 @@ class EarthquakeHistoryDetailsPage
 }
 
 class _Sheet extends StatelessWidget {
-  const _Sheet({
-    required this.sheetController,
-    required this.item,
-  });
+  const _Sheet({required this.sheetController, required this.item});
 
   final SheetController sheetController;
   final EarthquakeV1Extended item;
@@ -278,8 +224,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final comment = switch ((item.headline, item.text)) {
-      (final String headline, final String text) =>
-        '$headline\n$text',
+      (final String headline, final String text) => '$headline\n$text',
       (_, final String text) => text,
       (final String headline, _) => headline,
       _ => null,
@@ -310,10 +255,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
 }
 
 class EarthquakeHypoInfoWidget extends StatelessWidget {
-  const EarthquakeHypoInfoWidget({
-    required this.item,
-    super.key,
-  });
+  const EarthquakeHypoInfoWidget({required this.item, super.key});
 
   final EarthquakeV1Extended item;
 

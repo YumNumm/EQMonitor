@@ -24,21 +24,15 @@ class App extends HookConsumerWidget {
 
     final app = BetterFeedback(
       feedbackBuilder:
-          (p0, p1, p2) => CustomFeedbackForm(
-            onSubmit: p1,
-            scrollController: p2,
-          ),
+          (p0, p1, p2) =>
+              CustomFeedbackForm(onSubmit: p1, scrollController: p2),
       child: DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
           // Fictitious brand color.
           const brandBlue = Color(0xFF1E88E5);
 
-          var lightCustomColors = const CustomColors(
-            danger: Color(0xFFE53935),
-          );
-          var darkCustomColors = const CustomColors(
-            danger: Color(0xFFEF9A9A),
-          );
+          var lightCustomColors = const CustomColors(danger: Color(0xFFE53935));
+          var darkCustomColors = const CustomColors(danger: Color(0xFFEF9A9A));
 
           ColorScheme lightColorScheme;
           ColorScheme darkColorScheme;
@@ -51,26 +45,17 @@ class App extends HookConsumerWidget {
             // (Optional) Customize the scheme as desired. For example,
             // one might want to use a brand color to override the dynamic
             // [ColorScheme.secondary].
-            lightColorScheme = lightColorScheme.copyWith(
-              secondary: brandBlue,
-            );
+            lightColorScheme = lightColorScheme.copyWith(secondary: brandBlue);
             // (Optional) If applicable, harmonize custom colors.
-            lightCustomColors = lightCustomColors
-                .harmonized(lightColorScheme);
+            lightCustomColors = lightCustomColors.harmonized(lightColorScheme);
 
             // Repeat for the dark color scheme.
             darkColorScheme = darkDynamic.harmonized();
-            darkColorScheme = darkColorScheme.copyWith(
-              secondary: brandBlue,
-            );
-            darkCustomColors = darkCustomColors.harmonized(
-              darkColorScheme,
-            );
+            darkColorScheme = darkColorScheme.copyWith(secondary: brandBlue);
+            darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
           } else {
             // Otherwise, use fallback schemes.
-            lightColorScheme = ColorScheme.fromSeed(
-              seedColor: brandBlue,
-            );
+            lightColorScheme = ColorScheme.fromSeed(seedColor: brandBlue);
             darkColorScheme = ColorScheme.fromSeed(
               seedColor: brandBlue,
               brightness: Brightness.dark,
@@ -96,10 +81,7 @@ class App extends HookConsumerWidget {
             supportedLocales: const [Locale('ja', 'JP')],
             builder: (context, child) {
               return UpgradeAlert(
-                navigatorKey:
-                    routerConfig
-                        .routerDelegate
-                        .navigatorKey,
+                navigatorKey: routerConfig.routerDelegate.navigatorKey,
                 child: child,
               );
             },
@@ -112,8 +94,7 @@ class App extends HookConsumerWidget {
       return Directionality(
         textDirection: TextDirection.ltr,
         child: Banner(
-          message:
-              'v${packageInfo.version}-${packageInfo.buildNumber}',
+          message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
           location: BannerLocation.bottomStart,
           child: app,
         ),

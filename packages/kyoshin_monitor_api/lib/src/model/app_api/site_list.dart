@@ -52,10 +52,8 @@ class Site with _$Site {
   }) = _Site;
   const Site._();
 
-  factory Site.fromJson(Map<String, dynamic> json) =>
-      _$SiteFromJson(json);
+  factory Site.fromJson(Map<String, dynamic> json) => _$SiteFromJson(json);
 
   /// 都道府県
-  Prefecture? get prefecture =>
-      Prefecture.fromId(prefectureId);
+  Prefecture? get prefecture => Prefecture.fromId(prefectureId);
 }

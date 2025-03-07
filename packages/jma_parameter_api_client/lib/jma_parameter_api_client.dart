@@ -26,8 +26,7 @@ class JmaParameterApiClient {
   }
 
   Future<String?> getEarthquakeParameterHead() async {
-    final response =
-        await _client.getEarthquakeParameterHead();
+    final response = await _client.getEarthquakeParameterHead();
     return response.response.headers.value('etag');
   }
 
@@ -41,16 +40,14 @@ class JmaParameterApiClient {
   }
 
   Future<String?> getTsunamiParameterHeadEtag() async {
-    final response =
-        await _client.getTsunamiParameterHead();
+    final response = await _client.getTsunamiParameterHead();
     return response.response.headers.value('etag');
   }
 }
 
 @RestApi()
 abstract class _JmaParameterApiClient {
-  factory _JmaParameterApiClient(Dio dio) =
-      __JmaParameterApiClient;
+  factory _JmaParameterApiClient(Dio dio) = __JmaParameterApiClient;
 
   @GET('/parameter/earthquake')
   @DioResponseType(ResponseType.bytes)

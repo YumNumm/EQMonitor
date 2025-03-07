@@ -18,9 +18,7 @@ class FcmTopicManager extends _$FcmTopicManager {
 
   static const String _prefsKey = 'fcmTopicManager';
 
-  Future<Result<void, Exception>> unregisterFromTopic(
-    FcmTopic topic,
-  ) async {
+  Future<Result<void, Exception>> unregisterFromTopic(FcmTopic topic) async {
     // 登録されていない場合は何もしない
     if (!state.contains(topic.topic)) {
       return Result.success(null);
@@ -39,8 +37,7 @@ class FcmTopicManager extends _$FcmTopicManager {
   }
 }
 
-class FcmEewIntensityTopic
-    implements FcmTopic, FcmEewTopic {
+class FcmEewIntensityTopic implements FcmTopic, FcmEewTopic {
   const FcmEewIntensityTopic(this.intensity);
 
   final JmaIntensity intensity;
@@ -57,8 +54,7 @@ class FcmEewAllTopic implements FcmTopic, FcmEewTopic {
   String get topic => 'eew_all';
 }
 
-class FcmEewLowAccuracyTopic
-    implements FcmTopic, FcmEewTopic {
+class FcmEewLowAccuracyTopic implements FcmTopic, FcmEewTopic {
   const FcmEewLowAccuracyTopic();
 
   @override
@@ -74,9 +70,7 @@ class FcmEarthquakeTopic implements FcmTopic {
   // ignore: lines_longer_than_80_chars
   String get topic {
     final suffix =
-        intensity?.type
-            .replaceAll('-', 'lower')
-            .replaceAll('+', 'upper') ??
+        intensity?.type.replaceAll('-', 'lower').replaceAll('+', 'upper') ??
         'all';
     return 'earthquake_$suffix';
   }

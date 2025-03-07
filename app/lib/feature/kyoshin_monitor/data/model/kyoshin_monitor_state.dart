@@ -13,19 +13,16 @@ class KyoshinMonitorState with _$KyoshinMonitorState {
   const factory KyoshinMonitorState({
     RealtimeDataType? currentRealtimeDataType,
     RealtimeLayer? currentRealtimeLayer,
-    @Default(KyoshinMonitorStatus.initializing)
-    KyoshinMonitorStatus status,
+    @Default(KyoshinMonitorStatus.initializing) KyoshinMonitorStatus status,
     DateTime? lastUpdatedAt,
     DateTime? lastImageFetchTargetTime,
     Duration? lastImageFetchDuration,
-    List<KyoshinMonitorImageParseObservationPoint>?
-    analyzedPoints,
+    List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,
     List<int>? currentImageRaw,
   }) = _KyoshinMonitorState;
 
-  factory KyoshinMonitorState.fromJson(
-    Map<String, dynamic> json,
-  ) => _$KyoshinMonitorStateFromJson(json);
+  factory KyoshinMonitorState.fromJson(Map<String, dynamic> json) =>
+      _$KyoshinMonitorStateFromJson(json);
 }
 
 enum KyoshinMonitorStatus {
@@ -54,15 +51,12 @@ class KyoshinMonitorImageParseObservationPoint
       toJson: _kyoshinObservationPointToJson,
     )
     required KyoshinObservationPoint point,
-    required KyoshinMonitorObservationAnalyzedPoint
-    observation,
+    required KyoshinMonitorObservationAnalyzedPoint observation,
   }) = _KyoshinMonitorImageParseObservationPoint;
 
   factory KyoshinMonitorImageParseObservationPoint.fromJson(
     Map<String, dynamic> json,
-  ) => _$KyoshinMonitorImageParseObservationPointFromJson(
-    json,
-  );
+  ) => _$KyoshinMonitorImageParseObservationPointFromJson(json);
 }
 
 Map<String, dynamic> _kyoshinObservationPointToJson(

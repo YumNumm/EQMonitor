@@ -26,12 +26,10 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel =
         (colorModel ?? ref.watch(intensityColorProvider))!;
-    final colorScheme = intensityColorModel
-        .fromJmaForecastLgIntensity(intensity);
-    final (fg, bg) = (
-      colorScheme.foreground,
-      colorScheme.background,
+    final colorScheme = intensityColorModel.fromJmaForecastLgIntensity(
+      intensity,
     );
+    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
     final intensityMainText = intensity.type
         .replaceAll('-', '')
@@ -49,8 +47,7 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
       width: size,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color:
-              type == IntensityIconType.filled ? bg : null,
+          color: type == IntensityIconType.filled ? bg : null,
           // 角丸にする
           borderRadius: BorderRadius.circular(10),
         ),
@@ -58,8 +55,7 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Row(
-              crossAxisAlignment:
-                  CrossAxisAlignment.baseline,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
                 if (customText != null)
@@ -72,8 +68,7 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
                       fontFamily: FontFamily.jetBrainsMono,
                     ),
                   )
-                else if (intensity ==
-                    JmaForecastLgIntensity.unknown)
+                else if (intensity == JmaForecastLgIntensity.unknown)
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
@@ -103,9 +98,7 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
                       fontSize: 50,
                       fontWeight: FontWeight.w900,
                       fontFamily: FontFamily.jetBrainsMono,
-                      fontFamilyFallback: const [
-                        FontFamily.notoSansJP,
-                      ],
+                      fontFamilyFallback: const [FontFamily.notoSansJP],
                     ),
                   ),
                 ],

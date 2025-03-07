@@ -35,42 +35,33 @@ class EewV1 with _$EewV1 implements V1Database {
     List<EstimatedIntensityRegion>? regions,
   }) = _EewV1;
 
-  factory EewV1.fromJson(Map<String, dynamic> json) =>
-      _$EewV1FromJson(json);
+  factory EewV1.fromJson(Map<String, dynamic> json) => _$EewV1FromJson(json);
 
   const EewV1._();
 
   bool get isLevelEew =>
-      !(isPlum ?? false) &&
-      accuracy?.epicenters[0] == 1 &&
-      originTime == null;
+      !(isPlum ?? false) && accuracy?.epicenters[0] == 1 && originTime == null;
   bool get isIpfOnePoint =>
-      !(isPlum ?? false) &&
-      accuracy?.epicenters[0] == 1 &&
-      !isLevelEew;
+      !(isPlum ?? false) && accuracy?.epicenters[0] == 1 && !isLevelEew;
 }
 
 @freezed
-class EstimatedIntensityRegion
-    with _$EstimatedIntensityRegion {
+class EstimatedIntensityRegion with _$EstimatedIntensityRegion {
   const factory EstimatedIntensityRegion({
     required String code,
     required String name,
     @JsonKey(name: 'isPlum') required bool isPlum,
     @JsonKey(name: 'isWarning') required bool isWarning,
-    @JsonKey(name: 'forecastMaxInt')
-    required ForecastMaxInt forecastMaxInt,
+    @JsonKey(name: 'forecastMaxInt') required ForecastMaxInt forecastMaxInt,
     @JsonKey(name: 'forecastMaxLgInt')
     required ForecastMaxLgInt? forecastMaxLgInt,
 
     /// nullの場合 `既に主要動到達と推測`
-    @JsonKey(name: 'arrivalTime')
-    required DateTime? arrivalTime,
+    @JsonKey(name: 'arrivalTime') required DateTime? arrivalTime,
   }) = _EstimatedIntensityRegion;
 
-  factory EstimatedIntensityRegion.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EstimatedIntensityRegionFromJson(json);
+  factory EstimatedIntensityRegion.fromJson(Map<String, dynamic> json) =>
+      _$EstimatedIntensityRegionFromJson(json);
 }
 
 @freezed
@@ -79,13 +70,9 @@ class EewAccuracy with _$EewAccuracy {
   const factory EewAccuracy({
     /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
     /// '0' | '1' | '2' | '3' | '4' | '9']
-    @JsonKey(
-      fromJson: stringListToIntList,
-      toJson: intListToStringList,
-    )
+    @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
     required List<int> epicenters,
-    @JsonKey(fromJson: int.parse, toJson: intToString)
-    required int depth,
+    @JsonKey(fromJson: int.parse, toJson: intToString) required int depth,
     @JsonKey(fromJson: int.parse, toJson: intToString)
     required int magnitudeCalculation,
     @JsonKey(fromJson: int.parse, toJson: intToString)
@@ -116,9 +103,8 @@ class ForecastMaxInt with _$ForecastMaxInt {
     required JmaForecastIntensityOver to,
   }) = _ForecastMaxInt;
 
-  factory ForecastMaxInt.fromJson(
-    Map<String, dynamic> json,
-  ) => _$ForecastMaxIntFromJson(json);
+  factory ForecastMaxInt.fromJson(Map<String, dynamic> json) =>
+      _$ForecastMaxIntFromJson(json);
 }
 
 @freezed
@@ -129,22 +115,17 @@ class ForecastMaxLgInt with _$ForecastMaxLgInt {
     required JmaForecastLgIntensityOver to,
   }) = _ForecastMaxLgInt;
 
-  factory ForecastMaxLgInt.fromJson(
-    Map<String, dynamic> json,
-  ) => _$ForecastMaxLgIntFromJson(json);
+  factory ForecastMaxLgInt.fromJson(Map<String, dynamic> json) =>
+      _$ForecastMaxLgIntFromJson(json);
 }
 
 extension ForecastMaxIntDisplay on ForecastMaxInt {
   // 表示する最大震度
-  ({JmaForecastIntensity maxInt, bool isOver})
-  toDisplayMaxInt() {
+  ({JmaForecastIntensity maxInt, bool isOver}) toDisplayMaxInt() {
     if (to == JmaForecastIntensityOver.over) {
       return (maxInt: from, isOver: true);
     } else {
-      return (
-        maxInt: to.toJmaForecastIntensity,
-        isOver: false,
-      );
+      return (maxInt: to.toJmaForecastIntensity, isOver: false);
     }
   }
 }
@@ -153,14 +134,10 @@ extension ForecastMaxLgIntDisplay on ForecastMaxLgInt {
   /// 表示する最大震度
   /// 推定最大長周期地震動階級0の場合、nullを返す
   /// 0以上の場合、推定最大長周期地震動階級を返す
-  ({JmaForecastLgIntensity maxLgInt, bool isOver})
-  toDisplayMaxLgInt() {
+  ({JmaForecastLgIntensity maxLgInt, bool isOver}) toDisplayMaxLgInt() {
     if (to == JmaForecastLgIntensityOver.over) {
       return (maxLgInt: from, isOver: true);
     }
-    return (
-      maxLgInt: to.toJmaForecastLgIntensity,
-      isOver: false,
-    );
+    return (maxLgInt: to.toJmaForecastLgIntensity, isOver: false);
   }
 }

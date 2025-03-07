@@ -9,10 +9,7 @@ part 'jma_parameter_api.g.dart';
 JmaParameterApiClient jmaParameterApiClient(Ref ref) {
   return JmaParameterApiClient(
     client: Dio(
-      BaseOptions(
-        headers: {},
-        baseUrl: 'https://object.eqmonitor.app',
-      ),
+      BaseOptions(headers: {}, baseUrl: 'https://object.eqmonitor.app'),
     ),
   );
 }
