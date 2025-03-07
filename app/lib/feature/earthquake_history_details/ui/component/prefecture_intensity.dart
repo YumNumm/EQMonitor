@@ -22,25 +22,20 @@ typedef _Arg =
     });
 
 @riverpod
-Future<Map<JmaIntensity, List<_MergedRegionIntensity>>>
-_calculator(Ref ref, _Arg arg) => compute<
-  _Arg,
-  Map<JmaIntensity, List<_MergedRegionIntensity>>
->((arg) {
+Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
+  Ref ref,
+  _Arg arg,
+) => compute<_Arg, Map<JmaIntensity, List<_MergedRegionIntensity>>>((arg) {
   final cities = arg.cities;
   final prefectures = arg.prefectures;
   final stations = arg.stations;
 
-  final Map<JmaIntensity, List<_MergedRegionIntensity>>
-  result;
+  final Map<JmaIntensity, List<_MergedRegionIntensity>> result;
   if (stations != null && cities != null) {
     final stationsGroupedByIntensity = stations
         .where((e) => e.intensity != null)
         .groupListsBy((e) => e.intensity!);
-    result = stationsGroupedByIntensity.map((
-      intensity,
-      stations,
-    ) {
+    result = stationsGroupedByIntensity.map((intensity, stations) {
       final stationsGroupedByCity = stations.groupListsBy(
         (e) => '${e.code.substring(0, 5)}00',
       );
@@ -50,9 +45,7 @@ _calculator(Ref ref, _Arg arg) => compute<
               .map((e) {
                 final cityCode = e.key;
                 final cityStations = e.value;
-                final city = cities.firstWhereOrNull(
-                  (e) => e.code == cityCode,
-                );
+                final city = cities.firstWhereOrNull((e) => e.code == cityCode);
                 if (city == null) {
                   return null;
                 }
@@ -67,18 +60,18 @@ _calculator(Ref ref, _Arg arg) => compute<
               .toList();
 
       // 都道府県ごとにまとめる
-      final citiesGroupedByPrefecture = mergedCity
-          .groupListsBy((e) => e.code.substring(0, 2));
+      final citiesGroupedByPrefecture = mergedCity.groupListsBy(
+        (e) => e.code.substring(0, 2),
+      );
       // マージ
       final mergedPrefecture =
           citiesGroupedByPrefecture.entries
               .map((e) {
                 final prefectureCode = e.key;
                 final prefectureCities = e.value;
-                final prefecture = prefectures
-                    .firstWhereOrNull(
-                      (e) => e.code == prefectureCode,
-                    );
+                final prefecture = prefectures.firstWhereOrNull(
+                  (e) => e.code == prefectureCode,
+                );
                 if (prefecture == null) {
                   return null;
                 }
@@ -115,9 +108,7 @@ _calculator(Ref ref, _Arg arg) => compute<
   }
   final reorderedResult =
       result.entries
-          .sorted(
-            (a, b) => a.key.index.compareTo(b.key.index),
-          )
+          .sorted((a, b) => a.key.index.compareTo(b.key.index))
           .toList()
           .reversed
           .toList();
@@ -125,10 +116,7 @@ _calculator(Ref ref, _Arg arg) => compute<
 }, arg);
 
 class PrefectureIntensityWidget extends HookConsumerWidget {
-  const PrefectureIntensityWidget({
-    required this.item,
-    super.key,
-  });
+  const PrefectureIntensityWidget({required this.item, super.key});
 
   final EarthquakeV1 item;
 
@@ -156,10 +144,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
       ),
       AsyncData(:final value) => BorderedContainer(
         elevation: 1,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           children: [
             const SheetHeader(title: '各地の震度'),
@@ -176,42 +161,29 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                       false,
                 );
                 final title = switch (intensity) {
-                  JmaIntensity.fiveUpperNoInput =>
-                    '震度5弱以上未入電',
+                  JmaIntensity.fiveUpperNoInput => '震度5弱以上未入電',
                   _ => '震度$intensity',
                 };
                 return ListTile(
-                  titleAlignment:
-                      ListTileTitleAlignment.titleHeight,
+                  titleAlignment: ListTileTitleAlignment.titleHeight,
                   leading: JmaIntensityIcon(
                     intensity: intensity,
                     type: IntensityIconType.filled,
                   ),
-                  title: Text(
-                    title,
-                    style: textTheme.titleMedium,
-                  ),
+                  title: Text(title, style: textTheme.titleMedium),
                   subtitle: Text(
-                    prefectures
-                        .map((e) => e.name)
-                        .join(', '),
-                    style: const TextStyle(
-                      fontFamily: FontFamily.notoSansJP,
-                    ),
+                    prefectures.map((e) => e.name).join(', '),
+                    style: const TextStyle(fontFamily: FontFamily.notoSansJP),
                   ),
                   onTap:
                       hasCities
-                          ? () async =>
-                              _PrefectureModalBottomSheet.show(
-                                context: context,
-                                intensity: kv.key,
-                                prefectures: kv.value,
-                              )
+                          ? () async => _PrefectureModalBottomSheet.show(
+                            context: context,
+                            intensity: kv.key,
+                            prefectures: kv.value,
+                          )
                           : null,
-                  trailing:
-                      hasCities
-                          ? const Icon(Icons.chevron_right)
-                          : null,
+                  trailing: hasCities ? const Icon(Icons.chevron_right) : null,
                 );
               }(),
           ],
@@ -284,23 +256,18 @@ class _PrefectureListTile extends HookWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final city
-              in prefecture.cities ?? <_CityIntensity>[])
+          for (final city in prefecture.cities ?? <_CityIntensity>[])
             Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
                     text: '${city.name}: ',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   for (final station in city.stations)
                     TextSpan(
                       text: '${station.name} ',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(color: Colors.grey),
                     ),
                 ],
               ),

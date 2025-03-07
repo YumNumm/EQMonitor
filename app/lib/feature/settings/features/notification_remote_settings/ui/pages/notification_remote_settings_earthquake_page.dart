@@ -12,34 +12,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NotificationRemoteSettingsEarthquakePage
-    extends ConsumerWidget {
-  const NotificationRemoteSettingsEarthquakePage({
-    super.key,
-  });
+class NotificationRemoteSettingsEarthquakePage extends ConsumerWidget {
+  const NotificationRemoteSettingsEarthquakePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state =
         ref
-            .watch(
-              notificationRemoteSettingsNotifierProvider,
-            )
+            .watch(notificationRemoteSettingsNotifierProvider)
             .valueOrNull
             ?.earthquake;
     if (state == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
     return Scaffold(
       appBar: AppBar(title: const Text('地震情報の通知条件設定')),
       body: _Body(state: state),
       floatingActionButton:
           (state.global != JmaForecastIntensity.zero)
-              ? _AddRegionFloatingActionButton(
-                regions: state.regions,
-              )
+              ? _AddRegionFloatingActionButton(regions: state.regions)
               : null,
     );
   }
@@ -53,18 +44,12 @@ class _Body extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    final statusWidget = switch ((
-      state.global,
-      state.regions,
-    )) {
+    final statusWidget = switch ((state.global, state.regions)) {
       (null, []) => BorderedContainer(
         accentColor: colorScheme.errorContainer,
         child: Row(
           children: [
-            Icon(
-              Icons.error,
-              color: colorScheme.onErrorContainer,
-            ),
+            Icon(Icons.error, color: colorScheme.onErrorContainer),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -82,15 +67,10 @@ class _Body extends HookConsumerWidget {
         accentColor: colorScheme.secondaryContainer,
         child: Row(
           children: [
-            Icon(
-              Icons.check_circle,
-              color: colorScheme.onSecondaryContainer,
-            ),
+            Icon(Icons.check_circle, color: colorScheme.onSecondaryContainer),
             const SizedBox(width: 8),
             Expanded(
-              child: EarthquakeNotificationStatusText(
-                earthquake: state,
-              ),
+              child: EarthquakeNotificationStatusText(earthquake: state),
             ),
           ],
         ),
@@ -110,26 +90,18 @@ class _Body extends HookConsumerWidget {
             child:
                 (state.global != JmaForecastIntensity.zero)
                     ? KeyedSubtree(
-                      key: ValueKey(
-                        state.global ==
-                            JmaForecastIntensity.zero,
-                      ),
+                      key: ValueKey(state.global == JmaForecastIntensity.zero),
                       child: _RegionsChoiceView(
                         regions:
                             state.regions
                                 .sorted(
-                                  (a, b) =>
-                                      a.regionId.compareTo(
-                                        b.regionId,
-                                      ),
+                                  (a, b) => a.regionId.compareTo(b.regionId),
                                 )
                                 .toList(),
                         global: state.global,
                       ),
                     )
-                    : const SizedBox.shrink(
-                      key: ValueKey(true),
-                    ),
+                    : const SizedBox.shrink(key: ValueKey(true)),
           ),
           // FABと重ならないようにするため
           const SizedBox(height: 120),
@@ -158,18 +130,11 @@ class _GlobalChoiceTile extends ConsumerWidget {
         value: global,
         onChanged:
             (value) => ref
-                .read(
-                  notificationRemoteSettingsNotifierProvider
-                      .notifier,
-                )
+                .read(notificationRemoteSettingsNotifierProvider.notifier)
                 .updateEarthquakeGlobal(value),
         items:
             JmaForecastIntensity.values
-                .whereNot(
-                  (e) => [
-                    JmaForecastIntensity.unknown,
-                  ].contains(e),
-                )
+                .whereNot((e) => [JmaForecastIntensity.unknown].contains(e))
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,
@@ -189,13 +154,9 @@ class _GlobalChoiceTile extends ConsumerWidget {
 }
 
 class _RegionsChoiceView extends ConsumerWidget {
-  const _RegionsChoiceView({
-    required this.regions,
-    required this.global,
-  });
+  const _RegionsChoiceView({required this.regions, required this.global});
 
-  final List<NotificationRemoteSettingsEarthquakeRegion>
-  regions;
+  final List<NotificationRemoteSettingsEarthquakeRegion> regions;
   final JmaForecastIntensity? global;
 
   @override
@@ -212,66 +173,39 @@ class _RegionsChoiceView extends ConsumerWidget {
         ),
         for (final region in regions)
           () {
-            void update(
-              JmaForecastIntensity intensity,
-            ) => ref
-                .read(
-                  notificationRemoteSettingsNotifierProvider
-                      .notifier,
-                )
+            void update(JmaForecastIntensity intensity) => ref
+                .read(notificationRemoteSettingsNotifierProvider.notifier)
                 .updateEarthquakeRegions(
                   regions
                       .map(
                         (e) =>
                             e.regionId == region.regionId
-                                ? e.copyWith(
-                                  minJmaIntensity:
-                                      intensity,
-                                )
+                                ? e.copyWith(minJmaIntensity: intensity)
                                 : e,
                       )
                       .toList(),
                 );
             void delete() => ref
-                .read(
-                  notificationRemoteSettingsNotifierProvider
-                      .notifier,
-                )
+                .read(notificationRemoteSettingsNotifierProvider.notifier)
                 .updateEarthquakeRegions(
-                  regions
-                      .where(
-                        (e) =>
-                            e.regionId != region.regionId,
-                      )
-                      .toList(),
+                  regions.where((e) => e.regionId != region.regionId).toList(),
                 );
             final isNotificationEnabled =
-                (global == null) ||
-                region.minJmaIntensity < (global!);
+                (global == null) || region.minJmaIntensity < (global!);
             final child = Dismissible(
               key: ValueKey(region.regionId),
               onDismissed: (direction) async {
                 unawaited(HapticFeedback.mediumImpact());
                 ref
-                    .read(
-                      notificationRemoteSettingsNotifierProvider
-                          .notifier,
-                    )
+                    .read(notificationRemoteSettingsNotifierProvider.notifier)
                     .updateEarthquakeRegions(
                       regions
-                          .where(
-                            (e) =>
-                                e.regionId !=
-                                region.regionId,
-                          )
+                          .where((e) => e.regionId != region.regionId)
                           .toList(),
                     );
               },
               background: ColoredBox(
-                color:
-                    Theme.of(
-                      context,
-                    ).colorScheme.errorContainer,
+                color: Theme.of(context).colorScheme.errorContainer,
                 child: const Row(
                   children: [
                     SizedBox(width: 16),
@@ -295,17 +229,13 @@ class _RegionsChoiceView extends ConsumerWidget {
                     DropdownButton<JmaForecastIntensity>(
                       value: region.minJmaIntensity,
                       onChanged:
-                          (value) =>
-                              value != null
-                                  ? update(value)
-                                  : null,
+                          (value) => value != null ? update(value) : null,
                       items:
                           JmaForecastIntensity.values
                               .whereNot(
                                 (e) => [
                                   JmaForecastIntensity.zero,
-                                  JmaForecastIntensity
-                                      .unknown,
+                                  JmaForecastIntensity.unknown,
                                 ].contains(e),
                               )
                               .map(
@@ -326,16 +256,9 @@ class _RegionsChoiceView extends ConsumerWidget {
                         ? null
                         : const Row(
                           children: [
-                            Icon(
-                              Icons.warning,
-                              color: Colors.orange,
-                            ),
+                            Icon(Icons.warning, color: Colors.orange),
                             SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                ' (この震度は全国の地震情報に含まれています)',
-                              ),
-                            ),
+                            Expanded(child: Text(' (この震度は全国の地震情報に含まれています)')),
                           ],
                         ),
                 onTap: () async {
@@ -348,26 +271,20 @@ class _RegionsChoiceView extends ConsumerWidget {
                             JmaForecastIntensity.values
                                 .whereNot(
                                   (e) => [
-                                    JmaForecastIntensity
-                                        .zero,
-                                    JmaForecastIntensity
-                                        .unknown,
+                                    JmaForecastIntensity.zero,
+                                    JmaForecastIntensity.unknown,
                                   ].contains(e),
                                 )
                                 .map(
                                   (e) => SimpleDialogOption(
                                     onPressed: () {
                                       update(e);
-                                      Navigator.pop(
-                                        context,
-                                        e,
-                                      );
+                                      Navigator.pop(context, e);
                                     },
                                     child: Text(
                                       '震度${e.type.fromPlusMinus}'
                                       "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
-                                      style:
-                                          const TextStyle(),
+                                      style: const TextStyle(),
                                     ),
                                   ),
                                 )
@@ -381,10 +298,7 @@ class _RegionsChoiceView extends ConsumerWidget {
                                 child: Text(
                                   '削除する',
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.error,
+                                    color: Theme.of(context).colorScheme.error,
                                   ),
                                 ),
                               ),
@@ -402,14 +316,10 @@ class _RegionsChoiceView extends ConsumerWidget {
   }
 }
 
-class _AddRegionFloatingActionButton
-    extends StatelessWidget {
-  const _AddRegionFloatingActionButton({
-    required this.regions,
-  });
+class _AddRegionFloatingActionButton extends StatelessWidget {
+  const _AddRegionFloatingActionButton({required this.regions});
 
-  final List<NotificationRemoteSettingsEarthquakeRegion>
-  regions;
+  final List<NotificationRemoteSettingsEarthquakeRegion> regions;
 
   @override
   Widget build(BuildContext context) {
@@ -433,20 +343,13 @@ class _AddRegionFloatingActionButton
                 builder: (context) {
                   return DefaultTextStyle(
                     style: TextStyle(
-                      color:
-                          Theme.of(
-                            context,
-                          ).colorScheme.onErrorContainer,
+                      color: Theme.of(context).colorScheme.onErrorContainer,
                     ),
                     child: AlertDialog(
                       backgroundColor:
-                          Theme.of(
-                            context,
-                          ).colorScheme.errorContainer,
+                          Theme.of(context).colorScheme.errorContainer,
                       title: const Text('地域を追加'),
-                      content: const Text(
-                        '地域は10個以上選択できません',
-                      ),
+                      content: const Text('地域は10個以上選択できません'),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -464,12 +367,9 @@ class _AddRegionFloatingActionButton
 }
 
 class _AddRegionChoiceDialog extends ConsumerWidget {
-  const _AddRegionChoiceDialog({
-    required this.alreadySelectedRegions,
-  });
+  const _AddRegionChoiceDialog({required this.alreadySelectedRegions});
 
-  final List<NotificationRemoteSettingsEarthquakeRegion>
-  alreadySelectedRegions;
+  final List<NotificationRemoteSettingsEarthquakeRegion> alreadySelectedRegions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -493,12 +393,9 @@ class _AddRegionChoiceDialog extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children:
               tableRegions.map((region) {
-                final isSelected = alreadySelectedRegions
-                    .any(
-                      (e) =>
-                          e.regionId ==
-                          int.parse(region.code),
-                    );
+                final isSelected = alreadySelectedRegions.any(
+                  (e) => e.regionId == int.parse(region.code),
+                );
                 return SimpleDialogOption(
                   onPressed:
                       isSelected
@@ -512,30 +409,22 @@ class _AddRegionChoiceDialog extends ConsumerWidget {
                                 return SimpleDialog(
                                   title: Text(region.name),
                                   children:
-                                      JmaForecastIntensity
-                                          .values
+                                      JmaForecastIntensity.values
                                           .whereNot(
                                             (e) => [
-                                              JmaForecastIntensity
-                                                  .zero,
-                                              JmaForecastIntensity
-                                                  .unknown,
+                                              JmaForecastIntensity.zero,
+                                              JmaForecastIntensity.unknown,
                                             ].contains(e),
                                           )
                                           .map(
-                                            (
-                                              e,
-                                            ) => SimpleDialogOption(
+                                            (e) => SimpleDialogOption(
                                               onPressed:
-                                                  () => Navigator.pop(
-                                                    context,
-                                                    e,
-                                                  ),
+                                                  () =>
+                                                      Navigator.pop(context, e),
                                               child: Text(
                                                 '震度${e.type.fromPlusMinus}'
                                                 "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
-                                                style:
-                                                    const TextStyle(),
+                                                style: const TextStyle(),
                                               ),
                                             ),
                                           )
@@ -554,11 +443,8 @@ class _AddRegionChoiceDialog extends ConsumerWidget {
                                 .updateEarthquakeRegions([
                                   ...alreadySelectedRegions,
                                   NotificationRemoteSettingsEarthquakeRegion(
-                                    regionId: int.parse(
-                                      region.code,
-                                    ),
-                                    minJmaIntensity:
-                                        intensity,
+                                    regionId: int.parse(region.code),
+                                    minJmaIntensity: intensity,
                                     name: region.name,
                                   ),
                                 ]);
@@ -571,10 +457,9 @@ class _AddRegionChoiceDialog extends ConsumerWidget {
                           ? Text(
                             '${region.name} (選択済み)',
                             style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.7),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
                           )
                           : Text(region.name),

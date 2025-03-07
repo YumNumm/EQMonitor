@@ -19,19 +19,14 @@ class CustomChip extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color:
-              backgroundColor ??
-              Theme.of(context).colorScheme.surface,
+          color: backgroundColor ?? Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: Theme.of(context).colorScheme.onSurface,
             width: borderWidth,
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 4,
-            horizontal: 8,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           child: child,
         ),
       ),

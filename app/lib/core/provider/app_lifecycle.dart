@@ -6,13 +6,11 @@ part 'app_lifecycle.g.dart';
 
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
 @Riverpod(keepAlive: true)
-class AppLifecycle extends _$AppLifecycle
-    with WidgetsBindingObserver {
+class AppLifecycle extends _$AppLifecycle with WidgetsBindingObserver {
   @override
   AppLifecycleState build() {
     // プロバイダ構築時に監視を開始。
-    final binding =
-        WidgetsBinding.instance..addObserver(this);
+    final binding = WidgetsBinding.instance..addObserver(this);
     // プロバイダが破棄された時に監視を解除。
     ref.onDispose(() => binding.removeObserver(this));
     // 初期値として `resumed` を返している。

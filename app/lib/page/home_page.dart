@@ -11,36 +11,35 @@ import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provi
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          const _Sheet(),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FloatingActionButton.small(
-              onPressed:
-                  () async => Navigator.of(context).push<void>(
-                    ModalBottomSheetRoute(
-                      isScrollControlled: false,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(16),
-                        ),
-                      ),
-                      builder: (context) => const _DebugModal(),
-                    ),
-                  ),
-              child: const Icon(Icons.bug_report),
+    return const Scaffold(body: Stack(children: [_Sheet(), _DebugButton()]));
+  }
+}
+
+class _DebugButton extends StatelessWidget {
+  const _DebugButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: FloatingActionButton.small(
+        onPressed:
+            () async => Navigator.of(context).push<void>(
+              ModalBottomSheetRoute(
+                isScrollControlled: false,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (context) => const _DebugModal(),
+              ),
             ),
-          ),
-        ],
+        child: const Icon(Icons.bug_report),
       ),
     );
   }

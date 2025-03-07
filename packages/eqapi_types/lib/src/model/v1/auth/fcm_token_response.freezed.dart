@@ -24,18 +24,16 @@ FcmTokenUpdateResponse _$FcmTokenUpdateResponseFromJson(
 /// @nodoc
 mixin _$FcmTokenUpdateResponse {
   String? get token => throw _privateConstructorUsedError;
-  String? get fcmVerify =>
-      throw _privateConstructorUsedError;
+  String? get fcmVerify => throw _privateConstructorUsedError;
 
   /// Serializes this FcmTokenUpdateResponse to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of FcmTokenUpdateResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $FcmTokenUpdateResponseCopyWith<FcmTokenUpdateResponse>
-  get copyWith => throw _privateConstructorUsedError;
+  $FcmTokenUpdateResponseCopyWith<FcmTokenUpdateResponse> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -43,11 +41,7 @@ abstract class $FcmTokenUpdateResponseCopyWith<$Res> {
   factory $FcmTokenUpdateResponseCopyWith(
     FcmTokenUpdateResponse value,
     $Res Function(FcmTokenUpdateResponse) then,
-  ) =
-      _$FcmTokenUpdateResponseCopyWithImpl<
-        $Res,
-        FcmTokenUpdateResponse
-      >;
+  ) = _$FcmTokenUpdateResponseCopyWithImpl<$Res, FcmTokenUpdateResponse>;
   @useResult
   $Res call({String? token, String? fcmVerify});
 }
@@ -58,10 +52,7 @@ class _$FcmTokenUpdateResponseCopyWithImpl<
   $Val extends FcmTokenUpdateResponse
 >
     implements $FcmTokenUpdateResponseCopyWith<$Res> {
-  _$FcmTokenUpdateResponseCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$FcmTokenUpdateResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -72,10 +63,7 @@ class _$FcmTokenUpdateResponseCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? token = freezed,
-    Object? fcmVerify = freezed,
-  }) {
+  $Res call({Object? token = freezed, Object? fcmVerify = freezed}) {
     return _then(
       _value.copyWith(
             token:
@@ -109,10 +97,7 @@ abstract class _$$FcmTokenUpdateResponseImplCopyWith<$Res>
 /// @nodoc
 class __$$FcmTokenUpdateResponseImplCopyWithImpl<$Res>
     extends
-        _$FcmTokenUpdateResponseCopyWithImpl<
-          $Res,
-          _$FcmTokenUpdateResponseImpl
-        >
+        _$FcmTokenUpdateResponseCopyWithImpl<$Res, _$FcmTokenUpdateResponseImpl>
     implements _$$FcmTokenUpdateResponseImplCopyWith<$Res> {
   __$$FcmTokenUpdateResponseImplCopyWithImpl(
     _$FcmTokenUpdateResponseImpl _value,
@@ -123,10 +108,7 @@ class __$$FcmTokenUpdateResponseImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? token = freezed,
-    Object? fcmVerify = freezed,
-  }) {
+  $Res call({Object? token = freezed, Object? fcmVerify = freezed}) {
     return _then(
       _$FcmTokenUpdateResponseImpl(
         token:
@@ -146,16 +128,14 @@ class __$$FcmTokenUpdateResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$FcmTokenUpdateResponseImpl
-    implements _FcmTokenUpdateResponse {
+class _$FcmTokenUpdateResponseImpl implements _FcmTokenUpdateResponse {
   const _$FcmTokenUpdateResponseImpl({
     required this.token,
     required this.fcmVerify,
   });
 
-  factory _$FcmTokenUpdateResponseImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$FcmTokenUpdateResponseImplFromJson(json);
+  factory _$FcmTokenUpdateResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FcmTokenUpdateResponseImplFromJson(json);
 
   @override
   final String? token;
@@ -172,29 +152,26 @@ class _$FcmTokenUpdateResponseImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FcmTokenUpdateResponseImpl &&
-            (identical(other.token, token) ||
-                other.token == token) &&
+            (identical(other.token, token) || other.token == token) &&
             (identical(other.fcmVerify, fcmVerify) ||
                 other.fcmVerify == fcmVerify));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, token, fcmVerify);
+  int get hashCode => Object.hash(runtimeType, token, fcmVerify);
 
   /// Create a copy of FcmTokenUpdateResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$FcmTokenUpdateResponseImplCopyWith<
-    _$FcmTokenUpdateResponseImpl
-  >
+  _$$FcmTokenUpdateResponseImplCopyWith<_$FcmTokenUpdateResponseImpl>
   get copyWith =>
-      __$$FcmTokenUpdateResponseImplCopyWithImpl<
-        _$FcmTokenUpdateResponseImpl
-      >(this, _$identity);
+      __$$FcmTokenUpdateResponseImplCopyWithImpl<_$FcmTokenUpdateResponseImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -202,16 +179,14 @@ class _$FcmTokenUpdateResponseImpl
   }
 }
 
-abstract class _FcmTokenUpdateResponse
-    implements FcmTokenUpdateResponse {
+abstract class _FcmTokenUpdateResponse implements FcmTokenUpdateResponse {
   const factory _FcmTokenUpdateResponse({
     required final String? token,
     required final String? fcmVerify,
   }) = _$FcmTokenUpdateResponseImpl;
 
-  factory _FcmTokenUpdateResponse.fromJson(
-    Map<String, dynamic> json,
-  ) = _$FcmTokenUpdateResponseImpl.fromJson;
+  factory _FcmTokenUpdateResponse.fromJson(Map<String, dynamic> json) =
+      _$FcmTokenUpdateResponseImpl.fromJson;
 
   @override
   String? get token;
@@ -222,8 +197,6 @@ abstract class _FcmTokenUpdateResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FcmTokenUpdateResponseImplCopyWith<
-    _$FcmTokenUpdateResponseImpl
-  >
+  _$$FcmTokenUpdateResponseImplCopyWith<_$FcmTokenUpdateResponseImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

@@ -10,7 +10,6 @@ class FcmTokenUpdateResponse with _$FcmTokenUpdateResponse {
     required String? fcmVerify,
   }) = _FcmTokenUpdateResponse;
 
-  factory FcmTokenUpdateResponse.fromJson(
-    Map<String, dynamic> json,
-  ) => _$FcmTokenUpdateResponseFromJson(json);
+  factory FcmTokenUpdateResponse.fromJson(Map<String, dynamic> json) =>
+      _$FcmTokenUpdateResponseFromJson(json);
 }

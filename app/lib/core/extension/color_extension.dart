@@ -18,18 +18,9 @@ extension ColorCode on Color {
     // 色をsRGBに変換
     final color = withValues(colorSpace: ColorSpace.sRGB);
     // color.{r,g,b}は0~1までの値なので、255倍して16進数に変換
-    final r = (color.r * 255)
-        .round()
-        .toRadixString(16)
-        .padLeft(2, '0');
-    final g = (color.g * 255)
-        .round()
-        .toRadixString(16)
-        .padLeft(2, '0');
-    final b = (color.b * 255)
-        .round()
-        .toRadixString(16)
-        .padLeft(2, '0');
+    final r = (color.r * 255).round().toRadixString(16).padLeft(2, '0');
+    final g = (color.g * 255).round().toRadixString(16).padLeft(2, '0');
+    final b = (color.b * 255).round().toRadixString(16).padLeft(2, '0');
     return '#$r$g$b';
   }
 }

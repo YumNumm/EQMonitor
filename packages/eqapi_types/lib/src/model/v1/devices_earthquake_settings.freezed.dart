@@ -15,8 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-DevicesEarthquakeSettings
-_$DevicesEarthquakeSettingsFromJson(
+DevicesEarthquakeSettings _$DevicesEarthquakeSettingsFromJson(
   Map<String, dynamic> json,
 ) {
   return _DevicesEarthquakeSettings.fromJson(json);
@@ -28,22 +27,17 @@ mixin _$DevicesEarthquakeSettings {
   JmaForecastIntensity get minJmaIntensity =>
       throw _privateConstructorUsedError;
   int get regionId => throw _privateConstructorUsedError;
-  DateTime get createdAt =>
-      throw _privateConstructorUsedError;
-  DateTime get updatedAt =>
-      throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this DevicesEarthquakeSettings to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of DevicesEarthquakeSettings
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $DevicesEarthquakeSettingsCopyWith<
-    DevicesEarthquakeSettings
-  >
-  get copyWith => throw _privateConstructorUsedError;
+  $DevicesEarthquakeSettingsCopyWith<DevicesEarthquakeSettings> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -51,11 +45,7 @@ abstract class $DevicesEarthquakeSettingsCopyWith<$Res> {
   factory $DevicesEarthquakeSettingsCopyWith(
     DevicesEarthquakeSettings value,
     $Res Function(DevicesEarthquakeSettings) then,
-  ) =
-      _$DevicesEarthquakeSettingsCopyWithImpl<
-        $Res,
-        DevicesEarthquakeSettings
-      >;
+  ) = _$DevicesEarthquakeSettingsCopyWithImpl<$Res, DevicesEarthquakeSettings>;
   @useResult
   $Res call({
     String id,
@@ -72,10 +62,7 @@ class _$DevicesEarthquakeSettingsCopyWithImpl<
   $Val extends DevicesEarthquakeSettings
 >
     implements $DevicesEarthquakeSettingsCopyWith<$Res> {
-  _$DevicesEarthquakeSettingsCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$DevicesEarthquakeSettingsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -127,9 +114,7 @@ class _$DevicesEarthquakeSettingsCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$DevicesEarthquakeSettingsImplCopyWith<
-  $Res
->
+abstract class _$$DevicesEarthquakeSettingsImplCopyWith<$Res>
     implements $DevicesEarthquakeSettingsCopyWith<$Res> {
   factory _$$DevicesEarthquakeSettingsImplCopyWith(
     _$DevicesEarthquakeSettingsImpl value,
@@ -153,8 +138,7 @@ class __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>
           $Res,
           _$DevicesEarthquakeSettingsImpl
         >
-    implements
-        _$$DevicesEarthquakeSettingsImplCopyWith<$Res> {
+    implements _$$DevicesEarthquakeSettingsImplCopyWith<$Res> {
   __$$DevicesEarthquakeSettingsImplCopyWithImpl(
     _$DevicesEarthquakeSettingsImpl _value,
     $Res Function(_$DevicesEarthquakeSettingsImpl) _then,
@@ -205,8 +189,7 @@ class __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$DevicesEarthquakeSettingsImpl
-    implements _DevicesEarthquakeSettings {
+class _$DevicesEarthquakeSettingsImpl implements _DevicesEarthquakeSettings {
   const _$DevicesEarthquakeSettingsImpl({
     required this.id,
     required this.minJmaIntensity,
@@ -215,9 +198,8 @@ class _$DevicesEarthquakeSettingsImpl
     required this.updatedAt,
   });
 
-  factory _$DevicesEarthquakeSettingsImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$DevicesEarthquakeSettingsImplFromJson(json);
+  factory _$DevicesEarthquakeSettingsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DevicesEarthquakeSettingsImplFromJson(json);
 
   @override
   final String id;
@@ -241,10 +223,7 @@ class _$DevicesEarthquakeSettingsImpl
         (other.runtimeType == runtimeType &&
             other is _$DevicesEarthquakeSettingsImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(
-                  other.minJmaIntensity,
-                  minJmaIntensity,
-                ) ||
+            (identical(other.minJmaIntensity, minJmaIntensity) ||
                 other.minJmaIntensity == minJmaIntensity) &&
             (identical(other.regionId, regionId) ||
                 other.regionId == regionId) &&
@@ -270,13 +249,10 @@ class _$DevicesEarthquakeSettingsImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$DevicesEarthquakeSettingsImplCopyWith<
+  _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
+  get copyWith => __$$DevicesEarthquakeSettingsImplCopyWithImpl<
     _$DevicesEarthquakeSettingsImpl
-  >
-  get copyWith =>
-      __$$DevicesEarthquakeSettingsImplCopyWithImpl<
-        _$DevicesEarthquakeSettingsImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -284,8 +260,7 @@ class _$DevicesEarthquakeSettingsImpl
   }
 }
 
-abstract class _DevicesEarthquakeSettings
-    implements DevicesEarthquakeSettings {
+abstract class _DevicesEarthquakeSettings implements DevicesEarthquakeSettings {
   const factory _DevicesEarthquakeSettings({
     required final String id,
     required final JmaForecastIntensity minJmaIntensity,
@@ -294,9 +269,8 @@ abstract class _DevicesEarthquakeSettings
     required final DateTime updatedAt,
   }) = _$DevicesEarthquakeSettingsImpl;
 
-  factory _DevicesEarthquakeSettings.fromJson(
-    Map<String, dynamic> json,
-  ) = _$DevicesEarthquakeSettingsImpl.fromJson;
+  factory _DevicesEarthquakeSettings.fromJson(Map<String, dynamic> json) =
+      _$DevicesEarthquakeSettingsImpl.fromJson;
 
   @override
   String get id;
@@ -313,8 +287,6 @@ abstract class _DevicesEarthquakeSettings
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DevicesEarthquakeSettingsImplCopyWith<
-    _$DevicesEarthquakeSettingsImpl
-  >
+  _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

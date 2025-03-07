@@ -12,17 +12,13 @@ class MaintenanceMessage
     required String? message,
     required Security? security,
     required MaintenanceMessageType? type,
-    @JsonKey(
-      fromJson: dateTimeFromString,
-      toJson: dateTimeToString,
-    )
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
     required DateTime requestTime,
     required Result? result,
   }) = _MaintenanceMessage;
 
-  factory MaintenanceMessage.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MaintenanceMessageFromJson(json);
+  factory MaintenanceMessage.fromJson(Map<String, dynamic> json) =>
+      _$MaintenanceMessageFromJson(json);
 }
 
 @JsonEnum(valueField: 'type')

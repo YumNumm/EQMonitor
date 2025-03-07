@@ -13,12 +13,8 @@ TravelTimeTables travelTime(Ref ref) =>
 
 @Riverpod(keepAlive: true)
 Future<TravelTimeTables> travelTimeInternal(Ref ref) async {
-  final dataSource = ref.watch(
-    travelTimeDataSourceProvider,
-  );
-  return TravelTimeTables(
-    table: await dataSource.loadTables(),
-  );
+  final dataSource = ref.watch(travelTimeDataSourceProvider);
+  return TravelTimeTables(table: await dataSource.loadTables());
 }
 
 @Riverpod(keepAlive: true)
@@ -27,52 +23,36 @@ TravelTimeDepthMap travelTimeDepthMap(Ref ref) {
   return state.table.groupListsBy((e) => e.depth);
 }
 
-typedef TravelTimeDepthMap =
-    Map<int, List<TravelTimeTable>>;
+typedef TravelTimeDepthMap = Map<int, List<TravelTimeTable>>;
 
 extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
   /// 走時を求める
   /// [depth]: 震源の深さ(km)
   /// [duration]: 地震発生からの経過時間(sec)
-  TravelTimeResult getTravelTime(
-    int depth,
-    double duration,
-  ) {
+  TravelTimeResult getTravelTime(int depth, double duration) {
     final lists = getOrNull(depth);
     if (lists == null) {
       return TravelTimeResult(null, null);
     }
     final p = () {
-      final p1 = lists.lastWhereOrNull(
-        (e) => e.p <= duration,
-      );
-      final p2 = lists.firstWhereOrNull(
-        (e) => e.p >= duration,
-      );
+      final p1 = lists.lastWhereOrNull((e) => e.p <= duration);
+      final p2 = lists.firstWhereOrNull((e) => e.p >= duration);
       if (p1 == null || p2 == null) {
         return null;
       }
       final p =
-          (duration - p1.p) /
-              (p2.p - p1.p) *
-              (p2.distance - p1.distance) +
+          (duration - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
           p1.distance;
       return p;
     }();
     final s = () {
-      final s1 = lists.lastWhereOrNull(
-        (e) => e.s <= duration,
-      );
-      final s2 = lists.firstWhereOrNull(
-        (e) => e.s >= duration,
-      );
+      final s1 = lists.lastWhereOrNull((e) => e.s <= duration);
+      final s2 = lists.firstWhereOrNull((e) => e.s >= duration);
       if (s1 == null || s2 == null) {
         return null;
       }
       final s =
-          (duration - s1.s) /
-              (s2.s - s1.s) *
-              (s2.distance - s1.distance) +
+          (duration - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
           s1.distance;
       return s;
     }();
@@ -89,8 +69,7 @@ extension TravelTimeTablesCalc on TravelTimeTables {
     if (depth > 700 || time > 2000) {
       return TravelTimeResult(null, null);
     }
-    final lists =
-        table.where((e) => e.depth == depth).toList();
+    final lists = table.where((e) => e.depth == depth).toList();
     if (lists.isEmpty) {
       return TravelTimeResult(null, null);
     }
@@ -100,9 +79,7 @@ extension TravelTimeTablesCalc on TravelTimeTables {
       return TravelTimeResult(null, null);
     }
     final p =
-        (time - p1.p) /
-            (p2.p - p1.p) *
-            (p2.distance - p1.distance) +
+        (time - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
         p1.distance;
     final s1 = lists.firstWhereOrNull((e) => e.s <= time);
     final s2 = lists.lastWhereOrNull((e) => e.s >= time);
@@ -110,9 +87,7 @@ extension TravelTimeTablesCalc on TravelTimeTables {
       return TravelTimeResult(null, p);
     }
     final s =
-        (time - s1.s) /
-            (s2.s - s1.s) *
-            (s2.distance - s1.distance) +
+        (time - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
         s1.distance;
     return TravelTimeResult(s, p);
   }

@@ -20,31 +20,24 @@ class EarthquakeHistoryScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parameter = useState(
-      const EarthquakeHistoryParameter(),
-    );
-    final state = ref.watch(
-      earthquakeHistoryNotifierProvider(parameter.value),
-    );
+    final parameter = useState(const EarthquakeHistoryParameter());
+    final state = ref.watch(earthquakeHistoryNotifierProvider(parameter.value));
 
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then((_) async {
-          if (parameter.value ==
-                  const EarthquakeHistoryParameter() &&
+          if (parameter.value == const EarthquakeHistoryParameter() &&
               state.valueOrNull?.$1.length == 5) {
             await ref
                 .read(
-                  earthquakeHistoryNotifierProvider(
-                    parameter.value,
-                  ).notifier,
+                  earthquakeHistoryNotifierProvider(parameter.value).notifier,
                 )
                 .fetchNextData();
           }
         }),
       );
       return null;
-    }, [parameter.value],);
+    }, [parameter.value]);
 
     return Scaffold(
       appBar: AppBar(
@@ -84,10 +77,7 @@ class EarthquakeHistoryScreen extends HookConsumerWidget {
 }
 
 class _SearchParameter extends StatelessWidget {
-  const _SearchParameter({
-    required this.parameter,
-    required this.onChanged,
-  });
+  const _SearchParameter({required this.parameter, required this.onChanged});
 
   final EarthquakeHistoryParameter parameter;
   final void Function(EarthquakeHistoryParameter) onChanged;
@@ -105,23 +95,15 @@ class _SearchParameter extends StatelessWidget {
                       min: parameter.intensityGte,
                       max: parameter.intensityLte,
                       onChanged:
-                          (min, max) => onChanged(
-                            parameter.updateIntensity(
-                              min,
-                              max,
-                            ),
-                          ),
+                          (min, max) =>
+                              onChanged(parameter.updateIntensity(min, max)),
                     ),
                     MagnitudeFilterChip(
                       min: parameter.magnitudeGte,
                       max: parameter.magnitudeLte,
                       onChanged:
-                          (min, max) => onChanged(
-                            parameter.updateMagnitude(
-                              min,
-                              max,
-                            ),
-                          ),
+                          (min, max) =>
+                              onChanged(parameter.updateMagnitude(min, max)),
                     ),
                     DepthFilterChip(
                       min: parameter.depthGte?.toInt(),
@@ -137,9 +119,7 @@ class _SearchParameter extends StatelessWidget {
                   ]
                   .map(
                     (e) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: e,
                     ),
                   )
@@ -165,14 +145,10 @@ class _SliverListBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useMemoized(
-      () => PrimaryScrollController.of(context),
-    );
+    final controller = useMemoized(() => PrimaryScrollController.of(context));
     useEffect(() {
       controller.addListener(() {
-        if (state.hasError ||
-            state.isRefreshing ||
-            !state.hasValue) {
+        if (state.hasError || state.isRefreshing || !state.hasValue) {
           return;
         }
         if (controller.position.pixels >=
@@ -181,15 +157,13 @@ class _SliverListBody extends HookConsumerWidget {
         }
       });
       return null;
-    }, [controller, state, onScrollEnd, onRefresh],);
+    }, [controller, state, onScrollEnd, onRefresh]);
 
     Widget listView({
       required (List<EarthquakeV1Extended>, int) data,
       Widget loading = const Padding(
         padding: EdgeInsets.all(48),
-        child: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
+        child: Center(child: CircularProgressIndicator.adaptive()),
       ),
     }) {
       if (data.$1.isEmpty) {
@@ -208,13 +182,9 @@ class _SliverListBody extends HookConsumerWidget {
               }
               if (state.hasError) {
                 final error = state.error!;
-                return ErrorCard(
-                  error: error,
-                  onReload: onRefresh,
-                );
+                return ErrorCard(error: error, onReload: onRefresh);
               }
-              final hasNext =
-                  state.valueOrNull?.hasNext ?? false;
+              final hasNext = state.valueOrNull?.hasNext ?? false;
               if (hasNext) {
                 return loading;
               } else {
@@ -238,11 +208,8 @@ class _SliverListBody extends HookConsumerWidget {
       onRefresh: () async => onRefresh?.call(),
       child: switch (state) {
         AsyncError(:final error) => () {
-          if (error
-              is EarthquakeParameterHasNotInitializedException) {
-            final parameterState = ref.watch(
-              jmaParameterProvider,
-            );
+          if (error is EarthquakeParameterHasNotInitializedException) {
+            final parameterState = ref.watch(jmaParameterProvider);
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -254,9 +221,7 @@ class _SliverListBody extends HookConsumerWidget {
                     FilledButton(
                       child: const Text('観測点情報を再取得'),
                       onPressed:
-                          () async => ref.invalidate(
-                            jmaParameterProvider,
-                          ),
+                          () async => ref.invalidate(jmaParameterProvider),
                     ),
                 ],
               ),
@@ -269,17 +234,12 @@ class _SliverListBody extends HookConsumerWidget {
           return ErrorCard(
             error: error,
             onReload:
-                () async => ref.refresh(
-                  earthquakeHistoryNotifierProvider(
-                    parameter,
-                  ),
-                ),
+                () async =>
+                    ref.refresh(earthquakeHistoryNotifierProvider(parameter)),
           );
         }(),
         AsyncData(:final value) => listView(data: value),
-        _ => const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
+        _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
     );
   }

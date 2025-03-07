@@ -10,17 +10,10 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const defaultUrl = Env.restApiUrl;
-    final developUrl = defaultUrl.replaceAll(
-      'api.',
-      'dev.api.',
-    );
-    final state = ref.watch(
-      telegramUrlProvider.select((v) => v.restApiUrl),
-    );
+    final developUrl = defaultUrl.replaceAll('api.', 'dev.api.');
+    final state = ref.watch(telegramUrlProvider.select((v) => v.restApiUrl));
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('API Endpoint Selector'),
-      ),
+      appBar: AppBar(title: const Text('API Endpoint Selector')),
       body: Column(
         children: [
           BorderedContainer(
@@ -33,9 +26,7 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
                   groupValue: state,
                   onChanged:
                       (value) async => ref
-                          .read(
-                            telegramUrlProvider.notifier,
-                          )
+                          .read(telegramUrlProvider.notifier)
                           .updateRestUrl(value!),
                 ),
                 RadioListTile.adaptive(
@@ -45,9 +36,7 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
                   groupValue: state,
                   onChanged:
                       (value) async => ref
-                          .read(
-                            telegramUrlProvider.notifier,
-                          )
+                          .read(telegramUrlProvider.notifier)
                           .updateRestUrl(value!),
                 ),
               ],

@@ -13,11 +13,7 @@ class Color {
 
   // ignore: prefer_constructors_over_static_methods
   static Color fromRGB(int r, int g, int b) {
-    return Color(
-      r.clamp(0, 255),
-      g.clamp(0, 255),
-      b.clamp(0, 255),
-    );
+    return Color(r.clamp(0, 255), g.clamp(0, 255), b.clamp(0, 255));
   }
 }
 
@@ -77,12 +73,7 @@ List<double> scaleToHsv(double p) {
   } else {
     // 区間C: fC(v) = p  (v in [0..1]) + h=0固定
     h = 0.0;
-    v = _solveMonotonicallyDecreasing(
-      target: p,
-      lower: 0,
-      upper: 1,
-      func: _fC,
-    );
+    v = _solveMonotonicallyDecreasing(target: p, lower: 0, upper: 1, func: _fC);
   }
   return [h, s, v];
 }
@@ -285,11 +276,7 @@ Color _calculateColorForPosition(
     if (position >= currentP && position <= nextP) {
       // 2点間の比率を計算
       final t = (position - currentP) / (nextP - currentP);
-      return _interpolateColor(
-        scaleData[i].color,
-        scaleData[i + 1].color,
-        t,
-      );
+      return _interpolateColor(scaleData[i].color, scaleData[i + 1].color, t);
     }
   }
 
@@ -312,10 +299,7 @@ void main() {
   };
 
   // 震度のリスト (-3 ~ 7の1刻み)
-  final intensityList = List.generate(
-    11,
-    (i) => -3.0 + i.toDouble(),
-  );
+  final intensityList = List.generate(11, (i) => -3.0 + i.toDouble());
 
   // PGAの値のリスト (gal)
   final pgaList = [
@@ -383,10 +367,7 @@ void main() {
         final p = (value + 3) / 10;
         final hsv = scaleToHsv(p);
         final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (
-          value: p,
-          color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
-        );
+        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
       }).toList();
 
   // PGAのカラーマップを作成
@@ -395,10 +376,7 @@ void main() {
         final p = (math.log(value) / math.ln10 + 2) / 5;
         final hsv = scaleToHsv(p);
         final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (
-          value: p,
-          color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
-        );
+        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
       }).toList();
 
   // PGVのカラーマップを作成
@@ -407,10 +385,7 @@ void main() {
         final p = (math.log(value) / math.ln10 + 3) / 5;
         final hsv = scaleToHsv(p);
         final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (
-          value: p,
-          color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
-        );
+        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
       }).toList();
 
   // PGDのカラーマップを作成
@@ -419,10 +394,7 @@ void main() {
         final p = (math.log(value) / math.ln10 + 4) / 5;
         final hsv = scaleToHsv(p);
         final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (
-          value: p,
-          color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
-        );
+        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
       }).toList();
 
   // 震度の補間値を計算

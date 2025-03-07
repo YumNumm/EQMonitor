@@ -1,11 +1,9 @@
-sealed class KyoshinImageParseException
-    implements Exception {
+sealed class KyoshinImageParseException implements Exception {
   const KyoshinImageParseException(this.type);
   final KyoshinImageParseExceptionType type;
 }
 
-class KyoshinImageParseInvalidGifException
-    extends KyoshinImageParseException {
+class KyoshinImageParseInvalidGifException extends KyoshinImageParseException {
   const KyoshinImageParseInvalidGifException()
     : super(KyoshinImageParseExceptionType.invalidGif);
 }
@@ -13,12 +11,7 @@ class KyoshinImageParseInvalidGifException
 class KyoshinImageParseInvalidImageSizeException
     extends KyoshinImageParseException {
   const KyoshinImageParseInvalidImageSizeException()
-    : super(
-        KyoshinImageParseExceptionType.invalidImageSize,
-      );
+    : super(KyoshinImageParseExceptionType.invalidImageSize);
 }
 
-enum KyoshinImageParseExceptionType {
-  invalidGif,
-  invalidImageSize,
-}
+enum KyoshinImageParseExceptionType { invalidGif, invalidImageSize }

@@ -25,14 +25,11 @@ class TelegramUrl extends _$TelegramUrl {
 
   static const _key = 'telegram_url';
 
-  Future<void> _save() async => ref
-      .read(sharedPreferencesProvider)
-      .setString(_key, jsonEncode(state));
+  Future<void> _save() async =>
+      ref.read(sharedPreferencesProvider).setString(_key, jsonEncode(state));
 
   TelegramUrlModel? _load() {
-    final jsonString = ref
-        .read(sharedPreferencesProvider)
-        .getString(_key);
+    final jsonString = ref.read(sharedPreferencesProvider).getString(_key);
     if (jsonString == null) {
       return null;
     }

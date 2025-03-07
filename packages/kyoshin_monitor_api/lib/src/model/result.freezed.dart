@@ -25,22 +25,18 @@ mixin _$Result {
   String? get message => throw _privateConstructorUsedError;
 
   /// Serializes this Result to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of Result
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ResultCopyWith<Result> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ResultCopyWith<Result> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ResultCopyWith<$Res> {
-  factory $ResultCopyWith(
-    Result value,
-    $Res Function(Result) then,
-  ) = _$ResultCopyWithImpl<$Res, Result>;
+  factory $ResultCopyWith(Result value, $Res Function(Result) then) =
+      _$ResultCopyWithImpl<$Res, Result>;
   @useResult
   $Res call({String? status, String? message});
 }
@@ -59,10 +55,7 @@ class _$ResultCopyWithImpl<$Res, $Val extends Result>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? status = freezed,
-    Object? message = freezed,
-  }) {
+  $Res call({Object? status = freezed, Object? message = freezed}) {
     return _then(
       _value.copyWith(
             status:
@@ -82,8 +75,7 @@ class _$ResultCopyWithImpl<$Res, $Val extends Result>
 }
 
 /// @nodoc
-abstract class _$$ResultImplCopyWith<$Res>
-    implements $ResultCopyWith<$Res> {
+abstract class _$$ResultImplCopyWith<$Res> implements $ResultCopyWith<$Res> {
   factory _$$ResultImplCopyWith(
     _$ResultImpl value,
     $Res Function(_$ResultImpl) then,
@@ -106,10 +98,7 @@ class __$$ResultImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? status = freezed,
-    Object? message = freezed,
-  }) {
+  $Res call({Object? status = freezed, Object? message = freezed}) {
     return _then(
       _$ResultImpl(
         status:
@@ -130,14 +119,10 @@ class __$$ResultImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ResultImpl implements _Result {
-  const _$ResultImpl({
-    required this.status,
-    required this.message,
-  });
+  const _$ResultImpl({required this.status, required this.message});
 
-  factory _$ResultImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ResultImplFromJson(json);
+  factory _$ResultImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ResultImplFromJson(json);
 
   @override
   final String? status;
@@ -154,16 +139,13 @@ class _$ResultImpl implements _Result {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ResultImpl &&
-            (identical(other.status, status) ||
-                other.status == status) &&
-            (identical(other.message, message) ||
-                other.message == message));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, status, message);
+  int get hashCode => Object.hash(runtimeType, status, message);
 
   /// Create a copy of Result
   /// with the given fields replaced by the non-null parameter values.
@@ -171,10 +153,7 @@ class _$ResultImpl implements _Result {
   @override
   @pragma('vm:prefer-inline')
   _$$ResultImplCopyWith<_$ResultImpl> get copyWith =>
-      __$$ResultImplCopyWithImpl<_$ResultImpl>(
-        this,
-        _$identity,
-      );
+      __$$ResultImplCopyWithImpl<_$ResultImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -188,8 +167,7 @@ abstract class _Result implements Result {
     required final String? message,
   }) = _$ResultImpl;
 
-  factory _Result.fromJson(Map<String, dynamic> json) =
-      _$ResultImpl.fromJson;
+  factory _Result.fromJson(Map<String, dynamic> json) = _$ResultImpl.fromJson;
 
   @override
   String? get status;

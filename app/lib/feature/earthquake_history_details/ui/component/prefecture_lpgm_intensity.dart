@@ -22,59 +22,49 @@ typedef _Arg =
     });
 
 @riverpod
-Future<
-  Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
->
-_lpgmCalculator(Ref ref, _Arg arg) => compute<
-  _Arg,
-  Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
->((arg) {
-  final prefectures = arg.prefectures;
-  final stations = arg.stations;
-  if (prefectures == null || stations == null) {
-    return {};
-  }
-  // 最大長周期地震動階級でグルーピング
-  final prefecturesGroupedByLpgmIntensity = prefectures
-      .where((pref) => pref.lpgmIntensity != null)
-      .groupListsBy((pref) => pref.lpgmIntensity!);
-  // それぞれの階級ごとに、都道府県を舐める
-  final result =
-      <JmaLgIntensity, List<_MergedPrefectureIntensity>>{};
-  for (final entry
-      in prefecturesGroupedByLpgmIntensity.entries) {
-    final intensity = entry.key;
-    final prefectures = entry.value;
-    for (final pref in prefectures) {
-      // 観測点が所属していて、階級が同じものを取得
-      // idの上2桁が都道府県コード
-      final stationsInPrefAndIntensitySame = stations.where(
-        (sta) =>
-            sta.code.startsWith(
-              pref.code.substring(0, 2),
-            ) &&
-            sta.lpgmIntensity == intensity,
-      );
-      result.putIfAbsent(intensity, () => []);
-      result[intensity]!.add(
-        _MergedPrefectureIntensity(
-          code: pref.code,
-          name: pref.name,
-          intensity: intensity,
-          stations: stationsInPrefAndIntensitySame.toList(),
-        ),
-      );
-    }
-  }
-  return result;
-}, arg,);
+Future<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> _lpgmCalculator(
+  Ref ref,
+  _Arg arg,
+) =>
+    compute<_Arg, Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>((arg) {
+      final prefectures = arg.prefectures;
+      final stations = arg.stations;
+      if (prefectures == null || stations == null) {
+        return {};
+      }
+      // 最大長周期地震動階級でグルーピング
+      final prefecturesGroupedByLpgmIntensity = prefectures
+          .where((pref) => pref.lpgmIntensity != null)
+          .groupListsBy((pref) => pref.lpgmIntensity!);
+      // それぞれの階級ごとに、都道府県を舐める
+      final result = <JmaLgIntensity, List<_MergedPrefectureIntensity>>{};
+      for (final entry in prefecturesGroupedByLpgmIntensity.entries) {
+        final intensity = entry.key;
+        final prefectures = entry.value;
+        for (final pref in prefectures) {
+          // 観測点が所属していて、階級が同じものを取得
+          // idの上2桁が都道府県コード
+          final stationsInPrefAndIntensitySame = stations.where(
+            (sta) =>
+                sta.code.startsWith(pref.code.substring(0, 2)) &&
+                sta.lpgmIntensity == intensity,
+          );
+          result.putIfAbsent(intensity, () => []);
+          result[intensity]!.add(
+            _MergedPrefectureIntensity(
+              code: pref.code,
+              name: pref.name,
+              intensity: intensity,
+              stations: stationsInPrefAndIntensitySame.toList(),
+            ),
+          );
+        }
+      }
+      return result;
+    }, arg);
 
-class PrefectureLpgmIntensityWidget
-    extends HookConsumerWidget {
-  const PrefectureLpgmIntensityWidget({
-    required this.item,
-    super.key,
-  });
+class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
+  const PrefectureLpgmIntensityWidget({required this.item, super.key});
 
   final EarthquakeV1 item;
 
@@ -87,7 +77,7 @@ class PrefectureLpgmIntensityWidget
       _LpgmCalculatorProvider((
         prefectures: item.lpgmIntensityPrefectures,
         stations: item.lpgmIntenstiyStations,
-      ),),
+      )),
     );
 
     return switch (mergedPrefecturesFuture) {
@@ -97,14 +87,10 @@ class PrefectureLpgmIntensityWidget
           child: CircularProgressIndicator.adaptive(),
         ),
       ),
-      AsyncData(:final value) when value.isEmpty =>
-        const SizedBox.shrink(),
+      AsyncData(:final value) when value.isEmpty => const SizedBox.shrink(),
       AsyncData(:final value) => BorderedContainer(
         elevation: 1,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           children: [
             const SheetHeader(title: '各地の長周期地震動観測状況'),
@@ -113,12 +99,9 @@ class PrefectureLpgmIntensityWidget
               (a, b) => a.key < b.key ? 1 : -1,
             ))
               () {
-                final hasStations = kv.value.any(
-                  (e) => e.stations.isNotEmpty,
-                );
+                final hasStations = kv.value.any((e) => e.stations.isNotEmpty);
                 return ListTile(
-                  titleAlignment:
-                      ListTileTitleAlignment.titleHeight,
+                  titleAlignment: ListTileTitleAlignment.titleHeight,
                   leading: JmaLgIntensityIcon(
                     intensity: kv.key,
                     type: IntensityIconType.filled,
@@ -128,24 +111,18 @@ class PrefectureLpgmIntensityWidget
                     style: textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    kv.value
-                        .map((e) => e.name)
-                        .join(', ')
-                        .toHalfWidth,
+                    kv.value.map((e) => e.name).join(', ').toHalfWidth,
                   ),
                   onTap:
                       hasStations
-                          ? () async =>
-                              _PrefectureModalBottomSheet.show(
-                                context: context,
-                                intensity: kv.key,
-                                prefectures: kv.value,
-                              )
+                          ? () async => _PrefectureModalBottomSheet.show(
+                            context: context,
+                            intensity: kv.key,
+                            prefectures: kv.value,
+                          )
                           : null,
                   trailing:
-                      hasStations
-                          ? const Icon(Icons.chevron_right)
-                          : null,
+                      hasStations ? const Icon(Icons.chevron_right) : null,
                 );
               }(),
           ],
@@ -215,9 +192,7 @@ class _PrefectureListTile extends HookWidget {
         prefecture.name,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(
-        prefecture.stations.map((e) => e.name).join(', '),
-      ),
+      subtitle: Text(prefecture.stations.map((e) => e.name).join(', ')),
       onTap: () => isExpanded.value = false,
       trailing: const Icon(Icons.expand_less),
     );

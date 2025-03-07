@@ -15,18 +15,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class HomeMapLayerModal extends HookConsumerWidget {
   const HomeMapLayerModal({super.key});
 
-  static Future<void> show(BuildContext context) =>
-      Navigator.of(context).push(
-        AppSheetRoute(
-          builder:
-              (context) => const ClipRRect(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-                child: HomeMapLayerModal(),
-              ),
-        ),
-      );
+  static Future<void> show(BuildContext context) => Navigator.of(context).push(
+    AppSheetRoute(
+      builder:
+          (context) => const ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            child: HomeMapLayerModal(),
+          ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,16 +45,13 @@ class HomeMapLayerModal extends HookConsumerWidget {
                   tileMode: TileMode.mirror,
                 ),
                 inner: ColorFilter.mode(
-                  colorScheme.surfaceContainerLow
-                      .withValues(alpha: 0.7),
+                  colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
                   BlendMode.srcATop,
                 ),
               ),
               child: const Text(
                 'マップレイヤー',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             automaticallyImplyLeading: false,
@@ -74,12 +68,8 @@ class HomeMapLayerModal extends HookConsumerWidget {
               ),
             ],
           ),
-          const SliverToBoxAdapter(
-            child: _KyoshinMonitorIsEnabledTile(),
-          ),
-          const SliverToBoxAdapter(
-            child: _LocationSettingCards(),
-          ),
+          const SliverToBoxAdapter(child: _KyoshinMonitorIsEnabledTile()),
+          const SliverToBoxAdapter(child: _LocationSettingCards()),
         ],
       ),
     );
@@ -92,12 +82,8 @@ class _LocationSettingCards extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final config = ref.watch(
-      homeConfigurationNotifierProvider,
-    );
-    final permissionState = ref.watch(
-      permissionNotifierProvider,
-    );
+    final config = ref.watch(homeConfigurationNotifierProvider);
+    final permissionState = ref.watch(permissionNotifierProvider);
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -121,15 +107,8 @@ class _LocationSettingCards extends ConsumerWidget {
                   onTap:
                       () async => lightHapticFunction(
                         () async => ref
-                            .read(
-                              homeConfigurationNotifierProvider
-                                  .notifier,
-                            )
-                            .save(
-                              config.copyWith(
-                                showLocation: false,
-                              ),
-                            ),
+                            .read(homeConfigurationNotifierProvider.notifier)
+                            .save(config.copyWith(showLocation: false)),
                       ),
                 ),
               ),
@@ -138,40 +117,23 @@ class _LocationSettingCards extends ConsumerWidget {
                   title: '表示',
                   icon: Icons.location_on_outlined,
                   isSelected: config.showLocation,
-                  subtitle:
-                      !permissionState.location
-                          ? '位置情報が許可されていません'
-                          : null,
+                  subtitle: !permissionState.location ? '位置情報が許可されていません' : null,
                   onTap:
                       () async => lightHapticFunction(() async {
                         // 位置情報の権限がない場合は要求する
                         if (!permissionState.location) {
                           await ref
-                              .read(
-                                permissionNotifierProvider
-                                    .notifier,
-                              )
+                              .read(permissionNotifierProvider.notifier)
                               .requestLocationWhenInUsePermission();
                           // 権限が付与されなかった場合は早期リターン
-                          if (!ref
-                              .read(
-                                permissionNotifierProvider,
-                              )
-                              .location) {
+                          if (!ref.read(permissionNotifierProvider).location) {
                             return;
                           }
                         }
                         // 権限がある場合は位置情報表示を有効化
                         await ref
-                            .read(
-                              homeConfigurationNotifierProvider
-                                  .notifier,
-                            )
-                            .save(
-                              config.copyWith(
-                                showLocation: true,
-                              ),
-                            );
+                            .read(homeConfigurationNotifierProvider.notifier)
+                            .save(config.copyWith(showLocation: true));
                       }),
                 ),
               ),
@@ -213,10 +175,7 @@ class _LocationCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12,
-            horizontal: 16,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -233,16 +192,13 @@ class _LocationCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     title,
-                    style: theme.textTheme.bodyMedium
-                        ?.copyWith(
-                          color:
-                              isSelected
-                                  ? colorScheme
-                                      .onPrimaryContainer
-                                  : colorScheme
-                                      .onSurfaceVariant,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color:
+                          isSelected
+                              ? colorScheme.onPrimaryContainer
+                              : colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -250,10 +206,9 @@ class _LocationCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle!,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(
-                        color: theme.colorScheme.error,
-                      ),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -270,9 +225,7 @@ class _KyoshinMonitorIsEnabledTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final setting = ref.watch(
-      kyoshinMonitorSettingsProvider,
-    );
+    final setting = ref.watch(kyoshinMonitorSettingsProvider);
 
     final subtitle =
         setting.useKmoni
@@ -286,9 +239,7 @@ class _KyoshinMonitorIsEnabledTile extends ConsumerWidget {
         title: '強震モニタ',
         subtitle: subtitle,
         trailing: const Icon(Icons.chevron_right),
-        onTap:
-            () async =>
-                KyoshinMonitorSettingsModal.show(context),
+        onTap: () async => KyoshinMonitorSettingsModal.show(context),
       ),
     );
   }

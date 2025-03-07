@@ -5,14 +5,9 @@ class BorderedContainer extends StatelessWidget {
     required this.child,
     this.accentColor,
     this.padding = const EdgeInsets.all(12),
-    this.margin = const EdgeInsets.symmetric(
-      vertical: 4,
-      horizontal: 8,
-    ),
+    this.margin = const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
     this.elevation = 0,
-    this.borderRadius = const BorderRadius.all(
-      Radius.circular(16),
-    ),
+    this.borderRadius = const BorderRadius.all(Radius.circular(16)),
     this.onPressed,
     super.key,
   });
@@ -32,13 +27,11 @@ class BorderedContainer extends StatelessWidget {
     final card = Card(
       clipBehavior: Clip.antiAlias,
       elevation: elevation,
-      color:
-          accentColor ?? theme.colorScheme.surfaceContainer,
+      color: accentColor ?? theme.colorScheme.surfaceContainer,
       // border
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: theme.colorScheme.onSurfaceVariant
-              .withValues(alpha: 0.3),
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
         ),
         borderRadius: borderRadius,
       ),

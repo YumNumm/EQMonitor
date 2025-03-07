@@ -28,11 +28,7 @@ class ActionButton extends StatelessWidget {
     required void Function() onPressed,
     required Widget child,
   }) {
-    return ActionButton(
-      onPressed: onPressed,
-      isEnabled: false,
-      child: child,
-    );
+    return ActionButton(onPressed: onPressed, isEnabled: false, child: child);
   }
 
   factory ActionButton.text({
@@ -49,9 +45,7 @@ class ActionButton extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium!.copyWith(
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
             fontWeight: FontWeight.bold,
             color: Colors.white,
             letterSpacing: 1.1,
@@ -74,9 +68,7 @@ class ActionButton extends StatelessWidget {
     child: Center(
       child: Text(
         text,
-        style: Theme.of(
-          context,
-        ).textTheme.titleMedium!.copyWith(
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
           fontWeight: FontWeight.bold,
           color: textColor,
           letterSpacing: 1.1,
@@ -101,13 +93,9 @@ class ActionButton extends StatelessWidget {
     );
     final disabledWidget = DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(16),
-        ),
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
         color: Colors.white.withValues(alpha: 0.75),
-        border: const Border.fromBorderSide(
-          BorderSide(color: Colors.grey),
-        ),
+        border: const Border.fromBorderSide(BorderSide(color: Colors.grey)),
       ),
       child: child,
     );

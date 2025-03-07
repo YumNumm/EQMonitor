@@ -5,31 +5,25 @@ part 'notification_remote_settings_state.freezed.dart';
 part 'notification_remote_settings_state.g.dart';
 
 @freezed
-class NotificationRemoteSettingsState
-    with _$NotificationRemoteSettingsState {
+class NotificationRemoteSettingsState with _$NotificationRemoteSettingsState {
   const factory NotificationRemoteSettingsState({
     required NotificationRemoteSettingsEew eew,
-    required NotificationRemoteSettingsEarthquake
-    earthquake,
+    required NotificationRemoteSettingsEarthquake earthquake,
   }) = _NotificationRemoteSettingsState;
 
-  factory NotificationRemoteSettingsState.fromJson(
-    Map<String, dynamic> json,
-  ) => _$NotificationRemoteSettingsStateFromJson(json);
+  factory NotificationRemoteSettingsState.fromJson(Map<String, dynamic> json) =>
+      _$NotificationRemoteSettingsStateFromJson(json);
 }
 
 @freezed
-class NotificationRemoteSettingsEew
-    with _$NotificationRemoteSettingsEew {
+class NotificationRemoteSettingsEew with _$NotificationRemoteSettingsEew {
   const factory NotificationRemoteSettingsEew({
     required JmaForecastIntensity? global,
-    required List<NotificationRemoteSettingsEewRegion>
-    regions,
+    required List<NotificationRemoteSettingsEewRegion> regions,
   }) = _NotificationRemoteSettingsEew;
 
-  factory NotificationRemoteSettingsEew.fromJson(
-    Map<String, dynamic> json,
-  ) => _$NotificationRemoteSettingsEewFromJson(json);
+  factory NotificationRemoteSettingsEew.fromJson(Map<String, dynamic> json) =>
+      _$NotificationRemoteSettingsEewFromJson(json);
 }
 
 @freezed
@@ -51,10 +45,7 @@ class NotificationRemoteSettingsEarthquake
     with _$NotificationRemoteSettingsEarthquake {
   const factory NotificationRemoteSettingsEarthquake({
     required JmaForecastIntensity? global,
-    required List<
-      NotificationRemoteSettingsEarthquakeRegion
-    >
-    regions,
+    required List<NotificationRemoteSettingsEarthquakeRegion> regions,
   }) = _NotificationRemoteSettingsEarthquake;
 
   factory NotificationRemoteSettingsEarthquake.fromJson(
@@ -73,7 +64,5 @@ class NotificationRemoteSettingsEarthquakeRegion
 
   factory NotificationRemoteSettingsEarthquakeRegion.fromJson(
     Map<String, dynamic> json,
-  ) => _$NotificationRemoteSettingsEarthquakeRegionFromJson(
-    json,
-  );
+  ) => _$NotificationRemoteSettingsEarthquakeRegionFromJson(json);
 }

@@ -13,33 +13,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_monitor_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class KyoshinMonitorNotifier
-    extends _$KyoshinMonitorNotifier {
+class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
   @override
   Future<KyoshinMonitorState> build() async {
     // タイマーストリームを監視
-    ref.listen(kyoshinMonitorTimerStreamProvider, (
-      _,
-      next,
-    ) async {
+    ref.listen(kyoshinMonitorTimerStreamProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
         await _fetchAndAnalyzeImage(value);
       }
     });
 
     // 設定変更を監視
-    ref.listen(kyoshinMonitorSettingsProvider, (
-      previous,
-      next,
-    ) {
+    ref.listen(kyoshinMonitorSettingsProvider, (previous, next) {
       void onSettingsChanged() =>
           state = const AsyncData(KyoshinMonitorState());
 
       if (previous == null) {
         return;
       }
-      if (previous.realtimeDataType !=
-              next.realtimeDataType ||
+      if (previous.realtimeDataType != next.realtimeDataType ||
           previous.realtimeLayer != next.realtimeLayer) {
         onSettingsChanged();
       }
@@ -49,48 +41,28 @@ class KyoshinMonitorNotifier
   }
 
   /// 画像を取得して解析する
-  Future<void> _fetchAndAnalyzeImage(
-    DateTime targetTime,
-  ) async {
+  Future<void> _fetchAndAnalyzeImage(DateTime targetTime) async {
     // interval + 5秒遅れている場合は遅延として扱う
     final imageFetchInterval =
-        ref
-            .read(kyoshinMonitorSettingsProvider)
-            .api
-            .imageFetchInterval;
-    final delay =
-        imageFetchInterval + const Duration(seconds: 5);
-    final isDelayed =
-        targetTime.difference(DateTime.now()) > delay;
+        ref.read(kyoshinMonitorSettingsProvider).api.imageFetchInterval;
+    final delay = imageFetchInterval + const Duration(seconds: 5);
+    final isDelayed = targetTime.difference(DateTime.now()) > delay;
 
     if (state.isLoading) {
       return;
     }
     final stopwatch = Stopwatch()..start();
-    state = const AsyncLoading<KyoshinMonitorState>()
-        .copyWithPrevious(state);
+    state = const AsyncLoading<KyoshinMonitorState>().copyWithPrevious(state);
     state = await AsyncValue.guard(() async {
-      final dataSource = ref.read(
-        kyoshinMonitorWebApiDataSourceProvider,
-      );
-      final imageParser = ref.read(
-        kyoshinMonitorImageParserProvider,
-      );
-      final points = ref.read(
-        kyoshinMonitorObservationPointsProvider,
-      );
-      final observationPoints = ref.read(
-        kyoshinObservationPointsProvider,
-      );
+      final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
+      final imageParser = ref.read(kyoshinMonitorImageParserProvider);
+      final points = ref.read(kyoshinMonitorObservationPointsProvider);
+      final observationPoints = ref.read(kyoshinObservationPointsProvider);
       // 画像を取得
       final realtimeDataType =
-          ref
-              .read(kyoshinMonitorSettingsProvider)
-              .realtimeDataType;
+          ref.read(kyoshinMonitorSettingsProvider).realtimeDataType;
       final realtimeLayer =
-          ref
-              .read(kyoshinMonitorSettingsProvider)
-              .realtimeLayer;
+          ref.read(kyoshinMonitorSettingsProvider).realtimeLayer;
       final image = await dataSource.getRealtimeImageData(
         type: realtimeDataType,
         layer: realtimeLayer,
@@ -106,16 +78,14 @@ class KyoshinMonitorNotifier
       final results =
           result
               .mapIndexed((index, element) {
-                final point =
-                    observationPoints.points[index];
+                final point = observationPoints.points[index];
                 return switch (element) {
                   KyoshinMonitorImageParseObservationSuccess() =>
                     KyoshinMonitorImageParseObservationPoint(
                       point: point,
                       observation: element.point,
                     ),
-                  KyoshinMonitorImageParseObservationFailure() =>
-                    null,
+                  KyoshinMonitorImageParseObservationFailure() => null,
                 };
               })
               .nonNulls

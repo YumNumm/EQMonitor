@@ -15,9 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-IntensitySubDivision _$IntensitySubDivisionFromJson(
-  Map<String, dynamic> json,
-) {
+IntensitySubDivision _$IntensitySubDivisionFromJson(Map<String, dynamic> json) {
   return _IntensitySubDivision.fromJson(json);
 }
 
@@ -26,20 +24,17 @@ mixin _$IntensitySubDivision {
   int get id => throw _privateConstructorUsedError;
   int get eventId => throw _privateConstructorUsedError;
   String get areaCode => throw _privateConstructorUsedError;
-  JmaIntensity get maxIntensity =>
-      throw _privateConstructorUsedError;
-  JmaLgIntensity? get maxLpgmIntensity =>
-      throw _privateConstructorUsedError;
+  JmaIntensity get maxIntensity => throw _privateConstructorUsedError;
+  JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
 
   /// Serializes this IntensitySubDivision to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of IntensitySubDivision
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $IntensitySubDivisionCopyWith<IntensitySubDivision>
-  get copyWith => throw _privateConstructorUsedError;
+  $IntensitySubDivisionCopyWith<IntensitySubDivision> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -47,11 +42,7 @@ abstract class $IntensitySubDivisionCopyWith<$Res> {
   factory $IntensitySubDivisionCopyWith(
     IntensitySubDivision value,
     $Res Function(IntensitySubDivision) then,
-  ) =
-      _$IntensitySubDivisionCopyWithImpl<
-        $Res,
-        IntensitySubDivision
-      >;
+  ) = _$IntensitySubDivisionCopyWithImpl<$Res, IntensitySubDivision>;
   @useResult
   $Res call({
     int id,
@@ -68,10 +59,7 @@ class _$IntensitySubDivisionCopyWithImpl<
   $Val extends IntensitySubDivision
 >
     implements $IntensitySubDivisionCopyWith<$Res> {
-  _$IntensitySubDivisionCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$IntensitySubDivisionCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -142,11 +130,7 @@ abstract class _$$IntensitySubDivisionImplCopyWith<$Res>
 
 /// @nodoc
 class __$$IntensitySubDivisionImplCopyWithImpl<$Res>
-    extends
-        _$IntensitySubDivisionCopyWithImpl<
-          $Res,
-          _$IntensitySubDivisionImpl
-        >
+    extends _$IntensitySubDivisionCopyWithImpl<$Res, _$IntensitySubDivisionImpl>
     implements _$$IntensitySubDivisionImplCopyWith<$Res> {
   __$$IntensitySubDivisionImplCopyWithImpl(
     _$IntensitySubDivisionImpl _value,
@@ -198,8 +182,7 @@ class __$$IntensitySubDivisionImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$IntensitySubDivisionImpl
-    implements _IntensitySubDivision {
+class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
   const _$IntensitySubDivisionImpl({
     required this.id,
     required this.eventId,
@@ -208,9 +191,8 @@ class _$IntensitySubDivisionImpl
     required this.maxLpgmIntensity,
   });
 
-  factory _$IntensitySubDivisionImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$IntensitySubDivisionImplFromJson(json);
+  factory _$IntensitySubDivisionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IntensitySubDivisionImplFromJson(json);
 
   @override
   final int id;
@@ -234,18 +216,13 @@ class _$IntensitySubDivisionImpl
         (other.runtimeType == runtimeType &&
             other is _$IntensitySubDivisionImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.eventId, eventId) ||
-                other.eventId == eventId) &&
+            (identical(other.eventId, eventId) || other.eventId == eventId) &&
             (identical(other.areaCode, areaCode) ||
                 other.areaCode == areaCode) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            (identical(
-                  other.maxLpgmIntensity,
-                  maxLpgmIntensity,
-                ) ||
-                other.maxLpgmIntensity ==
-                    maxLpgmIntensity));
+            (identical(other.maxLpgmIntensity, maxLpgmIntensity) ||
+                other.maxLpgmIntensity == maxLpgmIntensity));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -264,12 +241,12 @@ class _$IntensitySubDivisionImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$IntensitySubDivisionImplCopyWith<
-    _$IntensitySubDivisionImpl
-  >
-  get copyWith => __$$IntensitySubDivisionImplCopyWithImpl<
-    _$IntensitySubDivisionImpl
-  >(this, _$identity);
+  _$$IntensitySubDivisionImplCopyWith<_$IntensitySubDivisionImpl>
+  get copyWith =>
+      __$$IntensitySubDivisionImplCopyWithImpl<_$IntensitySubDivisionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -277,8 +254,7 @@ class _$IntensitySubDivisionImpl
   }
 }
 
-abstract class _IntensitySubDivision
-    implements IntensitySubDivision {
+abstract class _IntensitySubDivision implements IntensitySubDivision {
   const factory _IntensitySubDivision({
     required final int id,
     required final int eventId,
@@ -287,9 +263,8 @@ abstract class _IntensitySubDivision
     required final JmaLgIntensity? maxLpgmIntensity,
   }) = _$IntensitySubDivisionImpl;
 
-  factory _IntensitySubDivision.fromJson(
-    Map<String, dynamic> json,
-  ) = _$IntensitySubDivisionImpl.fromJson;
+  factory _IntensitySubDivision.fromJson(Map<String, dynamic> json) =
+      _$IntensitySubDivisionImpl.fromJson;
 
   @override
   int get id;
@@ -306,8 +281,6 @@ abstract class _IntensitySubDivision
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$IntensitySubDivisionImplCopyWith<
-    _$IntensitySubDivisionImpl
-  >
+  _$$IntensitySubDivisionImplCopyWith<_$IntensitySubDivisionImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

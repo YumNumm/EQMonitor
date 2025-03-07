@@ -9,21 +9,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_remote_authentication_service.g.dart';
 
 @Riverpod(keepAlive: true)
-NotificationRemoteAuthenticationService
-notificationRemoteAuthenticateService(Ref ref) =>
-    NotificationRemoteAuthenticationService(
-      api: ref.watch(eqApiProvider),
-      apiAuthenticationService: ref.watch(
-        apiAuthenticationNotifierProvider.notifier,
-      ),
-      ref: ref,
-    );
+NotificationRemoteAuthenticationService notificationRemoteAuthenticateService(
+  Ref ref,
+) => NotificationRemoteAuthenticationService(
+  api: ref.watch(eqApiProvider),
+  apiAuthenticationService: ref.watch(
+    apiAuthenticationNotifierProvider.notifier,
+  ),
+  ref: ref,
+);
 
 class NotificationRemoteAuthenticationService {
   NotificationRemoteAuthenticationService({
     required EqApi api,
-    required ApiAuthenticationNotifier
-    apiAuthenticationService,
+    required ApiAuthenticationNotifier apiAuthenticationService,
     required Ref ref,
   }) : _api = api,
        _apiAuthenticationService = apiAuthenticationService,
@@ -33,9 +32,7 @@ class NotificationRemoteAuthenticationService {
   final ApiAuthenticationNotifier _apiAuthenticationService;
   final Ref _ref;
 
-  Future<void> authenticate({
-    required String fcmToken,
-  }) async {
+  Future<void> authenticate({required String fcmToken}) async {
     final result = await _api.auth.register(
       request: FcmTokenRequest(fcmToken: fcmToken),
     );
@@ -48,9 +45,7 @@ class NotificationRemoteAuthenticationService {
     return;
   }
 
-  Future<FcmTokenUpdateResponse> updateToken({
-    required String fcmToken,
-  }) async {
+  Future<FcmTokenUpdateResponse> updateToken({required String fcmToken}) async {
     final authorization = await _ref.read(
       apiAuthenticationNotifierProvider.future,
     );

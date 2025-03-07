@@ -22,14 +22,13 @@ Future<void> _save(
     () async => notifier.save(),
   );
   if (context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('通知条件を保存しました')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('通知条件を保存しました')));
   }
 }
 
-class NotificationRemoteSettingsPage
-    extends HookConsumerWidget {
+class NotificationRemoteSettingsPage extends HookConsumerWidget {
   const NotificationRemoteSettingsPage({super.key});
 
   @override
@@ -43,9 +42,7 @@ class NotificationRemoteSettingsPage
 
     if (initialSetup case AsyncLoading()) {
       return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
+        body: Center(child: CircularProgressIndicator.adaptive()),
       );
     }
     if (initialSetup case AsyncError(:final error)) {
@@ -76,22 +73,17 @@ class NotificationRemoteSettingsPage
           final _ = switch (result) {
             OkCancelResult.cancel => () {
               if (context.mounted) {
-                ref.invalidate(
-                  notificationRemoteSettingsNotifierProvider,
-                );
+                ref.invalidate(notificationRemoteSettingsNotifierProvider);
                 Navigator.of(context).pop();
               }
             }(),
             OkCancelResult.ok => () async {
               final notifier = ref.read(
-                notificationRemoteSettingsNotifierProvider
-                    .notifier,
+                notificationRemoteSettingsNotifierProvider.notifier,
               );
               await _save(context, notifier);
               if (context.mounted) {
-                ref.invalidate(
-                  notificationRemoteSettingsNotifierProvider,
-                );
+                ref.invalidate(notificationRemoteSettingsNotifierProvider);
                 Navigator.of(context).pop();
               }
             }(),
@@ -107,13 +99,10 @@ class NotificationRemoteSettingsPage
                   heroTag: 'save',
                   onPressed: () async {
                     final notifier = ref.read(
-                      notificationRemoteSettingsNotifierProvider
-                          .notifier,
+                      notificationRemoteSettingsNotifierProvider.notifier,
                     );
                     await _save(context, notifier);
-                    ref.invalidate(
-                      notificationRemoteSettingsNotifierProvider,
-                    );
+                    ref.invalidate(notificationRemoteSettingsNotifierProvider);
                   },
                   label: const Text('保存する'),
                   icon: const Icon(Icons.save),
@@ -129,17 +118,13 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(
-      notificationRemoteSettingsNotifierProvider,
-    );
+    final state = ref.watch(notificationRemoteSettingsNotifierProvider);
 
     return switch (state) {
       AsyncError(:final error) => ErrorCard(
         error: error,
         onReload:
-            () async => ref.refresh(
-              notificationRemoteSettingsNotifierProvider,
-            ),
+            () async => ref.refresh(notificationRemoteSettingsNotifierProvider),
       ),
       AsyncData(:final value) => _Data(state: value),
       _ => const Center(
@@ -147,9 +132,7 @@ class _Body extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
+            Center(child: CircularProgressIndicator.adaptive()),
             SizedBox(height: 16),
             Text(
               '設定を読み込んでいます...',
@@ -177,15 +160,13 @@ class _Data extends StatelessWidget {
             earthquake: state.earthquake,
             action:
                 () async =>
-                    const NotificationEarthquakeRoute()
-                        .push<void>(context),
+                    const NotificationEarthquakeRoute().push<void>(context),
           ),
           const SizedBox(height: 16),
           EewStatusWidget(
             eew: state.eew,
             action:
-                () async => const NotificationEewRoute()
-                    .push<void>(context),
+                () async => const NotificationEewRoute().push<void>(context),
           ),
         ],
       ),

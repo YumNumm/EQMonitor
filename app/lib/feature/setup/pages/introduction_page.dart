@@ -22,12 +22,8 @@ class IntroductionPage extends StatelessWidget {
             width: 100,
             height: 100,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(800),
-              ),
-              child: Image(
-                image: AssetImage('assets/images/icon.png'),
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(800)),
+              child: Image(image: AssetImage('assets/images/icon.png')),
             ),
           ),
         ),
@@ -55,11 +51,7 @@ class IntroductionPage extends StatelessWidget {
         ),
         // このボタンを押して、利用規約とプライバシーポリシーに同意したものとみなします。
         Card(
-          margin: const EdgeInsets.only(
-            left: 8,
-            right: 8,
-            bottom: 8,
-          ),
+          margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Text.rich(
@@ -75,9 +67,7 @@ class IntroductionPage extends StatelessWidget {
                         TapGestureRecognizer()
                           ..onTap =
                               () async => context.push(
-                                const TermOfServiceRoute(
-                                  $extra: null,
-                                ).location,
+                                const TermOfServiceRoute($extra: null).location,
                               ),
                   ),
                   const TextSpan(text: ' と '),
@@ -90,9 +80,7 @@ class IntroductionPage extends StatelessWidget {
                         TapGestureRecognizer()
                           ..onTap =
                               () async => context.push(
-                                const PrivacyPolicyRoute(
-                                  $extra: null,
-                                ).location,
+                                const PrivacyPolicyRoute($extra: null).location,
                               ),
                   ),
                   const TextSpan(text: ' に同意したものとみなします。'),

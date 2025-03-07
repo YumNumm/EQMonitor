@@ -15,9 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-EarthquakeV1 _$EarthquakeV1FromJson(
-  Map<String, dynamic> json,
-) {
+EarthquakeV1 _$EarthquakeV1FromJson(Map<String, dynamic> json) {
   return _EarthquakeV1.fromJson(json);
 }
 
@@ -25,15 +23,11 @@ EarthquakeV1 _$EarthquakeV1FromJson(
 mixin _$EarthquakeV1 {
   int get eventId => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  DateTime? get arrivalTime =>
-      throw _privateConstructorUsedError;
+  DateTime? get arrivalTime => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
-  int? get epicenterCode =>
-      throw _privateConstructorUsedError;
-  int? get epicenterDetailCode =>
-      throw _privateConstructorUsedError;
-  String? get headline =>
-      throw _privateConstructorUsedError;
+  int? get epicenterCode => throw _privateConstructorUsedError;
+  int? get epicenterDetailCode => throw _privateConstructorUsedError;
+  String? get headline => throw _privateConstructorUsedError;
   List<ObservedRegionIntensity>? get intensityCities =>
       throw _privateConstructorUsedError;
   List<ObservedRegionIntensity>? get intensityPrefectures =>
@@ -42,36 +36,24 @@ mixin _$EarthquakeV1 {
       throw _privateConstructorUsedError;
   List<ObservedRegionIntensity>? get intensityStations =>
       throw _privateConstructorUsedError;
-  double? get latitude =>
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityPrefectures =>
       throw _privateConstructorUsedError;
-  double? get longitude =>
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityRegions =>
       throw _privateConstructorUsedError;
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityPrefectures =>
+  List<ObservedRegionLpgmIntensity>? get lpgmIntenstiyStations =>
       throw _privateConstructorUsedError;
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityRegions =>
-      throw _privateConstructorUsedError;
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntenstiyStations =>
-      throw _privateConstructorUsedError;
-  double? get magnitude =>
-      throw _privateConstructorUsedError;
-  String? get magnitudeCondition =>
-      throw _privateConstructorUsedError;
-  JmaIntensity? get maxIntensity =>
-      throw _privateConstructorUsedError;
-  List<int>? get maxIntensityRegionIds =>
-      throw _privateConstructorUsedError;
-  JmaLgIntensity? get maxLpgmIntensity =>
-      throw _privateConstructorUsedError;
-  DateTime? get originTime =>
-      throw _privateConstructorUsedError;
+  double? get magnitude => throw _privateConstructorUsedError;
+  String? get magnitudeCondition => throw _privateConstructorUsedError;
+  JmaIntensity? get maxIntensity => throw _privateConstructorUsedError;
+  List<int>? get maxIntensityRegionIds => throw _privateConstructorUsedError;
+  JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
+  DateTime? get originTime => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeV1 to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeV1
   /// with the given fields replaced by the non-null parameter values.
@@ -101,11 +83,9 @@ abstract class $EarthquakeV1CopyWith<$Res> {
     List<ObservedRegionIntensity>? intensityStations,
     double? latitude,
     double? longitude,
-    List<ObservedRegionLpgmIntensity>?
-    lpgmIntensityPrefectures,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
     List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
-    List<ObservedRegionLpgmIntensity>?
-    lpgmIntenstiyStations,
+    List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
     double? magnitude,
     String? magnitudeCondition,
     JmaIntensity? maxIntensity,
@@ -117,10 +97,7 @@ abstract class $EarthquakeV1CopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EarthquakeV1CopyWithImpl<
-  $Res,
-  $Val extends EarthquakeV1
->
+class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
     implements $EarthquakeV1CopyWith<$Res> {
   _$EarthquakeV1CopyWithImpl(this._value, this._then);
 
@@ -229,23 +206,17 @@ class _$EarthquakeV1CopyWithImpl<
                 freezed == lpgmIntensityPrefectures
                     ? _value.lpgmIntensityPrefectures
                     : lpgmIntensityPrefectures // ignore: cast_nullable_to_non_nullable
-                        as List<
-                          ObservedRegionLpgmIntensity
-                        >?,
+                        as List<ObservedRegionLpgmIntensity>?,
             lpgmIntensityRegions:
                 freezed == lpgmIntensityRegions
                     ? _value.lpgmIntensityRegions
                     : lpgmIntensityRegions // ignore: cast_nullable_to_non_nullable
-                        as List<
-                          ObservedRegionLpgmIntensity
-                        >?,
+                        as List<ObservedRegionLpgmIntensity>?,
             lpgmIntenstiyStations:
                 freezed == lpgmIntenstiyStations
                     ? _value.lpgmIntenstiyStations
                     : lpgmIntenstiyStations // ignore: cast_nullable_to_non_nullable
-                        as List<
-                          ObservedRegionLpgmIntensity
-                        >?,
+                        as List<ObservedRegionLpgmIntensity>?,
             magnitude:
                 freezed == magnitude
                     ? _value.magnitude
@@ -310,11 +281,9 @@ abstract class _$$EarthquakeV1ImplCopyWith<$Res>
     List<ObservedRegionIntensity>? intensityStations,
     double? latitude,
     double? longitude,
-    List<ObservedRegionLpgmIntensity>?
-    lpgmIntensityPrefectures,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
     List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
-    List<ObservedRegionLpgmIntensity>?
-    lpgmIntenstiyStations,
+    List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
     double? magnitude,
     String? magnitudeCondition,
     JmaIntensity? maxIntensity,
@@ -327,8 +296,7 @@ abstract class _$$EarthquakeV1ImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeV1ImplCopyWithImpl<$Res>
-    extends
-        _$EarthquakeV1CopyWithImpl<$Res, _$EarthquakeV1Impl>
+    extends _$EarthquakeV1CopyWithImpl<$Res, _$EarthquakeV1Impl>
     implements _$$EarthquakeV1ImplCopyWith<$Res> {
   __$$EarthquakeV1ImplCopyWithImpl(
     _$EarthquakeV1Impl _value,
@@ -498,18 +466,14 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
     this.epicenterDetailCode,
     this.headline,
     final List<ObservedRegionIntensity>? intensityCities,
-    final List<ObservedRegionIntensity>?
-    intensityPrefectures,
+    final List<ObservedRegionIntensity>? intensityPrefectures,
     final List<ObservedRegionIntensity>? intensityRegions,
     final List<ObservedRegionIntensity>? intensityStations,
     this.latitude,
     this.longitude,
-    final List<ObservedRegionLpgmIntensity>?
-    lpgmIntensityPrefectures,
-    final List<ObservedRegionLpgmIntensity>?
-    lpgmIntensityRegions,
-    final List<ObservedRegionLpgmIntensity>?
-    lpgmIntenstiyStations,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
     this.magnitude,
     this.magnitudeCondition,
     this.maxIntensity,
@@ -526,9 +490,8 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
        _lpgmIntenstiyStations = lpgmIntenstiyStations,
        _maxIntensityRegionIds = maxIntensityRegionIds;
 
-  factory _$EarthquakeV1Impl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$EarthquakeV1ImplFromJson(json);
+  factory _$EarthquakeV1Impl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeV1ImplFromJson(json);
 
   @override
   final int eventId;
@@ -549,14 +512,12 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
   List<ObservedRegionIntensity>? get intensityCities {
     final value = _intensityCities;
     if (value == null) return null;
-    if (_intensityCities is EqualUnmodifiableListView)
-      return _intensityCities;
+    if (_intensityCities is EqualUnmodifiableListView) return _intensityCities;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
-  final List<ObservedRegionIntensity>?
-  _intensityPrefectures;
+  final List<ObservedRegionIntensity>? _intensityPrefectures;
   @override
   List<ObservedRegionIntensity>? get intensityPrefectures {
     final value = _intensityPrefectures;
@@ -593,25 +554,20 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
   final double? latitude;
   @override
   final double? longitude;
-  final List<ObservedRegionLpgmIntensity>?
-  _lpgmIntensityPrefectures;
+  final List<ObservedRegionLpgmIntensity>? _lpgmIntensityPrefectures;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityPrefectures {
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityPrefectures {
     final value = _lpgmIntensityPrefectures;
     if (value == null) return null;
-    if (_lpgmIntensityPrefectures
-        is EqualUnmodifiableListView)
+    if (_lpgmIntensityPrefectures is EqualUnmodifiableListView)
       return _lpgmIntensityPrefectures;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
-  final List<ObservedRegionLpgmIntensity>?
-  _lpgmIntensityRegions;
+  final List<ObservedRegionLpgmIntensity>? _lpgmIntensityRegions;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityRegions {
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityRegions {
     final value = _lpgmIntensityRegions;
     if (value == null) return null;
     if (_lpgmIntensityRegions is EqualUnmodifiableListView)
@@ -620,11 +576,9 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<ObservedRegionLpgmIntensity>?
-  _lpgmIntenstiyStations;
+  final List<ObservedRegionLpgmIntensity>? _lpgmIntenstiyStations;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntenstiyStations {
+  List<ObservedRegionLpgmIntensity>? get lpgmIntenstiyStations {
     final value = _lpgmIntenstiyStations;
     if (value == null) return null;
     if (_lpgmIntenstiyStations is EqualUnmodifiableListView)
@@ -667,25 +621,15 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeV1Impl &&
-            (identical(other.eventId, eventId) ||
-                other.eventId == eventId) &&
-            (identical(other.status, status) ||
-                other.status == status) &&
+            (identical(other.eventId, eventId) || other.eventId == eventId) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.arrivalTime, arrivalTime) ||
                 other.arrivalTime == arrivalTime) &&
-            (identical(other.depth, depth) ||
-                other.depth == depth) &&
-            (identical(
-                  other.epicenterCode,
-                  epicenterCode,
-                ) ||
+            (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.epicenterCode, epicenterCode) ||
                 other.epicenterCode == epicenterCode) &&
-            (identical(
-                  other.epicenterDetailCode,
-                  epicenterDetailCode,
-                ) ||
-                other.epicenterDetailCode ==
-                    epicenterDetailCode) &&
+            (identical(other.epicenterDetailCode, epicenterDetailCode) ||
+                other.epicenterDetailCode == epicenterDetailCode) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
             const DeepCollectionEquality().equals(
@@ -722,28 +666,19 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
             ) &&
             (identical(other.magnitude, magnitude) ||
                 other.magnitude == magnitude) &&
-            (identical(
-                  other.magnitudeCondition,
-                  magnitudeCondition,
-                ) ||
-                other.magnitudeCondition ==
-                    magnitudeCondition) &&
+            (identical(other.magnitudeCondition, magnitudeCondition) ||
+                other.magnitudeCondition == magnitudeCondition) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
             const DeepCollectionEquality().equals(
               other._maxIntensityRegionIds,
               _maxIntensityRegionIds,
             ) &&
-            (identical(
-                  other.maxLpgmIntensity,
-                  maxLpgmIntensity,
-                ) ||
-                other.maxLpgmIntensity ==
-                    maxLpgmIntensity) &&
+            (identical(other.maxLpgmIntensity, maxLpgmIntensity) ||
+                other.maxLpgmIntensity == maxLpgmIntensity) &&
             (identical(other.originTime, originTime) ||
                 other.originTime == originTime) &&
-            (identical(other.text, text) ||
-                other.text == text));
+            (identical(other.text, text) || other.text == text));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -758,28 +693,18 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
     epicenterDetailCode,
     headline,
     const DeepCollectionEquality().hash(_intensityCities),
-    const DeepCollectionEquality().hash(
-      _intensityPrefectures,
-    ),
+    const DeepCollectionEquality().hash(_intensityPrefectures),
     const DeepCollectionEquality().hash(_intensityRegions),
     const DeepCollectionEquality().hash(_intensityStations),
     latitude,
     longitude,
-    const DeepCollectionEquality().hash(
-      _lpgmIntensityPrefectures,
-    ),
-    const DeepCollectionEquality().hash(
-      _lpgmIntensityRegions,
-    ),
-    const DeepCollectionEquality().hash(
-      _lpgmIntenstiyStations,
-    ),
+    const DeepCollectionEquality().hash(_lpgmIntensityPrefectures),
+    const DeepCollectionEquality().hash(_lpgmIntensityRegions),
+    const DeepCollectionEquality().hash(_lpgmIntenstiyStations),
     magnitude,
     magnitudeCondition,
     maxIntensity,
-    const DeepCollectionEquality().hash(
-      _maxIntensityRegionIds,
-    ),
+    const DeepCollectionEquality().hash(_maxIntensityRegionIds),
     maxLpgmIntensity,
     originTime,
     text,
@@ -790,12 +715,8 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeV1ImplCopyWith<_$EarthquakeV1Impl>
-  get copyWith =>
-      __$$EarthquakeV1ImplCopyWithImpl<_$EarthquakeV1Impl>(
-        this,
-        _$identity,
-      );
+  _$$EarthquakeV1ImplCopyWith<_$EarthquakeV1Impl> get copyWith =>
+      __$$EarthquakeV1ImplCopyWithImpl<_$EarthquakeV1Impl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -813,18 +734,14 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
     final int? epicenterDetailCode,
     final String? headline,
     final List<ObservedRegionIntensity>? intensityCities,
-    final List<ObservedRegionIntensity>?
-    intensityPrefectures,
+    final List<ObservedRegionIntensity>? intensityPrefectures,
     final List<ObservedRegionIntensity>? intensityRegions,
     final List<ObservedRegionIntensity>? intensityStations,
     final double? latitude,
     final double? longitude,
-    final List<ObservedRegionLpgmIntensity>?
-    lpgmIntensityPrefectures,
-    final List<ObservedRegionLpgmIntensity>?
-    lpgmIntensityRegions,
-    final List<ObservedRegionLpgmIntensity>?
-    lpgmIntenstiyStations,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
     final double? magnitude,
     final String? magnitudeCondition,
     final JmaIntensity? maxIntensity,
@@ -834,9 +751,8 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
     final String? text,
   }) = _$EarthquakeV1Impl;
 
-  factory _EarthquakeV1.fromJson(
-    Map<String, dynamic> json,
-  ) = _$EarthquakeV1Impl.fromJson;
+  factory _EarthquakeV1.fromJson(Map<String, dynamic> json) =
+      _$EarthquakeV1Impl.fromJson;
 
   @override
   int get eventId;
@@ -865,14 +781,11 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
   @override
   double? get longitude;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityPrefectures;
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityPrefectures;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntensityRegions;
+  List<ObservedRegionLpgmIntensity>? get lpgmIntensityRegions;
   @override
-  List<ObservedRegionLpgmIntensity>?
-  get lpgmIntenstiyStations;
+  List<ObservedRegionLpgmIntensity>? get lpgmIntenstiyStations;
   @override
   double? get magnitude;
   @override
@@ -892,13 +805,11 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeV1ImplCopyWith<_$EarthquakeV1Impl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$EarthquakeV1ImplCopyWith<_$EarthquakeV1Impl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-EarthquakeV1Base _$EarthquakeV1BaseFromJson(
-  Map<String, dynamic> json,
-) {
+EarthquakeV1Base _$EarthquakeV1BaseFromJson(Map<String, dynamic> json) {
   return _EarthquakeV1Base.fromJson(json);
 }
 
@@ -906,42 +817,29 @@ EarthquakeV1Base _$EarthquakeV1BaseFromJson(
 mixin _$EarthquakeV1Base {
   int get eventId => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  DateTime? get arrivalTime =>
-      throw _privateConstructorUsedError;
+  DateTime? get arrivalTime => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
-  int? get epicenterCode =>
-      throw _privateConstructorUsedError;
-  int? get epicenterDetailCode =>
-      throw _privateConstructorUsedError;
-  String? get headline =>
-      throw _privateConstructorUsedError;
-  double? get latitude =>
-      throw _privateConstructorUsedError;
-  double? get longitude =>
-      throw _privateConstructorUsedError;
-  double? get magnitude =>
-      throw _privateConstructorUsedError;
-  String? get magnitudeCondition =>
-      throw _privateConstructorUsedError;
-  JmaIntensity? get maxIntensity =>
-      throw _privateConstructorUsedError;
-  List<int>? get maxIntensityRegionIds =>
-      throw _privateConstructorUsedError;
-  JmaLgIntensity? get maxLpgmIntensity =>
-      throw _privateConstructorUsedError;
-  DateTime? get originTime =>
-      throw _privateConstructorUsedError;
+  int? get epicenterCode => throw _privateConstructorUsedError;
+  int? get epicenterDetailCode => throw _privateConstructorUsedError;
+  String? get headline => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  double? get magnitude => throw _privateConstructorUsedError;
+  String? get magnitudeCondition => throw _privateConstructorUsedError;
+  JmaIntensity? get maxIntensity => throw _privateConstructorUsedError;
+  List<int>? get maxIntensityRegionIds => throw _privateConstructorUsedError;
+  JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
+  DateTime? get originTime => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeV1Base to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeV1Base
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeV1BaseCopyWith<EarthquakeV1Base>
-  get copyWith => throw _privateConstructorUsedError;
+  $EarthquakeV1BaseCopyWith<EarthquakeV1Base> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -949,11 +847,7 @@ abstract class $EarthquakeV1BaseCopyWith<$Res> {
   factory $EarthquakeV1BaseCopyWith(
     EarthquakeV1Base value,
     $Res Function(EarthquakeV1Base) then,
-  ) =
-      _$EarthquakeV1BaseCopyWithImpl<
-        $Res,
-        EarthquakeV1Base
-      >;
+  ) = _$EarthquakeV1BaseCopyWithImpl<$Res, EarthquakeV1Base>;
   @useResult
   $Res call({
     int eventId,
@@ -976,10 +870,7 @@ abstract class $EarthquakeV1BaseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EarthquakeV1BaseCopyWithImpl<
-  $Res,
-  $Val extends EarthquakeV1Base
->
+class _$EarthquakeV1BaseCopyWithImpl<$Res, $Val extends EarthquakeV1Base>
     implements $EarthquakeV1BaseCopyWith<$Res> {
   _$EarthquakeV1BaseCopyWithImpl(this._value, this._then);
 
@@ -1129,11 +1020,7 @@ abstract class _$$EarthquakeV1BaseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
-    extends
-        _$EarthquakeV1BaseCopyWithImpl<
-          $Res,
-          _$EarthquakeV1BaseImpl
-        >
+    extends _$EarthquakeV1BaseCopyWithImpl<$Res, _$EarthquakeV1BaseImpl>
     implements _$$EarthquakeV1BaseImplCopyWith<$Res> {
   __$$EarthquakeV1BaseImplCopyWithImpl(
     _$EarthquakeV1BaseImpl _value,
@@ -1271,9 +1158,8 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
     this.text,
   }) : _maxIntensityRegionIds = maxIntensityRegionIds;
 
-  factory _$EarthquakeV1BaseImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$EarthquakeV1BaseImplFromJson(json);
+  factory _$EarthquakeV1BaseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeV1BaseImplFromJson(json);
 
   @override
   final int eventId;
@@ -1327,25 +1213,15 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeV1BaseImpl &&
-            (identical(other.eventId, eventId) ||
-                other.eventId == eventId) &&
-            (identical(other.status, status) ||
-                other.status == status) &&
+            (identical(other.eventId, eventId) || other.eventId == eventId) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.arrivalTime, arrivalTime) ||
                 other.arrivalTime == arrivalTime) &&
-            (identical(other.depth, depth) ||
-                other.depth == depth) &&
-            (identical(
-                  other.epicenterCode,
-                  epicenterCode,
-                ) ||
+            (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.epicenterCode, epicenterCode) ||
                 other.epicenterCode == epicenterCode) &&
-            (identical(
-                  other.epicenterDetailCode,
-                  epicenterDetailCode,
-                ) ||
-                other.epicenterDetailCode ==
-                    epicenterDetailCode) &&
+            (identical(other.epicenterDetailCode, epicenterDetailCode) ||
+                other.epicenterDetailCode == epicenterDetailCode) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
             (identical(other.latitude, latitude) ||
@@ -1354,28 +1230,19 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
                 other.longitude == longitude) &&
             (identical(other.magnitude, magnitude) ||
                 other.magnitude == magnitude) &&
-            (identical(
-                  other.magnitudeCondition,
-                  magnitudeCondition,
-                ) ||
-                other.magnitudeCondition ==
-                    magnitudeCondition) &&
+            (identical(other.magnitudeCondition, magnitudeCondition) ||
+                other.magnitudeCondition == magnitudeCondition) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
             const DeepCollectionEquality().equals(
               other._maxIntensityRegionIds,
               _maxIntensityRegionIds,
             ) &&
-            (identical(
-                  other.maxLpgmIntensity,
-                  maxLpgmIntensity,
-                ) ||
-                other.maxLpgmIntensity ==
-                    maxLpgmIntensity) &&
+            (identical(other.maxLpgmIntensity, maxLpgmIntensity) ||
+                other.maxLpgmIntensity == maxLpgmIntensity) &&
             (identical(other.originTime, originTime) ||
                 other.originTime == originTime) &&
-            (identical(other.text, text) ||
-                other.text == text));
+            (identical(other.text, text) || other.text == text));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1394,9 +1261,7 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
     magnitude,
     magnitudeCondition,
     maxIntensity,
-    const DeepCollectionEquality().hash(
-      _maxIntensityRegionIds,
-    ),
+    const DeepCollectionEquality().hash(_maxIntensityRegionIds),
     maxLpgmIntensity,
     originTime,
     text,
@@ -1407,10 +1272,11 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeV1BaseImplCopyWith<_$EarthquakeV1BaseImpl>
-  get copyWith => __$$EarthquakeV1BaseImplCopyWithImpl<
-    _$EarthquakeV1BaseImpl
-  >(this, _$identity);
+  _$$EarthquakeV1BaseImplCopyWith<_$EarthquakeV1BaseImpl> get copyWith =>
+      __$$EarthquakeV1BaseImplCopyWithImpl<_$EarthquakeV1BaseImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -1418,8 +1284,7 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   }
 }
 
-abstract class _EarthquakeV1Base
-    implements EarthquakeV1Base {
+abstract class _EarthquakeV1Base implements EarthquakeV1Base {
   const factory _EarthquakeV1Base({
     required final int eventId,
     required final String status,
@@ -1439,9 +1304,8 @@ abstract class _EarthquakeV1Base
     final String? text,
   }) = _$EarthquakeV1BaseImpl;
 
-  factory _EarthquakeV1Base.fromJson(
-    Map<String, dynamic> json,
-  ) = _$EarthquakeV1BaseImpl.fromJson;
+  factory _EarthquakeV1Base.fromJson(Map<String, dynamic> json) =
+      _$EarthquakeV1BaseImpl.fromJson;
 
   @override
   int get eventId;
@@ -1480,8 +1344,8 @@ abstract class _EarthquakeV1Base
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeV1BaseImplCopyWith<_$EarthquakeV1BaseImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$EarthquakeV1BaseImplCopyWith<_$EarthquakeV1BaseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 ObservedRegionIntensity _$ObservedRegionIntensityFromJson(
@@ -1495,18 +1359,16 @@ mixin _$ObservedRegionIntensity {
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'maxInt')
-  JmaIntensity? get intensity =>
-      throw _privateConstructorUsedError;
+  JmaIntensity? get intensity => throw _privateConstructorUsedError;
 
   /// Serializes this ObservedRegionIntensity to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ObservedRegionIntensity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ObservedRegionIntensityCopyWith<ObservedRegionIntensity>
-  get copyWith => throw _privateConstructorUsedError;
+  $ObservedRegionIntensityCopyWith<ObservedRegionIntensity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1514,11 +1376,7 @@ abstract class $ObservedRegionIntensityCopyWith<$Res> {
   factory $ObservedRegionIntensityCopyWith(
     ObservedRegionIntensity value,
     $Res Function(ObservedRegionIntensity) then,
-  ) =
-      _$ObservedRegionIntensityCopyWithImpl<
-        $Res,
-        ObservedRegionIntensity
-      >;
+  ) = _$ObservedRegionIntensityCopyWithImpl<$Res, ObservedRegionIntensity>;
   @useResult
   $Res call({
     String code,
@@ -1533,10 +1391,7 @@ class _$ObservedRegionIntensityCopyWithImpl<
   $Val extends ObservedRegionIntensity
 >
     implements $ObservedRegionIntensityCopyWith<$Res> {
-  _$ObservedRegionIntensityCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$ObservedRegionIntensityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1598,8 +1453,7 @@ class __$$ObservedRegionIntensityImplCopyWithImpl<$Res>
           $Res,
           _$ObservedRegionIntensityImpl
         >
-    implements
-        _$$ObservedRegionIntensityImplCopyWith<$Res> {
+    implements _$$ObservedRegionIntensityImplCopyWith<$Res> {
   __$$ObservedRegionIntensityImplCopyWithImpl(
     _$ObservedRegionIntensityImpl _value,
     $Res Function(_$ObservedRegionIntensityImpl) _then,
@@ -1638,17 +1492,15 @@ class __$$ObservedRegionIntensityImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ObservedRegionIntensityImpl
-    implements _ObservedRegionIntensity {
+class _$ObservedRegionIntensityImpl implements _ObservedRegionIntensity {
   const _$ObservedRegionIntensityImpl({
     required this.code,
     required this.name,
     @JsonKey(name: 'maxInt') required this.intensity,
   });
 
-  factory _$ObservedRegionIntensityImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$ObservedRegionIntensityImplFromJson(json);
+  factory _$ObservedRegionIntensityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ObservedRegionIntensityImplFromJson(json);
 
   @override
   final String code;
@@ -1668,31 +1520,25 @@ class _$ObservedRegionIntensityImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ObservedRegionIntensityImpl &&
-            (identical(other.code, code) ||
-                other.code == code) &&
-            (identical(other.name, name) ||
-                other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, code, name, intensity);
+  int get hashCode => Object.hash(runtimeType, code, name, intensity);
 
   /// Create a copy of ObservedRegionIntensity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ObservedRegionIntensityImplCopyWith<
+  _$$ObservedRegionIntensityImplCopyWith<_$ObservedRegionIntensityImpl>
+  get copyWith => __$$ObservedRegionIntensityImplCopyWithImpl<
     _$ObservedRegionIntensityImpl
-  >
-  get copyWith =>
-      __$$ObservedRegionIntensityImplCopyWithImpl<
-        _$ObservedRegionIntensityImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1700,18 +1546,15 @@ class _$ObservedRegionIntensityImpl
   }
 }
 
-abstract class _ObservedRegionIntensity
-    implements ObservedRegionIntensity {
+abstract class _ObservedRegionIntensity implements ObservedRegionIntensity {
   const factory _ObservedRegionIntensity({
     required final String code,
     required final String name,
-    @JsonKey(name: 'maxInt')
-    required final JmaIntensity? intensity,
+    @JsonKey(name: 'maxInt') required final JmaIntensity? intensity,
   }) = _$ObservedRegionIntensityImpl;
 
-  factory _ObservedRegionIntensity.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ObservedRegionIntensityImpl.fromJson;
+  factory _ObservedRegionIntensity.fromJson(Map<String, dynamic> json) =
+      _$ObservedRegionIntensityImpl.fromJson;
 
   @override
   String get code;
@@ -1725,14 +1568,11 @@ abstract class _ObservedRegionIntensity
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ObservedRegionIntensityImplCopyWith<
-    _$ObservedRegionIntensityImpl
-  >
+  _$$ObservedRegionIntensityImplCopyWith<_$ObservedRegionIntensityImpl>
   get copyWith => throw _privateConstructorUsedError;
 }
 
-ObservedRegionLpgmIntensity
-_$ObservedRegionLpgmIntensityFromJson(
+ObservedRegionLpgmIntensity _$ObservedRegionLpgmIntensityFromJson(
   Map<String, dynamic> json,
 ) {
   return _ObservedRegionLpgmIntensity.fromJson(json);
@@ -1743,22 +1583,17 @@ mixin _$ObservedRegionLpgmIntensity {
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'maxInt')
-  JmaIntensity? get intensity =>
-      throw _privateConstructorUsedError;
+  JmaIntensity? get intensity => throw _privateConstructorUsedError;
   @JsonKey(name: 'maxLgInt')
-  JmaLgIntensity? get lpgmIntensity =>
-      throw _privateConstructorUsedError;
+  JmaLgIntensity? get lpgmIntensity => throw _privateConstructorUsedError;
 
   /// Serializes this ObservedRegionLpgmIntensity to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ObservedRegionLpgmIntensity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ObservedRegionLpgmIntensityCopyWith<
-    ObservedRegionLpgmIntensity
-  >
+  $ObservedRegionLpgmIntensityCopyWith<ObservedRegionLpgmIntensity>
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1777,8 +1612,7 @@ abstract class $ObservedRegionLpgmIntensityCopyWith<$Res> {
     String code,
     String name,
     @JsonKey(name: 'maxInt') JmaIntensity? intensity,
-    @JsonKey(name: 'maxLgInt')
-    JmaLgIntensity? lpgmIntensity,
+    @JsonKey(name: 'maxLgInt') JmaLgIntensity? lpgmIntensity,
   });
 }
 
@@ -1788,10 +1622,7 @@ class _$ObservedRegionLpgmIntensityCopyWithImpl<
   $Val extends ObservedRegionLpgmIntensity
 >
     implements $ObservedRegionLpgmIntensityCopyWith<$Res> {
-  _$ObservedRegionLpgmIntensityCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$ObservedRegionLpgmIntensityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1837,9 +1668,7 @@ class _$ObservedRegionLpgmIntensityCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$ObservedRegionLpgmIntensityImplCopyWith<
-  $Res
->
+abstract class _$$ObservedRegionLpgmIntensityImplCopyWith<$Res>
     implements $ObservedRegionLpgmIntensityCopyWith<$Res> {
   factory _$$ObservedRegionLpgmIntensityImplCopyWith(
     _$ObservedRegionLpgmIntensityImpl value,
@@ -1851,8 +1680,7 @@ abstract class _$$ObservedRegionLpgmIntensityImplCopyWith<
     String code,
     String name,
     @JsonKey(name: 'maxInt') JmaIntensity? intensity,
-    @JsonKey(name: 'maxLgInt')
-    JmaLgIntensity? lpgmIntensity,
+    @JsonKey(name: 'maxLgInt') JmaLgIntensity? lpgmIntensity,
   });
 }
 
@@ -1863,8 +1691,7 @@ class __$$ObservedRegionLpgmIntensityImplCopyWithImpl<$Res>
           $Res,
           _$ObservedRegionLpgmIntensityImpl
         >
-    implements
-        _$$ObservedRegionLpgmIntensityImplCopyWith<$Res> {
+    implements _$$ObservedRegionLpgmIntensityImplCopyWith<$Res> {
   __$$ObservedRegionLpgmIntensityImplCopyWithImpl(
     _$ObservedRegionLpgmIntensityImpl _value,
     $Res Function(_$ObservedRegionLpgmIntensityImpl) _then,
@@ -1943,41 +1770,28 @@ class _$ObservedRegionLpgmIntensityImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ObservedRegionLpgmIntensityImpl &&
-            (identical(other.code, code) ||
-                other.code == code) &&
-            (identical(other.name, name) ||
-                other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity) &&
-            (identical(
-                  other.lpgmIntensity,
-                  lpgmIntensity,
-                ) ||
+            (identical(other.lpgmIntensity, lpgmIntensity) ||
                 other.lpgmIntensity == lpgmIntensity));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    code,
-    name,
-    intensity,
-    lpgmIntensity,
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, code, name, intensity, lpgmIntensity);
 
   /// Create a copy of ObservedRegionLpgmIntensity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ObservedRegionLpgmIntensityImplCopyWith<
+  _$$ObservedRegionLpgmIntensityImplCopyWith<_$ObservedRegionLpgmIntensityImpl>
+  get copyWith => __$$ObservedRegionLpgmIntensityImplCopyWithImpl<
     _$ObservedRegionLpgmIntensityImpl
-  >
-  get copyWith =>
-      __$$ObservedRegionLpgmIntensityImplCopyWithImpl<
-        _$ObservedRegionLpgmIntensityImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1990,15 +1804,12 @@ abstract class _ObservedRegionLpgmIntensity
   const factory _ObservedRegionLpgmIntensity({
     required final String code,
     required final String name,
-    @JsonKey(name: 'maxInt')
-    required final JmaIntensity? intensity,
-    @JsonKey(name: 'maxLgInt')
-    required final JmaLgIntensity? lpgmIntensity,
+    @JsonKey(name: 'maxInt') required final JmaIntensity? intensity,
+    @JsonKey(name: 'maxLgInt') required final JmaLgIntensity? lpgmIntensity,
   }) = _$ObservedRegionLpgmIntensityImpl;
 
-  factory _ObservedRegionLpgmIntensity.fromJson(
-    Map<String, dynamic> json,
-  ) = _$ObservedRegionLpgmIntensityImpl.fromJson;
+  factory _ObservedRegionLpgmIntensity.fromJson(Map<String, dynamic> json) =
+      _$ObservedRegionLpgmIntensityImpl.fromJson;
 
   @override
   String get code;
@@ -2015,8 +1826,6 @@ abstract class _ObservedRegionLpgmIntensity
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ObservedRegionLpgmIntensityImplCopyWith<
-    _$ObservedRegionLpgmIntensityImpl
-  >
+  _$$ObservedRegionLpgmIntensityImplCopyWith<_$ObservedRegionLpgmIntensityImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

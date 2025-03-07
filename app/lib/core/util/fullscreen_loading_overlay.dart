@@ -4,8 +4,7 @@ import 'dart:developer';
 import 'package:eqmonitor/app.dart';
 import 'package:flutter/material.dart';
 
-class FullScreenCircularProgressIndicator
-    extends StatelessWidget {
+class FullScreenCircularProgressIndicator extends StatelessWidget {
   const FullScreenCircularProgressIndicator({super.key});
 
   static Future<T> showUntil<T>(
@@ -16,24 +15,19 @@ class FullScreenCircularProgressIndicator
     unawaited(
       showDialog<void>(
         context: context,
-        builder:
-            (context) =>
-                const FullScreenCircularProgressIndicator(),
+        builder: (context) => const FullScreenCircularProgressIndicator(),
         barrierDismissible: false,
       ),
     );
     final T result;
     try {
-      await Future<void>.delayed(
-        const Duration(milliseconds: 250),
-      );
+      await Future<void>.delayed(const Duration(milliseconds: 250));
       result = await function().timeout(timeout);
     } on TimeoutException catch (e) {
       log(
         'タイムアウト',
         error: e,
-        name:
-            'FullScreenCircularProgressIndicator.showUntil',
+        name: 'FullScreenCircularProgressIndicator.showUntil',
       );
       rethrow;
     } finally {
@@ -47,8 +41,6 @@ class FullScreenCircularProgressIndicator
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator.adaptive(),
-    );
+    return const Center(child: CircularProgressIndicator.adaptive());
   }
 }

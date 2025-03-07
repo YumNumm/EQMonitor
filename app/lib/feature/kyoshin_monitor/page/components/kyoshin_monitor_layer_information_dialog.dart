@@ -4,12 +4,10 @@ import 'package:url_launcher/url_launcher.dart';
 class RealtimeDataTypeInfoDialog extends StatelessWidget {
   const RealtimeDataTypeInfoDialog({super.key});
 
-  static Future<void> show(BuildContext context) async =>
-      showDialog<void>(
-        context: context,
-        builder:
-            (context) => const RealtimeDataTypeInfoDialog(),
-      );
+  static Future<void> show(BuildContext context) async => showDialog<void>(
+    context: context,
+    builder: (context) => const RealtimeDataTypeInfoDialog(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +32,11 @@ class RealtimeDataTypeInfoDialog extends StatelessWidget {
             ),
             _DataTypeInfo(
               title: '最大速度 (PGV)',
-              description:
-                  '揺れの加速度を積分して得られる速度の1秒毎の最大値を表示します。',
+              description: '揺れの加速度を積分して得られる速度の1秒毎の最大値を表示します。',
             ),
             _DataTypeInfo(
               title: '最大変位 (PGD)',
-              description:
-                  '揺れの加速度を2回積分して得られる変位の1秒毎の最大値を表示します。',
+              description: '揺れの加速度を2回積分して得られる変位の1秒毎の最大値を表示します。',
             ),
             _DataTypeInfo(
               title: '速度応答（0.125、0.25、0.5、1.0、2.0、4.0Hz）',
@@ -89,11 +85,7 @@ class _KyoshinMonitorSource extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.open_in_new,
-                    size: 12,
-                    color: hyperLinkColor,
-                  ),
+                  Icon(Icons.open_in_new, size: 12, color: hyperLinkColor),
                   Text(
                     '強震モニタについて - 防災科研',
                     style: textTheme.bodyMedium!.copyWith(
@@ -112,10 +104,7 @@ class _KyoshinMonitorSource extends StatelessWidget {
 }
 
 class _DataTypeInfo extends StatelessWidget {
-  const _DataTypeInfo({
-    required this.title,
-    required this.description,
-  });
+  const _DataTypeInfo({required this.title, required this.description});
 
   final String title;
   final String description;
@@ -133,9 +122,7 @@ class _DataTypeInfo extends StatelessWidget {
         children: [
           Text(
             title,
-            style: textTheme.titleSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(

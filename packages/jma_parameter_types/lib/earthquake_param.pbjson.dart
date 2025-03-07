@@ -13,8 +13,7 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core
-    .Deprecated('Use earthquakeParameterDescriptor instead')
+@$core.Deprecated('Use earthquakeParameterDescriptor instead')
 const EarthquakeParameter$json = {
   '1': 'EarthquakeParameter',
   '2': [
@@ -30,13 +29,11 @@ const EarthquakeParameter$json = {
 };
 
 /// Descriptor for `EarthquakeParameter`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List earthquakeParameterDescriptor =
-    $convert.base64Decode(
-        'ChNFYXJ0aHF1YWtlUGFyYW1ldGVyEjgKB3JlZ2lvbnMYASADKAsyHi5FYXJ0aHF1YWtlUGFyYW'
-        '1ldGVyUmVnaW9uSXRlbVIHcmVnaW9ucw==');
+final $typed_data.Uint8List earthquakeParameterDescriptor = $convert.base64Decode(
+    'ChNFYXJ0aHF1YWtlUGFyYW1ldGVyEjgKB3JlZ2lvbnMYASADKAsyHi5FYXJ0aHF1YWtlUGFyYW'
+    '1ldGVyUmVnaW9uSXRlbVIHcmVnaW9ucw==');
 
-@$core.Deprecated(
-    'Use earthquakeParameterRegionItemDescriptor instead')
+@$core.Deprecated('Use earthquakeParameterRegionItemDescriptor instead')
 const EarthquakeParameterRegionItem$json = {
   '1': 'EarthquakeParameterRegionItem',
   '2': [
@@ -54,15 +51,13 @@ const EarthquakeParameterRegionItem$json = {
 };
 
 /// Descriptor for `EarthquakeParameterRegionItem`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List
-    earthquakeParameterRegionItemDescriptor =
+final $typed_data.Uint8List earthquakeParameterRegionItemDescriptor =
     $convert.base64Decode(
         'Ch1FYXJ0aHF1YWtlUGFyYW1ldGVyUmVnaW9uSXRlbRISCgRjb2RlGAEgASgJUgRjb2RlEhIKBG'
         '5hbWUYAiABKAlSBG5hbWUSNAoGY2l0aWVzGAMgAygLMhwuRWFydGhxdWFrZVBhcmFtZXRlckNp'
         'dHlJdGVtUgZjaXRpZXM=');
 
-@$core.Deprecated(
-    'Use earthquakeParameterCityItemDescriptor instead')
+@$core.Deprecated('Use earthquakeParameterCityItemDescriptor instead')
 const EarthquakeParameterCityItem$json = {
   '1': 'EarthquakeParameterCityItem',
   '2': [
@@ -80,47 +75,26 @@ const EarthquakeParameterCityItem$json = {
 };
 
 /// Descriptor for `EarthquakeParameterCityItem`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List
-    earthquakeParameterCityItemDescriptor =
+final $typed_data.Uint8List earthquakeParameterCityItemDescriptor =
     $convert.base64Decode(
         'ChtFYXJ0aHF1YWtlUGFyYW1ldGVyQ2l0eUl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCgRuYW'
         '1lGAIgASgJUgRuYW1lEjsKCHN0YXRpb25zGAMgAygLMh8uRWFydGhxdWFrZVBhcmFtZXRlclN0'
         'YXRpb25JdGVtUghzdGF0aW9ucw==');
 
-@$core.Deprecated(
-    'Use earthquakeParameterStationItemDescriptor instead')
+@$core.Deprecated('Use earthquakeParameterStationItemDescriptor instead')
 const EarthquakeParameterStationItem$json = {
   '1': 'EarthquakeParameterStationItem',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
-    {
-      '1': 'latitude',
-      '3': 3,
-      '4': 1,
-      '5': 1,
-      '10': 'latitude'
-    },
-    {
-      '1': 'longitude',
-      '3': 4,
-      '4': 1,
-      '5': 1,
-      '10': 'longitude'
-    },
-    {
-      '1': 'arv_400',
-      '3': 6,
-      '4': 1,
-      '5': 1,
-      '10': 'arv400'
-    },
+    {'1': 'latitude', '3': 3, '4': 1, '5': 1, '10': 'latitude'},
+    {'1': 'longitude', '3': 4, '4': 1, '5': 1, '10': 'longitude'},
+    {'1': 'arv_400', '3': 6, '4': 1, '5': 1, '10': 'arv400'},
   ],
 };
 
 /// Descriptor for `EarthquakeParameterStationItem`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List
-    earthquakeParameterStationItemDescriptor =
+final $typed_data.Uint8List earthquakeParameterStationItemDescriptor =
     $convert.base64Decode(
         'Ch5FYXJ0aHF1YWtlUGFyYW1ldGVyU3RhdGlvbkl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCg'
         'RuYW1lGAIgASgJUgRuYW1lEhoKCGxhdGl0dWRlGAMgASgBUghsYXRpdHVkZRIcCglsb25naXR1'

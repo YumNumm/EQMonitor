@@ -13,15 +13,12 @@ class NotificationRemoteSettingsNotifier
   @override
   Future<NotificationRemoteSettingsState> build() async {
     final savedState = ref.watch(
-      notificationRemoteSettingsSavedStateNotifierProvider
-          .future,
+      notificationRemoteSettingsSavedStateNotifierProvider.future,
     );
     return savedState;
   }
 
-  void updateEarthquakeGlobal(
-    JmaForecastIntensity? global,
-  ) {
+  void updateEarthquakeGlobal(JmaForecastIntensity? global) {
     if (state case AsyncData(:final value)) {
       state = AsyncData(
         value.copyWith(
@@ -37,8 +34,7 @@ class NotificationRemoteSettingsNotifier
   }
 
   void updateEarthquakeRegions(
-    List<NotificationRemoteSettingsEarthquakeRegion>
-    regions,
+    List<NotificationRemoteSettingsEarthquakeRegion> regions,
   ) {
     if (state case AsyncData(:final value)) {
       state = AsyncData(
@@ -69,9 +65,7 @@ class NotificationRemoteSettingsNotifier
     }
   }
 
-  void updateEewRegions(
-    List<NotificationRemoteSettingsEewRegion> regions,
-  ) {
+  void updateEewRegions(List<NotificationRemoteSettingsEewRegion> regions) {
     if (state case AsyncData(:final value)) {
       state = AsyncData(
         value.copyWith(
@@ -89,9 +83,7 @@ class NotificationRemoteSettingsNotifier
   Future<void> save() async {
     final savedState =
         ref
-            .read(
-              notificationRemoteSettingsSavedStateNotifierProvider,
-            )
+            .read(notificationRemoteSettingsSavedStateNotifierProvider)
             .valueOrNull;
     if (savedState == null) {
       throw Exception('Saved state is null');
@@ -99,29 +91,19 @@ class NotificationRemoteSettingsNotifier
     if (state case AsyncData(:final value)) {
       if (value.earthquake != savedState.earthquake) {
         final global = value.earthquake.global;
-        log(
-          'Earthquake要素を更新中...',
-          name: 'NotificationRemoteSettingsNotifier',
-        );
+        log('Earthquake要素を更新中...', name: 'NotificationRemoteSettingsNotifier');
         await ref
-            .read(
-              notificationRemoteSettingsSavedStateNotifierProvider
-                  .notifier,
-            )
+            .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
             .updateEarthquake(
               request: NotificationSettingsRequest(
                 global:
                     global != null
-                        ? NotificationSettingsGlobal(
-                          minJmaIntensity: global,
-                        )
+                        ? NotificationSettingsGlobal(minJmaIntensity: global)
                         : null,
                 regions:
                     value.earthquake.regions
                         .where(
-                          (r) =>
-                              global == null ||
-                              r.minJmaIntensity < global,
+                          (r) => global == null || r.minJmaIntensity < global,
                         )
                         .map(
                           (r) => NotificationSettingsRegion(
@@ -140,22 +122,14 @@ class NotificationRemoteSettingsNotifier
       }
       if (value.eew != savedState.eew) {
         final global = value.eew.global;
-        log(
-          'EEW要素を更新中...',
-          name: 'NotificationRemoteSettingsNotifier',
-        );
+        log('EEW要素を更新中...', name: 'NotificationRemoteSettingsNotifier');
         await ref
-            .read(
-              notificationRemoteSettingsSavedStateNotifierProvider
-                  .notifier,
-            )
+            .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
             .updateEew(
               request: NotificationSettingsRequest(
                 global:
                     global != null
-                        ? NotificationSettingsGlobal(
-                          minJmaIntensity: global,
-                        )
+                        ? NotificationSettingsGlobal(minJmaIntensity: global)
                         : null,
                 regions:
                     value.eew.regions
@@ -169,10 +143,7 @@ class NotificationRemoteSettingsNotifier
               ),
             );
       } else {
-        log(
-          'EEW要素は更新されていません',
-          name: 'NotificationRemoteSettingsNotifier',
-        );
+        log('EEW要素は更新されていません', name: 'NotificationRemoteSettingsNotifier');
       }
     } else {
       throw Exception('State is not AsyncData');

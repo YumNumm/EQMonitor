@@ -7,8 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_monitor_settings.g.dart';
 
 @Riverpod(keepAlive: true)
-class KyoshinMonitorSettings
-    extends _$KyoshinMonitorSettings {
+class KyoshinMonitorSettings extends _$KyoshinMonitorSettings {
   @override
   KyoshinMonitorSettingsModel build() {
     final result = _load();
@@ -22,9 +21,7 @@ class KyoshinMonitorSettings
   static const _prefsKey = '_kmoni_settings';
 
   KyoshinMonitorSettingsModel? _load() {
-    final json = ref
-        .read(sharedPreferencesProvider)
-        .getString(_prefsKey);
+    final json = ref.read(sharedPreferencesProvider).getString(_prefsKey);
     if (json == null) {
       return null;
     }
@@ -38,9 +35,7 @@ class KyoshinMonitorSettings
     }
   }
 
-  Future<void> save(
-    KyoshinMonitorSettingsModel model,
-  ) async {
+  Future<void> save(KyoshinMonitorSettingsModel model) async {
     state = model;
     await ref
         .read(sharedPreferencesProvider)

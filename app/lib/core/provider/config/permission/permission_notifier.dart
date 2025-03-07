@@ -25,18 +25,12 @@ class PermissionNotifier extends _$PermissionNotifier {
 
   Future<void> initialize() async {
     final notificationPermission =
-        await ref
-            .read(firebaseMessagingProvider)
-            .getNotificationSettings();
+        await ref.read(firebaseMessagingProvider).getNotificationSettings();
     await ref
         .read(firebaseMessagingProvider)
-        .setForegroundNotificationPresentationOptions(
-          alert: true,
-          badge: true,
-        );
+        .setForegroundNotificationPresentationOptions(alert: true, badge: true);
     state = PermissionStateModel(
-      notification: switch (notificationPermission
-          .authorizationStatus) {
+      notification: switch (notificationPermission.authorizationStatus) {
         AuthorizationStatus.authorized ||
         AuthorizationStatus.provisional => true,
         _ => false,
@@ -45,11 +39,9 @@ class PermissionNotifier extends _$PermissionNotifier {
           notificationPermission.criticalAlert ==
           AppleNotificationSetting.enabled,
       backgroundLocation:
-          await Permission.locationAlways.status ==
-          PermissionStatus.granted,
+          await Permission.locationAlways.status == PermissionStatus.granted,
       location:
-          await Permission.locationWhenInUse.status ==
-          PermissionStatus.granted,
+          await Permission.locationWhenInUse.status == PermissionStatus.granted,
     );
   }
 
@@ -66,42 +58,33 @@ class PermissionNotifier extends _$PermissionNotifier {
           criticalAlert: true,
           carPlay: true,
         );
-    if (result.authorizationStatus ==
-        AuthorizationStatus.denied) {
+    if (result.authorizationStatus == AuthorizationStatus.denied) {
       // 設定画面に遷移する
-      await AppSettings.openAppSettings(
-        type: AppSettingsType.notification,
-      );
+      await AppSettings.openAppSettings(type: AppSettingsType.notification);
     }
     await initialize();
   }
 
   Future<void> requestLocationWhenInUsePermission() async {
-    final status =
-        await Permission.locationWhenInUse.request();
+    final status = await Permission.locationWhenInUse.request();
     log(
       'Permission requested: locationWhenInUse, status: $status',
       name: 'PermissionNotifier',
     );
     if (status == PermissionStatus.permanentlyDenied) {
-      await AppSettings.openAppSettings(
-        type: AppSettingsType.location,
-      );
+      await AppSettings.openAppSettings(type: AppSettingsType.location);
     }
     ref.invalidateSelf();
   }
 
   Future<void> requestLocationAlwaysPermission() async {
-    final status =
-        await Permission.locationAlways.request();
+    final status = await Permission.locationAlways.request();
     log(
       'Permission requested: locationAlways, status: $status',
       name: 'PermissionNotifier',
     );
     if (status == PermissionStatus.permanentlyDenied) {
-      await AppSettings.openAppSettings(
-        type: AppSettingsType.location,
-      );
+      await AppSettings.openAppSettings(type: AppSettingsType.location);
     }
 
     ref.invalidateSelf();

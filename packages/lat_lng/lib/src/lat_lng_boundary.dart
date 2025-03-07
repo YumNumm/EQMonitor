@@ -13,66 +13,37 @@ class LatLngBoundary {
     return LatLngBoundary._(northEast, southWest);
   }
 
-  factory LatLngBoundary.merge(
-    List<LatLngBoundary> boundaries,
-  ) {
+  factory LatLngBoundary.merge(List<LatLngBoundary> boundaries) {
     final northEast = LatLng(
       boundaries
           .map((e) => e.northEast.lat)
-          .reduce(
-            (value, element) =>
-                value > element ? value : element,
-          ),
+          .reduce((value, element) => value > element ? value : element),
       boundaries
           .map((e) => e.northEast.lon)
-          .reduce(
-            (value, element) =>
-                value > element ? value : element,
-          ),
+          .reduce((value, element) => value > element ? value : element),
     );
     final southWest = LatLng(
       boundaries
           .map((e) => e.southWest.lat)
-          .reduce(
-            (value, element) =>
-                value < element ? value : element,
-          ),
+          .reduce((value, element) => value < element ? value : element),
       boundaries
           .map((e) => e.southWest.lon)
-          .reduce(
-            (value, element) =>
-                value < element ? value : element,
-          ),
+          .reduce((value, element) => value < element ? value : element),
     );
     return LatLngBoundary._(northEast, southWest);
   }
 
   factory LatLngBoundary.fromList(List<LatLng> points) {
-    assert(
-      points.isNotEmpty && points.length > 1,
-      'points must be not empty',
-    );
+    assert(points.isNotEmpty && points.length > 1, 'points must be not empty');
     var northEastLat = double.negativeInfinity;
     var northEastLon = double.negativeInfinity;
     var southWestLat = double.infinity;
     var southWestLon = double.infinity;
     for (final point in points) {
-      northEastLat =
-          northEastLat > point.lat
-              ? northEastLat
-              : point.lat;
-      northEastLon =
-          northEastLon > point.lon
-              ? northEastLon
-              : point.lon;
-      southWestLat =
-          southWestLat < point.lat
-              ? southWestLat
-              : point.lat;
-      southWestLon =
-          southWestLon < point.lon
-              ? southWestLon
-              : point.lon;
+      northEastLat = northEastLat > point.lat ? northEastLat : point.lat;
+      northEastLon = northEastLon > point.lon ? northEastLon : point.lon;
+      southWestLat = southWestLat < point.lat ? southWestLat : point.lat;
+      southWestLon = southWestLon < point.lon ? southWestLon : point.lon;
     }
     final northEast = LatLng(northEastLat, northEastLon);
     final southWest = LatLng(southWestLat, southWestLon);

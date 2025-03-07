@@ -13,8 +13,7 @@ import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/src/protobuf/mixins/well_known.dart'
-    as $mixin;
+import 'package:protobuf/src/protobuf/mixins/well_known.dart' as $mixin;
 
 ///  A Timestamp represents a point in time independent of any time zone or local
 ///  calendar, encoded as a count of seconds and fractions of seconds at
@@ -105,8 +104,7 @@ import 'package:protobuf/src/protobuf/mixins/well_known.dart'
 ///  the Joda Time's [`ISODateTimeFormat.dateTime()`](
 ///  http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
 ///  ) to obtain a formatter capable of generating timestamps in this format.
-class Timestamp extends $pb.GeneratedMessage
-    with $mixin.TimestampMixin {
+class Timestamp extends $pb.GeneratedMessage with $mixin.TimestampMixin {
   factory Timestamp({
     $fixnum.Int64? seconds,
     $core.int? nanos,
@@ -122,52 +120,42 @@ class Timestamp extends $pb.GeneratedMessage
   }
   Timestamp._() : super();
   factory Timestamp.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory Timestamp.fromJson($core.String i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Timestamp',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'google.protobuf'),
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'),
       createEmptyInstance: create,
-      toProto3Json:
-          $mixin.TimestampMixin.toProto3JsonHelper,
-      fromProto3Json:
-          $mixin.TimestampMixin.fromProto3JsonHelper)
+      toProto3Json: $mixin.TimestampMixin.toProto3JsonHelper,
+      fromProto3Json: $mixin.TimestampMixin.fromProto3JsonHelper)
     ..aInt64(1, _omitFieldNames ? '' : 'seconds')
-    ..a<$core.int>(2, _omitFieldNames ? '' : 'nanos',
-        $pb.PbFieldType.O3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'nanos', $pb.PbFieldType.O3)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
   Timestamp clone() => Timestamp()..mergeFromMessage(this);
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   Timestamp copyWith(void Function(Timestamp) updates) =>
-      super.copyWith(
-              (message) => updates(message as Timestamp))
-          as Timestamp;
+      super.copyWith((message) => updates(message as Timestamp)) as Timestamp;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Timestamp create() => Timestamp._();
   Timestamp createEmptyInstance() => create();
-  static $pb.PbList<Timestamp> createRepeated() =>
-      $pb.PbList<Timestamp>();
+  static $pb.PbList<Timestamp> createRepeated() => $pb.PbList<Timestamp>();
   @$core.pragma('dart2js:noInline')
-  static Timestamp getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Timestamp>(create);
+  static Timestamp getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Timestamp>(create);
   static Timestamp? _defaultInstance;
 
   /// Represents seconds of UTC time since Unix epoch
@@ -211,7 +199,6 @@ class Timestamp extends $pb.GeneratedMessage
   }
 }
 
-const _omitFieldNames =
-    $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment(
-    'protobuf.omit_message_names');
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

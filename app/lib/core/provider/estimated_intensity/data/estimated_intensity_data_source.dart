@@ -7,12 +7,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'estimated_intensity_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
-EstimatedIntensityDataSource estimatedIntensityDataSource(
-  Ref ref,
-) => EstimatedIntensityDataSource();
+EstimatedIntensityDataSource estimatedIntensityDataSource(Ref ref) =>
+    EstimatedIntensityDataSource();
 
-typedef CalculationPoint =
-    ({double lat, double lon, double arv400});
+typedef CalculationPoint = ({double lat, double lon, double arv400});
 
 class EstimatedIntensityDataSource {
   Iterable<double> getEstimatedIntensity({
@@ -25,27 +23,19 @@ class EstimatedIntensityDataSource {
     // 宇津(1982)の経験式を用いる
     final momentMagnitude = jmaMagnitude - 0.171;
     // 断層長計算(半径)
-    final faultLength =
-        math.pow(10, 0.5 * momentMagnitude - 1.85) / 2;
+    final faultLength = math.pow(10, 0.5 * momentMagnitude - 1.85) / 2;
     const distanceCalcular = lat_long_2.Distance();
     for (final point in points) {
       final epicenterDistance =
           distanceCalcular.as(
             lat_long_2.LengthUnit.Kilometer,
             lat_long_2.LatLng(point.lat, point.lon),
-            lat_long_2.LatLng(
-              hypocenter.lat,
-              hypocenter.lon,
-            ),
+            lat_long_2.LatLng(hypocenter.lat, hypocenter.lon),
           ) -
           faultLength;
       // 断層長を引いた震源距離を求める
       final distance =
-          math.pow(
-            math.pow(depth, 2) +
-                math.pow(epicenterDistance, 2),
-            0.5,
-          ) -
+          math.pow(math.pow(depth, 2) + math.pow(epicenterDistance, 2), 0.5) -
           faultLength;
       // 計算で利用する震源距離の最短は3kmなので、大きいほうをとる
       final x = math.max(distance, 3);
@@ -55,14 +45,7 @@ class EstimatedIntensityDataSource {
         (0.58 * momentMagnitude +
                 0.0038 * depth -
                 1.29 -
-                log10(
-                  x +
-                      0.0028 *
-                          (math.pow(
-                            10,
-                            0.5 * momentMagnitude,
-                          )),
-                )) -
+                log10(x + 0.0028 * (math.pow(10, 0.5 * momentMagnitude)))) -
             0.002 * x,
       );
 

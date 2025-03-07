@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SheetHeader extends StatelessWidget {
-  const SheetHeader({
-    required this.title,
-    super.key,
-    this.action,
-  });
+  const SheetHeader({required this.title, super.key, this.action});
 
   final String title;
   final Widget? action;

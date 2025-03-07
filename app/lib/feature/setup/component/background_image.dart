@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SetupBackgroundImageWidget extends HookWidget {
-  const SetupBackgroundImageWidget({
-    required this.child,
-    super.key,
-  });
+  const SetupBackgroundImageWidget({required this.child, super.key});
 
   final Widget child;
 
@@ -17,45 +14,31 @@ class SetupBackgroundImageWidget extends HookWidget {
     final startTime = useState(0);
 
     if (kIsWeb) {
-      return ColoredBox(
-        color: const Color(0xFF05052F),
-        child: child,
-      );
+      return ColoredBox(color: const Color(0xFF05052F), child: child);
     }
 
     double elapsedTimeInSeconds() =>
-        (DateTime.now().millisecondsSinceEpoch -
-            startTime.value) /
-        1000;
+        (DateTime.now().millisecondsSinceEpoch - startTime.value) / 1000;
     final shader = useFuture(
       // ignore: discarded_futures
-      FragmentProgram.fromAsset(
-        'shaders/introduction.frag',
-      ),
+      FragmentProgram.fromAsset('shaders/introduction.frag'),
     );
     final animationController = useAnimationController(
       duration: const Duration(seconds: 1),
     )..repeat();
     useAnimation(animationController);
     useEffect(() {
-      startTime.value =
-          DateTime.now().millisecondsSinceEpoch;
+      startTime.value = DateTime.now().millisecondsSinceEpoch;
       return null;
-    }, [context],);
+    }, [context]);
     if (shader.hasData) {
       return AnimatedBuilder(
         animation: animationController,
         builder: (context, _) {
           final data = shader.data!.fragmentShader();
           return CustomPaint(
-            painter: _ShaderPainter(
-              data,
-              elapsedTimeInSeconds(),
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: child,
-            ),
+            painter: _ShaderPainter(data, elapsedTimeInSeconds()),
+            child: Scaffold(backgroundColor: Colors.transparent, body: child),
           );
         },
       );

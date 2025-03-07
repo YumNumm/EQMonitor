@@ -11,9 +11,8 @@ class ParameterRegion with _$ParameterRegion {
     required String kana,
   }) = _ParameterRegion;
 
-  factory ParameterRegion.fromJson(
-    Map<String, dynamic> json,
-  ) => _$ParameterRegionFromJson(json);
+  factory ParameterRegion.fromJson(Map<String, dynamic> json) =>
+      _$ParameterRegionFromJson(json);
 }
 
 @freezed
@@ -24,7 +23,6 @@ class ParameterCity with _$ParameterCity {
     required String kana,
   }) = _ParameterCity;
 
-  factory ParameterCity.fromJson(
-    Map<String, dynamic> json,
-  ) => _$ParameterCityFromJson(json);
+  factory ParameterCity.fromJson(Map<String, dynamic> json) =>
+      _$ParameterCityFromJson(json);
 }

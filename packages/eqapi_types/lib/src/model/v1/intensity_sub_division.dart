@@ -5,9 +5,7 @@ part 'intensity_sub_division.freezed.dart';
 part 'intensity_sub_division.g.dart';
 
 @freezed
-class IntensitySubDivision
-    with _$IntensitySubDivision
-    implements V1Database {
+class IntensitySubDivision with _$IntensitySubDivision implements V1Database {
   const factory IntensitySubDivision({
     required int id,
     required int eventId,
@@ -16,7 +14,6 @@ class IntensitySubDivision
     required JmaLgIntensity? maxLpgmIntensity,
   }) = _IntensitySubDivision;
 
-  factory IntensitySubDivision.fromJson(
-    Map<String, dynamic> json,
-  ) => _$IntensitySubDivisionFromJson(json);
+  factory IntensitySubDivision.fromJson(Map<String, dynamic> json) =>
+      _$IntensitySubDivisionFromJson(json);
 }

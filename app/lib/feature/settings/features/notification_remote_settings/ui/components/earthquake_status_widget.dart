@@ -21,8 +21,7 @@ class EarthquakeStatusWidget extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return BorderedContainer(
-      accentColor:
-          Theme.of(context).colorScheme.secondaryContainer,
+      accentColor: Theme.of(context).colorScheme.secondaryContainer,
       margin: EdgeInsets.zero,
       onPressed: action,
       child: Row(
@@ -38,9 +37,7 @@ class EarthquakeStatusWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                EarthquakeNotificationStatusText(
-                  earthquake: earthquake,
-                ),
+                EarthquakeNotificationStatusText(earthquake: earthquake),
               ],
             ),
           ),
@@ -54,12 +51,8 @@ class EarthquakeStatusWidget extends StatelessWidget {
   }
 }
 
-class EarthquakeNotificationStatusText
-    extends StatelessWidget {
-  const EarthquakeNotificationStatusText({
-    required this.earthquake,
-    super.key,
-  });
+class EarthquakeNotificationStatusText extends StatelessWidget {
+  const EarthquakeNotificationStatusText({required this.earthquake, super.key});
 
   final NotificationRemoteSettingsEarthquake earthquake;
 
@@ -70,8 +63,7 @@ class EarthquakeNotificationStatusText
           (earthquake.global == null) ||
           e.minJmaIntensity < (earthquake.global!),
     );
-    if (earthquake.global == null &&
-        earthquake.regions.isEmpty) {
+    if (earthquake.global == null && earthquake.regions.isEmpty) {
       return const Text('地震情報の通知は無効です');
     }
     return Text.rich(
@@ -81,17 +73,13 @@ class EarthquakeNotificationStatusText
                 ? [
                   const TextSpan(
                     text: 'すべての地震情報を通知します',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ]
                 : [
                   const TextSpan(
                     text: '以下の条件のいずれかを満たした時に通知します\n',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   if (earthquake.global != null) ...[
                     const TextSpan(text: '・任意の地域で'),
@@ -100,9 +88,7 @@ class EarthquakeNotificationStatusText
                           '震度'
                           '${earthquake.global!.type.fromPlusMinus}'
                           '${earthquake.global != JmaForecastIntensity.seven ? "以上" : ""}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const TextSpan(text: 'を観測'),
                   ],
@@ -110,9 +96,7 @@ class EarthquakeNotificationStatusText
                     ...enabledRegions
                         .mapIndexed(
                           (index, region) => [
-                            TextSpan(
-                              text: '\n・${region.name}で',
-                            ),
+                            TextSpan(text: '\n・${region.name}で'),
                             TextSpan(
                               text:
                                   '震度${region.minJmaIntensity.type.fromPlusMinus}'

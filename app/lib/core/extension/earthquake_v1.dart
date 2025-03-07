@@ -3,8 +3,7 @@ import 'package:eqapi_types/eqapi_types.dart';
 extension EarthquakeV1Ex on EarthquakeV1 {
   bool get isVolcano =>
       (text?.contains('大規模な噴火が発生しました') ?? false) &&
-      (text?.contains('実際には、規模の大きな地震は発生していない点に留意') ??
-          false);
+      (text?.contains('実際には、規模の大きな地震は発生していない点に留意') ?? false);
 
   String? get volcanoName {
     if (!isVolcano) {

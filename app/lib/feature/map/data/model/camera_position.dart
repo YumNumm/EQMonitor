@@ -26,9 +26,8 @@ class MapCameraPosition with _$MapCameraPosition {
   /// MapLibreのCameraPositionに変換
   const MapCameraPosition._();
 
-  factory MapCameraPosition.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MapCameraPositionFromJson(json);
+  factory MapCameraPosition.fromJson(Map<String, dynamic> json) =>
+      _$MapCameraPositionFromJson(json);
 
   /// 指定された緯度経度矩形が画面に収まるカメラ位置を計算する
   /// [screenWidth] 画面の幅（ピクセル）
@@ -40,12 +39,7 @@ class MapCameraPosition with _$MapCameraPosition {
   factory MapCameraPosition.fitBounds({
     required double screenWidth,
     required double screenHeight,
-    required ({
-      double minLat,
-      double minLng,
-      double maxLat,
-      double maxLng,
-    })
+    required ({double minLat, double minLng, double maxLat, double maxLng})
     bounds,
     double padding = 0,
     double tileSize = 512,
@@ -87,10 +81,7 @@ class MapCameraPosition with _$MapCameraPosition {
     // ズームレベルは通常小数点以下1桁程度に制限
     final roundedZoom = (zoom * 10).round() / 10;
 
-    return MapCameraPosition(
-      target: center,
-      zoom: roundedZoom,
-    );
+    return MapCameraPosition(target: center, zoom: roundedZoom);
   }
 
   /// 経度方向のズームレベルを計算
@@ -107,10 +98,7 @@ class MapCameraPosition with _$MapCameraPosition {
     // 360度（全世界）に対する経度スパンの比率から計算
     // ズームレベルzでは、世界の幅は tileSize * 2^z ピクセル
     // スクリーン幅:経度スパンの比率 = tileSize * 2^z:360
-    return math.log(
-          screenWidth * 360 / (longitudeSpan * tileSize),
-        ) /
-        math.ln2;
+    return math.log(screenWidth * 360 / (longitudeSpan * tileSize)) / math.ln2;
   }
 
   /// 緯度方向のズームレベルを計算
@@ -128,28 +116,17 @@ class MapCameraPosition with _$MapCameraPosition {
     }
     // 北から南への緯度範囲をピクセルに変換
     final topPixel = _latitudeToPixelY(maxLat, 0, tileSize);
-    final bottomPixel = _latitudeToPixelY(
-      minLat,
-      0,
-      tileSize,
-    );
+    final bottomPixel = _latitudeToPixelY(minLat, 0, tileSize);
     final pixelSpan = (bottomPixel - topPixel).abs();
 
     return math.log(screenHeight / pixelSpan) / math.ln2;
   }
 
   /// 緯度をY座標（ピクセル）に変換
-  static double _latitudeToPixelY(
-    double lat,
-    double zoom,
-    double tileSize,
-  ) {
+  static double _latitudeToPixelY(double lat, double zoom, double tileSize) {
     // メルカトル投影の数式
     final sinLat = math.sin(lat * math.pi / 180);
-    final y =
-        0.5 -
-        math.log((1 + sinLat) / (1 - sinLat)) /
-            (4 * math.pi);
+    final y = 0.5 - math.log((1 + sinLat) / (1 - sinLat)) / (4 * math.pi);
     return y * tileSize * math.pow(2, zoom);
   }
 }

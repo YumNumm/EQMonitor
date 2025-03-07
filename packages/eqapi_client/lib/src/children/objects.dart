@@ -9,6 +9,7 @@ abstract class Objects {
   factory Objects(Dio dio, {String baseUrl}) = _Objects;
 
   @GET('/earthquake-early/{id}.json')
-  Future<HttpResponse<EarthquakeEarlyEvent>>
-  getEarthquakeEarlyEvent({@Path('id') required String id});
+  Future<HttpResponse<EarthquakeEarlyEvent>> getEarthquakeEarlyEvent({
+    @Path('id') required String id,
+  });
 }

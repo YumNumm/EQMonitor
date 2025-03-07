@@ -13,8 +13,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class KyoshinObservationPoints
-    extends $pb.GeneratedMessage {
+class KyoshinObservationPoints extends $pb.GeneratedMessage {
   factory KyoshinObservationPoints({
     $core.Iterable<KyoshinObservationPoint>? points,
   }) {
@@ -25,64 +24,51 @@ class KyoshinObservationPoints
     return $result;
   }
   KyoshinObservationPoints._() : super();
-  factory KyoshinObservationPoints.fromBuffer(
-          $core.List<$core.int> i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+  factory KyoshinObservationPoints.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory KyoshinObservationPoints.fromJson($core.String i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'KyoshinObservationPoints',
       createEmptyInstance: create)
-    ..pc<KyoshinObservationPoint>(1,
-        _omitFieldNames ? '' : 'points', $pb.PbFieldType.PM,
+    ..pc<KyoshinObservationPoint>(
+        1, _omitFieldNames ? '' : 'points', $pb.PbFieldType.PM,
         subBuilder: KyoshinObservationPoint.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoints clone() =>
       KyoshinObservationPoints()..mergeFromMessage(this);
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoints copyWith(
-          void Function(KyoshinObservationPoints)
-              updates) =>
-      super.copyWith((message) =>
-              updates(message as KyoshinObservationPoints))
+          void Function(KyoshinObservationPoints) updates) =>
+      super.copyWith((message) => updates(message as KyoshinObservationPoints))
           as KyoshinObservationPoints;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static KyoshinObservationPoints create() =>
-      KyoshinObservationPoints._();
-  KyoshinObservationPoints createEmptyInstance() =>
-      create();
-  static $pb.PbList<KyoshinObservationPoints>
-      createRepeated() =>
-          $pb.PbList<KyoshinObservationPoints>();
+  static KyoshinObservationPoints create() => KyoshinObservationPoints._();
+  KyoshinObservationPoints createEmptyInstance() => create();
+  static $pb.PbList<KyoshinObservationPoints> createRepeated() =>
+      $pb.PbList<KyoshinObservationPoints>();
   @$core.pragma('dart2js:noInline')
-  static KyoshinObservationPoints getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage
-          .$_defaultFor<KyoshinObservationPoints>(create);
+  static KyoshinObservationPoints getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<KyoshinObservationPoints>(create);
   static KyoshinObservationPoints? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<KyoshinObservationPoint> get points =>
-      $_getList(0);
+  $core.List<KyoshinObservationPoint> get points => $_getList(0);
 }
 
-class KyoshinObservationPoint_LatLng
-    extends $pb.GeneratedMessage {
+class KyoshinObservationPoint_LatLng extends $pb.GeneratedMessage {
   factory KyoshinObservationPoint_LatLng({
     $core.double? latitude,
     $core.double? longitude,
@@ -97,44 +83,32 @@ class KyoshinObservationPoint_LatLng
     return $result;
   }
   KyoshinObservationPoint_LatLng._() : super();
-  factory KyoshinObservationPoint_LatLng.fromBuffer(
-          $core.List<$core.int> i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+  factory KyoshinObservationPoint_LatLng.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
-  factory KyoshinObservationPoint_LatLng.fromJson(
-          $core.String i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+  factory KyoshinObservationPoint_LatLng.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames
-          ? ''
-          : 'KyoshinObservationPoint.LatLng',
+      _omitMessageNames ? '' : 'KyoshinObservationPoint.LatLng',
       createEmptyInstance: create)
-    ..a<$core.double>(1, _omitFieldNames ? '' : 'latitude',
-        $pb.PbFieldType.OD)
-    ..a<$core.double>(2, _omitFieldNames ? '' : 'longitude',
-        $pb.PbFieldType.OD)
+    ..a<$core.double>(1, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OD)
+    ..a<$core.double>(2, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OD)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoint_LatLng clone() =>
-      KyoshinObservationPoint_LatLng()
-        ..mergeFromMessage(this);
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+      KyoshinObservationPoint_LatLng()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoint_LatLng copyWith(
-          void Function(KyoshinObservationPoint_LatLng)
-              updates) =>
-      super.copyWith((message) => updates(
-              message as KyoshinObservationPoint_LatLng))
+          void Function(KyoshinObservationPoint_LatLng) updates) =>
+      super.copyWith(
+              (message) => updates(message as KyoshinObservationPoint_LatLng))
           as KyoshinObservationPoint_LatLng;
 
   $pb.BuilderInfo get info_ => _i;
@@ -142,16 +116,12 @@ class KyoshinObservationPoint_LatLng
   @$core.pragma('dart2js:noInline')
   static KyoshinObservationPoint_LatLng create() =>
       KyoshinObservationPoint_LatLng._();
-  KyoshinObservationPoint_LatLng createEmptyInstance() =>
-      create();
-  static $pb.PbList<KyoshinObservationPoint_LatLng>
-      createRepeated() =>
-          $pb.PbList<KyoshinObservationPoint_LatLng>();
+  KyoshinObservationPoint_LatLng createEmptyInstance() => create();
+  static $pb.PbList<KyoshinObservationPoint_LatLng> createRepeated() =>
+      $pb.PbList<KyoshinObservationPoint_LatLng>();
   @$core.pragma('dart2js:noInline')
-  static KyoshinObservationPoint_LatLng getDefault() =>
-      _defaultInstance ??=
-          $pb.GeneratedMessage.$_defaultFor<
-              KyoshinObservationPoint_LatLng>(create);
+  static KyoshinObservationPoint_LatLng getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<KyoshinObservationPoint_LatLng>(create);
   static KyoshinObservationPoint_LatLng? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -179,8 +149,7 @@ class KyoshinObservationPoint_LatLng
   void clearLongitude() => clearField(2);
 }
 
-class KyoshinObservationPoint_Point
-    extends $pb.GeneratedMessage {
+class KyoshinObservationPoint_Point extends $pb.GeneratedMessage {
   factory KyoshinObservationPoint_Point({
     $core.int? x,
     $core.int? y,
@@ -195,44 +164,32 @@ class KyoshinObservationPoint_Point
     return $result;
   }
   KyoshinObservationPoint_Point._() : super();
-  factory KyoshinObservationPoint_Point.fromBuffer(
-          $core.List<$core.int> i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+  factory KyoshinObservationPoint_Point.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
-  factory KyoshinObservationPoint_Point.fromJson(
-          $core.String i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+  factory KyoshinObservationPoint_Point.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames
-          ? ''
-          : 'KyoshinObservationPoint.Point',
+      _omitMessageNames ? '' : 'KyoshinObservationPoint.Point',
       createEmptyInstance: create)
-    ..a<$core.int>(
-        1, _omitFieldNames ? '' : 'x', $pb.PbFieldType.O3)
-    ..a<$core.int>(
-        2, _omitFieldNames ? '' : 'y', $pb.PbFieldType.O3)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'x', $pb.PbFieldType.O3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'y', $pb.PbFieldType.O3)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoint_Point clone() =>
-      KyoshinObservationPoint_Point()
-        ..mergeFromMessage(this);
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+      KyoshinObservationPoint_Point()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoint_Point copyWith(
-          void Function(KyoshinObservationPoint_Point)
-              updates) =>
-      super.copyWith((message) => updates(
-              message as KyoshinObservationPoint_Point))
+          void Function(KyoshinObservationPoint_Point) updates) =>
+      super.copyWith(
+              (message) => updates(message as KyoshinObservationPoint_Point))
           as KyoshinObservationPoint_Point;
 
   $pb.BuilderInfo get info_ => _i;
@@ -240,16 +197,12 @@ class KyoshinObservationPoint_Point
   @$core.pragma('dart2js:noInline')
   static KyoshinObservationPoint_Point create() =>
       KyoshinObservationPoint_Point._();
-  KyoshinObservationPoint_Point createEmptyInstance() =>
-      create();
-  static $pb.PbList<KyoshinObservationPoint_Point>
-      createRepeated() =>
-          $pb.PbList<KyoshinObservationPoint_Point>();
+  KyoshinObservationPoint_Point createEmptyInstance() => create();
+  static $pb.PbList<KyoshinObservationPoint_Point> createRepeated() =>
+      $pb.PbList<KyoshinObservationPoint_Point>();
   @$core.pragma('dart2js:noInline')
-  static KyoshinObservationPoint_Point getDefault() =>
-      _defaultInstance ??=
-          $pb.GeneratedMessage.$_defaultFor<
-              KyoshinObservationPoint_Point>(create);
+  static KyoshinObservationPoint_Point getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<KyoshinObservationPoint_Point>(create);
   static KyoshinObservationPoint_Point? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -308,14 +261,11 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
     return $result;
   }
   KyoshinObservationPoint._() : super();
-  factory KyoshinObservationPoint.fromBuffer(
-          $core.List<$core.int> i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+  factory KyoshinObservationPoint.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory KyoshinObservationPoint.fromJson($core.String i,
-          [$pb.ExtensionRegistry r =
-              $pb.ExtensionRegistry.EMPTY]) =>
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -324,46 +274,37 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'region')
-    ..aOM<KyoshinObservationPoint_LatLng>(
-        4, _omitFieldNames ? '' : 'location',
+    ..aOM<KyoshinObservationPoint_LatLng>(4, _omitFieldNames ? '' : 'location',
         subBuilder: KyoshinObservationPoint_LatLng.create)
-    ..aOM<KyoshinObservationPoint_Point>(
-        5, _omitFieldNames ? '' : 'point',
+    ..aOM<KyoshinObservationPoint_Point>(5, _omitFieldNames ? '' : 'point',
         subBuilder: KyoshinObservationPoint_Point.create)
-    ..a<$core.double>(6, _omitFieldNames ? '' : 'arv400',
-        $pb.PbFieldType.OD,
+    ..a<$core.double>(6, _omitFieldNames ? '' : 'arv400', $pb.PbFieldType.OD,
         protoName: 'arv_400')
     ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoint clone() =>
       KyoshinObservationPoint()..mergeFromMessage(this);
-  @$core.Deprecated(
-      'Using this can add significant overhead to your binary. '
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   KyoshinObservationPoint copyWith(
           void Function(KyoshinObservationPoint) updates) =>
-      super.copyWith((message) =>
-              updates(message as KyoshinObservationPoint))
+      super.copyWith((message) => updates(message as KyoshinObservationPoint))
           as KyoshinObservationPoint;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static KyoshinObservationPoint create() =>
-      KyoshinObservationPoint._();
+  static KyoshinObservationPoint create() => KyoshinObservationPoint._();
   KyoshinObservationPoint createEmptyInstance() => create();
-  static $pb.PbList<KyoshinObservationPoint>
-      createRepeated() =>
-          $pb.PbList<KyoshinObservationPoint>();
+  static $pb.PbList<KyoshinObservationPoint> createRepeated() =>
+      $pb.PbList<KyoshinObservationPoint>();
   @$core.pragma('dart2js:noInline')
-  static KyoshinObservationPoint getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage
-          .$_defaultFor<KyoshinObservationPoint>(create);
+  static KyoshinObservationPoint getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<KyoshinObservationPoint>(create);
   static KyoshinObservationPoint? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -414,8 +355,7 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearLocation() => clearField(4);
   @$pb.TagNumber(4)
-  KyoshinObservationPoint_LatLng ensureLocation() =>
-      $_ensure(3);
+  KyoshinObservationPoint_LatLng ensureLocation() => $_ensure(3);
 
   @$pb.TagNumber(5)
   KyoshinObservationPoint_Point get point => $_getN(4);
@@ -429,8 +369,7 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearPoint() => clearField(5);
   @$pb.TagNumber(5)
-  KyoshinObservationPoint_Point ensurePoint() =>
-      $_ensure(4);
+  KyoshinObservationPoint_Point ensurePoint() => $_ensure(4);
 
   /// 工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
   @$pb.TagNumber(6)
@@ -446,7 +385,6 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
   void clearArv400() => clearField(6);
 }
 
-const _omitFieldNames =
-    $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment(
-    'protobuf.omit_message_names');
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

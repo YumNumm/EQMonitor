@@ -24,8 +24,7 @@ class Eew extends _$Eew {
     ref
       ..listen(websocketTableMessagesProvider, (_, next) {
         final valueOrNull = next.valueOrNull;
-        if (valueOrNull
-            is RealtimePostgresInsertPayload<EewV1>) {
+        if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
           _upsert(valueOrNull.newData);
         }
       })
@@ -46,15 +45,11 @@ class Eew extends _$Eew {
 
   void _refetchRestApi() {
     // WebSocketが接続されている場合は、パス
-    final webSocketState = ref.read(
-      websocketStatusProvider,
-    );
-    if (webSocketState is Connected ||
-        webSocketState is Reconnected) {
+    final webSocketState = ref.read(websocketStatusProvider);
+    if (webSocketState is Connected || webSocketState is Reconnected) {
       return;
     }
-    if (ref.read(appLifecycleProvider) !=
-        AppLifecycleState.resumed) {
+    if (ref.read(appLifecycleProvider) != AppLifecycleState.resumed) {
       return;
     }
     talker.log('Refetch EEW');
@@ -66,9 +61,7 @@ class Eew extends _$Eew {
   void _upsert(EewV1 item) {
     final dataView = state.valueOrNull ?? [];
     final data = [...dataView];
-    final index = data.indexWhereOrNull(
-      (e) => e.eventId == item.eventId,
-    );
+    final index = data.indexWhereOrNull((e) => e.eventId == item.eventId);
     if (index != null) {
       final previous = data[index];
       final previousSerialNo = previous.serialNo ?? 0;

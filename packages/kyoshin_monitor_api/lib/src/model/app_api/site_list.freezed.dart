@@ -23,27 +23,22 @@ SiteList _$SiteListFromJson(Map<String, dynamic> json) {
 mixin _$SiteList {
   /// 観測点一覧
   @JsonKey(name: 'items')
-  List<Site>? get sites =>
-      throw _privateConstructorUsedError;
+  List<Site>? get sites => throw _privateConstructorUsedError;
 
   /// セキュリティ情報
-  Security? get security =>
-      throw _privateConstructorUsedError;
+  Security? get security => throw _privateConstructorUsedError;
 
   /// 時間
-  String? get dataTime =>
-      throw _privateConstructorUsedError;
+  String? get dataTime => throw _privateConstructorUsedError;
 
   /// リザルト
   Result? get result => throw _privateConstructorUsedError;
 
   /// シリアル番号
-  String? get serialNo =>
-      throw _privateConstructorUsedError;
+  String? get serialNo => throw _privateConstructorUsedError;
 
   /// Serializes this SiteList to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of SiteList
   /// with the given fields replaced by the non-null parameter values.
@@ -54,10 +49,8 @@ mixin _$SiteList {
 
 /// @nodoc
 abstract class $SiteListCopyWith<$Res> {
-  factory $SiteListCopyWith(
-    SiteList value,
-    $Res Function(SiteList) then,
-  ) = _$SiteListCopyWithImpl<$Res, SiteList>;
+  factory $SiteListCopyWith(SiteList value, $Res Function(SiteList) then) =
+      _$SiteListCopyWithImpl<$Res, SiteList>;
   @useResult
   $Res call({
     @JsonKey(name: 'items') List<Site>? sites,
@@ -133,12 +126,8 @@ class _$SiteListCopyWithImpl<$Res, $Val extends SiteList>
       return null;
     }
 
-    return $SecurityCopyWith<$Res>(_value.security!, (
-      value,
-    ) {
-      return _then(
-        _value.copyWith(security: value) as $Val,
-      );
+    return $SecurityCopyWith<$Res>(_value.security!, (value) {
+      return _then(_value.copyWith(security: value) as $Val);
     });
   }
 
@@ -243,9 +232,8 @@ class _$SiteListImpl implements _SiteList {
     this.serialNo,
   }) : _sites = sites;
 
-  factory _$SiteListImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$SiteListImplFromJson(json);
+  factory _$SiteListImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SiteListImplFromJson(json);
 
   /// 観測点一覧
   final List<Site>? _sites;
@@ -287,16 +275,12 @@ class _$SiteListImpl implements _SiteList {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SiteListImpl &&
-            const DeepCollectionEquality().equals(
-              other._sites,
-              _sites,
-            ) &&
+            const DeepCollectionEquality().equals(other._sites, _sites) &&
             (identical(other.security, security) ||
                 other.security == security) &&
             (identical(other.dataTime, dataTime) ||
                 other.dataTime == dataTime) &&
-            (identical(other.result, result) ||
-                other.result == result) &&
+            (identical(other.result, result) || other.result == result) &&
             (identical(other.serialNo, serialNo) ||
                 other.serialNo == serialNo));
   }
@@ -318,10 +302,7 @@ class _$SiteListImpl implements _SiteList {
   @override
   @pragma('vm:prefer-inline')
   _$$SiteListImplCopyWith<_$SiteListImpl> get copyWith =>
-      __$$SiteListImplCopyWithImpl<_$SiteListImpl>(
-        this,
-        _$identity,
-      );
+      __$$SiteListImplCopyWithImpl<_$SiteListImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -384,8 +365,7 @@ mixin _$Site {
 
   /// 都道府県ID
   @JsonKey(name: 'pref')
-  int? get prefectureId =>
-      throw _privateConstructorUsedError;
+  int? get prefectureId => throw _privateConstructorUsedError;
 
   /// ID
   @JsonKey(name: 'siteid')
@@ -398,22 +378,18 @@ mixin _$Site {
   double? get lng => throw _privateConstructorUsedError;
 
   /// Serializes this Site to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of Site
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $SiteCopyWith<Site> get copyWith =>
-      throw _privateConstructorUsedError;
+  $SiteCopyWith<Site> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $SiteCopyWith<$Res> {
-  factory $SiteCopyWith(
-    Site value,
-    $Res Function(Site) then,
-  ) = _$SiteCopyWithImpl<$Res, Site>;
+  factory $SiteCopyWith(Site value, $Res Function(Site) then) =
+      _$SiteCopyWithImpl<$Res, Site>;
   @useResult
   $Res call({
     int? muni,
@@ -486,8 +462,7 @@ class _$SiteCopyWithImpl<$Res, $Val extends Site>
 }
 
 /// @nodoc
-abstract class _$$SiteImplCopyWith<$Res>
-    implements $SiteCopyWith<$Res> {
+abstract class _$$SiteImplCopyWith<$Res> implements $SiteCopyWith<$Res> {
   factory _$$SiteImplCopyWith(
     _$SiteImpl value,
     $Res Function(_$SiteImpl) then,
@@ -508,10 +483,8 @@ abstract class _$$SiteImplCopyWith<$Res>
 class __$$SiteImplCopyWithImpl<$Res>
     extends _$SiteCopyWithImpl<$Res, _$SiteImpl>
     implements _$$SiteImplCopyWith<$Res> {
-  __$$SiteImplCopyWithImpl(
-    _$SiteImpl _value,
-    $Res Function(_$SiteImpl) _then,
-  ) : super(_value, _then);
+  __$$SiteImplCopyWithImpl(_$SiteImpl _value, $Res Function(_$SiteImpl) _then)
+    : super(_value, _then);
 
   /// Create a copy of Site
   /// with the given fields replaced by the non-null parameter values.
@@ -613,31 +586,19 @@ class _$SiteImpl extends _Site {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SiteImpl &&
-            (identical(other.muni, muni) ||
-                other.muni == muni) &&
-            (identical(other.siteidx, siteidx) ||
-                other.siteidx == siteidx) &&
+            (identical(other.muni, muni) || other.muni == muni) &&
+            (identical(other.siteidx, siteidx) || other.siteidx == siteidx) &&
             (identical(other.prefectureId, prefectureId) ||
                 other.prefectureId == prefectureId) &&
-            (identical(other.siteId, siteId) ||
-                other.siteId == siteId) &&
-            (identical(other.lat, lat) ||
-                other.lat == lat) &&
-            (identical(other.lng, lng) ||
-                other.lng == lng));
+            (identical(other.siteId, siteId) || other.siteId == siteId) &&
+            (identical(other.lat, lat) || other.lat == lat) &&
+            (identical(other.lng, lng) || other.lng == lng));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    muni,
-    siteidx,
-    prefectureId,
-    siteId,
-    lat,
-    lng,
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, muni, siteidx, prefectureId, siteId, lat, lng);
 
   /// Create a copy of Site
   /// with the given fields replaced by the non-null parameter values.
@@ -645,10 +606,7 @@ class _$SiteImpl extends _Site {
   @override
   @pragma('vm:prefer-inline')
   _$$SiteImplCopyWith<_$SiteImpl> get copyWith =>
-      __$$SiteImplCopyWithImpl<_$SiteImpl>(
-        this,
-        _$identity,
-      );
+      __$$SiteImplCopyWithImpl<_$SiteImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -667,8 +625,7 @@ abstract class _Site extends Site {
   }) = _$SiteImpl;
   const _Site._() : super._();
 
-  factory _Site.fromJson(Map<String, dynamic> json) =
-      _$SiteImpl.fromJson;
+  factory _Site.fromJson(Map<String, dynamic> json) = _$SiteImpl.fromJson;
 
   /// 不明(内部ID?)
   @override

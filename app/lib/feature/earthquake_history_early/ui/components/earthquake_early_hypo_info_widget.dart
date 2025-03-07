@@ -8,12 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class EarthquakeEarlyHypoInfoWidget
-    extends HookConsumerWidget {
-  const EarthquakeEarlyHypoInfoWidget({
-    required this.item,
-    super.key,
-  });
+class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
+  const EarthquakeEarlyHypoInfoWidget({required this.item, super.key});
 
   final EarthquakeEarlyEvent item;
 
@@ -21,16 +17,12 @@ class EarthquakeEarlyHypoInfoWidget
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final intensityColorScheme = ref.watch(
-      intensityColorProvider,
-    );
+    final intensityColorScheme = ref.watch(intensityColorProvider);
 
     final maxIntensity = item.maxIntensity;
     final colorScheme = switch (maxIntensity) {
-      final JmaForecastIntensity intensity =>
-        intensityColorScheme.fromJmaForecastIntensity(
-          intensity,
-        ),
+      final JmaForecastIntensity intensity => intensityColorScheme
+          .fromJmaForecastIntensity(intensity),
       _ => null,
     };
 
@@ -41,9 +33,7 @@ class EarthquakeEarlyHypoInfoWidget
               children: [
                 const Text(
                   '最大震度',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 JmaForecastIntensityIcon(
@@ -63,15 +53,13 @@ class EarthquakeEarlyHypoInfoWidget
             : Row(
               textBaseline: TextBaseline.ideographic,
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment:
-                  CrossAxisAlignment.baseline,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
               children: [
                 Text(
                   '震源地',
                   style: textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: textTheme.bodyMedium!.color!
-                        .withValues(alpha: 0.8),
+                    color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -81,10 +69,9 @@ class EarthquakeEarlyHypoInfoWidget
                       children: [
                         TextSpan(
                           text: item.name,
-                          style: textTheme.headlineMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -96,22 +83,16 @@ class EarthquakeEarlyHypoInfoWidget
     // 地震発生時刻
     final originTime = item.originTime.toLocal();
     final timeText = switch (item.originTimePrecision) {
-      OriginTimePrecision.millisecond ||
-      OriginTimePrecision.second => DateFormat(
-        'yyyy/MM/dd HH:mm:ss ',
-      ).format(originTime),
+      OriginTimePrecision.millisecond || OriginTimePrecision.second =>
+        DateFormat('yyyy/MM/dd HH:mm:ss ').format(originTime),
       OriginTimePrecision.minute => DateFormat(
         'yyyy/MM/dd HH:mm ',
       ).format(originTime),
       OriginTimePrecision.hour => DateFormat(
         'yyyy/MM/dd HH ',
       ).format(originTime),
-      OriginTimePrecision.day => DateFormat(
-        'yyyy/MM/dd ',
-      ).format(originTime),
-      OriginTimePrecision.month => DateFormat(
-        'yyyy/MM ',
-      ).format(originTime),
+      OriginTimePrecision.day => DateFormat('yyyy/MM/dd ').format(originTime),
+      OriginTimePrecision.month => DateFormat('yyyy/MM ').format(originTime),
     };
     final timeWidget = Text.rich(
       TextSpan(
@@ -120,8 +101,7 @@ class EarthquakeEarlyHypoInfoWidget
             text: '発生時刻 ',
             style: textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: textTheme.bodyMedium!.color!
-                  .withValues(alpha: 0.8),
+              color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
             ),
           ),
           TextSpan(
@@ -144,17 +124,13 @@ class EarthquakeEarlyHypoInfoWidget
         Text(
           'M',
           style: textTheme.titleMedium?.copyWith(
-            color: textTheme.titleMedium?.color?.withValues(
-              alpha: 0.8,
-            ),
+            color: textTheme.titleMedium?.color?.withValues(alpha: 0.8),
           ),
         ),
         Flexible(
           child: Text(
             switch (item.magnitude) {
-              final double value => value.toStringAsFixed(
-                1,
-              ),
+              final double value => value.toStringAsFixed(1),
               // vxse53がある場合
               _ => '不明',
             },
@@ -174,9 +150,7 @@ class EarthquakeEarlyHypoInfoWidget
         Text(
           '深さ',
           style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withValues(
-              alpha: 0.8,
-            ),
+            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
         if (item.depth != null && item.depth != 0) ...[
@@ -190,8 +164,7 @@ class EarthquakeEarlyHypoInfoWidget
           Text(
             'km',
             style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!
-                  .withValues(alpha: 0.8),
+              color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
             ),
           ),
         ] else
@@ -219,9 +192,7 @@ class EarthquakeEarlyHypoInfoWidget
           'M・深さ',
           style: textTheme.bodyMedium!.copyWith(
             fontWeight: FontWeight.bold,
-            color: textTheme.bodyMedium!.color!.withValues(
-              alpha: 0.8,
-            ),
+            color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
         Text(
@@ -267,24 +238,20 @@ class EarthquakeEarlyHypoInfoWidget
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color:
-              colorScheme?.background ?? Colors.transparent,
+          color: colorScheme?.background ?? Colors.transparent,
           width: 0,
         ),
       ),
-      color: (colorScheme?.background ?? Colors.transparent)
-          .withValues(alpha: 0.3),
+      color: (colorScheme?.background ?? Colors.transparent).withValues(
+        alpha: 0.3,
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           children: [
             Row(
               children: [
-                if (maxIntensityWidget != null)
-                  maxIntensityWidget,
+                if (maxIntensityWidget != null) maxIntensityWidget,
                 const SizedBox(width: 4),
                 Expanded(child: body),
               ],

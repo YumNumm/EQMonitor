@@ -17,9 +17,7 @@ part 'websocket_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 WebSocket websocket(Ref ref) {
-  final apiUrl = ref.watch(
-    telegramUrlProvider.select((v) => v.wsApiUrl),
-  );
+  final apiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
   final uri = Uri.parse(apiUrl);
   final backoff = BinaryExponentialBackoff(
     initial: const Duration(milliseconds: 100),
@@ -27,9 +25,7 @@ WebSocket websocket(Ref ref) {
   );
   final socket = WebSocket(
     uri,
-    headers: {
-      HttpHeaders.authorizationHeader: Env.apiAuthorization,
-    },
+    headers: {HttpHeaders.authorizationHeader: Env.apiAuthorization},
     pingInterval: const Duration(seconds: 5),
     backoff: backoff,
   );
@@ -87,26 +83,17 @@ class WebsocketMessages extends _$WebsocketMessages {
     yield* _controller.stream;
   }
 
-  void emit(Map<String, dynamic> data) =>
-      _controller.add(data);
+  void emit(Map<String, dynamic> data) => _controller.add(data);
 }
 
 @Riverpod(keepAlive: true)
-Stream<RealtimePostgresChangesPayloadBase>
-websocketParsedMessages(Ref ref) {
-  final controller =
-      StreamController<
-        RealtimePostgresChangesPayloadBase
-      >();
+Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(Ref ref) {
+  final controller = StreamController<RealtimePostgresChangesPayloadBase>();
   ref
     ..listen(websocketMessagesProvider, (previous, next) {
       final value = next.value;
       if (value != null) {
-        controller.add(
-          RealtimePostgresChangesPayloadBase.fromJson(
-            value,
-          ),
-        );
+        controller.add(RealtimePostgresChangesPayloadBase.fromJson(value));
       }
     })
     ..onDispose(controller.close);
@@ -114,17 +101,10 @@ websocketParsedMessages(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
-Stream<RealtimePostgresChangesPayloadTable>
-websocketTableMessages(Ref ref) {
-  final controller =
-      StreamController<
-        RealtimePostgresChangesPayloadTable
-      >();
+Stream<RealtimePostgresChangesPayloadTable> websocketTableMessages(Ref ref) {
+  final controller = StreamController<RealtimePostgresChangesPayloadTable>();
   ref
-    ..listen(websocketParsedMessagesProvider, (
-      previous,
-      next,
-    ) {
+    ..listen(websocketParsedMessagesProvider, (previous, next) {
       final value = next.value;
       if (value == null || next.isLoading) {
         return;

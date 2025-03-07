@@ -5,30 +5,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const EewDetailsByEventIdPage({
-    required this.eventId,
-    super.key,
-  });
+  const EewDetailsByEventIdPage({required this.eventId, super.key});
 
   final String eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eewsAsyncValue = ref.watch(
-      eewsByEventIdProvider(eventId),
-    );
+    final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
 
     return Scaffold(
       appBar: AppBar(title: Text('緊急地震速報 詳細 ($eventId)')),
       body: eewsAsyncValue.when(
         data: _buildEewList,
-        loading:
-            () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-        error:
-            (error, stack) =>
-                Center(child: Text('エラーが発生しました: $error')),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('エラーが発生しました: $error')),
       ),
     );
   }
@@ -57,9 +47,7 @@ class _EewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
     final originTime =
-        eew.originTime != null
-            ? dateFormat.format(eew.originTime!)
-            : '不明';
+        eew.originTime != null ? dateFormat.format(eew.originTime!) : '不明';
     final reportTime = dateFormat.format(eew.reportTime);
 
     return Card(
@@ -79,9 +67,7 @@ class _EewCard extends StatelessWidget {
             Text('震源地: ${eew.hypoName ?? "不明"}'),
             Text('深さ: ${eew.depth}km'),
             Text('マグニチュード: ${eew.magnitude}'),
-            Text(
-              '最大予測震度: ${eew.forecastMaxIntensity?.toString() ?? '不明'}',
-            ),
+            Text('最大予測震度: ${eew.forecastMaxIntensity?.toString() ?? '不明'}'),
             if (eew.isWarning ?? false)
               const Chip(
                 label: Text('警報'),

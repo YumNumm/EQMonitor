@@ -15,8 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-NotificationSettingsRequest
-_$NotificationSettingsRequestFromJson(
+NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
   Map<String, dynamic> json,
 ) {
   return _NotificationSettingsRequest.fromJson(json);
@@ -24,21 +23,17 @@ _$NotificationSettingsRequestFromJson(
 
 /// @nodoc
 mixin _$NotificationSettingsRequest {
-  NotificationSettingsGlobal? get global =>
-      throw _privateConstructorUsedError;
+  NotificationSettingsGlobal? get global => throw _privateConstructorUsedError;
   List<NotificationSettingsRegion>? get regions =>
       throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsRequest to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationSettingsRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationSettingsRequestCopyWith<
-    NotificationSettingsRequest
-  >
+  $NotificationSettingsRequestCopyWith<NotificationSettingsRequest>
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -67,10 +62,7 @@ class _$NotificationSettingsRequestCopyWithImpl<
   $Val extends NotificationSettingsRequest
 >
     implements $NotificationSettingsRequestCopyWith<$Res> {
-  _$NotificationSettingsRequestCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$NotificationSettingsRequestCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -81,10 +73,7 @@ class _$NotificationSettingsRequestCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? global = freezed,
-    Object? regions = freezed,
-  }) {
+  $Res call({Object? global = freezed, Object? regions = freezed}) {
     return _then(
       _value.copyWith(
             global:
@@ -96,9 +85,7 @@ class _$NotificationSettingsRequestCopyWithImpl<
                 freezed == regions
                     ? _value.regions
                     : regions // ignore: cast_nullable_to_non_nullable
-                        as List<
-                          NotificationSettingsRegion
-                        >?,
+                        as List<NotificationSettingsRegion>?,
           )
           as $Val,
     );
@@ -113,21 +100,14 @@ class _$NotificationSettingsRequestCopyWithImpl<
       return null;
     }
 
-    return $NotificationSettingsGlobalCopyWith<$Res>(
-      _value.global!,
-      (value) {
-        return _then(
-          _value.copyWith(global: value) as $Val,
-        );
-      },
-    );
+    return $NotificationSettingsGlobalCopyWith<$Res>(_value.global!, (value) {
+      return _then(_value.copyWith(global: value) as $Val);
+    });
   }
 }
 
 /// @nodoc
-abstract class _$$NotificationSettingsRequestImplCopyWith<
-  $Res
->
+abstract class _$$NotificationSettingsRequestImplCopyWith<$Res>
     implements $NotificationSettingsRequestCopyWith<$Res> {
   factory _$$NotificationSettingsRequestImplCopyWith(
     _$NotificationSettingsRequestImpl value,
@@ -151,8 +131,7 @@ class __$$NotificationSettingsRequestImplCopyWithImpl<$Res>
           $Res,
           _$NotificationSettingsRequestImpl
         >
-    implements
-        _$$NotificationSettingsRequestImplCopyWith<$Res> {
+    implements _$$NotificationSettingsRequestImplCopyWith<$Res> {
   __$$NotificationSettingsRequestImplCopyWithImpl(
     _$NotificationSettingsRequestImpl _value,
     $Res Function(_$NotificationSettingsRequestImpl) _then,
@@ -162,10 +141,7 @@ class __$$NotificationSettingsRequestImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? global = freezed,
-    Object? regions = freezed,
-  }) {
+  $Res call({Object? global = freezed, Object? regions = freezed}) {
     return _then(
       _$NotificationSettingsRequestImpl(
         global:
@@ -203,8 +179,7 @@ class _$NotificationSettingsRequestImpl
   List<NotificationSettingsRegion>? get regions {
     final value = _regions;
     if (value == null) return null;
-    if (_regions is EqualUnmodifiableListView)
-      return _regions;
+    if (_regions is EqualUnmodifiableListView) return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -219,12 +194,8 @@ class _$NotificationSettingsRequestImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationSettingsRequestImpl &&
-            (identical(other.global, global) ||
-                other.global == global) &&
-            const DeepCollectionEquality().equals(
-              other._regions,
-              _regions,
-            ));
+            (identical(other.global, global) || other.global == global) &&
+            const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -240,13 +211,10 @@ class _$NotificationSettingsRequestImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotificationSettingsRequestImplCopyWith<
+  _$$NotificationSettingsRequestImplCopyWith<_$NotificationSettingsRequestImpl>
+  get copyWith => __$$NotificationSettingsRequestImplCopyWithImpl<
     _$NotificationSettingsRequestImpl
-  >
-  get copyWith =>
-      __$$NotificationSettingsRequestImplCopyWithImpl<
-        _$NotificationSettingsRequestImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -261,9 +229,8 @@ abstract class _NotificationSettingsRequest
     final List<NotificationSettingsRegion>? regions,
   }) = _$NotificationSettingsRequestImpl;
 
-  factory _NotificationSettingsRequest.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NotificationSettingsRequestImpl.fromJson;
+  factory _NotificationSettingsRequest.fromJson(Map<String, dynamic> json) =
+      _$NotificationSettingsRequestImpl.fromJson;
 
   @override
   NotificationSettingsGlobal? get global;
@@ -274,14 +241,11 @@ abstract class _NotificationSettingsRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NotificationSettingsRequestImplCopyWith<
-    _$NotificationSettingsRequestImpl
-  >
+  _$$NotificationSettingsRequestImplCopyWith<_$NotificationSettingsRequestImpl>
   get copyWith => throw _privateConstructorUsedError;
 }
 
-NotificationSettingsGlobal
-_$NotificationSettingsGlobalFromJson(
+NotificationSettingsGlobal _$NotificationSettingsGlobalFromJson(
   Map<String, dynamic> json,
 ) {
   return _NotificationSettingsGlobal.fromJson(json);
@@ -293,15 +257,12 @@ mixin _$NotificationSettingsGlobal {
       throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsGlobal to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationSettingsGlobal
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationSettingsGlobalCopyWith<
-    NotificationSettingsGlobal
-  >
+  $NotificationSettingsGlobalCopyWith<NotificationSettingsGlobal>
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -325,10 +286,7 @@ class _$NotificationSettingsGlobalCopyWithImpl<
   $Val extends NotificationSettingsGlobal
 >
     implements $NotificationSettingsGlobalCopyWith<$Res> {
-  _$NotificationSettingsGlobalCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$NotificationSettingsGlobalCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -354,9 +312,7 @@ class _$NotificationSettingsGlobalCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$NotificationSettingsGlobalImplCopyWith<
-  $Res
->
+abstract class _$$NotificationSettingsGlobalImplCopyWith<$Res>
     implements $NotificationSettingsGlobalCopyWith<$Res> {
   factory _$$NotificationSettingsGlobalImplCopyWith(
     _$NotificationSettingsGlobalImpl value,
@@ -374,8 +330,7 @@ class __$$NotificationSettingsGlobalImplCopyWithImpl<$Res>
           $Res,
           _$NotificationSettingsGlobalImpl
         >
-    implements
-        _$$NotificationSettingsGlobalImplCopyWith<$Res> {
+    implements _$$NotificationSettingsGlobalImplCopyWith<$Res> {
   __$$NotificationSettingsGlobalImplCopyWithImpl(
     _$NotificationSettingsGlobalImpl _value,
     $Res Function(_$NotificationSettingsGlobalImpl) _then,
@@ -400,11 +355,8 @@ class __$$NotificationSettingsGlobalImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$NotificationSettingsGlobalImpl
-    implements _NotificationSettingsGlobal {
-  const _$NotificationSettingsGlobalImpl({
-    required this.minJmaIntensity,
-  });
+class _$NotificationSettingsGlobalImpl implements _NotificationSettingsGlobal {
+  const _$NotificationSettingsGlobalImpl({required this.minJmaIntensity});
 
   factory _$NotificationSettingsGlobalImpl.fromJson(
     Map<String, dynamic> json,
@@ -423,30 +375,23 @@ class _$NotificationSettingsGlobalImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationSettingsGlobalImpl &&
-            (identical(
-                  other.minJmaIntensity,
-                  minJmaIntensity,
-                ) ||
+            (identical(other.minJmaIntensity, minJmaIntensity) ||
                 other.minJmaIntensity == minJmaIntensity));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, minJmaIntensity);
+  int get hashCode => Object.hash(runtimeType, minJmaIntensity);
 
   /// Create a copy of NotificationSettingsGlobal
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotificationSettingsGlobalImplCopyWith<
+  _$$NotificationSettingsGlobalImplCopyWith<_$NotificationSettingsGlobalImpl>
+  get copyWith => __$$NotificationSettingsGlobalImplCopyWithImpl<
     _$NotificationSettingsGlobalImpl
-  >
-  get copyWith =>
-      __$$NotificationSettingsGlobalImplCopyWithImpl<
-        _$NotificationSettingsGlobalImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -460,9 +405,8 @@ abstract class _NotificationSettingsGlobal
     required final JmaForecastIntensity minJmaIntensity,
   }) = _$NotificationSettingsGlobalImpl;
 
-  factory _NotificationSettingsGlobal.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NotificationSettingsGlobalImpl.fromJson;
+  factory _NotificationSettingsGlobal.fromJson(Map<String, dynamic> json) =
+      _$NotificationSettingsGlobalImpl.fromJson;
 
   @override
   JmaForecastIntensity get minJmaIntensity;
@@ -471,14 +415,11 @@ abstract class _NotificationSettingsGlobal
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NotificationSettingsGlobalImplCopyWith<
-    _$NotificationSettingsGlobalImpl
-  >
+  _$$NotificationSettingsGlobalImplCopyWith<_$NotificationSettingsGlobalImpl>
   get copyWith => throw _privateConstructorUsedError;
 }
 
-NotificationSettingsRegion
-_$NotificationSettingsRegionFromJson(
+NotificationSettingsRegion _$NotificationSettingsRegionFromJson(
   Map<String, dynamic> json,
 ) {
   return _NotificationSettingsRegion.fromJson(json);
@@ -487,19 +428,15 @@ _$NotificationSettingsRegionFromJson(
 /// @nodoc
 mixin _$NotificationSettingsRegion {
   int get code => throw _privateConstructorUsedError;
-  JmaForecastIntensity get minIntensity =>
-      throw _privateConstructorUsedError;
+  JmaForecastIntensity get minIntensity => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsRegion to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationSettingsRegion
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationSettingsRegionCopyWith<
-    NotificationSettingsRegion
-  >
+  $NotificationSettingsRegionCopyWith<NotificationSettingsRegion>
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -523,10 +460,7 @@ class _$NotificationSettingsRegionCopyWithImpl<
   $Val extends NotificationSettingsRegion
 >
     implements $NotificationSettingsRegionCopyWith<$Res> {
-  _$NotificationSettingsRegionCopyWithImpl(
-    this._value,
-    this._then,
-  );
+  _$NotificationSettingsRegionCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -537,10 +471,7 @@ class _$NotificationSettingsRegionCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? minIntensity = null,
-  }) {
+  $Res call({Object? code = null, Object? minIntensity = null}) {
     return _then(
       _value.copyWith(
             code:
@@ -560,9 +491,7 @@ class _$NotificationSettingsRegionCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$NotificationSettingsRegionImplCopyWith<
-  $Res
->
+abstract class _$$NotificationSettingsRegionImplCopyWith<$Res>
     implements $NotificationSettingsRegionCopyWith<$Res> {
   factory _$$NotificationSettingsRegionImplCopyWith(
     _$NotificationSettingsRegionImpl value,
@@ -580,8 +509,7 @@ class __$$NotificationSettingsRegionImplCopyWithImpl<$Res>
           $Res,
           _$NotificationSettingsRegionImpl
         >
-    implements
-        _$$NotificationSettingsRegionImplCopyWith<$Res> {
+    implements _$$NotificationSettingsRegionImplCopyWith<$Res> {
   __$$NotificationSettingsRegionImplCopyWithImpl(
     _$NotificationSettingsRegionImpl _value,
     $Res Function(_$NotificationSettingsRegionImpl) _then,
@@ -591,10 +519,7 @@ class __$$NotificationSettingsRegionImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? minIntensity = null,
-  }) {
+  $Res call({Object? code = null, Object? minIntensity = null}) {
     return _then(
       _$NotificationSettingsRegionImpl(
         code:
@@ -614,8 +539,7 @@ class __$$NotificationSettingsRegionImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$NotificationSettingsRegionImpl
-    implements _NotificationSettingsRegion {
+class _$NotificationSettingsRegionImpl implements _NotificationSettingsRegion {
   const _$NotificationSettingsRegionImpl({
     required this.code,
     required this.minIntensity,
@@ -640,29 +564,24 @@ class _$NotificationSettingsRegionImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationSettingsRegionImpl &&
-            (identical(other.code, code) ||
-                other.code == code) &&
+            (identical(other.code, code) || other.code == code) &&
             (identical(other.minIntensity, minIntensity) ||
                 other.minIntensity == minIntensity));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, code, minIntensity);
+  int get hashCode => Object.hash(runtimeType, code, minIntensity);
 
   /// Create a copy of NotificationSettingsRegion
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotificationSettingsRegionImplCopyWith<
+  _$$NotificationSettingsRegionImplCopyWith<_$NotificationSettingsRegionImpl>
+  get copyWith => __$$NotificationSettingsRegionImplCopyWithImpl<
     _$NotificationSettingsRegionImpl
-  >
-  get copyWith =>
-      __$$NotificationSettingsRegionImplCopyWithImpl<
-        _$NotificationSettingsRegionImpl
-      >(this, _$identity);
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -677,9 +596,8 @@ abstract class _NotificationSettingsRegion
     required final JmaForecastIntensity minIntensity,
   }) = _$NotificationSettingsRegionImpl;
 
-  factory _NotificationSettingsRegion.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NotificationSettingsRegionImpl.fromJson;
+  factory _NotificationSettingsRegion.fromJson(Map<String, dynamic> json) =
+      _$NotificationSettingsRegionImpl.fromJson;
 
   @override
   int get code;
@@ -690,8 +608,6 @@ abstract class _NotificationSettingsRegion
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NotificationSettingsRegionImplCopyWith<
-    _$NotificationSettingsRegionImpl
-  >
+  _$$NotificationSettingsRegionImplCopyWith<_$NotificationSettingsRegionImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

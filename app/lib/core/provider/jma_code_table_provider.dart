@@ -7,12 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'jma_code_table_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-JmaCodeTable jmaCodeTable(Ref ref) =>
-    throw UnimplementedError();
+JmaCodeTable jmaCodeTable(Ref ref) => throw UnimplementedError();
 
-Future<JmaCodeTable> loadJmaCodeTable() async =>
-    JmaCodeTable.fromBuffer(
-      (await rootBundle.load(
-        Assets.jmaCodeTable,
-      )).buffer.asUint8List(),
-    );
+Future<JmaCodeTable> loadJmaCodeTable() async => JmaCodeTable.fromBuffer(
+  (await rootBundle.load(Assets.jmaCodeTable)).buffer.asUint8List(),
+);

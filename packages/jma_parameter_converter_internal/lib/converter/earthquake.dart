@@ -11,10 +11,7 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
   dmdata.EarthquakeParameter parameter,
 ) async {
   final itemsFuture = parameter.items.map((e) async {
-    final arv = await getArv(
-      latitude: e.latitude,
-      longitude: e.longitude,
-    );
+    final arv = await getArv(latitude: e.latitude, longitude: e.longitude);
     return (
       e,
       EarthquakeParameterStationItem(
@@ -28,26 +25,16 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
   });
   // 直列実行
   final items =
-      <
-        (
-          dmdata.EarthquakeParmaeterItem,
-          EarthquakeParameterStationItem,
-        )
-      >[];
+      <(dmdata.EarthquakeParmaeterItem, EarthquakeParameterStationItem)>[];
   for (final item in itemsFuture) {
     items.add(await item);
   }
 
-  final itemsGroupByRegion = items.groupListsBy(
-    (e) => e.$1.region,
-  );
+  final itemsGroupByRegion = items.groupListsBy((e) => e.$1.region);
   final itemsGroupByRegionAndCity = itemsGroupByRegion.map(
-    (key, value) =>
-        MapEntry(key, value.groupListsBy((e) => e.$1.city)),
+    (key, value) => MapEntry(key, value.groupListsBy((e) => e.$1.city)),
   );
-  print(
-    'itemsGroupByRegionAndCity: ${itemsGroupByRegionAndCity.length}',
-  );
+  print('itemsGroupByRegionAndCity: ${itemsGroupByRegionAndCity.length}');
   final regions = itemsGroupByRegionAndCity.entries.map(
     (e) => EarthquakeParameterRegionItem(
       code: e.key.code,
@@ -70,14 +57,11 @@ Future<double?> getArv({
   required double longitude,
 }) async {
   // Cacheのチェック
-  final cacheFile = File(
-    'cache/${latitude}_$longitude.json',
-  );
+  final cacheFile = File('cache/${latitude}_$longitude.json');
   if (cacheFile.existsSync()) {
     print('Cache hit!: $cacheFile');
     final json =
-        jsonDecode(await cacheFile.readAsString())
-            as Map<String, dynamic>;
+        jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
     final arvStr =
         (((json['features'] as List<dynamic>?)?.first
                     as Map<String, dynamic>?)?['properties']
@@ -94,8 +78,7 @@ Future<double?> getArv({
       '&epsg=4326',
     ),
   );
-  final json =
-      jsonDecode(response.body) as Map<String, dynamic>;
+  final json = jsonDecode(response.body) as Map<String, dynamic>;
   print(json);
   final arvStr =
       (((json['features'] as List<dynamic>?)?.first

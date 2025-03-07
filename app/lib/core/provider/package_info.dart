@@ -5,5 +5,4 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'package_info.g.dart';
 
 @Riverpod(keepAlive: true)
-PackageInfo packageInfo(Ref ref) =>
-    throw UnimplementedError();
+PackageInfo packageInfo(Ref ref) => throw UnimplementedError();

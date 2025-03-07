@@ -16,28 +16,13 @@ _$EarthquakeEarlyImpl _$$EarthquakeEarlyImplFromJson(
   ($checkedConvert) {
     final val = _$EarthquakeEarlyImpl(
       id: $checkedConvert('id', (v) => v as String),
-      depth: $checkedConvert(
-        'depth',
-        (v) => (v as num?)?.toInt(),
-      ),
-      latitude: $checkedConvert(
-        'latitude',
-        (v) => (v as num?)?.toDouble(),
-      ),
-      longitude: $checkedConvert(
-        'longitude',
-        (v) => (v as num?)?.toDouble(),
-      ),
-      magnitude: $checkedConvert(
-        'magnitude',
-        (v) => (v as num?)?.toDouble(),
-      ),
+      depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
+      latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
+      longitude: $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
+      magnitude: $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
       maxIntensity: $checkedConvert(
         'max_intensity',
-        (v) => $enumDecodeNullable(
-          _$JmaForecastIntensityEnumMap,
-          v,
-        ),
+        (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v),
       ),
       maxIntensityIsEarly: $checkedConvert(
         'max_intensity_is_early',
@@ -71,14 +56,12 @@ Map<String, dynamic> _$$EarthquakeEarlyImplToJson(
   'latitude': instance.latitude,
   'longitude': instance.longitude,
   'magnitude': instance.magnitude,
-  'max_intensity':
-      _$JmaForecastIntensityEnumMap[instance.maxIntensity],
+  'max_intensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity],
   'max_intensity_is_early': instance.maxIntensityIsEarly,
   'name': instance.name,
   'origin_time': instance.originTime.toIso8601String(),
   'origin_time_precision':
-      _$OriginTimePrecisionEnumMap[instance
-          .originTimePrecision]!,
+      _$OriginTimePrecisionEnumMap[instance.originTimePrecision]!,
 };
 
 const _$JmaForecastIntensityEnumMap = {

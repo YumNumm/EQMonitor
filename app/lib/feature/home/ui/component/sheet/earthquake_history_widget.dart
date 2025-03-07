@@ -8,19 +8,14 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EarthquakeHistorySheetWidget
-    extends HookConsumerWidget {
+class EarthquakeHistorySheetWidget extends HookConsumerWidget {
   const EarthquakeHistorySheetWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final defaultEarthquakeHistoryNotifierProvider =
-        earthquakeHistoryNotifierProvider(
-          const EarthquakeHistoryParameter(),
-        );
-    final state = ref.watch(
-      defaultEarthquakeHistoryNotifierProvider,
-    );
+        earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter());
+    final state = ref.watch(defaultEarthquakeHistoryNotifierProvider);
     const loading = Center(
       child: Padding(
         padding: EdgeInsets.all(24),
@@ -33,10 +28,7 @@ class EarthquakeHistorySheetWidget
       margin:
           const EdgeInsets.symmetric(horizontal: 12) +
           const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Column(
         children: [
           const SheetHeader(title: '地震履歴'),
@@ -53,10 +45,9 @@ class EarthquakeHistorySheetWidget
                           (e) => EarthquakeHistoryListTile(
                             item: e,
                             onTap:
-                                () async =>
-                                    EarthquakeHistoryDetailsRoute(
-                                      eventId: e.eventId,
-                                    ).push<void>(context),
+                                () async => EarthquakeHistoryDetailsRoute(
+                                  eventId: e.eventId,
+                                ).push<void>(context),
                             showBackgroundColor: false,
                           ),
                         )
@@ -69,8 +60,7 @@ class EarthquakeHistorySheetWidget
                   () async =>
                       ref
                           .read(
-                            defaultEarthquakeHistoryNotifierProvider
-                                .notifier,
+                            defaultEarthquakeHistoryNotifierProvider.notifier,
                           )
                           .refresh(),
             ),
@@ -82,8 +72,7 @@ class EarthquakeHistorySheetWidget
               TextButton(
                 onPressed:
                     () async =>
-                        const EarthquakeHistoryRoute()
-                            .push<void>(context),
+                        const EarthquakeHistoryRoute().push<void>(context),
                 child: const Text('さらに表示'),
               ),
             ],
