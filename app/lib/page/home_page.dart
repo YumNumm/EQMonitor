@@ -5,13 +5,13 @@ import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_widget.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -21,7 +21,6 @@ class HomePage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          const HomeMapView(),
           const _Sheet(),
           Align(
             alignment: Alignment.centerRight,
