@@ -2,48 +2,48 @@
 
 // ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
-part of 'map_mbtiles_util.dart';
+part of 'map_pmtiles_util.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mapMbtilesUtilHash() => r'165ce56b09079a2e0e830c98c5777ee95475a692';
+String _$mapPmtilesUtilHash() => r'380dac2b2e3203d2f3dd4a326cfac152f84e0930';
 
-/// See also [mapMbtilesUtil].
-@ProviderFor(mapMbtilesUtil)
-final mapMbtilesUtilProvider = Provider<MapMbtilesUtil>.internal(
-  mapMbtilesUtil,
-  name: r'mapMbtilesUtilProvider',
+/// See also [mapPmtilesUtil].
+@ProviderFor(mapPmtilesUtil)
+final mapPmtilesUtilProvider = Provider<MapPmtilesUtil>.internal(
+  mapPmtilesUtil,
+  name: r'mapPmtilesUtilProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$mapMbtilesUtilHash,
+          : _$mapPmtilesUtilHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef MapMbtilesUtilRef = ProviderRef<MapMbtilesUtil>;
-String _$overviewMbtilesPathHash() =>
-    r'acad56f1a89a80d40a932eb2c13f7e6c89fb50b3';
+typedef MapPmtilesUtilRef = ProviderRef<MapPmtilesUtil>;
+String _$overviewPmtilesPathHash() =>
+    r'd99a8af09d9f5947af8f0d48a0909d657be28098';
 
-/// See also [overviewMbtilesPath].
-@ProviderFor(overviewMbtilesPath)
-final overviewMbtilesPathProvider = FutureProvider<String>.internal(
-  overviewMbtilesPath,
-  name: r'overviewMbtilesPathProvider',
+/// See also [overviewPmtilesPath].
+@ProviderFor(overviewPmtilesPath)
+final overviewPmtilesPathProvider = FutureProvider<String>.internal(
+  overviewPmtilesPath,
+  name: r'overviewPmtilesPathProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$overviewMbtilesPathHash,
+          : _$overviewPmtilesPathHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef OverviewMbtilesPathRef = FutureProviderRef<String>;
+typedef OverviewPmtilesPathRef = FutureProviderRef<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

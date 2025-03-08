@@ -5,6 +5,8 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 
 /// 地図表示に関するユーティリティクラス
 class MapCameraUtil {
+  MapCameraUtil._();
+
   /// 緯度経度の矩形と画面サイズから適切なカメラポジションを計算する
   ///
   /// [bounds] 表示したい緯度経度の矩形

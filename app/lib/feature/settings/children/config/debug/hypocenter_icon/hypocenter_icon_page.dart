@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:eqmonitor/gen/assets.gen.dart';
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';

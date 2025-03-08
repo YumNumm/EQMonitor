@@ -4,12 +4,12 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
-import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

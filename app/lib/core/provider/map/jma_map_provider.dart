@@ -1,4 +1,4 @@
-import 'package:eqmonitor/gen/assets.gen.dart';
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';

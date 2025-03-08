@@ -1,5 +1,5 @@
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
-import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart' hide LicensePage;
 import 'package:hooks_riverpod/hooks_riverpod.dart';

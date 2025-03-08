@@ -36,7 +36,8 @@ class MapColorScheme with _$MapColorScheme {
   factory MapColorScheme.light() {
     const colorScheme = ColorScheme.light();
     return MapColorScheme(
-      backgroundColor: colorScheme.surface,
+      backgroundColor:
+          Color.lerp(colorScheme.surface, Colors.blue.shade900, 0.1)!,
       worldLandColor: colorScheme.surfaceContainerLowest,
       worldLineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerLowest,
