@@ -1129,29 +1129,29 @@ packages:
     dependency: "direct overridden"
     description:
       path: maplibre_gl
-      ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
-      resolved-ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+      resolved-ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
-    version: "0.21.0"
+    version: "0.22.0"
   maplibre_gl_platform_interface:
     dependency: "direct overridden"
     description:
       path: maplibre_gl_platform_interface
-      ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
-      resolved-ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+      resolved-ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
-    version: "0.21.0"
+    version: "0.22.0"
   maplibre_gl_web:
     dependency: "direct overridden"
     description:
       path: maplibre_gl_web
-      ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
-      resolved-ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+      resolved-ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
-    version: "0.21.0"
+    version: "0.22.0"
   maps_toolkit:
     dependency: transitive
     description:
