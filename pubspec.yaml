@@ -30,17 +30,17 @@ dependency_overrides:
   maplibre_gl:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: 638ae4d4c40af5e73de393c76dc7ecdf3b879e21
+      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
       path: maplibre_gl
   maplibre_gl_platform_interface:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: 638ae4d4c40af5e73de393c76dc7ecdf3b879e21
+      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
       path: maplibre_gl_platform_interface
   maplibre_gl_web:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: 638ae4d4c40af5e73de393c76dc7ecdf3b879e21
+      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
       path: maplibre_gl_web
 
 melos:
