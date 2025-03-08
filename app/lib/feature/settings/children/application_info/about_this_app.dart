@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

@@ -29,7 +29,6 @@ class HomeMapLayerModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final backgroundColor = colorScheme.surfaceContainerLow;
 
     return Scaffold(
       backgroundColor: Colors.transparent,

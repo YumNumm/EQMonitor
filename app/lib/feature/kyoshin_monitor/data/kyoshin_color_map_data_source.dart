@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_color_map_model.dart';
-import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
 
 Future<List<KyoshinColorMapModel>> getKyoshinColorMap() async {
