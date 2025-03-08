@@ -473,6 +473,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  ffigen:
+    dependency: transitive
+    description:
+      name: ffigen
+      sha256: "2648b974fb322b81f7450e9713f8651653e9b1353ac9bc04fab89530715e7b24"
+      url: "https://pub.dev"
+    source: hosted
+    version: "17.0.0"
   file:
     dependency: transitive
     description:
@@ -1512,6 +1520,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.6.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   retrofit:
     dependency: transitive
     description:

@@ -1,0 +1,3 @@
+[submodule "packages/map_plugin/maplibre-gl-native-distribution"]
+	path = packages/map_plugin/maplibre-gl-native-distribution
+	url = https://github.com/maplibre/maplibre-gl-native-distribution
