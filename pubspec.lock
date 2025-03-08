@@ -861,6 +861,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3"
+  geotypes:
+    dependency: transitive
+    description:
+      name: geotypes
+      sha256: "5bedf57de92283133dd221e363812ef50eaaba414f0823b1974ef7d84b86991f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   glob:
     dependency: transitive
     description:
@@ -1029,6 +1037,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: cfd663ec90d87ec6abd338da7e21189e503bf6753a0027c1862796f5826adba6
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.1"
   js:
     dependency: transitive
     description:
@@ -1125,6 +1141,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.1"
+  maplibre:
+    dependency: "direct overridden"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
+      url: "https://github.com/YumNumm/flutter-maplibre.git"
+    source: git
+    version: "0.2.1"
   maplibre_gl:
     dependency: "direct overridden"
     description:
@@ -1152,6 +1177,15 @@ packages:
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.22.0"
+  maplibre_ios:
+    dependency: transitive
+    description:
+      path: maplibre_ios
+      ref: HEAD
+      resolved-ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
+      url: "https://github.com/YumNumm/flutter-maplibre.git"
+    source: git
+    version: "0.0.1"
   maps_toolkit:
     dependency: transitive
     description:
@@ -1232,6 +1266,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  objective_c:
+    dependency: transitive
+    description:
+      name: objective_c
+      sha256: "39cc952b20c86686838d6bd8224b265d283ea1c8dfa5d14949bd15e322195b0e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0"
   os_detect:
     dependency: transitive
     description:
