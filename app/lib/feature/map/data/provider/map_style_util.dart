@@ -5,7 +5,6 @@ import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,22 +42,21 @@ class MapStyleUtil {
       'center': [139.767125, 35.681236],
       'zoom': 5,
       'sources': {
-        'eqmonitor_map_asset': {
-          //
-          'type': 'vector',
-          'url': 'file://$overviewAssetPath',
-          'minzoom': 1,
-          'maxzoom': 5,
-          'bounds': [-180, -85.051129, 180, 83.634101],
-        },
+        // 'eqmonitor_map': {
+        //   'type': 'vector',
+        //   // 'url': 'file://$overviewAssetPath',
+        //   'minzoom': 1,
+        //   'maxzoom': 5,
+        //   'bounds': [-180, -85.051129, 180, 83.634101],
+        // },
         'eqmonitor_map': {
           'type': 'vector',
 
-          'url': 'https://map.eqmonitor.app/tiles/tiles.json',
-          // 'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
+          // 'url': 'https://map.eqmonitor.app/tiles/tiles.json',
+          'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
           'attribution': '© 気象庁, Natural Earth',
           // 'minzoom': 1,
-          'minzoom': 5,
+          'minzoom': 1,
           'maxzoom': 10,
         },
         'osm': {
@@ -76,19 +74,18 @@ class MapStyleUtil {
           'id': BaseLayer.background.name,
           'type': 'background',
           'paint': {
-            'background-color': Colors.red.toHexStringRGB(),
-            // 'background-color': colorScheme.backgroundColor.toHexStringRGB(),
+            'background-color': colorScheme.backgroundColor.toHexStringRGB(),
           },
         },
         // {
         //   'id': 'osm',
         //   'type': 'raster',
         //   'source': 'osm',
-        //   'paint': {'raster-opacity': 0.4},
+        //   'paint': {'raster-opacity': 0.2},
         // },
         {
           'id': BaseLayer.countriesFill.name,
-          'source': ['>=', 'zoom', 5, 'eqmonitor_map', 'eqmonitor_map_asset'],
+          'source': 'eqmonitor_map',
           'source-layer': 'countries',
           'type': 'fill',
           'layout': {'visibility': 'visible'},
@@ -143,6 +140,7 @@ class MapStyleUtil {
         {
           'id': BaseLayer.areaForecastLocalELine.name,
           'source': 'eqmonitor_map',
+
           'source-layer': 'areaForecastLocalE',
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
