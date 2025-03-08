@@ -125,6 +125,14 @@ dev_dependencies:
   riverpod_lint: ^2.6.3
   test: ^1.25.7
 
+flutter_gen:
+  output: lib/core/gen/ # Optional (default: lib/gen/)
+  line_length: 80
+
+  integrations:
+    image: true
+    flutter_svg: true
+
 flutter:
   uses-material-design: true
   assets:
@@ -134,7 +142,7 @@ flutter:
     - assets/images/map/
     - assets/fonts/
     - assets/docs/
-    - shorebird.yaml
+    - assets/map/
 
   shaders:
     - shaders/introduction.frag
