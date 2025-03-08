@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
@@ -66,33 +67,50 @@ class _Sheet extends StatelessWidget {
           );
           final isLandscape = size.width > size.height;
           final sheet = Sheet(
-            elevation: 4,
+            backgroundColor: Colors.transparent,
             initialExtent: size.height * 0.2,
             physics: const SnapSheetPhysics(stops: [0.1, 0.2, 0.5, 0.8, 1]),
-            child: Material(
-              color: colorScheme.surfaceContainer,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
               ),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    width: 36,
-                    height: 4,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: theme.colorScheme.onSurface,
-                    ),
+              clipBehavior: Clip.hardEdge,
+              child: BackdropFilter(
+                filter: ImageFilter.compose(
+                  inner: ImageFilter.blur(
+                    sigmaX: 8,
+                    sigmaY: 8,
+                    tileMode: TileMode.decal,
                   ),
-                  const Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: _SheetBody(),
-                    ),
+                  outer: ColorFilter.mode(
+                    colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
+                    BlendMode.srcOut,
                   ),
-                ],
+                ),
+                blendMode: BlendMode.srcOut,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        width: 36,
+                        height: 4,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: _SheetBody(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           );

@@ -17,7 +17,7 @@ MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil();
 class MapStyleUtil {
   Future<String> _saveStyleJson(Map<String, dynamic> json) async {
     final jsonStr = jsonEncode(json);
-    final hash = sha256.convert(utf8.encode(jsonStr)).toString();
+    final hash = md5.convert(utf8.encode(jsonStr)).toString();
 
     final dir = await getApplicationDocumentsDirectory();
     final documentDir = dir.path;
@@ -62,14 +62,14 @@ class MapStyleUtil {
             'background-color': colorScheme.backgroundColor.toHexStringRGB(),
           },
         },
-        // {
-        //   'id': 'osm',
-        //   'type': 'raster',
-        //   'source': 'osm',
-        //   'paint': {
-        //     'raster-opacity': 0.1,
-        //   },
-        // },
+        {
+          'id': 'osm',
+          'type': 'raster',
+          'source': 'osm',
+          'paint': {
+            'raster-opacity': 0.4,
+          },
+        },
         {
           'id': BaseLayer.countriesFill.name,
           'source': 'eqmonitor_map',
