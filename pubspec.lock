@@ -1126,28 +1126,31 @@ packages:
     source: hosted
     version: "1.6.1"
   maplibre_gl:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: maplibre_gl
-      sha256: cd0adf2da87149cab556ac70977783d6dcb3bd73b17a5583cc8366a5aafa46f8
-      url: "https://pub.dev"
-    source: hosted
+      path: maplibre_gl
+      ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      resolved-ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+    source: git
     version: "0.21.0"
   maplibre_gl_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: maplibre_gl_platform_interface
-      sha256: "6db8234705e58c09b6fd5a43747a817ba1e6e91a76deb3ed057a36a994d86f22"
-      url: "https://pub.dev"
-    source: hosted
+      path: maplibre_gl_platform_interface
+      ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      resolved-ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+    source: git
     version: "0.21.0"
   maplibre_gl_web:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: maplibre_gl_web
-      sha256: e1cbe04594fdb0d76de7cd448c0048290df8dc69dc37a85d23307dd595779141
-      url: "https://pub.dev"
-    source: hosted
+      path: maplibre_gl_web
+      ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      resolved-ref: "638ae4d4c40af5e73de393c76dc7ecdf3b879e21"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+    source: git
     version: "0.21.0"
   maps_toolkit:
     dependency: transitive
