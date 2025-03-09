@@ -5,7 +5,6 @@ import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre/maplibre.dart';
 
 class HomeMapView extends HookConsumerWidget {
   const HomeMapView({super.key});
@@ -43,13 +42,9 @@ class HomeMapView extends HookConsumerWidget {
 class _MapView extends HookConsumerWidget {
   const _MapView({
     required this.styleString,
-    required this.initialCenter,
-    required this.initialZoomLevel,
   });
 
   final String styleString;
-  final Position initialCenter;
-  final double initialZoomLevel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

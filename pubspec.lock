@@ -869,14 +869,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3"
-  geotypes:
-    dependency: transitive
-    description:
-      name: geotypes
-      sha256: "5bedf57de92283133dd221e363812ef50eaaba414f0823b1974ef7d84b86991f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
   glob:
     dependency: transitive
     description:
@@ -1045,14 +1037,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
-  jni:
-    dependency: transitive
-    description:
-      name: jni
-      sha256: "3296e4327bd74d57763ba71fd9efeb6f132634a27ea8754101e4ff3f8bca5faa"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.13.0"
   js:
     dependency: transitive
     description:
@@ -1149,14 +1133,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.1"
-  maplibre:
-    dependency: transitive
-    description:
-      name: maplibre
-      sha256: "46a65ae23efc6febd81e1f3567fd811da8accbf931e5bf1183bfc1510bfc9f9f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   maps_toolkit:
     dependency: transitive
     description:
