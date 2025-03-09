@@ -1145,43 +1145,16 @@ packages:
     dependency: "direct overridden"
     description:
       path: "."
-      ref: HEAD
+      ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
       resolved-ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.2.1"
-  maplibre_gl:
-    dependency: "direct overridden"
-    description:
-      path: maplibre_gl
-      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      resolved-ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
-    source: git
-    version: "0.22.0"
-  maplibre_gl_platform_interface:
-    dependency: "direct overridden"
-    description:
-      path: maplibre_gl_platform_interface
-      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      resolved-ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
-    source: git
-    version: "0.22.0"
-  maplibre_gl_web:
-    dependency: "direct overridden"
-    description:
-      path: maplibre_gl_web
-      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      resolved-ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
-    source: git
-    version: "0.22.0"
   maplibre_ios:
     dependency: transitive
     description:
       path: maplibre_ios
-      ref: HEAD
+      ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
       resolved-ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
