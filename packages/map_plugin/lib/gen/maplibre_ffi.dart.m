@@ -1,5 +1,6 @@
 #include <stdint.h>
 #import <Foundation/Foundation.h>
+#import "../../ios/map_plugin/Sources/map_plugin/MapLibreRegistry.h"
 #import "../../temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapView.h"
 #import "../../temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNPolyline.h"
 #import "../../temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNFillExtrusionStyleLayer.h"

@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:map_plugin/map_plugin.dart';
 
 class HomeMapView extends HookConsumerWidget {
   const HomeMapView({super.key});
@@ -25,11 +26,6 @@ class HomeMapView extends HookConsumerWidget {
 
           return _MapView(
             styleString: value.styleString!,
-            initialCenter: Position(
-              cameraPosition.target.lon,
-              cameraPosition.target.lat,
-            ),
-            initialZoomLevel: cameraPosition.zoom,
           );
         },
       ),
@@ -48,9 +44,7 @@ class _MapView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Text("MapView"),
-    );
+    return const MapPluginView();
     // return MapLibreMap(
     //   acceptLicense: true,
     //   options: MapOptions(

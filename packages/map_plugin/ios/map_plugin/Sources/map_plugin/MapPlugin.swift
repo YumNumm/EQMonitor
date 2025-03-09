@@ -14,7 +14,7 @@ public class MapPlugin: NSObject, FlutterPlugin {
     registrar.addMethodCallDelegate(instance, channel: channel)
 
     // register MapLibre view factory
-    let factory = MapPlugin(messenger: registrar.messenger())
+    let factory = MapPluginViewFactory(messenger: registrar.messenger())
     registrar.register(factory, withId: "plugins.net.yumnumm.map_plugin")
     logger.log("Registered.")
   }

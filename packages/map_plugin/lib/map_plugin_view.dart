@@ -11,7 +11,11 @@ class MapPluginView extends StatelessWidget {
       return UiKitView(
         viewType: "plugins.net.yumnumm.map_plugin",
         layoutDirection: TextDirection.ltr,
-        onPlatformViewCreated: (id) {},
+        onPlatformViewCreated: (id) {
+          print("MapPluginView created: $id");
+
+          MapLibreRegistry
+        },
       );
     }
     throw UnimplementedError(
