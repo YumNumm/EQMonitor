@@ -473,6 +473,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  ffigen:
+    dependency: transitive
+    description:
+      name: ffigen
+      sha256: "2648b974fb322b81f7450e9713f8651653e9b1353ac9bc04fab89530715e7b24"
+      url: "https://pub.dev"
+    source: hosted
+    version: "17.0.0"
   file:
     dependency: transitive
     description:
@@ -1041,10 +1049,10 @@ packages:
     dependency: transitive
     description:
       name: jni
-      sha256: cfd663ec90d87ec6abd338da7e21189e503bf6753a0027c1862796f5826adba6
+      sha256: "3296e4327bd74d57763ba71fd9efeb6f132634a27ea8754101e4ff3f8bca5faa"
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.1"
+    version: "0.13.0"
   js:
     dependency: transitive
     description:
@@ -1142,23 +1150,13 @@ packages:
     source: hosted
     version: "1.6.1"
   maplibre:
-    dependency: "direct overridden"
-    description:
-      path: "."
-      ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
-      resolved-ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
-    source: git
-    version: "0.2.1"
-  maplibre_ios:
     dependency: transitive
     description:
-      path: maplibre_ios
-      ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
-      resolved-ref: "1969208ebdded6315f587b474ae7f4142bf0d0e3"
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
-    source: git
-    version: "0.0.1"
+      name: maplibre
+      sha256: "46a65ae23efc6febd81e1f3567fd811da8accbf931e5bf1183bfc1510bfc9f9f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   maps_toolkit:
     dependency: transitive
     description:
@@ -1527,6 +1525,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.6.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   retrofit:
     dependency: transitive
     description:

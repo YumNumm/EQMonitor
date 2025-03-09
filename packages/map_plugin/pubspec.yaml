@@ -1,0 +1,167 @@
+name: map_plugin
+description: "A new Flutter plugin project."
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.7.0
+  flutter: ^3.29.1
+
+dependencies:
+  ffi: ^2.1.4
+  flutter:
+    sdk: flutter
+  objective_c: ^6.0.0
+  plugin_platform_interface: ^2.0.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: MapPlugin
+
+
+# `dart run ffigen` to generate Obj-C Interop bindings
+ffigen:
+  name: MapLibreFFi
+  description: Bindings for MapLibre iOS.
+  language: objc
+  output: 'lib/gen/maplibre_ffi.dart'
+  exclude-all-by-default: true
+  objc-interfaces:
+    include:
+      - 'NSString'
+      - 'MapLibreRegistry'
+      - 'MLNMapView'
+      - 'MLNMapCamera'
+      - 'CLLocationCoordinate2D'
+      - 'MLNMapProjection'
+      - 'MLNStyle'
+      - 'MLNSource'
+      - 'MLNRasterTileSource'
+      - 'MLNVectorTileSource'
+      - 'MLNImageSource'
+      - 'MLNRasterDEMSource'
+      - 'MLNVectorTileSource'
+      - 'MLNBackgroundStyleLayer'
+      - 'MLNCircleStyleLayer'
+      - 'MLNFillExtrusionStyleLayer'
+      - 'MLNFillStyleLayer'
+      - 'MLNHeatmapStyleLayer'
+      - 'MLNHillshadeStyleLayer'
+      - 'MLNLineStyleLayer'
+      - 'MLNRasterStyleLayer'
+      - 'MLNSymbolStyleLayer'
+      - 'MLNVectorStyleLayer'
+      - 'MLNAttributionInfo'
+      - 'NSAttributedString'
+      - 'MLNShapeSource'
+      - 'MLNImageSource'
+      - 'MLNShape'
+      - 'MLNRasterDEMSource'
+      - 'MLNOfflineStorage'
+      - 'MLNTilePyramidOfflineRegion'
+      - 'MLNOfflinePack'
+      - 'MLNOfflineRegion'
+      - 'MLNTilePyramidOfflineRegion'
+      - 'NSImage'
+      - 'NSExpression'
+      - 'Helpers'
+    module:
+      'MapLibreRegistry': 'maplibre_ios'
+      'Helpers': 'maplibre_ios'
+      'MLNMapView': 'MapLibre'
+      'MLNMapCamera': 'MapLibre'
+      'MLNVectorTileSource': 'MapLibre'
+      'MLNOfflinePack': 'MapLibre'
+      'MLNOfflineRegion': 'MapLibre'
+  headers:
+    entry-points:
+      - 'ios/maplibre_ios/Sources/maplibre_ios/MapLibreRegistry.h'
+      # - 'ios/maplibre_ios/Sources/maplibre_ios/Helpers.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapView.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNPolyline.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNFillExtrusionStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNVectorTileSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapCamera.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNUserLocationAnnotationViewStyle.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCustomStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNFoundation.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCalloutView.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCameraChangeReason.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNLoggingConfiguration.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/Mapbox.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNVectorStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNTileOperation.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCoordinateFormatter.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNTilePyramidOfflineRegion.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/NSValue+MLNAdditions.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNImageSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNTileServerOptions.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNShapeOfflineRegion.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNOverlay.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNClockDirectionFormatter.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapView+IBAdditions.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNFeature.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNNetworkConfiguration.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapProjection.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNSettings.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNStyleValue.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/NSPredicate+MLNAdditions.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNAttributedExpression.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCompassDirectionFormatter.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNLineStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNShapeCollection.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNForegroundStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNPolygon.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNHeatmapStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNRasterStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNRasterDEMSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNOfflineRegion.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCustomDrawableStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCluster.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNUserLocationAnnotationView.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNTileSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNRasterTileSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNBackgroundStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNBackendResource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNDefaultStyle.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNAnnotation.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNGeometry.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNOfflinePack.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNStyle.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNSymbolStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNLight.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNTypes.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MapLibre.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNAnnotationImage.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNComputedShapeSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNPointAnnotation.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNPointCollection.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapView.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/NSExpression+MLNAdditions.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMultiPoint.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNShapeSource.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCompassButton.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNLocationManager.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNDistanceFormatter.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapSnapshotter.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNUserLocation.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapViewDelegate.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNShape.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNFillStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNCircleStyleLayer.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNScaleBar.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNAttributionInfo.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNOfflineStorage.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNAnnotationView.h'
+      - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNHillshadeStyleLayer.h'
+    #include-directives:
+      #- '~/Library/Caches/CocoaPods/Pods/Release/MapLibre/6.11.0-9ff4b/MapLibre.xcframework/ios-arm64_x86_64-simulator/MapLibre.framework/Headers'
+  preamble: |
+    // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field, return_of_invalid_type, void_checks, annotate_overrides, no_leading_underscores_for_local_identifiers, library_private_types_in_public_api
+dev_dependencies:
+  ffigen: ^17.0.0
