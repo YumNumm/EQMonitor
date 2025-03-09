@@ -70,7 +70,6 @@ ffigen:
       - 'Helpers'
     module:
       'MapLibreRegistry': 'maplibre_ios'
-      'Helpers': 'maplibre_ios'
       'MLNMapView': 'MapLibre'
       'MLNMapCamera': 'MapLibre'
       'MLNVectorTileSource': 'MapLibre'
@@ -78,7 +77,7 @@ ffigen:
       'MLNOfflineRegion': 'MapLibre'
   headers:
     entry-points:
-      - 'ios/maplibre_ios/Sources/maplibre_ios/MapLibreRegistry.h'
+      - 'ios/map_plugin/Sources/map_plugin/MapLibreRegistry.h'
       # - 'ios/maplibre_ios/Sources/maplibre_ios/Helpers.h'
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapView.h'
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNPolyline.h'

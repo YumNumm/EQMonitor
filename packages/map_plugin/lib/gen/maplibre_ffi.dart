@@ -7727,6 +7727,254 @@ enum NSSaveOptions {
       };
 }
 
+late final _class_Helpers = objc.getClass("Helpers");
+late final _sel_addImageToStyleWithTarget_field_expression_ =
+    objc.registerName("addImageToStyleWithTarget:field:expression:");
+final _objc_msgSend_r8gdi7 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCObject>)>>()
+    .asFunction<
+        void Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCObject>)>();
+late final _sel_setExpressionWithTarget_field_expression_ =
+    objc.registerName("setExpressionWithTarget:field:expression:");
+late final _sel_parseExpressionWithPropertyName_expression_ =
+    objc.registerName("parseExpressionWithPropertyName:expression:");
+
+/// Helpers
+class Helpers extends objc.NSObject {
+  Helpers._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [Helpers] that points to the same underlying object as [other].
+  Helpers.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [Helpers] that wraps the given raw object pointer.
+  Helpers.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [Helpers].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_Helpers);
+  }
+
+  /// addImageToStyleWithTarget:field:expression:
+  static void addImageToStyleWithTarget_field_expression_(
+      objc.NSObject target, objc.NSString field, NSExpression expression) {
+    _objc_msgSend_r8gdi7(
+        _class_Helpers,
+        _sel_addImageToStyleWithTarget_field_expression_,
+        target.ref.pointer,
+        field.ref.pointer,
+        expression.ref.pointer);
+  }
+
+  /// setExpressionWithTarget:field:expression:
+  static void setExpressionWithTarget_field_expression_(
+      objc.NSObject target, objc.NSString field, NSExpression expression) {
+    _objc_msgSend_r8gdi7(
+        _class_Helpers,
+        _sel_setExpressionWithTarget_field_expression_,
+        target.ref.pointer,
+        field.ref.pointer,
+        expression.ref.pointer);
+  }
+
+  /// parseExpressionWithPropertyName:expression:
+  static NSExpression? parseExpressionWithPropertyName_expression_(
+      objc.NSString propertyName, objc.NSString expression) {
+    final _ret = _objc_msgSend_15qeuct(
+        _class_Helpers,
+        _sel_parseExpressionWithPropertyName_expression_,
+        propertyName.ref.pointer,
+        expression.ref.pointer);
+    return _ret.address == 0
+        ? null
+        : NSExpression.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// init
+  Helpers init() {
+    objc.checkOsVersion('Helpers.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// new
+  static Helpers new1() {
+    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_new);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static Helpers allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret =
+        _objc_msgSend_1cwp428(_class_Helpers, _sel_allocWithZone_, zone);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static Helpers alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_alloc);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  Helpers self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  Helpers retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  Helpers autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+}
+
+late final _class_MapLibreRegistry =
+    objc.getClass("maplibre_ios.MapLibreRegistry");
+late final _sel_getMapWithViewId_ = objc.registerName("getMapWithViewId:");
+final _objc_msgSend_1ya1kjn = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>, ffi.Int64)>>()
+    .asFunction<
+        ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, int)>();
+late final _sel_activity = objc.registerName("activity");
+late final _sel_setActivity_ = objc.registerName("setActivity:");
+late final _sel_context = objc.registerName("context");
+late final _sel_setContext_ = objc.registerName("setContext:");
+
+/// MapLibreRegistry
+class MapLibreRegistry extends objc.NSObject {
+  MapLibreRegistry._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MapLibreRegistry] that points to the same underlying object as [other].
+  MapLibreRegistry.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MapLibreRegistry] that wraps the given raw object pointer.
+  MapLibreRegistry.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [MapLibreRegistry].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_MapLibreRegistry);
+  }
+
+  /// getMapWithViewId:
+  static objc.ObjCObjectBase? getMapWithViewId_(int viewId) {
+    final _ret = _objc_msgSend_1ya1kjn(
+        _class_MapLibreRegistry, _sel_getMapWithViewId_, viewId);
+    return _ret.address == 0
+        ? null
+        : objc.ObjCObjectBase(_ret, retain: true, release: true);
+  }
+
+  /// activity
+  static objc.ObjCObjectBase? getActivity() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_activity);
+    return _ret.address == 0
+        ? null
+        : objc.ObjCObjectBase(_ret, retain: true, release: true);
+  }
+
+  /// setActivity:
+  static void setActivity(objc.ObjCObjectBase? value) {
+    _objc_msgSend_xtuoz7(_class_MapLibreRegistry, _sel_setActivity_,
+        value?.ref.pointer ?? ffi.nullptr);
+  }
+
+  /// context
+  static objc.ObjCObjectBase? getContext() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_context);
+    return _ret.address == 0
+        ? null
+        : objc.ObjCObjectBase(_ret, retain: true, release: true);
+  }
+
+  /// setContext:
+  static void setContext(objc.ObjCObjectBase? value) {
+    _objc_msgSend_xtuoz7(_class_MapLibreRegistry, _sel_setContext_,
+        value?.ref.pointer ?? ffi.nullptr);
+  }
+
+  /// init
+  MapLibreRegistry init() {
+    objc.checkOsVersion('MapLibreRegistry.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// new
+  static MapLibreRegistry new1() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_new);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static MapLibreRegistry allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret = _objc_msgSend_1cwp428(
+        _class_MapLibreRegistry, _sel_allocWithZone_, zone);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static MapLibreRegistry alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_alloc);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  MapLibreRegistry self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  MapLibreRegistry retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  MapLibreRegistry autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
+  }
+}
+
 /// WARNING: MLNBackendResource is a stub. To generate bindings for this class, include
 /// MLNBackendResource in your config's objc-interfaces list.
 ///
@@ -23578,7 +23826,6 @@ final class MLNOfflinePackProgress extends ffi.Struct {
 
 late final _class_MLNOfflinePack = objc.getClass("MapLibre.MLNOfflinePack");
 late final _sel_region = objc.registerName("region");
-late final _sel_context = objc.registerName("context");
 void _ObjCBlock_ffiVoid_NSError_fnPtrTrampoline(
         ffi.Pointer<objc.ObjCBlockImpl> block,
         ffi.Pointer<objc.ObjCObject> arg0) =>
