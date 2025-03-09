@@ -27,25 +27,26 @@ workspace:
 dependencies:
   melos: ^7.0.0-dev.7
 dependency_overrides:
-  maplibre_gl:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      path: maplibre_gl
-  maplibre_gl_platform_interface:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      path: maplibre_gl_platform_interface
-  maplibre_gl_web:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-      path: maplibre_gl_web
+  # maplibre_gl:
+  #   git:
+  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
+  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+  #     path: maplibre_gl
+  # maplibre_gl_platform_interface:
+  #   git:
+  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
+  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+  #     path: maplibre_gl_platform_interface
+  # maplibre_gl_web:
+  #   git:
+  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
+  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+  #     path: maplibre_gl_web
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 
+      ref: 1969208ebdded6315f587b474ae7f4142bf0d0e3
+
 
 melos:
   repository: https://github.com/YumNumm/EQMonitor
