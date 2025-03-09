@@ -2,13 +2,13 @@ import Flutter
 import MapLibre
 
 class MapPluginView: NSObject, FlutterPlatformView, MLNMapViewDelegate,
-  MapLibreHostApi, UIGestureRecognizerDelegate
+   UIGestureRecognizerDelegate
 {
   private var _view: UIView = .init()
   private var _mapView: MLNMapView!
   private var _viewId: Int64
 
-    init(
+  init(
     frame _: CGRect,
     viewId: Int64,
     binaryMessenger: FlutterBinaryMessenger
@@ -35,5 +35,25 @@ class MapPluginView: NSObject, FlutterPlatformView, MLNMapViewDelegate,
     _mapView.delegate = nil
     _mapView = nil
     _view.removeFromSuperview()
+  }
+
+  func view() -> UIView {
+    _view
+  }
+
+  // MLNMapViewDelegate method called when map has finished loading
+  func mapView(_ mapView: MLNMapView, didFinishLoading _: MLNStyle) {
+    // // setCamera() can only be used after the map did finish loading
+    // var camera = _mapView.camera
+    // camera.pitch = _mapOptions!.pitch
+    // _mapView.setCamera(camera, animated: false)
+
+    _mapView = mapView
+    // print("mapView didFinishLoading, call onStyleLoaded")
+    // _flutterApi.onStyleLoaded { _ in }
+  }
+
+  func mapView(_: MLNMapView, regionDidChangeAnimated _: Bool) {
+    // onCameraMoved()
   }
 }

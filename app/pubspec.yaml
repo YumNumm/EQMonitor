@@ -73,7 +73,9 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  maplibre: ^0.2.1
+  map_plugin:
+    path: ../packages/map_plugin
+  # maplibre: ^0.2.1
   # maplibre_gl: ^0.21.0
   notification_setting_types:
     path: ../packages/notification_setting_types
