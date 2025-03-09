@@ -72,7 +72,7 @@ class _MapView extends HookConsumerWidget {
         );
         await controller.updateGeoJsonSource(
           id: 'kyoshin-monitor',
-          data: jsonEncode({ }),
+          data: jsonEncode({}),
         );
       },
     );
