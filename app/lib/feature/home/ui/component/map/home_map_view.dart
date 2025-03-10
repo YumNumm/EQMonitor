@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +22,9 @@ class HomeMapView extends HookConsumerWidget {
             bounds: (minLat: 30, minLng: 128.8, maxLat: 45.8, maxLng: 145.1),
             padding: 16,
           );
+          print(cameraPosition);
 
-          return _MapView(
-            styleString: value.styleString!,
-          );
+          return _MapView(styleString: value.styleString!);
         },
       ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
@@ -36,14 +34,16 @@ class HomeMapView extends HookConsumerWidget {
 }
 
 class _MapView extends HookConsumerWidget {
-  const _MapView({
-    required this.styleString,
-  });
+  const _MapView({required this.styleString});
 
   final String styleString;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const MapPluginView();
+    return MapPluginView(
+      onMapCreated: (p0) {
+        talker.info('MapPluginView created: $p0');
+      },
+    );
   }
 }

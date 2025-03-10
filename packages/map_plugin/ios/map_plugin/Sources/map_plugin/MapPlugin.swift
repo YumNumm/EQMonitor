@@ -16,7 +16,7 @@ public class MapPlugin: NSObject, FlutterPlugin {
     // register MapLibre view factory
     let factory = MapPluginViewFactory(messenger: registrar.messenger())
     registrar.register(factory, withId: "plugins.net.yumnumm.map_plugin")
-    logger.log("Registered.")
+    logger.log("Registered MapPlugin.")
   }
 
   public func handle(

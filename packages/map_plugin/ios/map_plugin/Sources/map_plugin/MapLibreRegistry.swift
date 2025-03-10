@@ -9,18 +9,25 @@ import UIKit
 @objc public class MapLibreRegistry: NSObject {
   private static var mapRegistry: [Int64: AnyObject] = [:]
 
+  @objc public static func getMapRegistry() -> [Int64: AnyObject] {
+    mapRegistry
+  }
+
   // Method to get the map for a given viewId
   @objc public static func getMap(viewId: Int64) -> AnyObject? {
-    mapRegistry[viewId]
+    print("getMap: \(viewId)")
+    return mapRegistry[viewId]
   }
 
   // Method to add a map to the registry
   public static func addMap(viewId: Int64, map: AnyObject) {
+    print("addMap: \(viewId) \(map)")
     mapRegistry[viewId] = map
   }
 
   // Method to remove a map to the registry
   public static func removeMap(viewId: Int64) {
+    print("removeMap: \(viewId)")
     mapRegistry.removeValue(forKey: viewId)
   }
 
@@ -32,71 +39,6 @@ import UIKit
 }
 
 @objc public class Helpers: NSObject {
-  @objc public static func addImageToStyle(
-    target: NSObject, field: String, expression: NSExpression
-  ) {
-    do {
-      target.setValue(expression, forKey: field)
-    } catch {
-      print("Couldn't set expression in Helpers.setExpression()")
-    }
-  }
-
-  @objc public static func setExpression(
-    target: NSObject, field: String, expression: NSExpression
-  ) {
-    do {
-      // https://developer.apple.com/documentation/objectivec/nsobject/1418139-setvalue
-      try target.setValue(expression, forKey: field)
-    } catch {
-      print("Couldn't set expression in Helpers.setExpression()")
-    }
-  }
-
-  @objc public static func parseExpression(
-    propertyName: String, expression: String
-  ) -> NSExpression? {
-    print("\(propertyName): \(expression)")
-    do {
-      // can't create an Expression using the default method if the data is a hex string
-      if propertyName.contains("color"), expression.first == "#" {
-        var color = UIColor(hex: expression)
-        return NSExpression(forConstantValue: color)
-      }
-      if expression.starts(with: "[") {
-        // can't create an Expression if the data of a literal is an array
-        let json = try JSONSerialization.jsonObject(
-          with: expression.data(using: .utf8)!,
-          options: .fragmentsAllowed
-        )
-        // print("json: \(json)")
-        if let offset = json as? [Any] {
-          if offset.count == 2, offset.first is String,
-             offset.first as? String == "literal"
-          {
-            if let vector = offset.last as? [Any] {
-              if vector.count == 2 {
-                if let x = vector.first as? Double,
-                   let y = vector.last as? Double
-                {
-                  return NSExpression(
-                    forConstantValue: NSValue(
-                      cgVector: CGVector(dx: x, dy: y)))
-                }
-              }
-            }
-          }
-        }
-        return NSExpression(mglJSONObject: json)
-      }
-      // parse as a constant value
-      return NSExpression(forConstantValue: expression)
-
-    } catch {
-      print("Couldn't parse Expression: " + expression)
-    }
-    return nil
-  }
 }
 
 extension UIColor {

@@ -15,7 +15,8 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'map_plugin/Sources/map_plugin/**/*'
   s.dependency 'Flutter'
-  s.platform = :ios, '12.0'
+  s.dependency 'MapLibre', '~> 6.12.1'
+  s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

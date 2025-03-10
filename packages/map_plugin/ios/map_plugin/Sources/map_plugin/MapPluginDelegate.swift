@@ -19,7 +19,7 @@ class MapPluginView: NSObject, FlutterPlatformView, MLNMapViewDelegate,
     _viewId = viewId
     super.init()
     self._mapView = MLNMapView(frame: self._view.bounds)
-        MapLibreRegistry.addMap(viewId: viewId, map: self._mapView)
+    MapLibreRegistry.addMap(viewId: viewId, map: self._mapView)
     self._mapView.autoresizingMask = [
       .flexibleWidth, .flexibleHeight,
     ]

@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "map-plugin", targets: ["map_plugin"])
     ],
     dependencies: [
-        .package(url: "https://github.com/maplibre/maplibre-gl-native-distribution", .upToNextMinor(from: "6.11.0")),
+        .package(url: "https://github.com/maplibre/maplibre-gl-native-distribution", .upToNextMinor(from: "6.12.1")),
     ],
     targets: [
         .target(

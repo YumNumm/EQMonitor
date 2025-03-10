@@ -5,7 +5,6 @@
 //  Created by 尾上 遼太朗 on 2024/05/23.
 //
 
-import Gzip
 import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
