@@ -1,15 +1,24 @@
-# map_plugin
+# Map Plugin for EQMonitor
 
-A new Flutter plugin project.
+## メモ
 
-## Getting Started
+### MapLibreRegistry.swiftをいじった時
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+```bash
+cd ios/map_plugin/Sources/map_plugin/
+swiftc -c MapLibreRegistry.swift \
+  -module-name maplibre_ios \
+  -emit-objc-header-path MapLibreRegistry.h \
+  -emit-library -o libmaplibreios.dylib \
+  -target arm64-apple-ios18.4-simulator \
+  -sdk $(xcrun --sdk iphonesimulator --show-sdk-path) \
+  -F ../../../../temp/MapLibre.xcframework/ios-arm64_x86_64-simulator
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Swiftのコードをいじった時
 
+`ffigen`を利用してバインディングを生成してください
+
+```bash
+fvm dart run ffigen
+```

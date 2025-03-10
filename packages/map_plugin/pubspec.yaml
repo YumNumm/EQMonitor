@@ -69,7 +69,7 @@ ffigen:
       - 'NSExpression'
       - 'Helpers'
     module:
-      'MapLibreRegistry': 'maplibre_ios'
+      'MapLibreRegistry': 'map_plugin'
       'MLNMapView': 'MapLibre'
       'MLNMapCamera': 'MapLibre'
       'MLNVectorTileSource': 'MapLibre'

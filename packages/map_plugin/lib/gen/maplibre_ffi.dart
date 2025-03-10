@@ -7728,28 +7728,6 @@ enum NSSaveOptions {
 }
 
 late final _class_Helpers = objc.getClass("Helpers");
-late final _sel_addImageToStyleWithTarget_field_expression_ =
-    objc.registerName("addImageToStyleWithTarget:field:expression:");
-final _objc_msgSend_r8gdi7 = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Void Function(
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>,
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCObject>)>>()
-    .asFunction<
-        void Function(
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>,
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCObject>)>();
-late final _sel_setExpressionWithTarget_field_expression_ =
-    objc.registerName("setExpressionWithTarget:field:expression:");
-late final _sel_parseExpressionWithPropertyName_expression_ =
-    objc.registerName("parseExpressionWithPropertyName:expression:");
 
 /// Helpers
 class Helpers extends objc.NSObject {
@@ -7770,41 +7748,6 @@ class Helpers extends objc.NSObject {
   static bool isInstance(objc.ObjCObjectBase obj) {
     return _objc_msgSend_19nvye5(
         obj.ref.pointer, _sel_isKindOfClass_, _class_Helpers);
-  }
-
-  /// addImageToStyleWithTarget:field:expression:
-  static void addImageToStyleWithTarget_field_expression_(
-      objc.NSObject target, objc.NSString field, NSExpression expression) {
-    _objc_msgSend_r8gdi7(
-        _class_Helpers,
-        _sel_addImageToStyleWithTarget_field_expression_,
-        target.ref.pointer,
-        field.ref.pointer,
-        expression.ref.pointer);
-  }
-
-  /// setExpressionWithTarget:field:expression:
-  static void setExpressionWithTarget_field_expression_(
-      objc.NSObject target, objc.NSString field, NSExpression expression) {
-    _objc_msgSend_r8gdi7(
-        _class_Helpers,
-        _sel_setExpressionWithTarget_field_expression_,
-        target.ref.pointer,
-        field.ref.pointer,
-        expression.ref.pointer);
-  }
-
-  /// parseExpressionWithPropertyName:expression:
-  static NSExpression? parseExpressionWithPropertyName_expression_(
-      objc.NSString propertyName, objc.NSString expression) {
-    final _ret = _objc_msgSend_15qeuct(
-        _class_Helpers,
-        _sel_parseExpressionWithPropertyName_expression_,
-        propertyName.ref.pointer,
-        expression.ref.pointer);
-    return _ret.address == 0
-        ? null
-        : NSExpression.castFromPointer(_ret, retain: true, release: true);
   }
 
   /// init
@@ -7855,7 +7798,8 @@ class Helpers extends objc.NSObject {
 }
 
 late final _class_MapLibreRegistry =
-    objc.getClass("maplibre_ios.MapLibreRegistry");
+    objc.getClass("map_plugin.MapLibreRegistry");
+late final _sel_getMapRegistry = objc.registerName("getMapRegistry");
 late final _sel_getMapWithViewId_ = objc.registerName("getMapWithViewId:");
 final _objc_msgSend_1ya1kjn = objc.msgSendPointer
     .cast<
@@ -7889,6 +7833,13 @@ class MapLibreRegistry extends objc.NSObject {
   static bool isInstance(objc.ObjCObjectBase obj) {
     return _objc_msgSend_19nvye5(
         obj.ref.pointer, _sel_isKindOfClass_, _class_MapLibreRegistry);
+  }
+
+  /// getMapRegistry
+  static objc.NSDictionary getMapRegistry() {
+    final _ret =
+        _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_getMapRegistry);
+    return objc.NSDictionary.castFromPointer(_ret, retain: true, release: true);
   }
 
   /// getMapWithViewId:
