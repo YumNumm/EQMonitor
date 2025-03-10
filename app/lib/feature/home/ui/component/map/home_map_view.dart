@@ -45,28 +45,5 @@ class _MapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const MapPluginView();
-    // return MapLibreMap(
-    //   acceptLicense: true,
-    //   options: MapOptions(
-    //     initStyle: 'file://$styleString',
-    //     initCenter: initialCenter,
-    //     initZoom: initialZoomLevel,
-    //   ),
-    //   onStyleLoaded: (controller) async {
-    //     await controller.addSource(
-    //       GeoJsonSource(id: 'kyoshin-monitor', data: jsonEncode({})),
-    //     );
-    //     await controller.addLayer(
-    //       const CircleStyleLayer(
-    //         id: 'kyoshin-monitor',
-    //         sourceId: 'kyoshin-monitor',
-    //       ),
-    //     );
-    //     await controller.updateGeoJsonSource(
-    //       id: 'kyoshin-monitor',
-    //       data: jsonEncode({}),
-    //     );
-    //   },
-    // );
   }
 }
