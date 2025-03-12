@@ -1,27 +1,31 @@
 import Flutter
 import MapLibre
 
-typealias StyleLoadedCallback = @convention(c) (Int64) -> Void
-
 class MapPluginView: NSObject, FlutterPlatformView, MLNMapViewDelegate,
    UIGestureRecognizerDelegate
 {
   private var _view: UIView = .init()
   private var _mapView: MLNMapView!
   private var _viewId: Int64
-  private var _styleLoadedCallback: StyleLoadedCallback?
+  private var _methodChannel: FlutterMethodChannel!
 
   init(
     frame _: CGRect,
     viewId: Int64,
-    binaryMessenger: FlutterBinaryMessenger,
-    styleLoadedCallback: StyleLoadedCallback?
+    binaryMessenger: FlutterBinaryMessenger
   ) {
     print("### init new MapViewDelegate ### \(viewId) ###")
 
     var channelSuffix = String(viewId)
     _viewId = viewId
     super.init()
+
+    // MethodChannelの初期化
+    _methodChannel = FlutterMethodChannel(
+      name: "plugins.net.yumnumm.map_plugin/map_\(viewId)",
+      binaryMessenger: binaryMessenger
+    )
+
     self._mapView = MLNMapView(frame: self._view.bounds)
     MapLibreRegistry.addMap(viewId: viewId, map: self._mapView)
     self._mapView.autoresizingMask = [
@@ -46,26 +50,21 @@ class MapPluginView: NSObject, FlutterPlatformView, MLNMapViewDelegate,
   }
 
   // MLNMapViewDelegate method called when map has finished loading
-  func mapView(_ mapView: MLNMapView, didFinishLoading _: MLNStyle) {
+  func mapView(_ mapView: MLNMapView, didFinishLoading style: MLNStyle) {
     // // setCamera() can only be used after the map did finish loading
     // var camera = _mapView.camera
     // camera.pitch = _mapOptions!.pitch
     // _mapView.setCamera(camera, animated: false)
 
     _mapView = mapView
-    // print("mapView didFinishLoading, call onStyleLoaded")
-    // _flutterApi.onStyleLoaded { _ in }
 
-    // コールバックがあれば、メインスレッドで呼び出す
-    if let callback = _styleLoadedCallback {
-      logger.log("### call styleLoadedCallback ### \(self._viewId) ###")
-      DispatchQueue.main.async {
-        callback(self._viewId)
-      }
-    }
+    // Dartに通知
+    _methodChannel.invokeMethod("onStyleLoaded", arguments: nil)
+    print("mapView didFinishLoading, called onStyleLoaded")
   }
 
   func mapView(_: MLNMapView, regionDidChangeAnimated _: Bool) {
-    // onCameraMoved()
+    // Dartに通知
+    _methodChannel.invokeMethod("onCameraMoved", arguments: nil)
   }
 }

@@ -143,6 +143,8 @@ _ListenerTrampoline1 _MapLibreFFi_wrapBlockingBlock_1pl9qdv(
   };
 }
 
+Protocol* _MapLibreFFi_NSProgressReporting(void) { return @protocol(NSProgressReporting); }
+
 typedef void  (^_ListenerTrampoline2)(id arg0, struct _NSRange arg1, BOOL * arg2);
 __attribute__((visibility("default"))) __attribute__((used))
 _ListenerTrampoline2 _MapLibreFFi_wrapListenerBlock_1a22wz(_ListenerTrampoline2 block) NS_RETURNS_RETAINED {
@@ -248,6 +250,8 @@ Protocol* _MapLibreFFi_MLNCluster(void) { return @protocol(MLNCluster); }
 Protocol* _MapLibreFFi_MLNFeature(void) { return @protocol(MLNFeature); }
 
 Protocol* _MapLibreFFi_CTAdaptiveImageProviding(void) { return @protocol(CTAdaptiveImageProviding); }
+
+Protocol* _MapLibreFFi_MLNComputedShapeSourceDataSource(void) { return @protocol(MLNComputedShapeSourceDataSource); }
 
 Protocol* _MapLibreFFi_MLNOfflineRegion(void) { return @protocol(MLNOfflineRegion); }
 

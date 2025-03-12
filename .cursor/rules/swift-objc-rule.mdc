@@ -1,8 +1,10 @@
-# Map Plugin for EQMonitor
+---
+description: Swift and ObjectiveC Rule
+globs: *.swift, *.m
+alwaysApply: false
+---
 
-## メモ
-
-### MapLibreRegistry.swiftをいじった時
+### Dart FFIで
 
 ```bash
 cd ios/map_plugin/Sources/map_plugin/ && \

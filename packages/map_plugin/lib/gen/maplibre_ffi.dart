@@ -1825,6 +1825,26 @@ extension ObjCBlock_NSProgressUnpublishingHandler_NSProgress_CallExtension
           release: true);
 }
 
+/// WARNING: NSProgressReporting is a stub. To generate bindings for this class, include
+/// NSProgressReporting in your config's objc-protocols list.
+///
+/// NSProgressReporting
+interface class NSProgressReporting extends objc.ObjCProtocolBase
+    implements objc.NSObjectProtocol {
+  NSProgressReporting._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super(pointer, retain: retain, release: release);
+
+  /// Constructs a [NSProgressReporting] that points to the same underlying object as [other].
+  NSProgressReporting.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [NSProgressReporting] that wraps the given raw object pointer.
+  NSProgressReporting.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
 /// WARNING: NSBundle is a stub. To generate bindings for this class, include
 /// NSBundle in your config's objc-interfaces list.
 ///
@@ -5993,6 +6013,28 @@ enum NSOperationQueuePriority {
       };
 }
 
+/// WARNING: NSOperationQueue is a stub. To generate bindings for this class, include
+/// NSOperationQueue in your config's objc-interfaces list.
+///
+/// NSOperationQueue
+class NSOperationQueue extends objc.NSObject implements NSProgressReporting {
+  NSOperationQueue._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release) {
+    objc.checkOsVersion('NSOperationQueue',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 5, 0)));
+  }
+
+  /// Constructs a [NSOperationQueue] that points to the same underlying object as [other].
+  NSOperationQueue.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [NSOperationQueue] that wraps the given raw object pointer.
+  NSOperationQueue.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
 /// WARNING: NSOrthography is a stub. To generate bindings for this class, include
 /// NSOrthography in your config's objc-interfaces list.
 ///
@@ -7727,9 +7769,96 @@ enum NSSaveOptions {
       };
 }
 
-late final _class_CustomStyleLayer =
-    objc.getClass("map_plugin.CustomStyleLayer");
-late final _sel_initWithIdentifier_ = objc.registerName("initWithIdentifier:");
+/// WARNING: CoordinateBoundsStruct is a stub. To generate bindings for this class, include
+/// CoordinateBoundsStruct in your config's objc-interfaces list.
+///
+/// CoordinateBoundsStruct
+class CoordinateBoundsStruct extends objc.NSObject {
+  CoordinateBoundsStruct._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [CoordinateBoundsStruct] that points to the same underlying object as [other].
+  CoordinateBoundsStruct.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [CoordinateBoundsStruct] that wraps the given raw object pointer.
+  CoordinateBoundsStruct.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
+late final _class_Helpers = objc.getClass("Helpers");
+
+/// Helpers
+class Helpers extends objc.NSObject {
+  Helpers._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [Helpers] that points to the same underlying object as [other].
+  Helpers.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [Helpers] that wraps the given raw object pointer.
+  Helpers.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [Helpers].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_Helpers);
+  }
+
+  /// init
+  Helpers init() {
+    objc.checkOsVersion('Helpers.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// new
+  static Helpers new1() {
+    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_new);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static Helpers allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret =
+        _objc_msgSend_1cwp428(_class_Helpers, _sel_allocWithZone_, zone);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static Helpers alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_alloc);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  Helpers self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  Helpers retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  Helpers autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+}
+
+late final _class_MapHelper = objc.getClass("map_plugin.MapHelper");
 late final _class_MLNMapView = objc.getClass("MapLibre.MLNMapView");
 
 /// WARNING: MLNStylable is a stub. To generate bindings for this class, include
@@ -8066,6 +8195,7 @@ late final _sel_performsPlacementTransitions =
 late final _sel_setPerformsPlacementTransitions_ =
     objc.registerName("setPerformsPlacementTransitions:");
 late final _class_MLNSource = objc.getClass("MLNSource");
+late final _sel_initWithIdentifier_ = objc.registerName("initWithIdentifier:");
 late final _sel_identifier = objc.registerName("identifier");
 late final _sel_setIdentifier_ = objc.registerName("setIdentifier:");
 
@@ -16077,126 +16207,176 @@ class MLNMapView extends objc.ObjCObjectBase implements MLNStylable {
   }
 }
 
-late final _sel_didMoveToMapView_ = objc.registerName("didMoveToMapView:");
-late final _sel_drawInMapView_withContext_ =
-    objc.registerName("drawInMapView:withContext:");
-
-/// CustomStyleLayer
-class CustomStyleLayer extends objc.ObjCObjectBase {
-  CustomStyleLayer._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super(pointer, retain: retain, release: release);
-
-  /// Constructs a [CustomStyleLayer] that points to the same underlying object as [other].
-  CustomStyleLayer.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [CustomStyleLayer] that wraps the given raw object pointer.
-  CustomStyleLayer.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-
-  /// Returns whether [obj] is an instance of [CustomStyleLayer].
-  static bool isInstance(objc.ObjCObjectBase obj) {
-    return _objc_msgSend_19nvye5(
-        obj.ref.pointer, _sel_isKindOfClass_, _class_CustomStyleLayer);
-  }
-
-  /// initWithIdentifier:
-  CustomStyleLayer initWithIdentifier_(objc.NSString identifier) {
-    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
-        _sel_initWithIdentifier_, identifier.ref.pointer);
-    return CustomStyleLayer.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// initWithIdentifier:
-  static CustomStyleLayer initWithIdentifier_1(objc.NSString identifier) {
-    final _ret = _objc_msgSend_1sotr3r(_class_CustomStyleLayer,
-        _sel_initWithIdentifier_, identifier.ref.pointer);
-    return CustomStyleLayer.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// didMoveToMapView:
-  void didMoveToMapView_(MLNMapView mapView) {
-    _objc_msgSend_xtuoz7(
-        this.ref.pointer, _sel_didMoveToMapView_, mapView.ref.pointer);
-  }
-
-  /// drawInMapView:withContext:
-  void drawInMapView_withContext_(
-      MLNMapView mapView, objc.ObjCObjectBase context) {
-    _objc_msgSend_pfv6jd(this.ref.pointer, _sel_drawInMapView_withContext_,
-        mapView.ref.pointer, context.ref.pointer);
-  }
-}
-
-late final _class_Helpers = objc.getClass("Helpers");
-
-/// Helpers
-class Helpers extends objc.NSObject {
-  Helpers._(ffi.Pointer<objc.ObjCObject> pointer,
+/// WARNING: PaddingStruct is a stub. To generate bindings for this class, include
+/// PaddingStruct in your config's objc-interfaces list.
+///
+/// PaddingStruct
+class PaddingStruct extends objc.NSObject {
+  PaddingStruct._(ffi.Pointer<objc.ObjCObject> pointer,
       {bool retain = false, bool release = false})
       : super.castFromPointer(pointer, retain: retain, release: release);
 
-  /// Constructs a [Helpers] that points to the same underlying object as [other].
-  Helpers.castFrom(objc.ObjCObjectBase other)
+  /// Constructs a [PaddingStruct] that points to the same underlying object as [other].
+  PaddingStruct.castFrom(objc.ObjCObjectBase other)
       : this._(other.ref.pointer, retain: true, release: true);
 
-  /// Constructs a [Helpers] that wraps the given raw object pointer.
-  Helpers.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+  /// Constructs a [PaddingStruct] that wraps the given raw object pointer.
+  PaddingStruct.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
+late final _sel_setVisibleCoordinateBoundsWithMapView_bounds_padding_animated_ =
+    objc.registerName(
+        "setVisibleCoordinateBoundsWithMapView:bounds:padding:animated:");
+final _objc_msgSend_kuunnf = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Bool)>>()
+    .asFunction<
+        void Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCObject>,
+            bool)>();
+late final _sel_setVisibleCoordinateBoundsWithMapView_bounds_paddingTop_paddingLeft_paddingBottom_paddingRight_animated_ =
+    objc.registerName(
+        "setVisibleCoordinateBoundsWithMapView:bounds:paddingTop:paddingLeft:paddingBottom:paddingRight:animated:");
+final _objc_msgSend_1o7hlg1 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Double,
+                ffi.Double,
+                ffi.Double,
+                ffi.Double,
+                ffi.Bool)>>()
+    .asFunction<
+        void Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCObject>,
+            double,
+            double,
+            double,
+            double,
+            bool)>();
+
+/// MapHelper
+class MapHelper extends objc.NSObject {
+  MapHelper._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MapHelper] that points to the same underlying object as [other].
+  MapHelper.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MapHelper] that wraps the given raw object pointer.
+  MapHelper.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
       {bool retain = false, bool release = false})
       : this._(other, retain: retain, release: release);
 
-  /// Returns whether [obj] is an instance of [Helpers].
+  /// Returns whether [obj] is an instance of [MapHelper].
   static bool isInstance(objc.ObjCObjectBase obj) {
     return _objc_msgSend_19nvye5(
-        obj.ref.pointer, _sel_isKindOfClass_, _class_Helpers);
+        obj.ref.pointer, _sel_isKindOfClass_, _class_MapHelper);
+  }
+
+  /// setVisibleCoordinateBoundsWithMapView:bounds:padding:animated:
+  static void setVisibleCoordinateBoundsWithMapView_bounds_padding_animated_(
+      MLNMapView mapView,
+      CoordinateBoundsStruct bounds,
+      PaddingStruct padding,
+      bool animated) {
+    _objc_msgSend_kuunnf(
+        _class_MapHelper,
+        _sel_setVisibleCoordinateBoundsWithMapView_bounds_padding_animated_,
+        mapView.ref.pointer,
+        bounds.ref.pointer,
+        padding.ref.pointer,
+        animated);
+  }
+
+  /// setVisibleCoordinateBoundsWithMapView:bounds:paddingTop:paddingLeft:paddingBottom:paddingRight:animated:
+  static void
+      setVisibleCoordinateBoundsWithMapView_bounds_paddingTop_paddingLeft_paddingBottom_paddingRight_animated_(
+          MLNMapView mapView,
+          CoordinateBoundsStruct bounds,
+          double paddingTop,
+          double paddingLeft,
+          double paddingBottom,
+          double paddingRight,
+          bool animated) {
+    _objc_msgSend_1o7hlg1(
+        _class_MapHelper,
+        _sel_setVisibleCoordinateBoundsWithMapView_bounds_paddingTop_paddingLeft_paddingBottom_paddingRight_animated_,
+        mapView.ref.pointer,
+        bounds.ref.pointer,
+        paddingTop,
+        paddingLeft,
+        paddingBottom,
+        paddingRight,
+        animated);
   }
 
   /// init
-  Helpers init() {
-    objc.checkOsVersion('Helpers.init',
+  MapHelper init() {
+    objc.checkOsVersion('MapHelper.init',
         iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
     final _ret =
         _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
+    return MapHelper.castFromPointer(_ret, retain: false, release: true);
   }
 
   /// new
-  static Helpers new1() {
-    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_new);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  static MapHelper new1() {
+    final _ret = _objc_msgSend_151sglz(_class_MapHelper, _sel_new);
+    return MapHelper.castFromPointer(_ret, retain: false, release: true);
   }
 
   /// allocWithZone:
-  static Helpers allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+  static MapHelper allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
     final _ret =
-        _objc_msgSend_1cwp428(_class_Helpers, _sel_allocWithZone_, zone);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
+        _objc_msgSend_1cwp428(_class_MapHelper, _sel_allocWithZone_, zone);
+    return MapHelper.castFromPointer(_ret, retain: false, release: true);
   }
 
   /// alloc
-  static Helpers alloc() {
-    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_alloc);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  static MapHelper alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_MapHelper, _sel_alloc);
+    return MapHelper.castFromPointer(_ret, retain: false, release: true);
   }
 
   /// self
-  Helpers self1() {
+  MapHelper self1() {
     final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
-    return Helpers.castFromPointer(_ret, retain: true, release: true);
+    return MapHelper.castFromPointer(_ret, retain: true, release: true);
   }
 
   /// retain
-  Helpers retain() {
+  MapHelper retain() {
     final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
-    return Helpers.castFromPointer(_ret, retain: true, release: true);
+    return MapHelper.castFromPointer(_ret, retain: true, release: true);
   }
 
   /// autorelease
-  Helpers autorelease() {
+  MapHelper autorelease() {
     final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
-    return Helpers.castFromPointer(_ret, retain: true, release: true);
+    return MapHelper.castFromPointer(_ret, retain: true, release: true);
   }
 }
 
@@ -18707,8 +18887,11 @@ final _objc_msgSend_8j0bt5 = objc.msgSendPointer
     .asFunction<
         ffi.Pointer<_CGLContextObject> Function(
             ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
+late final _sel_didMoveToMapView_ = objc.registerName("didMoveToMapView:");
 late final _sel_willMoveFromMapView_ =
     objc.registerName("willMoveFromMapView:");
+late final _sel_drawInMapView_withContext_ =
+    objc.registerName("drawInMapView:withContext:");
 final _objc_msgSend_qe06h6 = objc.msgSendPointer
     .cast<
         ffi.NativeFunction<
@@ -20882,6 +21065,301 @@ class MLNShapeSource extends MLNSource {
   MLNShapeSource autorelease() {
     final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
     return MLNShapeSource.castFromPointer(_ret, retain: true, release: true);
+  }
+}
+
+/// WARNING: MLNComputedShapeSourceDataSource is a stub. To generate bindings for this class, include
+/// MLNComputedShapeSourceDataSource in your config's objc-protocols list.
+///
+/// Data source for ``MLNComputedShapeSource``. This protocol defines two optional methods for fetching
+/// data, one based on tile coordinates, and one based on a bounding box. Classes that implement this
+/// protocol must implement one, and only one of the methods. Methods on this protocol will not be
+/// called on main thread, they will be called on the caller's `requestQueue`.
+interface class MLNComputedShapeSourceDataSource extends objc.ObjCProtocolBase
+    implements objc.NSObjectProtocol {
+  MLNComputedShapeSourceDataSource._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNComputedShapeSourceDataSource] that points to the same underlying object as [other].
+  MLNComputedShapeSourceDataSource.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNComputedShapeSourceDataSource] that wraps the given raw object pointer.
+  MLNComputedShapeSourceDataSource.castFromPointer(
+      ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false,
+      bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
+late final _class_MLNComputedShapeSource =
+    objc.getClass("MLNComputedShapeSource");
+late final _sel_initWithIdentifier_options_ =
+    objc.registerName("initWithIdentifier:options:");
+late final _sel_initWithIdentifier_dataSource_options_ =
+    objc.registerName("initWithIdentifier:dataSource:options:");
+late final _sel_invalidateBounds_ = objc.registerName("invalidateBounds:");
+late final _sel_invalidateTileAtX_y_zoomLevel_ =
+    objc.registerName("invalidateTileAtX:y:zoomLevel:");
+final _objc_msgSend_1r0ktp8 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.UnsignedLong,
+                ffi.UnsignedLong,
+                ffi.UnsignedLong)>>()
+    .asFunction<
+        void Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, int, int, int)>();
+late final _sel_setFeatures_inTileAtX_y_zoomLevel_ =
+    objc.registerName("setFeatures:inTileAtX:y:zoomLevel:");
+final _objc_msgSend_10v42t6 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.UnsignedLong,
+                ffi.UnsignedLong,
+                ffi.UnsignedLong)>>()
+    .asFunction<
+        void Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            ffi.Pointer<objc.ObjCObject>,
+            int,
+            int,
+            int)>();
+late final _sel_dataSource = objc.registerName("dataSource");
+late final _sel_setDataSource_ = objc.registerName("setDataSource:");
+late final _sel_requestQueue = objc.registerName("requestQueue");
+
+/// ``MLNComputedShapeSource`` is a map content source that supplies vector shapes,
+/// one tile at a time, to be shown on the map on demand. You implement a class
+/// conforming to the ``MLNComputedShapeSourceDataSource`` protocol that returns
+/// instances of ``MLNShape`` or ``MLNShape``, then add a computed shape source to an
+/// ``MLNStyle`` object along with an ``MLNStyle`` object. The vector style
+/// layer defines the appearance of any content supplied by the computed shape
+/// source.
+///
+/// ``MLNComputedShapeSource`` is similar to ``MLNComputedShapeSource`` but is optimized for
+/// data sets that change dynamically or are too large to fit completely in memory.
+/// It is also useful for data that is divided into tiles in a format other than
+/// <a href="https://www.mapbox.com/vector-tiles/">Mapbox Vector Tiles</a>. For
+/// <a href="http://geojson.org/">GeoJSON</a> data, use the ``MLNShapeSource`` class.
+/// For static tiles or Mapbox Vector Tiles, use the ``MLNVectorTileSource`` class.
+///
+/// You can add and remove sources dynamically using methods such as
+/// ``MLNStyle/addSource:`` and ``MLNStyle/sourceWithIdentifier:``. This class
+/// cannot be represented in a style JSON file; you must add it ot the style at
+/// runtime.
+class MLNComputedShapeSource extends MLNSource {
+  MLNComputedShapeSource._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNComputedShapeSource] that points to the same underlying object as [other].
+  MLNComputedShapeSource.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNComputedShapeSource] that wraps the given raw object pointer.
+  MLNComputedShapeSource.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [MLNComputedShapeSource].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_MLNComputedShapeSource);
+  }
+
+  /// Returns a custom shape data source initialized with an identifier, and a
+  /// dictionary of options for the source according to the
+  /// <a href="https://maplibre.org/maplibre-style-spec/#sources-geojson">style
+  /// specification</a>.
+  ///
+  /// This class supports the following options:
+  /// ``MLNShapeSourceOptionMinimumZoomLevel``, ``MLNShapeSourceOptionMinimumZoomLevel``,
+  /// ``MLNShapeSourceOptionBuffer``,
+  /// ``MLNShapeSourceOptionSimplificationTolerance``,
+  /// ``MLNShapeSourceOptionWrapsCoordinates``, and
+  /// ``MLNShapeSourceOptionClipsCoordinates``. Shapes provided by a computed
+  /// shape source cannot be clustered.
+  ///
+  /// @param identifier A string that uniquely identifies the source.
+  /// @param options An `NSDictionary` of options for this source.
+  MLNComputedShapeSource initWithIdentifier_options_(
+      objc.NSString identifier, objc.NSDictionary? options) {
+    final _ret = _objc_msgSend_15qeuct(
+        this.ref.retainAndReturnPointer(),
+        _sel_initWithIdentifier_options_,
+        identifier.ref.pointer,
+        options?.ref.pointer ?? ffi.nullptr);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// Returns a custom shape data source initialized with an identifier, data source, and a
+  /// dictionary of options for the source according to the
+  /// <a href="https://maplibre.org/maplibre-style-spec/#sources-geojson">style
+  /// specification</a>.
+  ///
+  /// This class supports the following options:
+  /// ``MLNShapeSourceOptionMinimumZoomLevel``, ``MLNShapeSourceOptionMinimumZoomLevel``,
+  /// ``MLNShapeSourceOptionBuffer``,
+  /// ``MLNShapeSourceOptionSimplificationTolerance``,
+  /// ``MLNShapeSourceOptionWrapsCoordinates``, and
+  /// ``MLNShapeSourceOptionClipsCoordinates``. Shapes provided by a computed shape
+  /// source cannot be clustered.
+  ///
+  /// @param identifier A string that uniquely identifies the source.
+  /// @param dataSource An object conforming to MLNComputedShapeSourceDataSource protocol that will
+  /// provide the shape data.
+  /// @param options An `NSDictionary` of options for this source.
+  MLNComputedShapeSource initWithIdentifier_dataSource_options_(
+      objc.NSString identifier,
+      MLNComputedShapeSourceDataSource dataSource,
+      objc.NSDictionary? options) {
+    final _ret = _objc_msgSend_11spmsz(
+        this.ref.retainAndReturnPointer(),
+        _sel_initWithIdentifier_dataSource_options_,
+        identifier.ref.pointer,
+        dataSource.ref.pointer,
+        options?.ref.pointer ?? ffi.nullptr);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// Invalidates all the features and properties intersecting with or contained in
+  /// the specified bounds. New fetch requests will immediately be invoked on the
+  /// ``MLNComputedShapeSourceDataSource``.
+  /// @param bounds  Coordinate bounds to invalidate.
+  void invalidateBounds_(MLNCoordinateBounds bounds) {
+    _objc_msgSend_9ay59k(this.ref.pointer, _sel_invalidateBounds_, bounds);
+  }
+
+  /// Invalidates all the feautres and properties of a given tile. A new fetch request
+  /// will immediately be invoked on the ``MLNComputedShapeSourceDataSource``.
+  /// @param x Tile X coordinate.
+  /// @param y Tile Y coordinate.
+  /// @param zoomLevel Tile zoom level.
+  void invalidateTileAtX_y_zoomLevel_(int x, int y, int zoomLevel) {
+    _objc_msgSend_1r0ktp8(
+        this.ref.pointer, _sel_invalidateTileAtX_y_zoomLevel_, x, y, zoomLevel);
+  }
+
+  /// Set a new set of features for a tile. This method can be invkoed from background threads.
+  /// For best performance, use this method only to update tiles that have already been requested
+  /// through ``MLNComputedShapeSourceDataSource/``
+  /// @param features  Features for the tile.
+  /// @param x         Tile X coordinate.
+  /// @param y         Tile Y coordinate.
+  /// @param zoomLevel Tile zoom level.
+  void setFeatures_inTileAtX_y_zoomLevel_(
+      objc.NSArray features, int x, int y, int zoomLevel) {
+    _objc_msgSend_10v42t6(
+        this.ref.pointer,
+        _sel_setFeatures_inTileAtX_y_zoomLevel_,
+        features.ref.pointer,
+        x,
+        y,
+        zoomLevel);
+  }
+
+  /// An object that implements the ``MLNComputedShapeSourceDataSource`` protocol that will be queried
+  /// for tile data.
+  MLNComputedShapeSourceDataSource? get dataSource {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_dataSource);
+    return _ret.address == 0
+        ? null
+        : MLNComputedShapeSourceDataSource.castFromPointer(_ret,
+            retain: true, release: true);
+  }
+
+  /// An object that implements the ``MLNComputedShapeSourceDataSource`` protocol that will be queried
+  /// for tile data.
+  set dataSource(MLNComputedShapeSourceDataSource? value) {
+    _objc_msgSend_xtuoz7(this.ref.pointer, _sel_setDataSource_,
+        value?.ref.pointer ?? ffi.nullptr);
+  }
+
+  /// A queue that calls to the data source will be made on.
+  NSOperationQueue get requestQueue {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_requestQueue);
+    return NSOperationQueue.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// init
+  MLNComputedShapeSource init() {
+    objc.checkOsVersion('MLNComputedShapeSource.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// Returns a source initialized with an identifier.
+  ///
+  /// After initializing and configuring the source, add it to a map view’s style
+  /// using the ``MLNStyle/addSource:`` method.
+  ///
+  /// @param identifier A string that uniquely identifies the source in the style to
+  /// which it is added.
+  /// @return An initialized source.
+  MLNComputedShapeSource initWithIdentifier_(objc.NSString identifier) {
+    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
+        _sel_initWithIdentifier_, identifier.ref.pointer);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// new
+  static MLNComputedShapeSource new1() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNComputedShapeSource, _sel_new);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static MLNComputedShapeSource allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret = _objc_msgSend_1cwp428(
+        _class_MLNComputedShapeSource, _sel_allocWithZone_, zone);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// alloc
+  static MLNComputedShapeSource alloc() {
+    final _ret =
+        _objc_msgSend_151sglz(_class_MLNComputedShapeSource, _sel_alloc);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// self
+  MLNComputedShapeSource self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: true, release: true);
+  }
+
+  /// retain
+  MLNComputedShapeSource retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: true, release: true);
+  }
+
+  /// autorelease
+  MLNComputedShapeSource autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return MLNComputedShapeSource.castFromPointer(_ret,
+        retain: true, release: true);
   }
 }
 

@@ -279,8 +279,8 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #if __has_warning("-Watimport-in-framework-header")
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
+@import CoreFoundation;
 @import Foundation;
-@import MapLibre;
 @import ObjectiveC;
 #endif
 
@@ -304,18 +304,24 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 #if defined(__OBJC__)
 
-@class NSString;
-@class MLNMapView;
-SWIFT_CLASS("_TtC12maplibre_ios16CustomStyleLayer")
-@interface CustomStyleLayer : MLNCustomStyleLayer
-- (nonnull instancetype)initWithIdentifier:(NSString * _Nonnull)identifier OBJC_DESIGNATED_INITIALIZER;
-+ (CustomStyleLayer * _Nonnull)initWithIdentifier:(NSString * _Nonnull)identifier SWIFT_METHOD_FAMILY(none) SWIFT_WARN_UNUSED_RESULT;
-- (void)didMoveToMapView:(MLNMapView * _Nonnull)mapView;
-- (void)drawInMapView:(MLNMapView * _Nonnull)mapView withContext:(MLNStyleLayerDrawingContext)context;
+SWIFT_CLASS("_TtC12maplibre_ios22CoordinateBoundsStruct")
+@interface CoordinateBoundsStruct : NSObject
+- (nonnull instancetype)initWithMinLatitude:(double)minLatitude minLongitude:(double)minLongitude maxLatitude:(double)maxLatitude maxLongitude:(double)maxLongitude OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 SWIFT_CLASS("_TtC12maplibre_ios7Helpers")
 @interface Helpers : NSObject
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
+@class MLNMapView;
+@class PaddingStruct;
+SWIFT_CLASS("_TtC12maplibre_ios9MapHelper")
+@interface MapHelper : NSObject
++ (void)setVisibleCoordinateBoundsWithMapView:(MLNMapView * _Nonnull)mapView bounds:(CoordinateBoundsStruct * _Nonnull)bounds padding:(PaddingStruct * _Nonnull)padding animated:(BOOL)animated;
++ (void)setVisibleCoordinateBoundsWithMapView:(MLNMapView * _Nonnull)mapView bounds:(CoordinateBoundsStruct * _Nonnull)bounds paddingTop:(CGFloat)paddingTop paddingLeft:(CGFloat)paddingLeft paddingBottom:(CGFloat)paddingBottom paddingRight:(CGFloat)paddingRight animated:(BOOL)animated;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
@@ -330,6 +336,13 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) id _Nullable context;)
 + (id _Nullable)context SWIFT_WARN_UNUSED_RESULT;
 + (void)setContext:(id _Nullable)value;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
+SWIFT_CLASS("_TtC12maplibre_ios13PaddingStruct")
+@interface PaddingStruct : NSObject
+- (nonnull instancetype)initWithTop:(double)top left:(double)left bottom:(double)bottom right:(double)right OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 #endif
