@@ -280,6 +280,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
 @import Foundation;
+@import MapLibre;
 @import ObjectiveC;
 #endif
 
@@ -302,6 +303,16 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 
 #if defined(__OBJC__)
+
+@class NSString;
+@class MLNMapView;
+SWIFT_CLASS("_TtC12maplibre_ios16CustomStyleLayer")
+@interface CustomStyleLayer : MLNCustomStyleLayer
+- (nonnull instancetype)initWithIdentifier:(NSString * _Nonnull)identifier OBJC_DESIGNATED_INITIALIZER;
++ (CustomStyleLayer * _Nonnull)initWithIdentifier:(NSString * _Nonnull)identifier SWIFT_METHOD_FAMILY(none) SWIFT_WARN_UNUSED_RESULT;
+- (void)didMoveToMapView:(MLNMapView * _Nonnull)mapView;
+- (void)drawInMapView:(MLNMapView * _Nonnull)mapView withContext:(MLNStyleLayerDrawingContext)context;
+@end
 
 SWIFT_CLASS("_TtC12maplibre_ios7Helpers")
 @interface Helpers : NSObject
