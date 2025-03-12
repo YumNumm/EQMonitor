@@ -26,3 +26,4 @@ public class MapPlugin: NSObject, FlutterPlugin {
     result(FlutterMethodNotImplemented)
   }
 }
+

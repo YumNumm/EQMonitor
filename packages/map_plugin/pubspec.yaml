@@ -33,6 +33,8 @@ ffigen:
     include:
       - 'NSString'
       - 'MapLibreRegistry'
+      - 'CustomStyleLayer'
+      - 'MLNCustomStyleLayer'
       - 'MLNMapView'
       - 'MLNMapCamera'
       - 'CLLocationCoordinate2D'
@@ -70,6 +72,7 @@ ffigen:
       - 'Helpers'
     module:
       'MapLibreRegistry': 'map_plugin'
+      'CustomStyleLayer': 'map_plugin'
       'MLNMapView': 'MapLibre'
       'MLNMapCamera': 'MapLibre'
       'MLNVectorTileSource': 'MapLibre'

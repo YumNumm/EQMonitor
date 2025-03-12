@@ -231,11 +231,11 @@ _ListenerTrampoline4 _MapLibreFFi_wrapBlockingBlock_lmc3p5(
   };
 }
 
-Protocol* _MapLibreFFi_NSImageDelegate(void) { return @protocol(NSImageDelegate); }
-
 Protocol* _MapLibreFFi_MLNStylable(void) { return @protocol(MLNStylable); }
 
 Protocol* _MapLibreFFi_MLNMapViewDelegate(void) { return @protocol(MLNMapViewDelegate); }
+
+Protocol* _MapLibreFFi_NSImageDelegate(void) { return @protocol(NSImageDelegate); }
 
 Protocol* _MapLibreFFi_MLNLocationManager(void) { return @protocol(MLNLocationManager); }
 

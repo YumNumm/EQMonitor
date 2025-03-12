@@ -7727,402 +7727,33 @@ enum NSSaveOptions {
       };
 }
 
-late final _class_Helpers = objc.getClass("Helpers");
+late final _class_CustomStyleLayer =
+    objc.getClass("map_plugin.CustomStyleLayer");
+late final _sel_initWithIdentifier_ = objc.registerName("initWithIdentifier:");
+late final _class_MLNMapView = objc.getClass("MapLibre.MLNMapView");
 
-/// Helpers
-class Helpers extends objc.NSObject {
-  Helpers._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super.castFromPointer(pointer, retain: retain, release: release);
-
-  /// Constructs a [Helpers] that points to the same underlying object as [other].
-  Helpers.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [Helpers] that wraps the given raw object pointer.
-  Helpers.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-
-  /// Returns whether [obj] is an instance of [Helpers].
-  static bool isInstance(objc.ObjCObjectBase obj) {
-    return _objc_msgSend_19nvye5(
-        obj.ref.pointer, _sel_isKindOfClass_, _class_Helpers);
-  }
-
-  /// init
-  Helpers init() {
-    objc.checkOsVersion('Helpers.init',
-        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final _ret =
-        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// new
-  static Helpers new1() {
-    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_new);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// allocWithZone:
-  static Helpers allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
-    final _ret =
-        _objc_msgSend_1cwp428(_class_Helpers, _sel_allocWithZone_, zone);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// alloc
-  static Helpers alloc() {
-    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_alloc);
-    return Helpers.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// self
-  Helpers self1() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
-    return Helpers.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// retain
-  Helpers retain() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
-    return Helpers.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// autorelease
-  Helpers autorelease() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
-    return Helpers.castFromPointer(_ret, retain: true, release: true);
-  }
-}
-
-late final _class_MapLibreRegistry =
-    objc.getClass("map_plugin.MapLibreRegistry");
-late final _sel_getMapRegistry = objc.registerName("getMapRegistry");
-late final _sel_getMapWithViewId_ = objc.registerName("getMapWithViewId:");
-final _objc_msgSend_1ya1kjn = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>, ffi.Int64)>>()
-    .asFunction<
-        ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>, int)>();
-late final _sel_activity = objc.registerName("activity");
-late final _sel_setActivity_ = objc.registerName("setActivity:");
-late final _sel_context = objc.registerName("context");
-late final _sel_setContext_ = objc.registerName("setContext:");
-
-/// MapLibreRegistry
-class MapLibreRegistry extends objc.NSObject {
-  MapLibreRegistry._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super.castFromPointer(pointer, retain: retain, release: release);
-
-  /// Constructs a [MapLibreRegistry] that points to the same underlying object as [other].
-  MapLibreRegistry.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [MapLibreRegistry] that wraps the given raw object pointer.
-  MapLibreRegistry.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-
-  /// Returns whether [obj] is an instance of [MapLibreRegistry].
-  static bool isInstance(objc.ObjCObjectBase obj) {
-    return _objc_msgSend_19nvye5(
-        obj.ref.pointer, _sel_isKindOfClass_, _class_MapLibreRegistry);
-  }
-
-  /// getMapRegistry
-  static objc.NSDictionary getMapRegistry() {
-    final _ret =
-        _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_getMapRegistry);
-    return objc.NSDictionary.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// getMapWithViewId:
-  static objc.ObjCObjectBase? getMapWithViewId_(int viewId) {
-    final _ret = _objc_msgSend_1ya1kjn(
-        _class_MapLibreRegistry, _sel_getMapWithViewId_, viewId);
-    return _ret.address == 0
-        ? null
-        : objc.ObjCObjectBase(_ret, retain: true, release: true);
-  }
-
-  /// activity
-  static objc.ObjCObjectBase? getActivity() {
-    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_activity);
-    return _ret.address == 0
-        ? null
-        : objc.ObjCObjectBase(_ret, retain: true, release: true);
-  }
-
-  /// setActivity:
-  static void setActivity(objc.ObjCObjectBase? value) {
-    _objc_msgSend_xtuoz7(_class_MapLibreRegistry, _sel_setActivity_,
-        value?.ref.pointer ?? ffi.nullptr);
-  }
-
-  /// context
-  static objc.ObjCObjectBase? getContext() {
-    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_context);
-    return _ret.address == 0
-        ? null
-        : objc.ObjCObjectBase(_ret, retain: true, release: true);
-  }
-
-  /// setContext:
-  static void setContext(objc.ObjCObjectBase? value) {
-    _objc_msgSend_xtuoz7(_class_MapLibreRegistry, _sel_setContext_,
-        value?.ref.pointer ?? ffi.nullptr);
-  }
-
-  /// init
-  MapLibreRegistry init() {
-    objc.checkOsVersion('MapLibreRegistry.init',
-        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final _ret =
-        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
-    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// new
-  static MapLibreRegistry new1() {
-    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_new);
-    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// allocWithZone:
-  static MapLibreRegistry allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
-    final _ret = _objc_msgSend_1cwp428(
-        _class_MapLibreRegistry, _sel_allocWithZone_, zone);
-    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// alloc
-  static MapLibreRegistry alloc() {
-    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_alloc);
-    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// self
-  MapLibreRegistry self1() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
-    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// retain
-  MapLibreRegistry retain() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
-    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// autorelease
-  MapLibreRegistry autorelease() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
-    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
-  }
-}
-
-/// WARNING: MLNBackendResource is a stub. To generate bindings for this class, include
-/// MLNBackendResource in your config's objc-interfaces list.
+/// WARNING: MLNStylable is a stub. To generate bindings for this class, include
+/// MLNStylable in your config's objc-protocols list.
 ///
-/// MLNBackendResource
-class MLNBackendResource extends objc.NSObject {
-  MLNBackendResource._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super.castFromPointer(pointer, retain: retain, release: release);
-
-  /// Constructs a [MLNBackendResource] that points to the same underlying object as [other].
-  MLNBackendResource.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [MLNBackendResource] that wraps the given raw object pointer.
-  MLNBackendResource.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-}
-
-final class CGContext extends ffi.Opaque {}
-
-final class CGColor extends ffi.Opaque {}
-
-final class CGColorSpace extends ffi.Opaque {}
-
-final class CGImage extends ffi.Opaque {}
-
-final class CGPath extends ffi.Opaque {}
-
-final class CGLayer extends ffi.Opaque {}
-
-final class __CGEvent extends ffi.Opaque {}
-
-/// Options for enabling debugging features in an ``MLNMapView`` instance.
-enum MLNMapDebugMaskOptions {
-  /// Edges of tile boundaries are shown as thick, red lines to help diagnose
-  /// tile clipping issues.
-  MLNMapDebugTileBoundariesMask(2),
-
-  /// Each tile shows its tile coordinate (x/y/z) in the upper-left corner.
-  MLNMapDebugTileInfoMask(4),
-
-  /// Each tile shows a timestamp indicating when it was loaded.
-  MLNMapDebugTimestampsMask(8),
-
-  /// Edges of glyphs and symbols are shown as faint, green lines to help
-  /// diagnose collision and label placement issues.
-  MLNMapDebugCollisionBoxesMask(16),
-
-  /// Each drawing operation is replaced by a translucent fill. Overlapping
-  /// drawing operations appear more prominent to help diagnose overdrawing.
-  /// > Note: This option does nothing in Release builds of the SDK.
-  MLNMapDebugOverdrawVisualizationMask(32),
-
-  /// The stencil buffer is shown instead of the color buffer.
-  /// > Note: This option does nothing in Release builds of the SDK.
-  MLNMapDebugStencilBufferMask(64),
-
-  /// The depth buffer is shown instead of the color buffer.
-  /// > Note: This option does nothing in Release builds of the SDK.
-  MLNMapDebugDepthBufferMask(128);
-
-  final int value;
-  const MLNMapDebugMaskOptions(this.value);
-
-  static MLNMapDebugMaskOptions fromValue(int value) => switch (value) {
-        2 => MLNMapDebugTileBoundariesMask,
-        4 => MLNMapDebugTileInfoMask,
-        8 => MLNMapDebugTimestampsMask,
-        16 => MLNMapDebugCollisionBoxesMask,
-        32 => MLNMapDebugOverdrawVisualizationMask,
-        64 => MLNMapDebugStencilBufferMask,
-        128 => MLNMapDebugDepthBufferMask,
-        _ => throw ArgumentError(
-            "Unknown value for MLNMapDebugMaskOptions: $value"),
-      };
-}
-
-/// A structure containing information about a transition.
-final class MLNTransition extends ffi.Struct {
-  /// The amount of time the animation should take, not including the delay.
-  @ffi.Double()
-  external double duration;
-
-  /// The amount of time in seconds to wait before beginning the animation.
-  @ffi.Double()
-  external double delay;
-}
-
-/// Constants indicating the visibility of different map ornaments.
-enum MLNOrnamentVisibility {
-  /// A constant indicating that the ornament adapts to the current map state.
-  MLNOrnamentVisibilityAdaptive(0),
-
-  /// A constant indicating that the ornament is always hidden.
-  MLNOrnamentVisibilityHidden(1),
-
-  /// A constant indicating that the ornament is always visible.
-  MLNOrnamentVisibilityVisible(2);
-
-  final int value;
-  const MLNOrnamentVisibility(this.value);
-
-  static MLNOrnamentVisibility fromValue(int value) => switch (value) {
-        0 => MLNOrnamentVisibilityAdaptive,
-        1 => MLNOrnamentVisibilityHidden,
-        2 => MLNOrnamentVisibilityVisible,
-        _ => throw ArgumentError(
-            "Unknown value for MLNOrnamentVisibility: $value"),
-      };
-}
-
-/// WARNING: MLNCompassButton is a stub. To generate bindings for this class, include
-/// MLNCompassButton in your config's objc-interfaces list.
-///
-/// A specialized view that displays the current compass heading for its associated map.
-class MLNCompassButton extends objc.ObjCObjectBase {
-  MLNCompassButton._(ffi.Pointer<objc.ObjCObject> pointer,
+/// An object whose contents are represented by an ``MLNStyle`` object that you
+/// configure.
+interface class MLNStylable extends objc.ObjCProtocolBase
+    implements objc.NSObjectProtocol {
+  MLNStylable._(ffi.Pointer<objc.ObjCObject> pointer,
       {bool retain = false, bool release = false})
       : super(pointer, retain: retain, release: release);
 
-  /// Constructs a [MLNCompassButton] that points to the same underlying object as [other].
-  MLNCompassButton.castFrom(objc.ObjCObjectBase other)
+  /// Constructs a [MLNStylable] that points to the same underlying object as [other].
+  MLNStylable.castFrom(objc.ObjCObjectBase other)
       : this._(other.ref.pointer, retain: true, release: true);
 
-  /// Constructs a [MLNCompassButton] that wraps the given raw object pointer.
-  MLNCompassButton.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+  /// Constructs a [MLNStylable] that wraps the given raw object pointer.
+  MLNStylable.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
       {bool retain = false, bool release = false})
       : this._(other, retain: retain, release: release);
 }
 
-final class CLLocationCoordinate2D extends ffi.Struct {
-  @ffi.Double()
-  external double latitude;
-
-  @ffi.Double()
-  external double longitude;
-}
-
-/// A rectangular area as measured on a two-dimensional map projection.
-final class MLNCoordinateBounds extends ffi.Struct {
-  /// Coordinate at the southwest corner.
-  external CLLocationCoordinate2D sw;
-
-  /// Coordinate at the northeast corner.
-  external CLLocationCoordinate2D ne;
-}
-
-/// A quadrilateral area as measured on a two-dimensional map projection.
-/// ``MLNCoordinateQuad`` differs from ``MLNCoordinateQuad`` in that it allows
-/// representation of non-axis aligned bounds and non-rectangular quadrilaterals.
-/// The coordinates are described in counter clockwise order from top left.
-final class MLNCoordinateQuad extends ffi.Struct {
-  /// Coordinate at the top left corner.
-  external CLLocationCoordinate2D topLeft;
-
-  /// Coordinate at the bottom left corner.
-  external CLLocationCoordinate2D bottomLeft;
-
-  /// Coordinate at the bottom right corner.
-  external CLLocationCoordinate2D bottomRight;
-
-  /// Coordinate at the top right corner.
-  external CLLocationCoordinate2D topRight;
-}
-
-late final _class_MLNMapCamera = objc.getClass("MapLibre.MLNMapCamera");
-late final _sel_centerCoordinate = objc.registerName("centerCoordinate");
-final _objc_msgSend_18o5nok = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            CLLocationCoordinate2D Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>)>>()
-    .asFunction<
-        CLLocationCoordinate2D Function(
-            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
-final _objc_msgSend_18o5nokStret = objc.msgSendStretPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Void Function(
-                ffi.Pointer<CLLocationCoordinate2D>,
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>)>>()
-    .asFunction<
-        void Function(ffi.Pointer<CLLocationCoordinate2D>,
-            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
-late final _sel_setCenterCoordinate_ =
-    objc.registerName("setCenterCoordinate:");
-final _objc_msgSend_1zv0am = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Void Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>, CLLocationCoordinate2D)>>()
-    .asFunction<
-        void Function(ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>, CLLocationCoordinate2D)>();
-late final _sel_heading = objc.registerName("heading");
+late final _sel_latitude = objc.registerName("latitude");
 final _objc_msgSend_1ukqyt8 = objc.msgSendPointer
     .cast<
         ffi.NativeFunction<
@@ -8139,7 +7770,7 @@ final _objc_msgSend_1ukqyt8Fpret = objc.msgSendFpretPointer
     .asFunction<
         double Function(
             ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
-late final _sel_setHeading_ = objc.registerName("setHeading:");
+late final _sel_setLatitude_ = objc.registerName("setLatitude:");
 final _objc_msgSend_hwm8nu = objc.msgSendPointer
     .cast<
         ffi.NativeFunction<
@@ -8148,381 +7779,18 @@ final _objc_msgSend_hwm8nu = objc.msgSendPointer
     .asFunction<
         void Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, double)>();
-late final _sel_pitch = objc.registerName("pitch");
-late final _sel_setPitch_ = objc.registerName("setPitch:");
-late final _sel_altitude = objc.registerName("altitude");
-late final _sel_setAltitude_ = objc.registerName("setAltitude:");
-late final _sel_viewingDistance = objc.registerName("viewingDistance");
-late final _sel_setViewingDistance_ = objc.registerName("setViewingDistance:");
-late final _sel_camera = objc.registerName("camera");
-late final _sel_cameraLookingAtCenterCoordinate_fromEyeCoordinate_eyeAltitude_ =
-    objc.registerName(
-        "cameraLookingAtCenterCoordinate:fromEyeCoordinate:eyeAltitude:");
-final _objc_msgSend_2d68z4 = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Pointer<objc.ObjCObject> Function(
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>,
-                CLLocationCoordinate2D,
-                CLLocationCoordinate2D,
-                ffi.Double)>>()
-    .asFunction<
-        ffi.Pointer<objc.ObjCObject> Function(
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>,
-            CLLocationCoordinate2D,
-            CLLocationCoordinate2D,
-            double)>();
-late final _sel_cameraLookingAtCenterCoordinate_acrossDistance_pitch_heading_ =
-    objc.registerName(
-        "cameraLookingAtCenterCoordinate:acrossDistance:pitch:heading:");
-final _objc_msgSend_x3m0f9 = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Pointer<objc.ObjCObject> Function(
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>,
-                CLLocationCoordinate2D,
-                ffi.Double,
-                ffi.Double,
-                ffi.Double)>>()
-    .asFunction<
-        ffi.Pointer<objc.ObjCObject> Function(
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>,
-            CLLocationCoordinate2D,
-            double,
-            double,
-            double)>();
-late final _sel_cameraLookingAtCenterCoordinate_altitude_pitch_heading_ = objc
-    .registerName("cameraLookingAtCenterCoordinate:altitude:pitch:heading:");
-late final _sel_cameraLookingAtCenterCoordinate_fromDistance_pitch_heading_ =
-    objc.registerName(
-        "cameraLookingAtCenterCoordinate:fromDistance:pitch:heading:");
-late final _sel_isEqualToMapCamera_ = objc.registerName("isEqualToMapCamera:");
-
-/// An ``MLNMapCamera`` object represents a viewpoint from which the user observes
-/// some point on an ``MLNMapView``.
-///
-/// #### Related examples
-/// - <doc:BlockingGesturesExample>: learn how to use the
-/// ``MLNMapViewDelegate/mapView:shouldChangeFromCamera:toCamera:`` method of ``MLNMapViewDelegate`` to
-/// restrict panning.
-/// - *TODO:* Camera animation, learn how to create a camera that rotates
-/// around a central point.
-class MLNMapCamera extends objc.NSObject
-    implements objc.NSSecureCoding, objc.NSCopying {
-  MLNMapCamera._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super.castFromPointer(pointer, retain: retain, release: release);
-
-  /// Constructs a [MLNMapCamera] that points to the same underlying object as [other].
-  MLNMapCamera.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [MLNMapCamera] that wraps the given raw object pointer.
-  MLNMapCamera.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-
-  /// Returns whether [obj] is an instance of [MLNMapCamera].
-  static bool isInstance(objc.ObjCObjectBase obj) {
-    return _objc_msgSend_19nvye5(
-        obj.ref.pointer, _sel_isKindOfClass_, _class_MLNMapCamera);
-  }
-
-  /// Coordinate at the center of the map view.
-  CLLocationCoordinate2D get centerCoordinate {
-    final _ptr = pkg_ffi.calloc<CLLocationCoordinate2D>();
-    objc.useMsgSendVariants
-        ? _objc_msgSend_18o5nokStret(
-            _ptr, this.ref.pointer, _sel_centerCoordinate)
-        : _ptr.ref =
-            _objc_msgSend_18o5nok(this.ref.pointer, _sel_centerCoordinate);
-    final _finalizable = _ptr.cast<ffi.Uint8>().asTypedList(
-        ffi.sizeOf<CLLocationCoordinate2D>(),
-        finalizer: pkg_ffi.calloc.nativeFree);
-    return ffi.Struct.create<CLLocationCoordinate2D>(_finalizable);
-  }
-
-  /// Coordinate at the center of the map view.
-  set centerCoordinate(CLLocationCoordinate2D value) {
-    _objc_msgSend_1zv0am(this.ref.pointer, _sel_setCenterCoordinate_, value);
-  }
-
-  /// Heading measured in degrees clockwise from true north.
-  double get heading {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_heading)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_heading);
-  }
-
-  /// Heading measured in degrees clockwise from true north.
-  set heading(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setHeading_, value);
-  }
-
-  /// Pitch toward the horizon measured in degrees, with 0 degrees resulting in a
-  /// two-dimensional map.
-  double get pitch {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_pitch)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_pitch);
-  }
-
-  /// Pitch toward the horizon measured in degrees, with 0 degrees resulting in a
-  /// two-dimensional map.
-  set pitch(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setPitch_, value);
-  }
-
-  /// The altitude (measured in meters) above the map at which the camera is
-  /// situated.
-  ///
-  /// The altitude is the distance from the viewpoint to the map, perpendicular to
-  /// the map plane. This property does not account for physical elevation.
-  ///
-  /// This property’s value may be less than that of the ``viewingDistance`` property.
-  /// Setting this property automatically updates the ``viewingDistance`` property
-  /// based on the ``pitch`` property’s current value.
-  double get altitude {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_altitude)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_altitude);
-  }
-
-  /// The altitude (measured in meters) above the map at which the camera is
-  /// situated.
-  ///
-  /// The altitude is the distance from the viewpoint to the map, perpendicular to
-  /// the map plane. This property does not account for physical elevation.
-  ///
-  /// This property’s value may be less than that of the ``viewingDistance`` property.
-  /// Setting this property automatically updates the ``viewingDistance`` property
-  /// based on the ``pitch`` property’s current value.
-  set altitude(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setAltitude_, value);
-  }
-
-  /// The straight-line distance from the viewpoint to the ``centerCoordinate``.
-  ///
-  /// Setting this property automatically updates the ``altitude`` property based on
-  /// the ``pitch`` property’s current value.
-  double get viewingDistance {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_viewingDistance)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_viewingDistance);
-  }
-
-  /// The straight-line distance from the viewpoint to the ``centerCoordinate``.
-  ///
-  /// Setting this property automatically updates the ``altitude`` property based on
-  /// the ``pitch`` property’s current value.
-  set viewingDistance(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setViewingDistance_, value);
-  }
-
-  /// Returns a new camera with all properties set to 0.
-  static MLNMapCamera camera() {
-    final _ret = _objc_msgSend_151sglz(_class_MLNMapCamera, _sel_camera);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// Returns a new camera based on information about the camera’s viewpoint
-  /// and focus point.
-  ///
-  /// @param centerCoordinate The geographic coordinate on which the map should be
-  /// centered.
-  /// @param eyeCoordinate The geometric coordinate at which the camera should be
-  /// situated.
-  /// @param eyeAltitude The altitude (measured in meters) above the map at which the
-  /// camera should be situated. The altitude may be less than the distance from
-  /// the camera’s viewpoint to the camera’s focus point.
-  static MLNMapCamera
-      cameraLookingAtCenterCoordinate_fromEyeCoordinate_eyeAltitude_(
-          CLLocationCoordinate2D centerCoordinate,
-          CLLocationCoordinate2D eyeCoordinate,
-          double eyeAltitude) {
-    final _ret = _objc_msgSend_2d68z4(
-        _class_MLNMapCamera,
-        _sel_cameraLookingAtCenterCoordinate_fromEyeCoordinate_eyeAltitude_,
-        centerCoordinate,
-        eyeCoordinate,
-        eyeAltitude);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// Returns a new camera with the given distance, pitch, and heading.
-  ///
-  /// This method interprets the distance as a straight-line distance from the
-  /// viewpoint to the center coordinate. To specify the altitude of the viewpoint,
-  /// use the ``cameraLookingAtCenterCoordinate:altitude:pitch:heading:`` method.
-  ///
-  /// @param centerCoordinate The geographic coordinate on which the map should be
-  /// centered.
-  /// @param distance The straight-line distance from the viewpoint to the
-  /// ``centerCoordinate``.
-  /// @param pitch The viewing angle of the camera, measured in degrees. A value of
-  /// `0` results in a camera pointed straight down at the map. Angles greater
-  /// than `0` result in a camera angled toward the horizon.
-  /// @param heading The camera’s heading, measured in degrees clockwise from true
-  /// north. A value of `0` means that the top edge of the map view corresponds to
-  /// true north. The value `90` means the top of the map is pointing due east.
-  /// The value `180` means the top of the map points due south, and so on.
-  static MLNMapCamera
-      cameraLookingAtCenterCoordinate_acrossDistance_pitch_heading_(
-          CLLocationCoordinate2D centerCoordinate,
-          double distance,
-          double pitch,
-          double heading) {
-    final _ret = _objc_msgSend_x3m0f9(
-        _class_MLNMapCamera,
-        _sel_cameraLookingAtCenterCoordinate_acrossDistance_pitch_heading_,
-        centerCoordinate,
-        distance,
-        pitch,
-        heading);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// Returns a new camera with the given altitude, pitch, and heading.
-  ///
-  /// @param centerCoordinate The geographic coordinate on which the map should be
-  /// centered.
-  /// @param altitude The altitude (measured in meters) above the map at which the
-  /// camera should be situated. The altitude may be less than the distance from
-  /// the camera’s viewpoint to the camera’s focus point.
-  /// @param pitch The viewing angle of the camera, measured in degrees. A value of
-  /// `0` results in a camera pointed straight down at the map. Angles greater
-  /// than `0` result in a camera angled toward the horizon.
-  /// @param heading The camera’s heading, measured in degrees clockwise from true
-  /// north. A value of `0` means that the top edge of the map view corresponds to
-  /// true north. The value `90` means the top of the map is pointing due east.
-  /// The value `180` means the top of the map points due south, and so on.
-  static MLNMapCamera cameraLookingAtCenterCoordinate_altitude_pitch_heading_(
-      CLLocationCoordinate2D centerCoordinate,
-      double altitude,
-      double pitch,
-      double heading) {
-    final _ret = _objc_msgSend_x3m0f9(
-        _class_MLNMapCamera,
-        _sel_cameraLookingAtCenterCoordinate_altitude_pitch_heading_,
-        centerCoordinate,
-        altitude,
-        pitch,
-        heading);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// > This initializer incorrectly interprets the `distance` parameter. To
-  /// specify the straight-line distance from the viewpoint to ``centerCoordinate``,
-  /// use the ``cameraLookingAtCenterCoordinate:acrossDistance:pitch:heading:``
-  /// method. To specify the altitude of the viewpoint, use the
-  /// ``cameraLookingAtCenterCoordinate:altitude:pitch:heading:`` method, which has
-  /// the same behavior as this initializer.
-  static MLNMapCamera
-      cameraLookingAtCenterCoordinate_fromDistance_pitch_heading_(
-          CLLocationCoordinate2D centerCoordinate,
-          double distance,
-          double pitch,
-          double heading) {
-    final _ret = _objc_msgSend_x3m0f9(
-        _class_MLNMapCamera,
-        _sel_cameraLookingAtCenterCoordinate_fromDistance_pitch_heading_,
-        centerCoordinate,
-        distance,
-        pitch,
-        heading);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// Returns a Boolean value indicating whether the given camera is functionally
-  /// equivalent to the receiver.
-  ///
-  /// Unlike `isEqual:`, this method returns `YES` if the difference between the
-  /// coordinates, altitudes, pitches, or headings of the two camera objects is
-  /// negligible.
-  ///
-  /// @param otherCamera The camera with which to compare the receiver.
-  /// @return A Boolean value indicating whether the two cameras are functionally
-  /// equivalent.
-  bool isEqualToMapCamera_(MLNMapCamera otherCamera) {
-    return _objc_msgSend_19nvye5(
-        this.ref.pointer, _sel_isEqualToMapCamera_, otherCamera.ref.pointer);
-  }
-
-  /// init
-  MLNMapCamera init() {
-    objc.checkOsVersion('MLNMapCamera.init',
-        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final _ret =
-        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
-    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// new
-  static MLNMapCamera new1() {
-    final _ret = _objc_msgSend_151sglz(_class_MLNMapCamera, _sel_new);
-    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// allocWithZone:
-  static MLNMapCamera allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
-    final _ret =
-        _objc_msgSend_1cwp428(_class_MLNMapCamera, _sel_allocWithZone_, zone);
-    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// alloc
-  static MLNMapCamera alloc() {
-    final _ret = _objc_msgSend_151sglz(_class_MLNMapCamera, _sel_alloc);
-    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// self
-  MLNMapCamera self1() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// retain
-  MLNMapCamera retain() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// autorelease
-  MLNMapCamera autorelease() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
-    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// supportsSecureCoding
-  static bool getSupportsSecureCoding() {
-    return _objc_msgSend_91o635(_class_MLNMapCamera, _sel_supportsSecureCoding);
-  }
-
-  /// encodeWithCoder:
-  void encodeWithCoder_(objc.NSCoder coder) {
-    _objc_msgSend_xtuoz7(
-        this.ref.pointer, _sel_encodeWithCoder_, coder.ref.pointer);
-  }
-
-  /// initWithCoder:
-  MLNMapCamera? initWithCoder_(objc.NSCoder coder) {
-    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
-        _sel_initWithCoder_, coder.ref.pointer);
-    return _ret.address == 0
-        ? null
-        : MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
-  }
-}
-
-late final _class_MLNStyleLayer = objc.getClass("MLNStyleLayer");
-late final _sel_identifier = objc.registerName("identifier");
-late final _sel_isVisible = objc.registerName("isVisible");
-late final _sel_setVisible_ = objc.registerName("setVisible:");
+late final _sel_longitude = objc.registerName("longitude");
+late final _sel_setLongitude_ = objc.registerName("setLongitude:");
+late final _sel_zoomLevel = objc.registerName("zoomLevel");
+late final _sel_setZoomLevel_ = objc.registerName("setZoomLevel:");
+late final _sel_minimumZoomLevel = objc.registerName("minimumZoomLevel");
+late final _sel_setMinimumZoomLevel_ =
+    objc.registerName("setMinimumZoomLevel:");
+late final _sel_maximumZoomLevel = objc.registerName("maximumZoomLevel");
+late final _sel_setMaximumZoomLevel_ =
+    objc.registerName("setMaximumZoomLevel:");
+late final _sel_allowsZooming = objc.registerName("allowsZooming");
+late final _sel_setAllowsZooming_ = objc.registerName("setAllowsZooming:");
 final _objc_msgSend_1s56lr9 = objc.msgSendPointer
     .cast<
         ffi.NativeFunction<
@@ -8531,7 +7799,394 @@ final _objc_msgSend_1s56lr9 = objc.msgSendPointer
     .asFunction<
         void Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, bool)>();
-late final _sel_maximumZoomLevel = objc.registerName("maximumZoomLevel");
+late final _sel_allowsScrolling = objc.registerName("allowsScrolling");
+late final _sel_setAllowsScrolling_ = objc.registerName("setAllowsScrolling:");
+late final _sel_allowsRotating = objc.registerName("allowsRotating");
+late final _sel_setAllowsRotating_ = objc.registerName("setAllowsRotating:");
+late final _sel_allowsTilting = objc.registerName("allowsTilting");
+late final _sel_setAllowsTilting_ = objc.registerName("setAllowsTilting:");
+late final _sel_showsUserLocation = objc.registerName("showsUserLocation");
+late final _sel_setShowsUserLocation_ =
+    objc.registerName("setShowsUserLocation:");
+late final _sel_showsHeading = objc.registerName("showsHeading");
+late final _sel_setShowsHeading_ = objc.registerName("setShowsHeading:");
+late final _sel_showsScale = objc.registerName("showsScale");
+late final _sel_setShowsScale_ = objc.registerName("setShowsScale:");
+
+/// IBAdditions
+extension IBAdditions on MLNMapView {
+  /// latitude
+  double get latitude {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_latitude)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_latitude);
+  }
+
+  /// setLatitude:
+  set latitude(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setLatitude_, value);
+  }
+
+  /// longitude
+  double get longitude {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_longitude)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_longitude);
+  }
+
+  /// setLongitude:
+  set longitude(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setLongitude_, value);
+  }
+
+  /// zoomLevel
+  double get zoomLevel {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_zoomLevel)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_zoomLevel);
+  }
+
+  /// setZoomLevel:
+  set zoomLevel(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setZoomLevel_, value);
+  }
+
+  /// minimumZoomLevel
+  double get minimumZoomLevel {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_minimumZoomLevel)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_minimumZoomLevel);
+  }
+
+  /// setMinimumZoomLevel:
+  set minimumZoomLevel(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMinimumZoomLevel_, value);
+  }
+
+  /// maximumZoomLevel
+  double get maximumZoomLevel {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_maximumZoomLevel)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_maximumZoomLevel);
+  }
+
+  /// setMaximumZoomLevel:
+  set maximumZoomLevel(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMaximumZoomLevel_, value);
+  }
+
+  /// allowsZooming
+  bool get allowsZooming {
+    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsZooming);
+  }
+
+  /// setAllowsZooming:
+  set allowsZooming(bool value) {
+    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsZooming_, value);
+  }
+
+  /// allowsScrolling
+  bool get allowsScrolling {
+    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsScrolling);
+  }
+
+  /// setAllowsScrolling:
+  set allowsScrolling(bool value) {
+    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsScrolling_, value);
+  }
+
+  /// allowsRotating
+  bool get allowsRotating {
+    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsRotating);
+  }
+
+  /// setAllowsRotating:
+  set allowsRotating(bool value) {
+    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsRotating_, value);
+  }
+
+  /// allowsTilting
+  bool get allowsTilting {
+    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsTilting);
+  }
+
+  /// setAllowsTilting:
+  set allowsTilting(bool value) {
+    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsTilting_, value);
+  }
+
+  /// showsUserLocation
+  bool get showsUserLocation {
+    return _objc_msgSend_91o635(this.ref.pointer, _sel_showsUserLocation);
+  }
+
+  /// setShowsUserLocation:
+  set showsUserLocation(bool value) {
+    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setShowsUserLocation_, value);
+  }
+
+  /// showsHeading
+  bool get showsHeading {
+    return _objc_msgSend_91o635(this.ref.pointer, _sel_showsHeading);
+  }
+
+  /// setShowsHeading:
+  set showsHeading(bool value) {
+    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setShowsHeading_, value);
+  }
+
+  /// showsScale
+  bool get showsScale {
+    return _objc_msgSend_91o635(this.ref.pointer, _sel_showsScale);
+  }
+
+  /// setShowsScale:
+  set showsScale(bool value) {
+    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setShowsScale_, value);
+  }
+}
+
+late final _sel_initWithFrame_ = objc.registerName("initWithFrame:");
+final _objc_msgSend_15yz4e6 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>, CGRect)>>()
+    .asFunction<
+        ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, CGRect)>();
+late final _sel_initWithFrame_styleURL_ =
+    objc.registerName("initWithFrame:styleURL:");
+final _objc_msgSend_gxusyk = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObject> Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                CGRect,
+                ffi.Pointer<objc.ObjCObject>)>>()
+    .asFunction<
+        ffi.Pointer<objc.ObjCObject> Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            CGRect,
+            ffi.Pointer<objc.ObjCObject>)>();
+
+/// WARNING: MLNMapViewDelegate is a stub. To generate bindings for this class, include
+/// MLNMapViewDelegate in your config's objc-protocols list.
+///
+/// MLNMapViewDelegate
+interface class MLNMapViewDelegate extends objc.ObjCProtocolBase {
+  MLNMapViewDelegate._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNMapViewDelegate] that points to the same underlying object as [other].
+  MLNMapViewDelegate.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNMapViewDelegate] that wraps the given raw object pointer.
+  MLNMapViewDelegate.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
+late final _sel_delegate = objc.registerName("delegate");
+late final _sel_setDelegate_ = objc.registerName("setDelegate:");
+late final _class_MLNStyle = objc.getClass("MLNStyle");
+late final _sel_predefinedStyles = objc.registerName("predefinedStyles");
+
+/// WARNING: MLNDefaultStyle is a stub. To generate bindings for this class, include
+/// MLNDefaultStyle in your config's objc-interfaces list.
+///
+/// The ``MLNDefaultStyle`` defines the predefined vendor style
+class MLNDefaultStyle extends objc.NSObject {
+  MLNDefaultStyle._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNDefaultStyle] that points to the same underlying object as [other].
+  MLNDefaultStyle.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNDefaultStyle] that wraps the given raw object pointer.
+  MLNDefaultStyle.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
+late final _sel_defaultStyle = objc.registerName("defaultStyle");
+late final _sel_defaultStyleURL = objc.registerName("defaultStyleURL");
+late final _sel_predefinedStyle_ = objc.registerName("predefinedStyle:");
+late final _sel_name = objc.registerName("name");
+late final _sel_sources = objc.registerName("sources");
+late final _sel_setSources_ = objc.registerName("setSources:");
+
+/// A structure containing information about a transition.
+final class MLNTransition extends ffi.Struct {
+  /// The amount of time the animation should take, not including the delay.
+  @ffi.Double()
+  external double duration;
+
+  /// The amount of time in seconds to wait before beginning the animation.
+  @ffi.Double()
+  external double delay;
+}
+
+late final _sel_transition = objc.registerName("transition");
+final _objc_msgSend_1i0p3hy = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            MLNTransition Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>)>>()
+    .asFunction<
+        MLNTransition Function(
+            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
+final _objc_msgSend_1i0p3hyStret = objc.msgSendStretPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<MLNTransition>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>)>>()
+    .asFunction<
+        void Function(ffi.Pointer<MLNTransition>, ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>)>();
+late final _sel_setTransition_ = objc.registerName("setTransition:");
+final _objc_msgSend_z7lywk = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>, MLNTransition)>>()
+    .asFunction<
+        void Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, MLNTransition)>();
+late final _sel_performsPlacementTransitions =
+    objc.registerName("performsPlacementTransitions");
+late final _sel_setPerformsPlacementTransitions_ =
+    objc.registerName("setPerformsPlacementTransitions:");
+late final _class_MLNSource = objc.getClass("MLNSource");
+late final _sel_identifier = objc.registerName("identifier");
+late final _sel_setIdentifier_ = objc.registerName("setIdentifier:");
+
+/// MLNSource
+class MLNSource extends objc.NSObject {
+  MLNSource._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNSource] that points to the same underlying object as [other].
+  MLNSource.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNSource] that wraps the given raw object pointer.
+  MLNSource.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [MLNSource].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_MLNSource);
+  }
+
+  /// init
+  MLNSource init() {
+    objc.checkOsVersion('MLNSource.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return MLNSource.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// Returns a source initialized with an identifier.
+  ///
+  /// After initializing and configuring the source, add it to a map view’s style
+  /// using the ``MLNStyle/addSource:`` method.
+  ///
+  /// @param identifier A string that uniquely identifies the source in the style to
+  /// which it is added.
+  /// @return An initialized source.
+  MLNSource initWithIdentifier_(objc.NSString identifier) {
+    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
+        _sel_initWithIdentifier_, identifier.ref.pointer);
+    return MLNSource.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// A string that uniquely identifies the source in the style to which it is added.
+  objc.NSString get identifier {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_identifier);
+    return objc.NSString.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// A string that uniquely identifies the source in the style to which it is added.
+  set identifier(objc.NSString value) {
+    _objc_msgSend_xtuoz7(
+        this.ref.pointer, _sel_setIdentifier_, value.ref.pointer);
+  }
+
+  /// new
+  static MLNSource new1() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNSource, _sel_new);
+    return MLNSource.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static MLNSource allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret =
+        _objc_msgSend_1cwp428(_class_MLNSource, _sel_allocWithZone_, zone);
+    return MLNSource.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static MLNSource alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNSource, _sel_alloc);
+    return MLNSource.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  MLNSource self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return MLNSource.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  MLNSource retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return MLNSource.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  MLNSource autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return MLNSource.castFromPointer(_ret, retain: true, release: true);
+  }
+}
+
+late final _sel_sourceWithIdentifier_ =
+    objc.registerName("sourceWithIdentifier:");
+late final _sel_addSource_ = objc.registerName("addSource:");
+late final _sel_removeSource_ = objc.registerName("removeSource:");
+late final _sel_removeSource_error_ = objc.registerName("removeSource:error:");
+final _objc_msgSend_l9p60w = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Bool Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<ffi.Pointer<objc.ObjCObject>>)>>()
+    .asFunction<
+        bool Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<ffi.Pointer<objc.ObjCObject>>)>();
+late final _sel_layers = objc.registerName("layers");
+late final _sel_setLayers_ = objc.registerName("setLayers:");
+late final _class_MLNStyleLayer = objc.getClass("MLNStyleLayer");
+late final _sel_isVisible = objc.registerName("isVisible");
+late final _sel_setVisible_ = objc.registerName("setVisible:");
 final _objc_msgSend_2cgrxl = objc.msgSendPointer
     .cast<
         ffi.NativeFunction<
@@ -8548,8 +8203,6 @@ final _objc_msgSend_2cgrxlFpret = objc.msgSendFpretPointer
     .asFunction<
         double Function(
             ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
-late final _sel_setMaximumZoomLevel_ =
-    objc.registerName("setMaximumZoomLevel:");
 final _objc_msgSend_v5hmet = objc.msgSendPointer
     .cast<
         ffi.NativeFunction<
@@ -8558,9 +8211,6 @@ final _objc_msgSend_v5hmet = objc.msgSendPointer
     .asFunction<
         void Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, double)>();
-late final _sel_minimumZoomLevel = objc.registerName("minimumZoomLevel");
-late final _sel_setMinimumZoomLevel_ =
-    objc.registerName("setMinimumZoomLevel:");
 
 /// ``MLNStyleLayer`` is an abstract base class for style layers. A style layer
 /// manages the layout and appearance of content at a specific z-index in a style.
@@ -8697,184 +8347,6 @@ class MLNStyleLayer extends objc.NSObject {
   }
 }
 
-/// WARNING: MLNDefaultStyle is a stub. To generate bindings for this class, include
-/// MLNDefaultStyle in your config's objc-interfaces list.
-///
-/// The ``MLNDefaultStyle`` defines the predefined vendor style
-class MLNDefaultStyle extends objc.NSObject {
-  MLNDefaultStyle._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super.castFromPointer(pointer, retain: retain, release: release);
-
-  /// Constructs a [MLNDefaultStyle] that points to the same underlying object as [other].
-  MLNDefaultStyle.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [MLNDefaultStyle] that wraps the given raw object pointer.
-  MLNDefaultStyle.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-}
-
-late final _class_MLNStyle = objc.getClass("MLNStyle");
-late final _sel_predefinedStyles = objc.registerName("predefinedStyles");
-late final _sel_defaultStyle = objc.registerName("defaultStyle");
-late final _sel_defaultStyleURL = objc.registerName("defaultStyleURL");
-late final _sel_predefinedStyle_ = objc.registerName("predefinedStyle:");
-late final _sel_name = objc.registerName("name");
-late final _sel_sources = objc.registerName("sources");
-late final _sel_setSources_ = objc.registerName("setSources:");
-late final _sel_transition = objc.registerName("transition");
-final _objc_msgSend_1i0p3hy = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            MLNTransition Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>)>>()
-    .asFunction<
-        MLNTransition Function(
-            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
-final _objc_msgSend_1i0p3hyStret = objc.msgSendStretPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Void Function(
-                ffi.Pointer<MLNTransition>,
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>)>>()
-    .asFunction<
-        void Function(ffi.Pointer<MLNTransition>, ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>)>();
-late final _sel_setTransition_ = objc.registerName("setTransition:");
-final _objc_msgSend_z7lywk = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Void Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>, MLNTransition)>>()
-    .asFunction<
-        void Function(ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>, MLNTransition)>();
-late final _sel_performsPlacementTransitions =
-    objc.registerName("performsPlacementTransitions");
-late final _sel_setPerformsPlacementTransitions_ =
-    objc.registerName("setPerformsPlacementTransitions:");
-late final _class_MLNSource = objc.getClass("MLNSource");
-late final _sel_initWithIdentifier_ = objc.registerName("initWithIdentifier:");
-late final _sel_setIdentifier_ = objc.registerName("setIdentifier:");
-
-/// MLNSource
-class MLNSource extends objc.NSObject {
-  MLNSource._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super.castFromPointer(pointer, retain: retain, release: release);
-
-  /// Constructs a [MLNSource] that points to the same underlying object as [other].
-  MLNSource.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [MLNSource] that wraps the given raw object pointer.
-  MLNSource.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-
-  /// Returns whether [obj] is an instance of [MLNSource].
-  static bool isInstance(objc.ObjCObjectBase obj) {
-    return _objc_msgSend_19nvye5(
-        obj.ref.pointer, _sel_isKindOfClass_, _class_MLNSource);
-  }
-
-  /// init
-  MLNSource init() {
-    objc.checkOsVersion('MLNSource.init',
-        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final _ret =
-        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
-    return MLNSource.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// Returns a source initialized with an identifier.
-  ///
-  /// After initializing and configuring the source, add it to a map view’s style
-  /// using the ``MLNStyle/addSource:`` method.
-  ///
-  /// @param identifier A string that uniquely identifies the source in the style to
-  /// which it is added.
-  /// @return An initialized source.
-  MLNSource initWithIdentifier_(objc.NSString identifier) {
-    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
-        _sel_initWithIdentifier_, identifier.ref.pointer);
-    return MLNSource.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// A string that uniquely identifies the source in the style to which it is added.
-  objc.NSString get identifier {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_identifier);
-    return objc.NSString.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// A string that uniquely identifies the source in the style to which it is added.
-  set identifier(objc.NSString value) {
-    _objc_msgSend_xtuoz7(
-        this.ref.pointer, _sel_setIdentifier_, value.ref.pointer);
-  }
-
-  /// new
-  static MLNSource new1() {
-    final _ret = _objc_msgSend_151sglz(_class_MLNSource, _sel_new);
-    return MLNSource.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// allocWithZone:
-  static MLNSource allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
-    final _ret =
-        _objc_msgSend_1cwp428(_class_MLNSource, _sel_allocWithZone_, zone);
-    return MLNSource.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// alloc
-  static MLNSource alloc() {
-    final _ret = _objc_msgSend_151sglz(_class_MLNSource, _sel_alloc);
-    return MLNSource.castFromPointer(_ret, retain: false, release: true);
-  }
-
-  /// self
-  MLNSource self1() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
-    return MLNSource.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// retain
-  MLNSource retain() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
-    return MLNSource.castFromPointer(_ret, retain: true, release: true);
-  }
-
-  /// autorelease
-  MLNSource autorelease() {
-    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
-    return MLNSource.castFromPointer(_ret, retain: true, release: true);
-  }
-}
-
-late final _sel_sourceWithIdentifier_ =
-    objc.registerName("sourceWithIdentifier:");
-late final _sel_addSource_ = objc.registerName("addSource:");
-late final _sel_removeSource_ = objc.registerName("removeSource:");
-late final _sel_removeSource_error_ = objc.registerName("removeSource:error:");
-final _objc_msgSend_l9p60w = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Bool Function(
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>,
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<ffi.Pointer<objc.ObjCObject>>)>>()
-    .asFunction<
-        bool Function(
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>,
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<ffi.Pointer<objc.ObjCObject>>)>();
-late final _sel_layers = objc.registerName("layers");
-late final _sel_setLayers_ = objc.registerName("setLayers:");
 late final _sel_layerWithIdentifier_ =
     objc.registerName("layerWithIdentifier:");
 late final _sel_addLayer_ = objc.registerName("addLayer:");
@@ -9677,8 +9149,6 @@ interface class NSImageDelegate extends objc.ObjCProtocolBase
       : this._(other, retain: retain, release: release);
 }
 
-late final _sel_delegate = objc.registerName("delegate");
-late final _sel_setDelegate_ = objc.registerName("setDelegate:");
 late final _sel_imageTypes = objc.registerName("imageTypes");
 late final _sel_imageUnfilteredTypes =
     objc.registerName("imageUnfilteredTypes");
@@ -9745,6 +9215,9 @@ late final _sel_accessibilityDescription =
     objc.registerName("accessibilityDescription");
 late final _sel_setAccessibilityDescription_ =
     objc.registerName("setAccessibilityDescription:");
+
+final class CGImage extends ffi.Opaque {}
+
 late final _sel_initWithCGImage_size_ =
     objc.registerName("initWithCGImage:size:");
 final _objc_msgSend_lvz2zr = objc.msgSendPointer
@@ -11332,352 +10805,6 @@ class MLNStyle extends objc.NSObject {
   }
 }
 
-/// WARNING: MLNStylable is a stub. To generate bindings for this class, include
-/// MLNStylable in your config's objc-protocols list.
-///
-/// An object whose contents are represented by an ``MLNStyle`` object that you
-/// configure.
-interface class MLNStylable extends objc.ObjCProtocolBase
-    implements objc.NSObjectProtocol {
-  MLNStylable._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super(pointer, retain: retain, release: release);
-
-  /// Constructs a [MLNStylable] that points to the same underlying object as [other].
-  MLNStylable.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [MLNStylable] that wraps the given raw object pointer.
-  MLNStylable.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-}
-
-/// The vertical alignment of an annotation within a map view. Used with
-/// ``MLNMapView/userLocationVerticalAlignment``.
-enum MLNAnnotationVerticalAlignment {
-  /// Aligns the annotation vertically in the center of the map view.
-  MLNAnnotationVerticalAlignmentCenter(0),
-
-  /// Aligns the annotation vertically at the top of the map view.
-  MLNAnnotationVerticalAlignmentTop(1),
-
-  /// Aligns the annotation vertically at the bottom of the map view.
-  MLNAnnotationVerticalAlignmentBottom(2);
-
-  final int value;
-  const MLNAnnotationVerticalAlignment(this.value);
-
-  static MLNAnnotationVerticalAlignment fromValue(int value) => switch (value) {
-        0 => MLNAnnotationVerticalAlignmentCenter,
-        1 => MLNAnnotationVerticalAlignmentTop,
-        2 => MLNAnnotationVerticalAlignmentBottom,
-        _ => throw ArgumentError(
-            "Unknown value for MLNAnnotationVerticalAlignment: $value"),
-      };
-}
-
-/// The position of scale bar, compass, logo and attribution in a map view. Used with
-/// ``MLNMapView/scaleBarPosition``,
-/// ``MLNMapView/compassViewPosition``,
-/// ``MLNMapView/logoViewPosition``,
-/// ``MLNMapView/attributionButtonPosition``.
-enum MLNOrnamentPosition {
-  /// Place the ornament in the top left of the map view.
-  MLNOrnamentPositionTopLeft(0),
-
-  /// Place the ornament in the top right of the map view.
-  MLNOrnamentPositionTopRight(1),
-
-  /// Place the ornament in the bottom left of the map view.
-  MLNOrnamentPositionBottomLeft(2),
-
-  /// Place the ornament in the bottom right of the map view.
-  MLNOrnamentPositionBottomRight(3);
-
-  final int value;
-  const MLNOrnamentPosition(this.value);
-
-  static MLNOrnamentPosition fromValue(int value) => switch (value) {
-        0 => MLNOrnamentPositionTopLeft,
-        1 => MLNOrnamentPositionTopRight,
-        2 => MLNOrnamentPositionBottomLeft,
-        3 => MLNOrnamentPositionBottomRight,
-        _ =>
-          throw ArgumentError("Unknown value for MLNOrnamentPosition: $value"),
-      };
-}
-
-/// The mode used to track the user location on the map. Used with
-/// ``MLNMapView/userTrackingMode``.
-///
-/// #### Related examples
-/// - TODO: Switch between user tracking modes</a> example to learn how to toggle modes and
-/// how each mode behaves.
-enum MLNUserTrackingMode {
-  /// The map does not follow the user location.
-  MLNUserTrackingModeNone(0),
-
-  /// The map follows the user location. This tracking mode falls back
-  /// to ``MLNUserTrackingMode/MLNUserTrackingModeNone`` if the user pans the map view.
-  MLNUserTrackingModeFollow(1),
-
-  /// The map follows the user location and rotates when the heading changes.
-  /// The default user location annotation displays a fan-shaped indicator with
-  /// the current heading. The heading indicator represents the direction the
-  /// device is facing, which is sized according to the reported accuracy.
-  ///
-  /// This tracking mode is disabled if the user pans the map view, but
-  /// remains enabled if the user zooms in. If the user rotates the map
-  /// view, this tracking mode will fall back to ``MLNUserTrackingModeFollow``.
-  MLNUserTrackingModeFollowWithHeading(2),
-
-  /// The map follows the user location and rotates when the course changes.
-  /// Course represents the direction in which the device is traveling.
-  /// The default user location annotation shows a puck-shaped indicator
-  /// that rotates as the course changes.
-  ///
-  /// This tracking mode is disabled if the user pans the map view, but
-  /// remains enabled if the user zooms in. If the user rotates the map view,
-  /// this tracking mode will fall back to ``MLNUserTrackingModeFollow``.
-  MLNUserTrackingModeFollowWithCourse(3);
-
-  final int value;
-  const MLNUserTrackingMode(this.value);
-
-  static MLNUserTrackingMode fromValue(int value) => switch (value) {
-        0 => MLNUserTrackingModeNone,
-        1 => MLNUserTrackingModeFollow,
-        2 => MLNUserTrackingModeFollowWithHeading,
-        3 => MLNUserTrackingModeFollowWithCourse,
-        _ =>
-          throw ArgumentError("Unknown value for MLNUserTrackingMode: $value"),
-      };
-}
-
-enum MLNPanScrollingMode {
-  /// The map allows the user to only scroll horizontally.
-  MLNPanScrollingModeHorizontal(0),
-
-  /// The map allows the user to only scroll vertically.
-  MLNPanScrollingModeVertical(1),
-
-  /// The map allows the user to scroll both horizontally and vertically.
-  MLNPanScrollingModeDefault(2);
-
-  final int value;
-  const MLNPanScrollingMode(this.value);
-
-  static MLNPanScrollingMode fromValue(int value) => switch (value) {
-        0 => MLNPanScrollingModeHorizontal,
-        1 => MLNPanScrollingModeVertical,
-        2 => MLNPanScrollingModeDefault,
-        _ =>
-          throw ArgumentError("Unknown value for MLNPanScrollingMode: $value"),
-      };
-}
-
-late final _class_MLNMapView = objc.getClass("MapLibre.MLNMapView");
-late final _sel_latitude = objc.registerName("latitude");
-late final _sel_setLatitude_ = objc.registerName("setLatitude:");
-late final _sel_longitude = objc.registerName("longitude");
-late final _sel_setLongitude_ = objc.registerName("setLongitude:");
-late final _sel_zoomLevel = objc.registerName("zoomLevel");
-late final _sel_setZoomLevel_ = objc.registerName("setZoomLevel:");
-late final _sel_allowsZooming = objc.registerName("allowsZooming");
-late final _sel_setAllowsZooming_ = objc.registerName("setAllowsZooming:");
-late final _sel_allowsScrolling = objc.registerName("allowsScrolling");
-late final _sel_setAllowsScrolling_ = objc.registerName("setAllowsScrolling:");
-late final _sel_allowsRotating = objc.registerName("allowsRotating");
-late final _sel_setAllowsRotating_ = objc.registerName("setAllowsRotating:");
-late final _sel_allowsTilting = objc.registerName("allowsTilting");
-late final _sel_setAllowsTilting_ = objc.registerName("setAllowsTilting:");
-late final _sel_showsUserLocation = objc.registerName("showsUserLocation");
-late final _sel_setShowsUserLocation_ =
-    objc.registerName("setShowsUserLocation:");
-late final _sel_showsHeading = objc.registerName("showsHeading");
-late final _sel_setShowsHeading_ = objc.registerName("setShowsHeading:");
-late final _sel_showsScale = objc.registerName("showsScale");
-late final _sel_setShowsScale_ = objc.registerName("setShowsScale:");
-
-/// IBAdditions
-extension IBAdditions on MLNMapView {
-  /// latitude
-  double get latitude {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_latitude)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_latitude);
-  }
-
-  /// setLatitude:
-  set latitude(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setLatitude_, value);
-  }
-
-  /// longitude
-  double get longitude {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_longitude)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_longitude);
-  }
-
-  /// setLongitude:
-  set longitude(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setLongitude_, value);
-  }
-
-  /// zoomLevel
-  double get zoomLevel {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_zoomLevel)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_zoomLevel);
-  }
-
-  /// setZoomLevel:
-  set zoomLevel(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setZoomLevel_, value);
-  }
-
-  /// minimumZoomLevel
-  double get minimumZoomLevel {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_minimumZoomLevel)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_minimumZoomLevel);
-  }
-
-  /// setMinimumZoomLevel:
-  set minimumZoomLevel(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMinimumZoomLevel_, value);
-  }
-
-  /// maximumZoomLevel
-  double get maximumZoomLevel {
-    return objc.useMsgSendVariants
-        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_maximumZoomLevel)
-        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_maximumZoomLevel);
-  }
-
-  /// setMaximumZoomLevel:
-  set maximumZoomLevel(double value) {
-    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMaximumZoomLevel_, value);
-  }
-
-  /// allowsZooming
-  bool get allowsZooming {
-    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsZooming);
-  }
-
-  /// setAllowsZooming:
-  set allowsZooming(bool value) {
-    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsZooming_, value);
-  }
-
-  /// allowsScrolling
-  bool get allowsScrolling {
-    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsScrolling);
-  }
-
-  /// setAllowsScrolling:
-  set allowsScrolling(bool value) {
-    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsScrolling_, value);
-  }
-
-  /// allowsRotating
-  bool get allowsRotating {
-    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsRotating);
-  }
-
-  /// setAllowsRotating:
-  set allowsRotating(bool value) {
-    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsRotating_, value);
-  }
-
-  /// allowsTilting
-  bool get allowsTilting {
-    return _objc_msgSend_91o635(this.ref.pointer, _sel_allowsTilting);
-  }
-
-  /// setAllowsTilting:
-  set allowsTilting(bool value) {
-    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setAllowsTilting_, value);
-  }
-
-  /// showsUserLocation
-  bool get showsUserLocation {
-    return _objc_msgSend_91o635(this.ref.pointer, _sel_showsUserLocation);
-  }
-
-  /// setShowsUserLocation:
-  set showsUserLocation(bool value) {
-    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setShowsUserLocation_, value);
-  }
-
-  /// showsHeading
-  bool get showsHeading {
-    return _objc_msgSend_91o635(this.ref.pointer, _sel_showsHeading);
-  }
-
-  /// setShowsHeading:
-  set showsHeading(bool value) {
-    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setShowsHeading_, value);
-  }
-
-  /// showsScale
-  bool get showsScale {
-    return _objc_msgSend_91o635(this.ref.pointer, _sel_showsScale);
-  }
-
-  /// setShowsScale:
-  set showsScale(bool value) {
-    _objc_msgSend_1s56lr9(this.ref.pointer, _sel_setShowsScale_, value);
-  }
-}
-
-late final _sel_initWithFrame_ = objc.registerName("initWithFrame:");
-final _objc_msgSend_15yz4e6 = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>, CGRect)>>()
-    .asFunction<
-        ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>, CGRect)>();
-late final _sel_initWithFrame_styleURL_ =
-    objc.registerName("initWithFrame:styleURL:");
-final _objc_msgSend_gxusyk = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Pointer<objc.ObjCObject> Function(
-                ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>,
-                CGRect,
-                ffi.Pointer<objc.ObjCObject>)>>()
-    .asFunction<
-        ffi.Pointer<objc.ObjCObject> Function(
-            ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>,
-            CGRect,
-            ffi.Pointer<objc.ObjCObject>)>();
-
-/// WARNING: MLNMapViewDelegate is a stub. To generate bindings for this class, include
-/// MLNMapViewDelegate in your config's objc-protocols list.
-///
-/// MLNMapViewDelegate
-interface class MLNMapViewDelegate extends objc.ObjCProtocolBase {
-  MLNMapViewDelegate._(ffi.Pointer<objc.ObjCObject> pointer,
-      {bool retain = false, bool release = false})
-      : super(pointer, retain: retain, release: release);
-
-  /// Constructs a [MLNMapViewDelegate] that points to the same underlying object as [other].
-  MLNMapViewDelegate.castFrom(objc.ObjCObjectBase other)
-      : this._(other.ref.pointer, retain: true, release: true);
-
-  /// Constructs a [MLNMapViewDelegate] that wraps the given raw object pointer.
-  MLNMapViewDelegate.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
-      {bool retain = false, bool release = false})
-      : this._(other, retain: retain, release: release);
-}
-
 late final _sel_style = objc.registerName("style");
 ffi.Pointer<objc.ObjCObject> _ObjCBlock_MLNStyle_ffiVoid_fnPtrTrampoline(
         ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<ffi.Void> arg0) =>
@@ -11808,6 +10935,38 @@ late final _sel_scaleBarUsesMetricSystem =
     objc.registerName("scaleBarUsesMetricSystem");
 late final _sel_setScaleBarUsesMetricSystem_ =
     objc.registerName("setScaleBarUsesMetricSystem:");
+
+/// The position of scale bar, compass, logo and attribution in a map view. Used with
+/// ``MLNMapView/scaleBarPosition``,
+/// ``MLNMapView/compassViewPosition``,
+/// ``MLNMapView/logoViewPosition``,
+/// ``MLNMapView/attributionButtonPosition``.
+enum MLNOrnamentPosition {
+  /// Place the ornament in the top left of the map view.
+  MLNOrnamentPositionTopLeft(0),
+
+  /// Place the ornament in the top right of the map view.
+  MLNOrnamentPositionTopRight(1),
+
+  /// Place the ornament in the bottom left of the map view.
+  MLNOrnamentPositionBottomLeft(2),
+
+  /// Place the ornament in the bottom right of the map view.
+  MLNOrnamentPositionBottomRight(3);
+
+  final int value;
+  const MLNOrnamentPosition(this.value);
+
+  static MLNOrnamentPosition fromValue(int value) => switch (value) {
+        0 => MLNOrnamentPositionTopLeft,
+        1 => MLNOrnamentPositionTopRight,
+        2 => MLNOrnamentPositionBottomLeft,
+        3 => MLNOrnamentPositionBottomRight,
+        _ =>
+          throw ArgumentError("Unknown value for MLNOrnamentPosition: $value"),
+      };
+}
+
 late final _sel_scaleBarPosition = objc.registerName("scaleBarPosition");
 final _objc_msgSend_1c31cvt = objc.msgSendPointer
     .cast<
@@ -11847,6 +11006,26 @@ final _objc_msgSend_1uwdhlkStret = objc.msgSendStretPointer
         void Function(ffi.Pointer<CGPoint>, ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>)>();
 late final _sel_setScaleBarMargins_ = objc.registerName("setScaleBarMargins:");
+
+/// WARNING: MLNCompassButton is a stub. To generate bindings for this class, include
+/// MLNCompassButton in your config's objc-interfaces list.
+///
+/// A specialized view that displays the current compass heading for its associated map.
+class MLNCompassButton extends objc.ObjCObjectBase {
+  MLNCompassButton._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNCompassButton] that points to the same underlying object as [other].
+  MLNCompassButton.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNCompassButton] that wraps the given raw object pointer.
+  MLNCompassButton.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
 late final _sel_compassView = objc.registerName("compassView");
 late final _sel_compassViewPosition = objc.registerName("compassViewPosition");
 late final _sel_setCompassViewPosition_ =
@@ -11953,6 +11132,54 @@ class MLNUserLocation extends objc.NSObject
 }
 
 late final _sel_userLocation = objc.registerName("userLocation");
+
+/// The mode used to track the user location on the map. Used with
+/// ``MLNMapView/userTrackingMode``.
+///
+/// #### Related examples
+/// - TODO: Switch between user tracking modes</a> example to learn how to toggle modes and
+/// how each mode behaves.
+enum MLNUserTrackingMode {
+  /// The map does not follow the user location.
+  MLNUserTrackingModeNone(0),
+
+  /// The map follows the user location. This tracking mode falls back
+  /// to ``MLNUserTrackingMode/MLNUserTrackingModeNone`` if the user pans the map view.
+  MLNUserTrackingModeFollow(1),
+
+  /// The map follows the user location and rotates when the heading changes.
+  /// The default user location annotation displays a fan-shaped indicator with
+  /// the current heading. The heading indicator represents the direction the
+  /// device is facing, which is sized according to the reported accuracy.
+  ///
+  /// This tracking mode is disabled if the user pans the map view, but
+  /// remains enabled if the user zooms in. If the user rotates the map
+  /// view, this tracking mode will fall back to ``MLNUserTrackingModeFollow``.
+  MLNUserTrackingModeFollowWithHeading(2),
+
+  /// The map follows the user location and rotates when the course changes.
+  /// Course represents the direction in which the device is traveling.
+  /// The default user location annotation shows a puck-shaped indicator
+  /// that rotates as the course changes.
+  ///
+  /// This tracking mode is disabled if the user pans the map view, but
+  /// remains enabled if the user zooms in. If the user rotates the map view,
+  /// this tracking mode will fall back to ``MLNUserTrackingModeFollow``.
+  MLNUserTrackingModeFollowWithCourse(3);
+
+  final int value;
+  const MLNUserTrackingMode(this.value);
+
+  static MLNUserTrackingMode fromValue(int value) => switch (value) {
+        0 => MLNUserTrackingModeNone,
+        1 => MLNUserTrackingModeFollow,
+        2 => MLNUserTrackingModeFollowWithHeading,
+        3 => MLNUserTrackingModeFollowWithCourse,
+        _ =>
+          throw ArgumentError("Unknown value for MLNUserTrackingMode: $value"),
+      };
+}
+
 late final _sel_userTrackingMode = objc.registerName("userTrackingMode");
 final _objc_msgSend_1swtepj = objc.msgSendPointer
     .cast<
@@ -12000,6 +11227,31 @@ final _objc_msgSend_1iu40ms = objc.msgSendPointer
             int,
             bool,
             ffi.Pointer<objc.ObjCBlockImpl>)>();
+
+/// The vertical alignment of an annotation within a map view. Used with
+/// ``MLNMapView/userLocationVerticalAlignment``.
+enum MLNAnnotationVerticalAlignment {
+  /// Aligns the annotation vertically in the center of the map view.
+  MLNAnnotationVerticalAlignmentCenter(0),
+
+  /// Aligns the annotation vertically at the top of the map view.
+  MLNAnnotationVerticalAlignmentTop(1),
+
+  /// Aligns the annotation vertically at the bottom of the map view.
+  MLNAnnotationVerticalAlignmentBottom(2);
+
+  final int value;
+  const MLNAnnotationVerticalAlignment(this.value);
+
+  static MLNAnnotationVerticalAlignment fromValue(int value) => switch (value) {
+        0 => MLNAnnotationVerticalAlignmentCenter,
+        1 => MLNAnnotationVerticalAlignmentTop,
+        2 => MLNAnnotationVerticalAlignmentBottom,
+        _ => throw ArgumentError(
+            "Unknown value for MLNAnnotationVerticalAlignment: $value"),
+      };
+}
+
 late final _sel_userLocationVerticalAlignment =
     objc.registerName("userLocationVerticalAlignment");
 final _objc_msgSend_1m9zum6 = objc.msgSendPointer
@@ -12042,9 +11294,44 @@ late final _sel_displayHeadingCalibration =
     objc.registerName("displayHeadingCalibration");
 late final _sel_setDisplayHeadingCalibration_ =
     objc.registerName("setDisplayHeadingCalibration:");
+
+final class CLLocationCoordinate2D extends ffi.Struct {
+  @ffi.Double()
+  external double latitude;
+
+  @ffi.Double()
+  external double longitude;
+}
+
 late final _sel_targetCoordinate = objc.registerName("targetCoordinate");
+final _objc_msgSend_18o5nok = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            CLLocationCoordinate2D Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>)>>()
+    .asFunction<
+        CLLocationCoordinate2D Function(
+            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
+final _objc_msgSend_18o5nokStret = objc.msgSendStretPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<CLLocationCoordinate2D>,
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>)>>()
+    .asFunction<
+        void Function(ffi.Pointer<CLLocationCoordinate2D>,
+            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
 late final _sel_setTargetCoordinate_ =
     objc.registerName("setTargetCoordinate:");
+final _objc_msgSend_1zv0am = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>, CLLocationCoordinate2D)>>()
+    .asFunction<
+        void Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, CLLocationCoordinate2D)>();
 late final _sel_setTargetCoordinate_animated_ =
     objc.registerName("setTargetCoordinate:animated:");
 final _objc_msgSend_o7hjv2 = objc.msgSendPointer
@@ -12080,6 +11367,29 @@ late final _sel_isZoomEnabled = objc.registerName("isZoomEnabled");
 late final _sel_setZoomEnabled_ = objc.registerName("setZoomEnabled:");
 late final _sel_isScrollEnabled = objc.registerName("isScrollEnabled");
 late final _sel_setScrollEnabled_ = objc.registerName("setScrollEnabled:");
+
+enum MLNPanScrollingMode {
+  /// The map allows the user to only scroll horizontally.
+  MLNPanScrollingModeHorizontal(0),
+
+  /// The map allows the user to only scroll vertically.
+  MLNPanScrollingModeVertical(1),
+
+  /// The map allows the user to scroll both horizontally and vertically.
+  MLNPanScrollingModeDefault(2);
+
+  final int value;
+  const MLNPanScrollingMode(this.value);
+
+  static MLNPanScrollingMode fromValue(int value) => switch (value) {
+        0 => MLNPanScrollingModeHorizontal,
+        1 => MLNPanScrollingModeVertical,
+        2 => MLNPanScrollingModeDefault,
+        _ =>
+          throw ArgumentError("Unknown value for MLNPanScrollingMode: $value"),
+      };
+}
+
 late final _sel_panScrollingMode = objc.registerName("panScrollingMode");
 final _objc_msgSend_1vb5jwj = objc.msgSendPointer
     .cast<
@@ -12114,6 +11424,9 @@ late final _sel_setHapticFeedbackEnabled_ =
 late final _sel_decelerationRate = objc.registerName("decelerationRate");
 late final _sel_setDecelerationRate_ =
     objc.registerName("setDecelerationRate:");
+late final _sel_centerCoordinate = objc.registerName("centerCoordinate");
+late final _sel_setCenterCoordinate_ =
+    objc.registerName("setCenterCoordinate:");
 late final _sel_setCenterCoordinate_animated_ =
     objc.registerName("setCenterCoordinate:animated:");
 late final _sel_setCenterCoordinate_zoomLevel_animated_ =
@@ -12187,6 +11500,16 @@ final _objc_msgSend_ghxo7e = objc.msgSendPointer
     .asFunction<
         void Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, double, bool)>();
+
+/// A rectangular area as measured on a two-dimensional map projection.
+final class MLNCoordinateBounds extends ffi.Struct {
+  /// Coordinate at the southwest corner.
+  external CLLocationCoordinate2D sw;
+
+  /// Coordinate at the northeast corner.
+  external CLLocationCoordinate2D ne;
+}
+
 late final _sel_maximumScreenBounds = objc.registerName("maximumScreenBounds");
 final _objc_msgSend_ygoa6a = objc.msgSendPointer
     .cast<
@@ -12383,6 +11706,380 @@ final _objc_msgSend_1imhooq = objc.msgSendPointer
             ffi.Pointer<objc.ObjCObject>,
             bool,
             ffi.Pointer<objc.ObjCBlockImpl>)>();
+late final _class_MLNMapCamera = objc.getClass("MapLibre.MLNMapCamera");
+late final _sel_heading = objc.registerName("heading");
+late final _sel_setHeading_ = objc.registerName("setHeading:");
+late final _sel_pitch = objc.registerName("pitch");
+late final _sel_setPitch_ = objc.registerName("setPitch:");
+late final _sel_altitude = objc.registerName("altitude");
+late final _sel_setAltitude_ = objc.registerName("setAltitude:");
+late final _sel_viewingDistance = objc.registerName("viewingDistance");
+late final _sel_setViewingDistance_ = objc.registerName("setViewingDistance:");
+late final _sel_camera = objc.registerName("camera");
+late final _sel_cameraLookingAtCenterCoordinate_fromEyeCoordinate_eyeAltitude_ =
+    objc.registerName(
+        "cameraLookingAtCenterCoordinate:fromEyeCoordinate:eyeAltitude:");
+final _objc_msgSend_2d68z4 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObject> Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                CLLocationCoordinate2D,
+                CLLocationCoordinate2D,
+                ffi.Double)>>()
+    .asFunction<
+        ffi.Pointer<objc.ObjCObject> Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            CLLocationCoordinate2D,
+            CLLocationCoordinate2D,
+            double)>();
+late final _sel_cameraLookingAtCenterCoordinate_acrossDistance_pitch_heading_ =
+    objc.registerName(
+        "cameraLookingAtCenterCoordinate:acrossDistance:pitch:heading:");
+final _objc_msgSend_x3m0f9 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObject> Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                CLLocationCoordinate2D,
+                ffi.Double,
+                ffi.Double,
+                ffi.Double)>>()
+    .asFunction<
+        ffi.Pointer<objc.ObjCObject> Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            CLLocationCoordinate2D,
+            double,
+            double,
+            double)>();
+late final _sel_cameraLookingAtCenterCoordinate_altitude_pitch_heading_ = objc
+    .registerName("cameraLookingAtCenterCoordinate:altitude:pitch:heading:");
+late final _sel_cameraLookingAtCenterCoordinate_fromDistance_pitch_heading_ =
+    objc.registerName(
+        "cameraLookingAtCenterCoordinate:fromDistance:pitch:heading:");
+late final _sel_isEqualToMapCamera_ = objc.registerName("isEqualToMapCamera:");
+
+/// An ``MLNMapCamera`` object represents a viewpoint from which the user observes
+/// some point on an ``MLNMapView``.
+///
+/// #### Related examples
+/// - <doc:BlockingGesturesExample>: learn how to use the
+/// ``MLNMapViewDelegate/mapView:shouldChangeFromCamera:toCamera:`` method of ``MLNMapViewDelegate`` to
+/// restrict panning.
+/// - *TODO:* Camera animation, learn how to create a camera that rotates
+/// around a central point.
+class MLNMapCamera extends objc.NSObject
+    implements objc.NSSecureCoding, objc.NSCopying {
+  MLNMapCamera._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNMapCamera] that points to the same underlying object as [other].
+  MLNMapCamera.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNMapCamera] that wraps the given raw object pointer.
+  MLNMapCamera.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [MLNMapCamera].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_MLNMapCamera);
+  }
+
+  /// Coordinate at the center of the map view.
+  CLLocationCoordinate2D get centerCoordinate {
+    final _ptr = pkg_ffi.calloc<CLLocationCoordinate2D>();
+    objc.useMsgSendVariants
+        ? _objc_msgSend_18o5nokStret(
+            _ptr, this.ref.pointer, _sel_centerCoordinate)
+        : _ptr.ref =
+            _objc_msgSend_18o5nok(this.ref.pointer, _sel_centerCoordinate);
+    final _finalizable = _ptr.cast<ffi.Uint8>().asTypedList(
+        ffi.sizeOf<CLLocationCoordinate2D>(),
+        finalizer: pkg_ffi.calloc.nativeFree);
+    return ffi.Struct.create<CLLocationCoordinate2D>(_finalizable);
+  }
+
+  /// Coordinate at the center of the map view.
+  set centerCoordinate(CLLocationCoordinate2D value) {
+    _objc_msgSend_1zv0am(this.ref.pointer, _sel_setCenterCoordinate_, value);
+  }
+
+  /// Heading measured in degrees clockwise from true north.
+  double get heading {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_heading)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_heading);
+  }
+
+  /// Heading measured in degrees clockwise from true north.
+  set heading(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setHeading_, value);
+  }
+
+  /// Pitch toward the horizon measured in degrees, with 0 degrees resulting in a
+  /// two-dimensional map.
+  double get pitch {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_pitch)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_pitch);
+  }
+
+  /// Pitch toward the horizon measured in degrees, with 0 degrees resulting in a
+  /// two-dimensional map.
+  set pitch(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setPitch_, value);
+  }
+
+  /// The altitude (measured in meters) above the map at which the camera is
+  /// situated.
+  ///
+  /// The altitude is the distance from the viewpoint to the map, perpendicular to
+  /// the map plane. This property does not account for physical elevation.
+  ///
+  /// This property’s value may be less than that of the ``viewingDistance`` property.
+  /// Setting this property automatically updates the ``viewingDistance`` property
+  /// based on the ``pitch`` property’s current value.
+  double get altitude {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_altitude)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_altitude);
+  }
+
+  /// The altitude (measured in meters) above the map at which the camera is
+  /// situated.
+  ///
+  /// The altitude is the distance from the viewpoint to the map, perpendicular to
+  /// the map plane. This property does not account for physical elevation.
+  ///
+  /// This property’s value may be less than that of the ``viewingDistance`` property.
+  /// Setting this property automatically updates the ``viewingDistance`` property
+  /// based on the ``pitch`` property’s current value.
+  set altitude(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setAltitude_, value);
+  }
+
+  /// The straight-line distance from the viewpoint to the ``centerCoordinate``.
+  ///
+  /// Setting this property automatically updates the ``altitude`` property based on
+  /// the ``pitch`` property’s current value.
+  double get viewingDistance {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_viewingDistance)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_viewingDistance);
+  }
+
+  /// The straight-line distance from the viewpoint to the ``centerCoordinate``.
+  ///
+  /// Setting this property automatically updates the ``altitude`` property based on
+  /// the ``pitch`` property’s current value.
+  set viewingDistance(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setViewingDistance_, value);
+  }
+
+  /// Returns a new camera with all properties set to 0.
+  static MLNMapCamera camera() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNMapCamera, _sel_camera);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// Returns a new camera based on information about the camera’s viewpoint
+  /// and focus point.
+  ///
+  /// @param centerCoordinate The geographic coordinate on which the map should be
+  /// centered.
+  /// @param eyeCoordinate The geometric coordinate at which the camera should be
+  /// situated.
+  /// @param eyeAltitude The altitude (measured in meters) above the map at which the
+  /// camera should be situated. The altitude may be less than the distance from
+  /// the camera’s viewpoint to the camera’s focus point.
+  static MLNMapCamera
+      cameraLookingAtCenterCoordinate_fromEyeCoordinate_eyeAltitude_(
+          CLLocationCoordinate2D centerCoordinate,
+          CLLocationCoordinate2D eyeCoordinate,
+          double eyeAltitude) {
+    final _ret = _objc_msgSend_2d68z4(
+        _class_MLNMapCamera,
+        _sel_cameraLookingAtCenterCoordinate_fromEyeCoordinate_eyeAltitude_,
+        centerCoordinate,
+        eyeCoordinate,
+        eyeAltitude);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// Returns a new camera with the given distance, pitch, and heading.
+  ///
+  /// This method interprets the distance as a straight-line distance from the
+  /// viewpoint to the center coordinate. To specify the altitude of the viewpoint,
+  /// use the ``cameraLookingAtCenterCoordinate:altitude:pitch:heading:`` method.
+  ///
+  /// @param centerCoordinate The geographic coordinate on which the map should be
+  /// centered.
+  /// @param distance The straight-line distance from the viewpoint to the
+  /// ``centerCoordinate``.
+  /// @param pitch The viewing angle of the camera, measured in degrees. A value of
+  /// `0` results in a camera pointed straight down at the map. Angles greater
+  /// than `0` result in a camera angled toward the horizon.
+  /// @param heading The camera’s heading, measured in degrees clockwise from true
+  /// north. A value of `0` means that the top edge of the map view corresponds to
+  /// true north. The value `90` means the top of the map is pointing due east.
+  /// The value `180` means the top of the map points due south, and so on.
+  static MLNMapCamera
+      cameraLookingAtCenterCoordinate_acrossDistance_pitch_heading_(
+          CLLocationCoordinate2D centerCoordinate,
+          double distance,
+          double pitch,
+          double heading) {
+    final _ret = _objc_msgSend_x3m0f9(
+        _class_MLNMapCamera,
+        _sel_cameraLookingAtCenterCoordinate_acrossDistance_pitch_heading_,
+        centerCoordinate,
+        distance,
+        pitch,
+        heading);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// Returns a new camera with the given altitude, pitch, and heading.
+  ///
+  /// @param centerCoordinate The geographic coordinate on which the map should be
+  /// centered.
+  /// @param altitude The altitude (measured in meters) above the map at which the
+  /// camera should be situated. The altitude may be less than the distance from
+  /// the camera’s viewpoint to the camera’s focus point.
+  /// @param pitch The viewing angle of the camera, measured in degrees. A value of
+  /// `0` results in a camera pointed straight down at the map. Angles greater
+  /// than `0` result in a camera angled toward the horizon.
+  /// @param heading The camera’s heading, measured in degrees clockwise from true
+  /// north. A value of `0` means that the top edge of the map view corresponds to
+  /// true north. The value `90` means the top of the map is pointing due east.
+  /// The value `180` means the top of the map points due south, and so on.
+  static MLNMapCamera cameraLookingAtCenterCoordinate_altitude_pitch_heading_(
+      CLLocationCoordinate2D centerCoordinate,
+      double altitude,
+      double pitch,
+      double heading) {
+    final _ret = _objc_msgSend_x3m0f9(
+        _class_MLNMapCamera,
+        _sel_cameraLookingAtCenterCoordinate_altitude_pitch_heading_,
+        centerCoordinate,
+        altitude,
+        pitch,
+        heading);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// > This initializer incorrectly interprets the `distance` parameter. To
+  /// specify the straight-line distance from the viewpoint to ``centerCoordinate``,
+  /// use the ``cameraLookingAtCenterCoordinate:acrossDistance:pitch:heading:``
+  /// method. To specify the altitude of the viewpoint, use the
+  /// ``cameraLookingAtCenterCoordinate:altitude:pitch:heading:`` method, which has
+  /// the same behavior as this initializer.
+  static MLNMapCamera
+      cameraLookingAtCenterCoordinate_fromDistance_pitch_heading_(
+          CLLocationCoordinate2D centerCoordinate,
+          double distance,
+          double pitch,
+          double heading) {
+    final _ret = _objc_msgSend_x3m0f9(
+        _class_MLNMapCamera,
+        _sel_cameraLookingAtCenterCoordinate_fromDistance_pitch_heading_,
+        centerCoordinate,
+        distance,
+        pitch,
+        heading);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// Returns a Boolean value indicating whether the given camera is functionally
+  /// equivalent to the receiver.
+  ///
+  /// Unlike `isEqual:`, this method returns `YES` if the difference between the
+  /// coordinates, altitudes, pitches, or headings of the two camera objects is
+  /// negligible.
+  ///
+  /// @param otherCamera The camera with which to compare the receiver.
+  /// @return A Boolean value indicating whether the two cameras are functionally
+  /// equivalent.
+  bool isEqualToMapCamera_(MLNMapCamera otherCamera) {
+    return _objc_msgSend_19nvye5(
+        this.ref.pointer, _sel_isEqualToMapCamera_, otherCamera.ref.pointer);
+  }
+
+  /// init
+  MLNMapCamera init() {
+    objc.checkOsVersion('MLNMapCamera.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// new
+  static MLNMapCamera new1() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNMapCamera, _sel_new);
+    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static MLNMapCamera allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret =
+        _objc_msgSend_1cwp428(_class_MLNMapCamera, _sel_allocWithZone_, zone);
+    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static MLNMapCamera alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNMapCamera, _sel_alloc);
+    return MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  MLNMapCamera self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  MLNMapCamera retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  MLNMapCamera autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return MLNMapCamera.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// supportsSecureCoding
+  static bool getSupportsSecureCoding() {
+    return _objc_msgSend_91o635(_class_MLNMapCamera, _sel_supportsSecureCoding);
+  }
+
+  /// encodeWithCoder:
+  void encodeWithCoder_(objc.NSCoder coder) {
+    _objc_msgSend_xtuoz7(
+        this.ref.pointer, _sel_encodeWithCoder_, coder.ref.pointer);
+  }
+
+  /// initWithCoder:
+  MLNMapCamera? initWithCoder_(objc.NSCoder coder) {
+    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
+        _sel_initWithCoder_, coder.ref.pointer);
+    return _ret.address == 0
+        ? null
+        : MLNMapCamera.castFromPointer(_ret, retain: false, release: true);
+  }
+}
+
 late final _sel_setCamera_ = objc.registerName("setCamera:");
 late final _sel_setCamera_animated_ = objc.registerName("setCamera:animated:");
 late final _sel_setCamera_withDuration_animationTimingFunction_ =
@@ -13403,6 +13100,52 @@ late final _sel_visibleFeaturesInRect_inStyleLayersWithIdentifiers_ =
 late final _sel_visibleFeaturesInRect_inStyleLayersWithIdentifiers_predicate_ =
     objc.registerName(
         "visibleFeaturesInRect:inStyleLayersWithIdentifiers:predicate:");
+
+/// Options for enabling debugging features in an ``MLNMapView`` instance.
+enum MLNMapDebugMaskOptions {
+  /// Edges of tile boundaries are shown as thick, red lines to help diagnose
+  /// tile clipping issues.
+  MLNMapDebugTileBoundariesMask(2),
+
+  /// Each tile shows its tile coordinate (x/y/z) in the upper-left corner.
+  MLNMapDebugTileInfoMask(4),
+
+  /// Each tile shows a timestamp indicating when it was loaded.
+  MLNMapDebugTimestampsMask(8),
+
+  /// Edges of glyphs and symbols are shown as faint, green lines to help
+  /// diagnose collision and label placement issues.
+  MLNMapDebugCollisionBoxesMask(16),
+
+  /// Each drawing operation is replaced by a translucent fill. Overlapping
+  /// drawing operations appear more prominent to help diagnose overdrawing.
+  /// > Note: This option does nothing in Release builds of the SDK.
+  MLNMapDebugOverdrawVisualizationMask(32),
+
+  /// The stencil buffer is shown instead of the color buffer.
+  /// > Note: This option does nothing in Release builds of the SDK.
+  MLNMapDebugStencilBufferMask(64),
+
+  /// The depth buffer is shown instead of the color buffer.
+  /// > Note: This option does nothing in Release builds of the SDK.
+  MLNMapDebugDepthBufferMask(128);
+
+  final int value;
+  const MLNMapDebugMaskOptions(this.value);
+
+  static MLNMapDebugMaskOptions fromValue(int value) => switch (value) {
+        2 => MLNMapDebugTileBoundariesMask,
+        4 => MLNMapDebugTileInfoMask,
+        8 => MLNMapDebugTimestampsMask,
+        16 => MLNMapDebugCollisionBoxesMask,
+        32 => MLNMapDebugOverdrawVisualizationMask,
+        64 => MLNMapDebugStencilBufferMask,
+        128 => MLNMapDebugDepthBufferMask,
+        _ => throw ArgumentError(
+            "Unknown value for MLNMapDebugMaskOptions: $value"),
+      };
+}
+
 late final _sel_debugMask = objc.registerName("debugMask");
 final _objc_msgSend_1kwkjor = objc.msgSendPointer
     .cast<
@@ -13421,45 +13164,30 @@ final _objc_msgSend_pisvbv = objc.msgSendPointer
     .asFunction<
         void Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, int)>();
+
+/// WARNING: MLNBackendResource is a stub. To generate bindings for this class, include
+/// MLNBackendResource in your config's objc-interfaces list.
+///
+/// MLNBackendResource
+class MLNBackendResource extends objc.NSObject {
+  MLNBackendResource._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNBackendResource] that points to the same underlying object as [other].
+  MLNBackendResource.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNBackendResource] that wraps the given raw object pointer.
+  MLNBackendResource.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
 late final _sel_backendResource = objc.registerName("backendResource");
 late final _sel_triggerRepaint = objc.registerName("triggerRepaint");
 
-/// An interactive, customizable map view with an interface similar to the one
-/// provided by Apple’s MapKit.
-///
-/// Using ``MLNMapView``, you can embed the map inside a view, allow users to
-/// manipulate it with standard gestures, animate the map between different
-/// viewpoints, and present information in the form of annotations and overlays.
-///
-/// The map view loads scalable vector tiles that conform to the
-/// <a href="https://github.com/mapbox/vector-tile-spec">Mapbox Vector Tile Specification</a>.
-/// It styles them with a style that conforms to the
-/// <a href="https://maplibre.org/maplibre-style-spec/">MapLibre Style Spec</a>.
-/// Such styles can be designed with
-/// <a href="https://maplibre.org/maputnik/">Maputnik</a>.
-///
-///
-/// Because ``MLNMapView`` loads asynchronously, several delegate methods are available
-/// for receiving map-related updates. These methods can be used to ensure that certain operations
-/// have completed before taking any additional actions. Information on these methods is located
-/// in the ``MLNMapViewDelegate`` protocol documentation.
-///
-/// Adding your own gesture recognizer to ``MLNMapView`` will block the corresponding
-/// gesture recognizer built into ``MLNMapView``. To avoid conflicts, define which
-/// gesture takes precedence. For example, you can create your own
-/// `UITapGestureRecognizer` that will be invoked only if the default ``MLNMapView``
-/// tap gesture fails:
-///
-/// ```swift
-/// let mapTapGestureRecognizer = UITapGestureRecognizer(target: self, action:
-/// #selector(myCustomFunction)) for recognizer in mapView.gestureRecognizers! where recognizer is
-/// UITapGestureRecognizer { mapTapGestureRecognizer.require(toFail: recognizer)
-/// }
-/// mapView.addGestureRecognizer(mapTapGestureRecognizer)
-/// ```
-///
-/// > Note: You are responsible for getting permission to use the map data and for
-/// ensuring that your use adheres to the relevant terms of use.
+/// MLNMapView
 class MLNMapView extends objc.ObjCObjectBase implements MLNStylable {
   MLNMapView._(ffi.Pointer<objc.ObjCObject> pointer,
       {bool retain = false, bool release = false})
@@ -16349,6 +16077,361 @@ class MLNMapView extends objc.ObjCObjectBase implements MLNStylable {
   }
 }
 
+late final _sel_didMoveToMapView_ = objc.registerName("didMoveToMapView:");
+late final _sel_drawInMapView_withContext_ =
+    objc.registerName("drawInMapView:withContext:");
+
+/// CustomStyleLayer
+class CustomStyleLayer extends objc.ObjCObjectBase {
+  CustomStyleLayer._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super(pointer, retain: retain, release: release);
+
+  /// Constructs a [CustomStyleLayer] that points to the same underlying object as [other].
+  CustomStyleLayer.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [CustomStyleLayer] that wraps the given raw object pointer.
+  CustomStyleLayer.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [CustomStyleLayer].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_CustomStyleLayer);
+  }
+
+  /// initWithIdentifier:
+  CustomStyleLayer initWithIdentifier_(objc.NSString identifier) {
+    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
+        _sel_initWithIdentifier_, identifier.ref.pointer);
+    return CustomStyleLayer.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// initWithIdentifier:
+  static CustomStyleLayer initWithIdentifier_1(objc.NSString identifier) {
+    final _ret = _objc_msgSend_1sotr3r(_class_CustomStyleLayer,
+        _sel_initWithIdentifier_, identifier.ref.pointer);
+    return CustomStyleLayer.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// didMoveToMapView:
+  void didMoveToMapView_(MLNMapView mapView) {
+    _objc_msgSend_xtuoz7(
+        this.ref.pointer, _sel_didMoveToMapView_, mapView.ref.pointer);
+  }
+
+  /// drawInMapView:withContext:
+  void drawInMapView_withContext_(
+      MLNMapView mapView, objc.ObjCObjectBase context) {
+    _objc_msgSend_pfv6jd(this.ref.pointer, _sel_drawInMapView_withContext_,
+        mapView.ref.pointer, context.ref.pointer);
+  }
+}
+
+late final _class_Helpers = objc.getClass("Helpers");
+
+/// Helpers
+class Helpers extends objc.NSObject {
+  Helpers._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [Helpers] that points to the same underlying object as [other].
+  Helpers.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [Helpers] that wraps the given raw object pointer.
+  Helpers.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [Helpers].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_Helpers);
+  }
+
+  /// init
+  Helpers init() {
+    objc.checkOsVersion('Helpers.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// new
+  static Helpers new1() {
+    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_new);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static Helpers allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret =
+        _objc_msgSend_1cwp428(_class_Helpers, _sel_allocWithZone_, zone);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static Helpers alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_Helpers, _sel_alloc);
+    return Helpers.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  Helpers self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  Helpers retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  Helpers autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return Helpers.castFromPointer(_ret, retain: true, release: true);
+  }
+}
+
+late final _class_MapLibreRegistry =
+    objc.getClass("map_plugin.MapLibreRegistry");
+late final _sel_getMapRegistry = objc.registerName("getMapRegistry");
+late final _sel_getMapWithViewId_ = objc.registerName("getMapWithViewId:");
+final _objc_msgSend_1ya1kjn = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>, ffi.Int64)>>()
+    .asFunction<
+        ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, int)>();
+late final _sel_activity = objc.registerName("activity");
+late final _sel_setActivity_ = objc.registerName("setActivity:");
+late final _sel_context = objc.registerName("context");
+late final _sel_setContext_ = objc.registerName("setContext:");
+
+/// MapLibreRegistry
+class MapLibreRegistry extends objc.NSObject {
+  MapLibreRegistry._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MapLibreRegistry] that points to the same underlying object as [other].
+  MapLibreRegistry.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MapLibreRegistry] that wraps the given raw object pointer.
+  MapLibreRegistry.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [MapLibreRegistry].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_MapLibreRegistry);
+  }
+
+  /// getMapRegistry
+  static objc.NSDictionary getMapRegistry() {
+    final _ret =
+        _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_getMapRegistry);
+    return objc.NSDictionary.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// getMapWithViewId:
+  static objc.ObjCObjectBase? getMapWithViewId_(int viewId) {
+    final _ret = _objc_msgSend_1ya1kjn(
+        _class_MapLibreRegistry, _sel_getMapWithViewId_, viewId);
+    return _ret.address == 0
+        ? null
+        : objc.ObjCObjectBase(_ret, retain: true, release: true);
+  }
+
+  /// activity
+  static objc.ObjCObjectBase? getActivity() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_activity);
+    return _ret.address == 0
+        ? null
+        : objc.ObjCObjectBase(_ret, retain: true, release: true);
+  }
+
+  /// setActivity:
+  static void setActivity(objc.ObjCObjectBase? value) {
+    _objc_msgSend_xtuoz7(_class_MapLibreRegistry, _sel_setActivity_,
+        value?.ref.pointer ?? ffi.nullptr);
+  }
+
+  /// context
+  static objc.ObjCObjectBase? getContext() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_context);
+    return _ret.address == 0
+        ? null
+        : objc.ObjCObjectBase(_ret, retain: true, release: true);
+  }
+
+  /// setContext:
+  static void setContext(objc.ObjCObjectBase? value) {
+    _objc_msgSend_xtuoz7(_class_MapLibreRegistry, _sel_setContext_,
+        value?.ref.pointer ?? ffi.nullptr);
+  }
+
+  /// init
+  MapLibreRegistry init() {
+    objc.checkOsVersion('MapLibreRegistry.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// new
+  static MapLibreRegistry new1() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_new);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static MapLibreRegistry allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret = _objc_msgSend_1cwp428(
+        _class_MapLibreRegistry, _sel_allocWithZone_, zone);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static MapLibreRegistry alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_MapLibreRegistry, _sel_alloc);
+    return MapLibreRegistry.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  MapLibreRegistry self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  MapLibreRegistry retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  MapLibreRegistry autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return MapLibreRegistry.castFromPointer(_ret, retain: true, release: true);
+  }
+}
+
+final class CGContext extends ffi.Opaque {}
+
+final class CGColor extends ffi.Opaque {}
+
+final class CGColorSpace extends ffi.Opaque {}
+
+final class CGPath extends ffi.Opaque {}
+
+final class CGLayer extends ffi.Opaque {}
+
+final class __CGEvent extends ffi.Opaque {}
+
+/// Constants indicating the visibility of different map ornaments.
+enum MLNOrnamentVisibility {
+  /// A constant indicating that the ornament adapts to the current map state.
+  MLNOrnamentVisibilityAdaptive(0),
+
+  /// A constant indicating that the ornament is always hidden.
+  MLNOrnamentVisibilityHidden(1),
+
+  /// A constant indicating that the ornament is always visible.
+  MLNOrnamentVisibilityVisible(2);
+
+  final int value;
+  const MLNOrnamentVisibility(this.value);
+
+  static MLNOrnamentVisibility fromValue(int value) => switch (value) {
+        0 => MLNOrnamentVisibilityAdaptive,
+        1 => MLNOrnamentVisibilityHidden,
+        2 => MLNOrnamentVisibilityVisible,
+        _ => throw ArgumentError(
+            "Unknown value for MLNOrnamentVisibility: $value"),
+      };
+}
+
+final class MLNMatrix4 extends ffi.Struct {
+  @ffi.Double()
+  external double m00;
+
+  @ffi.Double()
+  external double m01;
+
+  @ffi.Double()
+  external double m02;
+
+  @ffi.Double()
+  external double m03;
+
+  @ffi.Double()
+  external double m10;
+
+  @ffi.Double()
+  external double m11;
+
+  @ffi.Double()
+  external double m12;
+
+  @ffi.Double()
+  external double m13;
+
+  @ffi.Double()
+  external double m20;
+
+  @ffi.Double()
+  external double m21;
+
+  @ffi.Double()
+  external double m22;
+
+  @ffi.Double()
+  external double m23;
+
+  @ffi.Double()
+  external double m30;
+
+  @ffi.Double()
+  external double m31;
+
+  @ffi.Double()
+  external double m32;
+
+  @ffi.Double()
+  external double m33;
+}
+
+/// A quadrilateral area as measured on a two-dimensional map projection.
+/// ``MLNCoordinateQuad`` differs from ``MLNCoordinateQuad`` in that it allows
+/// representation of non-axis aligned bounds and non-rectangular quadrilaterals.
+/// The coordinates are described in counter clockwise order from top left.
+final class MLNCoordinateQuad extends ffi.Struct {
+  /// Coordinate at the top left corner.
+  external CLLocationCoordinate2D topLeft;
+
+  /// Coordinate at the bottom left corner.
+  external CLLocationCoordinate2D bottomLeft;
+
+  /// Coordinate at the bottom right corner.
+  external CLLocationCoordinate2D bottomRight;
+
+  /// Coordinate at the top right corner.
+  external CLLocationCoordinate2D topRight;
+}
+
 late final _class_MLNForegroundStyleLayer =
     objc.getClass("MLNForegroundStyleLayer");
 late final _sel_sourceIdentifier = objc.registerName("sourceIdentifier");
@@ -18584,6 +18667,244 @@ enum CAConstraintAttribute {
         _ => throw ArgumentError(
             "Unknown value for CAConstraintAttribute: $value"),
       };
+}
+
+/// A structure containing context needed to draw a frame in an ``MLNCustomStyleLayer``.
+final class MLNStyleLayerDrawingContext extends ffi.Struct {
+  /// The size of the drawable area, in points.
+  external CGSize size;
+
+  /// The center coordinate of the map view.
+  external CLLocationCoordinate2D centerCoordinate;
+
+  /// The current zoom level of the map view.
+  @ffi.Double()
+  external double zoomLevel;
+
+  /// The heading (direction) in degrees clockwise from true north.
+  @ffi.Double()
+  external double direction;
+
+  /// The current pitch of the map view in degrees, measured from the map plane.
+  @ffi.Double()
+  external double pitch;
+
+  /// The vertical field of view, in degrees, for the map’s perspective.
+  @ffi.Double()
+  external double fieldOfView;
+
+  /// A 4×4 matrix representing the map view’s current projection state.
+  external MLNMatrix4 projectionMatrix;
+}
+
+late final _class_MLNCustomStyleLayer = objc.getClass("MLNCustomStyleLayer");
+final _objc_msgSend_8j0bt5 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<_CGLContextObject> Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>)>>()
+    .asFunction<
+        ffi.Pointer<_CGLContextObject> Function(
+            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
+late final _sel_willMoveFromMapView_ =
+    objc.registerName("willMoveFromMapView:");
+final _objc_msgSend_qe06h6 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.Pointer<objc.ObjCObject>,
+                MLNStyleLayerDrawingContext)>>()
+    .asFunction<
+        void Function(
+            ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>,
+            ffi.Pointer<objc.ObjCObject>,
+            MLNStyleLayerDrawingContext)>();
+late final _sel_setNeedsDisplay = objc.registerName("setNeedsDisplay");
+
+/// A style layer that is rendered by Metal code that you provide.
+///
+/// By default, this class does nothing. You can subclass it to provide custom
+/// Metal drawing code that is run on each frame of the map.
+///
+/// You can access an existing ``MLNCustomStyleLayer`` using the
+/// ``MLNStyle/layerWithIdentifier:`` method if you know its identifier;
+/// otherwise, find it using the ``MLNStyle/layers`` property. You can also
+/// create a new ``MLNCustomStyleLayer`` and add it to the style using a method such as
+/// ``MLNStyle/addLayer:``.
+///
+/// - Warning: This API experimental. It may change
+/// at any time without notice.
+class MLNCustomStyleLayer extends MLNStyleLayer {
+  MLNCustomStyleLayer._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [MLNCustomStyleLayer] that points to the same underlying object as [other].
+  MLNCustomStyleLayer.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [MLNCustomStyleLayer] that wraps the given raw object pointer.
+  MLNCustomStyleLayer.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [MLNCustomStyleLayer].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_MLNCustomStyleLayer);
+  }
+
+  /// The style that currently contains the layer.
+  ///
+  /// If the layer is not currently part of any style, this property is `nil`.
+  MLNStyle? get style {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_style);
+    return _ret.address == 0
+        ? null
+        : MLNStyle.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// The macOS CGL rendering context used for drawing this layer.
+  ///
+  /// This property is only valid when using the OpenGL-based rendering backend.
+  /// If the Metal backend is in use, this property will be `NULL`.
+  /// This property is deprecated and may be removed in a future release.
+  ///
+  /// - Warning: Deprecated and may be removed in a future release.
+  ffi.Pointer<_CGLContextObject> get context {
+    return _objc_msgSend_8j0bt5(this.ref.pointer, _sel_context);
+  }
+
+  /// Returns an ``MLNCustomStyleLayer`` style layer object initialized with the given identifier.
+  ///
+  /// After initializing and configuring the style layer, add it to a map view’s style
+  /// using the ``MLNStyle/addLayer:`` or
+  /// ``MLNStyle/insertLayer:belowLayer:`` method.
+  ///
+  /// - Parameter identifier: A string that uniquely identifies the layer in the style
+  /// to which it is added.
+  /// - Returns: An initialized custom style layer.
+  MLNCustomStyleLayer initWithIdentifier_(objc.NSString identifier) {
+    final _ret = _objc_msgSend_1sotr3r(this.ref.retainAndReturnPointer(),
+        _sel_initWithIdentifier_, identifier.ref.pointer);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// Called immediately after a layer is added to a map view’s style.
+  ///
+  /// Override this method in a subclass to perform any setup work before the layer
+  /// is used to draw a frame. For example, you might compile an OpenGL shader here.
+  /// The default implementation of this method does nothing.
+  ///
+  /// Any resource acquired in this method must be released in
+  /// ``willMoveFromMapView:``.
+  ///
+  /// - Parameter mapView: The map view to whose style the layer has been added.
+  void didMoveToMapView_(MLNMapView mapView) {
+    _objc_msgSend_xtuoz7(
+        this.ref.pointer, _sel_didMoveToMapView_, mapView.ref.pointer);
+  }
+
+  /// Called immediately before a layer is removed from a map view’s style.
+  ///
+  /// Override this method in a subclass to perform any teardown work once the
+  /// layer has drawn its last frame and is about to be removed from the style.
+  /// The default implementation of this method does nothing.
+  ///
+  /// This method may be called even if ``didMoveToMapView:`` has not been called.
+  ///
+  /// - Parameter mapView: The map view from whose style the layer is about to be removed.
+  void willMoveFromMapView_(MLNMapView mapView) {
+    _objc_msgSend_xtuoz7(
+        this.ref.pointer, _sel_willMoveFromMapView_, mapView.ref.pointer);
+  }
+
+  /// Called each time the layer needs to draw a new frame in a map view.
+  ///
+  /// Override this method in a subclass to draw the layer’s content. The default
+  /// implementation of this method does nothing.
+  ///
+  /// Your implementation should not make any assumptions about the OpenGL or Metal
+  /// state, other than that the current context/encoder is active. You may make
+  /// changes to the state as needed. You are not required to reset values such as
+  /// the depth or stencil configuration to their original values.
+  ///
+  /// Be sure to draw your fragments with a *z* value of 1 to take advantage of
+  /// opaque fragment culling, in case the style contains any opaque layers above
+  /// this layer.
+  ///
+  /// - Parameters:
+  /// - mapView: The map view to which the layer draws.
+  /// - context: A context structure with information defining the frame to draw.
+  void drawInMapView_withContext_(
+      MLNMapView mapView, MLNStyleLayerDrawingContext context) {
+    _objc_msgSend_qe06h6(this.ref.pointer, _sel_drawInMapView_withContext_,
+        mapView.ref.pointer, context);
+  }
+
+  /// Forces the map view associated with this style to redraw the receiving layer,
+  /// causing the ``drawInMapView:withContext:`` method to be called again.
+  void setNeedsDisplay() {
+    _objc_msgSend_1pl9qdv(this.ref.pointer, _sel_setNeedsDisplay);
+  }
+
+  /// init
+  MLNCustomStyleLayer init() {
+    objc.checkOsVersion('MLNCustomStyleLayer.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// new
+  static MLNCustomStyleLayer new1() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNCustomStyleLayer, _sel_new);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static MLNCustomStyleLayer allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret = _objc_msgSend_1cwp428(
+        _class_MLNCustomStyleLayer, _sel_allocWithZone_, zone);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// alloc
+  static MLNCustomStyleLayer alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_MLNCustomStyleLayer, _sel_alloc);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// self
+  MLNCustomStyleLayer self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: true, release: true);
+  }
+
+  /// retain
+  MLNCustomStyleLayer retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: true, release: true);
+  }
+
+  /// autorelease
+  MLNCustomStyleLayer autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return MLNCustomStyleLayer.castFromPointer(_ret,
+        retain: true, release: true);
+  }
 }
 
 /// These constants indicate the current drag state of an annotation view.
