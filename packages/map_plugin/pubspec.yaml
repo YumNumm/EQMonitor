@@ -70,9 +70,11 @@ ffigen:
       - 'NSImage'
       - 'NSExpression'
       - 'Helpers'
+      - 'MLNComputedShapeSource'
+      - 'MapHelper'
     module:
       'MapLibreRegistry': 'map_plugin'
-      'CustomStyleLayer': 'map_plugin'
+      'MapHelper': 'map_plugin'
       'MLNMapView': 'MapLibre'
       'MLNMapCamera': 'MapLibre'
       'MLNVectorTileSource': 'MapLibre'
@@ -81,7 +83,7 @@ ffigen:
   headers:
     entry-points:
       - 'ios/map_plugin/Sources/map_plugin/MapLibreRegistry.h'
-      # - 'ios/maplibre_ios/Sources/maplibre_ios/Helpers.h'
+      - 'ios/map_plugin/Sources/map_plugin/Helpers.h'
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNMapView.h'
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNPolyline.h'
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNFillExtrusionStyleLayer.h'
@@ -161,8 +163,6 @@ ffigen:
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNOfflineStorage.h'
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNAnnotationView.h'
       - './temp/MapLibre.xcframework/ios-arm64/MapLibre.framework/Headers/MLNHillshadeStyleLayer.h'
-    #include-directives:
-      #- '~/Library/Caches/CocoaPods/Pods/Release/MapLibre/6.11.0-9ff4b/MapLibre.xcframework/ios-arm64_x86_64-simulator/MapLibre.framework/Headers'
   preamble: |
     // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field, return_of_invalid_type, void_checks, annotate_overrides, no_leading_underscores_for_local_identifiers, library_private_types_in_public_api
 dev_dependencies:

@@ -2,10 +2,6 @@ import Foundation
 import MapLibre
 import UIKit
 
-// Update the header file for this class like this:
-// cd ios/map_plugin/Sources/map_plugin/
-// swiftc -c MapLibreRegistry.swift -module-name maplibre_ios -emit-objc-header-path MapLibreRegistry.h -emit-library -o libmaplibreios.dylib -target arm64-apple-ios18.4-simulator -sdk $(xcrun --sdk iphonesimulator --show-sdk-path) -F ../../../../temp/MapLibre.xcframework/ios-arm64_x86_64-simulator
-
 @objc public class MapLibreRegistry: NSObject {
   private static var mapRegistry: [Int64: AnyObject] = [:]
 
@@ -50,5 +46,3 @@ extension UIColor {
         self.init(red: r, green: g, blue: b, alpha: min(max(alpha, 0), 1))
     }
 }
-
-

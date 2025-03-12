@@ -44,6 +44,7 @@ class _MapView extends HookConsumerWidget {
       onMapCreated: (p0) {
         talker.info('MapPluginView created: $p0');
       },
+      styleString: styleString,
     );
   }
 }
