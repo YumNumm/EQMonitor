@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
@@ -75,41 +74,26 @@ class _Sheet extends StatelessWidget {
                 top: Radius.circular(16),
               ),
               clipBehavior: Clip.hardEdge,
-              child: BackdropFilter(
-                filter: ImageFilter.compose(
-                  inner: ImageFilter.blur(
-                    sigmaX: 8,
-                    sigmaY: 8,
-                    tileMode: TileMode.decal,
-                  ),
-                  outer: ColorFilter.mode(
-                    colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
-                    BlendMode.srcOut,
-                  ),
-                ),
-                blendMode: BlendMode.srcOut,
-                child: Material(
-                  color: Colors.transparent,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        width: 36,
-                        height: 4,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: theme.colorScheme.onSurface,
-                        ),
+              child: Material(
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      width: 36,
+                      height: 4,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: theme.colorScheme.onSurface,
                       ),
-                      const Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: _SheetBody(),
-                        ),
+                    ),
+                    const Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: _SheetBody(),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
