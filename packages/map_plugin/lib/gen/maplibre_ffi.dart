@@ -7769,9 +7769,57 @@ enum NSSaveOptions {
       };
 }
 
-/// WARNING: CoordinateBoundsStruct is a stub. To generate bindings for this class, include
-/// CoordinateBoundsStruct in your config's objc-interfaces list.
-///
+late final _class_CoordinateBoundsStruct =
+    objc.getClass("map_plugin.CoordinateBoundsStruct");
+late final _sel_minLatitude = objc.registerName("minLatitude");
+final _objc_msgSend_1ukqyt8 = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Double Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>)>>()
+    .asFunction<
+        double Function(
+            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
+final _objc_msgSend_1ukqyt8Fpret = objc.msgSendFpretPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Double Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>)>>()
+    .asFunction<
+        double Function(
+            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
+late final _sel_setMinLatitude_ = objc.registerName("setMinLatitude:");
+final _objc_msgSend_hwm8nu = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Void Function(ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>, ffi.Double)>>()
+    .asFunction<
+        void Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, double)>();
+late final _sel_minLongitude = objc.registerName("minLongitude");
+late final _sel_setMinLongitude_ = objc.registerName("setMinLongitude:");
+late final _sel_maxLatitude = objc.registerName("maxLatitude");
+late final _sel_setMaxLatitude_ = objc.registerName("setMaxLatitude:");
+late final _sel_maxLongitude = objc.registerName("maxLongitude");
+late final _sel_setMaxLongitude_ = objc.registerName("setMaxLongitude:");
+late final _sel_initWithMinLatitude_minLongitude_maxLatitude_maxLongitude_ =
+    objc.registerName(
+        "initWithMinLatitude:minLongitude:maxLatitude:maxLongitude:");
+final _objc_msgSend_q2wq4h = objc.msgSendPointer
+    .cast<
+        ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObject> Function(
+                ffi.Pointer<objc.ObjCObject>,
+                ffi.Pointer<objc.ObjCSelector>,
+                ffi.Double,
+                ffi.Double,
+                ffi.Double,
+                ffi.Double)>>()
+    .asFunction<
+        ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
+            ffi.Pointer<objc.ObjCSelector>, double, double, double, double)>();
+
 /// CoordinateBoundsStruct
 class CoordinateBoundsStruct extends objc.NSObject {
   CoordinateBoundsStruct._(ffi.Pointer<objc.ObjCObject> pointer,
@@ -7786,6 +7834,132 @@ class CoordinateBoundsStruct extends objc.NSObject {
   CoordinateBoundsStruct.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
       {bool retain = false, bool release = false})
       : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [CoordinateBoundsStruct].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_CoordinateBoundsStruct);
+  }
+
+  /// minLatitude
+  double get minLatitude {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_minLatitude)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_minLatitude);
+  }
+
+  /// setMinLatitude:
+  set minLatitude(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMinLatitude_, value);
+  }
+
+  /// minLongitude
+  double get minLongitude {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_minLongitude)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_minLongitude);
+  }
+
+  /// setMinLongitude:
+  set minLongitude(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMinLongitude_, value);
+  }
+
+  /// maxLatitude
+  double get maxLatitude {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_maxLatitude)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_maxLatitude);
+  }
+
+  /// setMaxLatitude:
+  set maxLatitude(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMaxLatitude_, value);
+  }
+
+  /// maxLongitude
+  double get maxLongitude {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_maxLongitude)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_maxLongitude);
+  }
+
+  /// setMaxLongitude:
+  set maxLongitude(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setMaxLongitude_, value);
+  }
+
+  /// init
+  CoordinateBoundsStruct init() {
+    objc.checkOsVersion('CoordinateBoundsStruct.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// initWithMinLatitude:minLongitude:maxLatitude:maxLongitude:
+  CoordinateBoundsStruct
+      initWithMinLatitude_minLongitude_maxLatitude_maxLongitude_(
+          double minLatitude,
+          double minLongitude,
+          double maxLatitude,
+          double maxLongitude) {
+    final _ret = _objc_msgSend_q2wq4h(
+        this.ref.retainAndReturnPointer(),
+        _sel_initWithMinLatitude_minLongitude_maxLatitude_maxLongitude_,
+        minLatitude,
+        minLongitude,
+        maxLatitude,
+        maxLongitude);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// new
+  static CoordinateBoundsStruct new1() {
+    final _ret = _objc_msgSend_151sglz(_class_CoordinateBoundsStruct, _sel_new);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static CoordinateBoundsStruct allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret = _objc_msgSend_1cwp428(
+        _class_CoordinateBoundsStruct, _sel_allocWithZone_, zone);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// alloc
+  static CoordinateBoundsStruct alloc() {
+    final _ret =
+        _objc_msgSend_151sglz(_class_CoordinateBoundsStruct, _sel_alloc);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: false, release: true);
+  }
+
+  /// self
+  CoordinateBoundsStruct self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: true, release: true);
+  }
+
+  /// retain
+  CoordinateBoundsStruct retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: true, release: true);
+  }
+
+  /// autorelease
+  CoordinateBoundsStruct autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return CoordinateBoundsStruct.castFromPointer(_ret,
+        retain: true, release: true);
+  }
 }
 
 late final _class_Helpers = objc.getClass("Helpers");
@@ -7858,6 +8032,25 @@ class Helpers extends objc.NSObject {
   }
 }
 
+/// WARNING: LayerManager is a stub. To generate bindings for this class, include
+/// LayerManager in your config's objc-interfaces list.
+///
+/// レイヤーを管理するクラス
+class LayerManager extends objc.NSObject {
+  LayerManager._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [LayerManager] that points to the same underlying object as [other].
+  LayerManager.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [LayerManager] that wraps the given raw object pointer.
+  LayerManager.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
 late final _class_MapHelper = objc.getClass("map_plugin.MapHelper");
 late final _class_MLNMapView = objc.getClass("MapLibre.MLNMapView");
 
@@ -7883,31 +8076,7 @@ interface class MLNStylable extends objc.ObjCProtocolBase
 }
 
 late final _sel_latitude = objc.registerName("latitude");
-final _objc_msgSend_1ukqyt8 = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Double Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>)>>()
-    .asFunction<
-        double Function(
-            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
-final _objc_msgSend_1ukqyt8Fpret = objc.msgSendFpretPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Double Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>)>>()
-    .asFunction<
-        double Function(
-            ffi.Pointer<objc.ObjCObject>, ffi.Pointer<objc.ObjCSelector>)>();
 late final _sel_setLatitude_ = objc.registerName("setLatitude:");
-final _objc_msgSend_hwm8nu = objc.msgSendPointer
-    .cast<
-        ffi.NativeFunction<
-            ffi.Void Function(ffi.Pointer<objc.ObjCObject>,
-                ffi.Pointer<objc.ObjCSelector>, ffi.Double)>>()
-    .asFunction<
-        void Function(ffi.Pointer<objc.ObjCObject>,
-            ffi.Pointer<objc.ObjCSelector>, double)>();
 late final _sel_longitude = objc.registerName("longitude");
 late final _sel_setLongitude_ = objc.registerName("setLongitude:");
 late final _sel_zoomLevel = objc.registerName("zoomLevel");
@@ -8342,21 +8511,7 @@ final _objc_msgSend_v5hmet = objc.msgSendPointer
         void Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, double)>();
 
-/// ``MLNStyleLayer`` is an abstract base class for style layers. A style layer
-/// manages the layout and appearance of content at a specific z-index in a style.
-/// An ``MLNStyle`` object consists of one or more ``MLNStyle`` objects.
-///
-/// Each style layer defined by the style JSON file is represented at runtime by an
-/// ``MLNStyleLayer`` object, which you can use to refine the map’s appearance. You
-/// can also add and remove style layers dynamically.
-///
-/// Create instances of ``MLNBackgroundStyleLayer`` and the concrete subclasses of
-/// ``MLNForegroundStyleLayer`` in order to use ``MLNForegroundStyleLayer``'s properties and methods.
-/// You do not create instances of ``MLNStyleLayer`` directly, and do not
-/// create your own subclasses of this class.
-///
-/// Do not add ``MLNStyleLayer`` objects to the `style` property of a ``MLNStyleLayer`` before
-/// ``MLNMapViewDelegate/mapView:didFinishLoadingStyle:`` is called.
+/// MLNStyleLayer
 class MLNStyleLayer extends objc.NSObject {
   MLNStyleLayer._(ffi.Pointer<objc.ObjCObject> pointer,
       {bool retain = false, bool release = false})
@@ -16207,9 +16362,18 @@ class MLNMapView extends objc.ObjCObjectBase implements MLNStylable {
   }
 }
 
-/// WARNING: PaddingStruct is a stub. To generate bindings for this class, include
-/// PaddingStruct in your config's objc-interfaces list.
-///
+late final _class_PaddingStruct = objc.getClass("map_plugin.PaddingStruct");
+late final _sel_top = objc.registerName("top");
+late final _sel_setTop_ = objc.registerName("setTop:");
+late final _sel_left = objc.registerName("left");
+late final _sel_setLeft_ = objc.registerName("setLeft:");
+late final _sel_bottom = objc.registerName("bottom");
+late final _sel_setBottom_ = objc.registerName("setBottom:");
+late final _sel_right = objc.registerName("right");
+late final _sel_setRight_ = objc.registerName("setRight:");
+late final _sel_initWithTop_left_bottom_right_ =
+    objc.registerName("initWithTop:left:bottom:right:");
+
 /// PaddingStruct
 class PaddingStruct extends objc.NSObject {
   PaddingStruct._(ffi.Pointer<objc.ObjCObject> pointer,
@@ -16224,6 +16388,114 @@ class PaddingStruct extends objc.NSObject {
   PaddingStruct.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
       {bool retain = false, bool release = false})
       : this._(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [PaddingStruct].
+  static bool isInstance(objc.ObjCObjectBase obj) {
+    return _objc_msgSend_19nvye5(
+        obj.ref.pointer, _sel_isKindOfClass_, _class_PaddingStruct);
+  }
+
+  /// top
+  double get top {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_top)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_top);
+  }
+
+  /// setTop:
+  set top(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setTop_, value);
+  }
+
+  /// left
+  double get left {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_left)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_left);
+  }
+
+  /// setLeft:
+  set left(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setLeft_, value);
+  }
+
+  /// bottom
+  double get bottom {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_bottom)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_bottom);
+  }
+
+  /// setBottom:
+  set bottom(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setBottom_, value);
+  }
+
+  /// right
+  double get right {
+    return objc.useMsgSendVariants
+        ? _objc_msgSend_1ukqyt8Fpret(this.ref.pointer, _sel_right)
+        : _objc_msgSend_1ukqyt8(this.ref.pointer, _sel_right);
+  }
+
+  /// setRight:
+  set right(double value) {
+    _objc_msgSend_hwm8nu(this.ref.pointer, _sel_setRight_, value);
+  }
+
+  /// init
+  PaddingStruct init() {
+    objc.checkOsVersion('PaddingStruct.init',
+        iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final _ret =
+        _objc_msgSend_151sglz(this.ref.retainAndReturnPointer(), _sel_init);
+    return PaddingStruct.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// initWithTop:left:bottom:right:
+  PaddingStruct initWithTop_left_bottom_right_(
+      double top, double left, double bottom, double right) {
+    final _ret = _objc_msgSend_q2wq4h(this.ref.retainAndReturnPointer(),
+        _sel_initWithTop_left_bottom_right_, top, left, bottom, right);
+    return PaddingStruct.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// new
+  static PaddingStruct new1() {
+    final _ret = _objc_msgSend_151sglz(_class_PaddingStruct, _sel_new);
+    return PaddingStruct.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static PaddingStruct allocWithZone_(ffi.Pointer<objc.NSZone> zone) {
+    final _ret =
+        _objc_msgSend_1cwp428(_class_PaddingStruct, _sel_allocWithZone_, zone);
+    return PaddingStruct.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// alloc
+  static PaddingStruct alloc() {
+    final _ret = _objc_msgSend_151sglz(_class_PaddingStruct, _sel_alloc);
+    return PaddingStruct.castFromPointer(_ret, retain: false, release: true);
+  }
+
+  /// self
+  PaddingStruct self1() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_self);
+    return PaddingStruct.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// retain
+  PaddingStruct retain() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_retain);
+    return PaddingStruct.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// autorelease
+  PaddingStruct autorelease() {
+    final _ret = _objc_msgSend_151sglz(this.ref.pointer, _sel_autorelease);
+    return PaddingStruct.castFromPointer(_ret, retain: true, release: true);
+  }
 }
 
 late final _sel_setVisibleCoordinateBoundsWithMapView_bounds_padding_animated_ =
@@ -16392,6 +16664,30 @@ final _objc_msgSend_1ya1kjn = objc.msgSendPointer
     .asFunction<
         ffi.Pointer<objc.ObjCObject> Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, int)>();
+late final _sel_getLayerManagerWithViewId_ =
+    objc.registerName("getLayerManagerWithViewId:");
+
+/// WARNING: SourceManager is a stub. To generate bindings for this class, include
+/// SourceManager in your config's objc-interfaces list.
+///
+/// ソースを管理するクラス
+class SourceManager extends objc.NSObject {
+  SourceManager._(ffi.Pointer<objc.ObjCObject> pointer,
+      {bool retain = false, bool release = false})
+      : super.castFromPointer(pointer, retain: retain, release: release);
+
+  /// Constructs a [SourceManager] that points to the same underlying object as [other].
+  SourceManager.castFrom(objc.ObjCObjectBase other)
+      : this._(other.ref.pointer, retain: true, release: true);
+
+  /// Constructs a [SourceManager] that wraps the given raw object pointer.
+  SourceManager.castFromPointer(ffi.Pointer<objc.ObjCObject> other,
+      {bool retain = false, bool release = false})
+      : this._(other, retain: retain, release: release);
+}
+
+late final _sel_getSourceManagerWithViewId_ =
+    objc.registerName("getSourceManagerWithViewId:");
 late final _sel_activity = objc.registerName("activity");
 late final _sel_setActivity_ = objc.registerName("setActivity:");
 late final _sel_context = objc.registerName("context");
@@ -16432,6 +16728,24 @@ class MapLibreRegistry extends objc.NSObject {
     return _ret.address == 0
         ? null
         : objc.ObjCObjectBase(_ret, retain: true, release: true);
+  }
+
+  /// getLayerManagerWithViewId:
+  static LayerManager? getLayerManagerWithViewId_(int viewId) {
+    final _ret = _objc_msgSend_1ya1kjn(
+        _class_MapLibreRegistry, _sel_getLayerManagerWithViewId_, viewId);
+    return _ret.address == 0
+        ? null
+        : LayerManager.castFromPointer(_ret, retain: true, release: true);
+  }
+
+  /// getSourceManagerWithViewId:
+  static SourceManager? getSourceManagerWithViewId_(int viewId) {
+    final _ret = _objc_msgSend_1ya1kjn(
+        _class_MapLibreRegistry, _sel_getSourceManagerWithViewId_, viewId);
+    return _ret.address == 0
+        ? null
+        : SourceManager.castFromPointer(_ret, retain: true, release: true);
   }
 
   /// activity
@@ -20673,46 +20987,7 @@ final _objc_msgSend_mabicuFpret = objc.msgSendFpretPointer
         double Function(ffi.Pointer<objc.ObjCObject>,
             ffi.Pointer<objc.ObjCSelector>, ffi.Pointer<objc.ObjCObject>)>();
 
-/// ``MLNShapeSource`` is a map content source that supplies vector shapes to be
-/// shown on the map. The shapes may be instances of ``MLNShape`` or ``MLNShape``,
-/// or they may be defined by local or external
-/// <a href="http://geojson.org/">GeoJSON</a> code. A shape source is added to an
-/// ``MLNStyle`` object along with an ``MLNStyle`` object. The vector style
-/// layer defines the appearance of any content supplied by the shape source. You
-/// can update a shape source by setting its `shape` or `URL` property.
-///
-/// ``MLNShapeSource`` is optimized for data sets that change dynamically and fit
-/// completely in memory. For large data sets that do not fit completely in memory,
-/// use the ``MLNComputedShapeSource`` or ``MLNComputedShapeSource`` class.
-///
-/// Each
-/// <a href="https://maplibre.org/maplibre-style-spec/#sources-geojson"><code>geojson</code></a>
-/// source defined by the style JSON file is represented at runtime by an
-/// ``MLNShapeSource`` object that you can use to refine the map’s content and
-/// initialize new style layers. You can also add and remove sources dynamically
-/// using methods such as ``MLNStyle/addSource:`` and
-/// ``MLNStyle/sourceWithIdentifier:``.
-///
-/// Any vector style layer initialized with a shape source should have a `nil`
-/// value in its `sourceLayerIdentifier` property.
-///
-/// ### Example
-///
-/// ```swift
-/// var coordinates: [CLLocationCoordinate2D] = [
-/// CLLocationCoordinate2D(latitude: 37.77, longitude: -122.42),
-/// CLLocationCoordinate2D(latitude: 38.91, longitude: -77.04),
-/// ]
-/// let polyline = MLNPolylineFeature(coordinates: &coordinates, count: UInt(coordinates.count))
-/// let source = MLNShapeSource(identifier: "lines", features: [polyline], options: nil)
-/// mapView.style?.addSource(source)
-/// ```
-///
-/// #### Related examples
-/// TODO: Cluster point data
-/// TODO: Use images to cluster point data
-/// TODO: Add live data
-/// Learn how to add data to your map using this ``MLNSource`` object.
+/// MLNShapeSource
 class MLNShapeSource extends MLNSource {
   MLNShapeSource._(ffi.Pointer<objc.ObjCObject> pointer,
       {bool retain = false, bool release = false})

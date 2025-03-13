@@ -281,6 +281,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 @import CoreFoundation;
 @import Foundation;
+@import MapLibre;
 @import ObjectiveC;
 #endif
 
@@ -306,9 +307,12 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 SWIFT_CLASS("_TtC12maplibre_ios22CoordinateBoundsStruct")
 @interface CoordinateBoundsStruct : NSObject
+@property (nonatomic) double minLatitude;
+@property (nonatomic) double minLongitude;
+@property (nonatomic) double maxLatitude;
+@property (nonatomic) double maxLongitude;
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)initWithMinLatitude:(double)minLatitude minLongitude:(double)minLongitude maxLatitude:(double)maxLatitude maxLongitude:(double)maxLongitude OBJC_DESIGNATED_INITIALIZER;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 SWIFT_CLASS("_TtC12maplibre_ios7Helpers")
@@ -317,6 +321,79 @@ SWIFT_CLASS("_TtC12maplibre_ios7Helpers")
 @end
 
 @class MLNMapView;
+@class MLNStyleLayer;
+@class NSString;
+/// レイヤーを管理するクラス
+SWIFT_CLASS("_TtC12maplibre_ios12LayerManager")
+@interface LayerManager : NSObject
+/// 初期化
+/// \param mapView MapLibreのマップビュー
+///
+- (nonnull instancetype)initWithMapView:(MLNMapView * _Nonnull)mapView OBJC_DESIGNATED_INITIALIZER;
+/// レイヤーを追加する
+/// \param layer 追加するレイヤー
+///
+///
+/// returns:
+/// 追加が成功したかどうか
+- (BOOL)addLayer:(MLNStyleLayer * _Nonnull)layer SWIFT_WARN_UNUSED_RESULT;
+/// レイヤーを指定したレイヤーの上に追加する
+/// \param layer 追加するレイヤー
+///
+/// \param above このレイヤーの上に追加する
+///
+///
+/// returns:
+/// 追加が成功したかどうか
+- (BOOL)addLayer:(MLNStyleLayer * _Nonnull)layer aboveLayerId:(NSString * _Nonnull)aboveLayerId SWIFT_WARN_UNUSED_RESULT;
+/// レイヤーを指定したレイヤーの下に追加する
+/// \param layer 追加するレイヤー
+///
+/// \param below このレイヤーの下に追加する
+///
+///
+/// returns:
+/// 追加が成功したかどうか
+- (BOOL)addLayer:(MLNStyleLayer * _Nonnull)layer belowLayerId:(NSString * _Nonnull)belowLayerId SWIFT_WARN_UNUSED_RESULT;
+/// レイヤーを削除する
+/// \param layerId 削除するレイヤーのID
+///
+///
+/// returns:
+/// 削除が成功したかどうか
+- (BOOL)removeLayerWithLayerId:(NSString * _Nonnull)layerId SWIFT_WARN_UNUSED_RESULT;
+/// レイヤーを取得する
+/// \param layerId レイヤーのID
+///
+///
+/// returns:
+/// レイヤー（見つからない場合はnil）
+- (MLNStyleLayer * _Nullable)getLayerWithLayerId:(NSString * _Nonnull)layerId SWIFT_WARN_UNUSED_RESULT;
+/// レイヤーの表示・非表示を設定する
+/// \param layerId レイヤーのID
+///
+/// \param visible 表示する場合はtrue、非表示にする場合はfalse
+///
+///
+/// returns:
+/// 設定が成功したかどうか
+- (BOOL)setLayerVisibilityWithLayerId:(NSString * _Nonnull)layerId visible:(BOOL)visible SWIFT_WARN_UNUSED_RESULT;
+/// レイヤーが存在するかどうかを確認する
+/// \param layerId レイヤーのID
+///
+///
+/// returns:
+/// 存在する場合はtrue、存在しない場合はfalse
+- (BOOL)isLayerExists:(NSString * _Nonnull)layerId SWIFT_WARN_UNUSED_RESULT;
+/// 全てのレイヤーのIDを取得する
+///
+/// returns:
+/// レイヤーIDの配列
+- (NSArray<NSString *> * _Nonnull)getAllLayerIds SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
 @class PaddingStruct;
 SWIFT_CLASS("_TtC12maplibre_ios9MapHelper")
 @interface MapHelper : NSObject
@@ -325,10 +402,13 @@ SWIFT_CLASS("_TtC12maplibre_ios9MapHelper")
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
+@class SourceManager;
 SWIFT_CLASS("_TtC12maplibre_ios16MapLibreRegistry")
 @interface MapLibreRegistry : NSObject
 + (NSDictionary<NSNumber *, id> * _Nonnull)getMapRegistry SWIFT_WARN_UNUSED_RESULT;
 + (id _Nullable)getMapWithViewId:(int64_t)viewId SWIFT_WARN_UNUSED_RESULT;
++ (LayerManager * _Nullable)getLayerManagerWithViewId:(int64_t)viewId SWIFT_WARN_UNUSED_RESULT;
++ (SourceManager * _Nullable)getSourceManagerWithViewId:(int64_t)viewId SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) id _Nullable activity;)
 + (id _Nullable)activity SWIFT_WARN_UNUSED_RESULT;
 + (void)setActivity:(id _Nullable)value;
@@ -340,7 +420,130 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, strong) id _Nullable context;)
 
 SWIFT_CLASS("_TtC12maplibre_ios13PaddingStruct")
 @interface PaddingStruct : NSObject
+@property (nonatomic) double top;
+@property (nonatomic) double left;
+@property (nonatomic) double bottom;
+@property (nonatomic) double right;
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)initWithTop:(double)top left:(double)left bottom:(double)bottom right:(double)right OBJC_DESIGNATED_INITIALIZER;
+@end
+
+@class MLNSource;
+@class MLNShapeSource;
+@class UIImage;
+@class NSData;
+/// ソースを管理するクラス
+SWIFT_CLASS("_TtC12maplibre_ios13SourceManager")
+@interface SourceManager : NSObject
+/// 初期化
+/// \param mapView MapLibreのマップビュー
+///
+- (nonnull instancetype)initWithMapView:(MLNMapView * _Nonnull)mapView OBJC_DESIGNATED_INITIALIZER;
+/// ソースを追加する
+/// \param source 追加するソース
+///
+///
+/// returns:
+/// 追加が成功したかどうか
+- (BOOL)addSource:(MLNSource * _Nonnull)source SWIFT_WARN_UNUSED_RESULT;
+/// GeoJSONソースを作成して追加する
+/// \param sourceId ソースID
+///
+/// \param geoJson GeoJSON形式のデータ
+///
+/// \param options ソースオプション
+///
+///
+/// returns:
+/// 追加が成功した場合はソース、失敗した場合はnil
+- (MLNShapeSource * _Nullable)addGeoJSONSourceWithSourceId:(NSString * _Nonnull)sourceId geoJson:(NSDictionary<NSString *, id> * _Nonnull)geoJson options:(NSDictionary<MLNShapeSourceOption, id> * _Nullable)options SWIFT_WARN_UNUSED_RESULT;
+/// 空のGeoJSONソースを作成して追加する
+/// \param sourceId ソースID
+///
+/// \param options ソースオプション
+///
+///
+/// returns:
+/// 追加が成功した場合はソース、失敗した場合はnil
+- (MLNShapeSource * _Nullable)addEmptyGeoJSONSourceWithSourceId:(NSString * _Nonnull)sourceId options:(NSDictionary<MLNShapeSourceOption, id> * _Nullable)options SWIFT_WARN_UNUSED_RESULT;
+/// ソースを削除する
+/// \param sourceId 削除するソースのID
+///
+///
+/// returns:
+/// 削除が成功したかどうか
+- (BOOL)removeSourceWithSourceId:(NSString * _Nonnull)sourceId SWIFT_WARN_UNUSED_RESULT;
+/// ソースを取得する
+/// \param sourceId ソースのID
+///
+///
+/// returns:
+/// ソース（見つからない場合はnil）
+- (MLNSource * _Nullable)getSourceWithSourceId:(NSString * _Nonnull)sourceId SWIFT_WARN_UNUSED_RESULT;
+/// GeoJSONソースを取得する
+/// \param sourceId ソースのID
+///
+///
+/// returns:
+/// GeoJSONソース（見つからない場合はnil）
+- (MLNShapeSource * _Nullable)getGeoJSONSourceWithSourceId:(NSString * _Nonnull)sourceId SWIFT_WARN_UNUSED_RESULT;
+/// GeoJSONソースを更新する
+/// \param sourceId ソースのID
+///
+/// \param geoJson GeoJSON形式のデータ
+///
+///
+/// returns:
+/// 更新が成功したかどうか
+- (BOOL)updateGeoJSONSourceWithSourceId:(NSString * _Nonnull)sourceId geoJson:(NSDictionary<NSString *, id> * _Nonnull)geoJson SWIFT_WARN_UNUSED_RESULT;
+/// ソースが存在するかどうかを確認する
+/// \param sourceId ソースのID
+///
+///
+/// returns:
+/// 存在する場合はtrue、存在しない場合はfalse
+- (BOOL)sourceExists:(NSString * _Nonnull)sourceId SWIFT_WARN_UNUSED_RESULT;
+/// 全てのソースのIDを取得する
+///
+/// returns:
+/// ソースIDの配列
+- (NSArray<NSString *> * _Nonnull)getAllSourceIds SWIFT_WARN_UNUSED_RESULT;
+/// 画像を追加する
+/// \param name 画像名
+///
+/// \param image 追加する画像
+///
+///
+/// returns:
+/// 追加が成功したかどうか
+- (BOOL)addImageWithName:(NSString * _Nonnull)name image:(UIImage * _Nonnull)image SWIFT_WARN_UNUSED_RESULT;
+/// 画像をデータから追加する
+/// \param name 画像名
+///
+/// \param data 画像データ
+///
+///
+/// returns:
+/// 追加が成功したかどうか
+- (BOOL)addImageFromDataWithName:(NSString * _Nonnull)name data:(NSData * _Nonnull)data SWIFT_WARN_UNUSED_RESULT;
+/// GeoJSONソースをJSONオブジェクトで更新する
+/// \param sourceId ソースID
+///
+/// \param geoJson GeoJSONオブジェクト
+///
+///
+/// returns:
+/// 更新が成功したかどうか
+- (BOOL)updateGeoJSONSourceWithObjectWithSourceId:(NSString * _Nonnull)sourceId geoJson:(NSDictionary<NSString *, id> * _Nonnull)geoJson SWIFT_WARN_UNUSED_RESULT;
+/// GeoJSONソースをJSON文字列で更新する
+/// \param sourceId ソースID
+///
+/// \param geoJsonString GeoJSON文字列
+///
+///
+/// returns:
+/// 更新が成功したかどうか
+- (BOOL)updateGeoJSONSourceWithStringWithSourceId:(NSString * _Nonnull)sourceId geoJsonString:(NSString * _Nonnull)geoJsonString SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end

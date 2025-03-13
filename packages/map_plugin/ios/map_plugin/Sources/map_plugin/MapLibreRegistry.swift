@@ -1,9 +1,12 @@
 import Foundation
-import MapLibre
 import UIKit
+import MapLibre
+
 
 @objc public class MapLibreRegistry: NSObject {
   private static var mapRegistry: [Int64: AnyObject] = [:]
+  private static var layerManagerRegistry: [Int64: LayerManager] = [:]
+  private static var sourceManagerRegistry: [Int64: SourceManager] = [:]
 
   @objc public static func getMapRegistry() -> [Int64: AnyObject] {
     mapRegistry
@@ -19,12 +22,33 @@ import UIKit
   public static func addMap(viewId: Int64, map: AnyObject) {
     print("addMap: \(viewId) \(map)")
     mapRegistry[viewId] = map
+
+    // マップが追加された時に管理クラスも作成する
+    if let mapView = map as? MLNMapView {
+      let layerManager = LayerManager(mapView: mapView)
+      layerManagerRegistry[viewId] = layerManager
+
+      let sourceManager = SourceManager(mapView: mapView)
+      sourceManagerRegistry[viewId] = sourceManager
+    }
   }
 
   // Method to remove a map to the registry
   public static func removeMap(viewId: Int64) {
     print("removeMap: \(viewId)")
     mapRegistry.removeValue(forKey: viewId)
+    layerManagerRegistry.removeValue(forKey: viewId)
+    sourceManagerRegistry.removeValue(forKey: viewId)
+  }
+
+  // LayerManagerを取得する
+  @objc public static func getLayerManager(viewId: Int64) -> LayerManager? {
+    return layerManagerRegistry[viewId]
+  }
+
+  // SourceManagerを取得する
+  @objc public static func getSourceManager(viewId: Int64) -> SourceManager? {
+    return sourceManagerRegistry[viewId]
   }
 
   // Warning: Storing Activity in a static field may lead to memory leaks.

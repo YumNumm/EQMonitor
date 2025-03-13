@@ -1,6 +1,7 @@
 import Foundation
-import MapLibre
 import UIKit
+import MapLibre
+
 
 // FFI用の座標範囲クラス
 @objc public class CoordinateBoundsStruct: NSObject {
@@ -9,7 +10,21 @@ import UIKit
   @objc public var maxLatitude: Double
   @objc public var maxLongitude: Double
 
-  
+  @objc public override init() {
+    self.minLatitude = 0.0
+    self.minLongitude = 0.0
+    self.maxLatitude = 0.0
+    self.maxLongitude = 0.0
+    super.init()
+  }
+
+  @objc public init(minLatitude: Double, minLongitude: Double, maxLatitude: Double, maxLongitude: Double) {
+    self.minLatitude = minLatitude
+    self.minLongitude = minLongitude
+    self.maxLatitude = maxLatitude
+    self.maxLongitude = maxLongitude
+    super.init()
+  }
 }
 
 // FFI用のパディングクラス
@@ -18,6 +33,22 @@ import UIKit
   @objc public var left: Double
   @objc public var bottom: Double
   @objc public var right: Double
+
+  @objc public override init() {
+    self.top = 0.0
+    self.left = 0.0
+    self.bottom = 0.0
+    self.right = 0.0
+    super.init()
+  }
+
+  @objc public init(top: Double, left: Double, bottom: Double, right: Double) {
+    self.top = top
+    self.left = left
+    self.bottom = bottom
+    self.right = right
+    super.init()
+  }
 }
 
 @objc public class MapHelper: NSObject {
@@ -28,9 +59,29 @@ import UIKit
     padding: PaddingStruct,
     animated: Bool
   ) {
+    // 緯度を-90〜90度の範囲にクランプする
+    let clampedMinLatitude = max(-90.0, min(90.0, bounds.minLatitude))
+    let clampedMaxLatitude = max(-90.0, min(90.0, bounds.maxLatitude))
+
+    // 経度を-180〜180度の範囲に正規化する
+    var normalizedMinLongitude = fmod(bounds.minLongitude + 540.0, 360.0) - 180.0
+    var normalizedMaxLongitude = fmod(bounds.maxLongitude + 540.0, 360.0) - 180.0
+
+    // 日付変更線をまたぐケースの処理
+    if (normalizedMaxLongitude < normalizedMinLongitude) {
+      // 東西が逆転している場合、地球を一周する
+      normalizedMaxLongitude += 360.0
+    }
+
+    // 範囲が360度以上の場合は全経度を表示
+    if (normalizedMaxLongitude - normalizedMinLongitude >= 360.0) {
+      normalizedMinLongitude = -180.0
+      normalizedMaxLongitude = 180.0
+    }
+
     // MLNCoordinateBoundsを作成
-    let southwest = CLLocationCoordinate2D(latitude: bounds.minLatitude, longitude: bounds.minLongitude)
-    let northeast = CLLocationCoordinate2D(latitude: bounds.maxLatitude, longitude: bounds.maxLongitude)
+    let southwest = CLLocationCoordinate2D(latitude: clampedMinLatitude, longitude: normalizedMinLongitude)
+    let northeast = CLLocationCoordinate2D(latitude: clampedMaxLatitude, longitude: normalizedMaxLongitude)
     let coordinateBounds = MLNCoordinateBounds(sw: southwest, ne: northeast)
 
     // エッジパディングを設定
