@@ -1,12 +1,19 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
+import 'package:eqmonitor/core/util/map_utility.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_symbol_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_layer.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/components/controller/map_layer_controller_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:map_plugin/map_plugin.dart';
+import 'package:maplibre/maplibre.dart';
 
 class HomeMapView extends HookConsumerWidget {
   const HomeMapView({super.key});
@@ -14,7 +21,7 @@ class HomeMapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationNotifierProvider);
-    final kyoshinMonitorState = ref.watch(kyoshinMonitorNotifierProvider);
+    // final kyoshinMonitorState = ref.watch(kyoshinMonitorNotifierProvider);
 
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => LayoutBuilder(
@@ -27,12 +34,9 @@ class HomeMapView extends HookConsumerWidget {
           );
           print(cameraPosition);
 
-          // 強震モニタの観測点データを取得
-          final observationPoints = _getObservationPoints(kyoshinMonitorState);
-
           return _MapView(
             styleString: value.styleString!,
-            observationPoints: observationPoints,
+            initialCameraPosition: cameraPosition,
           );
         },
       ),
@@ -40,44 +44,115 @@ class HomeMapView extends HookConsumerWidget {
       _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
   }
-
-  // 強震モニタの観測点データをマップ用に変換
-  List<ObservationPoint> _getObservationPoints(
-    AsyncValue<KyoshinMonitorState> state,
-  ) {
-    return state.valueOrNull?.analyzedPoints?.map((point) {
-          // 震度値に応じた色を設定
-          return ObservationPoint(
-            id: point.point.code,
-            latitude: point.point.location.latitude,
-            longitude: point.point.location.longitude,
-            intensity: point.observation.scale,
-            color: Color.fromARGB(
-              255,
-              point.observation.r,
-              point.observation.g,
-              point.observation.b,
-            ),
-          );
-        }).toList() ??
-        [];
-  }
 }
 
 class _MapView extends HookConsumerWidget {
-  const _MapView({required this.styleString, required this.observationPoints});
+  const _MapView({
+    required this.styleString,
+    required this.initialCameraPosition,
+  });
 
   final String styleString;
-  final List<ObservationPoint> observationPoints;
+  final MapCameraPosition initialCameraPosition;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MapPlugin(
-      onMapCreated: (p0) {
-        talker.info('MapPluginView created: $p0');
-      },
-      styleString: styleString,
-      observationPoints: observationPoints,
+    final isInitialized = useState(false);
+    final controller = useState<MapController?>(null);
+
+    return SizedBox.expand(
+      child: MapLibreMap(
+        acceptLicense: true,
+        options: MapOptions(
+          initStyle: 'file://$styleString',
+          initZoom: initialCameraPosition.zoom,
+          initCenter: Position(
+            initialCameraPosition.target.lon,
+            initialCameraPosition.target.lat,
+          ),
+        ),
+        onStyleLoaded: (styleController) async {
+          await ref
+              .read(mapUtilityProvider)
+              .addHypocenterImages(controller.value!);
+          isInitialized.value = true;
+        },
+        onMapCreated: (c) => controller.value = c,
+        children: [
+          if (isInitialized.value) ...[
+            const KyoshinMonitorLayer(),
+            const EewHypocenterSymbolLayer(),
+          ],
+          SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
+        ],
+      ),
+    );
+  }
+}
+
+class _MapHeader extends ConsumerWidget {
+  const _MapHeader({required this.initialPosition});
+
+  final MapCameraPosition initialPosition;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final useKmoni = ref.watch(
+      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+    );
+    final showScaleCard = ref.watch(
+      kyoshinMonitorSettingsProvider.select((v) => v.showScale),
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child:
+              useKmoni
+                  ? Column(
+                    key: const ValueKey('kyoshin_monitor_status_card'),
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4,
+                    children: [
+                      KyoshinMonitorStatusCard(
+                        onTap:
+                            () async =>
+                                KyoshinMonitorSettingsModal.show(context),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child:
+                              showScaleCard
+                                  ? const KyoshinMonitorScaleCard()
+                                  : const SizedBox.shrink(),
+                        ),
+                      ),
+                    ],
+                  )
+                  : const SizedBox.shrink(),
+        ),
+        const Column(),
+        MapLayerControllerCard(
+          onLayerButtonTap: () async => HomeMapLayerModal.show(context),
+          onLocationButtonTap:
+              () async => MapController.of(context).animateCamera(
+                nativeDuration: const Duration(milliseconds: 400),
+                pitch: 0,
+                bearing: 0,
+                center: Position(
+                  initialPosition.target.lon,
+                  initialPosition.target.lat,
+                ),
+                zoom: initialPosition.zoom,
+              ),
+        ),
+      ],
     );
   }
 }
