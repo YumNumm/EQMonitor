@@ -42,7 +42,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby
-        uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777 # v1.221.0
+        uses: ruby/setup-ruby@6c79f721fa26dd64559c2700086ac852c18e0756 # v1.225.0
         with:
           bundler-cache: true
           working-directory: app/android
@@ -156,7 +156,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby
-        uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777 # v1.221.0
+        uses: ruby/setup-ruby@6c79f721fa26dd64559c2700086ac852c18e0756 # v1.225.0
         with:
           bundler-cache: true
           working-directory: app/ios
