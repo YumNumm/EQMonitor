@@ -1162,7 +1162,7 @@
 //     final latLngsSorted = latLngs.sorted(
 //       (a, b) => a.lat.compareTo(b.lat),
 //     );
-//     final latMin = latLngsSorted.first.lat;
+//     final latMin = latLngsSorted.first.lat;0
 //     final latMax = latLngsSorted.last.lat;
 //     final lngs = latLngsSorted.where(
 //       (e) => e.lat == latMin || e.lat == latMax,
