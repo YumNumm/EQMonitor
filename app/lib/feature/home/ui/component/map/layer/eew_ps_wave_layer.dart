@@ -22,6 +22,13 @@ class EewPsWaveLayer extends HookConsumerWidget {
     final isInitialized = useRef(false);
     final controller = MapController.of(context);
 
+    final tickerProvider = useSingleTickerProvider();
+
+    useEffect(() {
+      tickerProvider.createTicker(print);
+      return null;
+    }, [tickerProvider]);
+
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
