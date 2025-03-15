@@ -1,7 +1,9 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/util/map_utility.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_symbol_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
@@ -82,6 +84,8 @@ class _MapView extends HookConsumerWidget {
           if (isInitialized.value) ...[
             const KyoshinMonitorLayer(),
             const EewHypocenterSymbolLayer(),
+            const EewPsWaveLayer(),
+            const EewEstimatedIntensityLayer(),
           ],
           SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
         ],

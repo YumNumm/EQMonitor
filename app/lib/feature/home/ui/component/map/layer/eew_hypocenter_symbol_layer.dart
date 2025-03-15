@@ -114,8 +114,8 @@ class _EewHypocenterPaintManager {
     const normal = MapUtility.normalHypocenterImage;
     const lowPrecise = MapUtility.lowPreciseHypocenterImage;
     return {
-      'icon-image': normal,
-      // 'icon-image': ['get', 'isLowPrecise', lowPrecise, normal],
+      // 'icon-image': normal,
+      'icon-image': ['get', 'isLowPrecise', lowPrecise, normal],
       'icon-size': [
         'interpolate',
         ['linear'],
