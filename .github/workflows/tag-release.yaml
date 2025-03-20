@@ -42,7 +42,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby
-        uses: ruby/setup-ruby@922ebc4c5262cd14e07bb0e1db020984b6c064fe # v1.226.0
+        uses: ruby/setup-ruby@1a615958ad9d422dd932dc1d5823942ee002799f # v1.227.0
         with:
           bundler-cache: true
           working-directory: app/android
@@ -67,7 +67,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact aab
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           path: app/build/app/outputs/bundle/release/app-release.aab
           name: release-aab
@@ -85,7 +85,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download artifact aab
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
         with:
           name: release-aab
           path: app/android/output
@@ -156,7 +156,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby
-        uses: ruby/setup-ruby@922ebc4c5262cd14e07bb0e1db020984b6c064fe # v1.226.0
+        uses: ruby/setup-ruby@1a615958ad9d422dd932dc1d5823942ee002799f # v1.227.0
         with:
           bundler-cache: true
           working-directory: app/ios
@@ -210,7 +210,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact ipa
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           path: app/ios/Runner.ipa
           name: release-ios
@@ -228,7 +228,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download artifact ipa
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
         with:
           name: release-ios
           path: app/ios/output
