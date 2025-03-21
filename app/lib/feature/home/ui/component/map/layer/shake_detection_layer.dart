@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
@@ -59,9 +60,7 @@ class ShakeDetectionLayer extends HookConsumerWidget {
                   id: layerId,
                   sourceId: _sourceId,
                   paint: {
-                    'line-color': level.color.value
-                        .toRadixString(16)
-                        .padLeft(8, '0'),
+                    'line-color': level.color.toHexStringRGB(),
                     'line-width': 2.0,
                   },
                   layout: {
@@ -123,9 +122,7 @@ class ShakeDetectionLayer extends HookConsumerWidget {
                 id: layerId,
                 sourceId: _sourceId,
                 paint: {
-                  'line-color': level.color.value
-                      .toRadixString(16)
-                      .padLeft(8, '0'),
+                  'line-color': level.color..toHexStringRGB(),
                   'line-width': 2.0,
                 },
                 layout: {
@@ -155,7 +152,7 @@ class ShakeDetectionLayer extends HookConsumerWidget {
 
   // 空のGeoJSONを作成
   static String _createEmptyGeoJson() {
-    return jsonEncode({'type': 'FeatureCollection', 'features': []});
+    return jsonEncode({'type': 'FeatureCollection', 'features': <void>[]});
   }
 
   // 揺れ検知イベントからグリッドデータを作成してGeoJSONに変換
