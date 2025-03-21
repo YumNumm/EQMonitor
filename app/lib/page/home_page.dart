@@ -193,7 +193,7 @@ class _DebugModal extends ConsumerWidget {
                 arrivalTime: DateTime.now(),
                 hypoName: 'テスト震源地',
                 magnitude: (Random().nextDouble() * 100).toInt() / 10,
-                depth: Random().nextInt(100),
+                depth: Random().nextInt(15) * 10,
                 originTime: DateTime.now(),
                 forecastMaxIntensity:
                     JmaForecastIntensity.values[Random().nextInt(

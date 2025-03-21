@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +21,68 @@ class EewPsWaveLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
+    final isRefreshing = useRef(false);
+    final currentEews = useRef<List<EewV1>>([]);
     final controller = MapController.of(context);
 
-    final tickerProvider = useSingleTickerProvider();
+    final animationController = useAnimationController(
+      duration: const Duration(seconds: 1),
+    );
 
     useEffect(() {
-      tickerProvider.createTicker(print);
+      animationController.repeat();
+      animationController.addListener(() async {
+        if (!isInitialized.value) {
+          return;
+        }
+        if (!isRefreshing.value) {
+          isRefreshing.value = true;
+          try {
+            final eews = ref.read(
+              eewProvider.select((value) => value.valueOrNull),
+            );
+            if (currentEews.value.isEmpty && (eews ?? []).isEmpty) {
+              return;
+            }
+            final activeEews = eews ?? [];
+            currentEews.value = activeEews;
+            final travelTimeMap = ref.read(travelTimeDepthMapProvider);
+            final now = DateTime.now();
+
+            final results =
+                <({TravelTimeResult result, double lat, double lon})>[];
+            for (final eew in activeEews) {
+              if (eew.isCanceled ||
+                  eew.latitude == null ||
+                  eew.longitude == null ||
+                  eew.depth == null ||
+                  eew.originTime == null) {
+                continue;
+              }
+
+              final duration =
+                  now.difference(eew.originTime!).inMilliseconds / 1000;
+              final result = travelTimeMap.getTravelTime(eew.depth!, duration);
+              results.add((
+                result: result,
+                lat: eew.latitude!,
+                lon: eew.longitude!,
+              ));
+            }
+
+            final geojson = _createGeoJson(results);
+            await controller.style!.updateGeoJsonSource(
+              id: _sourceId,
+              data: jsonEncode(geojson),
+            );
+          } finally {
+            isRefreshing.value = false;
+          }
+        }
+      });
+
       return null;
-    }, [tickerProvider]);
+    }, [animationController]);
 
     useEffect(() {
       unawaited(
@@ -47,6 +102,9 @@ class EewPsWaveLayer extends HookConsumerWidget {
                 id: _pWaveLayerId,
                 sourceId: _sourceId,
                 paint: {'line-color': '#0000FF', 'line-width': 2},
+                layout: {
+                  'filter': ['==', 'type', 'p_wave'],
+                },
               ),
             );
 
@@ -56,6 +114,9 @@ class EewPsWaveLayer extends HookConsumerWidget {
                 id: _sWaveLayerId,
                 sourceId: _sourceId,
                 paint: {'line-color': '#FF0000', 'line-width': 2},
+                layout: {
+                  'filter': ['==', 'type', 's_wave'],
+                },
               ),
             );
 
@@ -83,29 +144,6 @@ class EewPsWaveLayer extends HookConsumerWidget {
       if (!isInitialized.value) {
         return;
       }
-      final activeEews = eews ?? [];
-      final travelTimeMap = ref.read(travelTimeDepthMapProvider);
-      final now = DateTime.now();
-
-      final results = <({TravelTimeResult result, double lat, double lon})>[];
-      for (final eew in activeEews) {
-        if (eew.isCanceled ||
-            eew.latitude == null ||
-            eew.longitude == null ||
-            eew.depth == null ||
-            eew.originTime == null) {
-          continue;
-        }
-
-        final duration = now.difference(eew.originTime!).inMilliseconds / 1000;
-        final result = travelTimeMap.getTravelTime(eew.depth!, duration);
-        results.add((result: result, lat: eew.latitude!, lon: eew.longitude!));
-      }
-
-      await controller.style!.updateGeoJsonSource(
-        id: _sourceId,
-        data: jsonEncode(_createGeoJson(results)),
-      );
     });
 
     return const SizedBox.shrink();

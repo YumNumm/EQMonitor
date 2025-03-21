@@ -66,9 +66,10 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget {
       final controller = MapController.of(context);
       unawaited(
         controller.synchronized(() async {
+          final geojson = _convertEewsToGeoJson(activeEews);
           await controller.style!.updateGeoJsonSource(
             id: _sourceId,
-            data: _convertEewsToGeoJson(activeEews),
+            data: geojson,
           );
         }),
       );

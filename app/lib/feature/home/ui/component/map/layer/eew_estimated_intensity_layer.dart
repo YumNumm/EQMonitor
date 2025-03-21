@@ -83,11 +83,14 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
               FillStyleLayer(
                 id: layerId,
                 sourceId: 'eqmonitor_map',
-                paint: {
-                  ...manager.getPaintForIntensity(intensity),
-                  // 表示/非表示の制御
-                  'fill-opacity': codes.isNotEmpty ? 0.5 : 0.0,
-                },
+                paint: {...manager.getPaintForIntensity(intensity)},
+                // layout: {
+                //   'filter': [
+                //     'in',
+                //     ['get', 'code'],
+                //     ['literal', codes],
+                //   ],
+                // },
               ),
             );
           }
