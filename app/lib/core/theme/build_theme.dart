@@ -30,6 +30,8 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
       scrolledUnderElevation: 0,
     ),
     splashFactory: NoSplash.splashFactory,
+    sliderTheme: const SliderThemeData(year2023: false),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
   );
 }
 
