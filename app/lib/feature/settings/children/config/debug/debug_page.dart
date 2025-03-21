@@ -6,7 +6,6 @@ import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/layer/layer_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -78,31 +77,23 @@ class _DebugWidget extends ConsumerWidget {
                 leading: const Icon(Icons.http),
                 subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
                 onTap:
-                    () async =>
-                        const HttpApiEndpointSelectorRoute().push<void>(context),
+                    () async => const HttpApiEndpointSelectorRoute().push<void>(
+                      context,
+                    ),
               ),
               ListTile(
                 title: const Text('WebSocketエンドポイント'),
                 leading: const Icon(Icons.http),
                 subtitle: Text(ref.watch(telegramUrlProvider).wsApiUrl),
                 onTap:
-                    () async => const WebsocketEndpointSelectorRoute().push<void>(
-                      context,
-                    ),
+                    () async => const WebsocketEndpointSelectorRoute()
+                        .push<void>(context),
               ),
               ListTile(
                 title: const Text('KyoshinMonitor'),
                 leading: const Icon(Icons.list),
-                onTap: () async => const DebugKyoshinMonitorRoute().push(context),
-              ),
-              ListTile(
-                title: const Text('レイヤーデバッグ'),
-                leading: const Icon(Icons.layers),
-                onTap: () async => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (context) => const LayerDebugPage(),
-                  ),
-                ),
+                onTap:
+                    () async => const DebugKyoshinMonitorRoute().push(context),
               ),
               ListTile(
                 title: const Text('Playground'),
