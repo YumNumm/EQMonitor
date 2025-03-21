@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_inte
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_symbol_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
@@ -86,6 +87,7 @@ class _MapView extends HookConsumerWidget {
             const EewHypocenterSymbolLayer(),
             const EewPsWaveLayer(),
             const EewEstimatedIntensityLayer(),
+            const ShakeDetectionLayer(),
           ],
           SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
         ],
