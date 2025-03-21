@@ -69,14 +69,15 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
         return;
       }
 
-      final activeEews = eews ?? [];
-      final areas = _transformRegions(activeEews);
+      // final activeEews = eews ?? [];
+      // final areas = _transformRegions(activeEews);
 
       unawaited(
         controller.synchronized(() async {
           for (final intensity in JmaForecastIntensity.values) {
             final layerId = _getLayerId(intensity);
-            final codes = areas[intensity] ?? [];
+            // TODO: ここでフィルターを設定する
+            // final codes = areas[intensity] ?? [];
 
             // レイヤーを更新
             await controller.style!.updateLayer(

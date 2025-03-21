@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/layer/base_layer_debug_page.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +13,17 @@ class EewPsWaveLayerDebugPage extends BaseLayerDebugPage {
   String get title => 'EEW P波・S波レイヤーデバッグ';
 
   @override
-  String get description => 'EEW P波・S波レイヤーは、緊急地震速報の震源から伝播するP波とS波を地図上に表示します。'
+  String get description =>
+      'EEW P波・S波レイヤーは、緊急地震速報の震源から伝播するP波とS波を地図上に表示します。 '
       'P波は青色の円、S波は赤色の円で表示され、時間とともに拡大します。';
 
   @override
   Map<String, dynamic> get defaultLayerParams => {
-        'pWaveColor': Colors.blue.value,
-        'sWaveColor': Colors.red.value,
-        'lineWidth': 2.0,
-        'animationDuration': 1.0,
-      };
+    'pWaveColor': Colors.blue.toHexStringRGB(),
+    'sWaveColor': Colors.red.toHexStringRGB(),
+    'lineWidth': 2.0,
+    'animationDuration': 1.0,
+  };
 
   @override
   Widget buildLayer(
@@ -52,33 +54,36 @@ class EewPsWaveLayerDebugPage extends BaseLayerDebugPage {
             height: 24,
             decoration: BoxDecoration(
               color: Color(layerParams.value['pWaveColor'] as int),
-              border: Border.all(color: Colors.black),
+              border: Border.all(),
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-          onTap: () {
-            showDialog(
+          onTap: () async {
+            await showDialog<void>(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('P波の色を選択'),
-                content: SingleChildScrollView(
-                  child: ColorPicker(
-                    pickerColor: Color(layerParams.value['pWaveColor'] as int),
-                    onColorChanged: (color) {
-                      layerParams.value = {
-                        ...layerParams.value,
-                        'pWaveColor': color.value,
-                      };
-                    },
+              builder:
+                  (context) => AlertDialog(
+                    title: const Text('P波の色を選択'),
+                    content: SingleChildScrollView(
+                      child: ColorPicker(
+                        pickerColor: Color(
+                          layerParams.value['pWaveColor'] as int,
+                        ),
+                        onColorChanged: (color) {
+                          layerParams.value = {
+                            ...layerParams.value,
+                            'pWaveColor': color.toHexStringRGB(),
+                          };
+                        },
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
             );
           },
         ),
@@ -91,33 +96,36 @@ class EewPsWaveLayerDebugPage extends BaseLayerDebugPage {
             height: 24,
             decoration: BoxDecoration(
               color: Color(layerParams.value['sWaveColor'] as int),
-              border: Border.all(color: Colors.black),
+              border: Border.all(),
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-          onTap: () {
-            showDialog(
+          onTap: () async {
+            await showDialog<void>(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('S波の色を選択'),
-                content: SingleChildScrollView(
-                  child: ColorPicker(
-                    pickerColor: Color(layerParams.value['sWaveColor'] as int),
-                    onColorChanged: (color) {
-                      layerParams.value = {
-                        ...layerParams.value,
-                        'sWaveColor': color.value,
-                      };
-                    },
+              builder:
+                  (context) => AlertDialog(
+                    title: const Text('S波の色を選択'),
+                    content: SingleChildScrollView(
+                      child: ColorPicker(
+                        pickerColor: Color(
+                          layerParams.value['sWaveColor'] as int,
+                        ),
+                        onColorChanged: (color) {
+                          layerParams.value = {
+                            ...layerParams.value,
+                            'sWaveColor': color.toHexStringRGB(),
+                          };
+                        },
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
             );
           },
         ),
@@ -129,15 +137,12 @@ class EewPsWaveLayerDebugPage extends BaseLayerDebugPage {
         ),
         Slider(
           min: 0.5,
-          max: 5.0,
+          max: 5,
           divisions: 9,
           value: layerParams.value['lineWidth'] as double,
           label: '${layerParams.value['lineWidth']}px',
           onChanged: (value) {
-            layerParams.value = {
-              ...layerParams.value,
-              'lineWidth': value,
-            };
+            layerParams.value = {...layerParams.value, 'lineWidth': value};
           },
         ),
 
@@ -148,7 +153,7 @@ class EewPsWaveLayerDebugPage extends BaseLayerDebugPage {
         ),
         Slider(
           min: 0.1,
-          max: 3.0,
+          max: 3,
           divisions: 29,
           value: layerParams.value['animationDuration'] as double,
           label: '${layerParams.value['animationDuration']}秒',
@@ -165,9 +170,9 @@ class EewPsWaveLayerDebugPage extends BaseLayerDebugPage {
         const Card(
           color: Colors.amber,
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8),
             child: Text(
-              '注意: 現在の実装では、パラメータの変更は実際のレイヤーに反映されません。'
+              '注意: 現在の実装では、パラメータの変更は実際のレイヤーに反映されません。 '
               'これは、実際のレイヤーの実装を直接使用しているためです。'
               '将来的には、パラメータを直接反映できるようにする予定です。',
               style: TextStyle(fontWeight: FontWeight.bold),

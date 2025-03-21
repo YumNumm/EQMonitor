@@ -17,7 +17,11 @@ abstract class BaseLayerDebugPage extends HookConsumerWidget {
   String get description;
 
   /// コントロール部分のウィジェット
-  Widget buildControls(BuildContext context, WidgetRef ref, ValueNotifier<Map<String, dynamic>> layerParams);
+  Widget buildControls(
+    BuildContext context,
+    WidgetRef ref,
+    ValueNotifier<Map<String, dynamic>> layerParams,
+  );
 
   /// レイヤーのデフォルトパラメータ
   Map<String, dynamic> get defaultLayerParams;
@@ -31,70 +35,71 @@ abstract class BaseLayerDebugPage extends HookConsumerWidget {
       appBar: AppBar(title: Text(title)),
       body: switch (mapConfiguration) {
         AsyncData(:final value) when value.styleString != null => Column(
-            children: [
-              // 上部に地図を表示
-              Expanded(
-                flex: 3,
-                child: _MapView(
-                  styleString: value.styleString!,
-                  buildLayer: (context, ref, controller) =>
-                    buildLayer(context, ref, controller, layerParams),
-                ),
+          children: [
+            // 上部に地図を表示
+            Expanded(
+              flex: 3,
+              child: _MapView(
+                styleString: value.styleString!,
+                buildLayer:
+                    (context, ref, controller) =>
+                        buildLayer(context, ref, controller, layerParams),
               ),
-              // 下部にコントロールを表示
-              Expanded(
-                flex: 2,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'レイヤーパラメータ',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            // 下部にコントロールを表示
+            Expanded(
+              flex: 2,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'レイヤーパラメータ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          description,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        const SizedBox(height: 16),
-                        buildControls(context, ref, layerParams),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            layerParams.value = Map<String, dynamic>.from(defaultLayerParams);
-                          },
-                          child: const Text('デフォルト値に戻す'),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(description, style: const TextStyle(fontSize: 14)),
+                      const SizedBox(height: 16),
+                      buildControls(context, ref, layerParams),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          layerParams.value = Map<String, dynamic>.from(
+                            defaultLayerParams,
+                          );
+                        },
+                        child: const Text('デフォルト値に戻す'),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
-        AsyncError(:final error) => Center(
-            child: Text('エラー: $error'),
-          ),
-        _ => const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
+            ),
+          ],
+        ),
+        AsyncError(:final error) => Center(child: Text('エラー: $error')),
+        _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
     );
   }
 
   /// レイヤーを構築するメソッド
-  Widget buildLayer(BuildContext context, WidgetRef ref, MapController controller, ValueNotifier<Map<String, dynamic>> layerParams);
+  Widget buildLayer(
+    BuildContext context,
+    WidgetRef ref,
+    MapController controller,
+    ValueNotifier<Map<String, dynamic>> layerParams,
+  );
 }
 
 /// 地図表示用のウィジェット
 class _MapView extends HookConsumerWidget {
-  const _MapView({
-    required this.styleString,
-    required this.buildLayer,
-  });
+  const _MapView({required this.styleString, required this.buildLayer});
 
   final String styleString;
   final Widget Function(BuildContext, WidgetRef, MapController) buildLayer;
