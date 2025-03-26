@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_symbol_layer.dart';
@@ -62,6 +65,21 @@ class _MapView extends HookConsumerWidget {
     final isInitialized = useState(false);
     final controller = useState<MapController?>(null);
 
+    ref.listen(
+      homeConfigurationNotifierProvider.select((v) => v.showLocation),
+      (_, showLocation) {
+        if (controller.value != null) {
+          if (showLocation) {
+            unawaited(
+              controller.value!.enableLocation(pulse: false, pulseFade: false),
+            );
+          } else {
+            unawaited(controller.value!.disableLocation());
+          }
+        }
+      },
+    );
+
     return SizedBox.expand(
       child: MapLibreMap(
         acceptLicense: true,
@@ -72,9 +90,21 @@ class _MapView extends HookConsumerWidget {
             initialCameraPosition.target.lon,
             initialCameraPosition.target.lat,
           ),
+          maxZoom: 12,
         ),
         onStyleLoaded: (styleController) async {
           isInitialized.value = true;
+
+          final c = controller.value;
+          final location =
+              ref.read(homeConfigurationNotifierProvider).showLocation;
+          if (c != null) {
+            if (location) {
+              await c.enableLocation(pulse: false, pulseFade: false);
+            } else {
+              await c.disableLocation();
+            }
+          }
         },
         onMapCreated: (c) => controller.value = c,
         children: [

@@ -18,8 +18,6 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
     implements MapLayer {
   const EewEstimatedIntensityLayer({super.key});
 
-  static const _baseLayerId = 'areaForecastLocalELine';
-
   @override
   String get layerId => _getLayerId(JmaForecastIntensity.values.first);
 
@@ -35,34 +33,36 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
 
     final eews = ref.watch(eewProvider.select((value) => value.valueOrNull));
 
-    final areas = useMemoized(() => _transformRegions(eews ?? []), [eews]);
-
     // レイヤーの初期化
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
-            // 各予想震度ごとにFill Layerを追加
-            for (final intensity in JmaForecastIntensity.values) {
-              final codes = areas[intensity] ?? [];
-              final layerId = _getLayerId(intensity);
-              await controller.style!.addLayer(
-                FillStyleLayer(
-                  id: layerId,
-                  sourceId: 'eqmonitor_map',
-                  paint: manager.getPaintForIntensity(intensity),
-                  layout: {
-                    // 'filter': [
-                    //   'in',
-                    //   ['get', 'code'],
-                    //   ['literal', codes],
-                    // ],
-                  },
-                ),
-                belowLayerId: _baseLayerId,
-                sourceLayer: BaseLayer.areaForecastLocalEFill.name,
-              );
-            }
+            unawaited(
+              controller.synchronized(() async {
+                final areas = _transformRegions(eews ?? []);
+                await [
+                  for (final intensity in JmaForecastIntensity.values)
+                    // レイヤーを追加
+                    controller.style!.addLayer(
+                      FillStyleLayer(
+                        id: _getLayerId(intensity),
+                        sourceId: 'eqmonitor_map',
+                        paint: manager.getPaintForIntensity(intensity),
+                        layout: {
+                          'filter': [
+                            'in',
+                            ['get', 'code'],
+                            ['literal', areas[intensity] ?? []],
+                          ],
+                        },
+                      ),
+                      belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                      sourceLayer: 'areaForecastLocalE',
+                    ),
+                ].wait;
+              }),
+            );
             isInitialized.value = true;
           }),
         ),
@@ -83,6 +83,8 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
 
       unawaited(
         controller.synchronized(() async {
+          final areas = _transformRegions(eews ?? []);
+
           await [
             for (final intensity in JmaForecastIntensity.values)
               // レイヤーを更新
@@ -99,6 +101,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
                     ],
                   },
                 ),
+                sourceLayer: 'areaForecastLocalE',
               ),
           ].wait;
         }),
@@ -118,15 +121,13 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
   }
 
   // EEWの予想震度地域情報を変換
-  static Map<JmaForecastIntensity, List<String>> _transformRegions(
-    List<EewV1> eews,
-  ) {
+  Map<JmaForecastIntensity, List<String>> _transformRegions(List<EewV1> eews) {
     // 震度予測がないEEWを除外
     final regionsFromEews =
         eews
             .where((e) => !e.isCanceled)
             .map((e) => e.regions)
-            .whereType<List<EstimatedIntensityRegion>>()
+            .nonNulls
             .expand((e) => e)
             .toList();
 
@@ -137,24 +138,22 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
     }
 
     // 予想震度が最も大きいものを取り出す
-    final regionsIntensityMax = <String, ForecastMaxInt>{};
+    final regionsIntensityMax = <String, JmaForecastIntensity>{};
     for (final entry in regionsGrouped.entries) {
       if (entry.value.isEmpty) {
         continue;
       }
 
-      ForecastMaxInt? max;
+      JmaForecastIntensity? max;
       for (final region in entry.value) {
-        final forecastMaxInt = region.forecastMaxInt;
+        final forecastMaxInt = region.forecastMaxInt.toDisplayMaxInt().maxInt;
 
-        if (max == null ||
-            forecastMaxInt.toDisplayMaxInt().maxInt.index >
-                max.toDisplayMaxInt().maxInt.index) {
+        if (max == null || forecastMaxInt.index > max.index) {
           max = forecastMaxInt;
         }
       }
 
-      if (max != null) {
+      if (max != null) { 
         regionsIntensityMax[entry.key] = max;
       }
     }
@@ -162,7 +161,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
     // Map<予想震度, List<地域コード>> に変換する
     final regionsIntensityGrouped = <JmaForecastIntensity, List<String>>{};
     for (final entry in regionsIntensityMax.entries) {
-      final key = entry.value.toDisplayMaxInt().maxInt;
+      final key = entry.value;
       regionsIntensityGrouped.putIfAbsent(key, () => []).add(entry.key);
     }
 

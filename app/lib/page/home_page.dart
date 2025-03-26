@@ -205,10 +205,10 @@ class _DebugModal extends ConsumerWidget {
                       for (final region
                           in ref
                               .read(jmaCodeTableProvider)
-                              .areaForecastLocalEew
+                              .areaEpicenter
                               .items)
                         () {
-                          if (Random().nextDouble() > 0.8) {
+                          if (Random().nextDouble() > 0.9) {
                             return EstimatedIntensityRegion(
                               code: region.code,
                               name: region.name,

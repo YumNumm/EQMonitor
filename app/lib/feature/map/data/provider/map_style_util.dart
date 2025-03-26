@@ -140,7 +140,6 @@ class MapStyleUtil {
         {
           'id': BaseLayer.areaForecastLocalELine.name,
           'source': 'eqmonitor_map',
-
           'source-layer': 'areaForecastLocalE',
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},

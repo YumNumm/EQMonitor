@@ -235,7 +235,7 @@ class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
       'features': [
         for (final result in results) ...[
           // P波の円
-          if (result.result.pDistance != null)
+          if (result.result.pDistance != null && result.result.pDistance! > 0)
             {
               'type': 'Feature',
               'geometry': {
@@ -260,7 +260,7 @@ class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
               'properties': {'type': 'p_wave', 'is_warning': result.isWarning},
             },
           // S波の円
-          if (result.result.sDistance != null)
+          if (result.result.sDistance != null && result.result.sDistance! > 0)
             {
               'type': 'Feature',
               'geometry': {
