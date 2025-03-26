@@ -185,6 +185,7 @@ class _DebugModal extends ConsumerWidget {
                 reportTime: DateTime.now(),
                 isCanceled: false,
                 isLastInfo: Random().nextBool(),
+                isWarning: Random().nextBool(),
                 isPlum: Random().nextBool(),
                 accuracy: null,
                 serialNo: Random().nextInt(100),
