@@ -104,6 +104,25 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
       },
     );
 
+    ref.listen(kyoshinMonitorSettingsProvider.select((v) => v.useKmoni), (
+      _,
+      showLayer,
+    ) {
+      if (isInitialized.value) {
+        unawaited(
+          controller.synchronized(() async {
+            await controller.style!.updateLayer(
+              CircleStyleLayer(
+                id: _layerId,
+                sourceId: _sourceId,
+                paint: {'circle-opacity': showLayer ? 1.0 : 0.0},
+              ),
+            );
+          }),
+        );
+      }
+    });
+
     return const SizedBox.shrink();
   }
 

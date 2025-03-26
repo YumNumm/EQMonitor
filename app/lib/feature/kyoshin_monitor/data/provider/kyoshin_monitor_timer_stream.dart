@@ -47,7 +47,7 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
       .setInterval(
         ref.read(kyoshinMonitorSettingsProvider).api.imageFetchInterval,
       );
-
   ref.onDispose(streamController.close);
+
   yield* streamController.stream;
 }

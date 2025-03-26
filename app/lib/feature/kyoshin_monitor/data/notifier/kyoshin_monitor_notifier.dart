@@ -19,7 +19,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     // タイマーストリームを監視
     ref.listen(kyoshinMonitorTimerStreamProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
-        await _fetchAndAnalyzeImage(value);
+        if (ref.read(kyoshinMonitorSettingsProvider).useKmoni) {
+          await _fetchAndAnalyzeImage(value);
+        }
       }
     });
 
@@ -32,7 +34,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         return;
       }
       if (previous.realtimeDataType != next.realtimeDataType ||
-          previous.realtimeLayer != next.realtimeLayer) {
+          previous.realtimeLayer != next.realtimeLayer ||
+          previous.useKmoni != next.useKmoni) {
         onSettingsChanged();
       }
     });
