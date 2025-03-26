@@ -49,7 +49,7 @@ class MapLayerControllerCard extends StatelessWidget {
                     InkWell(
                       child: const Padding(
                         padding: EdgeInsets.all(8),
-                        child: Icon(Icons.location_on),
+                        child: Icon(Icons.home_rounded),
                       ),
                       onTap: () {
                         hapticFeedback();

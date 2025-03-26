@@ -71,7 +71,11 @@ class _MapView extends HookConsumerWidget {
         if (controller.value != null) {
           if (showLocation) {
             unawaited(
-              controller.value!.enableLocation(pulse: false, pulseFade: false),
+              controller.value!.enableLocation(
+                pulse: false,
+                pulseFade: false,
+                compassAnimation: false,
+              ),
             );
           } else {
             unawaited(controller.value!.disableLocation());
@@ -100,7 +104,11 @@ class _MapView extends HookConsumerWidget {
               ref.read(homeConfigurationNotifierProvider).showLocation;
           if (c != null) {
             if (location) {
-              await c.enableLocation(pulse: false, pulseFade: false);
+              await c.enableLocation(
+                pulse: false,
+                pulseFade: false,
+                compassAnimation: false,
+              );
             } else {
               await c.disableLocation();
             }
