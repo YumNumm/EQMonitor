@@ -30,7 +30,9 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
       scrolledUnderElevation: 0,
     ),
     splashFactory: NoSplash.splashFactory,
+    // ignore: deprecated_member_use
     sliderTheme: const SliderThemeData(year2023: false),
+    // ignore: deprecated_member_use
     progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
   );
 }
