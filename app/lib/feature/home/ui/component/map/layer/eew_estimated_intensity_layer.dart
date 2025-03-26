@@ -21,6 +21,12 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
   @override
   String get layerId => _getLayerId(JmaForecastIntensity.values.first);
 
+  Iterable<JmaForecastIntensity> get allowedIntensities =>
+      JmaForecastIntensity.values.where(
+        (e) =>
+            e != JmaForecastIntensity.unknown && e != JmaForecastIntensity.zero,
+      );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
@@ -42,7 +48,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
               controller.synchronized(() async {
                 final areas = _transformRegions(eews ?? []);
                 await [
-                  for (final intensity in JmaForecastIntensity.values)
+                  for (final intensity in allowedIntensities)
                     // レイヤーを追加
                     controller.style!.addLayer(
                       FillStyleLayer(
@@ -86,7 +92,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
           final areas = _transformRegions(eews ?? []);
 
           await [
-            for (final intensity in JmaForecastIntensity.values)
+            for (final intensity in allowedIntensities)
               // レイヤーを更新
               controller.style!.updateLayer(
                 FillStyleLayer(
@@ -153,7 +159,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
         }
       }
 
-      if (max != null) { 
+      if (max != null) {
         regionsIntensityMax[entry.key] = max;
       }
     }
