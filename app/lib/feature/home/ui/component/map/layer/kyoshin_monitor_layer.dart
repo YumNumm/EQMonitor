@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/extension/color_extension.dart';
+import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
@@ -14,11 +15,14 @@ import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:synchronized/extension.dart';
 
-class KyoshinMonitorLayer extends HookConsumerWidget {
+class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
   const KyoshinMonitorLayer({super.key});
 
   static const _layerId = 'kyoshin_monitor_layer';
   static const _sourceId = 'kyoshin_monitor_source';
+
+  @override
+  String get layerId => _layerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,12 +66,6 @@ class KyoshinMonitorLayer extends HookConsumerWidget {
       );
       return () {
         isInitialized.value = false;
-        unawaited(
-          controller.synchronized(() async {
-            await controller.style!.removeLayer(_layerId);
-            await controller.style!.removeSource(_sourceId);
-          }),
-        );
       };
     }, []);
 

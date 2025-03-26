@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/util/map_utility.dart';
+import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_symbol_layer.dart';
@@ -35,7 +35,6 @@ class HomeMapView extends HookConsumerWidget {
             bounds: (minLat: 30, minLng: 128.8, maxLat: 45.8, maxLng: 145.1),
             padding: 16,
           );
-          print(cameraPosition);
 
           return _MapView(
             styleString: value.styleString!,
@@ -75,14 +74,11 @@ class _MapView extends HookConsumerWidget {
           ),
         ),
         onStyleLoaded: (styleController) async {
-          await ref
-              .read(mapUtilityProvider)
-              .addHypocenterImages(controller.value!);
           isInitialized.value = true;
         },
         onMapCreated: (c) => controller.value = c,
         children: [
-          if (isInitialized.value) ...[
+          if (isInitialized.value) ...<MapLayer>[
             const KyoshinMonitorLayer(),
             const EewHypocenterSymbolLayer(),
             const EewPsWaveLayer(),

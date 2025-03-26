@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/color_extension.dart';
+import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,14 @@ import 'package:maplibre/maplibre.dart';
 import 'package:synchronized/extension.dart';
 
 /// 揺れ検知枠を表示するレイヤー
-class ShakeDetectionLayer extends HookConsumerWidget {
+class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
   const ShakeDetectionLayer({super.key});
 
   static const _baseLayerId = 'areaForecastLocalELine';
   static const _sourceId = 'shake_detection_grid_source';
+
+  @override
+  String get layerId => _baseLayerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,14 +85,6 @@ class ShakeDetectionLayer extends HookConsumerWidget {
       );
       return () {
         isInitialized.value = false;
-        unawaited(
-          controller.synchronized(() async {
-            for (final level in ShakeDetectionLevel.values) {
-              await controller.style!.removeLayer(_getLayerId(level));
-            }
-            await controller.style!.removeSource(_sourceId);
-          }),
-        );
       };
     }, []);
 
@@ -122,16 +118,16 @@ class ShakeDetectionLayer extends HookConsumerWidget {
                 id: layerId,
                 sourceId: _sourceId,
                 paint: {
-                  'line-color': level.color..toHexStringRGB(),
+                  'line-color': level.color.toHexStringRGB(),
                   'line-width': 2.0,
                 },
                 layout: {
                   'visibility': visibility,
-                  'filter': [
-                    '==',
-                    ['get', 'level'],
-                    level.index.toString(),
-                  ],
+                  // 'filter': [
+                  //   '==',
+                  //   ['get', 'level'],
+                  //   level.index.toString(),
+                  // ],
                 },
               ),
             );

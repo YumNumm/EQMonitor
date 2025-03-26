@@ -4,7 +4,9 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,10 +14,14 @@ import 'package:maplibre/maplibre.dart';
 import 'package:synchronized/extension.dart';
 
 /// EEWの予想震度を表示するレイヤー
-class EewEstimatedIntensityLayer extends HookConsumerWidget {
+class EewEstimatedIntensityLayer extends HookConsumerWidget
+    implements MapLayer {
   const EewEstimatedIntensityLayer({super.key});
 
   static const _baseLayerId = 'areaForecastLocalELine';
+
+  @override
+  String get layerId => _getLayerId(JmaForecastIntensity.values.first);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,6 +33,10 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
       [intensityColor],
     );
 
+    final eews = ref.watch(eewProvider.select((value) => value.valueOrNull));
+
+    final areas = useMemoized(() => _transformRegions(eews ?? []), [eews]);
+
     // レイヤーの初期化
     useEffect(() {
       unawaited(
@@ -34,14 +44,23 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           (_) async => controller.synchronized(() async {
             // 各予想震度ごとにFill Layerを追加
             for (final intensity in JmaForecastIntensity.values) {
+              final codes = areas[intensity] ?? [];
               final layerId = _getLayerId(intensity);
               await controller.style!.addLayer(
                 FillStyleLayer(
                   id: layerId,
                   sourceId: 'eqmonitor_map',
                   paint: manager.getPaintForIntensity(intensity),
+                  layout: {
+                    // 'filter': [
+                    //   'in',
+                    //   ['get', 'code'],
+                    //   ['literal', codes],
+                    // ],
+                  },
                 ),
                 belowLayerId: _baseLayerId,
+                sourceLayer: BaseLayer.areaForecastLocalEFill.name,
               );
             }
             isInitialized.value = true;
@@ -50,13 +69,6 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
       );
       return () {
         isInitialized.value = false;
-        unawaited(
-          controller.synchronized(() async {
-            for (final intensity in JmaForecastIntensity.values) {
-              await controller.style!.removeLayer(_getLayerId(intensity));
-            }
-          }),
-        );
       };
     }, []);
 
@@ -69,32 +81,26 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
         return;
       }
 
-      // final activeEews = eews ?? [];
-      // final areas = _transformRegions(activeEews);
-
       unawaited(
         controller.synchronized(() async {
-          for (final intensity in JmaForecastIntensity.values) {
-            final layerId = _getLayerId(intensity);
-            // TODO: ここでフィルターを設定する
-            // final codes = areas[intensity] ?? [];
-
-            // レイヤーを更新
-            await controller.style!.updateLayer(
-              FillStyleLayer(
-                id: layerId,
-                sourceId: 'eqmonitor_map',
-                paint: {...manager.getPaintForIntensity(intensity)},
-                // layout: {
-                //   'filter': [
-                //     'in',
-                //     ['get', 'code'],
-                //     ['literal', codes],
-                //   ],
-                // },
+          await [
+            for (final intensity in JmaForecastIntensity.values)
+              // レイヤーを更新
+              controller.style!.updateLayer(
+                FillStyleLayer(
+                  id: _getLayerId(intensity),
+                  sourceId: 'eqmonitor_map',
+                  paint: manager.getPaintForIntensity(intensity),
+                  layout: {
+                    'filter': [
+                      'in',
+                      ['get', 'code'],
+                      ['literal', areas[intensity] ?? []],
+                    ],
+                  },
+                ),
               ),
-            );
-          }
+          ].wait;
         }),
       );
     });
@@ -173,7 +179,7 @@ class _EewEstimatedIntensityPaintManager {
 
   Map<String, Object> getPaintForIntensity(JmaForecastIntensity intensity) {
     final color = _getColorForIntensity(intensity);
-    return {'fill-color': color.toHexStringRGB(), 'fill-opacity': 0.5};
+    return {'fill-color': color.toHexStringRGB()};
   }
 
   /// 予想震度に対応する色を取得
