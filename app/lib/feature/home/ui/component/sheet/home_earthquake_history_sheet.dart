@@ -20,9 +20,10 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     final colorScheme = theme.colorScheme;
 
     return Card.outlined(
+      margin: EdgeInsets.zero,
       color: colorScheme.surfaceContainerHigh,
       child: Padding(
-        padding: const EdgeInsets.all(8).copyWith(top: 4),
+        padding: const EdgeInsets.all(8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,18 +62,14 @@ class _Header extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        FilledButton.tonalIcon(
-          style: FilledButton.styleFrom(
-            visualDensity: VisualDensity.compact,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-
-            backgroundColor: colorScheme.secondaryContainer,
-            foregroundColor: colorScheme.onSecondaryContainer,
-          ),
+        FilledButton.tonal(
           onPressed:
               () async => const EarthquakeHistoryRoute().push<void>(context),
-          icon: const Icon(Icons.arrow_forward),
-          label: const Text('さらに表示'),
+          style: TextButton.styleFrom(
+            visualDensity: VisualDensity.compact,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+          ),
+          child: const Text('さらに表示'),
         ),
       ],
     );
