@@ -9,7 +9,7 @@ import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dar
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypo_info_widget.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
@@ -217,7 +217,7 @@ class _Sheet extends StatelessWidget {
         hasAppBar: false,
         child: Column(
           children: [
-            EarthquakeHypoInfoWidget(item: item),
+            EarthquakeHypocenterInformationCard(item: item),
             const Divider(),
             PrefectureIntensityWidget(item: item.v1),
             if (item.lpgmIntensityPrefectures != null)
