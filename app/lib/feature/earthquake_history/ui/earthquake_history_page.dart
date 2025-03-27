@@ -6,17 +6,17 @@ import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EarthquakeHistoryScreen extends HookConsumerWidget {
-  const EarthquakeHistoryScreen({super.key});
+class EarthquakeHistoryPage extends HookConsumerWidget {
+  const EarthquakeHistoryPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

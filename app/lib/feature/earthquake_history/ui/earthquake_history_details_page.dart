@@ -9,7 +9,7 @@ import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dar
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
@@ -68,10 +68,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final maxIntensity = details.maxIntensity;
     final maxLgIntensity = details.maxLpgmIntensity;
 
-    final config = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
-    );
-
     final sheetController = SheetController();
     final navigateToHomeFunction = useState<VoidCallback?>(null);
     final theme = Theme.of(context);
@@ -81,53 +77,9 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       body: Stack(
         children: [
           if (maxIntensity != null)
-            IgnorePointer(
-              child: SafeArea(
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: BorderedContainer(
-                        key: ValueKey((config, maxIntensity, maxLgIntensity)),
-                        margin: const EdgeInsets.all(4),
-                        padding: const EdgeInsets.all(4),
-                        borderRadius: BorderRadius.circular((25 / 5) + 5),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            if (config.showingLpgmIntensity &&
-                                maxLgIntensity != null)
-                              for (final intensity in [
-                                ...JmaLgIntensity.values,
-                              ].where(
-                                (e) =>
-                                    e != JmaLgIntensity.zero &&
-                                    e <= maxLgIntensity,
-                              ))
-                                JmaLgIntensityIcon(
-                                  type: IntensityIconType.filled,
-                                  intensity: intensity,
-                                  size: 25,
-                                )
-                            else
-                              for (final intensity in [
-                                ...JmaIntensity.values,
-                              ].where((e) => e <= maxIntensity))
-                                JmaIntensityIcon(
-                                  type: IntensityIconType.filled,
-                                  intensity: intensity,
-                                  size: 25,
-                                ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            _IntensityIcons(
+              maxIntensity: maxIntensity,
+              maxLgIntensity: maxLgIntensity,
             ),
           SheetFloatingActionButtons(
             hasAppBar: false,
@@ -186,6 +138,67 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _IntensityIcons extends ConsumerWidget {
+  const _IntensityIcons({
+    required this.maxIntensity,
+    required this.maxLgIntensity,
+  });
+
+  final JmaIntensity maxIntensity;
+  final JmaLgIntensity? maxLgIntensity;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final config = ref.watch(
+      earthquakeHistoryConfigProvider.select((value) => value.detail),
+    );
+
+    return IgnorePointer(
+      child: SafeArea(
+        child: Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: BorderedContainer(
+                key: ValueKey((config, maxIntensity, maxLgIntensity)),
+                margin: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(4),
+                borderRadius: BorderRadius.circular((25 / 5) + 5),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    if (config.showingLpgmIntensity && maxLgIntensity != null)
+                      for (final intensity in [...JmaLgIntensity.values].where(
+                        (e) => e != JmaLgIntensity.zero && e <= maxLgIntensity!,
+                      ))
+                        JmaLgIntensityIcon(
+                          type: IntensityIconType.filled,
+                          intensity: intensity,
+                          size: 25,
+                        )
+                    else
+                      for (final intensity in [
+                        ...JmaIntensity.values,
+                      ].where((e) => e <= maxIntensity))
+                        JmaIntensityIcon(
+                          type: IntensityIconType.filled,
+                          intensity: intensity,
+                          size: 25,
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

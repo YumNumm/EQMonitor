@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_details_notifier.g.dart';
@@ -27,8 +27,8 @@ class EarthquakeHistoryDetailsNotifier
           final target = earthquakes?.$1.firstWhereOrNull(
             (earthquake) => earthquake.eventId == eventId,
           );
-          if (target?.intensityRegions != null) {
-            state = AsyncData(target!);
+          if (target != null && target.intensityRegions != null) {
+            state = AsyncData(target);
           }
         }
       },
