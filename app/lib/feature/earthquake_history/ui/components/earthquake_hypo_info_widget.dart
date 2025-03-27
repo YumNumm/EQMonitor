@@ -75,31 +75,27 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
             ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        '火山の大規模な噴火',
-                        style: textTheme.titleMedium!.copyWith(
-                          color: textTheme.titleMedium!.color!.withValues(
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '火山の大規模な噴火',
+                        style: textTheme.titleSmall!.copyWith(
+                          color: textTheme.titleSmall!.color!.withValues(
                             alpha: 0.8,
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        volcanoName ?? '不明',
-                        style: textTheme.headlineMedium!.copyWith(
+                      const WidgetSpan(child: SizedBox(width: 4)),
+                      TextSpan(
+                        text: volcanoName ?? '不明',
+                        style: textTheme.headlineSmall!.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
                 Flexible(
                   child: Text.rich(

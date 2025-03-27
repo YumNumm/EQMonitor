@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
@@ -34,7 +35,17 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                 value.$1.isEmpty
                     ? const EarthquakeHistoryNotFound()
                     : _EarthquakeList(earthquakes: value.$1),
-              AsyncError(:final error) => Center(child: Text(error.toString())),
+              AsyncError(:final error) => ErrorCard(
+                error: error,
+                margin: EdgeInsets.zero,
+                onReload:
+                    () async => ref.refresh(
+                      earthquakeHistoryNotifierProvider(
+                        const EarthquakeHistoryParameter(),
+                      ),
+                    ),
+                padding: const EdgeInsets.all(8),
+              ),
               _ => const Center(child: CircularProgressIndicator.adaptive()),
             },
           ],
