@@ -2,32 +2,32 @@
 
 // ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
-part of 'earthquake_history_config_provider.dart';
+part of 'earthquake_history_config_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$earthquakeHistoryConfigHash() =>
-    r'453f49269fbf832c29a5b1363665b4b05884eb3f';
+String _$earthquakeHistoryConfigNotifierHash() =>
+    r'c133b5e0380ca6ba952eedc00a37ae65284751cd';
 
-/// See also [EarthquakeHistoryConfig].
-@ProviderFor(EarthquakeHistoryConfig)
-final earthquakeHistoryConfigProvider = AutoDisposeNotifierProvider<
-  EarthquakeHistoryConfig,
-  EarthquakeHistoryConfigModel
+/// See also [EarthquakeHistoryConfigNotifier].
+@ProviderFor(EarthquakeHistoryConfigNotifier)
+final earthquakeHistoryConfigNotifierProvider = AutoDisposeNotifierProvider<
+  EarthquakeHistoryConfigNotifier,
+  EarthquakeHistoryConfig
 >.internal(
-  EarthquakeHistoryConfig.new,
-  name: r'earthquakeHistoryConfigProvider',
+  EarthquakeHistoryConfigNotifier.new,
+  name: r'earthquakeHistoryConfigNotifierProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$earthquakeHistoryConfigHash,
+          : _$earthquakeHistoryConfigNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$EarthquakeHistoryConfig =
-    AutoDisposeNotifier<EarthquakeHistoryConfigModel>;
+typedef _$EarthquakeHistoryConfigNotifier =
+    AutoDisposeNotifier<EarthquakeHistoryConfig>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

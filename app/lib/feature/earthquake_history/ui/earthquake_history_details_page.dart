@@ -6,8 +6,8 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
-import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
@@ -154,8 +154,9 @@ class _IntensityIcons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigNotifierProvider.select((value) => value.detail),
     );
+    final showingLpgmIntensity = config.showingLpgmIntensity;
 
     return IgnorePointer(
       child: SafeArea(
@@ -174,7 +175,7 @@ class _IntensityIcons extends ConsumerWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    if (config.showingLpgmIntensity && maxLgIntensity != null)
+                    if (showingLpgmIntensity && maxLgIntensity != null)
                       for (final intensity in [...JmaLgIntensity.values].where(
                         (e) => e != JmaLgIntensity.zero && e <= maxLgIntensity!,
                       ))

@@ -8,12 +8,10 @@ part of 'earthquake_history_config_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EarthquakeHistoryConfigModelImpl _$$EarthquakeHistoryConfigModelImplFromJson(
+_$EarthquakeHistoryConfigImpl _$$EarthquakeHistoryConfigImplFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$EarthquakeHistoryConfigModelImpl', json, (
-  $checkedConvert,
-) {
-  final val = _$EarthquakeHistoryConfigModelImpl(
+) => $checkedCreate(r'_$EarthquakeHistoryConfigImpl', json, ($checkedConvert) {
+  final val = _$EarthquakeHistoryConfigImpl(
     list: $checkedConvert(
       'list',
       (v) => EarthquakeHistoryListConfig.fromJson(v as Map<String, dynamic>),
@@ -26,8 +24,8 @@ _$EarthquakeHistoryConfigModelImpl _$$EarthquakeHistoryConfigModelImplFromJson(
   return val;
 });
 
-Map<String, dynamic> _$$EarthquakeHistoryConfigModelImplToJson(
-  _$EarthquakeHistoryConfigModelImpl instance,
+Map<String, dynamic> _$$EarthquakeHistoryConfigImplToJson(
+  _$EarthquakeHistoryConfigImpl instance,
 ) => <String, dynamic>{'list': instance.list, 'detail': instance.detail};
 
 _$EarthquakeHistoryListConfigImpl _$$EarthquakeHistoryListConfigImplFromJson(
@@ -41,25 +39,15 @@ _$EarthquakeHistoryListConfigImpl _$$EarthquakeHistoryListConfigImplFromJson(
         'is_fill_background',
         (v) => v as bool? ?? true,
       ),
-      includeTestTelegrams: $checkedConvert(
-        'include_test_telegrams',
-        (v) => v as bool? ?? false,
-      ),
     );
     return val;
   },
-  fieldKeyMap: const {
-    'isFillBackground': 'is_fill_background',
-    'includeTestTelegrams': 'include_test_telegrams',
-  },
+  fieldKeyMap: const {'isFillBackground': 'is_fill_background'},
 );
 
 Map<String, dynamic> _$$EarthquakeHistoryListConfigImplToJson(
   _$EarthquakeHistoryListConfigImpl instance,
-) => <String, dynamic>{
-  'is_fill_background': instance.isFillBackground,
-  'include_test_telegrams': instance.includeTestTelegrams,
-};
+) => <String, dynamic>{'is_fill_background': instance.isFillBackground};
 
 _$EarthquakeHistoryDetailConfigImpl
 _$$EarthquakeHistoryDetailConfigImplFromJson(Map<String, dynamic> json) =>

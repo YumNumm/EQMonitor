@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
-import 'package:eqmonitor/core/provider/config/earthquake_history/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -34,7 +34,7 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.list),
+      earthquakeHistoryConfigNotifierProvider.select((value) => value.list),
     );
     return Column(
       children: [
@@ -43,21 +43,8 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
           value: state.isFillBackground,
           onChanged:
               (value) async => ref
-                  .read(earthquakeHistoryConfigProvider.notifier)
+                  .read(earthquakeHistoryConfigNotifierProvider.notifier)
                   .updateListConfig(state.copyWith(isFillBackground: value)),
-        ),
-
-        /// includeTest
-        SwitchListTile.adaptive(
-          title: const Text('訓練・試験報の情報を表示する'),
-          subtitle: const Text('気象庁により作成された、訓練・試験用の緊急地震速報の情報を表示します。※非推奨'),
-          value: state.includeTestTelegrams,
-          onChanged:
-              (value) async => ref
-                  .read(earthquakeHistoryConfigProvider.notifier)
-                  .updateListConfig(
-                    state.copyWith(includeTestTelegrams: value),
-                  ),
         ),
       ],
     );
@@ -71,7 +58,7 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigNotifierProvider.select((value) => value.detail),
     );
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -116,7 +103,7 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
             );
             if (result != null) {
               await ref
-                  .read(earthquakeHistoryConfigProvider.notifier)
+                  .read(earthquakeHistoryConfigNotifierProvider.notifier)
                   .updateDetailConfig(
                     state.copyWith(intensityFillMode: result),
                   );
@@ -165,7 +152,7 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showingLpgmIntensity = ref.watch(
-      earthquakeHistoryConfigProvider.select(
+      earthquakeHistoryConfigNotifierProvider.select(
         (value) => value.detail.showingLpgmIntensity,
       ),
     );
@@ -221,10 +208,10 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
                         : _IntensityMode.intensity,
                 onSelected:
                     (value) async => ref
-                        .read(earthquakeHistoryConfigProvider.notifier)
+                        .read(earthquakeHistoryConfigNotifierProvider.notifier)
                         .updateDetailConfig(
                           ref
-                              .watch(earthquakeHistoryConfigProvider)
+                              .watch(earthquakeHistoryConfigNotifierProvider)
                               .detail
                               .copyWith(
                                 showingLpgmIntensity:
@@ -255,7 +242,7 @@ class __IntensityFillModeSegmentedControlState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigNotifierProvider.select((value) => value.detail),
     );
     final showCitySelector = widget.showCitySelector;
     const choices = IntensityFillMode.values;
@@ -287,7 +274,7 @@ class __IntensityFillModeSegmentedControlState
               return;
             }
             await ref
-                .read(earthquakeHistoryConfigProvider.notifier)
+                .read(earthquakeHistoryConfigNotifierProvider.notifier)
                 .updateDetailConfig(state.copyWith(intensityFillMode: value));
           }
         },
@@ -297,7 +284,7 @@ class __IntensityFillModeSegmentedControlState
         selected: {state.intensityFillMode},
         onSelectionChanged:
             (p0) async => ref
-                .read(earthquakeHistoryConfigProvider.notifier)
+                .read(earthquakeHistoryConfigNotifierProvider.notifier)
                 .updateDetailConfig(
                   state.copyWith(intensityFillMode: p0.first),
                 ),
@@ -364,7 +351,7 @@ class _IntensityStationIconModeSegmentedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigNotifierProvider.select((value) => value.detail),
     );
     final isShowingLpgmIntensity = state.showingLpgmIntensity;
     return SwitchListTile.adaptive(
@@ -372,7 +359,7 @@ class _IntensityStationIconModeSegmentedButton extends ConsumerWidget {
       value: state.showIntensityIcon,
       onChanged:
           (value) async => ref
-              .read(earthquakeHistoryConfigProvider.notifier)
+              .read(earthquakeHistoryConfigNotifierProvider.notifier)
               .updateDetailConfig(state.copyWith(showIntensityIcon: value)),
     );
   }

@@ -15,38 +15,34 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-EarthquakeHistoryConfigModel _$EarthquakeHistoryConfigModelFromJson(
+EarthquakeHistoryConfig _$EarthquakeHistoryConfigFromJson(
   Map<String, dynamic> json,
 ) {
-  return _EarthquakeHistoryConfigModel.fromJson(json);
+  return _EarthquakeHistoryConfig.fromJson(json);
 }
 
 /// @nodoc
-mixin _$EarthquakeHistoryConfigModel {
+mixin _$EarthquakeHistoryConfig {
   EarthquakeHistoryListConfig get list => throw _privateConstructorUsedError;
   EarthquakeHistoryDetailConfig get detail =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this EarthquakeHistoryConfigModel to a JSON map.
+  /// Serializes this EarthquakeHistoryConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of EarthquakeHistoryConfigModel
+  /// Create a copy of EarthquakeHistoryConfig
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeHistoryConfigModelCopyWith<EarthquakeHistoryConfigModel>
-  get copyWith => throw _privateConstructorUsedError;
+  $EarthquakeHistoryConfigCopyWith<EarthquakeHistoryConfig> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $EarthquakeHistoryConfigModelCopyWith<$Res> {
-  factory $EarthquakeHistoryConfigModelCopyWith(
-    EarthquakeHistoryConfigModel value,
-    $Res Function(EarthquakeHistoryConfigModel) then,
-  ) =
-      _$EarthquakeHistoryConfigModelCopyWithImpl<
-        $Res,
-        EarthquakeHistoryConfigModel
-      >;
+abstract class $EarthquakeHistoryConfigCopyWith<$Res> {
+  factory $EarthquakeHistoryConfigCopyWith(
+    EarthquakeHistoryConfig value,
+    $Res Function(EarthquakeHistoryConfig) then,
+  ) = _$EarthquakeHistoryConfigCopyWithImpl<$Res, EarthquakeHistoryConfig>;
   @useResult
   $Res call({
     EarthquakeHistoryListConfig list,
@@ -58,19 +54,19 @@ abstract class $EarthquakeHistoryConfigModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EarthquakeHistoryConfigModelCopyWithImpl<
+class _$EarthquakeHistoryConfigCopyWithImpl<
   $Res,
-  $Val extends EarthquakeHistoryConfigModel
+  $Val extends EarthquakeHistoryConfig
 >
-    implements $EarthquakeHistoryConfigModelCopyWith<$Res> {
-  _$EarthquakeHistoryConfigModelCopyWithImpl(this._value, this._then);
+    implements $EarthquakeHistoryConfigCopyWith<$Res> {
+  _$EarthquakeHistoryConfigCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of EarthquakeHistoryConfigModel
+  /// Create a copy of EarthquakeHistoryConfig
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -92,7 +88,7 @@ class _$EarthquakeHistoryConfigModelCopyWithImpl<
     );
   }
 
-  /// Create a copy of EarthquakeHistoryConfigModel
+  /// Create a copy of EarthquakeHistoryConfig
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -102,7 +98,7 @@ class _$EarthquakeHistoryConfigModelCopyWithImpl<
     });
   }
 
-  /// Create a copy of EarthquakeHistoryConfigModel
+  /// Create a copy of EarthquakeHistoryConfig
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -114,12 +110,12 @@ class _$EarthquakeHistoryConfigModelCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$EarthquakeHistoryConfigModelImplCopyWith<$Res>
-    implements $EarthquakeHistoryConfigModelCopyWith<$Res> {
-  factory _$$EarthquakeHistoryConfigModelImplCopyWith(
-    _$EarthquakeHistoryConfigModelImpl value,
-    $Res Function(_$EarthquakeHistoryConfigModelImpl) then,
-  ) = __$$EarthquakeHistoryConfigModelImplCopyWithImpl<$Res>;
+abstract class _$$EarthquakeHistoryConfigImplCopyWith<$Res>
+    implements $EarthquakeHistoryConfigCopyWith<$Res> {
+  factory _$$EarthquakeHistoryConfigImplCopyWith(
+    _$EarthquakeHistoryConfigImpl value,
+    $Res Function(_$EarthquakeHistoryConfigImpl) then,
+  ) = __$$EarthquakeHistoryConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -134,25 +130,25 @@ abstract class _$$EarthquakeHistoryConfigModelImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$EarthquakeHistoryConfigModelImplCopyWithImpl<$Res>
+class __$$EarthquakeHistoryConfigImplCopyWithImpl<$Res>
     extends
-        _$EarthquakeHistoryConfigModelCopyWithImpl<
+        _$EarthquakeHistoryConfigCopyWithImpl<
           $Res,
-          _$EarthquakeHistoryConfigModelImpl
+          _$EarthquakeHistoryConfigImpl
         >
-    implements _$$EarthquakeHistoryConfigModelImplCopyWith<$Res> {
-  __$$EarthquakeHistoryConfigModelImplCopyWithImpl(
-    _$EarthquakeHistoryConfigModelImpl _value,
-    $Res Function(_$EarthquakeHistoryConfigModelImpl) _then,
+    implements _$$EarthquakeHistoryConfigImplCopyWith<$Res> {
+  __$$EarthquakeHistoryConfigImplCopyWithImpl(
+    _$EarthquakeHistoryConfigImpl _value,
+    $Res Function(_$EarthquakeHistoryConfigImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of EarthquakeHistoryConfigModel
+  /// Create a copy of EarthquakeHistoryConfig
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({Object? list = null, Object? detail = null}) {
     return _then(
-      _$EarthquakeHistoryConfigModelImpl(
+      _$EarthquakeHistoryConfigImpl(
         list:
             null == list
                 ? _value.list
@@ -170,16 +166,14 @@ class __$$EarthquakeHistoryConfigModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EarthquakeHistoryConfigModelImpl
-    implements _EarthquakeHistoryConfigModel {
-  const _$EarthquakeHistoryConfigModelImpl({
+class _$EarthquakeHistoryConfigImpl implements _EarthquakeHistoryConfig {
+  const _$EarthquakeHistoryConfigImpl({
     required this.list,
     required this.detail,
   });
 
-  factory _$EarthquakeHistoryConfigModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$EarthquakeHistoryConfigModelImplFromJson(json);
+  factory _$EarthquakeHistoryConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeHistoryConfigImplFromJson(json);
 
   @override
   final EarthquakeHistoryListConfig list;
@@ -188,14 +182,14 @@ class _$EarthquakeHistoryConfigModelImpl
 
   @override
   String toString() {
-    return 'EarthquakeHistoryConfigModel(list: $list, detail: $detail)';
+    return 'EarthquakeHistoryConfig(list: $list, detail: $detail)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$EarthquakeHistoryConfigModelImpl &&
+            other is _$EarthquakeHistoryConfigImpl &&
             (identical(other.list, list) || other.list == list) &&
             (identical(other.detail, detail) || other.detail == detail));
   }
@@ -204,46 +198,41 @@ class _$EarthquakeHistoryConfigModelImpl
   @override
   int get hashCode => Object.hash(runtimeType, list, detail);
 
-  /// Create a copy of EarthquakeHistoryConfigModel
+  /// Create a copy of EarthquakeHistoryConfig
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeHistoryConfigModelImplCopyWith<
-    _$EarthquakeHistoryConfigModelImpl
-  >
-  get copyWith => __$$EarthquakeHistoryConfigModelImplCopyWithImpl<
-    _$EarthquakeHistoryConfigModelImpl
+  _$$EarthquakeHistoryConfigImplCopyWith<_$EarthquakeHistoryConfigImpl>
+  get copyWith => __$$EarthquakeHistoryConfigImplCopyWithImpl<
+    _$EarthquakeHistoryConfigImpl
   >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeHistoryConfigModelImplToJson(this);
+    return _$$EarthquakeHistoryConfigImplToJson(this);
   }
 }
 
-abstract class _EarthquakeHistoryConfigModel
-    implements EarthquakeHistoryConfigModel {
-  const factory _EarthquakeHistoryConfigModel({
+abstract class _EarthquakeHistoryConfig implements EarthquakeHistoryConfig {
+  const factory _EarthquakeHistoryConfig({
     required final EarthquakeHistoryListConfig list,
     required final EarthquakeHistoryDetailConfig detail,
-  }) = _$EarthquakeHistoryConfigModelImpl;
+  }) = _$EarthquakeHistoryConfigImpl;
 
-  factory _EarthquakeHistoryConfigModel.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeHistoryConfigModelImpl.fromJson;
+  factory _EarthquakeHistoryConfig.fromJson(Map<String, dynamic> json) =
+      _$EarthquakeHistoryConfigImpl.fromJson;
 
   @override
   EarthquakeHistoryListConfig get list;
   @override
   EarthquakeHistoryDetailConfig get detail;
 
-  /// Create a copy of EarthquakeHistoryConfigModel
+  /// Create a copy of EarthquakeHistoryConfig
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeHistoryConfigModelImplCopyWith<
-    _$EarthquakeHistoryConfigModelImpl
-  >
+  _$$EarthquakeHistoryConfigImplCopyWith<_$EarthquakeHistoryConfigImpl>
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -257,9 +246,6 @@ EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
 mixin _$EarthquakeHistoryListConfig {
   /// 背景塗りつぶしの有無
   bool get isFillBackground => throw _privateConstructorUsedError;
-
-  /// 訓練・試験用の電文を含めるかどうか
-  bool get includeTestTelegrams => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeHistoryListConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -282,7 +268,7 @@ abstract class $EarthquakeHistoryListConfigCopyWith<$Res> {
         EarthquakeHistoryListConfig
       >;
   @useResult
-  $Res call({bool isFillBackground, bool includeTestTelegrams});
+  $Res call({bool isFillBackground});
 }
 
 /// @nodoc
@@ -302,21 +288,13 @@ class _$EarthquakeHistoryListConfigCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? isFillBackground = null,
-    Object? includeTestTelegrams = null,
-  }) {
+  $Res call({Object? isFillBackground = null}) {
     return _then(
       _value.copyWith(
             isFillBackground:
                 null == isFillBackground
                     ? _value.isFillBackground
                     : isFillBackground // ignore: cast_nullable_to_non_nullable
-                        as bool,
-            includeTestTelegrams:
-                null == includeTestTelegrams
-                    ? _value.includeTestTelegrams
-                    : includeTestTelegrams // ignore: cast_nullable_to_non_nullable
                         as bool,
           )
           as $Val,
@@ -333,7 +311,7 @@ abstract class _$$EarthquakeHistoryListConfigImplCopyWith<$Res>
   ) = __$$EarthquakeHistoryListConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isFillBackground, bool includeTestTelegrams});
+  $Res call({bool isFillBackground});
 }
 
 /// @nodoc
@@ -353,21 +331,13 @@ class __$$EarthquakeHistoryListConfigImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? isFillBackground = null,
-    Object? includeTestTelegrams = null,
-  }) {
+  $Res call({Object? isFillBackground = null}) {
     return _then(
       _$EarthquakeHistoryListConfigImpl(
         isFillBackground:
             null == isFillBackground
                 ? _value.isFillBackground
                 : isFillBackground // ignore: cast_nullable_to_non_nullable
-                    as bool,
-        includeTestTelegrams:
-            null == includeTestTelegrams
-                ? _value.includeTestTelegrams
-                : includeTestTelegrams // ignore: cast_nullable_to_non_nullable
                     as bool,
       ),
     );
@@ -378,10 +348,7 @@ class __$$EarthquakeHistoryListConfigImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EarthquakeHistoryListConfigImpl
     implements _EarthquakeHistoryListConfig {
-  const _$EarthquakeHistoryListConfigImpl({
-    this.isFillBackground = true,
-    this.includeTestTelegrams = false,
-  });
+  const _$EarthquakeHistoryListConfigImpl({this.isFillBackground = true});
 
   factory _$EarthquakeHistoryListConfigImpl.fromJson(
     Map<String, dynamic> json,
@@ -392,14 +359,9 @@ class _$EarthquakeHistoryListConfigImpl
   @JsonKey()
   final bool isFillBackground;
 
-  /// 訓練・試験用の電文を含めるかどうか
-  @override
-  @JsonKey()
-  final bool includeTestTelegrams;
-
   @override
   String toString() {
-    return 'EarthquakeHistoryListConfig(isFillBackground: $isFillBackground, includeTestTelegrams: $includeTestTelegrams)';
+    return 'EarthquakeHistoryListConfig(isFillBackground: $isFillBackground)';
   }
 
   @override
@@ -408,15 +370,12 @@ class _$EarthquakeHistoryListConfigImpl
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHistoryListConfigImpl &&
             (identical(other.isFillBackground, isFillBackground) ||
-                other.isFillBackground == isFillBackground) &&
-            (identical(other.includeTestTelegrams, includeTestTelegrams) ||
-                other.includeTestTelegrams == includeTestTelegrams));
+                other.isFillBackground == isFillBackground));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isFillBackground, includeTestTelegrams);
+  int get hashCode => Object.hash(runtimeType, isFillBackground);
 
   /// Create a copy of EarthquakeHistoryListConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -436,10 +395,8 @@ class _$EarthquakeHistoryListConfigImpl
 
 abstract class _EarthquakeHistoryListConfig
     implements EarthquakeHistoryListConfig {
-  const factory _EarthquakeHistoryListConfig({
-    final bool isFillBackground,
-    final bool includeTestTelegrams,
-  }) = _$EarthquakeHistoryListConfigImpl;
+  const factory _EarthquakeHistoryListConfig({final bool isFillBackground}) =
+      _$EarthquakeHistoryListConfigImpl;
 
   factory _EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHistoryListConfigImpl.fromJson;
@@ -447,10 +404,6 @@ abstract class _EarthquakeHistoryListConfig
   /// 背景塗りつぶしの有無
   @override
   bool get isFillBackground;
-
-  /// 訓練・試験用の電文を含めるかどうか
-  @override
-  bool get includeTestTelegrams;
 
   /// Create a copy of EarthquakeHistoryListConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -474,7 +427,7 @@ mixin _$EarthquakeHistoryDetailConfig {
   /// 震度観測点のアイコン表示
   bool get showIntensityIcon => throw _privateConstructorUsedError;
 
-  /// fromJsonでは、常にfalseを返す
+  /// 長周期地震動階級を表示しているか
   bool get showingLpgmIntensity => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeHistoryDetailConfig to a JSON map.
@@ -634,7 +587,7 @@ class _$EarthquakeHistoryDetailConfigImpl
   @JsonKey()
   final bool showIntensityIcon;
 
-  /// fromJsonでは、常にfalseを返す
+  /// 長周期地震動階級を表示しているか
   @override
   @JsonKey()
   final bool showingLpgmIntensity;
@@ -703,7 +656,7 @@ abstract class _EarthquakeHistoryDetailConfig
   @override
   bool get showIntensityIcon;
 
-  /// fromJsonでは、常にfalseを返す
+  /// 長周期地震動階級を表示しているか
   @override
   bool get showingLpgmIntensity;
 

@@ -1,20 +1,21 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/core/provider/config/earthquake_history/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'earthquake_history_config_provider.g.dart';
+part 'earthquake_history_config_notifier.g.dart';
 
 @riverpod
-class EarthquakeHistoryConfig extends _$EarthquakeHistoryConfig {
+class EarthquakeHistoryConfigNotifier
+    extends _$EarthquakeHistoryConfigNotifier {
   @override
-  EarthquakeHistoryConfigModel build() {
+  EarthquakeHistoryConfig build() {
     final result = _load();
     if (result != null) {
       return result;
     }
-    return const EarthquakeHistoryConfigModel(
+    return const EarthquakeHistoryConfig(
       list: EarthquakeHistoryListConfig(),
       detail: EarthquakeHistoryDetailConfig(),
     );
@@ -25,13 +26,13 @@ class EarthquakeHistoryConfig extends _$EarthquakeHistoryConfig {
   Future<void> _save() async =>
       ref.read(sharedPreferencesProvider).setString(_key, jsonEncode(state));
 
-  EarthquakeHistoryConfigModel? _load() {
+  EarthquakeHistoryConfig? _load() {
     final jsonString = ref.read(sharedPreferencesProvider).getString(_key);
     if (jsonString == null) {
       return null;
     }
     try {
-      return EarthquakeHistoryConfigModel.fromJson(
+      return EarthquakeHistoryConfig.fromJson(
         jsonDecode(jsonString) as Map<String, dynamic>,
       );
       // ignore: avoid_catches_without_on_clauses
