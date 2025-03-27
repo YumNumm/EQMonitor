@@ -145,7 +145,7 @@ class _SliverListBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useMemoized(() => PrimaryScrollController.of(context));
+    final controller = PrimaryScrollController.of(context);
     useEffect(() {
       controller.addListener(() {
         if (state.hasError || state.isRefreshing || !state.hasValue) {
@@ -169,38 +169,36 @@ class _SliverListBody extends HookConsumerWidget {
       if (data.$1.isEmpty) {
         return const EarthquakeHistoryNotFound();
       }
-      return PrimaryScrollController(
+      return ListView.builder(
         controller: controller,
-        child: ListView.builder(
-          clipBehavior: Clip.antiAlias,
-          padding: EdgeInsets.zero,
-          itemCount: data.$1.length + 1,
-          itemBuilder: (context, index) {
-            if (index == data.$1.length) {
-              if (state.isLoading) {
-                return loading;
-              }
-              if (state.hasError) {
-                final error = state.error!;
-                return ErrorCard(error: error, onReload: onRefresh);
-              }
-              final hasNext = state.valueOrNull?.hasNext ?? false;
-              if (hasNext) {
-                return loading;
-              } else {
-                return const EarthquakeHistoryAllFetched();
-              }
+        clipBehavior: Clip.antiAlias,
+        padding: EdgeInsets.zero,
+        itemCount: data.$1.length + 1,
+        itemBuilder: (context, index) {
+          if (index == data.$1.length) {
+            if (state.isLoading) {
+              return loading;
             }
-            final item = data.$1[index];
-            return EarthquakeHistoryListTile(
-              item: item,
-              onTap:
-                  () async => EarthquakeHistoryDetailsRoute(
-                    eventId: item.eventId,
-                  ).push<void>(context),
-            );
-          },
-        ),
+            if (state.hasError) {
+              final error = state.error!;
+              return ErrorCard(error: error, onReload: onRefresh);
+            }
+            final hasNext = state.valueOrNull?.hasNext ?? false;
+            if (hasNext) {
+              return loading;
+            } else {
+              return const EarthquakeHistoryAllFetched();
+            }
+          }
+          final item = data.$1[index];
+          return EarthquakeHistoryListTile(
+            item: item,
+            onTap:
+                () async => EarthquakeHistoryDetailsRoute(
+                  eventId: item.eventId,
+                ).push<void>(context),
+          );
+        },
       );
     }
 

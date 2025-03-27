@@ -158,11 +158,19 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       ),
       leading:
           isFarEarthquake
-              ? JmaIntensityIcon(
-                intensity: JmaIntensity.fiveLower,
-                type: IntensityIconType.filled,
-                customText: isVolcano ? '噴火\n情報' : '遠地\n地震',
-                size: intensityIconSize,
+              ? SizedBox(
+                width: intensityIconSize,
+                height: intensityIconSize,
+                child: Card(
+                  color: theme.colorScheme.errorContainer,
+                  margin: EdgeInsets.zero,
+                  elevation: 0,
+                  child: Icon(
+                    isVolcano ? Icons.volcano_rounded : Icons.public_rounded,
+                    size: 32,
+                    color: theme.colorScheme.onErrorContainer,
+                  ),
+                ),
               )
               : maxIntensity != null
               ? JmaIntensityIcon(
