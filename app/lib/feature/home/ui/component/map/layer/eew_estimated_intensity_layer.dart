@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
       [intensityColor],
     );
 
-    final eews = ref.watch(eewProvider.select((value) => value.valueOrNull));
+    final eews = ref.watch(eewAliveTelegramProvider);
 
     // レイヤーの初期化
     useEffect(() {

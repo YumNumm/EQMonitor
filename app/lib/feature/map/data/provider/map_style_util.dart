@@ -51,11 +51,9 @@ class MapStyleUtil {
         // },
         'eqmonitor_map': {
           'type': 'vector',
-
           // 'url': 'https://map.eqmonitor.app/tiles/tiles.json',
           'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
           'attribution': '© 気象庁, Natural Earth',
-          // 'minzoom': 1,
           'minzoom': 1,
           'maxzoom': 10,
         },

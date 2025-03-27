@@ -2,32 +2,27 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_controller_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/home_map_controller_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_symbol_layer.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_layer.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:maplibre/maplibre.dart';
 
-class HomeMapView extends HookConsumerWidget {
-  const HomeMapView({super.key});
+class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
+  const EarthquakeHistoryDetailsMapView({required this.earthquake, super.key});
+
+  final EarthquakeV1Extended earthquake;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationNotifierProvider);
-    // final kyoshinMonitorState = ref.watch(kyoshinMonitorNotifierProvider);
 
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => LayoutBuilder(
@@ -40,6 +35,7 @@ class HomeMapView extends HookConsumerWidget {
           );
 
           return _MapView(
+            earthquake: earthquake,
             styleString: value.styleString!,
             initialCameraPosition: cameraPosition,
           );
@@ -53,10 +49,12 @@ class HomeMapView extends HookConsumerWidget {
 
 class _MapView extends HookConsumerWidget {
   const _MapView({
+    required this.earthquake,
     required this.styleString,
     required this.initialCameraPosition,
   });
 
+  final EarthquakeV1Extended earthquake;
   final String styleString;
   final MapCameraPosition initialCameraPosition;
 
@@ -84,6 +82,11 @@ class _MapView extends HookConsumerWidget {
       },
     );
 
+    final hypocenter = switch ((earthquake.latitude, earthquake.longitude)) {
+      (final double lat, final double lng) => LatLng(lat, lng),
+      _ => null,
+    };
+
     return SizedBox.expand(
       child: MapLibreMap(
         acceptLicense: true,
@@ -97,8 +100,6 @@ class _MapView extends HookConsumerWidget {
           maxZoom: 12,
         ),
         onStyleLoaded: (styleController) async {
-          isInitialized.value = true;
-
           final c = controller.value;
           final location =
               ref.read(homeConfigurationNotifierProvider).showLocation;
@@ -113,15 +114,16 @@ class _MapView extends HookConsumerWidget {
               await c.disableLocation();
             }
           }
+          isInitialized.value = true;
         },
         onMapCreated: (c) => controller.value = c,
         children: [
           if (isInitialized.value) ...<MapLayer>[
-            const KyoshinMonitorLayer(),
-            const EewHypocenterSymbolLayer(),
-            const EewPsWaveLayer(),
-            const EewEstimatedIntensityLayer(),
-            const ShakeDetectionLayer(),
+            EarthquakeHypocenterLayer(
+              hypocenterType: HypocenterType.earthquake,
+              latLng: hypocenter ?? const LatLng(0, 0),
+              isVisible: hypocenter != null,
+            ),
           ],
           SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
         ],
@@ -137,48 +139,13 @@ class _MapHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final useKmoni = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
-    );
-    final showScaleCard = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.showScale),
-    );
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child:
-              useKmoni
-                  ? Column(
-                    key: const ValueKey('kyoshin_monitor_status_card'),
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 4,
-                    children: [
-                      KyoshinMonitorStatusCard(
-                        onTap:
-                            () async =>
-                                KyoshinMonitorSettingsModal.show(context),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child:
-                              showScaleCard
-                                  ? const KyoshinMonitorScaleCard()
-                                  : const SizedBox.shrink(),
-                        ),
-                      ),
-                    ],
-                  )
-                  : const SizedBox.shrink(),
-        ),
+        const SizedBox.shrink(),
         const Column(),
-        HomeMapControllerCard(
+        EarthquakeHistoryControllerCard(
           onLayerButtonTap: () async => HomeMapLayerModal.show(context),
           onLocationButtonTap:
               () async => MapController.of(context).animateCamera(

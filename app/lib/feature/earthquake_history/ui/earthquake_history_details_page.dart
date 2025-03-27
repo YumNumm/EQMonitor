@@ -9,6 +9,7 @@ import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dar
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_lpgm_intensity.dart';
@@ -75,6 +76,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
+          EarthquakeHistoryDetailsMapView(earthquake: details),
           if (maxIntensity != null)
             _IntensityIcons(
               maxIntensity: maxIntensity,
