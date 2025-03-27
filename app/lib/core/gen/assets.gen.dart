@@ -92,6 +92,19 @@ class $AssetsMapGen {
   List<String> get values => [overview];
 }
 
+class $AssetsParameterGen {
+  const $AssetsParameterGen();
+
+  /// File path: assets/parameter/earthquake.bin
+  String get earthquake => 'assets/parameter/earthquake.bin';
+
+  /// File path: assets/parameter/tsunami.bin
+  String get tsunami => 'assets/parameter/tsunami.bin';
+
+  /// List of all assets
+  List<String> get values => [earthquake, tsunami];
+}
+
 class $AssetsImagesMapGen {
   const $AssetsImagesMapGen();
 
@@ -136,6 +149,7 @@ class Assets {
   static const String kyoshinObservationPoint =
       'assets/kyoshin_observation_point.pb';
   static const $AssetsMapGen map = $AssetsMapGen();
+  static const $AssetsParameterGen parameter = $AssetsParameterGen();
   static const String tjma2001 = 'assets/tjma2001.csv';
 
   /// List of all assets

@@ -140,6 +140,7 @@ flutter:
     - assets/fonts/
     - assets/docs/
     - assets/map/
+    - assets/parameter/
 
   shaders:
     - shaders/introduction.frag
