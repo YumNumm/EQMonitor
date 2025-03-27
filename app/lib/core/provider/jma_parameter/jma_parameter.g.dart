@@ -8,7 +8,7 @@ part of 'jma_parameter.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaParameterHash() => r'3df30979a78f46a75386dec2811d41ead379cb5b';
+String _$jmaParameterHash() => r'eea2442fbefcd9296801c6d62be695fc1b38be75';
 
 /// See also [JmaParameter].
 @ProviderFor(JmaParameter)

@@ -29,7 +29,7 @@ final _fetchShakeDetectionEventsProvider =
 // ignore: unused_element
 typedef _FetchShakeDetectionEventsRef =
     FutureProviderRef<List<ShakeDetectionEvent>>;
-String _$shakeDetectionHash() => r'3cbc2b6a6d3312d20de99ca4512ff627577f3dcd';
+String _$shakeDetectionHash() => r'2fdb65ad069735cc0d4648bb34c4b842fb3cb051';
 
 /// See also [ShakeDetection].
 @ProviderFor(ShakeDetection)
@@ -50,7 +50,7 @@ final shakeDetectionProvider =
 
 typedef _$ShakeDetection = AsyncNotifier<List<ShakeDetectionEvent>>;
 String _$shakeDetectionKmoniPointsMergedHash() =>
-    r'a8a638bd1ec8f32ddf7250c8ce4d4bb52759d19a';
+    r'13fdbdfa68f5f816ddd3da1e821fb7a579d62d23';
 
 /// See also [ShakeDetectionKmoniPointsMerged].
 @ProviderFor(ShakeDetectionKmoniPointsMerged)

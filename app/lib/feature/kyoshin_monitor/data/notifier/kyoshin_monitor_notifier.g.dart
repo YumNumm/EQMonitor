@@ -9,7 +9,7 @@ part of 'kyoshin_monitor_notifier.dart';
 // **************************************************************************
 
 String _$kyoshinMonitorNotifierHash() =>
-    r'08a5a53dc374e26f9c4720fcf35748394f5eea2e';
+    r'75d77e477b5ff51625a240d35d0c36f27b2e551e';
 
 /// See also [KyoshinMonitorNotifier].
 @ProviderFor(KyoshinMonitorNotifier)
