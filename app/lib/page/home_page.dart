@@ -203,10 +203,7 @@ class _DebugModal extends ConsumerWidget {
                 regions:
                     [
                       for (final region
-                          in ref
-                              .read(jmaCodeTableProvider)
-                              .areaEpicenter
-                              .items)
+                          in ref.read(jmaCodeTableProvider).areaEpicenter.items)
                         () {
                           if (Random().nextDouble() > 0.9) {
                             return EstimatedIntensityRegion(
