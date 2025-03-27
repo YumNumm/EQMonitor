@@ -72,7 +72,7 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
                     'filter': [
                       '==',
                       ['get', 'level'],
-                      level.index.toString(),
+                      level.name,
                     ],
                   },
                 ),
@@ -123,11 +123,11 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
                 },
                 layout: {
                   'visibility': visibility,
-                  // 'filter': [
-                  //   '==',
-                  //   ['get', 'level'],
-                  //   level.index.toString(),
-                  // ],
+                  'filter': [
+                    '==',
+                    ['get', 'level'],
+                    level.name,
+                  ],
                 },
               ),
             );
