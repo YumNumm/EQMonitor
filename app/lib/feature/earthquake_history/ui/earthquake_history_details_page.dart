@@ -215,14 +215,16 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        children: [
-          EarthquakeHypoInfoWidget(item: item),
-          const Divider(),
-          PrefectureIntensityWidget(item: item.v1),
-          if (item.lpgmIntensityPrefectures != null)
-            PrefectureLpgmIntensityWidget(item: item),
-          _EarthquakeCommentWidget(item: item),
-        ],
+        child: Column(
+          children: [
+            EarthquakeHypoInfoWidget(item: item),
+            const Divider(),
+            PrefectureIntensityWidget(item: item.v1),
+            if (item.lpgmIntensityPrefectures != null)
+              PrefectureLpgmIntensityWidget(item: item),
+            _EarthquakeCommentWidget(item: item),
+          ],
+        ),
       ),
     );
   }

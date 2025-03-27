@@ -160,7 +160,7 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        children: [EarthquakeEarlyHypoInfoWidget(item: item)],
+        child: EarthquakeEarlyHypoInfoWidget(item: item),
       ),
     );
   }
