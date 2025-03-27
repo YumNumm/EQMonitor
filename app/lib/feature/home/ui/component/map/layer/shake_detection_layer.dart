@@ -117,18 +117,7 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
               LineStyleLayer(
                 id: layerId,
                 sourceId: _sourceId,
-                paint: {
-                  'line-color': level.color.toHexStringRGB(),
-                  'line-width': 2.0,
-                },
-                layout: {
-                  'visibility': visibility,
-                  'filter': [
-                    '==',
-                    ['get', 'level'],
-                    level.name,
-                  ],
-                },
+                layout: {'visibility': visibility},
               ),
             );
           }
