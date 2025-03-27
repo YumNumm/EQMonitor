@@ -5,7 +5,6 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/core/util/map_utility.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
-import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,8 +48,8 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
           (_) async => controller.synchronized(() async {
             await ref.read(mapUtilityProvider).addHypocenterImages(controller);
             final activeEews = ref.read(
-              eewProvider.select((eews) => eews.valueOrNull ?? []),
-            );
+              eewAliveTelegramProvider
+            ) ?? [];
             await controller.style!.removeSource(_sourceId);
             await controller.style!.addSource(
               GeoJsonSource(

@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MapLayerControllerCard extends StatelessWidget {
-  const MapLayerControllerCard({
+class HomeMapControllerCard extends StatelessWidget {
+  const HomeMapControllerCard({
     super.key,
     this.onLayerButtonTap,
     this.onLocationButtonTap,

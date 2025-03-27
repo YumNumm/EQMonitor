@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
-import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
@@ -34,7 +34,7 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
       kyoshinMonitorSettingsProvider.select((v) => v.kmoniMarkerType),
     );
     final hasActiveEew = ref.watch(
-      eewProvider.select((eews) => eews.valueOrNull?.isNotEmpty ?? false),
+      eewAliveTelegramProvider.select((v) => v?.isNotEmpty ?? false),
     );
     final showStroke = switch (strokeSetting) {
       KyoshinMonitorMarkerType.always => true,
