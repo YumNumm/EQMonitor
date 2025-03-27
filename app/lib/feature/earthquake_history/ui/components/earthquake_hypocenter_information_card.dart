@@ -15,8 +15,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class EarthquakeHypoInfoWidget extends HookConsumerWidget {
-  const EarthquakeHypoInfoWidget({required this.item, super.key});
+class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
+  const EarthquakeHypocenterInformationCard({required this.item, super.key});
 
   final EarthquakeV1Extended item;
 
@@ -27,6 +27,10 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     final intensityColorScheme = ref.watch(intensityColorProvider);
 
     final isVolcano = item.isVolcano;
+
+    /// 遠地地震かどうか
+    final isFarEarthquake = item.headline?.contains('海外で規模の大きな地震') ?? false;
+
     final maxIntensity = item.maxIntensity;
     final colorScheme = switch (maxIntensity) {
       final JmaIntensity intensity => intensityColorScheme.fromJmaIntensity(
@@ -127,9 +131,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       children: [
         Text(
           '震源地',
-          style: textTheme.bodyMedium!.copyWith(
+          style: textTheme.bodySmall!.copyWith(
             fontWeight: FontWeight.bold,
-            color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
+            color: textTheme.bodySmall!.color!.withValues(alpha: 0.8),
           ),
         ),
         const SizedBox(width: 4),
@@ -139,15 +143,15 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
               children: [
                 TextSpan(
                   text: hypoName?.name ?? '不明',
-                  style: textTheme.headlineMedium!.copyWith(
+                  style: textTheme.headlineSmall!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 if (hypoDetailName != null) ...[
                   const TextSpan(text: ' '),
                   TextSpan(
-                    text: '(${hypoDetailName.name})',
-                    style: textTheme.headlineSmall!.copyWith(
+                    text: '\n(${hypoDetailName.name})',
+                    style: textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -189,8 +193,8 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         if (item.magnitudeCondition == null)
           Text(
             'M',
-            style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+            style: textTheme.titleSmall!.copyWith(
+              color: textTheme.titleSmall!.color!.withValues(alpha: 0.8),
             ),
           ),
         Flexible(
@@ -203,8 +207,8 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
               _ => '調査中',
             },
             style: (item.magnitudeCondition != null
-                    ? textTheme.headlineLarge
-                    : textTheme.displaySmall)!
+                    ? textTheme.headlineMedium
+                    : textTheme.headlineLarge)!
                 .copyWith(
                   fontWeight: FontWeight.bold,
                   fontFamily: FontFamily.notoSansJP,
@@ -213,47 +217,54 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         ),
       ],
     );
-    final depthWidget = Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        Text(
-          '深さ',
-          style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
-          ),
-        ),
-        if (item.depth != null && item.depth != 0 && item.depth != 700) ...[
-          Text(
-            item.depth.toString(),
-            style: textTheme.displaySmall!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansJP,
-            ),
-          ),
-          Text(
-            'km',
-            style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
-            ),
-          ),
-        ] else
-          Text(
-            switch (item.depth) {
-              0 => 'ごく浅い',
-              700 => '700km以上',
-              // vxse53がある場合
-              _ when item.intensityCities != null => '不明',
-              _ => '調査中',
-            },
-            style: textTheme.displaySmall!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansJP,
-            ),
-          ),
-      ],
-    );
+    final depthWidget =
+        (isFarEarthquake && item.depth == null)
+            ? const SizedBox.shrink()
+            : Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '深さ',
+                  style: textTheme.titleSmall!.copyWith(
+                    color: textTheme.titleSmall!.color!.withValues(alpha: 0.8),
+                  ),
+                ),
+                if (item.depth != null &&
+                    item.depth != 0 &&
+                    item.depth != 700) ...[
+                  Text(
+                    item.depth.toString(),
+                    style: textTheme.headlineLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontFamily.notoSansJP,
+                    ),
+                  ),
+                  Text(
+                    'km',
+                    style: textTheme.titleMedium!.copyWith(
+                      color: textTheme.titleMedium!.color!.withValues(
+                        alpha: 0.8,
+                      ),
+                    ),
+                  ),
+                ] else
+                  Text(
+                    switch (item.depth) {
+                      0 => 'ごく浅い',
+                      700 => '700km以上',
+                      // vxse53がある場合
+                      _ when item.intensityCities != null => '不明',
+                      _ => '調査中',
+                    },
+                    style: textTheme.headlineMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontFamily.notoSansJP,
+                    ),
+                  ),
+              ],
+            );
     // M・深さ ともに不明の場合
     final isMagnitudeAndDepthUnknown =
         (item.magnitudeCondition?.toHalfWidth == 'M不明' ||
@@ -326,6 +337,7 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         ] else ...[
           magnitudeWidget,
           depthWidget,
+          const SizedBox(width: double.infinity),
           hypoWidget,
         ],
         const Row(),
