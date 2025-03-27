@@ -10,8 +10,8 @@ import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_his
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_lpgm_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:extensions/extensions.dart';
