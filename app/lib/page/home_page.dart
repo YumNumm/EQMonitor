@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
@@ -11,7 +12,6 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_histor
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sheet/sheet.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -19,7 +19,13 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const Scaffold(
-      body: Stack(children: [HomeMapView(), _Sheet(), _DebugButton()]),
+      body: Stack(
+        children: [
+          HomeMapView(),
+          BasicModalSheet(child: _SheetBody()),
+          _DebugButton(),
+        ],
+      ),
     );
   }
 }
@@ -43,73 +49,6 @@ class _DebugButton extends StatelessWidget {
               ),
             ),
         child: const Icon(Icons.bug_report),
-      ),
-    );
-  }
-}
-
-class _Sheet extends StatelessWidget {
-  const _Sheet();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SafeArea(
-      bottom: false,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final size = (
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-          );
-          final isLandscape = size.width > size.height;
-          final sheet = Sheet(
-            backgroundColor: Colors.transparent,
-            initialExtent: size.height * 0.2,
-            physics: const SnapSheetPhysics(stops: [0.1, 0.2, 0.5, 0.8, 1]),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              clipBehavior: Clip.hardEdge,
-              child: Material(
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      width: 36,
-                      height: 4,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    const Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: _SheetBody(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-
-          if (isLandscape) {
-            return Align(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: size.width * 0.5,
-                height: size.height,
-                child: sheet,
-              ),
-            );
-          }
-          return sheet;
-        },
       ),
     );
   }
