@@ -53,10 +53,6 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final isVolcano = item.isVolcano;
 
     final hypoName = useMemoized(() {
-      final volcanoName = item.volcanoName;
-      if (volcanoName != null) {
-        return volcanoName;
-      }
       return codeTable.areaEpicenter.items
           .firstWhereOrNull((e) => int.tryParse(e.code) == item.epicenterCode)
           ?.name;
@@ -75,22 +71,32 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       hypoDetailName,
       maxIntensity,
       maxIntensityRegionNames,
+      isFarEarthquake,
+      item.volcanoName,
     )) {
+      (final String hypoName, _, _, _, _, final String volcanoName) =>
+        '$hypoName($volcanoName)',
+      (final String hypoName, _, _, _, final bool isFarEarthquake, _)
+          when isFarEarthquake =>
+        hypoName,
       (
         final String hypoName,
         final AreaEpicenterDetail_AreaEpicenterDetailItem hypoDetailName,
         _,
         _,
+        _,
+        _,
       ) =>
         '$hypoName(${hypoDetailName.name})',
-      (final String hypoName, _, _, _) => hypoName,
-      (_, _, final JmaIntensity intensity, final List<String> regionNames)
+      (final String hypoName, _, _, _, _, _) => hypoName,
+      (_, _, final JmaIntensity intensity, final List<String> regionNames, _, _)
           when regionNames.isNotEmpty && regionNames.length >= 2 =>
         '最大震度$intensityを${regionNames.first}などで観測',
-      (_, _, final JmaIntensity intensity, final List<String> regionNames)
+      (_, _, final JmaIntensity intensity, final List<String> regionNames, _, _)
           when regionNames.isNotEmpty =>
         '最大震度$intensityを${regionNames.first}で観測',
-      (_, _, final JmaIntensity intensity, _) => '最大震度${intensity.type}を観測',
+      (_, _, final JmaIntensity intensity, _, _, _) =>
+        '最大震度${intensity.type}を観測',
       _ => '',
     };
     final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
