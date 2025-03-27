@@ -165,10 +165,12 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                   _ => '震度$intensity',
                 };
                 return ListTile(
+                  visualDensity: VisualDensity.compact,
                   titleAlignment: ListTileTitleAlignment.titleHeight,
                   leading: JmaIntensityIcon(
                     intensity: intensity,
                     type: IntensityIconType.filled,
+                    size: 40,
                   ),
                   title: Text(title, style: textTheme.titleMedium),
                   subtitle: Text(
