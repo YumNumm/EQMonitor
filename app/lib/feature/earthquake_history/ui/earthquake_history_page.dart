@@ -169,11 +169,14 @@ class _SliverListBody extends HookConsumerWidget {
       if (data.$1.isEmpty) {
         return const EarthquakeHistoryNotFound();
       }
-      return ListView.builder(
+      return ListView.separated(
         controller: controller,
         clipBehavior: Clip.antiAlias,
         padding: EdgeInsets.zero,
         itemCount: data.$1.length + 1,
+        separatorBuilder:
+            (context, index) =>
+                const Divider(height: 0, indent: 0, endIndent: 0, thickness: 0),
         itemBuilder: (context, index) {
           if (index == data.$1.length) {
             if (state.isLoading) {
