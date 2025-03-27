@@ -20,10 +20,10 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     final colorScheme = theme.colorScheme;
 
     return Card.outlined(
-      margin: EdgeInsets.zero,
-      color: colorScheme.surfaceContainerHigh,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      color: colorScheme.surfaceContainer,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
