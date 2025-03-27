@@ -5,8 +5,8 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquake_history_details.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
@@ -80,7 +80,7 @@ class EarthquakeHistoryRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeHistoryScreen();
+      const EarthquakeHistoryPage();
 }
 
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(

@@ -1,6 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
