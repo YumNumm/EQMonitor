@@ -4,14 +4,14 @@ part 'earthquake_history_config_model.freezed.dart';
 part 'earthquake_history_config_model.g.dart';
 
 @freezed
-class EarthquakeHistoryConfigModel with _$EarthquakeHistoryConfigModel {
-  const factory EarthquakeHistoryConfigModel({
+class EarthquakeHistoryConfig with _$EarthquakeHistoryConfig {
+  const factory EarthquakeHistoryConfig({
     required EarthquakeHistoryListConfig list,
     required EarthquakeHistoryDetailConfig detail,
-  }) = _EarthquakeHistoryConfigModel;
+  }) = _EarthquakeHistoryConfig;
 
-  factory EarthquakeHistoryConfigModel.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHistoryConfigModelFromJson(json);
+  factory EarthquakeHistoryConfig.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeHistoryConfigFromJson(json);
 }
 
 @freezed
@@ -19,9 +19,6 @@ class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
   const factory EarthquakeHistoryListConfig({
     /// 背景塗りつぶしの有無
     @Default(true) bool isFillBackground,
-
-    /// 訓練・試験用の電文を含めるかどうか
-    @Default(false) bool includeTestTelegrams,
   }) = _EarthquakeHistoryListConfig;
 
   factory EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) =>
@@ -37,14 +34,16 @@ class EarthquakeHistoryDetailConfig with _$EarthquakeHistoryDetailConfig {
     /// 震度観測点のアイコン表示
     @Default(true) bool showIntensityIcon,
 
-    /// fromJsonでは、常にfalseを返す
+    /// 長周期地震動階級を表示しているか
     @Default(false) bool showingLpgmIntensity,
   }) = _EarthquakeHistoryDetailConfig;
 
   factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryDetailConfigFromJson(
         json,
-      ).copyWith(showingLpgmIntensity: false);
+      ).copyWith(
+        showingLpgmIntensity: false,
+      );
 }
 
 /// 地震履歴詳細画面における震度の表示方法
