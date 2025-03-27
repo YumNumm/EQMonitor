@@ -1,3 +1,5 @@
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -92,7 +94,10 @@ class _DebugWidget extends ConsumerWidget {
           ),
           ListTile(
             title: const Text('FCM Token'),
-            subtitle: Text(notificationToken?.fcmToken?.toString() ?? 'null'),
+            subtitle: Text(
+              notificationToken?.fcmToken?.toString() ?? 'null',
+              style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
+            ),
             onTap:
                 () async => Clipboard.setData(
                   ClipboardData(text: notificationToken?.fcmToken ?? ''),
@@ -100,11 +105,22 @@ class _DebugWidget extends ConsumerWidget {
           ),
           ListTile(
             title: const Text('APNS Token'),
-            subtitle: Text(notificationToken?.apnsToken?.toString() ?? 'null'),
+            subtitle: Text(
+              notificationToken?.apnsToken?.toString() ?? 'null',
+              style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
+            ),
             onTap:
                 () async => Clipboard.setData(
                   ClipboardData(text: notificationToken?.apnsToken ?? ''),
                 ),
+          ),
+          ListTile(
+            title: const Text('観測点パラメータ'),
+            subtitle: Text(
+              'Earthquake: ${ref.watch(jmaParameterProvider).valueOrNull?.earthquakeStatus.toString() ?? 'null'}\n'
+              'Tsunami   : ${ref.watch(jmaParameterProvider).valueOrNull?.tsunamiStatus.toString() ?? 'null'}',
+              style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
+            ),
           ),
         ],
       ),
