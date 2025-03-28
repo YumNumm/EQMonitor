@@ -9,7 +9,7 @@ part of 'map_configuration_notifier.dart';
 // **************************************************************************
 
 String _$mapConfigurationNotifierHash() =>
-    r'1457c58e1da9b21af4c2766e2701d92a2b181f61';
+    r'32df3d97aa64cf68e5320209bf36c4392e23582c';
 
 /// See also [MapConfigurationNotifier].
 @ProviderFor(MapConfigurationNotifier)

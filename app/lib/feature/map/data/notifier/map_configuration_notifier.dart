@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/core/provider/map/map_pmtiles_util.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
@@ -31,7 +30,6 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
             MapTheme.dark => MapColorScheme.dark(),
             _ => throw UnimplementedError(),
           },
-      overviewAssetPath: await ref.watch(overviewPmtilesPathProvider.future),
     );
 
     return savedState.copyWith(styleString: styleString);
