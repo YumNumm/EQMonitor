@@ -48,6 +48,7 @@ dependency_overrides:
       ref: cdbd15f3cfa916466a159ca8db0d08a4e95c14e0
   # maplibre:
   #   path: ../eqmonitor-maplibre
+  protobuf: ^4.0.0
 
 melos:
   repository: https://github.com/YumNumm/EQMonitor
