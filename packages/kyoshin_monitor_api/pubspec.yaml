@@ -26,5 +26,5 @@ dev_dependencies:
     path: ../eqmonitor_lints
   freezed: ^2.5.7
   json_serializable: ^6.9.0
-  retrofit_generator: ^9.1.7
+  retrofit_generator: ^9.1.9
   test: ^1.25.2
