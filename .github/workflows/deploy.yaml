@@ -102,7 +102,7 @@ jobs:
           restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
 
       - name: Enable Swift Package Manager
-        run: flutter config -enable-swift-package-manager
+        run: flutter config --enable-swift-package-manager
 
       - name: Build iOS
         working-directory: app
