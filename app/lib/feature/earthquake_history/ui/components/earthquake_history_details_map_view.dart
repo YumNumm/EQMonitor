@@ -27,11 +27,10 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => LayoutBuilder(
         builder: (context, constraints) {
-          final cameraPosition = MapCameraPosition.fitBounds(
-            screenWidth: constraints.maxWidth,
-            screenHeight: constraints.maxHeight,
-            bounds: (minLat: 30, minLng: 128.8, maxLat: 45.8, maxLng: 145.1),
-            padding: 16,
+          final cameraPosition = _calculateCameraPosition(
+            earthquake,
+            constraints.maxWidth,
+            constraints.maxHeight,
           );
 
           return _MapView(
@@ -44,6 +43,45 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
+  }
+
+  MapCameraPosition _calculateCameraPosition(
+    EarthquakeV1Extended earthquake,
+    double screenWidth,
+    double screenHeight,
+  ) {
+    if (earthquake.latitude != null && earthquake.longitude != null) {
+      final lat = earthquake.latitude!;
+      final lng = earthquake.longitude!;
+
+      double zoom = 7.0;
+
+      if (earthquake.maxIntensity != null) {
+        switch (earthquake.maxIntensity!.index) {
+          case >= 6:
+            zoom = 6.0;
+          case >= 5:
+            zoom = 6.5;
+          case >= 4:
+            zoom = 7.0;
+          case >= 3:
+            zoom = 7.5;
+          case >= 2:
+            zoom = 8.0;
+          default:
+            zoom = 8.5;
+        }
+      }
+
+      return MapCameraPosition(target: LatLng(lat, lng), zoom: zoom);
+    } else {
+      return MapCameraPosition.fitBounds(
+        screenWidth: screenWidth,
+        screenHeight: screenHeight,
+        bounds: (minLat: 30.0, minLng: 128.8, maxLat: 45.8, maxLng: 145.1),
+        padding: 16,
+      );
+    }
   }
 }
 
@@ -97,6 +135,7 @@ class _MapView extends HookConsumerWidget {
             initialCameraPosition.target.lon,
             initialCameraPosition.target.lat,
           ),
+          minZoom: 1,
           maxZoom: 12,
         ),
         onStyleLoaded: (styleController) async {
