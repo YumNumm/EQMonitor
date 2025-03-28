@@ -5,6 +5,8 @@ import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_controller_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_hypocenter_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_city_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_region_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_details_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
@@ -151,6 +153,14 @@ class _MapView extends HookConsumerWidget {
               hypocenterType: HypocenterType.earthquake,
               latLng: hypocenter ?? const LatLng(0, 0),
               isVisible: hypocenter != null,
+            ),
+            EarthquakeIntensityRegionLayer(
+              eventId: earthquake.eventId,
+              visible: earthquake.maxIntensity != null,
+            ),
+            EarthquakeIntensityCityLayer(
+              eventId: earthquake.eventId,
+              visible: earthquake.maxIntensity != null,
             ),
           ],
           SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
