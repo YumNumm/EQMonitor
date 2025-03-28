@@ -23,26 +23,29 @@ message JmaMap {
 		message JmaMapDataItem {
 			LatLngBounds bounds = 1;
 			Property property = 2;
+			LatLng polylabel = 3;
+			repeated Polygon polygons = 4;
 
+			message Polygon {
+				repeated LatLng latLngs = 1;
+			}
 
 			message Property
 			{
-				string code = 1;
-				string name = 2;
-				string nameKana = 3;
+				optional string code = 1;
+				optional string name = 2;
+				optional string nameKana = 3;
 			}
 		}
 	}
-}
+	message LatLngBounds {
+		LatLng southWest = 1;
+		LatLng northEast = 2;
+	}
 
-
-message LatLngBounds {
-  LatLng southWest = 1;
-  LatLng northEast = 2;
-}
-
-message LatLng
-{
-	double lat = 1;
-	double lng = 2;
+	message LatLng
+	{
+		double lat = 1;
+		double lng = 2;
+	}
 }
