@@ -12,10 +12,21 @@ message JmaMap {
 
 		enum JmaMapType
 		{
+			// 緊急地震速報／府県予報区
 			AREA_FORECAST_LOCAL_EEW = 0;
+			// 地震情報／細分区域
 			AREA_FORECAST_LOCAL_E = 1;
+			// 市町村等（地震津波関係）
 			AREA_INFORMATION_CITY = 2;
+			// 津波予報区
 			AREA_TSUNAMI = 3;
+		}
+
+		enum DataType {
+			POLYGON = 0;
+			MULTI_POLYGON = 1;
+			LINE_STRING = 2;
+			MULTI_LINE_STRING = 3;
 		}
 
 		repeated JmaMapDataItem data = 2;
@@ -24,7 +35,7 @@ message JmaMap {
 			LatLngBounds bounds = 1;
 			Property property = 2;
 			LatLng polylabel = 3;
-			repeated Polygon polygons = 4;
+			bytes bytes = 4;
 
 			message Polygon {
 				repeated LatLng latLngs = 1;
@@ -36,6 +47,7 @@ message JmaMap {
 				optional string name = 2;
 				optional string nameKana = 3;
 			}
+
 		}
 	}
 	message LatLngBounds {
