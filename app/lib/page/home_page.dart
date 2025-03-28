@@ -75,7 +75,7 @@ class _SheetBody extends ConsumerWidget {
             ListTile(
               title: const Text('デバッグページ'),
               leading: const Icon(Icons.bug_report),
-              onTap: () async => const DebuggerRoute().push<void>(context),
+              onTap: () async => const DebugRoute().push<void>(context),
             ),
           ],
         ),

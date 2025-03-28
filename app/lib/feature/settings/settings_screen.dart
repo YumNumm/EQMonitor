@@ -14,7 +14,6 @@ import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -73,8 +72,7 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('地震履歴設定'),
             leading: const Icon(Icons.history),
             onTap:
-                () async =>
-                    context.push(const EarthquakeHistoryConfigRoute().location),
+                () async => const EarthquakeHistoryConfigRoute().push(context),
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
@@ -120,7 +118,7 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: const Text('デバッグメニュー'),
               leading: const Icon(Icons.bug_report),
-              onTap: () async => context.push(const DebuggerRoute().location),
+              onTap: () async => const DebugRoute().push<void>(context),
             ),
           ],
         ],

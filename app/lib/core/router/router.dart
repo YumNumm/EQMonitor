@@ -21,6 +21,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/term_of_ser
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
@@ -180,8 +181,8 @@ class TalkerRoute extends GoRouteData {
       path: 'donation',
       routes: [TypedGoRoute<DonationExecutedRoute>(path: 'executed')],
     ),
-    TypedGoRoute<DebuggerRoute>(
-      path: 'debugger',
+    TypedGoRoute<DebugRoute>(
+      path: 'debug',
       routes: [
         TypedGoRoute<HttpApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
@@ -190,6 +191,7 @@ class TalkerRoute extends GoRouteData {
           path: 'websocket-api-endpoint-selector',
         ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
+        TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
       ],
     ),
@@ -235,8 +237,8 @@ class NotificationEewRoute extends GoRouteData {
       const NotificationRemoteSettingsEewPage();
 }
 
-class DebuggerRoute extends GoRouteData {
-  const DebuggerRoute();
+class DebugRoute extends GoRouteData {
+  const DebugRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const DebugPage();

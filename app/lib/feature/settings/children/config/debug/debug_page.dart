@@ -5,12 +5,12 @@ import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provi
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugPage extends ConsumerWidget {
@@ -54,7 +54,7 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('ログ'),
             leading: const Icon(Icons.list),
-            onTap: () async => context.push(const TalkerRoute().location),
+            onTap: () async => const TalkerRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('REST APIエンドポイント'),
@@ -76,6 +76,11 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('KyoshinMonitor'),
             leading: const Icon(Icons.list),
             onTap: () async => const DebugKyoshinMonitorRoute().push(context),
+          ),
+          ListTile(
+            title: const Text('JmaMap'),
+            leading: const Icon(Icons.map),
+            onTap: () async => const DebugJmaMapRoute().push(context),
           ),
           ListTile(
             title: const Text('Playground'),
