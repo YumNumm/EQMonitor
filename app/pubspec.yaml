@@ -117,7 +117,7 @@ dev_dependencies:
   go_router_builder: ^2.7.1
   json_serializable: ^6.9.0
   pedantic_mono: ^1.29.0
-  retrofit_generator: ^9.1.5
+  retrofit_generator: ^9.1.9
   riverpod_generator: ^2.6.3
   riverpod_lint: ^2.6.3
   test: ^1.25.7
