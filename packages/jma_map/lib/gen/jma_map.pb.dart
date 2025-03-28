@@ -146,7 +146,8 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
     JmaMap_LatLngBounds? bounds,
     JmaMap_JmaMapData_JmaMapDataItem_Property? property,
     JmaMap_LatLng? polylabel,
-    $core.Iterable<JmaMap_JmaMapData_JmaMapDataItem_Polygon>? polygons,
+    $core.List<$core.int>? bytes,
+    JmaMap_JmaMapData_DataType? dataType,
   }) {
     final $result = create();
     if (bounds != null) {
@@ -158,8 +159,11 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
     if (polylabel != null) {
       $result.polylabel = polylabel;
     }
-    if (polygons != null) {
-      $result.polygons.addAll(polygons);
+    if (bytes != null) {
+      $result.bytes = bytes;
+    }
+    if (dataType != null) {
+      $result.dataType = dataType;
     }
     return $result;
   }
@@ -171,7 +175,8 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
     ..aOM<JmaMap_LatLngBounds>(1, _omitFieldNames ? '' : 'bounds', subBuilder: JmaMap_LatLngBounds.create)
     ..aOM<JmaMap_JmaMapData_JmaMapDataItem_Property>(2, _omitFieldNames ? '' : 'property', subBuilder: JmaMap_JmaMapData_JmaMapDataItem_Property.create)
     ..aOM<JmaMap_LatLng>(3, _omitFieldNames ? '' : 'polylabel', subBuilder: JmaMap_LatLng.create)
-    ..pc<JmaMap_JmaMapData_JmaMapDataItem_Polygon>(4, _omitFieldNames ? '' : 'polygons', $pb.PbFieldType.PM, subBuilder: JmaMap_JmaMapData_JmaMapDataItem_Polygon.create)
+    ..a<$core.List<$core.int>>(4, _omitFieldNames ? '' : 'bytes', $pb.PbFieldType.OY)
+    ..e<JmaMap_JmaMapData_DataType>(5, _omitFieldNames ? '' : 'dataType', $pb.PbFieldType.OE, protoName: 'dataType', defaultOrMaker: JmaMap_JmaMapData_DataType.POLYGON, valueOf: JmaMap_JmaMapData_DataType.valueOf, enumValues: JmaMap_JmaMapData_DataType.values)
     ..hasRequiredFields = false
   ;
 
@@ -230,7 +235,22 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
   JmaMap_LatLng ensurePolylabel() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $pb.PbList<JmaMap_JmaMapData_JmaMapDataItem_Polygon> get polygons => $_getList(3);
+  $core.List<$core.int> get bytes => $_getN(3);
+  @$pb.TagNumber(4)
+  set bytes($core.List<$core.int> v) { $_setBytes(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasBytes() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBytes() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  JmaMap_JmaMapData_DataType get dataType => $_getN(4);
+  @$pb.TagNumber(5)
+  set dataType(JmaMap_JmaMapData_DataType v) { $_setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasDataType() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDataType() => $_clearField(5);
 }
 
 class JmaMap_JmaMapData extends $pb.GeneratedMessage {

@@ -32,5 +32,24 @@ class JmaMap_JmaMapData_JmaMapType extends $pb.ProtobufEnum {
   const JmaMap_JmaMapData_JmaMapType._(super.v, super.n);
 }
 
+class JmaMap_JmaMapData_DataType extends $pb.ProtobufEnum {
+  static const JmaMap_JmaMapData_DataType POLYGON = JmaMap_JmaMapData_DataType._(0, _omitEnumNames ? '' : 'POLYGON');
+  static const JmaMap_JmaMapData_DataType MULTI_POLYGON = JmaMap_JmaMapData_DataType._(1, _omitEnumNames ? '' : 'MULTI_POLYGON');
+  static const JmaMap_JmaMapData_DataType LINE_STRING = JmaMap_JmaMapData_DataType._(2, _omitEnumNames ? '' : 'LINE_STRING');
+  static const JmaMap_JmaMapData_DataType MULTI_LINE_STRING = JmaMap_JmaMapData_DataType._(3, _omitEnumNames ? '' : 'MULTI_LINE_STRING');
+
+  static const $core.List<JmaMap_JmaMapData_DataType> values = <JmaMap_JmaMapData_DataType> [
+    POLYGON,
+    MULTI_POLYGON,
+    LINE_STRING,
+    MULTI_LINE_STRING,
+  ];
+
+  static final $core.Map<$core.int, JmaMap_JmaMapData_DataType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static JmaMap_JmaMapData_DataType? valueOf($core.int value) => _byValue[value];
+
+  const JmaMap_JmaMapData_DataType._(super.v, super.n);
+}
+
 
 const _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');
