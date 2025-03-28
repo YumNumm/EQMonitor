@@ -287,7 +287,6 @@ class _EarthquakeInformationBody extends HookWidget {
         "検知時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(arrivalTime.toLocal())}",
       (_, _, final DateTime creationDateFromEventId) =>
         "時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(creationDateFromEventId)}",
-      _ => null,
     };
   }
 }

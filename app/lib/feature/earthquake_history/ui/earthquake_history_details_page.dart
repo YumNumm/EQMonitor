@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
-import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
@@ -13,10 +12,8 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_lpgm_intensity.dart';
-import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -69,7 +66,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final maxLgIntensity = details.maxLpgmIntensity;
 
     final sheetController = SheetController();
-    final navigateToHomeFunction = useState<VoidCallback?>(null);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -82,42 +78,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
               maxIntensity: maxIntensity,
               maxLgIntensity: maxLgIntensity,
             ),
-          SheetFloatingActionButtons(
-            hasAppBar: false,
-            controller: sheetController,
-            fab: [
-              Column(
-                children: [
-                  // layer controller
-                  if (details.maxIntensity != null)
-                    FloatingActionButton.small(
-                      heroTag: 'earthquake_history_details_layer_fab',
-                      tooltip: '地図の表示レイヤーを切り替える',
-                      onPressed:
-                          () async => showEarthquakeHistoryDetailConfigDialog(
-                            context,
-                            showCitySelector: details.intensityCities != null,
-                            hasLpgmIntensity: details.maxLpgmIntensity != null,
-                          ),
-                      elevation: 4,
-                      child: const Icon(Icons.layers),
-                    ),
-                  FloatingActionButton.small(
-                    heroTag: 'earthquake_history_details_fab',
-                    tooltip: '表示領域を地図に合わせる',
-                    onPressed: () {
-                      if (navigateToHomeFunction.value != null) {
-                        navigateToHomeFunction.value!.call();
-                      }
-                    },
-                    elevation: 4,
-                    child: const Icon(Icons.home),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          // Sheet
           _Sheet(sheetController: sheetController, item: details),
           if (Navigator.canPop(context))
             // 戻るボタン

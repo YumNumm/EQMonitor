@@ -5,8 +5,8 @@ import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_controller_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_hypocenter_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_details_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +31,7 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
             earthquake,
             constraints.maxWidth,
             constraints.maxHeight,
+            earthquake.headline?.contains('遠地') ?? false,
           );
 
           return _MapView(
@@ -49,29 +50,17 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
     EarthquakeV1Extended earthquake,
     double screenWidth,
     double screenHeight,
+    bool isFarEarthquake,
   ) {
     if (earthquake.latitude != null && earthquake.longitude != null) {
       final lat = earthquake.latitude!;
       final lng = earthquake.longitude!;
 
-      double zoom = 7.0;
-
-      if (earthquake.maxIntensity != null) {
-        switch (earthquake.maxIntensity!.index) {
-          case >= 6:
-            zoom = 6.0;
-          case >= 5:
-            zoom = 6.5;
-          case >= 4:
-            zoom = 7.0;
-          case >= 3:
-            zoom = 7.5;
-          case >= 2:
-            zoom = 8.0;
-          default:
-            zoom = 8.5;
-        }
-      }
+      final maxIntensity = earthquake.maxIntensity;
+      final zoom = switch (maxIntensity) {
+        _ when isFarEarthquake => 4.0,
+        _ => 5.0,
+      };
 
       return MapCameraPosition(target: LatLng(lat, lng), zoom: zoom);
     } else {
@@ -185,7 +174,8 @@ class _MapHeader extends ConsumerWidget {
         const SizedBox.shrink(),
         const Column(),
         EarthquakeHistoryControllerCard(
-          onLayerButtonTap: () async => HomeMapLayerModal.show(context),
+          onLayerButtonTap:
+              () async => EarthquakeHistoryDetailsMapLayerModal.show(context),
           onLocationButtonTap:
               () async => MapController.of(context).animateCamera(
                 nativeDuration: const Duration(milliseconds: 400),
