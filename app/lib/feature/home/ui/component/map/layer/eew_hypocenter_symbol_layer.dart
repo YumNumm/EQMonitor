@@ -47,9 +47,7 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
             await ref.read(mapUtilityProvider).addHypocenterImages(controller);
-            final activeEews = ref.read(
-              eewAliveTelegramProvider
-            ) ?? [];
+            final activeEews = ref.read(eewAliveTelegramProvider) ?? [];
             await controller.style!.removeSource(_sourceId);
             await controller.style!.addSource(
               GeoJsonSource(
@@ -112,26 +110,29 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
     });
 
     useEffect(() {
-      unawaited(
-        controller.synchronized(() async {
-          await [
-            controller.style!.updateLayer(
-              SymbolStyleLayer(
-                id: _layerId(false),
-                sourceId: _sourceId,
-                paint: {'icon-opacity': isVisible.value ? 1.0 : 0.5},
+      final hasEew = ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false;
+      if (hasEew) {
+        unawaited(
+          controller.synchronized(() async {
+            await [
+              controller.style!.updateLayer(
+                SymbolStyleLayer(
+                  id: _layerId(false),
+                  sourceId: _sourceId,
+                  paint: {'icon-opacity': isVisible.value ? 1.0 : 0.5},
+                ),
               ),
-            ),
-            controller.style!.updateLayer(
-              SymbolStyleLayer(
-                id: _layerId(true),
-                sourceId: _sourceId,
-                paint: {'icon-opacity': isVisible.value ? 1.0 : 0.5},
+              controller.style!.updateLayer(
+                SymbolStyleLayer(
+                  id: _layerId(true),
+                  sourceId: _sourceId,
+                  paint: {'icon-opacity': isVisible.value ? 1.0 : 0.5},
+                ),
               ),
-            ),
-          ].wait;
-        }),
-      );
+            ].wait;
+          }),
+        );
+      }
       return null;
     }, [isVisible.value]);
 
