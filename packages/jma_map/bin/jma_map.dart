@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:geobase/coordinates.dart';
+import 'package:geobase/vector.dart';
 import 'package:geobase/vector_data.dart';
 import 'package:geodata/geodata.dart';
 import 'package:jma_map/gen/jma_map.pb.dart';
@@ -52,6 +53,8 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
       nameKana: propertyMap['namekana'] as String?,
     );
 
+    final byteFormat = WKB.geometry;
+
     switch (geometry) {
       case Polygon():
         final polylabel = geometry.polylabel2D();
@@ -72,16 +75,8 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            polygons: [
-              JmaMap_JmaMapData_JmaMapDataItem_Polygon(
-                latLngs:
-                    geometry.exterior!.positions
-                        .map(
-                          (point) => JmaMap_LatLng(lat: point.y, lng: point.x),
-                        )
-                        .toList(),
-              ),
-            ],
+            bytes: geometry.toBytes(format: byteFormat),
+            dataType: JmaMap_JmaMapData_DataType.POLYGON,
           ),
         );
       case MultiPolygon():
@@ -115,20 +110,8 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            polygons:
-                geometry.polygons
-                    .map(
-                      (polygon) => JmaMap_JmaMapData_JmaMapDataItem_Polygon(
-                        latLngs:
-                            polygon.exterior!.positions
-                                .map(
-                                  (point) =>
-                                      JmaMap_LatLng(lat: point.y, lng: point.x),
-                                )
-                                .toList(),
-                      ),
-                    )
-                    .toList(),
+            bytes: geometry.toBytes(format: byteFormat),
+            dataType: JmaMap_JmaMapData_DataType.MULTI_POLYGON,
           ),
         );
       case MultiLineString():
@@ -157,20 +140,8 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            polygons:
-                geometry.lineStrings
-                    .map(
-                      (lineString) => JmaMap_JmaMapData_JmaMapDataItem_Polygon(
-                        latLngs:
-                            lineString.chain.positions
-                                .map(
-                                  (point) =>
-                                      JmaMap_LatLng(lat: point.y, lng: point.x),
-                                )
-                                .toList(),
-                      ),
-                    )
-                    .toList(),
+            bytes: geometry.toBytes(format: byteFormat),
+            dataType: JmaMap_JmaMapData_DataType.MULTI_LINE_STRING,
           ),
         );
       case LineString():
@@ -190,16 +161,8 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            polygons: [
-              JmaMap_JmaMapData_JmaMapDataItem_Polygon(
-                latLngs:
-                    geometry.chain.positions
-                        .map(
-                          (point) => JmaMap_LatLng(lat: point.y, lng: point.x),
-                        )
-                        .toList(),
-              ),
-            ],
+            bytes: geometry.toBytes(format: byteFormat),
+            dataType: JmaMap_JmaMapData_DataType.LINE_STRING,
           ),
         );
       case null:
