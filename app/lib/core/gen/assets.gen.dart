@@ -82,16 +82,6 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [icon, iconForeground];
 }
 
-class $AssetsMapGen {
-  const $AssetsMapGen();
-
-  /// File path: assets/map/overview.pmtiles
-  String get overview => 'assets/map/overview.pmtiles';
-
-  /// List of all assets
-  List<String> get values => [overview];
-}
-
 class $AssetsParameterGen {
   const $AssetsParameterGen();
 
@@ -148,7 +138,6 @@ class Assets {
   static const String kyoshinMonitorScale = 'assets/kyoshin_monitor_scale.json';
   static const String kyoshinObservationPoint =
       'assets/kyoshin_observation_point.pb';
-  static const $AssetsMapGen map = $AssetsMapGen();
   static const $AssetsParameterGen parameter = $AssetsParameterGen();
   static const String tjma2001 = 'assets/tjma2001.csv';
 
