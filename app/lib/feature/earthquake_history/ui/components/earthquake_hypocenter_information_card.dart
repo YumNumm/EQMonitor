@@ -477,33 +477,41 @@ class _DepthWidget extends StatelessWidget {
     if (isFarEarthquake && item.depth == null) {
       return const SizedBox.shrink();
     }
-    String getDepthText() {
-      return switch (item.depth) {
-        0 => 'ごく浅い',
-        700 => '700km以上',
-        // vxse53がある場合
-        _ when item.intensityCities != null => '不明',
-        _ => '調査中',
-      };
+    final depth = item.depth;
+    final depthText = switch (item.depth) {
+      0 => 'ごく浅い',
+      700 => '700km以上',
+      // vxse53がある場合
+      null when item.intensityCities != null => '不明',
+      null => '調査中',
+      _ => null,
+    };
+    if (depthText != null) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Text('深さ', style: textTheme.labelStyle(textTheme.titleSmall!)),
+          Text(
+            depthText,
+            style: textTheme.valueStyle(textTheme.headlineMedium!),
+          ),
+        ],
+      );
     }
-
+    assert(depth != null, 'depth is null');
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
         Text('深さ', style: textTheme.labelStyle(textTheme.titleSmall!)),
-        if (item.depth != null) ...[
-          Text(
-            item.depth.toString(),
-            style: textTheme.valueStyle(textTheme.headlineLarge!),
-          ),
-          Text('km', style: textTheme.labelStyle(textTheme.titleMedium!)),
-        ] else
-          Text(
-            getDepthText(),
-            style: textTheme.valueStyle(textTheme.headlineMedium!),
-          ),
+        Text(
+          item.depth?.toString() ?? '不明',
+          style: textTheme.valueStyle(textTheme.headlineLarge!),
+        ),
+        Text('km', style: textTheme.labelStyle(textTheme.titleMedium!)),
       ],
     );
   }

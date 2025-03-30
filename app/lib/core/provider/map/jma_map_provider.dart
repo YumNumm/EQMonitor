@@ -24,7 +24,15 @@ enum JmaMapType {
   areaTsunami,
 }
 
-extension JmaMapEx on JmaMap_JmaMapData_JmaMapType {
+extension JmaMapEx on Map<JmaMapType, JmaMap_JmaMapData> {
+  JmaMap_JmaMapData get areaForecastLocalEew => this[JmaMapType.areaForecastLocalEew]!;
+  JmaMap_JmaMapData get areaForecastLocalE => this[JmaMapType.areaForecastLocalE]!;
+  JmaMap_JmaMapData get areaInformationCity =>
+      this[JmaMapType.areaInformationCity]!;
+  JmaMap_JmaMapData get areaTsunami => this[JmaMapType.areaTsunami]!;
+}
+
+extension JmaMapTypeEx on JmaMap_JmaMapData_JmaMapType {
   JmaMapType get mapType => switch (this) {
     JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_E =>
       JmaMapType.areaForecastLocalE,

@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_city_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_region_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_region_symbol_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_details_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
@@ -159,6 +160,10 @@ class _MapView extends HookConsumerWidget {
               visible: earthquake.maxIntensity != null,
             ),
             EarthquakeIntensityCityLayer(
+              eventId: earthquake.eventId,
+              visible: earthquake.maxIntensity != null,
+            ),
+            EarthquakeIntensityRegionSymbolLayer(
               eventId: earthquake.eventId,
               visible: earthquake.maxIntensity != null,
             ),
