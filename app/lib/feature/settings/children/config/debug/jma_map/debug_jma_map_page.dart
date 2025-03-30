@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/jma_parameter/jma_earthquake_nearest_observation_point.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
+import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class DebugJmaMapRoute extends GoRouteData {
@@ -35,6 +37,10 @@ class DebugJmaMapPage extends HookConsumerWidget {
 
     // 検索結果
     final searchResult = useState<JmaMap_JmaMapData_JmaMapDataItem?>(null);
+    final observationPointResult = useState<EarthquakeParameterStationItem?>(
+      null,
+    );
+    final distance = useState<double?>(null);
     final isLoading = useState(false);
 
     // 現在位置を使用
@@ -53,42 +59,57 @@ class DebugJmaMapPage extends HookConsumerWidget {
         final latLng = LatLng(lat, lng);
 
         isLoading.value = true;
-
-        JmaMap_JmaMapData_JmaMapDataItem? result;
+        searchResult.value = null;
+        observationPointResult.value = null;
 
         final stopWatch = Stopwatch()..start();
 
-        switch (selectedMapType.value) {
-          case JmaMapType.areaForecastLocalEew:
-            result = await ref.read(
-              jmaMapAreaForecastLocalEewInsideProvider(latLng).future,
-            );
-          case JmaMapType.areaForecastLocalE:
-            result = await ref.read(
-              jmaMapAreaForecastLocalEInsideProvider(latLng).future,
-            );
-          case JmaMapType.areaInformationCity:
-            result = await ref.read(
-              jmaMapAreaInformationCityInsideProvider(latLng).future,
-            );
-          case JmaMapType.areaTsunami:
-            result = await ref.read(
-              jmaMapAreaTsunamiNearestProvider(latLng).future,
-            );
+        if (selectedMapType.value == JmaMapType.observationPoint) {
+          final point = await ref.read(
+            jmaEarthquakeNearestObservationPointProvider(latLng).future,
+          );
+          observationPointResult.value = point?.$1;
+          distance.value = point?.$2;
+        } else {
+          JmaMap_JmaMapData_JmaMapDataItem? result;
+
+          switch (selectedMapType.value) {
+            case JmaMapType.areaForecastLocalEew:
+              result = await ref.read(
+                jmaMapAreaForecastLocalEewInsideProvider(latLng).future,
+              );
+            case JmaMapType.areaForecastLocalE:
+              result = await ref.read(
+                jmaMapAreaForecastLocalEInsideProvider(latLng).future,
+              );
+            case JmaMapType.areaInformationCity:
+              result = await ref.read(
+                jmaMapAreaInformationCityInsideProvider(latLng).future,
+              );
+            case JmaMapType.areaTsunami:
+              result = await ref.read(
+                jmaMapAreaTsunamiNearestProvider(latLng).future,
+              );
+            case JmaMapType.observationPoint:
+              // 処理は上記で実行済み
+              break;
+          }
+
+          searchResult.value = result;
         }
 
         stopWatch.stop();
-        print('${selectedMapType.value} time: ${stopWatch.elapsedMicroseconds/1000}ms');
+        print(
+          '${selectedMapType.value} time: ${stopWatch.elapsedMicroseconds / 1000}ms',
+        );
 
-        if (result == null) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('検索結果がありません')));
-          }
+        final noResults =
+            searchResult.value == null && observationPointResult.value == null;
+        if (noResults && context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('検索結果がありません')));
         }
-
-        searchResult.value = result;
       } on Exception catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(
@@ -104,138 +125,17 @@ class DebugJmaMapPage extends HookConsumerWidget {
       appBar: AppBar(title: const Text('JmaMap Debug')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              jmaMap.valueOrNull
-                      ?.map((k, v) => MapEntry(k, v.data.length))
-                      .toString() ??
-                  'null',
-            ),
-            // 位置情報セクション
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      '位置情報',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: latController,
-                            decoration: const InputDecoration(
-                              labelText: '緯度',
-                              border: OutlineInputBorder(),
-                            ),
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: lngController,
-                            decoration: const InputDecoration(
-                              labelText: '経度',
-                              border: OutlineInputBorder(),
-                            ),
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: useCurrentLocation,
-                          icon: const Icon(Icons.my_location),
-                          label: const Text('現在位置を使用'),
-                        ),
-                        const SizedBox(width: 8),
-                        switch (currentPosition) {
-                          AsyncData() => const Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                          ),
-                          AsyncError() => const Icon(
-                            Icons.error,
-                            color: Colors.red,
-                          ),
-                          AsyncLoading() => const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                          _ => const SizedBox(),
-                        },
-                      ],
-                    ),
-                  ],
-                ),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                jmaMap.valueOrNull
+                        ?.map((k, v) => MapEntry(k, v.data.length))
+                        .toString() ??
+                    'null',
               ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // JMAマップ種類選択
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'JMAマップ種類',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField<JmaMapType>(
-                      value: selectedMapType.value,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      items:
-                          JmaMapType.values.map((type) {
-                            return DropdownMenuItem(
-                              value: type,
-                              child: Text(_getMapTypeName(type)),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          searchResult.value = null;
-                          selectedMapType.value = value;
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextButton(onPressed: search, child: const Text('検索')),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // 検索結果
-            if (searchResult.value != null) ...[
+              // 位置情報セクション
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -243,20 +143,175 @@ class DebugJmaMapPage extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        '検索結果',
+                        '位置情報',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
                       const SizedBox(height: 16),
-                      _buildResultInfo(searchResult.value!),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: latController,
+                              decoration: const InputDecoration(
+                                labelText: '緯度',
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: lngController,
+                              decoration: const InputDecoration(
+                                labelText: '経度',
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: useCurrentLocation,
+                            icon: const Icon(Icons.my_location),
+                            label: const Text('現在位置を使用'),
+                          ),
+                          const SizedBox(width: 8),
+                          switch (currentPosition) {
+                            AsyncData() => const Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                            ),
+                            AsyncError() => const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            ),
+                            AsyncLoading() => const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                            _ => const SizedBox(),
+                          },
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
+
+              const SizedBox(height: 16),
+
+              // JMAマップ種類選択
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'JMAマップ種類',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<JmaMapType>(
+                        value: selectedMapType.value,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        items:
+                            JmaMapType.values.map((type) {
+                              return DropdownMenuItem(
+                                value: type,
+                                child: Text(_getMapTypeName(type)),
+                              );
+                            }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            searchResult.value = null;
+                            selectedMapType.value = value;
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextButton(onPressed: search, child: const Text('検索')),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // 検索結果
+              if (searchResult.value != null) ...[
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '検索結果',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildResultInfo(searchResult.value!),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+
+              // 地震観測点の検索結果
+              if (observationPointResult.value != null) ...[
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '最寄り地震観測点',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildObservationPointInfo(
+                          observationPointResult.value!,
+                        ),
+                        if (distance.value != null)
+                          _buildInfoRow(
+                            '距離',
+                            '${distance.value!.toStringAsFixed(2)} km',
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -286,6 +341,19 @@ class DebugJmaMapPage extends HookConsumerWidget {
     );
   }
 
+  Widget _buildObservationPointInfo(EarthquakeParameterStationItem item) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildInfoRow('コード', item.code),
+        _buildInfoRow('名前', item.name),
+        _buildInfoRow('緯度', item.latitude.toString()),
+        _buildInfoRow('経度', item.longitude.toString()),
+        if (item.hasArv400()) _buildInfoRow('ARV400', item.arv400.toString()),
+      ],
+    );
+  }
+
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -311,6 +379,15 @@ class DebugJmaMapPage extends HookConsumerWidget {
       JmaMapType.areaForecastLocalE => '地震情報',
       JmaMapType.areaInformationCity => '市区町村等',
       JmaMapType.areaTsunami => '津波予報区',
+      JmaMapType.observationPoint => '地震観測点',
     };
   }
+}
+
+enum JmaMapType {
+  areaForecastLocalEew,
+  areaForecastLocalE,
+  areaInformationCity,
+  areaTsunami,
+  observationPoint,
 }

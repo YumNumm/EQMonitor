@@ -57,8 +57,8 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
 
     switch (geometry) {
       case Polygon():
-        final polylabel = geometry.polylabel2D();
-        final bbox = geometry.calculateBounds()!;
+        final polylabel = geometry.polylabel2D(scheme: Geographic.scheme);
+        final bbox = geometry.calculateBounds(scheme: Geographic.scheme)!;
 
         results.add(
           JmaMap_JmaMapData_JmaMapDataItem(
@@ -93,7 +93,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
           scheme: Geographic.scheme,
         );
 
-        final bbox = geometry.calculateBounds()!;
+        final bbox = geometry.calculateBounds(scheme: Geographic.scheme)!;
 
         results.add(
           JmaMap_JmaMapData_JmaMapDataItem(
@@ -124,9 +124,10 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
                 })
                 .sorted((a, b) => b.$2.compareTo(a.$2))
                 .first;
-        final centroid = maxLengthLineString.$1.centroid2D()!;
+        final centroid =
+            maxLengthLineString.$1.centroid2D(scheme: Geographic.scheme)!;
 
-        final bbox = geometry.calculateBounds()!;
+        final bbox = geometry.calculateBounds(scheme: Geographic.scheme)!;
 
         results.add(
           JmaMap_JmaMapData_JmaMapDataItem(
@@ -145,9 +146,9 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
           ),
         );
       case LineString():
-        final centroid = geometry.centroid2D()!;
+        final centroid = geometry.centroid2D(scheme: Geographic.scheme)!;
 
-        final bbox = geometry.calculateBounds()!;
+        final bbox = geometry.calculateBounds(scheme: Geographic.scheme)!;
 
         results.add(
           JmaMap_JmaMapData_JmaMapDataItem(
