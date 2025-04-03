@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jma_map/jma_map.dart';
@@ -78,10 +77,7 @@ class _MapScreenState extends State<MapScreen> {
       body:
           _map == null
               ? const Center(child: CircularProgressIndicator())
-              : JmaMapWidget(
-                  map: _map!,
-                  controller: _controller,
-                ),
+              : JmaMapWidget(map: _map!, controller: _controller),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jma_map/gen/jma_map.pb.dart';
 import 'package:jma_map/src/layers/layer_render_parameter.dart';
 import 'package:jma_map/src/layers/map_layer.dart';
 import 'package:jma_map/src/utils/math_utils.dart';
@@ -36,10 +35,11 @@ class GridLayer extends MapLayer {
     this.gridStrokeWidth = 1.0,
     this.textSize = 12.0,
   }) {
-    _gridPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = gridStrokeWidth
-      ..color = gridColor;
+    _gridPaint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = gridStrokeWidth
+          ..color = gridColor;
 
     _textPainter = TextPainter(
       textDirection: TextDirection.ltr,
@@ -67,7 +67,8 @@ class GridLayer extends MapLayer {
   /// 緯度線を描画
   void _renderLatitudeLines(Canvas canvas, LayerRenderParameter param) {
     // 表示領域の左端の緯度を、間隔に合わせて切り捨てる
-    final origin = param.viewAreaRect.left - (param.viewAreaRect.left % latInterval);
+    final origin =
+        param.viewAreaRect.left - (param.viewAreaRect.left % latInterval);
     // 表示領域内に描画する緯度線の数
     final count = (param.viewAreaRect.width / latInterval).ceil() + 1;
 
@@ -88,18 +89,15 @@ class GridLayer extends MapLayer {
       );
 
       // 緯度のテキストを描画
-      _drawText(
-        canvas,
-        lat.toStringAsFixed(1),
-        Offset(x, param.padding.top),
-      );
+      _drawText(canvas, lat.toStringAsFixed(1), Offset(x, param.padding.top));
     }
   }
 
   /// 経度線を描画
   void _renderLongitudeLines(Canvas canvas, LayerRenderParameter param) {
     // 表示領域の上端の経度を、間隔に合わせて切り捨てる
-    final origin = param.viewAreaRect.top - (param.viewAreaRect.top % lngInterval);
+    final origin =
+        param.viewAreaRect.top - (param.viewAreaRect.top % lngInterval);
     // 表示領域内に描画する経度線の数
     final count = (param.viewAreaRect.height / lngInterval).ceil() + 1;
 
@@ -121,11 +119,7 @@ class GridLayer extends MapLayer {
       );
 
       // 経度のテキストを描画
-      _drawText(
-        canvas,
-        lng.toStringAsFixed(1),
-        Offset(param.padding.left, y),
-      );
+      _drawText(canvas, lng.toStringAsFixed(1), Offset(param.padding.left, y));
     }
   }
 
@@ -133,10 +127,7 @@ class GridLayer extends MapLayer {
   void _drawText(Canvas canvas, String text, Offset position) {
     _textPainter.text = TextSpan(
       text: text,
-      style: TextStyle(
-        color: gridColor,
-        fontSize: textSize,
-      ),
+      style: TextStyle(color: gridColor, fontSize: textSize),
     );
     _textPainter.layout();
     _textPainter.paint(canvas, position);

@@ -59,9 +59,9 @@ Future<void> main() async {
 
   // JSONとして保存（デバッグ用）
   final jsonOutputPath = 'out.json';
-  await File(jsonOutputPath).writeAsString(
-    jsonEncode(existingJmaMap.toProto3Json()),
-  );
+  await File(
+    jsonOutputPath,
+  ).writeAsString(jsonEncode(existingJmaMap.toProto3Json()));
 
   print('Conversion completed. Output: $outputPath, $jsonOutputPath');
 }
@@ -123,7 +123,9 @@ JmaMap_TopoJSONMapData parseTopoJson(
 /// [jsonGeometry] ジオメトリのJSON
 JmaMap_TopoJSONGeometry parseGeometry(Map<String, dynamic> jsonGeometry) {
   final type = jsonGeometry['type'] as String;
-  final property = parseProperty(jsonGeometry['properties'] as Map<String, dynamic>);
+  final property = parseProperty(
+    jsonGeometry['properties'] as Map<String, dynamic>,
+  );
   final arcIndices = <JmaMap_TopoJSONArcIndices>[];
 
   // arcsを抽出
@@ -188,10 +190,7 @@ JmaMap_TopoJSONArc parseArc(List<dynamic> jsonArc) {
   // 境界ボックスを計算
   final bounds = calculateArcBounds(positions);
 
-  return JmaMap_TopoJSONArc(
-    positions: positions,
-    bounds: bounds,
-  );
+  return JmaMap_TopoJSONArc(positions: positions, bounds: bounds);
 }
 
 /// プロパティをパースする関数

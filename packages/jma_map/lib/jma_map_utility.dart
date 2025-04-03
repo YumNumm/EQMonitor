@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:jma_map/jma_map.dart';
-import 'package:jma_map/src/utils/jma_map_data_item_extension.dart';
 
 class JmaMapUtility {
   /// [latLng] から最も近い ないしは 内包する JmaMapDataItemを返す
