@@ -21,6 +21,7 @@ do
     # flutterやFLUTTERで始まる項目は出力しないようにしています。
     lowercase_item=$(echo "$item" | tr '[:upper:]' '[:lower:]')
     if [[ $lowercase_item != flutter* ]]; then
+        echo "Extracting environment variable: $item"
         echo "$item" >> "$OUTPUT_FILE"
     fi
 done
