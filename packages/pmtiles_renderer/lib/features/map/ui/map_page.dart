@@ -117,7 +117,6 @@ class VectorMapTilesPmTilesPage extends StatelessWidget {
                     'world': tileProvider,
                     'overview': tileProvider,
                   }),
-                  
                 ),
               ],
             );

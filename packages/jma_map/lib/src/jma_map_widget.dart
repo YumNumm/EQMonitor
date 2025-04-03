@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jma_map/gen/jma_map.pb.dart';
 import 'package:jma_map/src/jma_map_controller.dart';
@@ -45,7 +44,8 @@ class _JmaMapWidgetState extends State<JmaMapWidget> {
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ??
+    _controller =
+        widget.controller ??
         JmaMapController(
           map: widget.map,
           initialZoom: widget.initialZoom,
@@ -59,7 +59,8 @@ class _JmaMapWidgetState extends State<JmaMapWidget> {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       _controller.removeListener(_onControllerChanged);
-      _controller = widget.controller ??
+      _controller =
+          widget.controller ??
           JmaMapController(
             map: widget.map,
             initialZoom: widget.initialZoom,
@@ -156,10 +157,7 @@ class _JmaMapPainter extends CustomPainter {
   final ValueChanged<bool> onNeedsRender;
 
   /// コンストラクタ
-  _JmaMapPainter({
-    required this.controller,
-    required this.onNeedsRender,
-  });
+  _JmaMapPainter({required this.controller, required this.onNeedsRender});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -180,10 +178,7 @@ class _JmaMapPainter extends CustomPainter {
     final leftTopLng = leftTopPixelX / pixelsPerLongitude;
     final leftTopLat = leftTopPixelY / pixelsPerLatitude;
 
-    final leftTopLocation = JmaMap_LatLng(
-      lat: leftTopLat,
-      lng: leftTopLng,
-    );
+    final leftTopLocation = JmaMap_LatLng(lat: leftTopLat, lng: leftTopLng);
 
     final leftTopPixel = Offset(leftTopPixelX, leftTopPixelY);
 
@@ -209,7 +204,11 @@ class _JmaMapPainter extends CustomPainter {
     );
 
     // レイヤーの描画
-    final needPersistentUpdate = controller.layerHost.render(canvas, param, false);
+    final needPersistentUpdate = controller.layerHost.render(
+      canvas,
+      param,
+      false,
+    );
 
     // 連続描画が必要な場合はコールバックを呼び出す
     onNeedsRender(needPersistentUpdate);

@@ -12,10 +12,7 @@ class JmaMapLayerSet {
   final JmaMap_JmaMapData_JmaMapType layerType;
 
   /// コンストラクタ
-  const JmaMapLayerSet({
-    required this.minZoom,
-    required this.layerType,
-  });
+  const JmaMapLayerSet({required this.minZoom, required this.layerType});
 
   /// デフォルトのレイヤー設定
   static const List<JmaMapLayerSet> defaultLayerSets = [
@@ -87,10 +84,12 @@ class JmaMapController {
     JmaMap_LatLng? initialCenter,
     List<JmaMapLayerSet>? layerSets,
     MapLayerHost? layerHost,
-  })  : _zoom = initialZoom,
-        _center = initialCenter ?? JmaMap_LatLng(lat: 35.681236, lng: 139.767125), // 東京駅
-        _layerSets = layerSets ?? JmaMapLayerSet.defaultLayerSets,
-        layerHost = layerHost ?? MapLayerHost() {
+  }) : _zoom = initialZoom,
+       _center =
+           initialCenter ??
+           JmaMap_LatLng(lat: 35.681236, lng: 139.767125), // 東京駅
+       _layerSets = layerSets ?? JmaMapLayerSet.defaultLayerSets,
+       layerHost = layerHost ?? MapLayerHost() {
     this.layerHost.onRefreshRequested = notifyListeners;
   }
 

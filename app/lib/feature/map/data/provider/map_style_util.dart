@@ -29,9 +29,7 @@ class MapStyleUtil {
     return styleFile.path;
   }
 
-  Future<String> getStyle({
-    required MapColorScheme colorScheme,
-  }) async {
+  Future<String> getStyle({required MapColorScheme colorScheme}) async {
     if (kIsWeb) {
       return 'https://v2.map.eqmonitor.app/style-light.json';
     }
