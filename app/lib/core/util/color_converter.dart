@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
+import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 class ColorConverter implements JsonConverter<Color, String> {
@@ -16,8 +16,5 @@ class ColorConverter implements JsonConverter<Color, String> {
   }
 
   @override
-  String toJson(Color color) {
-    final hex = color.hex;
-    return "#${hex.toRadixString(16).padLeft(6, '0')}";
-  }
+  String toJson(Color color) => color.toHexStringRGB();
 }

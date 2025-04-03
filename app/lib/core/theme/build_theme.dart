@@ -1,5 +1,5 @@
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,9 +12,10 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
     fontFamily: FontFamily.notoSansJP,
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        // MEMO(YumNumm): PredictiveBackを使うと、
-        // MediaQuery.sizeOf(context)の値が変わるので無効
-        // TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        // TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
       },
     ),
     cupertinoOverrideTheme: CupertinoThemeData(
@@ -29,6 +30,10 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
       scrolledUnderElevation: 0,
     ),
     splashFactory: NoSplash.splashFactory,
+    // ignore: deprecated_member_use
+    sliderTheme: const SliderThemeData(year2023: false),
+    // ignore: deprecated_member_use
+    progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
   );
 }
 

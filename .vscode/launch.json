@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "EQMonitor Development Profile",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "cwd": "app",
+      "flutterMode": "profile",
+      "args": [
+        "--dart-define-from-file=environment/.env.dev"
+      ]
+    },
+    {
       "name": "EQMonitor Development Release",
       "type": "dart",
       "request": "launch",

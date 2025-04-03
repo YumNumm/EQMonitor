@@ -264,15 +264,15 @@ MapColorScheme _$MapColorSchemeFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MapColorScheme {
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get backgroundColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get worldLandColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get worldLineColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get japanLandColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get japanLineColor => throw _privateConstructorUsedError;
 
   /// Serializes this MapColorScheme to a JSON map.
@@ -293,12 +293,11 @@ abstract class $MapColorSchemeCopyWith<$Res> {
   ) = _$MapColorSchemeCopyWithImpl<$Res, MapColorScheme>;
   @useResult
   $Res call({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    Color backgroundColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color worldLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color worldLineColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color japanLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color japanLineColor,
+    @ColorConverter() Color backgroundColor,
+    @ColorConverter() Color worldLandColor,
+    @ColorConverter() Color worldLineColor,
+    @ColorConverter() Color japanLandColor,
+    @ColorConverter() Color japanLineColor,
   });
 }
 
@@ -366,12 +365,11 @@ abstract class _$$MapColorSchemeImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    Color backgroundColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color worldLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color worldLineColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color japanLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color japanLineColor,
+    @ColorConverter() Color backgroundColor,
+    @ColorConverter() Color worldLandColor,
+    @ColorConverter() Color worldLineColor,
+    @ColorConverter() Color japanLandColor,
+    @ColorConverter() Color japanLineColor,
   });
 }
 
@@ -431,35 +429,30 @@ class __$$MapColorSchemeImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MapColorSchemeImpl implements _MapColorScheme {
   const _$MapColorSchemeImpl({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required this.backgroundColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required this.worldLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required this.worldLineColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required this.japanLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required this.japanLineColor,
+    @ColorConverter() required this.backgroundColor,
+    @ColorConverter() required this.worldLandColor,
+    @ColorConverter() required this.worldLineColor,
+    @ColorConverter() required this.japanLandColor,
+    @ColorConverter() required this.japanLineColor,
   });
 
   factory _$MapColorSchemeImpl.fromJson(Map<String, dynamic> json) =>
       _$$MapColorSchemeImplFromJson(json);
 
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   final Color backgroundColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   final Color worldLandColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   final Color worldLineColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   final Color japanLandColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   final Color japanLineColor;
 
   @override
@@ -514,35 +507,30 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
 
 abstract class _MapColorScheme implements MapColorScheme {
   const factory _MapColorScheme({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required final Color backgroundColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required final Color worldLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required final Color worldLineColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required final Color japanLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required final Color japanLineColor,
+    @ColorConverter() required final Color backgroundColor,
+    @ColorConverter() required final Color worldLandColor,
+    @ColorConverter() required final Color worldLineColor,
+    @ColorConverter() required final Color japanLandColor,
+    @ColorConverter() required final Color japanLineColor,
   }) = _$MapColorSchemeImpl;
 
   factory _MapColorScheme.fromJson(Map<String, dynamic> json) =
       _$MapColorSchemeImpl.fromJson;
 
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get backgroundColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get worldLandColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get worldLineColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get japanLandColor;
   @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+  @ColorConverter()
   Color get japanLineColor;
 
   /// Create a copy of MapColorScheme

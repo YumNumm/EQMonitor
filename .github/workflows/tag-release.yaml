@@ -113,9 +113,6 @@ jobs:
     timeout-minutes: 60
     env:
       TZ: Asia/Tokyo
-      FLUTTER_VERSION:
-      FLUTTER_CHANNEL:
-      FLUTTER_HOME:
       PRODUCE_USERNAME: yumnumm@icloud.com
       SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
       FASTLANE_USER: yumnumm@icloud.com

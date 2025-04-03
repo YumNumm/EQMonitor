@@ -35,23 +35,23 @@ _$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
         final val = _$MapColorSchemeImpl(
           backgroundColor: $checkedConvert(
             'background_color',
-            (v) => colorFromJson(v as String),
+            (v) => const ColorConverter().fromJson(v as String),
           ),
           worldLandColor: $checkedConvert(
             'world_land_color',
-            (v) => colorFromJson(v as String),
+            (v) => const ColorConverter().fromJson(v as String),
           ),
           worldLineColor: $checkedConvert(
             'world_line_color',
-            (v) => colorFromJson(v as String),
+            (v) => const ColorConverter().fromJson(v as String),
           ),
           japanLandColor: $checkedConvert(
             'japan_land_color',
-            (v) => colorFromJson(v as String),
+            (v) => const ColorConverter().fromJson(v as String),
           ),
           japanLineColor: $checkedConvert(
             'japan_line_color',
-            (v) => colorFromJson(v as String),
+            (v) => const ColorConverter().fromJson(v as String),
           ),
         );
         return val;
@@ -68,9 +68,9 @@ _$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$MapColorSchemeImplToJson(
   _$MapColorSchemeImpl instance,
 ) => <String, dynamic>{
-  'background_color': colorToJson(instance.backgroundColor),
-  'world_land_color': colorToJson(instance.worldLandColor),
-  'world_line_color': colorToJson(instance.worldLineColor),
-  'japan_land_color': colorToJson(instance.japanLandColor),
-  'japan_line_color': colorToJson(instance.japanLineColor),
+  'background_color': const ColorConverter().toJson(instance.backgroundColor),
+  'world_land_color': const ColorConverter().toJson(instance.worldLandColor),
+  'world_line_color': const ColorConverter().toJson(instance.worldLineColor),
+  'japan_land_color': const ColorConverter().toJson(instance.japanLandColor),
+  'japan_line_color': const ColorConverter().toJson(instance.japanLineColor),
 };

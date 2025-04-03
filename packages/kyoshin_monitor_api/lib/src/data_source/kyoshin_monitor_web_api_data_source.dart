@@ -72,69 +72,72 @@ class KyoshinMonitorWebApiDataSource {
 @JsonEnum(valueField: 'urlString')
 enum RealtimeDataType {
   /// 震度
-  shindo('震度', 'jma', false),
+  shindo('震度', 'jma', isLpgm: false),
 
   /// 最大加速度
-  pga('最大加速度', 'acmap', false),
+  pga('最大加速度', 'acmap', isLpgm: false),
 
   /// 最大速度
-  pgv('最大速度', 'vcmap', false),
+  pgv('最大速度', 'vcmap', isLpgm: false),
 
   /// 最大変位
-  pgd('最大変位', 'dcmap', false),
+  pgd('最大変位', 'dcmap', isLpgm: false),
 
   /// 速度応答0.125Hz
-  response0125Hz('速度応答0.125Hz', 'rsp0125', false),
+  response0125Hz('速度応答0.125Hz', 'rsp0125', isLpgm: false),
 
   /// 速度応答0.25Hz
-  response025Hz('速度応答0.25Hz', 'rsp0250', false),
+  response025Hz('速度応答0.25Hz', 'rsp0250', isLpgm: false),
 
   /// 速度応答0.5Hz
-  response05Hz('速度応答0.5Hz', 'rsp0500', false),
+  response05Hz('速度応答0.5Hz', 'rsp0500', isLpgm: false),
 
   /// 速度応答1Hz
-  response1Hz('速度応答1Hz', 'rsp1000', false),
+  response1Hz('速度応答1Hz', 'rsp1000', isLpgm: false),
 
   /// 速度応答2Hz
-  response2Hz('速度応答2Hz', 'rsp2000', false),
+  response2Hz('速度応答2Hz', 'rsp2000', isLpgm: false),
 
   /// 速度応答4Hz
-  response4Hz('速度応答4Hz', 'rsp4000', false),
+  response4Hz('速度応答4Hz', 'rsp4000', isLpgm: false),
 
   /// 長周期地震動階級
   /// Lpgm系列でのみ利用可
-  abrspmx('長周期地震動階級', 'abrspmx', true),
+  abrspmx('長周期地震動階級', 'abrspmx', isLpgm: true),
 
   /// 階級データ(周期1秒台)
   /// Lpgm系列でのみ利用可
-  abrsp1s('階級データ(周期1秒台)', 'abrsp1s', true),
+  abrsp1s('階級データ(周期1秒台)', 'abrsp1s', isLpgm: true),
 
   /// 階級データ(周期2秒台)
   /// Lpgm系列でのみ利用可
-  abrsp2s('階級データ(周期2秒台)', 'abrsp2s', true),
+  abrsp2s('階級データ(周期2秒台)', 'abrsp2s', isLpgm: true),
 
   /// 階級データ(周期3秒台)
   /// Lpgm系列でのみ利用可
-  abrsp3s('階級データ(周期3秒台)', 'abrsp3s', true),
+  abrsp3s('階級データ(周期3秒台)', 'abrsp3s', isLpgm: true),
 
   /// 階級データ(周期4秒台)
   /// Lpgm系列でのみ利用可
-  abrsp4s('階級データ(周期4秒台)', 'abrsp4s', true),
+  abrsp4s('階級データ(周期4秒台)', 'abrsp4s', isLpgm: true),
 
   /// 階級データ(周期5秒台)
   /// Lpgm系列でのみ利用可
-  abrsp5s('階級データ(周期5秒台)', 'abrsp5s', true),
+  abrsp5s('階級データ(周期5秒台)', 'abrsp5s', isLpgm: true),
 
   /// 階級データ(周期6秒台)
   /// Lpgm系列でのみ利用可
-  abrsp6s('階級データ(周期6秒台)', 'abrsp6s', true),
+  abrsp6s('階級データ(周期6秒台)', 'abrsp6s', isLpgm: true),
 
   /// 階級データ(周期7秒台)
   /// Lpgm系列でのみ利用可
-  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', true);
+  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true);
 
-  // ignore: avoid_positional_boolean_parameters
-  const RealtimeDataType(this.displayName, this.urlString, this.isLpgm);
+  const RealtimeDataType(
+    this.displayName,
+    this.urlString, {
+    required this.isLpgm,
+  });
 
   /// 表示名
   final String displayName;

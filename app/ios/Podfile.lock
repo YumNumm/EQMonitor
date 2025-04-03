@@ -6,23 +6,26 @@ PODS:
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
+  - objective_c (0.0.1):
+    - Flutter
   - permission_handler_apple (9.3.0):
     - Flutter
-  - purchases_flutter (8.4.6):
+  - purchases_flutter (8.6.0):
     - Flutter
-    - PurchasesHybridCommon (= 13.17.1)
-  - PurchasesHybridCommon (13.17.1):
-    - RevenueCat (= 5.16.1)
-  - RevenueCat (5.16.1)
+    - PurchasesHybridCommon (= 13.21.0)
+  - PurchasesHybridCommon (13.21.0):
+    - RevenueCat (= 5.18.0)
+  - RevenueCat (5.18.0)
   - shared_preference_app_group (1.0.0):
     - Flutter
-  - SwiftProtobuf (1.28.2)
+  - SwiftProtobuf (1.29.0)
 
 DEPENDENCIES:
   - background_task (from `.symlinks/plugins/background_task/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - objective_c (from `.symlinks/plugins/objective_c/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - shared_preference_app_group (from `.symlinks/plugins/shared_preference_app_group/ios`)
@@ -43,6 +46,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
+  objective_c:
+    :path: ".symlinks/plugins/objective_c/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   purchases_flutter:
@@ -55,12 +60,13 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: 395056b3175ba4f08480a7c5de30cd36d69827e4
   geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
+  objective_c: 89e720c30d716b036faf9c9684022048eee1eee2
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
-  purchases_flutter: 9b781bb8f1fa7641bc72d0dcb13f57591e6b8d8f
-  PurchasesHybridCommon: 7ee74fefbad7fa42a74ff6e339af46fac3af4640
-  RevenueCat: d38c56d5e1058f955ee7fce4ea7b18d126235e64
+  purchases_flutter: cbcf97969b7bf0f1db71d802f4e682bb851f0576
+  PurchasesHybridCommon: 9691d74a051f30858360d78936d59dc14575014e
+  RevenueCat: e825836f5d6baa870c53d7281be25a5fd91abd91
   shared_preference_app_group: 7422922a188e05cf680a656e18e2786dcb5c58b3
-  SwiftProtobuf: 4dbaffec76a39a8dc5da23b40af1a5dc01a4c02d
+  SwiftProtobuf: b7aa08087e2ab6d162862d143020091254095f69
 
 PODFILE CHECKSUM: d10447a9148f63b89692c9605e3219ee49461f0a
 

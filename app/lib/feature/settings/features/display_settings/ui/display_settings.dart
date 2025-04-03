@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
-import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -83,7 +83,7 @@ class _ThemeSelector extends ConsumerWidget {
                 ThemeMode.light => 'ライト',
                 ThemeMode.dark => 'ダーク',
                 _ => throw UnimplementedError(),
-              },),
+              }),
               const SizedBox(height: 4),
               Radio.adaptive(
                 value:

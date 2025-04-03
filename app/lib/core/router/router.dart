@@ -3,15 +3,13 @@ import 'dart:async';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquake_history_details.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
-import 'package:eqmonitor/feature/home/page/home_page.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
@@ -23,6 +21,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/term_of_ser
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
@@ -33,7 +32,8 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
-import 'package:eqmonitor/feature/talker/talker_page.dart';
+import 'package:eqmonitor/page/home_page.dart';
+import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide LicensePage;
@@ -52,10 +52,7 @@ final isInitializedStateProvider = StateProvider<bool>((ref) => false);
 GoRouter goRouter(Ref ref) => GoRouter(
   routes: $appRoutes,
   navigatorKey: App.navigatorKey,
-  initialLocation:
-      (ref.read(sharedPreferencesProvider).getBool('isInitialized') ?? false)
-          ? const HomeRoute().location
-          : const SetupRoute().location,
+  initialLocation: const HomeRoute().location,
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
@@ -84,7 +81,7 @@ class EarthquakeHistoryRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeHistoryScreen();
+      const EarthquakeHistoryPage();
 }
 
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
@@ -184,8 +181,8 @@ class TalkerRoute extends GoRouteData {
       path: 'donation',
       routes: [TypedGoRoute<DonationExecutedRoute>(path: 'executed')],
     ),
-    TypedGoRoute<DebuggerRoute>(
-      path: 'debugger',
+    TypedGoRoute<DebugRoute>(
+      path: 'debug',
       routes: [
         TypedGoRoute<HttpApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
@@ -194,6 +191,7 @@ class TalkerRoute extends GoRouteData {
           path: 'websocket-api-endpoint-selector',
         ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
+        TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
       ],
     ),
@@ -239,8 +237,8 @@ class NotificationEewRoute extends GoRouteData {
       const NotificationRemoteSettingsEewPage();
 }
 
-class DebuggerRoute extends GoRouteData {
-  const DebuggerRoute();
+class DebugRoute extends GoRouteData {
+  const DebugRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const DebugPage();

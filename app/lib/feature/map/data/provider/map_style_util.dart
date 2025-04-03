@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,7 +17,7 @@ MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil();
 class MapStyleUtil {
   Future<String> _saveStyleJson(Map<String, dynamic> json) async {
     final jsonStr = jsonEncode(json);
-    final hash = sha256.convert(utf8.encode(jsonStr)).toString();
+    final hash = md5.convert(utf8.encode(jsonStr)).toString();
 
     final dir = await getApplicationDocumentsDirectory();
     final documentDir = dir.path;
@@ -30,7 +29,9 @@ class MapStyleUtil {
     return styleFile.path;
   }
 
-  Future<String> getStyle({required MapColorScheme colorScheme}) async {
+  Future<String> getStyle({
+    required MapColorScheme colorScheme,
+  }) async {
     if (kIsWeb) {
       return 'https://v2.map.eqmonitor.app/style-light.json';
     }
@@ -40,10 +41,20 @@ class MapStyleUtil {
       'center': [139.767125, 35.681236],
       'zoom': 5,
       'sources': {
+        // 'eqmonitor_map': {
+        //   'type': 'vector',
+        //   // 'url': 'file://$overviewAssetPath',
+        //   'minzoom': 1,
+        //   'maxzoom': 5,
+        //   'bounds': [-180, -85.051129, 180, 83.634101],
+        // },
         'eqmonitor_map': {
           'type': 'vector',
+          // 'url': 'https://map.eqmonitor.app/tiles/tiles.json',
           'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
           'attribution': '© 気象庁, Natural Earth',
+          'minzoom': 1,
+          'maxzoom': 10,
         },
         'osm': {
           'type': 'raster',
@@ -67,9 +78,7 @@ class MapStyleUtil {
         //   'id': 'osm',
         //   'type': 'raster',
         //   'source': 'osm',
-        //   'paint': {
-        //     'raster-opacity': 0.1,
-        //   },
+        //   'paint': {'raster-opacity': 0.2},
         // },
         {
           'id': BaseLayer.countriesFill.name,
@@ -183,17 +192,4 @@ enum BaseLayer {
   areaForecastLocalEewLine,
   areaForecastLocalELine,
   areaInformationCityQuakeLine,
-}
-
-extension ColorCode on Color {
-  /// sRGB色空間における Hexカラーコードを取得
-  int get hex {
-    // 色をsRGBに変換
-    final color = withValues(colorSpace: ColorSpace.sRGB);
-    // color.{r,g,b}は0~1までの値なので、255倍にする
-    final r = (color.r * 255).toInt();
-    final g = (color.g * 255).toInt();
-    final b = (color.b * 255).toInt();
-    return (r << 16) + (g << 8) + b;
-  }
 }

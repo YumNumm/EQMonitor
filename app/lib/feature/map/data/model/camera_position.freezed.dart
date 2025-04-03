@@ -22,7 +22,6 @@ MapCameraPosition _$MapCameraPositionFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MapCameraPosition {
   /// カメラの中心座標
-  @LatLngConverter()
   LatLng get target => throw _privateConstructorUsedError;
 
   /// ズームレベル
@@ -51,12 +50,7 @@ abstract class $MapCameraPositionCopyWith<$Res> {
     $Res Function(MapCameraPosition) then,
   ) = _$MapCameraPositionCopyWithImpl<$Res, MapCameraPosition>;
   @useResult
-  $Res call({
-    @LatLngConverter() LatLng target,
-    double zoom,
-    double tilt,
-    double bearing,
-  });
+  $Res call({LatLng target, double zoom, double tilt, double bearing});
 }
 
 /// @nodoc
@@ -116,12 +110,7 @@ abstract class _$$MapCameraPositionImplCopyWith<$Res>
   ) = __$$MapCameraPositionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @LatLngConverter() LatLng target,
-    double zoom,
-    double tilt,
-    double bearing,
-  });
+  $Res call({LatLng target, double zoom, double tilt, double bearing});
 }
 
 /// @nodoc
@@ -174,7 +163,7 @@ class __$$MapCameraPositionImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MapCameraPositionImpl extends _MapCameraPosition {
   const _$MapCameraPositionImpl({
-    @LatLngConverter() required this.target,
+    required this.target,
     this.zoom = 5.0,
     this.tilt = 0.0,
     this.bearing = 0.0,
@@ -185,7 +174,6 @@ class _$MapCameraPositionImpl extends _MapCameraPosition {
 
   /// カメラの中心座標
   @override
-  @LatLngConverter()
   final LatLng target;
 
   /// ズームレベル
@@ -242,7 +230,7 @@ class _$MapCameraPositionImpl extends _MapCameraPosition {
 
 abstract class _MapCameraPosition extends MapCameraPosition {
   const factory _MapCameraPosition({
-    @LatLngConverter() required final LatLng target,
+    required final LatLng target,
     final double zoom,
     final double tilt,
     final double bearing,
@@ -254,7 +242,6 @@ abstract class _MapCameraPosition extends MapCameraPosition {
 
   /// カメラの中心座標
   @override
-  @LatLngConverter()
   LatLng get target;
 
   /// ズームレベル
