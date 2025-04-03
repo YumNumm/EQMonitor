@@ -12,6 +12,7 @@ workspace:
   - packages/jma_code_table_converter_internal
   - packages/jma_code_table_types
   - packages/jma_map
+  - packages/jma_map/example
   - packages/jma_parameter_api_client
   - packages/jma_parameter_converter_internal
   - packages/jma_parameter_types
@@ -23,6 +24,7 @@ workspace:
   - packages/msgpack_dart
   - packages/kyoshin_monitor_api
   - packages/kyoshin_monitor_image_parser
+  - packages/pmtiles_renderer
   # <ADD_PACKAGE_HERE>
 dependencies:
   melos: ^7.0.0-dev.7

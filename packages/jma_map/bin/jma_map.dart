@@ -76,7 +76,6 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               nameKana: p.nameKana,
             ),
             bytes: geometry.toBytes(format: byteFormat),
-            dataType: JmaMap_JmaMapData_DataType.POLYGON,
           ),
         );
       case MultiPolygon():
@@ -111,7 +110,6 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               nameKana: p.nameKana,
             ),
             bytes: geometry.toBytes(format: byteFormat),
-            dataType: JmaMap_JmaMapData_DataType.MULTI_POLYGON,
           ),
         );
       case MultiLineString():
@@ -142,7 +140,6 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               nameKana: p.nameKana,
             ),
             bytes: geometry.toBytes(format: byteFormat),
-            dataType: JmaMap_JmaMapData_DataType.MULTI_LINE_STRING,
           ),
         );
       case LineString():
@@ -163,7 +160,6 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               nameKana: p.nameKana,
             ),
             bytes: geometry.toBytes(format: byteFormat),
-            dataType: JmaMap_JmaMapData_DataType.LINE_STRING,
           ),
         );
       case null:

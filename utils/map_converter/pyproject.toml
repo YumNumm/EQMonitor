@@ -9,4 +9,5 @@ dependencies = [
     "colorama>=0.4.6",
     "requests>=2.32.3",
     "tqdm>=4.67.1",
+    "topojson>=1.5.1",
 ]

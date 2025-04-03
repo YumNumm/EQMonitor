@@ -1,30 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
-
-part of 'jma_map_utility.dart';
+part of 'router.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaMapUtilityHash() => r'77dac2bee1cbb90d6a20f86baab076df93a94006';
+String _$routerHash() => r'874cc5aa918969f1231d7b71ab729d642a86918d';
 
-/// See also [jmaMapUtility].
-@ProviderFor(jmaMapUtility)
-final jmaMapUtilityProvider = Provider<JmaMapUtility>.internal(
-  jmaMapUtility,
-  name: r'jmaMapUtilityProvider',
+/// See also [router].
+@ProviderFor(router)
+final routerProvider = AutoDisposeProvider<GoRouter>.internal(
+  router,
+  name: r'routerProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$jmaMapUtilityHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$routerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef JmaMapUtilityRef = ProviderRef<JmaMapUtility>;
+typedef RouterRef = AutoDisposeProviderRef<GoRouter>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

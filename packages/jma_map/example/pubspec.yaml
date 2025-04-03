@@ -1,0 +1,30 @@
+name: example
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+resolution: workspace
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  jma_map:
+    path: ../../../
+  path_provider: ^2.1.2
+  path: ^1.9.0
+  vector_math: ^2.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/jma_map_with_topojson.pb

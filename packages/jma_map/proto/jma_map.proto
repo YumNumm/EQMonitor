@@ -5,6 +5,7 @@ package net.yumnumm.eqmonitor.jma_map;
 
 message JmaMap {
   repeated JmaMapData data = 1;
+  repeated TopoJSONMapData topoJsonData = 2;
 
 	message JmaMapData
 	{
@@ -59,5 +60,30 @@ message JmaMap {
 	{
 		double lat = 1;
 		double lng = 2;
+	}
+
+	// TopoJSON関連のメッセージ定義
+	message TopoJSONMapData {
+		JmaMapData.JmaMapType mapType = 1;
+		string name = 2; // "AreaForecastLocalE" など
+		repeated TopoJSONGeometry geometries = 3;
+		repeated TopoJSONArc arcs = 4;
+		LatLngBounds bounds = 5; // 全体の境界ボックス
+	}
+
+	message TopoJSONGeometry {
+		string type = 1; // "Polygon", "MultiPolygon" など
+		repeated TopoJSONArcIndices arcIndices = 2; // ネストされた配列構造
+		JmaMapData.JmaMapDataItem.Property property = 3; // 既存のPropertyを再利用
+		LatLngBounds bounds = 4; // ジオメトリごとの境界ボックス
+	}
+
+	message TopoJSONArcIndices {
+		repeated int32 indices = 1; // 単一のarcを参照するインデックスの配列
+	}
+
+	message TopoJSONArc {
+		repeated LatLng positions = 1; // 既存のLatLngを再利用
+		LatLngBounds bounds = 2; // アークごとの境界ボックス
 	}
 }

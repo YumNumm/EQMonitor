@@ -14,9 +14,13 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class JmaMap_JmaMapData_JmaMapType extends $pb.ProtobufEnum {
+  /// 緊急地震速報／府県予報区
   static const JmaMap_JmaMapData_JmaMapType AREA_FORECAST_LOCAL_EEW = JmaMap_JmaMapData_JmaMapType._(0, _omitEnumNames ? '' : 'AREA_FORECAST_LOCAL_EEW');
+  /// 地震情報／細分区域
   static const JmaMap_JmaMapData_JmaMapType AREA_FORECAST_LOCAL_E = JmaMap_JmaMapData_JmaMapType._(1, _omitEnumNames ? '' : 'AREA_FORECAST_LOCAL_E');
+  /// 市町村等（地震津波関係）
   static const JmaMap_JmaMapData_JmaMapType AREA_INFORMATION_CITY = JmaMap_JmaMapData_JmaMapType._(2, _omitEnumNames ? '' : 'AREA_INFORMATION_CITY');
+  /// 津波予報区
   static const JmaMap_JmaMapData_JmaMapType AREA_TSUNAMI = JmaMap_JmaMapData_JmaMapType._(3, _omitEnumNames ? '' : 'AREA_TSUNAMI');
 
   static const $core.List<JmaMap_JmaMapData_JmaMapType> values = <JmaMap_JmaMapData_JmaMapType> [
