@@ -44,6 +44,14 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 1. `cd EQMonitor` でカレントディレクトリを移動します。
 
+1. Swift Package Managerを利用するために、以下のコマンドを実行してください
+
+    - [Swift Package Manager for app developers](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
+
+    ```bash
+    fvm flutter config --enable-swift-package-manager
+    ```
+
 1. Dartプロジェクトを管理するためのツールである[melos](https://melos.invertase.dev/)をインストールします。
 
    - `dart pub global activate melos` を実行してください。
@@ -64,14 +72,13 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 1. `fvm flutter run` でアプリケーションを起動します。
 
-
 ## アーキテクチャ
 
 - アプリケーション
   - 状態管理: Riverpod, Flutter Hooks
-  - データ取得: Dio, retrofit, eqapi_client(自作)
+  - データ取得: Dio, retrofit, eqapi_client
   - JSONシリアライズ/デシリアライズ: freezed, json_serializable
-  - マップ: maplibre_gl
+  - マップ: flutter-maplibre
 
 - エッジサーバサイド(API)
   - 実行環境: Cloudflare Workers

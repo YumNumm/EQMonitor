@@ -72,7 +72,7 @@ extension $EarthquakeHistoryDetailsRouteExtension
     on EarthquakeHistoryDetailsRoute {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
-        eventId: int.parse(state.pathParameters['eventId']!),
+        eventId: int.parse(state.pathParameters['eventId']!)!,
       );
 
   String get location => GoRouteData.$location(
@@ -335,9 +335,9 @@ RouteBase get $settingsRoute => GoRouteData.$route(
       ],
     ),
     GoRouteData.$route(
-      path: 'debugger',
+      path: 'debug',
 
-      factory: $DebuggerRouteExtension._fromState,
+      factory: $DebugRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'api-endpoint-selector',
@@ -353,6 +353,11 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'kyoshin-monitor',
 
           factory: $DebugKyoshinMonitorRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'jma-map',
+
+          factory: $DebugJmaMapRouteExtension._fromState,
         ),
         GoRouteData.$route(
           path: 'playground',
@@ -646,10 +651,10 @@ extension $DonationExecutedRouteExtension on DonationExecutedRoute {
       context.replace(location, extra: $extra);
 }
 
-extension $DebuggerRouteExtension on DebuggerRoute {
-  static DebuggerRoute _fromState(GoRouterState state) => const DebuggerRoute();
+extension $DebugRouteExtension on DebugRoute {
+  static DebugRoute _fromState(GoRouterState state) => const DebugRoute();
 
-  String get location => GoRouteData.$location('/settings/debugger');
+  String get location => GoRouteData.$location('/settings/debug');
 
   void go(BuildContext context) => context.go(location);
 
@@ -667,7 +672,7 @@ extension $HttpApiEndpointSelectorRouteExtension
       const HttpApiEndpointSelectorRoute();
 
   String get location =>
-      GoRouteData.$location('/settings/debugger/api-endpoint-selector');
+      GoRouteData.$location('/settings/debug/api-endpoint-selector');
 
   void go(BuildContext context) => context.go(location);
 
@@ -684,9 +689,8 @@ extension $WebsocketEndpointSelectorRouteExtension
   static WebsocketEndpointSelectorRoute _fromState(GoRouterState state) =>
       const WebsocketEndpointSelectorRoute();
 
-  String get location => GoRouteData.$location(
-    '/settings/debugger/websocket-api-endpoint-selector',
-  );
+  String get location =>
+      GoRouteData.$location('/settings/debug/websocket-api-endpoint-selector');
 
   void go(BuildContext context) => context.go(location);
 
@@ -703,7 +707,23 @@ extension $DebugKyoshinMonitorRouteExtension on DebugKyoshinMonitorRoute {
       const DebugKyoshinMonitorRoute();
 
   String get location =>
-      GoRouteData.$location('/settings/debugger/kyoshin-monitor');
+      GoRouteData.$location('/settings/debug/kyoshin-monitor');
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $DebugJmaMapRouteExtension on DebugJmaMapRoute {
+  static DebugJmaMapRoute _fromState(GoRouterState state) =>
+      const DebugJmaMapRoute();
+
+  String get location => GoRouteData.$location('/settings/debug/jma-map');
 
   void go(BuildContext context) => context.go(location);
 
@@ -719,7 +739,7 @@ extension $PlaygroundRouteExtension on PlaygroundRoute {
   static PlaygroundRoute _fromState(GoRouterState state) =>
       const PlaygroundRoute();
 
-  String get location => GoRouteData.$location('/settings/debugger/playground');
+  String get location => GoRouteData.$location('/settings/debug/playground');
 
   void go(BuildContext context) => context.go(location);
 
@@ -734,7 +754,7 @@ extension $PlaygroundRouteExtension on PlaygroundRoute {
 T? _$convertMapValue<T>(
   String key,
   Map<String, String> map,
-  T Function(String) converter,
+  T? Function(String) converter,
 ) {
   final value = map[key];
   return value == null ? null : converter(value);
@@ -755,7 +775,7 @@ bool _$boolConverter(String value) {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'33d706207b0bd6fae8cada54e07cc22f87464581';
+String _$goRouterHash() => r'8a62453a9e9e24d88c219ecf204af1cc7658b177';
 
 /// See also [goRouter].
 @ProviderFor(goRouter)

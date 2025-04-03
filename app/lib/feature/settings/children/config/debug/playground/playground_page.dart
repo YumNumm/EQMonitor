@@ -339,7 +339,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
       diff.value = d;
       diffParam.value = val2 - val;
       // ignore: deprecated_member_use
-      rgbString.value = 'RGB(${c.red}, ${c.green}, ${c.blue})';
+      rgbString.value = 'RGB(${c.r}, ${c.g}, ${c.b})';
     }
 
     return Scaffold(

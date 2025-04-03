@@ -1,0 +1,29 @@
+---
+description: Swift and ObjectiveC Rule
+globs: *.swift, *.m
+alwaysApply: false
+---
+
+### Dart FFIで
+
+```bash
+cd ios/map_plugin/Sources/map_plugin/ && \
+swiftc -c \
+  MapLibreRegistry.swift \
+  MapHelper.swift \
+  -module-name maplibre_ios \
+  -emit-objc-header-path MapLibreRegistry.h \
+  -emit-library -o libmaplibreios.dylib \
+  -target arm64-apple-ios18.4-simulator \
+  -sdk $(xcrun --sdk iphonesimulator --show-sdk-path) \
+  -F ../../../../temp/MapLibre.xcframework/ios-arm64_x86_64-simulator && \
+cd -
+```
+
+### Swiftのコードをいじった時
+
+`ffigen`を利用してバインディングを生成してください
+
+```bash
+fvm dart run ffigen
+```

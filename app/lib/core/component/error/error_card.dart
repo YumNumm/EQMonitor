@@ -53,8 +53,8 @@ class ErrorCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.error, size: 48, color: colorScheme.error),
-                  const SizedBox(width: 16),
+                  Icon(Icons.error, size: 36, color: colorScheme.error),
+                  const SizedBox(width: 8),
                   Flexible(
                     child: Text(
                       title ?? 'ERROR!',
@@ -117,8 +117,7 @@ class ErrorCard extends StatelessWidget {
           {'code': final String code, 'details': final String details} =>
             '$code: $details',
           _ =>
-            'エラーが発生しました\n'
-                '少し時間をおいて再度お試しください。\n'
+            '少し時間をおいて再度お試しください。\n'
                 '解消されない場合は、この画面のスクリーンショットを開発者へ送信してください',
         };
         final statusCode = response.statusCode;

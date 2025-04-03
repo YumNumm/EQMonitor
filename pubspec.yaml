@@ -26,6 +26,30 @@ workspace:
   # <ADD_PACKAGE_HERE>
 dependencies:
   melos: ^7.0.0-dev.7
+dependency_overrides:
+  # maplibre_gl:
+  #   git:
+  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
+  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+  #     path: maplibre_gl
+  # maplibre_gl_platform_interface:
+  #   git:
+  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
+  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+  #     path: maplibre_gl_platform_interface
+  # maplibre_gl_web:
+  #   git:
+  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
+  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
+  #     path: maplibre_gl_web
+  maplibre:
+    git:
+      url: https://github.com/YumNumm/flutter-maplibre.git
+      ref: cdbd15f3cfa916466a159ca8db0d08a4e95c14e0
+  # maplibre:
+  #   path: ../eqmonitor-maplibre
+  protobuf: ^4.0.0
+
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   sdkPath: .fvm/flutter_sdk/
@@ -36,7 +60,7 @@ melos:
       runPubGetInParallel: false
       environment:
         sdk: ^3.7.0
-        flutter: ^3.29.0
+        flutter: ^3.29.1
   scripts:
     analyze:
       run: |
@@ -120,9 +144,6 @@ melos:
       exec: bash "$MELOS_ROOT_PATH/scripts/report-custom-lint-ci.sh"
       packageFilters:
         dependsOn: custom_lint
-  packages:
-    - app
-    - packages/*
   ide:
     intellij:
       enabled: false

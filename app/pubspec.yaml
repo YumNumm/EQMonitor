@@ -6,7 +6,7 @@ version: 2.7.0
 
 environment:
   sdk: ^3.7.0
-  flutter: ^3.29.0
+  flutter: ^3.29.1
 
 resolution: workspace
 
@@ -40,7 +40,7 @@ dependencies:
     sdk: flutter
   flutter_colorpicker: ^1.1.0
   flutter_email_sender: ^7.0.0
-  flutter_hooks: ^0.20.5
+  flutter_hooks: ^0.21.2
   flutter_html: ^3.0.0-alpha.2
   flutter_local_notifications: ^18.0.1
   flutter_localizations:
@@ -50,6 +50,8 @@ dependencies:
   flutter_test:
     sdk: flutter
   freezed_annotation: ^2.4.4
+  geobase: ^1.5.0
+  geodata: ^1.3.0
   geolocator: ^13.0.2
   go_router: ^14.6.2
   google_fonts: ^6.2.1
@@ -73,15 +75,8 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  # maplibre:
-  #   git :
-  #     url: git@github.com:YumNumm/flutter-maplibre.git
-  #     ref: ios
-  maplibre_gl:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: f40da2de85b4c30bb1f17ff647e49dfaa3056f1f
-      path: maplibre_gl
+  maplibre: ^0.2.1
+  # maplibre_gl: ^0.21.0
   notification_setting_types:
     path: ../packages/notification_setting_types
   ntp: ^2.0.0
@@ -124,10 +119,18 @@ dev_dependencies:
   go_router_builder: ^2.7.1
   json_serializable: ^6.9.0
   pedantic_mono: ^1.29.0
-  retrofit_generator: ^9.1.5
+  retrofit_generator: ^9.1.9
   riverpod_generator: ^2.6.3
   riverpod_lint: ^2.6.3
   test: ^1.25.7
+
+flutter_gen:
+  output: lib/core/gen/ # Optional (default: lib/gen/)
+  line_length: 80
+
+  integrations:
+    image: true
+    flutter_svg: true
 
 flutter:
   uses-material-design: true
@@ -138,7 +141,7 @@ flutter:
     - assets/images/map/
     - assets/fonts/
     - assets/docs/
-    - shorebird.yaml
+    - assets/parameter/
 
   shaders:
     - shaders/introduction.frag

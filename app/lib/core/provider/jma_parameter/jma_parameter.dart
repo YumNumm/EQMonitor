@@ -5,17 +5,24 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/api/jma_parameter_api.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jma_parameter.g.dart';
 
 typedef JmaParameterState =
-    ({EarthquakeParameter earthquake, TsunamiParameter tsunami});
+    ({
+      EarthquakeParameter earthquake,
+      TsunamiParameter tsunami,
+      ParameterStatus earthquakeStatus,
+      ParameterStatus tsunamiStatus,
+    });
 
 @Riverpod(keepAlive: true)
 class JmaParameter extends _$JmaParameter {
@@ -28,21 +35,30 @@ class JmaParameter extends _$JmaParameter {
     final tsunamiStream = getTsunami();
 
     EarthquakeParameter? earthquake;
+    ParameterStatus? earthquakeStatus;
     TsunamiParameter? tsunami;
+    ParameterStatus? tsunamiStatus;
 
     void sendIfNotNull() {
       if (earthquake != null && tsunami != null) {
-        streamController.add((earthquake: earthquake!, tsunami: tsunami!));
+        streamController.add((
+          earthquake: earthquake!,
+          tsunami: tsunami!,
+          earthquakeStatus: earthquakeStatus!,
+          tsunamiStatus: tsunamiStatus!,
+        ));
       }
     }
 
     earthquakeStream.listen((value) {
-      earthquake = value;
+      earthquake = value.$1;
+      earthquakeStatus = value.$2;
       sendIfNotNull();
     });
 
     tsunamiStream.listen((value) {
-      tsunami = value;
+      tsunami = value.$1;
+      tsunamiStatus = value.$2;
       sendIfNotNull();
     });
 
@@ -54,11 +70,12 @@ class JmaParameter extends _$JmaParameter {
   static const _earthquakeFileName = 'earthquake_param.pb';
   static const _tsunamiFileName = 'tsunami_param.pb';
 
-  Stream<EarthquakeParameter> getEarthquake() async* {
+  Stream<(EarthquakeParameter, ParameterStatus)> getEarthquake() async* {
+    yield (await _getEarthquakeFromLocal(), ParameterStatus.asset);
     // ローカルにあったらとりあえず先に返す
-    final localResult = await _getEarthquakeFromLocal();
+    final localResult = await _getEarthquakeFromLocalCache();
     if (localResult case Success(:final value)) {
-      yield value;
+      yield (value, ParameterStatus.cachedLocal);
     }
 
     final cachedEtag = ref.read(earthquakeParameterEtagProvider);
@@ -69,23 +86,32 @@ class JmaParameter extends _$JmaParameter {
             .getEarthquakeParameterHead();
     talker.log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
-      return;
+      final localResult = await _getEarthquakeFromLocalCache();
+      if (localResult case Success(:final value)) {
+        yield (value, ParameterStatus.cachedLocal);
+        return;
+      }
     }
     // ETagが一致しない場合はAPIから再取得する
     final result =
         await ref.watch(jmaParameterApiClientProvider).getEarthquakeParameter();
     if (!kIsWeb) {
-      await _saveEarthquakeToLocal(result.parameter);
+      await _saveEarthquakeToLocalCache(result.parameter);
     }
     final etag = result.etag;
     if (etag != null) {
       await ref.read(earthquakeParameterEtagProvider.notifier).set(etag);
     }
-    yield result.parameter;
+    yield (result.parameter, ParameterStatus.remote);
+  }
+
+  Future<EarthquakeParameter> _getEarthquakeFromLocal() async {
+    final bytes = await rootBundle.load(Assets.parameter.earthquake);
+    return EarthquakeParameter.fromBuffer(bytes.buffer.asUint8List());
   }
 
   Future<Result<EarthquakeParameter, Exception>>
-  _getEarthquakeFromLocal() async {
+  _getEarthquakeFromLocalCache() async {
     final dir = ref.read(applicationDocumentsDirectoryProvider);
     final file = File('${dir.path}/$_earthquakeFileName');
     if (file.existsSync()) {
@@ -100,17 +126,16 @@ class JmaParameter extends _$JmaParameter {
     }
   }
 
-  Future<void> _saveEarthquakeToLocal(EarthquakeParameter earthquake) async {
+  Future<void> _saveEarthquakeToLocalCache(
+    EarthquakeParameter earthquake,
+  ) async {
     final dir = ref.read(applicationDocumentsDirectoryProvider);
     final file = File('${dir.path}/$_earthquakeFileName');
     await file.writeAsBytes(earthquake.writeToBuffer());
   }
 
-  Stream<TsunamiParameter> getTsunami() async* {
-    final localResult = await _getTsunamiFromLocal();
-    if (localResult case Success(:final value)) {
-      yield value;
-    }
+  Stream<(TsunamiParameter, ParameterStatus)> getTsunami() async* {
+    yield (await _getTsunamiFromLocal(), ParameterStatus.asset);
 
     final prefs = ref.watch(sharedPreferencesProvider);
     final cachedEtag = prefs.getString(_tsunamiKey);
@@ -121,22 +146,32 @@ class JmaParameter extends _$JmaParameter {
             .getTsunamiParameterHeadEtag();
     talker.log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
-      return;
+      final localResult = await _getTsunamiFromLocalCache();
+      if (localResult case Success(:final value)) {
+        yield (value, ParameterStatus.cachedLocal);
+        return;
+      }
     }
     // ETagが一致しない場合はAPIから再取得する
     final result =
         await ref.watch(jmaParameterApiClientProvider).getTsunamiParameter();
     if (!kIsWeb) {
-      await _saveTsunamiToLocal(result.parameter);
+      await _saveTsunamiToLocalCache(result.parameter);
     }
     final etag = result.etag;
     if (etag != null) {
       await prefs.setString(_tsunamiKey, etag);
     }
-    yield result.parameter;
+    yield (result.parameter, ParameterStatus.remote);
   }
 
-  Future<Result<TsunamiParameter, Exception>> _getTsunamiFromLocal() async {
+  Future<TsunamiParameter> _getTsunamiFromLocal() async {
+    final bytes = await rootBundle.load(Assets.parameter.tsunami);
+    return TsunamiParameter.fromBuffer(bytes.buffer.asUint8List());
+  }
+
+  Future<Result<TsunamiParameter, Exception>>
+  _getTsunamiFromLocalCache() async {
     final dir = ref.read(applicationDocumentsDirectoryProvider);
     final file = File('${dir.path}/$_tsunamiFileName');
     log('Tsunami file path: ${file.path}');
@@ -152,7 +187,7 @@ class JmaParameter extends _$JmaParameter {
     }
   }
 
-  Future<void> _saveTsunamiToLocal(TsunamiParameter tsunami) async {
+  Future<void> _saveTsunamiToLocalCache(TsunamiParameter tsunami) async {
     final dir = ref.read(applicationDocumentsDirectoryProvider);
     final file = File('${dir.path}/$_tsunamiFileName');
     await file.writeAsBytes(tsunami.writeToBuffer());
@@ -174,4 +209,15 @@ class EarthquakeParameterEtag extends _$EarthquakeParameterEtag {
   }
 
   static const _prefsKey = 'jma_parameter_earthquake';
+}
+
+enum ParameterStatus {
+  /// Asset
+  asset,
+
+  /// キャッシュ済みローカル (Remoteチェック済み)
+  cachedLocal,
+
+  /// リモート
+  remote,
 }

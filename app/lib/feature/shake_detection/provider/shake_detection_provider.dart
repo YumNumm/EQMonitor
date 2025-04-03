@@ -29,7 +29,7 @@ class ShakeDetection extends _$ShakeDetection {
                     ShakeDetectionWebSocketTelegram
                   >()) {
             for (final event in value.newData.events) {
-              _upsertShakeDetectionEvents([event]);
+              upsertShakeDetectionEvents([event]);
             }
           } else if (value
               case RealtimePostgresDeletePayload<
@@ -60,7 +60,8 @@ class ShakeDetection extends _$ShakeDetection {
         .toList();
   }
 
-  void _upsertShakeDetectionEvents(List<ShakeDetectionEvent> events) {
+
+  void upsertShakeDetectionEvents(List<ShakeDetectionEvent> events) {
     final currentEvents = state.valueOrNull ?? [];
     final data = [...currentEvents];
     for (final event in events) {
@@ -128,6 +129,14 @@ class ShakeDetectionKmoniPointsMerged
       );
     }
     return merged;
+  }
+
+  void upsertShakeDetectionKmoniMergedEvents(
+    List<ShakeDetectionKmoniMergedEvent> events,
+  ) {
+    final currentEvents = state.valueOrNull ?? [];
+    final data = [...currentEvents];
+    data.addAll(events);
   }
 }
 

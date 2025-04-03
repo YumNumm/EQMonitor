@@ -136,7 +136,7 @@ class _SortModal extends HookConsumerWidget {
               (EarthquakeEarlySortType.origin_time, true) => '地震発生時刻の古い順',
               (EarthquakeEarlySortType.max_intensity, false) => '最大観測震度の大きい順',
               (EarthquakeEarlySortType.max_intensity, true) => '最大観測震度の小さい順',
-            },),
+            }),
             value: ascending.value,
             onChanged: (v) => ascending.value = v,
           ),

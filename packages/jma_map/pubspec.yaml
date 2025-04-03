@@ -1,7 +1,7 @@
 name: jma_map
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: "none"
 
 environment:
   sdk: ^3.7.0
@@ -9,7 +9,10 @@ environment:
 resolution: workspace
 
 dependencies:
-  protobuf: ^3.1.0
+  protobuf: ^4.0.0
+  geobase: ^1.5.0
+  geodata: ^1.3.0
+  collection: ^1.19.1
 
 dev_dependencies:
   eqmonitor_lints:

@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
+import 'package:eqmonitor/core/util/color_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -20,22 +20,14 @@ class MapConfiguration with _$MapConfiguration {
 
 enum MapTheme { light, dark, system }
 
-Color colorFromJson(String json) => Color(int.parse(json));
-String colorToJson(Color color) => color.hex.toRadixString(16);
-
 @freezed
 class MapColorScheme with _$MapColorScheme {
   const factory MapColorScheme({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color backgroundColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color worldLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color worldLineColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color japanLandColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color japanLineColor,
+    @ColorConverter() required Color backgroundColor,
+    @ColorConverter() required Color worldLandColor,
+    @ColorConverter() required Color worldLineColor,
+    @ColorConverter() required Color japanLandColor,
+    @ColorConverter() required Color japanLineColor,
   }) = _MapColorScheme;
 
   factory MapColorScheme.fromJson(Map<String, dynamic> json) =>
@@ -44,7 +36,8 @@ class MapColorScheme with _$MapColorScheme {
   factory MapColorScheme.light() {
     const colorScheme = ColorScheme.light();
     return MapColorScheme(
-      backgroundColor: colorScheme.surface,
+      backgroundColor:
+          Color.lerp(colorScheme.surface, Colors.blue.shade900, 0.1)!,
       worldLandColor: colorScheme.surfaceContainerLowest,
       worldLineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerLowest,
