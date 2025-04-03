@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:geobase/geobase.dart';
 import 'package:jma_map/jma_map.dart';
+import 'package:jma_map/src/utils/jma_map_data_item_extension.dart';
 
 class JmaMapUtility {
   /// [latLng] から最も近い ないしは 内包する JmaMapDataItemを返す
@@ -14,7 +15,7 @@ class JmaMapUtility {
 
     if (mapData.mapType == JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI) {
       final dataList = mapData.data.map((data) {
-        final dataType = data.dataType;
+        final dataType = data.getDataType(mapData.mapType);
         final bytes = Uint8List.fromList(data.bytes);
         print("${data.property.name}: ${bytes.lengthInBytes / 1024} KB");
         switch (dataType) {
@@ -26,7 +27,7 @@ class JmaMapUtility {
             final multiLineString = MultiLineString.decode(bytes);
             final distance = multiLineString.distanceTo2D(referencePoint);
             return (data, distance);
-          case _:
+          default:
             throw UnimplementedError("Unsupported dataType: $dataType");
         }
       });
@@ -37,7 +38,7 @@ class JmaMapUtility {
     }
 
     for (final data in mapData.data) {
-      final dataType = data.dataType;
+      final dataType = data.getDataType(mapData.mapType);
       final bytes = Uint8List.fromList(data.bytes);
       switch (dataType) {
         case JmaMap_JmaMapData_DataType.POLYGON:
@@ -52,7 +53,7 @@ class JmaMapUtility {
           if (isInside) {
             return data;
           }
-        case _:
+        default:
           throw UnimplementedError("Unsupported dataType: $dataType");
       }
     }
