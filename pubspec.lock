@@ -1169,8 +1169,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "."
-      ref: "0cd2c3286abcc8020946f4b812cca935bce13bb0"
-      resolved-ref: "0cd2c3286abcc8020946f4b812cca935bce13bb0"
+      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
+      resolved-ref: c206212edf54c9331e3b2d040f256b4dbb08106f
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.2.1"
@@ -1178,8 +1178,8 @@ packages:
     dependency: transitive
     description:
       path: maplibre_ios
-      ref: "0cd2c3286abcc8020946f4b812cca935bce13bb0"
-      resolved-ref: "0cd2c3286abcc8020946f4b812cca935bce13bb0"
+      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
+      resolved-ref: c206212edf54c9331e3b2d040f256b4dbb08106f
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.0.1"
