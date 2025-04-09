@@ -20,5 +20,11 @@
 	<false/>
 	<key>uploadSymbols</key>
 	<true/>
+	<key>compileBitcode</key>
+	<false/>
+	<key>provisioningProfiles</key>
+	<dict/>
+	<key>signingCertificate</key>
+	<string>Apple Distribution</string>
 </dict>
 </plist>
