@@ -41,9 +41,7 @@ class EarthquakeHistoryDetailConfig with _$EarthquakeHistoryDetailConfig {
   factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>
       _$EarthquakeHistoryDetailConfigFromJson(
         json,
-      ).copyWith(
-        showingLpgmIntensity: false,
-      );
+      ).copyWith(showingLpgmIntensity: false);
 }
 
 /// 地震履歴詳細画面における震度の表示方法

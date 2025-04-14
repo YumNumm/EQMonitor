@@ -60,7 +60,6 @@ class ShakeDetection extends _$ShakeDetection {
         .toList();
   }
 
-
   void upsertShakeDetectionEvents(List<ShakeDetectionEvent> events) {
     final currentEvents = state.valueOrNull ?? [];
     final data = [...currentEvents];
