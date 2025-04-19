@@ -61,7 +61,7 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
    - これにより、各パッケージの依存関係が解決されます。
 
-1. `mv app/.env.example app/.env` を実行してください。
+1. `mv environment/.env.example environment/.env.dev` を実行してください。
 
    - HTTP APIのみ Staging APIへ接続できます。(事前設定済み)
      - 常に最新の地震情報が提供されることを保証しません。
