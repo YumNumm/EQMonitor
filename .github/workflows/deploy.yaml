@@ -108,7 +108,6 @@ jobs:
         working-directory: app
         run: |
           flutter build ipa \
-            --no-codesign \
             --dart-define-from-file=../environment/.env.prod
 
       - name: Extract App Store Connect API Key
@@ -126,8 +125,9 @@ jobs:
             -sdk iphoneos \
             -configuration Release archive \
             -archivePath build/ios/Runner.xcarchive \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO | xcbeautify
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES | xcbeautify
 
           xcodebuild -exportArchive \
             -archivePath build/ios/Runner.xcarchive \

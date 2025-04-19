@@ -1169,8 +1169,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "."
-      ref: cdbd15f3cfa916466a159ca8db0d08a4e95c14e0
-      resolved-ref: cdbd15f3cfa916466a159ca8db0d08a4e95c14e0
+      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
+      resolved-ref: c206212edf54c9331e3b2d040f256b4dbb08106f
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.2.1"
@@ -1178,8 +1178,8 @@ packages:
     dependency: transitive
     description:
       path: maplibre_ios
-      ref: cdbd15f3cfa916466a159ca8db0d08a4e95c14e0
-      resolved-ref: cdbd15f3cfa916466a159ca8db0d08a4e95c14e0
+      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
+      resolved-ref: c206212edf54c9331e3b2d040f256b4dbb08106f
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.0.1"
@@ -1275,10 +1275,10 @@ packages:
     dependency: transitive
     description:
       name: objective_c
-      sha256: "39cc952b20c86686838d6bd8224b265d283ea1c8dfa5d14949bd15e322195b0e"
+      sha256: "49e569fac1202d7fee1655fbbdfbf228840e11416be592bce2a6797b23de8231"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "7.0.0"
   os_detect:
     dependency: transitive
     description:
