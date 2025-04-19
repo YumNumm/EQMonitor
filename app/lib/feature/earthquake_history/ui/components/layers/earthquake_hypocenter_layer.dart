@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/core/util/map_utility.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lat_lng/lat_lng.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:synchronized/extension.dart';
 
 class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
@@ -31,47 +30,36 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
-    final controller = MapController.of(context);
-    final styleController = controller.style;
+    final controller = MapLibreInherited.of(context);
     final mapUtility = ref.watch(mapUtilityProvider);
 
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
-            if (styleController == null) {
-              return;
-            }
             if (!isInitialized.value) {
               await mapUtility.addHypocenterImages(controller);
 
-              await controller.style!.addSource(
-                GeoJsonSource(
-                  id: _sourceId,
-                  data: _createGeoJson(
-                    latLng: latLng,
-                    hypocenterType: hypocenterType,
-                  ),
-                ),
+              await controller.addGeoJsonSource(
+                _sourceId,
+                _createGeoJson(latLng: latLng, hypocenterType: hypocenterType),
               );
 
-              await controller.style!.addLayer(
-                const SymbolStyleLayer(
-                  id: _layerId,
-                  sourceId: _sourceId,
-                  paint: {
-                    'icon-image': MapUtility.normalHypocenterImage,
-                    'icon-size': [
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      3,
-                      0.3,
-                      20,
-                      2,
-                    ],
-                    'icon-allow-overlap': true,
-                  },
+              await controller.addLayer(
+                _layerId,
+                _sourceId,
+                const SymbolLayerProperties(
+                  iconImage: MapUtility.normalHypocenterImage,
+                  iconSize: [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    3,
+                    0.3,
+                    20,
+                    2,
+                  ],
+                  iconAllowOverlap: true,
                 ),
               );
               isInitialized.value = true;
@@ -80,63 +68,51 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
         ),
       );
       return null;
-    }, [styleController]);
+    }, [controller]);
 
     useEffect(() {
-      if (styleController == null) {
-        return null;
-      }
       unawaited(
         controller.synchronized(() async {
-          await styleController.updateGeoJsonSource(
-            id: _sourceId,
-            data: _createGeoJson(
-              latLng: latLng,
-              hypocenterType: hypocenterType,
-            ),
+          await controller.addGeoJsonSource(
+            _sourceId,
+            _createGeoJson(latLng: latLng, hypocenterType: hypocenterType),
           );
         }),
       );
       return null;
-    }, [latLng, styleController]);
+    }, [latLng, controller]);
 
     useEffect(() {
-      if (styleController == null) {
-        return null;
-      }
       unawaited(
         controller.synchronized(() async {
-          await styleController.updateLayer(
-            SymbolStyleLayer(
-              id: _layerId,
-              sourceId: _sourceId,
-              layout: {'visibility': isVisible ? 'visible' : 'none'},
-            ),
+          await controller.setLayerProperties(
+            _layerId,
+            SymbolLayerProperties(visibility: isVisible ? 'visible' : 'none'),
           );
         }),
       );
       return null;
-    }, [isVisible, styleController]);
+    }, [isVisible, controller]);
 
     return const SizedBox.shrink();
   }
 
-  String _createGeoJson({
+  Map<String, dynamic> _createGeoJson({
     required LatLng latLng,
     required HypocenterType hypocenterType,
-  }) => jsonEncode({
+  }) => {
     'type': 'FeatureCollection',
     'features': [
       {
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
-          'coordinates': [latLng.lon, latLng.lat],
+          'coordinates': [latLng.longitude, latLng.latitude],
         },
         'properties': {'hypocenterType': hypocenterType.name},
       },
     ],
-  });
+  };
 }
 
 enum HypocenterType {

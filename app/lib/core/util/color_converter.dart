@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 class ColorConverter implements JsonConverter<Color, String> {
   const ColorConverter();
