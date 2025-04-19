@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
-import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_controller_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart';
@@ -16,10 +13,11 @@ import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 class HomeMapView extends HookConsumerWidget {
   const HomeMapView({super.key});
@@ -63,68 +61,40 @@ class _MapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useState(false);
-    final controller = useState<MapController?>(null);
+    final controller = useState<MapLibreMapController?>(null);
 
-    ref.listen(
-      homeConfigurationNotifierProvider.select((v) => v.showLocation),
-      (_, showLocation) {
-        if (controller.value != null) {
-          if (showLocation) {
-            unawaited(
-              controller.value!.enableLocation(
-                pulse: false,
-                pulseFade: false,
-                compassAnimation: false,
-              ),
-            );
-          } else {
-            unawaited(controller.value!.disableLocation());
-          }
-        }
+    final map = MapLibreMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(
+          initialCameraPosition.target.lat,
+          initialCameraPosition.target.lon,
+        ),
+        zoom: initialCameraPosition.zoom,
+      ),
+      styleString: styleString,
+      minMaxZoomPreference: const MinMaxZoomPreference(0, 12),
+      onStyleLoadedCallback: () async {
+        isInitialized.value = true;
       },
+      onMapCreated: (c) => controller.value = c,
     );
 
     return SizedBox.expand(
-      child: MapLibreMap(
-        acceptLicense: true,
-        options: MapOptions(
-          initStyle: 'file://$styleString',
-          initZoom: initialCameraPosition.zoom,
-          initCenter: Position(
-            initialCameraPosition.target.lon,
-            initialCameraPosition.target.lat,
-          ),
-          maxZoom: 12,
-        ),
-        onStyleLoaded: (styleController) async {
-          isInitialized.value = true;
-
-          final c = controller.value;
-          final location =
-              ref.read(homeConfigurationNotifierProvider).showLocation;
-          if (c != null) {
-            if (location) {
-              await c.enableLocation(
-                pulse: false,
-                pulseFade: false,
-                compassAnimation: false,
-              );
-            } else {
-              await c.disableLocation();
-            }
-          }
-        },
-        onMapCreated: (c) => controller.value = c,
-        children: [
-          if (isInitialized.value) ...<MapLayer>[
-            const KyoshinMonitorLayer(),
-            const EewHypocenterSymbolLayer(),
-            const EewPsWaveLayer(),
-            const EewEstimatedIntensityLayer(),
-            const ShakeDetectionLayer(),
+      child: MapLibreInherited(
+        controller: controller.value,
+        child: Stack(
+          children: [
+            map,
+            if (isInitialized.value) ...<MapLayer>[
+              const KyoshinMonitorLayer(),
+              const EewHypocenterSymbolLayer(),
+              const EewPsWaveLayer(),
+              const EewEstimatedIntensityLayer(),
+              const ShakeDetectionLayer(),
+            ],
+            SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
           ],
-          SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
-        ],
+        ),
       ),
     );
   }
@@ -156,7 +126,6 @@ class _MapHeader extends ConsumerWidget {
                     key: const ValueKey('kyoshin_monitor_status_card'),
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 4,
                     children: [
                       KyoshinMonitorStatusCard(
                         onTap:
@@ -181,15 +150,17 @@ class _MapHeader extends ConsumerWidget {
         HomeMapControllerCard(
           onLayerButtonTap: () async => HomeMapLayerModal.show(context),
           onLocationButtonTap:
-              () async => MapController.of(context).animateCamera(
-                nativeDuration: const Duration(milliseconds: 400),
-                pitch: 0,
-                bearing: 0,
-                center: Position(
-                  initialPosition.target.lon,
-                  initialPosition.target.lat,
+              () async => MapLibreInherited.of(context).animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: LatLng(
+                      initialPosition.target.lat,
+                      initialPosition.target.lon,
+                    ),
+                    zoom: initialPosition.zoom,
+                  ),
                 ),
-                zoom: initialPosition.zoom,
+                duration: const Duration(milliseconds: 400),
               ),
         ),
       ],

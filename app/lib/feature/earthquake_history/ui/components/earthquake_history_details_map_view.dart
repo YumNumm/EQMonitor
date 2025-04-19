@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_controller_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_hypocenter_layer.dart';
@@ -9,14 +6,14 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthq
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_region_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_region_symbol_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_details_map_layer_modal.dart';
-import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lat_lng/lat_lng.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:lat_lng/lat_lng.dart' as app_lat_lng;
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   const EarthquakeHistoryDetailsMapView({required this.earthquake, super.key});
@@ -65,7 +62,10 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
         _ => 5.0,
       };
 
-      return MapCameraPosition(target: LatLng(lat, lng), zoom: zoom);
+      return MapCameraPosition(
+        target: app_lat_lng.LatLng(lat, lng),
+        zoom: zoom,
+      );
     } else {
       return MapCameraPosition.fitBounds(
         screenWidth: screenWidth,
@@ -91,85 +91,79 @@ class _MapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useState(false);
-    final controller = useState<MapController?>(null);
-
-    ref.listen(
-      homeConfigurationNotifierProvider.select((v) => v.showLocation),
-      (_, showLocation) {
-        if (controller.value != null) {
-          if (showLocation) {
-            unawaited(
-              controller.value!.enableLocation(
-                pulse: false,
-                pulseFade: false,
-                compassAnimation: false,
-              ),
-            );
-          } else {
-            unawaited(controller.value!.disableLocation());
-          }
-        }
-      },
-    );
+    final controller = useState<MapLibreMapController?>(null);
 
     final hypocenter = switch ((earthquake.latitude, earthquake.longitude)) {
       (final double lat, final double lng) => LatLng(lat, lng),
       _ => null,
     };
 
-    return SizedBox.expand(
-      child: MapLibreMap(
-        acceptLicense: true,
-        options: MapOptions(
-          initStyle: 'file://$styleString',
-          initZoom: initialCameraPosition.zoom,
-          initCenter: Position(
-            initialCameraPosition.target.lon,
-            initialCameraPosition.target.lat,
-          ),
-          minZoom: 1,
-          maxZoom: 12,
+    final map = MapLibreMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(
+          initialCameraPosition.target.lat,
+          initialCameraPosition.target.lon,
         ),
-        onStyleLoaded: (styleController) async {
-          final c = controller.value;
-          final location =
-              ref.read(homeConfigurationNotifierProvider).showLocation;
-          if (c != null) {
-            if (location) {
-              await c.enableLocation(
-                pulse: false,
-                pulseFade: false,
-                compassAnimation: false,
-              );
-            } else {
-              await c.disableLocation();
-            }
-          }
-          isInitialized.value = true;
-        },
-        onMapCreated: (c) => controller.value = c,
-        children: [
-          if (isInitialized.value) ...<MapLayer>[
-            EarthquakeHypocenterLayer(
-              hypocenterType: HypocenterType.earthquake,
-              latLng: hypocenter ?? const LatLng(0, 0),
-              isVisible: hypocenter != null,
-            ),
-            EarthquakeIntensityRegionLayer(
-              eventId: earthquake.eventId,
-              visible: earthquake.maxIntensity != null,
-            ),
-            EarthquakeIntensityCityLayer(
-              eventId: earthquake.eventId,
-              visible: earthquake.maxIntensity != null,
-            ),
-            EarthquakeIntensityRegionSymbolLayer(
-              eventId: earthquake.eventId,
-              visible: earthquake.maxIntensity != null,
-            ),
+        zoom: initialCameraPosition.zoom,
+      ),
+      styleString: styleString,
+      minMaxZoomPreference: const MinMaxZoomPreference(0, 12),
+      onStyleLoadedCallback: () async {
+        isInitialized.value = true;
+      },
+      onMapCreated: (c) => controller.value = c,
+      // children: [
+      //   if (isInitialized.value) ...<MapLayer>[
+      //     EarthquakeHypocenterLayer(
+      //       hypocenterType: HypocenterType.earthquake,
+      //       latLng: hypocenter ?? const LatLng(0, 0),
+      //       isVisible: hypocenter != null,
+      //     ),
+      //     EarthquakeIntensityRegionLayer(
+      //       eventId: earthquake.eventId,
+      //       visible: earthquake.maxIntensity != null,
+      //     ),
+      //     EarthquakeIntensityCityLayer(
+      //       eventId: earthquake.eventId,
+      //       visible: earthquake.maxIntensity != null,
+      //     ),
+      //     EarthquakeIntensityRegionSymbolLayer(
+      //       eventId: earthquake.eventId,
+      //       visible: earthquake.maxIntensity != null,
+      //     ),
+      //   ],
+      //   SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
+      // ],
+    );
+
+    return SizedBox.expand(
+      child: MapLibreInherited(
+        controller: controller.value,
+        child: Stack(
+          children: [
+            map,
+            _MapHeader(initialPosition: initialCameraPosition),
+            if (isInitialized.value) ...[
+              EarthquakeHypocenterLayer(
+                hypocenterType: HypocenterType.earthquake,
+                latLng: hypocenter ?? const LatLng(0, 0),
+                isVisible: hypocenter != null,
+              ),
+              EarthquakeIntensityRegionLayer(
+                eventId: earthquake.eventId,
+                visible: earthquake.maxIntensity != null,
+              ),
+              EarthquakeIntensityCityLayer(
+                eventId: earthquake.eventId,
+                visible: earthquake.maxIntensity != null,
+              ),
+              EarthquakeIntensityRegionSymbolLayer(
+                eventId: earthquake.eventId,
+                visible: earthquake.maxIntensity != null,
+              ),
+            ],
           ],
-          SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
-        ],
+        ),
       ),
     );
   }
@@ -192,15 +186,17 @@ class _MapHeader extends ConsumerWidget {
           onLayerButtonTap:
               () async => EarthquakeHistoryDetailsMapLayerModal.show(context),
           onLocationButtonTap:
-              () async => MapController.of(context).animateCamera(
-                nativeDuration: const Duration(milliseconds: 400),
-                pitch: 0,
-                bearing: 0,
-                center: Position(
-                  initialPosition.target.lon,
-                  initialPosition.target.lat,
+              () async => MapLibreInherited.of(context).animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: LatLng(
+                      initialPosition.target.lat,
+                      initialPosition.target.lon,
+                    ),
+                    zoom: initialPosition.zoom,
+                  ),
                 ),
-                zoom: initialPosition.zoom,
+                duration: const Duration(milliseconds: 400),
               ),
         ),
       ],

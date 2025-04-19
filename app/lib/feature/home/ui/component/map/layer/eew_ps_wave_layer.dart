@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:synchronized/extension.dart';
 
 class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
@@ -35,7 +35,7 @@ class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
     final isInitialized = useRef(false);
     final isRefreshing = useRef(false);
     final currentEews = useRef<List<EewV1>>([]);
-    final controller = MapController.of(context);
+    final controller = MapLibreInherited.of(context);
 
     final animationController = useAnimationController(
       duration: const Duration(seconds: 1),
@@ -90,10 +90,7 @@ class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
 
             final geojson = _createGeoJson(results);
             try {
-              await controller.style!.updateGeoJsonSource(
-                id: _sourceId,
-                data: jsonEncode(geojson),
-              );
+              await controller.setGeoJsonSource(_sourceId, geojson);
               // ignore: avoid_catching_errors
             } on UnsupportedError catch (_) {}
           } finally {
@@ -110,101 +107,79 @@ class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
             // GeoJSONソースを追加
-            await controller.style!.addSource(
-              GeoJsonSource(
-                id: _sourceId,
-                data: jsonEncode(_createGeoJson([])),
-              ),
+            await controller.addSource(
+              _sourceId,
+              GeojsonSourceProperties(data: jsonEncode(_createGeoJson([]))),
             );
 
             // P波レイヤーを追加
-            await controller.style!.addLayer(
-              LineStyleLayer(
-                id: _pWaveBorderLayerId,
-                sourceId: _sourceId,
-                paint: {
-                  'line-color': Colors.blueAccent.toHexStringRGB(),
-                  'line-width': 2,
-                },
-                layout: {
-                  'filter': ['==', 'type', 'p_wave'],
-                },
+            await controller.addLayer(
+              _pWaveBorderLayerId,
+              _sourceId,
+              LineLayerProperties(
+                lineColor: Colors.blueAccent.toHexStringRGB(),
+                lineWidth: 2,
               ),
+              filter: ['==', 'type', 'p_wave'],
             );
 
             // S波レイヤーを追加
-            await controller.style!.addLayer(
-              LineStyleLayer(
-                id: _sWaveNonWarningBorderLayerId,
-                sourceId: _sourceId,
-                paint: {
-                  'line-color': Colors.orangeAccent.toHexStringRGB(),
-                  'line-width': 2,
-                },
-                layout: {
-                  'filter': [
-                    'all',
-                    ['==', 'type', 's_wave'],
-                    ['==', 'is_warning', false],
-                  ],
-                },
+            await controller.addLayer(
+              _sWaveNonWarningBorderLayerId,
+              _sourceId,
+              LineLayerProperties(
+                lineColor: Colors.orangeAccent.toHexStringRGB(),
+                lineWidth: 2,
               ),
+              filter: [
+                'all',
+                ['==', 'type', 's_wave'],
+                ['==', 'is_warning', false],
+              ],
               belowLayerId: _pWaveBorderLayerId,
             );
 
-            await controller.style!.addLayer(
-              LineStyleLayer(
-                id: _sWaveWarningBorderLayerId,
-                sourceId: _sourceId,
-                paint: {
-                  'line-color': Colors.redAccent.toHexStringRGB(),
-                  'line-width': 2,
-                },
-                layout: {
-                  'filter': [
-                    'all',
-                    ['==', 'type', 's_wave'],
-                    ['==', 'is_warning', true],
-                  ],
-                },
+            await controller.addLayer(
+              _sWaveWarningBorderLayerId,
+              _sourceId,
+              LineLayerProperties(
+                lineColor: Colors.redAccent.toHexStringRGB(),
+                lineWidth: 2,
               ),
+              filter: [
+                'all',
+                ['==', 'type', 's_wave'],
+                ['==', 'is_warning', true],
+              ],
               belowLayerId: _pWaveBorderLayerId,
             );
 
-            await controller.style!.addLayer(
-              FillStyleLayer(
-                id: _sWaveNonWarningFillLayerId,
-                sourceId: _sourceId,
-                paint: {
-                  'fill-color': Colors.orangeAccent.toHexStringRGB(),
-                  'fill-opacity': 0.1,
-                },
-                layout: {
-                  'filter': [
-                    'all',
-                    ['==', 'type', 's_wave'],
-                    ['==', 'is_warning', false],
-                  ],
-                },
+            await controller.addLayer(
+              _sWaveNonWarningFillLayerId,
+              _sourceId,
+              FillLayerProperties(
+                fillColor: Colors.orangeAccent.toHexStringRGB(),
+                fillOpacity: 0.1,
               ),
+              filter: [
+                'all',
+                ['==', 'type', 's_wave'],
+                ['==', 'is_warning', false],
+              ],
             );
 
-            await controller.style!.addLayer(
-              FillStyleLayer(
-                id: _sWaveWarningFillLayerId,
-                sourceId: _sourceId,
-                paint: {
-                  'fill-color': Colors.redAccent.toHexStringRGB(),
-                  'fill-opacity': 0.1,
-                },
-                layout: {
-                  'filter': [
-                    'all',
-                    ['==', 'type', 's_wave'],
-                    ['==', 'is_warning', true],
-                  ],
-                },
+            await controller.addLayer(
+              _sWaveWarningFillLayerId,
+              _sourceId,
+              FillLayerProperties(
+                fillColor: Colors.redAccent.toHexStringRGB(),
+                fillOpacity: 0.1,
               ),
+              filter: [
+                'all',
+                ['==', 'type', 's_wave'],
+                ['==', 'is_warning', true],
+              ],
             );
 
             isInitialized.value = true;
