@@ -178,3 +178,5 @@ secret/
 /*.sql
 
 *.p8
+
+/devtools_options.yaml

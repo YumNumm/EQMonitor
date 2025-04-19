@@ -45,7 +45,7 @@ dependency_overrides:
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: cdbd15f3cfa916466a159ca8db0d08a4e95c14e0
+      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
   # maplibre:
   #   path: ../eqmonitor-maplibre
   protobuf: ^4.0.0
