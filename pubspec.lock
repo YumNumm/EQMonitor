@@ -1275,10 +1275,10 @@ packages:
     dependency: transitive
     description:
       name: objective_c
-      sha256: "49e569fac1202d7fee1655fbbdfbf228840e11416be592bce2a6797b23de8231"
+      sha256: "9f034ba1eeca53ddb339bc8f4813cb07336a849cd735559b60cdc068ecce2dc7"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "7.1.0"
   os_detect:
     dependency: transitive
     description:
