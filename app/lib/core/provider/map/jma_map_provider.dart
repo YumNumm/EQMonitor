@@ -7,14 +7,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'jma_map_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<Map<JmaMapType, JmaMap_JmaMapData>> jmaMap(
-  Ref ref,
-) async {
+Future<Map<JmaMapType, JmaMap_JmaMapData>> jmaMap(Ref ref) async {
   final bytes = await rootBundle.load(Assets.jmaMap);
   final jmaMap = JmaMap.fromBuffer(bytes.buffer.asUint8List());
-  return {
-    for (final element in jmaMap.data) element.mapType.mapType: element,
-  };
+  return {for (final element in jmaMap.data) element.mapType.mapType: element};
 }
 
 enum JmaMapType {
@@ -25,8 +21,10 @@ enum JmaMapType {
 }
 
 extension JmaMapEx on Map<JmaMapType, JmaMap_JmaMapData> {
-  JmaMap_JmaMapData get areaForecastLocalEew => this[JmaMapType.areaForecastLocalEew]!;
-  JmaMap_JmaMapData get areaForecastLocalE => this[JmaMapType.areaForecastLocalE]!;
+  JmaMap_JmaMapData get areaForecastLocalEew =>
+      this[JmaMapType.areaForecastLocalEew]!;
+  JmaMap_JmaMapData get areaForecastLocalE =>
+      this[JmaMapType.areaForecastLocalE]!;
   JmaMap_JmaMapData get areaInformationCity =>
       this[JmaMapType.areaInformationCity]!;
   JmaMap_JmaMapData get areaTsunami => this[JmaMapType.areaTsunami]!;
