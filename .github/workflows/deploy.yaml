@@ -96,7 +96,7 @@ jobs:
           rm environment.tar.gz
           ls -l environment/
 
-      - uses: irgaly/xcode-cache@fd644652c5d3fd1f794edcdf839eb1dc03a9021f # v1.8.1
+      - uses: irgaly/xcode-cache@7d303a62f4d1701699190a51e595234e3fe534b5 # v1.9.0
         with:
           key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.sha }}
           restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
@@ -165,7 +165,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download ipa
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: EQMonitor-ios.ipa
           path: build
@@ -291,7 +291,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Download artifact aab
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: EQMonitor-android.aab
           path: build
