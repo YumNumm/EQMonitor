@@ -9,7 +9,7 @@
       "part '${TM_FILENAME_BASE}.g.dart';",
       "",
       "@freezed",
-      "class ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}} with _$${1} {",
+      "abstract class ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}} with _$${1} {",
       "\tconst factory ${1}({",
       "\t\t// 必要フィールドを定義",
       "\t\trequired String title,",
@@ -25,7 +25,7 @@
     "description": "Create a Freezed class without import",
     "body": [
       "@freezed",
-      "class ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}} with _$${1} {",
+      "abstract class ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}} with _$${1} {",
       "\tconst factory ${1}({",
       "\t\t// 必要フィールドを定義",
       "\t\trequired String title,",
