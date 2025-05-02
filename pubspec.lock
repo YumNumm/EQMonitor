@@ -109,10 +109,10 @@ packages:
     dependency: transitive
     description:
       name: async
-      sha256: d2872f9c19731c2e5f10444b14686eb7cc85c76274bd6c16e1816bff9a3bab63
+      sha256: "758e6d74e971c3e5aceb4110bfd6698efc7f501675bcfe0c775459a8140750eb"
       url: "https://pub.dev"
     source: hosted
-    version: "2.12.0"
+    version: "2.13.0"
   background_task:
     dependency: transitive
     description:
@@ -277,10 +277,10 @@ packages:
     dependency: transitive
     description:
       name: conventional_commit
-      sha256: dec15ad1118f029c618651a4359eb9135d8b88f761aa24e4016d061cd45948f2
+      sha256: fad254feb6fb8eace2be18855176b0a4b97e0d50e416ff0fe590d5ba83735d34
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0+1"
+    version: "0.6.1"
   convert:
     dependency: transitive
     description:
@@ -453,10 +453,10 @@ packages:
     dependency: transitive
     description:
       name: fake_async
-      sha256: "6a95e56b2449df2273fd8c45a662d6947ce1ebb7aafe80e550a3f68297f3cacc"
+      sha256: "5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.2"
+    version: "1.3.3"
   feedback:
     dependency: transitive
     description:
@@ -877,14 +877,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3"
-  geotypes:
-    dependency: transitive
-    description:
-      name: geotypes
-      sha256: "5bedf57de92283133dd221e363812ef50eaaba414f0823b1974ef7d84b86991f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
   glob:
     dependency: transitive
     description:
@@ -1041,10 +1033,10 @@ packages:
     dependency: transitive
     description:
       name: intl
-      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.0"
+    version: "0.20.2"
   io:
     dependency: transitive
     description:
@@ -1053,14 +1045,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
-  jni:
-    dependency: transitive
-    description:
-      name: jni
-      sha256: cfd663ec90d87ec6abd338da7e21189e503bf6753a0027c1862796f5826adba6
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.14.1"
   js:
     dependency: transitive
     description:
@@ -1097,10 +1081,10 @@ packages:
     dependency: transitive
     description:
       name: leak_tracker
-      sha256: c35baad643ba394b40aac41080300150a4f08fd0fd6a10378f8f7c6bc161acec
+      sha256: "6bb818ecbdffe216e81182c2f0714a2e62b593f4a4f13098713ff1685dfb6ab0"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.8"
+    version: "10.0.9"
   leak_tracker_flutter_testing:
     dependency: transitive
     description:
@@ -1165,24 +1149,33 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.1"
-  maplibre:
+  maplibre_gl:
     dependency: "direct overridden"
     description:
-      path: "."
-      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
-      resolved-ref: c206212edf54c9331e3b2d040f256b4dbb08106f
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
+      path: maplibre_gl
+      ref: "2b653ca28184004db852f20cf91b7a068760103c"
+      resolved-ref: "2b653ca28184004db852f20cf91b7a068760103c"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
-    version: "0.2.1"
-  maplibre_ios:
-    dependency: transitive
+    version: "0.22.0"
+  maplibre_gl_platform_interface:
+    dependency: "direct overridden"
     description:
-      path: maplibre_ios
-      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
-      resolved-ref: c206212edf54c9331e3b2d040f256b4dbb08106f
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
+      path: maplibre_gl_platform_interface
+      ref: "2b653ca28184004db852f20cf91b7a068760103c"
+      resolved-ref: "2b653ca28184004db852f20cf91b7a068760103c"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
-    version: "0.0.1"
+    version: "0.22.0"
+  maplibre_gl_web:
+    dependency: "direct overridden"
+    description:
+      path: maplibre_gl_web
+      ref: "2b653ca28184004db852f20cf91b7a068760103c"
+      resolved-ref: "2b653ca28184004db852f20cf91b7a068760103c"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+    source: git
+    version: "0.22.0"
   maps_toolkit:
     dependency: transitive
     description:
@@ -1219,10 +1212,10 @@ packages:
     dependency: "direct main"
     description:
       name: melos
-      sha256: "63e9852a28a44c811503b31c607606f9ce8d891e22879e1e97fc7417c22ed6bc"
+      sha256: "26436105756ff4e535815a0f361181d6485a339cba5a84444e02c620a76d2a95"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0-dev.7"
+    version: "7.0.0-dev.8"
   meta:
     dependency: transitive
     description:
@@ -1271,14 +1264,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  objective_c:
-    dependency: transitive
-    description:
-      name: objective_c
-      sha256: "49e569fac1202d7fee1655fbbdfbf228840e11416be592bce2a6797b23de8231"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0"
   os_detect:
     dependency: transitive
     description:
@@ -2089,10 +2074,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "0968250880a6c5fe7edc067ed0a13d4bae1577fe2771dcf3010d52c4a9d3ca14"
+      sha256: ddfa8d30d89985b96407efce8acbdd124701f96741f2d981ca860662f1c0dc02
       url: "https://pub.dev"
     source: hosted
-    version: "14.3.1"
+    version: "15.0.0"
   watcher:
     dependency: transitive
     description:
@@ -2206,5 +2191,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=3.7.2 <4.0.0"
-  flutter: ">=3.29.3"
+  dart: "3.8.0-278.2.beta"
+  flutter: ">=3.32.0-0.3.pre"

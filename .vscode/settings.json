@@ -1,5 +1,5 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/3.29.3",
+  "dart.flutterSdkPath": ".fvm/versions/3.32.0-0.3.pre",
   "search.exclude": {
     "**/.fvm": true,
     "*.geojson": true
@@ -13,5 +13,5 @@
   "explorer.fileNesting.patterns": {
     "pubspec.yaml": "pubspec.lock,pubspec_overrides.yaml,.packages,.flutter-plugins,.flutter-plugins-dependencies,.metadata",
     "*.dart": "${capture}.g.dart, ${capture}.freezed.dart, ${capture}.viewmodel.dart"
-  },
+  }
 }
