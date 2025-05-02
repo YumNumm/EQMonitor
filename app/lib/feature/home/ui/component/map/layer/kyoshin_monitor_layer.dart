@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
@@ -45,11 +44,15 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
-            await controller.addSource(
+            // await controller.addSource(
+            //   _sourceId,
+            //   GeojsonSourceProperties(
+            //     data: _convertAnalyzedPointsToGeoJson([]),
+            //   ),
+            // );
+            await controller.addGeoJsonSource(
               _sourceId,
-              GeojsonSourceProperties(
-                data: _convertAnalyzedPointsToGeoJson([]),
-              ),
+              _convertAnalyzedPointsToGeoJson([]),
             );
 
             await controller.addLayer(
@@ -130,8 +133,7 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
           controller.synchronized(() async {
             await controller.setGeoJsonSource(
               _sourceId,
-              jsonDecode(_convertAnalyzedPointsToGeoJson(analyzedPoints ?? []))
-                  as Map<String, dynamic>,
+              _convertAnalyzedPointsToGeoJson(analyzedPoints ?? []),
             );
           }),
         );
@@ -157,10 +159,10 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
     return const SizedBox.shrink();
   }
 
-  static String _convertAnalyzedPointsToGeoJson(
+  static Map<String, dynamic> _convertAnalyzedPointsToGeoJson(
     Iterable<KyoshinMonitorImageParseObservationPoint> points,
   ) {
-    return jsonEncode({
+    return {
       'type': 'FeatureCollection',
       'features':
           points
@@ -181,7 +183,7 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
                 },
               )
               .toList(),
-    });
+    };
   }
 }
 
