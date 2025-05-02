@@ -1,17 +1,31 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/3.32.0-0.3.pre",
-  "search.exclude": {
-    "**/.fvm": true,
-    "*.geojson": true
-  },
-  "files.watcherExclude": {
-    "**/.fvm": true,
-    "*.geojson": true,
-    "**/DerivedData": true
-  },
-  "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.patterns": {
-    "pubspec.yaml": "pubspec.lock,pubspec_overrides.yaml,.packages,.flutter-plugins,.flutter-plugins-dependencies,.metadata",
-    "*.dart": "${capture}.g.dart, ${capture}.freezed.dart, ${capture}.viewmodel.dart"
-  }
+	"dart.runPubGetOnPubspecChanges": "never",
+	"dart.flutterSdkPath": ".fvm/versions/3.32.0-0.3.pre",
+	"search.exclude": {
+		"**/.fvm": true,
+		"*.geojson": true
+	},
+	"files.watcherExclude": {
+		"**/.fvm": true,
+		"*.geojson": true,
+		"**/DerivedData": true
+	},
+	"files.readonlyInclude": {
+		"**/*.*.dart": true,
+		"**/*.lock": true
+	},
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"pubspec.yaml": "pubspec.lock,pubspec_overrides.yaml,.packages,.flutter-plugins,.flutter-plugins-dependencies,.metadata",
+		"*.dart": "${capture}.g.dart, ${capture}.freezed.dart, ${capture}.viewmodel.dart"
+	},
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"files.associations": {
+		"./.vscode/*.json": "jsonc"
+	},
+	"editor.formatOnSave": true,
+	"[typescript][javascript][json][jsonc]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	}
 }
