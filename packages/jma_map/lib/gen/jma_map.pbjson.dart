@@ -17,7 +17,14 @@ import 'dart:typed_data' as $typed_data;
 const JmaMap$json = {
   '1': 'JmaMap',
   '2': [
-    {'1': 'data', '3': 1, '4': 3, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData', '10': 'data'},
+    {
+      '1': 'data',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData',
+      '10': 'data'
+    },
   ],
   '3': [JmaMap_JmaMapData$json, JmaMap_LatLngBounds$json, JmaMap_LatLng$json],
 };
@@ -26,8 +33,22 @@ const JmaMap$json = {
 const JmaMap_JmaMapData$json = {
   '1': 'JmaMapData',
   '2': [
-    {'1': 'mapType', '3': 1, '4': 1, '5': 14, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapType', '10': 'mapType'},
-    {'1': 'data', '3': 2, '4': 3, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem', '10': 'data'},
+    {
+      '1': 'mapType',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapType',
+      '10': 'mapType'
+    },
+    {
+      '1': 'data',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem',
+      '10': 'data'
+    },
   ],
   '3': [JmaMap_JmaMapData_JmaMapDataItem$json],
   '4': [JmaMap_JmaMapData_JmaMapType$json, JmaMap_JmaMapData_DataType$json],
@@ -37,20 +58,59 @@ const JmaMap_JmaMapData$json = {
 const JmaMap_JmaMapData_JmaMapDataItem$json = {
   '1': 'JmaMapDataItem',
   '2': [
-    {'1': 'bounds', '3': 1, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLngBounds', '10': 'bounds'},
-    {'1': 'property', '3': 2, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem.Property', '10': 'property'},
-    {'1': 'polylabel', '3': 3, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng', '10': 'polylabel'},
+    {
+      '1': 'bounds',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLngBounds',
+      '10': 'bounds'
+    },
+    {
+      '1': 'property',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6':
+          '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem.Property',
+      '10': 'property'
+    },
+    {
+      '1': 'polylabel',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng',
+      '10': 'polylabel'
+    },
     {'1': 'bytes', '3': 4, '4': 1, '5': 12, '10': 'bytes'},
-    {'1': 'dataType', '3': 5, '4': 1, '5': 14, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.DataType', '10': 'dataType'},
+    {
+      '1': 'dataType',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.DataType',
+      '10': 'dataType'
+    },
   ],
-  '3': [JmaMap_JmaMapData_JmaMapDataItem_Polygon$json, JmaMap_JmaMapData_JmaMapDataItem_Property$json],
+  '3': [
+    JmaMap_JmaMapData_JmaMapDataItem_Polygon$json,
+    JmaMap_JmaMapData_JmaMapDataItem_Property$json
+  ],
 };
 
 @$core.Deprecated('Use jmaMapDescriptor instead')
 const JmaMap_JmaMapData_JmaMapDataItem_Polygon$json = {
   '1': 'Polygon',
   '2': [
-    {'1': 'latLngs', '3': 1, '4': 3, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng', '10': 'latLngs'},
+    {
+      '1': 'latLngs',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng',
+      '10': 'latLngs'
+    },
   ],
 };
 
@@ -60,7 +120,15 @@ const JmaMap_JmaMapData_JmaMapDataItem_Property$json = {
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'code', '17': true},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
-    {'1': 'nameKana', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'nameKana', '17': true},
+    {
+      '1': 'nameKana',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'nameKana',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_code'},
@@ -95,8 +163,22 @@ const JmaMap_JmaMapData_DataType$json = {
 const JmaMap_LatLngBounds$json = {
   '1': 'LatLngBounds',
   '2': [
-    {'1': 'southWest', '3': 1, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng', '10': 'southWest'},
-    {'1': 'northEast', '3': 2, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng', '10': 'northEast'},
+    {
+      '1': 'southWest',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng',
+      '10': 'southWest'
+    },
+    {
+      '1': 'northEast',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.LatLng',
+      '10': 'northEast'
+    },
   ],
 };
 
@@ -134,4 +216,3 @@ final $typed_data.Uint8List jmaMapDescriptor = $convert.base64Decode(
     'bml0b3Iuam1hX21hcC5KbWFNYXAuTGF0TG5nUglzb3V0aFdlc3QSSgoJbm9ydGhFYXN0GAIgAS'
     'gLMiwubmV0Lnl1bW51bW0uZXFtb25pdG9yLmptYV9tYXAuSm1hTWFwLkxhdExuZ1IJbm9ydGhF'
     'YXN0GiwKBkxhdExuZxIQCgNsYXQYASABKAFSA2xhdBIQCgNsbmcYAiABKAFSA2xuZw==');
-
