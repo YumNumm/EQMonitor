@@ -145,7 +145,7 @@ platform :ios do
   desc "Push a new build to Firebase App Distribution"
   lane :beta_firebase do
     certificates
-    sh("fvm", "flutter", "build", "ios", "--release", "--no-codesign")
+    sh("flutter", "build", "ios", "--release", "--no-codesign")
     buildNumber = setup_build_number_by_firebase
     set_debug_info(buildNumber)
     match(

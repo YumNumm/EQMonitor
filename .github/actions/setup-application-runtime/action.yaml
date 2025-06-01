@@ -4,18 +4,16 @@ description: "Setup application runtime for Flutter"
 runs:
   using: "composite"
   steps:
-    # https://github.com/kuhnroyal/flutter-fvm-config-action
-    - name: Fetch flutter config
-      uses: kuhnroyal/flutter-fvm-config-action@60c14af316b09f8819202d845391260cf3b979c9 # v3.0
-      id: fvm-config-action
-
-    # https://github.com/subosito/flutter-action
-    - name: Setup flutter
-      uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.18.0
+    # https://github.com/jdx/mise-action
+    - name: Install Mise dependencies
+      uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v2.1.11
       with:
-        flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-        channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
-        cache: true
+        install_args: "flutter"
+
+    - name: Resolve dependencies
+      shell: bash
+      working-directory: bff/engine
+      run: dart pub get
 
     # https://github.com/actions/cache
     - name: Cache pubspec dependencies
@@ -30,8 +28,6 @@ runs:
     - name: Setup melos
       shell: bash
       run: |
-        mkdir -p .fvm
-        ln -s $FLUTTER_ROOT .fvm/flutter_sdk
         MELOS_VERSION=$(cat pubspec.lock | yq ".packages.melos.version" -r)
         dart pub global activate melos $MELOS_VERSION
 
