@@ -1,4 +1,7 @@
-include: package:yumemi_lints/flutter/3.24/recommended.yaml
+include: package:yumemi_lints/flutter/3.32/recommended.yaml
+
+formatter:
+  trailing_commas: preserve
 
 linter:
   rules:
@@ -29,6 +32,3 @@ custom_lint:
     - avoid_hardcoded_color: false
     - avoid_hardcoded_japanese: false
     - avoid_single_child: false
-
-formatter:
-  page_width: 80
