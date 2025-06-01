@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:synchronized/extension.dart';
 
 /// 地震履歴の震度を表示するレイヤー
@@ -35,7 +35,7 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
-    final controller = MapController.of(context);
+    final controller = MapLibreInherited.of(context);
     final intensityColor = ref.watch(intensityColorProvider);
     final manager = useMemoized(
       () => _EarthquakeIntensityRegionPaintManager(color: intensityColor),
@@ -61,19 +61,20 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
                 await [
                   for (final intensity in allowedIntensities)
                     // レイヤーを追加
-                    controller.style!.addLayer(
-                      FillStyleLayer(
-                        id: _getLayerId(intensity),
-                        sourceId: 'eqmonitor_map',
-                        paint: manager.getPaintForIntensity(intensity),
-                        layout: {
-                          'filter': [
-                            'in',
-                            ['get', 'code'],
-                            ['literal', areas[intensity] ?? []],
-                          ],
-                        },
+                    controller.addLayer(
+                      _getLayerId(intensity),
+                      'eqmonitor_map',
+                      FillLayerProperties(
+                        fillColor:
+                            manager
+                                ._getColorForIntensity(intensity)
+                                .toHexStringRGB(),
                       ),
+                      filter: [
+                        'in',
+                        ['get', 'code'],
+                        ['literal', areas[intensity] ?? []],
+                      ],
                       belowLayerId: BaseLayer.areaForecastLocalELine.name,
                       sourceLayer: 'areaForecastLocalE',
                     ),
@@ -104,22 +105,23 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
 
           await [
             for (final intensity in allowedIntensities)
-              // レイヤーを更新
-              controller.style!.updateLayer(
-                FillStyleLayer(
-                  id: _getLayerId(intensity),
-                  sourceId: 'eqmonitor_map',
-                  paint: manager.getPaintForIntensity(intensity),
-                  layout: {
-                    'filter': [
-                      'in',
-                      ['get', 'code'],
-                      ['literal', areas[intensity] ?? []],
-                    ],
-                  },
+            // レイヤーを更新
+            ...[
+              controller.setLayerProperties(
+                _getLayerId(intensity),
+                FillLayerProperties(
+                  fillColor:
+                      manager._getColorForIntensity(intensity).toHexStringRGB(),
                 ),
-                sourceLayer: 'areaForecastLocalE',
               ),
+              controller.setFilter(_getLayerId(intensity), {
+                'filter': [
+                  'in',
+                  ['get', 'code'],
+                  ['literal', areas[intensity] ?? []],
+                ],
+              }),
+            ],
           ].wait;
         }),
       );
@@ -128,13 +130,15 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
     useEffect(() {
       unawaited(
         controller.synchronized(
-          () async => controller.style!.updateLayer(
-            FillStyleLayer(
-              id: _getLayerId(JmaIntensity.values.first),
-              sourceId: 'eqmonitor_map',
-              layout: {'visibility': visible ? 'visible' : 'none'},
-            ),
-          ),
+          () async =>
+              JmaIntensity.values
+                  .map(
+                    (intensity) => controller.setLayerVisibility(
+                      _getLayerId(intensity),
+                      visible,
+                    ),
+                  )
+                  .wait,
         ),
       );
       return null;

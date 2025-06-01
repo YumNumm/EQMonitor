@@ -1,7 +1,8 @@
 name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
 environment:
-  sdk: ^3.7.0
+  sdk: 3.8.1
+  flutter: 3.32.1
 workspace:
   - app
   - packages/_base
@@ -25,29 +26,27 @@ workspace:
   - packages/kyoshin_monitor_image_parser
   # <ADD_PACKAGE_HERE>
 dependencies:
-  melos: ^7.0.0-dev.7
+  melos: ^7.0.0-dev.8
 dependency_overrides:
-  # maplibre_gl:
-  #   git:
-  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
-  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-  #     path: maplibre_gl
-  # maplibre_gl_platform_interface:
-  #   git:
-  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
-  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-  #     path: maplibre_gl_platform_interface
-  # maplibre_gl_web:
-  #   git:
-  #     url: https://github.com/YumNumm/flutter-maplibre-gl.git
-  #     ref: fd44e7684683cad5a1a0d2badddaa2108db575ba
-  #     path: maplibre_gl_web
-  maplibre:
+  maplibre_gl:
     git:
-      url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: c206212edf54c9331e3b2d040f256b4dbb08106f
+      url: https://github.com/YumNumm/flutter-maplibre-gl.git
+      ref: 2b653ca28184004db852f20cf91b7a068760103c
+      path: maplibre_gl
+  maplibre_gl_platform_interface:
+    git:
+      url: https://github.com/YumNumm/flutter-maplibre-gl.git
+      ref: 2b653ca28184004db852f20cf91b7a068760103c
+      path: maplibre_gl_platform_interface
+  maplibre_gl_web:
+    git:
+      url: https://github.com/YumNumm/flutter-maplibre-gl.git
+      ref: 2b653ca28184004db852f20cf91b7a068760103c
+      path: maplibre_gl_web
   # maplibre:
-  #   path: ../eqmonitor-maplibre
+  #   git:
+  #     url: https://github.com/YumNumm/flutter-maplibre.git
+  #     ref: c206212edf54c9331e3b2d040f256b4dbb08106f
   protobuf: ^4.0.0
 melos:
   repository: https://github.com/YumNumm/EQMonitor
@@ -58,8 +57,8 @@ melos:
     bootstrap:
       runPubGetInParallel: false
       environment:
-        sdk: ^3.7.2
-        flutter: ^3.29.3
+        sdk: 3.8.1
+        flutter: 3.32.1
   scripts:
     analyze:
       run: |

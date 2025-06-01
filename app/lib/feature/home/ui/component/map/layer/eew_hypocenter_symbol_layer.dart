@@ -5,10 +5,11 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/core/util/map_utility.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:synchronized/extension.dart';
 
 class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
@@ -25,7 +26,7 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
-    final controller = MapController.of(context);
+    final controller = MapLibreInherited.of(context);
     final manager = useMemoized(_EewHypocenterPaintManager.new);
 
     final isVisible = useState(true);
@@ -48,42 +49,48 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
           (_) async => controller.synchronized(() async {
             await ref.read(mapUtilityProvider).addHypocenterImages(controller);
             final activeEews = ref.read(eewAliveTelegramProvider) ?? [];
-            await controller.style!.removeSource(_sourceId);
-            await controller.style!.addSource(
-              GeoJsonSource(
-                id: _sourceId,
-                data: _convertEewsToGeoJson(activeEews),
+            await controller.removeSource(_sourceId);
+            await controller.addSource(
+              _sourceId,
+              GeojsonSourceProperties(
+                data: jsonEncode(_convertEewsToGeoJson(activeEews)),
               ),
             );
 
-            await controller.style!.addLayer(
-              SymbolStyleLayer(
-                id: _layerId(false),
-                sourceId: _sourceId,
-                paint: manager.json(isLowPrecise: false),
-                layout: {
-                  'filter': [
-                    '==',
-                    ['get', 'isLowPrecise'],
-                    false,
-                  ],
-                },
+            await controller.addLayer(
+              _layerId(false),
+              _sourceId,
+              SymbolLayerProperties(
+                iconImage:
+                    manager.json(isLowPrecise: false)['icon-image']! as String,
+                iconSize:
+                    manager.json(isLowPrecise: false)['icon-size']!
+                        as List<dynamic>,
+                iconAllowOverlap: true,
               ),
+              filter: [
+                '==',
+                ['get', 'isLowPrecise'],
+                false,
+              ],
             );
 
-            await controller.style!.addLayer(
-              SymbolStyleLayer(
-                id: _layerId(true),
-                sourceId: _sourceId,
-                paint: manager.json(isLowPrecise: true),
-                layout: {
-                  'filter': [
-                    '==',
-                    ['get', 'isLowPrecise'],
-                    true,
-                  ],
-                },
+            await controller.addLayer(
+              _layerId(true),
+              _sourceId,
+              SymbolLayerProperties(
+                iconImage:
+                    manager.json(isLowPrecise: true)['icon-image']! as String,
+                iconSize:
+                    manager.json(isLowPrecise: true)['icon-size']!
+                        as List<dynamic>,
+                iconAllowOverlap: true,
               ),
+              filter: [
+                '==',
+                ['get', 'isLowPrecise'],
+                true,
+              ],
             );
             isInitialized.value = true;
           }),
@@ -97,14 +104,11 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
         return;
       }
       final activeEews = eews ?? [];
-      final controller = MapController.of(context);
+      final controller = MapLibreInherited.of(context);
       unawaited(
         controller.synchronized(() async {
           final geojson = _convertEewsToGeoJson(activeEews);
-          await controller.style!.updateGeoJsonSource(
-            id: _sourceId,
-            data: geojson,
-          );
+          await controller.setGeoJsonSource(_sourceId, geojson);
         }),
       );
     });
@@ -115,19 +119,13 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
         unawaited(
           controller.synchronized(() async {
             await [
-              controller.style!.updateLayer(
-                SymbolStyleLayer(
-                  id: _layerId(false),
-                  sourceId: _sourceId,
-                  paint: {'icon-opacity': isVisible.value ? 1.0 : 0.5},
-                ),
+              controller.setLayerProperties(
+                _layerId(false),
+                SymbolLayerProperties(iconOpacity: isVisible.value ? 1.0 : 0.5),
               ),
-              controller.style!.updateLayer(
-                SymbolStyleLayer(
-                  id: _layerId(true),
-                  sourceId: _sourceId,
-                  paint: {'icon-opacity': isVisible.value ? 1.0 : 0.5},
-                ),
+              controller.setLayerProperties(
+                _layerId(true),
+                SymbolLayerProperties(iconOpacity: isVisible.value ? 1.0 : 0.5),
               ),
             ].wait;
           }),
@@ -139,8 +137,8 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
     return const SizedBox.shrink();
   }
 
-  static String _convertEewsToGeoJson(List<EewV1> eews) {
-    return jsonEncode({
+  static Map<String, dynamic> _convertEewsToGeoJson(List<EewV1> eews) {
+    return {
       'type': 'FeatureCollection',
       'features':
           eews
@@ -167,7 +165,7 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
                 },
               )
               .toList(),
-    });
+    };
   }
 }
 

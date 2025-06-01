@@ -9,11 +9,12 @@ import 'package:eqmonitor/core/util/map_utility.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/layers/earthquake_intensity_region_layer.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:synchronized/extension.dart';
 
 class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
@@ -43,7 +44,7 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
     }
 
     final isInitialized = useRef(false);
-    final controller = MapController.of(context);
+    final controller = MapLibreInherited.of(context);
 
     final earthquake = ref.watch(
       earthquakeHistoryDetailsNotifierProvider(eventId),
@@ -61,44 +62,41 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
             unawaited(
               controller.synchronized(() async {
                 await Future<void>.delayed(const Duration(milliseconds: 1000));
-                await controller.style!.addSource(
-                  GeoJsonSource(
-                    id: sourceId,
-                    data: _createGeoJson(
-                      earthquake: earthquake.valueOrNull!,
-                      jmaMap: jmaMap.areaForecastLocalE,
-                    ),
-                  ),
+
+                final geoJsonData = _createGeoJson(
+                  earthquake: earthquake.valueOrNull!,
+                  jmaMap: jmaMap.areaForecastLocalE,
                 );
+
+                await controller.addSource(
+                  sourceId,
+                  GeojsonSourceProperties(data: jsonEncode(geoJsonData)),
+                );
+
                 await [
                   for (final intensity in allowedIntensities)
                     // レイヤーを追加
-                    controller.style!.addLayer(
-                      SymbolStyleLayer(
-                        id: _getLayerId(intensity),
-                        sourceId: 'eqmonitor_map',
-                        paint: {
-                          'icon-image': MapUtility.lowPreciseHypocenterImage,
-                          'icon-size': [
-                            'interpolate',
-                            ['linear'],
-                            ['zoom'],
-                            3,
-                            0.3,
-                            20,
-                            1,
-                          ],
-                          'icon-allow-overlap': true,
-                        },
-                        // layout: {
-                        //   'filter': [
-                        //     '==',
-                        //     ['get', 'intensity'],
-                        //     intensity.type,
-                        //   ],
-                        // },
+                    controller.addLayer(
+                      _getLayerId(intensity),
+                      sourceId,
+                      const SymbolLayerProperties(
+                        iconImage: MapUtility.lowPreciseHypocenterImage,
+                        iconSize: [
+                          'interpolate',
+                          ['linear'],
+                          ['zoom'],
+                          3,
+                          0.3,
+                          20,
+                          1,
+                        ],
+                        iconAllowOverlap: true,
                       ),
-                      sourceLayer: sourceId,
+                      filter: [
+                        '==',
+                        ['get', 'intensity'],
+                        intensity.type,
+                      ],
                       belowLayerId:
                           const EarthquakeIntensityRegionLayer(
                             eventId: 0,
@@ -127,13 +125,12 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
 
       unawaited(
         controller.synchronized(() async {
-          await controller.style!.updateGeoJsonSource(
-            id: sourceId,
-            data: _createGeoJson(
-              earthquake: earthquake.valueOrNull!,
-              jmaMap: jmaMap.areaForecastLocalE,
-            ),
+          final geoJsonData = _createGeoJson(
+            earthquake: next.valueOrNull!,
+            jmaMap: jmaMap.areaForecastLocalE,
           );
+
+          await controller.setGeoJsonSource(sourceId, geoJsonData);
         }),
       );
     });
@@ -141,13 +138,15 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
     useEffect(() {
       unawaited(
         controller.synchronized(
-          () async => controller.style!.updateLayer(
-            FillStyleLayer(
-              id: _getLayerId(JmaIntensity.values.first),
-              sourceId: 'eqmonitor_map',
-              layout: {'visibility': visible ? 'visible' : 'none'},
-            ),
-          ),
+          () async =>
+              JmaIntensity.values
+                  .map(
+                    (intensity) => controller.setLayerVisibility(
+                      _getLayerId(intensity),
+                      visible,
+                    ),
+                  )
+                  .wait,
         ),
       );
       return null;
@@ -165,7 +164,8 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
     return 'earthquake-intensity-symbol-$base';
   }
 
-  String _createGeoJson({
+  // 地震履歴の震度地域のGeoJSON作成
+  Map<String, dynamic> _createGeoJson({
     required EarthquakeV1Extended earthquake,
     required JmaMap_JmaMapData jmaMap,
   }) {
@@ -202,8 +202,7 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
       'features': features,
     };
 
-    final encoded = jsonEncode(geoJson);
-    print(encoded);
-    return encoded;
+    print('GeoJSON: ${features.length} features');
+    return geoJson;
   }
 }

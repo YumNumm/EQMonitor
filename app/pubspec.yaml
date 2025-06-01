@@ -5,8 +5,8 @@ publish_to: "none"
 version: 2.7.0
 
 environment:
-  sdk: ^3.7.2
-  flutter: ^3.29.3
+  sdk: 3.8.1
+  flutter: 3.32.1
 
 resolution: workspace
 
@@ -58,7 +58,7 @@ dependencies:
   hooks_riverpod: ^2.6.1
   image: ^4.4.0
   in_app_review: ^2.0.10
-  intl: ^0.19.0
+  intl: ^0.20.2
   jma_code_table_types:
     path: ../packages/jma_code_table_types
   jma_map:
@@ -75,8 +75,8 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  maplibre: ^0.2.1
-  # maplibre_gl: ^0.21.0
+  # maplibre: ^0.2.1
+  maplibre_gl: ^0.21.0
   notification_setting_types:
     path: ../packages/notification_setting_types
   ntp: ^2.0.0

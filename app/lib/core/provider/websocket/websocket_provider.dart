@@ -70,7 +70,7 @@ class WebsocketMessages extends _$WebsocketMessages {
     final socket = ref.watch(websocketProvider);
     _controller = StreamController<Map<String, dynamic>>();
     ref.onDispose(() {
-      _controller.close();
+      unawaited(_controller.close());
     });
     socket.messages.listen((message) {
       talker.log('WebSocket message: $message');

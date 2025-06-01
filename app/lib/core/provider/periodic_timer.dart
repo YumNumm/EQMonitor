@@ -15,7 +15,7 @@ class PeriodicTimer extends _$PeriodicTimer {
     _stopwatch = clock.stopwatch()..start();
 
     ref.onDispose(() {
-      _streamController.close();
+      unawaited(_streamController.close());
       _timer?.cancel();
       _timerForDelayAdjust?.cancel();
       _stopwatch?.stop();
