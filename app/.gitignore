@@ -157,6 +157,3 @@ macos/GoogleService-Info.plist
 ios/*.p8
 
 *.pem
-
-# FVM Version Cache
-.fvm/
