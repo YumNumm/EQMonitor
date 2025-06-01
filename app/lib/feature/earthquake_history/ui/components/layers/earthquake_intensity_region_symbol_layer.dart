@@ -38,7 +38,7 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final jmaMap = ref.watch(jmaMapProvider).valueOrNull;
+    final jmaMap = ref.watch(jmaMapProvider).value;
     if (jmaMap == null) {
       return const SizedBox.shrink();
     }
@@ -55,7 +55,7 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
-            if (earthquake.valueOrNull == null) {
+            if (earthquake.value == null) {
               return;
             }
 
@@ -64,7 +64,7 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
                 await Future<void>.delayed(const Duration(milliseconds: 1000));
 
                 final geoJsonData = _createGeoJson(
-                  earthquake: earthquake.valueOrNull!,
+                  earthquake: earthquake.value!,
                   jmaMap: jmaMap.areaForecastLocalE,
                 );
 
@@ -119,14 +119,14 @@ class EarthquakeIntensityRegionSymbolLayer extends HookConsumerWidget
       _,
       next,
     ) async {
-      if (!isInitialized.value || next.valueOrNull == null) {
+      if (!isInitialized.value || next.value == null) {
         return;
       }
 
       unawaited(
         controller.synchronized(() async {
           final geoJsonData = _createGeoJson(
-            earthquake: next.valueOrNull!,
+            earthquake: next.value!,
             jmaMap: jmaMap.areaForecastLocalE,
           );
 

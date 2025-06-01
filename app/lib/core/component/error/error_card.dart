@@ -88,8 +88,8 @@ class ErrorCard extends StatelessWidget {
               if (onReload != null) ...[
                 const SizedBox(height: 8),
                 FilledButton.tonalIcon(
-                  onPressed:
-                      () async => FullScreenCircularProgressIndicator.showUntil(
+                  onPressed: () async =>
+                      FullScreenCircularProgressIndicator.showUntil(
                         context,
                         onReload!,
                       ),
@@ -174,7 +174,7 @@ class _DeviceIdText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    final state = ref.watch(apiAuthenticationPayloadProvider).valueOrNull;
+    final state = ref.watch(apiAuthenticationPayloadProvider).value;
     return Text(
       'デバイスID: ${state?.id ?? "Unknown"}',
       style: theme.textTheme.bodyMedium?.copyWith(

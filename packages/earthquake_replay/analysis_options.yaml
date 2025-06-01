@@ -1,1 +1,7 @@
 include: package:eqmonitor_lints/analysis_options.yaml
+custom_lint:
+  rules:
+    - prefer_clock_now: false
+    - avoid_hardcoded_color: false
+    - avoid_hardcoded_japanese: false
+    - avoid_single_child: false

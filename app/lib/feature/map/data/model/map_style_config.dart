@@ -7,7 +7,7 @@ part 'map_style_config.g.dart';
 
 /// マップのスタイル設定
 @freezed
-class MapStyleConfig with _$MapStyleConfig {
+abstract class MapStyleConfig with _$MapStyleConfig {
   const factory MapStyleConfig({
     required MapStyleTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
@@ -24,7 +24,7 @@ enum MapStyleTheme { light, dark, system }
 
 /// マップのカラースキーム
 @freezed
-class MapStyleColorScheme with _$MapStyleColorScheme {
+abstract class MapStyleColorScheme with _$MapStyleColorScheme {
   const factory MapStyleColorScheme({
     @ColorConverter() required Color backgroundColor,
     @ColorConverter() required Color landColor,

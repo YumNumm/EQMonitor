@@ -8,165 +8,90 @@ part of 'jma_earthquake_nearest_observation_point.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaEarthquakeNearestObservationPointHash() =>
-    r'46d50c9150faeccc1fcddd4e83ee69e16df3b4a0';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [jmaEarthquakeNearestObservationPoint].
 @ProviderFor(jmaEarthquakeNearestObservationPoint)
 const jmaEarthquakeNearestObservationPointProvider =
-    JmaEarthquakeNearestObservationPointFamily();
+    JmaEarthquakeNearestObservationPointFamily._();
 
-/// See also [jmaEarthquakeNearestObservationPoint].
-class JmaEarthquakeNearestObservationPointFamily
-    extends Family<AsyncValue<(EarthquakeParameterStationItem, double)?>> {
-  /// See also [jmaEarthquakeNearestObservationPoint].
-  const JmaEarthquakeNearestObservationPointFamily();
-
-  /// See also [jmaEarthquakeNearestObservationPoint].
-  JmaEarthquakeNearestObservationPointProvider call(LatLng latLng) {
-    return JmaEarthquakeNearestObservationPointProvider(latLng);
-  }
-
-  @override
-  JmaEarthquakeNearestObservationPointProvider getProviderOverride(
-    covariant JmaEarthquakeNearestObservationPointProvider provider,
-  ) {
-    return call(provider.latLng);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'jmaEarthquakeNearestObservationPointProvider';
-}
-
-/// See also [jmaEarthquakeNearestObservationPoint].
-class JmaEarthquakeNearestObservationPointProvider
+final class JmaEarthquakeNearestObservationPointProvider
     extends
-        AutoDisposeFutureProvider<(EarthquakeParameterStationItem, double)?> {
-  /// See also [jmaEarthquakeNearestObservationPoint].
-  JmaEarthquakeNearestObservationPointProvider(LatLng latLng)
-    : this._internal(
-        (ref) => jmaEarthquakeNearestObservationPoint(
-          ref as JmaEarthquakeNearestObservationPointRef,
-          latLng,
-        ),
-        from: jmaEarthquakeNearestObservationPointProvider,
-        name: r'jmaEarthquakeNearestObservationPointProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$jmaEarthquakeNearestObservationPointHash,
-        dependencies: JmaEarthquakeNearestObservationPointFamily._dependencies,
-        allTransitiveDependencies:
-            JmaEarthquakeNearestObservationPointFamily
-                ._allTransitiveDependencies,
-        latLng: latLng,
-      );
-
-  JmaEarthquakeNearestObservationPointProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.latLng,
-  }) : super.internal();
-
-  final LatLng latLng;
+        $FunctionalProvider<
+          AsyncValue<(EarthquakeParameterStationItem, double)?>,
+          FutureOr<(EarthquakeParameterStationItem, double)?>
+        >
+    with
+        $FutureModifier<(EarthquakeParameterStationItem, double)?>,
+        $FutureProvider<(EarthquakeParameterStationItem, double)?> {
+  const JmaEarthquakeNearestObservationPointProvider._({
+    required JmaEarthquakeNearestObservationPointFamily super.from,
+    required LatLng super.argument,
+  }) : super(
+         retry: null,
+         name: r'jmaEarthquakeNearestObservationPointProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  Override overrideWith(
-    FutureOr<(EarthquakeParameterStationItem, double)?> Function(
-      JmaEarthquakeNearestObservationPointRef provider,
-    )
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: JmaEarthquakeNearestObservationPointProvider._internal(
-        (ref) => create(ref as JmaEarthquakeNearestObservationPointRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        latLng: latLng,
-      ),
-    );
+  String debugGetCreateSourceHash() =>
+      _$jmaEarthquakeNearestObservationPointHash();
+
+  @override
+  String toString() {
+    return r'jmaEarthquakeNearestObservationPointProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<(EarthquakeParameterStationItem, double)?>
-  createElement() {
-    return _JmaEarthquakeNearestObservationPointProviderElement(this);
+  $FutureProviderElement<(EarthquakeParameterStationItem, double)?>
+  $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<(EarthquakeParameterStationItem, double)?> create(Ref ref) {
+    final argument = this.argument as LatLng;
+    return jmaEarthquakeNearestObservationPoint(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
     return other is JmaEarthquakeNearestObservationPointProvider &&
-        other.latLng == latLng;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, latLng.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin JmaEarthquakeNearestObservationPointRef
-    on AutoDisposeFutureProviderRef<(EarthquakeParameterStationItem, double)?> {
-  /// The parameter `latLng` of this provider.
-  LatLng get latLng;
-}
+String _$jmaEarthquakeNearestObservationPointHash() =>
+    r'21a12adc56a07f503d016b4fa4844f539233f0c8';
 
-class _JmaEarthquakeNearestObservationPointProviderElement
-    extends
-        AutoDisposeFutureProviderElement<
-          (EarthquakeParameterStationItem, double)?
-        >
-    with JmaEarthquakeNearestObservationPointRef {
-  _JmaEarthquakeNearestObservationPointProviderElement(super.provider);
+final class JmaEarthquakeNearestObservationPointFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<(EarthquakeParameterStationItem, double)?>,
+          LatLng
+        > {
+  const JmaEarthquakeNearestObservationPointFamily._()
+    : super(
+        retry: null,
+        name: r'jmaEarthquakeNearestObservationPointProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  JmaEarthquakeNearestObservationPointProvider call(LatLng latLng) =>
+      JmaEarthquakeNearestObservationPointProvider._(
+        argument: latLng,
+        from: this,
+      );
 
   @override
-  LatLng get latLng =>
-      (origin as JmaEarthquakeNearestObservationPointProvider).latLng;
+  String toString() => r'jmaEarthquakeNearestObservationPointProvider';
 }
 
 // ignore_for_file: type=lint

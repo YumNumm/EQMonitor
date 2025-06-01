@@ -10,61 +10,74 @@ class CustomProviderObserver extends ProviderObserver {
 
   @override
   void didAddProvider(
-    ProviderBase<Object?> provider,
+    ProviderObserverContext context,
     Object? value,
-    ProviderContainer container,
-  ) => switch (provider.name) {
+  ) => switch (context.provider.name) {
     _ when value.toString().length > 1000 => log(
-      '${provider.name} (${provider.runtimeType}) '
+      '${context.provider.name} (${context.provider.runtimeType}) '
       '${value?.toString().length} ',
       name: 'didAddProvider',
     ),
-    _ => log('${provider.name} ($provider)', name: 'didAddProvider'),
+    _ => log(
+      '${context.provider.name} (${context.provider})',
+      name: 'didAddProvider',
+    ),
   };
 
   @override
   void didDisposeProvider(
-    ProviderBase<Object?> provider,
-    ProviderContainer container,
-  ) => switch (provider.name) {
+    ProviderObserverContext context,
+  ) => switch (context.provider.name) {
     'timeTickerProvider' || 'eewAliveTelegramProvider' => null,
-    _ when provider.name?.contains('LayerControllerProvider') ?? false => null,
-    _ => log('${provider.name}', name: 'didDisposeProvider'),
+    _
+        when context.provider.name?.contains('LayerControllerProvider') ??
+            false =>
+      null,
+    _ => log('${context.provider.name}', name: 'didDisposeProvider'),
   };
 
   @override
   void didUpdateProvider(
-    ProviderBase<Object?> provider,
+    ProviderObserverContext context,
     Object? previousValue,
     Object? newValue,
-    ProviderContainer container,
-  ) => switch (provider.name) {
+  ) => switch (context.provider.name) {
     'mapViewModelProvider' ||
     'kyoshinMonitorTimerStreamProvider' ||
     'periodicTimerProvider' ||
     'timeTickerProvider' ||
     'kyoshinMonitorNotifierProvider' => null,
-    _ when provider.name?.contains('LayerControllerProvider') ?? false => null,
+    _
+        when context.provider.name?.contains('LayerControllerProvider') ??
+            false =>
+      null,
     _ when newValue.toString().length + previousValue.toString().length > 300 =>
       log(
-        '${provider.name} (${previousValue.runtimeType} '
+        '${context.provider.name} (${previousValue.runtimeType} '
         '-> ${newValue.runtimeType})',
         name: 'didUpdateProvider',
       ),
     _ => log(
-      '${provider.name} ($previousValue -> $newValue)',
+      '${context.provider.name} ($previousValue -> $newValue)',
       name: 'didUpdateProvider',
     ),
   };
 
   @override
   void providerDidFail(
-    ProviderBase<Object?> provider,
+    ProviderObserverContext context,
     Object error,
     StackTrace stackTrace,
-    ProviderContainer container,
   ) {
-    talker.handle(error, stackTrace, 'providerDidFail: ${provider.name}');
-    log('${provider.name} $error', name: 'providerDidFail', error: error);
+    talker.handle(
+      error,
+      stackTrace,
+      'providerDidFail: ${context.provider.name}',
+    );
+    log(
+      '${context.provider.name} $error',
+      name: 'providerDidFail',
+      error: error,
+    );
   }
 }

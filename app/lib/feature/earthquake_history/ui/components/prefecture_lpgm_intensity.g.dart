@@ -8,190 +8,85 @@ part of 'prefecture_lpgm_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$lpgmCalculatorHash() => r'6e4fb84f94c2bb397d7704498b6ece2284cd32f2';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [_lpgmCalculator].
 @ProviderFor(_lpgmCalculator)
-const _lpgmCalculatorProvider = _LpgmCalculatorFamily();
+const _lpgmCalculatorProvider = _LpgmCalculatorFamily._();
 
-/// See also [_lpgmCalculator].
-class _LpgmCalculatorFamily
+final class _LpgmCalculatorProvider
     extends
-        Family<
-          AsyncValue<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>
-        > {
-  /// See also [_lpgmCalculator].
-  const _LpgmCalculatorFamily();
+        $FunctionalProvider<
+          AsyncValue<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>,
+          FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>
+        >
+    with
+        $FutureModifier<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>,
+        $FutureProvider<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> {
+  const _LpgmCalculatorProvider._({
+    required _LpgmCalculatorFamily super.from,
+    required _Arg super.argument,
+  }) : super(
+         retry: null,
+         name: r'_lpgmCalculatorProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [_lpgmCalculator].
-  _LpgmCalculatorProvider call(
-    ({
-      List<ObservedRegionLpgmIntensity>? prefectures,
-      List<ObservedRegionLpgmIntensity>? stations,
-    })
-    arg,
-  ) {
-    return _LpgmCalculatorProvider(arg);
+  @override
+  String debugGetCreateSourceHash() => _$lpgmCalculatorHash();
+
+  @override
+  String toString() {
+    return r'_lpgmCalculatorProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  _LpgmCalculatorProvider getProviderOverride(
-    covariant _LpgmCalculatorProvider provider,
+  $FutureProviderElement<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>
+  $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> create(
+    Ref ref,
   ) {
-    return call(provider.arg);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'_lpgmCalculatorProvider';
-}
-
-/// See also [_lpgmCalculator].
-class _LpgmCalculatorProvider
-    extends
-        AutoDisposeFutureProvider<
-          Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
-        > {
-  /// See also [_lpgmCalculator].
-  _LpgmCalculatorProvider(
-    ({
-      List<ObservedRegionLpgmIntensity>? prefectures,
-      List<ObservedRegionLpgmIntensity>? stations,
-    })
-    arg,
-  ) : this._internal(
-        (ref) => _lpgmCalculator(ref as _LpgmCalculatorRef, arg),
-        from: _lpgmCalculatorProvider,
-        name: r'_lpgmCalculatorProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$lpgmCalculatorHash,
-        dependencies: _LpgmCalculatorFamily._dependencies,
-        allTransitiveDependencies:
-            _LpgmCalculatorFamily._allTransitiveDependencies,
-        arg: arg,
-      );
-
-  _LpgmCalculatorProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.arg,
-  }) : super.internal();
-
-  final ({
-    List<ObservedRegionLpgmIntensity>? prefectures,
-    List<ObservedRegionLpgmIntensity>? stations,
-  })
-  arg;
-
-  @override
-  Override overrideWith(
-    FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> Function(
-      _LpgmCalculatorRef provider,
-    )
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: _LpgmCalculatorProvider._internal(
-        (ref) => create(ref as _LpgmCalculatorRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        arg: arg,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<
-    Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
-  >
-  createElement() {
-    return _LpgmCalculatorProviderElement(this);
+    final argument = this.argument as _Arg;
+    return _lpgmCalculator(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is _LpgmCalculatorProvider && other.arg == arg;
+    return other is _LpgmCalculatorProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, arg.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin _LpgmCalculatorRef
-    on
-        AutoDisposeFutureProviderRef<
-          Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
-        > {
-  /// The parameter `arg` of this provider.
-  ({
-    List<ObservedRegionLpgmIntensity>? prefectures,
-    List<ObservedRegionLpgmIntensity>? stations,
-  })
-  get arg;
-}
+String _$lpgmCalculatorHash() => r'6e4fb84f94c2bb397d7704498b6ece2284cd32f2';
 
-class _LpgmCalculatorProviderElement
-    extends
-        AutoDisposeFutureProviderElement<
-          Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
-        >
-    with _LpgmCalculatorRef {
-  _LpgmCalculatorProviderElement(super.provider);
+final class _LpgmCalculatorFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>,
+          _Arg
+        > {
+  const _LpgmCalculatorFamily._()
+    : super(
+        retry: null,
+        name: r'_lpgmCalculatorProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  _LpgmCalculatorProvider call(_Arg arg) =>
+      _LpgmCalculatorProvider._(argument: arg, from: this);
 
   @override
-  ({
-    List<ObservedRegionLpgmIntensity>? prefectures,
-    List<ObservedRegionLpgmIntensity>? stations,
-  })
-  get arg => (origin as _LpgmCalculatorProvider).arg;
+  String toString() => r'_lpgmCalculatorProvider';
 }
 
 // ignore_for_file: type=lint

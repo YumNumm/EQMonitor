@@ -8,18 +8,19 @@ part of 'map_configuration.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MapConfigurationImpl _$$MapConfigurationImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$MapConfigurationImpl', json, ($checkedConvert) {
-  final val = _$MapConfigurationImpl(
-    theme: $checkedConvert('theme', (v) => $enumDecode(_$MapThemeEnumMap, v)),
-  );
-  return val;
-});
+_MapConfiguration _$MapConfigurationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_MapConfiguration', json, ($checkedConvert) {
+      final val = _MapConfiguration(
+        theme: $checkedConvert(
+          'theme',
+          (v) => $enumDecode(_$MapThemeEnumMap, v),
+        ),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$$MapConfigurationImplToJson(
-  _$MapConfigurationImpl instance,
-) => <String, dynamic>{'theme': _$MapThemeEnumMap[instance.theme]!};
+Map<String, dynamic> _$MapConfigurationToJson(_MapConfiguration instance) =>
+    <String, dynamic>{'theme': _$MapThemeEnumMap[instance.theme]!};
 
 const _$MapThemeEnumMap = {
   MapTheme.light: 'light',
@@ -27,12 +28,12 @@ const _$MapThemeEnumMap = {
   MapTheme.system: 'system',
 };
 
-_$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
+_MapColorScheme _$MapColorSchemeFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$MapColorSchemeImpl',
+      '_MapColorScheme',
       json,
       ($checkedConvert) {
-        final val = _$MapColorSchemeImpl(
+        final val = _MapColorScheme(
           backgroundColor: $checkedConvert(
             'background_color',
             (v) => const ColorConverter().fromJson(v as String),
@@ -65,8 +66,8 @@ _$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$MapColorSchemeImplToJson(
-  _$MapColorSchemeImpl instance,
+Map<String, dynamic> _$MapColorSchemeToJson(
+  _MapColorScheme instance,
 ) => <String, dynamic>{
   'background_color': const ColorConverter().toJson(instance.backgroundColor),
   'world_land_color': const ColorConverter().toJson(instance.worldLandColor),

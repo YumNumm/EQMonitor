@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_notifier.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
   @override
   Future<KyoshinMonitorState> build() async {
@@ -46,8 +46,10 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
   /// 画像を取得して解析する
   Future<void> _fetchAndAnalyzeImage(DateTime targetTime) async {
     // interval + 5秒遅れている場合は遅延として扱う
-    final imageFetchInterval =
-        ref.read(kyoshinMonitorSettingsProvider).api.imageFetchInterval;
+    final imageFetchInterval = ref
+        .read(kyoshinMonitorSettingsProvider)
+        .api
+        .imageFetchInterval;
     final delay = imageFetchInterval + const Duration(seconds: 5);
     final isDelayed = targetTime.difference(DateTime.now()) > delay;
 
@@ -62,10 +64,12 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       final points = ref.read(kyoshinMonitorObservationPointsProvider);
       final observationPoints = ref.read(kyoshinObservationPointsProvider);
       // 画像を取得
-      final realtimeDataType =
-          ref.read(kyoshinMonitorSettingsProvider).realtimeDataType;
-      final realtimeLayer =
-          ref.read(kyoshinMonitorSettingsProvider).realtimeLayer;
+      final realtimeDataType = ref
+          .read(kyoshinMonitorSettingsProvider)
+          .realtimeDataType;
+      final realtimeLayer = ref
+          .read(kyoshinMonitorSettingsProvider)
+          .realtimeLayer;
       final image = await dataSource.getRealtimeImageData(
         type: realtimeDataType,
         layer: realtimeLayer,
@@ -78,28 +82,26 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         points: points,
       );
 
-      final results =
-          result
-              .mapIndexed((index, element) {
-                final point = observationPoints.points[index];
-                return switch (element) {
-                  KyoshinMonitorImageParseObservationSuccess() =>
-                    KyoshinMonitorImageParseObservationPoint(
-                      point: point,
-                      observation: element.point,
-                    ),
-                  KyoshinMonitorImageParseObservationFailure() => null,
-                };
-              })
-              .nonNulls
-              .toList();
+      final results = result
+          .mapIndexed((index, element) {
+            final point = observationPoints.points[index];
+            return switch (element) {
+              KyoshinMonitorImageParseObservationSuccess() =>
+                KyoshinMonitorImageParseObservationPoint(
+                  point: point,
+                  observation: element.point,
+                ),
+              KyoshinMonitorImageParseObservationFailure() => null,
+            };
+          })
+          .nonNulls
+          .toList();
       return KyoshinMonitorState(
         lastUpdatedAt: DateTime.now(),
         lastImageFetchTargetTime: targetTime,
-        status:
-            isDelayed
-                ? KyoshinMonitorStatus.delayed
-                : KyoshinMonitorStatus.realtime,
+        status: isDelayed
+            ? KyoshinMonitorStatus.delayed
+            : KyoshinMonitorStatus.realtime,
         currentRealtimeDataType: realtimeDataType,
         currentRealtimeLayer: realtimeLayer,
         analyzedPoints: results,

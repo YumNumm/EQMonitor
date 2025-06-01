@@ -8,159 +8,115 @@ part of 'donation_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$productsHash() => r'0580a85a0955da5812cf32d6ad08d86940b1ffd5';
-
-/// See also [products].
 @ProviderFor(products)
-final productsProvider = FutureProvider<List<StoreProduct>>.internal(
-  products,
-  name: r'productsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$productsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const productsProvider = ProductsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ProductsRef = FutureProviderRef<List<StoreProduct>>;
-String _$purchaseHash() => r'9937f03b7541e1c598c164216e7a7ce9dd2ea4d7';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [purchase].
-@ProviderFor(purchase)
-const purchaseProvider = PurchaseFamily();
-
-/// See also [purchase].
-class PurchaseFamily extends Family<AsyncValue<CustomerInfo>> {
-  /// See also [purchase].
-  const PurchaseFamily();
-
-  /// See also [purchase].
-  PurchaseProvider call(StoreProduct product) {
-    return PurchaseProvider(product);
-  }
-
-  @override
-  PurchaseProvider getProviderOverride(covariant PurchaseProvider provider) {
-    return call(provider.product);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'purchaseProvider';
-}
-
-/// See also [purchase].
-class PurchaseProvider extends AutoDisposeFutureProvider<CustomerInfo> {
-  /// See also [purchase].
-  PurchaseProvider(StoreProduct product)
-    : this._internal(
-        (ref) => purchase(ref as PurchaseRef, product),
-        from: purchaseProvider,
-        name: r'purchaseProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$purchaseHash,
-        dependencies: PurchaseFamily._dependencies,
-        allTransitiveDependencies: PurchaseFamily._allTransitiveDependencies,
-        product: product,
+final class ProductsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<StoreProduct>>,
+          FutureOr<List<StoreProduct>>
+        >
+    with
+        $FutureModifier<List<StoreProduct>>,
+        $FutureProvider<List<StoreProduct>> {
+  const ProductsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'productsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
       );
 
-  PurchaseProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.product,
-  }) : super.internal();
+  @override
+  String debugGetCreateSourceHash() => _$productsHash();
 
-  final StoreProduct product;
+  @$internal
+  @override
+  $FutureProviderElement<List<StoreProduct>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  Override overrideWith(
-    FutureOr<CustomerInfo> Function(PurchaseRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: PurchaseProvider._internal(
-        (ref) => create(ref as PurchaseRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        product: product,
-      ),
-    );
+  FutureOr<List<StoreProduct>> create(Ref ref) {
+    return products(ref);
+  }
+}
+
+String _$productsHash() => r'0580a85a0955da5812cf32d6ad08d86940b1ffd5';
+
+@ProviderFor(purchase)
+const purchaseProvider = PurchaseFamily._();
+
+final class PurchaseProvider
+    extends
+        $FunctionalProvider<AsyncValue<CustomerInfo>, FutureOr<CustomerInfo>>
+    with $FutureModifier<CustomerInfo>, $FutureProvider<CustomerInfo> {
+  const PurchaseProvider._({
+    required PurchaseFamily super.from,
+    required StoreProduct super.argument,
+  }) : super(
+         retry: null,
+         name: r'purchaseProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$purchaseHash();
+
+  @override
+  String toString() {
+    return r'purchaseProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<CustomerInfo> createElement() {
-    return _PurchaseProviderElement(this);
+  $FutureProviderElement<CustomerInfo> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<CustomerInfo> create(Ref ref) {
+    final argument = this.argument as StoreProduct;
+    return purchase(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is PurchaseProvider && other.product == product;
+    return other is PurchaseProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, product.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin PurchaseRef on AutoDisposeFutureProviderRef<CustomerInfo> {
-  /// The parameter `product` of this provider.
-  StoreProduct get product;
-}
+String _$purchaseHash() => r'9937f03b7541e1c598c164216e7a7ce9dd2ea4d7';
 
-class _PurchaseProviderElement
-    extends AutoDisposeFutureProviderElement<CustomerInfo>
-    with PurchaseRef {
-  _PurchaseProviderElement(super.provider);
+final class PurchaseFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<CustomerInfo>, StoreProduct> {
+  const PurchaseFamily._()
+    : super(
+        retry: null,
+        name: r'purchaseProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  PurchaseProvider call(StoreProduct product) =>
+      PurchaseProvider._(argument: product, from: this);
 
   @override
-  StoreProduct get product => (origin as PurchaseProvider).product;
+  String toString() => r'purchaseProvider';
 }
 
 // ignore_for_file: type=lint

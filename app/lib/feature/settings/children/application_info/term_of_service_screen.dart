@@ -30,7 +30,6 @@ class _TermOfServiceScreenBody extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final markdownBody = useFuture(
-      // ignore: discarded_futures
       useMemoized(() async => rootBundle.loadString(Assets.docs.termOfService)),
       initialData: '',
     );

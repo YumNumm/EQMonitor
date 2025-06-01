@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_token.freezed.dart';
@@ -25,7 +24,7 @@ Future<NotificationTokenModel> notificationToken(Ref ref) async {
 }
 
 @freezed
-class NotificationTokenModel with _$NotificationTokenModel {
+abstract class NotificationTokenModel with _$NotificationTokenModel {
   const factory NotificationTokenModel({
     required String? fcmToken,
     required String? apnsToken,

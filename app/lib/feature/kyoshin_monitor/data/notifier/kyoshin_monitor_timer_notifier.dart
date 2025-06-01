@@ -7,7 +7,6 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monit
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_timer_notifier.g.dart';

@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

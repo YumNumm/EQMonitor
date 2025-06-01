@@ -20,7 +20,7 @@ class NotificationRemoteSettingsEarthquakePage extends ConsumerWidget {
     final state =
         ref
             .watch(notificationRemoteSettingsNotifierProvider)
-            .valueOrNull
+            .value
             ?.earthquake;
     if (state == null) {
       return const Center(child: CircularProgressIndicator.adaptive());

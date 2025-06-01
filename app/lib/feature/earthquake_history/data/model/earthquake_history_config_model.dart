@@ -4,7 +4,7 @@ part 'earthquake_history_config_model.freezed.dart';
 part 'earthquake_history_config_model.g.dart';
 
 @freezed
-class EarthquakeHistoryConfig with _$EarthquakeHistoryConfig {
+abstract class EarthquakeHistoryConfig with _$EarthquakeHistoryConfig {
   const factory EarthquakeHistoryConfig({
     required EarthquakeHistoryListConfig list,
     required EarthquakeHistoryDetailConfig detail,
@@ -15,7 +15,7 @@ class EarthquakeHistoryConfig with _$EarthquakeHistoryConfig {
 }
 
 @freezed
-class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
+abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
   const factory EarthquakeHistoryListConfig({
     /// 背景塗りつぶしの有無
     @Default(true) bool isFillBackground,
@@ -26,7 +26,8 @@ class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
 }
 
 @freezed
-class EarthquakeHistoryDetailConfig with _$EarthquakeHistoryDetailConfig {
+abstract class EarthquakeHistoryDetailConfig
+    with _$EarthquakeHistoryDetailConfig {
   const factory EarthquakeHistoryDetailConfig({
     /// 震度の表示方法
     @Default(IntensityFillMode.fillCity) IntensityFillMode intensityFillMode,

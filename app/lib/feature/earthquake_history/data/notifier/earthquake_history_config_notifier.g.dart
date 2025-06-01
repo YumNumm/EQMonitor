@@ -8,26 +8,73 @@ part of 'earthquake_history_config_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+@ProviderFor(EarthquakeHistoryConfigNotifier)
+const earthquakeHistoryConfigNotifierProvider =
+    EarthquakeHistoryConfigNotifierProvider._();
+
+final class EarthquakeHistoryConfigNotifierProvider
+    extends
+        $NotifierProvider<
+          EarthquakeHistoryConfigNotifier,
+          EarthquakeHistoryConfig
+        > {
+  const EarthquakeHistoryConfigNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'earthquakeHistoryConfigNotifierProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$earthquakeHistoryConfigNotifierHash();
+
+  @$internal
+  @override
+  EarthquakeHistoryConfigNotifier create() => EarthquakeHistoryConfigNotifier();
+
+  @$internal
+  @override
+  $NotifierProviderElement<
+    EarthquakeHistoryConfigNotifier,
+    EarthquakeHistoryConfig
+  >
+  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EarthquakeHistoryConfig value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $ValueProvider<EarthquakeHistoryConfig>(value),
+    );
+  }
+}
+
 String _$earthquakeHistoryConfigNotifierHash() =>
     r'c133b5e0380ca6ba952eedc00a37ae65284751cd';
 
-/// See also [EarthquakeHistoryConfigNotifier].
-@ProviderFor(EarthquakeHistoryConfigNotifier)
-final earthquakeHistoryConfigNotifierProvider = AutoDisposeNotifierProvider<
-  EarthquakeHistoryConfigNotifier,
-  EarthquakeHistoryConfig
->.internal(
-  EarthquakeHistoryConfigNotifier.new,
-  name: r'earthquakeHistoryConfigNotifierProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$earthquakeHistoryConfigNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$EarthquakeHistoryConfigNotifier
+    extends $Notifier<EarthquakeHistoryConfig> {
+  EarthquakeHistoryConfig build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<EarthquakeHistoryConfig>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<EarthquakeHistoryConfig>,
+              EarthquakeHistoryConfig,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$EarthquakeHistoryConfigNotifier =
-    AutoDisposeNotifier<EarthquakeHistoryConfig>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

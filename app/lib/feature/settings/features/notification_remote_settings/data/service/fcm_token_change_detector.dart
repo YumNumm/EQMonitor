@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fcm_token_change_detector.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class FcmTokenChangeDetector extends _$FcmTokenChangeDetector {
   @override
   Future<bool> build() async {
@@ -16,7 +16,7 @@ class FcmTokenChangeDetector extends _$FcmTokenChangeDetector {
     return true;
   }
 
-  static const String _prefsKey = 'fcmTokenChangeDetector';
+  static const _prefsKey = 'fcmTokenChangeDetector';
 
   String? _load() {
     final prefs = ref.watch(sharedPreferencesProvider);

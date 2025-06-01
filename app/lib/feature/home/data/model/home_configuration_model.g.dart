@@ -8,13 +8,13 @@ part of 'home_configuration_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$HomeConfigurationModelImpl _$$HomeConfigurationModelImplFromJson(
+_HomeConfigurationModel _$HomeConfigurationModelFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$HomeConfigurationModelImpl',
+  '_HomeConfigurationModel',
   json,
   ($checkedConvert) {
-    final val = _$HomeConfigurationModelImpl(
+    final val = _HomeConfigurationModel(
       showLocation: $checkedConvert(
         'show_location',
         (v) => v as bool? ?? false,
@@ -25,6 +25,6 @@ _$HomeConfigurationModelImpl _$$HomeConfigurationModelImplFromJson(
   fieldKeyMap: const {'showLocation': 'show_location'},
 );
 
-Map<String, dynamic> _$$HomeConfigurationModelImplToJson(
-  _$HomeConfigurationModelImpl instance,
+Map<String, dynamic> _$HomeConfigurationModelToJson(
+  _HomeConfigurationModel instance,
 ) => <String, dynamic>{'show_location': instance.showLocation};

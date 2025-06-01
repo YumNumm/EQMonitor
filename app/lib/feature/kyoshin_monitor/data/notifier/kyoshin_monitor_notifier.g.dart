@@ -8,23 +8,59 @@ part of 'kyoshin_monitor_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+@ProviderFor(KyoshinMonitorNotifier)
+const kyoshinMonitorNotifierProvider = KyoshinMonitorNotifierProvider._();
+
+final class KyoshinMonitorNotifierProvider
+    extends
+        $AsyncNotifierProvider<KyoshinMonitorNotifier, KyoshinMonitorState> {
+  const KyoshinMonitorNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kyoshinMonitorNotifierProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kyoshinMonitorNotifierHash();
+
+  @$internal
+  @override
+  KyoshinMonitorNotifier create() => KyoshinMonitorNotifier();
+
+  @$internal
+  @override
+  $AsyncNotifierProviderElement<KyoshinMonitorNotifier, KyoshinMonitorState>
+  $createElement($ProviderPointer pointer) =>
+      $AsyncNotifierProviderElement(pointer);
+}
+
 String _$kyoshinMonitorNotifierHash() =>
     r'75d77e477b5ff51625a240d35d0c36f27b2e551e';
 
-/// See also [KyoshinMonitorNotifier].
-@ProviderFor(KyoshinMonitorNotifier)
-final kyoshinMonitorNotifierProvider =
-    AsyncNotifierProvider<KyoshinMonitorNotifier, KyoshinMonitorState>.internal(
-      KyoshinMonitorNotifier.new,
-      name: r'kyoshinMonitorNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$kyoshinMonitorNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$KyoshinMonitorNotifier
+    extends $AsyncNotifier<KyoshinMonitorState> {
+  FutureOr<KyoshinMonitorState> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<KyoshinMonitorState>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<KyoshinMonitorState>>,
+              AsyncValue<KyoshinMonitorState>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$KyoshinMonitorNotifier = AsyncNotifier<KyoshinMonitorState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
