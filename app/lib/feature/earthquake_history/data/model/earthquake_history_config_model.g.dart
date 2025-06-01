@@ -8,10 +8,10 @@ part of 'earthquake_history_config_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EarthquakeHistoryConfigImpl _$$EarthquakeHistoryConfigImplFromJson(
+_EarthquakeHistoryConfig _$EarthquakeHistoryConfigFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$EarthquakeHistoryConfigImpl', json, ($checkedConvert) {
-  final val = _$EarthquakeHistoryConfigImpl(
+) => $checkedCreate('_EarthquakeHistoryConfig', json, ($checkedConvert) {
+  final val = _EarthquakeHistoryConfig(
     list: $checkedConvert(
       'list',
       (v) => EarthquakeHistoryListConfig.fromJson(v as Map<String, dynamic>),
@@ -24,17 +24,17 @@ _$EarthquakeHistoryConfigImpl _$$EarthquakeHistoryConfigImplFromJson(
   return val;
 });
 
-Map<String, dynamic> _$$EarthquakeHistoryConfigImplToJson(
-  _$EarthquakeHistoryConfigImpl instance,
+Map<String, dynamic> _$EarthquakeHistoryConfigToJson(
+  _EarthquakeHistoryConfig instance,
 ) => <String, dynamic>{'list': instance.list, 'detail': instance.detail};
 
-_$EarthquakeHistoryListConfigImpl _$$EarthquakeHistoryListConfigImplFromJson(
+_EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$EarthquakeHistoryListConfigImpl',
+  '_EarthquakeHistoryListConfig',
   json,
   ($checkedConvert) {
-    final val = _$EarthquakeHistoryListConfigImpl(
+    final val = _EarthquakeHistoryListConfig(
       isFillBackground: $checkedConvert(
         'is_fill_background',
         (v) => v as bool? ?? true,
@@ -45,43 +45,43 @@ _$EarthquakeHistoryListConfigImpl _$$EarthquakeHistoryListConfigImplFromJson(
   fieldKeyMap: const {'isFillBackground': 'is_fill_background'},
 );
 
-Map<String, dynamic> _$$EarthquakeHistoryListConfigImplToJson(
-  _$EarthquakeHistoryListConfigImpl instance,
+Map<String, dynamic> _$EarthquakeHistoryListConfigToJson(
+  _EarthquakeHistoryListConfig instance,
 ) => <String, dynamic>{'is_fill_background': instance.isFillBackground};
 
-_$EarthquakeHistoryDetailConfigImpl
-_$$EarthquakeHistoryDetailConfigImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$EarthquakeHistoryDetailConfigImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$EarthquakeHistoryDetailConfigImpl(
-          intensityFillMode: $checkedConvert(
-            'intensity_fill_mode',
-            (v) =>
-                $enumDecodeNullable(_$IntensityFillModeEnumMap, v) ??
-                IntensityFillMode.fillCity,
-          ),
-          showIntensityIcon: $checkedConvert(
-            'show_intensity_icon',
-            (v) => v as bool? ?? true,
-          ),
-          showingLpgmIntensity: $checkedConvert(
-            'showing_lpgm_intensity',
-            (v) => v as bool? ?? false,
-          ),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'intensityFillMode': 'intensity_fill_mode',
-        'showIntensityIcon': 'show_intensity_icon',
-        'showingLpgmIntensity': 'showing_lpgm_intensity',
-      },
+_EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_EarthquakeHistoryDetailConfig',
+  json,
+  ($checkedConvert) {
+    final val = _EarthquakeHistoryDetailConfig(
+      intensityFillMode: $checkedConvert(
+        'intensity_fill_mode',
+        (v) =>
+            $enumDecodeNullable(_$IntensityFillModeEnumMap, v) ??
+            IntensityFillMode.fillCity,
+      ),
+      showIntensityIcon: $checkedConvert(
+        'show_intensity_icon',
+        (v) => v as bool? ?? true,
+      ),
+      showingLpgmIntensity: $checkedConvert(
+        'showing_lpgm_intensity',
+        (v) => v as bool? ?? false,
+      ),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'intensityFillMode': 'intensity_fill_mode',
+    'showIntensityIcon': 'show_intensity_icon',
+    'showingLpgmIntensity': 'showing_lpgm_intensity',
+  },
+);
 
-Map<String, dynamic> _$$EarthquakeHistoryDetailConfigImplToJson(
-  _$EarthquakeHistoryDetailConfigImpl instance,
+Map<String, dynamic> _$EarthquakeHistoryDetailConfigToJson(
+  _EarthquakeHistoryDetailConfig instance,
 ) => <String, dynamic>{
   'intensity_fill_mode':
       _$IntensityFillModeEnumMap[instance.intensityFillMode]!,

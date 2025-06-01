@@ -8,177 +8,112 @@ part of 'earthquake_history_details_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'178de95240b3fa55e3d7823083315dd3b5f73c07';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$EarthquakeHistoryDetailsNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeV1Extended> {
-  late final int eventId;
-
-  FutureOr<EarthquakeV1Extended> build(int eventId);
-}
-
-/// See also [EarthquakeHistoryDetailsNotifier].
 @ProviderFor(EarthquakeHistoryDetailsNotifier)
 const earthquakeHistoryDetailsNotifierProvider =
-    EarthquakeHistoryDetailsNotifierFamily();
+    EarthquakeHistoryDetailsNotifierFamily._();
 
-/// See also [EarthquakeHistoryDetailsNotifier].
-class EarthquakeHistoryDetailsNotifierFamily
-    extends Family<AsyncValue<EarthquakeV1Extended>> {
-  /// See also [EarthquakeHistoryDetailsNotifier].
-  const EarthquakeHistoryDetailsNotifierFamily();
-
-  /// See also [EarthquakeHistoryDetailsNotifier].
-  EarthquakeHistoryDetailsNotifierProvider call(int eventId) {
-    return EarthquakeHistoryDetailsNotifierProvider(eventId);
-  }
-
-  @override
-  EarthquakeHistoryDetailsNotifierProvider getProviderOverride(
-    covariant EarthquakeHistoryDetailsNotifierProvider provider,
-  ) {
-    return call(provider.eventId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'earthquakeHistoryDetailsNotifierProvider';
-}
-
-/// See also [EarthquakeHistoryDetailsNotifier].
-class EarthquakeHistoryDetailsNotifierProvider
+final class EarthquakeHistoryDetailsNotifierProvider
     extends
-        AutoDisposeAsyncNotifierProviderImpl<
+        $AsyncNotifierProvider<
           EarthquakeHistoryDetailsNotifier,
           EarthquakeV1Extended
         > {
-  /// See also [EarthquakeHistoryDetailsNotifier].
-  EarthquakeHistoryDetailsNotifierProvider(int eventId)
-    : this._internal(
-        () => EarthquakeHistoryDetailsNotifier()..eventId = eventId,
-        from: earthquakeHistoryDetailsNotifierProvider,
-        name: r'earthquakeHistoryDetailsNotifierProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$earthquakeHistoryDetailsNotifierHash,
-        dependencies: EarthquakeHistoryDetailsNotifierFamily._dependencies,
-        allTransitiveDependencies:
-            EarthquakeHistoryDetailsNotifierFamily._allTransitiveDependencies,
-        eventId: eventId,
-      );
-
-  EarthquakeHistoryDetailsNotifierProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.eventId,
-  }) : super.internal();
-
-  final int eventId;
+  const EarthquakeHistoryDetailsNotifierProvider._({
+    required EarthquakeHistoryDetailsNotifierFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'earthquakeHistoryDetailsNotifierProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  FutureOr<EarthquakeV1Extended> runNotifierBuild(
-    covariant EarthquakeHistoryDetailsNotifier notifier,
-  ) {
-    return notifier.build(eventId);
+  String debugGetCreateSourceHash() => _$earthquakeHistoryDetailsNotifierHash();
+
+  @override
+  String toString() {
+    return r'earthquakeHistoryDetailsNotifierProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Override overrideWith(EarthquakeHistoryDetailsNotifier Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: EarthquakeHistoryDetailsNotifierProvider._internal(
-        () => create()..eventId = eventId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        eventId: eventId,
-      ),
-    );
-  }
+  EarthquakeHistoryDetailsNotifier create() =>
+      EarthquakeHistoryDetailsNotifier();
 
+  @$internal
   @override
-  AutoDisposeAsyncNotifierProviderElement<
+  $AsyncNotifierProviderElement<
     EarthquakeHistoryDetailsNotifier,
     EarthquakeV1Extended
   >
-  createElement() {
-    return _EarthquakeHistoryDetailsNotifierProviderElement(this);
-  }
+  $createElement($ProviderPointer pointer) =>
+      $AsyncNotifierProviderElement(pointer);
 
   @override
   bool operator ==(Object other) {
     return other is EarthquakeHistoryDetailsNotifierProvider &&
-        other.eventId == eventId;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, eventId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin EarthquakeHistoryDetailsNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<EarthquakeV1Extended> {
-  /// The parameter `eventId` of this provider.
-  int get eventId;
-}
+String _$earthquakeHistoryDetailsNotifierHash() =>
+    r'8cdbb878aba7678a78260d89fc29555f5d9b54bc';
 
-class _EarthquakeHistoryDetailsNotifierProviderElement
-    extends
-        AutoDisposeAsyncNotifierProviderElement<
+final class EarthquakeHistoryDetailsNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
           EarthquakeHistoryDetailsNotifier,
-          EarthquakeV1Extended
-        >
-    with EarthquakeHistoryDetailsNotifierRef {
-  _EarthquakeHistoryDetailsNotifierProviderElement(super.provider);
+          AsyncValue<EarthquakeV1Extended>,
+          EarthquakeV1Extended,
+          FutureOr<EarthquakeV1Extended>,
+          int
+        > {
+  const EarthquakeHistoryDetailsNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'earthquakeHistoryDetailsNotifierProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  EarthquakeHistoryDetailsNotifierProvider call(int eventId) =>
+      EarthquakeHistoryDetailsNotifierProvider._(argument: eventId, from: this);
 
   @override
-  int get eventId =>
-      (origin as EarthquakeHistoryDetailsNotifierProvider).eventId;
+  String toString() => r'earthquakeHistoryDetailsNotifierProvider';
+}
+
+abstract class _$EarthquakeHistoryDetailsNotifier
+    extends $AsyncNotifier<EarthquakeV1Extended> {
+  late final _$args = ref.$arg as int;
+  int get eventId => _$args;
+
+  FutureOr<EarthquakeV1Extended> build(int eventId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<EarthquakeV1Extended>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<EarthquakeV1Extended>>,
+              AsyncValue<EarthquakeV1Extended>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
 }
 
 // ignore_for_file: type=lint

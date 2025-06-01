@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/model/notification_remote_settings_state.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_notifier.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_code_table_types/jma_code_table.pb.dart' as jma_code_table;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

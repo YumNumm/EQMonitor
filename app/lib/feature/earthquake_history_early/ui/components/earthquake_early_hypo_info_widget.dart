@@ -216,11 +216,11 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
         const Row(),
         if (isMagnitudeAndDepthUnknown) ...[
           magnitudeDepthUnknownWidget,
-          if (hypoWidget != null) hypoWidget,
+          ?hypoWidget,
         ] else ...[
           magnitudeWidget,
           depthWidget,
-          if (hypoWidget != null) hypoWidget,
+          ?hypoWidget,
         ],
         const Row(),
         timeWidget,
@@ -251,7 +251,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
           children: [
             Row(
               children: [
-                if (maxIntensityWidget != null) maxIntensityWidget,
+                ?maxIntensityWidget,
                 const SizedBox(width: 4),
                 Expanded(child: body),
               ],

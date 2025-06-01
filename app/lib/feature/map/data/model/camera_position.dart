@@ -8,7 +8,7 @@ part 'camera_position.g.dart';
 
 /// マップのカメラ位置を表すモデル
 @freezed
-class MapCameraPosition with _$MapCameraPosition {
+abstract class MapCameraPosition with _$MapCameraPosition {
   const factory MapCameraPosition({
     /// カメラの中心座標
     required LatLng target,

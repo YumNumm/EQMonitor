@@ -8,23 +8,57 @@ part of 'api_authentication_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$apiAuthenticationNotifierHash() =>
-    r'0545a5e734e8f4585d2aefb2eda67fb10791d1ba';
-
-/// See also [ApiAuthenticationNotifier].
 @ProviderFor(ApiAuthenticationNotifier)
-final apiAuthenticationNotifierProvider =
-    AsyncNotifierProvider<ApiAuthenticationNotifier, String?>.internal(
-      ApiAuthenticationNotifier.new,
-      name: r'apiAuthenticationNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$apiAuthenticationNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+const apiAuthenticationNotifierProvider = ApiAuthenticationNotifierProvider._();
 
-typedef _$ApiAuthenticationNotifier = AsyncNotifier<String?>;
+final class ApiAuthenticationNotifierProvider
+    extends $AsyncNotifierProvider<ApiAuthenticationNotifier, String?> {
+  const ApiAuthenticationNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'apiAuthenticationNotifierProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$apiAuthenticationNotifierHash();
+
+  @$internal
+  @override
+  ApiAuthenticationNotifier create() => ApiAuthenticationNotifier();
+
+  @$internal
+  @override
+  $AsyncNotifierProviderElement<ApiAuthenticationNotifier, String?>
+  $createElement($ProviderPointer pointer) =>
+      $AsyncNotifierProviderElement(pointer);
+}
+
+String _$apiAuthenticationNotifierHash() =>
+    r'58c92c79f8b9c6eaea300322c2ad6d9ed7594881';
+
+abstract class _$ApiAuthenticationNotifier extends $AsyncNotifier<String?> {
+  FutureOr<String?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<String?>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<String?>>,
+              AsyncValue<String?>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -130,7 +130,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                jmaMap.valueOrNull
+                jmaMap.value
                         ?.map((k, v) => MapEntry(k, v.data.length))
                         .toString() ??
                     'null',
@@ -204,7 +204,6 @@ class DebugJmaMapPage extends HookConsumerWidget {
                               height: 16,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             ),
-                            _ => const SizedBox(),
                           },
                         ],
                       ),
@@ -235,13 +234,12 @@ class DebugJmaMapPage extends HookConsumerWidget {
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),
-                        items:
-                            JmaMapType.values.map((type) {
-                              return DropdownMenuItem(
-                                value: type,
-                                child: Text(_getMapTypeName(type)),
-                              );
-                            }).toList(),
+                        items: JmaMapType.values.map((type) {
+                          return DropdownMenuItem(
+                            value: type,
+                            child: Text(_getMapTypeName(type)),
+                          );
+                        }).toList(),
                         onChanged: (value) {
                           if (value != null) {
                             searchResult.value = null;

@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

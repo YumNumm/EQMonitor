@@ -18,7 +18,7 @@ class NotificationRemoteSettingsEewPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state =
-        ref.watch(notificationRemoteSettingsNotifierProvider).valueOrNull?.eew;
+        ref.watch(notificationRemoteSettingsNotifierProvider).value?.eew;
     if (state == null) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }

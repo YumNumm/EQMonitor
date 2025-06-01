@@ -1,12 +1,12 @@
 part of msgpack_dart;
 
-final int _kScratchSizeInitial = 64;
-final int _kScratchSizeRegular = 1024;
+const _kScratchSizeInitial = 64;
+const _kScratchSizeRegular = 1024;
 
 class DataWriter {
   Uint8List? _scratchBuffer;
   ByteData? _scratchData;
-  int _scratchOffset = 0;
+  var _scratchOffset = 0;
 
   void writeUint8(int i) {
     _ensureSize(1);
@@ -89,7 +89,7 @@ class DataWriter {
           bytes,
         );
       } else {
-        for (int i = 0; i < length; i++) {
+        for (var i = 0; i < length; i++) {
           _scratchBuffer?[_scratchOffset + i] = bytes[i];
         }
       }

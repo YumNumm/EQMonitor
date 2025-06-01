@@ -4,7 +4,7 @@ part 'custom_feedback.freezed.dart';
 part 'custom_feedback.g.dart';
 
 @freezed
-class CustomFeedback with _$CustomFeedback {
+abstract class CustomFeedback with _$CustomFeedback {
   const factory CustomFeedback({
     FeedbackType? feedbackType,
 

@@ -8,12 +8,12 @@ part of 'custom_feedback.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CustomFeedbackImpl _$$CustomFeedbackImplFromJson(Map<String, dynamic> json) =>
+_CustomFeedback _$CustomFeedbackFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$CustomFeedbackImpl',
+      '_CustomFeedback',
       json,
       ($checkedConvert) {
-        final val = _$CustomFeedbackImpl(
+        final val = _CustomFeedback(
           feedbackType: $checkedConvert(
             'feedback_type',
             (v) => $enumDecodeNullable(_$FeedbackTypeEnumMap, v),
@@ -36,13 +36,12 @@ _$CustomFeedbackImpl _$$CustomFeedbackImplFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$CustomFeedbackImplToJson(
-  _$CustomFeedbackImpl instance,
-) => <String, dynamic>{
-  'feedback_type': _$FeedbackTypeEnumMap[instance.feedbackType],
-  'is_reply_requested': instance.isReplyRequested,
-  'is_screenshot_attached': instance.isScreenshotAttached,
-};
+Map<String, dynamic> _$CustomFeedbackToJson(_CustomFeedback instance) =>
+    <String, dynamic>{
+      'feedback_type': _$FeedbackTypeEnumMap[instance.feedbackType],
+      'is_reply_requested': instance.isReplyRequested,
+      'is_screenshot_attached': instance.isScreenshotAttached,
+    };
 
 const _$FeedbackTypeEnumMap = {
   FeedbackType.bugReport: 'bugReport',

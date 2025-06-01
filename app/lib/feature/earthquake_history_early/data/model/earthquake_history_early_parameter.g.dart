@@ -8,14 +8,13 @@ part of 'earthquake_history_early_parameter.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EarthquakeHistoryEarlyParameterImpl
-_$$EarthquakeHistoryEarlyParameterImplFromJson(
+_EarthquakeHistoryEarlyParameter _$EarthquakeHistoryEarlyParameterFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$EarthquakeHistoryEarlyParameterImpl',
+  '_EarthquakeHistoryEarlyParameter',
   json,
   ($checkedConvert) {
-    final val = _$EarthquakeHistoryEarlyParameterImpl(
+    final val = _EarthquakeHistoryEarlyParameter(
       sort: $checkedConvert(
         'sort',
         (v) => $enumDecode(_$EarthquakeEarlySortTypeEnumMap, v),
@@ -62,8 +61,8 @@ _$$EarthquakeHistoryEarlyParameterImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$EarthquakeHistoryEarlyParameterImplToJson(
-  _$EarthquakeHistoryEarlyParameterImpl instance,
+Map<String, dynamic> _$EarthquakeHistoryEarlyParameterToJson(
+  _EarthquakeHistoryEarlyParameter instance,
 ) => <String, dynamic>{
   'sort': _$EarthquakeEarlySortTypeEnumMap[instance.sort]!,
   'ascending': instance.ascending,

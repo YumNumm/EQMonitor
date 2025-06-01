@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:extensions/extensions.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -23,7 +22,7 @@ class Eew extends _$Eew {
     // WebSocketのListen開始
     ref
       ..listen(websocketTableMessagesProvider, (_, next) {
-        final valueOrNull = next.valueOrNull;
+        final valueOrNull = next.value;
         if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
           _upsert(valueOrNull.newData);
         }
@@ -59,7 +58,7 @@ class Eew extends _$Eew {
   /// [item]をstateに追加する
   /// 既に同じeventIdが存在する場合は、serialNoが大きい方を採用する
   void _upsert(EewV1 item) {
-    final dataView = state.valueOrNull ?? [];
+    final dataView = state.value ?? [];
     final data = [...dataView];
     final index = data.indexWhereOrNull((e) => e.eventId == item.eventId);
     if (index != null) {

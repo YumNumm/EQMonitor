@@ -42,11 +42,10 @@ class HypocenterIconPage extends ConsumerWidget {
               ),
               Assets.images.map.normalHypocenter.image(width: 100, height: 100),
               FilledButton.icon(
-                onPressed:
-                    () async => _captureAndShare(
-                      controller: normalController,
-                      fileName: 'normal_hypocenter.png',
-                    ),
+                onPressed: () async => _captureAndShare(
+                  controller: normalController,
+                  fileName: 'normal_hypocenter.png',
+                ),
                 icon: const Icon(Icons.share),
                 label: const Text('共有'),
               ),
@@ -82,11 +81,10 @@ class HypocenterIconPage extends ConsumerWidget {
                     height: 100,
                   ),
                   FilledButton.icon(
-                    onPressed:
-                        () async => _captureAndShare(
-                          controller: lowPreciseController,
-                          fileName: 'low_precise_hypocenter.png',
-                        ),
+                    onPressed: () async => _captureAndShare(
+                      controller: lowPreciseController,
+                      fileName: 'low_precise_hypocenter.png',
+                    ),
                     icon: const Icon(Icons.share),
                     label: const Text('共有'),
                   ),
@@ -118,6 +116,7 @@ class HypocenterIconPage extends ConsumerWidget {
 
 class _HypocenterPainter extends CustomPainter {
   const _HypocenterPainter({required this.type});
+
   final HypocenterType type;
 
   @override

@@ -4,7 +4,7 @@ part 'telegram_url_model.freezed.dart';
 part 'telegram_url_model.g.dart';
 
 @freezed
-class TelegramUrlModel with _$TelegramUrlModel {
+abstract class TelegramUrlModel with _$TelegramUrlModel {
   const factory TelegramUrlModel({
     required String restApiUrl,
     required String wsApiUrl,

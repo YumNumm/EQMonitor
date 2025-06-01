@@ -11,17 +11,17 @@ environment:
 resolution: workspace
 
 dependencies:
-  collection: ^1.19.0
-  es_compression: ^2.0.13
-  freezed_annotation: ^2.4.4
+  collection: ^1.19.1
+  es_compression: ^2.0.14
+  freezed_annotation: ^3.0.0
   json_annotation: ^4.9.0
   msgpack_dart:
     path: ../msgpack_dart
 
 dev_dependencies:
-  altive_lints: ^1.14.1
-  build_runner: ^2.4.14
+  altive_lints: ^1.21.0
+  build_runner: ^2.4.15
   eqmonitor_lints:
     path: ../eqmonitor_lints
-  freezed: ^2.5.7
-  json_serializable: ^6.9.0
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5
