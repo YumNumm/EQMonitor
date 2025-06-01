@@ -1,6 +1,6 @@
 {
 	"dart.runPubGetOnPubspecChanges": "never",
-	"dart.flutterSdkPath": ".fvm/versions/3.32.1",
+	"dart.flutterSdkPath": "~/.local/share/mise/installs/flutter/3.32.1-stable",
 	// MEMO(YumNumm): miseの自動構成で`.vscode/mise-tools`配下にシンボリックリンクを作成し、それをツールのパスとして利用する機能を有効にします
 	// 2025/05/02検証時では、bunのみ正常に設定され、それ以外のツールでは絶対パスで設定されました
 	"mise.configureExtensionsUseSymLinks": true,
