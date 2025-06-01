@@ -1,6 +1,6 @@
 {
 	"dart.runPubGetOnPubspecChanges": "never",
-	"dart.flutterSdkPath": ".fvm/versions/3.32.0-0.3.pre",
+	"dart.flutterSdkPath": ".fvm/versions/3.32.1",
 	"search.exclude": {
 		"**/.fvm": true,
 		"*.geojson": true
