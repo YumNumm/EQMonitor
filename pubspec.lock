@@ -1258,6 +1258,7 @@ packages:
     version: "2.0.0"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   mocktail:
     dependency: transitive
     description:
@@ -1269,6 +1270,8 @@ packages:
 =======
 =======
 >>>>>>> 9020734b (Auto format)
+=======
+>>>>>>> a54e97a8 (resolve pubspec.lock)
   mockito:
     dependency: transitive
     description:
@@ -1278,9 +1281,12 @@ packages:
     source: hosted
     version: "5.4.6"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 1f73785b (update deps)
 =======
 =======
+=======
+>>>>>>> a54e97a8 (resolve pubspec.lock)
   mocktail:
     dependency: transitive
     description:
@@ -1289,8 +1295,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+<<<<<<< HEAD
 >>>>>>> fbbb9aa9 (Auto format)
 >>>>>>> 9020734b (Auto format)
+=======
+>>>>>>> a54e97a8 (resolve pubspec.lock)
   mustache_template:
     dependency: transitive
     description:
