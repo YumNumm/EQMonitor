@@ -40,6 +40,8 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
             if (!isInitialized.value) {
               await mapUtility.addHypocenterImages(controller);
 
+              // Remove source if it already exists to prevent duplicates
+              await controller.removeSource(_sourceId);
               await controller.addGeoJsonSource(
                 _sourceId,
                 _createGeoJson(latLng: latLng, hypocenterType: hypocenterType),
@@ -71,18 +73,24 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
     }, [controller]);
 
     useEffect(() {
+      if (!isInitialized.value) {
+        return;
+      }
       unawaited(
         controller.synchronized(() async {
-          await controller.addGeoJsonSource(
+          await controller.setGeoJsonSource(
             _sourceId,
             _createGeoJson(latLng: latLng, hypocenterType: hypocenterType),
           );
         }),
       );
       return null;
-    }, [latLng, controller]);
+    }, [latLng, controller, isInitialized.value]);
 
     useEffect(() {
+      if (!isInitialized.value) {
+        return;
+      }
       unawaited(
         controller.synchronized(() async {
           await controller.setLayerProperties(
@@ -92,7 +100,7 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
         }),
       );
       return null;
-    }, [isVisible, controller]);
+    }, [isVisible, controller, isInitialized.value]);
 
     return const SizedBox.shrink();
   }
