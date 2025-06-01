@@ -1257,6 +1257,7 @@ packages:
     source: hosted
     version: "2.0.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
   mocktail:
     dependency: transitive
     description:
@@ -1266,6 +1267,8 @@ packages:
     source: hosted
     version: "1.0.4"
 =======
+=======
+>>>>>>> 9020734b (Auto format)
   mockito:
     dependency: transitive
     description:
@@ -1274,7 +1277,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.6"
+<<<<<<< HEAD
 >>>>>>> 1f73785b (update deps)
+=======
+=======
+  mocktail:
+    dependency: transitive
+    description:
+      name: mocktail
+      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
+>>>>>>> fbbb9aa9 (Auto format)
+>>>>>>> 9020734b (Auto format)
   mustache_template:
     dependency: transitive
     description:
