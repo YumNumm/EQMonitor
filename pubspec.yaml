@@ -28,6 +28,7 @@ workspace:
 dependencies:
   melos: ^7.0.0-dev.8
 dependency_overrides:
+  freezed_annotation: ^3.0.0
   maplibre_gl:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
