@@ -12,7 +12,6 @@ runs:
 
     - name: Resolve dependencies
       shell: bash
-      working-directory: bff/engine
       run: dart pub get
 
     # https://github.com/actions/cache
