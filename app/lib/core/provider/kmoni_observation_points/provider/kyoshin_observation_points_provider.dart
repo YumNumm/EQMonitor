@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

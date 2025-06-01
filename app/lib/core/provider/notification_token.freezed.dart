@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,206 +10,154 @@ part of 'notification_token.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-NotificationTokenModel _$NotificationTokenModelFromJson(
-  Map<String, dynamic> json,
-) {
-  return _NotificationTokenModel.fromJson(json);
-}
-
 /// @nodoc
-mixin _$NotificationTokenModel {
-  String? get fcmToken => throw _privateConstructorUsedError;
-  String? get apnsToken => throw _privateConstructorUsedError;
+mixin _$NotificationTokenModel implements DiagnosticableTreeMixin {
+
+ String? get fcmToken; String? get apnsToken;
+/// Create a copy of NotificationTokenModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$NotificationTokenModelCopyWith<NotificationTokenModel> get copyWith => _$NotificationTokenModelCopyWithImpl<NotificationTokenModel>(this as NotificationTokenModel, _$identity);
 
   /// Serializes this NotificationTokenModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of NotificationTokenModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationTokenModelCopyWith<NotificationTokenModel> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'NotificationTokenModel'))
+    ..add(DiagnosticsProperty('fcmToken', fcmToken))..add(DiagnosticsProperty('apnsToken', apnsToken));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationTokenModel&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken)&&(identical(other.apnsToken, apnsToken) || other.apnsToken == apnsToken));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,fcmToken,apnsToken);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'NotificationTokenModel(fcmToken: $fcmToken, apnsToken: $apnsToken)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $NotificationTokenModelCopyWith<$Res> {
-  factory $NotificationTokenModelCopyWith(
-    NotificationTokenModel value,
-    $Res Function(NotificationTokenModel) then,
-  ) = _$NotificationTokenModelCopyWithImpl<$Res, NotificationTokenModel>;
-  @useResult
-  $Res call({String? fcmToken, String? apnsToken});
-}
+abstract mixin class $NotificationTokenModelCopyWith<$Res>  {
+  factory $NotificationTokenModelCopyWith(NotificationTokenModel value, $Res Function(NotificationTokenModel) _then) = _$NotificationTokenModelCopyWithImpl;
+@useResult
+$Res call({
+ String? fcmToken, String? apnsToken
+});
 
+
+
+
+}
 /// @nodoc
-class _$NotificationTokenModelCopyWithImpl<
-  $Res,
-  $Val extends NotificationTokenModel
->
+class _$NotificationTokenModelCopyWithImpl<$Res>
     implements $NotificationTokenModelCopyWith<$Res> {
-  _$NotificationTokenModelCopyWithImpl(this._value, this._then);
+  _$NotificationTokenModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final NotificationTokenModel _self;
+  final $Res Function(NotificationTokenModel) _then;
 
-  /// Create a copy of NotificationTokenModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? fcmToken = freezed, Object? apnsToken = freezed}) {
-    return _then(
-      _value.copyWith(
-            fcmToken:
-                freezed == fcmToken
-                    ? _value.fcmToken
-                    : fcmToken // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            apnsToken:
-                freezed == apnsToken
-                    ? _value.apnsToken
-                    : apnsToken // ignore: cast_nullable_to_non_nullable
-                        as String?,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of NotificationTokenModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? fcmToken = freezed,Object? apnsToken = freezed,}) {
+  return _then(_self.copyWith(
+fcmToken: freezed == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
+as String?,apnsToken: freezed == apnsToken ? _self.apnsToken : apnsToken // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$NotificationTokenModelImplCopyWith<$Res>
-    implements $NotificationTokenModelCopyWith<$Res> {
-  factory _$$NotificationTokenModelImplCopyWith(
-    _$NotificationTokenModelImpl value,
-    $Res Function(_$NotificationTokenModelImpl) then,
-  ) = __$$NotificationTokenModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String? fcmToken, String? apnsToken});
 }
 
-/// @nodoc
-class __$$NotificationTokenModelImplCopyWithImpl<$Res>
-    extends
-        _$NotificationTokenModelCopyWithImpl<$Res, _$NotificationTokenModelImpl>
-    implements _$$NotificationTokenModelImplCopyWith<$Res> {
-  __$$NotificationTokenModelImplCopyWithImpl(
-    _$NotificationTokenModelImpl _value,
-    $Res Function(_$NotificationTokenModelImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of NotificationTokenModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? fcmToken = freezed, Object? apnsToken = freezed}) {
-    return _then(
-      _$NotificationTokenModelImpl(
-        fcmToken:
-            freezed == fcmToken
-                ? _value.fcmToken
-                : fcmToken // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        apnsToken:
-            freezed == apnsToken
-                ? _value.apnsToken
-                : apnsToken // ignore: cast_nullable_to_non_nullable
-                    as String?,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$NotificationTokenModelImpl
-    with DiagnosticableTreeMixin
-    implements _NotificationTokenModel {
-  const _$NotificationTokenModelImpl({
-    required this.fcmToken,
-    required this.apnsToken,
-  });
 
-  factory _$NotificationTokenModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$NotificationTokenModelImplFromJson(json);
+class _NotificationTokenModel with DiagnosticableTreeMixin implements NotificationTokenModel {
+  const _NotificationTokenModel({required this.fcmToken, required this.apnsToken});
+  factory _NotificationTokenModel.fromJson(Map<String, dynamic> json) => _$NotificationTokenModelFromJson(json);
 
-  @override
-  final String? fcmToken;
-  @override
-  final String? apnsToken;
+@override final  String? fcmToken;
+@override final  String? apnsToken;
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'NotificationTokenModel(fcmToken: $fcmToken, apnsToken: $apnsToken)';
-  }
+/// Create a copy of NotificationTokenModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$NotificationTokenModelCopyWith<_NotificationTokenModel> get copyWith => __$NotificationTokenModelCopyWithImpl<_NotificationTokenModel>(this, _$identity);
 
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'NotificationTokenModel'))
-      ..add(DiagnosticsProperty('fcmToken', fcmToken))
-      ..add(DiagnosticsProperty('apnsToken', apnsToken));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$NotificationTokenModelImpl &&
-            (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken) &&
-            (identical(other.apnsToken, apnsToken) ||
-                other.apnsToken == apnsToken));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, fcmToken, apnsToken);
-
-  /// Create a copy of NotificationTokenModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$NotificationTokenModelImplCopyWith<_$NotificationTokenModelImpl>
-  get copyWith =>
-      __$$NotificationTokenModelImplCopyWithImpl<_$NotificationTokenModelImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$NotificationTokenModelImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$NotificationTokenModelToJson(this, );
+}
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'NotificationTokenModel'))
+    ..add(DiagnosticsProperty('fcmToken', fcmToken))..add(DiagnosticsProperty('apnsToken', apnsToken));
 }
 
-abstract class _NotificationTokenModel implements NotificationTokenModel {
-  const factory _NotificationTokenModel({
-    required final String? fcmToken,
-    required final String? apnsToken,
-  }) = _$NotificationTokenModelImpl;
-
-  factory _NotificationTokenModel.fromJson(Map<String, dynamic> json) =
-      _$NotificationTokenModelImpl.fromJson;
-
-  @override
-  String? get fcmToken;
-  @override
-  String? get apnsToken;
-
-  /// Create a copy of NotificationTokenModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NotificationTokenModelImplCopyWith<_$NotificationTokenModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationTokenModel&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken)&&(identical(other.apnsToken, apnsToken) || other.apnsToken == apnsToken));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,fcmToken,apnsToken);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'NotificationTokenModel(fcmToken: $fcmToken, apnsToken: $apnsToken)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$NotificationTokenModelCopyWith<$Res> implements $NotificationTokenModelCopyWith<$Res> {
+  factory _$NotificationTokenModelCopyWith(_NotificationTokenModel value, $Res Function(_NotificationTokenModel) _then) = __$NotificationTokenModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String? fcmToken, String? apnsToken
+});
+
+
+
+
+}
+/// @nodoc
+class __$NotificationTokenModelCopyWithImpl<$Res>
+    implements _$NotificationTokenModelCopyWith<$Res> {
+  __$NotificationTokenModelCopyWithImpl(this._self, this._then);
+
+  final _NotificationTokenModel _self;
+  final $Res Function(_NotificationTokenModel) _then;
+
+/// Create a copy of NotificationTokenModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? fcmToken = freezed,Object? apnsToken = freezed,}) {
+  return _then(_NotificationTokenModel(
+fcmToken: freezed == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
+as String?,apnsToken: freezed == apnsToken ? _self.apnsToken : apnsToken // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

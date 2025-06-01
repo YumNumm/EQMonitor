@@ -9,7 +9,7 @@ part 'kyoshin_monitor_state.freezed.dart';
 part 'kyoshin_monitor_state.g.dart';
 
 @freezed
-class KyoshinMonitorState with _$KyoshinMonitorState {
+abstract class KyoshinMonitorState with _$KyoshinMonitorState {
   const factory KyoshinMonitorState({
     RealtimeDataType? currentRealtimeDataType,
     RealtimeLayer? currentRealtimeLayer,
@@ -43,7 +43,7 @@ enum KyoshinMonitorStatus {
 }
 
 @freezed
-class KyoshinMonitorImageParseObservationPoint
+abstract class KyoshinMonitorImageParseObservationPoint
     with _$KyoshinMonitorImageParseObservationPoint {
   const factory KyoshinMonitorImageParseObservationPoint({
     @JsonKey(

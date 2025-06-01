@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,218 +10,145 @@ part of 'ntp_config_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-NtpConfigModel _$NtpConfigModelFromJson(Map<String, dynamic> json) {
-  return _NtpConfigModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$NtpConfigModel {
-  String get lookUpAddress => throw _privateConstructorUsedError;
-  Duration get timeout => throw _privateConstructorUsedError;
-  Duration get interval => throw _privateConstructorUsedError;
+
+ String get lookUpAddress; Duration get timeout; Duration get interval;
+/// Create a copy of NtpConfigModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$NtpConfigModelCopyWith<NtpConfigModel> get copyWith => _$NtpConfigModelCopyWithImpl<NtpConfigModel>(this as NtpConfigModel, _$identity);
 
   /// Serializes this NtpConfigModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of NtpConfigModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $NtpConfigModelCopyWith<NtpConfigModel> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NtpConfigModel&&(identical(other.lookUpAddress, lookUpAddress) || other.lookUpAddress == lookUpAddress)&&(identical(other.timeout, timeout) || other.timeout == timeout)&&(identical(other.interval, interval) || other.interval == interval));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,lookUpAddress,timeout,interval);
+
+@override
+String toString() {
+  return 'NtpConfigModel(lookUpAddress: $lookUpAddress, timeout: $timeout, interval: $interval)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $NtpConfigModelCopyWith<$Res> {
-  factory $NtpConfigModelCopyWith(
-    NtpConfigModel value,
-    $Res Function(NtpConfigModel) then,
-  ) = _$NtpConfigModelCopyWithImpl<$Res, NtpConfigModel>;
-  @useResult
-  $Res call({String lookUpAddress, Duration timeout, Duration interval});
-}
+abstract mixin class $NtpConfigModelCopyWith<$Res>  {
+  factory $NtpConfigModelCopyWith(NtpConfigModel value, $Res Function(NtpConfigModel) _then) = _$NtpConfigModelCopyWithImpl;
+@useResult
+$Res call({
+ String lookUpAddress, Duration timeout, Duration interval
+});
 
+
+
+
+}
 /// @nodoc
-class _$NtpConfigModelCopyWithImpl<$Res, $Val extends NtpConfigModel>
+class _$NtpConfigModelCopyWithImpl<$Res>
     implements $NtpConfigModelCopyWith<$Res> {
-  _$NtpConfigModelCopyWithImpl(this._value, this._then);
+  _$NtpConfigModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final NtpConfigModel _self;
+  final $Res Function(NtpConfigModel) _then;
 
-  /// Create a copy of NtpConfigModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? lookUpAddress = null,
-    Object? timeout = null,
-    Object? interval = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            lookUpAddress:
-                null == lookUpAddress
-                    ? _value.lookUpAddress
-                    : lookUpAddress // ignore: cast_nullable_to_non_nullable
-                        as String,
-            timeout:
-                null == timeout
-                    ? _value.timeout
-                    : timeout // ignore: cast_nullable_to_non_nullable
-                        as Duration,
-            interval:
-                null == interval
-                    ? _value.interval
-                    : interval // ignore: cast_nullable_to_non_nullable
-                        as Duration,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of NtpConfigModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? lookUpAddress = null,Object? timeout = null,Object? interval = null,}) {
+  return _then(_self.copyWith(
+lookUpAddress: null == lookUpAddress ? _self.lookUpAddress : lookUpAddress // ignore: cast_nullable_to_non_nullable
+as String,timeout: null == timeout ? _self.timeout : timeout // ignore: cast_nullable_to_non_nullable
+as Duration,interval: null == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
+as Duration,
+  ));
 }
 
-/// @nodoc
-abstract class _$$NtpConfigModelImplCopyWith<$Res>
-    implements $NtpConfigModelCopyWith<$Res> {
-  factory _$$NtpConfigModelImplCopyWith(
-    _$NtpConfigModelImpl value,
-    $Res Function(_$NtpConfigModelImpl) then,
-  ) = __$$NtpConfigModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String lookUpAddress, Duration timeout, Duration interval});
 }
 
-/// @nodoc
-class __$$NtpConfigModelImplCopyWithImpl<$Res>
-    extends _$NtpConfigModelCopyWithImpl<$Res, _$NtpConfigModelImpl>
-    implements _$$NtpConfigModelImplCopyWith<$Res> {
-  __$$NtpConfigModelImplCopyWithImpl(
-    _$NtpConfigModelImpl _value,
-    $Res Function(_$NtpConfigModelImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of NtpConfigModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? lookUpAddress = null,
-    Object? timeout = null,
-    Object? interval = null,
-  }) {
-    return _then(
-      _$NtpConfigModelImpl(
-        lookUpAddress:
-            null == lookUpAddress
-                ? _value.lookUpAddress
-                : lookUpAddress // ignore: cast_nullable_to_non_nullable
-                    as String,
-        timeout:
-            null == timeout
-                ? _value.timeout
-                : timeout // ignore: cast_nullable_to_non_nullable
-                    as Duration,
-        interval:
-            null == interval
-                ? _value.interval
-                : interval // ignore: cast_nullable_to_non_nullable
-                    as Duration,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$NtpConfigModelImpl implements _NtpConfigModel {
-  const _$NtpConfigModelImpl({
-    this.lookUpAddress = 'ntp.nict.jp',
-    this.timeout = const Duration(seconds: 10),
-    this.interval = const Duration(minutes: 30),
-  });
 
-  factory _$NtpConfigModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$NtpConfigModelImplFromJson(json);
+class _NtpConfigModel implements NtpConfigModel {
+  const _NtpConfigModel({this.lookUpAddress = 'ntp.nict.jp', this.timeout = const Duration(seconds: 10), this.interval = const Duration(minutes: 30)});
+  factory _NtpConfigModel.fromJson(Map<String, dynamic> json) => _$NtpConfigModelFromJson(json);
 
-  @override
-  @JsonKey()
-  final String lookUpAddress;
-  @override
-  @JsonKey()
-  final Duration timeout;
-  @override
-  @JsonKey()
-  final Duration interval;
+@override@JsonKey() final  String lookUpAddress;
+@override@JsonKey() final  Duration timeout;
+@override@JsonKey() final  Duration interval;
 
-  @override
-  String toString() {
-    return 'NtpConfigModel(lookUpAddress: $lookUpAddress, timeout: $timeout, interval: $interval)';
-  }
+/// Create a copy of NtpConfigModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$NtpConfigModelCopyWith<_NtpConfigModel> get copyWith => __$NtpConfigModelCopyWithImpl<_NtpConfigModel>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$NtpConfigModelImpl &&
-            (identical(other.lookUpAddress, lookUpAddress) ||
-                other.lookUpAddress == lookUpAddress) &&
-            (identical(other.timeout, timeout) || other.timeout == timeout) &&
-            (identical(other.interval, interval) ||
-                other.interval == interval));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, lookUpAddress, timeout, interval);
-
-  /// Create a copy of NtpConfigModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$NtpConfigModelImplCopyWith<_$NtpConfigModelImpl> get copyWith =>
-      __$$NtpConfigModelImplCopyWithImpl<_$NtpConfigModelImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$NtpConfigModelImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$NtpConfigModelToJson(this, );
 }
 
-abstract class _NtpConfigModel implements NtpConfigModel {
-  const factory _NtpConfigModel({
-    final String lookUpAddress,
-    final Duration timeout,
-    final Duration interval,
-  }) = _$NtpConfigModelImpl;
-
-  factory _NtpConfigModel.fromJson(Map<String, dynamic> json) =
-      _$NtpConfigModelImpl.fromJson;
-
-  @override
-  String get lookUpAddress;
-  @override
-  Duration get timeout;
-  @override
-  Duration get interval;
-
-  /// Create a copy of NtpConfigModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NtpConfigModelImplCopyWith<_$NtpConfigModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NtpConfigModel&&(identical(other.lookUpAddress, lookUpAddress) || other.lookUpAddress == lookUpAddress)&&(identical(other.timeout, timeout) || other.timeout == timeout)&&(identical(other.interval, interval) || other.interval == interval));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,lookUpAddress,timeout,interval);
+
+@override
+String toString() {
+  return 'NtpConfigModel(lookUpAddress: $lookUpAddress, timeout: $timeout, interval: $interval)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$NtpConfigModelCopyWith<$Res> implements $NtpConfigModelCopyWith<$Res> {
+  factory _$NtpConfigModelCopyWith(_NtpConfigModel value, $Res Function(_NtpConfigModel) _then) = __$NtpConfigModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String lookUpAddress, Duration timeout, Duration interval
+});
+
+
+
+
+}
+/// @nodoc
+class __$NtpConfigModelCopyWithImpl<$Res>
+    implements _$NtpConfigModelCopyWith<$Res> {
+  __$NtpConfigModelCopyWithImpl(this._self, this._then);
+
+  final _NtpConfigModel _self;
+  final $Res Function(_NtpConfigModel) _then;
+
+/// Create a copy of NtpConfigModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? lookUpAddress = null,Object? timeout = null,Object? interval = null,}) {
+  return _then(_NtpConfigModel(
+lookUpAddress: null == lookUpAddress ? _self.lookUpAddress : lookUpAddress // ignore: cast_nullable_to_non_nullable
+as String,timeout: null == timeout ? _self.timeout : timeout // ignore: cast_nullable_to_non_nullable
+as Duration,interval: null == interval ? _self.interval : interval // ignore: cast_nullable_to_non_nullable
+as Duration,
+  ));
+}
+
+
+}
+
+// dart format on

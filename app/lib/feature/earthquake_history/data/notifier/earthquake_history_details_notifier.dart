@@ -23,7 +23,7 @@ class EarthquakeHistoryDetailsNotifier
       earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter()),
       (_, next) {
         if (next is AsyncData) {
-          final earthquakes = next.valueOrNull;
+          final earthquakes = next.value;
           final target = earthquakes?.$1.firstWhereOrNull(
             (earthquake) => earthquake.eventId == eventId,
           );

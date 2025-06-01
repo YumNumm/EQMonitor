@@ -12,10 +12,10 @@ class DateRangeFilterChip extends StatelessWidget {
   final DateTime? min;
   final DateTime? max;
 
-  static DateTime initialMin = DateTime(1919);
-  static DateTime initialMax = DateTime.now();
+  static final initialMin = DateTime(1919);
+  static final initialMax = DateTime.now();
 
-  static DateFormat format = DateFormat('yyyy/MM/dd');
+  static final format = DateFormat('yyyy/MM/dd');
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +35,12 @@ class DateRangeFilterChip extends StatelessWidget {
           onChanged?.call(result.start, result.end);
         }
       },
-      label:
-          (range.isAllSelected)
-              ? const Text('地震発生日')
-              : Text(range.toRangeString),
-      onDeleted:
-          range.isAllSelected
-              ? null
-              : () => onChanged?.call(initialMin, initialMax),
+      label: (range.isAllSelected)
+          ? const Text('地震発生日')
+          : Text(range.toRangeString),
+      onDeleted: range.isAllSelected
+          ? null
+          : () => onChanged?.call(initialMin, initialMax),
       selected: !range.isAllSelected,
       selectedColor: Theme.of(context).colorScheme.secondaryContainer,
     );

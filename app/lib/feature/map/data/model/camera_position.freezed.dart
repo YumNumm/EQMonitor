@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,257 +10,156 @@ part of 'camera_position.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-MapCameraPosition _$MapCameraPositionFromJson(Map<String, dynamic> json) {
-  return _MapCameraPosition.fromJson(json);
-}
 
 /// @nodoc
 mixin _$MapCameraPosition {
-  /// カメラの中心座標
-  LatLng get target => throw _privateConstructorUsedError;
 
-  /// ズームレベル
-  double get zoom => throw _privateConstructorUsedError;
-
-  /// カメラの傾き (0-60)
-  double get tilt => throw _privateConstructorUsedError;
-
-  /// カメラの向き (0-360)
-  double get bearing => throw _privateConstructorUsedError;
+/// カメラの中心座標
+ LatLng get target;/// ズームレベル
+ double get zoom;/// カメラの傾き (0-60)
+ double get tilt;/// カメラの向き (0-360)
+ double get bearing;
+/// Create a copy of MapCameraPosition
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MapCameraPositionCopyWith<MapCameraPosition> get copyWith => _$MapCameraPositionCopyWithImpl<MapCameraPosition>(this as MapCameraPosition, _$identity);
 
   /// Serializes this MapCameraPosition to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of MapCameraPosition
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $MapCameraPositionCopyWith<MapCameraPosition> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapCameraPosition&&(identical(other.target, target) || other.target == target)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.tilt, tilt) || other.tilt == tilt)&&(identical(other.bearing, bearing) || other.bearing == bearing));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,target,zoom,tilt,bearing);
+
+@override
+String toString() {
+  return 'MapCameraPosition(target: $target, zoom: $zoom, tilt: $tilt, bearing: $bearing)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $MapCameraPositionCopyWith<$Res> {
-  factory $MapCameraPositionCopyWith(
-    MapCameraPosition value,
-    $Res Function(MapCameraPosition) then,
-  ) = _$MapCameraPositionCopyWithImpl<$Res, MapCameraPosition>;
-  @useResult
-  $Res call({LatLng target, double zoom, double tilt, double bearing});
-}
+abstract mixin class $MapCameraPositionCopyWith<$Res>  {
+  factory $MapCameraPositionCopyWith(MapCameraPosition value, $Res Function(MapCameraPosition) _then) = _$MapCameraPositionCopyWithImpl;
+@useResult
+$Res call({
+ LatLng target, double zoom, double tilt, double bearing
+});
 
+
+
+
+}
 /// @nodoc
-class _$MapCameraPositionCopyWithImpl<$Res, $Val extends MapCameraPosition>
+class _$MapCameraPositionCopyWithImpl<$Res>
     implements $MapCameraPositionCopyWith<$Res> {
-  _$MapCameraPositionCopyWithImpl(this._value, this._then);
+  _$MapCameraPositionCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final MapCameraPosition _self;
+  final $Res Function(MapCameraPosition) _then;
 
-  /// Create a copy of MapCameraPosition
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? target = null,
-    Object? zoom = null,
-    Object? tilt = null,
-    Object? bearing = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            target:
-                null == target
-                    ? _value.target
-                    : target // ignore: cast_nullable_to_non_nullable
-                        as LatLng,
-            zoom:
-                null == zoom
-                    ? _value.zoom
-                    : zoom // ignore: cast_nullable_to_non_nullable
-                        as double,
-            tilt:
-                null == tilt
-                    ? _value.tilt
-                    : tilt // ignore: cast_nullable_to_non_nullable
-                        as double,
-            bearing:
-                null == bearing
-                    ? _value.bearing
-                    : bearing // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of MapCameraPosition
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? target = null,Object? zoom = null,Object? tilt = null,Object? bearing = null,}) {
+  return _then(_self.copyWith(
+target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
+as LatLng,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
+as double,tilt: null == tilt ? _self.tilt : tilt // ignore: cast_nullable_to_non_nullable
+as double,bearing: null == bearing ? _self.bearing : bearing // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
 }
 
-/// @nodoc
-abstract class _$$MapCameraPositionImplCopyWith<$Res>
-    implements $MapCameraPositionCopyWith<$Res> {
-  factory _$$MapCameraPositionImplCopyWith(
-    _$MapCameraPositionImpl value,
-    $Res Function(_$MapCameraPositionImpl) then,
-  ) = __$$MapCameraPositionImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({LatLng target, double zoom, double tilt, double bearing});
 }
 
-/// @nodoc
-class __$$MapCameraPositionImplCopyWithImpl<$Res>
-    extends _$MapCameraPositionCopyWithImpl<$Res, _$MapCameraPositionImpl>
-    implements _$$MapCameraPositionImplCopyWith<$Res> {
-  __$$MapCameraPositionImplCopyWithImpl(
-    _$MapCameraPositionImpl _value,
-    $Res Function(_$MapCameraPositionImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of MapCameraPosition
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? target = null,
-    Object? zoom = null,
-    Object? tilt = null,
-    Object? bearing = null,
-  }) {
-    return _then(
-      _$MapCameraPositionImpl(
-        target:
-            null == target
-                ? _value.target
-                : target // ignore: cast_nullable_to_non_nullable
-                    as LatLng,
-        zoom:
-            null == zoom
-                ? _value.zoom
-                : zoom // ignore: cast_nullable_to_non_nullable
-                    as double,
-        tilt:
-            null == tilt
-                ? _value.tilt
-                : tilt // ignore: cast_nullable_to_non_nullable
-                    as double,
-        bearing:
-            null == bearing
-                ? _value.bearing
-                : bearing // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$MapCameraPositionImpl extends _MapCameraPosition {
-  const _$MapCameraPositionImpl({
-    required this.target,
-    this.zoom = 5.0,
-    this.tilt = 0.0,
-    this.bearing = 0.0,
-  }) : super._();
 
-  factory _$MapCameraPositionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MapCameraPositionImplFromJson(json);
+class _MapCameraPosition extends MapCameraPosition {
+  const _MapCameraPosition({required this.target, this.zoom = 5.0, this.tilt = 0.0, this.bearing = 0.0}): super._();
+  factory _MapCameraPosition.fromJson(Map<String, dynamic> json) => _$MapCameraPositionFromJson(json);
 
-  /// カメラの中心座標
-  @override
-  final LatLng target;
+/// カメラの中心座標
+@override final  LatLng target;
+/// ズームレベル
+@override@JsonKey() final  double zoom;
+/// カメラの傾き (0-60)
+@override@JsonKey() final  double tilt;
+/// カメラの向き (0-360)
+@override@JsonKey() final  double bearing;
 
-  /// ズームレベル
-  @override
-  @JsonKey()
-  final double zoom;
+/// Create a copy of MapCameraPosition
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MapCameraPositionCopyWith<_MapCameraPosition> get copyWith => __$MapCameraPositionCopyWithImpl<_MapCameraPosition>(this, _$identity);
 
-  /// カメラの傾き (0-60)
-  @override
-  @JsonKey()
-  final double tilt;
-
-  /// カメラの向き (0-360)
-  @override
-  @JsonKey()
-  final double bearing;
-
-  @override
-  String toString() {
-    return 'MapCameraPosition(target: $target, zoom: $zoom, tilt: $tilt, bearing: $bearing)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MapCameraPositionImpl &&
-            (identical(other.target, target) || other.target == target) &&
-            (identical(other.zoom, zoom) || other.zoom == zoom) &&
-            (identical(other.tilt, tilt) || other.tilt == tilt) &&
-            (identical(other.bearing, bearing) || other.bearing == bearing));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, target, zoom, tilt, bearing);
-
-  /// Create a copy of MapCameraPosition
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MapCameraPositionImplCopyWith<_$MapCameraPositionImpl> get copyWith =>
-      __$$MapCameraPositionImplCopyWithImpl<_$MapCameraPositionImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MapCameraPositionImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$MapCameraPositionToJson(this, );
 }
 
-abstract class _MapCameraPosition extends MapCameraPosition {
-  const factory _MapCameraPosition({
-    required final LatLng target,
-    final double zoom,
-    final double tilt,
-    final double bearing,
-  }) = _$MapCameraPositionImpl;
-  const _MapCameraPosition._() : super._();
-
-  factory _MapCameraPosition.fromJson(Map<String, dynamic> json) =
-      _$MapCameraPositionImpl.fromJson;
-
-  /// カメラの中心座標
-  @override
-  LatLng get target;
-
-  /// ズームレベル
-  @override
-  double get zoom;
-
-  /// カメラの傾き (0-60)
-  @override
-  double get tilt;
-
-  /// カメラの向き (0-360)
-  @override
-  double get bearing;
-
-  /// Create a copy of MapCameraPosition
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MapCameraPositionImplCopyWith<_$MapCameraPositionImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapCameraPosition&&(identical(other.target, target) || other.target == target)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.tilt, tilt) || other.tilt == tilt)&&(identical(other.bearing, bearing) || other.bearing == bearing));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,target,zoom,tilt,bearing);
+
+@override
+String toString() {
+  return 'MapCameraPosition(target: $target, zoom: $zoom, tilt: $tilt, bearing: $bearing)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MapCameraPositionCopyWith<$Res> implements $MapCameraPositionCopyWith<$Res> {
+  factory _$MapCameraPositionCopyWith(_MapCameraPosition value, $Res Function(_MapCameraPosition) _then) = __$MapCameraPositionCopyWithImpl;
+@override @useResult
+$Res call({
+ LatLng target, double zoom, double tilt, double bearing
+});
+
+
+
+
+}
+/// @nodoc
+class __$MapCameraPositionCopyWithImpl<$Res>
+    implements _$MapCameraPositionCopyWith<$Res> {
+  __$MapCameraPositionCopyWithImpl(this._self, this._then);
+
+  final _MapCameraPosition _self;
+  final $Res Function(_MapCameraPosition) _then;
+
+/// Create a copy of MapCameraPosition
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? target = null,Object? zoom = null,Object? tilt = null,Object? bearing = null,}) {
+  return _then(_MapCameraPosition(
+target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
+as LatLng,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
+as double,tilt: null == tilt ? _self.tilt : tilt // ignore: cast_nullable_to_non_nullable
+as double,bearing: null == bearing ? _self.bearing : bearing // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element
-
 import 'package:dio/dio.dart';
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
 import 'package:jma_parameter_types/tsunami_param.pb.dart';

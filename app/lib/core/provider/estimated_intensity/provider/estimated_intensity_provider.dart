@@ -8,19 +8,17 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'estimated_intensity_provider.freezed.dart';
 part 'estimated_intensity_provider.g.dart';
 
-typedef _CachedPoint =
-    ({
-      String regionCode,
-      String cityCode,
-      EarthquakeParameterStationItem station,
-    });
+typedef _CachedPoint = ({
+  String regionCode,
+  String cityCode,
+  EarthquakeParameterStationItem station,
+});
 
 @Riverpod(keepAlive: true)
 class EstimatedIntensity extends _$EstimatedIntensity {
@@ -62,15 +60,14 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     }
 
     for (final eew in targetEews) {
-      final result =
-          calculator
-              .getEstimatedIntensity(
-                points: _calculationPoints!.toList(),
-                jmaMagnitude: eew.magnitude!,
-                depth: eew.depth!,
-                hypocenter: (lat: eew.latitude!, lon: eew.longitude!),
-              )
-              .toList();
+      final result = calculator
+          .getEstimatedIntensity(
+            points: _calculationPoints!.toList(),
+            jmaMagnitude: eew.magnitude!,
+            depth: eew.depth!,
+            hypocenter: (lat: eew.latitude!, lon: eew.longitude!),
+          )
+          .toList();
       results.add(result);
     }
 
@@ -101,8 +98,8 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     List<EewV1> eews,
     EarthquakeParameter parameter,
   ) async =>
-  // TODO(YumNumm): 並列計算
-  calc(eews, parameter);
+      // TODO(YumNumm): 並列計算
+      calc(eews, parameter);
 
   List<_CachedPoint> _generateCachedPoints(EarthquakeParameter earthquake) {
     final result = <_CachedPoint>[];
@@ -137,7 +134,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
 @Riverpod(keepAlive: true)
 Stream<Map<String, double>> estimatedIntensityCity(Ref ref) async* {
-  final estimatedIntensity = ref.watch(estimatedIntensityProvider).valueOrNull;
+  final estimatedIntensity = ref.watch(estimatedIntensityProvider).value;
   if (estimatedIntensity != null) {
     final map = <String, double>{};
     for (final item in estimatedIntensity) {
@@ -154,7 +151,7 @@ Stream<Map<String, double>> estimatedIntensityCity(Ref ref) async* {
 
 @Riverpod(keepAlive: true)
 Stream<Map<String, double>> estimatedIntensityRegion(Ref ref) async* {
-  final estimatedIntensity = ref.watch(estimatedIntensityProvider).valueOrNull;
+  final estimatedIntensity = ref.watch(estimatedIntensityProvider).value;
   log(
     'estimatedIntensityRegion: ${estimatedIntensity.runtimeType}, '
     '${estimatedIntensity?.length}',
@@ -176,7 +173,7 @@ Stream<Map<String, double>> estimatedIntensityRegion(Ref ref) async* {
 }
 
 @Freezed(toJson: false)
-class EstimatedIntensityPoint with _$EstimatedIntensityPoint {
+abstract class EstimatedIntensityPoint with _$EstimatedIntensityPoint {
   const factory EstimatedIntensityPoint({
     required String regionCode,
     required String cityCode,

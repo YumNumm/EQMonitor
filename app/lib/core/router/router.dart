@@ -38,15 +38,12 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sheet/route.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'router.g.dart';
-
-final isInitializedStateProvider = StateProvider<bool>((ref) => false);
 
 @Riverpod(keepAlive: true)
 GoRouter goRouter(Ref ref) => GoRouter(
@@ -327,9 +324,8 @@ class DonationRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       CustomTransitionPage(
         child: const DonationScreen(),
-        transitionsBuilder:
-            (context, animation, secondaryAnimation, child) =>
-                FadeTransition(opacity: animation, child: child),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            FadeTransition(opacity: animation, child: child),
       );
 }
 

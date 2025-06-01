@@ -8,25 +8,42 @@ part of 'firebase_messaging_interaction.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+@ProviderFor(firebaseMessagingInteraction)
+const firebaseMessagingInteractionProvider =
+    FirebaseMessagingInteractionProvider._();
+
+final class FirebaseMessagingInteractionProvider
+    extends
+        $FunctionalProvider<AsyncValue<RemoteMessage>, Stream<RemoteMessage>>
+    with $FutureModifier<RemoteMessage>, $StreamProvider<RemoteMessage> {
+  const FirebaseMessagingInteractionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'firebaseMessagingInteractionProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$firebaseMessagingInteractionHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<RemoteMessage> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<RemoteMessage> create(Ref ref) {
+    return firebaseMessagingInteraction(ref);
+  }
+}
+
 String _$firebaseMessagingInteractionHash() =>
     r'51d01acd3aeffbeb731537057efbc3e2e2f6af6a';
 
-/// See also [firebaseMessagingInteraction].
-@ProviderFor(firebaseMessagingInteraction)
-final firebaseMessagingInteractionProvider =
-    StreamProvider<RemoteMessage>.internal(
-      firebaseMessagingInteraction,
-      name: r'firebaseMessagingInteractionProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$firebaseMessagingInteractionHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FirebaseMessagingInteractionRef = StreamProviderRef<RemoteMessage>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

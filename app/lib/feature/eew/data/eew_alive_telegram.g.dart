@@ -8,74 +8,153 @@ part of 'eew_alive_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewAliveNormalTelegramHash() =>
-    r'ee0e8fc7b4db6455d819f9cd4d0295347c8e3dac';
+/// イベント終了していないEEWのうち、精度が低いものを除外したもの
+@ProviderFor(eewAliveNormalTelegram)
+const eewAliveNormalTelegramProvider = EewAliveNormalTelegramProvider._();
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
-///
-/// Copied from [eewAliveNormalTelegram].
-@ProviderFor(eewAliveNormalTelegram)
-final eewAliveNormalTelegramProvider = Provider<List<EewV1>>.internal(
-  eewAliveNormalTelegram,
-  name: r'eewAliveNormalTelegramProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$eewAliveNormalTelegramHash,
-  dependencies: <ProviderOrFamily>[eewAliveTelegramProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    eewAliveTelegramProvider,
-    ...?eewAliveTelegramProvider.allTransitiveDependencies,
-  },
-);
+final class EewAliveNormalTelegramProvider
+    extends $FunctionalProvider<List<EewV1>, List<EewV1>>
+    with $Provider<List<EewV1>> {
+  /// イベント終了していないEEWのうち、精度が低いものを除外したもの
+  const EewAliveNormalTelegramProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'eewAliveNormalTelegramProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EewAliveNormalTelegramRef = ProviderRef<List<EewV1>>;
-String _$eewAliveCheckerHash() => r'21c8182cab2a3bb009efd938202257d2580030c9';
+  @override
+  String debugGetCreateSourceHash() => _$eewAliveNormalTelegramHash();
 
-/// See also [eewAliveChecker].
-@ProviderFor(eewAliveChecker)
-final eewAliveCheckerProvider = Provider<EewAliveChecker>.internal(
-  eewAliveChecker,
-  name: r'eewAliveCheckerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$eewAliveCheckerHash,
-  dependencies: const <ProviderOrFamily>[],
-  allTransitiveDependencies: const <ProviderOrFamily>{},
-);
+  @$internal
+  @override
+  $ProviderElement<List<EewV1>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EewAliveCheckerRef = ProviderRef<EewAliveChecker>;
-String _$eewAliveTelegramHash() => r'0e6433459f8e9d3a6a4b414224e0a0d9abb1e5a2';
+  @override
+  List<EewV1> create(Ref ref) {
+    return eewAliveNormalTelegram(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<EewV1> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $ValueProvider<List<EewV1>>(value),
+    );
+  }
+}
+
+String _$eewAliveNormalTelegramHash() =>
+    r'3d5ba64b3f98437062584f49208f9898a32358f3';
 
 /// イベント終了していないEEW
-///
-/// Copied from [EewAliveTelegram].
 @ProviderFor(EewAliveTelegram)
-final eewAliveTelegramProvider =
-    NotifierProvider<EewAliveTelegram, List<EewV1>?>.internal(
-      EewAliveTelegram.new,
-      name: r'eewAliveTelegramProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$eewAliveTelegramHash,
-      dependencies: <ProviderOrFamily>[
-        timeTickerProvider,
-        eewAliveCheckerProvider,
-      ],
-      allTransitiveDependencies: <ProviderOrFamily>{
-        timeTickerProvider,
-        ...?timeTickerProvider.allTransitiveDependencies,
-        eewAliveCheckerProvider,
-        ...?eewAliveCheckerProvider.allTransitiveDependencies,
-      },
-    );
+const eewAliveTelegramProvider = EewAliveTelegramProvider._();
 
-typedef _$EewAliveTelegram = Notifier<List<EewV1>?>;
+/// イベント終了していないEEW
+final class EewAliveTelegramProvider
+    extends $NotifierProvider<EewAliveTelegram, List<EewV1>?> {
+  /// イベント終了していないEEW
+  const EewAliveTelegramProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'eewAliveTelegramProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$eewAliveTelegramHash();
+
+  @$internal
+  @override
+  EewAliveTelegram create() => EewAliveTelegram();
+
+  @$internal
+  @override
+  $NotifierProviderElement<EewAliveTelegram, List<EewV1>?> $createElement(
+    $ProviderPointer pointer,
+  ) => $NotifierProviderElement(pointer);
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<EewV1>? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $ValueProvider<List<EewV1>?>(value),
+    );
+  }
+}
+
+String _$eewAliveTelegramHash() => r'bb7d83c2f9defdcef446234e4b2799effc9326ac';
+
+abstract class _$EewAliveTelegram extends $Notifier<List<EewV1>?> {
+  List<EewV1>? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<List<EewV1>?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<EewV1>?>,
+              List<EewV1>?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+@ProviderFor(eewAliveChecker)
+const eewAliveCheckerProvider = EewAliveCheckerProvider._();
+
+final class EewAliveCheckerProvider
+    extends $FunctionalProvider<EewAliveChecker, EewAliveChecker>
+    with $Provider<EewAliveChecker> {
+  const EewAliveCheckerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'eewAliveCheckerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$eewAliveCheckerHash();
+
+  @$internal
+  @override
+  $ProviderElement<EewAliveChecker> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  EewAliveChecker create(Ref ref) {
+    return eewAliveChecker(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EewAliveChecker value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $ValueProvider<EewAliveChecker>(value),
+    );
+  }
+}
+
+String _$eewAliveCheckerHash() => r'f092d121ff9d9ea2b58fb253608779403a4ce39f';
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

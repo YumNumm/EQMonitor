@@ -6,7 +6,7 @@ part 'map_configuration.freezed.dart';
 part 'map_configuration.g.dart';
 
 @freezed
-class MapConfiguration with _$MapConfiguration {
+abstract class MapConfiguration with _$MapConfiguration {
   const factory MapConfiguration({
     required MapTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
@@ -21,7 +21,7 @@ class MapConfiguration with _$MapConfiguration {
 enum MapTheme { light, dark, system }
 
 @freezed
-class MapColorScheme with _$MapColorScheme {
+abstract class MapColorScheme with _$MapColorScheme {
   const factory MapColorScheme({
     @ColorConverter() required Color backgroundColor,
     @ColorConverter() required Color worldLandColor,

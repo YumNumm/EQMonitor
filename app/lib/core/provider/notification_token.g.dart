@@ -8,13 +8,13 @@ part of 'notification_token.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NotificationTokenModelImpl _$$NotificationTokenModelImplFromJson(
+_NotificationTokenModel _$NotificationTokenModelFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$NotificationTokenModelImpl',
+  '_NotificationTokenModel',
   json,
   ($checkedConvert) {
-    final val = _$NotificationTokenModelImpl(
+    final val = _NotificationTokenModel(
       fcmToken: $checkedConvert('fcm_token', (v) => v as String?),
       apnsToken: $checkedConvert('apns_token', (v) => v as String?),
     );
@@ -23,8 +23,8 @@ _$NotificationTokenModelImpl _$$NotificationTokenModelImplFromJson(
   fieldKeyMap: const {'fcmToken': 'fcm_token', 'apnsToken': 'apns_token'},
 );
 
-Map<String, dynamic> _$$NotificationTokenModelImplToJson(
-  _$NotificationTokenModelImpl instance,
+Map<String, dynamic> _$NotificationTokenModelToJson(
+  _NotificationTokenModel instance,
 ) => <String, dynamic>{
   'fcm_token': instance.fcmToken,
   'apns_token': instance.apnsToken,
@@ -34,25 +34,45 @@ Map<String, dynamic> _$$NotificationTokenModelImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
+@ProviderFor(notificationToken)
+const notificationTokenProvider = NotificationTokenProvider._();
+
+final class NotificationTokenProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<NotificationTokenModel>,
+          FutureOr<NotificationTokenModel>
+        >
+    with
+        $FutureModifier<NotificationTokenModel>,
+        $FutureProvider<NotificationTokenModel> {
+  const NotificationTokenProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notificationTokenProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$notificationTokenHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<NotificationTokenModel> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<NotificationTokenModel> create(Ref ref) {
+    return notificationToken(ref);
+  }
+}
+
 String _$notificationTokenHash() => r'1d7efa28d4e4401069a1a4426fdbbd4b04239c5e';
 
-/// See also [notificationToken].
-@ProviderFor(notificationToken)
-final notificationTokenProvider =
-    AutoDisposeFutureProvider<NotificationTokenModel>.internal(
-      notificationToken,
-      name: r'notificationTokenProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$notificationTokenHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef NotificationTokenRef =
-    AutoDisposeFutureProviderRef<NotificationTokenModel>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -13,15 +13,16 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
 part 'earthquake_history_notifier.g.dart';
 
-typedef EarthquakeHistoryNotifierState =
-    (List<EarthquakeV1Extended>, int totalCount);
+typedef EarthquakeHistoryNotifierState = (
+  List<EarthquakeV1Extended>,
+  int totalCount,
+);
 
 @riverpod
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
@@ -107,8 +108,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
               ref.invalidate(jmaParameterProvider);
             }
             await ref.read(jmaParameterProvider.future);
-            final earthquakeParameter =
-                ref.watch(jmaParameterProvider).valueOrNull!.earthquake;
+            final earthquakeParameter = ref
+                .watch(jmaParameterProvider)
+                .value!
+                .earthquake;
 
             return _fetchInitialData(
               param: parameter,
@@ -125,11 +128,13 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       return;
     }
     // すでに全件取得済みの場合は何もしない
-    if (!(state.valueOrNull?.hasNext ?? false)) {
+    if (!(state.value?.hasNext ?? false)) {
       return;
     }
-    final jmaEarthquakeParameter =
-        ref.read(jmaParameterProvider).valueOrNull?.earthquake;
+    final jmaEarthquakeParameter = ref
+        .read(jmaParameterProvider)
+        .value
+        ?.earthquake;
     if (jmaEarthquakeParameter == null) {
       throw EarthquakeParameterHasNotInitializedException();
     }
@@ -138,7 +143,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         .copyWithPrevious(state);
     state = await state.guardPlus(() async {
       final repository = ref.read(earthquakeHistoryRepositoryProvider);
-      final currentData = state.valueOrNull;
+      final currentData = state.value;
       final result = await repository.fetchEarthquakeLists(
         depthGte: parameter.depthGte,
         depthLte: parameter.depthLte,
@@ -208,7 +213,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
       return;
     }
-    final currentData = state.valueOrNull;
+    final currentData = state.value;
     if (currentData == null) {
       return;
     }
@@ -216,7 +221,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     final histories = [...baseHistories];
     final extended = await _v1ToV1Extended(
       data: items,
-      regions: ref.read(jmaParameterProvider).valueOrNull!.earthquake.regions,
+      regions: ref.read(jmaParameterProvider).value!.earthquake.regions,
     );
     for (final item in extended) {
       final index = histories.indexWhereOrNull(
@@ -241,19 +246,16 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       for (final e in data)
         EarthquakeV1Extended(
           earthquake: e,
-          maxIntensityRegionNames:
-              e.maxIntensityRegionIds
-                  ?.map(
-                    (region) =>
-                        regions
-                            .firstWhereOrNull(
-                              (paramRegion) =>
-                                  int.parse(paramRegion.code) == region,
-                            )
-                            ?.name,
-                  )
-                  .nonNulls
-                  .toList(),
+          maxIntensityRegionNames: e.maxIntensityRegionIds
+              ?.map(
+                (region) => regions
+                    .firstWhereOrNull(
+                      (paramRegion) => int.parse(paramRegion.code) == region,
+                    )
+                    ?.name,
+              )
+              .nonNulls
+              .toList(),
         ),
     ];
     /* 別Isolateで処理させるならコッチ
@@ -285,7 +287,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
       return;
     }
-    final currentData = state.valueOrNull;
+    final currentData = state.value;
     if (currentData == null) {
       return;
     }
@@ -313,8 +315,7 @@ Future<EarthquakeV1Extended> earthquakeV1Extended(
   // ensure earthquakeParameter has been initialized.
   await ref.read(jmaParameterProvider.future);
 
-  final earthquakeParameter =
-      ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
+  final earthquakeParameter = ref.watch(jmaParameterProvider).value?.earthquake;
 
   if (earthquakeParameter == null) {
     throw EarthquakeParameterHasNotInitializedException();
@@ -323,18 +324,16 @@ Future<EarthquakeV1Extended> earthquakeV1Extended(
 
   return EarthquakeV1Extended(
     earthquake: data,
-    maxIntensityRegionNames:
-        data.maxIntensityRegionIds
-            ?.map(
-              (region) =>
-                  regions
-                      .firstWhereOrNull(
-                        (paramRegion) => int.parse(paramRegion.code) == region,
-                      )
-                      ?.name,
-            )
-            .nonNulls
-            .toList(),
+    maxIntensityRegionNames: data.maxIntensityRegionIds
+        ?.map(
+          (region) => regions
+              .firstWhereOrNull(
+                (paramRegion) => int.parse(paramRegion.code) == region,
+              )
+              ?.name,
+        )
+        .nonNulls
+        .toList(),
   );
 }
 

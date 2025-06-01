@@ -60,7 +60,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
           children: [
             Row(
               children: [
-                if (maxIntensityWidget != null) maxIntensityWidget,
+                ?maxIntensityWidget,
                 const SizedBox(width: 4),
                 Expanded(child: body),
               ],
@@ -259,7 +259,7 @@ class _EarthquakeInformationBody extends HookWidget {
         ],
 
         const Row(),
-        if (timeWidget != null) timeWidget,
+        ?timeWidget,
       ],
     );
   }

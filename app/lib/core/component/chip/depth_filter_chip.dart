@@ -12,8 +12,8 @@ class DepthFilterChip extends StatelessWidget {
   final int? min;
   final int? max;
 
-  static const int initialMin = 0;
-  static const int initialMax = 700;
+  static const initialMin = 0;
+  static const initialMax = 700;
 
   @override
   Widget build(BuildContext context) {

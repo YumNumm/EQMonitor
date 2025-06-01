@@ -5,7 +5,7 @@ part 'notification_remote_settings_state.freezed.dart';
 part 'notification_remote_settings_state.g.dart';
 
 @freezed
-class NotificationRemoteSettingsState with _$NotificationRemoteSettingsState {
+abstract class NotificationRemoteSettingsState with _$NotificationRemoteSettingsState {
   const factory NotificationRemoteSettingsState({
     required NotificationRemoteSettingsEew eew,
     required NotificationRemoteSettingsEarthquake earthquake,
@@ -16,7 +16,7 @@ class NotificationRemoteSettingsState with _$NotificationRemoteSettingsState {
 }
 
 @freezed
-class NotificationRemoteSettingsEew with _$NotificationRemoteSettingsEew {
+abstract class NotificationRemoteSettingsEew with _$NotificationRemoteSettingsEew {
   const factory NotificationRemoteSettingsEew({
     required JmaForecastIntensity? global,
     required List<NotificationRemoteSettingsEewRegion> regions,
@@ -27,7 +27,7 @@ class NotificationRemoteSettingsEew with _$NotificationRemoteSettingsEew {
 }
 
 @freezed
-class NotificationRemoteSettingsEewRegion
+abstract class NotificationRemoteSettingsEewRegion
     with _$NotificationRemoteSettingsEewRegion {
   const factory NotificationRemoteSettingsEewRegion({
     required int regionId,
@@ -41,7 +41,7 @@ class NotificationRemoteSettingsEewRegion
 }
 
 @freezed
-class NotificationRemoteSettingsEarthquake
+abstract class NotificationRemoteSettingsEarthquake
     with _$NotificationRemoteSettingsEarthquake {
   const factory NotificationRemoteSettingsEarthquake({
     required JmaForecastIntensity? global,
@@ -54,7 +54,7 @@ class NotificationRemoteSettingsEarthquake
 }
 
 @freezed
-class NotificationRemoteSettingsEarthquakeRegion
+abstract class NotificationRemoteSettingsEarthquakeRegion
     with _$NotificationRemoteSettingsEarthquakeRegion {
   const factory NotificationRemoteSettingsEarthquakeRegion({
     required int regionId,

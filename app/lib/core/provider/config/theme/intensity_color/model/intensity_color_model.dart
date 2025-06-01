@@ -10,7 +10,7 @@ part 'intensity_color_model.freezed.dart';
 part 'intensity_color_model.g.dart';
 
 @freezed
-class IntensityColorModel with _$IntensityColorModel {
+abstract class IntensityColorModel with _$IntensityColorModel {
   const factory IntensityColorModel({
     required TextColorModel unknown,
     required TextColorModel zero,
@@ -237,7 +237,7 @@ class IntensityColorModel with _$IntensityColorModel {
 }
 
 @freezed
-class TextColorModel with _$TextColorModel {
+abstract class TextColorModel with _$TextColorModel {
   const factory TextColorModel({
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
     required Color foreground,
@@ -249,8 +249,9 @@ class TextColorModel with _$TextColorModel {
       _$TextColorModelFromJson(json);
 
   factory TextColorModel.fromBackground(Color background) => TextColorModel(
-    foreground:
-        background.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+    foreground: background.computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white,
     background: background,
   );
 }

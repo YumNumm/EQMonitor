@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'travel_time_table.freezed.dart';
 
 @freezed
-class TravelTimeTable with _$TravelTimeTable {
+abstract class TravelTimeTable with _$TravelTimeTable {
   const factory TravelTimeTable({
     required double p,
     required double s,
@@ -22,7 +22,7 @@ class TravelTimeTable with _$TravelTimeTable {
 }
 
 @freezed
-class TravelTimeTables with _$TravelTimeTables {
+abstract class TravelTimeTables with _$TravelTimeTables {
   const factory TravelTimeTables({required List<TravelTimeTable> table}) =
       _TravelTimeTables;
 }

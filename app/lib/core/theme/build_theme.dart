@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
   return ThemeData(
     colorScheme: colorScheme,
-    extensions: [if (customColors != null) customColors],
+    extensions: [?customColors],
     useMaterial3: true,
     fontFamily: FontFamily.notoSansJP,
     pageTransitionsTheme: const PageTransitionsTheme(
@@ -37,4 +37,4 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
   );
 }
 
-final monoFont = GoogleFonts.fragmentMono().fontFamily;
+final String? monoFont = GoogleFonts.fragmentMono().fontFamily;

@@ -5,7 +5,7 @@ part 'notification_local_settings_model.freezed.dart';
 part 'notification_local_settings_model.g.dart';
 
 @freezed
-class NotificationLocalSettingsModel with _$NotificationLocalSettingsModel {
+abstract class NotificationLocalSettingsModel with _$NotificationLocalSettingsModel {
   const factory NotificationLocalSettingsModel({
     @Default(EewSettings()) EewSettings eew,
     @Default(EarthquakeSettings()) EarthquakeSettings earthquake,
@@ -16,7 +16,7 @@ class NotificationLocalSettingsModel with _$NotificationLocalSettingsModel {
 }
 
 @freezed
-class EewSettings with _$EewSettings {
+abstract class EewSettings with _$EewSettings {
   const factory EewSettings({
     @Default(null) JmaForecastIntensity? emergencyIntensity,
     @Default(null) JmaForecastIntensity? silentIntensity,
@@ -28,7 +28,7 @@ class EewSettings with _$EewSettings {
 }
 
 @freezed
-class EarthquakeSettings with _$EarthquakeSettings {
+abstract class EarthquakeSettings with _$EarthquakeSettings {
   const factory EarthquakeSettings({
     @Default(null) JmaForecastIntensity? emergencyIntensity,
     @Default(null) JmaForecastIntensity? silentIntensity,
@@ -40,7 +40,7 @@ class EarthquakeSettings with _$EarthquakeSettings {
 }
 
 @freezed
-class Region with _$Region {
+abstract class Region with _$Region {
   const factory Region({
     required String code,
     required String name,

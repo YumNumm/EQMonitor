@@ -32,7 +32,7 @@ class _DebugWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider);
 
-    final notificationToken = ref.watch(notificationTokenProvider).valueOrNull;
+    final notificationToken = ref.watch(notificationTokenProvider).value;
 
     return ListTileTheme(
       dense: true,
@@ -42,9 +42,8 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('デバッグモード'),
             subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
             value: isDebugEnabled,
-            onChanged:
-                (value) async =>
-                    ref.read(debugProvider.notifier).save(isEnabled: value),
+            onChanged: (value) async =>
+                ref.read(debugProvider.notifier).save(isEnabled: value),
           ),
           ListTile(
             title: const Text('Flavor'),
@@ -60,17 +59,15 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('REST APIエンドポイント'),
             leading: const Icon(Icons.http),
             subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
-            onTap:
-                () async =>
-                    const HttpApiEndpointSelectorRoute().push<void>(context),
+            onTap: () async =>
+                const HttpApiEndpointSelectorRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('WebSocketエンドポイント'),
             leading: const Icon(Icons.http),
             subtitle: Text(ref.watch(telegramUrlProvider).wsApiUrl),
-            onTap:
-                () async =>
-                    const WebsocketEndpointSelectorRoute().push<void>(context),
+            onTap: () async =>
+                const WebsocketEndpointSelectorRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('KyoshinMonitor'),
@@ -90,12 +87,11 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('震源アイコン生成'),
             leading: const Icon(Icons.place),
-            onTap:
-                () async => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (context) => const HypocenterIconPage(),
-                  ),
-                ),
+            onTap: () async => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (context) => const HypocenterIconPage(),
+              ),
+            ),
           ),
           ListTile(
             title: const Text('FCM Token'),
@@ -103,10 +99,9 @@ class _DebugWidget extends ConsumerWidget {
               notificationToken?.fcmToken?.toString() ?? 'null',
               style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
             ),
-            onTap:
-                () async => Clipboard.setData(
-                  ClipboardData(text: notificationToken?.fcmToken ?? ''),
-                ),
+            onTap: () async => Clipboard.setData(
+              ClipboardData(text: notificationToken?.fcmToken ?? ''),
+            ),
           ),
           ListTile(
             title: const Text('APNS Token'),
@@ -114,16 +109,15 @@ class _DebugWidget extends ConsumerWidget {
               notificationToken?.apnsToken?.toString() ?? 'null',
               style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
             ),
-            onTap:
-                () async => Clipboard.setData(
-                  ClipboardData(text: notificationToken?.apnsToken ?? ''),
-                ),
+            onTap: () async => Clipboard.setData(
+              ClipboardData(text: notificationToken?.apnsToken ?? ''),
+            ),
           ),
           ListTile(
             title: const Text('観測点パラメータ'),
             subtitle: Text(
-              'Earthquake: ${ref.watch(jmaParameterProvider).valueOrNull?.earthquakeStatus.toString() ?? 'null'}\n'
-              'Tsunami   : ${ref.watch(jmaParameterProvider).valueOrNull?.tsunamiStatus.toString() ?? 'null'}',
+              'Earthquake: ${ref.watch(jmaParameterProvider).value?.earthquakeStatus.toString() ?? 'null'}\n'
+              'Tsunami   : ${ref.watch(jmaParameterProvider).value?.tsunamiStatus.toString() ?? 'null'}',
               style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
             ),
           ),
