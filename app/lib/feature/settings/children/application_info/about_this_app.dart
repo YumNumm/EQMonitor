@@ -12,7 +12,6 @@ class AboutThisAppScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: discarded_futures
     final markdownFuture = useMemoized(
       () async => rootBundle.loadString(Assets.docs.aboutThisApp),
     );

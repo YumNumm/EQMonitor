@@ -8,158 +8,100 @@ part of 'periodic_timer.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$periodicTimerHash() => r'd0ba8e774a2bb19048648aa7512e8b18d5d28ba8';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$PeriodicTimer
-    extends BuildlessAutoDisposeStreamNotifier<void> {
-  late final Key key;
-
-  Stream<void> build(Key key);
-}
-
-/// See also [PeriodicTimer].
 @ProviderFor(PeriodicTimer)
-const periodicTimerProvider = PeriodicTimerFamily();
+const periodicTimerProvider = PeriodicTimerFamily._();
 
-/// See also [PeriodicTimer].
-class PeriodicTimerFamily extends Family<AsyncValue<void>> {
-  /// See also [PeriodicTimer].
-  const PeriodicTimerFamily();
+final class PeriodicTimerProvider
+    extends $StreamNotifierProvider<PeriodicTimer, void> {
+  const PeriodicTimerProvider._({
+    required PeriodicTimerFamily super.from,
+    required Key super.argument,
+  }) : super(
+         retry: null,
+         name: r'periodicTimerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [PeriodicTimer].
-  PeriodicTimerProvider call(Key key) {
-    return PeriodicTimerProvider(key);
+  @override
+  String debugGetCreateSourceHash() => _$periodicTimerHash();
+
+  @override
+  String toString() {
+    return r'periodicTimerProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  PeriodicTimerProvider getProviderOverride(
-    covariant PeriodicTimerProvider provider,
-  ) {
-    return call(provider.key);
-  }
+  PeriodicTimer create() => PeriodicTimer();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
+  @$internal
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'periodicTimerProvider';
-}
-
-/// See also [PeriodicTimer].
-class PeriodicTimerProvider
-    extends AutoDisposeStreamNotifierProviderImpl<PeriodicTimer, void> {
-  /// See also [PeriodicTimer].
-  PeriodicTimerProvider(Key key)
-    : this._internal(
-        () => PeriodicTimer()..key = key,
-        from: periodicTimerProvider,
-        name: r'periodicTimerProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$periodicTimerHash,
-        dependencies: PeriodicTimerFamily._dependencies,
-        allTransitiveDependencies:
-            PeriodicTimerFamily._allTransitiveDependencies,
-        key: key,
-      );
-
-  PeriodicTimerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.key,
-  }) : super.internal();
-
-  final Key key;
-
-  @override
-  Stream<void> runNotifierBuild(covariant PeriodicTimer notifier) {
-    return notifier.build(key);
-  }
-
-  @override
-  Override overrideWith(PeriodicTimer Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: PeriodicTimerProvider._internal(
-        () => create()..key = key,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        key: key,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeStreamNotifierProviderElement<PeriodicTimer, void>
-  createElement() {
-    return _PeriodicTimerProviderElement(this);
-  }
+  $StreamNotifierProviderElement<PeriodicTimer, void> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamNotifierProviderElement(pointer);
 
   @override
   bool operator ==(Object other) {
-    return other is PeriodicTimerProvider && other.key == key;
+    return other is PeriodicTimerProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, key.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin PeriodicTimerRef on AutoDisposeStreamNotifierProviderRef<void> {
-  /// The parameter `key` of this provider.
-  Key get key;
-}
+String _$periodicTimerHash() => r'ff2c9be25adb24f75d622439de9c72a77bca8631';
 
-class _PeriodicTimerProviderElement
-    extends AutoDisposeStreamNotifierProviderElement<PeriodicTimer, void>
-    with PeriodicTimerRef {
-  _PeriodicTimerProviderElement(super.provider);
+final class PeriodicTimerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          PeriodicTimer,
+          AsyncValue<void>,
+          void,
+          Stream<void>,
+          Key
+        > {
+  const PeriodicTimerFamily._()
+    : super(
+        retry: null,
+        name: r'periodicTimerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  PeriodicTimerProvider call(Key key) =>
+      PeriodicTimerProvider._(argument: key, from: this);
 
   @override
-  Key get key => (origin as PeriodicTimerProvider).key;
+  String toString() => r'periodicTimerProvider';
+}
+
+abstract class _$PeriodicTimer extends $StreamNotifier<void> {
+  late final _$args = ref.$arg as Key;
+  Key get key => _$args;
+
+  Stream<void> build(Key key);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<void>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, null);
+  }
 }
 
 // ignore_for_file: type=lint

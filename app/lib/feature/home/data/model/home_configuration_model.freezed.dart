@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,177 +10,141 @@ part of 'home_configuration_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-HomeConfigurationModel _$HomeConfigurationModelFromJson(
-  Map<String, dynamic> json,
-) {
-  return _HomeConfigurationModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$HomeConfigurationModel {
-  /// 位置情報を表示するかどうか
-  bool get showLocation => throw _privateConstructorUsedError;
+
+/// 位置情報を表示するかどうか
+ bool get showLocation;
+/// Create a copy of HomeConfigurationModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$HomeConfigurationModelCopyWith<HomeConfigurationModel> get copyWith => _$HomeConfigurationModelCopyWithImpl<HomeConfigurationModel>(this as HomeConfigurationModel, _$identity);
 
   /// Serializes this HomeConfigurationModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of HomeConfigurationModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $HomeConfigurationModelCopyWith<HomeConfigurationModel> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeConfigurationModel&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,showLocation);
+
+@override
+String toString() {
+  return 'HomeConfigurationModel(showLocation: $showLocation)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $HomeConfigurationModelCopyWith<$Res> {
-  factory $HomeConfigurationModelCopyWith(
-    HomeConfigurationModel value,
-    $Res Function(HomeConfigurationModel) then,
-  ) = _$HomeConfigurationModelCopyWithImpl<$Res, HomeConfigurationModel>;
-  @useResult
-  $Res call({bool showLocation});
-}
+abstract mixin class $HomeConfigurationModelCopyWith<$Res>  {
+  factory $HomeConfigurationModelCopyWith(HomeConfigurationModel value, $Res Function(HomeConfigurationModel) _then) = _$HomeConfigurationModelCopyWithImpl;
+@useResult
+$Res call({
+ bool showLocation
+});
 
+
+
+
+}
 /// @nodoc
-class _$HomeConfigurationModelCopyWithImpl<
-  $Res,
-  $Val extends HomeConfigurationModel
->
+class _$HomeConfigurationModelCopyWithImpl<$Res>
     implements $HomeConfigurationModelCopyWith<$Res> {
-  _$HomeConfigurationModelCopyWithImpl(this._value, this._then);
+  _$HomeConfigurationModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final HomeConfigurationModel _self;
+  final $Res Function(HomeConfigurationModel) _then;
 
-  /// Create a copy of HomeConfigurationModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? showLocation = null}) {
-    return _then(
-      _value.copyWith(
-            showLocation:
-                null == showLocation
-                    ? _value.showLocation
-                    : showLocation // ignore: cast_nullable_to_non_nullable
-                        as bool,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of HomeConfigurationModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? showLocation = null,}) {
+  return _then(_self.copyWith(
+showLocation: null == showLocation ? _self.showLocation : showLocation // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$HomeConfigurationModelImplCopyWith<$Res>
-    implements $HomeConfigurationModelCopyWith<$Res> {
-  factory _$$HomeConfigurationModelImplCopyWith(
-    _$HomeConfigurationModelImpl value,
-    $Res Function(_$HomeConfigurationModelImpl) then,
-  ) = __$$HomeConfigurationModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({bool showLocation});
 }
 
-/// @nodoc
-class __$$HomeConfigurationModelImplCopyWithImpl<$Res>
-    extends
-        _$HomeConfigurationModelCopyWithImpl<$Res, _$HomeConfigurationModelImpl>
-    implements _$$HomeConfigurationModelImplCopyWith<$Res> {
-  __$$HomeConfigurationModelImplCopyWithImpl(
-    _$HomeConfigurationModelImpl _value,
-    $Res Function(_$HomeConfigurationModelImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of HomeConfigurationModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? showLocation = null}) {
-    return _then(
-      _$HomeConfigurationModelImpl(
-        showLocation:
-            null == showLocation
-                ? _value.showLocation
-                : showLocation // ignore: cast_nullable_to_non_nullable
-                    as bool,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$HomeConfigurationModelImpl implements _HomeConfigurationModel {
-  const _$HomeConfigurationModelImpl({this.showLocation = false});
 
-  factory _$HomeConfigurationModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$HomeConfigurationModelImplFromJson(json);
+class _HomeConfigurationModel implements HomeConfigurationModel {
+  const _HomeConfigurationModel({this.showLocation = false});
+  factory _HomeConfigurationModel.fromJson(Map<String, dynamic> json) => _$HomeConfigurationModelFromJson(json);
 
-  /// 位置情報を表示するかどうか
-  @override
-  @JsonKey()
-  final bool showLocation;
+/// 位置情報を表示するかどうか
+@override@JsonKey() final  bool showLocation;
 
-  @override
-  String toString() {
-    return 'HomeConfigurationModel(showLocation: $showLocation)';
-  }
+/// Create a copy of HomeConfigurationModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$HomeConfigurationModelCopyWith<_HomeConfigurationModel> get copyWith => __$HomeConfigurationModelCopyWithImpl<_HomeConfigurationModel>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$HomeConfigurationModelImpl &&
-            (identical(other.showLocation, showLocation) ||
-                other.showLocation == showLocation));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, showLocation);
-
-  /// Create a copy of HomeConfigurationModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$HomeConfigurationModelImplCopyWith<_$HomeConfigurationModelImpl>
-  get copyWith =>
-      __$$HomeConfigurationModelImplCopyWithImpl<_$HomeConfigurationModelImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$HomeConfigurationModelImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$HomeConfigurationModelToJson(this, );
 }
 
-abstract class _HomeConfigurationModel implements HomeConfigurationModel {
-  const factory _HomeConfigurationModel({final bool showLocation}) =
-      _$HomeConfigurationModelImpl;
-
-  factory _HomeConfigurationModel.fromJson(Map<String, dynamic> json) =
-      _$HomeConfigurationModelImpl.fromJson;
-
-  /// 位置情報を表示するかどうか
-  @override
-  bool get showLocation;
-
-  /// Create a copy of HomeConfigurationModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$HomeConfigurationModelImplCopyWith<_$HomeConfigurationModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeConfigurationModel&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,showLocation);
+
+@override
+String toString() {
+  return 'HomeConfigurationModel(showLocation: $showLocation)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$HomeConfigurationModelCopyWith<$Res> implements $HomeConfigurationModelCopyWith<$Res> {
+  factory _$HomeConfigurationModelCopyWith(_HomeConfigurationModel value, $Res Function(_HomeConfigurationModel) _then) = __$HomeConfigurationModelCopyWithImpl;
+@override @useResult
+$Res call({
+ bool showLocation
+});
+
+
+
+
+}
+/// @nodoc
+class __$HomeConfigurationModelCopyWithImpl<$Res>
+    implements _$HomeConfigurationModelCopyWith<$Res> {
+  __$HomeConfigurationModelCopyWithImpl(this._self, this._then);
+
+  final _HomeConfigurationModel _self;
+  final $Res Function(_HomeConfigurationModel) _then;
+
+/// Create a copy of HomeConfigurationModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? showLocation = null,}) {
+  return _then(_HomeConfigurationModel(
+showLocation: null == showLocation ? _self.showLocation : showLocation // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,283 +10,147 @@ part of 'kmoni_observation_point.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$AnalyzedKmoniObservationPoint {
-  KyoshinObservationPoint get point =>
-      throw _privateConstructorUsedError; // ここから
-  double? get intensityValue => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color? get intensityColor => throw _privateConstructorUsedError;
-  double? get pga => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color? get pgaColor => throw _privateConstructorUsedError;
 
-  /// Create a copy of AnalyzedKmoniObservationPoint
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $AnalyzedKmoniObservationPointCopyWith<AnalyzedKmoniObservationPoint>
-  get copyWith => throw _privateConstructorUsedError;
+ KyoshinObservationPoint get point;// ここから
+ double? get intensityValue;@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? get intensityColor; double? get pga;@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? get pgaColor;
+/// Create a copy of AnalyzedKmoniObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AnalyzedKmoniObservationPointCopyWith<AnalyzedKmoniObservationPoint> get copyWith => _$AnalyzedKmoniObservationPointCopyWithImpl<AnalyzedKmoniObservationPoint>(this as AnalyzedKmoniObservationPoint, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnalyzedKmoniObservationPoint&&(identical(other.point, point) || other.point == point)&&(identical(other.intensityValue, intensityValue) || other.intensityValue == intensityValue)&&(identical(other.intensityColor, intensityColor) || other.intensityColor == intensityColor)&&(identical(other.pga, pga) || other.pga == pga)&&(identical(other.pgaColor, pgaColor) || other.pgaColor == pgaColor));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,point,intensityValue,intensityColor,pga,pgaColor);
+
+@override
+String toString() {
+  return 'AnalyzedKmoniObservationPoint(point: $point, intensityValue: $intensityValue, intensityColor: $intensityColor, pga: $pga, pgaColor: $pgaColor)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AnalyzedKmoniObservationPointCopyWith<$Res> {
-  factory $AnalyzedKmoniObservationPointCopyWith(
-    AnalyzedKmoniObservationPoint value,
-    $Res Function(AnalyzedKmoniObservationPoint) then,
-  ) =
-      _$AnalyzedKmoniObservationPointCopyWithImpl<
-        $Res,
-        AnalyzedKmoniObservationPoint
-      >;
-  @useResult
-  $Res call({
-    KyoshinObservationPoint point,
-    double? intensityValue,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    Color? intensityColor,
-    double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
-  });
-}
+abstract mixin class $AnalyzedKmoniObservationPointCopyWith<$Res>  {
+  factory $AnalyzedKmoniObservationPointCopyWith(AnalyzedKmoniObservationPoint value, $Res Function(AnalyzedKmoniObservationPoint) _then) = _$AnalyzedKmoniObservationPointCopyWithImpl;
+@useResult
+$Res call({
+ KyoshinObservationPoint point, double? intensityValue,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? intensityColor, double? pga,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor
+});
 
+
+
+
+}
 /// @nodoc
-class _$AnalyzedKmoniObservationPointCopyWithImpl<
-  $Res,
-  $Val extends AnalyzedKmoniObservationPoint
->
+class _$AnalyzedKmoniObservationPointCopyWithImpl<$Res>
     implements $AnalyzedKmoniObservationPointCopyWith<$Res> {
-  _$AnalyzedKmoniObservationPointCopyWithImpl(this._value, this._then);
+  _$AnalyzedKmoniObservationPointCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AnalyzedKmoniObservationPoint _self;
+  final $Res Function(AnalyzedKmoniObservationPoint) _then;
 
-  /// Create a copy of AnalyzedKmoniObservationPoint
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? point = null,
-    Object? intensityValue = freezed,
-    Object? intensityColor = freezed,
-    Object? pga = freezed,
-    Object? pgaColor = freezed,
-  }) {
-    return _then(
-      _value.copyWith(
-            point:
-                null == point
-                    ? _value.point
-                    : point // ignore: cast_nullable_to_non_nullable
-                        as KyoshinObservationPoint,
-            intensityValue:
-                freezed == intensityValue
-                    ? _value.intensityValue
-                    : intensityValue // ignore: cast_nullable_to_non_nullable
-                        as double?,
-            intensityColor:
-                freezed == intensityColor
-                    ? _value.intensityColor
-                    : intensityColor // ignore: cast_nullable_to_non_nullable
-                        as Color?,
-            pga:
-                freezed == pga
-                    ? _value.pga
-                    : pga // ignore: cast_nullable_to_non_nullable
-                        as double?,
-            pgaColor:
-                freezed == pgaColor
-                    ? _value.pgaColor
-                    : pgaColor // ignore: cast_nullable_to_non_nullable
-                        as Color?,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of AnalyzedKmoniObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? point = null,Object? intensityValue = freezed,Object? intensityColor = freezed,Object? pga = freezed,Object? pgaColor = freezed,}) {
+  return _then(_self.copyWith(
+point: null == point ? _self.point : point // ignore: cast_nullable_to_non_nullable
+as KyoshinObservationPoint,intensityValue: freezed == intensityValue ? _self.intensityValue : intensityValue // ignore: cast_nullable_to_non_nullable
+as double?,intensityColor: freezed == intensityColor ? _self.intensityColor : intensityColor // ignore: cast_nullable_to_non_nullable
+as Color?,pga: freezed == pga ? _self.pga : pga // ignore: cast_nullable_to_non_nullable
+as double?,pgaColor: freezed == pgaColor ? _self.pgaColor : pgaColor // ignore: cast_nullable_to_non_nullable
+as Color?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$AnalyzedKmoniObservationPointImplCopyWith<$Res>
-    implements $AnalyzedKmoniObservationPointCopyWith<$Res> {
-  factory _$$AnalyzedKmoniObservationPointImplCopyWith(
-    _$AnalyzedKmoniObservationPointImpl value,
-    $Res Function(_$AnalyzedKmoniObservationPointImpl) then,
-  ) = __$$AnalyzedKmoniObservationPointImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    KyoshinObservationPoint point,
-    double? intensityValue,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    Color? intensityColor,
-    double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
-  });
 }
 
-/// @nodoc
-class __$$AnalyzedKmoniObservationPointImplCopyWithImpl<$Res>
-    extends
-        _$AnalyzedKmoniObservationPointCopyWithImpl<
-          $Res,
-          _$AnalyzedKmoniObservationPointImpl
-        >
-    implements _$$AnalyzedKmoniObservationPointImplCopyWith<$Res> {
-  __$$AnalyzedKmoniObservationPointImplCopyWithImpl(
-    _$AnalyzedKmoniObservationPointImpl _value,
-    $Res Function(_$AnalyzedKmoniObservationPointImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of AnalyzedKmoniObservationPoint
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? point = null,
-    Object? intensityValue = freezed,
-    Object? intensityColor = freezed,
-    Object? pga = freezed,
-    Object? pgaColor = freezed,
-  }) {
-    return _then(
-      _$AnalyzedKmoniObservationPointImpl(
-        point:
-            null == point
-                ? _value.point
-                : point // ignore: cast_nullable_to_non_nullable
-                    as KyoshinObservationPoint,
-        intensityValue:
-            freezed == intensityValue
-                ? _value.intensityValue
-                : intensityValue // ignore: cast_nullable_to_non_nullable
-                    as double?,
-        intensityColor:
-            freezed == intensityColor
-                ? _value.intensityColor
-                : intensityColor // ignore: cast_nullable_to_non_nullable
-                    as Color?,
-        pga:
-            freezed == pga
-                ? _value.pga
-                : pga // ignore: cast_nullable_to_non_nullable
-                    as double?,
-        pgaColor:
-            freezed == pgaColor
-                ? _value.pgaColor
-                : pgaColor // ignore: cast_nullable_to_non_nullable
-                    as Color?,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 
-class _$AnalyzedKmoniObservationPointImpl
-    implements _AnalyzedKmoniObservationPoint {
-  const _$AnalyzedKmoniObservationPointImpl({
-    required this.point,
-    this.intensityValue,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.intensityColor,
-    this.pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.pgaColor,
-  });
 
-  @override
-  final KyoshinObservationPoint point;
-  // ここから
-  @override
-  final double? intensityValue;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color? intensityColor;
-  @override
-  final double? pga;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color? pgaColor;
+class _AnalyzedKmoniObservationPoint implements AnalyzedKmoniObservationPoint {
+  const _AnalyzedKmoniObservationPoint({required this.point, this.intensityValue, @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.intensityColor, this.pga, @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.pgaColor});
+  
 
-  @override
-  String toString() {
-    return 'AnalyzedKmoniObservationPoint(point: $point, intensityValue: $intensityValue, intensityColor: $intensityColor, pga: $pga, pgaColor: $pgaColor)';
-  }
+@override final  KyoshinObservationPoint point;
+// ここから
+@override final  double? intensityValue;
+@override@JsonKey(fromJson: colorFromJson, toJson: colorToJson) final  Color? intensityColor;
+@override final  double? pga;
+@override@JsonKey(fromJson: colorFromJson, toJson: colorToJson) final  Color? pgaColor;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AnalyzedKmoniObservationPointImpl &&
-            (identical(other.point, point) || other.point == point) &&
-            (identical(other.intensityValue, intensityValue) ||
-                other.intensityValue == intensityValue) &&
-            (identical(other.intensityColor, intensityColor) ||
-                other.intensityColor == intensityColor) &&
-            (identical(other.pga, pga) || other.pga == pga) &&
-            (identical(other.pgaColor, pgaColor) ||
-                other.pgaColor == pgaColor));
-  }
+/// Create a copy of AnalyzedKmoniObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AnalyzedKmoniObservationPointCopyWith<_AnalyzedKmoniObservationPoint> get copyWith => __$AnalyzedKmoniObservationPointCopyWithImpl<_AnalyzedKmoniObservationPoint>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    point,
-    intensityValue,
-    intensityColor,
-    pga,
-    pgaColor,
-  );
 
-  /// Create a copy of AnalyzedKmoniObservationPoint
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AnalyzedKmoniObservationPointImplCopyWith<
-    _$AnalyzedKmoniObservationPointImpl
-  >
-  get copyWith => __$$AnalyzedKmoniObservationPointImplCopyWithImpl<
-    _$AnalyzedKmoniObservationPointImpl
-  >(this, _$identity);
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnalyzedKmoniObservationPoint&&(identical(other.point, point) || other.point == point)&&(identical(other.intensityValue, intensityValue) || other.intensityValue == intensityValue)&&(identical(other.intensityColor, intensityColor) || other.intensityColor == intensityColor)&&(identical(other.pga, pga) || other.pga == pga)&&(identical(other.pgaColor, pgaColor) || other.pgaColor == pgaColor));
 }
 
-abstract class _AnalyzedKmoniObservationPoint
-    implements AnalyzedKmoniObservationPoint {
-  const factory _AnalyzedKmoniObservationPoint({
-    required final KyoshinObservationPoint point,
-    final double? intensityValue,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    final Color? intensityColor,
-    final double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    final Color? pgaColor,
-  }) = _$AnalyzedKmoniObservationPointImpl;
 
-  @override
-  KyoshinObservationPoint get point; // ここから
-  @override
-  double? get intensityValue;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color? get intensityColor;
-  @override
-  double? get pga;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color? get pgaColor;
+@override
+int get hashCode => Object.hash(runtimeType,point,intensityValue,intensityColor,pga,pgaColor);
 
-  /// Create a copy of AnalyzedKmoniObservationPoint
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AnalyzedKmoniObservationPointImplCopyWith<
-    _$AnalyzedKmoniObservationPointImpl
-  >
-  get copyWith => throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AnalyzedKmoniObservationPoint(point: $point, intensityValue: $intensityValue, intensityColor: $intensityColor, pga: $pga, pgaColor: $pgaColor)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AnalyzedKmoniObservationPointCopyWith<$Res> implements $AnalyzedKmoniObservationPointCopyWith<$Res> {
+  factory _$AnalyzedKmoniObservationPointCopyWith(_AnalyzedKmoniObservationPoint value, $Res Function(_AnalyzedKmoniObservationPoint) _then) = __$AnalyzedKmoniObservationPointCopyWithImpl;
+@override @useResult
+$Res call({
+ KyoshinObservationPoint point, double? intensityValue,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? intensityColor, double? pga,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor
+});
+
+
+
+
+}
+/// @nodoc
+class __$AnalyzedKmoniObservationPointCopyWithImpl<$Res>
+    implements _$AnalyzedKmoniObservationPointCopyWith<$Res> {
+  __$AnalyzedKmoniObservationPointCopyWithImpl(this._self, this._then);
+
+  final _AnalyzedKmoniObservationPoint _self;
+  final $Res Function(_AnalyzedKmoniObservationPoint) _then;
+
+/// Create a copy of AnalyzedKmoniObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? point = null,Object? intensityValue = freezed,Object? intensityColor = freezed,Object? pga = freezed,Object? pgaColor = freezed,}) {
+  return _then(_AnalyzedKmoniObservationPoint(
+point: null == point ? _self.point : point // ignore: cast_nullable_to_non_nullable
+as KyoshinObservationPoint,intensityValue: freezed == intensityValue ? _self.intensityValue : intensityValue // ignore: cast_nullable_to_non_nullable
+as double?,intensityColor: freezed == intensityColor ? _self.intensityColor : intensityColor // ignore: cast_nullable_to_non_nullable
+as Color?,pga: freezed == pga ? _self.pga : pga // ignore: cast_nullable_to_non_nullable
+as double?,pgaColor: freezed == pgaColor ? _self.pgaColor : pgaColor // ignore: cast_nullable_to_non_nullable
+as Color?,
+  ));
+}
+
+
+}
+
+// dart format on

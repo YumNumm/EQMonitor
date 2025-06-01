@@ -16,7 +16,7 @@ class JmaMapUtility {
       final dataList = mapData.data.map((data) {
         final dataType = data.dataType;
         final bytes = Uint8List.fromList(data.bytes);
-        print("${data.property.name}: ${bytes.lengthInBytes / 1024} KB");
+        print('${data.property.name}: ${bytes.lengthInBytes / 1024} KB');
         switch (dataType) {
           case JmaMap_JmaMapData_DataType.LINE_STRING:
             final lineString = LineString.decode(bytes);
@@ -26,12 +26,13 @@ class JmaMapUtility {
             final multiLineString = MultiLineString.decode(bytes);
             final distance = multiLineString.distanceTo2D(referencePoint);
             return (data, distance);
-          case _:
-            throw UnimplementedError("Unsupported dataType: $dataType");
+          case JmaMap_JmaMapData_DataType.POLYGON:
+          case JmaMap_JmaMapData_DataType.MULTI_POLYGON:
+            throw UnimplementedError('Unsupported dataType: $dataType');
         }
       });
 
-      final min = minBy(dataList, (e) => e.$2)!;
+      final min = minBy(dataList, (e) => e?.$2)!;
 
       return min.$1;
     }
@@ -52,8 +53,9 @@ class JmaMapUtility {
           if (isInside) {
             return data;
           }
-        case _:
-          throw UnimplementedError("Unsupported dataType: $dataType");
+        case JmaMap_JmaMapData_DataType.LINE_STRING:
+        case JmaMap_JmaMapData_DataType.MULTI_LINE_STRING:
+          throw UnimplementedError('Unsupported dataType: $dataType');
       }
     }
 

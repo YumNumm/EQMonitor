@@ -8,9 +8,9 @@ part of 'ntp_state_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NtpStateModelImpl _$$NtpStateModelImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$NtpStateModelImpl', json, ($checkedConvert) {
-      final val = _$NtpStateModelImpl(
+_NtpStateModel _$NtpStateModelFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_NtpStateModel', json, ($checkedConvert) {
+      final val = _NtpStateModel(
         offset: $checkedConvert('offset', (v) => (v as num?)?.toInt()),
         updatedAt: $checkedConvert(
           'updated_at',
@@ -20,7 +20,7 @@ _$NtpStateModelImpl _$$NtpStateModelImplFromJson(Map<String, dynamic> json) =>
       return val;
     }, fieldKeyMap: const {'updatedAt': 'updated_at'});
 
-Map<String, dynamic> _$$NtpStateModelImplToJson(_$NtpStateModelImpl instance) =>
+Map<String, dynamic> _$NtpStateModelToJson(_NtpStateModel instance) =>
     <String, dynamic>{
       'offset': instance.offset,
       'updated_at': instance.updatedAt?.toIso8601String(),

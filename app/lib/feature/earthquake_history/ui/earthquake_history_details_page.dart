@@ -30,7 +30,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final detailsState = ref.watch(
       earthquakeHistoryDetailsNotifierProvider(eventId),
     );
-    final details = detailsState.valueOrNull;
+    final details = detailsState.value;
 
     if (details == null) {
       return Scaffold(

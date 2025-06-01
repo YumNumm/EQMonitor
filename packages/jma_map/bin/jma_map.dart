@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:geobase/coordinates.dart';
-import 'package:geobase/vector.dart';
 import 'package:geobase/vector_data.dart';
 import 'package:geodata/geodata.dart';
 import 'package:jma_map/gen/jma_map.pb.dart';
@@ -19,8 +17,9 @@ Future<void> main() async {
     JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI,
   ];
   for (final target in targets) {
-    final body =
-        await File('geojson/${target.toFileName}.geojson').readAsString();
+    final body = await File(
+      'geojson/${target.toFileName}.geojson',
+    ).readAsString();
     final data = await _parseGeoJsonToJmaMap(body);
     jmaMapDataList.add(JmaMap_JmaMapData(data: data, mapType: target));
   }
@@ -53,8 +52,6 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
       nameKana: propertyMap['namekana'] as String?,
     );
 
-    final byteFormat = WKB.geometry;
-
     switch (geometry) {
       case Polygon():
         final polylabel = geometry.polylabel2D(scheme: Geographic.scheme);
@@ -75,20 +72,19 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            bytes: geometry.toBytes(format: byteFormat),
+            bytes: geometry.toBytes(),
             dataType: JmaMap_JmaMapData_DataType.POLYGON,
           ),
         );
       case MultiPolygon():
         // 最も面積が大きいPolygonのpolylabelを取得する
-        final maxAreaPolygon =
-            geometry.polygons
-                .map((polygon) {
-                  final area = polygon.area2D();
-                  return (polygon, area);
-                })
-                .sorted((a, b) => b.$2.compareTo(a.$2))
-                .first;
+        final maxAreaPolygon = geometry.polygons
+            .map((polygon) {
+              final area = polygon.area2D();
+              return (polygon, area);
+            })
+            .sorted((a, b) => b.$2.compareTo(a.$2))
+            .first;
         final polylabel = maxAreaPolygon.$1.polylabel2D(
           scheme: Geographic.scheme,
         );
@@ -110,22 +106,22 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            bytes: geometry.toBytes(format: byteFormat),
+            bytes: geometry.toBytes(),
             dataType: JmaMap_JmaMapData_DataType.MULTI_POLYGON,
           ),
         );
       case MultiLineString():
         // 最も長いLineStringのcentroidを取得する
-        final maxLengthLineString =
-            geometry.lineStrings
-                .map((lineString) {
-                  final length = lineString.length2D();
-                  return (lineString, length);
-                })
-                .sorted((a, b) => b.$2.compareTo(a.$2))
-                .first;
-        final centroid =
-            maxLengthLineString.$1.centroid2D(scheme: Geographic.scheme)!;
+        final maxLengthLineString = geometry.lineStrings
+            .map((lineString) {
+              final length = lineString.length2D();
+              return (lineString, length);
+            })
+            .sorted((a, b) => b.$2.compareTo(a.$2))
+            .first;
+        final centroid = maxLengthLineString.$1.centroid2D(
+          scheme: Geographic.scheme,
+        )!;
 
         final bbox = geometry.calculateBounds(scheme: Geographic.scheme)!;
 
@@ -141,7 +137,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            bytes: geometry.toBytes(format: byteFormat),
+            bytes: geometry.toBytes(),
             dataType: JmaMap_JmaMapData_DataType.MULTI_LINE_STRING,
           ),
         );
@@ -162,7 +158,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               name: p.name,
               nameKana: p.nameKana,
             ),
-            bytes: geometry.toBytes(format: byteFormat),
+            bytes: geometry.toBytes(),
             dataType: JmaMap_JmaMapData_DataType.LINE_STRING,
           ),
         );
@@ -171,35 +167,11 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
         continue;
       case _:
         throw UnimplementedError(
-          "Unsupported geometry type: ${geometry.geomType}",
+          'Unsupported geometry type: ${geometry.geomType}',
         );
     }
   }
   return results;
-}
-
-extension LatLngListEx on List<JmaMap_LatLng> {
-  JmaMap_LatLngBounds get toLatLngBounds {
-    final latLngs = this;
-    if (latLngs.isEmpty) {
-      throw Exception('LatLngs is empty');
-    }
-    var northEastLat = -180.0;
-    var northEastLng = -180.0;
-    var southWestLat = 180.0;
-    var southWestLng = 180.0;
-    for (final latLng in latLngs) {
-      northEastLat = max(northEastLat, latLng.lat);
-      northEastLng = max(northEastLng, latLng.lng);
-      southWestLat = min(southWestLat, latLng.lat);
-      southWestLng = min(southWestLng, latLng.lng);
-    }
-    final latLngBounds = JmaMap_LatLngBounds(
-      northEast: JmaMap_LatLng(lat: northEastLat, lng: northEastLng),
-      southWest: JmaMap_LatLng(lat: southWestLat, lng: southWestLng),
-    );
-    return latLngBounds;
-  }
 }
 
 extension JmaMapTypeConverter on JmaMap_JmaMapData_JmaMapType {

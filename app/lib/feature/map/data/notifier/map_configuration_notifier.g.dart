@@ -8,23 +8,58 @@ part of 'map_configuration_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+@ProviderFor(MapConfigurationNotifier)
+const mapConfigurationNotifierProvider = MapConfigurationNotifierProvider._();
+
+final class MapConfigurationNotifierProvider
+    extends $AsyncNotifierProvider<MapConfigurationNotifier, MapConfiguration> {
+  const MapConfigurationNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapConfigurationNotifierProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapConfigurationNotifierHash();
+
+  @$internal
+  @override
+  MapConfigurationNotifier create() => MapConfigurationNotifier();
+
+  @$internal
+  @override
+  $AsyncNotifierProviderElement<MapConfigurationNotifier, MapConfiguration>
+  $createElement($ProviderPointer pointer) =>
+      $AsyncNotifierProviderElement(pointer);
+}
+
 String _$mapConfigurationNotifierHash() =>
     r'32df3d97aa64cf68e5320209bf36c4392e23582c';
 
-/// See also [MapConfigurationNotifier].
-@ProviderFor(MapConfigurationNotifier)
-final mapConfigurationNotifierProvider =
-    AsyncNotifierProvider<MapConfigurationNotifier, MapConfiguration>.internal(
-      MapConfigurationNotifier.new,
-      name: r'mapConfigurationNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$mapConfigurationNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$MapConfigurationNotifier
+    extends $AsyncNotifier<MapConfiguration> {
+  FutureOr<MapConfiguration> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<MapConfiguration>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<MapConfiguration>>,
+              AsyncValue<MapConfiguration>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$MapConfigurationNotifier = AsyncNotifier<MapConfiguration>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

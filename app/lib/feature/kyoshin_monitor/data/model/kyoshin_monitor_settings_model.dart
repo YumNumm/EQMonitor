@@ -5,7 +5,7 @@ part 'kyoshin_monitor_settings_model.freezed.dart';
 part 'kyoshin_monitor_settings_model.g.dart';
 
 @freezed
-class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
+abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
   const factory KyoshinMonitorSettingsModel({
     /// 強震モニタの表示最低リアルタイム震度
     @Default(null) double? minRealtimeShindo,
@@ -36,7 +36,7 @@ class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
 }
 
 @freezed
-class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
+abstract class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
   const factory KyoshinMonitorSettingsApiModel({
     /// 強震モニタ APIのベースURL
     @Default(KyoshinMonitorEndpoint.kmoni)
