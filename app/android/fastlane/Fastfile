@@ -21,10 +21,6 @@ platform :android do
       "--build-number",
       options[:version_code],
     ]
-    if !ENV["CI"]
-      # CI環境ではない場合は、fvmを使う
-      command.unshift("fvm")
-    end
     if sh(command) { |s| s.success? }
       UI.success("Successfully built the AAB")
     else

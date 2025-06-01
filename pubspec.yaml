@@ -50,7 +50,6 @@ dependency_overrides:
   protobuf: ^4.0.0
 melos:
   repository: https://github.com/YumNumm/EQMonitor
-  sdkPath: .fvm/flutter_sdk/
   command:
     version:
       linkToCommits: true

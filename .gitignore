@@ -166,9 +166,6 @@ ios/*.p8
 
 *.pem
 
-# FVM Version Cache
-.fvm/
-
 # Secret Folder
 secret/
 
