@@ -1,12 +1,12 @@
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_scheme_type.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_scheme_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity_color_configuration.freezed.dart';
 part 'intensity_color_configuration.g.dart';
 
 @freezed
-class IntensityColorConfiguration with _$IntensityColorConfiguration {
+abstract class IntensityColorConfiguration with _$IntensityColorConfiguration {
   const factory IntensityColorConfiguration({
     required IntensityColorSchemeType schemeType,
     IntensityColorModel? customColors,

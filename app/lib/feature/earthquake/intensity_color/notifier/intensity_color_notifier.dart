@@ -1,16 +1,15 @@
-
 import 'dart:convert';
 
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_configuration.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_scheme_type.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_scheme_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'intensity_color_provider.g.dart';
+part 'intensity_color_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class IntensityColorConfiguration extends _$IntensityColorConfiguration {
+class IntensityColorNotifier extends _$IntensityColorNotifier {
   @override
   IntensityColorConfiguration build() {
     final result = loadConfiguration();
@@ -39,7 +38,9 @@ class IntensityColorConfiguration extends _$IntensityColorConfiguration {
     IntensityColorConfiguration configuration,
   ) async {
     state = configuration;
-    await ref.read(sharedPreferencesProvider).setString(
+    await ref
+        .read(sharedPreferencesProvider)
+        .setString(
           _configKey,
           jsonEncode(configuration.toJson()),
         );
@@ -130,20 +131,5 @@ class IntensityColorConfiguration extends _$IntensityColorConfiguration {
         a.sixLower.background == b.sixLower.background &&
         a.sixUpper.background == b.sixUpper.background &&
         a.seven.background == b.seven.background;
-  }
-}
-
-@Riverpod(keepAlive: true)
-class IntensityColor extends _$IntensityColor {
-  @override
-  IntensityColorModel build() {
-    final configuration = ref.watch(intensityColorConfigurationProvider);
-    return configuration.colorModel;
-  }
-
-  Future<void> update(IntensityColorModel model) async {
-    await ref
-        .read(intensityColorConfigurationProvider.notifier)
-        .updateCustomColors(model);
   }
 }

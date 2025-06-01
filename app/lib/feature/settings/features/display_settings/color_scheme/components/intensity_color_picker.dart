@@ -1,6 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 

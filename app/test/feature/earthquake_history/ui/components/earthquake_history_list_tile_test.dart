@@ -1,7 +1,7 @@
 // ignore_for_file: scoped_providers_should_specify_dependencies
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_provider.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';

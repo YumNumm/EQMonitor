@@ -4,7 +4,7 @@ part 'intensity_color_scheme_type.freezed.dart';
 part 'intensity_color_scheme_type.g.dart';
 
 @freezed
-class IntensityColorSchemeType with _$IntensityColorSchemeType {
+abstract class IntensityColorSchemeType with _$IntensityColorSchemeType {
   const factory IntensityColorSchemeType.predefined({
     required PredefinedScheme scheme,
   }) = _Predefined;

@@ -24,7 +24,7 @@ final class NotificationRemoteSettingsInitialSetupNotifierProvider
         argument: null,
         retry: null,
         name: r'notificationRemoteSettingsInitialSetupNotifierProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -49,7 +49,7 @@ final class NotificationRemoteSettingsInitialSetupNotifierProvider
 }
 
 String _$notificationRemoteSettingsInitialSetupNotifierHash() =>
-    r'c07726a8460cb9b4374dd27e333e424aa428d827';
+    r'898fb6f7e6ab9ab4d02f9e7bbd1ec2e99ba35ace';
 
 abstract class _$NotificationRemoteSettingsInitialSetupNotifier
     extends $StreamNotifier<NotificationRemoteSettingsSetupState> {

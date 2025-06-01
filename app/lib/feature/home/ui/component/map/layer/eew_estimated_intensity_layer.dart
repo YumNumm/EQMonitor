@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_provider.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -80,7 +80,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
     }, []);
 
     // EEWの状態が変更されたときの処理
-    ref.listen(eewProvider.select((value) => value.value), (
+    ref.listen(eewProvider.select((value) => value.valueOrNull), (
       _,
       eews,
     ) async {

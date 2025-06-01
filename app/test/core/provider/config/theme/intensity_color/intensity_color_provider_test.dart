@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_configuration.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_scheme_type.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_provider.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_scheme_type.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
