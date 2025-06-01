@@ -6,7 +6,8 @@ part 'earthquake_history_early_parameter.freezed.dart';
 part 'earthquake_history_early_parameter.g.dart';
 
 @freezed
-class EarthquakeHistoryEarlyParameter with _$EarthquakeHistoryEarlyParameter {
+abstract class EarthquakeHistoryEarlyParameter
+    with _$EarthquakeHistoryEarlyParameter {
   const factory EarthquakeHistoryEarlyParameter({
     required EarthquakeEarlySortType sort,
     required bool ascending,

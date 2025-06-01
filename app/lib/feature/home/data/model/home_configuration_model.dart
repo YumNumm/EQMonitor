@@ -4,7 +4,7 @@ part 'home_configuration_model.freezed.dart';
 part 'home_configuration_model.g.dart';
 
 @freezed
-class HomeConfigurationModel with _$HomeConfigurationModel {
+abstract class HomeConfigurationModel with _$HomeConfigurationModel {
   const factory HomeConfigurationModel({
     /// 位置情報を表示するかどうか
     @Default(false) bool showLocation,

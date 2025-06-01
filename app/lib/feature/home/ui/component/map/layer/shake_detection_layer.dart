@@ -92,7 +92,7 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
         return;
       }
 
-      final events = shakeDetectionEvents.valueOrNull ?? [];
+      final events = shakeDetectionEvents.value ?? [];
       final gridAreas = _createDetectionGridGeoJson(events);
 
       unawaited(

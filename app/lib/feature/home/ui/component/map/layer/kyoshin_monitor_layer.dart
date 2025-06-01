@@ -122,7 +122,7 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
 
     ref.listen(
       kyoshinMonitorNotifierProvider.select(
-        (v) => v.valueOrNull?.analyzedPoints,
+        (v) => v.value?.analyzedPoints,
       ),
       (_, analyzedPoints) async {
         if (!isInitialized.value) {

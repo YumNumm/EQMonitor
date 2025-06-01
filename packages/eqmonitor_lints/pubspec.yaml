@@ -11,4 +11,4 @@ dependencies:
   custom_lint: ^0.7.0
   flutter:
     sdk: flutter
-  yumemi_lints: ^3.0.0
+  yumemi_lints: ^4.1.1

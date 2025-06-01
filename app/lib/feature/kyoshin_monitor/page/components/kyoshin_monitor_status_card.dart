@@ -16,13 +16,13 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
         ref
             .watch(
               kyoshinMonitorNotifierProvider.select(
-                (v) => v.valueOrNull?.lastUpdatedAt,
+                (v) => v.value?.lastUpdatedAt,
               ),
             )
             ?.toLocal();
     final status =
         ref.watch(
-          kyoshinMonitorNotifierProvider.select((v) => v.valueOrNull?.status),
+          kyoshinMonitorNotifierProvider.select((v) => v.value?.status),
         ) ??
         KyoshinMonitorStatus.stopped;
 

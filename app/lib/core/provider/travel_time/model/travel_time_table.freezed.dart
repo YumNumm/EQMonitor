@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,360 +10,275 @@ part of 'travel_time_table.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$TravelTimeTable {
-  double get p => throw _privateConstructorUsedError;
-  double get s => throw _privateConstructorUsedError;
-  int get depth => throw _privateConstructorUsedError;
-  int get distance => throw _privateConstructorUsedError;
 
-  /// Create a copy of TravelTimeTable
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $TravelTimeTableCopyWith<TravelTimeTable> get copyWith =>
-      throw _privateConstructorUsedError;
+ double get p; double get s; int get depth; int get distance;
+/// Create a copy of TravelTimeTable
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TravelTimeTableCopyWith<TravelTimeTable> get copyWith => _$TravelTimeTableCopyWithImpl<TravelTimeTable>(this as TravelTimeTable, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TravelTimeTable&&(identical(other.p, p) || other.p == p)&&(identical(other.s, s) || other.s == s)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.distance, distance) || other.distance == distance));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,p,s,depth,distance);
+
+@override
+String toString() {
+  return 'TravelTimeTable(p: $p, s: $s, depth: $depth, distance: $distance)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TravelTimeTableCopyWith<$Res> {
-  factory $TravelTimeTableCopyWith(
-    TravelTimeTable value,
-    $Res Function(TravelTimeTable) then,
-  ) = _$TravelTimeTableCopyWithImpl<$Res, TravelTimeTable>;
-  @useResult
-  $Res call({double p, double s, int depth, int distance});
-}
+abstract mixin class $TravelTimeTableCopyWith<$Res>  {
+  factory $TravelTimeTableCopyWith(TravelTimeTable value, $Res Function(TravelTimeTable) _then) = _$TravelTimeTableCopyWithImpl;
+@useResult
+$Res call({
+ double p, double s, int depth, int distance
+});
 
+
+
+
+}
 /// @nodoc
-class _$TravelTimeTableCopyWithImpl<$Res, $Val extends TravelTimeTable>
+class _$TravelTimeTableCopyWithImpl<$Res>
     implements $TravelTimeTableCopyWith<$Res> {
-  _$TravelTimeTableCopyWithImpl(this._value, this._then);
+  _$TravelTimeTableCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TravelTimeTable _self;
+  final $Res Function(TravelTimeTable) _then;
 
-  /// Create a copy of TravelTimeTable
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? p = null,
-    Object? s = null,
-    Object? depth = null,
-    Object? distance = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            p:
-                null == p
-                    ? _value.p
-                    : p // ignore: cast_nullable_to_non_nullable
-                        as double,
-            s:
-                null == s
-                    ? _value.s
-                    : s // ignore: cast_nullable_to_non_nullable
-                        as double,
-            depth:
-                null == depth
-                    ? _value.depth
-                    : depth // ignore: cast_nullable_to_non_nullable
-                        as int,
-            distance:
-                null == distance
-                    ? _value.distance
-                    : distance // ignore: cast_nullable_to_non_nullable
-                        as int,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of TravelTimeTable
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? p = null,Object? s = null,Object? depth = null,Object? distance = null,}) {
+  return _then(_self.copyWith(
+p: null == p ? _self.p : p // ignore: cast_nullable_to_non_nullable
+as double,s: null == s ? _self.s : s // ignore: cast_nullable_to_non_nullable
+as double,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
+as int,distance: null == distance ? _self.distance : distance // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TravelTimeTableImplCopyWith<$Res>
-    implements $TravelTimeTableCopyWith<$Res> {
-  factory _$$TravelTimeTableImplCopyWith(
-    _$TravelTimeTableImpl value,
-    $Res Function(_$TravelTimeTableImpl) then,
-  ) = __$$TravelTimeTableImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({double p, double s, int depth, int distance});
 }
 
-/// @nodoc
-class __$$TravelTimeTableImplCopyWithImpl<$Res>
-    extends _$TravelTimeTableCopyWithImpl<$Res, _$TravelTimeTableImpl>
-    implements _$$TravelTimeTableImplCopyWith<$Res> {
-  __$$TravelTimeTableImplCopyWithImpl(
-    _$TravelTimeTableImpl _value,
-    $Res Function(_$TravelTimeTableImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of TravelTimeTable
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? p = null,
-    Object? s = null,
-    Object? depth = null,
-    Object? distance = null,
-  }) {
-    return _then(
-      _$TravelTimeTableImpl(
-        p:
-            null == p
-                ? _value.p
-                : p // ignore: cast_nullable_to_non_nullable
-                    as double,
-        s:
-            null == s
-                ? _value.s
-                : s // ignore: cast_nullable_to_non_nullable
-                    as double,
-        depth:
-            null == depth
-                ? _value.depth
-                : depth // ignore: cast_nullable_to_non_nullable
-                    as int,
-        distance:
-            null == distance
-                ? _value.distance
-                : distance // ignore: cast_nullable_to_non_nullable
-                    as int,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 
-class _$TravelTimeTableImpl implements _TravelTimeTable {
-  const _$TravelTimeTableImpl({
-    required this.p,
-    required this.s,
-    required this.depth,
-    required this.distance,
-  });
 
-  @override
-  final double p;
-  @override
-  final double s;
-  @override
-  final int depth;
-  @override
-  final int distance;
+class _TravelTimeTable implements TravelTimeTable {
+  const _TravelTimeTable({required this.p, required this.s, required this.depth, required this.distance});
+  
 
-  @override
-  String toString() {
-    return 'TravelTimeTable(p: $p, s: $s, depth: $depth, distance: $distance)';
-  }
+@override final  double p;
+@override final  double s;
+@override final  int depth;
+@override final  int distance;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TravelTimeTableImpl &&
-            (identical(other.p, p) || other.p == p) &&
-            (identical(other.s, s) || other.s == s) &&
-            (identical(other.depth, depth) || other.depth == depth) &&
-            (identical(other.distance, distance) ||
-                other.distance == distance));
-  }
+/// Create a copy of TravelTimeTable
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TravelTimeTableCopyWith<_TravelTimeTable> get copyWith => __$TravelTimeTableCopyWithImpl<_TravelTimeTable>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, p, s, depth, distance);
 
-  /// Create a copy of TravelTimeTable
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
-      __$$TravelTimeTableImplCopyWithImpl<_$TravelTimeTableImpl>(
-        this,
-        _$identity,
-      );
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TravelTimeTable&&(identical(other.p, p) || other.p == p)&&(identical(other.s, s) || other.s == s)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.distance, distance) || other.distance == distance));
 }
 
-abstract class _TravelTimeTable implements TravelTimeTable {
-  const factory _TravelTimeTable({
-    required final double p,
-    required final double s,
-    required final int depth,
-    required final int distance,
-  }) = _$TravelTimeTableImpl;
 
-  @override
-  double get p;
-  @override
-  double get s;
-  @override
-  int get depth;
-  @override
-  int get distance;
+@override
+int get hashCode => Object.hash(runtimeType,p,s,depth,distance);
 
-  /// Create a copy of TravelTimeTable
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'TravelTimeTable(p: $p, s: $s, depth: $depth, distance: $distance)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TravelTimeTableCopyWith<$Res> implements $TravelTimeTableCopyWith<$Res> {
+  factory _$TravelTimeTableCopyWith(_TravelTimeTable value, $Res Function(_TravelTimeTable) _then) = __$TravelTimeTableCopyWithImpl;
+@override @useResult
+$Res call({
+ double p, double s, int depth, int distance
+});
+
+
+
+
+}
+/// @nodoc
+class __$TravelTimeTableCopyWithImpl<$Res>
+    implements _$TravelTimeTableCopyWith<$Res> {
+  __$TravelTimeTableCopyWithImpl(this._self, this._then);
+
+  final _TravelTimeTable _self;
+  final $Res Function(_TravelTimeTable) _then;
+
+/// Create a copy of TravelTimeTable
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? p = null,Object? s = null,Object? depth = null,Object? distance = null,}) {
+  return _then(_TravelTimeTable(
+p: null == p ? _self.p : p // ignore: cast_nullable_to_non_nullable
+as double,s: null == s ? _self.s : s // ignore: cast_nullable_to_non_nullable
+as double,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
+as int,distance: null == distance ? _self.distance : distance // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
 }
 
 /// @nodoc
 mixin _$TravelTimeTables {
-  List<TravelTimeTable> get table => throw _privateConstructorUsedError;
 
-  /// Create a copy of TravelTimeTables
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $TravelTimeTablesCopyWith<TravelTimeTables> get copyWith =>
-      throw _privateConstructorUsedError;
+ List<TravelTimeTable> get table;
+/// Create a copy of TravelTimeTables
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TravelTimeTablesCopyWith<TravelTimeTables> get copyWith => _$TravelTimeTablesCopyWithImpl<TravelTimeTables>(this as TravelTimeTables, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TravelTimeTables&&const DeepCollectionEquality().equals(other.table, table));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(table));
+
+@override
+String toString() {
+  return 'TravelTimeTables(table: $table)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TravelTimeTablesCopyWith<$Res> {
-  factory $TravelTimeTablesCopyWith(
-    TravelTimeTables value,
-    $Res Function(TravelTimeTables) then,
-  ) = _$TravelTimeTablesCopyWithImpl<$Res, TravelTimeTables>;
-  @useResult
-  $Res call({List<TravelTimeTable> table});
-}
+abstract mixin class $TravelTimeTablesCopyWith<$Res>  {
+  factory $TravelTimeTablesCopyWith(TravelTimeTables value, $Res Function(TravelTimeTables) _then) = _$TravelTimeTablesCopyWithImpl;
+@useResult
+$Res call({
+ List<TravelTimeTable> table
+});
 
+
+
+
+}
 /// @nodoc
-class _$TravelTimeTablesCopyWithImpl<$Res, $Val extends TravelTimeTables>
+class _$TravelTimeTablesCopyWithImpl<$Res>
     implements $TravelTimeTablesCopyWith<$Res> {
-  _$TravelTimeTablesCopyWithImpl(this._value, this._then);
+  _$TravelTimeTablesCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TravelTimeTables _self;
+  final $Res Function(TravelTimeTables) _then;
 
-  /// Create a copy of TravelTimeTables
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? table = null}) {
-    return _then(
-      _value.copyWith(
-            table:
-                null == table
-                    ? _value.table
-                    : table // ignore: cast_nullable_to_non_nullable
-                        as List<TravelTimeTable>,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of TravelTimeTables
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? table = null,}) {
+  return _then(_self.copyWith(
+table: null == table ? _self.table : table // ignore: cast_nullable_to_non_nullable
+as List<TravelTimeTable>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TravelTimeTablesImplCopyWith<$Res>
-    implements $TravelTimeTablesCopyWith<$Res> {
-  factory _$$TravelTimeTablesImplCopyWith(
-    _$TravelTimeTablesImpl value,
-    $Res Function(_$TravelTimeTablesImpl) then,
-  ) = __$$TravelTimeTablesImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<TravelTimeTable> table});
 }
 
-/// @nodoc
-class __$$TravelTimeTablesImplCopyWithImpl<$Res>
-    extends _$TravelTimeTablesCopyWithImpl<$Res, _$TravelTimeTablesImpl>
-    implements _$$TravelTimeTablesImplCopyWith<$Res> {
-  __$$TravelTimeTablesImplCopyWithImpl(
-    _$TravelTimeTablesImpl _value,
-    $Res Function(_$TravelTimeTablesImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of TravelTimeTables
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? table = null}) {
-    return _then(
-      _$TravelTimeTablesImpl(
-        table:
-            null == table
-                ? _value._table
-                : table // ignore: cast_nullable_to_non_nullable
-                    as List<TravelTimeTable>,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 
-class _$TravelTimeTablesImpl implements _TravelTimeTables {
-  const _$TravelTimeTablesImpl({required final List<TravelTimeTable> table})
-    : _table = table;
 
-  final List<TravelTimeTable> _table;
-  @override
-  List<TravelTimeTable> get table {
-    if (_table is EqualUnmodifiableListView) return _table;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_table);
-  }
+class _TravelTimeTables implements TravelTimeTables {
+  const _TravelTimeTables({required final  List<TravelTimeTable> table}): _table = table;
+  
 
-  @override
-  String toString() {
-    return 'TravelTimeTables(table: $table)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TravelTimeTablesImpl &&
-            const DeepCollectionEquality().equals(other._table, _table));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_table));
-
-  /// Create a copy of TravelTimeTables
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
-      __$$TravelTimeTablesImplCopyWithImpl<_$TravelTimeTablesImpl>(
-        this,
-        _$identity,
-      );
+ final  List<TravelTimeTable> _table;
+@override List<TravelTimeTable> get table {
+  if (_table is EqualUnmodifiableListView) return _table;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_table);
 }
 
-abstract class _TravelTimeTables implements TravelTimeTables {
-  const factory _TravelTimeTables({
-    required final List<TravelTimeTable> table,
-  }) = _$TravelTimeTablesImpl;
 
-  @override
-  List<TravelTimeTable> get table;
+/// Create a copy of TravelTimeTables
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TravelTimeTablesCopyWith<_TravelTimeTables> get copyWith => __$TravelTimeTablesCopyWithImpl<_TravelTimeTables>(this, _$identity);
 
-  /// Create a copy of TravelTimeTables
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TravelTimeTables&&const DeepCollectionEquality().equals(other._table, _table));
 }
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_table));
+
+@override
+String toString() {
+  return 'TravelTimeTables(table: $table)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TravelTimeTablesCopyWith<$Res> implements $TravelTimeTablesCopyWith<$Res> {
+  factory _$TravelTimeTablesCopyWith(_TravelTimeTables value, $Res Function(_TravelTimeTables) _then) = __$TravelTimeTablesCopyWithImpl;
+@override @useResult
+$Res call({
+ List<TravelTimeTable> table
+});
+
+
+
+
+}
+/// @nodoc
+class __$TravelTimeTablesCopyWithImpl<$Res>
+    implements _$TravelTimeTablesCopyWith<$Res> {
+  __$TravelTimeTablesCopyWithImpl(this._self, this._then);
+
+  final _TravelTimeTables _self;
+  final $Res Function(_TravelTimeTables) _then;
+
+/// Create a copy of TravelTimeTables
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? table = null,}) {
+  return _then(_TravelTimeTables(
+table: null == table ? _self._table : table // ignore: cast_nullable_to_non_nullable
+as List<TravelTimeTable>,
+  ));
+}
+
+
+}
+
+// dart format on

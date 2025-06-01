@@ -8,23 +8,57 @@ part of 'fcm_token_change_detector.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fcmTokenChangeDetectorHash() =>
-    r'21e1c8015127d55fe15446bb2daec1bf67d93e7d';
-
-/// See also [FcmTokenChangeDetector].
 @ProviderFor(FcmTokenChangeDetector)
-final fcmTokenChangeDetectorProvider =
-    AsyncNotifierProvider<FcmTokenChangeDetector, bool>.internal(
-      FcmTokenChangeDetector.new,
-      name: r'fcmTokenChangeDetectorProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$fcmTokenChangeDetectorHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+const fcmTokenChangeDetectorProvider = FcmTokenChangeDetectorProvider._();
 
-typedef _$FcmTokenChangeDetector = AsyncNotifier<bool>;
+final class FcmTokenChangeDetectorProvider
+    extends $AsyncNotifierProvider<FcmTokenChangeDetector, bool> {
+  const FcmTokenChangeDetectorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fcmTokenChangeDetectorProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fcmTokenChangeDetectorHash();
+
+  @$internal
+  @override
+  FcmTokenChangeDetector create() => FcmTokenChangeDetector();
+
+  @$internal
+  @override
+  $AsyncNotifierProviderElement<FcmTokenChangeDetector, bool> $createElement(
+    $ProviderPointer pointer,
+  ) => $AsyncNotifierProviderElement(pointer);
+}
+
+String _$fcmTokenChangeDetectorHash() =>
+    r'f243d26545f8246b8690482adeb80b9643bf6079';
+
+abstract class _$FcmTokenChangeDetector extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<bool>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<bool>>,
+              AsyncValue<bool>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

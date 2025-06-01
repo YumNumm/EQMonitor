@@ -7,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'earthquake_history_parameter.freezed.dart';
 
 @freezed
-class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
+abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
   const factory EarthquakeHistoryParameter({
     double? magnitudeLte,
     double? magnitudeGte,

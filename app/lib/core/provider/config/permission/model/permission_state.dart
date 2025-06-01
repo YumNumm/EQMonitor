@@ -4,7 +4,7 @@ part 'permission_state.freezed.dart';
 part 'permission_state.g.dart';
 
 @freezed
-class PermissionStateModel with _$PermissionStateModel {
+abstract class PermissionStateModel with _$PermissionStateModel {
   const factory PermissionStateModel({
     @Default(false) bool notification,
     @Default(false) bool criticalAlert,

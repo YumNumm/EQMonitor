@@ -8,146 +8,73 @@ part of 'time_ticker.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timeTickerHash() => r'e07001e8fe705386ea328936b8d5064182b4f9cb';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [timeTicker].
 @ProviderFor(timeTicker)
-const timeTickerProvider = TimeTickerFamily();
+const timeTickerProvider = TimeTickerFamily._();
 
-/// See also [timeTicker].
-class TimeTickerFamily extends Family<AsyncValue<DateTime>> {
-  /// See also [timeTicker].
-  const TimeTickerFamily();
+final class TimeTickerProvider
+    extends $FunctionalProvider<AsyncValue<DateTime>, Stream<DateTime>>
+    with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
+  const TimeTickerProvider._({
+    required TimeTickerFamily super.from,
+    required Duration super.argument,
+  }) : super(
+         retry: null,
+         name: r'timeTickerProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [timeTicker].
-  TimeTickerProvider call([Duration duration = const Duration(seconds: 1)]) {
-    return TimeTickerProvider(duration);
+  @override
+  String debugGetCreateSourceHash() => _$timeTickerHash();
+
+  @override
+  String toString() {
+    return r'timeTickerProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  TimeTickerProvider getProviderOverride(
-    covariant TimeTickerProvider provider,
-  ) {
-    return call(provider.duration);
-  }
-
-  static final Iterable<ProviderOrFamily> _dependencies =
-      const <ProviderOrFamily>[];
+  $StreamProviderElement<DateTime> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static final Iterable<ProviderOrFamily> _allTransitiveDependencies =
-      const <ProviderOrFamily>{};
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'timeTickerProvider';
-}
-
-/// See also [timeTicker].
-class TimeTickerProvider extends StreamProvider<DateTime> {
-  /// See also [timeTicker].
-  TimeTickerProvider([Duration duration = const Duration(seconds: 1)])
-    : this._internal(
-        (ref) => timeTicker(ref as TimeTickerRef, duration),
-        from: timeTickerProvider,
-        name: r'timeTickerProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$timeTickerHash,
-        dependencies: TimeTickerFamily._dependencies,
-        allTransitiveDependencies: TimeTickerFamily._allTransitiveDependencies,
-        duration: duration,
-      );
-
-  TimeTickerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.duration,
-  }) : super.internal();
-
-  final Duration duration;
-
-  @override
-  Override overrideWith(
-    Stream<DateTime> Function(TimeTickerRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: TimeTickerProvider._internal(
-        (ref) => create(ref as TimeTickerRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        duration: duration,
-      ),
-    );
-  }
-
-  @override
-  StreamProviderElement<DateTime> createElement() {
-    return _TimeTickerProviderElement(this);
+  Stream<DateTime> create(Ref ref) {
+    final argument = this.argument as Duration;
+    return timeTicker(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is TimeTickerProvider && other.duration == duration;
+    return other is TimeTickerProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, duration.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin TimeTickerRef on StreamProviderRef<DateTime> {
-  /// The parameter `duration` of this provider.
-  Duration get duration;
-}
+String _$timeTickerHash() => r'b6558f45ff8da20b7a1b356a6b43ccd6c0d6d89f';
 
-class _TimeTickerProviderElement extends StreamProviderElement<DateTime>
-    with TimeTickerRef {
-  _TimeTickerProviderElement(super.provider);
+final class TimeTickerFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<DateTime>, Duration> {
+  const TimeTickerFamily._()
+    : super(
+        retry: null,
+        name: r'timeTickerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  TimeTickerProvider call([Duration duration = const Duration(seconds: 1)]) =>
+      TimeTickerProvider._(argument: duration, from: this);
 
   @override
-  Duration get duration => (origin as TimeTickerProvider).duration;
+  String toString() => r'timeTickerProvider';
 }
 
 // ignore_for_file: type=lint

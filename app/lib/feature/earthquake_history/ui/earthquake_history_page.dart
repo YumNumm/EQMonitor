@@ -27,7 +27,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then((_) async {
           if (parameter.value == const EarthquakeHistoryParameter() &&
-              state.valueOrNull?.$1.length == 5) {
+              state.value?.$1.length == 5) {
             await ref
                 .read(
                   earthquakeHistoryNotifierProvider(parameter.value).notifier,
@@ -53,24 +53,20 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       body: _SliverListBody(
         state: state,
         parameter: parameter.value,
-        onRefresh:
-            () async =>
-                ref
-                    .read(
-                      earthquakeHistoryNotifierProvider(
-                        parameter.value,
-                      ).notifier,
-                    )
-                    .refresh(),
-        onScrollEnd:
-            () async =>
-                ref
-                    .read(
-                      earthquakeHistoryNotifierProvider(
-                        parameter.value,
-                      ).notifier,
-                    )
-                    .fetchNextData(),
+        onRefresh: () async => ref
+            .read(
+              earthquakeHistoryNotifierProvider(
+                parameter.value,
+              ).notifier,
+            )
+            .refresh(),
+        onScrollEnd: () async => ref
+            .read(
+              earthquakeHistoryNotifierProvider(
+                parameter.value,
+              ).notifier,
+            )
+            .fetchNextData(),
       ),
     );
   }
@@ -94,27 +90,24 @@ class _SearchParameter extends StatelessWidget {
                     IntensityFilterChip(
                       min: parameter.intensityGte,
                       max: parameter.intensityLte,
-                      onChanged:
-                          (min, max) =>
-                              onChanged(parameter.updateIntensity(min, max)),
+                      onChanged: (min, max) =>
+                          onChanged(parameter.updateIntensity(min, max)),
                     ),
                     MagnitudeFilterChip(
                       min: parameter.magnitudeGte,
                       max: parameter.magnitudeLte,
-                      onChanged:
-                          (min, max) =>
-                              onChanged(parameter.updateMagnitude(min, max)),
+                      onChanged: (min, max) =>
+                          onChanged(parameter.updateMagnitude(min, max)),
                     ),
                     DepthFilterChip(
                       min: parameter.depthGte?.toInt(),
                       max: parameter.depthLte?.toInt(),
-                      onChanged:
-                          (min, max) => onChanged(
-                            parameter.updateDepth(
-                              min?.toDouble(),
-                              max?.toDouble(),
-                            ),
-                          ),
+                      onChanged: (min, max) => onChanged(
+                        parameter.updateDepth(
+                          min?.toDouble(),
+                          max?.toDouble(),
+                        ),
+                      ),
                     ),
                   ]
                   .map(
@@ -174,9 +167,8 @@ class _SliverListBody extends HookConsumerWidget {
         clipBehavior: Clip.antiAlias,
         padding: EdgeInsets.zero,
         itemCount: data.$1.length + 1,
-        separatorBuilder:
-            (context, index) =>
-                const Divider(height: 0, indent: 0, endIndent: 0, thickness: 0),
+        separatorBuilder: (context, index) =>
+            const Divider(height: 0, indent: 0, endIndent: 0, thickness: 0),
         itemBuilder: (context, index) {
           if (index == data.$1.length) {
             if (state.isLoading) {
@@ -186,7 +178,7 @@ class _SliverListBody extends HookConsumerWidget {
               final error = state.error!;
               return ErrorCard(error: error, onReload: onRefresh);
             }
-            final hasNext = state.valueOrNull?.hasNext ?? false;
+            final hasNext = state.value?.hasNext ?? false;
             if (hasNext) {
               return loading;
             } else {
@@ -196,10 +188,9 @@ class _SliverListBody extends HookConsumerWidget {
           final item = data.$1[index];
           return EarthquakeHistoryListTile(
             item: item,
-            onTap:
-                () async => EarthquakeHistoryDetailsRoute(
-                  eventId: item.eventId,
-                ).push<void>(context),
+            onTap: () async => EarthquakeHistoryDetailsRoute(
+              eventId: item.eventId,
+            ).push<void>(context),
           );
         },
       );
@@ -221,22 +212,21 @@ class _SliverListBody extends HookConsumerWidget {
                   else
                     FilledButton(
                       child: const Text('観測点情報を再取得'),
-                      onPressed:
-                          () async => ref.invalidate(jmaParameterProvider),
+                      onPressed: () async =>
+                          ref.invalidate(jmaParameterProvider),
                     ),
                 ],
               ),
             );
           }
-          final valueOrNull = state.valueOrNull;
+          final valueOrNull = state.value;
           if (valueOrNull != null) {
             return listView(data: valueOrNull);
           }
           return ErrorCard(
             error: error,
-            onReload:
-                () async =>
-                    ref.refresh(earthquakeHistoryNotifierProvider(parameter)),
+            onReload: () async =>
+                ref.refresh(earthquakeHistoryNotifierProvider(parameter)),
           );
         }(),
         AsyncData(:final value) => listView(data: value),

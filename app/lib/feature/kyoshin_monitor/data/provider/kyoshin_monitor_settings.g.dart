@@ -8,25 +8,66 @@ part of 'kyoshin_monitor_settings.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+@ProviderFor(KyoshinMonitorSettings)
+const kyoshinMonitorSettingsProvider = KyoshinMonitorSettingsProvider._();
+
+final class KyoshinMonitorSettingsProvider
+    extends
+        $NotifierProvider<KyoshinMonitorSettings, KyoshinMonitorSettingsModel> {
+  const KyoshinMonitorSettingsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kyoshinMonitorSettingsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kyoshinMonitorSettingsHash();
+
+  @$internal
+  @override
+  KyoshinMonitorSettings create() => KyoshinMonitorSettings();
+
+  @$internal
+  @override
+  $NotifierProviderElement<KyoshinMonitorSettings, KyoshinMonitorSettingsModel>
+  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KyoshinMonitorSettingsModel value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $ValueProvider<KyoshinMonitorSettingsModel>(value),
+    );
+  }
+}
+
 String _$kyoshinMonitorSettingsHash() =>
     r'6e7b5c58da4f50177bda98f59deec91e8292a9db';
 
-/// See also [KyoshinMonitorSettings].
-@ProviderFor(KyoshinMonitorSettings)
-final kyoshinMonitorSettingsProvider = NotifierProvider<
-  KyoshinMonitorSettings,
-  KyoshinMonitorSettingsModel
->.internal(
-  KyoshinMonitorSettings.new,
-  name: r'kyoshinMonitorSettingsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$kyoshinMonitorSettingsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$KyoshinMonitorSettings
+    extends $Notifier<KyoshinMonitorSettingsModel> {
+  KyoshinMonitorSettingsModel build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<KyoshinMonitorSettingsModel>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<KyoshinMonitorSettingsModel>,
+              KyoshinMonitorSettingsModel,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$KyoshinMonitorSettings = Notifier<KyoshinMonitorSettingsModel>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

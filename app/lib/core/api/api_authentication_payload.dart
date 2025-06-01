@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'api_authentication_payload.g.dart';
