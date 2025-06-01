@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_utility.g.dart';
@@ -10,11 +10,7 @@ part 'map_utility.g.dart';
 MapUtility mapUtility(Ref ref) => MapUtility();
 
 class MapUtility {
-  Future<void> addHypocenterImages(MapController controller) async {
-    final style = controller.style;
-    if (style == null) {
-      throw Exception('style is null');
-    }
+  Future<void> addHypocenterImages(MapLibreMapController controller) async {
 
     final normalHypocenterBytes = await rootBundle.load(
       Assets.images.map.normalHypocenter.path,
@@ -24,11 +20,11 @@ class MapUtility {
     );
 
     await (
-      style.addImage(
+      controller.addImage(
         normalHypocenterImage,
         normalHypocenterBytes.buffer.asUint8List(),
       ),
-      style.addImage(
+      controller.addImage(
         lowPreciseHypocenterImage,
         lowPreciseHypocenterBytes.buffer.asUint8List(),
       ),

@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre/maplibre.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:synchronized/extension.dart';
 
 /// 揺れ検知枠を表示するレイヤー
@@ -25,7 +25,7 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
-    final controller = MapController.of(context);
+    final controller = MapLibreInherited.of(context);
     final shakeDetectionEvents = ref.watch(
       shakeDetectionKmoniPointsMergedProvider,
     );
@@ -52,30 +52,26 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
             // GeoJSONソースを追加
-            await controller.style!.addSource(
-              GeoJsonSource(id: _sourceId, data: _createEmptyGeoJson()),
+            await controller.addSource(
+              _sourceId,
+              GeojsonSourceProperties(data: _createEmptyGeoJson()),
             );
 
             // 各レベルごとにLine Layerを追加
             for (final level in ShakeDetectionLevel.values) {
               final layerId = _getLayerId(level);
-              await controller.style!.addLayer(
-                LineStyleLayer(
-                  id: layerId,
-                  sourceId: _sourceId,
-                  paint: {
-                    'line-color': level.color.toHexStringRGB(),
-                    'line-width': 2.0,
-                  },
-                  layout: {
-                    'visibility': 'visible',
-                    'filter': [
-                      '==',
-                      ['get', 'level'],
-                      level.name,
-                    ],
-                  },
+              await controller.addLayer(
+                layerId,
+                _sourceId,
+                LineLayerProperties(
+                  lineColor: level.color.toHexStringRGB(),
+                  lineWidth: 2.0,
                 ),
+                filter: [
+                  '==',
+                  ['get', 'level'],
+                  level.name,
+                ],
                 belowLayerId: _baseLayerId,
               );
             }
@@ -102,24 +98,18 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
       unawaited(
         controller.synchronized(() async {
           // ソースデータを更新
-          await controller.style!.updateGeoJsonSource(
-            id: _sourceId,
-            data: gridAreas,
+          await controller.setGeoJsonSource(
+            _sourceId,
+            jsonDecode(gridAreas) as Map<String, dynamic>,
           );
 
           // 点滅制御 - 表示/非表示を切り替え
-          final visibility = isVisible.value ? 'visible' : 'none';
+          final visibility = isVisible.value;
 
           // 各レベルのレイヤーを更新
           for (final level in ShakeDetectionLevel.values) {
             final layerId = _getLayerId(level);
-            await controller.style!.updateLayer(
-              LineStyleLayer(
-                id: layerId,
-                sourceId: _sourceId,
-                layout: {'visibility': visibility},
-              ),
-            );
+            await controller.setLayerVisibility(layerId, visibility);
           }
         }),
       );
@@ -196,7 +186,7 @@ class ShakeDetectionLayer extends HookConsumerWidget implements MapLayer {
         },
         'properties': {
           'grid_id': entry.key,
-          'level': level.index.toString(),
+          'level': level.name,
           'intensity': intensity.type,
         },
       });
