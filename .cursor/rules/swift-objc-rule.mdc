@@ -25,5 +25,5 @@ cd -
 `ffigen`を利用してバインディングを生成してください
 
 ```bash
-fvm dart run ffigen
+dart run ffigen
 ```
