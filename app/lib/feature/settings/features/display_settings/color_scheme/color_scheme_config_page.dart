@@ -1,7 +1,10 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_configuration.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_scheme_type.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/components/intensity_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,19 +13,22 @@ class ColorSchemeConfigPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(intensityColorProvider);
+    final configuration = ref.watch(intensityColorConfigurationProvider);
+    final colorModel = ref.watch(intensityColorProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('震度配色設定')),
       body: SingleChildScrollView(
         child: Column(
           children: [
             RadioListTile.adaptive(
-              value: IntensityColorModel.eqmonitor(),
-              groupValue: state,
-              onChanged:
-                  (value) async => ref
-                      .read(intensityColorProvider.notifier)
-                      .update(IntensityColorModel.eqmonitor()),
+              value: const IntensityColorSchemeType.predefined(
+                scheme: PredefinedScheme.eqmonitor,
+              ),
+              groupValue: configuration.schemeType,
+              onChanged: (value) => ref
+                  .read(intensityColorConfigurationProvider.notifier)
+                  .updatePredefinedScheme(PredefinedScheme.eqmonitor),
               title: const Text('EQMonitor'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -32,12 +38,13 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               ),
             ),
             RadioListTile.adaptive(
-              value: IntensityColorModel.jma(),
-              groupValue: state,
-              onChanged:
-                  (value) async => ref
-                      .read(intensityColorProvider.notifier)
-                      .update(IntensityColorModel.jma()),
+              value: const IntensityColorSchemeType.predefined(
+                scheme: PredefinedScheme.jma,
+              ),
+              groupValue: configuration.schemeType,
+              onChanged: (value) => ref
+                  .read(intensityColorConfigurationProvider.notifier)
+                  .updatePredefinedScheme(PredefinedScheme.jma),
               title: const Text('気象庁配色'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -45,12 +52,13 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               ),
             ),
             RadioListTile.adaptive(
-              value: IntensityColorModel.earthQuickly(),
-              groupValue: state,
-              onChanged:
-                  (value) async => ref
-                      .read(intensityColorProvider.notifier)
-                      .update(IntensityColorModel.earthQuickly()),
+              value: const IntensityColorSchemeType.predefined(
+                scheme: PredefinedScheme.earthQuickly,
+              ),
+              groupValue: configuration.schemeType,
+              onChanged: (value) => ref
+                  .read(intensityColorConfigurationProvider.notifier)
+                  .updatePredefinedScheme(PredefinedScheme.earthQuickly),
               title: const Text('EarthQuickly'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -59,6 +67,50 @@ class ColorSchemeConfigPage extends ConsumerWidget {
                 ),
               ),
             ),
+            RadioListTile.adaptive(
+              value: const IntensityColorSchemeType.predefined(
+                scheme: PredefinedScheme.nhk,
+              ),
+              groupValue: configuration.schemeType,
+              onChanged: (value) => ref
+                  .read(intensityColorConfigurationProvider.notifier)
+                  .updatePredefinedScheme(PredefinedScheme.nhk),
+              title: const Text('NHK配色'),
+              subtitle: Padding(
+                padding: const EdgeInsets.all(4),
+                child: _IntensityWidgets(
+                  colorModel: IntensityColorModel.nhk(),
+                ),
+              ),
+            ),
+            RadioListTile.adaptive(
+              value: const IntensityColorSchemeType.custom(),
+              groupValue: configuration.schemeType,
+              onChanged: (value) {
+                final customColors = configuration.customColors ??
+                    IntensityColorModel.eqmonitor();
+                ref
+                    .read(intensityColorConfigurationProvider.notifier)
+                    .updateCustomColors(customColors);
+              },
+              title: const Text('カスタム配色'),
+              subtitle: configuration.schemeType == const IntensityColorSchemeType.custom()
+                  ? Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: _IntensityWidgets(colorModel: colorModel),
+                    )
+                  : null,
+            ),
+            if (configuration.schemeType == const IntensityColorSchemeType.custom())
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: IntensityColorPicker(
+                  initialColors: colorModel,
+                  onChanged: (colors) => ref
+                      .read(intensityColorConfigurationProvider.notifier)
+                      .updateCustomColors(colors),
+                ),
+              ),
             const SizedBox(height: kFloatingActionButtonMargin * 4),
           ],
         ),

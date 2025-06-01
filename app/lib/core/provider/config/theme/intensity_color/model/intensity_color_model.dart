@@ -190,6 +190,50 @@ class IntensityColorModel with _$IntensityColorModel {
       background: Color.fromARGB(255, 47, 79, 79),
     ),
   );
+
+  factory IntensityColorModel.nhk() => const IntensityColorModel(
+    zero: TextColorModel(
+      foreground: Colors.black,
+      background: Color.fromARGB(255, 255, 255, 255),
+    ),
+    one: TextColorModel(
+      foreground: Colors.black,
+      background: Color.fromARGB(255, 242, 242, 255),
+    ),
+    two: TextColorModel(
+      foreground: Colors.black,
+      background: Color.fromARGB(255, 0, 170, 255),
+    ),
+    three: TextColorModel(
+      foreground: Colors.white,
+      background: Color.fromARGB(255, 0, 65, 255),
+    ),
+    four: TextColorModel(
+      foreground: Colors.black,
+      background: Color.fromARGB(255, 250, 230, 150),
+    ),
+    fiveLower: TextColorModel(
+      foreground: Colors.black,
+      background: Color.fromARGB(255, 255, 230, 0),
+    ),
+    fiveUpper: TextColorModel(
+      foreground: Colors.black,
+      background: Color.fromARGB(255, 255, 153, 0),
+    ),
+    sixLower: TextColorModel(
+      foreground: Colors.white,
+      background: Color.fromARGB(255, 255, 40, 0),
+    ),
+    sixUpper: TextColorModel(
+      foreground: Colors.white,
+      background: Color.fromARGB(255, 165, 0, 33),
+    ),
+    seven: TextColorModel(
+      foreground: Colors.white,
+      background: Color.fromARGB(255, 180, 0, 104),
+    ),
+    unknown: TextColorModel(foreground: Colors.white, background: Colors.black),
+  );
 }
 
 @freezed
