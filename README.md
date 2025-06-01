@@ -40,16 +40,14 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 下記のコマンドをターミナルから実行してください。
 
-1. `git clone https://github.com/YumNumm/EQMonitor` でリポジトリをクローンします。
-
-1. `cd EQMonitor` でカレントディレクトリを移動します。
+1. [mise](https://mise.jdx.dev/)をインストールしてください
 
 1. Swift Package Managerを利用するために、以下のコマンドを実行してください
 
     - [Swift Package Manager for app developers](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
 
     ```bash
-    fvm flutter config --enable-swift-package-manager
+    flutter config --enable-swift-package-manager
     ```
 
 1. Dartプロジェクトを管理するためのツールである[melos](https://melos.invertase.dev/)をインストールします。
@@ -63,14 +61,7 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 1. `mv environment/.env.example environment/.env.dev` を実行してください。
 
-   - HTTP APIのみ Staging APIへ接続できます。(事前設定済み)
-     - 常に最新の地震情報が提供されることを保証しません。
-     - 事前の予告なしに、APIの仕様が変更される可能性があります。
-     - アプリストアで公開しているAPIとは異なり、APIの実行環境やWAFの設定が異なります。
-   - その他の値は、そのままでも問題ありません。
-     - WebSocket APIは公開していないため、リアルタイムでの緊急地震速報の受信などはできません。
-
-1. `fvm flutter run` でアプリケーションを起動します。
+1. `flutter run` でアプリケーションを起動します。
 
 ## アーキテクチャ
 
@@ -87,6 +78,6 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
   - WebSocket(Fallback): Cloudflare Durable Objects
 
 - バックエンド(通知配信, DB追加, データ加工, WebSocket, 揺れ検知)
-  - 実行環境: Oracle Cloud Infrastructure Compute Instance, Docker Compose(12個のコンテナを管理)
+  - 実行環境: Oracle Cloud Infrastructure Compute Instance, Docker Compose
   - データベース(キャッシュ用): PostgreSQL
   - 言語: Node.js(TS), Bun(TS), Golang, C#
