@@ -118,6 +118,7 @@ dev_dependencies:
   freezed: ^2.5.7
   go_router_builder: ^2.7.1
   json_serializable: ^6.9.0
+  mocktail: ^1.0.4
   pedantic_mono: ^1.29.0
   retrofit_generator: ^9.1.9
   riverpod_generator: ^2.6.3
