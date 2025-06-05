@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityColorConfiguration {
 
- IntensityColorSchemeType get schemeType; IntensityColorModel? get customColors;
+ PredefinedScheme get schemeType; IntensityColorModel? get customColors;
 /// Create a copy of IntensityColorConfiguration
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,11 +49,11 @@ abstract mixin class $IntensityColorConfigurationCopyWith<$Res>  {
   factory $IntensityColorConfigurationCopyWith(IntensityColorConfiguration value, $Res Function(IntensityColorConfiguration) _then) = _$IntensityColorConfigurationCopyWithImpl;
 @useResult
 $Res call({
- IntensityColorSchemeType schemeType, IntensityColorModel? customColors
+ PredefinedScheme schemeType, IntensityColorModel? customColors
 });
 
 
-$IntensityColorSchemeTypeCopyWith<$Res> get schemeType;$IntensityColorModelCopyWith<$Res>? get customColors;
+$IntensityColorModelCopyWith<$Res>? get customColors;
 
 }
 /// @nodoc
@@ -69,20 +69,11 @@ class _$IntensityColorConfigurationCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? schemeType = null,Object? customColors = freezed,}) {
   return _then(_self.copyWith(
 schemeType: null == schemeType ? _self.schemeType : schemeType // ignore: cast_nullable_to_non_nullable
-as IntensityColorSchemeType,customColors: freezed == customColors ? _self.customColors : customColors // ignore: cast_nullable_to_non_nullable
+as PredefinedScheme,customColors: freezed == customColors ? _self.customColors : customColors // ignore: cast_nullable_to_non_nullable
 as IntensityColorModel?,
   ));
 }
 /// Create a copy of IntensityColorConfiguration
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityColorSchemeTypeCopyWith<$Res> get schemeType {
-  
-  return $IntensityColorSchemeTypeCopyWith<$Res>(_self.schemeType, (value) {
-    return _then(_self.copyWith(schemeType: value));
-  });
-}/// Create a copy of IntensityColorConfiguration
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -105,7 +96,7 @@ class _IntensityColorConfiguration implements IntensityColorConfiguration {
   const _IntensityColorConfiguration({required this.schemeType, this.customColors});
   factory _IntensityColorConfiguration.fromJson(Map<String, dynamic> json) => _$IntensityColorConfigurationFromJson(json);
 
-@override final  IntensityColorSchemeType schemeType;
+@override final  PredefinedScheme schemeType;
 @override final  IntensityColorModel? customColors;
 
 /// Create a copy of IntensityColorConfiguration
@@ -141,11 +132,11 @@ abstract mixin class _$IntensityColorConfigurationCopyWith<$Res> implements $Int
   factory _$IntensityColorConfigurationCopyWith(_IntensityColorConfiguration value, $Res Function(_IntensityColorConfiguration) _then) = __$IntensityColorConfigurationCopyWithImpl;
 @override @useResult
 $Res call({
- IntensityColorSchemeType schemeType, IntensityColorModel? customColors
+ PredefinedScheme schemeType, IntensityColorModel? customColors
 });
 
 
-@override $IntensityColorSchemeTypeCopyWith<$Res> get schemeType;@override $IntensityColorModelCopyWith<$Res>? get customColors;
+@override $IntensityColorModelCopyWith<$Res>? get customColors;
 
 }
 /// @nodoc
@@ -161,21 +152,12 @@ class __$IntensityColorConfigurationCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? schemeType = null,Object? customColors = freezed,}) {
   return _then(_IntensityColorConfiguration(
 schemeType: null == schemeType ? _self.schemeType : schemeType // ignore: cast_nullable_to_non_nullable
-as IntensityColorSchemeType,customColors: freezed == customColors ? _self.customColors : customColors // ignore: cast_nullable_to_non_nullable
+as PredefinedScheme,customColors: freezed == customColors ? _self.customColors : customColors // ignore: cast_nullable_to_non_nullable
 as IntensityColorModel?,
   ));
 }
 
 /// Create a copy of IntensityColorConfiguration
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityColorSchemeTypeCopyWith<$Res> get schemeType {
-  
-  return $IntensityColorSchemeTypeCopyWith<$Res>(_self.schemeType, (value) {
-    return _then(_self.copyWith(schemeType: value));
-  });
-}/// Create a copy of IntensityColorConfiguration
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

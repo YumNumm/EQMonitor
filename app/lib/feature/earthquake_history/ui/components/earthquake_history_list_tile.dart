@@ -3,9 +3,10 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/extension/earthquake_v1.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -114,11 +115,10 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           (final int depth) => '深さ ${depth}km',
           _ => '',
         };
-    final intensityColorState = ref.watch(intensityColorProvider);
-    final intensityColor =
-        maxIntensity != null
-            ? intensityColorState.fromJmaIntensity(maxIntensity).background
-            : null;
+    final intensityColorState = ref.watch(intensityColorNotifierProvider).colorModel;
+    final intensityColor = maxIntensity != null
+        ? intensityColorState.fromJmaIntensity(maxIntensity).background
+        : null;
     final maxLpgmIntensity = item.maxLpgmIntensity;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
@@ -138,8 +138,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     ];
     return ListTile(
       visualDensity: visualDensity,
-      tileColor:
-          showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
+      tileColor: showBackgroundColor
+          ? intensityColor?.withValues(alpha: 0.4)
+          : null,
       onTap: onTap,
       title: Text(
         title,
@@ -162,29 +163,28 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           ...chips,
         ],
       ),
-      leading:
-          isFarEarthquake
-              ? SizedBox(
-                width: intensityIconSize,
-                height: intensityIconSize,
-                child: Card(
-                  color: theme.colorScheme.errorContainer,
-                  margin: EdgeInsets.zero,
-                  elevation: 0,
-                  child: Icon(
-                    isVolcano ? Icons.volcano_rounded : Icons.public_rounded,
-                    size: 32,
-                    color: theme.colorScheme.onErrorContainer,
-                  ),
+      leading: isFarEarthquake
+          ? SizedBox(
+              width: intensityIconSize,
+              height: intensityIconSize,
+              child: Card(
+                color: theme.colorScheme.errorContainer,
+                margin: EdgeInsets.zero,
+                elevation: 0,
+                child: Icon(
+                  isVolcano ? Icons.volcano_rounded : Icons.public_rounded,
+                  size: 32,
+                  color: theme.colorScheme.onErrorContainer,
                 ),
-              )
-              : maxIntensity != null
-              ? JmaIntensityIcon(
-                intensity: maxIntensity,
-                type: IntensityIconType.filled,
-                size: intensityIconSize,
-              )
-              : null,
+              ),
+            )
+          : maxIntensity != null
+          ? JmaIntensityIcon(
+              intensity: maxIntensity,
+              type: IntensityIconType.filled,
+              size: intensityIconSize,
+            )
+          : null,
       trailing: Text(
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(

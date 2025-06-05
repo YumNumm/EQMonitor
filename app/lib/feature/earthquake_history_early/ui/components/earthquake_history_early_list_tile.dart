@@ -1,8 +1,9 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,13 +56,12 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
           (final int depth) => '深さ ${depth}km',
           _ => '',
         };
-    final intensityColorState = ref.watch(intensityColorProvider);
-    final intensityColor =
-        maxIntensity != null
-            ? intensityColorState
-                .fromJmaForecastIntensity(maxIntensity)
-                .background
-            : null;
+    final intensityColorState = ref.watch(intensityColorNotifierProvider);
+    final intensityColor = maxIntensity != null
+        ? intensityColorState.colorModel
+              .fromJmaForecastIntensity(maxIntensity)
+              .background
+        : null;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
     final trailingText = switch (null) {
@@ -69,8 +69,9 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
       _ => '',
     };
     return ListTile(
-      tileColor:
-          showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
+      tileColor: showBackgroundColor
+          ? intensityColor?.withValues(alpha: 0.4)
+          : null,
       onTap: onTap,
       title: Text(
         title,
@@ -87,14 +88,13 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
           ),
         ],
       ),
-      leading:
-          maxIntensity != null
-              ? JmaForecastIntensityIcon(
-                intensity: maxIntensity,
-                type: IntensityIconType.filled,
-                showSuffix: !item.maxIntensityIsEarly,
-              )
-              : null,
+      leading: maxIntensity != null
+          ? JmaForecastIntensityIcon(
+              intensity: maxIntensity,
+              type: IntensityIconType.filled,
+              showSuffix: !item.maxIntensityIsEarly,
+            )
+          : null,
       trailing: Text(
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(

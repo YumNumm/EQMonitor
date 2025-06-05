@@ -256,23 +256,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
   factory: $SettingsRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'notification',
-
-      factory: $NotificationRouteExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'earthquake',
-
-          factory: $NotificationEarthquakeRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'eew',
-
-          factory: $NotificationEewRouteExtension._fromState,
-        ),
-      ],
-    ),
-    GoRouteData.$route(
       path: 'display',
 
       factory: $DisplayRouteExtension._fromState,
@@ -373,55 +356,6 @@ extension $SettingsRouteExtension on SettingsRoute {
   static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
 
   String get location => GoRouteData.$location('/settings');
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $NotificationRouteExtension on NotificationRoute {
-  static NotificationRoute _fromState(GoRouterState state) =>
-      const NotificationRoute();
-
-  String get location => GoRouteData.$location('/settings/notification');
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $NotificationEarthquakeRouteExtension on NotificationEarthquakeRoute {
-  static NotificationEarthquakeRoute _fromState(GoRouterState state) =>
-      const NotificationEarthquakeRoute();
-
-  String get location =>
-      GoRouteData.$location('/settings/notification/earthquake');
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $NotificationEewRouteExtension on NotificationEewRoute {
-  static NotificationEewRoute _fromState(GoRouterState state) =>
-      const NotificationEewRoute();
-
-  String get location => GoRouteData.$location('/settings/notification/eew');
 
   void go(BuildContext context) => context.go(location);
 

@@ -99,7 +99,7 @@
 //       _kmoniObservationPointService!.init(),
 //       _eewPsWaveService!.init(),
 //       _eewEstimatedIntensityService!.init(
-//         ref.read(intensityColorProvider),
+//         ref.read(intensityColorNotifierProvider).colorModel,
 //       ),
 //     ).wait;
 //     await _eewHypocenterService!.init(

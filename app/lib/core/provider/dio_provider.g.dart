@@ -46,61 +46,7 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio>
   }
 }
 
-String _$dioHash() => r'a29caf5d4b43ef7992d10d454a5cb5f7745d0df5';
-
-@ProviderFor(IsDioProxyEnabled)
-const isDioProxyEnabledProvider = IsDioProxyEnabledProvider._();
-
-final class IsDioProxyEnabledProvider
-    extends $NotifierProvider<IsDioProxyEnabled, bool> {
-  const IsDioProxyEnabledProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'isDioProxyEnabledProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$isDioProxyEnabledHash();
-
-  @$internal
-  @override
-  IsDioProxyEnabled create() => IsDioProxyEnabled();
-
-  @$internal
-  @override
-  $NotifierProviderElement<IsDioProxyEnabled, bool> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $ValueProvider<bool>(value),
-    );
-  }
-}
-
-String _$isDioProxyEnabledHash() => r'ea784ec995e551781f2350f1b6129db942a3508a';
-
-abstract class _$IsDioProxyEnabled extends $Notifier<bool> {
-  bool build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<bool>;
-    final element =
-        ref.element
-            as $ClassProviderElement<AnyNotifier<bool>, bool, Object?, Object?>;
-    element.handleValue(ref, created);
-  }
-}
+String _$dioHash() => r'17cfc8aa1da5813ededa73d5cfd719a1e487db63';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

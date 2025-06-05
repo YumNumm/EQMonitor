@@ -1,9 +1,9 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_scheme_type.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/components/intensity_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,8 +13,8 @@ class ColorSchemeConfigPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final configuration = ref.watch(intensityColorConfigurationProvider);
-    final colorModel = ref.watch(intensityColorProvider);
+    final configuration = ref.watch(intensityColorNotifierProvider);
+    final colorModel = ref.watch(intensityColorNotifierProvider).colorModel;
 
     return Scaffold(
       appBar: AppBar(title: const Text('震度配色設定')),
@@ -22,12 +22,10 @@ class ColorSchemeConfigPage extends ConsumerWidget {
         child: Column(
           children: [
             RadioListTile.adaptive(
-              value: const IntensityColorSchemeType.predefined(
-                scheme: PredefinedScheme.eqmonitor,
-              ),
+              value: PredefinedScheme.eqmonitor,
               groupValue: configuration.schemeType,
               onChanged: (value) => ref
-                  .read(intensityColorConfigurationProvider.notifier)
+                  .read(intensityColorNotifierProvider.notifier)
                   .updatePredefinedScheme(PredefinedScheme.eqmonitor),
               title: const Text('EQMonitor'),
               subtitle: Padding(
@@ -38,12 +36,10 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               ),
             ),
             RadioListTile.adaptive(
-              value: const IntensityColorSchemeType.predefined(
-                scheme: PredefinedScheme.jma,
-              ),
+              value: PredefinedScheme.jma,
               groupValue: configuration.schemeType,
               onChanged: (value) => ref
-                  .read(intensityColorConfigurationProvider.notifier)
+                  .read(intensityColorNotifierProvider.notifier)
                   .updatePredefinedScheme(PredefinedScheme.jma),
               title: const Text('気象庁配色'),
               subtitle: Padding(
@@ -52,12 +48,10 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               ),
             ),
             RadioListTile.adaptive(
-              value: const IntensityColorSchemeType.predefined(
-                scheme: PredefinedScheme.earthQuickly,
-              ),
+              value: PredefinedScheme.earthQuickly,
               groupValue: configuration.schemeType,
               onChanged: (value) => ref
-                  .read(intensityColorConfigurationProvider.notifier)
+                  .read(intensityColorNotifierProvider.notifier)
                   .updatePredefinedScheme(PredefinedScheme.earthQuickly),
               title: const Text('EarthQuickly'),
               subtitle: Padding(
@@ -68,12 +62,10 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               ),
             ),
             RadioListTile.adaptive(
-              value: const IntensityColorSchemeType.predefined(
-                scheme: PredefinedScheme.nhk,
-              ),
+              value: PredefinedScheme.nhk,
               groupValue: configuration.schemeType,
               onChanged: (value) => ref
-                  .read(intensityColorConfigurationProvider.notifier)
+                  .read(intensityColorNotifierProvider.notifier)
                   .updatePredefinedScheme(PredefinedScheme.nhk),
               title: const Text('NHK配色'),
               subtitle: Padding(
@@ -84,33 +76,31 @@ class ColorSchemeConfigPage extends ConsumerWidget {
               ),
             ),
             RadioListTile.adaptive(
-              value: const IntensityColorSchemeType.custom(),
+              value: null,
               groupValue: configuration.schemeType,
-              onChanged: (value) {
-                final customColors = configuration.customColors ??
+              onChanged: (value) async {
+                final customColors =
+                    configuration.customColors ??
                     IntensityColorModel.eqmonitor();
-                ref
-                    .read(intensityColorConfigurationProvider.notifier)
+                await ref
+                    .read(intensityColorNotifierProvider.notifier)
                     .updateCustomColors(customColors);
               },
               title: const Text('カスタム配色'),
-              subtitle: configuration.schemeType == const IntensityColorSchemeType.custom()
-                  ? Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: _IntensityWidgets(colorModel: colorModel),
-                    )
-                  : null,
-            ),
-            if (configuration.schemeType == const IntensityColorSchemeType.custom())
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: IntensityColorPicker(
-                  initialColors: colorModel,
-                  onChanged: (colors) => ref
-                      .read(intensityColorConfigurationProvider.notifier)
-                      .updateCustomColors(colors),
-                ),
+              subtitle: Padding(
+                padding: const EdgeInsets.all(4),
+                child: _IntensityWidgets(colorModel: colorModel),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: IntensityColorPicker(
+                initialColors: colorModel,
+                onChanged: (colors) => ref
+                    .read(intensityColorNotifierProvider.notifier)
+                    .updateCustomColors(colors),
+              ),
+            ),
             const SizedBox(height: kFloatingActionButtonMargin * 4),
           ],
         ),

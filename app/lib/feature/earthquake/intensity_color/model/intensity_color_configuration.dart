@@ -8,7 +8,7 @@ part 'intensity_color_configuration.g.dart';
 @freezed
 abstract class IntensityColorConfiguration with _$IntensityColorConfiguration {
   const factory IntensityColorConfiguration({
-    required IntensityColorSchemeType schemeType,
+    required PredefinedScheme schemeType,
     IntensityColorModel? customColors,
   }) = _IntensityColorConfiguration;
 
@@ -18,14 +18,15 @@ abstract class IntensityColorConfiguration with _$IntensityColorConfiguration {
 
 extension IntensityColorConfigurationExt on IntensityColorConfiguration {
   IntensityColorModel get colorModel {
-    return schemeType.when(
-      predefined: (scheme) => switch (scheme) {
+    if (customColors != null) {
+      return customColors!;
+    } else {
+      return switch (schemeType) {
         PredefinedScheme.eqmonitor => IntensityColorModel.eqmonitor(),
         PredefinedScheme.jma => IntensityColorModel.jma(),
         PredefinedScheme.earthQuickly => IntensityColorModel.earthQuickly(),
         PredefinedScheme.nhk => IntensityColorModel.nhk(),
-      },
-      custom: () => customColors ?? IntensityColorModel.eqmonitor(),
-    );
+      };
+    }
   }
 }

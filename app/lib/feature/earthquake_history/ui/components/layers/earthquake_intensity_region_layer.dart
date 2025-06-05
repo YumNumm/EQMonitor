@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -36,7 +37,7 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
     final controller = MapLibreInherited.of(context);
-    final intensityColor = ref.watch(intensityColorProvider);
+    final intensityColor = ref.watch(intensityColorNotifierProvider).colorModel;
     final manager = useMemoized(
       () => _EarthquakeIntensityRegionPaintManager(color: intensityColor),
       [intensityColor],
@@ -65,10 +66,9 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
                       _getLayerId(intensity),
                       'eqmonitor_map',
                       FillLayerProperties(
-                        fillColor:
-                            manager
-                                ._getColorForIntensity(intensity)
-                                .toHexStringRGB(),
+                        fillColor: manager
+                            ._getColorForIntensity(intensity)
+                            .toHexStringRGB(),
                       ),
                       filter: [
                         'in',
@@ -110,8 +110,9 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
               controller.setLayerProperties(
                 _getLayerId(intensity),
                 FillLayerProperties(
-                  fillColor:
-                      manager._getColorForIntensity(intensity).toHexStringRGB(),
+                  fillColor: manager
+                      ._getColorForIntensity(intensity)
+                      .toHexStringRGB(),
                 ),
               ),
               controller.setFilter(_getLayerId(intensity), {
@@ -130,15 +131,14 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
     useEffect(() {
       unawaited(
         controller.synchronized(
-          () async =>
-              JmaIntensity.values
-                  .map(
-                    (intensity) => controller.setLayerVisibility(
-                      _getLayerId(intensity),
-                      visible,
-                    ),
-                  )
-                  .wait,
+          () async => JmaIntensity.values
+              .map(
+                (intensity) => controller.setLayerVisibility(
+                  _getLayerId(intensity),
+                  visible,
+                ),
+              )
+              .wait,
         ),
       );
       return null;

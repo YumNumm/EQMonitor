@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -58,11 +57,6 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SettingsSectionHeader(text: '各種設定'),
-          ListTile(
-            title: const Text('通知条件設定'),
-            leading: const Icon(Icons.notifications),
-            onTap: () async => const NotificationRoute().push<void>(context),
-          ),
           ListTile(
             title: const Text('表示設定'),
             leading: const Icon(Icons.color_lens),
@@ -152,15 +146,10 @@ class _AppVersionInformation extends HookConsumerWidget {
 Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
   BetterFeedback.of(context).show((feedback) async {
     final packageInfo = ref.read(packageInfoProvider);
-    final payload =
-        await ref
-            .read(apiAuthenticationNotifierProvider.notifier)
-            .extractPayload();
 
     final base =
         '--------------------------\n'
         'EQMonitor v${packageInfo.version}+${packageInfo.buildNumber}\n'
-        'Payload: $payload\n'
         '--------------------------';
     // draft an email and send to developer
     final screenshotFilePath = await writeImageToStorage(feedback.screenshot);

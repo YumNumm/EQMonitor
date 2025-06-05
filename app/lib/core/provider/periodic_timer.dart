@@ -8,6 +8,17 @@ part 'periodic_timer.g.dart';
 
 @riverpod
 class PeriodicTimer extends _$PeriodicTimer {
+  late final StreamController<void> _streamController;
+
+  /// メインタイマー
+  Timer? _timer;
+
+  /// 調整タイマー
+  Timer? _timerForDelayAdjust;
+
+  /// ストップウォッチ
+  Stopwatch? _stopwatch;
+
   @override
   Stream<void> build(Key key) async* {
     _streamController = StreamController<void>();
@@ -61,15 +72,4 @@ class PeriodicTimer extends _$PeriodicTimer {
     _stopwatch?.reset();
     _streamController.add(null);
   }
-
-  /// メインタイマー
-  Timer? _timer;
-
-  /// 調整タイマー
-  Timer? _timerForDelayAdjust;
-
-  /// ストップウォッチ
-  Stopwatch? _stopwatch;
-
-  late StreamController<void> _streamController;
 }

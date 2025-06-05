@@ -1,8 +1,9 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -24,7 +25,9 @@ class JmaIntensityIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
+    final intensityColorModel = ref
+        .watch(intensityColorNotifierProvider)
+        .colorModel;
     final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
@@ -33,12 +36,11 @@ class JmaIntensityIcon extends ConsumerWidget {
       _ => intensity.type.replaceAll('-', '').replaceAll('+', ''),
     };
     // 震度の弱・強の表記
-    final suffix =
-        intensity.type.contains('-')
-            ? '-'
-            : intensity.type.contains('+')
-            ? '+'
-            : '';
+    final suffix = intensity.type.contains('-')
+        ? '-'
+        : intensity.type.contains('+')
+        ? '+'
+        : '';
     final intensitySubText = switch (intensity) {
       JmaIntensity.fiveUpperNoInput => '弱以上',
       _ =>
@@ -59,42 +61,41 @@ class JmaIntensityIcon extends ConsumerWidget {
             color: bg,
             border: Border.all(color: borderColor, width: 5),
           ),
-          child:
-              (intensity == JmaIntensity.fiveUpperNoInput)
-                  ? const SizedBox.shrink()
-                  : Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(2),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              intensityMainText,
-                              style: TextStyle(
-                                color: fg,
-                                fontSize: 100,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: FontFamily.jetBrainsMono,
-                              ),
+          child: (intensity == JmaIntensity.fiveUpperNoInput)
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            intensityMainText,
+                            style: TextStyle(
+                              color: fg,
+                              fontSize: 100,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontFamily.jetBrainsMono,
                             ),
-                            Text(
-                              suffix,
-                              style: TextStyle(
-                                color: fg,
-                                fontSize: 80,
-                                fontFamily: FontFamily.jetBrainsMono,
-                                fontFamilyFallback: const [
-                                  FontFamily.notoSansJP,
-                                ],
-                              ),
+                          ),
+                          Text(
+                            suffix,
+                            style: TextStyle(
+                              color: fg,
+                              fontSize: 80,
+                              fontFamily: FontFamily.jetBrainsMono,
+                              fontFamilyFallback: const [
+                                FontFamily.notoSansJP,
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                ),
         ),
       ),
       IntensityIconType.smallWithoutText => SizedBox(

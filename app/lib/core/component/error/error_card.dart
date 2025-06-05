@@ -1,11 +1,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/api/api_authentication_payload.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ErrorCard extends StatelessWidget {
   const ErrorCard({
@@ -84,7 +82,6 @@ class ErrorCard extends StatelessWidget {
                   ),
                 ),
               ],
-              const _DeviceIdText(),
               if (onReload != null) ...[
                 const SizedBox(height: 8),
                 FilledButton.tonalIcon(
@@ -164,23 +161,5 @@ class ErrorCard extends StatelessWidget {
         '少し時間をおいて再度お試しください。\n'
         '解消されない場合は、この画面のスクリーンショットを開発者へ送信してください'
         '\n($error)';
-  }
-}
-
-class _DeviceIdText extends ConsumerWidget {
-  const _DeviceIdText();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-
-    final state = ref.watch(apiAuthenticationPayloadProvider).value;
-    return Text(
-      'デバイスID: ${state?.id ?? "Unknown"}',
-      style: theme.textTheme.bodyMedium?.copyWith(
-        color: theme.colorScheme.onErrorContainer,
-        fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-      ),
-    );
   }
 }

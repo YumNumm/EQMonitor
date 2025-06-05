@@ -76,21 +76,24 @@ class _IntensityColorPickerState extends State<IntensityColorPicker> {
       JmaForecastIntensity.zero => _currentColors.copyWith(zero: textColor),
       JmaForecastIntensity.one => _currentColors.copyWith(one: textColor),
       JmaForecastIntensity.two => _currentColors.copyWith(two: textColor),
-      JmaForecastIntensity.three =>
-        _currentColors.copyWith(three: textColor),
+      JmaForecastIntensity.three => _currentColors.copyWith(three: textColor),
       JmaForecastIntensity.four => _currentColors.copyWith(four: textColor),
-      JmaForecastIntensity.fiveLower =>
-        _currentColors.copyWith(fiveLower: textColor),
-      JmaForecastIntensity.fiveUpper =>
-        _currentColors.copyWith(fiveUpper: textColor),
-      JmaForecastIntensity.sixLower =>
-        _currentColors.copyWith(sixLower: textColor),
-      JmaForecastIntensity.sixUpper =>
-        _currentColors.copyWith(sixUpper: textColor),
-      JmaForecastIntensity.seven =>
-        _currentColors.copyWith(seven: textColor),
-      JmaForecastIntensity.unknown =>
-        _currentColors.copyWith(unknown: textColor),
+      JmaForecastIntensity.fiveLower => _currentColors.copyWith(
+        fiveLower: textColor,
+      ),
+      JmaForecastIntensity.fiveUpper => _currentColors.copyWith(
+        fiveUpper: textColor,
+      ),
+      JmaForecastIntensity.sixLower => _currentColors.copyWith(
+        sixLower: textColor,
+      ),
+      JmaForecastIntensity.sixUpper => _currentColors.copyWith(
+        sixUpper: textColor,
+      ),
+      JmaForecastIntensity.seven => _currentColors.copyWith(seven: textColor),
+      JmaForecastIntensity.unknown => _currentColors.copyWith(
+        unknown: textColor,
+      ),
     };
 
     setState(() {
@@ -113,11 +116,9 @@ class _IntensityColorTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = colorModel.fromJmaForecastIntensity(intensity);
-
     return GestureDetector(
       onTap: () => _showColorPicker(context),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
@@ -145,7 +146,8 @@ class _IntensityColorTile extends StatelessWidget {
     );
   }
 
-  String _getIntensityLabel(JmaForecastIntensity intensity) => switch (intensity) {
+  String _getIntensityLabel(JmaForecastIntensity intensity) =>
+      switch (intensity) {
         JmaForecastIntensity.zero => '震度0',
         JmaForecastIntensity.one => '震度1',
         JmaForecastIntensity.two => '震度2',
@@ -159,10 +161,12 @@ class _IntensityColorTile extends StatelessWidget {
         JmaForecastIntensity.unknown => '不明',
       };
 
-  void _showColorPicker(BuildContext context) {
-    final currentColor = colorModel.fromJmaForecastIntensity(intensity).background;
+  Future<void> _showColorPicker(BuildContext context) async {
+    final currentColor = colorModel
+        .fromJmaForecastIntensity(intensity)
+        .background;
 
-    showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('${_getIntensityLabel(intensity)}の色を選択'),
@@ -170,7 +174,6 @@ class _IntensityColorTile extends StatelessWidget {
           child: ColorPicker(
             pickerColor: currentColor,
             onColorChanged: onColorChanged,
-            colorPickerWidth: 300,
             pickerAreaHeightPercent: 0.7,
             enableAlpha: false,
             displayThumbColor: true,

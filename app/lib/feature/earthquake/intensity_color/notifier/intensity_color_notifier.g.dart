@@ -47,7 +47,7 @@ final class IntensityColorNotifierProvider
 }
 
 String _$intensityColorNotifierHash() =>
-    r'80927b927e21afb374a477d78582cb76b501228a';
+    r'e2fde0c2ea5f2b6eee53060b3f64c731154a5911';
 
 abstract class _$IntensityColorNotifier
     extends $Notifier<IntensityColorConfiguration> {

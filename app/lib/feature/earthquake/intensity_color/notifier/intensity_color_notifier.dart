@@ -25,9 +25,7 @@ class IntensityColorNotifier extends _$IntensityColorNotifier {
       );
     }
     return const IntensityColorConfiguration(
-      schemeType: IntensityColorSchemeType.predefined(
-        scheme: PredefinedScheme.eqmonitor,
-      ),
+      schemeType: PredefinedScheme.eqmonitor,
     );
   }
 
@@ -48,14 +46,14 @@ class IntensityColorNotifier extends _$IntensityColorNotifier {
 
   Future<void> updatePredefinedScheme(PredefinedScheme scheme) async {
     final newConfig = IntensityColorConfiguration(
-      schemeType: IntensityColorSchemeType.predefined(scheme: scheme),
+      schemeType: scheme,
     );
     await updateConfiguration(newConfig);
   }
 
   Future<void> updateCustomColors(IntensityColorModel customColors) async {
     final newConfig = IntensityColorConfiguration(
-      schemeType: const IntensityColorSchemeType.custom(),
+      schemeType: PredefinedScheme.eqmonitor,
       customColors: customColors,
     );
     await updateConfiguration(newConfig);
@@ -89,28 +87,20 @@ class IntensityColorNotifier extends _$IntensityColorNotifier {
     }
   }
 
-  IntensityColorSchemeType _detectSchemeType(IntensityColorModel model) {
+  PredefinedScheme _detectSchemeType(IntensityColorModel model) {
     if (_modelsEqual(model, IntensityColorModel.eqmonitor())) {
-      return const IntensityColorSchemeType.predefined(
-        scheme: PredefinedScheme.eqmonitor,
-      );
+      return PredefinedScheme.eqmonitor;
     }
     if (_modelsEqual(model, IntensityColorModel.jma())) {
-      return const IntensityColorSchemeType.predefined(
-        scheme: PredefinedScheme.jma,
-      );
+      return PredefinedScheme.jma;
     }
     if (_modelsEqual(model, IntensityColorModel.earthQuickly())) {
-      return const IntensityColorSchemeType.predefined(
-        scheme: PredefinedScheme.earthQuickly,
-      );
+      return PredefinedScheme.earthQuickly;
     }
     if (_modelsEqual(model, IntensityColorModel.nhk())) {
-      return const IntensityColorSchemeType.predefined(
-        scheme: PredefinedScheme.nhk,
-      );
+      return PredefinedScheme.nhk;
     }
-    return const IntensityColorSchemeType.custom();
+    return PredefinedScheme.eqmonitor;
   }
 
   bool _isCustomScheme(IntensityColorModel model) {

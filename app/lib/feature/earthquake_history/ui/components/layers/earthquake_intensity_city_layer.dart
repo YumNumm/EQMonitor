@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
@@ -36,7 +37,7 @@ class EarthquakeIntensityCityLayer extends HookConsumerWidget
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useRef(false);
     final controller = MapLibreInherited.of(context);
-    final intensityColor = ref.watch(intensityColorProvider);
+    final intensityColor = ref.watch(intensityColorNotifierProvider);
 
     final earthquake = ref.watch(
       earthquakeHistoryDetailsNotifierProvider(eventId),
@@ -61,11 +62,10 @@ class EarthquakeIntensityCityLayer extends HookConsumerWidget
                       _getLayerId(intensity),
                       'eqmonitor_map',
                       FillLayerProperties(
-                        fillColor:
-                            intensityColor
-                                .fromJmaIntensity(intensity)
-                                .background
-                                .toHexStringRGB(),
+                        fillColor: intensityColor.colorModel
+                            .fromJmaIntensity(intensity)
+                            .background
+                            .toHexStringRGB(),
                       ),
                       filter: [
                         'in',
@@ -107,11 +107,10 @@ class EarthquakeIntensityCityLayer extends HookConsumerWidget
               controller.setLayerProperties(
                 _getLayerId(intensity),
                 FillLayerProperties(
-                  fillColor:
-                      intensityColor
-                          .fromJmaIntensity(intensity)
-                          .background
-                          .toHexStringRGB(),
+                  fillColor: intensityColor.colorModel
+                      .fromJmaIntensity(intensity)
+                      .background
+                      .toHexStringRGB(),
                 ),
               ),
               controller.setFilter(_getLayerId(intensity), {
@@ -130,15 +129,14 @@ class EarthquakeIntensityCityLayer extends HookConsumerWidget
     useEffect(() {
       unawaited(
         controller.synchronized(
-          () async =>
-              JmaIntensity.values
-                  .map(
-                    (intensity) => controller.setLayerVisibility(
-                      _getLayerId(intensity),
-                      visible,
-                    ),
-                  )
-                  .wait,
+          () async => JmaIntensity.values
+              .map(
+                (intensity) => controller.setLayerVisibility(
+                  _getLayerId(intensity),
+                  visible,
+                ),
+              )
+              .wait,
         ),
       );
       return null;

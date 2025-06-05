@@ -1,8 +1,9 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -22,7 +23,9 @@ class JmaLgIntensityIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
+    final intensityColorModel = ref
+        .watch(intensityColorNotifierProvider)
+        .colorModel;
     final colorScheme = intensityColorModel.fromJmaLgIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
 
@@ -81,26 +84,25 @@ class JmaLgIntensityIcon extends ConsumerWidget {
           child: Center(
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child:
-                  (customText != null)
-                      ? Text(
-                        customText!,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      )
-                      : Text(
-                        intensity.type,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
+              child: (customText != null)
+                  ? Text(
+                      customText!,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
                       ),
+                    )
+                  : Text(
+                      intensity.type,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
+                    ),
             ),
           ),
         ),

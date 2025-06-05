@@ -1,7 +1,8 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -24,7 +25,9 @@ class ShakeDetectionCard extends ConsumerWidget {
     final maxIntensity = event.maxIntensity;
     final now = ref.watch(timeTickerProvider()).value ?? DateTime.now();
 
-    final intensityColorSchema = ref.watch(intensityColorProvider);
+    final intensityColorSchema = ref
+        .watch(intensityColorNotifierProvider)
+        .colorModel;
     final maxIntensityColor = intensityColorSchema.fromJmaForecastIntensity(
       maxIntensity,
     );

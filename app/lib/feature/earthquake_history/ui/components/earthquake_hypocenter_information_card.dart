@@ -4,10 +4,11 @@ import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/extension/earthquake_v1.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/util/event_id.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -29,12 +30,11 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
     final earthquakeInfo = _useEarthquakeInfo(item, ref);
 
     // 最大震度アイコン
-    final maxIntensityWidget =
-        earthquakeInfo.isFarEarthquake
-            ? _FarEarthquakeHeaderIcon(isVolcano: earthquakeInfo.isVolcano)
-            : earthquakeInfo.maxIntensity != null
-            ? _MaxIntensityWidget(intensity: earthquakeInfo.maxIntensity!)
-            : null;
+    final maxIntensityWidget = earthquakeInfo.isFarEarthquake
+        ? _FarEarthquakeHeaderIcon(isVolcano: earthquakeInfo.isVolcano)
+        : earthquakeInfo.maxIntensity != null
+        ? _MaxIntensityWidget(intensity: earthquakeInfo.maxIntensity!)
+        : null;
 
     // 地震情報本体
     final body = _EarthquakeInformationBody(item: item, info: earthquakeInfo);
@@ -98,7 +98,9 @@ class _EarthquakeInfo {
 
 /// 地震情報を取得するフック
 _EarthquakeInfo _useEarthquakeInfo(EarthquakeV1Extended item, WidgetRef ref) {
-  final intensityColorScheme = ref.watch(intensityColorProvider);
+  final intensityColorScheme = ref
+      .watch(intensityColorNotifierProvider)
+      .colorModel;
   final isVolcano = item.isVolcano;
   final isFarEarthquake = item.headline?.contains('海外で規模の大きな地震') ?? false;
   final maxIntensity = item.maxIntensity;
@@ -219,8 +221,9 @@ class _EarthquakeInformationBody extends HookWidget {
       info.isVolcano,
       creationDateFromEventId,
     );
-    final timeWidget =
-        timeText != null ? Wrap(children: [Text(timeText)]) : null;
+    final timeWidget = timeText != null
+        ? Wrap(children: [Text(timeText)])
+        : null;
 
     return Wrap(
       spacing: 8,
@@ -453,10 +456,9 @@ class _MagnitudeWidget extends StatelessWidget {
   }
 
   TextStyle _getMagnitudeStyle(TextTheme textTheme) {
-    final baseStyle =
-        item.magnitudeCondition != null
-            ? textTheme.headlineMedium!
-            : textTheme.headlineLarge!;
+    final baseStyle = item.magnitudeCondition != null
+        ? textTheme.headlineMedium!
+        : textTheme.headlineLarge!;
 
     return textTheme.valueStyle(baseStyle);
   }

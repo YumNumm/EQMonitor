@@ -17,7 +17,7 @@ _IntensityColorConfiguration _$IntensityColorConfigurationFromJson(
     final val = _IntensityColorConfiguration(
       schemeType: $checkedConvert(
         'scheme_type',
-        (v) => IntensityColorSchemeType.fromJson(v as Map<String, dynamic>),
+        (v) => $enumDecode(_$PredefinedSchemeEnumMap, v),
       ),
       customColors: $checkedConvert(
         'custom_colors',
@@ -37,6 +37,16 @@ _IntensityColorConfiguration _$IntensityColorConfigurationFromJson(
 Map<String, dynamic> _$IntensityColorConfigurationToJson(
   _IntensityColorConfiguration instance,
 ) => <String, dynamic>{
-  'scheme_type': instance.schemeType,
+  'scheme_type': _$PredefinedSchemeEnumMap[instance.schemeType]!,
   'custom_colors': instance.customColors,
 };
+<<<<<<< HEAD
+=======
+
+const _$PredefinedSchemeEnumMap = {
+  PredefinedScheme.eqmonitor: 'eqmonitor',
+  PredefinedScheme.jma: 'jma',
+  PredefinedScheme.earthQuickly: 'earthQuickly',
+  PredefinedScheme.nhk: 'nhk',
+};
+>>>>>>> 669d7805 (不要なファイルを削除し、依存関係を更新しました。また、`pubspec.lock`のバージョンを更新し、`api_authentication_notifier`や`api_authentication_payload`に関連するコードを削除しました。さらに、`intensity_color`に関するインポートを整理し、コードの可読性を向上させました。)

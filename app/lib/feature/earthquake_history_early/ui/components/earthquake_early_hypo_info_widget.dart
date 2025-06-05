@@ -2,8 +2,9 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -17,68 +18,66 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final intensityColorScheme = ref.watch(intensityColorProvider);
+    final intensityColorScheme = ref.watch(intensityColorNotifierProvider);
 
     final maxIntensity = item.maxIntensity;
     final colorScheme = switch (maxIntensity) {
-      final JmaForecastIntensity intensity => intensityColorScheme
-          .fromJmaForecastIntensity(intensity),
+      final JmaForecastIntensity intensity =>
+        intensityColorScheme.colorModel.fromJmaForecastIntensity(intensity),
       _ => null,
     };
 
-    final maxIntensityWidget =
-        maxIntensity != null
-            ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  '最大震度',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                JmaForecastIntensityIcon(
-                  type: IntensityIconType.filled,
-                  size: 60,
-                  intensity: maxIntensity,
-                  showSuffix: !item.maxIntensityIsEarly,
-                ),
-              ],
-            )
-            : null;
+    final maxIntensityWidget = maxIntensity != null
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                '最大震度',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              JmaForecastIntensityIcon(
+                type: IntensityIconType.filled,
+                size: 60,
+                intensity: maxIntensity,
+                showSuffix: !item.maxIntensityIsEarly,
+              ),
+            ],
+          )
+        : null;
 
     // 「MaxInt, 震源地, 規模」
-    final hypoWidget =
-        item.name == '詳細不明'
-            ? null
-            : Row(
-              textBaseline: TextBaseline.ideographic,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              children: [
-                Text(
-                  '震源地',
-                  style: textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
-                  ),
+    final hypoWidget = item.name == '詳細不明'
+        ? null
+        : Row(
+            textBaseline: TextBaseline.ideographic,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            children: [
+              Text(
+                '震源地',
+                style: textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
                 ),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: item.name,
-                          style: textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+              ),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: item.name,
+                        style: textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            );
+              ),
+            ],
+          );
 
     // 地震発生時刻
     final originTime = item.originTime.toLocal();

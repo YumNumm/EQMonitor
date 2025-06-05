@@ -1,8 +1,9 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
 import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -24,8 +25,10 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel =
-        (colorModel ?? ref.watch(intensityColorProvider))!;
+    final colorModelState = ref
+        .watch(intensityColorNotifierProvider)
+        .colorModel;
+    final intensityColorModel = colorModel ?? colorModelState;
     final colorScheme = intensityColorModel.fromJmaForecastLgIntensity(
       intensity,
     );
@@ -35,12 +38,11 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
         .replaceAll('-', '')
         .replaceAll('+', '');
     // 震度の弱・強の表記
-    final intensitySubText =
-        intensity.type.contains('-')
-            ? '弱'
-            : intensity.type.contains('+')
-            ? '強'
-            : '';
+    final intensitySubText = intensity.type.contains('-')
+        ? '弱'
+        : intensity.type.contains('+')
+        ? '強'
+        : '';
 
     return SizedBox(
       height: size,

@@ -5,9 +5,10 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
-import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_configuration.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake/intensity_color/notifier/intensity_color_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -22,15 +23,14 @@ class EewWidgets extends ConsumerWidget {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
 
     return Column(
-      children:
-          state.reversed
-              .mapIndexed(
-                (index, element) => EewWidget(
-                  eew: element,
-                  index: (state.length > 1) ? '${index + 1}' : null,
-                ),
-              )
-              .toList(),
+      children: state.reversed
+          .mapIndexed(
+            (index, element) => EewWidget(
+              eew: element,
+              index: (state.length > 1) ? '${index + 1}' : null,
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -46,7 +46,7 @@ class EewWidget extends ConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorTheme = theme.colorScheme;
-    final intensityColorScheme = ref.watch(intensityColorProvider);
+    final intensityColorScheme = ref.watch(intensityColorNotifierProvider);
     if (eew.isCanceled) {
       return BorderedContainer(
         elevation: 1,
@@ -64,7 +64,7 @@ class EewWidget extends ConsumerWidget {
     }
     final maxIntensity =
         eew.forecastMaxIntensity ?? JmaForecastIntensity.unknown;
-    final intensityScheme = intensityColorScheme.fromJmaForecastIntensity(
+    final intensityScheme = intensityColorScheme.colorModel.fromJmaForecastIntensity(
       maxIntensity,
     );
     final (_, backgroundColor) = (
@@ -294,30 +294,28 @@ class EewWidget extends ConsumerWidget {
       ],
     );
     final headline = eew.headline?.toString().toHalfWidth;
-    final warningMessageWidget =
-        (headline != null)
-            ? [
-              Text(
-                headline.split('で地震 ').getOrNull(1) ?? headline,
-                style: textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+    final warningMessageWidget = (headline != null)
+        ? [
+            Text(
+              headline.split('で地震 ').getOrNull(1) ?? headline,
+              style: textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              Divider(color: colorTheme.onSurface.withValues(alpha: 0.6)),
-            ]
-            : null;
+            ),
+            Divider(color: colorTheme.onSurface.withValues(alpha: 0.6)),
+          ]
+        : null;
     final card = Card(
       elevation: 1,
       color: backgroundColor.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color:
-              Color.lerp(
-                backgroundColor,
-                colorTheme.outline.withValues(alpha: 0.6),
-                0.7,
-              )!,
+          color: Color.lerp(
+            intensityScheme.background,
+            colorTheme.outline.withValues(alpha: 0.6),
+            0.7,
+          )!,
         ),
       ),
       child: Padding(
@@ -406,73 +404,70 @@ class EewWidget extends ConsumerWidget {
   }
 }
 
-List<Widget> preview() =>
-    [
-          //  EEW 警報
-          EewWidget(
-            eew: EewV1(
-              id: -1,
-              eventId: 20220101000000,
-              isPlum: false,
-              type: 'eew',
-              schemaType: 'eew-information',
-              status: TelegramStatus.normal.type,
-              infoType: TelegramInfoType.issue.type,
-              reportTime: DateTime.now(),
-              isCanceled: false,
-              isLastInfo: true,
-              isWarning: true,
-              accuracy: null,
-              hypoName: 'XX沖',
-              arrivalTime: DateTime.now(),
-              depth: 50,
-              headline: 'XX沖で地震 XX地方では強い揺れに警戒',
-              magnitude: 6.7,
-              originTime: DateTime.now(),
-              serialNo: 12,
-              forecastMaxIntensity: JmaForecastIntensity.sixLower,
-            ),
-            index: null,
-          ),
-          // EEW 予報
-          EewWidget(
-            eew: EewV1(
-              id: -1,
-              eventId: 20220101000000,
-              isPlum: false,
-              type: 'eew',
-              schemaType: 'eew-information',
-              status: TelegramStatus.normal.type,
-              infoType: TelegramInfoType.issue.type,
-              reportTime: DateTime.now(),
-              isCanceled: false,
-              isLastInfo: false,
-              accuracy: null,
-              hypoName: 'XX沖',
-              arrivalTime: DateTime.now(),
-              depth: 40,
-              magnitude: 4.7,
-              forecastMaxIntensity: JmaForecastIntensity.fiveLower,
-            ),
-            index: null,
-          ),
-          // EEW キャンセル報
-          EewWidget(
-            eew: EewV1(
-              id: -1,
-              eventId: 20220101000000,
-              isPlum: false,
-              type: 'eew',
-              schemaType: 'eew-information',
-              status: TelegramStatus.normal.type,
-              infoType: TelegramInfoType.issue.type,
-              reportTime: DateTime.now(),
-              isCanceled: true,
-              isLastInfo: true,
-              accuracy: null,
-            ),
-            index: null,
-          ),
-        ]
-        .map((e) => Column(mainAxisSize: MainAxisSize.min, children: [e]))
-        .toList();
+List<Widget> preview() => [
+  //  EEW 警報
+  EewWidget(
+    eew: EewV1(
+      id: -1,
+      eventId: 20220101000000,
+      isPlum: false,
+      type: 'eew',
+      schemaType: 'eew-information',
+      status: TelegramStatus.normal.type,
+      infoType: TelegramInfoType.issue.type,
+      reportTime: DateTime.now(),
+      isCanceled: false,
+      isLastInfo: true,
+      isWarning: true,
+      accuracy: null,
+      hypoName: 'XX沖',
+      arrivalTime: DateTime.now(),
+      depth: 50,
+      headline: 'XX沖で地震 XX地方では強い揺れに警戒',
+      magnitude: 6.7,
+      originTime: DateTime.now(),
+      serialNo: 12,
+      forecastMaxIntensity: JmaForecastIntensity.sixLower,
+    ),
+    index: null,
+  ),
+  // EEW 予報
+  EewWidget(
+    eew: EewV1(
+      id: -1,
+      eventId: 20220101000000,
+      isPlum: false,
+      type: 'eew',
+      schemaType: 'eew-information',
+      status: TelegramStatus.normal.type,
+      infoType: TelegramInfoType.issue.type,
+      reportTime: DateTime.now(),
+      isCanceled: false,
+      isLastInfo: false,
+      accuracy: null,
+      hypoName: 'XX沖',
+      arrivalTime: DateTime.now(),
+      depth: 40,
+      magnitude: 4.7,
+      forecastMaxIntensity: JmaForecastIntensity.fiveLower,
+    ),
+    index: null,
+  ),
+  // EEW キャンセル報
+  EewWidget(
+    eew: EewV1(
+      id: -1,
+      eventId: 20220101000000,
+      isPlum: false,
+      type: 'eew',
+      schemaType: 'eew-information',
+      status: TelegramStatus.normal.type,
+      infoType: TelegramInfoType.issue.type,
+      reportTime: DateTime.now(),
+      isCanceled: true,
+      isLastInfo: true,
+      accuracy: null,
+    ),
+    index: null,
+  ),
+].map((e) => Column(mainAxisSize: MainAxisSize.min, children: [e])).toList();
