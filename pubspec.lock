@@ -1256,11 +1256,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
   mockito:
     dependency: transitive
     description:
@@ -1269,7 +1264,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.6"
->>>>>>> e4ec3378 (resolve deps)
   mocktail:
     dependency: transitive
     description:
@@ -1278,39 +1272,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-=======
-=======
->>>>>>> 9020734b (Auto format)
-=======
->>>>>>> a54e97a8 (resolve pubspec.lock)
-  mockito:
-    dependency: transitive
-    description:
-      name: mockito
-      sha256: "4546eac99e8967ea91bae633d2ca7698181d008e95fa4627330cf903d573277a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.4.6"
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 1f73785b (update deps)
-=======
-=======
-=======
->>>>>>> a54e97a8 (resolve pubspec.lock)
-  mocktail:
-    dependency: transitive
-    description:
-      name: mocktail
-      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
-<<<<<<< HEAD
->>>>>>> fbbb9aa9 (Auto format)
->>>>>>> 9020734b (Auto format)
-=======
->>>>>>> a54e97a8 (resolve pubspec.lock)
   mustache_template:
     dependency: transitive
     description:
