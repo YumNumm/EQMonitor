@@ -14,7 +14,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.net.yumnumm.eqmonitor</string>
+		<string>group.net.yumnumm.eqmonitor${APP_ID_SUFFIX}</string>
 	</array>
 </dict>
 </plist>
