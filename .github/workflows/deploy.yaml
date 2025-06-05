@@ -113,7 +113,7 @@ jobs:
       - name: Extract App Store Connect API Key
         working-directory: app/ios
         run: |
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 -d \
+          echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" \
             > AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
           ls -l AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
 
