@@ -93,51 +93,46 @@ Future<void> main() async {
 
   final deviceInfo = DeviceInfoPlugin();
 
-  final results =
-      await (
-        (
-          SharedPreferences.getInstance(),
-          PackageInfo.fromPlatform(),
-          (!kIsWeb && Platform.isAndroid
-              ? deviceInfo.androidInfo
-              : Future<Null>.value()),
-          (!kIsWeb && Platform.isIOS
-              ? deviceInfo.iosInfo
-              : Future<Null>.value()),
-          kIsWeb
-              ? Future<Null>.value()
-              : _registerNotificationChannelIfNeeded(),
-          kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
-          loadJmaCodeTable(),
-          kIsWeb
-              ? Future<Null>.value()
-              : FlutterLocalNotificationsPlugin().initialize(
-                const InitializationSettings(
-                  iOS: DarwinInitializationSettings(
-                    requestAlertPermission: false,
-                    requestSoundPermission: false,
-                    requestBadgePermission: false,
-                  ),
-                  android: AndroidInitializationSettings('mipmap/ic_launcher'),
-                  macOS: DarwinInitializationSettings(
-                    requestAlertPermission: false,
-                    requestSoundPermission: false,
-                    requestBadgePermission: false,
-                  ),
+  final results = await (
+    (
+      SharedPreferences.getInstance(),
+      PackageInfo.fromPlatform(),
+      (!kIsWeb && Platform.isAndroid
+          ? deviceInfo.androidInfo
+          : Future<Null>.value()),
+      (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
+      kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
+      kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
+      loadJmaCodeTable(),
+      kIsWeb
+          ? Future<Null>.value()
+          : FlutterLocalNotificationsPlugin().initialize(
+              const InitializationSettings(
+                iOS: DarwinInitializationSettings(
+                  requestAlertPermission: false,
+                  requestSoundPermission: false,
+                  requestBadgePermission: false,
+                ),
+                android: AndroidInitializationSettings('mipmap/ic_launcher'),
+                macOS: DarwinInitializationSettings(
+                  requestAlertPermission: false,
+                  requestSoundPermission: false,
+                  requestBadgePermission: false,
                 ),
               ),
-        ).wait,
-        (
-          initInAppPurchase(),
-          initLicenses(),
-          kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
-          !kIsWeb && Platform.isIOS
-              ? SharedPreferenceAppGroup.setAppGroup(
-                'group.net.yumnumm.eqmonitor',
-              )
-              : Future<void>.value(),
-        ).wait,
-      ).wait;
+            ),
+    ).wait,
+    (
+      initInAppPurchase(),
+      kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
+      !kIsWeb && Platform.isIOS
+          ? SharedPreferenceAppGroup.setAppGroup(
+              'group.net.yumnumm.eqmonitor',
+            )
+          : Future<void>.value(),
+    ).wait,
+  ).wait;
+  initLicenses();
 
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
   if (!kIsWeb) {
@@ -156,8 +151,8 @@ Future<void> main() async {
         iosDeviceInfoProvider.overrideWithValue(results.$1.$4!),
       applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$6!),
       jmaCodeTableProvider.overrideWithValue(results.$1.$7),
-      if (results.$2.$3 != null)
-        kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
+      if (results.$2.$2 != null)
+        kyoshinColorMapProvider.overrideWithValue(results.$2.$2!),
     ],
     observers: [if (kDebugMode) CustomProviderObserver(talker)],
   );
@@ -174,11 +169,10 @@ Future<void> main() async {
 }
 
 Future<void> _registerNotificationChannelIfNeeded() async {
-  final androidNotificationPlugin =
-      FlutterLocalNotificationsPlugin()
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
+  final androidNotificationPlugin = FlutterLocalNotificationsPlugin()
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >();
   if (androidNotificationPlugin == null) {
     return;
   }
