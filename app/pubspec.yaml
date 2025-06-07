@@ -19,7 +19,7 @@ dependencies:
   crypto: ^3.0.6
   data_table_2: ^2.5.16
   device_info_plus: ^11.2.0
-  dio: ^5.7.0
+  dio: ^5.8.0+1
   dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
