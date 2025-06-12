@@ -1,0 +1,45 @@
+{
+  "color-space-for-untagged-svg-colors" : "display-p3",
+  "fill" : {
+    "automatic-gradient" : "srgb:0.18266,0.38457,0.76842,1.00000"
+  },
+  "groups" : [
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "image-name" : "Vector.svg",
+          "name" : "Vector",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              149.83876381883917,
+              176.51128996479787
+            ]
+          }
+        },
+        {
+          "glass" : true,
+          "image-name" : "Subtract.svg",
+          "name" : "Subtract"
+        }
+      ],
+      "name" : "Icon",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
