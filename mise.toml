@@ -1,3 +1,6 @@
 [tools]
+cocoapods = "1.16.2"
 flutter = "3.32.1"
+java = "24.0.1"
+kotlin = "2.1.21"
 ruby = "3.4.4"
