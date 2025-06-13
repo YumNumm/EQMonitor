@@ -1,17 +1,29 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# EQMonitor Kotlin Multiplatform
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-    - `commonMain` is for code that’s common for all targets.
-    - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-      For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-      `iosMain` would be the right folder for such calls.
+このプロジェクトでは、EQMonitor(Flutter)をKotlin Multiplatformで書き直しています。
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## 概要
 
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the platform-specific folders here
-  too.
+EQMonitorは、日本全国の地震情報をいち早く受信できるアプリケーションです。
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+**_機能_**
+
+- **地震情報・緊急地震速報の通知**
+
+  気象庁により発表された地震情報や、緊急地震速報を受信し、通知します。
+
+- **過去の地震履歴の閲覧**
+
+  過去に発表された地震情報を遡って確認できます。
+
+- **緊急地震速報のリアルタイム表示**
+
+  緊急地震速報が発表された際に、P波・S波の予想到達範囲、予想最大震度、震央地を表示します。
+  緊急地震速報は、リアルタイムに更新され、インターネットに接続されていれば、どこからでも確認できます。
+
+- **強震モニタの表示**
+
+  防災科学技術研究所の提供するWebサービス 強震モニタ を表示します。
+  (※ 強震モニタは、揺れの様子を直感的に捉えることを目的としています。また、リアルタイムで観測値を処理しているため、ノイズ等により観測値が変動します。
+  そのため、本アプリケーションで表示される観測値は、あくまで参考値としてご利用ください。)
+あ

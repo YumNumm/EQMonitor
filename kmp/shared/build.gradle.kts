@@ -27,7 +27,19 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // put your Multiplatform dependencies here
+            // Network
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
+
+            // DateTime
+            implementation(libs.kotlinx.datetime)
+
+            // DI
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
