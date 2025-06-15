@@ -5,7 +5,7 @@ part 'notification_settings_request.freezed.dart';
 part 'notification_settings_request.g.dart';
 
 @freezed
-class NotificationSettingsRequest with _$NotificationSettingsRequest {
+abstract class NotificationSettingsRequest with _$NotificationSettingsRequest {
   const factory NotificationSettingsRequest({
     NotificationSettingsGlobal? global,
     List<NotificationSettingsRegion>? regions,
@@ -16,7 +16,7 @@ class NotificationSettingsRequest with _$NotificationSettingsRequest {
 }
 
 @freezed
-class NotificationSettingsGlobal with _$NotificationSettingsGlobal {
+abstract class NotificationSettingsGlobal with _$NotificationSettingsGlobal {
   const factory NotificationSettingsGlobal({
     required JmaForecastIntensity minJmaIntensity,
   }) = _NotificationSettingsGlobal;
@@ -26,7 +26,7 @@ class NotificationSettingsGlobal with _$NotificationSettingsGlobal {
 }
 
 @freezed
-class NotificationSettingsRegion with _$NotificationSettingsRegion {
+abstract class NotificationSettingsRegion with _$NotificationSettingsRegion {
   const factory NotificationSettingsRegion({
     required int code,
     required JmaForecastIntensity minIntensity,

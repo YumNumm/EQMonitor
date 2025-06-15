@@ -8,23 +8,18 @@ part of 'fcm_token_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FcmTokenUpdateResponseImpl _$$FcmTokenUpdateResponseImplFromJson(
+_FcmTokenUpdateResponse _$FcmTokenUpdateResponseFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$FcmTokenUpdateResponseImpl',
-  json,
-  ($checkedConvert) {
-    final val = _$FcmTokenUpdateResponseImpl(
-      token: $checkedConvert('token', (v) => v as String?),
-      fcmVerify: $checkedConvert('fcm_verify', (v) => v as String?),
-    );
-    return val;
-  },
-  fieldKeyMap: const {'fcmVerify': 'fcm_verify'},
-);
+) => $checkedCreate('_FcmTokenUpdateResponse', json, ($checkedConvert) {
+  final val = _FcmTokenUpdateResponse(
+    token: $checkedConvert('token', (v) => v as String?),
+    fcmVerify: $checkedConvert('fcm_verify', (v) => v as String?),
+  );
+  return val;
+}, fieldKeyMap: const {'fcmVerify': 'fcm_verify'});
 
-Map<String, dynamic> _$$FcmTokenUpdateResponseImplToJson(
-  _$FcmTokenUpdateResponseImpl instance,
+Map<String, dynamic> _$FcmTokenUpdateResponseToJson(
+  _FcmTokenUpdateResponse instance,
 ) => <String, dynamic>{
   'token': instance.token,
   'fcm_verify': instance.fcmVerify,

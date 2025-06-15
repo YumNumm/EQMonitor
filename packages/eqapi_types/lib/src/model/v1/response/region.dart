@@ -6,7 +6,7 @@ part 'region.g.dart';
 
 /// `/v1/earthquake/region` の `$.[*]`
 @freezed
-class RegionItem with _$RegionItem {
+abstract class RegionItem with _$RegionItem {
   const factory RegionItem({
     required int id,
     required int eventId,

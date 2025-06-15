@@ -8,10 +8,10 @@ part of 'replay_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$JmaXmlTelegramReplayDataImpl _$$JmaXmlTelegramReplayDataImplFromJson(
+_JmaXmlTelegramReplayData _$JmaXmlTelegramReplayDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$JmaXmlTelegramReplayDataImpl', json, ($checkedConvert) {
-  final val = _$JmaXmlTelegramReplayDataImpl(
+) => $checkedCreate('_JmaXmlTelegramReplayData', json, ($checkedConvert) {
+  final val = _JmaXmlTelegramReplayData(
     type: $checkedConvert(
       'type',
       (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
@@ -23,8 +23,8 @@ _$JmaXmlTelegramReplayDataImpl _$$JmaXmlTelegramReplayDataImplFromJson(
   return val;
 });
 
-Map<String, dynamic> _$$JmaXmlTelegramReplayDataImplToJson(
-  _$JmaXmlTelegramReplayDataImpl instance,
+Map<String, dynamic> _$JmaXmlTelegramReplayDataToJson(
+  _JmaXmlTelegramReplayData instance,
 ) => <String, dynamic>{
   'type': _$ReplayDataTypeEnumMap[instance.type]!,
   'time': instance.time.toIso8601String(),
@@ -42,13 +42,13 @@ const _$ReplayDataTypeEnumMap = {
   ReplayDataType.axisJson: 1002,
 };
 
-_$JmaBinaryTelegramReplayDataImpl _$$JmaBinaryTelegramReplayDataImplFromJson(
+_JmaBinaryTelegramReplayData _$JmaBinaryTelegramReplayDataFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$JmaBinaryTelegramReplayDataImpl',
+  '_JmaBinaryTelegramReplayData',
   json,
   ($checkedConvert) {
-    final val = _$JmaBinaryTelegramReplayDataImpl(
+    final val = _JmaBinaryTelegramReplayData(
       type: $checkedConvert(
         'type',
         (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
@@ -65,8 +65,8 @@ _$JmaBinaryTelegramReplayDataImpl _$$JmaBinaryTelegramReplayDataImplFromJson(
   fieldKeyMap: const {'telegramType': 'telegram_type'},
 );
 
-Map<String, dynamic> _$$JmaBinaryTelegramReplayDataImplToJson(
-  _$JmaBinaryTelegramReplayDataImpl instance,
+Map<String, dynamic> _$JmaBinaryTelegramReplayDataToJson(
+  _JmaBinaryTelegramReplayData instance,
 ) => <String, dynamic>{
   'type': _$ReplayDataTypeEnumMap[instance.type]!,
   'time': instance.time.toIso8601String(),
@@ -74,32 +74,30 @@ Map<String, dynamic> _$$JmaBinaryTelegramReplayDataImplToJson(
   'data': instance.data,
 };
 
-_$KyoshinMonitorImageReplayDataImpl
-_$$KyoshinMonitorImageReplayDataImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$KyoshinMonitorImageReplayDataImpl', json, (
-      $checkedConvert,
-    ) {
-      final val = _$KyoshinMonitorImageReplayDataImpl(
-        type: $checkedConvert(
-          'type',
-          (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
+_KyoshinMonitorImageReplayData _$KyoshinMonitorImageReplayDataFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_KyoshinMonitorImageReplayData', json, ($checkedConvert) {
+  final val = _KyoshinMonitorImageReplayData(
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
+    ),
+    time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
+    images: $checkedConvert(
+      'images',
+      (v) => (v as Map<String, dynamic>).map(
+        (k, e) => MapEntry(
+          $enumDecode(_$ImageTypeEnumMap, k),
+          (e as List<dynamic>).map((e) => (e as num).toInt()).toList(),
         ),
-        time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
-        images: $checkedConvert(
-          'images',
-          (v) => (v as Map<String, dynamic>).map(
-            (k, e) => MapEntry(
-              $enumDecode(_$ImageTypeEnumMap, k),
-              (e as List<dynamic>).map((e) => (e as num).toInt()).toList(),
-            ),
-          ),
-        ),
-      );
-      return val;
-    });
+      ),
+    ),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$$KyoshinMonitorImageReplayDataImplToJson(
-  _$KyoshinMonitorImageReplayDataImpl instance,
+Map<String, dynamic> _$KyoshinMonitorImageReplayDataToJson(
+  _KyoshinMonitorImageReplayData instance,
 ) => <String, dynamic>{
   'type': _$ReplayDataTypeEnumMap[instance.type]!,
   'time': instance.time.toIso8601String(),
@@ -114,12 +112,11 @@ const _$ImageTypeEnumMap = {
   ImageType.estShindo: 'estShindo',
 };
 
-_$KyoshinMonitorEewJsonReplayDataImpl
-_$$KyoshinMonitorEewJsonReplayDataImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$KyoshinMonitorEewJsonReplayDataImpl', json, (
-      $checkedConvert,
-    ) {
-      final val = _$KyoshinMonitorEewJsonReplayDataImpl(
+_KyoshinMonitorEewJsonReplayData _$KyoshinMonitorEewJsonReplayDataFromJson(
+  Map<String, dynamic> json,
+) =>
+    $checkedCreate('_KyoshinMonitorEewJsonReplayData', json, ($checkedConvert) {
+      final val = _KyoshinMonitorEewJsonReplayData(
         type: $checkedConvert(
           'type',
           (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
@@ -130,50 +127,48 @@ _$$KyoshinMonitorEewJsonReplayDataImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$KyoshinMonitorEewJsonReplayDataImplToJson(
-  _$KyoshinMonitorEewJsonReplayDataImpl instance,
+Map<String, dynamic> _$KyoshinMonitorEewJsonReplayDataToJson(
+  _KyoshinMonitorEewJsonReplayData instance,
 ) => <String, dynamic>{
   'type': _$ReplayDataTypeEnumMap[instance.type]!,
   'time': instance.time.toIso8601String(),
   'json': instance.json,
 };
 
-_$KeviJsonReplayDataImpl _$$KeviJsonReplayDataImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$KeviJsonReplayDataImpl', json, ($checkedConvert) {
-  final val = _$KeviJsonReplayDataImpl(
-    type: $checkedConvert(
-      'type',
-      (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
-    ),
-    time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
-    jsonType: $checkedConvert(
-      'json_type',
-      (v) => $enumDecode(_$JsonTypeEnumMap, v),
-    ),
-    json: $checkedConvert('json', (v) => v as String),
-  );
-  return val;
-}, fieldKeyMap: const {'jsonType': 'json_type'});
+_KeviJsonReplayData _$KeviJsonReplayDataFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_KeviJsonReplayData', json, ($checkedConvert) {
+      final val = _KeviJsonReplayData(
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
+        ),
+        time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
+        jsonType: $checkedConvert(
+          'json_type',
+          (v) => $enumDecode(_$JsonTypeEnumMap, v),
+        ),
+        json: $checkedConvert('json', (v) => v as String),
+      );
+      return val;
+    }, fieldKeyMap: const {'jsonType': 'json_type'});
 
-Map<String, dynamic> _$$KeviJsonReplayDataImplToJson(
-  _$KeviJsonReplayDataImpl instance,
-) => <String, dynamic>{
-  'type': _$ReplayDataTypeEnumMap[instance.type]!,
-  'time': instance.time.toIso8601String(),
-  'json_type': _$JsonTypeEnumMap[instance.jsonType]!,
-  'json': instance.json,
-};
+Map<String, dynamic> _$KeviJsonReplayDataToJson(_KeviJsonReplayData instance) =>
+    <String, dynamic>{
+      'type': _$ReplayDataTypeEnumMap[instance.type]!,
+      'time': instance.time.toIso8601String(),
+      'json_type': _$JsonTypeEnumMap[instance.jsonType]!,
+      'json': instance.json,
+    };
 
 const _$JsonTypeEnumMap = {
   JsonType.eew: 'eew',
   JsonType.eewWarning: 'eewWarning',
 };
 
-_$SnpLogEntryReplayDataImpl _$$SnpLogEntryReplayDataImplFromJson(
+_SnpLogEntryReplayData _$SnpLogEntryReplayDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$SnpLogEntryReplayDataImpl', json, ($checkedConvert) {
-  final val = _$SnpLogEntryReplayDataImpl(
+) => $checkedCreate('_SnpLogEntryReplayData', json, ($checkedConvert) {
+  final val = _SnpLogEntryReplayData(
     type: $checkedConvert(
       'type',
       (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
@@ -184,32 +179,30 @@ _$SnpLogEntryReplayDataImpl _$$SnpLogEntryReplayDataImplFromJson(
   return val;
 });
 
-Map<String, dynamic> _$$SnpLogEntryReplayDataImplToJson(
-  _$SnpLogEntryReplayDataImpl instance,
+Map<String, dynamic> _$SnpLogEntryReplayDataToJson(
+  _SnpLogEntryReplayData instance,
 ) => <String, dynamic>{
   'type': _$ReplayDataTypeEnumMap[instance.type]!,
   'time': instance.time.toIso8601String(),
   'message': instance.message,
 };
 
-_$AxisJsonReplayDataImpl _$$AxisJsonReplayDataImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$AxisJsonReplayDataImpl', json, ($checkedConvert) {
-  final val = _$AxisJsonReplayDataImpl(
-    type: $checkedConvert(
-      'type',
-      (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
-    ),
-    time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
-    json: $checkedConvert('json', (v) => v as String),
-  );
-  return val;
-});
+_AxisJsonReplayData _$AxisJsonReplayDataFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_AxisJsonReplayData', json, ($checkedConvert) {
+      final val = _AxisJsonReplayData(
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
+        ),
+        time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
+        json: $checkedConvert('json', (v) => v as String),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$$AxisJsonReplayDataImplToJson(
-  _$AxisJsonReplayDataImpl instance,
-) => <String, dynamic>{
-  'type': _$ReplayDataTypeEnumMap[instance.type]!,
-  'time': instance.time.toIso8601String(),
-  'json': instance.json,
-};
+Map<String, dynamic> _$AxisJsonReplayDataToJson(_AxisJsonReplayData instance) =>
+    <String, dynamic>{
+      'type': _$ReplayDataTypeEnumMap[instance.type]!,
+      'time': instance.time.toIso8601String(),
+      'json': instance.json,
+    };

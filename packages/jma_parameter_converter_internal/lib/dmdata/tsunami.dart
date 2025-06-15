@@ -7,7 +7,7 @@ part 'tsunami.freezed.dart';
 part 'tsunami.g.dart';
 
 @freezed
-class TsunamiParameter with _$TsunamiParameter {
+abstract class TsunamiParameter with _$TsunamiParameter {
   const factory TsunamiParameter({
     required String responseId,
     required DateTime responseTime,
@@ -22,7 +22,7 @@ class TsunamiParameter with _$TsunamiParameter {
 }
 
 @freezed
-class TsunamiParameterItem with _$TsunamiParameterItem {
+abstract class TsunamiParameterItem with _$TsunamiParameterItem {
   const factory TsunamiParameterItem({
     required String? area,
     required String prefecture,

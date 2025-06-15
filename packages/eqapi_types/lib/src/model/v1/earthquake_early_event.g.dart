@@ -8,13 +8,13 @@ part of 'earthquake_early_event.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EarthquakeEarlyEventImpl _$$EarthquakeEarlyEventImplFromJson(
+_EarthquakeEarlyEvent _$EarthquakeEarlyEventFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$EarthquakeEarlyEventImpl',
+  '_EarthquakeEarlyEvent',
   json,
   ($checkedConvert) {
-    final val = _$EarthquakeEarlyEventImpl(
+    final val = _EarthquakeEarlyEvent(
       id: $checkedConvert('id', (v) => v as String),
       name: $checkedConvert('name', (v) => v as String),
       lat: $checkedConvert('lat', (v) => (v as num?)?.toDouble()),
@@ -39,23 +39,17 @@ _$EarthquakeEarlyEventImpl _$$EarthquakeEarlyEventImplFromJson(
       ),
       regions: $checkedConvert(
         'regions',
-        (v) =>
-            (v as List<dynamic>)
-                .map(
-                  (e) =>
-                      EarthquakeEarlyRegion.fromJson(e as Map<String, dynamic>),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>)
+            .map(
+              (e) => EarthquakeEarlyRegion.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
       ),
       cities: $checkedConvert(
         'cities',
-        (v) =>
-            (v as List<dynamic>)
-                .map(
-                  (e) =>
-                      EarthquakeEarlyCity.fromJson(e as Map<String, dynamic>),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>)
+            .map((e) => EarthquakeEarlyCity.fromJson(e as Map<String, dynamic>))
+            .toList(),
       ),
     );
     return val;
@@ -68,8 +62,8 @@ _$EarthquakeEarlyEventImpl _$$EarthquakeEarlyEventImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$EarthquakeEarlyEventImplToJson(
-  _$EarthquakeEarlyEventImpl instance,
+Map<String, dynamic> _$EarthquakeEarlyEventToJson(
+  _EarthquakeEarlyEvent instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
@@ -109,13 +103,13 @@ const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.unknown: '不明',
 };
 
-_$EarthquakeEarlyRegionImpl _$$EarthquakeEarlyRegionImplFromJson(
+_EarthquakeEarlyRegion _$EarthquakeEarlyRegionFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$EarthquakeEarlyRegionImpl',
+  '_EarthquakeEarlyRegion',
   json,
   ($checkedConvert) {
-    final val = _$EarthquakeEarlyRegionImpl(
+    final val = _EarthquakeEarlyRegion(
       name: $checkedConvert('name', (v) => v as String),
       code: $checkedConvert('code', (v) => v as String),
       maxIntensity: $checkedConvert(
@@ -128,49 +122,47 @@ _$EarthquakeEarlyRegionImpl _$$EarthquakeEarlyRegionImplFromJson(
   fieldKeyMap: const {'maxIntensity': 'max_intensity'},
 );
 
-Map<String, dynamic> _$$EarthquakeEarlyRegionImplToJson(
-  _$EarthquakeEarlyRegionImpl instance,
+Map<String, dynamic> _$EarthquakeEarlyRegionToJson(
+  _EarthquakeEarlyRegion instance,
 ) => <String, dynamic>{
   'name': instance.name,
   'code': instance.code,
   'max_intensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity]!,
 };
 
-_$EarthquakeEarlyCityImpl _$$EarthquakeEarlyCityImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$EarthquakeEarlyCityImpl',
-  json,
-  ($checkedConvert) {
-    final val = _$EarthquakeEarlyCityImpl(
-      name: $checkedConvert('name', (v) => v as String),
-      code: $checkedConvert('code', (v) => v as String?),
-      maxIntensity: $checkedConvert(
-        'max_intensity',
-        (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
-      ),
-      observationPoints: $checkedConvert(
-        'observation_points',
-        (v) =>
-            (v as List<dynamic>)
+_EarthquakeEarlyCity _$EarthquakeEarlyCityFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_EarthquakeEarlyCity',
+      json,
+      ($checkedConvert) {
+        final val = _EarthquakeEarlyCity(
+          name: $checkedConvert('name', (v) => v as String),
+          code: $checkedConvert('code', (v) => v as String?),
+          maxIntensity: $checkedConvert(
+            'max_intensity',
+            (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
+          ),
+          observationPoints: $checkedConvert(
+            'observation_points',
+            (v) => (v as List<dynamic>)
                 .map(
                   (e) => EarthquakeEarlyObservationPoint.fromJson(
                     e as Map<String, dynamic>,
                   ),
                 )
                 .toList(),
-      ),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'maxIntensity': 'max_intensity',
+        'observationPoints': 'observation_points',
+      },
     );
-    return val;
-  },
-  fieldKeyMap: const {
-    'maxIntensity': 'max_intensity',
-    'observationPoints': 'observation_points',
-  },
-);
 
-Map<String, dynamic> _$$EarthquakeEarlyCityImplToJson(
-  _$EarthquakeEarlyCityImpl instance,
+Map<String, dynamic> _$EarthquakeEarlyCityToJson(
+  _EarthquakeEarlyCity instance,
 ) => <String, dynamic>{
   'name': instance.name,
   'code': instance.code,
@@ -178,12 +170,11 @@ Map<String, dynamic> _$$EarthquakeEarlyCityImplToJson(
   'observation_points': instance.observationPoints,
 };
 
-_$EarthquakeEarlyObservationPointImpl
-_$$EarthquakeEarlyObservationPointImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$EarthquakeEarlyObservationPointImpl', json, (
-      $checkedConvert,
-    ) {
-      final val = _$EarthquakeEarlyObservationPointImpl(
+_EarthquakeEarlyObservationPoint _$EarthquakeEarlyObservationPointFromJson(
+  Map<String, dynamic> json,
+) =>
+    $checkedCreate('_EarthquakeEarlyObservationPoint', json, ($checkedConvert) {
+      final val = _EarthquakeEarlyObservationPoint(
         name: $checkedConvert('name', (v) => v as String),
         lat: $checkedConvert('lat', (v) => (v as num).toDouble()),
         lon: $checkedConvert('lon', (v) => (v as num).toDouble()),
@@ -195,8 +186,8 @@ _$$EarthquakeEarlyObservationPointImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$EarthquakeEarlyObservationPointImplToJson(
-  _$EarthquakeEarlyObservationPointImpl instance,
+Map<String, dynamic> _$EarthquakeEarlyObservationPointToJson(
+  _EarthquakeEarlyObservationPoint instance,
 ) => <String, dynamic>{
   'name': instance.name,
   'lat': instance.lat,

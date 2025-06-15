@@ -8,13 +8,13 @@ part of 'intensity_sub_division.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
+_IntensitySubDivision _$IntensitySubDivisionFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$IntensitySubDivisionImpl',
+  '_IntensitySubDivision',
   json,
   ($checkedConvert) {
-    final val = _$IntensitySubDivisionImpl(
+    final val = _IntensitySubDivision(
       id: $checkedConvert('id', (v) => (v as num).toInt()),
       eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
       areaCode: $checkedConvert('area_code', (v) => v as String),
@@ -37,8 +37,8 @@ _$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$IntensitySubDivisionImplToJson(
-  _$IntensitySubDivisionImpl instance,
+Map<String, dynamic> _$IntensitySubDivisionToJson(
+  _IntensitySubDivision instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'event_id': instance.eventId,

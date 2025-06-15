@@ -8,15 +8,13 @@ part of 'fcm_token_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FcmTokenRequestImpl _$$FcmTokenRequestImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$FcmTokenRequestImpl', json, ($checkedConvert) {
-  final val = _$FcmTokenRequestImpl(
-    fcmToken: $checkedConvert('fcm_token', (v) => v as String),
-  );
-  return val;
-}, fieldKeyMap: const {'fcmToken': 'fcm_token'});
+_FcmTokenRequest _$FcmTokenRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_FcmTokenRequest', json, ($checkedConvert) {
+      final val = _FcmTokenRequest(
+        fcmToken: $checkedConvert('fcm_token', (v) => v as String),
+      );
+      return val;
+    }, fieldKeyMap: const {'fcmToken': 'fcm_token'});
 
-Map<String, dynamic> _$$FcmTokenRequestImplToJson(
-  _$FcmTokenRequestImpl instance,
-) => <String, dynamic>{'fcm_token': instance.fcmToken};
+Map<String, dynamic> _$FcmTokenRequestToJson(_FcmTokenRequest instance) =>
+    <String, dynamic>{'fcm_token': instance.fcmToken};

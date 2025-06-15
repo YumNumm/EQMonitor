@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,276 +10,151 @@ part of 'devices_eew_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-DevicesEewSettings _$DevicesEewSettingsFromJson(Map<String, dynamic> json) {
-  return _DevicesEewSettings.fromJson(json);
-}
 
 /// @nodoc
 mixin _$DevicesEewSettings {
-  String get id => throw _privateConstructorUsedError;
-  JmaForecastIntensity get minJmaIntensity =>
-      throw _privateConstructorUsedError;
-  int get regionId => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+
+ String get id; JmaForecastIntensity get minJmaIntensity; int get regionId; DateTime get createdAt; DateTime get updatedAt;
+/// Create a copy of DevicesEewSettings
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DevicesEewSettingsCopyWith<DevicesEewSettings> get copyWith => _$DevicesEewSettingsCopyWithImpl<DevicesEewSettings>(this as DevicesEewSettings, _$identity);
 
   /// Serializes this DevicesEewSettings to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of DevicesEewSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $DevicesEewSettingsCopyWith<DevicesEewSettings> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DevicesEewSettings&&(identical(other.id, id) || other.id == id)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,minJmaIntensity,regionId,createdAt,updatedAt);
+
+@override
+String toString() {
+  return 'DevicesEewSettings(id: $id, minJmaIntensity: $minJmaIntensity, regionId: $regionId, createdAt: $createdAt, updatedAt: $updatedAt)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DevicesEewSettingsCopyWith<$Res> {
-  factory $DevicesEewSettingsCopyWith(
-    DevicesEewSettings value,
-    $Res Function(DevicesEewSettings) then,
-  ) = _$DevicesEewSettingsCopyWithImpl<$Res, DevicesEewSettings>;
-  @useResult
-  $Res call({
-    String id,
-    JmaForecastIntensity minJmaIntensity,
-    int regionId,
-    DateTime createdAt,
-    DateTime updatedAt,
-  });
-}
+abstract mixin class $DevicesEewSettingsCopyWith<$Res>  {
+  factory $DevicesEewSettingsCopyWith(DevicesEewSettings value, $Res Function(DevicesEewSettings) _then) = _$DevicesEewSettingsCopyWithImpl;
+@useResult
+$Res call({
+ String id, JmaForecastIntensity minJmaIntensity, int regionId, DateTime createdAt, DateTime updatedAt
+});
 
+
+
+
+}
 /// @nodoc
-class _$DevicesEewSettingsCopyWithImpl<$Res, $Val extends DevicesEewSettings>
+class _$DevicesEewSettingsCopyWithImpl<$Res>
     implements $DevicesEewSettingsCopyWith<$Res> {
-  _$DevicesEewSettingsCopyWithImpl(this._value, this._then);
+  _$DevicesEewSettingsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DevicesEewSettings _self;
+  final $Res Function(DevicesEewSettings) _then;
 
-  /// Create a copy of DevicesEewSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? minJmaIntensity = null,
-    Object? regionId = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            id:
-                null == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
-                        as String,
-            minJmaIntensity:
-                null == minJmaIntensity
-                    ? _value.minJmaIntensity
-                    : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-                        as JmaForecastIntensity,
-            regionId:
-                null == regionId
-                    ? _value.regionId
-                    : regionId // ignore: cast_nullable_to_non_nullable
-                        as int,
-            createdAt:
-                null == createdAt
-                    ? _value.createdAt
-                    : createdAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            updatedAt:
-                null == updatedAt
-                    ? _value.updatedAt
-                    : updatedAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of DevicesEewSettings
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? minJmaIntensity = null,Object? regionId = null,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
+as JmaForecastIntensity,regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
 }
 
-/// @nodoc
-abstract class _$$DevicesEewSettingsImplCopyWith<$Res>
-    implements $DevicesEewSettingsCopyWith<$Res> {
-  factory _$$DevicesEewSettingsImplCopyWith(
-    _$DevicesEewSettingsImpl value,
-    $Res Function(_$DevicesEewSettingsImpl) then,
-  ) = __$$DevicesEewSettingsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String id,
-    JmaForecastIntensity minJmaIntensity,
-    int regionId,
-    DateTime createdAt,
-    DateTime updatedAt,
-  });
 }
 
-/// @nodoc
-class __$$DevicesEewSettingsImplCopyWithImpl<$Res>
-    extends _$DevicesEewSettingsCopyWithImpl<$Res, _$DevicesEewSettingsImpl>
-    implements _$$DevicesEewSettingsImplCopyWith<$Res> {
-  __$$DevicesEewSettingsImplCopyWithImpl(
-    _$DevicesEewSettingsImpl _value,
-    $Res Function(_$DevicesEewSettingsImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of DevicesEewSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? minJmaIntensity = null,
-    Object? regionId = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-  }) {
-    return _then(
-      _$DevicesEewSettingsImpl(
-        id:
-            null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                    as String,
-        minJmaIntensity:
-            null == minJmaIntensity
-                ? _value.minJmaIntensity
-                : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-                    as JmaForecastIntensity,
-        regionId:
-            null == regionId
-                ? _value.regionId
-                : regionId // ignore: cast_nullable_to_non_nullable
-                    as int,
-        createdAt:
-            null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        updatedAt:
-            null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$DevicesEewSettingsImpl implements _DevicesEewSettings {
-  const _$DevicesEewSettingsImpl({
-    required this.id,
-    required this.minJmaIntensity,
-    required this.regionId,
-    required this.createdAt,
-    required this.updatedAt,
-  });
 
-  factory _$DevicesEewSettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DevicesEewSettingsImplFromJson(json);
+class _DevicesEewSettings implements DevicesEewSettings {
+  const _DevicesEewSettings({required this.id, required this.minJmaIntensity, required this.regionId, required this.createdAt, required this.updatedAt});
+  factory _DevicesEewSettings.fromJson(Map<String, dynamic> json) => _$DevicesEewSettingsFromJson(json);
 
-  @override
-  final String id;
-  @override
-  final JmaForecastIntensity minJmaIntensity;
-  @override
-  final int regionId;
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime updatedAt;
+@override final  String id;
+@override final  JmaForecastIntensity minJmaIntensity;
+@override final  int regionId;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 
-  @override
-  String toString() {
-    return 'DevicesEewSettings(id: $id, minJmaIntensity: $minJmaIntensity, regionId: $regionId, createdAt: $createdAt, updatedAt: $updatedAt)';
-  }
+/// Create a copy of DevicesEewSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DevicesEewSettingsCopyWith<_DevicesEewSettings> get copyWith => __$DevicesEewSettingsCopyWithImpl<_DevicesEewSettings>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DevicesEewSettingsImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.minJmaIntensity, minJmaIntensity) ||
-                other.minJmaIntensity == minJmaIntensity) &&
-            (identical(other.regionId, regionId) ||
-                other.regionId == regionId) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    minJmaIntensity,
-    regionId,
-    createdAt,
-    updatedAt,
-  );
-
-  /// Create a copy of DevicesEewSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DevicesEewSettingsImplCopyWith<_$DevicesEewSettingsImpl> get copyWith =>
-      __$$DevicesEewSettingsImplCopyWithImpl<_$DevicesEewSettingsImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DevicesEewSettingsImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$DevicesEewSettingsToJson(this, );
 }
 
-abstract class _DevicesEewSettings implements DevicesEewSettings {
-  const factory _DevicesEewSettings({
-    required final String id,
-    required final JmaForecastIntensity minJmaIntensity,
-    required final int regionId,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
-  }) = _$DevicesEewSettingsImpl;
-
-  factory _DevicesEewSettings.fromJson(Map<String, dynamic> json) =
-      _$DevicesEewSettingsImpl.fromJson;
-
-  @override
-  String get id;
-  @override
-  JmaForecastIntensity get minJmaIntensity;
-  @override
-  int get regionId;
-  @override
-  DateTime get createdAt;
-  @override
-  DateTime get updatedAt;
-
-  /// Create a copy of DevicesEewSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DevicesEewSettingsImplCopyWith<_$DevicesEewSettingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DevicesEewSettings&&(identical(other.id, id) || other.id == id)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,minJmaIntensity,regionId,createdAt,updatedAt);
+
+@override
+String toString() {
+  return 'DevicesEewSettings(id: $id, minJmaIntensity: $minJmaIntensity, regionId: $regionId, createdAt: $createdAt, updatedAt: $updatedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DevicesEewSettingsCopyWith<$Res> implements $DevicesEewSettingsCopyWith<$Res> {
+  factory _$DevicesEewSettingsCopyWith(_DevicesEewSettings value, $Res Function(_DevicesEewSettings) _then) = __$DevicesEewSettingsCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, JmaForecastIntensity minJmaIntensity, int regionId, DateTime createdAt, DateTime updatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$DevicesEewSettingsCopyWithImpl<$Res>
+    implements _$DevicesEewSettingsCopyWith<$Res> {
+  __$DevicesEewSettingsCopyWithImpl(this._self, this._then);
+
+  final _DevicesEewSettings _self;
+  final $Res Function(_DevicesEewSettings) _then;
+
+/// Create a copy of DevicesEewSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? minJmaIntensity = null,Object? regionId = null,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(_DevicesEewSettings(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
+as JmaForecastIntensity,regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+// dart format on

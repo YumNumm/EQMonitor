@@ -8,40 +8,39 @@ part of 'devices_eew_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DevicesEewSettingsImpl _$$DevicesEewSettingsImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$DevicesEewSettingsImpl',
-  json,
-  ($checkedConvert) {
-    final val = _$DevicesEewSettingsImpl(
-      id: $checkedConvert('id', (v) => v as String),
-      minJmaIntensity: $checkedConvert(
-        'min_jma_intensity',
-        (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
-      ),
-      regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
-      createdAt: $checkedConvert(
-        'created_at',
-        (v) => DateTime.parse(v as String),
-      ),
-      updatedAt: $checkedConvert(
-        'updated_at',
-        (v) => DateTime.parse(v as String),
-      ),
+_DevicesEewSettings _$DevicesEewSettingsFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_DevicesEewSettings',
+      json,
+      ($checkedConvert) {
+        final val = _DevicesEewSettings(
+          id: $checkedConvert('id', (v) => v as String),
+          minJmaIntensity: $checkedConvert(
+            'min_jma_intensity',
+            (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
+          ),
+          regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
+          createdAt: $checkedConvert(
+            'created_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          updatedAt: $checkedConvert(
+            'updated_at',
+            (v) => DateTime.parse(v as String),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'minJmaIntensity': 'min_jma_intensity',
+        'regionId': 'region_id',
+        'createdAt': 'created_at',
+        'updatedAt': 'updated_at',
+      },
     );
-    return val;
-  },
-  fieldKeyMap: const {
-    'minJmaIntensity': 'min_jma_intensity',
-    'regionId': 'region_id',
-    'createdAt': 'created_at',
-    'updatedAt': 'updated_at',
-  },
-);
 
-Map<String, dynamic> _$$DevicesEewSettingsImplToJson(
-  _$DevicesEewSettingsImpl instance,
+Map<String, dynamic> _$DevicesEewSettingsToJson(
+  _DevicesEewSettings instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'min_jma_intensity': _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,

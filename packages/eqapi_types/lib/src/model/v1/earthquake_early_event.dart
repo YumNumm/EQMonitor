@@ -5,7 +5,7 @@ part 'earthquake_early_event.freezed.dart';
 part 'earthquake_early_event.g.dart';
 
 @freezed
-class EarthquakeEarlyEvent with _$EarthquakeEarlyEvent {
+abstract class EarthquakeEarlyEvent with _$EarthquakeEarlyEvent {
   const factory EarthquakeEarlyEvent({
     required String id,
     required String name,
@@ -26,7 +26,7 @@ class EarthquakeEarlyEvent with _$EarthquakeEarlyEvent {
 }
 
 @freezed
-class EarthquakeEarlyRegion with _$EarthquakeEarlyRegion {
+abstract class EarthquakeEarlyRegion with _$EarthquakeEarlyRegion {
   const factory EarthquakeEarlyRegion({
     required String name,
     required String code,
@@ -38,7 +38,7 @@ class EarthquakeEarlyRegion with _$EarthquakeEarlyRegion {
 }
 
 @freezed
-class EarthquakeEarlyCity with _$EarthquakeEarlyCity {
+abstract class EarthquakeEarlyCity with _$EarthquakeEarlyCity {
   const factory EarthquakeEarlyCity({
     required String name,
     required String? code,
@@ -51,7 +51,8 @@ class EarthquakeEarlyCity with _$EarthquakeEarlyCity {
 }
 
 @freezed
-class EarthquakeEarlyObservationPoint with _$EarthquakeEarlyObservationPoint {
+abstract class EarthquakeEarlyObservationPoint
+    with _$EarthquakeEarlyObservationPoint {
   const factory EarthquakeEarlyObservationPoint({
     required String name,
     required double lat,

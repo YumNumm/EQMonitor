@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,194 +10,142 @@ part of 'fcm_token_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-FcmTokenUpdateResponse _$FcmTokenUpdateResponseFromJson(
-  Map<String, dynamic> json,
-) {
-  return _FcmTokenUpdateResponse.fromJson(json);
-}
 
 /// @nodoc
 mixin _$FcmTokenUpdateResponse {
-  String? get token => throw _privateConstructorUsedError;
-  String? get fcmVerify => throw _privateConstructorUsedError;
+
+ String? get token; String? get fcmVerify;
+/// Create a copy of FcmTokenUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FcmTokenUpdateResponseCopyWith<FcmTokenUpdateResponse> get copyWith => _$FcmTokenUpdateResponseCopyWithImpl<FcmTokenUpdateResponse>(this as FcmTokenUpdateResponse, _$identity);
 
   /// Serializes this FcmTokenUpdateResponse to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of FcmTokenUpdateResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $FcmTokenUpdateResponseCopyWith<FcmTokenUpdateResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FcmTokenUpdateResponse&&(identical(other.token, token) || other.token == token)&&(identical(other.fcmVerify, fcmVerify) || other.fcmVerify == fcmVerify));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,token,fcmVerify);
+
+@override
+String toString() {
+  return 'FcmTokenUpdateResponse(token: $token, fcmVerify: $fcmVerify)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $FcmTokenUpdateResponseCopyWith<$Res> {
-  factory $FcmTokenUpdateResponseCopyWith(
-    FcmTokenUpdateResponse value,
-    $Res Function(FcmTokenUpdateResponse) then,
-  ) = _$FcmTokenUpdateResponseCopyWithImpl<$Res, FcmTokenUpdateResponse>;
-  @useResult
-  $Res call({String? token, String? fcmVerify});
-}
+abstract mixin class $FcmTokenUpdateResponseCopyWith<$Res>  {
+  factory $FcmTokenUpdateResponseCopyWith(FcmTokenUpdateResponse value, $Res Function(FcmTokenUpdateResponse) _then) = _$FcmTokenUpdateResponseCopyWithImpl;
+@useResult
+$Res call({
+ String? token, String? fcmVerify
+});
 
+
+
+
+}
 /// @nodoc
-class _$FcmTokenUpdateResponseCopyWithImpl<
-  $Res,
-  $Val extends FcmTokenUpdateResponse
->
+class _$FcmTokenUpdateResponseCopyWithImpl<$Res>
     implements $FcmTokenUpdateResponseCopyWith<$Res> {
-  _$FcmTokenUpdateResponseCopyWithImpl(this._value, this._then);
+  _$FcmTokenUpdateResponseCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final FcmTokenUpdateResponse _self;
+  final $Res Function(FcmTokenUpdateResponse) _then;
 
-  /// Create a copy of FcmTokenUpdateResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? token = freezed, Object? fcmVerify = freezed}) {
-    return _then(
-      _value.copyWith(
-            token:
-                freezed == token
-                    ? _value.token
-                    : token // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            fcmVerify:
-                freezed == fcmVerify
-                    ? _value.fcmVerify
-                    : fcmVerify // ignore: cast_nullable_to_non_nullable
-                        as String?,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of FcmTokenUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? token = freezed,Object? fcmVerify = freezed,}) {
+  return _then(_self.copyWith(
+token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String?,fcmVerify: freezed == fcmVerify ? _self.fcmVerify : fcmVerify // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$FcmTokenUpdateResponseImplCopyWith<$Res>
-    implements $FcmTokenUpdateResponseCopyWith<$Res> {
-  factory _$$FcmTokenUpdateResponseImplCopyWith(
-    _$FcmTokenUpdateResponseImpl value,
-    $Res Function(_$FcmTokenUpdateResponseImpl) then,
-  ) = __$$FcmTokenUpdateResponseImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String? token, String? fcmVerify});
 }
 
-/// @nodoc
-class __$$FcmTokenUpdateResponseImplCopyWithImpl<$Res>
-    extends
-        _$FcmTokenUpdateResponseCopyWithImpl<$Res, _$FcmTokenUpdateResponseImpl>
-    implements _$$FcmTokenUpdateResponseImplCopyWith<$Res> {
-  __$$FcmTokenUpdateResponseImplCopyWithImpl(
-    _$FcmTokenUpdateResponseImpl _value,
-    $Res Function(_$FcmTokenUpdateResponseImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of FcmTokenUpdateResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? token = freezed, Object? fcmVerify = freezed}) {
-    return _then(
-      _$FcmTokenUpdateResponseImpl(
-        token:
-            freezed == token
-                ? _value.token
-                : token // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        fcmVerify:
-            freezed == fcmVerify
-                ? _value.fcmVerify
-                : fcmVerify // ignore: cast_nullable_to_non_nullable
-                    as String?,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$FcmTokenUpdateResponseImpl implements _FcmTokenUpdateResponse {
-  const _$FcmTokenUpdateResponseImpl({
-    required this.token,
-    required this.fcmVerify,
-  });
 
-  factory _$FcmTokenUpdateResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FcmTokenUpdateResponseImplFromJson(json);
+class _FcmTokenUpdateResponse implements FcmTokenUpdateResponse {
+  const _FcmTokenUpdateResponse({required this.token, required this.fcmVerify});
+  factory _FcmTokenUpdateResponse.fromJson(Map<String, dynamic> json) => _$FcmTokenUpdateResponseFromJson(json);
 
-  @override
-  final String? token;
-  @override
-  final String? fcmVerify;
+@override final  String? token;
+@override final  String? fcmVerify;
 
-  @override
-  String toString() {
-    return 'FcmTokenUpdateResponse(token: $token, fcmVerify: $fcmVerify)';
-  }
+/// Create a copy of FcmTokenUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FcmTokenUpdateResponseCopyWith<_FcmTokenUpdateResponse> get copyWith => __$FcmTokenUpdateResponseCopyWithImpl<_FcmTokenUpdateResponse>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FcmTokenUpdateResponseImpl &&
-            (identical(other.token, token) || other.token == token) &&
-            (identical(other.fcmVerify, fcmVerify) ||
-                other.fcmVerify == fcmVerify));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, token, fcmVerify);
-
-  /// Create a copy of FcmTokenUpdateResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FcmTokenUpdateResponseImplCopyWith<_$FcmTokenUpdateResponseImpl>
-  get copyWith =>
-      __$$FcmTokenUpdateResponseImplCopyWithImpl<_$FcmTokenUpdateResponseImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$FcmTokenUpdateResponseImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$FcmTokenUpdateResponseToJson(this, );
 }
 
-abstract class _FcmTokenUpdateResponse implements FcmTokenUpdateResponse {
-  const factory _FcmTokenUpdateResponse({
-    required final String? token,
-    required final String? fcmVerify,
-  }) = _$FcmTokenUpdateResponseImpl;
-
-  factory _FcmTokenUpdateResponse.fromJson(Map<String, dynamic> json) =
-      _$FcmTokenUpdateResponseImpl.fromJson;
-
-  @override
-  String? get token;
-  @override
-  String? get fcmVerify;
-
-  /// Create a copy of FcmTokenUpdateResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FcmTokenUpdateResponseImplCopyWith<_$FcmTokenUpdateResponseImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FcmTokenUpdateResponse&&(identical(other.token, token) || other.token == token)&&(identical(other.fcmVerify, fcmVerify) || other.fcmVerify == fcmVerify));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,token,fcmVerify);
+
+@override
+String toString() {
+  return 'FcmTokenUpdateResponse(token: $token, fcmVerify: $fcmVerify)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FcmTokenUpdateResponseCopyWith<$Res> implements $FcmTokenUpdateResponseCopyWith<$Res> {
+  factory _$FcmTokenUpdateResponseCopyWith(_FcmTokenUpdateResponse value, $Res Function(_FcmTokenUpdateResponse) _then) = __$FcmTokenUpdateResponseCopyWithImpl;
+@override @useResult
+$Res call({
+ String? token, String? fcmVerify
+});
+
+
+
+
+}
+/// @nodoc
+class __$FcmTokenUpdateResponseCopyWithImpl<$Res>
+    implements _$FcmTokenUpdateResponseCopyWith<$Res> {
+  __$FcmTokenUpdateResponseCopyWithImpl(this._self, this._then);
+
+  final _FcmTokenUpdateResponse _self;
+  final $Res Function(_FcmTokenUpdateResponse) _then;
+
+/// Create a copy of FcmTokenUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? token = freezed,Object? fcmVerify = freezed,}) {
+  return _then(_FcmTokenUpdateResponse(
+token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String?,fcmVerify: freezed == fcmVerify ? _self.fcmVerify : fcmVerify // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

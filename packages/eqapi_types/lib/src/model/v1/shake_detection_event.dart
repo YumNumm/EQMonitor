@@ -7,7 +7,7 @@ part 'shake_detection_event.g.dart';
 /// YumNumm/eqproxy-io/server/telegram-proxy-server/src/service/shake-detect.ts
 /// `KyoshinEventWebSocketSchema`に準拠
 @freezed
-class ShakeDetectionWebSocketTelegram
+abstract class ShakeDetectionWebSocketTelegram
     with _$ShakeDetectionWebSocketTelegram
     implements V1Database {
   const factory ShakeDetectionWebSocketTelegram({
@@ -19,7 +19,9 @@ class ShakeDetectionWebSocketTelegram
 }
 
 @freezed
-class ShakeDetectionEvent with _$ShakeDetectionEvent implements V1Database {
+abstract class ShakeDetectionEvent
+    with _$ShakeDetectionEvent
+    implements V1Database {
   const factory ShakeDetectionEvent({
     @JsonKey(defaultValue: -1) required int? id,
     required String eventId,
@@ -44,7 +46,7 @@ class ShakeDetectionEvent with _$ShakeDetectionEvent implements V1Database {
 }
 
 @freezed
-class ShakeDetectionRegion with _$ShakeDetectionRegion {
+abstract class ShakeDetectionRegion with _$ShakeDetectionRegion {
   const factory ShakeDetectionRegion({
     required String name,
     @JsonKey(
@@ -61,7 +63,7 @@ class ShakeDetectionRegion with _$ShakeDetectionRegion {
 }
 
 @freezed
-class ShakeDetectionPoint with _$ShakeDetectionPoint {
+abstract class ShakeDetectionPoint with _$ShakeDetectionPoint {
   const factory ShakeDetectionPoint({
     @JsonKey(
       unknownEnumValue: JmaForecastIntensity.unknown,
@@ -76,7 +78,7 @@ class ShakeDetectionPoint with _$ShakeDetectionPoint {
 }
 
 @freezed
-class ShakeDetectionLatLng with _$ShakeDetectionLatLng {
+abstract class ShakeDetectionLatLng with _$ShakeDetectionLatLng {
   const factory ShakeDetectionLatLng({
     required double latitude,
     required double longitude,

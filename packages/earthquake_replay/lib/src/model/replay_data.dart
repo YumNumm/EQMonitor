@@ -34,7 +34,7 @@ sealed class ReplayData {
 }
 
 @freezed
-class JmaXmlTelegramReplayData
+abstract class JmaXmlTelegramReplayData
     with _$JmaXmlTelegramReplayData
     implements ReplayData {
   const factory JmaXmlTelegramReplayData({
@@ -63,7 +63,7 @@ class JmaXmlTelegramReplayData
 }
 
 @freezed
-class JmaBinaryTelegramReplayData
+abstract class JmaBinaryTelegramReplayData
     with _$JmaBinaryTelegramReplayData
     implements ReplayData {
   const factory JmaBinaryTelegramReplayData({
@@ -92,7 +92,7 @@ class JmaBinaryTelegramReplayData
 }
 
 @freezed
-class KyoshinMonitorImageReplayData
+abstract class KyoshinMonitorImageReplayData
     with _$KyoshinMonitorImageReplayData
     implements ReplayData {
   const factory KyoshinMonitorImageReplayData({
@@ -124,7 +124,7 @@ class KyoshinMonitorImageReplayData
 }
 
 @freezed
-class KyoshinMonitorEewJsonReplayData
+abstract class KyoshinMonitorEewJsonReplayData
     with _$KyoshinMonitorEewJsonReplayData
     implements ReplayData {
   const factory KyoshinMonitorEewJsonReplayData({
@@ -151,7 +151,9 @@ class KyoshinMonitorEewJsonReplayData
 }
 
 @freezed
-class KeviJsonReplayData with _$KeviJsonReplayData implements ReplayData {
+abstract class KeviJsonReplayData
+    with _$KeviJsonReplayData
+    implements ReplayData {
   const factory KeviJsonReplayData({
     required ReplayDataType type,
     required DateTime time,
@@ -182,7 +184,9 @@ class KeviJsonReplayData with _$KeviJsonReplayData implements ReplayData {
 }
 
 @freezed
-class SnpLogEntryReplayData with _$SnpLogEntryReplayData implements ReplayData {
+abstract class SnpLogEntryReplayData
+    with _$SnpLogEntryReplayData
+    implements ReplayData {
   const factory SnpLogEntryReplayData({
     required ReplayDataType type,
     required DateTime time,
@@ -207,7 +211,9 @@ class SnpLogEntryReplayData with _$SnpLogEntryReplayData implements ReplayData {
 }
 
 @freezed
-class AxisJsonReplayData with _$AxisJsonReplayData implements ReplayData {
+abstract class AxisJsonReplayData
+    with _$AxisJsonReplayData
+    implements ReplayData {
   const factory AxisJsonReplayData({
     required ReplayDataType type,
     required DateTime time,

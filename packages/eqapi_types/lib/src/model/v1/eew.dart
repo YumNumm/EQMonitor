@@ -5,7 +5,7 @@ part 'eew.freezed.dart';
 part 'eew.g.dart';
 
 @freezed
-class EewV1 with _$EewV1 implements V1Database {
+abstract class EewV1 with _$EewV1 implements V1Database {
   const factory EewV1({
     required int id,
     required int eventId,
@@ -46,7 +46,7 @@ class EewV1 with _$EewV1 implements V1Database {
 }
 
 @freezed
-class EstimatedIntensityRegion with _$EstimatedIntensityRegion {
+abstract class EstimatedIntensityRegion with _$EstimatedIntensityRegion {
   const factory EstimatedIntensityRegion({
     required String code,
     required String name,
@@ -65,7 +65,7 @@ class EstimatedIntensityRegion with _$EstimatedIntensityRegion {
 }
 
 @freezed
-class EewAccuracy with _$EewAccuracy {
+abstract class EewAccuracy with _$EewAccuracy {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory EewAccuracy({
     /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
@@ -96,7 +96,7 @@ List<dynamic> intListToStringList(List<int> value) =>
     value.map((e) => e.toString()).toList();
 
 @freezed
-class ForecastMaxInt with _$ForecastMaxInt {
+abstract class ForecastMaxInt with _$ForecastMaxInt {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory ForecastMaxInt({
     required JmaForecastIntensity from,
@@ -108,7 +108,7 @@ class ForecastMaxInt with _$ForecastMaxInt {
 }
 
 @freezed
-class ForecastMaxLgInt with _$ForecastMaxLgInt {
+abstract class ForecastMaxLgInt with _$ForecastMaxLgInt {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory ForecastMaxLgInt({
     required JmaForecastLgIntensity from,

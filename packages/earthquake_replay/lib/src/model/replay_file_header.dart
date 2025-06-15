@@ -4,7 +4,7 @@ part 'replay_file_header.freezed.dart';
 part 'replay_file_header.g.dart';
 
 @freezed
-class ReplayFileHeader with _$ReplayFileHeader {
+abstract class ReplayFileHeader with _$ReplayFileHeader {
   const factory ReplayFileHeader({
     required int version,
     required String softwareName,

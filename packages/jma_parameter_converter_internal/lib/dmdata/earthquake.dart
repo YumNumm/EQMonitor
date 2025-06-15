@@ -9,7 +9,7 @@ part 'earthquake.g.dart';
 
 /// Parameter Earthquake station v2
 @freezed
-class EarthquakeParameter with _$EarthquakeParameter {
+abstract class EarthquakeParameter with _$EarthquakeParameter {
   const factory EarthquakeParameter({
     required String responseId,
     required DateTime responseTime,
@@ -24,7 +24,7 @@ class EarthquakeParameter with _$EarthquakeParameter {
 }
 
 @freezed
-class EarthquakeParmaeterItem with _$EarthquakeParmaeterItem {
+abstract class EarthquakeParmaeterItem with _$EarthquakeParmaeterItem {
   const factory EarthquakeParmaeterItem({
     required ParameterRegion region,
     required ParameterCity city,

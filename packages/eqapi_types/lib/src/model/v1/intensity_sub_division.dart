@@ -5,7 +5,9 @@ part 'intensity_sub_division.freezed.dart';
 part 'intensity_sub_division.g.dart';
 
 @freezed
-class IntensitySubDivision with _$IntensitySubDivision implements V1Database {
+abstract class IntensitySubDivision
+    with _$IntensitySubDivision
+    implements V1Database {
   const factory IntensitySubDivision({
     required int id,
     required int eventId,

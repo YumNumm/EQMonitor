@@ -8,13 +8,13 @@ part of 'earthquake_early.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EarthquakeEarlyImpl _$$EarthquakeEarlyImplFromJson(
+_EarthquakeEarly _$EarthquakeEarlyFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$EarthquakeEarlyImpl',
+  '_EarthquakeEarly',
   json,
   ($checkedConvert) {
-    final val = _$EarthquakeEarlyImpl(
+    final val = _EarthquakeEarly(
       id: $checkedConvert('id', (v) => v as String),
       depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
       latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
@@ -48,21 +48,20 @@ _$EarthquakeEarlyImpl _$$EarthquakeEarlyImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$EarthquakeEarlyImplToJson(
-  _$EarthquakeEarlyImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'depth': instance.depth,
-  'latitude': instance.latitude,
-  'longitude': instance.longitude,
-  'magnitude': instance.magnitude,
-  'max_intensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity],
-  'max_intensity_is_early': instance.maxIntensityIsEarly,
-  'name': instance.name,
-  'origin_time': instance.originTime.toIso8601String(),
-  'origin_time_precision':
-      _$OriginTimePrecisionEnumMap[instance.originTimePrecision]!,
-};
+Map<String, dynamic> _$EarthquakeEarlyToJson(_EarthquakeEarly instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'depth': instance.depth,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      'magnitude': instance.magnitude,
+      'max_intensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity],
+      'max_intensity_is_early': instance.maxIntensityIsEarly,
+      'name': instance.name,
+      'origin_time': instance.originTime.toIso8601String(),
+      'origin_time_precision':
+          _$OriginTimePrecisionEnumMap[instance.originTimePrecision]!,
+    };
 
 const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.zero: '0',
