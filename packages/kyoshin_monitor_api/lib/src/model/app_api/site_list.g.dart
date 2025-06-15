@@ -8,19 +8,16 @@ part of 'site_list.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SiteListImpl _$$SiteListImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$SiteListImpl',
+_SiteList _$SiteListFromJson(Map<String, dynamic> json) => $checkedCreate(
+  '_SiteList',
   json,
   ($checkedConvert) {
-    final val = _$SiteListImpl(
-      sites: $checkedConvert(
+    final val = _SiteList(
+      items: $checkedConvert(
         'items',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map((e) => Site.fromJson(e as Map<String, dynamic>))
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => Site.fromJson(e as Map<String, dynamic>))
+            .toList(),
       ),
       security: $checkedConvert(
         'security',
@@ -35,25 +32,20 @@ _$SiteListImpl _$$SiteListImplFromJson(
     );
     return val;
   },
-  fieldKeyMap: const {
-    'sites': 'items',
-    'dataTime': 'data_time',
-    'serialNo': 'serial_no',
-  },
+  fieldKeyMap: const {'dataTime': 'data_time', 'serialNo': 'serial_no'},
 );
 
-Map<String, dynamic> _$$SiteListImplToJson(_$SiteListImpl instance) =>
-    <String, dynamic>{
-      'items': instance.sites,
-      'security': instance.security,
-      'data_time': instance.dataTime,
-      'result': instance.result,
-      'serial_no': instance.serialNo,
-    };
+Map<String, dynamic> _$SiteListToJson(_SiteList instance) => <String, dynamic>{
+  'items': instance.items,
+  'security': instance.security,
+  'data_time': instance.dataTime,
+  'result': instance.result,
+  'serial_no': instance.serialNo,
+};
 
-_$SiteImpl _$$SiteImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$SiteImpl', json, ($checkedConvert) {
-      final val = _$SiteImpl(
+_Site _$SiteFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_Site', json, ($checkedConvert) {
+      final val = _Site(
         muni: $checkedConvert('muni', (v) => (v as num?)?.toInt()),
         siteidx: $checkedConvert('siteidx', (v) => (v as num?)?.toInt()),
         prefectureId: $checkedConvert('pref', (v) => (v as num?)?.toInt()),
@@ -64,12 +56,11 @@ _$SiteImpl _$$SiteImplFromJson(Map<String, dynamic> json) =>
       return val;
     }, fieldKeyMap: const {'prefectureId': 'pref', 'siteId': 'siteid'});
 
-Map<String, dynamic> _$$SiteImplToJson(_$SiteImpl instance) =>
-    <String, dynamic>{
-      'muni': instance.muni,
-      'siteidx': instance.siteidx,
-      'pref': instance.prefectureId,
-      'siteid': instance.siteId,
-      'lat': instance.lat,
-      'lng': instance.lng,
-    };
+Map<String, dynamic> _$SiteToJson(_Site instance) => <String, dynamic>{
+  'muni': instance.muni,
+  'siteidx': instance.siteidx,
+  'pref': instance.prefectureId,
+  'siteid': instance.siteId,
+  'lat': instance.lat,
+  'lng': instance.lng,
+};
