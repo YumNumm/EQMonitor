@@ -7,10 +7,10 @@ part 'site_list.freezed.dart';
 part 'site_list.g.dart';
 
 @freezed
-class SiteList with _$SiteList {
+abstract class SiteList with _$SiteList {
   const factory SiteList({
     /// 観測点一覧
-    @JsonKey(name: 'items') List<Site>? sites,
+    List<Site>? items,
 
     /// セキュリティ情報
     Security? security,
@@ -30,7 +30,7 @@ class SiteList with _$SiteList {
 }
 
 @freezed
-class Site with _$Site {
+abstract class Site with _$Site {
   const factory Site({
     /// 不明(内部ID?)
     int? muni,

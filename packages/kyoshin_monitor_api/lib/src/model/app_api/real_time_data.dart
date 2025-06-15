@@ -6,7 +6,7 @@ part 'real_time_data.freezed.dart';
 part 'real_time_data.g.dart';
 
 @freezed
-class RealTimeData with _$RealTimeData {
+abstract class RealTimeData with _$RealTimeData {
   const factory RealTimeData({
     required DateTime? dateTime,
     required String? packetType,

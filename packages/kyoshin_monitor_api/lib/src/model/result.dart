@@ -4,7 +4,7 @@ part 'result.freezed.dart';
 part 'result.g.dart';
 
 @freezed
-class Result with _$Result {
+abstract class Result with _$Result {
   const factory Result({required String? status, required String? message}) =
       _Result;
 

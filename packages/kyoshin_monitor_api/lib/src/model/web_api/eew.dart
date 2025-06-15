@@ -10,7 +10,7 @@ part 'eew.g.dart';
 
 /// Web版APIでの緊急地震速報の情報
 @freezed
-class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
+abstract class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
   const factory Eew({
     /// リザルト
     Result? result,
