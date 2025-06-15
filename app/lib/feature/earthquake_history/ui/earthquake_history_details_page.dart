@@ -185,9 +185,9 @@ class _Sheet extends StatelessWidget {
               child: Column(
                 children: [
                   EarthquakeHypocenterInformationCard(item: item),
-                  PrefectureIntensityWidget(item: item.v1),
+                  PrefectureIntensityWidget(item: item.earthquake),
                   if (item.lpgmIntensityPrefectures != null)
-                    PrefectureLpgmIntensityWidget(item: item),
+                    PrefectureLpgmIntensityWidget(item: item.earthquake),
                   _EarthquakeCommentWidget(item: item),
                 ],
               ),
