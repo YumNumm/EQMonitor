@@ -8,9 +8,9 @@ part of 'information.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$InformationV1Impl _$$InformationV1ImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$InformationV1Impl', json, ($checkedConvert) {
-      final val = _$InformationV1Impl(
+_InformationV1 _$InformationV1FromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_InformationV1', json, ($checkedConvert) {
+      final val = _InformationV1(
         author: $checkedConvert(
           'author',
           (v) =>
@@ -43,7 +43,7 @@ _$InformationV1Impl _$$InformationV1ImplFromJson(Map<String, dynamic> json) =>
       return val;
     }, fieldKeyMap: const {'createdAt': 'created_at'});
 
-Map<String, dynamic> _$$InformationV1ImplToJson(_$InformationV1Impl instance) =>
+Map<String, dynamic> _$InformationV1ToJson(_InformationV1 instance) =>
     <String, dynamic>{
       'author': _$InformationAuthorEnumMap[instance.author]!,
       'body': instance.body,

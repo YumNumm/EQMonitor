@@ -5,7 +5,7 @@ part 'earthquake_early.freezed.dart';
 part 'earthquake_early.g.dart';
 
 @freezed
-class EarthquakeEarly with _$EarthquakeEarly {
+abstract class EarthquakeEarly with _$EarthquakeEarly {
   const factory EarthquakeEarly({
     required String id,
     required int? depth,

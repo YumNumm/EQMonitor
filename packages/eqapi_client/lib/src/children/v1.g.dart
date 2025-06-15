@@ -57,12 +57,9 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<EarthquakeV1> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) => EarthquakeV1.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => EarthquakeV1.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -133,12 +130,9 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<RegionItem> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) => RegionItem.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => RegionItem.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -172,13 +166,9 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<InformationV1> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) =>
-                    InformationV1.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => InformationV1.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -212,10 +202,9 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<EewV1> _value;
     try {
-      _value =
-          _result.data!
-              .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -243,10 +232,9 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<EewV1> _value;
     try {
-      _value =
-          _result.data!
-              .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -276,10 +264,9 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<EewV1> _value;
     try {
-      _value =
-          _result.data!
-              .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -334,13 +321,11 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<EarthquakeEarly> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) =>
-                    EarthquakeEarly.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map(
+            (dynamic i) => EarthquakeEarly.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -368,13 +353,12 @@ class _V1 implements V1 {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<ShakeDetectionEvent> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) =>
-                    ShakeDetectionEvent.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map(
+            (dynamic i) =>
+                ShakeDetectionEvent.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

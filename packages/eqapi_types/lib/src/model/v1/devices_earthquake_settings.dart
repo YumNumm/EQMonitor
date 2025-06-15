@@ -5,7 +5,7 @@ part 'devices_earthquake_settings.freezed.dart';
 part 'devices_earthquake_settings.g.dart';
 
 @freezed
-class DevicesEarthquakeSettings with _$DevicesEarthquakeSettings {
+abstract class DevicesEarthquakeSettings with _$DevicesEarthquakeSettings {
   const factory DevicesEarthquakeSettings({
     required String id,
     required JmaForecastIntensity minJmaIntensity,

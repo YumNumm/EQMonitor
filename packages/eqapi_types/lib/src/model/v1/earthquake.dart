@@ -5,7 +5,7 @@ part 'earthquake.freezed.dart';
 part 'earthquake.g.dart';
 
 @freezed
-class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
+abstract class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
   const factory EarthquakeV1({
     required int eventId,
     required String status,
@@ -38,7 +38,7 @@ class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
 
 /// `/v1/earthquake/region` の `$.[*].earthquake` で利用
 @freezed
-class EarthquakeV1Base with _$EarthquakeV1Base {
+abstract class EarthquakeV1Base with _$EarthquakeV1Base {
   const factory EarthquakeV1Base({
     required int eventId,
     required String status,
@@ -63,7 +63,7 @@ class EarthquakeV1Base with _$EarthquakeV1Base {
 }
 
 @freezed
-class ObservedRegionIntensity with _$ObservedRegionIntensity {
+abstract class ObservedRegionIntensity with _$ObservedRegionIntensity {
   const factory ObservedRegionIntensity({
     required String code,
     required String name,
@@ -75,7 +75,7 @@ class ObservedRegionIntensity with _$ObservedRegionIntensity {
 }
 
 @freezed
-class ObservedRegionLpgmIntensity with _$ObservedRegionLpgmIntensity {
+abstract class ObservedRegionLpgmIntensity with _$ObservedRegionLpgmIntensity {
   const factory ObservedRegionLpgmIntensity({
     required String code,
     required String name,

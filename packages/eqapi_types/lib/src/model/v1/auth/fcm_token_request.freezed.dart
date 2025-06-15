@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,166 +10,139 @@ part of 'fcm_token_request.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-FcmTokenRequest _$FcmTokenRequestFromJson(Map<String, dynamic> json) {
-  return _FcmTokenRequest.fromJson(json);
-}
 
 /// @nodoc
 mixin _$FcmTokenRequest {
-  String get fcmToken => throw _privateConstructorUsedError;
+
+ String get fcmToken;
+/// Create a copy of FcmTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FcmTokenRequestCopyWith<FcmTokenRequest> get copyWith => _$FcmTokenRequestCopyWithImpl<FcmTokenRequest>(this as FcmTokenRequest, _$identity);
 
   /// Serializes this FcmTokenRequest to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of FcmTokenRequest
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $FcmTokenRequestCopyWith<FcmTokenRequest> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FcmTokenRequest&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,fcmToken);
+
+@override
+String toString() {
+  return 'FcmTokenRequest(fcmToken: $fcmToken)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $FcmTokenRequestCopyWith<$Res> {
-  factory $FcmTokenRequestCopyWith(
-    FcmTokenRequest value,
-    $Res Function(FcmTokenRequest) then,
-  ) = _$FcmTokenRequestCopyWithImpl<$Res, FcmTokenRequest>;
-  @useResult
-  $Res call({String fcmToken});
-}
+abstract mixin class $FcmTokenRequestCopyWith<$Res>  {
+  factory $FcmTokenRequestCopyWith(FcmTokenRequest value, $Res Function(FcmTokenRequest) _then) = _$FcmTokenRequestCopyWithImpl;
+@useResult
+$Res call({
+ String fcmToken
+});
 
+
+
+
+}
 /// @nodoc
-class _$FcmTokenRequestCopyWithImpl<$Res, $Val extends FcmTokenRequest>
+class _$FcmTokenRequestCopyWithImpl<$Res>
     implements $FcmTokenRequestCopyWith<$Res> {
-  _$FcmTokenRequestCopyWithImpl(this._value, this._then);
+  _$FcmTokenRequestCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final FcmTokenRequest _self;
+  final $Res Function(FcmTokenRequest) _then;
 
-  /// Create a copy of FcmTokenRequest
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? fcmToken = null}) {
-    return _then(
-      _value.copyWith(
-            fcmToken:
-                null == fcmToken
-                    ? _value.fcmToken
-                    : fcmToken // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of FcmTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? fcmToken = null,}) {
+  return _then(_self.copyWith(
+fcmToken: null == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$FcmTokenRequestImplCopyWith<$Res>
-    implements $FcmTokenRequestCopyWith<$Res> {
-  factory _$$FcmTokenRequestImplCopyWith(
-    _$FcmTokenRequestImpl value,
-    $Res Function(_$FcmTokenRequestImpl) then,
-  ) = __$$FcmTokenRequestImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String fcmToken});
 }
 
-/// @nodoc
-class __$$FcmTokenRequestImplCopyWithImpl<$Res>
-    extends _$FcmTokenRequestCopyWithImpl<$Res, _$FcmTokenRequestImpl>
-    implements _$$FcmTokenRequestImplCopyWith<$Res> {
-  __$$FcmTokenRequestImplCopyWithImpl(
-    _$FcmTokenRequestImpl _value,
-    $Res Function(_$FcmTokenRequestImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of FcmTokenRequest
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? fcmToken = null}) {
-    return _then(
-      _$FcmTokenRequestImpl(
-        fcmToken:
-            null == fcmToken
-                ? _value.fcmToken
-                : fcmToken // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$FcmTokenRequestImpl implements _FcmTokenRequest {
-  const _$FcmTokenRequestImpl({required this.fcmToken});
 
-  factory _$FcmTokenRequestImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FcmTokenRequestImplFromJson(json);
+class _FcmTokenRequest implements FcmTokenRequest {
+  const _FcmTokenRequest({required this.fcmToken});
+  factory _FcmTokenRequest.fromJson(Map<String, dynamic> json) => _$FcmTokenRequestFromJson(json);
 
-  @override
-  final String fcmToken;
+@override final  String fcmToken;
 
-  @override
-  String toString() {
-    return 'FcmTokenRequest(fcmToken: $fcmToken)';
-  }
+/// Create a copy of FcmTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FcmTokenRequestCopyWith<_FcmTokenRequest> get copyWith => __$FcmTokenRequestCopyWithImpl<_FcmTokenRequest>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FcmTokenRequestImpl &&
-            (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, fcmToken);
-
-  /// Create a copy of FcmTokenRequest
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl> get copyWith =>
-      __$$FcmTokenRequestImplCopyWithImpl<_$FcmTokenRequestImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$FcmTokenRequestImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$FcmTokenRequestToJson(this, );
 }
 
-abstract class _FcmTokenRequest implements FcmTokenRequest {
-  const factory _FcmTokenRequest({required final String fcmToken}) =
-      _$FcmTokenRequestImpl;
-
-  factory _FcmTokenRequest.fromJson(Map<String, dynamic> json) =
-      _$FcmTokenRequestImpl.fromJson;
-
-  @override
-  String get fcmToken;
-
-  /// Create a copy of FcmTokenRequest
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FcmTokenRequest&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,fcmToken);
+
+@override
+String toString() {
+  return 'FcmTokenRequest(fcmToken: $fcmToken)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FcmTokenRequestCopyWith<$Res> implements $FcmTokenRequestCopyWith<$Res> {
+  factory _$FcmTokenRequestCopyWith(_FcmTokenRequest value, $Res Function(_FcmTokenRequest) _then) = __$FcmTokenRequestCopyWithImpl;
+@override @useResult
+$Res call({
+ String fcmToken
+});
+
+
+
+
+}
+/// @nodoc
+class __$FcmTokenRequestCopyWithImpl<$Res>
+    implements _$FcmTokenRequestCopyWith<$Res> {
+  __$FcmTokenRequestCopyWithImpl(this._self, this._then);
+
+  final _FcmTokenRequest _self;
+  final $Res Function(_FcmTokenRequest) _then;
+
+/// Create a copy of FcmTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? fcmToken = null,}) {
+  return _then(_FcmTokenRequest(
+fcmToken: null == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

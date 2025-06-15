@@ -8,11 +8,11 @@ part of 'eew.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
-  r'_$EewV1Impl',
+_EewV1 _$EewV1FromJson(Map<String, dynamic> json) => $checkedCreate(
+  '_EewV1',
   json,
   ($checkedConvert) {
-    final val = _$EewV1Impl(
+    final val = _EewV1(
       id: $checkedConvert('id', (v) => (v as num).toInt()),
       eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
       type: $checkedConvert('type', (v) => v as String),
@@ -65,14 +65,12 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       regions: $checkedConvert(
         'regions',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => EstimatedIntensityRegion.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) =>
+                  EstimatedIntensityRegion.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
       ),
     );
     return val;
@@ -97,38 +95,37 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
   },
 );
 
-Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'event_id': instance.eventId,
-      'type': instance.type,
-      'schema_type': instance.schemaType,
-      'status': instance.status,
-      'info_type': instance.infoType,
-      'report_time': instance.reportTime.toIso8601String(),
-      'is_canceled': instance.isCanceled,
-      'is_last_info': instance.isLastInfo,
-      'is_plum': instance.isPlum,
-      'accuracy': instance.accuracy,
-      'serial_no': instance.serialNo,
-      'headline': instance.headline,
-      'is_warning': instance.isWarning,
-      'origin_time': instance.originTime?.toIso8601String(),
-      'arrival_time': instance.arrivalTime?.toIso8601String(),
-      'hypo_name': instance.hypoName,
-      'depth': instance.depth,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      'magnitude': instance.magnitude,
-      'forecast_max_intensity':
-          _$JmaForecastIntensityEnumMap[instance.forecastMaxIntensity],
-      'forecast_max_intensity_is_over': instance.forecastMaxIntensityIsOver,
-      'forecast_max_lpgm_intensity':
-          _$JmaForecastLgIntensityEnumMap[instance.forecastMaxLpgmIntensity],
-      'forecast_max_lpgm_intensity_is_over':
-          instance.forecastMaxLpgmIntensityIsOver,
-      'regions': instance.regions,
-    };
+Map<String, dynamic> _$EewV1ToJson(_EewV1 instance) => <String, dynamic>{
+  'id': instance.id,
+  'event_id': instance.eventId,
+  'type': instance.type,
+  'schema_type': instance.schemaType,
+  'status': instance.status,
+  'info_type': instance.infoType,
+  'report_time': instance.reportTime.toIso8601String(),
+  'is_canceled': instance.isCanceled,
+  'is_last_info': instance.isLastInfo,
+  'is_plum': instance.isPlum,
+  'accuracy': instance.accuracy,
+  'serial_no': instance.serialNo,
+  'headline': instance.headline,
+  'is_warning': instance.isWarning,
+  'origin_time': instance.originTime?.toIso8601String(),
+  'arrival_time': instance.arrivalTime?.toIso8601String(),
+  'hypo_name': instance.hypoName,
+  'depth': instance.depth,
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
+  'magnitude': instance.magnitude,
+  'forecast_max_intensity':
+      _$JmaForecastIntensityEnumMap[instance.forecastMaxIntensity],
+  'forecast_max_intensity_is_over': instance.forecastMaxIntensityIsOver,
+  'forecast_max_lpgm_intensity':
+      _$JmaForecastLgIntensityEnumMap[instance.forecastMaxLpgmIntensity],
+  'forecast_max_lpgm_intensity_is_over':
+      instance.forecastMaxLpgmIntensityIsOver,
+  'regions': instance.regions,
+};
 
 const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.zero: '0',
@@ -153,10 +150,10 @@ const _$JmaForecastLgIntensityEnumMap = {
   JmaForecastLgIntensity.unknown: '不明',
 };
 
-_$EstimatedIntensityRegionImpl _$$EstimatedIntensityRegionImplFromJson(
+_EstimatedIntensityRegion _$EstimatedIntensityRegionFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$EstimatedIntensityRegionImpl', json, ($checkedConvert) {
-  final val = _$EstimatedIntensityRegionImpl(
+) => $checkedCreate('_EstimatedIntensityRegion', json, ($checkedConvert) {
+  final val = _EstimatedIntensityRegion(
     code: $checkedConvert('code', (v) => v as String),
     name: $checkedConvert('name', (v) => v as String),
     isPlum: $checkedConvert('isPlum', (v) => v as bool),
@@ -167,10 +164,9 @@ _$EstimatedIntensityRegionImpl _$$EstimatedIntensityRegionImplFromJson(
     ),
     forecastMaxLgInt: $checkedConvert(
       'forecastMaxLgInt',
-      (v) =>
-          v == null
-              ? null
-              : ForecastMaxLgInt.fromJson(v as Map<String, dynamic>),
+      (v) => v == null
+          ? null
+          : ForecastMaxLgInt.fromJson(v as Map<String, dynamic>),
     ),
     arrivalTime: $checkedConvert(
       'arrivalTime',
@@ -180,8 +176,8 @@ _$EstimatedIntensityRegionImpl _$$EstimatedIntensityRegionImplFromJson(
   return val;
 });
 
-Map<String, dynamic> _$$EstimatedIntensityRegionImplToJson(
-  _$EstimatedIntensityRegionImpl instance,
+Map<String, dynamic> _$EstimatedIntensityRegionToJson(
+  _EstimatedIntensityRegion instance,
 ) => <String, dynamic>{
   'code': instance.code,
   'name': instance.name,
@@ -192,9 +188,9 @@ Map<String, dynamic> _$$EstimatedIntensityRegionImplToJson(
   'arrivalTime': instance.arrivalTime?.toIso8601String(),
 };
 
-_$EewAccuracyImpl _$$EewAccuracyImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$EewAccuracyImpl', json, ($checkedConvert) {
-      final val = _$EewAccuracyImpl(
+_EewAccuracy _$EewAccuracyFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_EewAccuracy', json, ($checkedConvert) {
+      final val = _EewAccuracy(
         epicenters: $checkedConvert(
           'epicenters',
           (v) => stringListToIntList(v as List),
@@ -212,7 +208,7 @@ _$EewAccuracyImpl _$$EewAccuracyImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$EewAccuracyImplToJson(_$EewAccuracyImpl instance) =>
+Map<String, dynamic> _$EewAccuracyToJson(_EewAccuracy instance) =>
     <String, dynamic>{
       'epicenters': intListToStringList(instance.epicenters),
       'depth': intToString(instance.depth),
@@ -222,9 +218,9 @@ Map<String, dynamic> _$$EewAccuracyImplToJson(_$EewAccuracyImpl instance) =>
       ),
     };
 
-_$ForecastMaxIntImpl _$$ForecastMaxIntImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$ForecastMaxIntImpl', json, ($checkedConvert) {
-      final val = _$ForecastMaxIntImpl(
+_ForecastMaxInt _$ForecastMaxIntFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_ForecastMaxInt', json, ($checkedConvert) {
+      final val = _ForecastMaxInt(
         from: $checkedConvert(
           'from',
           (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
@@ -237,12 +233,11 @@ _$ForecastMaxIntImpl _$$ForecastMaxIntImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$ForecastMaxIntImplToJson(
-  _$ForecastMaxIntImpl instance,
-) => <String, dynamic>{
-  'from': _$JmaForecastIntensityEnumMap[instance.from]!,
-  'to': _$JmaForecastIntensityOverEnumMap[instance.to]!,
-};
+Map<String, dynamic> _$ForecastMaxIntToJson(_ForecastMaxInt instance) =>
+    <String, dynamic>{
+      'from': _$JmaForecastIntensityEnumMap[instance.from]!,
+      'to': _$JmaForecastIntensityOverEnumMap[instance.to]!,
+    };
 
 const _$JmaForecastIntensityOverEnumMap = {
   JmaForecastIntensityOver.zero: '0',
@@ -259,28 +254,26 @@ const _$JmaForecastIntensityOverEnumMap = {
   JmaForecastIntensityOver.over: 'over',
 };
 
-_$ForecastMaxLgIntImpl _$$ForecastMaxLgIntImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$ForecastMaxLgIntImpl', json, ($checkedConvert) {
-  final val = _$ForecastMaxLgIntImpl(
-    from: $checkedConvert(
-      'from',
-      (v) => $enumDecode(_$JmaForecastLgIntensityEnumMap, v),
-    ),
-    to: $checkedConvert(
-      'to',
-      (v) => $enumDecode(_$JmaForecastLgIntensityOverEnumMap, v),
-    ),
-  );
-  return val;
-});
+_ForecastMaxLgInt _$ForecastMaxLgIntFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_ForecastMaxLgInt', json, ($checkedConvert) {
+      final val = _ForecastMaxLgInt(
+        from: $checkedConvert(
+          'from',
+          (v) => $enumDecode(_$JmaForecastLgIntensityEnumMap, v),
+        ),
+        to: $checkedConvert(
+          'to',
+          (v) => $enumDecode(_$JmaForecastLgIntensityOverEnumMap, v),
+        ),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$$ForecastMaxLgIntImplToJson(
-  _$ForecastMaxLgIntImpl instance,
-) => <String, dynamic>{
-  'from': _$JmaForecastLgIntensityEnumMap[instance.from]!,
-  'to': _$JmaForecastLgIntensityOverEnumMap[instance.to]!,
-};
+Map<String, dynamic> _$ForecastMaxLgIntToJson(_ForecastMaxLgInt instance) =>
+    <String, dynamic>{
+      'from': _$JmaForecastLgIntensityEnumMap[instance.from]!,
+      'to': _$JmaForecastLgIntensityOverEnumMap[instance.to]!,
+    };
 
 const _$JmaForecastLgIntensityOverEnumMap = {
   JmaForecastLgIntensityOver.zero: '0',

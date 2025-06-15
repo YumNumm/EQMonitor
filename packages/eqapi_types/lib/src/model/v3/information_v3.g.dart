@@ -8,28 +8,26 @@ part of 'information_v3.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$InformationV3ResultImpl _$$InformationV3ResultImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$InformationV3ResultImpl', json, ($checkedConvert) {
-  final val = _$InformationV3ResultImpl(
-    items: $checkedConvert(
-      'items',
-      (v) =>
-          (v as List<dynamic>)
+_InformationV3Result _$InformationV3ResultFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_InformationV3Result', json, ($checkedConvert) {
+      final val = _InformationV3Result(
+        items: $checkedConvert(
+          'items',
+          (v) => (v as List<dynamic>)
               .map((e) => InformationV3.fromJson(e as Map<String, dynamic>))
               .toList(),
-    ),
-  );
-  return val;
-});
+        ),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$$InformationV3ResultImplToJson(
-  _$InformationV3ResultImpl instance,
+Map<String, dynamic> _$InformationV3ResultToJson(
+  _InformationV3Result instance,
 ) => <String, dynamic>{'items': instance.items};
 
-_$InformationV3Impl _$$InformationV3ImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$InformationV3Impl', json, ($checkedConvert) {
-      final val = _$InformationV3Impl(
+_InformationV3 _$InformationV3FromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_InformationV3', json, ($checkedConvert) {
+      final val = _InformationV3(
         id: $checkedConvert('id', (v) => (v as num).toInt()),
         title: $checkedConvert('title', (v) => v as String),
         body: $checkedConvert('body', (v) => v as String),
@@ -50,7 +48,7 @@ _$InformationV3Impl _$$InformationV3ImplFromJson(Map<String, dynamic> json) =>
       return val;
     }, fieldKeyMap: const {'eventId': 'event_id'});
 
-Map<String, dynamic> _$$InformationV3ImplToJson(_$InformationV3Impl instance) =>
+Map<String, dynamic> _$InformationV3ToJson(_InformationV3 instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,

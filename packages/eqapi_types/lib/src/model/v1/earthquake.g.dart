@@ -8,13 +8,13 @@ part of 'earthquake.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EarthquakeV1Impl _$$EarthquakeV1ImplFromJson(
+_EarthquakeV1 _$EarthquakeV1FromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$EarthquakeV1Impl',
+  '_EarthquakeV1',
   json,
   ($checkedConvert) {
-    final val = _$EarthquakeV1Impl(
+    final val = _EarthquakeV1(
       eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
       status: $checkedConvert('status', (v) => v as String),
       arrivalTime: $checkedConvert(
@@ -33,82 +33,71 @@ _$EarthquakeV1Impl _$$EarthquakeV1ImplFromJson(
       headline: $checkedConvert('headline', (v) => v as String?),
       intensityCities: $checkedConvert(
         'intensity_cities',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => ObservedRegionIntensity.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) =>
+                  ObservedRegionIntensity.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
       ),
       intensityPrefectures: $checkedConvert(
         'intensity_prefectures',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => ObservedRegionIntensity.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) =>
+                  ObservedRegionIntensity.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
       ),
       intensityRegions: $checkedConvert(
         'intensity_regions',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => ObservedRegionIntensity.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) =>
+                  ObservedRegionIntensity.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
       ),
       intensityStations: $checkedConvert(
         'intensity_stations',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => ObservedRegionIntensity.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) =>
+                  ObservedRegionIntensity.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
       ),
       latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
       longitude: $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
       lpgmIntensityPrefectures: $checkedConvert(
         'lpgm_intensity_prefectures',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => ObservedRegionLpgmIntensity.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) => ObservedRegionLpgmIntensity.fromJson(
+                e as Map<String, dynamic>,
+              ),
+            )
+            .toList(),
       ),
       lpgmIntensityRegions: $checkedConvert(
         'lpgm_intensity_regions',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => ObservedRegionLpgmIntensity.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) => ObservedRegionLpgmIntensity.fromJson(
+                e as Map<String, dynamic>,
+              ),
+            )
+            .toList(),
       ),
       lpgmIntenstiyStations: $checkedConvert(
         'lpgm_intenstiy_stations',
-        (v) =>
-            (v as List<dynamic>?)
-                ?.map(
-                  (e) => ObservedRegionLpgmIntensity.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) => ObservedRegionLpgmIntensity.fromJson(
+                e as Map<String, dynamic>,
+              ),
+            )
+            .toList(),
       ),
       magnitude: $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
       magnitudeCondition: $checkedConvert(
@@ -155,7 +144,7 @@ _$EarthquakeV1Impl _$$EarthquakeV1ImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$EarthquakeV1ImplToJson(_$EarthquakeV1Impl instance) =>
+Map<String, dynamic> _$EarthquakeV1ToJson(_EarthquakeV1 instance) =>
     <String, dynamic>{
       'event_id': instance.eventId,
       'status': instance.status,
@@ -203,13 +192,13 @@ const _$JmaLgIntensityEnumMap = {
   JmaLgIntensity.four: '4',
 };
 
-_$EarthquakeV1BaseImpl _$$EarthquakeV1BaseImplFromJson(
+_EarthquakeV1Base _$EarthquakeV1BaseFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$EarthquakeV1BaseImpl',
+  '_EarthquakeV1Base',
   json,
   ($checkedConvert) {
-    final val = _$EarthquakeV1BaseImpl(
+    final val = _EarthquakeV1Base(
       eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
       status: $checkedConvert('status', (v) => v as String),
       arrivalTime: $checkedConvert(
@@ -266,31 +255,30 @@ _$EarthquakeV1BaseImpl _$$EarthquakeV1BaseImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$EarthquakeV1BaseImplToJson(
-  _$EarthquakeV1BaseImpl instance,
-) => <String, dynamic>{
-  'event_id': instance.eventId,
-  'status': instance.status,
-  'arrival_time': instance.arrivalTime?.toIso8601String(),
-  'depth': instance.depth,
-  'epicenter_code': instance.epicenterCode,
-  'epicenter_detail_code': instance.epicenterDetailCode,
-  'headline': instance.headline,
-  'latitude': instance.latitude,
-  'longitude': instance.longitude,
-  'magnitude': instance.magnitude,
-  'magnitude_condition': instance.magnitudeCondition,
-  'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
-  'max_intensity_region_ids': instance.maxIntensityRegionIds,
-  'max_lpgm_intensity': _$JmaLgIntensityEnumMap[instance.maxLpgmIntensity],
-  'origin_time': instance.originTime?.toIso8601String(),
-  'text': instance.text,
-};
+Map<String, dynamic> _$EarthquakeV1BaseToJson(_EarthquakeV1Base instance) =>
+    <String, dynamic>{
+      'event_id': instance.eventId,
+      'status': instance.status,
+      'arrival_time': instance.arrivalTime?.toIso8601String(),
+      'depth': instance.depth,
+      'epicenter_code': instance.epicenterCode,
+      'epicenter_detail_code': instance.epicenterDetailCode,
+      'headline': instance.headline,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      'magnitude': instance.magnitude,
+      'magnitude_condition': instance.magnitudeCondition,
+      'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
+      'max_intensity_region_ids': instance.maxIntensityRegionIds,
+      'max_lpgm_intensity': _$JmaLgIntensityEnumMap[instance.maxLpgmIntensity],
+      'origin_time': instance.originTime?.toIso8601String(),
+      'text': instance.text,
+    };
 
-_$ObservedRegionIntensityImpl _$$ObservedRegionIntensityImplFromJson(
+_ObservedRegionIntensity _$ObservedRegionIntensityFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$ObservedRegionIntensityImpl', json, ($checkedConvert) {
-  final val = _$ObservedRegionIntensityImpl(
+) => $checkedCreate('_ObservedRegionIntensity', json, ($checkedConvert) {
+  final val = _ObservedRegionIntensity(
     code: $checkedConvert('code', (v) => v as String),
     name: $checkedConvert('name', (v) => v as String),
     intensity: $checkedConvert(
@@ -301,21 +289,21 @@ _$ObservedRegionIntensityImpl _$$ObservedRegionIntensityImplFromJson(
   return val;
 }, fieldKeyMap: const {'intensity': 'maxInt'});
 
-Map<String, dynamic> _$$ObservedRegionIntensityImplToJson(
-  _$ObservedRegionIntensityImpl instance,
+Map<String, dynamic> _$ObservedRegionIntensityToJson(
+  _ObservedRegionIntensity instance,
 ) => <String, dynamic>{
   'code': instance.code,
   'name': instance.name,
   'maxInt': _$JmaIntensityEnumMap[instance.intensity],
 };
 
-_$ObservedRegionLpgmIntensityImpl _$$ObservedRegionLpgmIntensityImplFromJson(
+_ObservedRegionLpgmIntensity _$ObservedRegionLpgmIntensityFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$ObservedRegionLpgmIntensityImpl',
+  '_ObservedRegionLpgmIntensity',
   json,
   ($checkedConvert) {
-    final val = _$ObservedRegionLpgmIntensityImpl(
+    final val = _ObservedRegionLpgmIntensity(
       code: $checkedConvert('code', (v) => v as String),
       name: $checkedConvert('name', (v) => v as String),
       intensity: $checkedConvert(
@@ -332,8 +320,8 @@ _$ObservedRegionLpgmIntensityImpl _$$ObservedRegionLpgmIntensityImplFromJson(
   fieldKeyMap: const {'intensity': 'maxInt', 'lpgmIntensity': 'maxLgInt'},
 );
 
-Map<String, dynamic> _$$ObservedRegionLpgmIntensityImplToJson(
-  _$ObservedRegionLpgmIntensityImpl instance,
+Map<String, dynamic> _$ObservedRegionLpgmIntensityToJson(
+  _ObservedRegionLpgmIntensity instance,
 ) => <String, dynamic>{
   'code': instance.code,
   'name': instance.name,

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,1575 +10,944 @@ part of 'replay_data.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-JmaXmlTelegramReplayData _$JmaXmlTelegramReplayDataFromJson(
-  Map<String, dynamic> json,
-) {
-  return _JmaXmlTelegramReplayData.fromJson(json);
-}
 
 /// @nodoc
 mixin _$JmaXmlTelegramReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
-  DateTime get time => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  String get telegram => throw _privateConstructorUsedError;
+
+ ReplayDataType get type; DateTime get time; String get title; String get telegram;
+/// Create a copy of JmaXmlTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$JmaXmlTelegramReplayDataCopyWith<JmaXmlTelegramReplayData> get copyWith => _$JmaXmlTelegramReplayDataCopyWithImpl<JmaXmlTelegramReplayData>(this as JmaXmlTelegramReplayData, _$identity);
 
   /// Serializes this JmaXmlTelegramReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of JmaXmlTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $JmaXmlTelegramReplayDataCopyWith<JmaXmlTelegramReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JmaXmlTelegramReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.title, title) || other.title == title)&&(identical(other.telegram, telegram) || other.telegram == telegram));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,title,telegram);
+
+
+
 }
 
 /// @nodoc
-abstract class $JmaXmlTelegramReplayDataCopyWith<$Res> {
-  factory $JmaXmlTelegramReplayDataCopyWith(
-    JmaXmlTelegramReplayData value,
-    $Res Function(JmaXmlTelegramReplayData) then,
-  ) = _$JmaXmlTelegramReplayDataCopyWithImpl<$Res, JmaXmlTelegramReplayData>;
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    String title,
-    String telegram,
-  });
-}
+abstract mixin class $JmaXmlTelegramReplayDataCopyWith<$Res>  {
+  factory $JmaXmlTelegramReplayDataCopyWith(JmaXmlTelegramReplayData value, $Res Function(JmaXmlTelegramReplayData) _then) = _$JmaXmlTelegramReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, String title, String telegram
+});
 
+
+
+
+}
 /// @nodoc
-class _$JmaXmlTelegramReplayDataCopyWithImpl<
-  $Res,
-  $Val extends JmaXmlTelegramReplayData
->
+class _$JmaXmlTelegramReplayDataCopyWithImpl<$Res>
     implements $JmaXmlTelegramReplayDataCopyWith<$Res> {
-  _$JmaXmlTelegramReplayDataCopyWithImpl(this._value, this._then);
+  _$JmaXmlTelegramReplayDataCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final JmaXmlTelegramReplayData _self;
+  final $Res Function(JmaXmlTelegramReplayData) _then;
 
-  /// Create a copy of JmaXmlTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? title = null,
-    Object? telegram = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ReplayDataType,
-            time:
-                null == time
-                    ? _value.time
-                    : time // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            title:
-                null == title
-                    ? _value.title
-                    : title // ignore: cast_nullable_to_non_nullable
-                        as String,
-            telegram:
-                null == telegram
-                    ? _value.telegram
-                    : telegram // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of JmaXmlTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? title = null,Object? telegram = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,telegram: null == telegram ? _self.telegram : telegram // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$JmaXmlTelegramReplayDataImplCopyWith<$Res>
-    implements $JmaXmlTelegramReplayDataCopyWith<$Res> {
-  factory _$$JmaXmlTelegramReplayDataImplCopyWith(
-    _$JmaXmlTelegramReplayDataImpl value,
-    $Res Function(_$JmaXmlTelegramReplayDataImpl) then,
-  ) = __$$JmaXmlTelegramReplayDataImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    String title,
-    String telegram,
-  });
 }
 
-/// @nodoc
-class __$$JmaXmlTelegramReplayDataImplCopyWithImpl<$Res>
-    extends
-        _$JmaXmlTelegramReplayDataCopyWithImpl<
-          $Res,
-          _$JmaXmlTelegramReplayDataImpl
-        >
-    implements _$$JmaXmlTelegramReplayDataImplCopyWith<$Res> {
-  __$$JmaXmlTelegramReplayDataImplCopyWithImpl(
-    _$JmaXmlTelegramReplayDataImpl _value,
-    $Res Function(_$JmaXmlTelegramReplayDataImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of JmaXmlTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? title = null,
-    Object? telegram = null,
-  }) {
-    return _then(
-      _$JmaXmlTelegramReplayDataImpl(
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ReplayDataType,
-        time:
-            null == time
-                ? _value.time
-                : time // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        title:
-            null == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                    as String,
-        telegram:
-            null == telegram
-                ? _value.telegram
-                : telegram // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$JmaXmlTelegramReplayDataImpl extends _JmaXmlTelegramReplayData {
-  const _$JmaXmlTelegramReplayDataImpl({
-    required this.type,
-    required this.time,
-    required this.title,
-    required this.telegram,
-  }) : super._();
 
-  factory _$JmaXmlTelegramReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$JmaXmlTelegramReplayDataImplFromJson(json);
+class _JmaXmlTelegramReplayData extends JmaXmlTelegramReplayData {
+  const _JmaXmlTelegramReplayData({required this.type, required this.time, required this.title, required this.telegram}): super._();
+  factory _JmaXmlTelegramReplayData.fromJson(Map<String, dynamic> json) => _$JmaXmlTelegramReplayDataFromJson(json);
 
-  @override
-  final ReplayDataType type;
-  @override
-  final DateTime time;
-  @override
-  final String title;
-  @override
-  final String telegram;
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  String title;
+@override final  String telegram;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$JmaXmlTelegramReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.telegram, telegram) ||
-                other.telegram == telegram));
-  }
+/// Create a copy of JmaXmlTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$JmaXmlTelegramReplayDataCopyWith<_JmaXmlTelegramReplayData> get copyWith => __$JmaXmlTelegramReplayDataCopyWithImpl<_JmaXmlTelegramReplayData>(this, _$identity);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, type, time, title, telegram);
-
-  /// Create a copy of JmaXmlTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$JmaXmlTelegramReplayDataImplCopyWith<_$JmaXmlTelegramReplayDataImpl>
-  get copyWith => __$$JmaXmlTelegramReplayDataImplCopyWithImpl<
-    _$JmaXmlTelegramReplayDataImpl
-  >(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$JmaXmlTelegramReplayDataImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$JmaXmlTelegramReplayDataToJson(this, );
 }
 
-abstract class _JmaXmlTelegramReplayData extends JmaXmlTelegramReplayData {
-  const factory _JmaXmlTelegramReplayData({
-    required final ReplayDataType type,
-    required final DateTime time,
-    required final String title,
-    required final String telegram,
-  }) = _$JmaXmlTelegramReplayDataImpl;
-  const _JmaXmlTelegramReplayData._() : super._();
-
-  factory _JmaXmlTelegramReplayData.fromJson(Map<String, dynamic> json) =
-      _$JmaXmlTelegramReplayDataImpl.fromJson;
-
-  @override
-  ReplayDataType get type;
-  @override
-  DateTime get time;
-  @override
-  String get title;
-  @override
-  String get telegram;
-
-  /// Create a copy of JmaXmlTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$JmaXmlTelegramReplayDataImplCopyWith<_$JmaXmlTelegramReplayDataImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JmaXmlTelegramReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.title, title) || other.title == title)&&(identical(other.telegram, telegram) || other.telegram == telegram));
 }
 
-JmaBinaryTelegramReplayData _$JmaBinaryTelegramReplayDataFromJson(
-  Map<String, dynamic> json,
-) {
-  return _JmaBinaryTelegramReplayData.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,title,telegram);
+
+
+
 }
+
+/// @nodoc
+abstract mixin class _$JmaXmlTelegramReplayDataCopyWith<$Res> implements $JmaXmlTelegramReplayDataCopyWith<$Res> {
+  factory _$JmaXmlTelegramReplayDataCopyWith(_JmaXmlTelegramReplayData value, $Res Function(_JmaXmlTelegramReplayData) _then) = __$JmaXmlTelegramReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, String title, String telegram
+});
+
+
+
+
+}
+/// @nodoc
+class __$JmaXmlTelegramReplayDataCopyWithImpl<$Res>
+    implements _$JmaXmlTelegramReplayDataCopyWith<$Res> {
+  __$JmaXmlTelegramReplayDataCopyWithImpl(this._self, this._then);
+
+  final _JmaXmlTelegramReplayData _self;
+  final $Res Function(_JmaXmlTelegramReplayData) _then;
+
+/// Create a copy of JmaXmlTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? title = null,Object? telegram = null,}) {
+  return _then(_JmaXmlTelegramReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,telegram: null == telegram ? _self.telegram : telegram // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$JmaBinaryTelegramReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
-  DateTime get time => throw _privateConstructorUsedError;
-  String get telegramType => throw _privateConstructorUsedError;
-  List<int> get data => throw _privateConstructorUsedError;
+
+ ReplayDataType get type; DateTime get time; String get telegramType; List<int> get data;
+/// Create a copy of JmaBinaryTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$JmaBinaryTelegramReplayDataCopyWith<JmaBinaryTelegramReplayData> get copyWith => _$JmaBinaryTelegramReplayDataCopyWithImpl<JmaBinaryTelegramReplayData>(this as JmaBinaryTelegramReplayData, _$identity);
 
   /// Serializes this JmaBinaryTelegramReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of JmaBinaryTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $JmaBinaryTelegramReplayDataCopyWith<JmaBinaryTelegramReplayData>
-  get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JmaBinaryTelegramReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.telegramType, telegramType) || other.telegramType == telegramType)&&const DeepCollectionEquality().equals(other.data, data));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,telegramType,const DeepCollectionEquality().hash(data));
+
+
+
 }
 
 /// @nodoc
-abstract class $JmaBinaryTelegramReplayDataCopyWith<$Res> {
-  factory $JmaBinaryTelegramReplayDataCopyWith(
-    JmaBinaryTelegramReplayData value,
-    $Res Function(JmaBinaryTelegramReplayData) then,
-  ) =
-      _$JmaBinaryTelegramReplayDataCopyWithImpl<
-        $Res,
-        JmaBinaryTelegramReplayData
-      >;
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    String telegramType,
-    List<int> data,
-  });
-}
+abstract mixin class $JmaBinaryTelegramReplayDataCopyWith<$Res>  {
+  factory $JmaBinaryTelegramReplayDataCopyWith(JmaBinaryTelegramReplayData value, $Res Function(JmaBinaryTelegramReplayData) _then) = _$JmaBinaryTelegramReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, String telegramType, List<int> data
+});
 
+
+
+
+}
 /// @nodoc
-class _$JmaBinaryTelegramReplayDataCopyWithImpl<
-  $Res,
-  $Val extends JmaBinaryTelegramReplayData
->
+class _$JmaBinaryTelegramReplayDataCopyWithImpl<$Res>
     implements $JmaBinaryTelegramReplayDataCopyWith<$Res> {
-  _$JmaBinaryTelegramReplayDataCopyWithImpl(this._value, this._then);
+  _$JmaBinaryTelegramReplayDataCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final JmaBinaryTelegramReplayData _self;
+  final $Res Function(JmaBinaryTelegramReplayData) _then;
 
-  /// Create a copy of JmaBinaryTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? telegramType = null,
-    Object? data = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ReplayDataType,
-            time:
-                null == time
-                    ? _value.time
-                    : time // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            telegramType:
-                null == telegramType
-                    ? _value.telegramType
-                    : telegramType // ignore: cast_nullable_to_non_nullable
-                        as String,
-            data:
-                null == data
-                    ? _value.data
-                    : data // ignore: cast_nullable_to_non_nullable
-                        as List<int>,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of JmaBinaryTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? telegramType = null,Object? data = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
+as String,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as List<int>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$JmaBinaryTelegramReplayDataImplCopyWith<$Res>
-    implements $JmaBinaryTelegramReplayDataCopyWith<$Res> {
-  factory _$$JmaBinaryTelegramReplayDataImplCopyWith(
-    _$JmaBinaryTelegramReplayDataImpl value,
-    $Res Function(_$JmaBinaryTelegramReplayDataImpl) then,
-  ) = __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    String telegramType,
-    List<int> data,
-  });
 }
 
-/// @nodoc
-class __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<$Res>
-    extends
-        _$JmaBinaryTelegramReplayDataCopyWithImpl<
-          $Res,
-          _$JmaBinaryTelegramReplayDataImpl
-        >
-    implements _$$JmaBinaryTelegramReplayDataImplCopyWith<$Res> {
-  __$$JmaBinaryTelegramReplayDataImplCopyWithImpl(
-    _$JmaBinaryTelegramReplayDataImpl _value,
-    $Res Function(_$JmaBinaryTelegramReplayDataImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of JmaBinaryTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? telegramType = null,
-    Object? data = null,
-  }) {
-    return _then(
-      _$JmaBinaryTelegramReplayDataImpl(
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ReplayDataType,
-        time:
-            null == time
-                ? _value.time
-                : time // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        telegramType:
-            null == telegramType
-                ? _value.telegramType
-                : telegramType // ignore: cast_nullable_to_non_nullable
-                    as String,
-        data:
-            null == data
-                ? _value._data
-                : data // ignore: cast_nullable_to_non_nullable
-                    as List<int>,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$JmaBinaryTelegramReplayDataImpl extends _JmaBinaryTelegramReplayData {
-  const _$JmaBinaryTelegramReplayDataImpl({
-    required this.type,
-    required this.time,
-    required this.telegramType,
-    required final List<int> data,
-  }) : _data = data,
-       super._();
 
-  factory _$JmaBinaryTelegramReplayDataImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$JmaBinaryTelegramReplayDataImplFromJson(json);
+class _JmaBinaryTelegramReplayData extends JmaBinaryTelegramReplayData {
+  const _JmaBinaryTelegramReplayData({required this.type, required this.time, required this.telegramType, required final  List<int> data}): _data = data,super._();
+  factory _JmaBinaryTelegramReplayData.fromJson(Map<String, dynamic> json) => _$JmaBinaryTelegramReplayDataFromJson(json);
 
-  @override
-  final ReplayDataType type;
-  @override
-  final DateTime time;
-  @override
-  final String telegramType;
-  final List<int> _data;
-  @override
-  List<int> get data {
-    if (_data is EqualUnmodifiableListView) return _data;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_data);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$JmaBinaryTelegramReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.telegramType, telegramType) ||
-                other.telegramType == telegramType) &&
-            const DeepCollectionEquality().equals(other._data, _data));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    type,
-    time,
-    telegramType,
-    const DeepCollectionEquality().hash(_data),
-  );
-
-  /// Create a copy of JmaBinaryTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$JmaBinaryTelegramReplayDataImplCopyWith<_$JmaBinaryTelegramReplayDataImpl>
-  get copyWith => __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<
-    _$JmaBinaryTelegramReplayDataImpl
-  >(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$JmaBinaryTelegramReplayDataImplToJson(this);
-  }
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  String telegramType;
+ final  List<int> _data;
+@override List<int> get data {
+  if (_data is EqualUnmodifiableListView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_data);
 }
 
-abstract class _JmaBinaryTelegramReplayData
-    extends JmaBinaryTelegramReplayData {
-  const factory _JmaBinaryTelegramReplayData({
-    required final ReplayDataType type,
-    required final DateTime time,
-    required final String telegramType,
-    required final List<int> data,
-  }) = _$JmaBinaryTelegramReplayDataImpl;
-  const _JmaBinaryTelegramReplayData._() : super._();
 
-  factory _JmaBinaryTelegramReplayData.fromJson(Map<String, dynamic> json) =
-      _$JmaBinaryTelegramReplayDataImpl.fromJson;
+/// Create a copy of JmaBinaryTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$JmaBinaryTelegramReplayDataCopyWith<_JmaBinaryTelegramReplayData> get copyWith => __$JmaBinaryTelegramReplayDataCopyWithImpl<_JmaBinaryTelegramReplayData>(this, _$identity);
 
-  @override
-  ReplayDataType get type;
-  @override
-  DateTime get time;
-  @override
-  String get telegramType;
-  @override
-  List<int> get data;
-
-  /// Create a copy of JmaBinaryTelegramReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$JmaBinaryTelegramReplayDataImplCopyWith<_$JmaBinaryTelegramReplayDataImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$JmaBinaryTelegramReplayDataToJson(this, );
 }
 
-KyoshinMonitorImageReplayData _$KyoshinMonitorImageReplayDataFromJson(
-  Map<String, dynamic> json,
-) {
-  return _KyoshinMonitorImageReplayData.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JmaBinaryTelegramReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.telegramType, telegramType) || other.telegramType == telegramType)&&const DeepCollectionEquality().equals(other._data, _data));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,telegramType,const DeepCollectionEquality().hash(_data));
+
+
+
+}
+
+/// @nodoc
+abstract mixin class _$JmaBinaryTelegramReplayDataCopyWith<$Res> implements $JmaBinaryTelegramReplayDataCopyWith<$Res> {
+  factory _$JmaBinaryTelegramReplayDataCopyWith(_JmaBinaryTelegramReplayData value, $Res Function(_JmaBinaryTelegramReplayData) _then) = __$JmaBinaryTelegramReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, String telegramType, List<int> data
+});
+
+
+
+
+}
+/// @nodoc
+class __$JmaBinaryTelegramReplayDataCopyWithImpl<$Res>
+    implements _$JmaBinaryTelegramReplayDataCopyWith<$Res> {
+  __$JmaBinaryTelegramReplayDataCopyWithImpl(this._self, this._then);
+
+  final _JmaBinaryTelegramReplayData _self;
+  final $Res Function(_JmaBinaryTelegramReplayData) _then;
+
+/// Create a copy of JmaBinaryTelegramReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? telegramType = null,Object? data = null,}) {
+  return _then(_JmaBinaryTelegramReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,telegramType: null == telegramType ? _self.telegramType : telegramType // ignore: cast_nullable_to_non_nullable
+as String,data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as List<int>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$KyoshinMonitorImageReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
-  DateTime get time => throw _privateConstructorUsedError;
-  Map<ImageType, List<int>> get images => throw _privateConstructorUsedError;
+
+ ReplayDataType get type; DateTime get time; Map<ImageType, List<int>> get images;
+/// Create a copy of KyoshinMonitorImageReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$KyoshinMonitorImageReplayDataCopyWith<KyoshinMonitorImageReplayData> get copyWith => _$KyoshinMonitorImageReplayDataCopyWithImpl<KyoshinMonitorImageReplayData>(this as KyoshinMonitorImageReplayData, _$identity);
 
   /// Serializes this KyoshinMonitorImageReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of KyoshinMonitorImageReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinMonitorImageReplayDataCopyWith<KyoshinMonitorImageReplayData>
-  get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorImageReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other.images, images));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,const DeepCollectionEquality().hash(images));
+
+
+
 }
 
 /// @nodoc
-abstract class $KyoshinMonitorImageReplayDataCopyWith<$Res> {
-  factory $KyoshinMonitorImageReplayDataCopyWith(
-    KyoshinMonitorImageReplayData value,
-    $Res Function(KyoshinMonitorImageReplayData) then,
-  ) =
-      _$KyoshinMonitorImageReplayDataCopyWithImpl<
-        $Res,
-        KyoshinMonitorImageReplayData
-      >;
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    Map<ImageType, List<int>> images,
-  });
-}
+abstract mixin class $KyoshinMonitorImageReplayDataCopyWith<$Res>  {
+  factory $KyoshinMonitorImageReplayDataCopyWith(KyoshinMonitorImageReplayData value, $Res Function(KyoshinMonitorImageReplayData) _then) = _$KyoshinMonitorImageReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, Map<ImageType, List<int>> images
+});
 
+
+
+
+}
 /// @nodoc
-class _$KyoshinMonitorImageReplayDataCopyWithImpl<
-  $Res,
-  $Val extends KyoshinMonitorImageReplayData
->
+class _$KyoshinMonitorImageReplayDataCopyWithImpl<$Res>
     implements $KyoshinMonitorImageReplayDataCopyWith<$Res> {
-  _$KyoshinMonitorImageReplayDataCopyWithImpl(this._value, this._then);
+  _$KyoshinMonitorImageReplayDataCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final KyoshinMonitorImageReplayData _self;
+  final $Res Function(KyoshinMonitorImageReplayData) _then;
 
-  /// Create a copy of KyoshinMonitorImageReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? type = null, Object? time = null, Object? images = null}) {
-    return _then(
-      _value.copyWith(
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ReplayDataType,
-            time:
-                null == time
-                    ? _value.time
-                    : time // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            images:
-                null == images
-                    ? _value.images
-                    : images // ignore: cast_nullable_to_non_nullable
-                        as Map<ImageType, List<int>>,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of KyoshinMonitorImageReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? images = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
+as Map<ImageType, List<int>>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$KyoshinMonitorImageReplayDataImplCopyWith<$Res>
-    implements $KyoshinMonitorImageReplayDataCopyWith<$Res> {
-  factory _$$KyoshinMonitorImageReplayDataImplCopyWith(
-    _$KyoshinMonitorImageReplayDataImpl value,
-    $Res Function(_$KyoshinMonitorImageReplayDataImpl) then,
-  ) = __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    Map<ImageType, List<int>> images,
-  });
 }
 
-/// @nodoc
-class __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<$Res>
-    extends
-        _$KyoshinMonitorImageReplayDataCopyWithImpl<
-          $Res,
-          _$KyoshinMonitorImageReplayDataImpl
-        >
-    implements _$$KyoshinMonitorImageReplayDataImplCopyWith<$Res> {
-  __$$KyoshinMonitorImageReplayDataImplCopyWithImpl(
-    _$KyoshinMonitorImageReplayDataImpl _value,
-    $Res Function(_$KyoshinMonitorImageReplayDataImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of KyoshinMonitorImageReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? type = null, Object? time = null, Object? images = null}) {
-    return _then(
-      _$KyoshinMonitorImageReplayDataImpl(
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ReplayDataType,
-        time:
-            null == time
-                ? _value.time
-                : time // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        images:
-            null == images
-                ? _value._images
-                : images // ignore: cast_nullable_to_non_nullable
-                    as Map<ImageType, List<int>>,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$KyoshinMonitorImageReplayDataImpl
-    extends _KyoshinMonitorImageReplayData {
-  const _$KyoshinMonitorImageReplayDataImpl({
-    required this.type,
-    required this.time,
-    required final Map<ImageType, List<int>> images,
-  }) : _images = images,
-       super._();
 
-  factory _$KyoshinMonitorImageReplayDataImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$KyoshinMonitorImageReplayDataImplFromJson(json);
+class _KyoshinMonitorImageReplayData extends KyoshinMonitorImageReplayData {
+  const _KyoshinMonitorImageReplayData({required this.type, required this.time, required final  Map<ImageType, List<int>> images}): _images = images,super._();
+  factory _KyoshinMonitorImageReplayData.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorImageReplayDataFromJson(json);
 
-  @override
-  final ReplayDataType type;
-  @override
-  final DateTime time;
-  final Map<ImageType, List<int>> _images;
-  @override
-  Map<ImageType, List<int>> get images {
-    if (_images is EqualUnmodifiableMapView) return _images;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_images);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$KyoshinMonitorImageReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            const DeepCollectionEquality().equals(other._images, _images));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    type,
-    time,
-    const DeepCollectionEquality().hash(_images),
-  );
-
-  /// Create a copy of KyoshinMonitorImageReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$KyoshinMonitorImageReplayDataImplCopyWith<
-    _$KyoshinMonitorImageReplayDataImpl
-  >
-  get copyWith => __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<
-    _$KyoshinMonitorImageReplayDataImpl
-  >(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$KyoshinMonitorImageReplayDataImplToJson(this);
-  }
+@override final  ReplayDataType type;
+@override final  DateTime time;
+ final  Map<ImageType, List<int>> _images;
+@override Map<ImageType, List<int>> get images {
+  if (_images is EqualUnmodifiableMapView) return _images;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_images);
 }
 
-abstract class _KyoshinMonitorImageReplayData
-    extends KyoshinMonitorImageReplayData {
-  const factory _KyoshinMonitorImageReplayData({
-    required final ReplayDataType type,
-    required final DateTime time,
-    required final Map<ImageType, List<int>> images,
-  }) = _$KyoshinMonitorImageReplayDataImpl;
-  const _KyoshinMonitorImageReplayData._() : super._();
 
-  factory _KyoshinMonitorImageReplayData.fromJson(Map<String, dynamic> json) =
-      _$KyoshinMonitorImageReplayDataImpl.fromJson;
+/// Create a copy of KyoshinMonitorImageReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$KyoshinMonitorImageReplayDataCopyWith<_KyoshinMonitorImageReplayData> get copyWith => __$KyoshinMonitorImageReplayDataCopyWithImpl<_KyoshinMonitorImageReplayData>(this, _$identity);
 
-  @override
-  ReplayDataType get type;
-  @override
-  DateTime get time;
-  @override
-  Map<ImageType, List<int>> get images;
-
-  /// Create a copy of KyoshinMonitorImageReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$KyoshinMonitorImageReplayDataImplCopyWith<
-    _$KyoshinMonitorImageReplayDataImpl
-  >
-  get copyWith => throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$KyoshinMonitorImageReplayDataToJson(this, );
 }
 
-KyoshinMonitorEewJsonReplayData _$KyoshinMonitorEewJsonReplayDataFromJson(
-  Map<String, dynamic> json,
-) {
-  return _KyoshinMonitorEewJsonReplayData.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorImageReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other._images, _images));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,const DeepCollectionEquality().hash(_images));
+
+
+
+}
+
+/// @nodoc
+abstract mixin class _$KyoshinMonitorImageReplayDataCopyWith<$Res> implements $KyoshinMonitorImageReplayDataCopyWith<$Res> {
+  factory _$KyoshinMonitorImageReplayDataCopyWith(_KyoshinMonitorImageReplayData value, $Res Function(_KyoshinMonitorImageReplayData) _then) = __$KyoshinMonitorImageReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, Map<ImageType, List<int>> images
+});
+
+
+
+
+}
+/// @nodoc
+class __$KyoshinMonitorImageReplayDataCopyWithImpl<$Res>
+    implements _$KyoshinMonitorImageReplayDataCopyWith<$Res> {
+  __$KyoshinMonitorImageReplayDataCopyWithImpl(this._self, this._then);
+
+  final _KyoshinMonitorImageReplayData _self;
+  final $Res Function(_KyoshinMonitorImageReplayData) _then;
+
+/// Create a copy of KyoshinMonitorImageReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? images = null,}) {
+  return _then(_KyoshinMonitorImageReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
+as Map<ImageType, List<int>>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$KyoshinMonitorEewJsonReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
-  DateTime get time => throw _privateConstructorUsedError;
-  String get json => throw _privateConstructorUsedError;
+
+ ReplayDataType get type; DateTime get time; String get json;
+/// Create a copy of KyoshinMonitorEewJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$KyoshinMonitorEewJsonReplayDataCopyWith<KyoshinMonitorEewJsonReplayData> get copyWith => _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<KyoshinMonitorEewJsonReplayData>(this as KyoshinMonitorEewJsonReplayData, _$identity);
 
   /// Serializes this KyoshinMonitorEewJsonReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of KyoshinMonitorEewJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinMonitorEewJsonReplayDataCopyWith<KyoshinMonitorEewJsonReplayData>
-  get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorEewJsonReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.json, json) || other.json == json));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,json);
+
+
+
 }
 
 /// @nodoc
-abstract class $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
-  factory $KyoshinMonitorEewJsonReplayDataCopyWith(
-    KyoshinMonitorEewJsonReplayData value,
-    $Res Function(KyoshinMonitorEewJsonReplayData) then,
-  ) =
-      _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<
-        $Res,
-        KyoshinMonitorEewJsonReplayData
-      >;
-  @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
-}
+abstract mixin class $KyoshinMonitorEewJsonReplayDataCopyWith<$Res>  {
+  factory $KyoshinMonitorEewJsonReplayDataCopyWith(KyoshinMonitorEewJsonReplayData value, $Res Function(KyoshinMonitorEewJsonReplayData) _then) = _$KyoshinMonitorEewJsonReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, String json
+});
 
+
+
+
+}
 /// @nodoc
-class _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<
-  $Res,
-  $Val extends KyoshinMonitorEewJsonReplayData
->
+class _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<$Res>
     implements $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
-  _$KyoshinMonitorEewJsonReplayDataCopyWithImpl(this._value, this._then);
+  _$KyoshinMonitorEewJsonReplayDataCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final KyoshinMonitorEewJsonReplayData _self;
+  final $Res Function(KyoshinMonitorEewJsonReplayData) _then;
 
-  /// Create a copy of KyoshinMonitorEewJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
-    return _then(
-      _value.copyWith(
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ReplayDataType,
-            time:
-                null == time
-                    ? _value.time
-                    : time // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            json:
-                null == json
-                    ? _value.json
-                    : json // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of KyoshinMonitorEewJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<$Res>
-    implements $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
-  factory _$$KyoshinMonitorEewJsonReplayDataImplCopyWith(
-    _$KyoshinMonitorEewJsonReplayDataImpl value,
-    $Res Function(_$KyoshinMonitorEewJsonReplayDataImpl) then,
-  ) = __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
 }
 
-/// @nodoc
-class __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<$Res>
-    extends
-        _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<
-          $Res,
-          _$KyoshinMonitorEewJsonReplayDataImpl
-        >
-    implements _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<$Res> {
-  __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl(
-    _$KyoshinMonitorEewJsonReplayDataImpl _value,
-    $Res Function(_$KyoshinMonitorEewJsonReplayDataImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of KyoshinMonitorEewJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
-    return _then(
-      _$KyoshinMonitorEewJsonReplayDataImpl(
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ReplayDataType,
-        time:
-            null == time
-                ? _value.time
-                : time // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        json:
-            null == json
-                ? _value.json
-                : json // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$KyoshinMonitorEewJsonReplayDataImpl
-    extends _KyoshinMonitorEewJsonReplayData {
-  const _$KyoshinMonitorEewJsonReplayDataImpl({
-    required this.type,
-    required this.time,
-    required this.json,
-  }) : super._();
 
-  factory _$KyoshinMonitorEewJsonReplayDataImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$KyoshinMonitorEewJsonReplayDataImplFromJson(json);
+class _KyoshinMonitorEewJsonReplayData extends KyoshinMonitorEewJsonReplayData {
+  const _KyoshinMonitorEewJsonReplayData({required this.type, required this.time, required this.json}): super._();
+  factory _KyoshinMonitorEewJsonReplayData.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorEewJsonReplayDataFromJson(json);
 
-  @override
-  final ReplayDataType type;
-  @override
-  final DateTime time;
-  @override
-  final String json;
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  String json;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$KyoshinMonitorEewJsonReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.json, json) || other.json == json));
-  }
+/// Create a copy of KyoshinMonitorEewJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$KyoshinMonitorEewJsonReplayDataCopyWith<_KyoshinMonitorEewJsonReplayData> get copyWith => __$KyoshinMonitorEewJsonReplayDataCopyWithImpl<_KyoshinMonitorEewJsonReplayData>(this, _$identity);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, type, time, json);
-
-  /// Create a copy of KyoshinMonitorEewJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<
-    _$KyoshinMonitorEewJsonReplayDataImpl
-  >
-  get copyWith => __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<
-    _$KyoshinMonitorEewJsonReplayDataImpl
-  >(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$KyoshinMonitorEewJsonReplayDataImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$KyoshinMonitorEewJsonReplayDataToJson(this, );
 }
 
-abstract class _KyoshinMonitorEewJsonReplayData
-    extends KyoshinMonitorEewJsonReplayData {
-  const factory _KyoshinMonitorEewJsonReplayData({
-    required final ReplayDataType type,
-    required final DateTime time,
-    required final String json,
-  }) = _$KyoshinMonitorEewJsonReplayDataImpl;
-  const _KyoshinMonitorEewJsonReplayData._() : super._();
-
-  factory _KyoshinMonitorEewJsonReplayData.fromJson(Map<String, dynamic> json) =
-      _$KyoshinMonitorEewJsonReplayDataImpl.fromJson;
-
-  @override
-  ReplayDataType get type;
-  @override
-  DateTime get time;
-  @override
-  String get json;
-
-  /// Create a copy of KyoshinMonitorEewJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<
-    _$KyoshinMonitorEewJsonReplayDataImpl
-  >
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorEewJsonReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.json, json) || other.json == json));
 }
 
-KeviJsonReplayData _$KeviJsonReplayDataFromJson(Map<String, dynamic> json) {
-  return _KeviJsonReplayData.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,json);
+
+
+
 }
+
+/// @nodoc
+abstract mixin class _$KyoshinMonitorEewJsonReplayDataCopyWith<$Res> implements $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
+  factory _$KyoshinMonitorEewJsonReplayDataCopyWith(_KyoshinMonitorEewJsonReplayData value, $Res Function(_KyoshinMonitorEewJsonReplayData) _then) = __$KyoshinMonitorEewJsonReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, String json
+});
+
+
+
+
+}
+/// @nodoc
+class __$KyoshinMonitorEewJsonReplayDataCopyWithImpl<$Res>
+    implements _$KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
+  __$KyoshinMonitorEewJsonReplayDataCopyWithImpl(this._self, this._then);
+
+  final _KyoshinMonitorEewJsonReplayData _self;
+  final $Res Function(_KyoshinMonitorEewJsonReplayData) _then;
+
+/// Create a copy of KyoshinMonitorEewJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
+  return _then(_KyoshinMonitorEewJsonReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$KeviJsonReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
-  DateTime get time => throw _privateConstructorUsedError;
-  JsonType get jsonType => throw _privateConstructorUsedError;
-  String get json => throw _privateConstructorUsedError;
+
+ ReplayDataType get type; DateTime get time; JsonType get jsonType; String get json;
+/// Create a copy of KeviJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$KeviJsonReplayDataCopyWith<KeviJsonReplayData> get copyWith => _$KeviJsonReplayDataCopyWithImpl<KeviJsonReplayData>(this as KeviJsonReplayData, _$identity);
 
   /// Serializes this KeviJsonReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of KeviJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $KeviJsonReplayDataCopyWith<KeviJsonReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KeviJsonReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.jsonType, jsonType) || other.jsonType == jsonType)&&(identical(other.json, json) || other.json == json));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,jsonType,json);
+
+
+
 }
 
 /// @nodoc
-abstract class $KeviJsonReplayDataCopyWith<$Res> {
-  factory $KeviJsonReplayDataCopyWith(
-    KeviJsonReplayData value,
-    $Res Function(KeviJsonReplayData) then,
-  ) = _$KeviJsonReplayDataCopyWithImpl<$Res, KeviJsonReplayData>;
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    JsonType jsonType,
-    String json,
-  });
-}
+abstract mixin class $KeviJsonReplayDataCopyWith<$Res>  {
+  factory $KeviJsonReplayDataCopyWith(KeviJsonReplayData value, $Res Function(KeviJsonReplayData) _then) = _$KeviJsonReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, JsonType jsonType, String json
+});
 
+
+
+
+}
 /// @nodoc
-class _$KeviJsonReplayDataCopyWithImpl<$Res, $Val extends KeviJsonReplayData>
+class _$KeviJsonReplayDataCopyWithImpl<$Res>
     implements $KeviJsonReplayDataCopyWith<$Res> {
-  _$KeviJsonReplayDataCopyWithImpl(this._value, this._then);
+  _$KeviJsonReplayDataCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final KeviJsonReplayData _self;
+  final $Res Function(KeviJsonReplayData) _then;
 
-  /// Create a copy of KeviJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? jsonType = null,
-    Object? json = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ReplayDataType,
-            time:
-                null == time
-                    ? _value.time
-                    : time // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            jsonType:
-                null == jsonType
-                    ? _value.jsonType
-                    : jsonType // ignore: cast_nullable_to_non_nullable
-                        as JsonType,
-            json:
-                null == json
-                    ? _value.json
-                    : json // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of KeviJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? jsonType = null,Object? json = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,jsonType: null == jsonType ? _self.jsonType : jsonType // ignore: cast_nullable_to_non_nullable
+as JsonType,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$KeviJsonReplayDataImplCopyWith<$Res>
-    implements $KeviJsonReplayDataCopyWith<$Res> {
-  factory _$$KeviJsonReplayDataImplCopyWith(
-    _$KeviJsonReplayDataImpl value,
-    $Res Function(_$KeviJsonReplayDataImpl) then,
-  ) = __$$KeviJsonReplayDataImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    ReplayDataType type,
-    DateTime time,
-    JsonType jsonType,
-    String json,
-  });
 }
 
-/// @nodoc
-class __$$KeviJsonReplayDataImplCopyWithImpl<$Res>
-    extends _$KeviJsonReplayDataCopyWithImpl<$Res, _$KeviJsonReplayDataImpl>
-    implements _$$KeviJsonReplayDataImplCopyWith<$Res> {
-  __$$KeviJsonReplayDataImplCopyWithImpl(
-    _$KeviJsonReplayDataImpl _value,
-    $Res Function(_$KeviJsonReplayDataImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of KeviJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? jsonType = null,
-    Object? json = null,
-  }) {
-    return _then(
-      _$KeviJsonReplayDataImpl(
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ReplayDataType,
-        time:
-            null == time
-                ? _value.time
-                : time // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        jsonType:
-            null == jsonType
-                ? _value.jsonType
-                : jsonType // ignore: cast_nullable_to_non_nullable
-                    as JsonType,
-        json:
-            null == json
-                ? _value.json
-                : json // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$KeviJsonReplayDataImpl extends _KeviJsonReplayData {
-  const _$KeviJsonReplayDataImpl({
-    required this.type,
-    required this.time,
-    required this.jsonType,
-    required this.json,
-  }) : super._();
 
-  factory _$KeviJsonReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$KeviJsonReplayDataImplFromJson(json);
+class _KeviJsonReplayData extends KeviJsonReplayData {
+  const _KeviJsonReplayData({required this.type, required this.time, required this.jsonType, required this.json}): super._();
+  factory _KeviJsonReplayData.fromJson(Map<String, dynamic> json) => _$KeviJsonReplayDataFromJson(json);
 
-  @override
-  final ReplayDataType type;
-  @override
-  final DateTime time;
-  @override
-  final JsonType jsonType;
-  @override
-  final String json;
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  JsonType jsonType;
+@override final  String json;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$KeviJsonReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.jsonType, jsonType) ||
-                other.jsonType == jsonType) &&
-            (identical(other.json, json) || other.json == json));
-  }
+/// Create a copy of KeviJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$KeviJsonReplayDataCopyWith<_KeviJsonReplayData> get copyWith => __$KeviJsonReplayDataCopyWithImpl<_KeviJsonReplayData>(this, _$identity);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, type, time, jsonType, json);
-
-  /// Create a copy of KeviJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$KeviJsonReplayDataImplCopyWith<_$KeviJsonReplayDataImpl> get copyWith =>
-      __$$KeviJsonReplayDataImplCopyWithImpl<_$KeviJsonReplayDataImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$KeviJsonReplayDataImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$KeviJsonReplayDataToJson(this, );
 }
 
-abstract class _KeviJsonReplayData extends KeviJsonReplayData {
-  const factory _KeviJsonReplayData({
-    required final ReplayDataType type,
-    required final DateTime time,
-    required final JsonType jsonType,
-    required final String json,
-  }) = _$KeviJsonReplayDataImpl;
-  const _KeviJsonReplayData._() : super._();
-
-  factory _KeviJsonReplayData.fromJson(Map<String, dynamic> json) =
-      _$KeviJsonReplayDataImpl.fromJson;
-
-  @override
-  ReplayDataType get type;
-  @override
-  DateTime get time;
-  @override
-  JsonType get jsonType;
-  @override
-  String get json;
-
-  /// Create a copy of KeviJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$KeviJsonReplayDataImplCopyWith<_$KeviJsonReplayDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KeviJsonReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.jsonType, jsonType) || other.jsonType == jsonType)&&(identical(other.json, json) || other.json == json));
 }
 
-SnpLogEntryReplayData _$SnpLogEntryReplayDataFromJson(
-  Map<String, dynamic> json,
-) {
-  return _SnpLogEntryReplayData.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,jsonType,json);
+
+
+
 }
+
+/// @nodoc
+abstract mixin class _$KeviJsonReplayDataCopyWith<$Res> implements $KeviJsonReplayDataCopyWith<$Res> {
+  factory _$KeviJsonReplayDataCopyWith(_KeviJsonReplayData value, $Res Function(_KeviJsonReplayData) _then) = __$KeviJsonReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, JsonType jsonType, String json
+});
+
+
+
+
+}
+/// @nodoc
+class __$KeviJsonReplayDataCopyWithImpl<$Res>
+    implements _$KeviJsonReplayDataCopyWith<$Res> {
+  __$KeviJsonReplayDataCopyWithImpl(this._self, this._then);
+
+  final _KeviJsonReplayData _self;
+  final $Res Function(_KeviJsonReplayData) _then;
+
+/// Create a copy of KeviJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? jsonType = null,Object? json = null,}) {
+  return _then(_KeviJsonReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,jsonType: null == jsonType ? _self.jsonType : jsonType // ignore: cast_nullable_to_non_nullable
+as JsonType,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$SnpLogEntryReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
-  DateTime get time => throw _privateConstructorUsedError;
-  String get message => throw _privateConstructorUsedError;
+
+ ReplayDataType get type; DateTime get time; String get message;
+/// Create a copy of SnpLogEntryReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SnpLogEntryReplayDataCopyWith<SnpLogEntryReplayData> get copyWith => _$SnpLogEntryReplayDataCopyWithImpl<SnpLogEntryReplayData>(this as SnpLogEntryReplayData, _$identity);
 
   /// Serializes this SnpLogEntryReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of SnpLogEntryReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $SnpLogEntryReplayDataCopyWith<SnpLogEntryReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SnpLogEntryReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.message, message) || other.message == message));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,message);
+
+
+
 }
 
 /// @nodoc
-abstract class $SnpLogEntryReplayDataCopyWith<$Res> {
-  factory $SnpLogEntryReplayDataCopyWith(
-    SnpLogEntryReplayData value,
-    $Res Function(SnpLogEntryReplayData) then,
-  ) = _$SnpLogEntryReplayDataCopyWithImpl<$Res, SnpLogEntryReplayData>;
-  @useResult
-  $Res call({ReplayDataType type, DateTime time, String message});
-}
+abstract mixin class $SnpLogEntryReplayDataCopyWith<$Res>  {
+  factory $SnpLogEntryReplayDataCopyWith(SnpLogEntryReplayData value, $Res Function(SnpLogEntryReplayData) _then) = _$SnpLogEntryReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, String message
+});
 
+
+
+
+}
 /// @nodoc
-class _$SnpLogEntryReplayDataCopyWithImpl<
-  $Res,
-  $Val extends SnpLogEntryReplayData
->
+class _$SnpLogEntryReplayDataCopyWithImpl<$Res>
     implements $SnpLogEntryReplayDataCopyWith<$Res> {
-  _$SnpLogEntryReplayDataCopyWithImpl(this._value, this._then);
+  _$SnpLogEntryReplayDataCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final SnpLogEntryReplayData _self;
+  final $Res Function(SnpLogEntryReplayData) _then;
 
-  /// Create a copy of SnpLogEntryReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? message = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ReplayDataType,
-            time:
-                null == time
-                    ? _value.time
-                    : time // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            message:
-                null == message
-                    ? _value.message
-                    : message // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of SnpLogEntryReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? message = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$SnpLogEntryReplayDataImplCopyWith<$Res>
-    implements $SnpLogEntryReplayDataCopyWith<$Res> {
-  factory _$$SnpLogEntryReplayDataImplCopyWith(
-    _$SnpLogEntryReplayDataImpl value,
-    $Res Function(_$SnpLogEntryReplayDataImpl) then,
-  ) = __$$SnpLogEntryReplayDataImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({ReplayDataType type, DateTime time, String message});
 }
 
-/// @nodoc
-class __$$SnpLogEntryReplayDataImplCopyWithImpl<$Res>
-    extends
-        _$SnpLogEntryReplayDataCopyWithImpl<$Res, _$SnpLogEntryReplayDataImpl>
-    implements _$$SnpLogEntryReplayDataImplCopyWith<$Res> {
-  __$$SnpLogEntryReplayDataImplCopyWithImpl(
-    _$SnpLogEntryReplayDataImpl _value,
-    $Res Function(_$SnpLogEntryReplayDataImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of SnpLogEntryReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? time = null,
-    Object? message = null,
-  }) {
-    return _then(
-      _$SnpLogEntryReplayDataImpl(
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ReplayDataType,
-        time:
-            null == time
-                ? _value.time
-                : time // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        message:
-            null == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$SnpLogEntryReplayDataImpl extends _SnpLogEntryReplayData {
-  const _$SnpLogEntryReplayDataImpl({
-    required this.type,
-    required this.time,
-    required this.message,
-  }) : super._();
 
-  factory _$SnpLogEntryReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SnpLogEntryReplayDataImplFromJson(json);
+class _SnpLogEntryReplayData extends SnpLogEntryReplayData {
+  const _SnpLogEntryReplayData({required this.type, required this.time, required this.message}): super._();
+  factory _SnpLogEntryReplayData.fromJson(Map<String, dynamic> json) => _$SnpLogEntryReplayDataFromJson(json);
 
-  @override
-  final ReplayDataType type;
-  @override
-  final DateTime time;
-  @override
-  final String message;
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  String message;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SnpLogEntryReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.message, message) || other.message == message));
-  }
+/// Create a copy of SnpLogEntryReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SnpLogEntryReplayDataCopyWith<_SnpLogEntryReplayData> get copyWith => __$SnpLogEntryReplayDataCopyWithImpl<_SnpLogEntryReplayData>(this, _$identity);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, type, time, message);
-
-  /// Create a copy of SnpLogEntryReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SnpLogEntryReplayDataImplCopyWith<_$SnpLogEntryReplayDataImpl>
-  get copyWith =>
-      __$$SnpLogEntryReplayDataImplCopyWithImpl<_$SnpLogEntryReplayDataImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SnpLogEntryReplayDataImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$SnpLogEntryReplayDataToJson(this, );
 }
 
-abstract class _SnpLogEntryReplayData extends SnpLogEntryReplayData {
-  const factory _SnpLogEntryReplayData({
-    required final ReplayDataType type,
-    required final DateTime time,
-    required final String message,
-  }) = _$SnpLogEntryReplayDataImpl;
-  const _SnpLogEntryReplayData._() : super._();
-
-  factory _SnpLogEntryReplayData.fromJson(Map<String, dynamic> json) =
-      _$SnpLogEntryReplayDataImpl.fromJson;
-
-  @override
-  ReplayDataType get type;
-  @override
-  DateTime get time;
-  @override
-  String get message;
-
-  /// Create a copy of SnpLogEntryReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SnpLogEntryReplayDataImplCopyWith<_$SnpLogEntryReplayDataImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SnpLogEntryReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.message, message) || other.message == message));
 }
 
-AxisJsonReplayData _$AxisJsonReplayDataFromJson(Map<String, dynamic> json) {
-  return _AxisJsonReplayData.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,message);
+
+
+
 }
+
+/// @nodoc
+abstract mixin class _$SnpLogEntryReplayDataCopyWith<$Res> implements $SnpLogEntryReplayDataCopyWith<$Res> {
+  factory _$SnpLogEntryReplayDataCopyWith(_SnpLogEntryReplayData value, $Res Function(_SnpLogEntryReplayData) _then) = __$SnpLogEntryReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, String message
+});
+
+
+
+
+}
+/// @nodoc
+class __$SnpLogEntryReplayDataCopyWithImpl<$Res>
+    implements _$SnpLogEntryReplayDataCopyWith<$Res> {
+  __$SnpLogEntryReplayDataCopyWithImpl(this._self, this._then);
+
+  final _SnpLogEntryReplayData _self;
+  final $Res Function(_SnpLogEntryReplayData) _then;
+
+/// Create a copy of SnpLogEntryReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? message = null,}) {
+  return _then(_SnpLogEntryReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$AxisJsonReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
-  DateTime get time => throw _privateConstructorUsedError;
-  String get json => throw _privateConstructorUsedError;
+
+ ReplayDataType get type; DateTime get time; String get json;
+/// Create a copy of AxisJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AxisJsonReplayDataCopyWith<AxisJsonReplayData> get copyWith => _$AxisJsonReplayDataCopyWithImpl<AxisJsonReplayData>(this as AxisJsonReplayData, _$identity);
 
   /// Serializes this AxisJsonReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of AxisJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $AxisJsonReplayDataCopyWith<AxisJsonReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AxisJsonReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.json, json) || other.json == json));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,json);
+
+
+
 }
 
 /// @nodoc
-abstract class $AxisJsonReplayDataCopyWith<$Res> {
-  factory $AxisJsonReplayDataCopyWith(
-    AxisJsonReplayData value,
-    $Res Function(AxisJsonReplayData) then,
-  ) = _$AxisJsonReplayDataCopyWithImpl<$Res, AxisJsonReplayData>;
-  @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
-}
+abstract mixin class $AxisJsonReplayDataCopyWith<$Res>  {
+  factory $AxisJsonReplayDataCopyWith(AxisJsonReplayData value, $Res Function(AxisJsonReplayData) _then) = _$AxisJsonReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, String json
+});
 
+
+
+
+}
 /// @nodoc
-class _$AxisJsonReplayDataCopyWithImpl<$Res, $Val extends AxisJsonReplayData>
+class _$AxisJsonReplayDataCopyWithImpl<$Res>
     implements $AxisJsonReplayDataCopyWith<$Res> {
-  _$AxisJsonReplayDataCopyWithImpl(this._value, this._then);
+  _$AxisJsonReplayDataCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AxisJsonReplayData _self;
+  final $Res Function(AxisJsonReplayData) _then;
 
-  /// Create a copy of AxisJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
-    return _then(
-      _value.copyWith(
-            type:
-                null == type
-                    ? _value.type
-                    : type // ignore: cast_nullable_to_non_nullable
-                        as ReplayDataType,
-            time:
-                null == time
-                    ? _value.time
-                    : time // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            json:
-                null == json
-                    ? _value.json
-                    : json // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of AxisJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$AxisJsonReplayDataImplCopyWith<$Res>
-    implements $AxisJsonReplayDataCopyWith<$Res> {
-  factory _$$AxisJsonReplayDataImplCopyWith(
-    _$AxisJsonReplayDataImpl value,
-    $Res Function(_$AxisJsonReplayDataImpl) then,
-  ) = __$$AxisJsonReplayDataImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
 }
 
-/// @nodoc
-class __$$AxisJsonReplayDataImplCopyWithImpl<$Res>
-    extends _$AxisJsonReplayDataCopyWithImpl<$Res, _$AxisJsonReplayDataImpl>
-    implements _$$AxisJsonReplayDataImplCopyWith<$Res> {
-  __$$AxisJsonReplayDataImplCopyWithImpl(
-    _$AxisJsonReplayDataImpl _value,
-    $Res Function(_$AxisJsonReplayDataImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of AxisJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
-    return _then(
-      _$AxisJsonReplayDataImpl(
-        type:
-            null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                    as ReplayDataType,
-        time:
-            null == time
-                ? _value.time
-                : time // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        json:
-            null == json
-                ? _value.json
-                : json // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$AxisJsonReplayDataImpl extends _AxisJsonReplayData {
-  const _$AxisJsonReplayDataImpl({
-    required this.type,
-    required this.time,
-    required this.json,
-  }) : super._();
 
-  factory _$AxisJsonReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AxisJsonReplayDataImplFromJson(json);
+class _AxisJsonReplayData extends AxisJsonReplayData {
+  const _AxisJsonReplayData({required this.type, required this.time, required this.json}): super._();
+  factory _AxisJsonReplayData.fromJson(Map<String, dynamic> json) => _$AxisJsonReplayDataFromJson(json);
 
-  @override
-  final ReplayDataType type;
-  @override
-  final DateTime time;
-  @override
-  final String json;
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  String json;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AxisJsonReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.json, json) || other.json == json));
-  }
+/// Create a copy of AxisJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AxisJsonReplayDataCopyWith<_AxisJsonReplayData> get copyWith => __$AxisJsonReplayDataCopyWithImpl<_AxisJsonReplayData>(this, _$identity);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, type, time, json);
-
-  /// Create a copy of AxisJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AxisJsonReplayDataImplCopyWith<_$AxisJsonReplayDataImpl> get copyWith =>
-      __$$AxisJsonReplayDataImplCopyWithImpl<_$AxisJsonReplayDataImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AxisJsonReplayDataImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$AxisJsonReplayDataToJson(this, );
 }
 
-abstract class _AxisJsonReplayData extends AxisJsonReplayData {
-  const factory _AxisJsonReplayData({
-    required final ReplayDataType type,
-    required final DateTime time,
-    required final String json,
-  }) = _$AxisJsonReplayDataImpl;
-  const _AxisJsonReplayData._() : super._();
-
-  factory _AxisJsonReplayData.fromJson(Map<String, dynamic> json) =
-      _$AxisJsonReplayDataImpl.fromJson;
-
-  @override
-  ReplayDataType get type;
-  @override
-  DateTime get time;
-  @override
-  String get json;
-
-  /// Create a copy of AxisJsonReplayData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AxisJsonReplayDataImplCopyWith<_$AxisJsonReplayDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AxisJsonReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.json, json) || other.json == json));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,json);
+
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AxisJsonReplayDataCopyWith<$Res> implements $AxisJsonReplayDataCopyWith<$Res> {
+  factory _$AxisJsonReplayDataCopyWith(_AxisJsonReplayData value, $Res Function(_AxisJsonReplayData) _then) = __$AxisJsonReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, String json
+});
+
+
+
+
+}
+/// @nodoc
+class __$AxisJsonReplayDataCopyWithImpl<$Res>
+    implements _$AxisJsonReplayDataCopyWith<$Res> {
+  __$AxisJsonReplayDataCopyWithImpl(this._self, this._then);
+
+  final _AxisJsonReplayData _self;
+  final $Res Function(_AxisJsonReplayData) _then;
+
+/// Create a copy of AxisJsonReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
+  return _then(_AxisJsonReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -67,7 +67,7 @@ class TsunamiV1 implements V1Database {
 }
 
 @freezed
-class _TsunamiV1Base with _$TsunamiV1Base {
+abstract class _TsunamiV1Base with _$TsunamiV1Base {
   const factory _TsunamiV1Base({
     required int eventId,
     required String? headline,
@@ -119,7 +119,7 @@ enum TsunamiBodyType {
 }
 
 @freezed
-class Comment with _$Comment {
+abstract class Comment with _$Comment {
   const factory Comment({
     required String? free,
     required CommentWarning? warning,
@@ -130,7 +130,7 @@ class Comment with _$Comment {
 }
 
 @freezed
-class CommentWarning with _$CommentWarning {
+abstract class CommentWarning with _$CommentWarning {
   const factory CommentWarning({
     required String text,
     required List<String> codes,
@@ -141,7 +141,7 @@ class CommentWarning with _$CommentWarning {
 }
 
 @freezed
-class CancelBody with _$CancelBody implements TsunamiBody {
+abstract class CancelBody with _$CancelBody implements TsunamiBody {
   const factory CancelBody({required String text}) = _CancelBody;
 
   factory CancelBody.fromJson(Map<String, dynamic> json) =>
@@ -149,7 +149,7 @@ class CancelBody with _$CancelBody implements TsunamiBody {
 }
 
 @freezed
-class PublicBodyVTSE41Tsunami with _$PublicBodyVTSE41Tsunami {
+abstract class PublicBodyVTSE41Tsunami with _$PublicBodyVTSE41Tsunami {
   const factory PublicBodyVTSE41Tsunami({
     required List<TsunamiForecast> forecasts,
   }) = _PublicBodyVTSE41Tsunami;
@@ -159,7 +159,7 @@ class PublicBodyVTSE41Tsunami with _$PublicBodyVTSE41Tsunami {
 }
 
 @freezed
-class PublicBodyVTSE51Tsunami with _$PublicBodyVTSE51Tsunami {
+abstract class PublicBodyVTSE51Tsunami with _$PublicBodyVTSE51Tsunami {
   const factory PublicBodyVTSE51Tsunami({
     required List<TsunamiForecast> forecasts,
     required List<TsunamiObservation>? observations,
@@ -170,7 +170,7 @@ class PublicBodyVTSE51Tsunami with _$PublicBodyVTSE51Tsunami {
 }
 
 @freezed
-class PublicBodyVTSE52Tsunami with _$PublicBodyVTSE52Tsunami {
+abstract class PublicBodyVTSE52Tsunami with _$PublicBodyVTSE52Tsunami {
   const factory PublicBodyVTSE52Tsunami({
     required List<TsunamiObservation>? observations,
     required List<TsunamiEstimation> estimations,
@@ -181,7 +181,7 @@ class PublicBodyVTSE52Tsunami with _$PublicBodyVTSE52Tsunami {
 }
 
 @freezed
-class TsunamiForecast with _$TsunamiForecast {
+abstract class TsunamiForecast with _$TsunamiForecast {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecast({
     required String code,
@@ -213,7 +213,7 @@ enum TsunamiForecastFirstHeightCondition {
 }
 
 @freezed
-class TsunamiForecastFirstHeight with _$TsunamiForecastFirstHeight {
+abstract class TsunamiForecastFirstHeight with _$TsunamiForecastFirstHeight {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastFirstHeight({
     required DateTime? arrivalTime,
@@ -237,7 +237,7 @@ enum TsunamiMaxHeightCondition {
 }
 
 @freezed
-class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
+abstract class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastMaxHeight({
     /// 定量表現
@@ -253,7 +253,7 @@ class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
 }
 
 @freezed
-class TsunamiForecastStation with _$TsunamiForecastStation {
+abstract class TsunamiForecastStation with _$TsunamiForecastStation {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastStation({
     required String code,
@@ -268,7 +268,7 @@ class TsunamiForecastStation with _$TsunamiForecastStation {
 }
 
 @freezed
-class TsunamiObservation with _$TsunamiObservation {
+abstract class TsunamiObservation with _$TsunamiObservation {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiObservation({
     required String? code,
@@ -281,7 +281,7 @@ class TsunamiObservation with _$TsunamiObservation {
 }
 
 @freezed
-class TsunamiObservationStation with _$TsunamiObservationStation {
+abstract class TsunamiObservationStation with _$TsunamiObservationStation {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiObservationStation({
     required String code,
@@ -328,7 +328,7 @@ enum TsunamiObservationStationCondition {
 }
 
 @freezed
-class TsunamiEstimation with _$TsunamiEstimation {
+abstract class TsunamiEstimation with _$TsunamiEstimation {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiEstimation({
     required String code,
@@ -359,7 +359,7 @@ enum TsunamiEstimationFirstHeightCondition {
 }
 
 @freezed
-class PublicBodyVTSE41 with _$PublicBodyVTSE41 implements TsunamiBody {
+abstract class PublicBodyVTSE41 with _$PublicBodyVTSE41 implements TsunamiBody {
   const factory PublicBodyVTSE41({
     required PublicBodyVTSE41Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -372,7 +372,7 @@ class PublicBodyVTSE41 with _$PublicBodyVTSE41 implements TsunamiBody {
 }
 
 @freezed
-class PublicBodyVTSE51 with _$PublicBodyVTSE51 implements TsunamiBody {
+abstract class PublicBodyVTSE51 with _$PublicBodyVTSE51 implements TsunamiBody {
   const factory PublicBodyVTSE51({
     required PublicBodyVTSE51Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -385,7 +385,7 @@ class PublicBodyVTSE51 with _$PublicBodyVTSE51 implements TsunamiBody {
 }
 
 @freezed
-class PublicBodyVTSE52 with _$PublicBodyVTSE52 implements TsunamiBody {
+abstract class PublicBodyVTSE52 with _$PublicBodyVTSE52 implements TsunamiBody {
   const factory PublicBodyVTSE52({
     required PublicBodyVTSE52Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -399,7 +399,7 @@ class PublicBodyVTSE52 with _$PublicBodyVTSE52 implements TsunamiBody {
 
 // ------------------ Earthquake ------------------ //
 @freezed
-class Earthquake with _$Earthquake {
+abstract class Earthquake with _$Earthquake {
   const factory Earthquake({
     required DateTime originTime,
     required DateTime arrivalTime,
@@ -412,7 +412,7 @@ class Earthquake with _$Earthquake {
 }
 
 @freezed
-class EarthquakeHypocenter with _$EarthquakeHypocenter {
+abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
   const factory EarthquakeHypocenter({
     required String name,
     required String code,
@@ -426,7 +426,8 @@ class EarthquakeHypocenter with _$EarthquakeHypocenter {
 }
 
 @freezed
-class EarthquakeHypocenterDetailed with _$EarthquakeHypocenterDetailed {
+abstract class EarthquakeHypocenterDetailed
+    with _$EarthquakeHypocenterDetailed {
   const factory EarthquakeHypocenterDetailed({
     required String code,
     required String name,
@@ -437,7 +438,8 @@ class EarthquakeHypocenterDetailed with _$EarthquakeHypocenterDetailed {
 }
 
 @freezed
-class EarthquakeHypocenterCoordinate with _$EarthquakeHypocenterCoordinate {
+abstract class EarthquakeHypocenterCoordinate
+    with _$EarthquakeHypocenterCoordinate {
   const factory EarthquakeHypocenterCoordinate({
     required double lat,
     required double lon,
@@ -448,7 +450,7 @@ class EarthquakeHypocenterCoordinate with _$EarthquakeHypocenterCoordinate {
 }
 
 @freezed
-class EarthquakeMagnitude with _$EarthquakeMagnitude {
+abstract class EarthquakeMagnitude with _$EarthquakeMagnitude {
   const factory EarthquakeMagnitude({
     required double? value,
     required EarthquakeMagnitudeCondition? condition,
