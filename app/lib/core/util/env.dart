@@ -5,9 +5,9 @@ class Env {
   static Flavor flavor = Flavor.values.byName(
     const String.fromEnvironment('FLAVOR'),
   );
-  static const String restApiUrl = String.fromEnvironment('REST_API_URL');
-  static const String wsApiUrl = String.fromEnvironment('WS_API_URL');
-  static const String apiAuthorization = String.fromEnvironment(
+  static const restApiUrl = String.fromEnvironment('REST_API_URL');
+  static const wsApiUrl = String.fromEnvironment('WS_API_URL');
+  static const apiAuthorization = String.fromEnvironment(
     'API_AUTHORIZATION',
   );
 }

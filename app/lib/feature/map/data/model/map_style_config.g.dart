@@ -8,9 +8,9 @@ part of 'map_style_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MapStyleConfigImpl _$$MapStyleConfigImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$MapStyleConfigImpl', json, ($checkedConvert) {
-      final val = _$MapStyleConfigImpl(
+_MapStyleConfig _$MapStyleConfigFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_MapStyleConfig', json, ($checkedConvert) {
+      final val = _MapStyleConfig(
         theme: $checkedConvert(
           'theme',
           (v) => $enumDecode(_$MapStyleThemeEnumMap, v),
@@ -19,9 +19,8 @@ _$MapStyleConfigImpl _$$MapStyleConfigImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$MapStyleConfigImplToJson(
-  _$MapStyleConfigImpl instance,
-) => <String, dynamic>{'theme': _$MapStyleThemeEnumMap[instance.theme]!};
+Map<String, dynamic> _$MapStyleConfigToJson(_MapStyleConfig instance) =>
+    <String, dynamic>{'theme': _$MapStyleThemeEnumMap[instance.theme]!};
 
 const _$MapStyleThemeEnumMap = {
   MapStyleTheme.light: 'light',
@@ -29,47 +28,46 @@ const _$MapStyleThemeEnumMap = {
   MapStyleTheme.system: 'system',
 };
 
-_$MapStyleColorSchemeImpl _$$MapStyleColorSchemeImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$MapStyleColorSchemeImpl',
-  json,
-  ($checkedConvert) {
-    final val = _$MapStyleColorSchemeImpl(
-      backgroundColor: $checkedConvert(
-        'background_color',
-        (v) => const ColorConverter().fromJson(v as String),
-      ),
-      landColor: $checkedConvert(
-        'land_color',
-        (v) => const ColorConverter().fromJson(v as String),
-      ),
-      lineColor: $checkedConvert(
-        'line_color',
-        (v) => const ColorConverter().fromJson(v as String),
-      ),
-      japanLandColor: $checkedConvert(
-        'japan_land_color',
-        (v) => const ColorConverter().fromJson(v as String),
-      ),
-      japanLineColor: $checkedConvert(
-        'japan_line_color',
-        (v) => const ColorConverter().fromJson(v as String),
-      ),
+_MapStyleColorScheme _$MapStyleColorSchemeFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_MapStyleColorScheme',
+      json,
+      ($checkedConvert) {
+        final val = _MapStyleColorScheme(
+          backgroundColor: $checkedConvert(
+            'background_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          landColor: $checkedConvert(
+            'land_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          lineColor: $checkedConvert(
+            'line_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          japanLandColor: $checkedConvert(
+            'japan_land_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+          japanLineColor: $checkedConvert(
+            'japan_line_color',
+            (v) => const ColorConverter().fromJson(v as String),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'backgroundColor': 'background_color',
+        'landColor': 'land_color',
+        'lineColor': 'line_color',
+        'japanLandColor': 'japan_land_color',
+        'japanLineColor': 'japan_line_color',
+      },
     );
-    return val;
-  },
-  fieldKeyMap: const {
-    'backgroundColor': 'background_color',
-    'landColor': 'land_color',
-    'lineColor': 'line_color',
-    'japanLandColor': 'japan_land_color',
-    'japanLineColor': 'japan_line_color',
-  },
-);
 
-Map<String, dynamic> _$$MapStyleColorSchemeImplToJson(
-  _$MapStyleColorSchemeImpl instance,
+Map<String, dynamic> _$MapStyleColorSchemeToJson(
+  _MapStyleColorScheme instance,
 ) => <String, dynamic>{
   'background_color': const ColorConverter().toJson(instance.backgroundColor),
   'land_color': const ColorConverter().toJson(instance.landColor),

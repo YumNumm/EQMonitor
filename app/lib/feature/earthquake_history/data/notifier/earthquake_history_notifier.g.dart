@@ -8,304 +8,194 @@ part of 'earthquake_history_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$earthquakeV1ExtendedHash() =>
-    r'067c099ee066ba7229a2fe4eb7d7d625b89bd65b';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [earthquakeV1Extended].
-@ProviderFor(earthquakeV1Extended)
-const earthquakeV1ExtendedProvider = EarthquakeV1ExtendedFamily();
-
-/// See also [earthquakeV1Extended].
-class EarthquakeV1ExtendedFamily
-    extends Family<AsyncValue<EarthquakeV1Extended>> {
-  /// See also [earthquakeV1Extended].
-  const EarthquakeV1ExtendedFamily();
-
-  /// See also [earthquakeV1Extended].
-  EarthquakeV1ExtendedProvider call(EarthquakeV1 data) {
-    return EarthquakeV1ExtendedProvider(data);
-  }
-
-  @override
-  EarthquakeV1ExtendedProvider getProviderOverride(
-    covariant EarthquakeV1ExtendedProvider provider,
-  ) {
-    return call(provider.data);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'earthquakeV1ExtendedProvider';
-}
-
-/// See also [earthquakeV1Extended].
-class EarthquakeV1ExtendedProvider
-    extends AutoDisposeFutureProvider<EarthquakeV1Extended> {
-  /// See also [earthquakeV1Extended].
-  EarthquakeV1ExtendedProvider(EarthquakeV1 data)
-    : this._internal(
-        (ref) => earthquakeV1Extended(ref as EarthquakeV1ExtendedRef, data),
-        from: earthquakeV1ExtendedProvider,
-        name: r'earthquakeV1ExtendedProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$earthquakeV1ExtendedHash,
-        dependencies: EarthquakeV1ExtendedFamily._dependencies,
-        allTransitiveDependencies:
-            EarthquakeV1ExtendedFamily._allTransitiveDependencies,
-        data: data,
-      );
-
-  EarthquakeV1ExtendedProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.data,
-  }) : super.internal();
-
-  final EarthquakeV1 data;
-
-  @override
-  Override overrideWith(
-    FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef provider)
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: EarthquakeV1ExtendedProvider._internal(
-        (ref) => create(ref as EarthquakeV1ExtendedRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        data: data,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<EarthquakeV1Extended> createElement() {
-    return _EarthquakeV1ExtendedProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is EarthquakeV1ExtendedProvider && other.data == data;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, data.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin EarthquakeV1ExtendedRef
-    on AutoDisposeFutureProviderRef<EarthquakeV1Extended> {
-  /// The parameter `data` of this provider.
-  EarthquakeV1 get data;
-}
-
-class _EarthquakeV1ExtendedProviderElement
-    extends AutoDisposeFutureProviderElement<EarthquakeV1Extended>
-    with EarthquakeV1ExtendedRef {
-  _EarthquakeV1ExtendedProviderElement(super.provider);
-
-  @override
-  EarthquakeV1 get data => (origin as EarthquakeV1ExtendedProvider).data;
-}
-
-String _$earthquakeHistoryNotifierHash() =>
-    r'6a341ff23d02ef7a6c7904cbb565b160cc853195';
-
-abstract class _$EarthquakeHistoryNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierState> {
-  late final EarthquakeHistoryParameter parameter;
-
-  FutureOr<EarthquakeHistoryNotifierState> build(
-    EarthquakeHistoryParameter parameter,
-  );
-}
-
-/// See also [EarthquakeHistoryNotifier].
 @ProviderFor(EarthquakeHistoryNotifier)
-const earthquakeHistoryNotifierProvider = EarthquakeHistoryNotifierFamily();
+const earthquakeHistoryNotifierProvider = EarthquakeHistoryNotifierFamily._();
 
-/// See also [EarthquakeHistoryNotifier].
-class EarthquakeHistoryNotifierFamily
-    extends Family<AsyncValue<EarthquakeHistoryNotifierState>> {
-  /// See also [EarthquakeHistoryNotifier].
-  const EarthquakeHistoryNotifierFamily();
-
-  /// See also [EarthquakeHistoryNotifier].
-  EarthquakeHistoryNotifierProvider call(EarthquakeHistoryParameter parameter) {
-    return EarthquakeHistoryNotifierProvider(parameter);
-  }
-
-  @override
-  EarthquakeHistoryNotifierProvider getProviderOverride(
-    covariant EarthquakeHistoryNotifierProvider provider,
-  ) {
-    return call(provider.parameter);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'earthquakeHistoryNotifierProvider';
-}
-
-/// See also [EarthquakeHistoryNotifier].
-class EarthquakeHistoryNotifierProvider
+final class EarthquakeHistoryNotifierProvider
     extends
-        AutoDisposeAsyncNotifierProviderImpl<
+        $AsyncNotifierProvider<
           EarthquakeHistoryNotifier,
           EarthquakeHistoryNotifierState
         > {
-  /// See also [EarthquakeHistoryNotifier].
-  EarthquakeHistoryNotifierProvider(EarthquakeHistoryParameter parameter)
-    : this._internal(
-        () => EarthquakeHistoryNotifier()..parameter = parameter,
-        from: earthquakeHistoryNotifierProvider,
-        name: r'earthquakeHistoryNotifierProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$earthquakeHistoryNotifierHash,
-        dependencies: EarthquakeHistoryNotifierFamily._dependencies,
-        allTransitiveDependencies:
-            EarthquakeHistoryNotifierFamily._allTransitiveDependencies,
-        parameter: parameter,
-      );
-
-  EarthquakeHistoryNotifierProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.parameter,
-  }) : super.internal();
-
-  final EarthquakeHistoryParameter parameter;
+  const EarthquakeHistoryNotifierProvider._({
+    required EarthquakeHistoryNotifierFamily super.from,
+    required EarthquakeHistoryParameter super.argument,
+  }) : super(
+         retry: null,
+         name: r'earthquakeHistoryNotifierProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  FutureOr<EarthquakeHistoryNotifierState> runNotifierBuild(
-    covariant EarthquakeHistoryNotifier notifier,
-  ) {
-    return notifier.build(parameter);
+  String debugGetCreateSourceHash() => _$earthquakeHistoryNotifierHash();
+
+  @override
+  String toString() {
+    return r'earthquakeHistoryNotifierProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Override overrideWith(EarthquakeHistoryNotifier Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: EarthquakeHistoryNotifierProvider._internal(
-        () => create()..parameter = parameter,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        parameter: parameter,
-      ),
-    );
-  }
+  EarthquakeHistoryNotifier create() => EarthquakeHistoryNotifier();
 
+  @$internal
   @override
-  AutoDisposeAsyncNotifierProviderElement<
+  $AsyncNotifierProviderElement<
     EarthquakeHistoryNotifier,
     EarthquakeHistoryNotifierState
   >
-  createElement() {
-    return _EarthquakeHistoryNotifierProviderElement(this);
-  }
+  $createElement($ProviderPointer pointer) =>
+      $AsyncNotifierProviderElement(pointer);
 
   @override
   bool operator ==(Object other) {
     return other is EarthquakeHistoryNotifierProvider &&
-        other.parameter == parameter;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, parameter.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin EarthquakeHistoryNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<EarthquakeHistoryNotifierState> {
-  /// The parameter `parameter` of this provider.
-  EarthquakeHistoryParameter get parameter;
-}
+String _$earthquakeHistoryNotifierHash() =>
+    r'e1bddc0afbe2c703f594c40acd784ddbd424c60f';
 
-class _EarthquakeHistoryNotifierProviderElement
-    extends
-        AutoDisposeAsyncNotifierProviderElement<
+final class EarthquakeHistoryNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
           EarthquakeHistoryNotifier,
-          EarthquakeHistoryNotifierState
-        >
-    with EarthquakeHistoryNotifierRef {
-  _EarthquakeHistoryNotifierProviderElement(super.provider);
+          AsyncValue<EarthquakeHistoryNotifierState>,
+          EarthquakeHistoryNotifierState,
+          FutureOr<EarthquakeHistoryNotifierState>,
+          EarthquakeHistoryParameter
+        > {
+  const EarthquakeHistoryNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'earthquakeHistoryNotifierProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  EarthquakeHistoryNotifierProvider call(
+    EarthquakeHistoryParameter parameter,
+  ) => EarthquakeHistoryNotifierProvider._(argument: parameter, from: this);
 
   @override
-  EarthquakeHistoryParameter get parameter =>
-      (origin as EarthquakeHistoryNotifierProvider).parameter;
+  String toString() => r'earthquakeHistoryNotifierProvider';
+}
+
+abstract class _$EarthquakeHistoryNotifier
+    extends $AsyncNotifier<EarthquakeHistoryNotifierState> {
+  late final _$args = ref.$arg as EarthquakeHistoryParameter;
+  EarthquakeHistoryParameter get parameter => _$args;
+
+  FutureOr<EarthquakeHistoryNotifierState> build(
+    EarthquakeHistoryParameter parameter,
+  );
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<EarthquakeHistoryNotifierState>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<EarthquakeHistoryNotifierState>>,
+              AsyncValue<EarthquakeHistoryNotifierState>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+@ProviderFor(earthquakeV1Extended)
+const earthquakeV1ExtendedProvider = EarthquakeV1ExtendedFamily._();
+
+final class EarthquakeV1ExtendedProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<EarthquakeV1Extended>,
+          FutureOr<EarthquakeV1Extended>
+        >
+    with
+        $FutureModifier<EarthquakeV1Extended>,
+        $FutureProvider<EarthquakeV1Extended> {
+  const EarthquakeV1ExtendedProvider._({
+    required EarthquakeV1ExtendedFamily super.from,
+    required EarthquakeV1 super.argument,
+  }) : super(
+         retry: null,
+         name: r'earthquakeV1ExtendedProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$earthquakeV1ExtendedHash();
+
+  @override
+  String toString() {
+    return r'earthquakeV1ExtendedProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<EarthquakeV1Extended> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<EarthquakeV1Extended> create(Ref ref) {
+    final argument = this.argument as EarthquakeV1;
+    return earthquakeV1Extended(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is EarthquakeV1ExtendedProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$earthquakeV1ExtendedHash() =>
+    r'19ec401d223bac3130f06c83f3d01bef8eaf68f8';
+
+final class EarthquakeV1ExtendedFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<EarthquakeV1Extended>,
+          EarthquakeV1
+        > {
+  const EarthquakeV1ExtendedFamily._()
+    : super(
+        retry: null,
+        name: r'earthquakeV1ExtendedProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  EarthquakeV1ExtendedProvider call(EarthquakeV1 data) =>
+      EarthquakeV1ExtendedProvider._(argument: data, from: this);
+
+  @override
+  String toString() => r'earthquakeV1ExtendedProvider';
 }
 
 // ignore_for_file: type=lint

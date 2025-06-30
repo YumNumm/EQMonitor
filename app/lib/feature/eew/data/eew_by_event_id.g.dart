@@ -8,158 +8,100 @@ part of 'eew_by_event_id.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewsByEventIdHash() => r'b57fe47c5a2108c48cec9ac7d79448bc48969b22';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$EewsByEventId
-    extends BuildlessAutoDisposeAsyncNotifier<List<EewV1>> {
-  late final String eventId;
-
-  FutureOr<List<EewV1>> build(String eventId);
-}
-
-/// See also [EewsByEventId].
 @ProviderFor(EewsByEventId)
-const eewsByEventIdProvider = EewsByEventIdFamily();
+const eewsByEventIdProvider = EewsByEventIdFamily._();
 
-/// See also [EewsByEventId].
-class EewsByEventIdFamily extends Family<AsyncValue<List<EewV1>>> {
-  /// See also [EewsByEventId].
-  const EewsByEventIdFamily();
+final class EewsByEventIdProvider
+    extends $AsyncNotifierProvider<EewsByEventId, List<EewV1>> {
+  const EewsByEventIdProvider._({
+    required EewsByEventIdFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'eewsByEventIdProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [EewsByEventId].
-  EewsByEventIdProvider call(String eventId) {
-    return EewsByEventIdProvider(eventId);
+  @override
+  String debugGetCreateSourceHash() => _$eewsByEventIdHash();
+
+  @override
+  String toString() {
+    return r'eewsByEventIdProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  EewsByEventIdProvider getProviderOverride(
-    covariant EewsByEventIdProvider provider,
-  ) {
-    return call(provider.eventId);
-  }
+  EewsByEventId create() => EewsByEventId();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
+  @$internal
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'eewsByEventIdProvider';
-}
-
-/// See also [EewsByEventId].
-class EewsByEventIdProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<EewsByEventId, List<EewV1>> {
-  /// See also [EewsByEventId].
-  EewsByEventIdProvider(String eventId)
-    : this._internal(
-        () => EewsByEventId()..eventId = eventId,
-        from: eewsByEventIdProvider,
-        name: r'eewsByEventIdProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$eewsByEventIdHash,
-        dependencies: EewsByEventIdFamily._dependencies,
-        allTransitiveDependencies:
-            EewsByEventIdFamily._allTransitiveDependencies,
-        eventId: eventId,
-      );
-
-  EewsByEventIdProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.eventId,
-  }) : super.internal();
-
-  final String eventId;
-
-  @override
-  FutureOr<List<EewV1>> runNotifierBuild(covariant EewsByEventId notifier) {
-    return notifier.build(eventId);
-  }
-
-  @override
-  Override overrideWith(EewsByEventId Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: EewsByEventIdProvider._internal(
-        () => create()..eventId = eventId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        eventId: eventId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<EewsByEventId, List<EewV1>>
-  createElement() {
-    return _EewsByEventIdProviderElement(this);
-  }
+  $AsyncNotifierProviderElement<EewsByEventId, List<EewV1>> $createElement(
+    $ProviderPointer pointer,
+  ) => $AsyncNotifierProviderElement(pointer);
 
   @override
   bool operator ==(Object other) {
-    return other is EewsByEventIdProvider && other.eventId == eventId;
+    return other is EewsByEventIdProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, eventId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin EewsByEventIdRef on AutoDisposeAsyncNotifierProviderRef<List<EewV1>> {
-  /// The parameter `eventId` of this provider.
-  String get eventId;
-}
+String _$eewsByEventIdHash() => r'cd83c02b16e6fd89ac1f52581f12210d0d41f2d3';
 
-class _EewsByEventIdProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<EewsByEventId, List<EewV1>>
-    with EewsByEventIdRef {
-  _EewsByEventIdProviderElement(super.provider);
+final class EewsByEventIdFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          EewsByEventId,
+          AsyncValue<List<EewV1>>,
+          List<EewV1>,
+          FutureOr<List<EewV1>>,
+          String
+        > {
+  const EewsByEventIdFamily._()
+    : super(
+        retry: null,
+        name: r'eewsByEventIdProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  EewsByEventIdProvider call(String eventId) =>
+      EewsByEventIdProvider._(argument: eventId, from: this);
 
   @override
-  String get eventId => (origin as EewsByEventIdProvider).eventId;
+  String toString() => r'eewsByEventIdProvider';
+}
+
+abstract class _$EewsByEventId extends $AsyncNotifier<List<EewV1>> {
+  late final _$args = ref.$arg as String;
+  String get eventId => _$args;
+
+  FutureOr<List<EewV1>> build(String eventId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<List<EewV1>>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<EewV1>>>,
+              AsyncValue<List<EewV1>>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
 }
 
 // ignore_for_file: type=lint

@@ -8,13 +8,13 @@ part of 'kyoshin_monitor_settings_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
+_KyoshinMonitorSettingsModel _$KyoshinMonitorSettingsModelFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$KyoshinMonitorSettingsModelImpl',
+  '_KyoshinMonitorSettingsModel',
   json,
   ($checkedConvert) {
-    final val = _$KyoshinMonitorSettingsModelImpl(
+    final val = _KyoshinMonitorSettingsModel(
       minRealtimeShindo: $checkedConvert(
         'min_realtime_shindo',
         (v) => (v as num?)?.toDouble() ?? null,
@@ -41,12 +41,11 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
       ),
       api: $checkedConvert(
         'api',
-        (v) =>
-            v == null
-                ? const KyoshinMonitorSettingsApiModel()
-                : KyoshinMonitorSettingsApiModel.fromJson(
-                  v as Map<String, dynamic>,
-                ),
+        (v) => v == null
+            ? const KyoshinMonitorSettingsApiModel()
+            : KyoshinMonitorSettingsApiModel.fromJson(
+                v as Map<String, dynamic>,
+              ),
       ),
     );
     return val;
@@ -61,8 +60,8 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$KyoshinMonitorSettingsModelImplToJson(
-  _$KyoshinMonitorSettingsModelImpl instance,
+Map<String, dynamic> _$KyoshinMonitorSettingsModelToJson(
+  _KyoshinMonitorSettingsModel instance,
 ) => <String, dynamic>{
   'min_realtime_shindo': instance.minRealtimeShindo,
   'show_scale': instance.showScale,
@@ -106,48 +105,46 @@ const _$RealtimeLayerEnumMap = {
   RealtimeLayer.underground: 'underground',
 };
 
-_$KyoshinMonitorSettingsApiModelImpl
-_$$KyoshinMonitorSettingsApiModelImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$KyoshinMonitorSettingsApiModelImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$KyoshinMonitorSettingsApiModelImpl(
-          endpoint: $checkedConvert(
-            'endpoint',
-            (v) =>
-                $enumDecodeNullable(
-                  _$KyoshinMonitorEndpointEnumMap,
-                  v,
-                  unknownValue: KyoshinMonitorEndpoint.kmoni,
-                ) ??
-                KyoshinMonitorEndpoint.kmoni,
-          ),
-          imageFetchInterval: $checkedConvert(
-            'image_fetch_interval',
-            (v) =>
-                v == null
-                    ? const Duration(seconds: 1)
-                    : Duration(microseconds: (v as num).toInt()),
-          ),
-          delayAdjustInterval: $checkedConvert(
-            'delay_adjust_interval',
-            (v) =>
-                v == null
-                    ? const Duration(minutes: 10)
-                    : Duration(microseconds: (v as num).toInt()),
-          ),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'imageFetchInterval': 'image_fetch_interval',
-        'delayAdjustInterval': 'delay_adjust_interval',
-      },
+_KyoshinMonitorSettingsApiModel _$KyoshinMonitorSettingsApiModelFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_KyoshinMonitorSettingsApiModel',
+  json,
+  ($checkedConvert) {
+    final val = _KyoshinMonitorSettingsApiModel(
+      endpoint: $checkedConvert(
+        'endpoint',
+        (v) =>
+            $enumDecodeNullable(
+              _$KyoshinMonitorEndpointEnumMap,
+              v,
+              unknownValue: KyoshinMonitorEndpoint.kmoni,
+            ) ??
+            KyoshinMonitorEndpoint.kmoni,
+      ),
+      imageFetchInterval: $checkedConvert(
+        'image_fetch_interval',
+        (v) => v == null
+            ? const Duration(seconds: 1)
+            : Duration(microseconds: (v as num).toInt()),
+      ),
+      delayAdjustInterval: $checkedConvert(
+        'delay_adjust_interval',
+        (v) => v == null
+            ? const Duration(minutes: 10)
+            : Duration(microseconds: (v as num).toInt()),
+      ),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'imageFetchInterval': 'image_fetch_interval',
+    'delayAdjustInterval': 'delay_adjust_interval',
+  },
+);
 
-Map<String, dynamic> _$$KyoshinMonitorSettingsApiModelImplToJson(
-  _$KyoshinMonitorSettingsApiModelImpl instance,
+Map<String, dynamic> _$KyoshinMonitorSettingsApiModelToJson(
+  _KyoshinMonitorSettingsApiModel instance,
 ) => <String, dynamic>{
   'endpoint': _$KyoshinMonitorEndpointEnumMap[instance.endpoint]!,
   'image_fetch_interval': instance.imageFetchInterval.inMicroseconds,

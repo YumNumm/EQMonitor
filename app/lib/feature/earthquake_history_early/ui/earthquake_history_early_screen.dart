@@ -58,28 +58,24 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.info),
-            onPressed:
-                () async =>
-                    _EarthquakeHistoryEarlyInformationModal.show(context),
+            onPressed: () async =>
+                _EarthquakeHistoryEarlyInformationModal.show(context),
           ),
         ],
       ),
       body: _SliverListBody(
         parameter: parameter.value,
         state: state,
-        onRefresh:
-            () async => ref.refresh(
-              earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
-            ),
-        onScrollEnd:
-            () async =>
-                ref
-                    .read(
-                      earthquakeHistoryEarlyNotifierProvider(
-                        parameter.value,
-                      ).notifier,
-                    )
-                    .fetchNextData(),
+        onRefresh: () async => ref.refresh(
+          earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
+        ),
+        onScrollEnd: () async => ref
+            .read(
+              earthquakeHistoryEarlyNotifierProvider(
+                parameter.value,
+              ).notifier,
+            )
+            .fetchNextData(),
         shouldShowLatestEarthquakeMessage:
             parameter.value.sort == EarthquakeEarlySortType.origin_time &&
             !parameter.value.ascending,
@@ -107,46 +103,41 @@ class _SearchParameter extends StatelessWidget {
                       EarthquakeHistoryEarlySortChip(
                         type: parameter.sort,
                         ascending: parameter.ascending,
-                        onChanged:
-                            (type, ascending) => onChanged(
-                              parameter.updateSort(
-                                type: type,
-                                ascending: ascending,
-                              ),
-                            ),
+                        onChanged: (type, ascending) => onChanged(
+                          parameter.updateSort(
+                            type: type,
+                            ascending: ascending,
+                          ),
+                        ),
                       ),
                       const VerticalDivider(),
                       IntensityFilterChip(
                         min: parameter.intensityGte,
                         max: parameter.intensityLte,
-                        onChanged:
-                            (min, max) =>
-                                onChanged(parameter.updateIntensity(min, max)),
+                        onChanged: (min, max) =>
+                            onChanged(parameter.updateIntensity(min, max)),
                       ),
                       MagnitudeFilterChip(
                         min: parameter.magnitudeGte,
                         max: parameter.magnitudeLte,
-                        onChanged:
-                            (min, max) =>
-                                onChanged(parameter.updateMagnitude(min, max)),
+                        onChanged: (min, max) =>
+                            onChanged(parameter.updateMagnitude(min, max)),
                       ),
                       DepthFilterChip(
                         min: parameter.depthGte?.toInt(),
                         max: parameter.depthLte?.toInt(),
-                        onChanged:
-                            (min, max) => onChanged(
-                              parameter.updateDepth(
-                                min?.toDouble(),
-                                max?.toDouble(),
-                              ),
-                            ),
+                        onChanged: (min, max) => onChanged(
+                          parameter.updateDepth(
+                            min?.toDouble(),
+                            max?.toDouble(),
+                          ),
+                        ),
                       ),
                       DateRangeFilterChip(
                         min: parameter.originTimeGte,
                         max: parameter.originTimeLte,
-                        onChanged:
-                            (min, max) =>
-                                onChanged(parameter.updateOriginTime(min, max)),
+                        onChanged: (min, max) =>
+                            onChanged(parameter.updateOriginTime(min, max)),
                       ),
                     ]
                     .map(
@@ -223,7 +214,7 @@ class _SliverListBody extends HookConsumerWidget {
                   final error = state.error!;
                   return ErrorCard(error: error, onReload: onRefresh);
                 }
-                final hasNext = state.valueOrNull?.hasNext ?? false;
+                final hasNext = state.value?.hasNext ?? false;
                 if (hasNext) {
                   return loading;
                 } else {
@@ -233,10 +224,9 @@ class _SliverListBody extends HookConsumerWidget {
               final item = data.$1[index];
               return EarthquakeHistoryEarlyListTile(
                 item: item,
-                onTap:
-                    () async => EarthquakeHistoryEarlyDetailsRoute(
-                      id: item.id,
-                    ).push<void>(context),
+                onTap: () async => EarthquakeHistoryEarlyDetailsRoute(
+                  id: item.id,
+                ).push<void>(context),
               );
             },
           ),
@@ -248,16 +238,15 @@ class _SliverListBody extends HookConsumerWidget {
       onRefresh: () async => onRefresh?.call(),
       child: switch (state) {
         AsyncError(:final error) => () {
-          final valueOrNull = state.valueOrNull;
+          final valueOrNull = state.value;
           if (valueOrNull != null) {
             return listView(data: valueOrNull);
           }
           return ErrorCard(
             error: error,
-            onReload:
-                () async => ref.refresh(
-                  earthquakeHistoryEarlyNotifierProvider(parameter),
-                ),
+            onReload: () async => ref.refresh(
+              earthquakeHistoryEarlyNotifierProvider(parameter),
+            ),
           );
         }(),
         AsyncData(:final value) => Column(
@@ -275,11 +264,9 @@ class _SliverListBody extends HookConsumerWidget {
                         TextSpan(
                           text: '地震履歴',
                           style: const TextStyle(fontWeight: FontWeight.bold),
-                          recognizer:
-                              TapGestureRecognizer()
-                                ..onTap =
-                                    () async => const EarthquakeHistoryRoute()
-                                        .push<void>(context),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async => const EarthquakeHistoryRoute()
+                                .push<void>(context),
                         ),
                         const TextSpan(text: 'を使ってください'),
                       ],
@@ -342,7 +329,7 @@ class _EarthquakeHistoryEarlyInformationModal extends StatelessWidget {
           Center(child: sheetBar),
           Expanded(
             child: Markdown(
-              onTapLink: (_, url, __) async {
+              onTapLink: (_, url, _) async {
                 if (url != null && await canLaunchUrlString(url)) {
                   await launchUrlString(url);
                 }

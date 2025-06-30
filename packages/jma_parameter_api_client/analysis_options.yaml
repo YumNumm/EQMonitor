@@ -1,1 +1,11 @@
 include: package:eqmonitor_lints/analysis_options.yaml
+analyzer:
+  errors:
+    document_ignores: ignore
+    lines_longer_than_80_chars: ignore
+custom_lint:
+  rules:
+    - prefer_clock_now: false
+    - avoid_hardcoded_color: false
+    - avoid_hardcoded_japanese: false
+    - avoid_single_child: false

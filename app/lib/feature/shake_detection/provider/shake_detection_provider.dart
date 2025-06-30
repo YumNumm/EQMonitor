@@ -9,12 +9,11 @@ import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [timeTicker])
+@Riverpod(keepAlive: true)
 class ShakeDetection extends _$ShakeDetection {
   @override
   Future<List<ShakeDetectionEvent>> build() async {
@@ -41,7 +40,7 @@ class ShakeDetection extends _$ShakeDetection {
           }
         }
       })
-      ..listen(timeTickerProvider(), (_, __) {
+      ..listen(timeTickerProvider(), (_, _) {
         if (state case AsyncData(:final value)) {
           state = AsyncData(_pruneOldEvents(value));
         }
@@ -61,7 +60,7 @@ class ShakeDetection extends _$ShakeDetection {
   }
 
   void upsertShakeDetectionEvents(List<ShakeDetectionEvent> events) {
-    final currentEvents = state.valueOrNull ?? [];
+    final currentEvents = state.value ?? [];
     final data = [...currentEvents];
     for (final event in events) {
       final index = data.indexWhereOrNull((e) => e.eventId == event.eventId);
@@ -91,36 +90,35 @@ class ShakeDetection extends _$ShakeDetection {
   }
 }
 
-@Riverpod(keepAlive: true, dependencies: [ShakeDetection])
+@Riverpod(keepAlive: true)
 class ShakeDetectionKmoniPointsMerged
     extends _$ShakeDetectionKmoniPointsMerged {
   @override
   Future<List<ShakeDetectionKmoniMergedEvent>> build() async {
     final points = ref.watch(kyoshinObservationPointsProvider);
-    final events = ref.watch(shakeDetectionProvider).valueOrNull ?? [];
+    final events = ref.watch(shakeDetectionProvider).value ?? [];
     final merged = <ShakeDetectionKmoniMergedEvent>[];
     for (final event in events) {
       final regions = event.regions.map(
         (e) => ShakeDetectionKmoniMergedRegion(
           name: e.name,
           maxIntensity: e.maxIntensity,
-          points:
-              e.points
-                  .map((p) {
-                    final point = points.points.firstWhereOrNull(
-                      (e) => e.code == p.code,
-                    );
-                    if (point == null) {
-                      return null;
-                    }
-                    return ShakeDetectionKmoniMergedPoint(
-                      intensity: p.intensity,
-                      code: p.code,
-                      point: point,
-                    );
-                  })
-                  .nonNulls
-                  .toList(),
+          points: e.points
+              .map((p) {
+                final point = points.points.firstWhereOrNull(
+                  (e) => e.code == p.code,
+                );
+                if (point == null) {
+                  return null;
+                }
+                return ShakeDetectionKmoniMergedPoint(
+                  intensity: p.intensity,
+                  code: p.code,
+                  point: point,
+                );
+              })
+              .nonNulls
+              .toList(),
         ),
       );
       merged.add(
@@ -133,7 +131,7 @@ class ShakeDetectionKmoniPointsMerged
   void upsertShakeDetectionKmoniMergedEvents(
     List<ShakeDetectionKmoniMergedEvent> events,
   ) {
-    final currentEvents = state.valueOrNull ?? [];
+    final currentEvents = state.value ?? [];
     final data = [...currentEvents];
     data.addAll(events);
   }
@@ -165,8 +163,9 @@ enum ShakeDetectionLevel {
     JmaForecastIntensity.sixLower ||
     JmaForecastIntensity.sixUpper ||
     JmaForecastIntensity.seven => ShakeDetectionLevel.highest,
-    JmaForecastIntensity.unknown =>
-      throw ArgumentError('unsupported JmaForecastIntensity: $intensity'),
+    JmaForecastIntensity.unknown => throw ArgumentError(
+      'unsupported JmaForecastIntensity: $intensity',
+    ),
   };
 
   bool operator <(ShakeDetectionLevel other) => index < other.index;

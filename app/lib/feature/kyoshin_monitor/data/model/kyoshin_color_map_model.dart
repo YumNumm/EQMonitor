@@ -4,7 +4,7 @@ part 'kyoshin_color_map_model.freezed.dart';
 part 'kyoshin_color_map_model.g.dart';
 
 @freezed
-class KyoshinColorMapModel with _$KyoshinColorMapModel {
+abstract class KyoshinColorMapModel with _$KyoshinColorMapModel {
   const factory KyoshinColorMapModel({
     required double intensity,
     required int r,

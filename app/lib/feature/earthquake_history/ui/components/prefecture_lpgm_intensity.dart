@@ -74,7 +74,7 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
     final textTheme = theme.textTheme;
 
     final mergedPrefecturesFuture = ref.watch(
-      _LpgmCalculatorProvider((
+      _lpgmCalculatorProvider((
         prefectures: item.lpgmIntensityPrefectures,
         stations: item.lpgmIntenstiyStations,
       )),

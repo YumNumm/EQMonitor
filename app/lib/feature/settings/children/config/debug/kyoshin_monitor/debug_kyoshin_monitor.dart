@@ -131,11 +131,11 @@ class _Body extends ConsumerWidget {
                   AsyncError(:final error) => error.toString(),
                   _ => 'Loading...',
                 }, style: bodyTextStyle),
-                if (state.valueOrNull?.currentImageRaw != null)
+                if (state.value?.currentImageRaw != null)
                   ColoredBox(
                     color: Colors.white,
                     child: Image.memory(
-                      Uint8List.fromList(state.valueOrNull!.currentImageRaw!),
+                      Uint8List.fromList(state.value!.currentImageRaw!),
                       height: 200,
                       width: 200,
                     ),

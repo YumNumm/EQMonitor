@@ -16,7 +16,7 @@ class FcmTopicManager extends _$FcmTopicManager {
     return list ?? [];
   }
 
-  static const String _prefsKey = 'fcmTopicManager';
+  static const _prefsKey = 'fcmTopicManager';
 
   Future<Result<void, Exception>> unregisterFromTopic(FcmTopic topic) async {
     // 登録されていない場合は何もしない
@@ -67,7 +67,6 @@ class FcmEarthquakeTopic implements FcmTopic {
   final JmaIntensity? intensity;
 
   @override
-  // ignore: lines_longer_than_80_chars
   String get topic {
     final suffix =
         intensity?.type.replaceAll('-', 'lower').replaceAll('+', 'upper') ??

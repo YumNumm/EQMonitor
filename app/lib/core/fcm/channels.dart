@@ -1,9 +1,8 @@
-// ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final List<AndroidNotificationChannel> notificationChannels = [
+final notificationChannels = <AndroidNotificationChannel>[
   const AndroidNotificationChannel(
     'fromdev',
     '開発者からのお知らせ',
@@ -144,7 +143,7 @@ final List<AndroidNotificationChannel> notificationChannels = [
   ),
 ];
 
-final List<AndroidNotificationChannelGroup> notificationChannelGroups = [
+final notificationChannelGroups = <AndroidNotificationChannelGroup>[
   const AndroidNotificationChannelGroup('eew', '緊急地震速報'),
   const AndroidNotificationChannelGroup(
     'earthquake',

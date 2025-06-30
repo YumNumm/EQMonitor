@@ -1,5 +1,6 @@
 sealed class KyoshinImageParseException implements Exception {
   const KyoshinImageParseException(this.type);
+
   final KyoshinImageParseExceptionType type;
 }
 

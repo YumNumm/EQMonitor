@@ -1,6 +1,5 @@
 import 'package:eqmonitor/feature/kyoshin_monitor/data/api/kyoshin_monitor_dio.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

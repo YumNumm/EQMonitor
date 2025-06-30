@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as lat_long_2;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

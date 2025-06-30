@@ -8,12 +8,11 @@ part of 'notification_remote_settings_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NotificationRemoteSettingsStateImpl
-_$$NotificationRemoteSettingsStateImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$NotificationRemoteSettingsStateImpl', json, (
-      $checkedConvert,
-    ) {
-      final val = _$NotificationRemoteSettingsStateImpl(
+_NotificationRemoteSettingsState _$NotificationRemoteSettingsStateFromJson(
+  Map<String, dynamic> json,
+) =>
+    $checkedCreate('_NotificationRemoteSettingsState', json, ($checkedConvert) {
+      final val = _NotificationRemoteSettingsState(
         eew: $checkedConvert(
           'eew',
           (v) =>
@@ -29,37 +28,34 @@ _$$NotificationRemoteSettingsStateImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$NotificationRemoteSettingsStateImplToJson(
-  _$NotificationRemoteSettingsStateImpl instance,
+Map<String, dynamic> _$NotificationRemoteSettingsStateToJson(
+  _NotificationRemoteSettingsState instance,
 ) => <String, dynamic>{'eew': instance.eew, 'earthquake': instance.earthquake};
 
-_$NotificationRemoteSettingsEewImpl
-_$$NotificationRemoteSettingsEewImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$NotificationRemoteSettingsEewImpl', json, (
-      $checkedConvert,
-    ) {
-      final val = _$NotificationRemoteSettingsEewImpl(
-        global: $checkedConvert(
-          'global',
-          (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v),
-        ),
-        regions: $checkedConvert(
-          'regions',
-          (v) =>
-              (v as List<dynamic>)
-                  .map(
-                    (e) => NotificationRemoteSettingsEewRegion.fromJson(
-                      e as Map<String, dynamic>,
-                    ),
-                  )
-                  .toList(),
-        ),
-      );
-      return val;
-    });
+_NotificationRemoteSettingsEew _$NotificationRemoteSettingsEewFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_NotificationRemoteSettingsEew', json, ($checkedConvert) {
+  final val = _NotificationRemoteSettingsEew(
+    global: $checkedConvert(
+      'global',
+      (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v),
+    ),
+    regions: $checkedConvert(
+      'regions',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => NotificationRemoteSettingsEewRegion.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$$NotificationRemoteSettingsEewImplToJson(
-  _$NotificationRemoteSettingsEewImpl instance,
+Map<String, dynamic> _$NotificationRemoteSettingsEewToJson(
+  _NotificationRemoteSettingsEew instance,
 ) => <String, dynamic>{
   'global': _$JmaForecastIntensityEnumMap[instance.global],
   'regions': instance.regions,
@@ -79,13 +75,13 @@ const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.unknown: '不明',
 };
 
-_$NotificationRemoteSettingsEewRegionImpl
-_$$NotificationRemoteSettingsEewRegionImplFromJson(Map<String, dynamic> json) =>
+_NotificationRemoteSettingsEewRegion
+_$NotificationRemoteSettingsEewRegionFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$NotificationRemoteSettingsEewRegionImpl',
+      '_NotificationRemoteSettingsEewRegion',
       json,
       ($checkedConvert) {
-        final val = _$NotificationRemoteSettingsEewRegionImpl(
+        final val = _NotificationRemoteSettingsEewRegion(
           regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
           minJmaIntensity: $checkedConvert(
             'min_jma_intensity',
@@ -101,55 +97,53 @@ _$$NotificationRemoteSettingsEewRegionImplFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$NotificationRemoteSettingsEewRegionImplToJson(
-  _$NotificationRemoteSettingsEewRegionImpl instance,
+Map<String, dynamic> _$NotificationRemoteSettingsEewRegionToJson(
+  _NotificationRemoteSettingsEewRegion instance,
 ) => <String, dynamic>{
   'region_id': instance.regionId,
   'min_jma_intensity': _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,
   'name': instance.name,
 };
 
-_$NotificationRemoteSettingsEarthquakeImpl
-_$$NotificationRemoteSettingsEarthquakeImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$NotificationRemoteSettingsEarthquakeImpl', json, (
-  $checkedConvert,
-) {
-  final val = _$NotificationRemoteSettingsEarthquakeImpl(
-    global: $checkedConvert(
-      'global',
-      (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v),
-    ),
-    regions: $checkedConvert(
-      'regions',
-      (v) =>
-          (v as List<dynamic>)
+_NotificationRemoteSettingsEarthquake
+_$NotificationRemoteSettingsEarthquakeFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_NotificationRemoteSettingsEarthquake', json, (
+      $checkedConvert,
+    ) {
+      final val = _NotificationRemoteSettingsEarthquake(
+        global: $checkedConvert(
+          'global',
+          (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v),
+        ),
+        regions: $checkedConvert(
+          'regions',
+          (v) => (v as List<dynamic>)
               .map(
                 (e) => NotificationRemoteSettingsEarthquakeRegion.fromJson(
                   e as Map<String, dynamic>,
                 ),
               )
               .toList(),
-    ),
-  );
-  return val;
-});
+        ),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$$NotificationRemoteSettingsEarthquakeImplToJson(
-  _$NotificationRemoteSettingsEarthquakeImpl instance,
+Map<String, dynamic> _$NotificationRemoteSettingsEarthquakeToJson(
+  _NotificationRemoteSettingsEarthquake instance,
 ) => <String, dynamic>{
   'global': _$JmaForecastIntensityEnumMap[instance.global],
   'regions': instance.regions,
 };
 
-_$NotificationRemoteSettingsEarthquakeRegionImpl
-_$$NotificationRemoteSettingsEarthquakeRegionImplFromJson(
+_NotificationRemoteSettingsEarthquakeRegion
+_$NotificationRemoteSettingsEarthquakeRegionFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$NotificationRemoteSettingsEarthquakeRegionImpl',
+  '_NotificationRemoteSettingsEarthquakeRegion',
   json,
   ($checkedConvert) {
-    final val = _$NotificationRemoteSettingsEarthquakeRegionImpl(
+    final val = _NotificationRemoteSettingsEarthquakeRegion(
       regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
       minJmaIntensity: $checkedConvert(
         'min_jma_intensity',
@@ -165,8 +159,8 @@ _$$NotificationRemoteSettingsEarthquakeRegionImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$NotificationRemoteSettingsEarthquakeRegionImplToJson(
-  _$NotificationRemoteSettingsEarthquakeRegionImpl instance,
+Map<String, dynamic> _$NotificationRemoteSettingsEarthquakeRegionToJson(
+  _NotificationRemoteSettingsEarthquakeRegion instance,
 ) => <String, dynamic>{
   'region_id': instance.regionId,
   'min_jma_intensity': _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,

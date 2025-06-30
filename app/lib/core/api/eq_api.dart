@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:eqapi_client/eqapi_client.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';

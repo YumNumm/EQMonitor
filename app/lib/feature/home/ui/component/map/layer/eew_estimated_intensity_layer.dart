@@ -55,10 +55,9 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
                       _getLayerId(intensity),
                       'eqmonitor_map',
                       FillLayerProperties(
-                        fillColor:
-                            manager
-                                ._getColorForIntensity(intensity)
-                                .toHexStringRGB(),
+                        fillColor: manager
+                            ._getColorForIntensity(intensity)
+                            .toHexStringRGB(),
                       ),
                       filter: [
                         'in',
@@ -81,7 +80,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
     }, []);
 
     // EEWの状態が変更されたときの処理
-    ref.listen(eewProvider.select((value) => value.valueOrNull), (
+    ref.listen(eewProvider.select((value) => value.value), (
       _,
       eews,
     ) async {
@@ -100,8 +99,9 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
               controller.setLayerProperties(
                 _getLayerId(intensity),
                 FillLayerProperties(
-                  fillColor:
-                      manager._getColorForIntensity(intensity).toHexStringRGB(),
+                  fillColor: manager
+                      ._getColorForIntensity(intensity)
+                      .toHexStringRGB(),
                 ),
               ),
               controller.setFilter(_getLayerId(intensity), {
@@ -132,13 +132,12 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
   // EEWの予想震度地域情報を変換
   Map<JmaForecastIntensity, List<String>> _transformRegions(List<EewV1> eews) {
     // 震度予測がないEEWを除外
-    final regionsFromEews =
-        eews
-            .where((e) => !e.isCanceled)
-            .map((e) => e.regions)
-            .nonNulls
-            .expand((e) => e)
-            .toList();
+    final regionsFromEews = eews
+        .where((e) => !e.isCanceled)
+        .map((e) => e.regions)
+        .nonNulls
+        .expand((e) => e)
+        .toList();
 
     // 同じ地域をまとめる
     final regionsGrouped = <String, List<EstimatedIntensityRegion>>{};

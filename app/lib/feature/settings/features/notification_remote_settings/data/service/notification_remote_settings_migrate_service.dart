@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_remote_settings_migrate_service.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class NotificationRemoteSettingsInitialSetupNotifier
     extends _$NotificationRemoteSettingsInitialSetupNotifier {
   @override
@@ -23,6 +23,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
     final authorization = await ref.read(
       apiAuthenticationNotifierProvider.future,
     );
+    ref.keepAlive();
     if (isMigrated && authorization != null) {
       yield NotificationRemoteSettingsSetupState.completed;
       log(
