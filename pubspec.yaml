@@ -19,7 +19,6 @@ workspace:
   - packages/kyoshin_observation_point_converter_internal
   - packages/kyoshin_observation_point_types
   - packages/lat_lng
-  - packages/notification_setting_types
   - packages/earthquake_replay
   - packages/msgpack_dart
   - packages/kyoshin_monitor_api
