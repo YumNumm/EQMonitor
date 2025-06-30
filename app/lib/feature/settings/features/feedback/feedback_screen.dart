@@ -1,4 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
 
 import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
 import 'package:feedback/feedback.dart';

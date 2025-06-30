@@ -51,13 +51,13 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
           (_) async => controller.synchronized(() async {
-            if (earthquake.valueOrNull == null) {
+            if (earthquake.value == null) {
               return;
             }
 
             unawaited(
               controller.synchronized(() async {
-                final areas = _transformRegions(earthquake.valueOrNull!);
+                final areas = _transformRegions(earthquake.value!);
                 await [
                   for (final intensity in allowedIntensities)
                     // レイヤーを追加
@@ -95,13 +95,13 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
       _,
       next,
     ) async {
-      if (!isInitialized.value || next.valueOrNull == null) {
+      if (!isInitialized.value || next.value == null) {
         return;
       }
 
       unawaited(
         controller.synchronized(() async {
-          final areas = _transformRegions(next.valueOrNull!);
+          final areas = _transformRegions(next.value!);
 
           await [
             for (final intensity in allowedIntensities)

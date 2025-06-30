@@ -8,13 +8,13 @@ part of 'kyoshin_monitor_timer_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$KyoshinMonitorTimerStateImpl _$$KyoshinMonitorTimerStateImplFromJson(
+_KyoshinMonitorTimerState _$KyoshinMonitorTimerStateFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$KyoshinMonitorTimerStateImpl',
+  '_KyoshinMonitorTimerState',
   json,
   ($checkedConvert) {
-    final val = _$KyoshinMonitorTimerStateImpl(
+    final val = _KyoshinMonitorTimerState(
       delayFromDevice: $checkedConvert(
         'delay_from_device',
         (v) => Duration(microseconds: (v as num).toInt()),
@@ -32,8 +32,8 @@ _$KyoshinMonitorTimerStateImpl _$$KyoshinMonitorTimerStateImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$KyoshinMonitorTimerStateImplToJson(
-  _$KyoshinMonitorTimerStateImpl instance,
+Map<String, dynamic> _$KyoshinMonitorTimerStateToJson(
+  _KyoshinMonitorTimerState instance,
 ) => <String, dynamic>{
   'delay_from_device': instance.delayFromDevice.inMicroseconds,
   'last_synced_at': instance.lastSyncedAt?.toIso8601String(),

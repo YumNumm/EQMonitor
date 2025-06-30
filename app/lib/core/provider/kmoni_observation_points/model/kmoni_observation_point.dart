@@ -6,7 +6,7 @@ import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dar
 part 'kmoni_observation_point.freezed.dart';
 
 @freezed
-class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
+abstract class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
   const factory AnalyzedKmoniObservationPoint({
     required KyoshinObservationPoint point,
     // ここから

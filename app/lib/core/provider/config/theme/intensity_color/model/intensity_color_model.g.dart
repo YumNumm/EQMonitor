@@ -8,70 +8,69 @@ part of 'intensity_color_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$IntensityColorModelImpl _$$IntensityColorModelImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$IntensityColorModelImpl',
-  json,
-  ($checkedConvert) {
-    final val = _$IntensityColorModelImpl(
-      unknown: $checkedConvert(
-        'unknown',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      zero: $checkedConvert(
-        'zero',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      one: $checkedConvert(
-        'one',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      two: $checkedConvert(
-        'two',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      three: $checkedConvert(
-        'three',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      four: $checkedConvert(
-        'four',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      fiveLower: $checkedConvert(
-        'five_lower',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      fiveUpper: $checkedConvert(
-        'five_upper',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      sixLower: $checkedConvert(
-        'six_lower',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      sixUpper: $checkedConvert(
-        'six_upper',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
-      seven: $checkedConvert(
-        'seven',
-        (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
-      ),
+_IntensityColorModel _$IntensityColorModelFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_IntensityColorModel',
+      json,
+      ($checkedConvert) {
+        final val = _IntensityColorModel(
+          unknown: $checkedConvert(
+            'unknown',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          zero: $checkedConvert(
+            'zero',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          one: $checkedConvert(
+            'one',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          two: $checkedConvert(
+            'two',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          three: $checkedConvert(
+            'three',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          four: $checkedConvert(
+            'four',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          fiveLower: $checkedConvert(
+            'five_lower',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          fiveUpper: $checkedConvert(
+            'five_upper',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          sixLower: $checkedConvert(
+            'six_lower',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          sixUpper: $checkedConvert(
+            'six_upper',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+          seven: $checkedConvert(
+            'seven',
+            (v) => TextColorModel.fromJson(v as Map<String, dynamic>),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'fiveLower': 'five_lower',
+        'fiveUpper': 'five_upper',
+        'sixLower': 'six_lower',
+        'sixUpper': 'six_upper',
+      },
     );
-    return val;
-  },
-  fieldKeyMap: const {
-    'fiveLower': 'five_lower',
-    'fiveUpper': 'five_upper',
-    'sixLower': 'six_lower',
-    'sixUpper': 'six_upper',
-  },
-);
 
-Map<String, dynamic> _$$IntensityColorModelImplToJson(
-  _$IntensityColorModelImpl instance,
+Map<String, dynamic> _$IntensityColorModelToJson(
+  _IntensityColorModel instance,
 ) => <String, dynamic>{
   'unknown': instance.unknown,
   'zero': instance.zero,
@@ -86,9 +85,9 @@ Map<String, dynamic> _$$IntensityColorModelImplToJson(
   'seven': instance.seven,
 };
 
-_$TextColorModelImpl _$$TextColorModelImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$TextColorModelImpl', json, ($checkedConvert) {
-      final val = _$TextColorModelImpl(
+_TextColorModel _$TextColorModelFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_TextColorModel', json, ($checkedConvert) {
+      final val = _TextColorModel(
         foreground: $checkedConvert(
           'foreground',
           (v) => colorFromJson(v as String),
@@ -101,9 +100,8 @@ _$TextColorModelImpl _$$TextColorModelImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$TextColorModelImplToJson(
-  _$TextColorModelImpl instance,
-) => <String, dynamic>{
-  'foreground': colorToJson(instance.foreground),
-  'background': colorToJson(instance.background),
-};
+Map<String, dynamic> _$TextColorModelToJson(_TextColorModel instance) =>
+    <String, dynamic>{
+      'foreground': colorToJson(instance.foreground),
+      'background': colorToJson(instance.background),
+    };

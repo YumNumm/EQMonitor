@@ -7,7 +7,6 @@ SheetController useSheetController({
 }) => use(_UseSheetControllerHook(debugLabel: debugLabel));
 
 class _UseSheetControllerHook extends Hook<SheetController> {
-  // ignore: unused_element
   const _UseSheetControllerHook({this.debugLabel = 'useSheetController'});
 
   final String debugLabel;

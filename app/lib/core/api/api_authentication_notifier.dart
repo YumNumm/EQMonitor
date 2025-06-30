@@ -25,7 +25,7 @@ class ApiAuthenticationNotifier extends _$ApiAuthenticationNotifier {
   }
 
   Future<({String id, String role})> extractPayload() async {
-    final token = state.valueOrNull;
+    final token = state.value;
     if (token == null) {
       throw UnauthorizedException();
     }

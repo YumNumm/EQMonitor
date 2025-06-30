@@ -1,4 +1,0 @@
-include: package:eqmonitor_lints/analysis_options.yaml
-analyzer:
-  errors:
-    implementation_imports: ignore

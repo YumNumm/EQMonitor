@@ -8,38 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'; // 追加
 import 'package:go_router/go_router.dart';
 
-// ignore: unreachable_from_main
 class PlaygroundRoute extends GoRouteData {
-  // ignore: unreachable_from_main
   const PlaygroundRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const PlaygroundPage();
-  }
-}
-
-Future<void> main() async {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final router = GoRouter(
-      routes: [
-        GoRoute(path: '/', builder: (context, state) => const PlaygroundPage()),
-      ],
-    );
-    return MaterialApp.router(
-      title: 'Kyoshin Monitor Color Demo',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.dark,
-      routerConfig: router,
-    );
   }
 }
 
@@ -55,23 +29,20 @@ class PlaygroundPage extends StatelessWidget {
         children: [
           ListTile(
             title: const Text('ScaleCheckList'),
-            onTap:
-                () async => showDialog(
-                  context: context,
-                  builder:
-                      (context) => Scaffold(
-                        appBar: AppBar(title: const Text('ScaleCheckList')),
-                        body: const ScaleCheckList(),
-                      ),
-                ),
+            onTap: () async => showDialog(
+              context: context,
+              builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('ScaleCheckList')),
+                body: const ScaleCheckList(),
+              ),
+            ),
           ),
           ListTile(
             title: const Text('KyoshinMonitorScaleColorPage'),
-            onTap:
-                () async => showDialog(
-                  context: context,
-                  builder: (context) => const KyoshinMonitorScaleColorPage(),
-                ),
+            onTap: () async => showDialog(
+              context: context,
+              builder: (context) => const KyoshinMonitorScaleColorPage(),
+            ),
           ),
         ],
       ),
@@ -248,10 +219,9 @@ class ScaleCheckList extends StatelessWidget {
         final diff = p2 - p;
 
         final absDiff = diff.abs();
-        final textColor =
-            (absDiff < 0.002)
-                ? Colors.green
-                : (absDiff < 0.01 ? Colors.orange : Colors.red);
+        final textColor = (absDiff < 0.002)
+            ? Colors.green
+            : (absDiff < 0.01 ? Colors.orange : Colors.red);
 
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 2),
@@ -338,7 +308,6 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
       p2.value = pTmp2;
       diff.value = d;
       diffParam.value = val2 - val;
-      // ignore: deprecated_member_use
       rgbString.value = 'RGB(${c.r}, ${c.g}, ${c.b})';
     }
 
@@ -355,13 +324,12 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
                 const SizedBox(width: 8),
                 DropdownButton<ParamType>(
                   value: selectedType.value,
-                  items:
-                      ParamType.values.map((type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(type.name),
-                        );
-                      }).toList(),
+                  items: ParamType.values.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type.name),
+                    );
+                  }).toList(),
                   onChanged: (val) {
                     if (val != null) {
                       selectedType.value = val;

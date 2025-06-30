@@ -47,14 +47,14 @@ class EarthquakeHistoryEarlyNotifier extends _$EarthquakeHistoryEarlyNotifier {
       return;
     }
     // すでに全件取得済みの場合は何もしない
-    if (!(state.valueOrNull?.hasNext ?? false)) {
+    if (!(state.value?.hasNext ?? false)) {
       return;
     }
     state = const AsyncLoading<(List<EarthquakeEarly>, int totalCount)>()
         .copyWithPrevious(state);
     state = await state.guardPlus(() async {
       final repository = ref.read(earthquakeHistoryEarlyRepositoryProvider);
-      final currentData = state.valueOrNull;
+      final currentData = state.value;
       final result = await repository.fetchEarthquakeEarlyLists(
         depthGte: parameter.depthGte,
         depthLte: parameter.depthLte,

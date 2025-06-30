@@ -6,15 +6,11 @@
 	"mise.configureExtensionsUseSymLinks": true,
 	// MEMO(YumNumm): miseの自動構成では、以下の拡張に関するパスを絶対パスで設定するため無効化
 	"mise.configureExtensionsAutomaticallyIgnoreList": ["dart-code.flutter"],
-	"search.exclude": {
-		"*.geojson": true
-	},
 	"files.watcherExclude": {
 		"*.geojson": true,
 		"**/DerivedData": true
 	},
 	"files.readonlyInclude": {
-		"**/*.*.dart": true,
 		"**/*.lock": true
 	},
 	"explorer.fileNesting.enabled": true,

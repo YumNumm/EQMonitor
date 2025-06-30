@@ -8,65 +8,147 @@ part of 'estimated_intensity_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$estimatedIntensityCityHash() =>
-    r'9bcbac883935662bc3388807662d7d6a4c8f7da6';
+@ProviderFor(EstimatedIntensity)
+const estimatedIntensityProvider = EstimatedIntensityProvider._();
 
-/// See also [estimatedIntensityCity].
-@ProviderFor(estimatedIntensityCity)
-final estimatedIntensityCityProvider =
-    StreamProvider<Map<String, double>>.internal(
-      estimatedIntensityCity,
-      name: r'estimatedIntensityCityProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$estimatedIntensityCityHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final class EstimatedIntensityProvider
+    extends
+        $AsyncNotifierProvider<
+          EstimatedIntensity,
+          List<EstimatedIntensityPoint>
+        > {
+  const EstimatedIntensityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'estimatedIntensityProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EstimatedIntensityCityRef = StreamProviderRef<Map<String, double>>;
-String _$estimatedIntensityRegionHash() =>
-    r'bc6d5fcbeeb39c3b9705951ed3412df7bf83645e';
+  @override
+  String debugGetCreateSourceHash() => _$estimatedIntensityHash();
 
-/// See also [estimatedIntensityRegion].
-@ProviderFor(estimatedIntensityRegion)
-final estimatedIntensityRegionProvider =
-    StreamProvider<Map<String, double>>.internal(
-      estimatedIntensityRegion,
-      name: r'estimatedIntensityRegionProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$estimatedIntensityRegionHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+  @$internal
+  @override
+  EstimatedIntensity create() => EstimatedIntensity();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EstimatedIntensityRegionRef = StreamProviderRef<Map<String, double>>;
+  @$internal
+  @override
+  $AsyncNotifierProviderElement<
+    EstimatedIntensity,
+    List<EstimatedIntensityPoint>
+  >
+  $createElement($ProviderPointer pointer) =>
+      $AsyncNotifierProviderElement(pointer);
+}
+
 String _$estimatedIntensityHash() =>
     r'd60154c92ffedbd45ee522e8f26d8000cc8c74fd';
 
-/// See also [EstimatedIntensity].
-@ProviderFor(EstimatedIntensity)
-final estimatedIntensityProvider = AsyncNotifierProvider<
-  EstimatedIntensity,
-  List<EstimatedIntensityPoint>
->.internal(
-  EstimatedIntensity.new,
-  name: r'estimatedIntensityProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$estimatedIntensityHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$EstimatedIntensity
+    extends $AsyncNotifier<List<EstimatedIntensityPoint>> {
+  FutureOr<List<EstimatedIntensityPoint>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<List<EstimatedIntensityPoint>>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<EstimatedIntensityPoint>>>,
+              AsyncValue<List<EstimatedIntensityPoint>>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$EstimatedIntensity = AsyncNotifier<List<EstimatedIntensityPoint>>;
+@ProviderFor(estimatedIntensityCity)
+const estimatedIntensityCityProvider = EstimatedIntensityCityProvider._();
+
+final class EstimatedIntensityCityProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, double>>,
+          Stream<Map<String, double>>
+        >
+    with
+        $FutureModifier<Map<String, double>>,
+        $StreamProvider<Map<String, double>> {
+  const EstimatedIntensityCityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'estimatedIntensityCityProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$estimatedIntensityCityHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Map<String, double>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Map<String, double>> create(Ref ref) {
+    return estimatedIntensityCity(ref);
+  }
+}
+
+String _$estimatedIntensityCityHash() =>
+    r'd260dc423fc1c3c73e9ce87ab6e57ac836789ae0';
+
+@ProviderFor(estimatedIntensityRegion)
+const estimatedIntensityRegionProvider = EstimatedIntensityRegionProvider._();
+
+final class EstimatedIntensityRegionProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, double>>,
+          Stream<Map<String, double>>
+        >
+    with
+        $FutureModifier<Map<String, double>>,
+        $StreamProvider<Map<String, double>> {
+  const EstimatedIntensityRegionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'estimatedIntensityRegionProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$estimatedIntensityRegionHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Map<String, double>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Map<String, double>> create(Ref ref) {
+    return estimatedIntensityRegion(ref);
+  }
+}
+
+String _$estimatedIntensityRegionHash() =>
+    r'9d8f0d110d42dace397d6484c8079b9e3fe4f397';
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

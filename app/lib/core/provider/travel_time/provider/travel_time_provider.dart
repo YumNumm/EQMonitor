@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/travel_time/data/travel_time_data_source.dart';
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:extensions/extensions.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'travel_time_provider.g.dart';

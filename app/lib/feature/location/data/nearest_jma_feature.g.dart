@@ -8,562 +8,335 @@ part of 'nearest_jma_feature.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaMapAreaForecastLocalEewInsideHash() =>
-    r'4ff30976ac501077239e83117dfe6f126a0fa15c';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [jmaMapAreaForecastLocalEewInside].
 @ProviderFor(jmaMapAreaForecastLocalEewInside)
 const jmaMapAreaForecastLocalEewInsideProvider =
-    JmaMapAreaForecastLocalEewInsideFamily();
+    JmaMapAreaForecastLocalEewInsideFamily._();
 
-/// See also [jmaMapAreaForecastLocalEewInside].
-class JmaMapAreaForecastLocalEewInsideFamily
-    extends Family<AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>> {
-  /// See also [jmaMapAreaForecastLocalEewInside].
-  const JmaMapAreaForecastLocalEewInsideFamily();
+final class JmaMapAreaForecastLocalEewInsideProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+        >
+    with
+        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
+        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+  const JmaMapAreaForecastLocalEewInsideProvider._({
+    required JmaMapAreaForecastLocalEewInsideFamily super.from,
+    required LatLng super.argument,
+  }) : super(
+         retry: null,
+         name: r'jmaMapAreaForecastLocalEewInsideProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [jmaMapAreaForecastLocalEewInside].
-  JmaMapAreaForecastLocalEewInsideProvider call(LatLng latLng) {
-    return JmaMapAreaForecastLocalEewInsideProvider(latLng);
+  @override
+  String debugGetCreateSourceHash() => _$jmaMapAreaForecastLocalEewInsideHash();
+
+  @override
+  String toString() {
+    return r'jmaMapAreaForecastLocalEewInsideProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  JmaMapAreaForecastLocalEewInsideProvider getProviderOverride(
-    covariant JmaMapAreaForecastLocalEewInsideProvider provider,
-  ) {
-    return call(provider.latLng);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'jmaMapAreaForecastLocalEewInsideProvider';
-}
-
-/// See also [jmaMapAreaForecastLocalEewInside].
-class JmaMapAreaForecastLocalEewInsideProvider
-    extends AutoDisposeFutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// See also [jmaMapAreaForecastLocalEewInside].
-  JmaMapAreaForecastLocalEewInsideProvider(LatLng latLng)
-    : this._internal(
-        (ref) => jmaMapAreaForecastLocalEewInside(
-          ref as JmaMapAreaForecastLocalEewInsideRef,
-          latLng,
-        ),
-        from: jmaMapAreaForecastLocalEewInsideProvider,
-        name: r'jmaMapAreaForecastLocalEewInsideProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$jmaMapAreaForecastLocalEewInsideHash,
-        dependencies: JmaMapAreaForecastLocalEewInsideFamily._dependencies,
-        allTransitiveDependencies:
-            JmaMapAreaForecastLocalEewInsideFamily._allTransitiveDependencies,
-        latLng: latLng,
-      );
-
-  JmaMapAreaForecastLocalEewInsideProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.latLng,
-  }) : super.internal();
-
-  final LatLng latLng;
-
-  @override
-  Override overrideWith(
-    FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> Function(
-      JmaMapAreaForecastLocalEewInsideRef provider,
-    )
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: JmaMapAreaForecastLocalEewInsideProvider._internal(
-        (ref) => create(ref as JmaMapAreaForecastLocalEewInsideRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        latLng: latLng,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-  createElement() {
-    return _JmaMapAreaForecastLocalEewInsideProviderElement(this);
+  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+    final argument = this.argument as LatLng;
+    return jmaMapAreaForecastLocalEewInside(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
     return other is JmaMapAreaForecastLocalEewInsideProvider &&
-        other.latLng == latLng;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, latLng.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin JmaMapAreaForecastLocalEewInsideRef
-    on AutoDisposeFutureProviderRef<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// The parameter `latLng` of this provider.
-  LatLng get latLng;
-}
+String _$jmaMapAreaForecastLocalEewInsideHash() =>
+    r'4ff30976ac501077239e83117dfe6f126a0fa15c';
 
-class _JmaMapAreaForecastLocalEewInsideProviderElement
-    extends AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-    with JmaMapAreaForecastLocalEewInsideRef {
-  _JmaMapAreaForecastLocalEewInsideProviderElement(super.provider);
-
-  @override
-  LatLng get latLng =>
-      (origin as JmaMapAreaForecastLocalEewInsideProvider).latLng;
-}
-
-String _$jmaMapAreaForecastLocalEInsideHash() =>
-    r'9ff489ff43f7e78222aabaa9482e5a0edf7fa555';
-
-/// See also [jmaMapAreaForecastLocalEInside].
-@ProviderFor(jmaMapAreaForecastLocalEInside)
-const jmaMapAreaForecastLocalEInsideProvider =
-    JmaMapAreaForecastLocalEInsideFamily();
-
-/// See also [jmaMapAreaForecastLocalEInside].
-class JmaMapAreaForecastLocalEInsideFamily
-    extends Family<AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>> {
-  /// See also [jmaMapAreaForecastLocalEInside].
-  const JmaMapAreaForecastLocalEInsideFamily();
-
-  /// See also [jmaMapAreaForecastLocalEInside].
-  JmaMapAreaForecastLocalEInsideProvider call(LatLng latLng) {
-    return JmaMapAreaForecastLocalEInsideProvider(latLng);
-  }
-
-  @override
-  JmaMapAreaForecastLocalEInsideProvider getProviderOverride(
-    covariant JmaMapAreaForecastLocalEInsideProvider provider,
-  ) {
-    return call(provider.latLng);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'jmaMapAreaForecastLocalEInsideProvider';
-}
-
-/// See also [jmaMapAreaForecastLocalEInside].
-class JmaMapAreaForecastLocalEInsideProvider
-    extends AutoDisposeFutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// See also [jmaMapAreaForecastLocalEInside].
-  JmaMapAreaForecastLocalEInsideProvider(LatLng latLng)
-    : this._internal(
-        (ref) => jmaMapAreaForecastLocalEInside(
-          ref as JmaMapAreaForecastLocalEInsideRef,
-          latLng,
-        ),
-        from: jmaMapAreaForecastLocalEInsideProvider,
-        name: r'jmaMapAreaForecastLocalEInsideProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$jmaMapAreaForecastLocalEInsideHash,
-        dependencies: JmaMapAreaForecastLocalEInsideFamily._dependencies,
-        allTransitiveDependencies:
-            JmaMapAreaForecastLocalEInsideFamily._allTransitiveDependencies,
-        latLng: latLng,
+final class JmaMapAreaForecastLocalEewInsideFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
+          LatLng
+        > {
+  const JmaMapAreaForecastLocalEewInsideFamily._()
+    : super(
+        retry: null,
+        name: r'jmaMapAreaForecastLocalEewInsideProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  JmaMapAreaForecastLocalEInsideProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.latLng,
-  }) : super.internal();
-
-  final LatLng latLng;
+  JmaMapAreaForecastLocalEewInsideProvider call(LatLng latLng) =>
+      JmaMapAreaForecastLocalEewInsideProvider._(argument: latLng, from: this);
 
   @override
-  Override overrideWith(
-    FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> Function(
-      JmaMapAreaForecastLocalEInsideRef provider,
-    )
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: JmaMapAreaForecastLocalEInsideProvider._internal(
-        (ref) => create(ref as JmaMapAreaForecastLocalEInsideRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        latLng: latLng,
-      ),
-    );
+  String toString() => r'jmaMapAreaForecastLocalEewInsideProvider';
+}
+
+@ProviderFor(jmaMapAreaForecastLocalEInside)
+const jmaMapAreaForecastLocalEInsideProvider =
+    JmaMapAreaForecastLocalEInsideFamily._();
+
+final class JmaMapAreaForecastLocalEInsideProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+        >
+    with
+        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
+        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+  const JmaMapAreaForecastLocalEInsideProvider._({
+    required JmaMapAreaForecastLocalEInsideFamily super.from,
+    required LatLng super.argument,
+  }) : super(
+         retry: null,
+         name: r'jmaMapAreaForecastLocalEInsideProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$jmaMapAreaForecastLocalEInsideHash();
+
+  @override
+  String toString() {
+    return r'jmaMapAreaForecastLocalEInsideProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-  createElement() {
-    return _JmaMapAreaForecastLocalEInsideProviderElement(this);
+  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+    final argument = this.argument as LatLng;
+    return jmaMapAreaForecastLocalEInside(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
     return other is JmaMapAreaForecastLocalEInsideProvider &&
-        other.latLng == latLng;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, latLng.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin JmaMapAreaForecastLocalEInsideRef
-    on AutoDisposeFutureProviderRef<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// The parameter `latLng` of this provider.
-  LatLng get latLng;
-}
+String _$jmaMapAreaForecastLocalEInsideHash() =>
+    r'9ff489ff43f7e78222aabaa9482e5a0edf7fa555';
 
-class _JmaMapAreaForecastLocalEInsideProviderElement
-    extends AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-    with JmaMapAreaForecastLocalEInsideRef {
-  _JmaMapAreaForecastLocalEInsideProviderElement(super.provider);
-
-  @override
-  LatLng get latLng =>
-      (origin as JmaMapAreaForecastLocalEInsideProvider).latLng;
-}
-
-String _$jmaMapAreaInformationCityInsideHash() =>
-    r'93f5886776de857c7a024a68eab16e6a8accf9a0';
-
-/// See also [jmaMapAreaInformationCityInside].
-@ProviderFor(jmaMapAreaInformationCityInside)
-const jmaMapAreaInformationCityInsideProvider =
-    JmaMapAreaInformationCityInsideFamily();
-
-/// See also [jmaMapAreaInformationCityInside].
-class JmaMapAreaInformationCityInsideFamily
-    extends Family<AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>> {
-  /// See also [jmaMapAreaInformationCityInside].
-  const JmaMapAreaInformationCityInsideFamily();
-
-  /// See also [jmaMapAreaInformationCityInside].
-  JmaMapAreaInformationCityInsideProvider call(LatLng latLng) {
-    return JmaMapAreaInformationCityInsideProvider(latLng);
-  }
-
-  @override
-  JmaMapAreaInformationCityInsideProvider getProviderOverride(
-    covariant JmaMapAreaInformationCityInsideProvider provider,
-  ) {
-    return call(provider.latLng);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'jmaMapAreaInformationCityInsideProvider';
-}
-
-/// See also [jmaMapAreaInformationCityInside].
-class JmaMapAreaInformationCityInsideProvider
-    extends AutoDisposeFutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// See also [jmaMapAreaInformationCityInside].
-  JmaMapAreaInformationCityInsideProvider(LatLng latLng)
-    : this._internal(
-        (ref) => jmaMapAreaInformationCityInside(
-          ref as JmaMapAreaInformationCityInsideRef,
-          latLng,
-        ),
-        from: jmaMapAreaInformationCityInsideProvider,
-        name: r'jmaMapAreaInformationCityInsideProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$jmaMapAreaInformationCityInsideHash,
-        dependencies: JmaMapAreaInformationCityInsideFamily._dependencies,
-        allTransitiveDependencies:
-            JmaMapAreaInformationCityInsideFamily._allTransitiveDependencies,
-        latLng: latLng,
+final class JmaMapAreaForecastLocalEInsideFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
+          LatLng
+        > {
+  const JmaMapAreaForecastLocalEInsideFamily._()
+    : super(
+        retry: null,
+        name: r'jmaMapAreaForecastLocalEInsideProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  JmaMapAreaInformationCityInsideProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.latLng,
-  }) : super.internal();
-
-  final LatLng latLng;
+  JmaMapAreaForecastLocalEInsideProvider call(LatLng latLng) =>
+      JmaMapAreaForecastLocalEInsideProvider._(argument: latLng, from: this);
 
   @override
-  Override overrideWith(
-    FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> Function(
-      JmaMapAreaInformationCityInsideRef provider,
-    )
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: JmaMapAreaInformationCityInsideProvider._internal(
-        (ref) => create(ref as JmaMapAreaInformationCityInsideRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        latLng: latLng,
-      ),
-    );
+  String toString() => r'jmaMapAreaForecastLocalEInsideProvider';
+}
+
+@ProviderFor(jmaMapAreaInformationCityInside)
+const jmaMapAreaInformationCityInsideProvider =
+    JmaMapAreaInformationCityInsideFamily._();
+
+final class JmaMapAreaInformationCityInsideProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+        >
+    with
+        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
+        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+  const JmaMapAreaInformationCityInsideProvider._({
+    required JmaMapAreaInformationCityInsideFamily super.from,
+    required LatLng super.argument,
+  }) : super(
+         retry: null,
+         name: r'jmaMapAreaInformationCityInsideProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$jmaMapAreaInformationCityInsideHash();
+
+  @override
+  String toString() {
+    return r'jmaMapAreaInformationCityInsideProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-  createElement() {
-    return _JmaMapAreaInformationCityInsideProviderElement(this);
+  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+    final argument = this.argument as LatLng;
+    return jmaMapAreaInformationCityInside(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
     return other is JmaMapAreaInformationCityInsideProvider &&
-        other.latLng == latLng;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, latLng.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin JmaMapAreaInformationCityInsideRef
-    on AutoDisposeFutureProviderRef<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// The parameter `latLng` of this provider.
-  LatLng get latLng;
-}
+String _$jmaMapAreaInformationCityInsideHash() =>
+    r'93f5886776de857c7a024a68eab16e6a8accf9a0';
 
-class _JmaMapAreaInformationCityInsideProviderElement
-    extends AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-    with JmaMapAreaInformationCityInsideRef {
-  _JmaMapAreaInformationCityInsideProviderElement(super.provider);
+final class JmaMapAreaInformationCityInsideFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
+          LatLng
+        > {
+  const JmaMapAreaInformationCityInsideFamily._()
+    : super(
+        retry: null,
+        name: r'jmaMapAreaInformationCityInsideProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  JmaMapAreaInformationCityInsideProvider call(LatLng latLng) =>
+      JmaMapAreaInformationCityInsideProvider._(argument: latLng, from: this);
 
   @override
-  LatLng get latLng =>
-      (origin as JmaMapAreaInformationCityInsideProvider).latLng;
+  String toString() => r'jmaMapAreaInformationCityInsideProvider';
+}
+
+@ProviderFor(jmaMapAreaTsunamiNearest)
+const jmaMapAreaTsunamiNearestProvider = JmaMapAreaTsunamiNearestFamily._();
+
+final class JmaMapAreaTsunamiNearestProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+        >
+    with
+        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
+        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+  const JmaMapAreaTsunamiNearestProvider._({
+    required JmaMapAreaTsunamiNearestFamily super.from,
+    required LatLng super.argument,
+  }) : super(
+         retry: null,
+         name: r'jmaMapAreaTsunamiNearestProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$jmaMapAreaTsunamiNearestHash();
+
+  @override
+  String toString() {
+    return r'jmaMapAreaTsunamiNearestProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+    final argument = this.argument as LatLng;
+    return jmaMapAreaTsunamiNearest(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is JmaMapAreaTsunamiNearestProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$jmaMapAreaTsunamiNearestHash() =>
     r'1280074c335c521685a91e4152131e2209c5ef30';
 
-/// See also [jmaMapAreaTsunamiNearest].
-@ProviderFor(jmaMapAreaTsunamiNearest)
-const jmaMapAreaTsunamiNearestProvider = JmaMapAreaTsunamiNearestFamily();
-
-/// See also [jmaMapAreaTsunamiNearest].
-class JmaMapAreaTsunamiNearestFamily
-    extends Family<AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>> {
-  /// See also [jmaMapAreaTsunamiNearest].
-  const JmaMapAreaTsunamiNearestFamily();
-
-  /// See also [jmaMapAreaTsunamiNearest].
-  JmaMapAreaTsunamiNearestProvider call(LatLng latLng) {
-    return JmaMapAreaTsunamiNearestProvider(latLng);
-  }
-
-  @override
-  JmaMapAreaTsunamiNearestProvider getProviderOverride(
-    covariant JmaMapAreaTsunamiNearestProvider provider,
-  ) {
-    return call(provider.latLng);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'jmaMapAreaTsunamiNearestProvider';
-}
-
-/// See also [jmaMapAreaTsunamiNearest].
-class JmaMapAreaTsunamiNearestProvider
-    extends AutoDisposeFutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// See also [jmaMapAreaTsunamiNearest].
-  JmaMapAreaTsunamiNearestProvider(LatLng latLng)
-    : this._internal(
-        (ref) => jmaMapAreaTsunamiNearest(
-          ref as JmaMapAreaTsunamiNearestRef,
-          latLng,
-        ),
-        from: jmaMapAreaTsunamiNearestProvider,
+final class JmaMapAreaTsunamiNearestFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
+          LatLng
+        > {
+  const JmaMapAreaTsunamiNearestFamily._()
+    : super(
+        retry: null,
         name: r'jmaMapAreaTsunamiNearestProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$jmaMapAreaTsunamiNearestHash,
-        dependencies: JmaMapAreaTsunamiNearestFamily._dependencies,
-        allTransitiveDependencies:
-            JmaMapAreaTsunamiNearestFamily._allTransitiveDependencies,
-        latLng: latLng,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  JmaMapAreaTsunamiNearestProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.latLng,
-  }) : super.internal();
-
-  final LatLng latLng;
+  JmaMapAreaTsunamiNearestProvider call(LatLng latLng) =>
+      JmaMapAreaTsunamiNearestProvider._(argument: latLng, from: this);
 
   @override
-  Override overrideWith(
-    FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> Function(
-      JmaMapAreaTsunamiNearestRef provider,
-    )
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: JmaMapAreaTsunamiNearestProvider._internal(
-        (ref) => create(ref as JmaMapAreaTsunamiNearestRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        latLng: latLng,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-  createElement() {
-    return _JmaMapAreaTsunamiNearestProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is JmaMapAreaTsunamiNearestProvider && other.latLng == latLng;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, latLng.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin JmaMapAreaTsunamiNearestRef
-    on AutoDisposeFutureProviderRef<JmaMap_JmaMapData_JmaMapDataItem?> {
-  /// The parameter `latLng` of this provider.
-  LatLng get latLng;
-}
-
-class _JmaMapAreaTsunamiNearestProviderElement
-    extends AutoDisposeFutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?>
-    with JmaMapAreaTsunamiNearestRef {
-  _JmaMapAreaTsunamiNearestProviderElement(super.provider);
-
-  @override
-  LatLng get latLng => (origin as JmaMapAreaTsunamiNearestProvider).latLng;
+  String toString() => r'jmaMapAreaTsunamiNearestProvider';
 }
 
 // ignore_for_file: type=lint

@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/provider/periodic_timer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_timer_stream.g.dart';
@@ -24,11 +23,10 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
     })
     ..listen(periodicTimerProvider(key), (_, next) async {
       if (next case AsyncData()) {
-        final delay =
-            ref
-                .read(kyoshinMonitorTimerNotifierProvider)
-                .valueOrNull
-                ?.delayFromDevice;
+        final delay = ref
+            .read(kyoshinMonitorTimerNotifierProvider)
+            .value
+            ?.delayFromDevice;
         if (delay != null) {
           streamController.add(DateTime.now().subtract(delay));
         }
@@ -38,7 +36,7 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
   final kyoshinMonitorTimerNotifier = ref.read(
     kyoshinMonitorTimerNotifierProvider,
   );
-  final delay = kyoshinMonitorTimerNotifier.valueOrNull?.delayFromDevice;
+  final delay = kyoshinMonitorTimerNotifier.value?.delayFromDevice;
   if (delay != null) {
     streamController.add(DateTime.now().subtract(delay));
   }

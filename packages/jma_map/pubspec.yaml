@@ -9,12 +9,12 @@ environment:
 resolution: workspace
 
 dependencies:
-  protobuf: ^4.0.0
+  collection: ^1.19.1
   geobase: ^1.5.0
   geodata: ^1.3.0
-  collection: ^1.19.1
+  protobuf: ^4.0.0
 
 dev_dependencies:
+  altive_lints: ^1.16.0
   eqmonitor_lints:
     path: ../eqmonitor_lints
-  altive_lints: ^1.16.0

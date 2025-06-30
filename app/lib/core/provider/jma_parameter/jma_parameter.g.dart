@@ -8,40 +8,116 @@ part of 'jma_parameter.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+@ProviderFor(JmaParameter)
+const jmaParameterProvider = JmaParameterProvider._();
+
+final class JmaParameterProvider
+    extends $StreamNotifierProvider<JmaParameter, JmaParameterState> {
+  const JmaParameterProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'jmaParameterProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$jmaParameterHash();
+
+  @$internal
+  @override
+  JmaParameter create() => JmaParameter();
+
+  @$internal
+  @override
+  $StreamNotifierProviderElement<JmaParameter, JmaParameterState>
+  $createElement($ProviderPointer pointer) =>
+      $StreamNotifierProviderElement(pointer);
+}
+
 String _$jmaParameterHash() => r'27235c3f43d2ad4f6a6fbe97f8d741b8f125c2f6';
 
-/// See also [JmaParameter].
-@ProviderFor(JmaParameter)
-final jmaParameterProvider =
-    StreamNotifierProvider<JmaParameter, JmaParameterState>.internal(
-      JmaParameter.new,
-      name: r'jmaParameterProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$jmaParameterHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$JmaParameter extends $StreamNotifier<JmaParameterState> {
+  Stream<JmaParameterState> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<JmaParameterState>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<JmaParameterState>>,
+              AsyncValue<JmaParameterState>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$JmaParameter = StreamNotifier<JmaParameterState>;
+@ProviderFor(EarthquakeParameterEtag)
+const earthquakeParameterEtagProvider = EarthquakeParameterEtagProvider._();
+
+final class EarthquakeParameterEtagProvider
+    extends $NotifierProvider<EarthquakeParameterEtag, String?> {
+  const EarthquakeParameterEtagProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'earthquakeParameterEtagProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$earthquakeParameterEtagHash();
+
+  @$internal
+  @override
+  EarthquakeParameterEtag create() => EarthquakeParameterEtag();
+
+  @$internal
+  @override
+  $NotifierProviderElement<EarthquakeParameterEtag, String?> $createElement(
+    $ProviderPointer pointer,
+  ) => $NotifierProviderElement(pointer);
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $ValueProvider<String?>(value),
+    );
+  }
+}
+
 String _$earthquakeParameterEtagHash() =>
     r'2351454514903ab08fe4100dc59680743b4ee26d';
 
-/// See also [EarthquakeParameterEtag].
-@ProviderFor(EarthquakeParameterEtag)
-final earthquakeParameterEtagProvider =
-    NotifierProvider<EarthquakeParameterEtag, String?>.internal(
-      EarthquakeParameterEtag.new,
-      name: r'earthquakeParameterEtagProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$earthquakeParameterEtagHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$EarthquakeParameterEtag extends $Notifier<String?> {
+  String? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<String?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String?>,
+              String?,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$EarthquakeParameterEtag = Notifier<String?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
