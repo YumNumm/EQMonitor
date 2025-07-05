@@ -8,45 +8,40 @@ part of 'notification_settings_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NotificationSettingsRequestImpl _$$NotificationSettingsRequestImplFromJson(
+_NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$NotificationSettingsRequestImpl', json, (
-  $checkedConvert,
-) {
-  final val = _$NotificationSettingsRequestImpl(
+) => $checkedCreate('_NotificationSettingsRequest', json, ($checkedConvert) {
+  final val = _NotificationSettingsRequest(
     global: $checkedConvert(
       'global',
-      (v) =>
-          v == null
-              ? null
-              : NotificationSettingsGlobal.fromJson(v as Map<String, dynamic>),
+      (v) => v == null
+          ? null
+          : NotificationSettingsGlobal.fromJson(v as Map<String, dynamic>),
     ),
     regions: $checkedConvert(
       'regions',
-      (v) =>
-          (v as List<dynamic>?)
-              ?.map(
-                (e) => NotificationSettingsRegion.fromJson(
-                  e as Map<String, dynamic>,
-                ),
-              )
-              .toList(),
+      (v) => (v as List<dynamic>?)
+          ?.map(
+            (e) =>
+                NotificationSettingsRegion.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
     ),
   );
   return val;
 });
 
-Map<String, dynamic> _$$NotificationSettingsRequestImplToJson(
-  _$NotificationSettingsRequestImpl instance,
+Map<String, dynamic> _$NotificationSettingsRequestToJson(
+  _NotificationSettingsRequest instance,
 ) => <String, dynamic>{'global': instance.global, 'regions': instance.regions};
 
-_$NotificationSettingsGlobalImpl _$$NotificationSettingsGlobalImplFromJson(
+_NotificationSettingsGlobal _$NotificationSettingsGlobalFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$NotificationSettingsGlobalImpl',
+  '_NotificationSettingsGlobal',
   json,
   ($checkedConvert) {
-    final val = _$NotificationSettingsGlobalImpl(
+    final val = _NotificationSettingsGlobal(
       minJmaIntensity: $checkedConvert(
         'min_jma_intensity',
         (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
@@ -57,8 +52,8 @@ _$NotificationSettingsGlobalImpl _$$NotificationSettingsGlobalImplFromJson(
   fieldKeyMap: const {'minJmaIntensity': 'min_jma_intensity'},
 );
 
-Map<String, dynamic> _$$NotificationSettingsGlobalImplToJson(
-  _$NotificationSettingsGlobalImpl instance,
+Map<String, dynamic> _$NotificationSettingsGlobalToJson(
+  _NotificationSettingsGlobal instance,
 ) => <String, dynamic>{
   'min_jma_intensity': _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,
 };
@@ -77,13 +72,13 @@ const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.unknown: '不明',
 };
 
-_$NotificationSettingsRegionImpl _$$NotificationSettingsRegionImplFromJson(
+_NotificationSettingsRegion _$NotificationSettingsRegionFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$NotificationSettingsRegionImpl',
+  '_NotificationSettingsRegion',
   json,
   ($checkedConvert) {
-    final val = _$NotificationSettingsRegionImpl(
+    final val = _NotificationSettingsRegion(
       code: $checkedConvert('code', (v) => (v as num).toInt()),
       minIntensity: $checkedConvert(
         'min_intensity',
@@ -95,8 +90,8 @@ _$NotificationSettingsRegionImpl _$$NotificationSettingsRegionImplFromJson(
   fieldKeyMap: const {'minIntensity': 'min_intensity'},
 );
 
-Map<String, dynamic> _$$NotificationSettingsRegionImplToJson(
-  _$NotificationSettingsRegionImpl instance,
+Map<String, dynamic> _$NotificationSettingsRegionToJson(
+  _NotificationSettingsRegion instance,
 ) => <String, dynamic>{
   'code': instance.code,
   'min_intensity': _$JmaForecastIntensityEnumMap[instance.minIntensity]!,

@@ -4,7 +4,7 @@ part 'security.freezed.dart';
 part 'security.g.dart';
 
 @freezed
-class Security with _$Security {
+abstract class Security with _$Security {
   const factory Security({required String? realm, required String? hash}) =
       _Security;
 

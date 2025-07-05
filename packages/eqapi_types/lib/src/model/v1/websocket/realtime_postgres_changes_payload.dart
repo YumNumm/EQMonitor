@@ -65,14 +65,15 @@ sealed class RealtimePostgresChangesPayloadBase {
             json,
             (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
           ),
-        PublicTable.shakeDetectionEvents => RealtimePostgresInsertPayload<
-          ShakeDetectionWebSocketTelegram
-        >.fromJson(
-          json,
-          (v) => ShakeDetectionWebSocketTelegram.fromJson(
-            v! as Map<String, dynamic>,
+        PublicTable.shakeDetectionEvents =>
+          RealtimePostgresInsertPayload<
+            ShakeDetectionWebSocketTelegram
+          >.fromJson(
+            json,
+            (v) => ShakeDetectionWebSocketTelegram.fromJson(
+              v! as Map<String, dynamic>,
+            ),
           ),
-        ),
       },
       RealtimePostgresChangesListenEvent.update => switch (table) {
         PublicTable.earthquake =>
@@ -104,14 +105,15 @@ sealed class RealtimePostgresChangesPayloadBase {
             json,
             (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
           ),
-        PublicTable.shakeDetectionEvents => RealtimePostgresUpdatePayload<
-          ShakeDetectionWebSocketTelegram
-        >.fromJson(
-          json,
-          (v) => ShakeDetectionWebSocketTelegram.fromJson(
-            v! as Map<String, dynamic>,
+        PublicTable.shakeDetectionEvents =>
+          RealtimePostgresUpdatePayload<
+            ShakeDetectionWebSocketTelegram
+          >.fromJson(
+            json,
+            (v) => ShakeDetectionWebSocketTelegram.fromJson(
+              v! as Map<String, dynamic>,
+            ),
           ),
-        ),
       },
       RealtimePostgresChangesListenEvent.delete => switch (table) {
         PublicTable.earthquake =>
@@ -143,14 +145,15 @@ sealed class RealtimePostgresChangesPayloadBase {
             json,
             (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
           ),
-        PublicTable.shakeDetectionEvents => RealtimePostgresDeletePayload<
-          ShakeDetectionWebSocketTelegram
-        >.fromJson(
-          json,
-          (v) => ShakeDetectionWebSocketTelegram.fromJson(
-            v! as Map<String, dynamic>,
+        PublicTable.shakeDetectionEvents =>
+          RealtimePostgresDeletePayload<
+            ShakeDetectionWebSocketTelegram
+          >.fromJson(
+            json,
+            (v) => ShakeDetectionWebSocketTelegram.fromJson(
+              v! as Map<String, dynamic>,
+            ),
           ),
-        ),
       },
     };
   }
@@ -178,7 +181,7 @@ enum PublicTable {
 }
 
 @Freezed(genericArgumentFactories: true)
-class RealtimePostgresInsertPayload<T extends V1Database>
+abstract class RealtimePostgresInsertPayload<T extends V1Database>
     with _$RealtimePostgresInsertPayload<T>
     implements
         RealtimePostgresChangesPayloadBase,
@@ -202,7 +205,7 @@ class RealtimePostgresInsertPayload<T extends V1Database>
 }
 
 @Freezed(genericArgumentFactories: true)
-class RealtimePostgresUpdatePayload<T extends V1Database>
+abstract class RealtimePostgresUpdatePayload<T extends V1Database>
     with _$RealtimePostgresUpdatePayload<T>
     implements
         RealtimePostgresChangesPayloadBase,
@@ -228,7 +231,7 @@ class RealtimePostgresUpdatePayload<T extends V1Database>
 }
 
 @Freezed(genericArgumentFactories: true)
-class RealtimePostgresDeletePayload<T extends V1Database>
+abstract class RealtimePostgresDeletePayload<T extends V1Database>
     with _$RealtimePostgresDeletePayload<T>
     implements
         RealtimePostgresChangesPayloadBase,

@@ -9,16 +9,13 @@ environment:
 resolution: workspace
 
 
-# Add regular dependencies here.
 dependencies:
   collection: ^1.17.2
   freezed_annotation: ^3.0.0
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
   lat_lng:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/lat_lng
+    path: ../lat_lng
 
 dev_dependencies:
   altive_lints: ^1.16.0

@@ -8,14 +8,16 @@ part of 'result.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ResultImpl _$$ResultImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$ResultImpl', json, ($checkedConvert) {
-      final val = _$ResultImpl(
+_Result _$ResultFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_Result', json, ($checkedConvert) {
+      final val = _Result(
         status: $checkedConvert('status', (v) => v as String?),
         message: $checkedConvert('message', (v) => v as String?),
       );
       return val;
     });
 
-Map<String, dynamic> _$$ResultImplToJson(_$ResultImpl instance) =>
-    <String, dynamic>{'status': instance.status, 'message': instance.message};
+Map<String, dynamic> _$ResultToJson(_Result instance) => <String, dynamic>{
+  'status': instance.status,
+  'message': instance.message,
+};

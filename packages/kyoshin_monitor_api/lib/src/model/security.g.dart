@@ -8,14 +8,16 @@ part of 'security.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SecurityImpl _$$SecurityImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$SecurityImpl', json, ($checkedConvert) {
-      final val = _$SecurityImpl(
+_Security _$SecurityFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_Security', json, ($checkedConvert) {
+      final val = _Security(
         realm: $checkedConvert('realm', (v) => v as String?),
         hash: $checkedConvert('hash', (v) => v as String?),
       );
       return val;
     });
 
-Map<String, dynamic> _$$SecurityImplToJson(_$SecurityImpl instance) =>
-    <String, dynamic>{'realm': instance.realm, 'hash': instance.hash};
+Map<String, dynamic> _$SecurityToJson(_Security instance) => <String, dynamic>{
+  'realm': instance.realm,
+  'hash': instance.hash,
+};

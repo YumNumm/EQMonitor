@@ -8,37 +8,35 @@ part of 'earthquake.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EarthquakeParameterImpl _$$EarthquakeParameterImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(r'_$EarthquakeParameterImpl', json, ($checkedConvert) {
-  final val = _$EarthquakeParameterImpl(
-    responseId: $checkedConvert('responseId', (v) => v as String),
-    responseTime: $checkedConvert(
-      'responseTime',
-      (v) => DateTime.parse(v as String),
-    ),
-    status: $checkedConvert('status', (v) => v as String),
-    changeTime: $checkedConvert(
-      'changeTime',
-      (v) => DateTime.parse(v as String),
-    ),
-    version: $checkedConvert('version', (v) => v as String),
-    items: $checkedConvert(
-      'items',
-      (v) =>
-          (v as List<dynamic>)
+_EarthquakeParameter _$EarthquakeParameterFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_EarthquakeParameter', json, ($checkedConvert) {
+      final val = _EarthquakeParameter(
+        responseId: $checkedConvert('responseId', (v) => v as String),
+        responseTime: $checkedConvert(
+          'responseTime',
+          (v) => DateTime.parse(v as String),
+        ),
+        status: $checkedConvert('status', (v) => v as String),
+        changeTime: $checkedConvert(
+          'changeTime',
+          (v) => DateTime.parse(v as String),
+        ),
+        version: $checkedConvert('version', (v) => v as String),
+        items: $checkedConvert(
+          'items',
+          (v) => (v as List<dynamic>)
               .map(
                 (e) =>
                     EarthquakeParmaeterItem.fromJson(e as Map<String, dynamic>),
               )
               .toList(),
-    ),
-  );
-  return val;
-});
+        ),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$$EarthquakeParameterImplToJson(
-  _$EarthquakeParameterImpl instance,
+Map<String, dynamic> _$EarthquakeParameterToJson(
+  _EarthquakeParameter instance,
 ) => <String, dynamic>{
   'responseId': instance.responseId,
   'responseTime': instance.responseTime.toIso8601String(),
@@ -48,10 +46,10 @@ Map<String, dynamic> _$$EarthquakeParameterImplToJson(
   'items': instance.items,
 };
 
-_$EarthquakeParmaeterItemImpl _$$EarthquakeParmaeterItemImplFromJson(
+_EarthquakeParmaeterItem _$EarthquakeParmaeterItemFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$EarthquakeParmaeterItemImpl', json, ($checkedConvert) {
-  final val = _$EarthquakeParmaeterItemImpl(
+) => $checkedCreate('_EarthquakeParmaeterItem', json, ($checkedConvert) {
+  final val = _EarthquakeParmaeterItem(
     region: $checkedConvert(
       'region',
       (v) => ParameterRegion.fromJson(v as Map<String, dynamic>),
@@ -75,8 +73,8 @@ _$EarthquakeParmaeterItemImpl _$$EarthquakeParmaeterItemImplFromJson(
   return val;
 });
 
-Map<String, dynamic> _$$EarthquakeParmaeterItemImplToJson(
-  _$EarthquakeParmaeterItemImpl instance,
+Map<String, dynamic> _$EarthquakeParmaeterItemToJson(
+  _EarthquakeParmaeterItem instance,
 ) => <String, dynamic>{
   'region': instance.region,
   'city': instance.city,

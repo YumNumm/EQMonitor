@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,291 +10,196 @@ part of 'data_time.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-DataTime _$DataTimeFromJson(Map<String, dynamic> json) {
-  return _DataTime.fromJson(json);
-}
 
 /// @nodoc
 mixin _$DataTime {
-  Security? get security => throw _privateConstructorUsedError;
-  Result? get result => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  DateTime get latestTime => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  DateTime get requestTime => throw _privateConstructorUsedError;
+
+ Security? get security; Result? get result;@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) DateTime get latestTime;@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) DateTime get requestTime;
+/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DataTimeCopyWith<DataTime> get copyWith => _$DataTimeCopyWithImpl<DataTime>(this as DataTime, _$identity);
 
   /// Serializes this DataTime to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of DataTime
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $DataTimeCopyWith<DataTime> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DataTime&&(identical(other.security, security) || other.security == security)&&(identical(other.result, result) || other.result == result)&&(identical(other.latestTime, latestTime) || other.latestTime == latestTime)&&(identical(other.requestTime, requestTime) || other.requestTime == requestTime));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,security,result,latestTime,requestTime);
+
+@override
+String toString() {
+  return 'DataTime(security: $security, result: $result, latestTime: $latestTime, requestTime: $requestTime)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DataTimeCopyWith<$Res> {
-  factory $DataTimeCopyWith(DataTime value, $Res Function(DataTime) then) =
-      _$DataTimeCopyWithImpl<$Res, DataTime>;
-  @useResult
-  $Res call({
-    Security? security,
-    Result? result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    DateTime latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    DateTime requestTime,
-  });
+abstract mixin class $DataTimeCopyWith<$Res>  {
+  factory $DataTimeCopyWith(DataTime value, $Res Function(DataTime) _then) = _$DataTimeCopyWithImpl;
+@useResult
+$Res call({
+ Security? security, Result? result,@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) DateTime latestTime,@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) DateTime requestTime
+});
 
-  $SecurityCopyWith<$Res>? get security;
-  $ResultCopyWith<$Res>? get result;
+
+$SecurityCopyWith<$Res>? get security;$ResultCopyWith<$Res>? get result;
+
 }
-
 /// @nodoc
-class _$DataTimeCopyWithImpl<$Res, $Val extends DataTime>
+class _$DataTimeCopyWithImpl<$Res>
     implements $DataTimeCopyWith<$Res> {
-  _$DataTimeCopyWithImpl(this._value, this._then);
+  _$DataTimeCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DataTime _self;
+  final $Res Function(DataTime) _then;
 
-  /// Create a copy of DataTime
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? security = freezed,
-    Object? result = freezed,
-    Object? latestTime = null,
-    Object? requestTime = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            security:
-                freezed == security
-                    ? _value.security
-                    : security // ignore: cast_nullable_to_non_nullable
-                        as Security?,
-            result:
-                freezed == result
-                    ? _value.result
-                    : result // ignore: cast_nullable_to_non_nullable
-                        as Result?,
-            latestTime:
-                null == latestTime
-                    ? _value.latestTime
-                    : latestTime // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            requestTime:
-                null == requestTime
-                    ? _value.requestTime
-                    : requestTime // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-          )
-          as $Val,
-    );
-  }
-
-  /// Create a copy of DataTime
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $SecurityCopyWith<$Res>? get security {
-    if (_value.security == null) {
-      return null;
-    }
-
-    return $SecurityCopyWith<$Res>(_value.security!, (value) {
-      return _then(_value.copyWith(security: value) as $Val);
-    });
-  }
-
-  /// Create a copy of DataTime
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ResultCopyWith<$Res>? get result {
-    if (_value.result == null) {
-      return null;
-    }
-
-    return $ResultCopyWith<$Res>(_value.result!, (value) {
-      return _then(_value.copyWith(result: value) as $Val);
-    });
-  }
+/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? security = freezed,Object? result = freezed,Object? latestTime = null,Object? requestTime = null,}) {
+  return _then(_self.copyWith(
+security: freezed == security ? _self.security : security // ignore: cast_nullable_to_non_nullable
+as Security?,result: freezed == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
+as Result?,latestTime: null == latestTime ? _self.latestTime : latestTime // ignore: cast_nullable_to_non_nullable
+as DateTime,requestTime: null == requestTime ? _self.requestTime : requestTime // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
 }
+/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SecurityCopyWith<$Res>? get security {
+    if (_self.security == null) {
+    return null;
+  }
 
-/// @nodoc
-abstract class _$$DataTimeImplCopyWith<$Res>
-    implements $DataTimeCopyWith<$Res> {
-  factory _$$DataTimeImplCopyWith(
-    _$DataTimeImpl value,
-    $Res Function(_$DataTimeImpl) then,
-  ) = __$$DataTimeImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    Security? security,
-    Result? result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    DateTime latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    DateTime requestTime,
+  return $SecurityCopyWith<$Res>(_self.security!, (value) {
+    return _then(_self.copyWith(security: value));
   });
-
-  @override
-  $SecurityCopyWith<$Res>? get security;
-  @override
-  $ResultCopyWith<$Res>? get result;
-}
-
-/// @nodoc
-class __$$DataTimeImplCopyWithImpl<$Res>
-    extends _$DataTimeCopyWithImpl<$Res, _$DataTimeImpl>
-    implements _$$DataTimeImplCopyWith<$Res> {
-  __$$DataTimeImplCopyWithImpl(
-    _$DataTimeImpl _value,
-    $Res Function(_$DataTimeImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of DataTime
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? security = freezed,
-    Object? result = freezed,
-    Object? latestTime = null,
-    Object? requestTime = null,
-  }) {
-    return _then(
-      _$DataTimeImpl(
-        security:
-            freezed == security
-                ? _value.security
-                : security // ignore: cast_nullable_to_non_nullable
-                    as Security?,
-        result:
-            freezed == result
-                ? _value.result
-                : result // ignore: cast_nullable_to_non_nullable
-                    as Result?,
-        latestTime:
-            null == latestTime
-                ? _value.latestTime
-                : latestTime // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        requestTime:
-            null == requestTime
-                ? _value.requestTime
-                : requestTime // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-      ),
-    );
+}/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ResultCopyWith<$Res>? get result {
+    if (_self.result == null) {
+    return null;
   }
+
+  return $ResultCopyWith<$Res>(_self.result!, (value) {
+    return _then(_self.copyWith(result: value));
+  });
 }
+}
+
 
 /// @nodoc
 @JsonSerializable()
-class _$DataTimeImpl implements _DataTime {
-  const _$DataTimeImpl({
-    required this.security,
-    required this.result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    required this.latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    required this.requestTime,
+
+class _DataTime implements DataTime {
+  const _DataTime({required this.security, required this.result, @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) required this.latestTime, @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) required this.requestTime});
+  factory _DataTime.fromJson(Map<String, dynamic> json) => _$DataTimeFromJson(json);
+
+@override final  Security? security;
+@override final  Result? result;
+@override@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) final  DateTime latestTime;
+@override@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) final  DateTime requestTime;
+
+/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DataTimeCopyWith<_DataTime> get copyWith => __$DataTimeCopyWithImpl<_DataTime>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$DataTimeToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DataTime&&(identical(other.security, security) || other.security == security)&&(identical(other.result, result) || other.result == result)&&(identical(other.latestTime, latestTime) || other.latestTime == latestTime)&&(identical(other.requestTime, requestTime) || other.requestTime == requestTime));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,security,result,latestTime,requestTime);
+
+@override
+String toString() {
+  return 'DataTime(security: $security, result: $result, latestTime: $latestTime, requestTime: $requestTime)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DataTimeCopyWith<$Res> implements $DataTimeCopyWith<$Res> {
+  factory _$DataTimeCopyWith(_DataTime value, $Res Function(_DataTime) _then) = __$DataTimeCopyWithImpl;
+@override @useResult
+$Res call({
+ Security? security, Result? result,@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) DateTime latestTime,@JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString) DateTime requestTime
+});
+
+
+@override $SecurityCopyWith<$Res>? get security;@override $ResultCopyWith<$Res>? get result;
+
+}
+/// @nodoc
+class __$DataTimeCopyWithImpl<$Res>
+    implements _$DataTimeCopyWith<$Res> {
+  __$DataTimeCopyWithImpl(this._self, this._then);
+
+  final _DataTime _self;
+  final $Res Function(_DataTime) _then;
+
+/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? security = freezed,Object? result = freezed,Object? latestTime = null,Object? requestTime = null,}) {
+  return _then(_DataTime(
+security: freezed == security ? _self.security : security // ignore: cast_nullable_to_non_nullable
+as Security?,result: freezed == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
+as Result?,latestTime: null == latestTime ? _self.latestTime : latestTime // ignore: cast_nullable_to_non_nullable
+as DateTime,requestTime: null == requestTime ? _self.requestTime : requestTime // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SecurityCopyWith<$Res>? get security {
+    if (_self.security == null) {
+    return null;
+  }
+
+  return $SecurityCopyWith<$Res>(_self.security!, (value) {
+    return _then(_self.copyWith(security: value));
   });
-
-  factory _$DataTimeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DataTimeImplFromJson(json);
-
-  @override
-  final Security? security;
-  @override
-  final Result? result;
-  @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  final DateTime latestTime;
-  @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  final DateTime requestTime;
-
-  @override
-  String toString() {
-    return 'DataTime(security: $security, result: $result, latestTime: $latestTime, requestTime: $requestTime)';
+}/// Create a copy of DataTime
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ResultCopyWith<$Res>? get result {
+    if (_self.result == null) {
+    return null;
   }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DataTimeImpl &&
-            (identical(other.security, security) ||
-                other.security == security) &&
-            (identical(other.result, result) || other.result == result) &&
-            (identical(other.latestTime, latestTime) ||
-                other.latestTime == latestTime) &&
-            (identical(other.requestTime, requestTime) ||
-                other.requestTime == requestTime));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, security, result, latestTime, requestTime);
-
-  /// Create a copy of DataTime
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DataTimeImplCopyWith<_$DataTimeImpl> get copyWith =>
-      __$$DataTimeImplCopyWithImpl<_$DataTimeImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DataTimeImplToJson(this);
-  }
+  return $ResultCopyWith<$Res>(_self.result!, (value) {
+    return _then(_self.copyWith(result: value));
+  });
+}
 }
 
-abstract class _DataTime implements DataTime {
-  const factory _DataTime({
-    required final Security? security,
-    required final Result? result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    required final DateTime latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-    required final DateTime requestTime,
-  }) = _$DataTimeImpl;
-
-  factory _DataTime.fromJson(Map<String, dynamic> json) =
-      _$DataTimeImpl.fromJson;
-
-  @override
-  Security? get security;
-  @override
-  Result? get result;
-  @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  DateTime get latestTime;
-  @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  DateTime get requestTime;
-
-  /// Create a copy of DataTime
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DataTimeImplCopyWith<_$DataTimeImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

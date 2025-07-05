@@ -70,18 +70,17 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
                   10,
                 ],
                 circleStrokeColor: Colors.grey.toHexStringRGB(),
-                circleStrokeWidth:
-                    showStroke
-                        ? [
-                          'interpolate',
-                          ['linear'],
-                          ['zoom'],
-                          3,
-                          0.2,
-                          10,
-                          1,
-                        ]
-                        : 0,
+                circleStrokeWidth: showStroke
+                    ? [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        3,
+                        0.2,
+                        10,
+                        1,
+                      ]
+                    : 0,
                 circleSortKey: ['get', 'scale'],
               ),
             );
@@ -97,13 +96,13 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
     useEffect(() {
       unawaited(
         controller.synchronized(() async {
-          await controller.setLayerProperties(
-            _layerId,
-            CircleLayerProperties(
-              circleStrokeColor: Colors.grey.toHexStringRGB(),
-              circleStrokeWidth:
-                  showStroke
-                      ? [
+          if (isInitialized.value) {
+            await controller.setLayerProperties(
+              _layerId,
+              CircleLayerProperties(
+                circleStrokeColor: Colors.grey.toHexStringRGB(),
+                circleStrokeWidth: showStroke
+                    ? [
                         'interpolate',
                         ['linear'],
                         ['zoom'],
@@ -112,13 +111,14 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
                         10,
                         1,
                       ]
-                      : 0,
-            ),
-          );
+                    : 0,
+              ),
+            );
+          }
         }),
       );
       return null;
-    }, [showStroke]);
+    }, [showStroke, isInitialized.value]);
 
     ref.listen(
       kyoshinMonitorNotifierProvider.select(
@@ -164,25 +164,24 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
   ) {
     return {
       'type': 'FeatureCollection',
-      'features':
-          points
-              .map(
-                (point) => {
-                  'type': 'Feature',
-                  'geometry': {
-                    'type': 'Point',
-                    'coordinates': [
-                      point.point.location.longitude,
-                      point.point.location.latitude,
-                    ],
-                  },
-                  'properties': {
-                    'scale': point.observation.scale,
-                    'color': point.observation.color.toHexStringRGB(),
-                  },
-                },
-              )
-              .toList(),
+      'features': points
+          .map(
+            (point) => {
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [
+                  point.point.location.longitude,
+                  point.point.location.latitude,
+                ],
+              },
+              'properties': {
+                'scale': point.observation.scale,
+                'color': point.observation.color.toHexStringRGB(),
+              },
+            },
+          )
+          .toList(),
     };
   }
 }

@@ -1,89 +1,89 @@
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class EarthquakeV1Extended implements EarthquakeV1 {
-  EarthquakeV1Extended({
-    required this.maxIntensityRegionNames,
+part 'earthquake_v1_extended.freezed.dart';
+part 'earthquake_v1_extended.g.dart';
+
+@freezed
+abstract class EarthquakeV1Extended with _$EarthquakeV1Extended {
+  const factory EarthquakeV1Extended({
     required EarthquakeV1 earthquake,
-  }) : _earthquake = earthquake;
+    required List<String>? maxIntensityRegionNames,
+  }) = _EarthquakeV1Extended;
 
-  final List<String>? maxIntensityRegionNames;
-  final EarthquakeV1 _earthquake;
+  factory EarthquakeV1Extended.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeV1ExtendedFromJson(json);
 
-  @override
-  DateTime? get arrivalTime => _earthquake.arrivalTime;
+  EarthquakeV1Extended._();
 
-  @override
-  $EarthquakeV1CopyWith<EarthquakeV1> get copyWith =>
-      throw UnimplementedError();
+  int? get depth => earthquake.depth;
 
-  @override
-  int? get depth => _earthquake.depth;
+  int? get epicenterCode => earthquake.epicenterCode;
 
-  @override
-  int? get epicenterCode => _earthquake.epicenterCode;
+  int? get epicenterDetailCode => earthquake.epicenterDetailCode;
 
-  @override
-  int? get epicenterDetailCode => _earthquake.epicenterDetailCode;
+  int get eventId => earthquake.eventId;
 
-  @override
-  int get eventId => _earthquake.eventId;
+  String? get headline => earthquake.headline;
 
-  @override
-  String? get headline => _earthquake.headline;
-
-  @override
   List<ObservedRegionIntensity>? get intensityCities =>
-      _earthquake.intensityCities;
-  @override
+      earthquake.intensityCities;
+
   List<ObservedRegionIntensity>? get intensityPrefectures =>
-      _earthquake.intensityPrefectures;
-  @override
+      earthquake.intensityPrefectures;
+
   List<ObservedRegionIntensity>? get intensityRegions =>
-      _earthquake.intensityRegions;
-  @override
+      earthquake.intensityRegions;
+
   List<ObservedRegionIntensity>? get intensityStations =>
-      _earthquake.intensityStations;
-  @override
-  double? get latitude => _earthquake.latitude;
+      earthquake.intensityStations;
 
-  @override
-  double? get longitude => _earthquake.longitude;
+  double? get latitude => earthquake.latitude;
 
-  @override
+  double? get longitude => earthquake.longitude;
+
   List<ObservedRegionLpgmIntensity>? get lpgmIntensityPrefectures =>
-      _earthquake.lpgmIntensityPrefectures;
-  @override
+      earthquake.lpgmIntensityPrefectures;
+
   List<ObservedRegionLpgmIntensity>? get lpgmIntensityRegions =>
-      _earthquake.lpgmIntensityRegions;
-  @override
+      earthquake.lpgmIntensityRegions;
+
   List<ObservedRegionLpgmIntensity>? get lpgmIntenstiyStations =>
-      _earthquake.lpgmIntenstiyStations;
-  @override
-  double? get magnitude => _earthquake.magnitude;
+      earthquake.lpgmIntenstiyStations;
 
-  @override
-  String? get magnitudeCondition => _earthquake.magnitudeCondition;
+  double? get magnitude => earthquake.magnitude;
 
-  @override
-  JmaIntensity? get maxIntensity => _earthquake.maxIntensity;
+  String? get magnitudeCondition => earthquake.magnitudeCondition;
 
-  @override
-  List<int>? get maxIntensityRegionIds => _earthquake.maxIntensityRegionIds;
+  JmaIntensity? get maxIntensity => earthquake.maxIntensity;
 
-  @override
-  JmaLgIntensity? get maxLpgmIntensity => _earthquake.maxLpgmIntensity;
+  List<int>? get maxIntensityRegionIds => earthquake.maxIntensityRegionIds;
 
-  @override
-  DateTime? get originTime => _earthquake.originTime;
+  JmaLgIntensity? get maxLpgmIntensity => earthquake.maxLpgmIntensity;
 
-  @override
-  String get status => _earthquake.status;
+  DateTime? get originTime => earthquake.originTime;
 
-  @override
-  String? get text => _earthquake.text;
+  String get status => earthquake.status;
 
-  EarthquakeV1 get v1 => _earthquake;
+  String? get text => earthquake.text;
 
-  @override
-  Map<String, dynamic> toJson() => _earthquake.toJson();
+  DateTime? get arrivalTime => earthquake.arrivalTime;
+}
+
+extension EarthquakeV1ExtendedEx on EarthquakeV1Extended {
+  bool get isVolcano =>
+      (text?.contains('大規模な噴火が発生しました') ?? false) &&
+      (text?.contains('実際には、規模の大きな地震は発生していない点に留意') ?? false);
+
+  String? get volcanoName {
+    if (!isVolcano) {
+      return null;
+    }
+
+    final splitted = text?.split('分頃（日本時間）に') ?? [];
+    if (splitted.length != 2) {
+      return null;
+    }
+    return splitted[1].split('で大規模な噴火が発生しました')[0];
+  }
 }

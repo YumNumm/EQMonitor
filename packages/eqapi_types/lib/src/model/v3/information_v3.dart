@@ -4,7 +4,7 @@ part 'information_v3.freezed.dart';
 part 'information_v3.g.dart';
 
 @freezed
-class InformationV3Result with _$InformationV3Result {
+abstract class InformationV3Result with _$InformationV3Result {
   const factory InformationV3Result({required List<InformationV3> items}) =
       _InformationV3Result;
 
@@ -13,7 +13,7 @@ class InformationV3Result with _$InformationV3Result {
 }
 
 @freezed
-class InformationV3 with _$InformationV3 {
+abstract class InformationV3 with _$InformationV3 {
   const factory InformationV3({
     required int id,
     required String title,

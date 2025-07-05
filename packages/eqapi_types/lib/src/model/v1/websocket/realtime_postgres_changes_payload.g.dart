@@ -8,15 +8,15 @@ part of 'realtime_postgres_changes_payload.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RealtimePostgresInsertPayloadImpl<T>
-_$$RealtimePostgresInsertPayloadImplFromJson<T extends V1Database>(
+_RealtimePostgresInsertPayload<T>
+_$RealtimePostgresInsertPayloadFromJson<T extends V1Database>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => $checkedCreate(
-  r'_$RealtimePostgresInsertPayloadImpl',
+  '_RealtimePostgresInsertPayload',
   json,
   ($checkedConvert) {
-    final val = _$RealtimePostgresInsertPayloadImpl<T>(
+    final val = _RealtimePostgresInsertPayload<T>(
       schema: $checkedConvert('schema', (v) => v as String),
       table: $checkedConvert('table', (v) => v as String),
       commitTimestamp: $checkedConvert(
@@ -35,8 +35,8 @@ _$$RealtimePostgresInsertPayloadImplFromJson<T extends V1Database>(
 );
 
 Map<String, dynamic>
-_$$RealtimePostgresInsertPayloadImplToJson<T extends V1Database>(
-  _$RealtimePostgresInsertPayloadImpl<T> instance,
+_$RealtimePostgresInsertPayloadToJson<T extends V1Database>(
+  _RealtimePostgresInsertPayload<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'schema': instance.schema,
@@ -46,15 +46,15 @@ _$$RealtimePostgresInsertPayloadImplToJson<T extends V1Database>(
   'new': toJsonT(instance.newData),
 };
 
-_$RealtimePostgresUpdatePayloadImpl<T>
-_$$RealtimePostgresUpdatePayloadImplFromJson<T extends V1Database>(
+_RealtimePostgresUpdatePayload<T>
+_$RealtimePostgresUpdatePayloadFromJson<T extends V1Database>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => $checkedCreate(
-  r'_$RealtimePostgresUpdatePayloadImpl',
+  '_RealtimePostgresUpdatePayload',
   json,
   ($checkedConvert) {
-    final val = _$RealtimePostgresUpdatePayloadImpl<T>(
+    final val = _RealtimePostgresUpdatePayload<T>(
       schema: $checkedConvert('schema', (v) => v as String),
       table: $checkedConvert('table', (v) => v as String),
       commitTimestamp: $checkedConvert(
@@ -74,8 +74,8 @@ _$$RealtimePostgresUpdatePayloadImplFromJson<T extends V1Database>(
 );
 
 Map<String, dynamic>
-_$$RealtimePostgresUpdatePayloadImplToJson<T extends V1Database>(
-  _$RealtimePostgresUpdatePayloadImpl<T> instance,
+_$RealtimePostgresUpdatePayloadToJson<T extends V1Database>(
+  _RealtimePostgresUpdatePayload<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'schema': instance.schema,
@@ -86,15 +86,15 @@ _$$RealtimePostgresUpdatePayloadImplToJson<T extends V1Database>(
   'old': instance.old,
 };
 
-_$RealtimePostgresDeletePayloadImpl<T>
-_$$RealtimePostgresDeletePayloadImplFromJson<T extends V1Database>(
+_RealtimePostgresDeletePayload<T>
+_$RealtimePostgresDeletePayloadFromJson<T extends V1Database>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => $checkedCreate(
-  r'_$RealtimePostgresDeletePayloadImpl',
+  '_RealtimePostgresDeletePayload',
   json,
   ($checkedConvert) {
-    final val = _$RealtimePostgresDeletePayloadImpl<T>(
+    final val = _RealtimePostgresDeletePayload<T>(
       schema: $checkedConvert('schema', (v) => v as String),
       table: $checkedConvert('table', (v) => v as String),
       commitTimestamp: $checkedConvert(
@@ -113,8 +113,8 @@ _$$RealtimePostgresDeletePayloadImplFromJson<T extends V1Database>(
 );
 
 Map<String, dynamic>
-_$$RealtimePostgresDeletePayloadImplToJson<T extends V1Database>(
-  _$RealtimePostgresDeletePayloadImpl<T> instance,
+_$RealtimePostgresDeletePayloadToJson<T extends V1Database>(
+  _RealtimePostgresDeletePayload<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'schema': instance.schema,
