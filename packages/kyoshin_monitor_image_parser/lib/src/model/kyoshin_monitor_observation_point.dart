@@ -6,7 +6,8 @@ part 'kyoshin_monitor_observation_point.freezed.dart';
 part 'kyoshin_monitor_observation_point.g.dart';
 
 @freezed
-class KyoshinMonitorObservationPoint with _$KyoshinMonitorObservationPoint {
+abstract class KyoshinMonitorObservationPoint
+    with _$KyoshinMonitorObservationPoint {
   const factory KyoshinMonitorObservationPoint({
     required String code,
     required int x,
@@ -18,7 +19,7 @@ class KyoshinMonitorObservationPoint with _$KyoshinMonitorObservationPoint {
 }
 
 @freezed
-class KyoshinMonitorObservationAnalyzedPoint
+abstract class KyoshinMonitorObservationAnalyzedPoint
     with _$KyoshinMonitorObservationAnalyzedPoint {
   const factory KyoshinMonitorObservationAnalyzedPoint({
     required KyoshinMonitorObservationPoint point,

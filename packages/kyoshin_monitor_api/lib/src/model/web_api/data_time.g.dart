@@ -8,13 +8,11 @@ part of 'data_time.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DataTimeImpl _$$DataTimeImplFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate(
-  r'_$DataTimeImpl',
+_DataTime _$DataTimeFromJson(Map<String, dynamic> json) => $checkedCreate(
+  '_DataTime',
   json,
   ($checkedConvert) {
-    final val = _$DataTimeImpl(
+    final val = _DataTime(
       security: $checkedConvert(
         'security',
         (v) => v == null ? null : Security.fromJson(v as Map<String, dynamic>),
@@ -40,10 +38,9 @@ _$DataTimeImpl _$$DataTimeImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$DataTimeImplToJson(_$DataTimeImpl instance) =>
-    <String, dynamic>{
-      'security': instance.security,
-      'result': instance.result,
-      'latest_time': dateTimeToString(instance.latestTime),
-      'request_time': dateTimeToString(instance.requestTime),
-    };
+Map<String, dynamic> _$DataTimeToJson(_DataTime instance) => <String, dynamic>{
+  'security': instance.security,
+  'result': instance.result,
+  'latest_time': dateTimeToString(instance.latestTime),
+  'request_time': dateTimeToString(instance.requestTime),
+};

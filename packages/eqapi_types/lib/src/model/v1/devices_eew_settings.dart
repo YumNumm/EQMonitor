@@ -5,7 +5,7 @@ part 'devices_eew_settings.freezed.dart';
 part 'devices_eew_settings.g.dart';
 
 @freezed
-class DevicesEewSettings with _$DevicesEewSettings {
+abstract class DevicesEewSettings with _$DevicesEewSettings {
   const factory DevicesEewSettings({
     required String id,
     required JmaForecastIntensity minJmaIntensity,

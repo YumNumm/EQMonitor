@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,655 +10,314 @@ part of 'tsunami.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-TsunamiParameter _$TsunamiParameterFromJson(Map<String, dynamic> json) {
-  return _TsunamiParameter.fromJson(json);
-}
 
 /// @nodoc
 mixin _$TsunamiParameter {
-  String get responseId => throw _privateConstructorUsedError;
-  DateTime get responseTime => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
-  DateTime get changeTime => throw _privateConstructorUsedError;
-  String get version => throw _privateConstructorUsedError;
-  List<TsunamiParameterItem> get items => throw _privateConstructorUsedError;
+
+ String get responseId; DateTime get responseTime; String get status; DateTime get changeTime; String get version; List<TsunamiParameterItem> get items;
+/// Create a copy of TsunamiParameter
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiParameterCopyWith<TsunamiParameter> get copyWith => _$TsunamiParameterCopyWithImpl<TsunamiParameter>(this as TsunamiParameter, _$identity);
 
   /// Serializes this TsunamiParameter to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of TsunamiParameter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiParameterCopyWith<TsunamiParameter> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiParameter&&(identical(other.responseId, responseId) || other.responseId == responseId)&&(identical(other.responseTime, responseTime) || other.responseTime == responseTime)&&(identical(other.status, status) || other.status == status)&&(identical(other.changeTime, changeTime) || other.changeTime == changeTime)&&(identical(other.version, version) || other.version == version)&&const DeepCollectionEquality().equals(other.items, items));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,responseId,responseTime,status,changeTime,version,const DeepCollectionEquality().hash(items));
+
+@override
+String toString() {
+  return 'TsunamiParameter(responseId: $responseId, responseTime: $responseTime, status: $status, changeTime: $changeTime, version: $version, items: $items)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TsunamiParameterCopyWith<$Res> {
-  factory $TsunamiParameterCopyWith(
-    TsunamiParameter value,
-    $Res Function(TsunamiParameter) then,
-  ) = _$TsunamiParameterCopyWithImpl<$Res, TsunamiParameter>;
-  @useResult
-  $Res call({
-    String responseId,
-    DateTime responseTime,
-    String status,
-    DateTime changeTime,
-    String version,
-    List<TsunamiParameterItem> items,
-  });
-}
+abstract mixin class $TsunamiParameterCopyWith<$Res>  {
+  factory $TsunamiParameterCopyWith(TsunamiParameter value, $Res Function(TsunamiParameter) _then) = _$TsunamiParameterCopyWithImpl;
+@useResult
+$Res call({
+ String responseId, DateTime responseTime, String status, DateTime changeTime, String version, List<TsunamiParameterItem> items
+});
 
+
+
+
+}
 /// @nodoc
-class _$TsunamiParameterCopyWithImpl<$Res, $Val extends TsunamiParameter>
+class _$TsunamiParameterCopyWithImpl<$Res>
     implements $TsunamiParameterCopyWith<$Res> {
-  _$TsunamiParameterCopyWithImpl(this._value, this._then);
+  _$TsunamiParameterCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TsunamiParameter _self;
+  final $Res Function(TsunamiParameter) _then;
 
-  /// Create a copy of TsunamiParameter
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? responseId = null,
-    Object? responseTime = null,
-    Object? status = null,
-    Object? changeTime = null,
-    Object? version = null,
-    Object? items = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            responseId:
-                null == responseId
-                    ? _value.responseId
-                    : responseId // ignore: cast_nullable_to_non_nullable
-                        as String,
-            responseTime:
-                null == responseTime
-                    ? _value.responseTime
-                    : responseTime // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            status:
-                null == status
-                    ? _value.status
-                    : status // ignore: cast_nullable_to_non_nullable
-                        as String,
-            changeTime:
-                null == changeTime
-                    ? _value.changeTime
-                    : changeTime // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            version:
-                null == version
-                    ? _value.version
-                    : version // ignore: cast_nullable_to_non_nullable
-                        as String,
-            items:
-                null == items
-                    ? _value.items
-                    : items // ignore: cast_nullable_to_non_nullable
-                        as List<TsunamiParameterItem>,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of TsunamiParameter
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? responseId = null,Object? responseTime = null,Object? status = null,Object? changeTime = null,Object? version = null,Object? items = null,}) {
+  return _then(_self.copyWith(
+responseId: null == responseId ? _self.responseId : responseId // ignore: cast_nullable_to_non_nullable
+as String,responseTime: null == responseTime ? _self.responseTime : responseTime // ignore: cast_nullable_to_non_nullable
+as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,changeTime: null == changeTime ? _self.changeTime : changeTime // ignore: cast_nullable_to_non_nullable
+as DateTime,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<TsunamiParameterItem>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TsunamiParameterImplCopyWith<$Res>
-    implements $TsunamiParameterCopyWith<$Res> {
-  factory _$$TsunamiParameterImplCopyWith(
-    _$TsunamiParameterImpl value,
-    $Res Function(_$TsunamiParameterImpl) then,
-  ) = __$$TsunamiParameterImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String responseId,
-    DateTime responseTime,
-    String status,
-    DateTime changeTime,
-    String version,
-    List<TsunamiParameterItem> items,
-  });
 }
 
-/// @nodoc
-class __$$TsunamiParameterImplCopyWithImpl<$Res>
-    extends _$TsunamiParameterCopyWithImpl<$Res, _$TsunamiParameterImpl>
-    implements _$$TsunamiParameterImplCopyWith<$Res> {
-  __$$TsunamiParameterImplCopyWithImpl(
-    _$TsunamiParameterImpl _value,
-    $Res Function(_$TsunamiParameterImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of TsunamiParameter
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? responseId = null,
-    Object? responseTime = null,
-    Object? status = null,
-    Object? changeTime = null,
-    Object? version = null,
-    Object? items = null,
-  }) {
-    return _then(
-      _$TsunamiParameterImpl(
-        responseId:
-            null == responseId
-                ? _value.responseId
-                : responseId // ignore: cast_nullable_to_non_nullable
-                    as String,
-        responseTime:
-            null == responseTime
-                ? _value.responseTime
-                : responseTime // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        status:
-            null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                    as String,
-        changeTime:
-            null == changeTime
-                ? _value.changeTime
-                : changeTime // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        version:
-            null == version
-                ? _value.version
-                : version // ignore: cast_nullable_to_non_nullable
-                    as String,
-        items:
-            null == items
-                ? _value._items
-                : items // ignore: cast_nullable_to_non_nullable
-                    as List<TsunamiParameterItem>,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$TsunamiParameterImpl implements _TsunamiParameter {
-  const _$TsunamiParameterImpl({
-    required this.responseId,
-    required this.responseTime,
-    required this.status,
-    required this.changeTime,
-    required this.version,
-    required final List<TsunamiParameterItem> items,
-  }) : _items = items;
 
-  factory _$TsunamiParameterImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiParameterImplFromJson(json);
+class _TsunamiParameter implements TsunamiParameter {
+  const _TsunamiParameter({required this.responseId, required this.responseTime, required this.status, required this.changeTime, required this.version, required final  List<TsunamiParameterItem> items}): _items = items;
+  factory _TsunamiParameter.fromJson(Map<String, dynamic> json) => _$TsunamiParameterFromJson(json);
 
-  @override
-  final String responseId;
-  @override
-  final DateTime responseTime;
-  @override
-  final String status;
-  @override
-  final DateTime changeTime;
-  @override
-  final String version;
-  final List<TsunamiParameterItem> _items;
-  @override
-  List<TsunamiParameterItem> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
-  }
-
-  @override
-  String toString() {
-    return 'TsunamiParameter(responseId: $responseId, responseTime: $responseTime, status: $status, changeTime: $changeTime, version: $version, items: $items)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TsunamiParameterImpl &&
-            (identical(other.responseId, responseId) ||
-                other.responseId == responseId) &&
-            (identical(other.responseTime, responseTime) ||
-                other.responseTime == responseTime) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.changeTime, changeTime) ||
-                other.changeTime == changeTime) &&
-            (identical(other.version, version) || other.version == version) &&
-            const DeepCollectionEquality().equals(other._items, _items));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    responseId,
-    responseTime,
-    status,
-    changeTime,
-    version,
-    const DeepCollectionEquality().hash(_items),
-  );
-
-  /// Create a copy of TsunamiParameter
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TsunamiParameterImplCopyWith<_$TsunamiParameterImpl> get copyWith =>
-      __$$TsunamiParameterImplCopyWithImpl<_$TsunamiParameterImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TsunamiParameterImplToJson(this);
-  }
+@override final  String responseId;
+@override final  DateTime responseTime;
+@override final  String status;
+@override final  DateTime changeTime;
+@override final  String version;
+ final  List<TsunamiParameterItem> _items;
+@override List<TsunamiParameterItem> get items {
+  if (_items is EqualUnmodifiableListView) return _items;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_items);
 }
 
-abstract class _TsunamiParameter implements TsunamiParameter {
-  const factory _TsunamiParameter({
-    required final String responseId,
-    required final DateTime responseTime,
-    required final String status,
-    required final DateTime changeTime,
-    required final String version,
-    required final List<TsunamiParameterItem> items,
-  }) = _$TsunamiParameterImpl;
 
-  factory _TsunamiParameter.fromJson(Map<String, dynamic> json) =
-      _$TsunamiParameterImpl.fromJson;
+/// Create a copy of TsunamiParameter
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TsunamiParameterCopyWith<_TsunamiParameter> get copyWith => __$TsunamiParameterCopyWithImpl<_TsunamiParameter>(this, _$identity);
 
-  @override
-  String get responseId;
-  @override
-  DateTime get responseTime;
-  @override
-  String get status;
-  @override
-  DateTime get changeTime;
-  @override
-  String get version;
-  @override
-  List<TsunamiParameterItem> get items;
-
-  /// Create a copy of TsunamiParameter
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiParameterImplCopyWith<_$TsunamiParameterImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiParameterToJson(this, );
 }
 
-TsunamiParameterItem _$TsunamiParameterItemFromJson(Map<String, dynamic> json) {
-  return _TsunamiParameterItem.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiParameter&&(identical(other.responseId, responseId) || other.responseId == responseId)&&(identical(other.responseTime, responseTime) || other.responseTime == responseTime)&&(identical(other.status, status) || other.status == status)&&(identical(other.changeTime, changeTime) || other.changeTime == changeTime)&&(identical(other.version, version) || other.version == version)&&const DeepCollectionEquality().equals(other._items, _items));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,responseId,responseTime,status,changeTime,version,const DeepCollectionEquality().hash(_items));
+
+@override
+String toString() {
+  return 'TsunamiParameter(responseId: $responseId, responseTime: $responseTime, status: $status, changeTime: $changeTime, version: $version, items: $items)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TsunamiParameterCopyWith<$Res> implements $TsunamiParameterCopyWith<$Res> {
+  factory _$TsunamiParameterCopyWith(_TsunamiParameter value, $Res Function(_TsunamiParameter) _then) = __$TsunamiParameterCopyWithImpl;
+@override @useResult
+$Res call({
+ String responseId, DateTime responseTime, String status, DateTime changeTime, String version, List<TsunamiParameterItem> items
+});
+
+
+
+
+}
+/// @nodoc
+class __$TsunamiParameterCopyWithImpl<$Res>
+    implements _$TsunamiParameterCopyWith<$Res> {
+  __$TsunamiParameterCopyWithImpl(this._self, this._then);
+
+  final _TsunamiParameter _self;
+  final $Res Function(_TsunamiParameter) _then;
+
+/// Create a copy of TsunamiParameter
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? responseId = null,Object? responseTime = null,Object? status = null,Object? changeTime = null,Object? version = null,Object? items = null,}) {
+  return _then(_TsunamiParameter(
+responseId: null == responseId ? _self.responseId : responseId // ignore: cast_nullable_to_non_nullable
+as String,responseTime: null == responseTime ? _self.responseTime : responseTime // ignore: cast_nullable_to_non_nullable
+as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,changeTime: null == changeTime ? _self.changeTime : changeTime // ignore: cast_nullable_to_non_nullable
+as DateTime,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<TsunamiParameterItem>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$TsunamiParameterItem {
-  String? get area => throw _privateConstructorUsedError;
-  String get prefecture => throw _privateConstructorUsedError;
-  String get code => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get kana => throw _privateConstructorUsedError;
-  String get owner => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-  double get latitude => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-  double get longitude => throw _privateConstructorUsedError;
+
+ String? get area; String get prefecture; String get code; String get name; String get kana; String get owner;@JsonKey(fromJson: doubleFromString, toJson: doubleToString) double get latitude;@JsonKey(fromJson: doubleFromString, toJson: doubleToString) double get longitude;
+/// Create a copy of TsunamiParameterItem
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiParameterItemCopyWith<TsunamiParameterItem> get copyWith => _$TsunamiParameterItemCopyWithImpl<TsunamiParameterItem>(this as TsunamiParameterItem, _$identity);
 
   /// Serializes this TsunamiParameterItem to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of TsunamiParameterItem
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiParameterItemCopyWith<TsunamiParameterItem> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiParameterItem&&(identical(other.area, area) || other.area == area)&&(identical(other.prefecture, prefecture) || other.prefecture == prefecture)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,area,prefecture,code,name,kana,owner,latitude,longitude);
+
+@override
+String toString() {
+  return 'TsunamiParameterItem(area: $area, prefecture: $prefecture, code: $code, name: $name, kana: $kana, owner: $owner, latitude: $latitude, longitude: $longitude)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TsunamiParameterItemCopyWith<$Res> {
-  factory $TsunamiParameterItemCopyWith(
-    TsunamiParameterItem value,
-    $Res Function(TsunamiParameterItem) then,
-  ) = _$TsunamiParameterItemCopyWithImpl<$Res, TsunamiParameterItem>;
-  @useResult
-  $Res call({
-    String? area,
-    String prefecture,
-    String code,
-    String name,
-    String kana,
-    String owner,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    double latitude,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    double longitude,
-  });
-}
+abstract mixin class $TsunamiParameterItemCopyWith<$Res>  {
+  factory $TsunamiParameterItemCopyWith(TsunamiParameterItem value, $Res Function(TsunamiParameterItem) _then) = _$TsunamiParameterItemCopyWithImpl;
+@useResult
+$Res call({
+ String? area, String prefecture, String code, String name, String kana, String owner,@JsonKey(fromJson: doubleFromString, toJson: doubleToString) double latitude,@JsonKey(fromJson: doubleFromString, toJson: doubleToString) double longitude
+});
 
+
+
+
+}
 /// @nodoc
-class _$TsunamiParameterItemCopyWithImpl<
-  $Res,
-  $Val extends TsunamiParameterItem
->
+class _$TsunamiParameterItemCopyWithImpl<$Res>
     implements $TsunamiParameterItemCopyWith<$Res> {
-  _$TsunamiParameterItemCopyWithImpl(this._value, this._then);
+  _$TsunamiParameterItemCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TsunamiParameterItem _self;
+  final $Res Function(TsunamiParameterItem) _then;
 
-  /// Create a copy of TsunamiParameterItem
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? area = freezed,
-    Object? prefecture = null,
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-    Object? owner = null,
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            area:
-                freezed == area
-                    ? _value.area
-                    : area // ignore: cast_nullable_to_non_nullable
-                        as String?,
-            prefecture:
-                null == prefecture
-                    ? _value.prefecture
-                    : prefecture // ignore: cast_nullable_to_non_nullable
-                        as String,
-            code:
-                null == code
-                    ? _value.code
-                    : code // ignore: cast_nullable_to_non_nullable
-                        as String,
-            name:
-                null == name
-                    ? _value.name
-                    : name // ignore: cast_nullable_to_non_nullable
-                        as String,
-            kana:
-                null == kana
-                    ? _value.kana
-                    : kana // ignore: cast_nullable_to_non_nullable
-                        as String,
-            owner:
-                null == owner
-                    ? _value.owner
-                    : owner // ignore: cast_nullable_to_non_nullable
-                        as String,
-            latitude:
-                null == latitude
-                    ? _value.latitude
-                    : latitude // ignore: cast_nullable_to_non_nullable
-                        as double,
-            longitude:
-                null == longitude
-                    ? _value.longitude
-                    : longitude // ignore: cast_nullable_to_non_nullable
-                        as double,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of TsunamiParameterItem
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? area = freezed,Object? prefecture = null,Object? code = null,Object? name = null,Object? kana = null,Object? owner = null,Object? latitude = null,Object? longitude = null,}) {
+  return _then(_self.copyWith(
+area: freezed == area ? _self.area : area // ignore: cast_nullable_to_non_nullable
+as String?,prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,kana: null == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
+as String,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
+as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TsunamiParameterItemImplCopyWith<$Res>
-    implements $TsunamiParameterItemCopyWith<$Res> {
-  factory _$$TsunamiParameterItemImplCopyWith(
-    _$TsunamiParameterItemImpl value,
-    $Res Function(_$TsunamiParameterItemImpl) then,
-  ) = __$$TsunamiParameterItemImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String? area,
-    String prefecture,
-    String code,
-    String name,
-    String kana,
-    String owner,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    double latitude,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    double longitude,
-  });
 }
 
-/// @nodoc
-class __$$TsunamiParameterItemImplCopyWithImpl<$Res>
-    extends _$TsunamiParameterItemCopyWithImpl<$Res, _$TsunamiParameterItemImpl>
-    implements _$$TsunamiParameterItemImplCopyWith<$Res> {
-  __$$TsunamiParameterItemImplCopyWithImpl(
-    _$TsunamiParameterItemImpl _value,
-    $Res Function(_$TsunamiParameterItemImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of TsunamiParameterItem
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? area = freezed,
-    Object? prefecture = null,
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-    Object? owner = null,
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(
-      _$TsunamiParameterItemImpl(
-        area:
-            freezed == area
-                ? _value.area
-                : area // ignore: cast_nullable_to_non_nullable
-                    as String?,
-        prefecture:
-            null == prefecture
-                ? _value.prefecture
-                : prefecture // ignore: cast_nullable_to_non_nullable
-                    as String,
-        code:
-            null == code
-                ? _value.code
-                : code // ignore: cast_nullable_to_non_nullable
-                    as String,
-        name:
-            null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                    as String,
-        kana:
-            null == kana
-                ? _value.kana
-                : kana // ignore: cast_nullable_to_non_nullable
-                    as String,
-        owner:
-            null == owner
-                ? _value.owner
-                : owner // ignore: cast_nullable_to_non_nullable
-                    as String,
-        latitude:
-            null == latitude
-                ? _value.latitude
-                : latitude // ignore: cast_nullable_to_non_nullable
-                    as double,
-        longitude:
-            null == longitude
-                ? _value.longitude
-                : longitude // ignore: cast_nullable_to_non_nullable
-                    as double,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$TsunamiParameterItemImpl implements _TsunamiParameterItem {
-  const _$TsunamiParameterItemImpl({
-    required this.area,
-    required this.prefecture,
-    required this.code,
-    required this.name,
-    required this.kana,
-    required this.owner,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    required this.latitude,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    required this.longitude,
-  });
 
-  factory _$TsunamiParameterItemImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiParameterItemImplFromJson(json);
+class _TsunamiParameterItem implements TsunamiParameterItem {
+  const _TsunamiParameterItem({required this.area, required this.prefecture, required this.code, required this.name, required this.kana, required this.owner, @JsonKey(fromJson: doubleFromString, toJson: doubleToString) required this.latitude, @JsonKey(fromJson: doubleFromString, toJson: doubleToString) required this.longitude});
+  factory _TsunamiParameterItem.fromJson(Map<String, dynamic> json) => _$TsunamiParameterItemFromJson(json);
 
-  @override
-  final String? area;
-  @override
-  final String prefecture;
-  @override
-  final String code;
-  @override
-  final String name;
-  @override
-  final String kana;
-  @override
-  final String owner;
-  @override
-  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-  final double latitude;
-  @override
-  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-  final double longitude;
+@override final  String? area;
+@override final  String prefecture;
+@override final  String code;
+@override final  String name;
+@override final  String kana;
+@override final  String owner;
+@override@JsonKey(fromJson: doubleFromString, toJson: doubleToString) final  double latitude;
+@override@JsonKey(fromJson: doubleFromString, toJson: doubleToString) final  double longitude;
 
-  @override
-  String toString() {
-    return 'TsunamiParameterItem(area: $area, prefecture: $prefecture, code: $code, name: $name, kana: $kana, owner: $owner, latitude: $latitude, longitude: $longitude)';
-  }
+/// Create a copy of TsunamiParameterItem
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TsunamiParameterItemCopyWith<_TsunamiParameterItem> get copyWith => __$TsunamiParameterItemCopyWithImpl<_TsunamiParameterItem>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TsunamiParameterItemImpl &&
-            (identical(other.area, area) || other.area == area) &&
-            (identical(other.prefecture, prefecture) ||
-                other.prefecture == prefecture) &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.kana, kana) || other.kana == kana) &&
-            (identical(other.owner, owner) || other.owner == owner) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    area,
-    prefecture,
-    code,
-    name,
-    kana,
-    owner,
-    latitude,
-    longitude,
-  );
-
-  /// Create a copy of TsunamiParameterItem
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TsunamiParameterItemImplCopyWith<_$TsunamiParameterItemImpl>
-  get copyWith =>
-      __$$TsunamiParameterItemImplCopyWithImpl<_$TsunamiParameterItemImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TsunamiParameterItemImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiParameterItemToJson(this, );
 }
 
-abstract class _TsunamiParameterItem implements TsunamiParameterItem {
-  const factory _TsunamiParameterItem({
-    required final String? area,
-    required final String prefecture,
-    required final String code,
-    required final String name,
-    required final String kana,
-    required final String owner,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    required final double latitude,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-    required final double longitude,
-  }) = _$TsunamiParameterItemImpl;
-
-  factory _TsunamiParameterItem.fromJson(Map<String, dynamic> json) =
-      _$TsunamiParameterItemImpl.fromJson;
-
-  @override
-  String? get area;
-  @override
-  String get prefecture;
-  @override
-  String get code;
-  @override
-  String get name;
-  @override
-  String get kana;
-  @override
-  String get owner;
-  @override
-  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-  double get latitude;
-  @override
-  @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-  double get longitude;
-
-  /// Create a copy of TsunamiParameterItem
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiParameterItemImplCopyWith<_$TsunamiParameterItemImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiParameterItem&&(identical(other.area, area) || other.area == area)&&(identical(other.prefecture, prefecture) || other.prefecture == prefecture)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,area,prefecture,code,name,kana,owner,latitude,longitude);
+
+@override
+String toString() {
+  return 'TsunamiParameterItem(area: $area, prefecture: $prefecture, code: $code, name: $name, kana: $kana, owner: $owner, latitude: $latitude, longitude: $longitude)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TsunamiParameterItemCopyWith<$Res> implements $TsunamiParameterItemCopyWith<$Res> {
+  factory _$TsunamiParameterItemCopyWith(_TsunamiParameterItem value, $Res Function(_TsunamiParameterItem) _then) = __$TsunamiParameterItemCopyWithImpl;
+@override @useResult
+$Res call({
+ String? area, String prefecture, String code, String name, String kana, String owner,@JsonKey(fromJson: doubleFromString, toJson: doubleToString) double latitude,@JsonKey(fromJson: doubleFromString, toJson: doubleToString) double longitude
+});
+
+
+
+
+}
+/// @nodoc
+class __$TsunamiParameterItemCopyWithImpl<$Res>
+    implements _$TsunamiParameterItemCopyWith<$Res> {
+  __$TsunamiParameterItemCopyWithImpl(this._self, this._then);
+
+  final _TsunamiParameterItem _self;
+  final $Res Function(_TsunamiParameterItem) _then;
+
+/// Create a copy of TsunamiParameterItem
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? area = freezed,Object? prefecture = null,Object? code = null,Object? name = null,Object? kana = null,Object? owner = null,Object? latitude = null,Object? longitude = null,}) {
+  return _then(_TsunamiParameterItem(
+area: freezed == area ? _self.area : area // ignore: cast_nullable_to_non_nullable
+as String?,prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,kana: null == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
+as String,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
+as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -19,7 +19,7 @@ final class FcmTokenChangeDetectorProvider
         argument: null,
         retry: null,
         name: r'fcmTokenChangeDetectorProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -39,7 +39,7 @@ final class FcmTokenChangeDetectorProvider
 }
 
 String _$fcmTokenChangeDetectorHash() =>
-    r'f243d26545f8246b8690482adeb80b9643bf6079';
+    r'bad2e1ff458e3076d8adb41f365864a69f694e46';
 
 abstract class _$FcmTokenChangeDetector extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

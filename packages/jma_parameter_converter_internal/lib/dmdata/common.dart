@@ -4,7 +4,7 @@ part 'common.freezed.dart';
 part 'common.g.dart';
 
 @freezed
-class ParameterRegion with _$ParameterRegion {
+abstract class ParameterRegion with _$ParameterRegion {
   const factory ParameterRegion({
     required String code,
     required String name,
@@ -16,7 +16,7 @@ class ParameterRegion with _$ParameterRegion {
 }
 
 @freezed
-class ParameterCity with _$ParameterCity {
+abstract class ParameterCity with _$ParameterCity {
   const factory ParameterCity({
     required String code,
     required String name,

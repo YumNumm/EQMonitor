@@ -4,7 +4,7 @@ part 'app_information.freezed.dart';
 part 'app_information.g.dart';
 
 @freezed
-class AppInformation with _$AppInformation {
+abstract class AppInformation with _$AppInformation {
   const factory AppInformation({
     required PlatformAppInformation ios,
     required PlatformAppInformation android,
@@ -15,7 +15,7 @@ class AppInformation with _$AppInformation {
 }
 
 @freezed
-class PlatformAppInformation with _$PlatformAppInformation {
+abstract class PlatformAppInformation with _$PlatformAppInformation {
   const factory PlatformAppInformation({
     required AppVersion? latest,
     required AppVersion? minimum,
@@ -27,7 +27,7 @@ class PlatformAppInformation with _$PlatformAppInformation {
 }
 
 @freezed
-class AppVersion with _$AppVersion {
+abstract class AppVersion with _$AppVersion {
   const factory AppVersion({
     required String version,
     required String? message,

@@ -20,7 +20,7 @@ final class KyoshinMonitorNotifierProvider
         argument: null,
         retry: null,
         name: r'kyoshinMonitorNotifierProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -40,7 +40,7 @@ final class KyoshinMonitorNotifierProvider
 }
 
 String _$kyoshinMonitorNotifierHash() =>
-    r'75d77e477b5ff51625a240d35d0c36f27b2e551e';
+    r'8a878dff247cd95647f48e51800268d081aee526';
 
 abstract class _$KyoshinMonitorNotifier
     extends $AsyncNotifier<KyoshinMonitorState> {

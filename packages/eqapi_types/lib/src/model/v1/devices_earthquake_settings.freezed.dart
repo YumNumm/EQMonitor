@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,284 +10,151 @@ part of 'devices_earthquake_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-DevicesEarthquakeSettings _$DevicesEarthquakeSettingsFromJson(
-  Map<String, dynamic> json,
-) {
-  return _DevicesEarthquakeSettings.fromJson(json);
-}
 
 /// @nodoc
 mixin _$DevicesEarthquakeSettings {
-  String get id => throw _privateConstructorUsedError;
-  JmaForecastIntensity get minJmaIntensity =>
-      throw _privateConstructorUsedError;
-  int get regionId => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+
+ String get id; JmaForecastIntensity get minJmaIntensity; int get regionId; DateTime get createdAt; DateTime get updatedAt;
+/// Create a copy of DevicesEarthquakeSettings
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DevicesEarthquakeSettingsCopyWith<DevicesEarthquakeSettings> get copyWith => _$DevicesEarthquakeSettingsCopyWithImpl<DevicesEarthquakeSettings>(this as DevicesEarthquakeSettings, _$identity);
 
   /// Serializes this DevicesEarthquakeSettings to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of DevicesEarthquakeSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $DevicesEarthquakeSettingsCopyWith<DevicesEarthquakeSettings> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DevicesEarthquakeSettings&&(identical(other.id, id) || other.id == id)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,minJmaIntensity,regionId,createdAt,updatedAt);
+
+@override
+String toString() {
+  return 'DevicesEarthquakeSettings(id: $id, minJmaIntensity: $minJmaIntensity, regionId: $regionId, createdAt: $createdAt, updatedAt: $updatedAt)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DevicesEarthquakeSettingsCopyWith<$Res> {
-  factory $DevicesEarthquakeSettingsCopyWith(
-    DevicesEarthquakeSettings value,
-    $Res Function(DevicesEarthquakeSettings) then,
-  ) = _$DevicesEarthquakeSettingsCopyWithImpl<$Res, DevicesEarthquakeSettings>;
-  @useResult
-  $Res call({
-    String id,
-    JmaForecastIntensity minJmaIntensity,
-    int regionId,
-    DateTime createdAt,
-    DateTime updatedAt,
-  });
-}
+abstract mixin class $DevicesEarthquakeSettingsCopyWith<$Res>  {
+  factory $DevicesEarthquakeSettingsCopyWith(DevicesEarthquakeSettings value, $Res Function(DevicesEarthquakeSettings) _then) = _$DevicesEarthquakeSettingsCopyWithImpl;
+@useResult
+$Res call({
+ String id, JmaForecastIntensity minJmaIntensity, int regionId, DateTime createdAt, DateTime updatedAt
+});
 
+
+
+
+}
 /// @nodoc
-class _$DevicesEarthquakeSettingsCopyWithImpl<
-  $Res,
-  $Val extends DevicesEarthquakeSettings
->
+class _$DevicesEarthquakeSettingsCopyWithImpl<$Res>
     implements $DevicesEarthquakeSettingsCopyWith<$Res> {
-  _$DevicesEarthquakeSettingsCopyWithImpl(this._value, this._then);
+  _$DevicesEarthquakeSettingsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DevicesEarthquakeSettings _self;
+  final $Res Function(DevicesEarthquakeSettings) _then;
 
-  /// Create a copy of DevicesEarthquakeSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? minJmaIntensity = null,
-    Object? regionId = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            id:
-                null == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
-                        as String,
-            minJmaIntensity:
-                null == minJmaIntensity
-                    ? _value.minJmaIntensity
-                    : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-                        as JmaForecastIntensity,
-            regionId:
-                null == regionId
-                    ? _value.regionId
-                    : regionId // ignore: cast_nullable_to_non_nullable
-                        as int,
-            createdAt:
-                null == createdAt
-                    ? _value.createdAt
-                    : createdAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-            updatedAt:
-                null == updatedAt
-                    ? _value.updatedAt
-                    : updatedAt // ignore: cast_nullable_to_non_nullable
-                        as DateTime,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of DevicesEarthquakeSettings
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? minJmaIntensity = null,Object? regionId = null,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
+as JmaForecastIntensity,regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
 }
 
-/// @nodoc
-abstract class _$$DevicesEarthquakeSettingsImplCopyWith<$Res>
-    implements $DevicesEarthquakeSettingsCopyWith<$Res> {
-  factory _$$DevicesEarthquakeSettingsImplCopyWith(
-    _$DevicesEarthquakeSettingsImpl value,
-    $Res Function(_$DevicesEarthquakeSettingsImpl) then,
-  ) = __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String id,
-    JmaForecastIntensity minJmaIntensity,
-    int regionId,
-    DateTime createdAt,
-    DateTime updatedAt,
-  });
 }
 
-/// @nodoc
-class __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>
-    extends
-        _$DevicesEarthquakeSettingsCopyWithImpl<
-          $Res,
-          _$DevicesEarthquakeSettingsImpl
-        >
-    implements _$$DevicesEarthquakeSettingsImplCopyWith<$Res> {
-  __$$DevicesEarthquakeSettingsImplCopyWithImpl(
-    _$DevicesEarthquakeSettingsImpl _value,
-    $Res Function(_$DevicesEarthquakeSettingsImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of DevicesEarthquakeSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? minJmaIntensity = null,
-    Object? regionId = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-  }) {
-    return _then(
-      _$DevicesEarthquakeSettingsImpl(
-        id:
-            null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                    as String,
-        minJmaIntensity:
-            null == minJmaIntensity
-                ? _value.minJmaIntensity
-                : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-                    as JmaForecastIntensity,
-        regionId:
-            null == regionId
-                ? _value.regionId
-                : regionId // ignore: cast_nullable_to_non_nullable
-                    as int,
-        createdAt:
-            null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-        updatedAt:
-            null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                    as DateTime,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$DevicesEarthquakeSettingsImpl implements _DevicesEarthquakeSettings {
-  const _$DevicesEarthquakeSettingsImpl({
-    required this.id,
-    required this.minJmaIntensity,
-    required this.regionId,
-    required this.createdAt,
-    required this.updatedAt,
-  });
 
-  factory _$DevicesEarthquakeSettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DevicesEarthquakeSettingsImplFromJson(json);
+class _DevicesEarthquakeSettings implements DevicesEarthquakeSettings {
+  const _DevicesEarthquakeSettings({required this.id, required this.minJmaIntensity, required this.regionId, required this.createdAt, required this.updatedAt});
+  factory _DevicesEarthquakeSettings.fromJson(Map<String, dynamic> json) => _$DevicesEarthquakeSettingsFromJson(json);
 
-  @override
-  final String id;
-  @override
-  final JmaForecastIntensity minJmaIntensity;
-  @override
-  final int regionId;
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime updatedAt;
+@override final  String id;
+@override final  JmaForecastIntensity minJmaIntensity;
+@override final  int regionId;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 
-  @override
-  String toString() {
-    return 'DevicesEarthquakeSettings(id: $id, minJmaIntensity: $minJmaIntensity, regionId: $regionId, createdAt: $createdAt, updatedAt: $updatedAt)';
-  }
+/// Create a copy of DevicesEarthquakeSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DevicesEarthquakeSettingsCopyWith<_DevicesEarthquakeSettings> get copyWith => __$DevicesEarthquakeSettingsCopyWithImpl<_DevicesEarthquakeSettings>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DevicesEarthquakeSettingsImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.minJmaIntensity, minJmaIntensity) ||
-                other.minJmaIntensity == minJmaIntensity) &&
-            (identical(other.regionId, regionId) ||
-                other.regionId == regionId) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    minJmaIntensity,
-    regionId,
-    createdAt,
-    updatedAt,
-  );
-
-  /// Create a copy of DevicesEarthquakeSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
-  get copyWith => __$$DevicesEarthquakeSettingsImplCopyWithImpl<
-    _$DevicesEarthquakeSettingsImpl
-  >(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DevicesEarthquakeSettingsImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$DevicesEarthquakeSettingsToJson(this, );
 }
 
-abstract class _DevicesEarthquakeSettings implements DevicesEarthquakeSettings {
-  const factory _DevicesEarthquakeSettings({
-    required final String id,
-    required final JmaForecastIntensity minJmaIntensity,
-    required final int regionId,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
-  }) = _$DevicesEarthquakeSettingsImpl;
-
-  factory _DevicesEarthquakeSettings.fromJson(Map<String, dynamic> json) =
-      _$DevicesEarthquakeSettingsImpl.fromJson;
-
-  @override
-  String get id;
-  @override
-  JmaForecastIntensity get minJmaIntensity;
-  @override
-  int get regionId;
-  @override
-  DateTime get createdAt;
-  @override
-  DateTime get updatedAt;
-
-  /// Create a copy of DevicesEarthquakeSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
-  get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DevicesEarthquakeSettings&&(identical(other.id, id) || other.id == id)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,minJmaIntensity,regionId,createdAt,updatedAt);
+
+@override
+String toString() {
+  return 'DevicesEarthquakeSettings(id: $id, minJmaIntensity: $minJmaIntensity, regionId: $regionId, createdAt: $createdAt, updatedAt: $updatedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DevicesEarthquakeSettingsCopyWith<$Res> implements $DevicesEarthquakeSettingsCopyWith<$Res> {
+  factory _$DevicesEarthquakeSettingsCopyWith(_DevicesEarthquakeSettings value, $Res Function(_DevicesEarthquakeSettings) _then) = __$DevicesEarthquakeSettingsCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, JmaForecastIntensity minJmaIntensity, int regionId, DateTime createdAt, DateTime updatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$DevicesEarthquakeSettingsCopyWithImpl<$Res>
+    implements _$DevicesEarthquakeSettingsCopyWith<$Res> {
+  __$DevicesEarthquakeSettingsCopyWithImpl(this._self, this._then);
+
+  final _DevicesEarthquakeSettings _self;
+  final $Res Function(_DevicesEarthquakeSettings) _then;
+
+/// Create a copy of DevicesEarthquakeSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? minJmaIntensity = null,Object? regionId = null,Object? createdAt = null,Object? updatedAt = null,}) {
+  return _then(_DevicesEarthquakeSettings(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
+as JmaForecastIntensity,regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+// dart format on

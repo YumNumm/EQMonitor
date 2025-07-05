@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/extension/earthquake_v1.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -29,12 +28,11 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
     final earthquakeInfo = _useEarthquakeInfo(item, ref);
 
     // 最大震度アイコン
-    final maxIntensityWidget =
-        earthquakeInfo.isFarEarthquake
-            ? _FarEarthquakeHeaderIcon(isVolcano: earthquakeInfo.isVolcano)
-            : earthquakeInfo.maxIntensity != null
-            ? _MaxIntensityWidget(intensity: earthquakeInfo.maxIntensity!)
-            : null;
+    final maxIntensityWidget = earthquakeInfo.isFarEarthquake
+        ? _FarEarthquakeHeaderIcon(isVolcano: earthquakeInfo.isVolcano)
+        : earthquakeInfo.maxIntensity != null
+        ? _MaxIntensityWidget(intensity: earthquakeInfo.maxIntensity!)
+        : null;
 
     // 地震情報本体
     final body = _EarthquakeInformationBody(item: item, info: earthquakeInfo);
@@ -219,8 +217,9 @@ class _EarthquakeInformationBody extends HookWidget {
       info.isVolcano,
       creationDateFromEventId,
     );
-    final timeWidget =
-        timeText != null ? Wrap(children: [Text(timeText)]) : null;
+    final timeWidget = timeText != null
+        ? Wrap(children: [Text(timeText)])
+        : null;
 
     return Wrap(
       spacing: 8,
@@ -453,10 +452,9 @@ class _MagnitudeWidget extends StatelessWidget {
   }
 
   TextStyle _getMagnitudeStyle(TextTheme textTheme) {
-    final baseStyle =
-        item.magnitudeCondition != null
-            ? textTheme.headlineMedium!
-            : textTheme.headlineLarge!;
+    final baseStyle = item.magnitudeCondition != null
+        ? textTheme.headlineMedium!
+        : textTheme.headlineLarge!;
 
     return textTheme.valueStyle(baseStyle);
   }

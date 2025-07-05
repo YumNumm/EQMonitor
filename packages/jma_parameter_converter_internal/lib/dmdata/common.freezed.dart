@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,397 +10,284 @@ part of 'common.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-ParameterRegion _$ParameterRegionFromJson(Map<String, dynamic> json) {
-  return _ParameterRegion.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ParameterRegion {
-  String get code => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get kana => throw _privateConstructorUsedError;
+
+ String get code; String get name; String get kana;
+/// Create a copy of ParameterRegion
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ParameterRegionCopyWith<ParameterRegion> get copyWith => _$ParameterRegionCopyWithImpl<ParameterRegion>(this as ParameterRegion, _$identity);
 
   /// Serializes this ParameterRegion to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of ParameterRegion
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ParameterRegionCopyWith<ParameterRegion> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterRegion&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,kana);
+
+@override
+String toString() {
+  return 'ParameterRegion(code: $code, name: $name, kana: $kana)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ParameterRegionCopyWith<$Res> {
-  factory $ParameterRegionCopyWith(
-    ParameterRegion value,
-    $Res Function(ParameterRegion) then,
-  ) = _$ParameterRegionCopyWithImpl<$Res, ParameterRegion>;
-  @useResult
-  $Res call({String code, String name, String kana});
-}
+abstract mixin class $ParameterRegionCopyWith<$Res>  {
+  factory $ParameterRegionCopyWith(ParameterRegion value, $Res Function(ParameterRegion) _then) = _$ParameterRegionCopyWithImpl;
+@useResult
+$Res call({
+ String code, String name, String kana
+});
 
+
+
+
+}
 /// @nodoc
-class _$ParameterRegionCopyWithImpl<$Res, $Val extends ParameterRegion>
+class _$ParameterRegionCopyWithImpl<$Res>
     implements $ParameterRegionCopyWith<$Res> {
-  _$ParameterRegionCopyWithImpl(this._value, this._then);
+  _$ParameterRegionCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ParameterRegion _self;
+  final $Res Function(ParameterRegion) _then;
 
-  /// Create a copy of ParameterRegion
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
-    return _then(
-      _value.copyWith(
-            code:
-                null == code
-                    ? _value.code
-                    : code // ignore: cast_nullable_to_non_nullable
-                        as String,
-            name:
-                null == name
-                    ? _value.name
-                    : name // ignore: cast_nullable_to_non_nullable
-                        as String,
-            kana:
-                null == kana
-                    ? _value.kana
-                    : kana // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of ParameterRegion
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kana = null,}) {
+  return _then(_self.copyWith(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,kana: null == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ParameterRegionImplCopyWith<$Res>
-    implements $ParameterRegionCopyWith<$Res> {
-  factory _$$ParameterRegionImplCopyWith(
-    _$ParameterRegionImpl value,
-    $Res Function(_$ParameterRegionImpl) then,
-  ) = __$$ParameterRegionImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String code, String name, String kana});
 }
 
-/// @nodoc
-class __$$ParameterRegionImplCopyWithImpl<$Res>
-    extends _$ParameterRegionCopyWithImpl<$Res, _$ParameterRegionImpl>
-    implements _$$ParameterRegionImplCopyWith<$Res> {
-  __$$ParameterRegionImplCopyWithImpl(
-    _$ParameterRegionImpl _value,
-    $Res Function(_$ParameterRegionImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of ParameterRegion
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
-    return _then(
-      _$ParameterRegionImpl(
-        code:
-            null == code
-                ? _value.code
-                : code // ignore: cast_nullable_to_non_nullable
-                    as String,
-        name:
-            null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                    as String,
-        kana:
-            null == kana
-                ? _value.kana
-                : kana // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$ParameterRegionImpl implements _ParameterRegion {
-  const _$ParameterRegionImpl({
-    required this.code,
-    required this.name,
-    required this.kana,
-  });
 
-  factory _$ParameterRegionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ParameterRegionImplFromJson(json);
+class _ParameterRegion implements ParameterRegion {
+  const _ParameterRegion({required this.code, required this.name, required this.kana});
+  factory _ParameterRegion.fromJson(Map<String, dynamic> json) => _$ParameterRegionFromJson(json);
 
-  @override
-  final String code;
-  @override
-  final String name;
-  @override
-  final String kana;
+@override final  String code;
+@override final  String name;
+@override final  String kana;
 
-  @override
-  String toString() {
-    return 'ParameterRegion(code: $code, name: $name, kana: $kana)';
-  }
+/// Create a copy of ParameterRegion
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ParameterRegionCopyWith<_ParameterRegion> get copyWith => __$ParameterRegionCopyWithImpl<_ParameterRegion>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ParameterRegionImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.kana, kana) || other.kana == kana));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, code, name, kana);
-
-  /// Create a copy of ParameterRegion
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl> get copyWith =>
-      __$$ParameterRegionImplCopyWithImpl<_$ParameterRegionImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ParameterRegionImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ParameterRegionToJson(this, );
 }
 
-abstract class _ParameterRegion implements ParameterRegion {
-  const factory _ParameterRegion({
-    required final String code,
-    required final String name,
-    required final String kana,
-  }) = _$ParameterRegionImpl;
-
-  factory _ParameterRegion.fromJson(Map<String, dynamic> json) =
-      _$ParameterRegionImpl.fromJson;
-
-  @override
-  String get code;
-  @override
-  String get name;
-  @override
-  String get kana;
-
-  /// Create a copy of ParameterRegion
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterRegion&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana));
 }
 
-ParameterCity _$ParameterCityFromJson(Map<String, dynamic> json) {
-  return _ParameterCity.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,kana);
+
+@override
+String toString() {
+  return 'ParameterRegion(code: $code, name: $name, kana: $kana)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ParameterRegionCopyWith<$Res> implements $ParameterRegionCopyWith<$Res> {
+  factory _$ParameterRegionCopyWith(_ParameterRegion value, $Res Function(_ParameterRegion) _then) = __$ParameterRegionCopyWithImpl;
+@override @useResult
+$Res call({
+ String code, String name, String kana
+});
+
+
+
+
+}
+/// @nodoc
+class __$ParameterRegionCopyWithImpl<$Res>
+    implements _$ParameterRegionCopyWith<$Res> {
+  __$ParameterRegionCopyWithImpl(this._self, this._then);
+
+  final _ParameterRegion _self;
+  final $Res Function(_ParameterRegion) _then;
+
+/// Create a copy of ParameterRegion
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? kana = null,}) {
+  return _then(_ParameterRegion(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,kana: null == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$ParameterCity {
-  String get code => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get kana => throw _privateConstructorUsedError;
+
+ String get code; String get name; String get kana;
+/// Create a copy of ParameterCity
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ParameterCityCopyWith<ParameterCity> get copyWith => _$ParameterCityCopyWithImpl<ParameterCity>(this as ParameterCity, _$identity);
 
   /// Serializes this ParameterCity to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of ParameterCity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ParameterCityCopyWith<ParameterCity> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParameterCity&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,kana);
+
+@override
+String toString() {
+  return 'ParameterCity(code: $code, name: $name, kana: $kana)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ParameterCityCopyWith<$Res> {
-  factory $ParameterCityCopyWith(
-    ParameterCity value,
-    $Res Function(ParameterCity) then,
-  ) = _$ParameterCityCopyWithImpl<$Res, ParameterCity>;
-  @useResult
-  $Res call({String code, String name, String kana});
-}
+abstract mixin class $ParameterCityCopyWith<$Res>  {
+  factory $ParameterCityCopyWith(ParameterCity value, $Res Function(ParameterCity) _then) = _$ParameterCityCopyWithImpl;
+@useResult
+$Res call({
+ String code, String name, String kana
+});
 
+
+
+
+}
 /// @nodoc
-class _$ParameterCityCopyWithImpl<$Res, $Val extends ParameterCity>
+class _$ParameterCityCopyWithImpl<$Res>
     implements $ParameterCityCopyWith<$Res> {
-  _$ParameterCityCopyWithImpl(this._value, this._then);
+  _$ParameterCityCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ParameterCity _self;
+  final $Res Function(ParameterCity) _then;
 
-  /// Create a copy of ParameterCity
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
-    return _then(
-      _value.copyWith(
-            code:
-                null == code
-                    ? _value.code
-                    : code // ignore: cast_nullable_to_non_nullable
-                        as String,
-            name:
-                null == name
-                    ? _value.name
-                    : name // ignore: cast_nullable_to_non_nullable
-                        as String,
-            kana:
-                null == kana
-                    ? _value.kana
-                    : kana // ignore: cast_nullable_to_non_nullable
-                        as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of ParameterCity
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? kana = null,}) {
+  return _then(_self.copyWith(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,kana: null == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ParameterCityImplCopyWith<$Res>
-    implements $ParameterCityCopyWith<$Res> {
-  factory _$$ParameterCityImplCopyWith(
-    _$ParameterCityImpl value,
-    $Res Function(_$ParameterCityImpl) then,
-  ) = __$$ParameterCityImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String code, String name, String kana});
 }
 
-/// @nodoc
-class __$$ParameterCityImplCopyWithImpl<$Res>
-    extends _$ParameterCityCopyWithImpl<$Res, _$ParameterCityImpl>
-    implements _$$ParameterCityImplCopyWith<$Res> {
-  __$$ParameterCityImplCopyWithImpl(
-    _$ParameterCityImpl _value,
-    $Res Function(_$ParameterCityImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of ParameterCity
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
-    return _then(
-      _$ParameterCityImpl(
-        code:
-            null == code
-                ? _value.code
-                : code // ignore: cast_nullable_to_non_nullable
-                    as String,
-        name:
-            null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                    as String,
-        kana:
-            null == kana
-                ? _value.kana
-                : kana // ignore: cast_nullable_to_non_nullable
-                    as String,
-      ),
-    );
-  }
-}
 
 /// @nodoc
 @JsonSerializable()
-class _$ParameterCityImpl implements _ParameterCity {
-  const _$ParameterCityImpl({
-    required this.code,
-    required this.name,
-    required this.kana,
-  });
 
-  factory _$ParameterCityImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ParameterCityImplFromJson(json);
+class _ParameterCity implements ParameterCity {
+  const _ParameterCity({required this.code, required this.name, required this.kana});
+  factory _ParameterCity.fromJson(Map<String, dynamic> json) => _$ParameterCityFromJson(json);
 
-  @override
-  final String code;
-  @override
-  final String name;
-  @override
-  final String kana;
+@override final  String code;
+@override final  String name;
+@override final  String kana;
 
-  @override
-  String toString() {
-    return 'ParameterCity(code: $code, name: $name, kana: $kana)';
-  }
+/// Create a copy of ParameterCity
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ParameterCityCopyWith<_ParameterCity> get copyWith => __$ParameterCityCopyWithImpl<_ParameterCity>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ParameterCityImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.kana, kana) || other.kana == kana));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, code, name, kana);
-
-  /// Create a copy of ParameterCity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ParameterCityImplCopyWith<_$ParameterCityImpl> get copyWith =>
-      __$$ParameterCityImplCopyWithImpl<_$ParameterCityImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ParameterCityImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ParameterCityToJson(this, );
 }
 
-abstract class _ParameterCity implements ParameterCity {
-  const factory _ParameterCity({
-    required final String code,
-    required final String name,
-    required final String kana,
-  }) = _$ParameterCityImpl;
-
-  factory _ParameterCity.fromJson(Map<String, dynamic> json) =
-      _$ParameterCityImpl.fromJson;
-
-  @override
-  String get code;
-  @override
-  String get name;
-  @override
-  String get kana;
-
-  /// Create a copy of ParameterCity
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ParameterCityImplCopyWith<_$ParameterCityImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParameterCity&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,kana);
+
+@override
+String toString() {
+  return 'ParameterCity(code: $code, name: $name, kana: $kana)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ParameterCityCopyWith<$Res> implements $ParameterCityCopyWith<$Res> {
+  factory _$ParameterCityCopyWith(_ParameterCity value, $Res Function(_ParameterCity) _then) = __$ParameterCityCopyWithImpl;
+@override @useResult
+$Res call({
+ String code, String name, String kana
+});
+
+
+
+
+}
+/// @nodoc
+class __$ParameterCityCopyWithImpl<$Res>
+    implements _$ParameterCityCopyWith<$Res> {
+  __$ParameterCityCopyWithImpl(this._self, this._then);
+
+  final _ParameterCity _self;
+  final $Res Function(_ParameterCity) _then;
+
+/// Create a copy of ParameterCity
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? kana = null,}) {
+  return _then(_ParameterCity(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,kana: null == kana ? _self.kana : kana // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

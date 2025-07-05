@@ -8,11 +8,11 @@ part of 'eew.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EewImpl _$$EewImplFromJson(Map<String, dynamic> json) => $checkedCreate(
-  r'_$EewImpl',
+_Eew _$EewFromJson(Map<String, dynamic> json) => $checkedCreate(
+  '_Eew',
   json,
   ($checkedConvert) {
-    final val = _$EewImpl(
+    final val = _Eew(
       result: $checkedConvert(
         'result',
         (v) => v == null ? null : Result.fromJson(v as Map<String, dynamic>),
@@ -81,7 +81,7 @@ _$EewImpl _$$EewImplFromJson(Map<String, dynamic> json) => $checkedCreate(
   },
 );
 
-Map<String, dynamic> _$$EewImplToJson(_$EewImpl instance) => <String, dynamic>{
+Map<String, dynamic> _$EewToJson(_Eew instance) => <String, dynamic>{
   'result': instance.result,
   'report_time': dateTimeOrNullToString(instance.reportTime),
   'region_code': instance.regionCode,

@@ -21,8 +21,6 @@ class HomeMapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationNotifierProvider);
-    // final kyoshinMonitorState = ref.watch(kyoshinMonitorNotifierProvider);
-
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => LayoutBuilder(
         builder: (context, constraints) {

@@ -8,13 +8,13 @@ part of 'devices_earthquake_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DevicesEarthquakeSettingsImpl _$$DevicesEarthquakeSettingsImplFromJson(
+_DevicesEarthquakeSettings _$DevicesEarthquakeSettingsFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  r'_$DevicesEarthquakeSettingsImpl',
+  '_DevicesEarthquakeSettings',
   json,
   ($checkedConvert) {
-    final val = _$DevicesEarthquakeSettingsImpl(
+    final val = _DevicesEarthquakeSettings(
       id: $checkedConvert('id', (v) => v as String),
       minJmaIntensity: $checkedConvert(
         'min_jma_intensity',
@@ -40,8 +40,8 @@ _$DevicesEarthquakeSettingsImpl _$$DevicesEarthquakeSettingsImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$DevicesEarthquakeSettingsImplToJson(
-  _$DevicesEarthquakeSettingsImpl instance,
+Map<String, dynamic> _$DevicesEarthquakeSettingsToJson(
+  _DevicesEarthquakeSettings instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'min_jma_intensity': _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,

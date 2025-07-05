@@ -5,7 +5,8 @@ part 'notification_settings_response.freezed.dart';
 part 'notification_settings_response.g.dart';
 
 @freezed
-class NotificationSettingsResponse with _$NotificationSettingsResponse {
+abstract class NotificationSettingsResponse
+    with _$NotificationSettingsResponse {
   const factory NotificationSettingsResponse({
     required List<DevicesEarthquakeSettings> earthquake,
     required List<DevicesEewSettings> eew,

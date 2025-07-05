@@ -5,7 +5,7 @@ part 'maintenance_message.freezed.dart';
 part 'maintenance_message.g.dart';
 
 @freezed
-class MaintenanceMessage
+abstract class MaintenanceMessage
     with _$MaintenanceMessage
     implements KyoshinMonitorWebApiResponse {
   const factory MaintenanceMessage({
