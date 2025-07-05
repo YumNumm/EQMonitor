@@ -8,12 +8,12 @@ part of 'tsunami.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-__TsunamiV1Base _$TsunamiV1BaseFromJson(Map<String, dynamic> json) =>
+_TsunamiV1Base _$TsunamiV1BaseFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      '__TsunamiV1Base',
+      '_TsunamiV1Base',
       json,
       ($checkedConvert) {
-        final val = __TsunamiV1Base(
+        final val = _TsunamiV1Base(
           eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
           id: $checkedConvert('id', (v) => (v as num).toInt()),
@@ -46,7 +46,7 @@ __TsunamiV1Base _$TsunamiV1BaseFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$TsunamiV1BaseToJson(__TsunamiV1Base instance) =>
+Map<String, dynamic> _$TsunamiV1BaseToJson(_TsunamiV1Base instance) =>
     <String, dynamic>{
       'event_id': instance.eventId,
       'headline': instance.headline,
