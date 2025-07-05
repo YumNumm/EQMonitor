@@ -6,7 +6,7 @@ part 'tsunami.freezed.dart';
 part 'tsunami.g.dart';
 
 class TsunamiV1 implements V1Database {
-  TsunamiV1({
+  const TsunamiV1({
     required this.eventId,
     required this.headline,
     required this.id,
@@ -21,7 +21,7 @@ class TsunamiV1 implements V1Database {
   });
 
   factory TsunamiV1.fromJson(Map<String, dynamic> json) {
-    final base = _TsunamiV1Base.fromJson(json);
+    final base = TsunamiV1Base.fromJson(json);
     final body = TsunamiBody.fromJson(json, base.toJson());
     return TsunamiV1(
       eventId: base.eventId,
@@ -67,8 +67,8 @@ class TsunamiV1 implements V1Database {
 }
 
 @freezed
-abstract class _TsunamiV1Base with _$TsunamiV1Base {
-  const factory _TsunamiV1Base({
+abstract class TsunamiV1Base with _$TsunamiV1Base {
+  const factory TsunamiV1Base({
     required int eventId,
     required String? headline,
     required int id,
@@ -79,9 +79,9 @@ abstract class _TsunamiV1Base with _$TsunamiV1Base {
     required String status,
     required String type,
     required DateTime? validAt,
-  }) = __TsunamiV1Base;
+  }) = _TsunamiV1Base;
 
-  factory _TsunamiV1Base.fromJson(Map<String, dynamic> json) =>
+  factory TsunamiV1Base.fromJson(Map<String, dynamic> json) =>
       _$TsunamiV1BaseFromJson(json);
 }
 

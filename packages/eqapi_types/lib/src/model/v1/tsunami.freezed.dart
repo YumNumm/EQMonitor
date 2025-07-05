@@ -12,31 +12,24 @@ part of 'tsunami.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-_TsunamiV1Base _$TsunamiV1BaseFromJson(
-  Map<String, dynamic> json
-) {
-    return __TsunamiV1Base.fromJson(
-      json
-    );
-}
 
 /// @nodoc
 mixin _$TsunamiV1Base {
 
  int get eventId; String? get headline; int get id; String get infoType; DateTime get pressAt; DateTime get reportAt; int? get serialNo; String get status; String get type; DateTime? get validAt;
-/// Create a copy of _TsunamiV1Base
+/// Create a copy of TsunamiV1Base
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$TsunamiV1BaseCopyWith<_TsunamiV1Base> get copyWith => __$TsunamiV1BaseCopyWithImpl<_TsunamiV1Base>(this as _TsunamiV1Base, _$identity);
+$TsunamiV1BaseCopyWith<TsunamiV1Base> get copyWith => _$TsunamiV1BaseCopyWithImpl<TsunamiV1Base>(this as TsunamiV1Base, _$identity);
 
-  /// Serializes this _TsunamiV1Base to a JSON map.
+  /// Serializes this TsunamiV1Base to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiV1Base&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.id, id) || other.id == id)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.status, status) || other.status == status)&&(identical(other.type, type) || other.type == type)&&(identical(other.validAt, validAt) || other.validAt == validAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiV1Base&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.id, id) || other.id == id)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.status, status) || other.status == status)&&(identical(other.type, type) || other.type == type)&&(identical(other.validAt, validAt) || other.validAt == validAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,15 +38,15 @@ int get hashCode => Object.hash(runtimeType,eventId,headline,id,infoType,pressAt
 
 @override
 String toString() {
-  return '_TsunamiV1Base(eventId: $eventId, headline: $headline, id: $id, infoType: $infoType, pressAt: $pressAt, reportAt: $reportAt, serialNo: $serialNo, status: $status, type: $type, validAt: $validAt)';
+  return 'TsunamiV1Base(eventId: $eventId, headline: $headline, id: $id, infoType: $infoType, pressAt: $pressAt, reportAt: $reportAt, serialNo: $serialNo, status: $status, type: $type, validAt: $validAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$TsunamiV1BaseCopyWith<$Res>  {
-  factory _$TsunamiV1BaseCopyWith(_TsunamiV1Base value, $Res Function(_TsunamiV1Base) _then) = __$TsunamiV1BaseCopyWithImpl;
+abstract mixin class $TsunamiV1BaseCopyWith<$Res>  {
+  factory $TsunamiV1BaseCopyWith(TsunamiV1Base value, $Res Function(TsunamiV1Base) _then) = _$TsunamiV1BaseCopyWithImpl;
 @useResult
 $Res call({
  int eventId, String? headline, int id, String infoType, DateTime pressAt, DateTime reportAt, int? serialNo, String status, String type, DateTime? validAt
@@ -64,14 +57,14 @@ $Res call({
 
 }
 /// @nodoc
-class __$TsunamiV1BaseCopyWithImpl<$Res>
-    implements _$TsunamiV1BaseCopyWith<$Res> {
-  __$TsunamiV1BaseCopyWithImpl(this._self, this._then);
+class _$TsunamiV1BaseCopyWithImpl<$Res>
+    implements $TsunamiV1BaseCopyWith<$Res> {
+  _$TsunamiV1BaseCopyWithImpl(this._self, this._then);
 
-  final _TsunamiV1Base _self;
-  final $Res Function(_TsunamiV1Base) _then;
+  final TsunamiV1Base _self;
+  final $Res Function(TsunamiV1Base) _then;
 
-/// Create a copy of _TsunamiV1Base
+/// Create a copy of TsunamiV1Base
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? headline = freezed,Object? id = null,Object? infoType = null,Object? pressAt = null,Object? reportAt = null,Object? serialNo = freezed,Object? status = null,Object? type = null,Object? validAt = freezed,}) {
   return _then(_self.copyWith(
@@ -95,9 +88,9 @@ as DateTime?,
 /// @nodoc
 @JsonSerializable()
 
-class __TsunamiV1Base implements _TsunamiV1Base {
-  const __TsunamiV1Base({required this.eventId, required this.headline, required this.id, required this.infoType, required this.pressAt, required this.reportAt, required this.serialNo, required this.status, required this.type, required this.validAt});
-  factory __TsunamiV1Base.fromJson(Map<String, dynamic> json) => _$_TsunamiV1BaseFromJson(json);
+class _TsunamiV1Base implements TsunamiV1Base {
+  const _TsunamiV1Base({required this.eventId, required this.headline, required this.id, required this.infoType, required this.pressAt, required this.reportAt, required this.serialNo, required this.status, required this.type, required this.validAt});
+  factory _TsunamiV1Base.fromJson(Map<String, dynamic> json) => _$TsunamiV1BaseFromJson(json);
 
 @override final  int eventId;
 @override final  String? headline;
@@ -110,20 +103,20 @@ class __TsunamiV1Base implements _TsunamiV1Base {
 @override final  String type;
 @override final  DateTime? validAt;
 
-/// Create a copy of _TsunamiV1Base
+/// Create a copy of TsunamiV1Base
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$_TsunamiV1BaseCopyWith<__TsunamiV1Base> get copyWith => __$_TsunamiV1BaseCopyWithImpl<__TsunamiV1Base>(this, _$identity);
+_$TsunamiV1BaseCopyWith<_TsunamiV1Base> get copyWith => __$TsunamiV1BaseCopyWithImpl<_TsunamiV1Base>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$_TsunamiV1BaseToJson(this, );
+  return _$TsunamiV1BaseToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is __TsunamiV1Base&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.id, id) || other.id == id)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.status, status) || other.status == status)&&(identical(other.type, type) || other.type == type)&&(identical(other.validAt, validAt) || other.validAt == validAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiV1Base&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.id, id) || other.id == id)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.status, status) || other.status == status)&&(identical(other.type, type) || other.type == type)&&(identical(other.validAt, validAt) || other.validAt == validAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -132,15 +125,15 @@ int get hashCode => Object.hash(runtimeType,eventId,headline,id,infoType,pressAt
 
 @override
 String toString() {
-  return '_TsunamiV1Base(eventId: $eventId, headline: $headline, id: $id, infoType: $infoType, pressAt: $pressAt, reportAt: $reportAt, serialNo: $serialNo, status: $status, type: $type, validAt: $validAt)';
+  return 'TsunamiV1Base(eventId: $eventId, headline: $headline, id: $id, infoType: $infoType, pressAt: $pressAt, reportAt: $reportAt, serialNo: $serialNo, status: $status, type: $type, validAt: $validAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$_TsunamiV1BaseCopyWith<$Res> implements _$TsunamiV1BaseCopyWith<$Res> {
-  factory _$_TsunamiV1BaseCopyWith(__TsunamiV1Base value, $Res Function(__TsunamiV1Base) _then) = __$_TsunamiV1BaseCopyWithImpl;
+abstract mixin class _$TsunamiV1BaseCopyWith<$Res> implements $TsunamiV1BaseCopyWith<$Res> {
+  factory _$TsunamiV1BaseCopyWith(_TsunamiV1Base value, $Res Function(_TsunamiV1Base) _then) = __$TsunamiV1BaseCopyWithImpl;
 @override @useResult
 $Res call({
  int eventId, String? headline, int id, String infoType, DateTime pressAt, DateTime reportAt, int? serialNo, String status, String type, DateTime? validAt
@@ -151,17 +144,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$_TsunamiV1BaseCopyWithImpl<$Res>
-    implements _$_TsunamiV1BaseCopyWith<$Res> {
-  __$_TsunamiV1BaseCopyWithImpl(this._self, this._then);
+class __$TsunamiV1BaseCopyWithImpl<$Res>
+    implements _$TsunamiV1BaseCopyWith<$Res> {
+  __$TsunamiV1BaseCopyWithImpl(this._self, this._then);
 
-  final __TsunamiV1Base _self;
-  final $Res Function(__TsunamiV1Base) _then;
+  final _TsunamiV1Base _self;
+  final $Res Function(_TsunamiV1Base) _then;
 
-/// Create a copy of _TsunamiV1Base
+/// Create a copy of TsunamiV1Base
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? headline = freezed,Object? id = null,Object? infoType = null,Object? pressAt = null,Object? reportAt = null,Object? serialNo = freezed,Object? status = null,Object? type = null,Object? validAt = freezed,}) {
-  return _then(__TsunamiV1Base(
+  return _then(_TsunamiV1Base(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as int,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
 as String?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
