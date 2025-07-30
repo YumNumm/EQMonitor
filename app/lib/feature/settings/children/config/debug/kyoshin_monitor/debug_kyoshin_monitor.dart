@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DebugKyoshinMonitorRoute extends GoRouteData {
+class DebugKyoshinMonitorRoute extends GoRouteData with _$DebugKyoshinMonitorRoute {
   const DebugKyoshinMonitorRoute();
 
   @override

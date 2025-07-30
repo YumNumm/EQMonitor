@@ -31,17 +31,11 @@ final class PlatformBrightnessProvider
   @override
   PlatformBrightness create() => PlatformBrightness();
 
-  @$internal
-  @override
-  $NotifierProviderElement<PlatformBrightness, Brightness> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(Brightness value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<Brightness>(value),
+      providerOverride: $SyncValueProvider<Brightness>(value),
     );
   }
 }
@@ -55,11 +49,11 @@ abstract class _$PlatformBrightness extends $Notifier<Brightness> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<Brightness>;
+    final ref = this.ref as $Ref<Brightness, Brightness>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<Brightness>,
+              AnyNotifier<Brightness, Brightness>,
               Brightness,
               Object?,
               Object?

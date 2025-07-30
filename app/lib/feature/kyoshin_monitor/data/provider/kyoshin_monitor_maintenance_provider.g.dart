@@ -15,6 +15,7 @@ final class KyoshinMonitorMaintenanceProvider
     extends
         $FunctionalProvider<
           AsyncValue<kmoni_api.MaintenanceMessage>,
+          kmoni_api.MaintenanceMessage,
           FutureOr<kmoni_api.MaintenanceMessage>
         >
     with

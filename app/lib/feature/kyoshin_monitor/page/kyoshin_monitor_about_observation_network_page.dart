@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData {
+part 'kyoshin_monitor_about_observation_network_page.g.dart';
+
+class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
+    with _$KyoshinMonitorAboutObservationNetworkRoute {
   const KyoshinMonitorAboutObservationNetworkRoute();
 
   @override

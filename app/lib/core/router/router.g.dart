@@ -14,495 +14,609 @@ List<RouteBase> get $appRoutes => [
   $earthquakeHistoryDetailsRoute,
   $informationHistoryRoute,
   $informationHistoryDetailsRoute,
+  $tsunamiHistoryRoute,
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
 ];
 
-RouteBase get $setupRoute => GoRouteData.$route(
-  path: '/setup',
+RouteBase get $setupRoute =>
+    GoRouteData.$route(path: '/setup', factory: _$SetupRoute._fromState);
 
-  factory: $SetupRouteExtension._fromState,
-);
-
-extension $SetupRouteExtension on SetupRoute {
+mixin _$SetupRoute on GoRouteData {
   static SetupRoute _fromState(GoRouterState state) => const SetupRoute();
 
+  @override
   String get location => GoRouteData.$location('/setup');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',
 
-  factory: $EarthquakeHistoryRouteExtension._fromState,
+  factory: _$EarthquakeHistoryRoute._fromState,
 );
 
-extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
+mixin _$EarthquakeHistoryRoute on GoRouteData {
   static EarthquakeHistoryRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryRoute();
 
+  @override
   String get location => GoRouteData.$location('/earthquake-history');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
   path: '/earthquake-history-details/:eventId',
 
-  factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
+  factory: _$EarthquakeHistoryDetailsRoute._fromState,
 );
 
-extension $EarthquakeHistoryDetailsRouteExtension
-    on EarthquakeHistoryDetailsRoute {
+mixin _$EarthquakeHistoryDetailsRoute on GoRouteData {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
         eventId: int.parse(state.pathParameters['eventId']!)!,
       );
 
+  EarthquakeHistoryDetailsRoute get _self =>
+      this as EarthquakeHistoryDetailsRoute;
+
+  @override
   String get location => GoRouteData.$location(
-    '/earthquake-history-details/${Uri.encodeComponent(eventId.toString())}',
+    '/earthquake-history-details/${Uri.encodeComponent(_self.eventId.toString())}',
   );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $informationHistoryRoute => GoRouteData.$route(
   path: '/information-history',
 
-  factory: $InformationHistoryRouteExtension._fromState,
+  factory: _$InformationHistoryRoute._fromState,
 );
 
-extension $InformationHistoryRouteExtension on InformationHistoryRoute {
+mixin _$InformationHistoryRoute on GoRouteData {
   static InformationHistoryRoute _fromState(GoRouterState state) =>
       const InformationHistoryRoute();
 
+  @override
   String get location => GoRouteData.$location('/information-history');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $informationHistoryDetailsRoute => GoRouteData.$route(
   path: '/information-history-details',
 
-  factory: $InformationHistoryDetailsRouteExtension._fromState,
+  factory: _$InformationHistoryDetailsRoute._fromState,
 );
 
-extension $InformationHistoryDetailsRouteExtension
-    on InformationHistoryDetailsRoute {
+mixin _$InformationHistoryDetailsRoute on GoRouteData {
   static InformationHistoryDetailsRoute _fromState(GoRouterState state) =>
       InformationHistoryDetailsRoute($extra: state.extra as InformationV3);
 
+  InformationHistoryDetailsRoute get _self =>
+      this as InformationHistoryDetailsRoute;
+
+  @override
   String get location => GoRouteData.$location('/information-history-details');
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
+}
+
+RouteBase get $tsunamiHistoryRoute => GoRouteData.$route(
+  path: '/tsunami-history',
+
+  factory: _$TsunamiHistoryRoute._fromState,
+);
+
+mixin _$TsunamiHistoryRoute on GoRouteData {
+  static TsunamiHistoryRoute _fromState(GoRouterState state) =>
+      const TsunamiHistoryRoute();
+
+  @override
+  String get location => GoRouteData.$location('/tsunami-history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $homeRoute => GoRouteData.$route(
   path: '/',
 
-  factory: $HomeRouteExtension._fromState,
+  factory: _$HomeRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'earthquake-history-early',
 
-      factory: $EarthquakeHistoryEarlyRouteExtension._fromState,
+      factory: _$EarthquakeHistoryEarlyRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'details/:id',
 
-          factory: $EarthquakeHistoryEarlyDetailsRouteExtension._fromState,
+          factory: _$EarthquakeHistoryEarlyDetailsRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'eew-details-by-event-id/:eventId',
 
-      factory: $EewDetailsByEventIdRouteExtension._fromState,
+      factory: _$EewDetailsByEventIdRoute._fromState,
     ),
   ],
 );
 
-extension $HomeRouteExtension on HomeRoute {
+mixin _$HomeRoute on GoRouteData {
   static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
 
+  @override
   String get location => GoRouteData.$location('/');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $EarthquakeHistoryEarlyRouteExtension on EarthquakeHistoryEarlyRoute {
+mixin _$EarthquakeHistoryEarlyRoute on GoRouteData {
   static EarthquakeHistoryEarlyRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryEarlyRoute();
 
+  @override
   String get location => GoRouteData.$location('/earthquake-history-early');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $EarthquakeHistoryEarlyDetailsRouteExtension
-    on EarthquakeHistoryEarlyDetailsRoute {
+mixin _$EarthquakeHistoryEarlyDetailsRoute on GoRouteData {
   static EarthquakeHistoryEarlyDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryEarlyDetailsRoute(id: state.pathParameters['id']!);
 
+  EarthquakeHistoryEarlyDetailsRoute get _self =>
+      this as EarthquakeHistoryEarlyDetailsRoute;
+
+  @override
   String get location => GoRouteData.$location(
-    '/earthquake-history-early/details/${Uri.encodeComponent(id)}',
+    '/earthquake-history-early/details/${Uri.encodeComponent(_self.id)}',
   );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $EewDetailsByEventIdRouteExtension on EewDetailsByEventIdRoute {
+mixin _$EewDetailsByEventIdRoute on GoRouteData {
   static EewDetailsByEventIdRoute _fromState(GoRouterState state) =>
       EewDetailsByEventIdRoute(eventId: state.pathParameters['eventId']!);
 
+  EewDetailsByEventIdRoute get _self => this as EewDetailsByEventIdRoute;
+
+  @override
   String get location => GoRouteData.$location(
-    '/eew-details-by-event-id/${Uri.encodeComponent(eventId)}',
+    '/eew-details-by-event-id/${Uri.encodeComponent(_self.eventId)}',
   );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $talkerRoute => GoRouteData.$route(
-  path: '/talker',
+RouteBase get $talkerRoute =>
+    GoRouteData.$route(path: '/talker', factory: _$TalkerRoute._fromState);
 
-  factory: $TalkerRouteExtension._fromState,
-);
-
-extension $TalkerRouteExtension on TalkerRoute {
+mixin _$TalkerRoute on GoRouteData {
   static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
 
+  @override
   String get location => GoRouteData.$location('/talker');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $settingsRoute => GoRouteData.$route(
   path: '/settings',
 
-  factory: $SettingsRouteExtension._fromState,
+  factory: _$SettingsRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'notification',
 
-      factory: $NotificationRouteExtension._fromState,
+      factory: _$NotificationRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'earthquake',
 
-          factory: $NotificationEarthquakeRouteExtension._fromState,
+          factory: _$NotificationEarthquakeRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'eew',
 
-          factory: $NotificationEewRouteExtension._fromState,
+          factory: _$NotificationEewRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'display',
 
-      factory: $DisplayRouteExtension._fromState,
+      factory: _$DisplayRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'color-schema',
 
-          factory: $ColorSchemeConfigRouteExtension._fromState,
+          factory: _$ColorSchemeConfigRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'kyoshin-monitor-about',
 
-      factory: $KyoshinMonitorAboutRouteExtension._fromState,
+      factory: _$KyoshinMonitorAboutRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'observation-network',
 
-          factory:
-              $KyoshinMonitorAboutObservationNetworkRouteExtension._fromState,
+          factory: _$KyoshinMonitorAboutObservationNetworkRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'term-of-service',
 
-      factory: $TermOfServiceRouteExtension._fromState,
+      factory: _$TermOfServiceRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'privacy-policy',
 
-      factory: $PrivacyPolicyRouteExtension._fromState,
+      factory: _$PrivacyPolicyRoute._fromState,
     ),
-    GoRouteData.$route(
-      path: 'license',
-
-      factory: $LicenseRouteExtension._fromState,
-    ),
+    GoRouteData.$route(path: 'license', factory: _$LicenseRoute._fromState),
     GoRouteData.$route(
       path: 'earthquake-history',
 
-      factory: $EarthquakeHistoryConfigRouteExtension._fromState,
+      factory: _$EarthquakeHistoryConfigRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'about-this-app',
 
-      factory: $AboutThisAppRouteExtension._fromState,
+      factory: _$AboutThisAppRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'donation',
 
-      factory: $DonationRouteExtension._fromState,
+      factory: _$DonationRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'executed',
 
-          factory: $DonationExecutedRouteExtension._fromState,
+          factory: _$DonationExecutedRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'debug',
 
-      factory: $DebugRouteExtension._fromState,
+      factory: _$DebugRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'api-endpoint-selector',
 
-          factory: $HttpApiEndpointSelectorRouteExtension._fromState,
+          factory: _$HttpApiEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'websocket-api-endpoint-selector',
 
-          factory: $WebsocketEndpointSelectorRouteExtension._fromState,
+          factory: _$WebsocketEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'kyoshin-monitor',
 
-          factory: $DebugKyoshinMonitorRouteExtension._fromState,
+          factory: _$DebugKyoshinMonitorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'jma-map',
 
-          factory: $DebugJmaMapRouteExtension._fromState,
+          factory: _$DebugJmaMapRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'playground',
 
-          factory: $PlaygroundRouteExtension._fromState,
+          factory: _$PlaygroundRoute._fromState,
         ),
       ],
     ),
   ],
 );
 
-extension $SettingsRouteExtension on SettingsRoute {
+mixin _$SettingsRoute on GoRouteData {
   static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $NotificationRouteExtension on NotificationRoute {
+mixin _$NotificationRoute on GoRouteData {
   static NotificationRoute _fromState(GoRouterState state) =>
       const NotificationRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/notification');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $NotificationEarthquakeRouteExtension on NotificationEarthquakeRoute {
+mixin _$NotificationEarthquakeRoute on GoRouteData {
   static NotificationEarthquakeRoute _fromState(GoRouterState state) =>
       const NotificationEarthquakeRoute();
 
+  @override
   String get location =>
       GoRouteData.$location('/settings/notification/earthquake');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $NotificationEewRouteExtension on NotificationEewRoute {
+mixin _$NotificationEewRoute on GoRouteData {
   static NotificationEewRoute _fromState(GoRouterState state) =>
       const NotificationEewRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/notification/eew');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $DisplayRouteExtension on DisplayRoute {
+mixin _$DisplayRoute on GoRouteData {
   static DisplayRoute _fromState(GoRouterState state) => const DisplayRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/display');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
+mixin _$ColorSchemeConfigRoute on GoRouteData {
   static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
       const ColorSchemeConfigRoute();
 
+  @override
   String get location =>
       GoRouteData.$location('/settings/display/color-schema');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $KyoshinMonitorAboutRouteExtension on KyoshinMonitorAboutRoute {
+mixin _$KyoshinMonitorAboutRoute on GoRouteData {
   static KyoshinMonitorAboutRoute _fromState(GoRouterState state) =>
       const KyoshinMonitorAboutRoute();
 
+  @override
   String get location =>
       GoRouteData.$location('/settings/kyoshin-monitor-about');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $KyoshinMonitorAboutObservationNetworkRouteExtension
-    on KyoshinMonitorAboutObservationNetworkRoute {
+mixin _$KyoshinMonitorAboutObservationNetworkRoute on GoRouteData {
   static KyoshinMonitorAboutObservationNetworkRoute _fromState(
     GoRouterState state,
   ) => const KyoshinMonitorAboutObservationNetworkRoute();
 
+  @override
   String get location => GoRouteData.$location(
     '/settings/kyoshin-monitor-about/observation-network',
   );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $TermOfServiceRouteExtension on TermOfServiceRoute {
+mixin _$TermOfServiceRoute on GoRouteData {
   static TermOfServiceRoute _fromState(GoRouterState state) =>
       TermOfServiceRoute(
         showAcceptButton:
@@ -515,27 +629,34 @@ extension $TermOfServiceRouteExtension on TermOfServiceRoute {
         $extra: state.extra as void Function({bool isAccepted})?,
       );
 
+  TermOfServiceRoute get _self => this as TermOfServiceRoute;
+
+  @override
   String get location => GoRouteData.$location(
     '/settings/term-of-service',
     queryParams: {
-      if (showAcceptButton != false)
-        'show-accept-button': showAcceptButton.toString(),
+      if (_self.showAcceptButton != false)
+        'show-accept-button': _self.showAcceptButton.toString(),
     },
   );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
-extension $PrivacyPolicyRouteExtension on PrivacyPolicyRoute {
+mixin _$PrivacyPolicyRoute on GoRouteData {
   static PrivacyPolicyRoute _fromState(GoRouterState state) =>
       PrivacyPolicyRoute(
         showAcceptButton:
@@ -548,206 +669,267 @@ extension $PrivacyPolicyRouteExtension on PrivacyPolicyRoute {
         $extra: state.extra as void Function({bool isAccepted})?,
       );
 
+  PrivacyPolicyRoute get _self => this as PrivacyPolicyRoute;
+
+  @override
   String get location => GoRouteData.$location(
     '/settings/privacy-policy',
     queryParams: {
-      if (showAcceptButton != false)
-        'show-accept-button': showAcceptButton.toString(),
+      if (_self.showAcceptButton != false)
+        'show-accept-button': _self.showAcceptButton.toString(),
     },
   );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
-extension $LicenseRouteExtension on LicenseRoute {
+mixin _$LicenseRoute on GoRouteData {
   static LicenseRoute _fromState(GoRouterState state) => const LicenseRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/license');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $EarthquakeHistoryConfigRouteExtension
-    on EarthquakeHistoryConfigRoute {
+mixin _$EarthquakeHistoryConfigRoute on GoRouteData {
   static EarthquakeHistoryConfigRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryConfigRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/earthquake-history');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $AboutThisAppRouteExtension on AboutThisAppRoute {
+mixin _$AboutThisAppRoute on GoRouteData {
   static AboutThisAppRoute _fromState(GoRouterState state) =>
       const AboutThisAppRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/about-this-app');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $DonationRouteExtension on DonationRoute {
+mixin _$DonationRoute on GoRouteData {
   static DonationRoute _fromState(GoRouterState state) => const DonationRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/donation');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $DonationExecutedRouteExtension on DonationExecutedRoute {
+mixin _$DonationExecutedRoute on GoRouteData {
   static DonationExecutedRoute _fromState(GoRouterState state) =>
       DonationExecutedRoute(
         $extra: state.extra as (StoreProduct, CustomerInfo),
       );
 
+  DonationExecutedRoute get _self => this as DonationExecutedRoute;
+
+  @override
   String get location => GoRouteData.$location('/settings/donation/executed');
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
-extension $DebugRouteExtension on DebugRoute {
+mixin _$DebugRoute on GoRouteData {
   static DebugRoute _fromState(GoRouterState state) => const DebugRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/debug');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $HttpApiEndpointSelectorRouteExtension
-    on HttpApiEndpointSelectorRoute {
+mixin _$HttpApiEndpointSelectorRoute on GoRouteData {
   static HttpApiEndpointSelectorRoute _fromState(GoRouterState state) =>
       const HttpApiEndpointSelectorRoute();
 
+  @override
   String get location =>
       GoRouteData.$location('/settings/debug/api-endpoint-selector');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $WebsocketEndpointSelectorRouteExtension
-    on WebsocketEndpointSelectorRoute {
+mixin _$WebsocketEndpointSelectorRoute on GoRouteData {
   static WebsocketEndpointSelectorRoute _fromState(GoRouterState state) =>
       const WebsocketEndpointSelectorRoute();
 
+  @override
   String get location =>
       GoRouteData.$location('/settings/debug/websocket-api-endpoint-selector');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $DebugKyoshinMonitorRouteExtension on DebugKyoshinMonitorRoute {
+mixin _$DebugKyoshinMonitorRoute on GoRouteData {
   static DebugKyoshinMonitorRoute _fromState(GoRouterState state) =>
       const DebugKyoshinMonitorRoute();
 
+  @override
   String get location =>
       GoRouteData.$location('/settings/debug/kyoshin-monitor');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $DebugJmaMapRouteExtension on DebugJmaMapRoute {
+mixin _$DebugJmaMapRoute on GoRouteData {
   static DebugJmaMapRoute _fromState(GoRouterState state) =>
       const DebugJmaMapRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/debug/jma-map');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $PlaygroundRouteExtension on PlaygroundRoute {
+mixin _$PlaygroundRoute on GoRouteData {
   static PlaygroundRoute _fromState(GoRouterState state) =>
       const PlaygroundRoute();
 
+  @override
   String get location => GoRouteData.$location('/settings/debug/playground');
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
@@ -778,7 +960,8 @@ bool _$boolConverter(String value) {
 @ProviderFor(goRouter)
 const goRouterProvider = GoRouterProvider._();
 
-final class GoRouterProvider extends $FunctionalProvider<GoRouter, GoRouter>
+final class GoRouterProvider
+    extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
   const GoRouterProvider._()
     : super(
@@ -808,7 +991,7 @@ final class GoRouterProvider extends $FunctionalProvider<GoRouter, GoRouter>
   Override overrideWithValue(GoRouter value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<GoRouter>(value),
+      providerOverride: $SyncValueProvider<GoRouter>(value),
     );
   }
 }

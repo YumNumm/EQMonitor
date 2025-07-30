@@ -31,17 +31,11 @@ final class EewProvider
   @override
   Eew create() => Eew();
 
-  @$internal
-  @override
-  $NotifierProviderElement<Eew, AsyncValue<List<EewV1>>> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(AsyncValue<List<EewV1>> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<AsyncValue<List<EewV1>>>(value),
+      providerOverride: $SyncValueProvider<AsyncValue<List<EewV1>>>(value),
     );
   }
 }
@@ -54,11 +48,12 @@ abstract class _$Eew extends $Notifier<AsyncValue<List<EewV1>>> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<EewV1>>>;
+    final ref =
+        this.ref as $Ref<AsyncValue<List<EewV1>>, AsyncValue<List<EewV1>>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<EewV1>>>,
+              AnyNotifier<AsyncValue<List<EewV1>>, AsyncValue<List<EewV1>>>,
               AsyncValue<List<EewV1>>,
               Object?,
               Object?
@@ -71,7 +66,12 @@ abstract class _$Eew extends $Notifier<AsyncValue<List<EewV1>>> {
 const _eewRestProvider = _EewRestProvider._();
 
 final class _EewRestProvider
-    extends $FunctionalProvider<AsyncValue<List<EewV1>>, FutureOr<List<EewV1>>>
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<EewV1>>,
+          List<EewV1>,
+          FutureOr<List<EewV1>>
+        >
     with $FutureModifier<List<EewV1>>, $FutureProvider<List<EewV1>> {
   const _EewRestProvider._()
     : super(

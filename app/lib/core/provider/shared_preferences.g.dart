@@ -12,7 +12,12 @@ part of 'shared_preferences.dart';
 const sharedPreferencesProvider = SharedPreferencesProvider._();
 
 final class SharedPreferencesProvider
-    extends $FunctionalProvider<SharedPreferences, SharedPreferences>
+    extends
+        $FunctionalProvider<
+          SharedPreferences,
+          SharedPreferences,
+          SharedPreferences
+        >
     with $Provider<SharedPreferences> {
   const SharedPreferencesProvider._()
     : super(
@@ -43,7 +48,7 @@ final class SharedPreferencesProvider
   Override overrideWithValue(SharedPreferences value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<SharedPreferences>(value),
+      providerOverride: $SyncValueProvider<SharedPreferences>(value),
     );
   }
 }

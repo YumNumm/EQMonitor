@@ -38,19 +38,11 @@ final class EarthquakeNotificationSettingsViewModelProvider
   EarthquakeNotificationSettingsViewModel create() =>
       EarthquakeNotificationSettingsViewModel();
 
-  @$internal
-  @override
-  $NotifierProviderElement<
-    EarthquakeNotificationSettingsViewModel,
-    FcmEarthquakeTopic?
-  >
-  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(FcmEarthquakeTopic? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<FcmEarthquakeTopic?>(value),
+      providerOverride: $SyncValueProvider<FcmEarthquakeTopic?>(value),
     );
   }
 }
@@ -65,11 +57,11 @@ abstract class _$EarthquakeNotificationSettingsViewModel
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<FcmEarthquakeTopic?>;
+    final ref = this.ref as $Ref<FcmEarthquakeTopic?, FcmEarthquakeTopic?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<FcmEarthquakeTopic?>,
+              AnyNotifier<FcmEarthquakeTopic?, FcmEarthquakeTopic?>,
               FcmEarthquakeTopic?,
               Object?,
               Object?

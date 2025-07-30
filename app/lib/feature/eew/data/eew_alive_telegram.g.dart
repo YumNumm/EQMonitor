@@ -14,7 +14,7 @@ const eewAliveNormalTelegramProvider = EewAliveNormalTelegramProvider._();
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 final class EewAliveNormalTelegramProvider
-    extends $FunctionalProvider<List<EewV1>, List<EewV1>>
+    extends $FunctionalProvider<List<EewV1>, List<EewV1>, List<EewV1>>
     with $Provider<List<EewV1>> {
   /// イベント終了していないEEWのうち、精度が低いものを除外したもの
   const EewAliveNormalTelegramProvider._()
@@ -45,7 +45,7 @@ final class EewAliveNormalTelegramProvider
   Override overrideWithValue(List<EewV1> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<List<EewV1>>(value),
+      providerOverride: $SyncValueProvider<List<EewV1>>(value),
     );
   }
 }
@@ -79,17 +79,11 @@ final class EewAliveTelegramProvider
   @override
   EewAliveTelegram create() => EewAliveTelegram();
 
-  @$internal
-  @override
-  $NotifierProviderElement<EewAliveTelegram, List<EewV1>?> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(List<EewV1>? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<List<EewV1>?>(value),
+      providerOverride: $SyncValueProvider<List<EewV1>?>(value),
     );
   }
 }
@@ -102,11 +96,11 @@ abstract class _$EewAliveTelegram extends $Notifier<List<EewV1>?> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<List<EewV1>?>;
+    final ref = this.ref as $Ref<List<EewV1>?, List<EewV1>?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<EewV1>?>,
+              AnyNotifier<List<EewV1>?, List<EewV1>?>,
               List<EewV1>?,
               Object?,
               Object?
@@ -119,7 +113,8 @@ abstract class _$EewAliveTelegram extends $Notifier<List<EewV1>?> {
 const eewAliveCheckerProvider = EewAliveCheckerProvider._();
 
 final class EewAliveCheckerProvider
-    extends $FunctionalProvider<EewAliveChecker, EewAliveChecker>
+    extends
+        $FunctionalProvider<EewAliveChecker, EewAliveChecker, EewAliveChecker>
     with $Provider<EewAliveChecker> {
   const EewAliveCheckerProvider._()
     : super(
@@ -149,7 +144,7 @@ final class EewAliveCheckerProvider
   Override overrideWithValue(EewAliveChecker value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<EewAliveChecker>(value),
+      providerOverride: $SyncValueProvider<EewAliveChecker>(value),
     );
   }
 }

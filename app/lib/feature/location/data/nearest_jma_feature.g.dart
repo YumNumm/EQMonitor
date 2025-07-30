@@ -16,6 +16,7 @@ final class JmaMapAreaForecastLocalEewInsideProvider
     extends
         $FunctionalProvider<
           AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          JmaMap_JmaMapData_JmaMapDataItem?,
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
         >
     with
@@ -99,6 +100,7 @@ final class JmaMapAreaForecastLocalEInsideProvider
     extends
         $FunctionalProvider<
           AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          JmaMap_JmaMapData_JmaMapDataItem?,
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
         >
     with
@@ -182,6 +184,7 @@ final class JmaMapAreaInformationCityInsideProvider
     extends
         $FunctionalProvider<
           AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          JmaMap_JmaMapData_JmaMapDataItem?,
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
         >
     with
@@ -264,6 +267,7 @@ final class JmaMapAreaTsunamiNearestProvider
     extends
         $FunctionalProvider<
           AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
+          JmaMap_JmaMapData_JmaMapDataItem?,
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
         >
     with

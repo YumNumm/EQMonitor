@@ -11,7 +11,7 @@ part of 'dio_provider.dart';
 @ProviderFor(dio)
 const dioProvider = DioProvider._();
 
-final class DioProvider extends $FunctionalProvider<Dio, Dio>
+final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
   const DioProvider._()
     : super(
@@ -41,7 +41,7 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio>
   Override overrideWithValue(Dio value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<Dio>(value),
+      providerOverride: $SyncValueProvider<Dio>(value),
     );
   }
 }
@@ -71,17 +71,11 @@ final class IsDioProxyEnabledProvider
   @override
   IsDioProxyEnabled create() => IsDioProxyEnabled();
 
-  @$internal
-  @override
-  $NotifierProviderElement<IsDioProxyEnabled, bool> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<bool>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
@@ -94,10 +88,15 @@ abstract class _$IsDioProxyEnabled extends $Notifier<bool> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<bool>;
+    final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
-            as $ClassProviderElement<AnyNotifier<bool>, bool, Object?, Object?>;
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
     element.handleValue(ref, created);
   }
 }

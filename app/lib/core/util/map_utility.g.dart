@@ -12,7 +12,7 @@ part of 'map_utility.dart';
 const mapUtilityProvider = MapUtilityProvider._();
 
 final class MapUtilityProvider
-    extends $FunctionalProvider<MapUtility, MapUtility>
+    extends $FunctionalProvider<MapUtility, MapUtility, MapUtility>
     with $Provider<MapUtility> {
   const MapUtilityProvider._()
     : super(
@@ -42,7 +42,7 @@ final class MapUtilityProvider
   Override overrideWithValue(MapUtility value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<MapUtility>(value),
+      providerOverride: $SyncValueProvider<MapUtility>(value),
     );
   }
 }

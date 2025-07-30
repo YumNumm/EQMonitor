@@ -22,7 +22,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class EarthquakeHistoryEarlyRoute extends GoRouteData {
+part 'earthquake_history_early_screen.g.dart';
+
+class EarthquakeHistoryEarlyRoute extends GoRouteData with _$EarthquakeHistoryEarlyRoute {
   const EarthquakeHistoryEarlyRoute();
 
   @override

@@ -12,7 +12,12 @@ part of 'firebase_messaging.dart';
 const firebaseMessagingProvider = FirebaseMessagingProvider._();
 
 final class FirebaseMessagingProvider
-    extends $FunctionalProvider<FirebaseMessaging, FirebaseMessaging>
+    extends
+        $FunctionalProvider<
+          FirebaseMessaging,
+          FirebaseMessaging,
+          FirebaseMessaging
+        >
     with $Provider<FirebaseMessaging> {
   const FirebaseMessagingProvider._()
     : super(
@@ -43,7 +48,7 @@ final class FirebaseMessagingProvider
   Override overrideWithValue(FirebaseMessaging value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<FirebaseMessaging>(value),
+      providerOverride: $SyncValueProvider<FirebaseMessaging>(value),
     );
   }
 }

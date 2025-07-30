@@ -36,19 +36,11 @@ final class EarthquakeHistoryConfigNotifierProvider
   @override
   EarthquakeHistoryConfigNotifier create() => EarthquakeHistoryConfigNotifier();
 
-  @$internal
-  @override
-  $NotifierProviderElement<
-    EarthquakeHistoryConfigNotifier,
-    EarthquakeHistoryConfig
-  >
-  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(EarthquakeHistoryConfig value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<EarthquakeHistoryConfig>(value),
+      providerOverride: $SyncValueProvider<EarthquakeHistoryConfig>(value),
     );
   }
 }
@@ -63,11 +55,12 @@ abstract class _$EarthquakeHistoryConfigNotifier
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<EarthquakeHistoryConfig>;
+    final ref =
+        this.ref as $Ref<EarthquakeHistoryConfig, EarthquakeHistoryConfig>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<EarthquakeHistoryConfig>,
+              AnyNotifier<EarthquakeHistoryConfig, EarthquakeHistoryConfig>,
               EarthquakeHistoryConfig,
               Object?,
               Object?

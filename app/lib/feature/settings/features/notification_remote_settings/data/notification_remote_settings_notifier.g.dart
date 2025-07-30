@@ -37,15 +37,6 @@ final class NotificationRemoteSettingsNotifierProvider
   @override
   NotificationRemoteSettingsNotifier create() =>
       NotificationRemoteSettingsNotifier();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<
-    NotificationRemoteSettingsNotifier,
-    NotificationRemoteSettingsState
-  >
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$notificationRemoteSettingsNotifierHash() =>
@@ -58,11 +49,19 @@ abstract class _$NotificationRemoteSettingsNotifier
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<NotificationRemoteSettingsState>>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<NotificationRemoteSettingsState>,
+              NotificationRemoteSettingsState
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<NotificationRemoteSettingsState>>,
+              AnyNotifier<
+                AsyncValue<NotificationRemoteSettingsState>,
+                NotificationRemoteSettingsState
+              >,
               AsyncValue<NotificationRemoteSettingsState>,
               Object?,
               Object?

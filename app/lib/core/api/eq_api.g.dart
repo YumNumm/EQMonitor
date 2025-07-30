@@ -11,7 +11,7 @@ part of 'eq_api.dart';
 @ProviderFor(eqApi)
 const eqApiProvider = EqApiProvider._();
 
-final class EqApiProvider extends $FunctionalProvider<EqApi, EqApi>
+final class EqApiProvider extends $FunctionalProvider<EqApi, EqApi, EqApi>
     with $Provider<EqApi> {
   const EqApiProvider._()
     : super(
@@ -41,7 +41,7 @@ final class EqApiProvider extends $FunctionalProvider<EqApi, EqApi>
   Override overrideWithValue(EqApi value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<EqApi>(value),
+      providerOverride: $SyncValueProvider<EqApi>(value),
     );
   }
 }

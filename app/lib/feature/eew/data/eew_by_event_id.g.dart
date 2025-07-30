@@ -38,12 +38,6 @@ final class EewsByEventIdProvider
   @override
   EewsByEventId create() => EewsByEventId();
 
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<EewsByEventId, List<EewV1>> $createElement(
-    $ProviderPointer pointer,
-  ) => $AsyncNotifierProviderElement(pointer);
-
   @override
   bool operator ==(Object other) {
     return other is EewsByEventIdProvider && other.argument == argument;
@@ -91,11 +85,11 @@ abstract class _$EewsByEventId extends $AsyncNotifier<List<EewV1>> {
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<List<EewV1>>>;
+    final ref = this.ref as $Ref<AsyncValue<List<EewV1>>, List<EewV1>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<EewV1>>>,
+              AnyNotifier<AsyncValue<List<EewV1>>, List<EewV1>>,
               AsyncValue<List<EewV1>>,
               Object?,
               Object?

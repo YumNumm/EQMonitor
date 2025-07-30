@@ -31,16 +31,11 @@ final class PermissionNotifierProvider
   @override
   PermissionNotifier create() => PermissionNotifier();
 
-  @$internal
-  @override
-  $NotifierProviderElement<PermissionNotifier, PermissionStateModel>
-  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(PermissionStateModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<PermissionStateModel>(value),
+      providerOverride: $SyncValueProvider<PermissionStateModel>(value),
     );
   }
 }
@@ -54,11 +49,11 @@ abstract class _$PermissionNotifier extends $Notifier<PermissionStateModel> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<PermissionStateModel>;
+    final ref = this.ref as $Ref<PermissionStateModel, PermissionStateModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<PermissionStateModel>,
+              AnyNotifier<PermissionStateModel, PermissionStateModel>,
               PermissionStateModel,
               Object?,
               Object?

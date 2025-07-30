@@ -16,6 +16,7 @@ final class EarthquakeHistoryEarlyEventProvider
     extends
         $FunctionalProvider<
           AsyncValue<EarthquakeEarlyEvent>,
+          EarthquakeEarlyEvent,
           FutureOr<EarthquakeEarlyEvent>
         >
     with

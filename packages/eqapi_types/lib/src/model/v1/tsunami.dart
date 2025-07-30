@@ -22,7 +22,7 @@ class TsunamiV1 implements V1Database {
 
   factory TsunamiV1.fromJson(Map<String, dynamic> json) {
     final base = TsunamiV1Base.fromJson(json);
-    final body = TsunamiBody.fromJson(json, base.toJson());
+    final body = TsunamiBody.fromJson(json);
     return TsunamiV1(
       eventId: base.eventId,
       headline: base.headline,
@@ -86,12 +86,9 @@ abstract class TsunamiV1Base with _$TsunamiV1Base {
 }
 
 sealed class TsunamiBody {
-  factory TsunamiBody.fromJson(
-    Map<String, dynamic> json,
-    Map<String, dynamic> parent,
-  ) {
-    final infoTypeStr = parent['infoType'].toString();
-    final typeStr = parent['type'].toString();
+  factory TsunamiBody.fromJson(Map<String, dynamic> json) {
+    final infoTypeStr = json['infoType'].toString();
+    final typeStr = json['type'].toString();
     final type = TsunamiBodyType.values.firstWhereOrNull(
       (e) => e.value == typeStr,
     );
@@ -474,85 +471,49 @@ enum EarthquakeMagnitudeCondition {
 
 // ------------------ New Tsunami API Response Types ------------------ //
 
-/// 津波データ（VTSE41タイプ）
-@freezed
-abstract class TsunamiDataVTSE41 with _$TsunamiDataVTSE41 {
-  const factory TsunamiDataVTSE41({
-    required int id,
-    required int eventId,
-    required int? serialNo,
-    @Default('津波警報・注意報・予報a') String type,
-    required TsunamiBody body,
-    required String status,
-    required String? headline,
-    required String infoType,
-    required DateTime pressAt,
-    required DateTime reportAt,
-    required DateTime? validAt,
-  }) = _TsunamiDataVTSE41;
-
-  factory TsunamiDataVTSE41.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiDataVTSE41FromJson(json);
-}
-
-/// 津波データ（VTSE51タイプ）
-@freezed
-abstract class TsunamiDataVTSE51 with _$TsunamiDataVTSE51 {
-  const factory TsunamiDataVTSE51({
-    required int id,
-    required int eventId,
-    required int? serialNo,
-    @Default('津波情報a') String type,
-    required TsunamiBody body,
-    required String status,
-    required String? headline,
-    required String infoType,
-    required DateTime pressAt,
-    required DateTime reportAt,
-    required DateTime? validAt,
-  }) = _TsunamiDataVTSE51;
-
-  factory TsunamiDataVTSE51.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiDataVTSE51FromJson(json);
-}
-
-/// 津波データ（VTSE52タイプ）
-@freezed
-abstract class TsunamiDataVTSE52 with _$TsunamiDataVTSE52 {
-  const factory TsunamiDataVTSE52({
-    required int id,
-    required int eventId,
-    required int? serialNo,
-    @Default('沖合の津波観測に関する情報') String type,
-    required TsunamiBody body,
-    required String status,
-    required String? headline,
-    required String infoType,
-    required DateTime pressAt,
-    required DateTime reportAt,
-    required DateTime? validAt,
-  }) = _TsunamiDataVTSE52;
-
-  factory TsunamiDataVTSE52.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiDataVTSE52FromJson(json);
-}
-
 /// 津波データ（全タイプのUnion）
-@freezed
-abstract class TsunamiData with _$TsunamiData {
-  const factory TsunamiData.vtse41(TsunamiDataVTSE41 data) = _TsunamiDataVTSE41;
-  const factory TsunamiData.vtse51(TsunamiDataVTSE51 data) = _TsunamiDataVTSE51;
-  const factory TsunamiData.vtse52(TsunamiDataVTSE52 data) = _TsunamiDataVTSE52;
+@Freezed(unionKey: 'type')
+sealed class TsunamiData with _$TsunamiData {
+  @FreezedUnionValue('津波警報・注意報・予報a')
+  const factory TsunamiData.vtse41({
+    required int id,
+    required int eventId,
+    required int? serialNo,
+    required TsunamiBody body,
+    required String status,
+    required String? headline,
+    required String infoType,
+    required DateTime pressAt,
+    required DateTime reportAt,
+    required DateTime? validAt,
+  }) = TsunamiDataVTSE41;
 
-  factory TsunamiData.fromJson(Map<String, dynamic> json) {
-    final type = json['type'] as String?;
-    return switch (type) {
-      '津波警報・注意報・予報a' => TsunamiData.vtse41(TsunamiDataVTSE41.fromJson(json)),
-      '津波情報a' => TsunamiData.vtse51(TsunamiDataVTSE51.fromJson(json)),
-      '沖合の津波観測に関する情報' => TsunamiData.vtse52(TsunamiDataVTSE52.fromJson(json)),
-      _ => throw ArgumentError('Unknown tsunami type: $type'),
-    };
-  }
+  @FreezedUnionValue('津波情報a')
+  const factory TsunamiData.vtse51({
+    required int id,
+    required int eventId,
+    required int? serialNo,
+    required TsunamiBody body,
+    required String status,
+    required String? headline,
+    required String infoType,
+    required DateTime pressAt,
+    required DateTime reportAt,
+    required DateTime? validAt,
+  }) = TsunamiDataVTSE51;
+
+  @FreezedUnionValue('沖合の津波観測に関する情報')
+  const factory TsunamiData.vtse52({
+    required int id,
+    required int eventId,
+    required int? serialNo,
+    required TsunamiBody body,
+    required String status,
+    required String? headline,
+  }) = TsunamiDataVTSE52;
+
+  factory TsunamiData.fromJson(Map<String, dynamic> json) =>
+      _$TsunamiDataFromJson(json);
 }
 
 /// eventIdごとにグループ化された津波情報

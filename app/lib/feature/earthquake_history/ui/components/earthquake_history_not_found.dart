@@ -1,4 +1,3 @@
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -26,9 +25,8 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             FilledButton(
-              onPressed:
-                  () async =>
-                      const EarthquakeHistoryEarlyRoute().push<void>(context),
+              onPressed: () async =>
+                  const EarthquakeHistoryEarlyRoute().push<void>(context),
               child: const Text('震度データベース'),
             ),
           ],
@@ -63,9 +61,8 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               FilledButton(
-                onPressed:
-                    () async =>
-                        const EarthquakeHistoryEarlyRoute().push<void>(context),
+                onPressed: () async =>
+                    const EarthquakeHistoryEarlyRoute().push<void>(context),
                 child: const Text('震度データベース'),
               ),
             ],

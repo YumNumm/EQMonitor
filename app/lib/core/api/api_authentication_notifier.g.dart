@@ -30,12 +30,6 @@ final class ApiAuthenticationNotifierProvider
   @$internal
   @override
   ApiAuthenticationNotifier create() => ApiAuthenticationNotifier();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<ApiAuthenticationNotifier, String?>
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$apiAuthenticationNotifierHash() =>
@@ -47,11 +41,11 @@ abstract class _$ApiAuthenticationNotifier extends $AsyncNotifier<String?> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<String?>>;
+    final ref = this.ref as $Ref<AsyncValue<String?>, String?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<String?>>,
+              AnyNotifier<AsyncValue<String?>, String?>,
               AsyncValue<String?>,
               Object?,
               Object?

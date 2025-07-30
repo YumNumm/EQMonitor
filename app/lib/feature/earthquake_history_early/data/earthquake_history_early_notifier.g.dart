@@ -43,15 +43,6 @@ final class EarthquakeHistoryEarlyNotifierProvider
   @override
   EarthquakeHistoryEarlyNotifier create() => EarthquakeHistoryEarlyNotifier();
 
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<
-    EarthquakeHistoryEarlyNotifier,
-    EarthquakeHistoryEarlyNotifierState
-  >
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
-
   @override
   bool operator ==(Object other) {
     return other is EarthquakeHistoryEarlyNotifierProvider &&
@@ -107,11 +98,18 @@ abstract class _$EarthquakeHistoryEarlyNotifier
   void runBuild() {
     final created = build(_$args);
     final ref =
-        this.ref as $Ref<AsyncValue<EarthquakeHistoryEarlyNotifierState>>;
+        this.ref
+            as $Ref<
+              AsyncValue<EarthquakeHistoryEarlyNotifierState>,
+              EarthquakeHistoryEarlyNotifierState
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<EarthquakeHistoryEarlyNotifierState>>,
+              AnyNotifier<
+                AsyncValue<EarthquakeHistoryEarlyNotifierState>,
+                EarthquakeHistoryEarlyNotifierState
+              >,
               AsyncValue<EarthquakeHistoryEarlyNotifierState>,
               Object?,
               Object?

@@ -10,7 +10,7 @@ import 'package:jma_map/jma_map.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:lat_lng/lat_lng.dart';
 
-class DebugJmaMapRoute extends GoRouteData {
+class DebugJmaMapRoute extends GoRouteData with _$DebugJmaMapRoute {
   const DebugJmaMapRoute();
 
   @override

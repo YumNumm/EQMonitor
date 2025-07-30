@@ -12,7 +12,12 @@ part of 'travel_time_provider.dart';
 const travelTimeProvider = TravelTimeProvider._();
 
 final class TravelTimeProvider
-    extends $FunctionalProvider<TravelTimeTables, TravelTimeTables>
+    extends
+        $FunctionalProvider<
+          TravelTimeTables,
+          TravelTimeTables,
+          TravelTimeTables
+        >
     with $Provider<TravelTimeTables> {
   const TravelTimeProvider._()
     : super(
@@ -42,7 +47,7 @@ final class TravelTimeProvider
   Override overrideWithValue(TravelTimeTables value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<TravelTimeTables>(value),
+      providerOverride: $SyncValueProvider<TravelTimeTables>(value),
     );
   }
 }
@@ -56,6 +61,7 @@ final class TravelTimeInternalProvider
     extends
         $FunctionalProvider<
           AsyncValue<TravelTimeTables>,
+          TravelTimeTables,
           FutureOr<TravelTimeTables>
         >
     with $FutureModifier<TravelTimeTables>, $FutureProvider<TravelTimeTables> {
@@ -92,7 +98,12 @@ String _$travelTimeInternalHash() =>
 const travelTimeDepthMapProvider = TravelTimeDepthMapProvider._();
 
 final class TravelTimeDepthMapProvider
-    extends $FunctionalProvider<TravelTimeDepthMap, TravelTimeDepthMap>
+    extends
+        $FunctionalProvider<
+          TravelTimeDepthMap,
+          TravelTimeDepthMap,
+          TravelTimeDepthMap
+        >
     with $Provider<TravelTimeDepthMap> {
   const TravelTimeDepthMapProvider._()
     : super(
@@ -123,7 +134,7 @@ final class TravelTimeDepthMapProvider
   Override overrideWithValue(TravelTimeDepthMap value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<TravelTimeDepthMap>(value),
+      providerOverride: $SyncValueProvider<TravelTimeDepthMap>(value),
     );
   }
 }

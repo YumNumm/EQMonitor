@@ -16,6 +16,7 @@ final class KyoshinMonitorObservationPointsProvider
     extends
         $FunctionalProvider<
           List<KyoshinMonitorObservationPoint>,
+          List<KyoshinMonitorObservationPoint>,
           List<KyoshinMonitorObservationPoint>
         >
     with $Provider<List<KyoshinMonitorObservationPoint>> {
@@ -48,9 +49,8 @@ final class KyoshinMonitorObservationPointsProvider
   Override overrideWithValue(List<KyoshinMonitorObservationPoint> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<List<KyoshinMonitorObservationPoint>>(
-        value,
-      ),
+      providerOverride:
+          $SyncValueProvider<List<KyoshinMonitorObservationPoint>>(value),
     );
   }
 }
@@ -66,6 +66,7 @@ final class KyoshinMonitorInternalObservationPointsConvertedProvider
     extends
         $FunctionalProvider<
           AsyncValue<List<KyoshinMonitorObservationPoint>>,
+          List<KyoshinMonitorObservationPoint>,
           FutureOr<List<KyoshinMonitorObservationPoint>>
         >
     with
@@ -106,7 +107,11 @@ const kyoshinObservationPointsProvider = KyoshinObservationPointsProvider._();
 
 final class KyoshinObservationPointsProvider
     extends
-        $FunctionalProvider<KyoshinObservationPoints, KyoshinObservationPoints>
+        $FunctionalProvider<
+          KyoshinObservationPoints,
+          KyoshinObservationPoints,
+          KyoshinObservationPoints
+        >
     with $Provider<KyoshinObservationPoints> {
   const KyoshinObservationPointsProvider._()
     : super(
@@ -137,7 +142,7 @@ final class KyoshinObservationPointsProvider
   Override overrideWithValue(KyoshinObservationPoints value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<KyoshinObservationPoints>(value),
+      providerOverride: $SyncValueProvider<KyoshinObservationPoints>(value),
     );
   }
 }
@@ -153,6 +158,7 @@ final class KyoshinMonitorInternalObservationPointsProvider
     extends
         $FunctionalProvider<
           AsyncValue<KyoshinObservationPoints>,
+          KyoshinObservationPoints,
           FutureOr<KyoshinObservationPoints>
         >
     with

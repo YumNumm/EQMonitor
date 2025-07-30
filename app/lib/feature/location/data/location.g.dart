@@ -12,7 +12,8 @@ part of 'location.dart';
 const locationStreamProvider = LocationStreamProvider._();
 
 final class LocationStreamProvider
-    extends $FunctionalProvider<AsyncValue<Position>, Stream<Position>>
+    extends
+        $FunctionalProvider<AsyncValue<Position>, Position, Stream<Position>>
     with $FutureModifier<Position>, $StreamProvider<Position> {
   const LocationStreamProvider._()
     : super(
@@ -51,6 +52,7 @@ final class ClosestKmoniObservationPointStreamProvider
     extends
         $FunctionalProvider<
           AsyncValue<(KyoshinObservationPoint, double km)>,
+          (KyoshinObservationPoint, double km),
           Stream<(KyoshinObservationPoint, double km)>
         >
     with

@@ -15,6 +15,7 @@ final class _LpgmCalculatorProvider
     extends
         $FunctionalProvider<
           AsyncValue<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>,
+          Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>,
           FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>
         >
     with

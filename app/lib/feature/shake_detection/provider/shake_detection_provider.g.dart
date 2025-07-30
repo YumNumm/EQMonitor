@@ -30,12 +30,6 @@ final class ShakeDetectionProvider
   @$internal
   @override
   ShakeDetection create() => ShakeDetection();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<ShakeDetection, List<ShakeDetectionEvent>>
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$shakeDetectionHash() => r'07bbd447c27e212010656596fbf04538fcc4c908';
@@ -47,11 +41,19 @@ abstract class _$ShakeDetection
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<ShakeDetectionEvent>>>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<ShakeDetectionEvent>>,
+              List<ShakeDetectionEvent>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<ShakeDetectionEvent>>>,
+              AnyNotifier<
+                AsyncValue<List<ShakeDetectionEvent>>,
+                List<ShakeDetectionEvent>
+              >,
               AsyncValue<List<ShakeDetectionEvent>>,
               Object?,
               Object?
@@ -87,15 +89,6 @@ final class ShakeDetectionKmoniPointsMergedProvider
   @$internal
   @override
   ShakeDetectionKmoniPointsMerged create() => ShakeDetectionKmoniPointsMerged();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<
-    ShakeDetectionKmoniPointsMerged,
-    List<ShakeDetectionKmoniMergedEvent>
-  >
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$shakeDetectionKmoniPointsMergedHash() =>
@@ -109,11 +102,18 @@ abstract class _$ShakeDetectionKmoniPointsMerged
   void runBuild() {
     final created = build();
     final ref =
-        this.ref as $Ref<AsyncValue<List<ShakeDetectionKmoniMergedEvent>>>;
+        this.ref
+            as $Ref<
+              AsyncValue<List<ShakeDetectionKmoniMergedEvent>>,
+              List<ShakeDetectionKmoniMergedEvent>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<ShakeDetectionKmoniMergedEvent>>>,
+              AnyNotifier<
+                AsyncValue<List<ShakeDetectionKmoniMergedEvent>>,
+                List<ShakeDetectionKmoniMergedEvent>
+              >,
               AsyncValue<List<ShakeDetectionKmoniMergedEvent>>,
               Object?,
               Object?
@@ -130,6 +130,7 @@ final class _FetchShakeDetectionEventsProvider
     extends
         $FunctionalProvider<
           AsyncValue<List<ShakeDetectionEvent>>,
+          List<ShakeDetectionEvent>,
           FutureOr<List<ShakeDetectionEvent>>
         >
     with

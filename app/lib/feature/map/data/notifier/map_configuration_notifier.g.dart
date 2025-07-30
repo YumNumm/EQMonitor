@@ -30,12 +30,6 @@ final class MapConfigurationNotifierProvider
   @$internal
   @override
   MapConfigurationNotifier create() => MapConfigurationNotifier();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<MapConfigurationNotifier, MapConfiguration>
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$mapConfigurationNotifierHash() =>
@@ -48,11 +42,12 @@ abstract class _$MapConfigurationNotifier
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<MapConfiguration>>;
+    final ref =
+        this.ref as $Ref<AsyncValue<MapConfiguration>, MapConfiguration>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<MapConfiguration>>,
+              AnyNotifier<AsyncValue<MapConfiguration>, MapConfiguration>,
               AsyncValue<MapConfiguration>,
               Object?,
               Object?

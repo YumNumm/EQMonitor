@@ -38,12 +38,6 @@ final class PeriodicTimerProvider
   @override
   PeriodicTimer create() => PeriodicTimer();
 
-  @$internal
-  @override
-  $StreamNotifierProviderElement<PeriodicTimer, void> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamNotifierProviderElement(pointer);
-
   @override
   bool operator ==(Object other) {
     return other is PeriodicTimerProvider && other.argument == argument;
@@ -91,11 +85,11 @@ abstract class _$PeriodicTimer extends $StreamNotifier<void> {
   @override
   void runBuild() {
     build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<void>>;
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<void>>,
+              AnyNotifier<AsyncValue<void>, void>,
               AsyncValue<void>,
               Object?,
               Object?

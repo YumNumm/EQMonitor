@@ -41,6 +41,7 @@ final class NotificationTokenProvider
     extends
         $FunctionalProvider<
           AsyncValue<NotificationTokenModel>,
+          NotificationTokenModel,
           FutureOr<NotificationTokenModel>
         >
     with

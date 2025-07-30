@@ -5,3 +5,6 @@ custom_lint:
     - avoid_hardcoded_color: false
     - avoid_hardcoded_japanese: false
     - avoid_single_child: false
+analyzer:
+  errors:
+    always_put_required_named_parameters_first: ignore

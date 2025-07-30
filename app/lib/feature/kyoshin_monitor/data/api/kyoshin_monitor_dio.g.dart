@@ -11,7 +11,7 @@ part of 'kyoshin_monitor_dio.dart';
 @ProviderFor(kyoshinMonitorDio)
 const kyoshinMonitorDioProvider = KyoshinMonitorDioProvider._();
 
-final class KyoshinMonitorDioProvider extends $FunctionalProvider<Dio, Dio>
+final class KyoshinMonitorDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
   const KyoshinMonitorDioProvider._()
     : super(
@@ -41,7 +41,7 @@ final class KyoshinMonitorDioProvider extends $FunctionalProvider<Dio, Dio>
   Override overrideWithValue(Dio value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<Dio>(value),
+      providerOverride: $SyncValueProvider<Dio>(value),
     );
   }
 }

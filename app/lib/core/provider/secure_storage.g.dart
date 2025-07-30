@@ -12,7 +12,12 @@ part of 'secure_storage.dart';
 const secureStorageProvider = SecureStorageProvider._();
 
 final class SecureStorageProvider
-    extends $FunctionalProvider<FlutterSecureStorage, FlutterSecureStorage>
+    extends
+        $FunctionalProvider<
+          FlutterSecureStorage,
+          FlutterSecureStorage,
+          FlutterSecureStorage
+        >
     with $Provider<FlutterSecureStorage> {
   const SecureStorageProvider._()
     : super(
@@ -43,7 +48,7 @@ final class SecureStorageProvider
   Override overrideWithValue(FlutterSecureStorage value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<FlutterSecureStorage>(value),
+      providerOverride: $SyncValueProvider<FlutterSecureStorage>(value),
     );
   }
 }

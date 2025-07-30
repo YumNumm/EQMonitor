@@ -12,7 +12,12 @@ part of 'device_info.dart';
 const androidDeviceInfoProvider = AndroidDeviceInfoProvider._();
 
 final class AndroidDeviceInfoProvider
-    extends $FunctionalProvider<AndroidDeviceInfo, AndroidDeviceInfo>
+    extends
+        $FunctionalProvider<
+          AndroidDeviceInfo,
+          AndroidDeviceInfo,
+          AndroidDeviceInfo
+        >
     with $Provider<AndroidDeviceInfo> {
   const AndroidDeviceInfoProvider._()
     : super(
@@ -43,7 +48,7 @@ final class AndroidDeviceInfoProvider
   Override overrideWithValue(AndroidDeviceInfo value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<AndroidDeviceInfo>(value),
+      providerOverride: $SyncValueProvider<AndroidDeviceInfo>(value),
     );
   }
 }
@@ -54,7 +59,7 @@ String _$androidDeviceInfoHash() => r'02f1a66ec8a7e96d418eb9cb0a981fd40d5d2523';
 const iosDeviceInfoProvider = IosDeviceInfoProvider._();
 
 final class IosDeviceInfoProvider
-    extends $FunctionalProvider<IosDeviceInfo, IosDeviceInfo>
+    extends $FunctionalProvider<IosDeviceInfo, IosDeviceInfo, IosDeviceInfo>
     with $Provider<IosDeviceInfo> {
   const IosDeviceInfoProvider._()
     : super(
@@ -84,7 +89,7 @@ final class IosDeviceInfoProvider
   Override overrideWithValue(IosDeviceInfo value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<IosDeviceInfo>(value),
+      providerOverride: $SyncValueProvider<IosDeviceInfo>(value),
     );
   }
 }

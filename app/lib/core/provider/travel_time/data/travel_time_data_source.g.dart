@@ -12,7 +12,12 @@ part of 'travel_time_data_source.dart';
 const travelTimeDataSourceProvider = TravelTimeDataSourceProvider._();
 
 final class TravelTimeDataSourceProvider
-    extends $FunctionalProvider<TravelTimeDataSource, TravelTimeDataSource>
+    extends
+        $FunctionalProvider<
+          TravelTimeDataSource,
+          TravelTimeDataSource,
+          TravelTimeDataSource
+        >
     with $Provider<TravelTimeDataSource> {
   const TravelTimeDataSourceProvider._()
     : super(
@@ -43,7 +48,7 @@ final class TravelTimeDataSourceProvider
   Override overrideWithValue(TravelTimeDataSource value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<TravelTimeDataSource>(value),
+      providerOverride: $SyncValueProvider<TravelTimeDataSource>(value),
     );
   }
 }

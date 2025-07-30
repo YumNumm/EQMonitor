@@ -15,6 +15,7 @@ final class KyoshinColorMapProvider
     extends
         $FunctionalProvider<
           List<KyoshinColorMapModel>,
+          List<KyoshinColorMapModel>,
           List<KyoshinColorMapModel>
         >
     with $Provider<List<KyoshinColorMapModel>> {
@@ -47,7 +48,7 @@ final class KyoshinColorMapProvider
   Override overrideWithValue(List<KyoshinColorMapModel> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<List<KyoshinColorMapModel>>(value),
+      providerOverride: $SyncValueProvider<List<KyoshinColorMapModel>>(value),
     );
   }
 }

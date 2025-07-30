@@ -31,12 +31,6 @@ final class KyoshinMonitorNotifierProvider
   @$internal
   @override
   KyoshinMonitorNotifier create() => KyoshinMonitorNotifier();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<KyoshinMonitorNotifier, KyoshinMonitorState>
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$kyoshinMonitorNotifierHash() =>
@@ -49,11 +43,12 @@ abstract class _$KyoshinMonitorNotifier
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<KyoshinMonitorState>>;
+    final ref =
+        this.ref as $Ref<AsyncValue<KyoshinMonitorState>, KyoshinMonitorState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<KyoshinMonitorState>>,
+              AnyNotifier<AsyncValue<KyoshinMonitorState>, KyoshinMonitorState>,
               AsyncValue<KyoshinMonitorState>,
               Object?,
               Object?

@@ -36,19 +36,13 @@ final class InformationHistoryViewModelProvider
   @override
   InformationHistoryViewModel create() => InformationHistoryViewModel();
 
-  @$internal
-  @override
-  $NotifierProviderElement<
-    InformationHistoryViewModel,
-    AsyncValue<List<InformationV3>>?
-  >
-  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(AsyncValue<List<InformationV3>>? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<AsyncValue<List<InformationV3>>?>(value),
+      providerOverride: $SyncValueProvider<AsyncValue<List<InformationV3>>?>(
+        value,
+      ),
     );
   }
 }
@@ -63,11 +57,19 @@ abstract class _$InformationHistoryViewModel
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<InformationV3>>?>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<InformationV3>>?,
+              AsyncValue<List<InformationV3>>?
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<InformationV3>>?>,
+              AnyNotifier<
+                AsyncValue<List<InformationV3>>?,
+                AsyncValue<List<InformationV3>>?
+              >,
               AsyncValue<List<InformationV3>>?,
               Object?,
               Object?

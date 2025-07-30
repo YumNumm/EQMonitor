@@ -2,52 +2,52 @@
 
 // ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
-part of 'jma_map_provider.dart';
+part of 'tsunami_summary.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-@ProviderFor(jmaMap)
-const jmaMapProvider = JmaMapProvider._();
+@ProviderFor(tsunamiSummary)
+const tsunamiSummaryProvider = TsunamiSummaryProvider._();
 
-final class JmaMapProvider
+final class TsunamiSummaryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<Map<JmaMapType, JmaMap_JmaMapData>>,
-          Map<JmaMapType, JmaMap_JmaMapData>,
-          FutureOr<Map<JmaMapType, JmaMap_JmaMapData>>
+          AsyncValue<TsunamiSummaryResponse>,
+          TsunamiSummaryResponse,
+          FutureOr<TsunamiSummaryResponse>
         >
     with
-        $FutureModifier<Map<JmaMapType, JmaMap_JmaMapData>>,
-        $FutureProvider<Map<JmaMapType, JmaMap_JmaMapData>> {
-  const JmaMapProvider._()
+        $FutureModifier<TsunamiSummaryResponse>,
+        $FutureProvider<TsunamiSummaryResponse> {
+  const TsunamiSummaryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'jmaMapProvider',
+        name: r'tsunamiSummaryProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$jmaMapHash();
+  String debugGetCreateSourceHash() => _$tsunamiSummaryHash();
 
   @$internal
   @override
-  $FutureProviderElement<Map<JmaMapType, JmaMap_JmaMapData>> $createElement(
+  $FutureProviderElement<TsunamiSummaryResponse> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<Map<JmaMapType, JmaMap_JmaMapData>> create(Ref ref) {
-    return jmaMap(ref);
+  FutureOr<TsunamiSummaryResponse> create(Ref ref) {
+    return tsunamiSummary(ref);
   }
 }
 
-String _$jmaMapHash() => r'66b616db96254fccfe0395f10acb8e5f759d03ba';
+String _$tsunamiSummaryHash() => r'a32a878487ed764021c080688cfec15c4ef1066a';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

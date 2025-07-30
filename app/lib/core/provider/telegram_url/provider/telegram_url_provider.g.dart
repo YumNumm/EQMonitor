@@ -31,17 +31,11 @@ final class TelegramUrlProvider
   @override
   TelegramUrl create() => TelegramUrl();
 
-  @$internal
-  @override
-  $NotifierProviderElement<TelegramUrl, TelegramUrlModel> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(TelegramUrlModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<TelegramUrlModel>(value),
+      providerOverride: $SyncValueProvider<TelegramUrlModel>(value),
     );
   }
 }
@@ -54,11 +48,11 @@ abstract class _$TelegramUrl extends $Notifier<TelegramUrlModel> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<TelegramUrlModel>;
+    final ref = this.ref as $Ref<TelegramUrlModel, TelegramUrlModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<TelegramUrlModel>,
+              AnyNotifier<TelegramUrlModel, TelegramUrlModel>,
               TelegramUrlModel,
               Object?,
               Object?
