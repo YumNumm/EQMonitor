@@ -12,7 +12,12 @@ part of 'jma_parameter_api.dart';
 const jmaParameterApiClientProvider = JmaParameterApiClientProvider._();
 
 final class JmaParameterApiClientProvider
-    extends $FunctionalProvider<JmaParameterApiClient, JmaParameterApiClient>
+    extends
+        $FunctionalProvider<
+          JmaParameterApiClient,
+          JmaParameterApiClient,
+          JmaParameterApiClient
+        >
     with $Provider<JmaParameterApiClient> {
   const JmaParameterApiClientProvider._()
     : super(
@@ -43,7 +48,7 @@ final class JmaParameterApiClientProvider
   Override overrideWithValue(JmaParameterApiClient value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<JmaParameterApiClient>(value),
+      providerOverride: $SyncValueProvider<JmaParameterApiClient>(value),
     );
   }
 }

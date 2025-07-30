@@ -12,7 +12,12 @@ part of 'information_repository.dart';
 const informationRepositoryProvider = InformationRepositoryProvider._();
 
 final class InformationRepositoryProvider
-    extends $FunctionalProvider<InformationRepository, InformationRepository>
+    extends
+        $FunctionalProvider<
+          InformationRepository,
+          InformationRepository,
+          InformationRepository
+        >
     with $Provider<InformationRepository> {
   const InformationRepositoryProvider._()
     : super(
@@ -43,7 +48,7 @@ final class InformationRepositoryProvider
   Override overrideWithValue(InformationRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<InformationRepository>(value),
+      providerOverride: $SyncValueProvider<InformationRepository>(value),
     );
   }
 }

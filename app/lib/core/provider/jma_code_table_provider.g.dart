@@ -12,7 +12,7 @@ part of 'jma_code_table_provider.dart';
 const jmaCodeTableProvider = JmaCodeTableProvider._();
 
 final class JmaCodeTableProvider
-    extends $FunctionalProvider<JmaCodeTable, JmaCodeTable>
+    extends $FunctionalProvider<JmaCodeTable, JmaCodeTable, JmaCodeTable>
     with $Provider<JmaCodeTable> {
   const JmaCodeTableProvider._()
     : super(
@@ -42,7 +42,7 @@ final class JmaCodeTableProvider
   Override overrideWithValue(JmaCodeTable value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<JmaCodeTable>(value),
+      providerOverride: $SyncValueProvider<JmaCodeTable>(value),
     );
   }
 }

@@ -15,6 +15,7 @@ final class _CalculatorProvider
     extends
         $FunctionalProvider<
           AsyncValue<Map<JmaIntensity, List<_MergedRegionIntensity>>>,
+          Map<JmaIntensity, List<_MergedRegionIntensity>>,
           FutureOr<Map<JmaIntensity, List<_MergedRegionIntensity>>>
         >
     with

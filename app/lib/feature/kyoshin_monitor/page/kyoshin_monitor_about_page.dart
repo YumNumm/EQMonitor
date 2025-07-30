@@ -1,10 +1,9 @@
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class KyoshinMonitorAboutRoute extends GoRouteData {
+class KyoshinMonitorAboutRoute extends GoRouteData with _$KyoshinMonitorAboutRoute {
   const KyoshinMonitorAboutRoute();
 
   @override
@@ -74,10 +73,9 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                           '全国約700ヶ所に設置された地中の強震計による観測網です。地表と地中の両方で観測を行います。',
                     ),
                   ],
-                  onTapMore:
-                      () async =>
-                          const KyoshinMonitorAboutObservationNetworkRoute()
-                              .push<void>(context),
+                  onTapMore: () async =>
+                      const KyoshinMonitorAboutObservationNetworkRoute()
+                          .push<void>(context),
                   tapMoreText: '日本を取り巻く観測網について',
                 ),
                 _SectionTitle(title: '利用上の注意', style: textTheme.titleMedium),

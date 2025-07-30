@@ -15,6 +15,7 @@ final class ProductsProvider
     extends
         $FunctionalProvider<
           AsyncValue<List<StoreProduct>>,
+          List<StoreProduct>,
           FutureOr<List<StoreProduct>>
         >
     with
@@ -53,8 +54,12 @@ const purchaseProvider = PurchaseFamily._();
 
 final class PurchaseProvider
     extends
-        $FunctionalProvider<AsyncValue<CustomerInfo>, FutureOr<CustomerInfo>>
-    with $FutureModifier<CustomerInfo>, $FutureProvider<CustomerInfo> {
+        $FunctionalProvider<
+          AsyncValue<PurchaseResult>,
+          PurchaseResult,
+          FutureOr<PurchaseResult>
+        >
+    with $FutureModifier<PurchaseResult>, $FutureProvider<PurchaseResult> {
   const PurchaseProvider._({
     required PurchaseFamily super.from,
     required StoreProduct super.argument,
@@ -78,12 +83,12 @@ final class PurchaseProvider
 
   @$internal
   @override
-  $FutureProviderElement<CustomerInfo> $createElement(
+  $FutureProviderElement<PurchaseResult> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<CustomerInfo> create(Ref ref) {
+  FutureOr<PurchaseResult> create(Ref ref) {
     final argument = this.argument as StoreProduct;
     return purchase(ref, argument);
   }
@@ -99,10 +104,10 @@ final class PurchaseProvider
   }
 }
 
-String _$purchaseHash() => r'9937f03b7541e1c598c164216e7a7ce9dd2ea4d7';
+String _$purchaseHash() => r'51e3cf0a78558b80afcc878b1fe8fc4ceb9146d6';
 
 final class PurchaseFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<CustomerInfo>, StoreProduct> {
+    with $FunctionalFamilyOverride<FutureOr<PurchaseResult>, StoreProduct> {
   const PurchaseFamily._()
     : super(
         retry: null,

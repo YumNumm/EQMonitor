@@ -12,7 +12,12 @@ part of 'firebase_crashlytics.dart';
 const firebaseCrashlyticsProvider = FirebaseCrashlyticsProvider._();
 
 final class FirebaseCrashlyticsProvider
-    extends $FunctionalProvider<FirebaseCrashlytics, FirebaseCrashlytics>
+    extends
+        $FunctionalProvider<
+          FirebaseCrashlytics,
+          FirebaseCrashlytics,
+          FirebaseCrashlytics
+        >
     with $Provider<FirebaseCrashlytics> {
   const FirebaseCrashlyticsProvider._()
     : super(
@@ -43,7 +48,7 @@ final class FirebaseCrashlyticsProvider
   Override overrideWithValue(FirebaseCrashlytics value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<FirebaseCrashlytics>(value),
+      providerOverride: $SyncValueProvider<FirebaseCrashlytics>(value),
     );
   }
 }

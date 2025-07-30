@@ -16,6 +16,7 @@ final class KyoshinMonitorWebApiClientProvider
     extends
         $FunctionalProvider<
           KyoshinMonitorWebApiClient,
+          KyoshinMonitorWebApiClient,
           KyoshinMonitorWebApiClient
         >
     with $Provider<KyoshinMonitorWebApiClient> {
@@ -48,7 +49,7 @@ final class KyoshinMonitorWebApiClientProvider
   Override overrideWithValue(KyoshinMonitorWebApiClient value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<KyoshinMonitorWebApiClient>(value),
+      providerOverride: $SyncValueProvider<KyoshinMonitorWebApiClient>(value),
     );
   }
 }
@@ -63,6 +64,7 @@ const lpgmKyoshinMonitorWebApiClientProvider =
 final class LpgmKyoshinMonitorWebApiClientProvider
     extends
         $FunctionalProvider<
+          LpgmKyoshinMonitorWebApiClient,
           LpgmKyoshinMonitorWebApiClient,
           LpgmKyoshinMonitorWebApiClient
         >
@@ -96,7 +98,9 @@ final class LpgmKyoshinMonitorWebApiClientProvider
   Override overrideWithValue(LpgmKyoshinMonitorWebApiClient value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<LpgmKyoshinMonitorWebApiClient>(value),
+      providerOverride: $SyncValueProvider<LpgmKyoshinMonitorWebApiClient>(
+        value,
+      ),
     );
   }
 }

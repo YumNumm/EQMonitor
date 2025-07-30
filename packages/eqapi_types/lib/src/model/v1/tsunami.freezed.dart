@@ -3493,4 +3493,791 @@ as EarthquakeMagnitudeCondition?,
 
 }
 
+TsunamiData _$TsunamiDataFromJson(
+  Map<String, dynamic> json
+) {
+        switch (json['type']) {
+                  case '津波警報・注意報・予報a':
+          return TsunamiDataVTSE41.fromJson(
+            json
+          );
+                case '津波情報a':
+          return TsunamiDataVTSE51.fromJson(
+            json
+          );
+                case '沖合の津波観測に関する情報':
+          return TsunamiDataVTSE52.fromJson(
+            json
+          );
+        
+          default:
+            throw CheckedFromJsonException(
+  json,
+  'type',
+  'TsunamiData',
+  'Invalid union type "${json['type']}"!'
+);
+        }
+      
+}
+
+/// @nodoc
+mixin _$TsunamiData {
+
+ int get id; int get eventId; int? get serialNo; TsunamiBody get body; String get status; String? get headline;
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiDataCopyWith<TsunamiData> get copyWith => _$TsunamiDataCopyWithImpl<TsunamiData>(this as TsunamiData, _$identity);
+
+  /// Serializes this TsunamiData to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiData&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.body, body) || other.body == body)&&(identical(other.status, status) || other.status == status)&&(identical(other.headline, headline) || other.headline == headline));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,eventId,serialNo,body,status,headline);
+
+@override
+String toString() {
+  return 'TsunamiData(id: $id, eventId: $eventId, serialNo: $serialNo, body: $body, status: $status, headline: $headline)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TsunamiDataCopyWith<$Res>  {
+  factory $TsunamiDataCopyWith(TsunamiData value, $Res Function(TsunamiData) _then) = _$TsunamiDataCopyWithImpl;
+@useResult
+$Res call({
+ int id, int eventId, int? serialNo, TsunamiBody body, String status, String? headline
+});
+
+
+
+
+}
+/// @nodoc
+class _$TsunamiDataCopyWithImpl<$Res>
+    implements $TsunamiDataCopyWith<$Res> {
+  _$TsunamiDataCopyWithImpl(this._self, this._then);
+
+  final TsunamiData _self;
+  final $Res Function(TsunamiData) _then;
+
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventId = null,Object? serialNo = freezed,Object? body = null,Object? status = null,Object? headline = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as int?,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as TsunamiBody,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// @nodoc
+@JsonSerializable()
+
+class TsunamiDataVTSE41 implements TsunamiData {
+  const TsunamiDataVTSE41({required this.id, required this.eventId, required this.serialNo, required this.body, required this.status, required this.headline, required this.infoType, required this.pressAt, required this.reportAt, required this.validAt, final  String? $type}): $type = $type ?? '津波警報・注意報・予報a';
+  factory TsunamiDataVTSE41.fromJson(Map<String, dynamic> json) => _$TsunamiDataVTSE41FromJson(json);
+
+@override final  int id;
+@override final  int eventId;
+@override final  int? serialNo;
+@override final  TsunamiBody body;
+@override final  String status;
+@override final  String? headline;
+ final  String infoType;
+ final  DateTime pressAt;
+ final  DateTime reportAt;
+ final  DateTime? validAt;
+
+@JsonKey(name: 'type')
+final String $type;
+
+
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiDataVTSE41CopyWith<TsunamiDataVTSE41> get copyWith => _$TsunamiDataVTSE41CopyWithImpl<TsunamiDataVTSE41>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiDataVTSE41ToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiDataVTSE41&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.body, body) || other.body == body)&&(identical(other.status, status) || other.status == status)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.validAt, validAt) || other.validAt == validAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,eventId,serialNo,body,status,headline,infoType,pressAt,reportAt,validAt);
+
+@override
+String toString() {
+  return 'TsunamiData.vtse41(id: $id, eventId: $eventId, serialNo: $serialNo, body: $body, status: $status, headline: $headline, infoType: $infoType, pressAt: $pressAt, reportAt: $reportAt, validAt: $validAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TsunamiDataVTSE41CopyWith<$Res> implements $TsunamiDataCopyWith<$Res> {
+  factory $TsunamiDataVTSE41CopyWith(TsunamiDataVTSE41 value, $Res Function(TsunamiDataVTSE41) _then) = _$TsunamiDataVTSE41CopyWithImpl;
+@override @useResult
+$Res call({
+ int id, int eventId, int? serialNo, TsunamiBody body, String status, String? headline, String infoType, DateTime pressAt, DateTime reportAt, DateTime? validAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$TsunamiDataVTSE41CopyWithImpl<$Res>
+    implements $TsunamiDataVTSE41CopyWith<$Res> {
+  _$TsunamiDataVTSE41CopyWithImpl(this._self, this._then);
+
+  final TsunamiDataVTSE41 _self;
+  final $Res Function(TsunamiDataVTSE41) _then;
+
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventId = null,Object? serialNo = freezed,Object? body = null,Object? status = null,Object? headline = freezed,Object? infoType = null,Object? pressAt = null,Object? reportAt = null,Object? validAt = freezed,}) {
+  return _then(TsunamiDataVTSE41(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as int?,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as TsunamiBody,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
+as String,pressAt: null == pressAt ? _self.pressAt : pressAt // ignore: cast_nullable_to_non_nullable
+as DateTime,reportAt: null == reportAt ? _self.reportAt : reportAt // ignore: cast_nullable_to_non_nullable
+as DateTime,validAt: freezed == validAt ? _self.validAt : validAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class TsunamiDataVTSE51 implements TsunamiData {
+  const TsunamiDataVTSE51({required this.id, required this.eventId, required this.serialNo, required this.body, required this.status, required this.headline, required this.infoType, required this.pressAt, required this.reportAt, required this.validAt, final  String? $type}): $type = $type ?? '津波情報a';
+  factory TsunamiDataVTSE51.fromJson(Map<String, dynamic> json) => _$TsunamiDataVTSE51FromJson(json);
+
+@override final  int id;
+@override final  int eventId;
+@override final  int? serialNo;
+@override final  TsunamiBody body;
+@override final  String status;
+@override final  String? headline;
+ final  String infoType;
+ final  DateTime pressAt;
+ final  DateTime reportAt;
+ final  DateTime? validAt;
+
+@JsonKey(name: 'type')
+final String $type;
+
+
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiDataVTSE51CopyWith<TsunamiDataVTSE51> get copyWith => _$TsunamiDataVTSE51CopyWithImpl<TsunamiDataVTSE51>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiDataVTSE51ToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiDataVTSE51&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.body, body) || other.body == body)&&(identical(other.status, status) || other.status == status)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.validAt, validAt) || other.validAt == validAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,eventId,serialNo,body,status,headline,infoType,pressAt,reportAt,validAt);
+
+@override
+String toString() {
+  return 'TsunamiData.vtse51(id: $id, eventId: $eventId, serialNo: $serialNo, body: $body, status: $status, headline: $headline, infoType: $infoType, pressAt: $pressAt, reportAt: $reportAt, validAt: $validAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TsunamiDataVTSE51CopyWith<$Res> implements $TsunamiDataCopyWith<$Res> {
+  factory $TsunamiDataVTSE51CopyWith(TsunamiDataVTSE51 value, $Res Function(TsunamiDataVTSE51) _then) = _$TsunamiDataVTSE51CopyWithImpl;
+@override @useResult
+$Res call({
+ int id, int eventId, int? serialNo, TsunamiBody body, String status, String? headline, String infoType, DateTime pressAt, DateTime reportAt, DateTime? validAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$TsunamiDataVTSE51CopyWithImpl<$Res>
+    implements $TsunamiDataVTSE51CopyWith<$Res> {
+  _$TsunamiDataVTSE51CopyWithImpl(this._self, this._then);
+
+  final TsunamiDataVTSE51 _self;
+  final $Res Function(TsunamiDataVTSE51) _then;
+
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventId = null,Object? serialNo = freezed,Object? body = null,Object? status = null,Object? headline = freezed,Object? infoType = null,Object? pressAt = null,Object? reportAt = null,Object? validAt = freezed,}) {
+  return _then(TsunamiDataVTSE51(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as int?,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as TsunamiBody,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
+as String,pressAt: null == pressAt ? _self.pressAt : pressAt // ignore: cast_nullable_to_non_nullable
+as DateTime,reportAt: null == reportAt ? _self.reportAt : reportAt // ignore: cast_nullable_to_non_nullable
+as DateTime,validAt: freezed == validAt ? _self.validAt : validAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class TsunamiDataVTSE52 implements TsunamiData {
+  const TsunamiDataVTSE52({required this.id, required this.eventId, required this.serialNo, required this.body, required this.status, required this.headline, final  String? $type}): $type = $type ?? '沖合の津波観測に関する情報';
+  factory TsunamiDataVTSE52.fromJson(Map<String, dynamic> json) => _$TsunamiDataVTSE52FromJson(json);
+
+@override final  int id;
+@override final  int eventId;
+@override final  int? serialNo;
+@override final  TsunamiBody body;
+@override final  String status;
+@override final  String? headline;
+
+@JsonKey(name: 'type')
+final String $type;
+
+
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiDataVTSE52CopyWith<TsunamiDataVTSE52> get copyWith => _$TsunamiDataVTSE52CopyWithImpl<TsunamiDataVTSE52>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiDataVTSE52ToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiDataVTSE52&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.body, body) || other.body == body)&&(identical(other.status, status) || other.status == status)&&(identical(other.headline, headline) || other.headline == headline));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,eventId,serialNo,body,status,headline);
+
+@override
+String toString() {
+  return 'TsunamiData.vtse52(id: $id, eventId: $eventId, serialNo: $serialNo, body: $body, status: $status, headline: $headline)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TsunamiDataVTSE52CopyWith<$Res> implements $TsunamiDataCopyWith<$Res> {
+  factory $TsunamiDataVTSE52CopyWith(TsunamiDataVTSE52 value, $Res Function(TsunamiDataVTSE52) _then) = _$TsunamiDataVTSE52CopyWithImpl;
+@override @useResult
+$Res call({
+ int id, int eventId, int? serialNo, TsunamiBody body, String status, String? headline
+});
+
+
+
+
+}
+/// @nodoc
+class _$TsunamiDataVTSE52CopyWithImpl<$Res>
+    implements $TsunamiDataVTSE52CopyWith<$Res> {
+  _$TsunamiDataVTSE52CopyWithImpl(this._self, this._then);
+
+  final TsunamiDataVTSE52 _self;
+  final $Res Function(TsunamiDataVTSE52) _then;
+
+/// Create a copy of TsunamiData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventId = null,Object? serialNo = freezed,Object? body = null,Object? status = null,Object? headline = freezed,}) {
+  return _then(TsunamiDataVTSE52(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as int?,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as TsunamiBody,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$TsunamiGroupedByEvent {
+
+@JsonKey(name: 'event_id') String get eventId; TsunamiDataVTSE41? get vtse41; TsunamiDataVTSE51? get vtse51; TsunamiDataVTSE52? get vtse52;
+/// Create a copy of TsunamiGroupedByEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiGroupedByEventCopyWith<TsunamiGroupedByEvent> get copyWith => _$TsunamiGroupedByEventCopyWithImpl<TsunamiGroupedByEvent>(this as TsunamiGroupedByEvent, _$identity);
+
+  /// Serializes this TsunamiGroupedByEvent to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiGroupedByEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&const DeepCollectionEquality().equals(other.vtse41, vtse41)&&const DeepCollectionEquality().equals(other.vtse51, vtse51)&&const DeepCollectionEquality().equals(other.vtse52, vtse52));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,eventId,const DeepCollectionEquality().hash(vtse41),const DeepCollectionEquality().hash(vtse51),const DeepCollectionEquality().hash(vtse52));
+
+@override
+String toString() {
+  return 'TsunamiGroupedByEvent(eventId: $eventId, vtse41: $vtse41, vtse51: $vtse51, vtse52: $vtse52)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TsunamiGroupedByEventCopyWith<$Res>  {
+  factory $TsunamiGroupedByEventCopyWith(TsunamiGroupedByEvent value, $Res Function(TsunamiGroupedByEvent) _then) = _$TsunamiGroupedByEventCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'event_id') String eventId, TsunamiDataVTSE41? vtse41, TsunamiDataVTSE51? vtse51, TsunamiDataVTSE52? vtse52
+});
+
+
+
+
+}
+/// @nodoc
+class _$TsunamiGroupedByEventCopyWithImpl<$Res>
+    implements $TsunamiGroupedByEventCopyWith<$Res> {
+  _$TsunamiGroupedByEventCopyWithImpl(this._self, this._then);
+
+  final TsunamiGroupedByEvent _self;
+  final $Res Function(TsunamiGroupedByEvent) _then;
+
+/// Create a copy of TsunamiGroupedByEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? vtse41 = freezed,Object? vtse51 = freezed,Object? vtse52 = freezed,}) {
+  return _then(_self.copyWith(
+eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,vtse41: freezed == vtse41 ? _self.vtse41 : vtse41 // ignore: cast_nullable_to_non_nullable
+as TsunamiDataVTSE41?,vtse51: freezed == vtse51 ? _self.vtse51 : vtse51 // ignore: cast_nullable_to_non_nullable
+as TsunamiDataVTSE51?,vtse52: freezed == vtse52 ? _self.vtse52 : vtse52 // ignore: cast_nullable_to_non_nullable
+as TsunamiDataVTSE52?,
+  ));
+}
+
+}
+
+
+/// @nodoc
+@JsonSerializable()
+
+class _TsunamiGroupedByEvent implements TsunamiGroupedByEvent {
+  const _TsunamiGroupedByEvent({@JsonKey(name: 'event_id') required this.eventId, required this.vtse41, required this.vtse51, required this.vtse52});
+  factory _TsunamiGroupedByEvent.fromJson(Map<String, dynamic> json) => _$TsunamiGroupedByEventFromJson(json);
+
+@override@JsonKey(name: 'event_id') final  String eventId;
+@override final  TsunamiDataVTSE41? vtse41;
+@override final  TsunamiDataVTSE51? vtse51;
+@override final  TsunamiDataVTSE52? vtse52;
+
+/// Create a copy of TsunamiGroupedByEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TsunamiGroupedByEventCopyWith<_TsunamiGroupedByEvent> get copyWith => __$TsunamiGroupedByEventCopyWithImpl<_TsunamiGroupedByEvent>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiGroupedByEventToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiGroupedByEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&const DeepCollectionEquality().equals(other.vtse41, vtse41)&&const DeepCollectionEquality().equals(other.vtse51, vtse51)&&const DeepCollectionEquality().equals(other.vtse52, vtse52));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,eventId,const DeepCollectionEquality().hash(vtse41),const DeepCollectionEquality().hash(vtse51),const DeepCollectionEquality().hash(vtse52));
+
+@override
+String toString() {
+  return 'TsunamiGroupedByEvent(eventId: $eventId, vtse41: $vtse41, vtse51: $vtse51, vtse52: $vtse52)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TsunamiGroupedByEventCopyWith<$Res> implements $TsunamiGroupedByEventCopyWith<$Res> {
+  factory _$TsunamiGroupedByEventCopyWith(_TsunamiGroupedByEvent value, $Res Function(_TsunamiGroupedByEvent) _then) = __$TsunamiGroupedByEventCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'event_id') String eventId, TsunamiDataVTSE41? vtse41, TsunamiDataVTSE51? vtse51, TsunamiDataVTSE52? vtse52
+});
+
+
+
+
+}
+/// @nodoc
+class __$TsunamiGroupedByEventCopyWithImpl<$Res>
+    implements _$TsunamiGroupedByEventCopyWith<$Res> {
+  __$TsunamiGroupedByEventCopyWithImpl(this._self, this._then);
+
+  final _TsunamiGroupedByEvent _self;
+  final $Res Function(_TsunamiGroupedByEvent) _then;
+
+/// Create a copy of TsunamiGroupedByEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? vtse41 = freezed,Object? vtse51 = freezed,Object? vtse52 = freezed,}) {
+  return _then(_TsunamiGroupedByEvent(
+eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,vtse41: freezed == vtse41 ? _self.vtse41 : vtse41 // ignore: cast_nullable_to_non_nullable
+as TsunamiDataVTSE41?,vtse51: freezed == vtse51 ? _self.vtse51 : vtse51 // ignore: cast_nullable_to_non_nullable
+as TsunamiDataVTSE51?,vtse52: freezed == vtse52 ? _self.vtse52 : vtse52 // ignore: cast_nullable_to_non_nullable
+as TsunamiDataVTSE52?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$TsunamiSummaryResponse {
+
+ List<TsunamiGroupedByEvent> get data;
+/// Create a copy of TsunamiSummaryResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiSummaryResponseCopyWith<TsunamiSummaryResponse> get copyWith => _$TsunamiSummaryResponseCopyWithImpl<TsunamiSummaryResponse>(this as TsunamiSummaryResponse, _$identity);
+
+  /// Serializes this TsunamiSummaryResponse to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiSummaryResponse&&const DeepCollectionEquality().equals(other.data, data));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data));
+
+@override
+String toString() {
+  return 'TsunamiSummaryResponse(data: $data)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TsunamiSummaryResponseCopyWith<$Res>  {
+  factory $TsunamiSummaryResponseCopyWith(TsunamiSummaryResponse value, $Res Function(TsunamiSummaryResponse) _then) = _$TsunamiSummaryResponseCopyWithImpl;
+@useResult
+$Res call({
+ List<TsunamiGroupedByEvent> data
+});
+
+
+
+
+}
+/// @nodoc
+class _$TsunamiSummaryResponseCopyWithImpl<$Res>
+    implements $TsunamiSummaryResponseCopyWith<$Res> {
+  _$TsunamiSummaryResponseCopyWithImpl(this._self, this._then);
+
+  final TsunamiSummaryResponse _self;
+  final $Res Function(TsunamiSummaryResponse) _then;
+
+/// Create a copy of TsunamiSummaryResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? data = null,}) {
+  return _then(_self.copyWith(
+data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as List<TsunamiGroupedByEvent>,
+  ));
+}
+
+}
+
+
+/// @nodoc
+@JsonSerializable()
+
+class _TsunamiSummaryResponse implements TsunamiSummaryResponse {
+  const _TsunamiSummaryResponse({required final  List<TsunamiGroupedByEvent> data}): _data = data;
+  factory _TsunamiSummaryResponse.fromJson(Map<String, dynamic> json) => _$TsunamiSummaryResponseFromJson(json);
+
+ final  List<TsunamiGroupedByEvent> _data;
+@override List<TsunamiGroupedByEvent> get data {
+  if (_data is EqualUnmodifiableListView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_data);
+}
+
+
+/// Create a copy of TsunamiSummaryResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TsunamiSummaryResponseCopyWith<_TsunamiSummaryResponse> get copyWith => __$TsunamiSummaryResponseCopyWithImpl<_TsunamiSummaryResponse>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiSummaryResponseToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiSummaryResponse&&const DeepCollectionEquality().equals(other._data, _data));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
+
+@override
+String toString() {
+  return 'TsunamiSummaryResponse(data: $data)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TsunamiSummaryResponseCopyWith<$Res> implements $TsunamiSummaryResponseCopyWith<$Res> {
+  factory _$TsunamiSummaryResponseCopyWith(_TsunamiSummaryResponse value, $Res Function(_TsunamiSummaryResponse) _then) = __$TsunamiSummaryResponseCopyWithImpl;
+@override @useResult
+$Res call({
+ List<TsunamiGroupedByEvent> data
+});
+
+
+
+
+}
+/// @nodoc
+class __$TsunamiSummaryResponseCopyWithImpl<$Res>
+    implements _$TsunamiSummaryResponseCopyWith<$Res> {
+  __$TsunamiSummaryResponseCopyWithImpl(this._self, this._then);
+
+  final _TsunamiSummaryResponse _self;
+  final $Res Function(_TsunamiSummaryResponse) _then;
+
+/// Create a copy of TsunamiSummaryResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? data = null,}) {
+  return _then(_TsunamiSummaryResponse(
+data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as List<TsunamiGroupedByEvent>,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$TsunamiDetailResponse {
+
+@JsonKey(name: 'event_id') int get eventId; List<TsunamiData> get data; int get count;
+/// Create a copy of TsunamiDetailResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TsunamiDetailResponseCopyWith<TsunamiDetailResponse> get copyWith => _$TsunamiDetailResponseCopyWithImpl<TsunamiDetailResponse>(this as TsunamiDetailResponse, _$identity);
+
+  /// Serializes this TsunamiDetailResponse to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiDetailResponse&&(identical(other.eventId, eventId) || other.eventId == eventId)&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.count, count) || other.count == count));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,eventId,const DeepCollectionEquality().hash(data),count);
+
+@override
+String toString() {
+  return 'TsunamiDetailResponse(eventId: $eventId, data: $data, count: $count)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TsunamiDetailResponseCopyWith<$Res>  {
+  factory $TsunamiDetailResponseCopyWith(TsunamiDetailResponse value, $Res Function(TsunamiDetailResponse) _then) = _$TsunamiDetailResponseCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'event_id') int eventId, List<TsunamiData> data, int count
+});
+
+
+
+
+}
+/// @nodoc
+class _$TsunamiDetailResponseCopyWithImpl<$Res>
+    implements $TsunamiDetailResponseCopyWith<$Res> {
+  _$TsunamiDetailResponseCopyWithImpl(this._self, this._then);
+
+  final TsunamiDetailResponse _self;
+  final $Res Function(TsunamiDetailResponse) _then;
+
+/// Create a copy of TsunamiDetailResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? data = null,Object? count = null,}) {
+  return _then(_self.copyWith(
+eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
+as List<TsunamiData>,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// @nodoc
+@JsonSerializable()
+
+class _TsunamiDetailResponse implements TsunamiDetailResponse {
+  const _TsunamiDetailResponse({@JsonKey(name: 'event_id') required this.eventId, required final  List<TsunamiData> data, required this.count}): _data = data;
+  factory _TsunamiDetailResponse.fromJson(Map<String, dynamic> json) => _$TsunamiDetailResponseFromJson(json);
+
+@override@JsonKey(name: 'event_id') final  int eventId;
+ final  List<TsunamiData> _data;
+@override List<TsunamiData> get data {
+  if (_data is EqualUnmodifiableListView) return _data;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_data);
+}
+
+@override final  int count;
+
+/// Create a copy of TsunamiDetailResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TsunamiDetailResponseCopyWith<_TsunamiDetailResponse> get copyWith => __$TsunamiDetailResponseCopyWithImpl<_TsunamiDetailResponse>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TsunamiDetailResponseToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiDetailResponse&&(identical(other.eventId, eventId) || other.eventId == eventId)&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.count, count) || other.count == count));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,eventId,const DeepCollectionEquality().hash(_data),count);
+
+@override
+String toString() {
+  return 'TsunamiDetailResponse(eventId: $eventId, data: $data, count: $count)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TsunamiDetailResponseCopyWith<$Res> implements $TsunamiDetailResponseCopyWith<$Res> {
+  factory _$TsunamiDetailResponseCopyWith(_TsunamiDetailResponse value, $Res Function(_TsunamiDetailResponse) _then) = __$TsunamiDetailResponseCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'event_id') int eventId, List<TsunamiData> data, int count
+});
+
+
+
+
+}
+/// @nodoc
+class __$TsunamiDetailResponseCopyWithImpl<$Res>
+    implements _$TsunamiDetailResponseCopyWith<$Res> {
+  __$TsunamiDetailResponseCopyWithImpl(this._self, this._then);
+
+  final _TsunamiDetailResponse _self;
+  final $Res Function(_TsunamiDetailResponse) _then;
+
+/// Create a copy of TsunamiDetailResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? data = null,Object? count = null,}) {
+  return _then(_TsunamiDetailResponse(
+eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int,data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
+as List<TsunamiData>,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 // dart format on

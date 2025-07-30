@@ -12,7 +12,8 @@ part of 'time_ticker.dart';
 const timeTickerProvider = TimeTickerFamily._();
 
 final class TimeTickerProvider
-    extends $FunctionalProvider<AsyncValue<DateTime>, Stream<DateTime>>
+    extends
+        $FunctionalProvider<AsyncValue<DateTime>, DateTime, Stream<DateTime>>
     with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
   const TimeTickerProvider._({
     required TimeTickerFamily super.from,

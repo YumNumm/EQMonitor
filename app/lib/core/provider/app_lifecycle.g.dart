@@ -34,17 +34,11 @@ final class AppLifecycleProvider
   @override
   AppLifecycle create() => AppLifecycle();
 
-  @$internal
-  @override
-  $NotifierProviderElement<AppLifecycle, AppLifecycleState> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(AppLifecycleState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<AppLifecycleState>(value),
+      providerOverride: $SyncValueProvider<AppLifecycleState>(value),
     );
   }
 }
@@ -57,11 +51,11 @@ abstract class _$AppLifecycle extends $Notifier<AppLifecycleState> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AppLifecycleState>;
+    final ref = this.ref as $Ref<AppLifecycleState, AppLifecycleState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AppLifecycleState>,
+              AnyNotifier<AppLifecycleState, AppLifecycleState>,
               AppLifecycleState,
               Object?,
               Object?

@@ -16,6 +16,7 @@ final class NotificationRemoteAuthenticateServiceProvider
     extends
         $FunctionalProvider<
           NotificationRemoteAuthenticationService,
+          NotificationRemoteAuthenticationService,
           NotificationRemoteAuthenticationService
         >
     with $Provider<NotificationRemoteAuthenticationService> {
@@ -49,9 +50,8 @@ final class NotificationRemoteAuthenticateServiceProvider
   Override overrideWithValue(NotificationRemoteAuthenticationService value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<NotificationRemoteAuthenticationService>(
-        value,
-      ),
+      providerOverride:
+          $SyncValueProvider<NotificationRemoteAuthenticationService>(value),
     );
   }
 }

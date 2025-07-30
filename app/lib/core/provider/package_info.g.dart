@@ -12,7 +12,7 @@ part of 'package_info.dart';
 const packageInfoProvider = PackageInfoProvider._();
 
 final class PackageInfoProvider
-    extends $FunctionalProvider<PackageInfo, PackageInfo>
+    extends $FunctionalProvider<PackageInfo, PackageInfo, PackageInfo>
     with $Provider<PackageInfo> {
   const PackageInfoProvider._()
     : super(
@@ -42,7 +42,7 @@ final class PackageInfoProvider
   Override overrideWithValue(PackageInfo value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<PackageInfo>(value),
+      providerOverride: $SyncValueProvider<PackageInfo>(value),
     );
   }
 }

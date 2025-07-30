@@ -34,15 +34,6 @@ final class EstimatedIntensityProvider
   @$internal
   @override
   EstimatedIntensity create() => EstimatedIntensity();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<
-    EstimatedIntensity,
-    List<EstimatedIntensityPoint>
-  >
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$estimatedIntensityHash() =>
@@ -55,11 +46,19 @@ abstract class _$EstimatedIntensity
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<EstimatedIntensityPoint>>>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<EstimatedIntensityPoint>>,
+              List<EstimatedIntensityPoint>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<EstimatedIntensityPoint>>>,
+              AnyNotifier<
+                AsyncValue<List<EstimatedIntensityPoint>>,
+                List<EstimatedIntensityPoint>
+              >,
               AsyncValue<List<EstimatedIntensityPoint>>,
               Object?,
               Object?
@@ -75,6 +74,7 @@ final class EstimatedIntensityCityProvider
     extends
         $FunctionalProvider<
           AsyncValue<Map<String, double>>,
+          Map<String, double>,
           Stream<Map<String, double>>
         >
     with
@@ -116,6 +116,7 @@ final class EstimatedIntensityRegionProvider
     extends
         $FunctionalProvider<
           AsyncValue<Map<String, double>>,
+          Map<String, double>,
           Stream<Map<String, double>>
         >
     with

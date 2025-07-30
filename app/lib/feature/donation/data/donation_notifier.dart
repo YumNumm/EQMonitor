@@ -28,7 +28,7 @@ Future<List<StoreProduct>> products(Ref ref) => Purchases.getProducts(
 );
 
 @riverpod
-Future<CustomerInfo> purchase(Ref ref, StoreProduct product) =>
+Future<PurchaseResult> purchase(Ref ref, StoreProduct product) async =>
     Purchases.purchaseStoreProduct(product);
 
 enum Products {

@@ -11,7 +11,8 @@ part of 'websocket_provider.dart';
 @ProviderFor(websocket)
 const websocketProvider = WebsocketProvider._();
 
-final class WebsocketProvider extends $FunctionalProvider<WebSocket, WebSocket>
+final class WebsocketProvider
+    extends $FunctionalProvider<WebSocket, WebSocket, WebSocket>
     with $Provider<WebSocket> {
   const WebsocketProvider._()
     : super(
@@ -41,7 +42,7 @@ final class WebsocketProvider extends $FunctionalProvider<WebSocket, WebSocket>
   Override overrideWithValue(WebSocket value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<WebSocket>(value),
+      providerOverride: $SyncValueProvider<WebSocket>(value),
     );
   }
 }
@@ -71,17 +72,11 @@ final class WebsocketStatusProvider
   @override
   WebsocketStatus create() => WebsocketStatus();
 
-  @$internal
-  @override
-  $NotifierProviderElement<WebsocketStatus, ConnectionState> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ConnectionState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<ConnectionState>(value),
+      providerOverride: $SyncValueProvider<ConnectionState>(value),
     );
   }
 }
@@ -94,11 +89,11 @@ abstract class _$WebsocketStatus extends $Notifier<ConnectionState> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<ConnectionState>;
+    final ref = this.ref as $Ref<ConnectionState, ConnectionState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ConnectionState>,
+              AnyNotifier<ConnectionState, ConnectionState>,
               ConnectionState,
               Object?,
               Object?
@@ -129,12 +124,6 @@ final class WebsocketMessagesProvider
   @$internal
   @override
   WebsocketMessages create() => WebsocketMessages();
-
-  @$internal
-  @override
-  $StreamNotifierProviderElement<WebsocketMessages, Map<String, dynamic>>
-  $createElement($ProviderPointer pointer) =>
-      $StreamNotifierProviderElement(pointer);
 }
 
 String _$websocketMessagesHash() => r'16cf86bb5810b07fac6e2bac65de369b306f6d9c';
@@ -146,11 +135,16 @@ abstract class _$WebsocketMessages
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<Map<String, dynamic>>>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<Map<String, dynamic>>, Map<String, dynamic>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<Map<String, dynamic>>>,
+              AnyNotifier<
+                AsyncValue<Map<String, dynamic>>,
+                Map<String, dynamic>
+              >,
               AsyncValue<Map<String, dynamic>>,
               Object?,
               Object?
@@ -166,6 +160,7 @@ final class WebsocketParsedMessagesProvider
     extends
         $FunctionalProvider<
           AsyncValue<RealtimePostgresChangesPayloadBase>,
+          RealtimePostgresChangesPayloadBase,
           Stream<RealtimePostgresChangesPayloadBase>
         >
     with
@@ -207,6 +202,7 @@ final class WebsocketTableMessagesProvider
     extends
         $FunctionalProvider<
           AsyncValue<RealtimePostgresChangesPayloadTable>,
+          RealtimePostgresChangesPayloadTable,
           Stream<RealtimePostgresChangesPayloadTable>
         >
     with

@@ -15,6 +15,7 @@ final class ApiAuthenticationPayloadProvider
     extends
         $FunctionalProvider<
           AsyncValue<({String id, String role})>,
+          ({String id, String role}),
           FutureOr<({String id, String role})>
         >
     with

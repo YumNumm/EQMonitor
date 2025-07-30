@@ -31,17 +31,11 @@ final class LocationTrackingModeProvider
   @override
   LocationTrackingMode create() => LocationTrackingMode();
 
-  @$internal
-  @override
-  $NotifierProviderElement<LocationTrackingMode, bool> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<bool>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
@@ -55,10 +49,15 @@ abstract class _$LocationTrackingMode extends $Notifier<bool> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<bool>;
+    final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
-            as $ClassProviderElement<AnyNotifier<bool>, bool, Object?, Object?>;
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
     element.handleValue(ref, created);
   }
 }

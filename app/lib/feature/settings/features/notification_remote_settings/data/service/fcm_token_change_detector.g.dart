@@ -30,12 +30,6 @@ final class FcmTokenChangeDetectorProvider
   @$internal
   @override
   FcmTokenChangeDetector create() => FcmTokenChangeDetector();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<FcmTokenChangeDetector, bool> $createElement(
-    $ProviderPointer pointer,
-  ) => $AsyncNotifierProviderElement(pointer);
 }
 
 String _$fcmTokenChangeDetectorHash() =>
@@ -47,11 +41,11 @@ abstract class _$FcmTokenChangeDetector extends $AsyncNotifier<bool> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<bool>>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<bool>>,
+              AnyNotifier<AsyncValue<bool>, bool>,
               AsyncValue<bool>,
               Object?,
               Object?

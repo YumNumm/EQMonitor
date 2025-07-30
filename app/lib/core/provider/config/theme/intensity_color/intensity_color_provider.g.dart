@@ -31,17 +31,11 @@ final class IntensityColorProvider
   @override
   IntensityColor create() => IntensityColor();
 
-  @$internal
-  @override
-  $NotifierProviderElement<IntensityColor, IntensityColorModel> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(IntensityColorModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<IntensityColorModel>(value),
+      providerOverride: $SyncValueProvider<IntensityColorModel>(value),
     );
   }
 }
@@ -54,11 +48,11 @@ abstract class _$IntensityColor extends $Notifier<IntensityColorModel> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<IntensityColorModel>;
+    final ref = this.ref as $Ref<IntensityColorModel, IntensityColorModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<IntensityColorModel>,
+              AnyNotifier<IntensityColorModel, IntensityColorModel>,
               IntensityColorModel,
               Object?,
               Object?

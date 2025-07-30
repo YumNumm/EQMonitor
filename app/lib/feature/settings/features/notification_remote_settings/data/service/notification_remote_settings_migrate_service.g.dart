@@ -37,15 +37,6 @@ final class NotificationRemoteSettingsInitialSetupNotifierProvider
   @override
   NotificationRemoteSettingsInitialSetupNotifier create() =>
       NotificationRemoteSettingsInitialSetupNotifier();
-
-  @$internal
-  @override
-  $StreamNotifierProviderElement<
-    NotificationRemoteSettingsInitialSetupNotifier,
-    NotificationRemoteSettingsSetupState
-  >
-  $createElement($ProviderPointer pointer) =>
-      $StreamNotifierProviderElement(pointer);
 }
 
 String _$notificationRemoteSettingsInitialSetupNotifierHash() =>
@@ -59,11 +50,18 @@ abstract class _$NotificationRemoteSettingsInitialSetupNotifier
   void runBuild() {
     final created = build();
     final ref =
-        this.ref as $Ref<AsyncValue<NotificationRemoteSettingsSetupState>>;
+        this.ref
+            as $Ref<
+              AsyncValue<NotificationRemoteSettingsSetupState>,
+              NotificationRemoteSettingsSetupState
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<NotificationRemoteSettingsSetupState>>,
+              AnyNotifier<
+                AsyncValue<NotificationRemoteSettingsSetupState>,
+                NotificationRemoteSettingsSetupState
+              >,
               AsyncValue<NotificationRemoteSettingsSetupState>,
               Object?,
               Object?

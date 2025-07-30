@@ -1,8 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/container/background_container.dart';
-import 'package:eqmonitor/core/provider/tsunami_provider.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/tsunami_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TsunamiHistoryPage extends HookConsumerWidget {
@@ -11,39 +9,37 @@ class TsunamiHistoryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tsunamiAsync = ref.watch(tsunamiSummaryProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('津波情報'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => ref.read(tsunamiSummaryProvider.notifier).refresh(),
+            onPressed: () async => ref.refresh(tsunamiSummaryProvider),
           ),
         ],
       ),
-      body: BackgroundContainer(
-        child: tsunamiAsync.when(
-          data: (data) => _TsunamiList(data: data),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          error: (error, stackTrace) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('エラーが発生しました'),
-                const SizedBox(height: 8),
-                Text(error.toString()),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => ref.read(tsunamiSummaryProvider.notifier).refresh(),
-                  child: const Text('再試行'),
-                ),
-              ],
-            ),
+      body: tsunamiAsync.when(
+        data: (data) => _TsunamiList(data: data.data),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              const Text('エラーが発生しました'),
+              const SizedBox(height: 8),
+              Text(error.toString()),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () => ref.refresh(tsunamiSummaryProvider),
+                child: const Text('再試行'),
+              ),
+            ],
           ),
         ),
       ),
@@ -54,11 +50,11 @@ class TsunamiHistoryPage extends HookConsumerWidget {
 class _TsunamiList extends StatelessWidget {
   const _TsunamiList({required this.data});
 
-  final TsunamiSummaryResponse data;
+  final List<TsunamiGroupedByEvent> data;
 
   @override
   Widget build(BuildContext context) {
-    if (data.data.isEmpty) {
+    if (data.isEmpty) {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -72,9 +68,9 @@ class _TsunamiList extends StatelessWidget {
     }
 
     return ListView.builder(
-      itemCount: data.data.length,
+      itemCount: data.length,
       itemBuilder: (context, index) {
-        final group = data.data[index];
+        final group = data[index];
         return _TsunamiGroupCard(group: group);
       },
     );
@@ -89,10 +85,12 @@ class _TsunamiGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // 最新の津波データを取得
     final latestData = _getLatestTsunamiData();
-    if (latestData == null) return const SizedBox.shrink();
+    if (latestData == null) {
+      return const SizedBox.shrink();
+    }
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -105,7 +103,10 @@ class _TsunamiGroupCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: _getTsunamiTypeColor(latestData.type),
                     borderRadius: BorderRadius.circular(4),
@@ -132,14 +133,14 @@ class _TsunamiGroupCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            
+
             // 情報詳細
             _buildInfoRow('イベントID', group.eventId),
             _buildInfoRow('発表時刻', _formatDateTime(latestData.pressAt)),
             _buildInfoRow('報告時刻', _formatDateTime(latestData.reportAt)),
             _buildInfoRow('情報種別', latestData.infoType),
             _buildInfoRow('状態', latestData.status),
-            
+
             // 津波データの種類
             const SizedBox(height: 8),
             Wrap(
@@ -215,14 +216,15 @@ class _TsunamiGroupCard extends StatelessWidget {
     DateTime pressAt,
     DateTime reportAt,
     DateTime? validAt,
-  })? _getLatestTsunamiData() {
+  })?
+  _getLatestTsunamiData() {
     if (group.vtse41 != null) {
       final data = group.vtse41!;
       return (
         id: data.id,
         eventId: data.eventId,
         serialNo: data.serialNo,
-        type: data.type,
+        type: '津波警報・注意報・予報a',
         status: data.status,
         headline: data.headline,
         infoType: data.infoType,
@@ -237,7 +239,7 @@ class _TsunamiGroupCard extends StatelessWidget {
         id: data.id,
         eventId: data.eventId,
         serialNo: data.serialNo,
-        type: data.type,
+        type: '津波情報a',
         status: data.status,
         headline: data.headline,
         infoType: data.infoType,
@@ -252,13 +254,13 @@ class _TsunamiGroupCard extends StatelessWidget {
         id: data.id,
         eventId: data.eventId,
         serialNo: data.serialNo,
-        type: data.type,
+        type: '沖合の津波観測に関する情報',
         status: data.status,
         headline: data.headline,
-        infoType: data.infoType,
-        pressAt: data.pressAt,
-        reportAt: data.reportAt,
-        validAt: data.validAt,
+        infoType: '発表', // VTSE52では固定値
+        pressAt: DateTime.now(), // VTSE52では現在時刻（表示用）
+        reportAt: DateTime.now(), // VTSE52では現在時刻（表示用）
+        validAt: null, // VTSE52ではnull
       );
     }
     return null;

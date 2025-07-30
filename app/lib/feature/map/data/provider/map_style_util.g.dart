@@ -12,7 +12,7 @@ part of 'map_style_util.dart';
 const mapStyleUtilProvider = MapStyleUtilProvider._();
 
 final class MapStyleUtilProvider
-    extends $FunctionalProvider<MapStyleUtil, MapStyleUtil>
+    extends $FunctionalProvider<MapStyleUtil, MapStyleUtil, MapStyleUtil>
     with $Provider<MapStyleUtil> {
   const MapStyleUtilProvider._()
     : super(
@@ -42,7 +42,7 @@ final class MapStyleUtilProvider
   Override overrideWithValue(MapStyleUtil value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<MapStyleUtil>(value),
+      providerOverride: $SyncValueProvider<MapStyleUtil>(value),
     );
   }
 }

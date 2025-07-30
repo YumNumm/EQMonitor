@@ -65,7 +65,7 @@ class GoRouterRedirectException implements Exception {
 }
 
 @TypedGoRoute<SetupRoute>(path: '/setup')
-class SetupRoute extends GoRouteData {
+class SetupRoute extends GoRouteData with _$SetupRoute {
   const SetupRoute();
 
   @override
@@ -74,7 +74,7 @@ class SetupRoute extends GoRouteData {
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
-class EarthquakeHistoryRoute extends GoRouteData {
+class EarthquakeHistoryRoute extends GoRouteData with _$EarthquakeHistoryRoute {
   const EarthquakeHistoryRoute();
 
   @override
@@ -85,7 +85,8 @@ class EarthquakeHistoryRoute extends GoRouteData {
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
   path: '/earthquake-history-details/:eventId',
 )
-class EarthquakeHistoryDetailsRoute extends GoRouteData {
+class EarthquakeHistoryDetailsRoute extends GoRouteData
+    with _$EarthquakeHistoryDetailsRoute {
   const EarthquakeHistoryDetailsRoute({required this.eventId});
 
   final int eventId;
@@ -97,7 +98,8 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
 }
 
 @TypedGoRoute<InformationHistoryRoute>(path: '/information-history')
-class InformationHistoryRoute extends GoRouteData {
+class InformationHistoryRoute extends GoRouteData
+    with _$InformationHistoryRoute {
   const InformationHistoryRoute();
 
   @override
@@ -108,7 +110,8 @@ class InformationHistoryRoute extends GoRouteData {
 @TypedGoRoute<InformationHistoryDetailsRoute>(
   path: '/information-history-details',
 )
-class InformationHistoryDetailsRoute extends GoRouteData {
+class InformationHistoryDetailsRoute extends GoRouteData
+    with _$InformationHistoryDetailsRoute {
   const InformationHistoryDetailsRoute({required this.$extra});
 
   final InformationV3 $extra;
@@ -119,7 +122,7 @@ class InformationHistoryDetailsRoute extends GoRouteData {
 }
 
 @TypedGoRoute<TsunamiHistoryRoute>(path: '/tsunami-history')
-class TsunamiHistoryRoute extends GoRouteData {
+class TsunamiHistoryRoute extends GoRouteData with _$TsunamiHistoryRoute {
   const TsunamiHistoryRoute();
 
   @override
@@ -141,7 +144,7 @@ class TsunamiHistoryRoute extends GoRouteData {
     ),
   ],
 )
-class HomeRoute extends GoRouteData {
+class HomeRoute extends GoRouteData with _$HomeRoute {
   const HomeRoute();
 
   @override
@@ -150,7 +153,7 @@ class HomeRoute extends GoRouteData {
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')
-class TalkerRoute extends GoRouteData {
+class TalkerRoute extends GoRouteData with _$TalkerRoute {
   const TalkerRoute();
 
   @override
@@ -204,7 +207,7 @@ class TalkerRoute extends GoRouteData {
     ),
   ],
 )
-class SettingsRoute extends GoRouteData {
+class SettingsRoute extends GoRouteData with _$SettingsRoute {
   const SettingsRoute();
 
   @override
@@ -212,7 +215,7 @@ class SettingsRoute extends GoRouteData {
       const SettingsScreen();
 }
 
-class NotificationRoute extends GoRouteData {
+class NotificationRoute extends GoRouteData with _$NotificationRoute {
   const NotificationRoute();
 
   @override
@@ -220,7 +223,7 @@ class NotificationRoute extends GoRouteData {
       const NotificationRemoteSettingsPage();
 }
 
-class DisplayRoute extends GoRouteData {
+class DisplayRoute extends GoRouteData with _$DisplayRoute {
   const DisplayRoute();
 
   @override
@@ -228,7 +231,8 @@ class DisplayRoute extends GoRouteData {
       const DisplaySettingsScreen();
 }
 
-class NotificationEarthquakeRoute extends GoRouteData {
+class NotificationEarthquakeRoute extends GoRouteData
+    with _$NotificationEarthquakeRoute {
   const NotificationEarthquakeRoute();
 
   @override
@@ -236,7 +240,7 @@ class NotificationEarthquakeRoute extends GoRouteData {
       const NotificationRemoteSettingsEarthquakePage();
 }
 
-class NotificationEewRoute extends GoRouteData {
+class NotificationEewRoute extends GoRouteData with _$NotificationEewRoute {
   const NotificationEewRoute();
 
   @override
@@ -244,14 +248,15 @@ class NotificationEewRoute extends GoRouteData {
       const NotificationRemoteSettingsEewPage();
 }
 
-class DebugRoute extends GoRouteData {
+class DebugRoute extends GoRouteData with _$DebugRoute {
   const DebugRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const DebugPage();
 }
 
-class HttpApiEndpointSelectorRoute extends GoRouteData {
+class HttpApiEndpointSelectorRoute extends GoRouteData
+    with _$HttpApiEndpointSelectorRoute {
   const HttpApiEndpointSelectorRoute();
 
   @override
@@ -259,7 +264,8 @@ class HttpApiEndpointSelectorRoute extends GoRouteData {
       const HttpApiEndpointSelectorPage();
 }
 
-class WebsocketEndpointSelectorRoute extends GoRouteData {
+class WebsocketEndpointSelectorRoute extends GoRouteData
+    with _$WebsocketEndpointSelectorRoute {
   const WebsocketEndpointSelectorRoute();
 
   @override
@@ -267,7 +273,8 @@ class WebsocketEndpointSelectorRoute extends GoRouteData {
       const WebSocketApiEndpointSelectorPage();
 }
 
-class EarthquakeHistoryConfigRoute extends GoRouteData {
+class EarthquakeHistoryConfigRoute extends GoRouteData
+    with _$EarthquakeHistoryConfigRoute {
   const EarthquakeHistoryConfigRoute();
 
   @override
@@ -275,7 +282,7 @@ class EarthquakeHistoryConfigRoute extends GoRouteData {
       const EarthquakeHistoryConfigPage();
 }
 
-class TermOfServiceRoute extends GoRouteData {
+class TermOfServiceRoute extends GoRouteData with _$TermOfServiceRoute {
   const TermOfServiceRoute({
     required this.$extra,
     this.showAcceptButton = false,
@@ -289,7 +296,7 @@ class TermOfServiceRoute extends GoRouteData {
       TermOfServiceScreen(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
-class ColorSchemeConfigRoute extends GoRouteData {
+class ColorSchemeConfigRoute extends GoRouteData with _$ColorSchemeConfigRoute {
   const ColorSchemeConfigRoute();
 
   @override
@@ -297,7 +304,7 @@ class ColorSchemeConfigRoute extends GoRouteData {
       const ColorSchemeConfigPage();
 }
 
-class PrivacyPolicyRoute extends GoRouteData {
+class PrivacyPolicyRoute extends GoRouteData with _$PrivacyPolicyRoute {
   const PrivacyPolicyRoute({
     required this.$extra,
     this.showAcceptButton = false,
@@ -311,7 +318,7 @@ class PrivacyPolicyRoute extends GoRouteData {
       PrivacyPolicyScreen(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
-class LicenseRoute extends GoRouteData {
+class LicenseRoute extends GoRouteData with _$LicenseRoute {
   const LicenseRoute();
 
   @override
@@ -319,7 +326,7 @@ class LicenseRoute extends GoRouteData {
       const LicensePage();
 }
 
-class AboutThisAppRoute extends GoRouteData {
+class AboutThisAppRoute extends GoRouteData with _$AboutThisAppRoute {
   const AboutThisAppRoute();
 
   @override
@@ -327,7 +334,7 @@ class AboutThisAppRoute extends GoRouteData {
       const AboutThisAppScreen();
 }
 
-class DonationRoute extends GoRouteData {
+class DonationRoute extends GoRouteData with _$DonationRoute {
   const DonationRoute();
 
   @override
@@ -341,7 +348,7 @@ class DonationRoute extends GoRouteData {
 
 typedef DonationExecutedRouteExtra = (StoreProduct, CustomerInfo);
 
-class DonationExecutedRoute extends GoRouteData {
+class DonationExecutedRoute extends GoRouteData with _$DonationExecutedRoute {
   const DonationExecutedRoute({required this.$extra});
 
   final DonationExecutedRouteExtra $extra;

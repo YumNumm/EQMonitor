@@ -16,6 +16,7 @@ final class EstimatedIntensityDataSourceProvider
     extends
         $FunctionalProvider<
           EstimatedIntensityDataSource,
+          EstimatedIntensityDataSource,
           EstimatedIntensityDataSource
         >
     with $Provider<EstimatedIntensityDataSource> {
@@ -48,7 +49,7 @@ final class EstimatedIntensityDataSourceProvider
   Override overrideWithValue(EstimatedIntensityDataSource value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<EstimatedIntensityDataSource>(value),
+      providerOverride: $SyncValueProvider<EstimatedIntensityDataSource>(value),
     );
   }
 }

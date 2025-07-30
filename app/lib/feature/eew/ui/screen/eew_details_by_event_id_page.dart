@@ -7,7 +7,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EewDetailsByEventIdRoute extends GoRouteData {
+part 'eew_details_by_event_id_page.g.dart';
+
+class EewDetailsByEventIdRoute extends GoRouteData
+    with _$EewDetailsByEventIdRoute {
   const EewDetailsByEventIdRoute({required this.eventId});
 
   final String eventId;
@@ -44,11 +47,10 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
           return EewTable(eews: sortedEews);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error:
-            (error, stack) => ErrorCard(
-              error: error,
-              onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
-            ),
+        error: (error, stack) => ErrorCard(
+          error: error,
+          onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
+        ),
       ),
     );
   }

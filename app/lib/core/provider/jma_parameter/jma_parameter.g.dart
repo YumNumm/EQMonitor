@@ -30,12 +30,6 @@ final class JmaParameterProvider
   @$internal
   @override
   JmaParameter create() => JmaParameter();
-
-  @$internal
-  @override
-  $StreamNotifierProviderElement<JmaParameter, JmaParameterState>
-  $createElement($ProviderPointer pointer) =>
-      $StreamNotifierProviderElement(pointer);
 }
 
 String _$jmaParameterHash() => r'27235c3f43d2ad4f6a6fbe97f8d741b8f125c2f6';
@@ -46,11 +40,12 @@ abstract class _$JmaParameter extends $StreamNotifier<JmaParameterState> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<JmaParameterState>>;
+    final ref =
+        this.ref as $Ref<AsyncValue<JmaParameterState>, JmaParameterState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<JmaParameterState>>,
+              AnyNotifier<AsyncValue<JmaParameterState>, JmaParameterState>,
               AsyncValue<JmaParameterState>,
               Object?,
               Object?
@@ -82,17 +77,11 @@ final class EarthquakeParameterEtagProvider
   @override
   EarthquakeParameterEtag create() => EarthquakeParameterEtag();
 
-  @$internal
-  @override
-  $NotifierProviderElement<EarthquakeParameterEtag, String?> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(String? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<String?>(value),
+      providerOverride: $SyncValueProvider<String?>(value),
     );
   }
 }
@@ -106,11 +95,11 @@ abstract class _$EarthquakeParameterEtag extends $Notifier<String?> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<String?>;
+    final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<String?>,
+              AnyNotifier<String?, String?>,
               String?,
               Object?,
               Object?

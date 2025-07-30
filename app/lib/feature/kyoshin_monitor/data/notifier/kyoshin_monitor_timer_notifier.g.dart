@@ -35,15 +35,6 @@ final class KyoshinMonitorTimerNotifierProvider
   @$internal
   @override
   KyoshinMonitorTimerNotifier create() => KyoshinMonitorTimerNotifier();
-
-  @$internal
-  @override
-  $StreamNotifierProviderElement<
-    KyoshinMonitorTimerNotifier,
-    KyoshinMonitorTimerState
-  >
-  $createElement($ProviderPointer pointer) =>
-      $StreamNotifierProviderElement(pointer);
 }
 
 String _$kyoshinMonitorTimerNotifierHash() =>
@@ -56,11 +47,19 @@ abstract class _$KyoshinMonitorTimerNotifier
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<KyoshinMonitorTimerState>>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<KyoshinMonitorTimerState>,
+              KyoshinMonitorTimerState
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<KyoshinMonitorTimerState>>,
+              AnyNotifier<
+                AsyncValue<KyoshinMonitorTimerState>,
+                KyoshinMonitorTimerState
+              >,
               AsyncValue<KyoshinMonitorTimerState>,
               Object?,
               Object?
@@ -74,7 +73,7 @@ const _kyoshinMonitorDelayAdujustTimingProvider =
     _KyoshinMonitorDelayAdujustTimingProvider._();
 
 final class _KyoshinMonitorDelayAdujustTimingProvider
-    extends $FunctionalProvider<AsyncValue<void>, Stream<void>>
+    extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
     with $FutureModifier<void>, $StreamProvider<void> {
   const _KyoshinMonitorDelayAdujustTimingProvider._()
     : super(

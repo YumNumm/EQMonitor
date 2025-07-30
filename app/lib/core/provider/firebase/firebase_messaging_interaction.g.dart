@@ -14,7 +14,11 @@ const firebaseMessagingInteractionProvider =
 
 final class FirebaseMessagingInteractionProvider
     extends
-        $FunctionalProvider<AsyncValue<RemoteMessage>, Stream<RemoteMessage>>
+        $FunctionalProvider<
+          AsyncValue<RemoteMessage>,
+          RemoteMessage,
+          Stream<RemoteMessage>
+        >
     with $FutureModifier<RemoteMessage>, $StreamProvider<RemoteMessage> {
   const FirebaseMessagingInteractionProvider._()
     : super(

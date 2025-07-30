@@ -34,16 +34,11 @@ final class EewNotificationsSettingsViewModelProvider
   EewNotificationsSettingsViewModel create() =>
       EewNotificationsSettingsViewModel();
 
-  @$internal
-  @override
-  $NotifierProviderElement<EewNotificationsSettingsViewModel, FcmEewTopic?>
-  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(FcmEewTopic? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<FcmEewTopic?>(value),
+      providerOverride: $SyncValueProvider<FcmEewTopic?>(value),
     );
   }
 }
@@ -58,11 +53,11 @@ abstract class _$EewNotificationsSettingsViewModel
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<FcmEewTopic?>;
+    final ref = this.ref as $Ref<FcmEewTopic?, FcmEewTopic?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<FcmEewTopic?>,
+              AnyNotifier<FcmEewTopic?, FcmEewTopic?>,
               FcmEewTopic?,
               Object?,
               Object?

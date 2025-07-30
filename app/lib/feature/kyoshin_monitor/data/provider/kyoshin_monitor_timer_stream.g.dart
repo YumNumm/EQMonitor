@@ -12,7 +12,8 @@ part of 'kyoshin_monitor_timer_stream.dart';
 const kyoshinMonitorTimerStreamProvider = KyoshinMonitorTimerStreamProvider._();
 
 final class KyoshinMonitorTimerStreamProvider
-    extends $FunctionalProvider<AsyncValue<DateTime>, Stream<DateTime>>
+    extends
+        $FunctionalProvider<AsyncValue<DateTime>, DateTime, Stream<DateTime>>
     with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
   const KyoshinMonitorTimerStreamProvider._()
     : super(

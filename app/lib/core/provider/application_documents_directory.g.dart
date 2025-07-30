@@ -13,7 +13,7 @@ const applicationDocumentsDirectoryProvider =
     ApplicationDocumentsDirectoryProvider._();
 
 final class ApplicationDocumentsDirectoryProvider
-    extends $FunctionalProvider<Directory, Directory>
+    extends $FunctionalProvider<Directory, Directory, Directory>
     with $Provider<Directory> {
   const ApplicationDocumentsDirectoryProvider._()
     : super(
@@ -43,7 +43,7 @@ final class ApplicationDocumentsDirectoryProvider
   Override overrideWithValue(Directory value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<Directory>(value),
+      providerOverride: $SyncValueProvider<Directory>(value),
     );
   }
 }

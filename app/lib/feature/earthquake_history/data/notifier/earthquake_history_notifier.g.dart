@@ -42,15 +42,6 @@ final class EarthquakeHistoryNotifierProvider
   @override
   EarthquakeHistoryNotifier create() => EarthquakeHistoryNotifier();
 
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<
-    EarthquakeHistoryNotifier,
-    EarthquakeHistoryNotifierState
-  >
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
-
   @override
   bool operator ==(Object other) {
     return other is EarthquakeHistoryNotifierProvider &&
@@ -104,11 +95,19 @@ abstract class _$EarthquakeHistoryNotifier
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<EarthquakeHistoryNotifierState>>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<EarthquakeHistoryNotifierState>,
+              EarthquakeHistoryNotifierState
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<EarthquakeHistoryNotifierState>>,
+              AnyNotifier<
+                AsyncValue<EarthquakeHistoryNotifierState>,
+                EarthquakeHistoryNotifierState
+              >,
               AsyncValue<EarthquakeHistoryNotifierState>,
               Object?,
               Object?
@@ -124,6 +123,7 @@ final class EarthquakeV1ExtendedProvider
     extends
         $FunctionalProvider<
           AsyncValue<EarthquakeV1Extended>,
+          EarthquakeV1Extended,
           FutureOr<EarthquakeV1Extended>
         >
     with

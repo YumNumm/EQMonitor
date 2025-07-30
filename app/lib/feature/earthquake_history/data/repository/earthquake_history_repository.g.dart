@@ -16,6 +16,7 @@ final class EarthquakeHistoryRepositoryProvider
     extends
         $FunctionalProvider<
           EarthquakeHistoryRepository,
+          EarthquakeHistoryRepository,
           EarthquakeHistoryRepository
         >
     with $Provider<EarthquakeHistoryRepository> {
@@ -48,7 +49,7 @@ final class EarthquakeHistoryRepositoryProvider
   Override overrideWithValue(EarthquakeHistoryRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<EarthquakeHistoryRepository>(value),
+      providerOverride: $SyncValueProvider<EarthquakeHistoryRepository>(value),
     );
   }
 }

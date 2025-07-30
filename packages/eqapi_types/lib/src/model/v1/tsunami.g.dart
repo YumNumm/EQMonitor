@@ -666,3 +666,234 @@ const _$EarthquakeMagnitudeConditionEnumMap = {
   EarthquakeMagnitudeCondition.unknown: 'Ｍ不明',
   EarthquakeMagnitudeCondition.huge: 'Ｍ８を超える巨大地震',
 };
+
+TsunamiDataVTSE41 _$TsunamiDataVTSE41FromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'TsunamiDataVTSE41',
+      json,
+      ($checkedConvert) {
+        final val = TsunamiDataVTSE41(
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
+          serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
+          body: $checkedConvert(
+            'body',
+            (v) => TsunamiBody.fromJson(v as Map<String, dynamic>),
+          ),
+          status: $checkedConvert('status', (v) => v as String),
+          headline: $checkedConvert('headline', (v) => v as String?),
+          infoType: $checkedConvert('info_type', (v) => v as String),
+          pressAt: $checkedConvert(
+            'press_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          reportAt: $checkedConvert(
+            'report_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          validAt: $checkedConvert(
+            'valid_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          $type: $checkedConvert('type', (v) => v as String?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'eventId': 'event_id',
+        'serialNo': 'serial_no',
+        'infoType': 'info_type',
+        'pressAt': 'press_at',
+        'reportAt': 'report_at',
+        'validAt': 'valid_at',
+        r'$type': 'type',
+      },
+    );
+
+Map<String, dynamic> _$TsunamiDataVTSE41ToJson(TsunamiDataVTSE41 instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'event_id': instance.eventId,
+      'serial_no': instance.serialNo,
+      'body': instance.body,
+      'status': instance.status,
+      'headline': instance.headline,
+      'info_type': instance.infoType,
+      'press_at': instance.pressAt.toIso8601String(),
+      'report_at': instance.reportAt.toIso8601String(),
+      'valid_at': instance.validAt?.toIso8601String(),
+      'type': instance.$type,
+    };
+
+TsunamiDataVTSE51 _$TsunamiDataVTSE51FromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'TsunamiDataVTSE51',
+      json,
+      ($checkedConvert) {
+        final val = TsunamiDataVTSE51(
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
+          serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
+          body: $checkedConvert(
+            'body',
+            (v) => TsunamiBody.fromJson(v as Map<String, dynamic>),
+          ),
+          status: $checkedConvert('status', (v) => v as String),
+          headline: $checkedConvert('headline', (v) => v as String?),
+          infoType: $checkedConvert('info_type', (v) => v as String),
+          pressAt: $checkedConvert(
+            'press_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          reportAt: $checkedConvert(
+            'report_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          validAt: $checkedConvert(
+            'valid_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          $type: $checkedConvert('type', (v) => v as String?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'eventId': 'event_id',
+        'serialNo': 'serial_no',
+        'infoType': 'info_type',
+        'pressAt': 'press_at',
+        'reportAt': 'report_at',
+        'validAt': 'valid_at',
+        r'$type': 'type',
+      },
+    );
+
+Map<String, dynamic> _$TsunamiDataVTSE51ToJson(TsunamiDataVTSE51 instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'event_id': instance.eventId,
+      'serial_no': instance.serialNo,
+      'body': instance.body,
+      'status': instance.status,
+      'headline': instance.headline,
+      'info_type': instance.infoType,
+      'press_at': instance.pressAt.toIso8601String(),
+      'report_at': instance.reportAt.toIso8601String(),
+      'valid_at': instance.validAt?.toIso8601String(),
+      'type': instance.$type,
+    };
+
+TsunamiDataVTSE52 _$TsunamiDataVTSE52FromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'TsunamiDataVTSE52',
+      json,
+      ($checkedConvert) {
+        final val = TsunamiDataVTSE52(
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
+          serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
+          body: $checkedConvert(
+            'body',
+            (v) => TsunamiBody.fromJson(v as Map<String, dynamic>),
+          ),
+          status: $checkedConvert('status', (v) => v as String),
+          headline: $checkedConvert('headline', (v) => v as String?),
+          $type: $checkedConvert('type', (v) => v as String?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'eventId': 'event_id',
+        'serialNo': 'serial_no',
+        r'$type': 'type',
+      },
+    );
+
+Map<String, dynamic> _$TsunamiDataVTSE52ToJson(TsunamiDataVTSE52 instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'event_id': instance.eventId,
+      'serial_no': instance.serialNo,
+      'body': instance.body,
+      'status': instance.status,
+      'headline': instance.headline,
+      'type': instance.$type,
+    };
+
+_TsunamiGroupedByEvent _$TsunamiGroupedByEventFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_TsunamiGroupedByEvent', json, ($checkedConvert) {
+  final val = _TsunamiGroupedByEvent(
+    eventId: $checkedConvert('event_id', (v) => v as String),
+    vtse41: $checkedConvert(
+      'vtse41',
+      (v) => v == null
+          ? null
+          : TsunamiDataVTSE41.fromJson(v as Map<String, dynamic>),
+    ),
+    vtse51: $checkedConvert(
+      'vtse51',
+      (v) => v == null
+          ? null
+          : TsunamiDataVTSE51.fromJson(v as Map<String, dynamic>),
+    ),
+    vtse52: $checkedConvert(
+      'vtse52',
+      (v) => v == null
+          ? null
+          : TsunamiDataVTSE52.fromJson(v as Map<String, dynamic>),
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'eventId': 'event_id'});
+
+Map<String, dynamic> _$TsunamiGroupedByEventToJson(
+  _TsunamiGroupedByEvent instance,
+) => <String, dynamic>{
+  'event_id': instance.eventId,
+  'vtse41': instance.vtse41,
+  'vtse51': instance.vtse51,
+  'vtse52': instance.vtse52,
+};
+
+_TsunamiSummaryResponse _$TsunamiSummaryResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_TsunamiSummaryResponse', json, ($checkedConvert) {
+  final val = _TsunamiSummaryResponse(
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => TsunamiGroupedByEvent.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$TsunamiSummaryResponseToJson(
+  _TsunamiSummaryResponse instance,
+) => <String, dynamic>{'data': instance.data};
+
+_TsunamiDetailResponse _$TsunamiDetailResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_TsunamiDetailResponse', json, ($checkedConvert) {
+  final val = _TsunamiDetailResponse(
+    eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => TsunamiData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    count: $checkedConvert('count', (v) => (v as num).toInt()),
+  );
+  return val;
+}, fieldKeyMap: const {'eventId': 'event_id'});
+
+Map<String, dynamic> _$TsunamiDetailResponseToJson(
+  _TsunamiDetailResponse instance,
+) => <String, dynamic>{
+  'event_id': instance.eventId,
+  'data': instance.data,
+  'count': instance.count,
+};

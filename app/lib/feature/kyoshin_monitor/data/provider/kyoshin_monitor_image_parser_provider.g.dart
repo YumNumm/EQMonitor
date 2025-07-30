@@ -15,6 +15,7 @@ final class KyoshinMonitorImageParserProvider
     extends
         $FunctionalProvider<
           KyoshinMonitorImageParser,
+          KyoshinMonitorImageParser,
           KyoshinMonitorImageParser
         >
     with $Provider<KyoshinMonitorImageParser> {
@@ -47,7 +48,7 @@ final class KyoshinMonitorImageParserProvider
   Override overrideWithValue(KyoshinMonitorImageParser value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<KyoshinMonitorImageParser>(value),
+      providerOverride: $SyncValueProvider<KyoshinMonitorImageParser>(value),
     );
   }
 }

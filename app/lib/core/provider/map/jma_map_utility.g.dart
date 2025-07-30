@@ -12,7 +12,7 @@ part of 'jma_map_utility.dart';
 const jmaMapUtilityProvider = JmaMapUtilityProvider._();
 
 final class JmaMapUtilityProvider
-    extends $FunctionalProvider<JmaMapUtility, JmaMapUtility>
+    extends $FunctionalProvider<JmaMapUtility, JmaMapUtility, JmaMapUtility>
     with $Provider<JmaMapUtility> {
   const JmaMapUtilityProvider._()
     : super(
@@ -42,7 +42,7 @@ final class JmaMapUtilityProvider
   Override overrideWithValue(JmaMapUtility value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<JmaMapUtility>(value),
+      providerOverride: $SyncValueProvider<JmaMapUtility>(value),
     );
   }
 }

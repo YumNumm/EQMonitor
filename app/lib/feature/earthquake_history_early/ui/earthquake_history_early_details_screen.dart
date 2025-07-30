@@ -13,7 +13,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
 
-class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData {
+part 'earthquake_history_early_details_screen.g.dart';
+
+class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData with _$EarthquakeHistoryEarlyDetailsRoute {
   const EarthquakeHistoryEarlyDetailsRoute({required this.id});
 
   final String id;

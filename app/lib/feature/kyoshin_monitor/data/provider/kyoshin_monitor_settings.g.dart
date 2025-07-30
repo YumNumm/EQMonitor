@@ -32,16 +32,11 @@ final class KyoshinMonitorSettingsProvider
   @override
   KyoshinMonitorSettings create() => KyoshinMonitorSettings();
 
-  @$internal
-  @override
-  $NotifierProviderElement<KyoshinMonitorSettings, KyoshinMonitorSettingsModel>
-  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(KyoshinMonitorSettingsModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<KyoshinMonitorSettingsModel>(value),
+      providerOverride: $SyncValueProvider<KyoshinMonitorSettingsModel>(value),
     );
   }
 }
@@ -56,11 +51,16 @@ abstract class _$KyoshinMonitorSettings
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<KyoshinMonitorSettingsModel>;
+    final ref =
+        this.ref
+            as $Ref<KyoshinMonitorSettingsModel, KyoshinMonitorSettingsModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<KyoshinMonitorSettingsModel>,
+              AnyNotifier<
+                KyoshinMonitorSettingsModel,
+                KyoshinMonitorSettingsModel
+              >,
               KyoshinMonitorSettingsModel,
               Object?,
               Object?

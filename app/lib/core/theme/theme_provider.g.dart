@@ -31,17 +31,11 @@ final class ThemeModeNotifierProvider
   @override
   ThemeModeNotifier create() => ThemeModeNotifier();
 
-  @$internal
-  @override
-  $NotifierProviderElement<ThemeModeNotifier, ThemeMode> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ThemeMode value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<ThemeMode>(value),
+      providerOverride: $SyncValueProvider<ThemeMode>(value),
     );
   }
 }
@@ -54,11 +48,11 @@ abstract class _$ThemeModeNotifier extends $Notifier<ThemeMode> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<ThemeMode>;
+    final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ThemeMode>,
+              AnyNotifier<ThemeMode, ThemeMode>,
               ThemeMode,
               Object?,
               Object?
@@ -90,17 +84,11 @@ final class BrightnessNotifierProvider
   @override
   BrightnessNotifier create() => BrightnessNotifier();
 
-  @$internal
-  @override
-  $NotifierProviderElement<BrightnessNotifier, ui.Brightness> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ui.Brightness value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<ui.Brightness>(value),
+      providerOverride: $SyncValueProvider<ui.Brightness>(value),
     );
   }
 }
@@ -114,11 +102,11 @@ abstract class _$BrightnessNotifier extends $Notifier<ui.Brightness> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<ui.Brightness>;
+    final ref = this.ref as $Ref<ui.Brightness, ui.Brightness>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ui.Brightness>,
+              AnyNotifier<ui.Brightness, ui.Brightness>,
               ui.Brightness,
               Object?,
               Object?

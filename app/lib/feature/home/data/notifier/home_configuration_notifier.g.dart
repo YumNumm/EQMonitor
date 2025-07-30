@@ -32,16 +32,11 @@ final class HomeConfigurationNotifierProvider
   @override
   HomeConfigurationNotifier create() => HomeConfigurationNotifier();
 
-  @$internal
-  @override
-  $NotifierProviderElement<HomeConfigurationNotifier, HomeConfigurationModel>
-  $createElement($ProviderPointer pointer) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(HomeConfigurationModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<HomeConfigurationModel>(value),
+      providerOverride: $SyncValueProvider<HomeConfigurationModel>(value),
     );
   }
 }
@@ -56,11 +51,12 @@ abstract class _$HomeConfigurationNotifier
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<HomeConfigurationModel>;
+    final ref =
+        this.ref as $Ref<HomeConfigurationModel, HomeConfigurationModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<HomeConfigurationModel>,
+              AnyNotifier<HomeConfigurationModel, HomeConfigurationModel>,
               HomeConfigurationModel,
               Object?,
               Object?

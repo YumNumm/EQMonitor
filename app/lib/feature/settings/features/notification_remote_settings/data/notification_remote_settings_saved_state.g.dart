@@ -13,7 +13,7 @@ const notificationRemoteSettingsHasChangedFromSavedStateProvider =
     NotificationRemoteSettingsHasChangedFromSavedStateProvider._();
 
 final class NotificationRemoteSettingsHasChangedFromSavedStateProvider
-    extends $FunctionalProvider<bool, bool>
+    extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   const NotificationRemoteSettingsHasChangedFromSavedStateProvider._()
     : super(
@@ -44,7 +44,7 @@ final class NotificationRemoteSettingsHasChangedFromSavedStateProvider
   Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<bool>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
@@ -81,15 +81,6 @@ final class NotificationRemoteSettingsSavedStateNotifierProvider
   @override
   NotificationRemoteSettingsSavedStateNotifier create() =>
       NotificationRemoteSettingsSavedStateNotifier();
-
-  @$internal
-  @override
-  $AsyncNotifierProviderElement<
-    NotificationRemoteSettingsSavedStateNotifier,
-    NotificationRemoteSettingsState
-  >
-  $createElement($ProviderPointer pointer) =>
-      $AsyncNotifierProviderElement(pointer);
 }
 
 String _$notificationRemoteSettingsSavedStateNotifierHash() =>
@@ -102,11 +93,19 @@ abstract class _$NotificationRemoteSettingsSavedStateNotifier
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<NotificationRemoteSettingsState>>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<NotificationRemoteSettingsState>,
+              NotificationRemoteSettingsState
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<NotificationRemoteSettingsState>>,
+              AnyNotifier<
+                AsyncValue<NotificationRemoteSettingsState>,
+                NotificationRemoteSettingsState
+              >,
               AsyncValue<NotificationRemoteSettingsState>,
               Object?,
               Object?

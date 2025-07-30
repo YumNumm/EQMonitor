@@ -31,17 +31,11 @@ final class NtpConfigProvider
   @override
   NtpConfig create() => NtpConfig();
 
-  @$internal
-  @override
-  $NotifierProviderElement<NtpConfig, NtpConfigModel> $createElement(
-    $ProviderPointer pointer,
-  ) => $NotifierProviderElement(pointer);
-
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(NtpConfigModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $ValueProvider<NtpConfigModel>(value),
+      providerOverride: $SyncValueProvider<NtpConfigModel>(value),
     );
   }
 }
@@ -54,11 +48,11 @@ abstract class _$NtpConfig extends $Notifier<NtpConfigModel> {
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<NtpConfigModel>;
+    final ref = this.ref as $Ref<NtpConfigModel, NtpConfigModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<NtpConfigModel>,
+              AnyNotifier<NtpConfigModel, NtpConfigModel>,
               NtpConfigModel,
               Object?,
               Object?

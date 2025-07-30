@@ -16,6 +16,7 @@ final class JmaEarthquakeNearestObservationPointProvider
     extends
         $FunctionalProvider<
           AsyncValue<(EarthquakeParameterStationItem, double)?>,
+          (EarthquakeParameterStationItem, double)?,
           FutureOr<(EarthquakeParameterStationItem, double)?>
         >
     with
