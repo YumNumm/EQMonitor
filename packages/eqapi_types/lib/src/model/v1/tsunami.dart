@@ -471,3 +471,124 @@ enum EarthquakeMagnitudeCondition {
   const EarthquakeMagnitudeCondition(this.value);
   final String value;
 }
+
+// ------------------ New Tsunami API Response Types ------------------ //
+
+/// 津波データ（VTSE41タイプ）
+@freezed
+abstract class TsunamiDataVTSE41 with _$TsunamiDataVTSE41 {
+  const factory TsunamiDataVTSE41({
+    required int id,
+    required int eventId,
+    required int? serialNo,
+    @Default('津波警報・注意報・予報a') String type,
+    required TsunamiBody body,
+    required String status,
+    required String? headline,
+    required String infoType,
+    required DateTime pressAt,
+    required DateTime reportAt,
+    required DateTime? validAt,
+  }) = _TsunamiDataVTSE41;
+
+  factory TsunamiDataVTSE41.fromJson(Map<String, dynamic> json) =>
+      _$TsunamiDataVTSE41FromJson(json);
+}
+
+/// 津波データ（VTSE51タイプ）
+@freezed
+abstract class TsunamiDataVTSE51 with _$TsunamiDataVTSE51 {
+  const factory TsunamiDataVTSE51({
+    required int id,
+    required int eventId,
+    required int? serialNo,
+    @Default('津波情報a') String type,
+    required TsunamiBody body,
+    required String status,
+    required String? headline,
+    required String infoType,
+    required DateTime pressAt,
+    required DateTime reportAt,
+    required DateTime? validAt,
+  }) = _TsunamiDataVTSE51;
+
+  factory TsunamiDataVTSE51.fromJson(Map<String, dynamic> json) =>
+      _$TsunamiDataVTSE51FromJson(json);
+}
+
+/// 津波データ（VTSE52タイプ）
+@freezed
+abstract class TsunamiDataVTSE52 with _$TsunamiDataVTSE52 {
+  const factory TsunamiDataVTSE52({
+    required int id,
+    required int eventId,
+    required int? serialNo,
+    @Default('沖合の津波観測に関する情報') String type,
+    required TsunamiBody body,
+    required String status,
+    required String? headline,
+    required String infoType,
+    required DateTime pressAt,
+    required DateTime reportAt,
+    required DateTime? validAt,
+  }) = _TsunamiDataVTSE52;
+
+  factory TsunamiDataVTSE52.fromJson(Map<String, dynamic> json) =>
+      _$TsunamiDataVTSE52FromJson(json);
+}
+
+/// 津波データ（全タイプのUnion）
+@freezed
+abstract class TsunamiData with _$TsunamiData {
+  const factory TsunamiData.vtse41(TsunamiDataVTSE41 data) = _TsunamiDataVTSE41;
+  const factory TsunamiData.vtse51(TsunamiDataVTSE51 data) = _TsunamiDataVTSE51;
+  const factory TsunamiData.vtse52(TsunamiDataVTSE52 data) = _TsunamiDataVTSE52;
+
+  factory TsunamiData.fromJson(Map<String, dynamic> json) {
+    final type = json['type'] as String?;
+    return switch (type) {
+      '津波警報・注意報・予報a' => TsunamiData.vtse41(TsunamiDataVTSE41.fromJson(json)),
+      '津波情報a' => TsunamiData.vtse51(TsunamiDataVTSE51.fromJson(json)),
+      '沖合の津波観測に関する情報' => TsunamiData.vtse52(TsunamiDataVTSE52.fromJson(json)),
+      _ => throw ArgumentError('Unknown tsunami type: $type'),
+    };
+  }
+}
+
+/// eventIdごとにグループ化された津波情報
+@freezed
+abstract class TsunamiGroupedByEvent with _$TsunamiGroupedByEvent {
+  const factory TsunamiGroupedByEvent({
+    @JsonKey(name: 'event_id') required String eventId,
+    required TsunamiDataVTSE41? vtse41,
+    required TsunamiDataVTSE51? vtse51,
+    required TsunamiDataVTSE52? vtse52,
+  }) = _TsunamiGroupedByEvent;
+
+  factory TsunamiGroupedByEvent.fromJson(Map<String, dynamic> json) =>
+      _$TsunamiGroupedByEventFromJson(json);
+}
+
+/// 津波情報一覧レスポンス（eventIdでグループ化）
+@freezed
+abstract class TsunamiSummaryResponse with _$TsunamiSummaryResponse {
+  const factory TsunamiSummaryResponse({
+    required List<TsunamiGroupedByEvent> data,
+  }) = _TsunamiSummaryResponse;
+
+  factory TsunamiSummaryResponse.fromJson(Map<String, dynamic> json) =>
+      _$TsunamiSummaryResponseFromJson(json);
+}
+
+/// 特定eventIdの津波情報詳細レスポンス
+@freezed
+abstract class TsunamiDetailResponse with _$TsunamiDetailResponse {
+  const factory TsunamiDetailResponse({
+    @JsonKey(name: 'event_id') required int eventId,
+    required List<TsunamiData> data,
+    required int count,
+  }) = _TsunamiDetailResponse;
+
+  factory TsunamiDetailResponse.fromJson(Map<String, dynamic> json) =>
+      _$TsunamiDetailResponseFromJson(json);
+}
