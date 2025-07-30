@@ -32,6 +32,7 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
+import 'package:eqmonitor/feature/tsunami_history/page/tsunami_history_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -115,6 +116,15 @@ class InformationHistoryDetailsRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       InformationHistoryDetailsPage(data: $extra);
+}
+
+@TypedGoRoute<TsunamiHistoryRoute>(path: '/tsunami-history')
+class TsunamiHistoryRoute extends GoRouteData {
+  const TsunamiHistoryRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const TsunamiHistoryPage();
 }
 
 @TypedGoRoute<HomeRoute>(
