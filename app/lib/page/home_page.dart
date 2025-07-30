@@ -68,6 +68,11 @@ class _SheetBody extends ConsumerWidget {
             const _ShakeDetectionList(),
             const HomeEarthquakeHistorySheet(),
             ListTile(
+              title: const Text('津波情報'),
+              leading: const Icon(Icons.tsunami),
+              onTap: () async => const TsunamiHistoryRoute().push<void>(context),
+            ),
+            ListTile(
               title: const Text('設定'),
               leading: const Icon(Icons.settings),
               onTap: () async => const SettingsRoute().push<void>(context),
