@@ -4,12 +4,12 @@ PODS:
   - Flutter (1.0.0)
   - permission_handler_apple (9.3.0):
     - Flutter
-  - purchases_flutter (8.9.0):
+  - purchases_flutter (9.1.0):
     - Flutter
-    - PurchasesHybridCommon (= 13.32.0)
-  - PurchasesHybridCommon (13.32.0):
-    - RevenueCat (= 5.24.0)
-  - RevenueCat (5.24.0)
+    - PurchasesHybridCommon (= 16.0.2)
+  - PurchasesHybridCommon (16.0.2):
+    - RevenueCat (= 5.33.1)
+  - RevenueCat (5.33.1)
   - shared_preference_app_group (1.0.0):
     - Flutter
 
@@ -41,9 +41,9 @@ SPEC CHECKSUMS:
   background_task: cb74890aa75be08c253c56017a2f0f6038d0879a
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
-  purchases_flutter: 5c7fbfbe656117ea8a72d132a82294a2025ef8ae
-  PurchasesHybridCommon: 662aa1f4769ff4ef594e35adf1a5d0ad7b3d08b7
-  RevenueCat: 2d3639d30b8a71cbfe3d99cef8243c602793e0ec
+  purchases_flutter: 818eabac676b9037ac7692d4bc48a52a10b276be
+  PurchasesHybridCommon: ae7a0a6e105ecdde3e8816a004e57f0a2a7b9261
+  RevenueCat: b0ed01125b05a45b8264a2951ad68acb61942038
   shared_preference_app_group: 7422922a188e05cf680a656e18e2786dcb5c58b3
 
 PODFILE CHECKSUM: 474c89de82ea32ce8797bfa74c1e03ad5c96d99e
