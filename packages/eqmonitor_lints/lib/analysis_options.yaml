@@ -23,7 +23,6 @@ analyzer:
   plugins:
     - custom_lint
   exclude:
-    - "**/*.*.dart"
     - "**/DerivedData/**"
 
 custom_lint:
