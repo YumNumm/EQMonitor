@@ -120,11 +120,35 @@ class _TsunamiGroupCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
+                // 有効期限切れの表示
+                if (_isExpired(latestData.validAt))
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '期限切れ',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                if (_isExpired(latestData.validAt)) const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     latestData.headline ?? 'ヘッドラインなし',
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: _isExpired(latestData.validAt)
+                          ? Colors.grey
+                          : null,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -138,6 +162,11 @@ class _TsunamiGroupCard extends StatelessWidget {
             _buildInfoRow('イベントID', group.eventId),
             _buildInfoRow('発表時刻', _formatDateTime(latestData.pressAt)),
             _buildInfoRow('報告時刻', _formatDateTime(latestData.reportAt)),
+            if (latestData.validAt != null)
+              _buildInfoRow(
+                '有効期限',
+                '${_formatDateTime(latestData.validAt!)}${_isExpired(latestData.validAt) ? ' (期限切れ)' : ''}',
+              ),
             _buildInfoRow('情報種別', latestData.infoType),
             _buildInfoRow('状態', latestData.status),
 
@@ -285,9 +314,18 @@ class _TsunamiGroupCard extends StatelessWidget {
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.month.toString().padLeft(2, '0')}/'
-        '${dateTime.day.toString().padLeft(2, '0')} '
-        '${dateTime.hour.toString().padLeft(2, '0')}:'
-        '${dateTime.minute.toString().padLeft(2, '0')}';
+    final local = dateTime.toLocal();
+    return '${local.month.toString().padLeft(2, '0')}/'
+        '${local.day.toString().padLeft(2, '0')} '
+        '${local.hour.toString().padLeft(2, '0')}:'
+        '${local.minute.toString().padLeft(2, '0')}';
+  }
+
+  /// 有効期限が切れているかどうかを判定
+  bool _isExpired(DateTime? validAt) {
+    if (validAt == null) {
+      return false;
+    }
+    return DateTime.now().isAfter(validAt);
   }
 }

@@ -14,7 +14,7 @@ abstract class EarthquakeV1Extended with _$EarthquakeV1Extended {
   factory EarthquakeV1Extended.fromJson(Map<String, dynamic> json) =>
       _$EarthquakeV1ExtendedFromJson(json);
 
-  EarthquakeV1Extended._();
+  const EarthquakeV1Extended._();
 
   int? get depth => earthquake.depth;
 

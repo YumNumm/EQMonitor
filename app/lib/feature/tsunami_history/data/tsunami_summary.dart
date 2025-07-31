@@ -7,6 +7,6 @@ part 'tsunami_summary.g.dart';
 @Riverpod(keepAlive: true)
 Future<TsunamiSummaryResponse> tsunamiSummary(Ref ref) async {
   final eqApi = ref.watch(eqApiProvider);
-  final response = await eqApi.v1.getTsunamiSummary();
+  final response = await eqApi.v2.getTsunamiSummary();
   return response.data;
 }

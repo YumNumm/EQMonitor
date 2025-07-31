@@ -22,7 +22,7 @@ class TsunamiV1 implements V1Database {
 
   factory TsunamiV1.fromJson(Map<String, dynamic> json) {
     final base = TsunamiV1Base.fromJson(json);
-    final body = TsunamiBody.fromJson(json);
+    final body = TsunamiBody.fromJson(json, base);
     return TsunamiV1(
       eventId: base.eventId,
       headline: base.headline,
@@ -86,9 +86,9 @@ abstract class TsunamiV1Base with _$TsunamiV1Base {
 }
 
 sealed class TsunamiBody {
-  factory TsunamiBody.fromJson(Map<String, dynamic> json) {
-    final infoTypeStr = json['infoType'].toString();
-    final typeStr = json['type'].toString();
+  factory TsunamiBody.fromJson(Map<String, dynamic> json, TsunamiV1Base base) {
+    final infoTypeStr = base.infoType;
+    final typeStr = base.type;
     final type = TsunamiBodyType.values.firstWhereOrNull(
       (e) => e.value == typeStr,
     );
@@ -179,7 +179,6 @@ abstract class PublicBodyVTSE52Tsunami with _$PublicBodyVTSE52Tsunami {
 
 @freezed
 abstract class TsunamiForecast with _$TsunamiForecast {
-  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecast({
     required String code,
     required String name,
@@ -211,7 +210,6 @@ enum TsunamiForecastFirstHeightCondition {
 
 @freezed
 abstract class TsunamiForecastFirstHeight with _$TsunamiForecastFirstHeight {
-  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastFirstHeight({
     required DateTime? arrivalTime,
     required TsunamiForecastFirstHeightCondition? condition,
@@ -235,7 +233,6 @@ enum TsunamiMaxHeightCondition {
 
 @freezed
 abstract class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
-  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastMaxHeight({
     /// 定量表現
     required double? value,
@@ -251,7 +248,6 @@ abstract class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
 
 @freezed
 abstract class TsunamiForecastStation with _$TsunamiForecastStation {
-  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastStation({
     required String code,
     required String name,
@@ -266,7 +262,6 @@ abstract class TsunamiForecastStation with _$TsunamiForecastStation {
 
 @freezed
 abstract class TsunamiObservation with _$TsunamiObservation {
-  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiObservation({
     required String? code,
     required String? name,
@@ -279,7 +274,6 @@ abstract class TsunamiObservation with _$TsunamiObservation {
 
 @freezed
 abstract class TsunamiObservationStation with _$TsunamiObservationStation {
-  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiObservationStation({
     required String code,
     required String name,
@@ -326,7 +320,6 @@ enum TsunamiObservationStationCondition {
 
 @freezed
 abstract class TsunamiEstimation with _$TsunamiEstimation {
-  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiEstimation({
     required String code,
     required String name,
@@ -479,7 +472,7 @@ sealed class TsunamiData with _$TsunamiData {
     required int id,
     required int eventId,
     required int? serialNo,
-    required TsunamiBody body,
+    @JsonKey(name: 'body') required PublicBodyVTSE41 bodyVtse41,
     required String status,
     required String? headline,
     required String infoType,
@@ -493,7 +486,7 @@ sealed class TsunamiData with _$TsunamiData {
     required int id,
     required int eventId,
     required int? serialNo,
-    required TsunamiBody body,
+    @JsonKey(name: 'body') required PublicBodyVTSE51 bodyVtse51,
     required String status,
     required String? headline,
     required String infoType,
@@ -507,7 +500,7 @@ sealed class TsunamiData with _$TsunamiData {
     required int id,
     required int eventId,
     required int? serialNo,
-    required TsunamiBody body,
+    @JsonKey(name: 'body') required PublicBodyVTSE52 bodyVtse52,
     required String status,
     required String? headline,
   }) = TsunamiDataVTSE52;

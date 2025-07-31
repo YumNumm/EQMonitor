@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-part 'kyoshin_monitor_about_observation_network_page.g.dart';
-
-class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
-    with _$KyoshinMonitorAboutObservationNetworkRoute {
-  const KyoshinMonitorAboutObservationNetworkRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const KyoshinMonitorAboutObservationNetworkPage();
-  }
-}
 
 class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
   const KyoshinMonitorAboutObservationNetworkPage({super.key});

@@ -1,16 +1,6 @@
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-class KyoshinMonitorAboutRoute extends GoRouteData with _$KyoshinMonitorAboutRoute {
-  const KyoshinMonitorAboutRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const KyoshinMonitorAboutPage();
-  }
-}
 
 class KyoshinMonitorAboutPage extends HookConsumerWidget {
   const KyoshinMonitorAboutPage({super.key});

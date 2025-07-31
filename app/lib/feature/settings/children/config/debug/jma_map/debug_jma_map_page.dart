@@ -4,20 +4,10 @@ import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:lat_lng/lat_lng.dart';
-
-class DebugJmaMapRoute extends GoRouteData with _$DebugJmaMapRoute {
-  const DebugJmaMapRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const DebugJmaMapPage();
-  }
-}
 
 class DebugJmaMapPage extends HookConsumerWidget {
   const DebugJmaMapPage({super.key});

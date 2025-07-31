@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
 part of 'map_utility.dart';
 

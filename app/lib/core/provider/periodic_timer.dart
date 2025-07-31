@@ -9,13 +9,13 @@ part 'periodic_timer.g.dart';
 @riverpod
 class PeriodicTimer extends _$PeriodicTimer {
   /// メインタイマー
-  Timer? _timer;
+  late final Timer? _timer;
 
   /// 調整タイマー
-  Timer? _timerForDelayAdjust;
+  late final Timer? _timerForDelayAdjust;
 
   /// ストップウォッチ
-  Stopwatch? _stopwatch;
+  late final Stopwatch? _stopwatch;
 
   final _streamController = StreamController<void>();
 

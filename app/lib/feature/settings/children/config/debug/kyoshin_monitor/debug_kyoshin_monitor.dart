@@ -9,17 +9,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-class DebugKyoshinMonitorRoute extends GoRouteData with _$DebugKyoshinMonitorRoute {
-  const DebugKyoshinMonitorRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const DebugKyoshinMonitorPage();
-  }
-}
 
 class DebugKyoshinMonitorPage extends StatelessWidget {
   const DebugKyoshinMonitorPage({super.key});
@@ -77,12 +67,13 @@ class _Body extends ConsumerWidget {
             children: [
               Text('KyoshinMonitorTimerNotifier', style: titleTextStyle),
               Text(switch (kyoshinMonitorTimerState) {
-                AsyncData(:final value) => const JsonEncoder.withIndent(
-                  '  ',
-                ).convert({
-                  ...value.toJson(),
-                  'delay_from_device': value.delayFromDevice.toString(),
-                }),
+                AsyncData(:final value) =>
+                  const JsonEncoder.withIndent(
+                    '  ',
+                  ).convert({
+                    ...value.toJson(),
+                    'delay_from_device': value.delayFromDevice.toString(),
+                  }),
                 AsyncError(:final error) => error.toString(),
                 _ => 'Loading...',
               }, style: bodyTextStyle),
@@ -115,19 +106,20 @@ class _Body extends ConsumerWidget {
                   ],
                 ),
                 Text(switch (state) {
-                  AsyncData(:final value) => const JsonEncoder.withIndent(
-                    '  ',
-                  ).convert({
-                    ...value.toJson(),
-                    'analyzed_points': value.analyzedPoints?.length,
-                    'last_image_fetch_duration': switch (value
-                        .lastImageFetchDuration
-                        ?.inMicroseconds) {
-                      final int v => '${v / 1000}ms',
-                      null => 'null',
-                    },
-                    'current_image_raw': value.currentImageRaw?.length,
-                  }),
+                  AsyncData(:final value) =>
+                    const JsonEncoder.withIndent(
+                      '  ',
+                    ).convert({
+                      ...value.toJson(),
+                      'analyzed_points': value.analyzedPoints?.length,
+                      'last_image_fetch_duration': switch (value
+                          .lastImageFetchDuration
+                          ?.inMicroseconds) {
+                        final int v => '${v / 1000}ms',
+                        null => 'null',
+                      },
+                      'current_image_raw': value.currentImageRaw?.length,
+                    }),
                   AsyncError(:final error) => error.toString(),
                   _ => 'Loading...',
                 }, style: bodyTextStyle),
