@@ -12,9 +12,12 @@ resolution: workspace
 
 dependencies:
   adaptive_dialog: ^2.3.0
-  app_settings: ^6.1.1
+  app_settings:
+    git:
+      url: https://github.com/rhbrunetto/app_settings.git
+      ref: 30f3d52314e24c934cafaf383e68c8085c8cda41
   background_task: ^0.2.0
-  clock: ^1.1.1
+  clock: ^1.1.2
   collection: ^1.19.1
   crypto: ^3.0.6
   data_table_2: ^2.5.16
