@@ -96,7 +96,7 @@ jobs:
           rm environment.tar.gz
           ls -l environment/
 
-      - uses: irgaly/xcode-cache@7d303a62f4d1701699190a51e595234e3fe534b5 # v1.9.0
+      - uses: irgaly/xcode-cache@bfac98e3b3325d8326505f899f6688663c99ad2c # v1.9.1
         with:
           key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.sha }}
           restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
