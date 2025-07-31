@@ -1,14 +1,16 @@
 targets:
   $default:
     builders:
+      # https://github.com/google/json_serializable.dart/tree/master/json_serializable#build-configuration
+      json_serializable:
+        options:
+          field_rename: snake
+          checked: true
       # https://github.com/dart-lang/source_gen#ignore_for_file
       source_gen:combining_builder:
         options:
           ignore_for_file:
             - type=lint
+            - type=warning
             - duplicate_ignore
-            - deprecated_member_use
-      json_serializable:
-        options:
-          checked: true
-          field_rename: snake
+            - unused_element_parameter
