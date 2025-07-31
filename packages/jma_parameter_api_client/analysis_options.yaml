@@ -3,6 +3,8 @@ analyzer:
   errors:
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
+  exclude:
+    - "lib/*"
 custom_lint:
   rules:
     - prefer_clock_now: false

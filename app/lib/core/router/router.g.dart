@@ -15,6 +15,7 @@ List<RouteBase> get $appRoutes => [
   $informationHistoryRoute,
   $informationHistoryDetailsRoute,
   $tsunamiHistoryRoute,
+  $tsunamiDetailsRoute,
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
@@ -188,6 +189,37 @@ mixin _$TsunamiHistoryRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $tsunamiDetailsRoute => GoRouteData.$route(
+  path: '/tsunami-details',
+
+  factory: _$TsunamiDetailsRoute._fromState,
+);
+
+mixin _$TsunamiDetailsRoute on GoRouteData {
+  static TsunamiDetailsRoute _fromState(GoRouterState state) =>
+      TsunamiDetailsRoute($extra: state.extra as TsunamiEvent);
+
+  TsunamiDetailsRoute get _self => this as TsunamiDetailsRoute;
+
+  @override
+  String get location => GoRouteData.$location('/tsunami-details');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $homeRoute => GoRouteData.$route(
