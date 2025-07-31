@@ -76,10 +76,11 @@ packages:
   app_settings:
     dependency: transitive
     description:
-      name: app_settings
-      sha256: "3e46c561441e5820d3a25339bf8b51b9e45a5f686873851a20c257a530917795"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "30f3d52314e24c934cafaf383e68c8085c8cda41"
+      resolved-ref: "30f3d52314e24c934cafaf383e68c8085c8cda41"
+      url: "https://github.com/rhbrunetto/app_settings.git"
+    source: git
     version: "6.1.1"
   appkit_ui_element_colors:
     dependency: transitive
