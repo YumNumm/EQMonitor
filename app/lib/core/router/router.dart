@@ -32,6 +32,8 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
+import 'package:eqmonitor/feature/tsunami_history/models/tsunami_models.dart';
+import 'package:eqmonitor/feature/tsunami_history/page/tsunami_details_page.dart';
 import 'package:eqmonitor/feature/tsunami_history/page/tsunami_history_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
@@ -128,6 +130,19 @@ class TsunamiHistoryRoute extends GoRouteData with _$TsunamiHistoryRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const TsunamiHistoryPage();
+}
+
+@TypedGoRoute<TsunamiDetailsRoute>(
+  path: '/tsunami-details',
+)
+class TsunamiDetailsRoute extends GoRouteData with _$TsunamiDetailsRoute {
+  const TsunamiDetailsRoute({required this.$extra});
+
+  final TsunamiEvent $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      TsunamiDetailsPage(event: $extra);
 }
 
 @TypedGoRoute<HomeRoute>(
@@ -358,8 +373,6 @@ class DonationExecutedRoute extends GoRouteData with _$DonationExecutedRoute {
       DonationExecutedScreen(result: $extra);
 }
 
-
-
 class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData
     with _$EarthquakeHistoryEarlyDetailsRoute {
   const EarthquakeHistoryEarlyDetailsRoute({required this.id});
@@ -371,7 +384,6 @@ class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData
     return EarthquakeHistoryEarlyDetailsScreen(id: id);
   }
 }
-
 
 class EewDetailsByEventIdRoute extends GoRouteData
     with _$EewDetailsByEventIdRoute {
@@ -385,8 +397,8 @@ class EewDetailsByEventIdRoute extends GoRouteData
   }
 }
 
-
-class EarthquakeHistoryEarlyRoute extends GoRouteData with _$EarthquakeHistoryEarlyRoute {
+class EarthquakeHistoryEarlyRoute extends GoRouteData
+    with _$EarthquakeHistoryEarlyRoute {
   const EarthquakeHistoryEarlyRoute();
 
   @override
@@ -394,7 +406,6 @@ class EarthquakeHistoryEarlyRoute extends GoRouteData with _$EarthquakeHistoryEa
     return const EarthquakeHistoryEarlyScreen();
   }
 }
-
 
 class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
     with _$KyoshinMonitorAboutObservationNetworkRoute {
@@ -415,7 +426,8 @@ class DebugJmaMapRoute extends GoRouteData with _$DebugJmaMapRoute {
   }
 }
 
-class DebugKyoshinMonitorRoute extends GoRouteData with _$DebugKyoshinMonitorRoute {
+class DebugKyoshinMonitorRoute extends GoRouteData
+    with _$DebugKyoshinMonitorRoute {
   const DebugKyoshinMonitorRoute();
 
   @override
@@ -433,7 +445,6 @@ class PlaygroundRoute extends GoRouteData with _$PlaygroundRoute {
   }
 }
 
-
 class KyoshinMonitorAboutRoute extends GoRouteData
     with _$KyoshinMonitorAboutRoute {
   const KyoshinMonitorAboutRoute();
@@ -443,9 +454,6 @@ class KyoshinMonitorAboutRoute extends GoRouteData
     return const KyoshinMonitorAboutPage();
   }
 }
-
-
-
 
 class _NavigatorObserver extends NavigatorObserver {
   _NavigatorObserver(this.talker);

@@ -1,5 +1,6 @@
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/tsunami_history/data/tsunami_summary.dart';
+import 'package:eqmonitor/feature/tsunami_history/models/tsunami_models.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,7 +22,7 @@ class TsunamiHistoryPage extends HookConsumerWidget {
         ],
       ),
       body: tsunamiAsync.when(
-        data: (data) => _TsunamiList(data: data.data),
+        data: (data) => _TsunamiList(data: data),
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
@@ -50,7 +51,7 @@ class TsunamiHistoryPage extends HookConsumerWidget {
 class _TsunamiList extends StatelessWidget {
   const _TsunamiList({required this.data});
 
-  final List<TsunamiGroupedByEvent> data;
+  final List<TsunamiEvent> data;
 
   @override
   Widget build(BuildContext context) {
@@ -70,117 +71,119 @@ class _TsunamiList extends StatelessWidget {
     return ListView.builder(
       itemCount: data.length,
       itemBuilder: (context, index) {
-        final group = data[index];
-        return _TsunamiGroupCard(group: group);
+        final event = data[index];
+        return _TsunamiEventCard(event: event);
       },
     );
   }
 }
 
-class _TsunamiGroupCard extends StatelessWidget {
-  const _TsunamiGroupCard({required this.group});
+class _TsunamiEventCard extends StatelessWidget {
+  const _TsunamiEventCard({required this.event});
 
-  final TsunamiGroupedByEvent group;
+  final TsunamiEvent event;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // 最新の津波データを取得
-    final latestData = _getLatestTsunamiData();
-    if (latestData == null) {
-      return const SizedBox.shrink();
-    }
+    // 津波警報レベルを取得
+    final warningLevel = event.highestWarning;
+    final warningColor = warningLevel?.color ?? TsunamiWarningColor.grey;
+    final displayName = warningLevel?.displayName ?? '情報なし';
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ヘッダー部分
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getTsunamiTypeColor(latestData.type),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    _getTsunamiTypeShort(latestData.type),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                // 有効期限切れの表示
-                if (_isExpired(latestData.validAt))
+      child: InkWell(
+        onTap: () async =>
+            TsunamiDetailsRoute($extra: event).push<void>(context),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ヘッダー部分
+              Row(
+                children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
+                      horizontal: 8,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: _getWarningColor(warningColor),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      '期限切れ',
+                      displayName,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 10,
                       ),
                     ),
                   ),
-                if (_isExpired(latestData.validAt)) const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    latestData.headline ?? 'ヘッドラインなし',
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: _isExpired(latestData.validAt)
-                          ? Colors.grey
-                          : null,
+                  const SizedBox(width: 8),
+                  // 有効期限切れの表示
+                  if (event.isExpired)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        '期限切れ',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                        ),
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  if (event.isExpired) const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      event.headline ?? 'ヘッドラインなし',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: event.isExpired ? Colors.grey : null,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // 情報詳細
-            _buildInfoRow('イベントID', group.eventId),
-            _buildInfoRow('発表時刻', _formatDateTime(latestData.pressAt)),
-            _buildInfoRow('報告時刻', _formatDateTime(latestData.reportAt)),
-            if (latestData.validAt != null)
-              _buildInfoRow(
-                '有効期限',
-                '${_formatDateTime(latestData.validAt!)}${_isExpired(latestData.validAt) ? ' (期限切れ)' : ''}',
+                ],
               ),
-            _buildInfoRow('情報種別', latestData.infoType),
-            _buildInfoRow('状態', latestData.status),
+              const SizedBox(height: 8),
 
-            // 津波データの種類
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children: [
-                if (group.vtse41 != null) _buildTypeChip('警報・注意報', Colors.red),
-                if (group.vtse51 != null) _buildTypeChip('津波情報', Colors.orange),
-                if (group.vtse52 != null) _buildTypeChip('沖合観測', Colors.blue),
-              ],
-            ),
-          ],
+              // 情報詳細
+              _buildInfoRow('イベントID', event.eventId),
+              _buildInfoRow('発表時刻', _formatDateTime(event.pressAt)),
+              _buildInfoRow('報告時刻', _formatDateTime(event.reportAt)),
+              if (event.validAt != null)
+                _buildInfoRow(
+                  '有効期限',
+                  '${_formatDateTime(event.validAt!)}${event.isExpired ? ' (期限切れ)' : ''}',
+                ),
+              _buildInfoRow('情報種別', event.infoType),
+              _buildInfoRow('状態', event.status),
+
+              // 津波データの種類
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: [
+                  if (event.info != null) _buildTypeChip('津波情報', Colors.orange),
+                  if (event.observationInfo != null)
+                    _buildTypeChip('沖合観測', Colors.blue),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -233,83 +236,13 @@ class _TsunamiGroupCard extends StatelessWidget {
     );
   }
 
-  // 最新の津波データを取得（優先度: vtse41 > vtse51 > vtse52）
-  ({
-    int id,
-    int eventId,
-    int? serialNo,
-    String type,
-    String status,
-    String? headline,
-    String infoType,
-    DateTime pressAt,
-    DateTime reportAt,
-    DateTime? validAt,
-  })?
-  _getLatestTsunamiData() {
-    if (group.vtse41 != null) {
-      final data = group.vtse41!;
-      return (
-        id: data.id,
-        eventId: data.eventId,
-        serialNo: data.serialNo,
-        type: '津波警報・注意報・予報a',
-        status: data.status,
-        headline: data.headline,
-        infoType: data.infoType,
-        pressAt: data.pressAt,
-        reportAt: data.reportAt,
-        validAt: data.validAt,
-      );
-    }
-    if (group.vtse51 != null) {
-      final data = group.vtse51!;
-      return (
-        id: data.id,
-        eventId: data.eventId,
-        serialNo: data.serialNo,
-        type: '津波情報a',
-        status: data.status,
-        headline: data.headline,
-        infoType: data.infoType,
-        pressAt: data.pressAt,
-        reportAt: data.reportAt,
-        validAt: data.validAt,
-      );
-    }
-    if (group.vtse52 != null) {
-      final data = group.vtse52!;
-      return (
-        id: data.id,
-        eventId: data.eventId,
-        serialNo: data.serialNo,
-        type: '沖合の津波観測に関する情報',
-        status: data.status,
-        headline: data.headline,
-        infoType: '発表', // VTSE52では固定値
-        pressAt: DateTime.now(), // VTSE52では現在時刻（表示用）
-        reportAt: DateTime.now(), // VTSE52では現在時刻（表示用）
-        validAt: null, // VTSE52ではnull
-      );
-    }
-    return null;
-  }
-
-  String _getTsunamiTypeShort(String type) {
-    return switch (type) {
-      '津波警報・注意報・予報a' => '警報・注意報',
-      '津波情報a' => '津波情報',
-      '沖合の津波観測に関する情報' => '沖合観測',
-      _ => type,
-    };
-  }
-
-  Color _getTsunamiTypeColor(String type) {
-    return switch (type) {
-      '津波警報・注意報・予報a' => Colors.red,
-      '津波情報a' => Colors.orange,
-      '沖合の津波観測に関する情報' => Colors.blue,
-      _ => Colors.grey,
+  Color _getWarningColor(TsunamiWarningColor warningColor) {
+    return switch (warningColor) {
+      TsunamiWarningColor.purple => Colors.purple,
+      TsunamiWarningColor.red => Colors.red,
+      TsunamiWarningColor.yellow => Colors.orange,
+      TsunamiWarningColor.blue => Colors.blue,
+      TsunamiWarningColor.grey => Colors.grey,
     };
   }
 
@@ -319,13 +252,5 @@ class _TsunamiGroupCard extends StatelessWidget {
         '${local.day.toString().padLeft(2, '0')} '
         '${local.hour.toString().padLeft(2, '0')}:'
         '${local.minute.toString().padLeft(2, '0')}';
-  }
-
-  /// 有効期限が切れているかどうかを判定
-  bool _isExpired(DateTime? validAt) {
-    if (validAt == null) {
-      return false;
-    }
-    return DateTime.now().isAfter(validAt);
   }
 }

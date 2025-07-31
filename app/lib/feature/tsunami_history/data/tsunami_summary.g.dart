@@ -14,13 +14,13 @@ const tsunamiSummaryProvider = TsunamiSummaryProvider._();
 final class TsunamiSummaryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<TsunamiSummaryResponse>,
-          TsunamiSummaryResponse,
-          FutureOr<TsunamiSummaryResponse>
+          AsyncValue<List<TsunamiEvent>>,
+          List<TsunamiEvent>,
+          FutureOr<List<TsunamiEvent>>
         >
     with
-        $FutureModifier<TsunamiSummaryResponse>,
-        $FutureProvider<TsunamiSummaryResponse> {
+        $FutureModifier<List<TsunamiEvent>>,
+        $FutureProvider<List<TsunamiEvent>> {
   const TsunamiSummaryProvider._()
     : super(
         from: null,
@@ -37,17 +37,17 @@ final class TsunamiSummaryProvider
 
   @$internal
   @override
-  $FutureProviderElement<TsunamiSummaryResponse> $createElement(
+  $FutureProviderElement<List<TsunamiEvent>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<TsunamiSummaryResponse> create(Ref ref) {
+  FutureOr<List<TsunamiEvent>> create(Ref ref) {
     return tsunamiSummary(ref);
   }
 }
 
-String _$tsunamiSummaryHash() => r'a32a878487ed764021c080688cfec15c4ef1066a';
+String _$tsunamiSummaryHash() => r'd9c2cc73079a6213ec858e02a9d0a1da676a4742';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
