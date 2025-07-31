@@ -4,22 +4,7 @@ import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-part 'eew_details_by_event_id_page.g.dart';
-
-class EewDetailsByEventIdRoute extends GoRouteData
-    with _$EewDetailsByEventIdRoute {
-  const EewDetailsByEventIdRoute({required this.eventId});
-
-  final String eventId;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return EewDetailsByEventIdPage(eventId: eventId);
-  }
-}
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
   const EewDetailsByEventIdPage({required this.eventId, super.key});

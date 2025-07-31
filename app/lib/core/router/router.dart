@@ -358,6 +358,95 @@ class DonationExecutedRoute extends GoRouteData with _$DonationExecutedRoute {
       DonationExecutedScreen(result: $extra);
 }
 
+
+
+class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData
+    with _$EarthquakeHistoryEarlyDetailsRoute {
+  const EarthquakeHistoryEarlyDetailsRoute({required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EarthquakeHistoryEarlyDetailsScreen(id: id);
+  }
+}
+
+
+class EewDetailsByEventIdRoute extends GoRouteData
+    with _$EewDetailsByEventIdRoute {
+  const EewDetailsByEventIdRoute({required this.eventId});
+
+  final String eventId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EewDetailsByEventIdPage(eventId: eventId);
+  }
+}
+
+
+class EarthquakeHistoryEarlyRoute extends GoRouteData with _$EarthquakeHistoryEarlyRoute {
+  const EarthquakeHistoryEarlyRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const EarthquakeHistoryEarlyScreen();
+  }
+}
+
+
+class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
+    with _$KyoshinMonitorAboutObservationNetworkRoute {
+  const KyoshinMonitorAboutObservationNetworkRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const KyoshinMonitorAboutObservationNetworkPage();
+  }
+}
+
+class DebugJmaMapRoute extends GoRouteData with _$DebugJmaMapRoute {
+  const DebugJmaMapRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugJmaMapPage();
+  }
+}
+
+class DebugKyoshinMonitorRoute extends GoRouteData with _$DebugKyoshinMonitorRoute {
+  const DebugKyoshinMonitorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugKyoshinMonitorPage();
+  }
+}
+
+class PlaygroundRoute extends GoRouteData with _$PlaygroundRoute {
+  const PlaygroundRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const PlaygroundPage();
+  }
+}
+
+
+class KyoshinMonitorAboutRoute extends GoRouteData
+    with _$KyoshinMonitorAboutRoute {
+  const KyoshinMonitorAboutRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const KyoshinMonitorAboutPage();
+  }
+}
+
+
+
+
 class _NavigatorObserver extends NavigatorObserver {
   _NavigatorObserver(this.talker);
 

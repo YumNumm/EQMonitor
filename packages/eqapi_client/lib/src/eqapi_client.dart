@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:eqapi_client/src/children/auth.dart';
 import 'package:eqapi_client/src/children/objects.dart';
 import 'package:eqapi_client/src/children/v1.dart';
+import 'package:eqapi_client/src/v2_api_client.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -16,6 +17,8 @@ class EqApi {
   final Dio objectsDio;
 
   V1 get v1 => V1(dio);
+
+  V2ApiClient get v2 => V2ApiClient(dio);
 
   AuthApiClient get auth => AuthApiClient(dio);
 

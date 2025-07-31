@@ -8,7 +8,7 @@ part of 'v1.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
 class _V1 implements V1 {
   _V1(this._dio, {this.baseUrl, this.errorLogger});
@@ -302,7 +302,7 @@ class _V1 implements V1 {
       r'intensityGte': intensityGte,
       r'originTimeLte': originTimeLte?.toIso8601String(),
       r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'sort': sort.name,
+      r'sort': sort,
       r'ascending': ascending,
     };
     queryParameters.removeWhere((k, v) => v == null);

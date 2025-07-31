@@ -106,8 +106,6 @@ abstract class V1 {
   @GET('/v1/shake-detection/latest')
   Future<List<ShakeDetectionEvent>> getLatestShakeDetectionEvents();
 
-  @GET('/v2/tsunami')
-  Future<HttpResponse<TsunamiSummaryResponse>> getTsunamiSummary();
 }
 
 enum EarthquakeEarlySortType {

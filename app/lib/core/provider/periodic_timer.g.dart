@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
 part of 'periodic_timer.dart';
 
@@ -49,7 +49,7 @@ final class PeriodicTimerProvider
   }
 }
 
-String _$periodicTimerHash() => r'cf5abf37f23f3d7de7a4c4da4fc9fd71b5c8b34f';
+String _$periodicTimerHash() => r'ccbdf0ca8ab4731c7d49afc78ae8685e7f0ddabc';
 
 final class PeriodicTimerFamily extends $Family
     with

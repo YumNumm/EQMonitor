@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
 
 class EarthquakeHistoryNotFound extends StatelessWidget {

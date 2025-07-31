@@ -3,11 +3,11 @@ import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/component/widget/app_list_tile.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_layer_information_dialog.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

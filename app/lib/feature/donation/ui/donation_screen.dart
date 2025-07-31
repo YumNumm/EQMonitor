@@ -167,10 +167,9 @@ class _ShowDonationButton extends HookConsumerWidget {
                             showDialog<void>(
                               context: context,
                               barrierDismissible: false,
-                              builder:
-                                  (context) => const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  ),
+                              builder: (context) => const Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
                             ),
                           );
                           try {
@@ -184,7 +183,7 @@ class _ShowDonationButton extends HookConsumerWidget {
                               Navigator.of(context).pop();
                               // 完了画面へ遷移
                               await DonationExecutedRoute(
-                                $extra: (item, purchaseResult),
+                                $extra: (item, purchaseResult.customerInfo),
                               ).push<void>(context);
                             }
                           } on PlatformException catch (e) {

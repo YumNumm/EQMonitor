@@ -12,26 +12,13 @@ import 'package:eqmonitor/feature/earthquake_history_early/data/model/earthquake
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/chip/earthquake_history_early_sort_chip.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_history_early_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_history_early_not_found.dart';
-import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-part 'earthquake_history_early_screen.g.dart';
-
-class EarthquakeHistoryEarlyRoute extends GoRouteData with _$EarthquakeHistoryEarlyRoute {
-  const EarthquakeHistoryEarlyRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const EarthquakeHistoryEarlyScreen();
-  }
-}
 
 class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
   const EarthquakeHistoryEarlyScreen({super.key});

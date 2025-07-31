@@ -77,8 +77,8 @@ class DonationExecutedScreen extends HookConsumerWidget {
                   ActionButton.text(
                     context: context,
                     text: 'アプリストアでレビューを書く',
-                    onPressed:
-                        () async => InAppReview.instance.openStoreListing(
+                    onPressed: () async =>
+                        InAppReview.instance.openStoreListing(
                           appStoreId: '6447546703',
                         ),
                   ),
@@ -175,12 +175,10 @@ class _ScrollView extends StatelessWidget {
                               TextSpan(
                                 text: '@$account',
                                 style: TextStyle(color: Colors.blue.shade400),
-                                recognizer:
-                                    TapGestureRecognizer()
-                                      ..onTap =
-                                          () async => launchUrlString(
-                                            'https://twitter.com/$account',
-                                          ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async => launchUrlString(
+                                    'https://twitter.com/$account',
+                                  ),
                               ),
                           ],
                         ),

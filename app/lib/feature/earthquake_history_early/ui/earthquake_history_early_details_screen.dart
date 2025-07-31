@@ -13,18 +13,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
 
-part 'earthquake_history_early_details_screen.g.dart';
-
-class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData with _$EarthquakeHistoryEarlyDetailsRoute {
-  const EarthquakeHistoryEarlyDetailsRoute({required this.id});
-
-  final String id;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return EarthquakeHistoryEarlyDetailsScreen(id: id);
-  }
-}
 
 class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
   const EarthquakeHistoryEarlyDetailsScreen({required this.id, super.key});
@@ -44,8 +32,8 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
         appBar: AppBar(),
         body: ErrorCard(
           error: error,
-          onReload:
-              () async => ref.refresh(earthquakeHistoryEarlyEventProvider(id)),
+          onReload: () async =>
+              ref.refresh(earthquakeHistoryEarlyEventProvider(id)),
         ),
       ),
       AsyncData(:final value) => Scaffold(
