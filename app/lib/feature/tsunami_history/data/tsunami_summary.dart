@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/api/eq_api.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_converter.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_models.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_converter.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_models.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tsunami_summary.g.dart';

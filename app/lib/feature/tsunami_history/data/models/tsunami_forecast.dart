@@ -1,7 +1,7 @@
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_comments.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_height.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_observation.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_warning.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_comments.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_height.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_observation.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_warning.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'tsunami_forecast.freezed.dart';

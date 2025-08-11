@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/tsunami_history/data/tsunami_summary.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_models.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_models.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -32,7 +32,7 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_models.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_models.dart';
 import 'package:eqmonitor/feature/tsunami_history/page/tsunami_details_page.dart';
 import 'package:eqmonitor/feature/tsunami_history/page/tsunami_history_page.dart';
 import 'package:eqmonitor/page/home_page.dart';

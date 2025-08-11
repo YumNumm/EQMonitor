@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_models.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_models.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -197,16 +197,18 @@ class TsunamiDetailsPage extends HookConsumerWidget {
       title: '津波情報',
       isExpansionTile: true,
       children: [
+        // 発表時刻と失効時刻の表示
+        _buildTimingInfo(context),
+        const SizedBox(height: 12),
+
+        // 警報のみ存在する地域
         if (info.areas.isNotEmpty) ...[
-          const Text(
-            '地域別津波情報',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-          ),
-          const SizedBox(height: 6),
-          ...info.areas.map(_buildAreaItem),
-        ],
-        if (info.observations?.isNotEmpty ?? false) ...[
+          _buildWarningOnlySection(info.areas),
           const SizedBox(height: 12),
+        ],
+
+        // 観測データ（観測値 + 警報情報マッチング）
+        if (info.observations?.isNotEmpty ?? false) ...[
           const Text(
             '津波観測（観測値 + 警報情報）',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
@@ -214,6 +216,28 @@ class TsunamiDetailsPage extends HookConsumerWidget {
           const SizedBox(height: 6),
           ...info.observations!.map(
             (obs) => _buildObservationItem(obs, info.areas),
+          ),
+        ],
+
+        // 観測データがない場合の警告
+        if ((info.observations?.isEmpty ?? true) && info.areas.isNotEmpty) ...[
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.orange.withValues(alpha: 0.1),
+              border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.warning, color: Colors.orange, size: 16),
+                SizedBox(width: 6),
+                Text(
+                  '観測データはまだ入っていません',
+                  style: TextStyle(color: Colors.orange, fontSize: 12),
+                ),
+              ],
+            ),
           ),
         ],
       ],
@@ -250,19 +274,15 @@ class TsunamiDetailsPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildAreaItem(TsunamiArea area) {
+  /// 発表時刻と失効時刻の情報を表示
+  Widget _buildTimingInfo(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: area.warning != null
-            ? _getWarningColor(area.warning!.color).withValues(alpha: 0.1)
-            : Colors.grey.withValues(alpha: 0.1),
-        border: Border.all(
-          color: area.warning != null
-              ? _getWarningColor(area.warning!.color).withValues(alpha: 0.3)
-              : Colors.grey.withValues(alpha: 0.3),
-        ),
+        color: Colors.blue.withValues(alpha: 0.05),
+        border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Column(
@@ -270,69 +290,74 @@ class TsunamiDetailsPage extends HookConsumerWidget {
         children: [
           Row(
             children: [
-              if (area.warning != null) ...[
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getWarningColor(area.warning!.color),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Text(
-                    area.warning!.displayName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 6),
-              ],
-              Expanded(
-                child: Text(
-                  area.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+              Icon(
+                Icons.schedule,
+                size: 16,
+                color: Colors.blue.shade700,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '発表情報',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade700,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          if (area.maxHeight != null) ...[
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Text(
+                '発表時刻: ',
+                style: TextStyle(color: Colors.grey, fontSize: 13),
+              ),
+              Text(
+                _formatDateTime(event.pressAt),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          if (event.validAt != null) ...[
+            const SizedBox(height: 4),
             Row(
               children: [
-                const Text('津波の高さ: ', style: TextStyle(color: Colors.grey)),
-                Text(
-                  area.maxHeight!.displayText,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                const Text(
+                  '有効期限: ',
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
                 ),
-              ],
-            ),
-          ],
-          if (area.firstHeight?.arrivalTime != null) ...[
-            Row(
-              children: [
-                const Text('到達予想時刻: ', style: TextStyle(color: Colors.grey)),
                 Text(
-                  _formatDateTime(area.firstHeight!.arrivalTime!),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  '${_formatDateTime(event.validAt!)}まで有効',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: event.isExpired ? Colors.red : Colors.green.shade700,
+                  ),
                 ),
-              ],
-            ),
-          ],
-          if (area.firstHeight?.situation != null) ...[
-            Row(
-              children: [
-                const Text('状況: ', style: TextStyle(color: Colors.grey)),
-                Text(
-                  area.firstHeight!.situation!,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                if (event.isExpired) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: const Text(
+                      '期限切れ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ],
@@ -584,6 +609,82 @@ class TsunamiDetailsPage extends HookConsumerWidget {
     }
 
     return null;
+  }
+
+  /// 警報のみ存在する地域の表示
+  Widget _buildWarningOnlySection(List<TsunamiArea> areas) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '津波警報・注意報（予想情報）',
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        const SizedBox(height: 6),
+        ...areas.map(_buildWarningAreaItem),
+      ],
+    );
+  }
+
+  /// 警報地域アイテムの構築
+  Widget _buildWarningAreaItem(TsunamiArea area) {
+    final warningColor = area.warning != null
+        ? _getWarningColor(area.warning!.color)
+        : Colors.grey;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: warningColor.withValues(alpha: 0.1),
+        border: Border.all(color: warningColor.withValues(alpha: 0.3)),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ヘッダー（警報レベル + 地域名）
+          Row(
+            children: [
+              if (area.warning != null) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: warningColor,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: Text(
+                    area.warning!.displayName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+              ],
+              Expanded(
+                child: Text(
+                  area.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+
+          // 詳細情報
+          _buildWarningInfoSection(area),
+        ],
+      ),
+    );
   }
 
   /// 警報情報セクションの構築
