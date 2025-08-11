@@ -1,10 +1,13 @@
 targets:
   $default:
     builders:
-      source_gen|combining_builder:
+      # https://github.com/dart-lang/source_gen#ignore_for_file
+      source_gen:combining_builder:
         options:
           ignore_for_file:
             - type=lint
+            - duplicate_ignore
+            - deprecated_member_use
       json_serializable:
         options:
           checked: true
