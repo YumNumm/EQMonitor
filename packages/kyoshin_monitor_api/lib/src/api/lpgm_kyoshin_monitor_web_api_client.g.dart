@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'lpgm_kyoshin_monitor_web_api_client.dart';
 
@@ -8,7 +8,7 @@ part of 'lpgm_kyoshin_monitor_web_api_client.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
 class _LpgmKyoshinMonitorWebApiClient
     implements LpgmKyoshinMonitorWebApiClient {
