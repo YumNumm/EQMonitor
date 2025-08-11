@@ -1,6 +1,6 @@
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_forecast.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_observation.dart';
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_warning.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_forecast.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_observation.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_warning.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'tsunami_event.freezed.dart';

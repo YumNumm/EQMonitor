@@ -1,5 +1,5 @@
 import 'package:eqapi_types/eqapi_types.dart' as api;
-import 'package:eqmonitor/feature/tsunami_history/models/tsunami_models.dart';
+import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_models.dart';
 
 /// API型からアプリ型への変換ユーティリティ
 class TsunamiConverter {
