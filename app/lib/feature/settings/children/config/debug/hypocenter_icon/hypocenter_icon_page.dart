@@ -110,7 +110,12 @@ class HypocenterIconPage extends ConsumerWidget {
     final file = await File('${tempDir.path}/$fileName').create();
     await file.writeAsBytes(image);
 
-    await Share.shareXFiles([XFile(file.path)]);
+    await SharePlus.instance.share(
+      ShareParams(
+        subject: '震源アイコン',
+        files: [XFile(file.path)],
+      ),
+    );
   }
 }
 

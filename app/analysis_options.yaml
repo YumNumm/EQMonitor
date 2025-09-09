@@ -1,6 +1,7 @@
 include: package:eqmonitor_lints/analysis_options.yaml
 analyzer:
   errors:
+    avoid_implementing_value_types: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
 custom_lint:
