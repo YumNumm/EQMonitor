@@ -1,14 +1,14 @@
 name: eqmonitor_lints
 
 environment:
-  sdk: 3.8.1
-  flutter: 3.32.4
+  sdk: 3.9.2
+  flutter: 3.35.3
 
 resolution: workspace
 
 dependencies:
   altive_lints: ^1.18.0
-  custom_lint: ^0.7.0
+  custom_lint: ^0.8.0
   flutter:
     sdk: flutter
   yumemi_lints: ^4.1.1
