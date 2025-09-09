@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:synchronized/extension.dart';
 
+// ignore: avoid_implementing_value_types
 class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
   const EarthquakeHypocenterLayer({
     required this.isVisible,

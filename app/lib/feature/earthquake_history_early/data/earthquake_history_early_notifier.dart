@@ -50,8 +50,7 @@ class EarthquakeHistoryEarlyNotifier extends _$EarthquakeHistoryEarlyNotifier {
     if (!(state.value?.hasNext ?? false)) {
       return;
     }
-    state = const AsyncLoading<(List<EarthquakeEarly>, int totalCount)>()
-        .copyWithPrevious(state);
+    state = const AsyncLoading<(List<EarthquakeEarly>, int totalCount)>();
     state = await state.guardPlus(() async {
       final repository = ref.read(earthquakeHistoryEarlyRepositoryProvider);
       final currentData = state.value;

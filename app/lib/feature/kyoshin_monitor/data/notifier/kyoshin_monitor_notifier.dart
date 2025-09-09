@@ -57,7 +57,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       return;
     }
     final stopwatch = Stopwatch()..start();
-    state = const AsyncLoading<KyoshinMonitorState>().copyWithPrevious(state);
+    state = const AsyncLoading<KyoshinMonitorState>();
     state = await AsyncValue.guard(() async {
       final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
       final imageParser = ref.read(kyoshinMonitorImageParserProvider);

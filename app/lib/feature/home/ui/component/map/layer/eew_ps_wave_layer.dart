@@ -42,7 +42,7 @@ class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
     );
 
     useEffect(() {
-      animationController.repeat();
+      unawaited(animationController.repeat());
       animationController.addListener(() async {
         if (!isInitialized.value) {
           return;

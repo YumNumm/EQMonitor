@@ -139,8 +139,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       throw EarthquakeParameterHasNotInitializedException();
     }
 
-    state = const AsyncLoading<(List<EarthquakeV1Extended>, int totalCount)>()
-        .copyWithPrevious(state);
+    state = const AsyncLoading<(List<EarthquakeV1Extended>, int totalCount)>();
     state = await state.guardPlus(() async {
       final repository = ref.read(earthquakeHistoryRepositoryProvider);
       final currentData = state.value;
