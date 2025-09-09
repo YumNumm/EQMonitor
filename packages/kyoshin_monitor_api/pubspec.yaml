@@ -5,8 +5,8 @@ version: 1.0.0
 publish_to: "none"
 
 environment:
-  sdk: 3.8.1
-  flutter: 3.32.4
+  sdk: 3.9.2
+  flutter: 3.35.3
 
 resolution: workspace
 
@@ -26,5 +26,5 @@ dev_dependencies:
     path: ../eqmonitor_lints
   freezed: ^3.0.6
   json_serializable: ^6.9.0
-  retrofit_generator: ^9.1.9
+  retrofit_generator: ^10.0.0
   test: ^1.25.2

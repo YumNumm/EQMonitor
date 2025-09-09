@@ -1,8 +1,8 @@
 name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
 environment:
-  sdk: 3.8.1
-  flutter: 3.32.4
+  sdk: 3.9.2
+  flutter: 3.35.3
 workspace:
   - app
   - packages/_base
@@ -25,9 +25,9 @@ workspace:
   - packages/kyoshin_monitor_image_parser
   # <ADD_PACKAGE_HERE>
 dependencies:
-  melos: ^7.0.0-dev.8
+  melos: ^7.1.0
 dependency_overrides:
-  freezed_annotation: ^3.0.0
+  freezed_annotation: ^3.1.0
   maplibre_gl:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
@@ -47,7 +47,7 @@ dependency_overrides:
   #   git:
   #     url: https://github.com/YumNumm/flutter-maplibre.git
   #     ref: c206212edf54c9331e3b2d040f256b4dbb08106f
-  protobuf: ^4.0.0
+  protobuf: ^4.2.0
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   command:
@@ -56,8 +56,8 @@ melos:
     bootstrap:
       runPubGetInParallel: false
       environment:
-        sdk: 3.8.1
-        flutter: 3.32.4
+        sdk: 3.9.2
+        flutter: 3.35.3
   scripts:
     analyze:
       run: |
