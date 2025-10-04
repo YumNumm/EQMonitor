@@ -16,7 +16,7 @@ dependencies:
   clock: ^1.1.2
   collection: ^1.19.1
   crypto: ^3.0.6
-  device_info_plus: ^11.2.0
+  device_info_plus: ^12.1.0
   dio: ^5.8.0+1
   dynamic_color: ^1.7.0
   earthquake_replay:
@@ -83,7 +83,7 @@ dependencies:
   purchases_flutter: ^9.1.0
   riverpod_annotation: ^3.0.0-dev.16
   screenshot: 3.0.0
-  share_plus: ^11.0.0
+  share_plus: ^12.0.0
   shared_preference_app_group: ^1.1.1
   shared_preferences: ^2.3.3
   sheet:
@@ -95,7 +95,7 @@ dependencies:
   synchronized: ^3.3.0
   talker_dio_logger: ^5.0.0
   talker_flutter: ^5.0.0
-  upgrader: ^11.3.1
+  upgrader: ^12.1.0
   url_launcher: ^6.3.1
   uuid: ^4.5.1
   version: ^3.0.2
