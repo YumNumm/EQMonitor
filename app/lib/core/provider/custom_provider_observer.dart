@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-class CustomProviderObserver extends ProviderObserver {
+final class CustomProviderObserver extends ProviderObserver {
   CustomProviderObserver(this.talker);
 
   final Talker talker;
