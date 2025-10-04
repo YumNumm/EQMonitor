@@ -12,7 +12,10 @@ resolution: workspace
 
 dependencies:
   adaptive_dialog: ^2.3.0
-  app_settings: ^6.1.1
+  app_settings:
+    git:
+      url: https://github.com/spencerccf/app_settings.git
+      ref: ebbf71824a21cded805d5894f8df8f5af44ec069
   clock: ^1.1.2
   collection: ^1.19.1
   crypto: ^3.0.6
@@ -74,6 +77,7 @@ dependencies:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
   # maplibre: ^0.2.1
+  maplibre: ^0.3.0
   maplibre_gl: ^0.21.0
   ntp: ^2.0.0
   package_info_plus: ^8.1.2
