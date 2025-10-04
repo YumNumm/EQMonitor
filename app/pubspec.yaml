@@ -6,21 +6,16 @@ version: 2.10.0
 
 environment:
   sdk: 3.9.2
-  flutter: 3.35.3
+  flutter: 3.35.5
 
 resolution: workspace
 
 dependencies:
   adaptive_dialog: ^2.3.0
-  app_settings:
-    git:
-      url: https://github.com/rhbrunetto/app_settings.git
-      ref: 30f3d52314e24c934cafaf383e68c8085c8cda41
-  background_task: ^0.2.0
+  app_settings: ^6.1.1
   clock: ^1.1.2
   collection: ^1.19.1
   crypto: ^3.0.6
-  data_table_2: ^2.5.16
   device_info_plus: ^11.2.0
   dio: ^5.8.0+1
   dynamic_color: ^1.7.0
@@ -42,7 +37,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.1.0
-  flutter_email_sender: ^7.0.0
+  flutter_email_sender: ^8.0.0
   flutter_hooks: ^0.21.2
   flutter_html: ^3.0.0
   flutter_local_notifications: ^19.2.1
@@ -134,6 +129,8 @@ flutter_gen:
     flutter_svg: true
 
 flutter:
+  config:
+    enable-swift-package-manager: true
   uses-material-design: true
   assets:
     - assets/
