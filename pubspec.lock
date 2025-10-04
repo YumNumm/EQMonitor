@@ -84,11 +84,12 @@ packages:
   app_settings:
     dependency: transitive
     description:
-      name: app_settings
-      sha256: "3e46c561441e5820d3a25339bf8b51b9e45a5f686873851a20c257a530917795"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.1"
+      path: "."
+      ref: ebbf71824a21cded805d5894f8df8f5af44ec069
+      resolved-ref: ebbf71824a21cded805d5894f8df8f5af44ec069
+      url: "https://github.com/spencerccf/app_settings.git"
+    source: git
+    version: "6.1.2"
   appkit_ui_element_colors:
     dependency: transitive
     description:
@@ -1077,6 +1078,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: d2c361082d554d4593c3012e26f6b188f902acd291330f13d6427641a92b3da1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.2"
   js:
     dependency: transitive
     description:
@@ -1181,6 +1190,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+  maplibre:
+    dependency: transitive
+    description:
+      name: maplibre
+      sha256: "010f44eb1e2da3c386d7f1801685bb9af0b92b3908e380a5e05e55432762e1b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   maplibre_gl:
     dependency: "direct overridden"
     description:
@@ -1208,6 +1225,14 @@ packages:
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.22.0"
+  maplibre_ios:
+    dependency: transitive
+    description:
+      name: maplibre_ios
+      sha256: e1913565d25be9794773e8095fb7040cd33a52a3af6c7ab2f9c848b5482ead2f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   maps_toolkit:
     dependency: transitive
     description:
@@ -1304,6 +1329,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  objective_c:
+    dependency: transitive
+    description:
+      name: objective_c
+      sha256: "87103d96b19be76dc34b5ef859fecae78561d49779d5480b73c23b4dec8b9ec4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.1.0"
   os_detect:
     dependency: transitive
     description:

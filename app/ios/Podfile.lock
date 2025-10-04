@@ -1,6 +1,4 @@
 PODS:
-  - background_task (0.0.1):
-    - Flutter
   - Flutter (1.0.0)
   - permission_handler_apple (9.3.0):
     - Flutter
@@ -8,14 +6,11 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - background_task (from `.symlinks/plugins/background_task/ios`)
   - Flutter (from `Flutter`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preference_app_group (from `.symlinks/plugins/shared_preference_app_group/ios`)
 
 EXTERNAL SOURCES:
-  background_task:
-    :path: ".symlinks/plugins/background_task/ios"
   Flutter:
     :path: Flutter
   permission_handler_apple:
@@ -24,7 +19,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preference_app_group/ios"
 
 SPEC CHECKSUMS:
-  background_task: cb74890aa75be08c253c56017a2f0f6038d0879a
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   shared_preference_app_group: 7422922a188e05cf680a656e18e2786dcb5c58b3
