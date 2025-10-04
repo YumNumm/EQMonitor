@@ -2,7 +2,7 @@ name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
 environment:
   sdk: 3.9.2
-  flutter: 3.35.3
+  flutter: 3.35.5
 workspace:
   - app
   - packages/_base
@@ -57,7 +57,7 @@ melos:
       runPubGetInParallel: false
       environment:
         sdk: 3.9.2
-        flutter: 3.35.3
+        flutter: 3.35.5
   scripts:
     analyze:
       run: |
