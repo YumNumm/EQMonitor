@@ -176,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-hybrid-common.git",
       "state" : {
-        "revision" : "0ac706f004edebb2efedad996f03db328a7bc375",
-        "version" : "17.3.0"
+        "revision" : "e29e09e7883a9f5dbf0ecddfa14642f7abd1c31d",
+        "version" : "17.5.0"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios-spm",
       "state" : {
-        "revision" : "901d956d179ca04a89a19b644c439a345f971630",
-        "version" : "5.36.0"
+        "revision" : "7abf1505551da3d8c33d4306a80c1e1cc450e47e",
+        "version" : "5.37.0"
       }
     },
     {
