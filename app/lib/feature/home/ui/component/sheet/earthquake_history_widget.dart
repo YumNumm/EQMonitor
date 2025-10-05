@@ -13,9 +13,10 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final defaultEarthquakeHistoryNotifierProvider =
-        earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter());
-    final state = ref.watch(defaultEarthquakeHistoryNotifierProvider);
+    final defaultEarthquakeHistoryProvider = earthquakeHistoryProvider(
+      const EarthquakeHistoryParameter(),
+    );
+    final state = ref.watch(defaultEarthquakeHistoryProvider);
     const loading = Center(
       child: Padding(
         padding: EdgeInsets.all(24),
@@ -39,30 +40,26 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                 return const SizedBox.shrink();
               }
               return Column(
-                children:
-                    data
-                        .map(
-                          (e) => EarthquakeHistoryListTile(
-                            item: e,
-                            onTap:
-                                () async => EarthquakeHistoryDetailsRoute(
-                                  eventId: e.eventId,
-                                ).push<void>(context),
-                            showBackgroundColor: false,
-                          ),
-                        )
-                        .toList(),
+                children: data
+                    .map(
+                      (e) => EarthquakeHistoryListTile(
+                        item: e,
+                        onTap: () async => EarthquakeHistoryDetailsRoute(
+                          eventId: e.eventId,
+                        ).push<void>(context),
+                        showBackgroundColor: false,
+                      ),
+                    )
+                    .toList(),
               );
             }(),
             AsyncError(:final error) => ErrorCard(
               error: error,
-              onReload:
-                  () async =>
-                      ref
-                          .read(
-                            defaultEarthquakeHistoryNotifierProvider.notifier,
-                          )
-                          .refresh(),
+              onReload: () async => ref
+                  .read(
+                    defaultEarthquakeHistoryProvider.notifier,
+                  )
+                  .refresh(),
             ),
             _ => loading,
           },
@@ -70,9 +67,8 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
             children: [
               const Spacer(),
               TextButton(
-                onPressed:
-                    () async =>
-                        const EarthquakeHistoryRoute().push<void>(context),
+                onPressed: () async =>
+                    const EarthquakeHistoryRoute().push<void>(context),
                 child: const Text('さらに表示'),
               ),
             ],

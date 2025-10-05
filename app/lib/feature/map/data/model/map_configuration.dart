@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/util/color_converter.dart';
+import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -36,8 +36,11 @@ abstract class MapColorScheme with _$MapColorScheme {
   factory MapColorScheme.light() {
     const colorScheme = ColorScheme.light();
     return MapColorScheme(
-      backgroundColor:
-          Color.lerp(colorScheme.surface, Colors.blue.shade900, 0.1)!,
+      backgroundColor: Color.lerp(
+        colorScheme.surface,
+        Colors.blue.shade900,
+        0.1,
+      )!,
       worldLandColor: colorScheme.surfaceContainerLowest,
       worldLineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerLowest,
@@ -48,12 +51,11 @@ abstract class MapColorScheme with _$MapColorScheme {
   factory MapColorScheme.dark() {
     const colorScheme = ColorScheme.dark();
     return MapColorScheme(
-      backgroundColor:
-          Color.lerp(
-            colorScheme.surfaceContainerLowest,
-            Colors.blue.shade900,
-            0.1,
-          )!,
+      backgroundColor: Color.lerp(
+        colorScheme.surfaceContainerLowest,
+        Colors.blue.shade900,
+        0.1,
+      )!,
       worldLandColor: colorScheme.surfaceContainerHighest,
       worldLineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerHighest,

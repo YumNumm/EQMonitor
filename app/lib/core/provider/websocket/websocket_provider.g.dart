@@ -8,6 +8,9 @@ part of 'websocket_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(websocket)
 const websocketProvider = WebsocketProvider._();
 
@@ -201,13 +204,13 @@ const websocketTableMessagesProvider = WebsocketTableMessagesProvider._();
 final class WebsocketTableMessagesProvider
     extends
         $FunctionalProvider<
-          AsyncValue<RealtimePostgresChangesPayloadTable>,
-          RealtimePostgresChangesPayloadTable,
-          Stream<RealtimePostgresChangesPayloadTable>
+          AsyncValue<RealtimePostgresChangesPayloadTable<V1Database>>,
+          RealtimePostgresChangesPayloadTable<V1Database>,
+          Stream<RealtimePostgresChangesPayloadTable<V1Database>>
         >
     with
-        $FutureModifier<RealtimePostgresChangesPayloadTable>,
-        $StreamProvider<RealtimePostgresChangesPayloadTable> {
+        $FutureModifier<RealtimePostgresChangesPayloadTable<V1Database>>,
+        $StreamProvider<RealtimePostgresChangesPayloadTable<V1Database>> {
   const WebsocketTableMessagesProvider._()
     : super(
         from: null,
@@ -224,18 +227,14 @@ final class WebsocketTableMessagesProvider
 
   @$internal
   @override
-  $StreamProviderElement<RealtimePostgresChangesPayloadTable> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  $StreamProviderElement<RealtimePostgresChangesPayloadTable<V1Database>>
+  $createElement($ProviderPointer pointer) => $StreamProviderElement(pointer);
 
   @override
-  Stream<RealtimePostgresChangesPayloadTable> create(Ref ref) {
+  Stream<RealtimePostgresChangesPayloadTable<V1Database>> create(Ref ref) {
     return websocketTableMessages(ref);
   }
 }
 
 String _$websocketTableMessagesHash() =>
     r'53916279b0c281a63156b8900900605a867bea1c';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

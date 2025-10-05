@@ -799,7 +799,7 @@ packages:
     source: hosted
     version: "3.2.3"
   freezed_annotation:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: freezed_annotation
       sha256: "7294967ff0a6d98638e7acb774aac3af2550777accd8149c90af5b014e6d44d8"
@@ -1198,33 +1198,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
-  maplibre_gl:
-    dependency: "direct overridden"
-    description:
-      path: maplibre_gl
-      ref: "2b653ca28184004db852f20cf91b7a068760103c"
-      resolved-ref: "2b653ca28184004db852f20cf91b7a068760103c"
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
-    source: git
-    version: "0.22.0"
-  maplibre_gl_platform_interface:
-    dependency: "direct overridden"
-    description:
-      path: maplibre_gl_platform_interface
-      ref: "2b653ca28184004db852f20cf91b7a068760103c"
-      resolved-ref: "2b653ca28184004db852f20cf91b7a068760103c"
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
-    source: git
-    version: "0.22.0"
-  maplibre_gl_web:
-    dependency: "direct overridden"
-    description:
-      path: maplibre_gl_web
-      ref: "2b653ca28184004db852f20cf91b7a068760103c"
-      resolved-ref: "2b653ca28184004db852f20cf91b7a068760103c"
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
-    source: git
-    version: "0.22.0"
   maplibre_ios:
     dependency: transitive
     description:

@@ -8,8 +8,11 @@ part of 'map_configuration_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(MapConfigurationNotifier)
-const mapConfigurationNotifierProvider = MapConfigurationNotifierProvider._();
+const mapConfigurationProvider = MapConfigurationNotifierProvider._();
 
 final class MapConfigurationNotifierProvider
     extends $AsyncNotifierProvider<MapConfigurationNotifier, MapConfiguration> {
@@ -18,7 +21,7 @@ final class MapConfigurationNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'mapConfigurationNotifierProvider',
+        name: r'mapConfigurationProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -33,7 +36,7 @@ final class MapConfigurationNotifierProvider
 }
 
 String _$mapConfigurationNotifierHash() =>
-    r'32df3d97aa64cf68e5320209bf36c4392e23582c';
+    r'983783ee8c85413b0e3fda079b180dd20a3c2fcb';
 
 abstract class _$MapConfigurationNotifier
     extends $AsyncNotifier<MapConfiguration> {
@@ -55,6 +58,3 @@ abstract class _$MapConfigurationNotifier
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

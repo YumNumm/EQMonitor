@@ -8,6 +8,9 @@ part of 'eew_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(Eew)
 const eewProvider = EewProvider._();
 
@@ -85,7 +88,7 @@ final class _EewRestProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$eewRestHash();
+  String debugGetCreateSourceHash() => _$_eewRestHash();
 
   @$internal
   @override
@@ -99,7 +102,4 @@ final class _EewRestProvider
   }
 }
 
-String _$eewRestHash() => r'69fa253ca95a018a286351ead0b2f662f5e47626';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+String _$_eewRestHash() => r'69fa253ca95a018a286351ead0b2f662f5e47626';

@@ -46,7 +46,7 @@ final class CustomProviderObserver extends ProviderObserver {
     'kyoshinMonitorTimerStreamProvider' ||
     'periodicTimerProvider' ||
     'timeTickerProvider' ||
-    'kyoshinMonitorNotifierProvider' => null,
+    'kyoshinMonitorProvider' => null,
     _
         when context.provider.name?.contains('LayerControllerProvider') ??
             false =>

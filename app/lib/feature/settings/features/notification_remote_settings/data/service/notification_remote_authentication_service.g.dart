@@ -8,6 +8,9 @@ part of 'notification_remote_authentication_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(notificationRemoteAuthenticateService)
 const notificationRemoteAuthenticateServiceProvider =
     NotificationRemoteAuthenticateServiceProvider._();
@@ -57,7 +60,4 @@ final class NotificationRemoteAuthenticateServiceProvider
 }
 
 String _$notificationRemoteAuthenticateServiceHash() =>
-    r'98471376ed9c8902c7243c5b897f5e8555640b48';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+    r'0d2182d09d47b433e16ff97a206bce5198d0b6b1';

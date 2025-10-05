@@ -1,2 +1,3 @@
 [tools]
 flutter = "3.35.5-stable"
+"pipx:oraios/serena" = "latest"

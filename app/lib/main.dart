@@ -162,7 +162,7 @@ Future<void> main() async {
       kyoshinMonitorInternalObservationPointsConvertedProvider.future,
     ),
     container.read(travelTimeInternalProvider.future),
-    container.read(permissionNotifierProvider.notifier).initialize(),
+    container.read(permissionProvider.notifier).initialize(),
   ).wait;
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));

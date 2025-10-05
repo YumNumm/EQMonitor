@@ -19,13 +19,12 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeModeNotifierProvider);
+    final theme = ref.watch(themeModeProvider);
     final routerConfig = ref.watch(goRouterProvider);
 
     final app = BetterFeedback(
-      feedbackBuilder:
-          (p0, p1, p2) =>
-              CustomFeedbackForm(onSubmit: p1, scrollController: p2),
+      feedbackBuilder: (p0, p1, p2) =>
+          CustomFeedbackForm(onSubmit: p1, scrollController: p2),
       child: DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
           // Fictitious brand color.

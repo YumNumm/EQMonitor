@@ -8,6 +8,9 @@ part of 'kyoshin_monitor_timer_stream.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(kyoshinMonitorTimerStream)
 const kyoshinMonitorTimerStreamProvider = KyoshinMonitorTimerStreamProvider._();
 
@@ -41,7 +44,4 @@ final class KyoshinMonitorTimerStreamProvider
 }
 
 String _$kyoshinMonitorTimerStreamHash() =>
-    r'580f6e70bd5a356fbb93595e3eaba6337cfab128';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+    r'54b75e8ffed7bd29e9e42fd886c11b81fc3c8131';

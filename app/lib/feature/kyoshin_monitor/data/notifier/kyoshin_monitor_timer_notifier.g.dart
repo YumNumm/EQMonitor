@@ -8,9 +8,11 @@ part of 'kyoshin_monitor_timer_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(KyoshinMonitorTimerNotifier)
-const kyoshinMonitorTimerNotifierProvider =
-    KyoshinMonitorTimerNotifierProvider._();
+const kyoshinMonitorTimerProvider = KyoshinMonitorTimerNotifierProvider._();
 
 final class KyoshinMonitorTimerNotifierProvider
     extends
@@ -23,7 +25,7 @@ final class KyoshinMonitorTimerNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'kyoshinMonitorTimerNotifierProvider',
+        name: r'kyoshinMonitorTimerProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -38,7 +40,7 @@ final class KyoshinMonitorTimerNotifierProvider
 }
 
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'344b38935163fac1cce8de724e781381158eb1db';
+    r'f82e78b9ef4059e19f60a3ebf1de64eec3d47d77';
 
 abstract class _$KyoshinMonitorTimerNotifier
     extends $StreamNotifier<KyoshinMonitorTimerState> {
@@ -87,7 +89,8 @@ final class _KyoshinMonitorDelayAdujustTimingProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$kyoshinMonitorDelayAdujustTimingHash();
+  String debugGetCreateSourceHash() =>
+      _$_kyoshinMonitorDelayAdujustTimingHash();
 
   @$internal
   @override
@@ -100,8 +103,5 @@ final class _KyoshinMonitorDelayAdujustTimingProvider
   }
 }
 
-String _$kyoshinMonitorDelayAdujustTimingHash() =>
-    r'9596c780015c7ef05f31704d32976671e7500925';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+String _$_kyoshinMonitorDelayAdujustTimingHash() =>
+    r'eb766fed5a2c7eb8cfb1082c912ec34995bc9300';

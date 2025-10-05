@@ -8,6 +8,9 @@ part of 'api_authentication_payload.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(apiAuthenticationPayload)
 const apiAuthenticationPayloadProvider = ApiAuthenticationPayloadProvider._();
 
@@ -48,7 +51,4 @@ final class ApiAuthenticationPayloadProvider
 }
 
 String _$apiAuthenticationPayloadHash() =>
-    r'b381a5161adb22c2ec3263673d35a62839b77de9';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+    r'e90163fb1098b728ed25229d501a59885c224c93';

@@ -28,7 +28,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailsState = ref.watch(
-      earthquakeHistoryDetailsNotifierProvider(eventId),
+      earthquakeHistoryDetailsProvider(eventId),
     );
     final details = detailsState.value;
 
@@ -38,10 +38,9 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         body: switch (detailsState) {
           AsyncError(:final error) when !detailsState.isLoading => ErrorCard(
             error: error,
-            onReload:
-                () async => ref.refresh(
-                  earthquakeHistoryDetailsNotifierProvider(eventId),
-                ),
+            onReload: () async => ref.refresh(
+              earthquakeHistoryDetailsProvider(eventId),
+            ),
           ),
           AsyncLoading() || _ when detailsState.isLoading => Center(
             child: Column(
@@ -116,7 +115,7 @@ class _IntensityIcons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(
-      earthquakeHistoryConfigNotifierProvider.select((value) => value.detail),
+      earthquakeHistoryConfigProvider.select((value) => value.detail),
     );
     final showingLpgmIntensity = config.showingLpgmIntensity;
 

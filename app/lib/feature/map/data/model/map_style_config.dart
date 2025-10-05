@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/util/color_converter.dart';
+import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
