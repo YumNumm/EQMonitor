@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -184,6 +183,136 @@ $TextColorModelCopyWith<$Res> get seven {
 }
 }
 
+
+/// Adds pattern-matching-related methods to [IntensityColorModel].
+extension IntensityColorModelPatterns on IntensityColorModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IntensityColorModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _IntensityColorModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IntensityColorModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _IntensityColorModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IntensityColorModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _IntensityColorModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TextColorModel unknown,  TextColorModel zero,  TextColorModel one,  TextColorModel two,  TextColorModel three,  TextColorModel four,  TextColorModel fiveLower,  TextColorModel fiveUpper,  TextColorModel sixLower,  TextColorModel sixUpper,  TextColorModel seven)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _IntensityColorModel() when $default != null:
+return $default(_that.unknown,_that.zero,_that.one,_that.two,_that.three,_that.four,_that.fiveLower,_that.fiveUpper,_that.sixLower,_that.sixUpper,_that.seven);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TextColorModel unknown,  TextColorModel zero,  TextColorModel one,  TextColorModel two,  TextColorModel three,  TextColorModel four,  TextColorModel fiveLower,  TextColorModel fiveUpper,  TextColorModel sixLower,  TextColorModel sixUpper,  TextColorModel seven)  $default,) {final _that = this;
+switch (_that) {
+case _IntensityColorModel():
+return $default(_that.unknown,_that.zero,_that.one,_that.two,_that.three,_that.four,_that.fiveLower,_that.fiveUpper,_that.sixLower,_that.sixUpper,_that.seven);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TextColorModel unknown,  TextColorModel zero,  TextColorModel one,  TextColorModel two,  TextColorModel three,  TextColorModel four,  TextColorModel fiveLower,  TextColorModel fiveUpper,  TextColorModel sixLower,  TextColorModel sixUpper,  TextColorModel seven)?  $default,) {final _that = this;
+switch (_that) {
+case _IntensityColorModel() when $default != null:
+return $default(_that.unknown,_that.zero,_that.one,_that.two,_that.three,_that.four,_that.fiveLower,_that.fiveUpper,_that.sixLower,_that.sixUpper,_that.seven);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()
@@ -437,6 +566,136 @@ as Color,
 
 }
 
+
+/// Adds pattern-matching-related methods to [TextColorModel].
+extension TextColorModelPatterns on TextColorModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TextColorModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TextColorModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TextColorModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _TextColorModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TextColorModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TextColorModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color foreground, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color background)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TextColorModel() when $default != null:
+return $default(_that.foreground,_that.background);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color foreground, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color background)  $default,) {final _that = this;
+switch (_that) {
+case _TextColorModel():
+return $default(_that.foreground,_that.background);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color foreground, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color background)?  $default,) {final _that = this;
+switch (_that) {
+case _TextColorModel() when $default != null:
+return $default(_that.foreground,_that.background);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

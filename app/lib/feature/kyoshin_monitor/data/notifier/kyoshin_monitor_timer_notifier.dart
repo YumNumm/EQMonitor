@@ -36,15 +36,18 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     }
 
     // Resync timer
-    const key = Key('KyoshinMonitorTimerNotifier');
     var isResyncing = false;
     ref
       ..listen(
         kyoshinMonitorSettingsProvider.select((v) => v.api.delayAdjustInterval),
-        (_, next) =>
-            ref.read(periodicTimerProvider(key).notifier).setInterval(next),
+        (_, next) => ref
+            .read(periodicTimerProvider('KyoshinMonitorTimerNotifier').notifier)
+            .setInterval(next),
       )
-      ..listen(periodicTimerProvider(key), (_, next) async {
+      ..listen(periodicTimerProvider('KyoshinMonitorTimerNotifier'), (
+        _,
+        next,
+      ) async {
         if (isResyncing) {
           return;
         }
@@ -79,10 +82,9 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   /// サーバの現在時刻を1回取得して、デバイスの現在時刻との差分を返す
   Future<Result<Duration, Exception>> _syncDelaySimple() async =>
       Result.capture(() async {
-        final latestJson =
-            await ref
-                .read(kyoshinMonitorWebApiDataSourceProvider)
-                .getLatestDataTime();
+        final latestJson = await ref
+            .read(kyoshinMonitorWebApiDataSourceProvider)
+            .getLatestDataTime();
         final deviceTime = DateTime.now();
         return deviceTime.difference(latestJson.latestTime);
       });
@@ -120,7 +122,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 
 @riverpod
 Stream<void> _kyoshinMonitorDelayAdujustTiming(Ref ref) {
-  const key = Key('kyoshin_monitor_delay_adjust_timing');
+  const key = 'kyoshin_monitor_delay_adjust_timing';
   final streamController = StreamController<void>();
   ref
     ..listen(periodicTimerProvider(key), (previous, next) {

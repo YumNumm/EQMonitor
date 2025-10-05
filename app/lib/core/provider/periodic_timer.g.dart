@@ -8,6 +8,9 @@ part of 'periodic_timer.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(PeriodicTimer)
 const periodicTimerProvider = PeriodicTimerFamily._();
 
@@ -15,7 +18,7 @@ final class PeriodicTimerProvider
     extends $StreamNotifierProvider<PeriodicTimer, void> {
   const PeriodicTimerProvider._({
     required PeriodicTimerFamily super.from,
-    required Key super.argument,
+    required String super.argument,
   }) : super(
          retry: null,
          name: r'periodicTimerProvider',
@@ -49,7 +52,7 @@ final class PeriodicTimerProvider
   }
 }
 
-String _$periodicTimerHash() => r'ccbdf0ca8ab4731c7d49afc78ae8685e7f0ddabc';
+String _$periodicTimerHash() => r'4ae81efeee3972e537dbcab72d6beb423a755031';
 
 final class PeriodicTimerFamily extends $Family
     with
@@ -58,7 +61,7 @@ final class PeriodicTimerFamily extends $Family
           AsyncValue<void>,
           void,
           Stream<void>,
-          Key
+          String
         > {
   const PeriodicTimerFamily._()
     : super(
@@ -69,7 +72,7 @@ final class PeriodicTimerFamily extends $Family
         isAutoDispose: true,
       );
 
-  PeriodicTimerProvider call(Key key) =>
+  PeriodicTimerProvider call(String key) =>
       PeriodicTimerProvider._(argument: key, from: this);
 
   @override
@@ -77,10 +80,10 @@ final class PeriodicTimerFamily extends $Family
 }
 
 abstract class _$PeriodicTimer extends $StreamNotifier<void> {
-  late final _$args = ref.$arg as Key;
-  Key get key => _$args;
+  late final _$args = ref.$arg as String;
+  String get key => _$args;
 
-  Stream<void> build(Key key);
+  Stream<void> build(String key);
   @$mustCallSuper
   @override
   void runBuild() {
@@ -97,6 +100,3 @@ abstract class _$PeriodicTimer extends $StreamNotifier<void> {
     element.handleValue(ref, null);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -85,8 +85,8 @@ class _LocationSettingCards extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final config = ref.watch(homeConfigurationNotifierProvider);
-    final permissionState = ref.watch(permissionNotifierProvider);
+    final config = ref.watch(homeConfigurationProvider);
+    final permissionState = ref.watch(permissionProvider);
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -109,7 +109,7 @@ class _LocationSettingCards extends ConsumerWidget {
                   isSelected: !config.showLocation,
                   onTap: () async => lightHapticFunction(
                     () async => ref
-                        .read(homeConfigurationNotifierProvider.notifier)
+                        .read(homeConfigurationProvider.notifier)
                         .save(config.copyWith(showLocation: false)),
                   ),
                 ),
@@ -124,16 +124,16 @@ class _LocationSettingCards extends ConsumerWidget {
                     // 位置情報の権限がない場合は要求する
                     if (!permissionState.location) {
                       await ref
-                          .read(permissionNotifierProvider.notifier)
+                          .read(permissionProvider.notifier)
                           .requestLocationWhenInUsePermission();
                       // 権限が付与されなかった場合は早期リターン
-                      if (!ref.read(permissionNotifierProvider).location) {
+                      if (!ref.read(permissionProvider).location) {
                         return;
                       }
                     }
                     // 権限がある場合は位置情報表示を有効化
                     await ref
-                        .read(homeConfigurationNotifierProvider.notifier)
+                        .read(homeConfigurationProvider.notifier)
                         .save(config.copyWith(showLocation: true));
                   }),
                 ),

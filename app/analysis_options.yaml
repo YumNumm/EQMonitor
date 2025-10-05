@@ -4,6 +4,9 @@ analyzer:
     avoid_implementing_value_types: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
+  enable-experiment:
+    - dot-shorthands
+
 custom_lint:
   rules:
     - prefer_clock_now: false

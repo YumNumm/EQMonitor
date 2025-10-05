@@ -14,7 +14,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter()),
+      earthquakeHistoryProvider(const EarthquakeHistoryParameter()),
     );
 
     final theme = Theme.of(context);
@@ -38,12 +38,11 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
               AsyncError(:final error) => ErrorCard(
                 error: error,
                 margin: EdgeInsets.zero,
-                onReload:
-                    () async => ref.refresh(
-                      earthquakeHistoryNotifierProvider(
-                        const EarthquakeHistoryParameter(),
-                      ),
-                    ),
+                onReload: () async => ref.refresh(
+                  earthquakeHistoryProvider(
+                    const EarthquakeHistoryParameter(),
+                  ),
+                ),
                 padding: const EdgeInsets.all(8),
               ),
               _ => const Center(child: CircularProgressIndicator.adaptive()),
@@ -74,8 +73,8 @@ class _Header extends StatelessWidget {
         ),
         const Spacer(),
         FilledButton.tonal(
-          onPressed:
-              () async => const EarthquakeHistoryRoute().push<void>(context),
+          onPressed: () async =>
+              const EarthquakeHistoryRoute().push<void>(context),
           style: TextButton.styleFrom(
             visualDensity: VisualDensity.compact,
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -97,30 +96,28 @@ class _EarthquakeList extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
-      children:
-          earthquakes
-              .take(3)
-              .map(
-                (item) => InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap:
-                      () async => EarthquakeHistoryDetailsRoute(
-                        eventId: item.eventId,
-                      ).push<void>(context),
-                  child: EarthquakeHistoryListTile(
-                    visualDensity: VisualDensity.compact,
-                    item: item,
-                    showBackgroundColor: false,
-                    intensityIconSize: 32,
-                    titleTextColor: colorScheme.onSurfaceVariant,
-                    descriptionTextColor: colorScheme.onSurfaceVariant,
-                    magnitudeTextColor: colorScheme.onPrimaryContainer,
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-              )
-              .toList(),
+      children: earthquakes
+          .take(3)
+          .map(
+            (item) => InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () async => EarthquakeHistoryDetailsRoute(
+                eventId: item.eventId,
+              ).push<void>(context),
+              child: EarthquakeHistoryListTile(
+                visualDensity: VisualDensity.compact,
+                item: item,
+                showBackgroundColor: false,
+                intensityIconSize: 32,
+                titleTextColor: colorScheme.onSurfaceVariant,
+                descriptionTextColor: colorScheme.onSurfaceVariant,
+                magnitudeTextColor: colorScheme.onPrimaryContainer,
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

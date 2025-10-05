@@ -22,9 +22,9 @@ List<RouteBase> get $appRoutes => [
 ];
 
 RouteBase get $setupRoute =>
-    GoRouteData.$route(path: '/setup', factory: _$SetupRoute._fromState);
+    GoRouteData.$route(path: '/setup', factory: $SetupRoute._fromState);
 
-mixin _$SetupRoute on GoRouteData {
+mixin $SetupRoute on GoRouteData {
   static SetupRoute _fromState(GoRouterState state) => const SetupRoute();
 
   @override
@@ -46,11 +46,10 @@ mixin _$SetupRoute on GoRouteData {
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',
-
-  factory: _$EarthquakeHistoryRoute._fromState,
+  factory: $EarthquakeHistoryRoute._fromState,
 );
 
-mixin _$EarthquakeHistoryRoute on GoRouteData {
+mixin $EarthquakeHistoryRoute on GoRouteData {
   static EarthquakeHistoryRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryRoute();
 
@@ -73,14 +72,13 @@ mixin _$EarthquakeHistoryRoute on GoRouteData {
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
   path: '/earthquake-history-details/:eventId',
-
-  factory: _$EarthquakeHistoryDetailsRoute._fromState,
+  factory: $EarthquakeHistoryDetailsRoute._fromState,
 );
 
-mixin _$EarthquakeHistoryDetailsRoute on GoRouteData {
+mixin $EarthquakeHistoryDetailsRoute on GoRouteData {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
-        eventId: int.parse(state.pathParameters['eventId']!)!,
+        eventId: int.parse(state.pathParameters['eventId']!),
       );
 
   EarthquakeHistoryDetailsRoute get _self =>
@@ -107,11 +105,10 @@ mixin _$EarthquakeHistoryDetailsRoute on GoRouteData {
 
 RouteBase get $informationHistoryRoute => GoRouteData.$route(
   path: '/information-history',
-
-  factory: _$InformationHistoryRoute._fromState,
+  factory: $InformationHistoryRoute._fromState,
 );
 
-mixin _$InformationHistoryRoute on GoRouteData {
+mixin $InformationHistoryRoute on GoRouteData {
   static InformationHistoryRoute _fromState(GoRouterState state) =>
       const InformationHistoryRoute();
 
@@ -134,11 +131,10 @@ mixin _$InformationHistoryRoute on GoRouteData {
 
 RouteBase get $informationHistoryDetailsRoute => GoRouteData.$route(
   path: '/information-history-details',
-
-  factory: _$InformationHistoryDetailsRoute._fromState,
+  factory: $InformationHistoryDetailsRoute._fromState,
 );
 
-mixin _$InformationHistoryDetailsRoute on GoRouteData {
+mixin $InformationHistoryDetailsRoute on GoRouteData {
   static InformationHistoryDetailsRoute _fromState(GoRouterState state) =>
       InformationHistoryDetailsRoute($extra: state.extra as InformationV3);
 
@@ -166,11 +162,10 @@ mixin _$InformationHistoryDetailsRoute on GoRouteData {
 
 RouteBase get $tsunamiHistoryRoute => GoRouteData.$route(
   path: '/tsunami-history',
-
-  factory: _$TsunamiHistoryRoute._fromState,
+  factory: $TsunamiHistoryRoute._fromState,
 );
 
-mixin _$TsunamiHistoryRoute on GoRouteData {
+mixin $TsunamiHistoryRoute on GoRouteData {
   static TsunamiHistoryRoute _fromState(GoRouterState state) =>
       const TsunamiHistoryRoute();
 
@@ -193,11 +188,10 @@ mixin _$TsunamiHistoryRoute on GoRouteData {
 
 RouteBase get $tsunamiDetailsRoute => GoRouteData.$route(
   path: '/tsunami-details',
-
-  factory: _$TsunamiDetailsRoute._fromState,
+  factory: $TsunamiDetailsRoute._fromState,
 );
 
-mixin _$TsunamiDetailsRoute on GoRouteData {
+mixin $TsunamiDetailsRoute on GoRouteData {
   static TsunamiDetailsRoute _fromState(GoRouterState state) =>
       TsunamiDetailsRoute($extra: state.extra as TsunamiEvent);
 
@@ -224,30 +218,26 @@ mixin _$TsunamiDetailsRoute on GoRouteData {
 
 RouteBase get $homeRoute => GoRouteData.$route(
   path: '/',
-
-  factory: _$HomeRoute._fromState,
+  factory: $HomeRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'earthquake-history-early',
-
-      factory: _$EarthquakeHistoryEarlyRoute._fromState,
+      factory: $EarthquakeHistoryEarlyRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'details/:id',
-
-          factory: _$EarthquakeHistoryEarlyDetailsRoute._fromState,
+          factory: $EarthquakeHistoryEarlyDetailsRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'eew-details-by-event-id/:eventId',
-
-      factory: _$EewDetailsByEventIdRoute._fromState,
+      factory: $EewDetailsByEventIdRoute._fromState,
     ),
   ],
 );
 
-mixin _$HomeRoute on GoRouteData {
+mixin $HomeRoute on GoRouteData {
   static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
 
   @override
@@ -267,7 +257,7 @@ mixin _$HomeRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EarthquakeHistoryEarlyRoute on GoRouteData {
+mixin $EarthquakeHistoryEarlyRoute on GoRouteData {
   static EarthquakeHistoryEarlyRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryEarlyRoute();
 
@@ -288,7 +278,7 @@ mixin _$EarthquakeHistoryEarlyRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EarthquakeHistoryEarlyDetailsRoute on GoRouteData {
+mixin $EarthquakeHistoryEarlyDetailsRoute on GoRouteData {
   static EarthquakeHistoryEarlyDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryEarlyDetailsRoute(id: state.pathParameters['id']!);
 
@@ -314,7 +304,7 @@ mixin _$EarthquakeHistoryEarlyDetailsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EewDetailsByEventIdRoute on GoRouteData {
+mixin $EewDetailsByEventIdRoute on GoRouteData {
   static EewDetailsByEventIdRoute _fromState(GoRouterState state) =>
       EewDetailsByEventIdRoute(eventId: state.pathParameters['eventId']!);
 
@@ -340,9 +330,9 @@ mixin _$EewDetailsByEventIdRoute on GoRouteData {
 }
 
 RouteBase get $talkerRoute =>
-    GoRouteData.$route(path: '/talker', factory: _$TalkerRoute._fromState);
+    GoRouteData.$route(path: '/talker', factory: $TalkerRoute._fromState);
 
-mixin _$TalkerRoute on GoRouteData {
+mixin $TalkerRoute on GoRouteData {
   static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
 
   @override
@@ -364,119 +354,99 @@ mixin _$TalkerRoute on GoRouteData {
 
 RouteBase get $settingsRoute => GoRouteData.$route(
   path: '/settings',
-
-  factory: _$SettingsRoute._fromState,
+  factory: $SettingsRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'notification',
-
-      factory: _$NotificationRoute._fromState,
+      factory: $NotificationRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'earthquake',
-
-          factory: _$NotificationEarthquakeRoute._fromState,
+          factory: $NotificationEarthquakeRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'eew',
-
-          factory: _$NotificationEewRoute._fromState,
+          factory: $NotificationEewRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'display',
-
-      factory: _$DisplayRoute._fromState,
+      factory: $DisplayRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'color-schema',
-
-          factory: _$ColorSchemeConfigRoute._fromState,
+          factory: $ColorSchemeConfigRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'kyoshin-monitor-about',
-
-      factory: _$KyoshinMonitorAboutRoute._fromState,
+      factory: $KyoshinMonitorAboutRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'observation-network',
-
-          factory: _$KyoshinMonitorAboutObservationNetworkRoute._fromState,
+          factory: $KyoshinMonitorAboutObservationNetworkRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'term-of-service',
-
-      factory: _$TermOfServiceRoute._fromState,
+      factory: $TermOfServiceRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'privacy-policy',
-
-      factory: _$PrivacyPolicyRoute._fromState,
+      factory: $PrivacyPolicyRoute._fromState,
     ),
-    GoRouteData.$route(path: 'license', factory: _$LicenseRoute._fromState),
+    GoRouteData.$route(path: 'license', factory: $LicenseRoute._fromState),
     GoRouteData.$route(
       path: 'earthquake-history',
-
-      factory: _$EarthquakeHistoryConfigRoute._fromState,
+      factory: $EarthquakeHistoryConfigRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'about-this-app',
-
-      factory: _$AboutThisAppRoute._fromState,
+      factory: $AboutThisAppRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'donation',
-
-      factory: _$DonationRoute._fromState,
+      factory: $DonationRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'executed',
-
-          factory: _$DonationExecutedRoute._fromState,
+          factory: $DonationExecutedRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'debug',
-
-      factory: _$DebugRoute._fromState,
+      factory: $DebugRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'api-endpoint-selector',
-
-          factory: _$HttpApiEndpointSelectorRoute._fromState,
+          factory: $HttpApiEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'websocket-api-endpoint-selector',
-
-          factory: _$WebsocketEndpointSelectorRoute._fromState,
+          factory: $WebsocketEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'kyoshin-monitor',
-
-          factory: _$DebugKyoshinMonitorRoute._fromState,
+          factory: $DebugKyoshinMonitorRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'jma-map',
-
-          factory: _$DebugJmaMapRoute._fromState,
+          factory: $DebugJmaMapRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'playground',
-
-          factory: _$PlaygroundRoute._fromState,
+          factory: $PlaygroundRoute._fromState,
         ),
       ],
     ),
   ],
 );
 
-mixin _$SettingsRoute on GoRouteData {
+mixin $SettingsRoute on GoRouteData {
   static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
 
   @override
@@ -496,7 +466,7 @@ mixin _$SettingsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$NotificationRoute on GoRouteData {
+mixin $NotificationRoute on GoRouteData {
   static NotificationRoute _fromState(GoRouterState state) =>
       const NotificationRoute();
 
@@ -517,7 +487,7 @@ mixin _$NotificationRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$NotificationEarthquakeRoute on GoRouteData {
+mixin $NotificationEarthquakeRoute on GoRouteData {
   static NotificationEarthquakeRoute _fromState(GoRouterState state) =>
       const NotificationEarthquakeRoute();
 
@@ -539,7 +509,7 @@ mixin _$NotificationEarthquakeRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$NotificationEewRoute on GoRouteData {
+mixin $NotificationEewRoute on GoRouteData {
   static NotificationEewRoute _fromState(GoRouterState state) =>
       const NotificationEewRoute();
 
@@ -560,7 +530,7 @@ mixin _$NotificationEewRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$DisplayRoute on GoRouteData {
+mixin $DisplayRoute on GoRouteData {
   static DisplayRoute _fromState(GoRouterState state) => const DisplayRoute();
 
   @override
@@ -580,7 +550,7 @@ mixin _$DisplayRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$ColorSchemeConfigRoute on GoRouteData {
+mixin $ColorSchemeConfigRoute on GoRouteData {
   static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
       const ColorSchemeConfigRoute();
 
@@ -602,7 +572,7 @@ mixin _$ColorSchemeConfigRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$KyoshinMonitorAboutRoute on GoRouteData {
+mixin $KyoshinMonitorAboutRoute on GoRouteData {
   static KyoshinMonitorAboutRoute _fromState(GoRouterState state) =>
       const KyoshinMonitorAboutRoute();
 
@@ -624,7 +594,7 @@ mixin _$KyoshinMonitorAboutRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$KyoshinMonitorAboutObservationNetworkRoute on GoRouteData {
+mixin $KyoshinMonitorAboutObservationNetworkRoute on GoRouteData {
   static KyoshinMonitorAboutObservationNetworkRoute _fromState(
     GoRouterState state,
   ) => const KyoshinMonitorAboutObservationNetworkRoute();
@@ -648,7 +618,7 @@ mixin _$KyoshinMonitorAboutObservationNetworkRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$TermOfServiceRoute on GoRouteData {
+mixin $TermOfServiceRoute on GoRouteData {
   static TermOfServiceRoute _fromState(GoRouterState state) =>
       TermOfServiceRoute(
         showAcceptButton:
@@ -688,7 +658,7 @@ mixin _$TermOfServiceRoute on GoRouteData {
       context.replace(location, extra: _self.$extra);
 }
 
-mixin _$PrivacyPolicyRoute on GoRouteData {
+mixin $PrivacyPolicyRoute on GoRouteData {
   static PrivacyPolicyRoute _fromState(GoRouterState state) =>
       PrivacyPolicyRoute(
         showAcceptButton:
@@ -728,7 +698,7 @@ mixin _$PrivacyPolicyRoute on GoRouteData {
       context.replace(location, extra: _self.$extra);
 }
 
-mixin _$LicenseRoute on GoRouteData {
+mixin $LicenseRoute on GoRouteData {
   static LicenseRoute _fromState(GoRouterState state) => const LicenseRoute();
 
   @override
@@ -748,7 +718,7 @@ mixin _$LicenseRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$EarthquakeHistoryConfigRoute on GoRouteData {
+mixin $EarthquakeHistoryConfigRoute on GoRouteData {
   static EarthquakeHistoryConfigRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryConfigRoute();
 
@@ -769,7 +739,7 @@ mixin _$EarthquakeHistoryConfigRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$AboutThisAppRoute on GoRouteData {
+mixin $AboutThisAppRoute on GoRouteData {
   static AboutThisAppRoute _fromState(GoRouterState state) =>
       const AboutThisAppRoute();
 
@@ -790,7 +760,7 @@ mixin _$AboutThisAppRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$DonationRoute on GoRouteData {
+mixin $DonationRoute on GoRouteData {
   static DonationRoute _fromState(GoRouterState state) => const DonationRoute();
 
   @override
@@ -810,7 +780,7 @@ mixin _$DonationRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$DonationExecutedRoute on GoRouteData {
+mixin $DonationExecutedRoute on GoRouteData {
   static DonationExecutedRoute _fromState(GoRouterState state) =>
       DonationExecutedRoute(
         $extra: state.extra as (StoreProduct, CustomerInfo),
@@ -837,7 +807,7 @@ mixin _$DonationExecutedRoute on GoRouteData {
       context.replace(location, extra: _self.$extra);
 }
 
-mixin _$DebugRoute on GoRouteData {
+mixin $DebugRoute on GoRouteData {
   static DebugRoute _fromState(GoRouterState state) => const DebugRoute();
 
   @override
@@ -857,7 +827,7 @@ mixin _$DebugRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$HttpApiEndpointSelectorRoute on GoRouteData {
+mixin $HttpApiEndpointSelectorRoute on GoRouteData {
   static HttpApiEndpointSelectorRoute _fromState(GoRouterState state) =>
       const HttpApiEndpointSelectorRoute();
 
@@ -879,7 +849,7 @@ mixin _$HttpApiEndpointSelectorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$WebsocketEndpointSelectorRoute on GoRouteData {
+mixin $WebsocketEndpointSelectorRoute on GoRouteData {
   static WebsocketEndpointSelectorRoute _fromState(GoRouterState state) =>
       const WebsocketEndpointSelectorRoute();
 
@@ -901,7 +871,7 @@ mixin _$WebsocketEndpointSelectorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$DebugKyoshinMonitorRoute on GoRouteData {
+mixin $DebugKyoshinMonitorRoute on GoRouteData {
   static DebugKyoshinMonitorRoute _fromState(GoRouterState state) =>
       const DebugKyoshinMonitorRoute();
 
@@ -923,7 +893,7 @@ mixin _$DebugKyoshinMonitorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$DebugJmaMapRoute on GoRouteData {
+mixin $DebugJmaMapRoute on GoRouteData {
   static DebugJmaMapRoute _fromState(GoRouterState state) =>
       const DebugJmaMapRoute();
 
@@ -944,7 +914,7 @@ mixin _$DebugJmaMapRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin _$PlaygroundRoute on GoRouteData {
+mixin $PlaygroundRoute on GoRouteData {
   static PlaygroundRoute _fromState(GoRouterState state) =>
       const PlaygroundRoute();
 
@@ -989,6 +959,9 @@ bool _$boolConverter(String value) {
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(goRouter)
 const goRouterProvider = GoRouterProvider._();
 
@@ -1029,6 +1002,3 @@ final class GoRouterProvider
 }
 
 String _$goRouterHash() => r'8a62453a9e9e24d88c219ecf204af1cc7658b177';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -8,9 +8,11 @@ part of 'earthquake_history_early_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(EarthquakeHistoryEarlyNotifier)
-const earthquakeHistoryEarlyNotifierProvider =
-    EarthquakeHistoryEarlyNotifierFamily._();
+const earthquakeHistoryEarlyProvider = EarthquakeHistoryEarlyNotifierFamily._();
 
 final class EarthquakeHistoryEarlyNotifierProvider
     extends
@@ -23,7 +25,7 @@ final class EarthquakeHistoryEarlyNotifierProvider
     required EarthquakeHistoryEarlyParameter super.argument,
   }) : super(
          retry: null,
-         name: r'earthquakeHistoryEarlyNotifierProvider',
+         name: r'earthquakeHistoryEarlyProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
@@ -34,7 +36,7 @@ final class EarthquakeHistoryEarlyNotifierProvider
 
   @override
   String toString() {
-    return r'earthquakeHistoryEarlyNotifierProvider'
+    return r'earthquakeHistoryEarlyProvider'
         ''
         '($argument)';
   }
@@ -56,7 +58,7 @@ final class EarthquakeHistoryEarlyNotifierProvider
 }
 
 String _$earthquakeHistoryEarlyNotifierHash() =>
-    r'd7d873ac0cfdcd0d04abca854cdc6f380493b345';
+    r'31b4e4df9d2a775c3aec6dc200abb1add915f2a5';
 
 final class EarthquakeHistoryEarlyNotifierFamily extends $Family
     with
@@ -70,7 +72,7 @@ final class EarthquakeHistoryEarlyNotifierFamily extends $Family
   const EarthquakeHistoryEarlyNotifierFamily._()
     : super(
         retry: null,
-        name: r'earthquakeHistoryEarlyNotifierProvider',
+        name: r'earthquakeHistoryEarlyProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
@@ -82,7 +84,7 @@ final class EarthquakeHistoryEarlyNotifierFamily extends $Family
       EarthquakeHistoryEarlyNotifierProvider._(argument: parameter, from: this);
 
   @override
-  String toString() => r'earthquakeHistoryEarlyNotifierProvider';
+  String toString() => r'earthquakeHistoryEarlyProvider';
 }
 
 abstract class _$EarthquakeHistoryEarlyNotifier
@@ -117,6 +119,3 @@ abstract class _$EarthquakeHistoryEarlyNotifier
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

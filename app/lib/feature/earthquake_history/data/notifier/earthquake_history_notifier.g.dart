@@ -8,8 +8,11 @@ part of 'earthquake_history_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(EarthquakeHistoryNotifier)
-const earthquakeHistoryNotifierProvider = EarthquakeHistoryNotifierFamily._();
+const earthquakeHistoryProvider = EarthquakeHistoryNotifierFamily._();
 
 final class EarthquakeHistoryNotifierProvider
     extends
@@ -22,7 +25,7 @@ final class EarthquakeHistoryNotifierProvider
     required EarthquakeHistoryParameter super.argument,
   }) : super(
          retry: null,
-         name: r'earthquakeHistoryNotifierProvider',
+         name: r'earthquakeHistoryProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
@@ -33,7 +36,7 @@ final class EarthquakeHistoryNotifierProvider
 
   @override
   String toString() {
-    return r'earthquakeHistoryNotifierProvider'
+    return r'earthquakeHistoryProvider'
         ''
         '($argument)';
   }
@@ -55,7 +58,7 @@ final class EarthquakeHistoryNotifierProvider
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'e1bddc0afbe2c703f594c40acd784ddbd424c60f';
+    r'665e3f603eae24c71097102072af43158ab519dd';
 
 final class EarthquakeHistoryNotifierFamily extends $Family
     with
@@ -69,7 +72,7 @@ final class EarthquakeHistoryNotifierFamily extends $Family
   const EarthquakeHistoryNotifierFamily._()
     : super(
         retry: null,
-        name: r'earthquakeHistoryNotifierProvider',
+        name: r'earthquakeHistoryProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
@@ -80,7 +83,7 @@ final class EarthquakeHistoryNotifierFamily extends $Family
   ) => EarthquakeHistoryNotifierProvider._(argument: parameter, from: this);
 
   @override
-  String toString() => r'earthquakeHistoryNotifierProvider';
+  String toString() => r'earthquakeHistoryProvider';
 }
 
 abstract class _$EarthquakeHistoryNotifier
@@ -197,6 +200,3 @@ final class EarthquakeV1ExtendedFamily extends $Family
   @override
   String toString() => r'earthquakeV1ExtendedProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

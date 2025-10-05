@@ -17,6 +17,7 @@ part 'shake_detection_provider.g.dart';
 class ShakeDetection extends _$ShakeDetection {
   @override
   Future<List<ShakeDetectionEvent>> build() async {
+    return [];
     final apiResult = await ref.watch(
       _fetchShakeDetectionEventsProvider.future,
     );

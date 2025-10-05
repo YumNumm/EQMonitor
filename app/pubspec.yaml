@@ -78,7 +78,6 @@ dependencies:
   latlong2: ^0.9.1
   # maplibre: ^0.2.1
   maplibre: ^0.3.0
-  maplibre_gl: ^0.21.0
   ntp: ^2.0.0
   package_info_plus: ^8.1.2
   path_provider: ^2.1.5
