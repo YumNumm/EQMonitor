@@ -1,23 +1,24 @@
+import java.util.Base64
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val dartDefines: Map<String, String> = if (project.hasProperty("dart-defines")) {
-    project.property("dart-defines")
-        .toString()
-        .split(",")
-        .mapNotNull { entry ->
-            val pair = String(
-                java.util.Base64.getDecoder().decode(entry),
-                Charsets.UTF_8
-            ).split("=")
-            if (pair.size == 2) pair[0] to pair[1] else null
-        }
-        .toMap()
-} else {
-    emptyMap()
+val dartDefines = mutableMapOf<String, String>()
+if (project.hasProperty("dart-defines")) {
+  // カンマ区切りかつBase64でエンコードされている dart-defines をデコードして変数に格納します。
+  val defines = project.property("dart-defines") as String
+  defines.split(",").forEach { entry ->
+    val decoded = String(Base64.getDecoder().decode(entry))
+    val pair = decoded.split("=")
+    if (pair.size == 2) {
+      dartDefines[pair[0]] = pair[1]
+    }
+  }
 }
 
 tasks.register<Copy>("copySources") {
@@ -30,15 +31,15 @@ tasks.whenTaskAdded {
 }
 
 val keystorePropertiesFile = rootProject.file("key.properties")
-val keystoreProperties = java.util.Properties()
+val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(java.io.FileInputStream(keystorePropertiesFile))
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
     namespace = "net.yumnumm.eqmonitor"
     buildToolsVersion = "34.0.0"
-    compileSdk = 35
+    compileSdk = 36
 
     compileOptions {
         // flutter_local_notificationsで利用
@@ -61,7 +62,7 @@ android {
             applicationIdSuffix = it
         }
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         multiDexEnabled = true
         versionCode = flutter.versionCode
         versionName = flutter.versionName
