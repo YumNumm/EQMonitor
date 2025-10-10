@@ -14,12 +14,11 @@ import 'package:sheet/route.dart';
 
 part 'prefecture_intensity.g.dart';
 
-typedef _Arg =
-    ({
-      List<ObservedRegionIntensity>? cities,
-      List<ObservedRegionIntensity> prefectures,
-      List<ObservedRegionIntensity>? stations,
-    });
+typedef _Arg = ({
+  List<ObservedRegionIntensity>? cities,
+  List<ObservedRegionIntensity> prefectures,
+  List<ObservedRegionIntensity>? stations,
+});
 
 @riverpod
 Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
@@ -40,50 +39,48 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
         (e) => '${e.code.substring(0, 5)}00',
       );
       // マージ
-      final mergedCity =
-          stationsGroupedByCity.entries
-              .map((e) {
-                final cityCode = e.key;
-                final cityStations = e.value;
-                final city = cities.firstWhereOrNull((e) => e.code == cityCode);
-                if (city == null) {
-                  return null;
-                }
-                return _CityIntensity(
-                  code: city.code,
-                  name: city.name,
-                  intensity: intensity,
-                  stations: cityStations,
-                );
-              })
-              .whereType<_CityIntensity>()
-              .toList();
+      final mergedCity = stationsGroupedByCity.entries
+          .map((e) {
+            final cityCode = e.key;
+            final cityStations = e.value;
+            final city = cities.firstWhereOrNull((e) => e.code == cityCode);
+            if (city == null) {
+              return null;
+            }
+            return _CityIntensity(
+              code: city.code,
+              name: city.name,
+              intensity: intensity,
+              stations: cityStations,
+            );
+          })
+          .whereType<_CityIntensity>()
+          .toList();
 
       // 都道府県ごとにまとめる
       final citiesGroupedByPrefecture = mergedCity.groupListsBy(
         (e) => e.code.substring(0, 2),
       );
       // マージ
-      final mergedPrefecture =
-          citiesGroupedByPrefecture.entries
-              .map((e) {
-                final prefectureCode = e.key;
-                final prefectureCities = e.value;
-                final prefecture = prefectures.firstWhereOrNull(
-                  (e) => e.code == prefectureCode,
-                );
-                if (prefecture == null) {
-                  return null;
-                }
-                return _MergedRegionIntensity(
-                  code: prefecture.code,
-                  name: prefecture.name,
-                  intensity: intensity,
-                  cities: prefectureCities,
-                );
-              })
-              .whereType<_MergedRegionIntensity>()
-              .toList();
+      final mergedPrefecture = citiesGroupedByPrefecture.entries
+          .map((e) {
+            final prefectureCode = e.key;
+            final prefectureCities = e.value;
+            final prefecture = prefectures.firstWhereOrNull(
+              (e) => e.code == prefectureCode,
+            );
+            if (prefecture == null) {
+              return null;
+            }
+            return _MergedRegionIntensity(
+              code: prefecture.code,
+              name: prefecture.name,
+              intensity: intensity,
+              cities: prefectureCities,
+            );
+          })
+          .whereType<_MergedRegionIntensity>()
+          .toList();
       return MapEntry(intensity, mergedPrefecture);
     });
   } else {
@@ -106,12 +103,11 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
           ),
         );
   }
-  final reorderedResult =
-      result.entries
-          .sorted((a, b) => a.key.index.compareTo(b.key.index))
-          .toList()
-          .reversed
-          .toList();
+  final reorderedResult = result.entries
+      .sorted((a, b) => a.key.index.compareTo(b.key.index))
+      .toList()
+      .reversed
+      .toList();
   return Map.fromEntries(reorderedResult);
 }, arg);
 
@@ -177,14 +173,13 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                     prefectures.map((e) => e.name).join(', '),
                     style: const TextStyle(fontFamily: FontFamily.notoSansJP),
                   ),
-                  onTap:
-                      hasCities
-                          ? () async => _PrefectureModalBottomSheet.show(
-                            context: context,
-                            intensity: kv.key,
-                            prefectures: kv.value,
-                          )
-                          : null,
+                  onTap: hasCities
+                      ? () async => _PrefectureModalBottomSheet.show(
+                          context: context,
+                          intensity: kv.key,
+                          prefectures: kv.value,
+                        )
+                      : null,
                   trailing: hasCities ? const Icon(Icons.chevron_right) : null,
                 );
               }(),
@@ -282,10 +277,9 @@ class _PrefectureListTile extends HookWidget {
     return AnimatedCrossFade(
       firstChild: shrinked,
       secondChild: expanded,
-      crossFadeState:
-          isExpanded.value
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
+      crossFadeState: isExpanded.value
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       duration: const Duration(milliseconds: 300),
     );
   }

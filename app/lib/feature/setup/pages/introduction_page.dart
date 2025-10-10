@@ -63,12 +63,10 @@ class IntroductionPage extends StatelessWidget {
                     style: const TextStyle(
                       decoration: TextDecoration.underline,
                     ),
-                    recognizer:
-                        TapGestureRecognizer()
-                          ..onTap =
-                              () async => context.push(
-                                const TermOfServiceRoute($extra: null).location,
-                              ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async => context.push(
+                        const TermOfServiceRoute($extra: null).location,
+                      ),
                   ),
                   const TextSpan(text: ' と '),
                   TextSpan(
@@ -76,12 +74,10 @@ class IntroductionPage extends StatelessWidget {
                     style: const TextStyle(
                       decoration: TextDecoration.underline,
                     ),
-                    recognizer:
-                        TapGestureRecognizer()
-                          ..onTap =
-                              () async => context.push(
-                                const PrivacyPolicyRoute($extra: null).location,
-                              ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async => context.push(
+                        const PrivacyPolicyRoute($extra: null).location,
+                      ),
                   ),
                   const TextSpan(text: ' に同意したものとみなします。'),
                 ],

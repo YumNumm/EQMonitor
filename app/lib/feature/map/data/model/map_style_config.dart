@@ -52,12 +52,11 @@ abstract class MapStyleColorScheme with _$MapStyleColorScheme {
   factory MapStyleColorScheme.dark() {
     const colorScheme = ColorScheme.dark();
     return MapStyleColorScheme(
-      backgroundColor:
-          Color.lerp(
-            colorScheme.surfaceContainerLowest,
-            Colors.blue.shade900,
-            0.1,
-          )!,
+      backgroundColor: Color.lerp(
+        colorScheme.surfaceContainerLowest,
+        Colors.blue.shade900,
+        0.1,
+      )!,
       landColor: colorScheme.surfaceContainerHighest,
       lineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerHighest,

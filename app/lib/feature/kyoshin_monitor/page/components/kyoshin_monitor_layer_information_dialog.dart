@@ -76,12 +76,11 @@ class _KyoshinMonitorSource extends StatelessWidget {
           const TextSpan(text: '上記説明は、'),
           WidgetSpan(
             child: InkWell(
-              onTap:
-                  () async => launchUrl(
-                    Uri.parse(
-                      'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.shtml',
-                    ),
-                  ),
+              onTap: () async => launchUrl(
+                Uri.parse(
+                  'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.shtml',
+                ),
+              ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

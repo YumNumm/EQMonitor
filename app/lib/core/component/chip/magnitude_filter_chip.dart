@@ -24,25 +24,22 @@ class MagnitudeFilterChip extends StatelessWidget {
         final result = await showModalBottomSheet<(double?, double?)?>(
           clipBehavior: Clip.antiAlias,
           context: context,
-          builder:
-              (context) =>
-                  _MagnitudeFilterModal(currentMin: min, currentMax: max),
+          builder: (context) =>
+              _MagnitudeFilterModal(currentMin: min, currentMax: max),
         );
         if (result != null) {
           onChanged?.call(result.min, result.max);
         }
       },
-      label:
-          (range.isAllSelected)
-              ? const Text('マグニチュード')
-              : Text(
-                range.toRangeString,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-      onDeleted:
-          range.isAllSelected
-              ? null
-              : () => onChanged?.call(initialMin, initialMax),
+      label: (range.isAllSelected)
+          ? const Text('マグニチュード')
+          : Text(
+              range.toRangeString,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+      onDeleted: range.isAllSelected
+          ? null
+          : () => onChanged?.call(initialMin, initialMax),
       selected: !range.isAllSelected,
       selectedColor: Theme.of(context).colorScheme.secondaryContainer,
     );
@@ -127,8 +124,8 @@ class _MagnitudeFilterModal extends HookWidget {
                 child: const Text('キャンセル'),
               ),
               TextButton(
-                onPressed:
-                    () => Navigator.of(context).pop((min.value, max.value)),
+                onPressed: () =>
+                    Navigator.of(context).pop((min.value, max.value)),
                 child: const Text('完了'),
               ),
             ],

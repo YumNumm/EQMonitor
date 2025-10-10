@@ -22,13 +22,12 @@ class DonationChoiceModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sortedChoices = useMemoized(
-      () =>
-          choices.sorted((a, b) => a.price.compareTo(b.price)).map((choice) {
-            final matchedProduct = Products.values.firstWhereOrNull(
-              (product) => product.id == choice.identifier,
-            );
-            return (choice, matchedProduct);
-          }).whereType<(StoreProduct, Products)>(),
+      () => choices.sorted((a, b) => a.price.compareTo(b.price)).map((choice) {
+        final matchedProduct = Products.values.firstWhereOrNull(
+          (product) => product.id == choice.identifier,
+        );
+        return (choice, matchedProduct);
+      }).whereType<(StoreProduct, Products)>(),
       [choices],
     );
     final theme = Theme.of(context);

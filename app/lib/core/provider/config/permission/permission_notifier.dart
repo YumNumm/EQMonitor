@@ -24,8 +24,9 @@ class PermissionNotifier extends _$PermissionNotifier {
   }
 
   Future<void> initialize() async {
-    final notificationPermission =
-        await ref.read(firebaseMessagingProvider).getNotificationSettings();
+    final notificationPermission = await ref
+        .read(firebaseMessagingProvider)
+        .getNotificationSettings();
     await ref
         .read(firebaseMessagingProvider)
         .setForegroundNotificationPresentationOptions(alert: true, badge: true);

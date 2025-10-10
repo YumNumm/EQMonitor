@@ -32,10 +32,9 @@ class DownloadCommand extends Command<void> {
         'datetime',
         abbr: 'd',
         help: '日時を指定します (yyyyMMddHHmmss形式)',
-        defaultsTo:
-            DateTime.now()
-                .subtract(const Duration(seconds: 10))
-                .toIso8601String(),
+        defaultsTo: DateTime.now()
+            .subtract(const Duration(seconds: 10))
+            .toIso8601String(),
       )
       ..addOption('output', abbr: 'o', help: '出力ファイル名を指定します', mandatory: true);
   }
@@ -66,18 +65,17 @@ class DownloadCommand extends Command<void> {
       client: KyoshinMonitorWebApiClient(dio),
     );
     try {
-      final data =
-          type.isLpgm
-              ? await lpgmKyoshinMonitorWebApiDataSource.getRealtimeImageData(
-                type,
-                layer,
-                datetime,
-              )
-              : await kyoshinMonitorWebApiDataSource.getRealtimeImageData(
-                type: type,
-                layer: layer,
-                dateTime: datetime,
-              );
+      final data = type.isLpgm
+          ? await lpgmKyoshinMonitorWebApiDataSource.getRealtimeImageData(
+              type,
+              layer,
+              datetime,
+            )
+          : await kyoshinMonitorWebApiDataSource.getRealtimeImageData(
+              type: type,
+              layer: layer,
+              dateTime: datetime,
+            );
       await File(output).writeAsBytes(data);
       print('ダウンロードが完了しました: $output');
     } on Exception catch (e) {

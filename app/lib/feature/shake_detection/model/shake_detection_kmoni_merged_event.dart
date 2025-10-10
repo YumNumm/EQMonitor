@@ -6,7 +6,8 @@ part 'shake_detection_kmoni_merged_event.freezed.dart';
 part 'shake_detection_kmoni_merged_event.g.dart';
 
 @freezed
-abstract class ShakeDetectionKmoniMergedEvent with _$ShakeDetectionKmoniMergedEvent {
+abstract class ShakeDetectionKmoniMergedEvent
+    with _$ShakeDetectionKmoniMergedEvent {
   const factory ShakeDetectionKmoniMergedEvent({
     required ShakeDetectionEvent event,
     required List<ShakeDetectionKmoniMergedRegion> regions,
@@ -17,7 +18,8 @@ abstract class ShakeDetectionKmoniMergedEvent with _$ShakeDetectionKmoniMergedEv
 }
 
 @freezed
-abstract class ShakeDetectionKmoniMergedRegion with _$ShakeDetectionKmoniMergedRegion {
+abstract class ShakeDetectionKmoniMergedRegion
+    with _$ShakeDetectionKmoniMergedRegion {
   const factory ShakeDetectionKmoniMergedRegion({
     required String name,
     @JsonKey(
@@ -34,7 +36,8 @@ abstract class ShakeDetectionKmoniMergedRegion with _$ShakeDetectionKmoniMergedR
 }
 
 @freezed
-abstract class ShakeDetectionKmoniMergedPoint with _$ShakeDetectionKmoniMergedPoint {
+abstract class ShakeDetectionKmoniMergedPoint
+    with _$ShakeDetectionKmoniMergedPoint {
   const factory ShakeDetectionKmoniMergedPoint({
     @JsonKey(
       unknownEnumValue: JmaForecastIntensity.unknown,

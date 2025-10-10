@@ -16,13 +16,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jma_parameter.g.dart';
 
-typedef JmaParameterState =
-    ({
-      EarthquakeParameter earthquake,
-      TsunamiParameter tsunami,
-      ParameterStatus earthquakeStatus,
-      ParameterStatus tsunamiStatus,
-    });
+typedef JmaParameterState = ({
+  EarthquakeParameter earthquake,
+  TsunamiParameter tsunami,
+  ParameterStatus earthquakeStatus,
+  ParameterStatus tsunamiStatus,
+});
 
 @Riverpod(keepAlive: true)
 class JmaParameter extends _$JmaParameter {
@@ -80,10 +79,9 @@ class JmaParameter extends _$JmaParameter {
 
     final cachedEtag = ref.read(earthquakeParameterEtagProvider);
     // check Etag
-    final currentEtag =
-        await ref
-            .watch(jmaParameterApiClientProvider)
-            .getEarthquakeParameterHead();
+    final currentEtag = await ref
+        .watch(jmaParameterApiClientProvider)
+        .getEarthquakeParameterHead();
     talker.log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       final localResult = await _getEarthquakeFromLocalCache();
@@ -93,8 +91,9 @@ class JmaParameter extends _$JmaParameter {
       }
     }
     // ETagが一致しない場合はAPIから再取得する
-    final result =
-        await ref.watch(jmaParameterApiClientProvider).getEarthquakeParameter();
+    final result = await ref
+        .watch(jmaParameterApiClientProvider)
+        .getEarthquakeParameter();
     if (!kIsWeb) {
       await _saveEarthquakeToLocalCache(result.parameter);
     }
@@ -140,10 +139,9 @@ class JmaParameter extends _$JmaParameter {
     final prefs = ref.watch(sharedPreferencesProvider);
     final cachedEtag = prefs.getString(_tsunamiKey);
     // check Etag
-    final currentEtag =
-        await ref
-            .watch(jmaParameterApiClientProvider)
-            .getTsunamiParameterHeadEtag();
+    final currentEtag = await ref
+        .watch(jmaParameterApiClientProvider)
+        .getTsunamiParameterHeadEtag();
     talker.log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       final localResult = await _getTsunamiFromLocalCache();
@@ -153,8 +151,9 @@ class JmaParameter extends _$JmaParameter {
       }
     }
     // ETagが一致しない場合はAPIから再取得する
-    final result =
-        await ref.watch(jmaParameterApiClientProvider).getTsunamiParameter();
+    final result = await ref
+        .watch(jmaParameterApiClientProvider)
+        .getTsunamiParameter();
     if (!kIsWeb) {
       await _saveTsunamiToLocalCache(result.parameter);
     }

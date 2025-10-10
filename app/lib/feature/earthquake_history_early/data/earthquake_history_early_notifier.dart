@@ -6,8 +6,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_early_notifier.g.dart';
 
-typedef EarthquakeHistoryEarlyNotifierState =
-    (List<EarthquakeEarly>, int totalCount);
+typedef EarthquakeHistoryEarlyNotifierState = (
+  List<EarthquakeEarly>,
+  int totalCount,
+);
 
 extension EarthquakeHistoryEarlyNotifierStateEx
     on EarthquakeHistoryEarlyNotifierState {

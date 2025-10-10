@@ -46,8 +46,9 @@ class _EewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final originTime =
-        eew.originTime != null ? dateFormat.format(eew.originTime!) : '不明';
+    final originTime = eew.originTime != null
+        ? dateFormat.format(eew.originTime!)
+        : '不明';
     final reportTime = dateFormat.format(eew.reportTime);
 
     return Card(

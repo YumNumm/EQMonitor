@@ -36,7 +36,8 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
 }
 
 @freezed
-abstract class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
+abstract class KyoshinMonitorSettingsApiModel
+    with _$KyoshinMonitorSettingsApiModel {
   const factory KyoshinMonitorSettingsApiModel({
     /// 強震モニタ APIのベースURL
     @Default(KyoshinMonitorEndpoint.kmoni)

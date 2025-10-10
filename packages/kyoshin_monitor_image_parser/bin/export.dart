@@ -362,40 +362,36 @@ void main() {
   ];
 
   // 震度のカラーマップを作成
-  final intensityColorMap =
-      intensityList.map((value) {
-        final p = (value + 3) / 10;
-        final hsv = scaleToHsv(p);
-        final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
-      }).toList();
+  final intensityColorMap = intensityList.map((value) {
+    final p = (value + 3) / 10;
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
+    return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
+  }).toList();
 
   // PGAのカラーマップを作成
-  final pgaColorMap =
-      pgaList.map((value) {
-        final p = (math.log(value) / math.ln10 + 2) / 5;
-        final hsv = scaleToHsv(p);
-        final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
-      }).toList();
+  final pgaColorMap = pgaList.map((value) {
+    final p = (math.log(value) / math.ln10 + 2) / 5;
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
+    return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
+  }).toList();
 
   // PGVのカラーマップを作成
-  final pgvColorMap =
-      pgvList.map((value) {
-        final p = (math.log(value) / math.ln10 + 3) / 5;
-        final hsv = scaleToHsv(p);
-        final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
-      }).toList();
+  final pgvColorMap = pgvList.map((value) {
+    final p = (math.log(value) / math.ln10 + 3) / 5;
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
+    return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
+  }).toList();
 
   // PGDのカラーマップを作成
-  final pgdColorMap =
-      pgdList.map((value) {
-        final p = (math.log(value) / math.ln10 + 4) / 5;
-        final hsv = scaleToHsv(p);
-        final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-        return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
-      }).toList();
+  final pgdColorMap = pgdList.map((value) {
+    final p = (math.log(value) / math.ln10 + 4) / 5;
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
+    return (value: p, color: Color.fromRGB(rgb[0], rgb[1], rgb[2]));
+  }).toList();
 
   // 震度の補間値を計算
   for (var i = 0; i < positionSteps; i++) {

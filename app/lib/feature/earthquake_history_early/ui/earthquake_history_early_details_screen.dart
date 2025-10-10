@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
 
-
 class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
   const EarthquakeHistoryEarlyDetailsScreen({required this.id, super.key});
 

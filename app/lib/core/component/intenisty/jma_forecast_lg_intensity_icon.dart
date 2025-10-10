@@ -35,12 +35,11 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
         .replaceAll('-', '')
         .replaceAll('+', '');
     // 震度の弱・強の表記
-    final intensitySubText =
-        intensity.type.contains('-')
-            ? '弱'
-            : intensity.type.contains('+')
-            ? '強'
-            : '';
+    final intensitySubText = intensity.type.contains('-')
+        ? '弱'
+        : intensity.type.contains('+')
+        ? '強'
+        : '';
 
     return SizedBox(
       height: size,
