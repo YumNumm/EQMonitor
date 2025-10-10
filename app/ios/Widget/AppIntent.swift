@@ -83,10 +83,12 @@ struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
 struct RefreshWidgetIntent: AppIntent {
     static var title: LocalizedStringResource { "ウィジェットを更新" }
     static var description: IntentDescription { "地震情報を最新の状態に更新します" }
-
+    
     func perform() async throws -> some IntentResult {
         // すべてのウィジェットを再読み込み
         WidgetCenter.shared.reloadAllTimelines()
-        return .result()
+        
+        // 通知を表示
+        return .result(dialog: "地震情報を更新しました")
     }
 }
