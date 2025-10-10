@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WidgetKit
+import AppIntents
 
 struct EarthquakeWidgetView: View {
     let entry: EarthquakeEntry
@@ -27,20 +28,40 @@ struct EarthquakeWidgetView: View {
 // 大きいサイズ用（ヘッダー付き）
 struct LargeWidgetView: View {
     let entry: EarthquakeEntry
+    @Environment(\.widgetFamily) var widgetFamily
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // ヘッダー
-            HStack(spacing: 8) {
-                Image(systemName: "circle.fill")
-                    .font(.title3)
-                    .foregroundStyle(.white)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 8) {
+                    Image(systemName: "circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.white)
 
-                Text(headerTitle)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(.white)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(headerTitle)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundStyle(.white)
 
-                Spacer()
+                        Text("最終更新: \(formattedUpdateTime)")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.white.opacity(0.8))
+                    }
+
+                    Spacer()
+
+                    // 再読み込みボタン
+                    Button(intent: RefreshWidgetIntent()) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .padding(8)
+                            .background(Color.white.opacity(0.2))
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(.plain)
+                }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
@@ -63,14 +84,30 @@ struct LargeWidgetView: View {
                 EmptyView(message: "地震情報がありません")
                     .padding()
             } else {
-                // 地震リスト（全件表示）
+                // 地震リスト（サイズに応じて件数制限）
                 VStack(spacing: 0) {
-                    ForEach(Array(entry.earthquakes.enumerated()), id: \.element.id) { index, earthquake in
-                        EarthquakeRow(earthquake: earthquake, showDivider: index < entry.earthquakes.count - 1)
+                    ForEach(Array(displayedEarthquakes.enumerated()), id: \.element.id) { index, earthquake in
+                        EarthquakeRow(earthquake: earthquake, showDivider: index < displayedEarthquakes.count - 1)
                     }
                 }
             }
         }
+    }
+
+    // ウィジェットサイズに応じた表示件数
+    var displayedEarthquakes: [EarthquakeItem] {
+        let maxCount: Int
+        switch widgetFamily {
+        case .systemMedium:
+            maxCount = 3
+        case .systemLarge:
+            maxCount = 7
+        case .systemExtraLarge:
+            maxCount = 10
+        default:
+            maxCount = 3
+        }
+        return Array(entry.earthquakes.prefix(maxCount))
     }
 
     var headerTitle: String {
@@ -86,6 +123,14 @@ struct LargeWidgetView: View {
             return "地震履歴"
         }
     }
+
+    var formattedUpdateTime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: "ja_JP")
+        formatter.timeZone = TimeZone.current
+        return formatter.string(from: entry.date)
+    }
 }
 
 // 小さいサイズ用（ヘッダーなし）
@@ -93,23 +138,68 @@ struct SmallWidgetView: View {
     let entry: EarthquakeEntry
 
     var body: some View {
-        if let error = entry.error {
-            ErrorView(error: error)
-                .padding(8)
-        } else if entry.earthquakes.isEmpty {
-            EmptyView(message: "地震情報が\nありません")
-                .padding(8)
-        } else {
-            VStack(spacing: 6) {
-                ForEach(Array(entry.earthquakes.prefix(3).enumerated()), id: \.element.id) { index, earthquake in
-                    CompactEarthquakeRow(earthquake: earthquake)
-                    if index < min(2, entry.earthquakes.count - 1) {
-                        Divider()
-                            .background(Color.primary.opacity(0.15))
+        VStack(spacing: 0) {
+            // コンパクトヘッダー（再読み込みボタン付き）
+            HStack(spacing: 4) {
+                Text(headerTitle)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                // 再読み込みボタン
+                Button(intent: RefreshWidgetIntent()) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(.blue)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 10)
+            .padding(.top, 8)
+            .padding(.bottom, 4)
+
+            Divider()
+                .padding(.horizontal, 10)
+
+            // コンテンツ
+            if let error = entry.error {
+                ErrorView(error: error)
+                    .padding(8)
+            } else if entry.earthquakes.isEmpty {
+                EmptyView(message: "地震情報が\nありません")
+                    .padding(8)
+            } else {
+                VStack(spacing: 6) {
+                    ForEach(Array(entry.earthquakes.prefix(3).enumerated()), id: \.element.id) { index, earthquake in
+                        CompactEarthquakeRow(earthquake: earthquake)
+                        if index < min(2, entry.earthquakes.count - 1) {
+                            Divider()
+                                .background(Color.primary.opacity(0.15))
+                        }
                     }
                 }
+                .padding(10)
             }
-            .padding(10)
+        }
+    }
+
+    var headerTitle: String {
+        switch entry.configuration.regionType {
+        case .nationwide:
+            return "地震履歴"
+        case .currentLocation:
+            return "現在地"
+        case .specificRegion:
+            if let region = entry.configuration.region {
+                // 長い地域名を短縮
+                let name = region.name
+                if name.count > 8 {
+                    return String(name.prefix(8)) + "..."
+                }
+                return name
+            }
+            return "地震履歴"
         }
     }
 }

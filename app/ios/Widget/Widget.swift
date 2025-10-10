@@ -149,7 +149,6 @@ struct EarthquakeWidget: Widget {
             if #available(iOS 17.0, *) {
                 EarthquakeWidgetView(entry: entry)
                     .containerBackground(.background, for: .widget)
-                    .contentMarginsDisabled()
             } else {
                 EarthquakeWidgetView(entry: entry)
                     .containerBackground(.background, for: .widget)
