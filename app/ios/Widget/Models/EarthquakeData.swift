@@ -19,7 +19,7 @@ struct EarthquakeData: Codable {
     let magnitudeCondition: String?
     let maxIntensity: String?
     let maxLpgmIntensity: String?
-    let hypocenter: HypocenterData
+    let hypocenter: HypocenterData?
     let arrivalTime: String
     let originTime: String
     let headline: String?
@@ -54,12 +54,25 @@ struct EarthquakeItem: Identifiable {
         self.magnitude = data.magnitude
         self.magnitudeCondition = data.magnitudeCondition
         self.maxIntensity = data.maxIntensity
-        self.hypocenterName = EpicenterLoader.getName(forCode: data.hypocenter.code)
-        self.depth = data.hypocenter.depth
 
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        self.originTime = formatter.date(from: data.originTime) ?? Date()
+        // hypocenterがnilの場合の処理
+        if let hypocenter = data.hypocenter {
+            self.hypocenterName = EpicenterLoader.getName(forCode: hypocenter.code)
+            self.depth = hypocenter.depth
+        } else {
+            self.hypocenterName = "震源地不明"
+            self.depth = nil
+        }
+
+        // originTimeのパース: "2025-10-10 21:24:00+09" 形式
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        inputFormatter.locale = Locale(identifier: "en_US_POSIX")
+
+        // +09を+0900に変換
+        let normalizedTime = data.originTime.replacingOccurrences(of: "+09", with: "+0900")
+        self.originTime = inputFormatter.date(from: normalizedTime) ?? Date()
+
         self.headline = data.headline
     }
 

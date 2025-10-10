@@ -78,3 +78,15 @@ struct EarthquakeWidgetIntent: WidgetConfigurationIntent {
         self.region = region
     }
 }
+
+// ウィジェット再読み込み用Intent
+struct RefreshWidgetIntent: AppIntent {
+    static var title: LocalizedStringResource { "ウィジェットを更新" }
+    static var description: IntentDescription { "地震情報を最新の状態に更新します" }
+
+    func perform() async throws -> some IntentResult {
+        // すべてのウィジェットを再読み込み
+        WidgetCenter.shared.reloadAllTimelines()
+        return .result()
+    }
+}
