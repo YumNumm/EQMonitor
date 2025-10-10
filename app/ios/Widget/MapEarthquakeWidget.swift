@@ -20,7 +20,6 @@ struct MapEarthquakeWidget: Widget {
             if #available(iOS 17.0, *) {
                 MapEarthquakeWidgetView(entry: entry)
                     .containerBackground(.background, for: .widget)
-                    .contentMarginsDisabled()
             } else {
                 MapEarthquakeWidgetView(entry: entry)
                     .containerBackground(.background, for: .widget)
