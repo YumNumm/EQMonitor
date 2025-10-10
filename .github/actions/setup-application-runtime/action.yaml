@@ -27,6 +27,7 @@ runs:
       run: |
         MELOS_VERSION=$(cat pubspec.lock | yq ".packages.melos.version" -r)
         dart pub global activate melos $MELOS_VERSION
+        echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
 
     - name: Resolve dependencies
       shell: bash
