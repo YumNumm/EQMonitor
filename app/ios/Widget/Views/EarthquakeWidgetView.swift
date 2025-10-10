@@ -101,9 +101,9 @@ struct LargeWidgetView: View {
         case .systemMedium:
             maxCount = 3
         case .systemLarge:
-            maxCount = 7
+            maxCount = 5
         case .systemExtraLarge:
-            maxCount = 10
+            maxCount = 8
         default:
             maxCount = 3
         }
@@ -123,7 +123,7 @@ struct LargeWidgetView: View {
             return "地震履歴"
         }
     }
-
+    
     var formattedUpdateTime: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
@@ -228,8 +228,8 @@ struct EarthquakeRow: View {
                         Text("/")
                             .font(.system(size: 12))
                             .foregroundStyle(.secondary)
-
-                        Text(earthquake.relativeTime)
+                        
+                        Text(earthquake.formattedTime)
                             .font(.system(size: 12).monospaced())
                     }
                     .foregroundStyle(.secondary)
@@ -289,11 +289,11 @@ struct CompactEarthquakeRow: View {
                 )
             }
 
-            Text(earthquake.relativeTime)
+            Text(earthquake.formattedTime)
                 .font(.system(size: 9).monospaced())
                 .foregroundStyle(.blue)
                 .lineLimit(1)
-                .frame(width: 40, alignment: .trailing)
+                .frame(width: 60, alignment: .trailing)
         }
     }
 }
