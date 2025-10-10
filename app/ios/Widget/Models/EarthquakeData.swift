@@ -134,21 +134,9 @@ struct EarthquakeItem: Identifiable {
         return (intensity, nil)
     }
 
-    var relativeTime: String {
-        let now = Date()
-        let interval = now.timeIntervalSince(originTime)
-
-        if interval < 60 {
-            return "数秒前"
-        } else if interval < 3600 {
-            let minutes = Int(interval / 60)
-            return "\(minutes)分前"
-        } else if interval < 86400 {
-            let hours = Int(interval / 3600)
-            return "\(hours)時間前"
-        } else {
-            let days = Int(interval / 86400)
-            return "\(days)日前"
-        }
+    var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd HH:mm"
+        return formatter.string(from: originTime) + "頃"
     }
 }
