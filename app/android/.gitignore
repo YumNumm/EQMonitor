@@ -18,3 +18,4 @@ keystore.properties
 /output.aab
 /fastlane/metadata
 /app/property*/**
+/.kotlin
