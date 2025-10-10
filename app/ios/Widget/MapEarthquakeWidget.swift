@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MapEarthquakeWidget: Widget {
     let kind: String = "MapEarthquakeWidget"
-    
+
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
@@ -75,4 +75,3 @@ struct MapEarthquakeWidget: Widget {
         error: nil
     )
 }
-

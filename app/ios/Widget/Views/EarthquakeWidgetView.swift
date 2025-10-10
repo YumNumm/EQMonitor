@@ -123,7 +123,7 @@ struct LargeWidgetView: View {
             return "地震履歴"
         }
     }
-    
+
     var formattedUpdateTime: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
@@ -228,7 +228,7 @@ struct EarthquakeRow: View {
                         Text("/")
                             .font(.system(size: 12))
                             .foregroundStyle(.secondary)
-                        
+
                         Text(earthquake.formattedTime)
                             .font(.system(size: 12).monospaced())
                     }
