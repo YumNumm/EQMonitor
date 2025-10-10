@@ -104,34 +104,49 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
     private func mockEarthquakes() -> [EarthquakeItem] {
         [
             EarthquakeItem(
-                id: "mock1",
+                id: mock1,
                 magnitude: 6.4,
                 magnitudeCondition: nil,
                 maxIntensity: "5-",
                 hypocenterName: "XXX県沖",
                 depth: 10,
                 originTime: Date().addingTimeInterval(-1200),
-                headline: nil
+                headline: nil,
+                latitude: 35.0,
+                longitude: 139.0
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "mock2",
+                id: mock2,
                 magnitude: nil,
                 magnitudeCondition: "不明",
                 maxIntensity: "4",
                 hypocenterName: "YY地方西部",
                 depth: nil,
                 originTime: Date().addingTimeInterval(-14400),
-                headline: nil
+                headline: nil,
+                latitude: 35.5,
+                longitude: 139.5
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "mock3",
+                id: mock3,
                 magnitude: 8.0,
                 magnitudeCondition: nil,
                 maxIntensity: "5-",
                 hypocenterName: "ZZZZ",
                 depth: 700,
                 originTime: Date().addingTimeInterval(-86400),
-                headline: nil
+                headline: nil,
+                latitude: 36.0,
+                longitude: 140.0
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             )
         ]
     }
@@ -168,7 +183,7 @@ struct EarthquakeWidget: Widget {
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
         earthquakes: [
             EarthquakeItem(
-                id: "preview1",
+                id: preview1,
                 magnitude: 6.4,
                 magnitudeCondition: nil,
                 maxIntensity: "5-",
@@ -176,9 +191,12 @@ struct EarthquakeWidget: Widget {
                 depth: 10,
                 originTime: Date().addingTimeInterval(-1200),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "preview2",
+                id: preview2,
                 magnitude: nil,
                 magnitudeCondition: "不明",
                 maxIntensity: "4",
@@ -186,9 +204,12 @@ struct EarthquakeWidget: Widget {
                 depth: nil,
                 originTime: Date().addingTimeInterval(-14400),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "preview3",
+                id: preview3,
                 magnitude: 8.0,
                 magnitudeCondition: nil,
                 maxIntensity: "5-",
@@ -196,6 +217,9 @@ struct EarthquakeWidget: Widget {
                 depth: 700,
                 originTime: Date().addingTimeInterval(-86400),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             )
         ],
         error: nil
@@ -210,7 +234,7 @@ struct EarthquakeWidget: Widget {
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
         earthquakes: [
             EarthquakeItem(
-                id: "preview1",
+                id: preview1,
                 magnitude: 6.4,
                 magnitudeCondition: nil,
                 maxIntensity: "5-",
@@ -218,9 +242,12 @@ struct EarthquakeWidget: Widget {
                 depth: 10,
                 originTime: Date().addingTimeInterval(-1200),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "preview2",
+                id: preview2,
                 magnitude: nil,
                 magnitudeCondition: "不明",
                 maxIntensity: "4",
@@ -228,9 +255,12 @@ struct EarthquakeWidget: Widget {
                 depth: nil,
                 originTime: Date().addingTimeInterval(-14400),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "preview3",
+                id: preview3,
                 magnitude: 8.0,
                 magnitudeCondition: nil,
                 maxIntensity: "5+",
@@ -238,6 +268,9 @@ struct EarthquakeWidget: Widget {
                 depth: 700,
                 originTime: Date().addingTimeInterval(-86400),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             )
         ],
         error: nil
@@ -255,7 +288,7 @@ struct EarthquakeWidget: Widget {
         ),
         earthquakes: [
             EarthquakeItem(
-                id: "preview1",
+                id: preview1,
                 magnitude: 6.4,
                 magnitudeCondition: nil,
                 maxIntensity: "5-",
@@ -263,9 +296,12 @@ struct EarthquakeWidget: Widget {
                 depth: 10,
                 originTime: Date().addingTimeInterval(-1200),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "preview2",
+                id: preview2,
                 magnitude: 5.2,
                 magnitudeCondition: nil,
                 maxIntensity: "4",
@@ -273,9 +309,12 @@ struct EarthquakeWidget: Widget {
                 depth: 20,
                 originTime: Date().addingTimeInterval(-14400),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "preview3",
+                id: preview3,
                 magnitude: 4.8,
                 magnitudeCondition: nil,
                 maxIntensity: "3",
@@ -283,6 +322,9 @@ struct EarthquakeWidget: Widget {
                 depth: 30,
                 originTime: Date().addingTimeInterval(-28800),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             )
         ],
         error: nil
@@ -308,7 +350,7 @@ struct EarthquakeWidget: Widget {
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
         earthquakes: [
             EarthquakeItem(
-                id: "preview1",
+                id: preview1,
                 magnitude: 7.2,
                 magnitudeCondition: nil,
                 maxIntensity: "6+",
@@ -316,9 +358,12 @@ struct EarthquakeWidget: Widget {
                 depth: 15,
                 originTime: Date().addingTimeInterval(-600),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             ),
             EarthquakeItem(
-                id: "preview2",
+                id: preview2,
                 magnitude: 5.8,
                 magnitudeCondition: nil,
                 maxIntensity: "5+",
@@ -326,6 +371,9 @@ struct EarthquakeWidget: Widget {
                 depth: 12,
                 originTime: Date().addingTimeInterval(-3600),
                 headline: nil
+            ,
+                latitude: 35.6762,
+                longitude: 139.6503
             )
         ],
         error: nil

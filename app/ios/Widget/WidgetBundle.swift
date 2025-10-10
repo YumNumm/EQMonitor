@@ -12,6 +12,7 @@ import SwiftUI
 struct EQMonitorWidgetBundle: WidgetBundle {
     var body: some Widget {
         EarthquakeWidget()
+        MapEarthquakeWidget()
         WidgetControl()
     }
 }
