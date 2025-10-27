@@ -14,9 +14,7 @@ abstract class MapCameraState with _$MapCameraState {
   }) = _MapCameraState;
 
   factory MapCameraState.home() => const MapCameraState(
-        center: Geographic(lon: 137, lat: 37.5),
-        zoom: 5,
-      );
+    center: Geographic(lon: 137, lat: 37.5),
+    zoom: 5,
+  );
 }
-
-
