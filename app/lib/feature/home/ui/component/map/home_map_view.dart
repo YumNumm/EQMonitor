@@ -3,6 +3,7 @@ import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.d
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_controller_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
@@ -51,10 +52,11 @@ class _MapContent extends HookConsumerWidget {
       onMapCreated: (controller) {
         ref.read(homeMapCameraStateProvider.notifier).setController(controller);
       },
-      children: const [
-        KyoshinMonitorObservationLayer(),
-        EewHypocenterLayer(),
-        SafeArea(child: _MapHeader()),
+      children: [
+        const KyoshinMonitorObservationLayer(),
+        const EewPsWaveLayer(),
+        const EewHypocenterLayer(),
+        const SafeArea(child: _MapHeader()),
       ],
     );
 
