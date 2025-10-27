@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:eqmonitor/core/util/color_converter.dart';
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
@@ -11,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:maplibre/maplibre.dart';
 import 'package:synchronized/extension.dart';
 
 class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
@@ -43,49 +45,52 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
-          (_) async => controller.synchronized(() async {
-            // await controller.addSource(
-            //   _sourceId,
-            //   GeojsonSourceProperties(
-            //     data: _convertAnalyzedPointsToGeoJson([]),
-            //   ),
-            // );
-            await controller.addGeoJsonSource(
-              _sourceId,
-              _convertAnalyzedPointsToGeoJson([]),
-            );
+          (_) async {
+            final style = controller.style;
+            if (style == null) return;
+            
+            await controller.synchronized(() async {
+              await style.addSource(
+                GeoJsonSource(
+                  id: _sourceId,
+                  data: jsonEncode(_convertAnalyzedPointsToGeoJson([])),
+                ),
+              );
 
-            await controller.addLayer(
-              _layerId,
-              _sourceId,
-              CircleLayerProperties(
-                circleColor: ['get', 'color'],
-                circleRadius: [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  3,
-                  1,
-                  10,
-                  10,
-                ],
-                circleStrokeColor: Colors.grey.toHexStringRGB(),
-                circleStrokeWidth: showStroke
-                    ? [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        3,
-                        0.2,
-                        10,
-                        1,
-                      ]
-                    : 0,
-                circleSortKey: ['get', 'scale'],
-              ),
-            );
-            isInitialized.value = true;
-          }),
+              await style.addLayer(
+                CircleStyleLayer(
+                  id: _layerId,
+                  sourceId: _sourceId,
+                  paint: {
+                    'circle-color': ['get', 'color'],
+                    'circle-radius': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      3,
+                      1,
+                      10,
+                      10,
+                    ],
+                    'circle-stroke-color': Colors.grey.toHexStringRGB(),
+                    'circle-stroke-width': showStroke
+                        ? [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            3,
+                            0.2,
+                            10,
+                            1,
+                          ]
+                        : 0,
+                    'circle-sort-key': ['get', 'scale'],
+                  },
+                ),
+              );
+              isInitialized.value = true;
+            });
+          },
         ),
       );
       return () {
@@ -96,22 +101,39 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
     useEffect(() {
       unawaited(
         controller.synchronized(() async {
-          if (isInitialized.value) {
-            await controller.setLayerProperties(
-              _layerId,
-              CircleLayerProperties(
-                circleStrokeColor: Colors.grey.toHexStringRGB(),
-                circleStrokeWidth: showStroke
-                    ? [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        3,
-                        0.2,
-                        10,
-                        1,
-                      ]
-                    : 0,
+          final style = controller.style;
+          if (isInitialized.value && style != null) {
+            // Remove and re-add the layer with updated properties
+            await style.removeLayer(_layerId);
+            await style.addLayer(
+              CircleStyleLayer(
+                id: _layerId,
+                sourceId: _sourceId,
+                paint: {
+                  'circle-color': ['get', 'color'],
+                  'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    3,
+                    1,
+                    10,
+                    10,
+                  ],
+                  'circle-stroke-color': Colors.grey.toHexStringRGB(),
+                  'circle-stroke-width': showStroke
+                      ? [
+                          'interpolate',
+                          ['linear'],
+                          ['zoom'],
+                          3,
+                          0.2,
+                          10,
+                          1,
+                        ]
+                      : 0,
+                  'circle-sort-key': ['get', 'scale'],
+                },
               ),
             );
           }
@@ -129,11 +151,14 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
           return;
         }
         final controller = MapLibreInherited.of(context);
+        final style = controller.style;
+        if (style == null) return;
+        
         unawaited(
           controller.synchronized(() async {
-            await controller.setGeoJsonSource(
-              _sourceId,
-              _convertAnalyzedPointsToGeoJson(analyzedPoints ?? []),
+            await style.updateGeoJsonSource(
+              id: _sourceId,
+              data: jsonEncode(_convertAnalyzedPointsToGeoJson(analyzedPoints ?? [])),
             );
           }),
         );
@@ -144,12 +169,43 @@ class KyoshinMonitorLayer extends HookConsumerWidget implements MapLayer {
       _,
       showLayer,
     ) {
-      if (isInitialized.value) {
+      final style = controller.style;
+      if (isInitialized.value && style != null) {
         unawaited(
           controller.synchronized(() async {
-            await controller.setLayerProperties(
-              _layerId,
-              CircleLayerProperties(circleOpacity: showLayer ? 1.0 : 0.0),
+            // Remove and re-add the layer with updated opacity
+            await style.removeLayer(_layerId);
+            await style.addLayer(
+              CircleStyleLayer(
+                id: _layerId,
+                sourceId: _sourceId,
+                paint: {
+                  'circle-color': ['get', 'color'],
+                  'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    3,
+                    1,
+                    10,
+                    10,
+                  ],
+                  'circle-stroke-color': Colors.grey.toHexStringRGB(),
+                  'circle-stroke-width': showStroke
+                      ? [
+                          'interpolate',
+                          ['linear'],
+                          ['zoom'],
+                          3,
+                          0.2,
+                          10,
+                          1,
+                        ]
+                      : 0,
+                  'circle-sort-key': ['get', 'scale'],
+                  'circle-opacity': showLayer ? 1.0 : 0.0,
+                },
+              ),
             );
           }),
         );

@@ -1,16 +1,24 @@
 import 'package:flutter/widgets.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:maplibre/maplibre.dart';
 
+/// Wrapper for backward compatibility with old maplibre_gl API
 class MapLibreInherited extends InheritedWidget {
   const MapLibreInherited({
     required super.child,
-    MapLibreMapController? controller,
+    MapController? controller,
     super.key,
   }) : _controller = controller;
 
-  final MapLibreMapController? _controller;
+  final MapController? _controller;
 
-  static MapLibreMapController of(BuildContext context) {
+  static MapController of(BuildContext context) {
+    // Try to get from the new MapLibre API first
+    final controller = MapController.maybeOf(context);
+    if (controller != null) {
+      return controller;
+    }
+    
+    // Fallback to legacy InheritedWidget
     final inheritedController =
         context.dependOnInheritedWidgetOfExactType<MapLibreInherited>();
     if (inheritedController == null) {
@@ -20,5 +28,6 @@ class MapLibreInherited extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(MapLibreInherited oldWidget) => false;
+  bool updateShouldNotify(MapLibreInherited oldWidget) => 
+      _controller != oldWidget._controller;
 }

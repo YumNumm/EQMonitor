@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/util/color_converter.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -9,7 +10,7 @@ import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provi
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:maplibre/maplibre.dart';
 import 'package:synchronized/extension.dart';
 
 /// 揺れ検知枠を表示するレイヤー

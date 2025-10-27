@@ -13,7 +13,7 @@ import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:maplibre/maplibre.dart';
 
 class HomeMapView extends HookConsumerWidget {
   const HomeMapView({super.key});
@@ -55,40 +55,39 @@ class _MapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useState(false);
-    final controller = useState<MapLibreMapController?>(null);
+    final controller = useState<MapController?>(null);
 
     final map = MapLibreMap(
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          initialCameraPosition.target.lat,
+      options: MapOptions(
+        initCenter: Position(
           initialCameraPosition.target.lon,
+          initialCameraPosition.target.lat,
         ),
-        zoom: initialCameraPosition.zoom,
+        initZoom: initialCameraPosition.zoom,
+        initStyle: styleString,
+        minZoom: 0,
+        maxZoom: 12,
       ),
-      styleString: styleString,
-      minMaxZoomPreference: const MinMaxZoomPreference(0, 12),
-      onStyleLoadedCallback: () async {
+      onStyleLoaded: (style) async {
         isInitialized.value = true;
       },
       onMapCreated: (c) => controller.value = c,
+      children: [
+        if (isInitialized.value) ...<MapLayer>[
+          const KyoshinMonitorLayer(),
+          //   const EewHypocenterSymbolLayer(),
+          //   const EewPsWaveLayer(),
+          //   const EewEstimatedIntensityLayer(),
+          //   const ShakeDetectionLayer(),
+        ],
+        SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
+      ],
     );
 
     return SizedBox.expand(
       child: MapLibreInherited(
         controller: controller.value,
-        child: Stack(
-          children: [
-            map,
-            if (isInitialized.value) ...<MapLayer>[
-              const KyoshinMonitorLayer(),
-              //   const EewHypocenterSymbolLayer(),
-              //   const EewPsWaveLayer(),
-              //   const EewEstimatedIntensityLayer(),
-              //   const ShakeDetectionLayer(),
-            ],
-            SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
-          ],
-        ),
+        child: map,
       ),
     );
   }
@@ -143,19 +142,17 @@ class _MapHeader extends ConsumerWidget {
         const Column(),
         HomeMapControllerCard(
           onLayerButtonTap: () async => HomeMapLayerModal.show(context),
-          onLocationButtonTap:
-              () async => MapLibreInherited.of(context).animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: LatLng(
-                      initialPosition.target.lat,
-                      initialPosition.target.lon,
-                    ),
-                    zoom: initialPosition.zoom,
-                  ),
-                ),
-                duration: const Duration(milliseconds: 400),
+          onLocationButtonTap: () async {
+            final controller = MapLibreInherited.of(context);
+            await controller.animateCamera(
+              center: Position(
+                initialPosition.target.lon,
+                initialPosition.target.lat,
               ),
+              zoom: initialPosition.zoom,
+              nativeDuration: const Duration(milliseconds: 400),
+            );
+          },
         ),
       ],
     );

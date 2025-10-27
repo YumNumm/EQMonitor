@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as app_lat_lng;
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:maplibre/maplibre.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   const EarthquakeHistoryDetailsMapView({required this.earthquake, super.key});
@@ -91,79 +91,56 @@ class _MapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isInitialized = useState(false);
-    final controller = useState<MapLibreMapController?>(null);
+    final controller = useState<MapController?>(null);
 
     final hypocenter = switch ((earthquake.latitude, earthquake.longitude)) {
-      (final double lat, final double lng) => LatLng(lat, lng),
+      (final double lat, final double lng) => Position(lng, lat),
       _ => null,
     };
 
     final map = MapLibreMap(
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          initialCameraPosition.target.lat,
+      options: MapOptions(
+        initCenter: Position(
           initialCameraPosition.target.lon,
+          initialCameraPosition.target.lat,
         ),
-        zoom: initialCameraPosition.zoom,
+        initZoom: initialCameraPosition.zoom,
+        initStyle: styleString,
+        minZoom: 0,
+        maxZoom: 12,
       ),
-      styleString: styleString,
-      minMaxZoomPreference: const MinMaxZoomPreference(0, 12),
-      onStyleLoadedCallback: () async {
+      onStyleLoaded: (style) async {
         isInitialized.value = true;
       },
       onMapCreated: (c) => controller.value = c,
-      // children: [
-      //   if (isInitialized.value) ...<MapLayer>[
-      //     EarthquakeHypocenterLayer(
-      //       hypocenterType: HypocenterType.earthquake,
-      //       latLng: hypocenter ?? const LatLng(0, 0),
-      //       isVisible: hypocenter != null,
-      //     ),
-      //     EarthquakeIntensityRegionLayer(
-      //       eventId: earthquake.eventId,
-      //       visible: earthquake.maxIntensity != null,
-      //     ),
-      //     EarthquakeIntensityCityLayer(
-      //       eventId: earthquake.eventId,
-      //       visible: earthquake.maxIntensity != null,
-      //     ),
-      //     EarthquakeIntensityRegionSymbolLayer(
-      //       eventId: earthquake.eventId,
-      //       visible: earthquake.maxIntensity != null,
-      //     ),
-      //   ],
-      //   SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
-      // ],
+      children: [
+        if (isInitialized.value) ...[
+          EarthquakeHypocenterLayer(
+            hypocenterType: HypocenterType.earthquake,
+            latLng: hypocenter ?? Position(0, 0),
+            isVisible: hypocenter != null,
+          ),
+          EarthquakeIntensityRegionLayer(
+            eventId: earthquake.eventId,
+            visible: earthquake.maxIntensity != null,
+          ),
+          EarthquakeIntensityCityLayer(
+            eventId: earthquake.eventId,
+            visible: earthquake.maxIntensity != null,
+          ),
+          EarthquakeIntensityRegionSymbolLayer(
+            eventId: earthquake.eventId,
+            visible: earthquake.maxIntensity != null,
+          ),
+        ],
+        SafeArea(child: _MapHeader(initialPosition: initialCameraPosition)),
+      ],
     );
 
     return SizedBox.expand(
       child: MapLibreInherited(
         controller: controller.value,
-        child: Stack(
-          children: [
-            map,
-            _MapHeader(initialPosition: initialCameraPosition),
-            if (isInitialized.value) ...[
-              EarthquakeHypocenterLayer(
-                hypocenterType: HypocenterType.earthquake,
-                latLng: hypocenter ?? const LatLng(0, 0),
-                isVisible: hypocenter != null,
-              ),
-              EarthquakeIntensityRegionLayer(
-                eventId: earthquake.eventId,
-                visible: earthquake.maxIntensity != null,
-              ),
-              EarthquakeIntensityCityLayer(
-                eventId: earthquake.eventId,
-                visible: earthquake.maxIntensity != null,
-              ),
-              EarthquakeIntensityRegionSymbolLayer(
-                eventId: earthquake.eventId,
-                visible: earthquake.maxIntensity != null,
-              ),
-            ],
-          ],
-        ),
+        child: map,
       ),
     );
   }
@@ -185,19 +162,17 @@ class _MapHeader extends ConsumerWidget {
         EarthquakeHistoryControllerCard(
           onLayerButtonTap:
               () async => EarthquakeHistoryDetailsMapLayerModal.show(context),
-          onLocationButtonTap:
-              () async => MapLibreInherited.of(context).animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: LatLng(
-                      initialPosition.target.lat,
-                      initialPosition.target.lon,
-                    ),
-                    zoom: initialPosition.zoom,
-                  ),
-                ),
-                duration: const Duration(milliseconds: 400),
+          onLocationButtonTap: () async {
+            final controller = MapLibreInherited.of(context);
+            await controller.animateCamera(
+              center: Position(
+                initialPosition.target.lon,
+                initialPosition.target.lat,
               ),
+              zoom: initialPosition.zoom,
+              nativeDuration: const Duration(milliseconds: 400),
+            );
+          },
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/core/util/map_utility.dart';
@@ -6,7 +7,7 @@ import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:maplibre/maplibre.dart';
 import 'package:synchronized/extension.dart';
 
 class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
@@ -22,7 +23,7 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
 
   final bool isVisible;
   final HypocenterType hypocenterType;
-  final LatLng latLng;
+  final Position latLng;
 
   @override
   String get layerId => _layerId;
@@ -36,37 +37,49 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
-          (_) async => controller.synchronized(() async {
-            if (!isInitialized.value) {
-              await mapUtility.addHypocenterImages(controller);
+          (_) async {
+            final style = controller.style;
+            if (style == null || isInitialized.value) return;
+            
+            await controller.synchronized(() async {
+              await mapUtility.addHypocenterImages(style);
 
               // Remove source if it already exists to prevent duplicates
-              await controller.removeSource(_sourceId);
-              await controller.addGeoJsonSource(
-                _sourceId,
-                _createGeoJson(latLng: latLng, hypocenterType: hypocenterType),
+              try {
+                await style.removeSource(_sourceId);
+              } catch (_) {
+                // Source doesn't exist yet, ignore
+              }
+              
+              await style.addSource(
+                GeoJsonSource(
+                  id: _sourceId,
+                  data: jsonEncode(_createGeoJson(latLng: latLng, hypocenterType: hypocenterType)),
+                ),
               );
 
-              await controller.addLayer(
-                _layerId,
-                _sourceId,
-                const SymbolLayerProperties(
-                  iconImage: MapUtility.normalHypocenterImage,
-                  iconSize: [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    3,
-                    0.3,
-                    20,
-                    2,
-                  ],
-                  iconAllowOverlap: true,
+              await style.addLayer(
+                SymbolStyleLayer(
+                  id: _layerId,
+                  sourceId: _sourceId,
+                  layout: {
+                    'icon-image': MapUtility.normalHypocenterImage,
+                    'icon-size': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      3,
+                      0.3,
+                      20,
+                      2,
+                    ],
+                    'icon-allow-overlap': true,
+                  },
                 ),
               );
               isInitialized.value = true;
-            }
-          }),
+            });
+          },
         ),
       );
       return null;
@@ -76,11 +89,14 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
       if (!isInitialized.value) {
         return;
       }
+      final style = controller.style;
+      if (style == null) return;
+      
       unawaited(
         controller.synchronized(() async {
-          await controller.setGeoJsonSource(
-            _sourceId,
-            _createGeoJson(latLng: latLng, hypocenterType: hypocenterType),
+          await style.updateGeoJsonSource(
+            id: _sourceId,
+            data: jsonEncode(_createGeoJson(latLng: latLng, hypocenterType: hypocenterType)),
           );
         }),
       );
@@ -91,11 +107,32 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
       if (!isInitialized.value) {
         return;
       }
+      final style = controller.style;
+      if (style == null) return;
+      
       unawaited(
         controller.synchronized(() async {
-          await controller.setLayerProperties(
-            _layerId,
-            SymbolLayerProperties(visibility: isVisible ? 'visible' : 'none'),
+          // Remove and re-add the layer with updated visibility
+          await style.removeLayer(_layerId);
+          await style.addLayer(
+            SymbolStyleLayer(
+              id: _layerId,
+              sourceId: _sourceId,
+              layout: {
+                'icon-image': MapUtility.normalHypocenterImage,
+                'icon-size': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0.3,
+                  20,
+                  2,
+                ],
+                'icon-allow-overlap': true,
+                'visibility': isVisible ? 'visible' : 'none',
+              },
+            ),
           );
         }),
       );
@@ -106,7 +143,7 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
   }
 
   Map<String, dynamic> _createGeoJson({
-    required LatLng latLng,
+    required Position latLng,
     required HypocenterType hypocenterType,
   }) => {
     'type': 'FeatureCollection',
@@ -115,7 +152,7 @@ class EarthquakeHypocenterLayer extends HookConsumerWidget implements MapLayer {
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
-          'coordinates': [latLng.longitude, latLng.latitude],
+          'coordinates': [latLng.lng, latLng.lat],
         },
         'properties': {'hypocenterType': hypocenterType.name},
       },
