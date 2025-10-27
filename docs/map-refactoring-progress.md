@@ -118,14 +118,33 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 - カメラ状態は `homeMapCameraStateProvider` から取得して初期値に設定
 - ホームボタンは `returnToHome()` を呼び出し
 
+### ✅ declarative-layers (完了)
+
+**ファイル:**
+- `app/lib/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart`
+- `app/lib/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart`
+- `app/lib/feature/home/ui/component/map/home_map_view.dart` (更新)
+
+**内容:**
+- 強震モニタ観測点レイヤーの実装（HookConsumerWidget + StyleController）
+- EEW震源レイヤーの実装（HookConsumerWidget + StyleController）
+- これらのレイヤーを HomeMapView に統合
+
+**技術的詳細:**
+- 組み込み`CircleLayer`/`MarkerLayer`は各Featureごとの動的プロパティに非対応
+- 代わりに`StyleController`で`CircleStyleLayer`を追加し、data-driven styling使用
+- `useEffect`でレイヤーの初期化とクリーンアップを管理
+- `Point.position`は基底クラス`Position`を返すため、`x`/`y`プロパティを使用
+- GeoJSON更新は`StyleController.updateGeoJsonSource()`使用
+- 震源はシンプルな赤い円で表示（アイコンは後で追加予定）
+
 ## 次のステップ
 
 以下のTODOを順次実装予定:
-- [ ] declarative-layers: 宣言的レイヤーの統合（CircleLayer, MarkerLayer）
 - [ ] ps-wave-layer: P/S波レイヤー（HookConsumerWidget）
 - [ ] intensity-layer: 予想震度レイヤー（HookConsumerWidget）
-- [ ] camera-auto-control: カメラ自動制御機能
-- [ ] integration: 全体統合
+- [ ] camera-auto-control: カメラ自動制御機能の詳細実装
+- [ ] integration: 全体統合とアイコン追加
 - [ ] analyze-fix: 最終調整
 
 ## コミット履歴
