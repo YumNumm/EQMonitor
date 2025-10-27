@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -74,6 +73,136 @@ as String?,
 
 }
 
+
+/// Adds pattern-matching-related methods to [TsunamiObservation].
+extension TsunamiObservationPatterns on TsunamiObservation {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TsunamiObservation value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TsunamiObservation() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TsunamiObservation value)  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiObservation():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TsunamiObservation value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiObservation() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TsunamiObservationStation> stations,  String? code,  String? name)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TsunamiObservation() when $default != null:
+return $default(_that.stations,_that.code,_that.name);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TsunamiObservationStation> stations,  String? code,  String? name)  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiObservation():
+return $default(_that.stations,_that.code,_that.name);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TsunamiObservationStation> stations,  String? code,  String? name)?  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiObservation() when $default != null:
+return $default(_that.stations,_that.code,_that.name);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 
@@ -240,6 +369,136 @@ $TsunamiStationMaxHeightCopyWith<$Res>? get maxHeight {
 }
 
 
+/// Adds pattern-matching-related methods to [TsunamiObservationStation].
+extension TsunamiObservationStationPatterns on TsunamiObservationStation {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TsunamiObservationStation value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TsunamiObservationStation() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TsunamiObservationStation value)  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiObservationStation():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TsunamiObservationStation value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiObservationStation() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  TsunamiStationFirstHeight? firstHeight,  TsunamiStationMaxHeight? maxHeight,  String? condition)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TsunamiObservationStation() when $default != null:
+return $default(_that.code,_that.name,_that.firstHeight,_that.maxHeight,_that.condition);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  TsunamiStationFirstHeight? firstHeight,  TsunamiStationMaxHeight? maxHeight,  String? condition)  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiObservationStation():
+return $default(_that.code,_that.name,_that.firstHeight,_that.maxHeight,_that.condition);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  TsunamiStationFirstHeight? firstHeight,  TsunamiStationMaxHeight? maxHeight,  String? condition)?  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiObservationStation() when $default != null:
+return $default(_that.code,_that.name,_that.firstHeight,_that.maxHeight,_that.condition);case _:
+  return null;
+
+}
+}
+
+}
+
 /// @nodoc
 
 
@@ -401,6 +660,136 @@ as String?,
 }
 
 
+/// Adds pattern-matching-related methods to [TsunamiStationFirstHeight].
+extension TsunamiStationFirstHeightPatterns on TsunamiStationFirstHeight {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TsunamiStationFirstHeight value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TsunamiStationFirstHeight() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TsunamiStationFirstHeight value)  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiStationFirstHeight():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TsunamiStationFirstHeight value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiStationFirstHeight() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime? arrivalTime,  String? initial,  String? condition)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TsunamiStationFirstHeight() when $default != null:
+return $default(_that.arrivalTime,_that.initial,_that.condition);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime? arrivalTime,  String? initial,  String? condition)  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiStationFirstHeight():
+return $default(_that.arrivalTime,_that.initial,_that.condition);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime? arrivalTime,  String? initial,  String? condition)?  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiStationFirstHeight() when $default != null:
+return $default(_that.arrivalTime,_that.initial,_that.condition);case _:
+  return null;
+
+}
+}
+
+}
+
 /// @nodoc
 
 
@@ -536,6 +925,136 @@ as String?,
 
 }
 
+
+/// Adds pattern-matching-related methods to [TsunamiStationMaxHeight].
+extension TsunamiStationMaxHeightPatterns on TsunamiStationMaxHeight {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TsunamiStationMaxHeight value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TsunamiStationMaxHeight() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TsunamiStationMaxHeight value)  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiStationMaxHeight():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TsunamiStationMaxHeight value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiStationMaxHeight() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime? dateTime,  double? value,  bool? isOver,  bool? isRising,  String? condition,  String? revise)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TsunamiStationMaxHeight() when $default != null:
+return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.condition,_that.revise);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime? dateTime,  double? value,  bool? isOver,  bool? isRising,  String? condition,  String? revise)  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiStationMaxHeight():
+return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.condition,_that.revise);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime? dateTime,  double? value,  bool? isOver,  bool? isRising,  String? condition,  String? revise)?  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiStationMaxHeight() when $default != null:
+return $default(_that.dateTime,_that.value,_that.isOver,_that.isRising,_that.condition,_that.revise);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 
@@ -688,6 +1207,136 @@ $TsunamiCommentsCopyWith<$Res>? get comments {
 }
 }
 
+
+/// Adds pattern-matching-related methods to [TsunamiObservationInfo].
+extension TsunamiObservationInfoPatterns on TsunamiObservationInfo {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TsunamiObservationInfo value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TsunamiObservationInfo() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TsunamiObservationInfo value)  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiObservationInfo():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TsunamiObservationInfo value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiObservationInfo() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TsunamiObservation>? observations,  List<TsunamiEstimation>? estimations,  String? text,  TsunamiComments? comments)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TsunamiObservationInfo() when $default != null:
+return $default(_that.observations,_that.estimations,_that.text,_that.comments);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TsunamiObservation>? observations,  List<TsunamiEstimation>? estimations,  String? text,  TsunamiComments? comments)  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiObservationInfo():
+return $default(_that.observations,_that.estimations,_that.text,_that.comments);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TsunamiObservation>? observations,  List<TsunamiEstimation>? estimations,  String? text,  TsunamiComments? comments)?  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiObservationInfo() when $default != null:
+return $default(_that.observations,_that.estimations,_that.text,_that.comments);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 
@@ -877,6 +1526,136 @@ $TsunamiHeightCopyWith<$Res>? get maxHeight {
 }
 }
 
+
+/// Adds pattern-matching-related methods to [TsunamiEstimation].
+extension TsunamiEstimationPatterns on TsunamiEstimation {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TsunamiEstimation value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TsunamiEstimation() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TsunamiEstimation value)  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiEstimation():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TsunamiEstimation value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TsunamiEstimation() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  TsunamiHeight? firstHeight,  TsunamiHeight? maxHeight,  String? revise)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TsunamiEstimation() when $default != null:
+return $default(_that.code,_that.name,_that.firstHeight,_that.maxHeight,_that.revise);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  TsunamiHeight? firstHeight,  TsunamiHeight? maxHeight,  String? revise)  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiEstimation():
+return $default(_that.code,_that.name,_that.firstHeight,_that.maxHeight,_that.revise);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  TsunamiHeight? firstHeight,  TsunamiHeight? maxHeight,  String? revise)?  $default,) {final _that = this;
+switch (_that) {
+case _TsunamiEstimation() when $default != null:
+return $default(_that.code,_that.name,_that.firstHeight,_that.maxHeight,_that.revise);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 

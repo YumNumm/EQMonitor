@@ -8,6 +8,9 @@ part of 'kyoshin_monitor_image_parser_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(kyoshinMonitorImageParser)
 const kyoshinMonitorImageParserProvider = KyoshinMonitorImageParserProvider._();
 
@@ -55,6 +58,3 @@ final class KyoshinMonitorImageParserProvider
 
 String _$kyoshinMonitorImageParserHash() =>
     r'c343437d7d4e5a9ddbae9041f8c356cd6c8132d2';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -2,11 +2,11 @@ name: eqmonitor
 description: An earthquake monitoring Application
 publish_to: "none"
 
-version: 2.10.0
+version: 3.0.0
 
 environment:
-  sdk: 3.8.1
-  flutter: 3.32.4
+  sdk: 3.9.2
+  flutter: 3.35.5
 
 resolution: workspace
 
@@ -14,14 +14,12 @@ dependencies:
   adaptive_dialog: ^2.3.0
   app_settings:
     git:
-      url: https://github.com/rhbrunetto/app_settings.git
-      ref: 30f3d52314e24c934cafaf383e68c8085c8cda41
-  background_task: ^0.2.0
+      url: https://github.com/spencerccf/app_settings.git
+      ref: ebbf71824a21cded805d5894f8df8f5af44ec069
   clock: ^1.1.2
   collection: ^1.19.1
   crypto: ^3.0.6
-  data_table_2: ^2.5.16
-  device_info_plus: ^11.2.0
+  device_info_plus: ^12.1.0
   dio: ^5.8.0+1
   dynamic_color: ^1.7.0
   earthquake_replay:
@@ -42,7 +40,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.1.0
-  flutter_email_sender: ^7.0.0
+  flutter_email_sender: ^8.0.0
   flutter_hooks: ^0.21.2
   flutter_html: ^3.0.0
   flutter_local_notifications: ^19.2.1
@@ -79,7 +77,7 @@ dependencies:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
   # maplibre: ^0.2.1
-  maplibre_gl: ^0.21.0
+  maplibre: ^0.3.0
   ntp: ^2.0.0
   package_info_plus: ^8.1.2
   path_provider: ^2.1.5
@@ -88,7 +86,7 @@ dependencies:
   purchases_flutter: ^9.1.0
   riverpod_annotation: ^3.0.0-dev.16
   screenshot: 3.0.0
-  share_plus: ^11.0.0
+  share_plus: ^12.0.0
   shared_preference_app_group: ^1.1.1
   shared_preferences: ^2.3.3
   sheet:
@@ -98,9 +96,9 @@ dependencies:
       path: sheet
   soft_edge_blur: ^0.1.3
   synchronized: ^3.3.0
-  talker_dio_logger: ^4.5.2
-  talker_flutter: ^4.5.2
-  upgrader: ^11.3.1
+  talker_dio_logger: ^5.0.0
+  talker_flutter: ^5.0.0
+  upgrader: ^12.1.0
   url_launcher: ^6.3.1
   uuid: ^4.5.1
   version: ^3.0.2
@@ -110,17 +108,17 @@ dev_dependencies:
   altive_lints: ^1.16.0
   analyzer: ^7.3.0
   build_runner: ^2.4.13
-  custom_lint: ^0.7.0
+  custom_lint: ^0.8.0
   dependency_validator: ^5.0.2
   eqmonitor_lints:
     path: ../packages/eqmonitor_lints
   fake_async: ^1.3.1
   flutter_gen_runner: ^5.8.0
   freezed: ^3.0.6
-  go_router_builder: ^3.0.0
+  go_router_builder: ^4.0.1
   json_serializable: ^6.9.0
   pedantic_mono: ^1.29.0
-  retrofit_generator: ^9.1.9
+  retrofit_generator: ^10.0.0
   riverpod_generator: ^3.0.0-dev.16
   riverpod_lint: ^3.0.0-dev.16
   test: ^1.25.7
@@ -134,6 +132,8 @@ flutter_gen:
     flutter_svg: true
 
 flutter:
+  config:
+    enable-swift-package-manager: true
   uses-material-design: true
   assets:
     - assets/

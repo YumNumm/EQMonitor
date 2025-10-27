@@ -8,6 +8,9 @@ part of 'jma_map_utility.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(jmaMapUtility)
 const jmaMapUtilityProvider = JmaMapUtilityProvider._();
 
@@ -48,6 +51,3 @@ final class JmaMapUtilityProvider
 }
 
 String _$jmaMapUtilityHash() => r'77dac2bee1cbb90d6a20f86baab076df93a94006';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

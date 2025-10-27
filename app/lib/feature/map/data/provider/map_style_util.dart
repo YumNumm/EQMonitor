@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:flutter/foundation.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

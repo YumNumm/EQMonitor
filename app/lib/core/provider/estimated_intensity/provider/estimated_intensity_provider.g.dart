@@ -8,6 +8,9 @@ part of 'estimated_intensity_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(EstimatedIntensity)
 const estimatedIntensityProvider = EstimatedIntensityProvider._();
 
@@ -150,6 +153,3 @@ final class EstimatedIntensityRegionProvider
 
 String _$estimatedIntensityRegionHash() =>
     r'9d8f0d110d42dace397d6484c8079b9e3fe4f397';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

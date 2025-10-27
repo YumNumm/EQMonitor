@@ -8,8 +8,11 @@ part of 'earthquake_history_config_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(EarthquakeHistoryConfigNotifier)
-const earthquakeHistoryConfigNotifierProvider =
+const earthquakeHistoryConfigProvider =
     EarthquakeHistoryConfigNotifierProvider._();
 
 final class EarthquakeHistoryConfigNotifierProvider
@@ -23,7 +26,7 @@ final class EarthquakeHistoryConfigNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'earthquakeHistoryConfigNotifierProvider',
+        name: r'earthquakeHistoryConfigProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -68,6 +71,3 @@ abstract class _$EarthquakeHistoryConfigNotifier
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -54,7 +54,7 @@ class _Body extends ConsumerWidget {
     );
 
     final kyoshinMonitorTimerState = ref.watch(
-      kyoshinMonitorTimerNotifierProvider,
+      kyoshinMonitorTimerProvider,
     );
 
     return Column(
@@ -95,7 +95,7 @@ class _Body extends ConsumerWidget {
         ),
         BorderedContainer(
           child: () {
-            final state = ref.watch(kyoshinMonitorNotifierProvider);
+            final state = ref.watch(kyoshinMonitorProvider);
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

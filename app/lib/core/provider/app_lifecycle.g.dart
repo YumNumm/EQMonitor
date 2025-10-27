@@ -8,7 +8,10 @@ part of 'app_lifecycle.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
+
 @ProviderFor(AppLifecycle)
 const appLifecycleProvider = AppLifecycleProvider._();
 
@@ -45,6 +48,8 @@ final class AppLifecycleProvider
 
 String _$appLifecycleHash() => r'9e357a2c4983fa88f3ed65162de86ce5813fb838';
 
+/// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
+
 abstract class _$AppLifecycle extends $Notifier<AppLifecycleState> {
   AppLifecycleState build();
   @$mustCallSuper
@@ -63,6 +68,3 @@ abstract class _$AppLifecycle extends $Notifier<AppLifecycleState> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

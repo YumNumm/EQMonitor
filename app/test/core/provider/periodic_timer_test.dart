@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/provider/periodic_timer.dart';
 import 'package:fake_async/fake_async.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -11,7 +10,7 @@ void main() {
         final container = ProviderContainer();
         addTearDown(container.dispose);
 
-        final key = UniqueKey();
+        const key = 'test_periodic_timer';
         final events = <void>[];
         container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
@@ -40,7 +39,7 @@ void main() {
         final container = ProviderContainer();
         addTearDown(container.dispose);
 
-        final key = UniqueKey();
+        const key = 'test_periodic_timer';
         final events = <void>[];
         container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
@@ -73,7 +72,7 @@ void main() {
         final container = ProviderContainer();
         addTearDown(container.dispose);
 
-        final key = UniqueKey();
+        const key = 'test_periodic_timer';
         final events = <void>[];
         container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
@@ -108,7 +107,7 @@ void main() {
         final container = ProviderContainer();
         addTearDown(container.dispose);
 
-        final key = UniqueKey();
+        const key = 'test_periodic_timer';
         final events = <void>[];
         container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {
@@ -139,7 +138,7 @@ void main() {
         final container = ProviderContainer();
         addTearDown(container.dispose);
 
-        final key = UniqueKey();
+        const key = 'test_periodic_timer';
         final events = <void>[];
         container.listen(periodicTimerProvider(key), (previous, next) {
           if (next is AsyncData) {

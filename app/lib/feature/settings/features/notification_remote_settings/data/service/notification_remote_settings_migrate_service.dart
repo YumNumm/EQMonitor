@@ -21,7 +21,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
     final isMigrated = _getIsMigrated();
     // Tokenを持っているかどうか確認
     final authorization = await ref.read(
-      apiAuthenticationNotifierProvider.future,
+      apiAuthenticationProvider.future,
     );
     ref.keepAlive();
     if (isMigrated && authorization != null) {
@@ -50,7 +50,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
 
     yield NotificationRemoteSettingsSetupState.migrating;
     await ref
-        .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
+        .read(notificationRemoteSettingsSavedStateProvider.notifier)
         .updateEarthquake(
           request: const NotificationSettingsRequest(
             global: NotificationSettingsGlobal(
@@ -60,7 +60,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
         );
 
     await ref
-        .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
+        .read(notificationRemoteSettingsSavedStateProvider.notifier)
         .updateEew(
           request: const NotificationSettingsRequest(
             global: NotificationSettingsGlobal(

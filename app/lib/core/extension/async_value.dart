@@ -13,7 +13,7 @@ extension AsyncValueX<T> on AsyncValue<T> {
       // ignore: avoid_catches_without_on_clauses
     } catch (err, stack) {
       // 前回のデータを持たせてエラーを返す
-      return AsyncValue<T>.error(err, stack).copyWithPrevious(this);
+      return AsyncValue<T>.error(err, stack);
     }
   }
 

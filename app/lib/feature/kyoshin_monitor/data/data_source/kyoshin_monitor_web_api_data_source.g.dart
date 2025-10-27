@@ -8,6 +8,9 @@ part of 'kyoshin_monitor_web_api_data_source.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(kyoshinMonitorWebApiDataSource)
 const kyoshinMonitorWebApiDataSourceProvider =
     KyoshinMonitorWebApiDataSourceProvider._();
@@ -110,6 +113,3 @@ final class LpgmKyoshinMonitorWebApiDataSourceProvider
 
 String _$lpgmKyoshinMonitorWebApiDataSourceHash() =>
     r'b9550e9d91f4ccea757577c71731599c7c38abaf';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

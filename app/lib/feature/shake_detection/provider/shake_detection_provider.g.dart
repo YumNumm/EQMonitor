@@ -8,6 +8,9 @@ part of 'shake_detection_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(ShakeDetection)
 const shakeDetectionProvider = ShakeDetectionProvider._();
 
@@ -32,7 +35,7 @@ final class ShakeDetectionProvider
   ShakeDetection create() => ShakeDetection();
 }
 
-String _$shakeDetectionHash() => r'07bbd447c27e212010656596fbf04538fcc4c908';
+String _$shakeDetectionHash() => r'3f300c49219272ff577983b995731bbced3afd6e';
 
 abstract class _$ShakeDetection
     extends $AsyncNotifier<List<ShakeDetectionEvent>> {
@@ -148,7 +151,7 @@ final class _FetchShakeDetectionEventsProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$fetchShakeDetectionEventsHash();
+  String debugGetCreateSourceHash() => _$_fetchShakeDetectionEventsHash();
 
   @$internal
   @override
@@ -162,8 +165,5 @@ final class _FetchShakeDetectionEventsProvider
   }
 }
 
-String _$fetchShakeDetectionEventsHash() =>
+String _$_fetchShakeDetectionEventsHash() =>
     r'f38c3e2f402f56379e8ee0ebb8c8eef755723690';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

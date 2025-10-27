@@ -8,6 +8,9 @@ part of 'notification_remote_settings_saved_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(notificationRemoteSettingsHasChangedFromSavedState)
 const notificationRemoteSettingsHasChangedFromSavedStateProvider =
     NotificationRemoteSettingsHasChangedFromSavedStateProvider._();
@@ -50,10 +53,10 @@ final class NotificationRemoteSettingsHasChangedFromSavedStateProvider
 }
 
 String _$notificationRemoteSettingsHasChangedFromSavedStateHash() =>
-    r'c04adf9bbda4cbfdbdfd8034f0604d332adaa85f';
+    r'b72f7eaad0a8e883c6afc2565bb82dafaac2de03';
 
 @ProviderFor(NotificationRemoteSettingsSavedStateNotifier)
-const notificationRemoteSettingsSavedStateNotifierProvider =
+const notificationRemoteSettingsSavedStateProvider =
     NotificationRemoteSettingsSavedStateNotifierProvider._();
 
 final class NotificationRemoteSettingsSavedStateNotifierProvider
@@ -67,7 +70,7 @@ final class NotificationRemoteSettingsSavedStateNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'notificationRemoteSettingsSavedStateNotifierProvider',
+        name: r'notificationRemoteSettingsSavedStateProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -84,7 +87,7 @@ final class NotificationRemoteSettingsSavedStateNotifierProvider
 }
 
 String _$notificationRemoteSettingsSavedStateNotifierHash() =>
-    r'025f0ceee184a458195f2fc5ed2a87e8c80efea4';
+    r'87a8cf986cfedcd4dec8b6c72acd94650ba67308';
 
 abstract class _$NotificationRemoteSettingsSavedStateNotifier
     extends $AsyncNotifier<NotificationRemoteSettingsState> {
@@ -113,6 +116,3 @@ abstract class _$NotificationRemoteSettingsSavedStateNotifier
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

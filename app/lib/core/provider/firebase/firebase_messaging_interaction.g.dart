@@ -8,6 +8,9 @@ part of 'firebase_messaging_interaction.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(firebaseMessagingInteraction)
 const firebaseMessagingInteractionProvider =
     FirebaseMessagingInteractionProvider._();
@@ -48,6 +51,3 @@ final class FirebaseMessagingInteractionProvider
 
 String _$firebaseMessagingInteractionHash() =>
     r'51d01acd3aeffbeb731537057efbc3e2e2f6af6a';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
