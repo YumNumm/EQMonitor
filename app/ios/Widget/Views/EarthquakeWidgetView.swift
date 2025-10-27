@@ -31,9 +31,9 @@ struct LargeWidgetView: View {
     @Environment(\.widgetFamily) var widgetFamily
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // ヘッダー
-            VStack(alignment: .leading, spacing: 4) {
+        GeometryReader { geometry in
+            VStack(alignment: .leading, spacing: 0) {
+                // ヘッダー
                 HStack(spacing: 8) {
                     Image(systemName: "circle.fill")
                         .font(.title3)
@@ -43,10 +43,13 @@ struct LargeWidgetView: View {
                         Text(headerTitle)
                             .font(.system(size: 18, weight: .bold))
                             .foregroundStyle(.white)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
 
                         Text("最終更新: \(formattedUpdateTime)")
                             .font(.system(size: 11))
                             .foregroundStyle(.white.opacity(0.8))
+                            .lineLimit(1)
                     }
 
                     Spacer()
@@ -62,35 +65,41 @@ struct LargeWidgetView: View {
                     }
                     .buttonStyle(.plain)
                 }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(
-                LinearGradient(
-                    stops: [
-                        Gradient.Stop(color: Color(red: 0.23, green: 0.38, blue: 0.9), location: 0.00),
-                        Gradient.Stop(color: Color(red: 0.05, green: 0.26, blue: 0.66), location: 1.00),
-                    ],
-                    startPoint: UnitPoint(x: 0.5, y: 0),
-                    endPoint: UnitPoint(x: 0.5, y: 1)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(width: geometry.size.width)
+                .background(
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: Color(red: 0.23, green: 0.38, blue: 0.9), location: 0.00),
+                            Gradient.Stop(color: Color(red: 0.05, green: 0.26, blue: 0.66), location: 1.00),
+                        ],
+                        startPoint: UnitPoint(x: 0.5, y: 0),
+                        endPoint: UnitPoint(x: 0.5, y: 1)
+                    )
                 )
-            )
 
-            // エラー表示
-            if let error = entry.error {
-                ErrorView(error: error)
-                    .padding()
-            } else if entry.earthquakes.isEmpty {
-                EmptyView(message: "地震情報がありません")
-                    .padding()
-            } else {
-                // 地震リスト（サイズに応じて件数制限）
-                VStack(spacing: 0) {
-                    ForEach(Array(displayedEarthquakes.enumerated()), id: \.element.id) { index, earthquake in
-                        EarthquakeRow(earthquake: earthquake, showDivider: index < displayedEarthquakes.count - 1)
+                // エラー表示
+                if let error = entry.error {
+                    ErrorView(error: error)
+                        .padding()
+                } else if entry.earthquakes.isEmpty {
+                    EmptyView(message: "地震情報がありません")
+                        .padding()
+                } else {
+                    // 地震リスト（サイズに応じて件数制限）
+                    VStack(spacing: 0) {
+                        ForEach(Array(displayedEarthquakes.enumerated()), id: \.element.id) { index, earthquake in
+                            EarthquakeRow(
+                                earthquake: earthquake,
+                                showDivider: index < displayedEarthquakes.count - 1,
+                                availableWidth: geometry.size.width
+                            )
+                        }
                     }
                 }
             }
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
         }
     }
 
@@ -138,49 +147,58 @@ struct SmallWidgetView: View {
     let entry: EarthquakeEntry
 
     var body: some View {
-        VStack(spacing: 0) {
-            // コンパクトヘッダー（再読み込みボタン付き）
-            HStack(spacing: 4) {
-                Text(headerTitle)
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(.primary)
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                // コンパクトヘッダー（再読み込みボタン付き）
+                HStack(spacing: 4) {
+                    Text(headerTitle)
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(.primary)
 
-                Spacer()
+                    Spacer()
 
-                // 再読み込みボタン
-                Button(intent: RefreshWidgetIntent()) {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundStyle(.blue)
+                    // 再読み込みボタン
+                    Button(intent: RefreshWidgetIntent()) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(.blue)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 10)
-            .padding(.top, 8)
-            .padding(.bottom, 4)
-
-            Divider()
                 .padding(.horizontal, 10)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
 
-            // コンテンツ
-            if let error = entry.error {
-                ErrorView(error: error)
-                    .padding(8)
-            } else if entry.earthquakes.isEmpty {
-                EmptyView(message: "地震情報が\nありません")
-                    .padding(8)
-            } else {
-                VStack(spacing: 6) {
-                    ForEach(Array(entry.earthquakes.prefix(3).enumerated()), id: \.element.id) { index, earthquake in
-                        CompactEarthquakeRow(earthquake: earthquake)
-                        if index < min(2, entry.earthquakes.count - 1) {
-                            Divider()
-                                .background(Color.primary.opacity(0.15))
+                Divider()
+                    .padding(.horizontal, 10)
+
+                // コンテンツ
+                if let error = entry.error {
+                    ErrorView(error: error)
+                        .padding(8)
+                } else if entry.earthquakes.isEmpty {
+                    EmptyView(message: "地震情報が\nありません")
+                        .padding(8)
+                } else {
+                    VStack(spacing: 4) {
+                        ForEach(Array(entry.earthquakes.prefix(3).enumerated()), id: \.element.id) { index, earthquake in
+                            CompactEarthquakeRow(
+                                earthquake: earthquake,
+                                availableWidth: geometry.size.width - 20
+                            )
+                            if index < min(2, entry.earthquakes.count - 1) {
+                                Divider()
+                                    .background(Color.primary.opacity(0.15))
+                            }
                         }
                     }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
                 }
-                .padding(10)
+
+                Spacer(minLength: 0)
             }
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
         }
     }
 
@@ -208,6 +226,7 @@ struct SmallWidgetView: View {
 struct EarthquakeRow: View {
     let earthquake: EarthquakeItem
     let showDivider: Bool
+    let availableWidth: CGFloat
 
     var body: some View {
         VStack(spacing: 0) {
@@ -217,6 +236,9 @@ struct EarthquakeRow: View {
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .truncationMode(.tail)
+                        .frame(maxWidth: availableWidth - 120, alignment: .leading)
 
                     HStack(spacing: 4) {
                         Text(earthquake.formattedMagnitude)
@@ -233,9 +255,12 @@ struct EarthquakeRow: View {
                             .font(.system(size: 12).monospaced())
                     }
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer(minLength: 8)
+                Spacer(minLength: 4)
 
                 VStack(alignment: .trailing, spacing: 0) {
                     Text("最大震度")
@@ -244,6 +269,7 @@ struct EarthquakeRow: View {
 
                     IntensityView(intensity: earthquake.formattedIntensity)
                 }
+                .frame(width: 60, alignment: .trailing)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
@@ -260,41 +286,52 @@ struct EarthquakeRow: View {
 // コンパクト地震行（小さいサイズ用）
 struct CompactEarthquakeRow: View {
     let earthquake: EarthquakeItem
+    let availableWidth: CGFloat
 
     var body: some View {
-        HStack(alignment: .center, spacing: 6) {
+        HStack(alignment: .center, spacing: 4) {
             VStack(alignment: .leading, spacing: 1) {
                 Text(earthquake.hypocenterName)
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: availableWidth * 0.5, alignment: .leading)
 
                 Text("\(earthquake.formattedMagnitude) \(earthquake.formattedDepth)")
                     .font(.system(size: 9).monospaced())
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            Spacer(minLength: 2)
+            Spacer(minLength: 0)
 
-            VStack(alignment: .trailing, spacing: 0) {
-                Text("震度")
-                    .font(.system(size: 7))
-                    .foregroundStyle(.secondary)
+            HStack(spacing: 4) {
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text("震度")
+                        .font(.system(size: 7))
+                        .foregroundStyle(.secondary)
 
-                IntensityView(
-                    intensity: earthquake.formattedIntensity,
-                    mainSize: 16,
-                    subSize: 10
-                )
+                    IntensityView(
+                        intensity: earthquake.formattedIntensity,
+                        mainSize: 16,
+                        subSize: 10
+                    )
+                }
+                .frame(width: 32)
+
+                Text(earthquake.formattedTime)
+                    .font(.system(size: 8).monospaced())
+                    .foregroundStyle(.blue)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .frame(width: 45, alignment: .trailing)
             }
-
-            Text(earthquake.formattedTime)
-                .font(.system(size: 9).monospaced())
-                .foregroundStyle(.blue)
-                .lineLimit(1)
-                .frame(width: 60, alignment: .trailing)
         }
+        .frame(width: availableWidth)
     }
 }
 

@@ -20,7 +20,6 @@ struct MapEarthquakeWidget: Widget {
             if #available(iOS 17.0, *) {
                 MapEarthquakeWidgetView(entry: entry)
                     .containerBackground(.background, for: .widget)
-                    .contentMarginsDisabled()
             } else {
                 MapEarthquakeWidgetView(entry: entry)
                     .containerBackground(.background, for: .widget)
@@ -47,7 +46,9 @@ struct MapEarthquakeWidget: Widget {
                 hypocenterName: "能登半島沖",
                 depth: 10,
                 originTime: Date().addingTimeInterval(-1200),
-                headline: nil
+                headline: nil,
+                latitude: 37.5,
+                longitude: 137.0
             )
         ],
         error: nil
@@ -69,7 +70,9 @@ struct MapEarthquakeWidget: Widget {
                 hypocenterName: "石川県能登地方",
                 depth: 15,
                 originTime: Date().addingTimeInterval(-600),
-                headline: nil
+                headline: nil,
+                latitude: 37.3,
+                longitude: 136.8
             )
         ],
         error: nil
