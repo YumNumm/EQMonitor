@@ -220,7 +220,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<JmaMapType>(
-                        value: selectedMapType.value,
+                        initialValue: selectedMapType.value,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                         ),

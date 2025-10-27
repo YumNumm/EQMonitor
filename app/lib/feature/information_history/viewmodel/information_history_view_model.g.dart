@@ -8,6 +8,9 @@ part of 'information_history_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(InformationHistoryViewModel)
 const informationHistoryViewModelProvider =
     InformationHistoryViewModelProvider._();
@@ -48,7 +51,7 @@ final class InformationHistoryViewModelProvider
 }
 
 String _$informationHistoryViewModelHash() =>
-    r'e38d2303d991d0e3a43935793125bb949a945a90';
+    r'e36e4b1e0d2833f78e25284fd68c34f48f1f4f92';
 
 abstract class _$InformationHistoryViewModel
     extends $Notifier<AsyncValue<List<InformationV3>>?> {
@@ -77,6 +80,3 @@ abstract class _$InformationHistoryViewModel
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

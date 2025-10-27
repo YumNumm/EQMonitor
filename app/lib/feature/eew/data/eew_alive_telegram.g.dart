@@ -8,11 +8,15 @@ part of 'eew_alive_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
+
 @ProviderFor(eewAliveNormalTelegram)
 const eewAliveNormalTelegramProvider = EewAliveNormalTelegramProvider._();
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
+
 final class EewAliveNormalTelegramProvider
     extends $FunctionalProvider<List<EewV1>, List<EewV1>, List<EewV1>>
     with $Provider<List<EewV1>> {
@@ -54,6 +58,7 @@ String _$eewAliveNormalTelegramHash() =>
     r'3d5ba64b3f98437062584f49208f9898a32358f3';
 
 /// イベント終了していないEEW
+
 @ProviderFor(EewAliveTelegram)
 const eewAliveTelegramProvider = EewAliveTelegramProvider._();
 
@@ -89,6 +94,8 @@ final class EewAliveTelegramProvider
 }
 
 String _$eewAliveTelegramHash() => r'bb7d83c2f9defdcef446234e4b2799effc9326ac';
+
+/// イベント終了していないEEW
 
 abstract class _$EewAliveTelegram extends $Notifier<List<EewV1>?> {
   List<EewV1>? build();
@@ -150,6 +157,3 @@ final class EewAliveCheckerProvider
 }
 
 String _$eewAliveCheckerHash() => r'f092d121ff9d9ea2b58fb253608779403a4ce39f';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

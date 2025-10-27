@@ -35,9 +35,8 @@ class _Body extends StatelessWidget {
             ListTile(
               title: const Text('震度配色設定'),
               leading: const Icon(Icons.color_lens),
-              onTap:
-                  () async =>
-                      const ColorSchemeConfigRoute().push<void>(context),
+              onTap: () async =>
+                  const ColorSchemeConfigRoute().push<void>(context),
             ),
           ],
         ),
@@ -51,18 +50,17 @@ class _ThemeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(themeModeNotifierProvider);
+    final state = ref.watch(themeModeProvider);
 
     final brightness = MediaQuery.platformBrightnessOf(context);
 
     Widget buildThemeChoice(ThemeMode mode) {
-      final modeBrightness =
-          mode == ThemeMode.light ? Brightness.light : Brightness.dark;
+      final modeBrightness = mode == ThemeMode.light
+          ? Brightness.light
+          : Brightness.dark;
       return Expanded(
         child: GestureDetector(
-          onTap:
-              () async =>
-                  ref.read(themeModeNotifierProvider.notifier).update(mode),
+          onTap: () async => ref.read(themeModeProvider.notifier).update(mode),
           child: Column(
             children: [
               SizedBox(
@@ -86,17 +84,16 @@ class _ThemeSelector extends ConsumerWidget {
               }),
               const SizedBox(height: 4),
               Radio.adaptive(
-                value:
-                    state == ThemeMode.system
-                        ? brightness == modeBrightness
-                            ? ThemeMode.system
-                            : null
-                        : mode,
+                value: state == ThemeMode.system
+                    ? brightness == modeBrightness
+                          ? ThemeMode.system
+                          : null
+                    : mode,
+                // ignore: deprecated_member_use
                 groupValue: state,
-                onChanged:
-                    (value) async => ref
-                        .read(themeModeNotifierProvider.notifier)
-                        .update(mode),
+                // ignore: deprecated_member_use
+                onChanged: (value) async =>
+                    ref.read(themeModeProvider.notifier).update(mode),
               ),
             ],
           ),
@@ -137,17 +134,16 @@ class _ThemeSelector extends ConsumerWidget {
             visualDensity: VisualDensity.compact,
             title: const Text('システム設定に従う'),
             value: state == ThemeMode.system,
-            onChanged:
-                (value) async => ref
-                    .read(themeModeNotifierProvider.notifier)
-                    .update(
-                      value
-                          ? ThemeMode.system
-                          : PlatformDispatcher.instance.platformBrightness ==
-                              Brightness.light
-                          ? ThemeMode.light
-                          : ThemeMode.dark,
-                    ),
+            onChanged: (value) async => ref
+                .read(themeModeProvider.notifier)
+                .update(
+                  value
+                      ? ThemeMode.system
+                      : PlatformDispatcher.instance.platformBrightness ==
+                            Brightness.light
+                      ? ThemeMode.light
+                      : ThemeMode.dark,
+                ),
           ),
         ],
       ),

@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -97,6 +96,136 @@ $KyoshinMonitorSettingsApiModelCopyWith<$Res> get api {
 }
 }
 
+
+/// Adds pattern-matching-related methods to [KyoshinMonitorSettingsModel].
+extension KyoshinMonitorSettingsModelPatterns on KyoshinMonitorSettingsModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _KyoshinMonitorSettingsModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _KyoshinMonitorSettingsModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _KyoshinMonitorSettingsModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsModel() when $default != null:
+return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)  $default,) {final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsModel():
+return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,) {final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsModel() when $default != null:
+return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()
@@ -263,6 +392,136 @@ as Duration,
 
 }
 
+
+/// Adds pattern-matching-related methods to [KyoshinMonitorSettingsApiModel].
+extension KyoshinMonitorSettingsApiModelPatterns on KyoshinMonitorSettingsApiModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _KyoshinMonitorSettingsApiModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsApiModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _KyoshinMonitorSettingsApiModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsApiModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _KyoshinMonitorSettingsApiModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsApiModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsApiModel() when $default != null:
+return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval)  $default,) {final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsApiModel():
+return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)  KyoshinMonitorEndpoint endpoint, @Assert('imageFetchInterval.inSeconds > 1', 'imageFetchInterval must be greater than 1 second')  Duration imageFetchInterval,  Duration delayAdjustInterval)?  $default,) {final _that = this;
+switch (_that) {
+case _KyoshinMonitorSettingsApiModel() when $default != null:
+return $default(_that.endpoint,_that.imageFetchInterval,_that.delayAdjustInterval);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

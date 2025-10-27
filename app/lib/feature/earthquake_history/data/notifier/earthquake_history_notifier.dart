@@ -78,7 +78,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     required List<EarthquakeParameterRegionItem> regions,
     required int limit,
   }) async {
-    ref.invalidate(earthquakeHistoryDetailsNotifierProvider);
+    ref.invalidate(earthquakeHistoryDetailsProvider);
 
     final result = await ref
         .read(earthquakeHistoryRepositoryProvider)
@@ -98,7 +98,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   }
 
   Future<void> refresh() async {
-    ref.invalidate(earthquakeHistoryDetailsNotifierProvider);
+    ref.invalidate(earthquakeHistoryDetailsProvider);
     state = const AsyncLoading();
     state =
         await AsyncValue.guard<(List<EarthquakeV1Extended>, int totalCount)>(
@@ -139,8 +139,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       throw EarthquakeParameterHasNotInitializedException();
     }
 
-    state = const AsyncLoading<(List<EarthquakeV1Extended>, int totalCount)>()
-        .copyWithPrevious(state);
+    state = const AsyncLoading<(List<EarthquakeV1Extended>, int totalCount)>();
     state = await state.guardPlus(() async {
       final repository = ref.read(earthquakeHistoryRepositoryProvider);
       final currentData = state.value;

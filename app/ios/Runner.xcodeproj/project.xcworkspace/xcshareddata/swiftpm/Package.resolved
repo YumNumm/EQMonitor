@@ -1,5 +1,4 @@
 {
-  "originHash" : "514eee6990f50b5772edb75b7250eadb7347b3931868bdf13fde8d9abc46c58f",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -51,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
-        "revision" : "4e62da1e5e6baf61674d3f5ae23d6d60c19f9c4a",
-        "version" : "12.0.0"
+        "revision" : "e2a3c3fbcaa1df3fd549b5b3f1175bc8a11912fd",
+        "version" : "12.2.0"
       }
     },
     {
@@ -60,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/flutterfire",
       "state" : {
-        "revision" : "5129db511ca163774800411439058a4fa330cd20",
-        "version" : "4.0.0-firebase-core-swift"
+        "revision" : "032a707dfc773f8dda1832635d2c969cfb426a14",
+        "version" : "4.1.1-firebase-core-swift"
       }
     },
     {
@@ -69,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/googleads/google-ads-on-device-conversion-ios-sdk",
       "state" : {
-        "revision" : "428d8bb138e00f9a3f4f61cc6cd8863607524f65",
-        "version" : "2.1.0"
+        "revision" : "a2d0f1f1666de591eb1a811f40b1706f5c63a2ed",
+        "version" : "2.3.0"
       }
     },
     {
@@ -78,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
       "state" : {
-        "revision" : "63c18311aac00032f15f5ce431c9e83ada96c386",
-        "version" : "12.0.0"
+        "revision" : "1c7edd5cc6e4ad22d2b81166bb9b208b9e63058a",
+        "version" : "12.2.0"
       }
     },
     {
@@ -150,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution",
       "state" : {
-        "revision" : "82fd2565148fafa3478a2951bb709414950bda6f",
-        "version" : "6.12.3"
+        "revision" : "1051e9dfa3546bece1a6eaf33a5ac85ac35d6bda",
+        "version" : "6.19.1"
       }
     },
     {
@@ -170,6 +169,24 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "purchases-hybrid-common",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RevenueCat/purchases-hybrid-common.git",
+      "state" : {
+        "revision" : "89817160685d304dcef6cbc850a2b98f128c5246",
+        "version" : "17.9.0"
+      }
+    },
+    {
+      "identity" : "purchases-ios-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RevenueCat/purchases-ios-spm",
+      "state" : {
+        "revision" : "3ea11388df5b0ff6a4d5c38e8e523670de549af8",
+        "version" : "5.41.0"
       }
     },
     {
@@ -209,5 +226,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

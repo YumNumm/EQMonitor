@@ -13,7 +13,7 @@ part 'map_configuration_notifier.g.dart';
 class MapConfigurationNotifier extends _$MapConfigurationNotifier {
   @override
   Future<MapConfiguration> build() async {
-    final brightness = ref.watch(brightnessNotifierProvider);
+    final brightness = ref.watch(brightnessProvider);
     var savedState = _load() ?? const MapConfiguration(theme: MapTheme.system);
     if (savedState.theme == MapTheme.system) {
       savedState = savedState.copyWith(

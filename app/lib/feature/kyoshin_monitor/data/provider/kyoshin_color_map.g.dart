@@ -8,6 +8,9 @@ part of 'kyoshin_color_map.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(kyoshinColorMap)
 const kyoshinColorMapProvider = KyoshinColorMapProvider._();
 
@@ -54,6 +57,3 @@ final class KyoshinColorMapProvider
 }
 
 String _$kyoshinColorMapHash() => r'74b3acf2ebc484ef656b4184e435dc4861052c0f';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

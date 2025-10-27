@@ -15,25 +15,21 @@ class InformationHistoryViewModel extends _$InformationHistoryViewModel {
     if (state?.isLoading ?? false) {
       return;
     }
-    if (state != null) {
-      state = const AsyncLoading<List<InformationV3>>().copyWithPrevious(
-        state!,
-      );
-    } else {
-      state = const AsyncLoading<List<InformationV3>>();
-    }
+    state = const AsyncLoading<List<InformationV3>>();
     final offset = state?.value?.length ?? 0;
     final res = await ref
         .read(informationRepositoryProvider)
         .fetchInformation(limit: offset == 0 ? 10 : 50, offset: offset);
     final _ = switch (res) {
-      Success(:final value) =>
-        state = AsyncData([...state?.value ?? [], ...value.items]),
+      Success(:final value) => state = AsyncData([
+        ...state?.value ?? [],
+        ...value.items,
+      ]),
       Failure(:final exception, :final stackTrace) =>
         state = AsyncError<List<InformationV3>>(
           exception,
           stackTrace ?? StackTrace.current,
-        ).copyWithPrevious(state!),
+        ),
     };
   }
 

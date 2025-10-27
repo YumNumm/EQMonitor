@@ -8,6 +8,9 @@ part of 'donation_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(products)
 const productsProvider = ProductsProvider._();
 
@@ -104,7 +107,7 @@ final class PurchaseProvider
   }
 }
 
-String _$purchaseHash() => r'51e3cf0a78558b80afcc878b1fe8fc4ceb9146d6';
+String _$purchaseHash() => r'063f4bbaca05afc6051c0366907347c8fcafe3c0';
 
 final class PurchaseFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<PurchaseResult>, StoreProduct> {
@@ -123,6 +126,3 @@ final class PurchaseFamily extends $Family
   @override
   String toString() => r'purchaseProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

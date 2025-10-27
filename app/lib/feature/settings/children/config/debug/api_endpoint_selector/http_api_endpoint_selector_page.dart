@@ -17,29 +17,24 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
       body: Column(
         children: [
           BorderedContainer(
-            child: Column(
-              children: [
-                RadioListTile<String>.adaptive(
-                  title: const Text('[HTTP API] Default'),
-                  subtitle: const Text(defaultUrl),
-                  value: defaultUrl,
-                  groupValue: state,
-                  onChanged:
-                      (value) async => ref
-                          .read(telegramUrlProvider.notifier)
-                          .updateRestUrl(value!),
-                ),
-                RadioListTile.adaptive(
-                  title: const Text('[HTTP API] DEV'),
-                  value: developUrl,
-                  subtitle: Text(developUrl),
-                  groupValue: state,
-                  onChanged:
-                      (value) async => ref
-                          .read(telegramUrlProvider.notifier)
-                          .updateRestUrl(value!),
-                ),
-              ],
+            child: RadioGroup(
+              onChanged: (value) async =>
+                  ref.read(telegramUrlProvider.notifier).updateRestUrl(value!),
+              groupValue: state,
+              child: Column(
+                children: [
+                  const RadioListTile<String>.adaptive(
+                    title: Text('[HTTP API] Default'),
+                    subtitle: Text(defaultUrl),
+                    value: defaultUrl,
+                  ),
+                  RadioListTile.adaptive(
+                    title: const Text('[HTTP API] DEV'),
+                    value: developUrl,
+                    subtitle: Text(developUrl),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -32,7 +32,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
       ),
     );
     final state = ref.watch(
-      earthquakeHistoryEarlyNotifierProvider(parameter.value),
+      earthquakeHistoryEarlyProvider(parameter.value),
     );
     return Scaffold(
       appBar: AppBar(
@@ -56,11 +56,11 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
         parameter: parameter.value,
         state: state,
         onRefresh: () async => ref.refresh(
-          earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
+          earthquakeHistoryEarlyProvider(parameter.value).notifier,
         ),
         onScrollEnd: () async => ref
             .read(
-              earthquakeHistoryEarlyNotifierProvider(
+              earthquakeHistoryEarlyProvider(
                 parameter.value,
               ).notifier,
             )
@@ -234,7 +234,7 @@ class _SliverListBody extends HookConsumerWidget {
           return ErrorCard(
             error: error,
             onReload: () async => ref.refresh(
-              earthquakeHistoryEarlyNotifierProvider(parameter),
+              earthquakeHistoryEarlyProvider(parameter),
             ),
           );
         }(),

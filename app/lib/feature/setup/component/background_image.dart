@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -24,7 +25,11 @@ class SetupBackgroundImageWidget extends HookWidget {
     );
     final animationController = useAnimationController(
       duration: const Duration(seconds: 1),
-    )..repeat();
+    );
+    useEffect(() {
+      unawaited(animationController.repeat());
+      return null;
+    }, [context]);
     useAnimation(animationController);
     useEffect(() {
       startTime.value = DateTime.now().millisecondsSinceEpoch;
@@ -58,11 +63,10 @@ class _ShaderPainter extends CustomPainter {
     canvas.drawRect(
       Rect.fromLTWH(0, 0, size.width, size.height),
       Paint()
-        ..shader =
-            (shader
-              ..setFloat(0, elapsedSeconds)
-              ..setFloat(1, size.width)
-              ..setFloat(2, size.height)),
+        ..shader = (shader
+          ..setFloat(0, elapsedSeconds)
+          ..setFloat(1, size.width)
+          ..setFloat(2, size.height)),
     );
   }
 
