@@ -8,18 +8,18 @@ part 'periodic_timer.g.dart';
 @riverpod
 class PeriodicTimer extends _$PeriodicTimer {
   /// メインタイマー
-  late final Timer? _timer;
+  Timer? _timer;
 
   /// 調整タイマー
-  late final Timer? _timerForDelayAdjust;
+  Timer? _timerForDelayAdjust;
 
   /// ストップウォッチ
-  late final Stopwatch? _stopwatch;
+  Stopwatch? _stopwatch;
 
-  final _streamController = StreamController<void>();
+  late final _streamController = StreamController<void>.broadcast();
 
   @override
-  Stream<void> build(String key) async* {
+  Stream<void> build(String key) {
     _stopwatch = clock.stopwatch()..start();
 
     ref.onDispose(() {
@@ -29,7 +29,7 @@ class PeriodicTimer extends _$PeriodicTimer {
       _stopwatch?.stop();
     });
 
-    yield* _streamController.stream;
+    return _streamController.stream;
   }
 
   /// 直近のTimerを考慮してタイマーを設定する
@@ -42,10 +42,16 @@ class PeriodicTimer extends _$PeriodicTimer {
     // 次のタイミングを計算する
     final nextTime = interval - (_stopwatch?.elapsed ?? Duration.zero);
     if (nextTime.isNegative) {
+      // ignore: avoid_print
+      print('[PeriodicTimer] Adding event immediately (nextTime: $nextTime)');
       _streamController.add(null);
       _timer = Timer.periodic(interval, _onTimer);
     } else {
+      // ignore: avoid_print
+      print('[PeriodicTimer] Setting delay adjust timer (nextTime: $nextTime)');
       _timerForDelayAdjust = Timer(nextTime, () {
+        // ignore: avoid_print
+        print('[PeriodicTimer] Delay adjust timer triggered');
         _streamController.add(null);
         _timerForDelayAdjust?.cancel();
         _timerForDelayAdjust = null;
@@ -66,6 +72,8 @@ class PeriodicTimer extends _$PeriodicTimer {
   }
 
   void _onTimer(Timer timer) {
+    // ignore: avoid_print
+    print('[PeriodicTimer] Timer triggered');
     _stopwatch?.reset();
     _streamController.add(null);
   }
