@@ -16,57 +16,69 @@ struct MapEarthquakeWidgetView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        if let earthquake = entry.earthquakes.first {
-            GeometryReader { geometry in
+        GeometryReader { geometry in
+            if let earthquake = entry.earthquakes.first,
+               let latitude = earthquake.latitude,
+               let longitude = earthquake.longitude {
                 ZStack(alignment: .bottom) {
                     // 背景地図
                     MapSnapshotView(
-                        latitude: earthquake.latitude,
-                        longitude: earthquake.longitude,
+                        latitude: latitude,
+                        longitude: longitude,
                         size: geometry.size
                     )
 
                     // 情報オーバーレイ
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: widgetFamily == .systemSmall ? 2 : 4) {
                         Text(earthquake.hypocenterName)
-                            .font(.system(size: widgetFamily == .systemSmall ? 14 : 16, weight: .bold))
+                            .font(.system(size: widgetFamily == .systemSmall ? 13 : 16, weight: .bold))
                             .foregroundStyle(.primary)
                             .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                            .truncationMode(.tail)
+                            .frame(maxWidth: geometry.size.width - (widgetFamily == .systemSmall ? 20 : 32), alignment: .leading)
 
-                        HStack(spacing: 8) {
+                        HStack(spacing: widgetFamily == .systemSmall ? 3 : 6) {
                             Text(earthquake.formattedMagnitude)
-                                .font(.system(size: widgetFamily == .systemSmall ? 12 : 14, weight: .semibold).monospaced())
+                                .font(.system(size: widgetFamily == .systemSmall ? 11 : 14, weight: .semibold).monospaced())
                                 .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.85)
 
                             HStack(alignment: .lastTextBaseline, spacing: 2) {
                                 Text("最大震度")
-                                    .font(.system(size: widgetFamily == .systemSmall ? 10 : 11))
+                                    .font(.system(size: widgetFamily == .systemSmall ? 9 : 11))
                                     .foregroundStyle(.secondary)
 
                                 IntensityView(
                                     intensity: earthquake.formattedIntensity,
-                                    mainSize: widgetFamily == .systemSmall ? 18 : 22,
-                                    subSize: widgetFamily == .systemSmall ? 11 : 13
+                                    mainSize: widgetFamily == .systemSmall ? 16 : 20,
+                                    subSize: widgetFamily == .systemSmall ? 10 : 12
                                 )
                             }
 
-                            Spacer()
+                            Spacer(minLength: 0)
                         }
 
                         Text(earthquake.formattedTime)
-                            .font(.system(size: widgetFamily == .systemSmall ? 10 : 12).monospaced())
+                            .font(.system(size: widgetFamily == .systemSmall ? 9 : 12).monospaced())
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
                     }
-                    .padding(widgetFamily == .systemSmall ? 12 : 16)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(widgetFamily == .systemSmall ? 8 : 14)
+                    .frame(width: geometry.size.width, alignment: .leading)
                     .background(.ultraThinMaterial)
                 }
+                .frame(width: geometry.size.width, height: geometry.size.height)
+            } else if let error = entry.error {
+                ErrorView(error: error)
+                    .padding()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+            } else {
+                EmptyView(message: "地震情報が\nありません")
+                    .frame(width: geometry.size.width, height: geometry.size.height)
             }
-        } else if let error = entry.error {
-            ErrorView(error: error)
-                .padding()
-        } else {
-            EmptyView(message: "地震情報が\nありません")
         }
     }
 }

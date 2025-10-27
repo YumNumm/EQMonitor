@@ -48,6 +48,8 @@ struct EarthquakeItem: Identifiable {
     let depth: Double?
     let originTime: Date
     let headline: String?
+    let latitude: Double?
+    let longitude: Double?
 
     init(from data: EarthquakeData) {
         self.id = String(data.id)
@@ -59,9 +61,13 @@ struct EarthquakeItem: Identifiable {
         if let hypocenter = data.hypocenter {
             self.hypocenterName = EpicenterLoader.getName(forCode: hypocenter.code)
             self.depth = hypocenter.depth
+            self.latitude = hypocenter.coordinates.latitude
+            self.longitude = hypocenter.coordinates.longitude
         } else {
             self.hypocenterName = "震源地不明"
             self.depth = nil
+            self.latitude = nil
+            self.longitude = nil
         }
 
         // originTimeのパース: "2025-10-10 21:24:00+09" 形式
@@ -85,7 +91,9 @@ struct EarthquakeItem: Identifiable {
         hypocenterName: String,
         depth: Double?,
         originTime: Date,
-        headline: String?
+        headline: String?,
+        latitude: Double? = nil,
+        longitude: Double? = nil
     ) {
         self.id = id
         self.magnitude = magnitude
@@ -95,6 +103,8 @@ struct EarthquakeItem: Identifiable {
         self.depth = depth
         self.originTime = originTime
         self.headline = headline
+        self.latitude = latitude
+        self.longitude = longitude
     }
 
     var formattedMagnitude: String {
