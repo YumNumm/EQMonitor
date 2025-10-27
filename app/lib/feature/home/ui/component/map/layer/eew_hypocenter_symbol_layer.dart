@@ -46,54 +46,51 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
-          (_) async => controller.synchronized(() async {
-            await ref.read(mapUtilityProvider).addHypocenterImages(controller);
-            final activeEews = ref.read(eewAliveTelegramProvider) ?? [];
-            await controller.removeSource(_sourceId);
-            await controller.addSource(
-              _sourceId,
-              GeojsonSourceProperties(
-                data: jsonEncode(_convertEewsToGeoJson(activeEews)),
-              ),
-            );
+          (_) async {
+            final style = controller.style;
+            if (style == null) return;
+            
+            await controller.synchronized(() async {
+              await ref.read(mapUtilityProvider).addHypocenterImages(style);
+              final activeEews = ref.read(eewAliveTelegramProvider) ?? [];
+              
+              try {
+                await style.removeSource(_sourceId);
+              } catch (_) {}
+              
+              await style.addSource(
+                GeoJsonSource(
+                  id: _sourceId,
+                  data: jsonEncode(_convertEewsToGeoJson(activeEews)),
+                ),
+              );
 
-            await controller.addLayer(
-              _layerId(false),
-              _sourceId,
-              SymbolLayerProperties(
-                iconImage:
-                    manager.json(isLowPrecise: false)['icon-image']! as String,
-                iconSize:
-                    manager.json(isLowPrecise: false)['icon-size']!
-                        as List<dynamic>,
-                iconAllowOverlap: true,
-              ),
-              filter: [
-                '==',
-                ['get', 'isLowPrecise'],
-                false,
-              ],
-            );
+              await style.addLayer(
+                SymbolStyleLayer(
+                  id: _layerId(false),
+                  sourceId: _sourceId,
+                  layout: {
+                    'icon-image': manager.json(isLowPrecise: false)['icon-image']!,
+                    'icon-size': manager.json(isLowPrecise: false)['icon-size']!,
+                    'icon-allow-overlap': true,
+                  },
+                ),
+              );
 
-            await controller.addLayer(
-              _layerId(true),
-              _sourceId,
-              SymbolLayerProperties(
-                iconImage:
-                    manager.json(isLowPrecise: true)['icon-image']! as String,
-                iconSize:
-                    manager.json(isLowPrecise: true)['icon-size']!
-                        as List<dynamic>,
-                iconAllowOverlap: true,
-              ),
-              filter: [
-                '==',
-                ['get', 'isLowPrecise'],
-                true,
-              ],
-            );
-            isInitialized.value = true;
-          }),
+              await style.addLayer(
+                SymbolStyleLayer(
+                  id: _layerId(true),
+                  sourceId: _sourceId,
+                  layout: {
+                    'icon-image': manager.json(isLowPrecise: true)['icon-image']!,
+                    'icon-size': manager.json(isLowPrecise: true)['icon-size']!,
+                    'icon-allow-overlap': true,
+                  },
+                ),
+              );
+              isInitialized.value = true;
+            });
+          },
         ),
       );
       return null;
@@ -105,28 +102,65 @@ class EewHypocenterSymbolLayer extends HookConsumerWidget implements MapLayer {
       }
       final activeEews = eews ?? [];
       final controller = MapLibreInherited.of(context);
+      final style = controller.style;
+      if (style == null) return;
+      
       unawaited(
         controller.synchronized(() async {
           final geojson = _convertEewsToGeoJson(activeEews);
-          await controller.setGeoJsonSource(_sourceId, geojson);
+          await style.updateGeoJsonSource(
+            id: _sourceId,
+            data: jsonEncode(geojson),
+          );
         }),
       );
     });
 
     useEffect(() {
       final hasEew = ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false;
-      if (hasEew) {
+      final style = controller.style;
+      if (hasEew && style != null) {
         unawaited(
           controller.synchronized(() async {
             await [
-              controller.setLayerProperties(
-                _layerId(false),
-                SymbolLayerProperties(iconOpacity: isVisible.value ? 1.0 : 0.5),
-              ),
-              controller.setLayerProperties(
-                _layerId(true),
-                SymbolLayerProperties(iconOpacity: isVisible.value ? 1.0 : 0.5),
-              ),
+              () async {
+                try {
+                  await style.removeLayer(_layerId(false));
+                } catch (_) {}
+                await style.addLayer(
+                  SymbolStyleLayer(
+                    id: _layerId(false),
+                    sourceId: _sourceId,
+                    layout: {
+                      'icon-image': manager.json(isLowPrecise: false)['icon-image']!,
+                      'icon-size': manager.json(isLowPrecise: false)['icon-size']!,
+                      'icon-allow-overlap': true,
+                    },
+                    paint: {
+                      'icon-opacity': isVisible.value ? 1.0 : 0.5,
+                    },
+                  ),
+                );
+              }(),
+              () async {
+                try {
+                  await style.removeLayer(_layerId(true));
+                } catch (_) {}
+                await style.addLayer(
+                  SymbolStyleLayer(
+                    id: _layerId(true),
+                    sourceId: _sourceId,
+                    layout: {
+                      'icon-image': manager.json(isLowPrecise: true)['icon-image']!,
+                      'icon-size': manager.json(isLowPrecise: true)['icon-size']!,
+                      'icon-allow-overlap': true,
+                    },
+                    paint: {
+                      'icon-opacity': isVisible.value ? 1.0 : 0.5,
+                    },
+                  ),
+                );
+              }(),
             ].wait;
           }),
         );

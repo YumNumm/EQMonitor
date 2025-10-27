@@ -47,40 +47,39 @@ class EarthquakeIntensityCityLayer extends HookConsumerWidget
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
-          (_) async => controller.synchronized(() async {
+          (_) async {
             if (earthquake.value == null) {
               return;
             }
+            final style = controller.style;
+            if (style == null) return;
 
-            unawaited(
-              controller.synchronized(() async {
-                final cities = _transformCities(earthquake.value!);
-                await [
-                  for (final intensity in allowedIntensities)
-                    // レイヤーを追加
-                    controller.addLayer(
-                      _getLayerId(intensity),
-                      'eqmonitor_map',
-                      FillLayerProperties(
-                        fillColor:
+            await controller.synchronized(() async {
+              final cities = _transformCities(earthquake.value!);
+              await [
+                for (final intensity in allowedIntensities)
+                  // レイヤーを追加
+                  style.addLayer(
+                    FillStyleLayer(
+                      id: _getLayerId(intensity),
+                      sourceId: 'eqmonitor_map',
+                      paint: {
+                        'fill-color':
                             intensityColor
                                 .fromJmaIntensity(intensity)
                                 .background
                                 .toHexStringRGB(),
-                      ),
-                      filter: [
-                        'in',
-                        ['get', 'code'],
-                        ['literal', cities[intensity] ?? []],
-                      ],
-                      belowLayerId: BaseLayer.areaForecastLocalELine.name,
-                      sourceLayer: 'areaForecastLocalE',
+                      },
+                      layout: {
+                        'visibility': visible ? 'visible' : 'none',
+                      },
                     ),
-                ].wait;
-              }),
-            );
+                    belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                  ),
+              ].wait;
+            });
             isInitialized.value = true;
-          }),
+          },
         ),
       );
       return () {
@@ -96,51 +95,79 @@ class EarthquakeIntensityCityLayer extends HookConsumerWidget
       if (!isInitialized.value || next.value == null) {
         return;
       }
+      final style = controller.style;
+      if (style == null) return;
 
       unawaited(
         controller.synchronized(() async {
           final cities = _transformCities(next.value!);
 
+          // レイヤーを削除して再追加で更新
           await [
             for (final intensity in allowedIntensities)
-            // レイヤーを更新
-            ...[
-              controller.setLayerProperties(
-                _getLayerId(intensity),
-                FillLayerProperties(
-                  fillColor:
-                      intensityColor
-                          .fromJmaIntensity(intensity)
-                          .background
-                          .toHexStringRGB(),
-                ),
-              ),
-              controller.setFilter(_getLayerId(intensity), {
-                'filter': [
-                  'in',
-                  ['get', 'code'],
-                  ['literal', cities[intensity] ?? []],
-                ],
-              }),
-            ],
+              () async {
+                try {
+                  await style.removeLayer(_getLayerId(intensity));
+                } catch (_) {
+                  // Layer doesn't exist, ignore
+                }
+                await style.addLayer(
+                  FillStyleLayer(
+                    id: _getLayerId(intensity),
+                    sourceId: 'eqmonitor_map',
+                    paint: {
+                      'fill-color':
+                          intensityColor
+                              .fromJmaIntensity(intensity)
+                              .background
+                              .toHexStringRGB(),
+                    },
+                    layout: {
+                      'visibility': visible ? 'visible' : 'none',
+                    },
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+              }(),
           ].wait;
         }),
       );
     });
 
     useEffect(() {
+      final style = controller.style;
+      if (style == null || !isInitialized.value) return null;
+      
       unawaited(
-        controller.synchronized(
-          () async =>
-              JmaIntensity.values
-                  .map(
-                    (intensity) => controller.setLayerVisibility(
-                      _getLayerId(intensity),
-                      visible,
-                    ),
-                  )
-                  .wait,
-        ),
+        controller.synchronized(() async {
+          if (earthquake.value == null) return;
+          final cities = _transformCities(earthquake.value!);
+          await [
+            for (final intensity in allowedIntensities)
+              () async {
+                try {
+                  await style.removeLayer(_getLayerId(intensity));
+                } catch (_) {}
+                await style.addLayer(
+                  FillStyleLayer(
+                    id: _getLayerId(intensity),
+                    sourceId: 'eqmonitor_map',
+                    paint: {
+                      'fill-color':
+                          intensityColor
+                              .fromJmaIntensity(intensity)
+                              .background
+                              .toHexStringRGB(),
+                    },
+                    layout: {
+                      'visibility': visible ? 'visible' : 'none',
+                    },
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+              }(),
+          ].wait;
+        }),
       );
       return null;
     }, [visible]);

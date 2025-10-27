@@ -51,39 +51,38 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then(
-          (_) async => controller.synchronized(() async {
+          (_) async {
             if (earthquake.value == null) {
               return;
             }
+            final style = controller.style;
+            if (style == null) return;
 
-            unawaited(
-              controller.synchronized(() async {
-                final areas = _transformRegions(earthquake.value!);
-                await [
-                  for (final intensity in allowedIntensities)
-                    // レイヤーを追加
-                    controller.addLayer(
-                      _getLayerId(intensity),
-                      'eqmonitor_map',
-                      FillLayerProperties(
-                        fillColor:
+            await controller.synchronized(() async {
+              final areas = _transformRegions(earthquake.value!);
+              await [
+                for (final intensity in allowedIntensities)
+                  // レイヤーを追加
+                  style.addLayer(
+                    FillStyleLayer(
+                      id: _getLayerId(intensity),
+                      sourceId: 'eqmonitor_map',
+                      paint: {
+                        'fill-color':
                             manager
                                 ._getColorForIntensity(intensity)
                                 .toHexStringRGB(),
-                      ),
-                      filter: [
-                        'in',
-                        ['get', 'code'],
-                        ['literal', areas[intensity] ?? []],
-                      ],
-                      belowLayerId: BaseLayer.areaForecastLocalELine.name,
-                      sourceLayer: 'areaForecastLocalE',
+                      },
+                      layout: {
+                        'visibility': visible ? 'visible' : 'none',
+                      },
                     ),
-                ].wait;
-              }),
-            );
+                    belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                  ),
+              ].wait;
+            });
             isInitialized.value = true;
-          }),
+          },
         ),
       );
       return () {
@@ -99,48 +98,69 @@ class EarthquakeIntensityRegionLayer extends HookConsumerWidget
       if (!isInitialized.value || next.value == null) {
         return;
       }
+      final style = controller.style;
+      if (style == null) return;
 
       unawaited(
         controller.synchronized(() async {
           final areas = _transformRegions(next.value!);
 
+          // レイヤーを削除して再追加で更新
           await [
             for (final intensity in allowedIntensities)
-            // レイヤーを更新
-            ...[
-              controller.setLayerProperties(
-                _getLayerId(intensity),
-                FillLayerProperties(
-                  fillColor:
-                      manager._getColorForIntensity(intensity).toHexStringRGB(),
-                ),
-              ),
-              controller.setFilter(_getLayerId(intensity), {
-                'filter': [
-                  'in',
-                  ['get', 'code'],
-                  ['literal', areas[intensity] ?? []],
-                ],
-              }),
-            ],
+              () async {
+                try {
+                  await style.removeLayer(_getLayerId(intensity));
+                } catch (_) {}
+                await style.addLayer(
+                  FillStyleLayer(
+                    id: _getLayerId(intensity),
+                    sourceId: 'eqmonitor_map',
+                    paint: {
+                      'fill-color':
+                          manager._getColorForIntensity(intensity).toHexStringRGB(),
+                    },
+                    layout: {
+                      'visibility': visible ? 'visible' : 'none',
+                    },
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+              }(),
           ].wait;
         }),
       );
     });
 
     useEffect(() {
+      final style = controller.style;
+      if (style == null || !isInitialized.value) return null;
+      
       unawaited(
-        controller.synchronized(
-          () async =>
-              JmaIntensity.values
-                  .map(
-                    (intensity) => controller.setLayerVisibility(
-                      _getLayerId(intensity),
-                      visible,
-                    ),
-                  )
-                  .wait,
-        ),
+        controller.synchronized(() async {
+          await [
+            for (final intensity in allowedIntensities)
+              () async {
+                try {
+                  await style.removeLayer(_getLayerId(intensity));
+                } catch (_) {}
+                await style.addLayer(
+                  FillStyleLayer(
+                    id: _getLayerId(intensity),
+                    sourceId: 'eqmonitor_map',
+                    paint: {
+                      'fill-color':
+                          manager._getColorForIntensity(intensity).toHexStringRGB(),
+                    },
+                    layout: {
+                      'visibility': visible ? 'visible' : 'none',
+                    },
+                  ),
+                  belowLayerId: BaseLayer.areaForecastLocalELine.name,
+                );
+              }(),
+          ].wait;
+        }),
       );
       return null;
     }, [visible]);
