@@ -23,8 +23,9 @@ class HomeMapView extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null =>
-        _MapContent(styleString: value.styleString!),
+      AsyncData(:final value) when value.styleString != null => _MapContent(
+        styleString: value.styleString!,
+      ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
@@ -53,12 +54,12 @@ class _MapContent extends HookConsumerWidget {
       onMapCreated: (controller) {
         ref.read(homeMapCameraStateProvider.notifier).setController(controller);
       },
-      children: [
-        const EewEstimatedIntensityLayer(),
-        const KyoshinMonitorObservationLayer(),
-        const EewPsWaveLayer(),
-        const EewHypocenterLayer(),
-        const SafeArea(child: _MapHeader()),
+      children: const [
+        EewEstimatedIntensityLayer(),
+        KyoshinMonitorObservationLayer(),
+        EewPsWaveLayer(),
+        EewHypocenterLayer(),
+        SafeArea(child: _MapHeader()),
       ],
     );
 
@@ -115,4 +116,3 @@ class _MapHeader extends ConsumerWidget {
     );
   }
 }
-

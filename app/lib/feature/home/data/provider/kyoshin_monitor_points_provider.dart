@@ -1,6 +1,4 @@
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
-import 'package:flutter/material.dart';
-import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
@@ -126,7 +127,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
   }
 
   (String, String) _calculateGeoJson(
-    List eews,
+    List<EewV1> eews,
     DateTime now,
     TravelTimeDepthMap travelTimeMap,
   ) {
@@ -134,10 +135,10 @@ class EewPsWaveLayer extends HookConsumerWidget {
     final sWaveFeatures = <Map<String, dynamic>>[];
 
     for (final eew in eews) {
-      final lat = eew.latitude as double?;
-      final lng = eew.longitude as double?;
-      final depth = eew.depth as int?;
-      final originTime = eew.originTime as DateTime?;
+      final lat = eew.latitude;
+      final lng = eew.longitude;
+      final depth = eew.depth;
+      final originTime = eew.originTime;
 
       if (lat == null || lng == null || depth == null || originTime == null) {
         continue;
@@ -147,15 +148,14 @@ class EewPsWaveLayer extends HookConsumerWidget {
       final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
 
       final isWarning =
-          (eew.isWarning as bool?) ??
-          ((eew.headline as String?)?.contains('強い揺れ') ?? false);
+          eew.isWarning ?? (eew.headline?.contains('強い揺れ') ?? false);
       final lineColor = isWarning ? '#FF0000' : '#FFA500';
       final fillColor = isWarning ? '#FF0000' : '#FFA500';
 
       if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
-        pWaveFeatures.add({
+        pWaveFeatures.add(<String, dynamic>{
           'type': 'Feature',
-          'geometry': {
+          'geometry': <String, dynamic>{
             'type': 'Polygon',
             'coordinates': [
               _generateCircleCoordinates(
@@ -165,7 +165,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
               ),
             ],
           },
-          'properties': {},
+          'properties': <String, dynamic>{},
         });
       }
 
@@ -230,4 +230,5 @@ class EewPsWaveLayer extends HookConsumerWidget {
     await style.removeSource(_sWaveSourceId);
   }
 }
+
 
