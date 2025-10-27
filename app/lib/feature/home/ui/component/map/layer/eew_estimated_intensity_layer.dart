@@ -53,9 +53,9 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
   ) async {
     for (final intensity in JmaForecastIntensity.values) {
       final layerId = _getLayerId(intensity);
-      final color = intensityColorModel
-          .fromJmaForecastIntensity(intensity)
-          .background as Color;
+      final color =
+          intensityColorModel.fromJmaForecastIntensity(intensity).background
+              as Color;
 
       await style.addLayer(
         FillStyleLayer(
@@ -82,9 +82,9 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
 
       await style.removeLayer(layerId);
 
-      final color = intensityColorModel
-          .fromJmaForecastIntensity(intensity)
-          .background as Color;
+      final color =
+          intensityColorModel.fromJmaForecastIntensity(intensity).background
+              as Color;
 
       await style.addLayer(
         FillStyleLayer(
@@ -117,7 +117,8 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
       }
 
       final maxIntensity = intensities.reduce(
-        (value, element) => _compareIntensity(value, element) >= 0 ? value : element,
+        (value, element) =>
+            _compareIntensity(value, element) >= 0 ? value : element,
       );
       regionsIntensityMax[entry.key] = maxIntensity;
     }
@@ -186,7 +187,8 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
     final r = (color.r * 255).round();
     final g = (color.g * 255).round();
     final b = (color.b * 255).round();
-    return '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
+    return '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'
+        .toUpperCase();
   }
 
   Future<void> _cleanupLayers(StyleController style) async {
@@ -195,4 +197,3 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
     }
   }
 }
-

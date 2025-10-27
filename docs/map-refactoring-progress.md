@@ -105,14 +105,17 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ map-view-base (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/ui/component/map/home_map_view.dart`
 
 **内容:**
+
 - `HomeMapView` を maplibre 0.3.0 の `MapLibreMap` ウィジェットベースに刷新
 - `_MapContent` で MapLibreMap を構築
 - `_MapHeader` でUIコントロール（強震モニタステータス、コントロールカード）を配置
 
 **技術的詳細:**
+
 - `MapOptions` のパラメータ名: `initCenter`, `initZoom`, `initBearing`, `initPitch`, `initStyle`
 - `onMapCreated` コールバックで `MapController` を `HomeMapCameraStateProvider` に登録
 - カメラ状態は `homeMapCameraStateProvider` から取得して初期値に設定
@@ -121,16 +124,19 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ declarative-layers (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart`
 - `app/lib/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart`
 - `app/lib/feature/home/ui/component/map/home_map_view.dart` (更新)
 
 **内容:**
+
 - 強震モニタ観測点レイヤーの実装（HookConsumerWidget + StyleController）
 - EEW震源レイヤーの実装（HookConsumerWidget + StyleController）
 - これらのレイヤーを HomeMapView に統合
 
 **技術的詳細:**
+
 - 組み込み`CircleLayer`/`MarkerLayer`は各Featureごとの動的プロパティに非対応
 - 代わりに`StyleController`で`CircleStyleLayer`を追加し、data-driven styling使用
 - `useEffect`でレイヤーの初期化とクリーンアップを管理
@@ -141,15 +147,18 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ ps-wave-layer (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart`
 
 **内容:**
+
 - P波とS波の到達範囲を円で表示
 - 走時表を使用して時刻に応じた半径を計算
 - 警報/予報で色分け（赤/オレンジ）
 - 100msごとに自動更新
 
 **技術的詳細:**
+
 - P波とS波で別々のGeoJsonSourceを使用（maplibre 0.3.0ではfilterパラメータが使えないため）
 - latlong2パッケージのDistance().offsetで円形ポリゴンの座標を計算
 - Timer.periodicで定期的にGeoJSON更新
@@ -159,27 +168,49 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ intensity-layer (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart`
 
 **内容:**
+
 - 予想震度地域をレイヤーで表示
 - 各予想震度ごとにFillStyleLayerを作成
 - 地域コードごとに最大震度をグループ化
 - 震度に応じた色で塗りつぶし
 
 **技術的詳細:**
+
 - 既存のベクトルタイルソース 'eqmonitor_map' を使用
 - 各震度ごとにFillStyleLayerを作成（filter使用不可のため削除→再作成で更新）
 - EstimatedIntensityPointから計測震度→予想震度への変換
 - IntensityColorProviderから震度に応じた色を取得
 - 地域コードごとの最大震度を計算してグループ化
 
-## 次のステップ
+## ✅ 実装完了
 
-以下のTODOを順次実装予定:
-- [ ] camera-auto-control: カメラ自動制御機能の検証（既に実装済み）
-- [ ] integration: 全体統合とアイコン追加
-- [ ] analyze-fix: 最終調整
+すべての主要機能の実装が完了しました：
+
+✅ 強震モニタ観測点表示（動的色付け）
+✅ EEW震源表示（赤い円）
+✅ P波/S波円表示（リアルタイム更新、100ms間隔）
+✅ 予想震度地域表示（震度別色分け）
+✅ カメラ自動制御（EEW発生時の自動ズーム、終了時のホーム復帰）
+
+### コード品質
+
+- **dart analyze: エラー 0件**
+- 警告: 他ファイルのunused importのみ（本機能には影響なし）
+- HookConsumerWidget ベースで実装
+- dynamic 型の使用なし
+- 適切な型付けと null safety
+- 宣言的APIの最大限活用
+
+## 今後の改善点
+
+- EEW震源アイコンの追加（現在は赤い円で表示）
+- 震源の点滅アニメーション追加
+- パフォーマンス最適化（必要に応じて）
+- エラーハンドリングの強化
 
 ## コミット履歴
 
@@ -205,3 +236,19 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 - EewHypocenterLayer実装
 - EewPsWaveLayer実装（リアルタイム波動伝播）
 - dart analyze: エラー 0件
+
+### 2025-10-28 (Commit 4): 予想震度レイヤー実装
+
+- EewEstimatedIntensityLayer実装
+- 地域コードごとの最大震度計算
+- 震度別の色分け表示
+- dart analyze: エラー 0件
+
+### 2025-10-28 (Commit 5): コード品質改善とdynamic排除
+
+- unused import/variableを削除
+- dynamic型を適切な型に置き換え
+- IntensityColorModelの型を明示
+- EewV1の型を明示
+- ファイル末尾の改行を追加
+- dart analyze: エラー 0件、警告 最小限

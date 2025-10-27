@@ -125,3 +125,4 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
   }
 }
 
+
