@@ -10,14 +10,17 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ camera-model (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/data/model/map_camera_state.dart`
 
 **内容:**
+
 - `MapCameraState` モデルの作成
 - Geographic, zoom, bearing, pitch, isAtHome をプロパティとして定義
 - `MapCameraState.home()` ファクトリメソッドでデフォルト位置を提供
 
 **技術的詳細:**
+
 - `Geographic` は maplibre 0.3.0 の geobase パッケージから提供
 - パラメータ名は `lon` (not `lng`) を使用
 - freezed による immutable なモデル
@@ -25,15 +28,18 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ camera-provider (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/data/provider/map_camera_state_provider.dart`
 
 **内容:**
+
 - `HomeMapCameraState` Riverpod プロバイダーの実装
 - EEW発生時の自動ズーム機能
 - EEW終了時のホームポジション復帰機能
 - `LngLatBounds` の計算ロジック
 
 **技術的詳細:**
+
 - `eewAliveTelegramProvider` をリスンして自動的にカメラ制御
 - `LngLatBounds` のパラメータ名: `longitudeWest`, `longitudeEast`, `latitudeSouth`, `latitudeNorth`
 - `MapController.fitBounds()` を使用したカメラ移動
@@ -41,14 +47,17 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ kyoshin-points-provider (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/data/provider/kyoshin_monitor_points_provider.dart`
 
 **内容:**
+
 - 強震モニタ観測点データを `Feature<Point>` に変換
 - `KyoshinMonitorImageParseObservationPoint` からGeoJSON Feature形式へ変換
 - RGB値から16進数カラーコードへの変換
 
 **技術的詳細:**
+
 - `kyoshinMonitorProvider` の `analyzedPoints` を使用
 - `observation.scaleToIntensity` で震度値を取得
 - `observation.r/g/b` を16進数カラーコード (#RRGGBB) に変換
@@ -57,14 +66,17 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 ### ✅ eew-points-provider (完了)
 
 **ファイル:**
+
 - `app/lib/feature/home/data/provider/eew_hypocenter_points_provider.dart`
 
 **内容:**
+
 - EEW震源位置データを `Feature<Point>` に変換
 - キャンセルされていない有効なEEWのみをフィルタリング
 - magnitude, depth, isLowPrecise をプロパティとして付加
 
 **技術的詳細:**
+
 - `eewAliveTelegramProvider` からデータ取得
 - `Geographic(lon:, lat:)` を使用した座標指定
 - 低精度判定: `isIpfOnePoint || isLevelEew || isPlum`
@@ -90,11 +102,26 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 - `abstract class` を使用する必要がある
 - 例: `@freezed abstract class MapCameraState with _$MapCameraState`
 
+### ✅ map-view-base (完了)
+
+**ファイル:**
+- `app/lib/feature/home/ui/component/map/home_map_view.dart`
+
+**内容:**
+- `HomeMapView` を maplibre 0.3.0 の `MapLibreMap` ウィジェットベースに刷新
+- `_MapContent` で MapLibreMap を構築
+- `_MapHeader` でUIコントロール（強震モニタステータス、コントロールカード）を配置
+
+**技術的詳細:**
+- `MapOptions` のパラメータ名: `initCenter`, `initZoom`, `initBearing`, `initPitch`, `initStyle`
+- `onMapCreated` コールバックで `MapController` を `HomeMapCameraStateProvider` に登録
+- カメラ状態は `homeMapCameraStateProvider` から取得して初期値に設定
+- ホームボタンは `returnToHome()` を呼び出し
+
 ## 次のステップ
 
 以下のTODOを順次実装予定:
-- [ ] map-view-base: HomeMapView基本実装
-- [ ] declarative-layers: 宣言的レイヤーの統合
+- [ ] declarative-layers: 宣言的レイヤーの統合（CircleLayer, MarkerLayer）
 - [ ] ps-wave-layer: P/S波レイヤー（HookConsumerWidget）
 - [ ] intensity-layer: 予想震度レイヤー（HookConsumerWidget）
 - [ ] camera-auto-control: カメラ自動制御機能
@@ -103,7 +130,7 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 
 ## コミット履歴
 
-### 2025-01-XX: 基盤となるモデルとプロバイダーの実装
+### 2025-01-XX (Commit 1): 基盤となるモデルとプロバイダーの実装
 
 - MapCameraState モデルの作成
 - カメラ制御プロバイダーの実装
@@ -111,3 +138,10 @@ maplibre_gl から maplibre 0.3.0 への移行に伴うマップ機能の再実�
 - EEW震源Featureプロバイダーの実装
 - dart analyze: エラー 0件
 
+### 2025-01-XX (Commit 2): HomeMapViewの基本実装
+
+- HomeMapView を maplibre 0.3.0 ベースに刷新
+- MapLibreMap ウィジェットの統合
+- MapOptions による初期カメラ位置設定
+- MapController の登録
+- dart analyze: エラー 0件
