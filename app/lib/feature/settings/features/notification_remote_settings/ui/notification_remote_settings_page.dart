@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
@@ -61,32 +60,10 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
       canPop: !hasChanged,
       onPopInvokedWithResult: (value, _) async {
         if (!value) {
-          // 保存しなくてよいか確認
-          final result = await showOkCancelAlertDialog(
-            context: context,
-            title: '通知条件設定',
-            message: '通知条件が変更されています。変更を保存しますか?',
-            okLabel: '保存する',
-            cancelLabel: 'キャンセル',
+          final notifier = ref.read(
+            notificationRemoteSettingsProvider.notifier,
           );
-          final _ = switch (result) {
-            OkCancelResult.cancel => () {
-              if (context.mounted) {
-                ref.invalidate(notificationRemoteSettingsProvider);
-                Navigator.of(context).pop();
-              }
-            }(),
-            OkCancelResult.ok => () async {
-              final notifier = ref.read(
-                notificationRemoteSettingsProvider.notifier,
-              );
-              await _save(context, notifier);
-              if (context.mounted) {
-                ref.invalidate(notificationRemoteSettingsProvider);
-                Navigator.of(context).pop();
-              }
-            }(),
-          };
+          await _save(context, notifier);
         }
       },
       child: Scaffold(
