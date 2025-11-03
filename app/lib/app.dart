@@ -77,7 +77,7 @@ class App extends HookConsumerWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [Locale('ja', 'JP')],
+            supportedLocales: const [Locale('ja', 'JP'), Locale('en', 'US')],
             builder: (context, child) {
               return UpgradeAlert(
                 navigatorKey: routerConfig.routerDelegate.navigatorKey,
