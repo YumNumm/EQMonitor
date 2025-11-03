@@ -14,6 +14,9 @@ import 'package:eqmonitor/feature/information_history/page/information_history_p
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
+import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
+import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
+import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
@@ -218,6 +221,17 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
+        TypedGoRoute<NiedRoute>(
+          path: 'nied',
+          routes: [
+            TypedGoRoute<AquaRoute>(
+              path: 'aqua',
+              routes: [
+                TypedGoRoute<AquaCatalogRoute>(path: 'catalog'),
+              ],
+            ),
+          ],
+        ),
       ],
     ),
   ],
@@ -442,6 +456,33 @@ class PlaygroundRoute extends GoRouteData with $PlaygroundRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const PlaygroundPage();
+  }
+}
+
+class NiedRoute extends GoRouteData with $NiedRoute {
+  const NiedRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NiedPage();
+  }
+}
+
+class AquaRoute extends GoRouteData with $AquaRoute {
+  const AquaRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AquaPage();
+  }
+}
+
+class AquaCatalogRoute extends GoRouteData with $AquaCatalogRoute {
+  const AquaCatalogRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AquaCatalogPage();
   }
 }
 

@@ -23,6 +23,8 @@ workspace:
   - packages/msgpack_dart
   - packages/kyoshin_monitor_api
   - packages/kyoshin_monitor_image_parser
+  - packages/nied_api_client
+  - packages/core
   # <ADD_PACKAGE_HERE>
 dependencies:
   melos: ^7.1.1
