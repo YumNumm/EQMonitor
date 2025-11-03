@@ -52,7 +52,7 @@ final class PeriodicTimerProvider
   }
 }
 
-String _$periodicTimerHash() => r'4ae81efeee3972e537dbcab72d6beb423a755031';
+String _$periodicTimerHash() => r'0a25841a4523504a834b5503d1ed90863da606a1';
 
 final class PeriodicTimerFamily extends $Family
     with
