@@ -8,7 +8,7 @@ import 'package:nied_api_client/src/hinet/aqua/model/angle_pair.dart';
 import 'package:nied_api_client/src/hinet/aqua/model/aqua_event.dart';
 import 'package:nied_api_client/src/hinet/aqua/model/aqua_event_type.dart';
 import 'package:nied_api_client/src/hinet/aqua/model/focal_mechanism.dart';
-import 'package:timezone/timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// AQUAカタログHTMLパーサー
 class AquaHtmlParser {
@@ -61,11 +61,27 @@ class AquaHtmlParser {
     }
 
     // Origin Time (例: 2025-09-29 23:33:08)
+    final jst = tz.getLocation('Asia/Tokyo');
+    // yyyy-MM-dd HH:mm:ss
     final originTimeText = cells[0].text.trim();
-    final originTime = _dateTimeFormat.parse(originTimeText);
+    final originTimeYear = int.parse(originTimeText.substring(0, 4));
+    final originTimeMonth = int.parse(originTimeText.substring(5, 7));
+    final originTimeDay = int.parse(originTimeText.substring(8, 10));
+    final originTimeHour = int.parse(originTimeText.substring(11, 13));
+    final originTimeMinute = int.parse(originTimeText.substring(14, 16));
+    final originTimeSecond = int.parse(originTimeText.substring(17, 19));
+    final originTime = tz.TZDateTime(
+      jst,
+      originTimeYear,
+      originTimeMonth,
+      originTimeDay,
+      originTimeHour,
+      originTimeMinute,
+      originTimeSecond,
+    );
 
     // ID (yyyyMMddHHmmss形式)
-    final id = DateFormat('yyyyMMddHHmmss').format(originTime);
+    final id = row.attributes['id']!.replaceFirst('lst', '');
 
     // Region
     final region = cells[1].text.trim();
@@ -122,7 +138,7 @@ class AquaHtmlParser {
 
     return AquaEvent(
       id: id,
-      originTime: TZDateTime.from(originTime, getLocation('Asia/Tokyo')),
+      originTime: originTime,
       region: region,
       latitude: latitude,
       longitude: longitude,

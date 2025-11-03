@@ -23,8 +23,8 @@ class _AquaCatalogApi implements AquaCatalogApi {
 
   @override
   Future<HttpResponse<List<int>>> getCatalogHtml({
-    int? year,
-    int? month,
+    String? year,
+    String? month,
     String lang = 'ja',
     void Function(int, int)? onReceiveProgress,
   }) async {
