@@ -14,7 +14,8 @@ List<Feature<Point>> kyoshinMonitorPoints(Ref ref) {
     final point = p.point;
 
     final colorHex =
-        '#${observation.r.toRadixString(16).padLeft(2, '0')}${observation.g.toRadixString(16).padLeft(2, '0')}${observation.b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
+        '#${observation.r.toRadixString(16).padLeft(2, '0')}${observation.g.toRadixString(16).padLeft(2, '0')}${observation.b.toRadixString(16).padLeft(2, '0')}'
+            .toUpperCase();
 
     return Feature(
       geometry: Point(
@@ -31,5 +32,3 @@ List<Feature<Point>> kyoshinMonitorPoints(Ref ref) {
     );
   }).toList();
 }
-
-
