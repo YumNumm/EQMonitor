@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      source_gen|combining_builder:
+        options:
+          ignore_for_file:
+            - type=lint
+      freezed:
+        options:
+          # Generate toJson/fromJson methods
+          json_serializable: true
+      json_serializable:
+        options:
+          checked: true

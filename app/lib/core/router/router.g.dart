@@ -441,6 +441,22 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'playground',
           factory: $PlaygroundRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'nied',
+          factory: $NiedRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'aqua',
+              factory: $AquaRoute._fromState,
+              routes: [
+                GoRouteData.$route(
+                  path: 'catalog',
+                  factory: $AquaCatalogRoute._fromState,
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     ),
   ],
@@ -920,6 +936,68 @@ mixin $PlaygroundRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/playground');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $NiedRoute on GoRouteData {
+  static NiedRoute _fromState(GoRouterState state) => const NiedRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/nied');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AquaRoute on GoRouteData {
+  static AquaRoute _fromState(GoRouterState state) => const AquaRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/nied/aqua');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AquaCatalogRoute on GoRouteData {
+  static AquaCatalogRoute _fromState(GoRouterState state) =>
+      const AquaCatalogRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/aqua/catalog');
 
   @override
   void go(BuildContext context) => context.go(location);

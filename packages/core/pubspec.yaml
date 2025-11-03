@@ -1,0 +1,24 @@
+name: core
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: 3.9.2
+  flutter: 3.35.7
+
+resolution: workspace
+
+dependencies:
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.9.0
+  timezone: ^0.10.1
+
+dev_dependencies:
+  altive_lints: ^1.14.1
+  build_runner: ^2.7.1
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  freezed: ^3.2.3
+  json_serializable: ^6.11.1
