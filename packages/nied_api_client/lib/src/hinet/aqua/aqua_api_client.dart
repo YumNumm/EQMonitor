@@ -11,22 +11,13 @@ class AquaApiClient {
 
   final Dio _dio;
 
-  AquaCatalogApi? _catalog;
-  FocalMechanismUrlGenerator? _focalMechanism;
-
   /// カタログAPI
   ///
   /// AQUAカタログページからデータを取得します
-  AquaCatalogApi get catalog {
-    _catalog ??= AquaCatalogApi(_dio);
-    return _catalog!;
-  }
+  AquaCatalogApi get catalog => AquaCatalogApi(_dio);
 
   /// 発震機構解画像URL生成
   ///
   /// 発震機構解のビーチボール図の画像URLを生成します
-  FocalMechanismUrlGenerator get focalMechanism {
-    _focalMechanism ??= FocalMechanismUrlGenerator();
-    return _focalMechanism!;
-  }
+  FocalMechanismUrlGenerator get focalMechanism => FocalMechanismUrlGenerator();
 }

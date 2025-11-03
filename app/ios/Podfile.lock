@@ -1,4 +1,6 @@
 PODS:
+  - adaptive_platform_ui (0.1.0):
+    - Flutter
   - charset_converter (0.0.1):
     - Flutter
   - Flutter (1.0.0)
@@ -10,6 +12,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - adaptive_platform_ui (from `.symlinks/plugins/adaptive_platform_ui/ios`)
   - charset_converter (from `.symlinks/plugins/charset_converter/ios`)
   - Flutter (from `Flutter`)
   - objective_c (from `.symlinks/plugins/objective_c/ios`)
@@ -17,6 +20,8 @@ DEPENDENCIES:
   - shared_preference_app_group (from `.symlinks/plugins/shared_preference_app_group/ios`)
 
 EXTERNAL SOURCES:
+  adaptive_platform_ui:
+    :path: ".symlinks/plugins/adaptive_platform_ui/ios"
   charset_converter:
     :path: ".symlinks/plugins/charset_converter/ios"
   Flutter:
@@ -29,6 +34,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preference_app_group/ios"
 
 SPEC CHECKSUMS:
+  adaptive_platform_ui: f54f620666d1797636f9ef06f49137ef2cc13611
   charset_converter: 82bc1d2e3c70dcb51bf769e9772e3ae5b2571695
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   objective_c: 89e720c30d716b036faf9c9684022048eee1eee2

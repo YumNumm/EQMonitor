@@ -47,8 +47,8 @@ abstract class AquaCatalogApi {
   @GET('/AQUA/aqua_catalogue.php')
   @DioResponseType(ResponseType.bytes)
   Future<HttpResponse<List<int>>> getCatalogHtml({
-    @Query('y') int? year,
-    @Query('m') int? month,
+    @Query('y') String? year,
+    @Query('m') String? month,
     @Query('LANG') String lang = 'ja',
     @ReceiveProgress() ProgressCallback? onReceiveProgress,
   });
