@@ -63,7 +63,7 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
     );
 
     await style.addLayer(
-      CircleStyleLayer(
+      const CircleStyleLayer(
         id: _layerId,
         sourceId: _sourceId,
         paint: {
@@ -96,20 +96,23 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
     StyleController style,
     List<Feature<Point>> points,
   ) async {
-    final features = points.map((p) {
-      final coords = p.geometry?.position;
-      if (coords == null) {
-        return null;
-      }
-      return {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [coords.x, coords.y],
-        },
-        'properties': p.properties,
-      };
-    }).whereType<Map<String, dynamic>>().toList();
+    final features = points
+        .map((p) {
+          final coords = p.geometry?.position;
+          if (coords == null) {
+            return null;
+          }
+          return {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [coords.x, coords.y],
+            },
+            'properties': p.properties,
+          };
+        })
+        .whereType<Map<String, dynamic>>()
+        .toList();
 
     final geojson = jsonEncode({
       'type': 'FeatureCollection',
@@ -124,5 +127,3 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
     await style.removeSource(_sourceId);
   }
 }
-
-

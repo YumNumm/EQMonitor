@@ -44,12 +44,14 @@ app/lib/feature/home/
 メインのマップビューコンポーネント。
 
 **責務:**
+
 - MapLibreMapウィジェットの表示
 - MapConfigurationからスタイル取得
 - 各レイヤーの配置
 - MapControllerの初期化
 
 **主要コード:**
+
 ```dart
 MapLibreMap(
   options: MapOptions(
@@ -75,12 +77,14 @@ MapLibreMap(
 カメラの状態管理と自動制御。
 
 **責務:**
+
 - カメラ位置の状態管理
 - EEW発生時の自動ズーム
 - EEW終了時のホーム復帰
 - 境界計算
 
 **データフロー:**
+
 ```
 eewAliveTelegramProvider
   ↓ listen
@@ -90,6 +94,7 @@ MapController
 ```
 
 **主要メソッド:**
+
 - `setController(MapController)`: MapControllerの登録
 - `_fitToEews(List<EewV1>)`: EEWに合わせてカメラ移動
 - `_returnToHome()`: ホームポジションに復帰
@@ -102,11 +107,13 @@ MapController
 強震モニタの観測点を円で表示。
 
 **技術:**
+
 - GeoJsonSource + CircleStyleLayer
 - data-driven styling: `['get', 'color']`
 - zoom-based interpolation
 
 **プロパティ:**
+
 - `color`: 観測点ごとの色（RGB値から16進数）
 - `intensity`: 震度値（scaleToIntensity）
 - `name`: 観測点名
@@ -116,10 +123,12 @@ MapController
 EEW震源を赤い円で表示（シンプル実装）。
 
 **技術:**
+
 - GeoJsonSource + CircleStyleLayer
 - 固定色（赤）
 
 **プロパティ:**
+
 - `magnitude`: マグニチュード
 - `depth`: 深さ
 - `isLowPrecise`: 低精度フラグ
@@ -129,12 +138,14 @@ EEW震源を赤い円で表示（シンプル実装）。
 P波とS波の到達範囲を円で表示。
 
 **技術:**
+
 - 2つの独立したGeoJsonSource（P波用、S波用）
 - LineStyleLayer + FillStyleLayer
 - Timer.periodicで100msごとに更新
 - latlong2で円形ポリゴン生成
 
 **更新フロー:**
+
 1. 走時表から距離を計算
 2. 円形ポリゴン座標を生成（360度、4度刻み）
 3. GeoJSONを更新
@@ -144,11 +155,13 @@ P波とS波の到達範囲を円で表示。
 予想震度を地域ごとに塗りつぶし表示。
 
 **技術:**
+
 - 既存ベクトルタイルソース ('eqmonitor_map') を使用
 - 各予想震度ごとにFillStyleLayerを作成
 - レイヤー削除→再作成で更新（filter更新不可のため）
 
 **処理フロー:**
+
 1. EstimatedIntensityPointを地域コードでグループ化
 2. 各地域の最大震度を計算
 3. 震度→JmaForecastIntensityへ変換
@@ -189,10 +202,12 @@ Raw Data Providers                Feature Converters              Layers
 ### 1. maplibre 0.3.0の制約
 
 **制約:**
+
 - 組み込み`CircleLayer`/`MarkerLayer`は全体に単一スタイルのみ適用可能
 - `StyleLayer`に`filter`パラメータがない
 
 **解決策:**
+
 - `StyleController`で`CircleStyleLayer`/`SymbolStyleLayer`を直接追加
 - data-driven styling: `['get', 'property']` で動的プロパティ指定
 - 異なるデータタイプには別々のSourceを使用
@@ -200,20 +215,24 @@ Raw Data Providers                Feature Converters              Layers
 ### 2. Position型
 
 **制約:**
+
 - `Point.position`は基底クラス`Position`を返す
 - `Geographic`ではなく`Position`型
 
 **解決策:**
+
 - `Position.x`（lon相当）と`Position.y`（lat相当）を使用
 - GeoJSON coordinates: `[coords.x, coords.y]`
 
 ### 3. 型パラメータ
 
 **制約:**
+
 - `Geographic`のコンストラクタは`lon`/`lat`（`lng`ではない）
 - `LngLatBounds`は4つの個別パラメータ
 
 **解決策:**
+
 ```dart
 Geographic(lon: 139.0, lat: 35.0)
 LngLatBounds(
@@ -262,4 +281,5 @@ LngLatBounds(
 ✅ HookConsumerWidgetベースの保守性の高い実装
 ✅ 全機能の動作（強震モニタ、EEW、予想震度）
 ✅ dart analyze: エラー 0件
+
 
