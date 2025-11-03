@@ -76,6 +76,8 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
+  nied_api_client:
+    path: ../packages/nied_api_client
   # maplibre: ^0.2.1
   maplibre: ^0.3.0
   ntp: ^2.0.0
@@ -103,6 +105,8 @@ dependencies:
   uuid: ^4.5.1
   version: ^3.0.2
   web_socket_client: ^0.2.1
+  timezone: ^0.10.1
+  flutter_timezone: ^5.0.1
 
 dev_dependencies:
   altive_lints: ^1.16.0
