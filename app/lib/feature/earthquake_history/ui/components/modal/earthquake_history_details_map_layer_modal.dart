@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
-import 'package:eqmonitor/core/provider/config/permission/permission_notifier.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +77,6 @@ class _LocationSettingCards extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final config = ref.watch(homeConfigurationProvider);
-    final permissionState = ref.watch(permissionProvider);
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -99,8 +97,8 @@ class _LocationSettingCards extends ConsumerWidget {
                   title: '非表示',
                   icon: Icons.location_off_outlined,
                   isSelected: !config.showLocation,
-                  onTap: () async => lightHapticFunction(
-                    () async => ref
+                  onTap: () => lightHapticFunction(
+                    () => ref
                         .read(homeConfigurationProvider.notifier)
                         .save(config.copyWith(showLocation: false)),
                   ),
@@ -111,23 +109,8 @@ class _LocationSettingCards extends ConsumerWidget {
                   title: '表示',
                   icon: Icons.location_on_outlined,
                   isSelected: config.showLocation,
-                  subtitle: !permissionState.location ? '位置情報が許可されていません' : null,
-                  onTap: () async => lightHapticFunction(() async {
-                    // 位置情報の権限がない場合は要求する
-                    if (!permissionState.location) {
-                      await ref
-                          .read(permissionProvider.notifier)
-                          .requestLocationWhenInUsePermission();
-                      // 権限が付与されなかった場合は早期リターン
-                      if (!ref.read(permissionProvider).location) {
-                        return;
-                      }
-                    }
-                    // 権限がある場合は位置情報表示を有効化
-                    await ref
-                        .read(homeConfigurationProvider.notifier)
-                        .save(config.copyWith(showLocation: true));
-                  }),
+                  subtitle: 'NOT IMPLEMENTED',
+                  onTap: () => throw UnimplementedError(),
                 ),
               ),
             ],
