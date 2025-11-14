@@ -1,3 +1,13 @@
 [tools]
+"aqua:suzuki-shunsuke/tfcmt" = "4.14.12"
 flutter = "3.35.7-stable"
 java = "21"
+node = "25.1.0"
+"pipx:codemagic-cli-tools" = "0.61.1"
+tflint = "0.59.1"
+uv = "0.9.8"
+websocat = "1.14.0"
+
+[settings]
+lockfile = true
+experimental = true
