@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:fnet_types/fnet_types.dart';
-
-import 'fnet_catalog_api.dart';
-import 'fnet_catalog_parser.dart';
+import 'package:nied_api_client/src/fnet/api/fnet_catalog_api.dart';
+import 'package:nied_api_client/src/fnet/model/fnet_earthquake_event.dart';
+import 'package:nied_api_client/src/fnet/parser/fnet_catalog_parser.dart';
 
 /// F-net APIクライアント
 class FnetApiClient {
@@ -14,7 +13,7 @@ class FnetApiClient {
   late final FnetCatalogApi _api;
 
   /// 指定された年月のカタログデータを取得してパースする
-  /// 
+  ///
   /// [year] 年 (例: 2025)
   /// [month] 月 (例: 11)
   Future<List<FnetEarthquakeEvent>> getCatalog({
@@ -27,7 +26,7 @@ class FnetApiClient {
   }
 
   /// 指定された年の全カタログデータを取得してパースする
-  /// 
+  ///
   /// [year] 年 (例: 2025)
   Future<List<FnetEarthquakeEvent>> getYearCatalog({
     required int year,
@@ -49,7 +48,7 @@ class FnetApiClient {
   }
 
   /// 指定された期間のカタログデータを取得してパースする
-  /// 
+  ///
   /// [startYear] 開始年
   /// [startMonth] 開始月
   /// [endYear] 終了年

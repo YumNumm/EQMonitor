@@ -1,5 +1,4 @@
-import 'package:fnet_types/fnet_types.dart';
-import 'package:intl/intl.dart';
+import 'package:nied_api_client/src/fnet/model/fnet_earthquake_event.dart';
 
 /// F-netカタログデータのパーサー
 class FnetCatalogParser {
@@ -34,7 +33,7 @@ class FnetCatalogParser {
   }
 
   static FnetEarthquakeEvent? _parseEvent(String line) {
-    // タブ区切りで分割
+    // タブまたは複数のスペースで区切られたデータを分割
     final parts = line.split(RegExp(r'\s+'));
 
     if (parts.length < 20) {

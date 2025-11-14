@@ -2,6 +2,11 @@
 version = "4.14.12"
 backend = "aqua:suzuki-shunsuke/tfcmt"
 
+[tools."aqua:suzuki-shunsuke/tfcmt".platforms.linux-x64]
+checksum = "sha256:08e0ac75a743fde6948d8482f992c90b8bee5e99fe1b5e4de11ccea428e66a86"
+size = 4695416
+url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt_linux_amd64.tar.gz"
+
 [[tools.flutter]]
 version = "3.35.7-stable"
 backend = "asdf:flutter"
@@ -10,9 +15,19 @@ backend = "asdf:flutter"
 version = "21.0.2"
 backend = "core:java"
 
+[tools.java.platforms.linux-x64]
+checksum = "sha256:a2def047a73941e01a73739f92755f86b895811afb1f91243db214cff5bdac3f"
+size = 203616881
+url = "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
+
 [[tools.node]]
 version = "25.1.0"
 backend = "core:node"
+
+[tools.node.platforms.linux-x64]
+checksum = "sha256:0b8de924cd43546a2098c091b73002442cd61340622b2c1489df408755de21fc"
+size = 54581244
+url = "https://nodejs.org/dist/v25.1.0/node-v25.1.0-linux-x64.tar.gz"
 
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.61.1"
@@ -22,10 +37,25 @@ backend = "pipx:codemagic-cli-tools"
 version = "0.59.1"
 backend = "aqua:terraform-linters/tflint"
 
+[tools.tflint.platforms.linux-x64]
+checksum = "sha256:6108d84282292f11d793dc8038ce08fbc629dcd25324d6f13c63d8100b52e01f"
+size = 16335399
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.59.1/tflint_linux_amd64.zip"
+
 [[tools.uv]]
 version = "0.9.8"
 backend = "aqua:astral-sh/uv"
 
+[tools.uv.platforms.linux-x64]
+checksum = "sha256:7763091b882874ae80d162ff77284032ce83174da68c3a759988c81e677e1286"
+size = 21566033
+url = "https://github.com/astral-sh/uv/releases/download/0.9.8/uv-x86_64-unknown-linux-musl.tar.gz"
+
 [[tools.websocat]]
 version = "1.14.0"
 backend = "aqua:vi/websocat"
+
+[tools.websocat.platforms.linux-x64]
+checksum = "blake3:0a3027e1be724706e4156bca6098653425bfa8375d88cc0b8fd1fd41ccb6df89"
+size = 7304728
+url = "https://github.com/vi/websocat/releases/download/v1.14.0/websocat.x86_64-unknown-linux-musl"
