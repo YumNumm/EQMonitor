@@ -1,0 +1,23 @@
+name: fnet_types
+description: Data types for F-net earthquake catalog
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: 3.9.2
+
+resolution: workspace
+
+dependencies:
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  altive_lints: ^1.14.1
+  build_runner: ^2.7.1
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  freezed: ^3.2.3
+  json_serializable: ^6.11.1
+  test: ^1.26.2
