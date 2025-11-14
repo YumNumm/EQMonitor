@@ -47,3 +47,7 @@ backend = "aqua:astral-sh/uv"
 [[tools.websocat]]
 version = "1.14.0"
 backend = "aqua:vi/websocat"
+
+[[tools.xcbeautify]]
+version = "3.1.0"
+backend = "aqua:cpisciotta/xcbeautify"
