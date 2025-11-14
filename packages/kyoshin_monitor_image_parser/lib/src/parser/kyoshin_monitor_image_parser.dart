@@ -50,7 +50,7 @@ class KyoshinMonitorImageParser {
   Future<List<KyoshinMonitorImageParseObservationResult>> parseGif({
     required List<int> gifImage,
     required List<KyoshinMonitorObservationPoint> points,
-  }) async {
+  }) {
     final image = img.decodeGif(Uint8List.fromList(gifImage));
     if (image == null) {
       throw const KyoshinImageParseInvalidGifException();
@@ -61,7 +61,7 @@ class KyoshinMonitorImageParser {
   Future<List<KyoshinMonitorImageParseObservationResult>> parseGifInIsolate(
     List<int> gifImage,
     List<KyoshinMonitorObservationPoint> points,
-  ) async => Isolate.run(() => parseGif(gifImage: gifImage, points: points));
+  ) => Isolate.run(() => parseGif(gifImage: gifImage, points: points));
 
   @visibleForTesting
   double? hsvToPosition(HsvColor hsv) => _hsvToPosition(hsv);

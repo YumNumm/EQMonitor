@@ -9,7 +9,6 @@ part of 'router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-  $setupRoute,
   $earthquakeHistoryRoute,
   $earthquakeHistoryDetailsRoute,
   $informationHistoryRoute,
@@ -20,29 +19,6 @@ List<RouteBase> get $appRoutes => [
   $talkerRoute,
   $settingsRoute,
 ];
-
-RouteBase get $setupRoute =>
-    GoRouteData.$route(path: '/setup', factory: $SetupRoute._fromState);
-
-mixin $SetupRoute on GoRouteData {
-  static SetupRoute _fromState(GoRouterState state) => const SetupRoute();
-
-  @override
-  String get location => GoRouteData.$location('/setup');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',
@@ -408,16 +384,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
       factory: $AboutThisAppRoute._fromState,
     ),
     GoRouteData.$route(
-      path: 'donation',
-      factory: $DonationRoute._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'executed',
-          factory: $DonationExecutedRoute._fromState,
-        ),
-      ],
-    ),
-    GoRouteData.$route(
       path: 'debug',
       factory: $DebugRoute._fromState,
       routes: [
@@ -774,53 +740,6 @@ mixin $AboutThisAppRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $DonationRoute on GoRouteData {
-  static DonationRoute _fromState(GoRouterState state) => const DonationRoute();
-
-  @override
-  String get location => GoRouteData.$location('/settings/donation');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $DonationExecutedRoute on GoRouteData {
-  static DonationExecutedRoute _fromState(GoRouterState state) =>
-      DonationExecutedRoute(
-        $extra: state.extra as (StoreProduct, CustomerInfo),
-      );
-
-  DonationExecutedRoute get _self => this as DonationExecutedRoute;
-
-  @override
-  String get location => GoRouteData.$location('/settings/donation/executed');
-
-  @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
-
-  @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
-
-  @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
 }
 
 mixin $DebugRoute on GoRouteData {

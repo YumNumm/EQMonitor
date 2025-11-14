@@ -140,7 +140,7 @@ class ShakeDetectionKmoniPointsMerged
 }
 
 @Riverpod(keepAlive: true)
-Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(Ref ref) async =>
+Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(Ref ref) =>
     ref.watch(eqApiProvider).v1.getLatestShakeDetectionEvents();
 
 enum ShakeDetectionLevel {

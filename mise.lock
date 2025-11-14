@@ -15,6 +15,10 @@ url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3
 version = "3.35.7-stable"
 backend = "asdf:flutter"
 
+[[tools."gem:cocoapods"]]
+version = "1.16.2"
+backend = "gem:cocoapods"
+
 [[tools.java]]
 version = "21.0.2"
 backend = "core:java"
@@ -35,6 +39,10 @@ backend = "aqua:pnpm/pnpm"
 checksum = "sha256:818bfd5782292cc74673e5f5f365ffc88cc735b1eff6ded342322eb7f2d2ce94"
 size = 62505632
 url = "https://github.com/pnpm/pnpm/releases/download/v10.22.0/pnpm-macos-arm64"
+
+[[tools.ruby]]
+version = "3.4.7"
+backend = "core:ruby"
 
 [[tools.tflint]]
 version = "0.59.1"

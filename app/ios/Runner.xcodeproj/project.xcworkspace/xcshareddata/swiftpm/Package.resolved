@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/flutterfire",
       "state" : {
-        "revision" : "bdd380f1f5c5fe71a1846ddb44cdd5559952580a",
-        "version" : "4.2.0-firebase-core-swift"
+        "revision" : "1fc2adfbeb6e132e49ba72d04c727227f9827b3e",
+        "version" : "4.2.1-firebase-core-swift"
       }
     },
     {
@@ -176,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-hybrid-common.git",
       "state" : {
-        "revision" : "4341a902ca34c5b6aeab111223dea31d0ea1e373",
-        "version" : "17.12.0"
+        "revision" : "f97e639b54371403f97173618ac206e0cecebd6a",
+        "version" : "17.17.0"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios-spm",
       "state" : {
-        "revision" : "5a0985f297ccd8870c85d86fde97695ca466ff99",
-        "version" : "5.45.0"
+        "revision" : "1548d80a9910dcdf8a2f6db53fcdb647997f17bb",
+        "version" : "5.47.0"
       }
     },
     {

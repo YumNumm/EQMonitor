@@ -91,7 +91,6 @@ dependencies:
   riverpod_annotation: ^3.0.3
   screenshot: 3.0.0
   share_plus: ^12.0.0
-  shared_preference_app_group: ^1.1.1
   shared_preferences: ^2.3.3
   sheet:
     git:
