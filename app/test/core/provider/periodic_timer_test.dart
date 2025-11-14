@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/provider/periodic_timer.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -109,7 +107,9 @@ void main() {
         final notifier = container.read(provider.notifier);
 
         // 100ミリ秒ごとのインターバル設定
-        notifier.setIntervalWithoutCurrentTimer(const Duration(milliseconds: 100));
+        notifier.setIntervalWithoutCurrentTimer(
+          const Duration(milliseconds: 100),
+        );
 
         // 350ミリ秒待機
         await Future<void>.delayed(const Duration(milliseconds: 350));

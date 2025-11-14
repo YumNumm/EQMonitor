@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
-import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
@@ -34,7 +32,6 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_earthquake_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
-import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_models.dart';
 import 'package:eqmonitor/feature/tsunami_history/page/tsunami_details_page.dart';
 import 'package:eqmonitor/feature/tsunami_history/page/tsunami_history_page.dart';
@@ -44,7 +41,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sheet/route.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -67,15 +63,6 @@ class GoRouterRedirectException implements Exception {
   GoRouterRedirectException(this.message);
 
   final String message;
-}
-
-@TypedGoRoute<SetupRoute>(path: '/setup')
-class SetupRoute extends GoRouteData with $SetupRoute {
-  const SetupRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SetupScreen();
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
@@ -205,10 +192,6 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
     TypedGoRoute<LicenseRoute>(path: 'license'),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
     TypedGoRoute<AboutThisAppRoute>(path: 'about-this-app'),
-    TypedGoRoute<DonationRoute>(
-      path: 'donation',
-      routes: [TypedGoRoute<DonationExecutedRoute>(path: 'executed')],
-    ),
     TypedGoRoute<DebugRoute>(
       path: 'debug',
       routes: [
@@ -361,30 +344,6 @@ class AboutThisAppRoute extends GoRouteData with $AboutThisAppRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const AboutThisAppScreen();
-}
-
-class DonationRoute extends GoRouteData with $DonationRoute {
-  const DonationRoute();
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      CustomTransitionPage(
-        child: const DonationScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            FadeTransition(opacity: animation, child: child),
-      );
-}
-
-typedef DonationExecutedRouteExtra = (StoreProduct, CustomerInfo);
-
-class DonationExecutedRoute extends GoRouteData with $DonationExecutedRoute {
-  const DonationExecutedRoute({required this.$extra});
-
-  final DonationExecutedRouteExtra $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      DonationExecutedScreen(result: $extra);
 }
 
 class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData

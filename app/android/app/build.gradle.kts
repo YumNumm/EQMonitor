@@ -10,7 +10,6 @@ plugins {
 
 val dartDefines = mutableMapOf<String, String>()
 if (project.hasProperty("dart-defines")) {
-  // カンマ区切りかつBase64でエンコードされている dart-defines をデコードして変数に格納します。
   val defines = project.property("dart-defines") as String
   defines.split(",").forEach { entry ->
     val decoded = String(Base64.getDecoder().decode(entry))
@@ -38,7 +37,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "net.yumnumm.eqmonitor"
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "36.1.0"
     compileSdk = 36
 
     compileOptions {
@@ -49,7 +48,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     sourceSets {
@@ -61,7 +60,7 @@ android {
         dartDefines["appIdSuffix"]?.let {
             applicationIdSuffix = it
         }
-        minSdk = 26
+        minSdk = 29
         targetSdk = 36
         multiDexEnabled = true
         versionCode = flutter.versionCode
