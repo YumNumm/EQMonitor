@@ -12,17 +12,16 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final latestTime =
-        ref
-            .watch(
-              kyoshinMonitorNotifierProvider.select(
-                (v) => v.value?.lastUpdatedAt,
-              ),
-            )
-            ?.toLocal();
+    final latestTime = ref
+        .watch(
+          kyoshinMonitorProvider.select(
+            (v) => v.value?.lastUpdatedAt,
+          ),
+        )
+        ?.toLocal();
     final status =
         ref.watch(
-          kyoshinMonitorNotifierProvider.select((v) => v.value?.status),
+          kyoshinMonitorProvider.select((v) => v.value?.status),
         ) ??
         KyoshinMonitorStatus.stopped;
 

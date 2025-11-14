@@ -1,127 +1,181 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/util/map_layer.dart';
-import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
-import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
-import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:synchronized/extension.dart';
+import 'package:maplibre/maplibre.dart';
 
-/// EEWの予想震度を表示するレイヤー
-class EewEstimatedIntensityLayer extends HookConsumerWidget
-    implements MapLayer {
+class EewEstimatedIntensityLayer extends HookConsumerWidget {
   const EewEstimatedIntensityLayer({super.key});
 
   @override
-  String get layerId => _getLayerId(JmaForecastIntensity.values.first);
-
-  Iterable<JmaForecastIntensity> get allowedIntensities =>
-      JmaForecastIntensity.values.where(
-        (e) =>
-            e != JmaForecastIntensity.unknown && e != JmaForecastIntensity.zero,
-      );
-
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isInitialized = useRef(false);
-    final controller = MapLibreInherited.of(context);
-    final intensityColor = ref.watch(intensityColorProvider);
-    final manager = useMemoized(
-      () => _EewEstimatedIntensityPaintManager(color: intensityColor),
-      [intensityColor],
+    final styleController = MapController.maybeOf(context)?.style;
+    final intensityData = ref.watch(estimatedIntensityProvider);
+    final colorModel = ref.watch(intensityColorProvider);
+
+    useEffect(
+      () {
+        if (styleController == null) {
+          return null;
+        }
+
+        _initializeLayers(styleController, colorModel);
+
+        return () => _cleanupLayers(styleController);
+      },
+      [styleController],
     );
 
-    final eews = ref.watch(eewAliveTelegramProvider);
+    useEffect(
+      () {
+        if (styleController == null || intensityData.value == null) {
+          return null;
+        }
 
-    // レイヤーの初期化
-    useEffect(() {
-      unawaited(
-        WidgetsBinding.instance.endOfFrame.then(
-          (_) async => controller.synchronized(() async {
-            unawaited(
-              controller.synchronized(() async {
-                final areas = _transformRegions(eews ?? []);
-                await [
-                  for (final intensity in allowedIntensities)
-                    // レイヤーを追加
-                    controller.addLayer(
-                      _getLayerId(intensity),
-                      'eqmonitor_map',
-                      FillLayerProperties(
-                        fillColor: manager
-                            ._getColorForIntensity(intensity)
-                            .toHexStringRGB(),
-                      ),
-                      filter: [
-                        'in',
-                        ['get', 'code'],
-                        ['literal', areas[intensity] ?? []],
-                      ],
-                      belowLayerId: BaseLayer.areaForecastLocalELine.name,
-                      sourceLayer: 'areaForecastLocalE',
-                    ),
-                ].wait;
-              }),
-            );
-            isInitialized.value = true;
-          }),
-        ),
-      );
-      return () {
-        isInitialized.value = false;
-      };
-    }, []);
+        _updateLayers(styleController, intensityData.value!, colorModel);
 
-    // EEWの状態が変更されたときの処理
-    ref.listen(eewProvider.select((value) => value.value), (
-      _,
-      eews,
-    ) async {
-      if (!isInitialized.value) {
-        return;
-      }
-
-      unawaited(
-        controller.synchronized(() async {
-          final areas = _transformRegions(eews ?? []);
-
-          await [
-            for (final intensity in allowedIntensities)
-            // レイヤーを更新
-            ...[
-              controller.setLayerProperties(
-                _getLayerId(intensity),
-                FillLayerProperties(
-                  fillColor: manager
-                      ._getColorForIntensity(intensity)
-                      .toHexStringRGB(),
-                ),
-              ),
-              controller.setFilter(_getLayerId(intensity), {
-                'filter': [
-                  'in',
-                  ['get', 'code'],
-                  ['literal', areas[intensity] ?? []],
-                ],
-              }),
-            ],
-          ].wait;
-        }),
-      );
-    });
+        return null;
+      },
+      [styleController, intensityData, colorModel],
+    );
 
     return const SizedBox.shrink();
   }
 
-  // 各予想震度ごとのレイヤーID
-  static String _getLayerId(JmaForecastIntensity intensity) {
+  Future<void> _initializeLayers(
+    StyleController style,
+    dynamic intensityColorModel,
+  ) async {
+    for (final intensity in JmaForecastIntensity.values) {
+      final layerId = _getLayerId(intensity);
+      final color =
+          intensityColorModel.fromJmaForecastIntensity(intensity).background
+              as Color;
+
+      await style.addLayer(
+        FillStyleLayer(
+          id: layerId,
+          sourceId: 'eqmonitor_map',
+          paint: {
+            'fill-color': _colorToHex(color),
+            'fill-opacity': 0.5,
+          },
+        ),
+      );
+    }
+  }
+
+  Future<void> _updateLayers(
+    StyleController style,
+    List<EstimatedIntensityPoint> points,
+    dynamic intensityColorModel,
+  ) async {
+    final grouped = _groupByRegionCode(points);
+
+    for (final intensity in JmaForecastIntensity.values) {
+      final layerId = _getLayerId(intensity);
+
+      await style.removeLayer(layerId);
+
+      final color =
+          intensityColorModel.fromJmaForecastIntensity(intensity).background
+              as Color;
+
+      await style.addLayer(
+        FillStyleLayer(
+          id: layerId,
+          sourceId: 'eqmonitor_map',
+          paint: {
+            'fill-color': _colorToHex(color),
+            'fill-opacity': 0.5,
+          },
+        ),
+      );
+    }
+  }
+
+  Map<JmaForecastIntensity, List<String>> _groupByRegionCode(
+    List<EstimatedIntensityPoint> points,
+  ) {
+    final regionsGrouped = points.groupListsBy((e) => e.regionCode);
+
+    final regionsIntensityMax = <String, JmaForecastIntensity>{};
+
+    for (final entry in regionsGrouped.entries) {
+      final intensities = entry.value
+          .map((e) => _intensityToForecastIntensity(e.intensity))
+          .whereType<JmaForecastIntensity>()
+          .toList();
+
+      if (intensities.isEmpty) {
+        continue;
+      }
+
+      final maxIntensity = intensities.reduce(
+        (value, element) =>
+            _compareIntensity(value, element) >= 0 ? value : element,
+      );
+      regionsIntensityMax[entry.key] = maxIntensity;
+    }
+
+    final result = <JmaForecastIntensity, List<String>>{};
+    for (final entry in regionsIntensityMax.entries) {
+      final intensity = entry.value;
+      result.putIfAbsent(intensity, () => []).add(entry.key);
+    }
+
+    return result;
+  }
+
+  JmaForecastIntensity? _intensityToForecastIntensity(double intensity) {
+    if (intensity < 0.5) {
+      return JmaForecastIntensity.zero;
+    } else if (intensity < 1.5) {
+      return JmaForecastIntensity.one;
+    } else if (intensity < 2.5) {
+      return JmaForecastIntensity.two;
+    } else if (intensity < 3.5) {
+      return JmaForecastIntensity.three;
+    } else if (intensity < 4.5) {
+      return JmaForecastIntensity.four;
+    } else if (intensity < 5.0) {
+      return JmaForecastIntensity.fiveLower;
+    } else if (intensity < 5.5) {
+      return JmaForecastIntensity.fiveUpper;
+    } else if (intensity < 6.0) {
+      return JmaForecastIntensity.sixLower;
+    } else if (intensity < 6.5) {
+      return JmaForecastIntensity.sixUpper;
+    } else {
+      return JmaForecastIntensity.seven;
+    }
+  }
+
+  int _compareIntensity(
+    JmaForecastIntensity a,
+    JmaForecastIntensity b,
+  ) {
+    final order = [
+      JmaForecastIntensity.zero,
+      JmaForecastIntensity.one,
+      JmaForecastIntensity.two,
+      JmaForecastIntensity.three,
+      JmaForecastIntensity.four,
+      JmaForecastIntensity.fiveLower,
+      JmaForecastIntensity.fiveUpper,
+      JmaForecastIntensity.sixLower,
+      JmaForecastIntensity.sixUpper,
+      JmaForecastIntensity.seven,
+    ];
+    return order.indexOf(a).compareTo(order.indexOf(b));
+  }
+
+  String _getLayerId(JmaForecastIntensity intensity) {
     final base = intensity.type
         .replaceAll('-', 'low')
         .replaceAll('+', 'high')
@@ -129,67 +183,17 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget
     return 'eew-estimated-intensity-fill-$base';
   }
 
-  // EEWの予想震度地域情報を変換
-  Map<JmaForecastIntensity, List<String>> _transformRegions(List<EewV1> eews) {
-    // 震度予測がないEEWを除外
-    final regionsFromEews = eews
-        .where((e) => !e.isCanceled)
-        .map((e) => e.regions)
-        .nonNulls
-        .expand((e) => e)
-        .toList();
-
-    // 同じ地域をまとめる
-    final regionsGrouped = <String, List<EstimatedIntensityRegion>>{};
-    for (final region in regionsFromEews) {
-      regionsGrouped.putIfAbsent(region.code, () => []).add(region);
-    }
-
-    // 予想震度が最も大きいものを取り出す
-    final regionsIntensityMax = <String, JmaForecastIntensity>{};
-    for (final entry in regionsGrouped.entries) {
-      if (entry.value.isEmpty) {
-        continue;
-      }
-
-      JmaForecastIntensity? max;
-      for (final region in entry.value) {
-        final forecastMaxInt = region.forecastMaxInt.toDisplayMaxInt().maxInt;
-
-        if (max == null || forecastMaxInt.index > max.index) {
-          max = forecastMaxInt;
-        }
-      }
-
-      if (max != null) {
-        regionsIntensityMax[entry.key] = max;
-      }
-    }
-
-    // Map<予想震度, List<地域コード>> に変換する
-    final regionsIntensityGrouped = <JmaForecastIntensity, List<String>>{};
-    for (final entry in regionsIntensityMax.entries) {
-      final key = entry.value;
-      regionsIntensityGrouped.putIfAbsent(key, () => []).add(entry.key);
-    }
-
-    return regionsIntensityGrouped;
-  }
-}
-
-/// 予想震度ごとの塗りつぶし色を管理するクラス
-class _EewEstimatedIntensityPaintManager {
-  _EewEstimatedIntensityPaintManager({required IntensityColorModel color})
-    : _color = color;
-
-  final IntensityColorModel _color;
-
-  Map<String, Object> getPaintForIntensity(JmaForecastIntensity intensity) {
-    final color = _getColorForIntensity(intensity);
-    return {'fill-color': color.toHexStringRGB()};
+  String _colorToHex(Color color) {
+    final r = (color.r * 255).round();
+    final g = (color.g * 255).round();
+    final b = (color.b * 255).round();
+    return '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'
+        .toUpperCase();
   }
 
-  /// 予想震度に対応する色を取得
-  Color _getColorForIntensity(JmaForecastIntensity intensity) =>
-      _color.fromJmaForecastIntensity(intensity).background;
+  Future<void> _cleanupLayers(StyleController style) async {
+    for (final intensity in JmaForecastIntensity.values) {
+      await style.removeLayer(_getLayerId(intensity));
+    }
+  }
 }

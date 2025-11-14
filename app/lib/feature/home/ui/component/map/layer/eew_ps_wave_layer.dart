@@ -2,265 +2,233 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
-import 'package:eqmonitor/core/util/map_layer.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
-import 'package:eqmonitor/feature/map/ui/maplibre_inherited.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
-import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:synchronized/extension.dart';
+import 'package:maplibre/maplibre.dart';
 
-class EewPsWaveLayer extends HookConsumerWidget implements MapLayer {
-  const EewPsWaveLayer({super.key, this.belowLayerId});
+class EewPsWaveLayer extends HookConsumerWidget {
+  const EewPsWaveLayer({super.key});
 
-  final String? belowLayerId;
-
-  @override
-  String get layerId => _pWaveBorderLayerId;
-
-  static const _sourceId = 'eew_ps_wave_source';
-  static const _pWaveBorderLayerId = 'eew_p_wave_border_layer';
-  static const _sWaveNonWarningBorderLayerId =
-      'eew_s_wave_non_warning_border_layer';
-  static const _sWaveWarningBorderLayerId = 'eew_s_wave_warning_border_layer';
-  static const _sWaveNonWarningFillLayerId =
-      'eew_s_wave_non_warning_fill_layer';
-  static const _sWaveWarningFillLayerId = 'eew_s_wave_warning_fill_layer';
+  static const _pWaveSourceId = 'eew-p-wave';
+  static const _sWaveSourceId = 'eew-s-wave';
+  static const _pWaveLineLayerId = 'eew-p-wave-line';
+  static const _sWaveLineLayerId = 'eew-s-wave-line';
+  static const _sWaveFillLayerId = 'eew-s-wave-fill';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isInitialized = useRef(false);
-    final isRefreshing = useRef(false);
-    final currentEews = useRef<List<EewV1>>([]);
-    final controller = MapLibreInherited.of(context);
+    final styleController = MapController.maybeOf(context)?.style;
 
-    final animationController = useAnimationController(
-      duration: const Duration(seconds: 1),
+    useEffect(
+      () {
+        if (styleController == null) {
+          return null;
+        }
+
+        _initializeLayer(styleController);
+
+        return () => _cleanupLayer(styleController);
+      },
+      [styleController],
     );
 
-    useEffect(() {
-      animationController.repeat();
-      animationController.addListener(() async {
-        if (!isInitialized.value) {
-          return;
+    useEffect(
+      () {
+        if (styleController == null) {
+          return null;
         }
-        if (!isRefreshing.value) {
-          isRefreshing.value = true;
-          try {
-            final eews = ref.read(eewAliveNormalTelegramProvider);
-            if (currentEews.value.isEmpty && eews.isEmpty) {
-              return;
-            }
-            final activeEews = eews;
-            currentEews.value = activeEews;
-            final travelTimeMap = ref.read(travelTimeDepthMapProvider);
-            final now = DateTime.now();
 
-            final results =
-                <
-                  ({
-                    TravelTimeResult result,
-                    double lat,
-                    double lon,
-                    bool isWarning,
-                  })
-                >[];
-            for (final eew in activeEews) {
-              if (eew.isCanceled ||
-                  eew.latitude == null ||
-                  eew.longitude == null ||
-                  eew.depth == null ||
-                  eew.originTime == null) {
-                continue;
-              }
+        final timer = Timer.periodic(
+          const Duration(milliseconds: 100),
+          (_) => _updateWaves(ref, styleController),
+        );
 
-              final duration =
-                  now.difference(eew.originTime!).inMilliseconds / 1000;
-              final result = travelTimeMap.getTravelTime(eew.depth!, duration);
-              results.add((
-                result: result,
-                lat: eew.latitude!,
-                lon: eew.longitude!,
-                isWarning: eew.isWarning ?? false,
-              ));
-            }
-
-            final geojson = _createGeoJson(results);
-            try {
-              await controller.setGeoJsonSource(_sourceId, geojson);
-              // ignore: avoid_catching_errors
-            } on UnsupportedError catch (_) {}
-          } finally {
-            isRefreshing.value = false;
-          }
-        }
-      });
-
-      return null;
-    }, [animationController]);
-
-    useEffect(() {
-      unawaited(
-        WidgetsBinding.instance.endOfFrame.then(
-          (_) async => controller.synchronized(() async {
-            // GeoJSONソースを追加
-            await controller.addSource(
-              _sourceId,
-              GeojsonSourceProperties(data: jsonEncode(_createGeoJson([]))),
-            );
-
-            // P波レイヤーを追加
-            await controller.addLayer(
-              _pWaveBorderLayerId,
-              _sourceId,
-              LineLayerProperties(
-                lineColor: Colors.blueAccent.toHexStringRGB(),
-                lineWidth: 2,
-              ),
-              filter: ['==', 'type', 'p_wave'],
-            );
-
-            // S波レイヤーを追加
-            await controller.addLayer(
-              _sWaveNonWarningBorderLayerId,
-              _sourceId,
-              LineLayerProperties(
-                lineColor: Colors.orangeAccent.toHexStringRGB(),
-                lineWidth: 2,
-              ),
-              filter: [
-                'all',
-                ['==', 'type', 's_wave'],
-                ['==', 'is_warning', false],
-              ],
-              belowLayerId: _pWaveBorderLayerId,
-            );
-
-            await controller.addLayer(
-              _sWaveWarningBorderLayerId,
-              _sourceId,
-              LineLayerProperties(
-                lineColor: Colors.redAccent.toHexStringRGB(),
-                lineWidth: 2,
-              ),
-              filter: [
-                'all',
-                ['==', 'type', 's_wave'],
-                ['==', 'is_warning', true],
-              ],
-              belowLayerId: _pWaveBorderLayerId,
-            );
-
-            await controller.addLayer(
-              _sWaveNonWarningFillLayerId,
-              _sourceId,
-              FillLayerProperties(
-                fillColor: Colors.orangeAccent.toHexStringRGB(),
-                fillOpacity: 0.1,
-              ),
-              filter: [
-                'all',
-                ['==', 'type', 's_wave'],
-                ['==', 'is_warning', false],
-              ],
-            );
-
-            await controller.addLayer(
-              _sWaveWarningFillLayerId,
-              _sourceId,
-              FillLayerProperties(
-                fillColor: Colors.redAccent.toHexStringRGB(),
-                fillOpacity: 0.1,
-              ),
-              filter: [
-                'all',
-                ['==', 'type', 's_wave'],
-                ['==', 'is_warning', true],
-              ],
-            );
-
-            isInitialized.value = true;
-          }),
-        ),
-      );
-      return () {
-        isInitialized.value = false;
-      };
-    }, []);
-
-    // EEWの状態が変更されたときにレイヤーを更新
-    ref.listen(eewAliveNormalTelegramProvider, (_, eews) async {
-      if (!isInitialized.value) {
-        return;
-      }
-    });
+        return timer.cancel;
+      },
+      [styleController],
+    );
 
     return const SizedBox.shrink();
   }
 
-  static Map<String, dynamic> _createGeoJson(
-    List<({TravelTimeResult result, double lat, double lon, bool isWarning})>
-    results,
+  Future<void> _initializeLayer(StyleController style) async {
+    await style.addSource(
+      GeoJsonSource(
+        id: _pWaveSourceId,
+        data: jsonEncode({
+          'type': 'FeatureCollection',
+          'features': <Map<String, dynamic>>[],
+        }),
+      ),
+    );
+
+    await style.addSource(
+      GeoJsonSource(
+        id: _sWaveSourceId,
+        data: jsonEncode({
+          'type': 'FeatureCollection',
+          'features': <Map<String, dynamic>>[],
+        }),
+      ),
+    );
+
+    await style.addLayer(
+      const LineStyleLayer(
+        id: _pWaveLineLayerId,
+        sourceId: _pWaveSourceId,
+        paint: {
+          'line-color': '#0000FF',
+          'line-width': 1,
+        },
+      ),
+    );
+
+    await style.addLayer(
+      const LineStyleLayer(
+        id: _sWaveLineLayerId,
+        sourceId: _sWaveSourceId,
+        paint: {
+          'line-color': ['get', 'lineColor'],
+          'line-width': 2,
+        },
+      ),
+    );
+
+    await style.addLayer(
+      const FillStyleLayer(
+        id: _sWaveFillLayerId,
+        sourceId: _sWaveSourceId,
+        paint: {
+          'fill-color': ['get', 'fillColor'],
+          'fill-opacity': 0.2,
+        },
+      ),
+    );
+  }
+
+  Future<void> _updateWaves(
+    WidgetRef ref,
+    StyleController style,
+  ) async {
+    final eews = ref.read(eewAliveNormalTelegramProvider);
+    final now = ref.read(timeTickerProvider()).value ?? DateTime.now();
+    final travelTimeMap = ref.read(travelTimeDepthMapProvider);
+
+    final (pWaveGeojson, sWaveGeojson) =
+        _calculateGeoJson(eews, now, travelTimeMap);
+
+    await style.updateGeoJsonSource(id: _pWaveSourceId, data: pWaveGeojson);
+    await style.updateGeoJsonSource(id: _sWaveSourceId, data: sWaveGeojson);
+  }
+
+  (String, String) _calculateGeoJson(
+    List<EewV1> eews,
+    DateTime now,
+    TravelTimeDepthMap travelTimeMap,
   ) {
-    return {
+    final pWaveFeatures = <Map<String, dynamic>>[];
+    final sWaveFeatures = <Map<String, dynamic>>[];
+
+    for (final eew in eews) {
+      final lat = eew.latitude;
+      final lng = eew.longitude;
+      final depth = eew.depth;
+      final originTime = eew.originTime;
+
+      if (lat == null || lng == null || depth == null || originTime == null) {
+        continue;
+      }
+
+      final elapsed = now.difference(originTime).inMilliseconds / 1000;
+      final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
+
+      final isWarning =
+          eew.isWarning ?? (eew.headline?.contains('強い揺れ') ?? false);
+      final lineColor = isWarning ? '#FF0000' : '#FFA500';
+      final fillColor = isWarning ? '#FF0000' : '#FFA500';
+
+      if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
+        pWaveFeatures.add(<String, dynamic>{
+          'type': 'Feature',
+          'geometry': <String, dynamic>{
+            'type': 'Polygon',
+            'coordinates': [
+              _generateCircleCoordinates(
+                lat,
+                lng,
+                travelTime.pDistance!,
+              ),
+            ],
+          },
+          'properties': <String, dynamic>{},
+        });
+      }
+
+      if (travelTime.sDistance != null && travelTime.sDistance! > 0) {
+        sWaveFeatures.add({
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Polygon',
+            'coordinates': [
+              _generateCircleCoordinates(
+                lat,
+                lng,
+                travelTime.sDistance!,
+              ),
+            ],
+          },
+          'properties': {
+            'lineColor': lineColor,
+            'fillColor': fillColor,
+          },
+        });
+      }
+    }
+
+    final pWaveGeojson = jsonEncode({
       'type': 'FeatureCollection',
-      'features': [
-        for (final result in results) ...[
-          // P波の円
-          if (result.result.pDistance != null && result.result.pDistance! > 0)
-            {
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Polygon',
-                'coordinates': [
-                  [
-                    for (final bearing in Iterable<int>.generate(
-                      91,
-                      (index) => index * 4,
-                    ))
-                      () {
-                        final point = const latlong2.Distance().offset(
-                          latlong2.LatLng(result.lat, result.lon),
-                          (result.result.pDistance! * 1000).toInt(),
-                          bearing.toDouble(),
-                        );
-                        return [point.longitude, point.latitude];
-                      }(),
-                  ],
-                ],
-              },
-              'properties': {'type': 'p_wave', 'is_warning': result.isWarning},
-            },
-          // S波の円
-          if (result.result.sDistance != null && result.result.sDistance! > 0)
-            {
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Polygon',
-                'coordinates': [
-                  [
-                    for (final bearing in Iterable<int>.generate(
-                      91,
-                      (index) => index * 4,
-                    ))
-                      () {
-                        final point = const latlong2.Distance().offset(
-                          latlong2.LatLng(result.lat, result.lon),
-                          (result.result.sDistance! * 1000).toInt(),
-                          bearing.toDouble(),
-                        );
-                        return [point.longitude, point.latitude];
-                      }(),
-                  ],
-                ],
-              },
-              'properties': {'type': 's_wave', 'is_warning': result.isWarning},
-            },
-        ],
-      ],
-    };
+      'features': pWaveFeatures,
+    });
+
+    final sWaveGeojson = jsonEncode({
+      'type': 'FeatureCollection',
+      'features': sWaveFeatures,
+    });
+
+    return (pWaveGeojson, sWaveGeojson);
+  }
+
+  List<List<double>> _generateCircleCoordinates(
+    double lat,
+    double lng,
+    double radiusKm,
+  ) {
+    const distance = latlong2.Distance();
+    final center = latlong2.LatLng(lat, lng);
+    final coordinates = <List<double>>[];
+
+    for (var bearing = 0; bearing < 360; bearing += 4) {
+      final point = distance.offset(center, radiusKm * 1000, bearing);
+      coordinates.add([point.longitude, point.latitude]);
+    }
+
+    coordinates.add(coordinates.first);
+
+    return coordinates;
+  }
+
+  Future<void> _cleanupLayer(StyleController style) async {
+    await style.removeLayer(_pWaveLineLayerId);
+    await style.removeLayer(_sWaveLineLayerId);
+    await style.removeLayer(_sWaveFillLayerId);
+    await style.removeSource(_pWaveSourceId);
+    await style.removeSource(_sWaveSourceId);
   }
 }
+
+

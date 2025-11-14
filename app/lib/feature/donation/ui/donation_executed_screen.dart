@@ -90,9 +90,14 @@ class DonationExecutedScreen extends HookConsumerWidget {
                           text: '画像を保存する',
                           onPressed: () async {
                             final image = await controller.capture();
-                            await Share.shareXFiles([
-                              XFile.fromData(image!, mimeType: 'image/png'),
-                            ]);
+                            await SharePlus.instance.share(
+                              ShareParams(
+                                subject: 'EQMonitorを支援しました✌',
+                                files: [
+                                  XFile.fromData(image!, mimeType: 'image/png'),
+                                ],
+                              ),
+                            );
                           },
                           accentColor: Colors.grey.shade900,
                         ),

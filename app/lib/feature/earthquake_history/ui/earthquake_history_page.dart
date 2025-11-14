@@ -21,7 +21,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(const EarthquakeHistoryParameter());
-    final state = ref.watch(earthquakeHistoryNotifierProvider(parameter.value));
+    final state = ref.watch(earthquakeHistoryProvider(parameter.value));
 
     useEffect(() {
       unawaited(
@@ -30,7 +30,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
               state.value?.$1.length == 5) {
             await ref
                 .read(
-                  earthquakeHistoryNotifierProvider(parameter.value).notifier,
+                  earthquakeHistoryProvider(parameter.value).notifier,
                 )
                 .fetchNextData();
           }
@@ -55,14 +55,14 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
         parameter: parameter.value,
         onRefresh: () async => ref
             .read(
-              earthquakeHistoryNotifierProvider(
+              earthquakeHistoryProvider(
                 parameter.value,
               ).notifier,
             )
             .refresh(),
         onScrollEnd: () async => ref
             .read(
-              earthquakeHistoryNotifierProvider(
+              earthquakeHistoryProvider(
                 parameter.value,
               ).notifier,
             )
@@ -226,7 +226,7 @@ class _SliverListBody extends HookConsumerWidget {
           return ErrorCard(
             error: error,
             onReload: () async =>
-                ref.refresh(earthquakeHistoryNotifierProvider(parameter)),
+                ref.refresh(earthquakeHistoryProvider(parameter)),
           );
         }(),
         AsyncData(:final value) => listView(data: value),

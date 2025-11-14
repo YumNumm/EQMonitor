@@ -71,8 +71,8 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             title: const Text('地震履歴設定'),
             leading: const Icon(Icons.history),
-            onTap:
-                () async => const EarthquakeHistoryConfigRoute().push(context),
+            onTap: () async =>
+                const EarthquakeHistoryConfigRoute().push(context),
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
@@ -91,11 +91,10 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('サーバの稼働状況'),
             subtitle: const Text('外部Webサイトへ遷移します'),
             leading: const Icon(Icons.network_ping),
-            onTap:
-                () async => launchUrlString(
-                  'https://status.eqmonitor.app/',
-                  mode: LaunchMode.externalApplication,
-                ),
+            onTap: () async => launchUrlString(
+              'https://status.eqmonitor.app/',
+              mode: LaunchMode.externalApplication,
+            ),
           ),
           Center(
             child: Text(
@@ -152,10 +151,9 @@ class _AppVersionInformation extends HookConsumerWidget {
 Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
   BetterFeedback.of(context).show((feedback) async {
     final packageInfo = ref.read(packageInfoProvider);
-    final payload =
-        await ref
-            .read(apiAuthenticationNotifierProvider.notifier)
-            .extractPayload();
+    final payload = await ref
+        .read(apiAuthenticationProvider.notifier)
+        .extractPayload();
 
     final base =
         '--------------------------\n'

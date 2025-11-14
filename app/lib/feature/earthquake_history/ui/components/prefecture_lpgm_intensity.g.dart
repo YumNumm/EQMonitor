@@ -8,6 +8,9 @@ part of 'prefecture_lpgm_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(_lpgmCalculator)
 const _lpgmCalculatorProvider = _LpgmCalculatorFamily._();
 
@@ -33,7 +36,7 @@ final class _LpgmCalculatorProvider
        );
 
   @override
-  String debugGetCreateSourceHash() => _$lpgmCalculatorHash();
+  String debugGetCreateSourceHash() => _$_lpgmCalculatorHash();
 
   @override
   String toString() {
@@ -66,7 +69,7 @@ final class _LpgmCalculatorProvider
   }
 }
 
-String _$lpgmCalculatorHash() => r'6e4fb84f94c2bb397d7704498b6ece2284cd32f2';
+String _$_lpgmCalculatorHash() => r'6e4fb84f94c2bb397d7704498b6ece2284cd32f2';
 
 final class _LpgmCalculatorFamily extends $Family
     with
@@ -89,6 +92,3 @@ final class _LpgmCalculatorFamily extends $Family
   @override
   String toString() => r'_lpgmCalculatorProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -8,8 +8,11 @@ part of 'theme_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(ThemeModeNotifier)
-const themeModeNotifierProvider = ThemeModeNotifierProvider._();
+const themeModeProvider = ThemeModeNotifierProvider._();
 
 final class ThemeModeNotifierProvider
     extends $NotifierProvider<ThemeModeNotifier, ThemeMode> {
@@ -18,7 +21,7 @@ final class ThemeModeNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'themeModeNotifierProvider',
+        name: r'themeModeProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -62,7 +65,7 @@ abstract class _$ThemeModeNotifier extends $Notifier<ThemeMode> {
 }
 
 @ProviderFor(BrightnessNotifier)
-const brightnessNotifierProvider = BrightnessNotifierProvider._();
+const brightnessProvider = BrightnessNotifierProvider._();
 
 final class BrightnessNotifierProvider
     extends $NotifierProvider<BrightnessNotifier, ui.Brightness> {
@@ -71,7 +74,7 @@ final class BrightnessNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'brightnessNotifierProvider',
+        name: r'brightnessProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -114,6 +117,3 @@ abstract class _$BrightnessNotifier extends $Notifier<ui.Brightness> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -64,7 +64,7 @@ class NotificationSettingIntroPage extends HookConsumerWidget {
             onPressed: () async {
               unawaited(
                 ref
-                    .read(permissionNotifierProvider.notifier)
+                    .read(permissionProvider.notifier)
                     .requestNotificationPermission(),
               );
               if (context.mounted) {

@@ -17,21 +17,19 @@ class NotificationRemoteSettingsEarthquakePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state =
-        ref
-            .watch(notificationRemoteSettingsNotifierProvider)
-            .value
-            ?.earthquake;
+    final state = ref
+        .watch(notificationRemoteSettingsProvider)
+        .value
+        ?.earthquake;
     if (state == null) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
     return Scaffold(
       appBar: AppBar(title: const Text('地震情報の通知条件設定')),
       body: _Body(state: state),
-      floatingActionButton:
-          (state.global != JmaForecastIntensity.zero)
-              ? _AddRegionFloatingActionButton(regions: state.regions)
-              : null,
+      floatingActionButton: (state.global != JmaForecastIntensity.zero)
+          ? _AddRegionFloatingActionButton(regions: state.regions)
+          : null,
     );
   }
 }
@@ -87,21 +85,19 @@ class _Body extends HookConsumerWidget {
 
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),
-            child:
-                (state.global != JmaForecastIntensity.zero)
-                    ? KeyedSubtree(
-                      key: ValueKey(state.global == JmaForecastIntensity.zero),
-                      child: _RegionsChoiceView(
-                        regions:
-                            state.regions
-                                .sorted(
-                                  (a, b) => a.regionId.compareTo(b.regionId),
-                                )
-                                .toList(),
-                        global: state.global,
-                      ),
-                    )
-                    : const SizedBox.shrink(key: ValueKey(true)),
+            child: (state.global != JmaForecastIntensity.zero)
+                ? KeyedSubtree(
+                    key: ValueKey(state.global == JmaForecastIntensity.zero),
+                    child: _RegionsChoiceView(
+                      regions: state.regions
+                          .sorted(
+                            (a, b) => a.regionId.compareTo(b.regionId),
+                          )
+                          .toList(),
+                      global: state.global,
+                    ),
+                  )
+                : const SizedBox.shrink(key: ValueKey(true)),
           ),
           // FABと重ならないようにするため
           const SizedBox(height: 120),
@@ -128,10 +124,9 @@ class _GlobalChoiceTile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         elevation: 1,
         value: global,
-        onChanged:
-            (value) => ref
-                .read(notificationRemoteSettingsNotifierProvider.notifier)
-                .updateEarthquakeGlobal(value),
+        onChanged: (value) => ref
+            .read(notificationRemoteSettingsProvider.notifier)
+            .updateEarthquakeGlobal(value),
         items:
             JmaForecastIntensity.values
                 .whereNot((e) => [JmaForecastIntensity.unknown].contains(e))
@@ -142,7 +137,7 @@ class _GlobalChoiceTile extends ConsumerWidget {
                       e == JmaForecastIntensity.zero
                           ? 'すべての地震情報'
                           : '震度${e.type.fromPlusMinus}'
-                              "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
+                                "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
                     ),
                   ),
                 )
@@ -174,19 +169,18 @@ class _RegionsChoiceView extends ConsumerWidget {
         for (final region in regions)
           () {
             void update(JmaForecastIntensity intensity) => ref
-                .read(notificationRemoteSettingsNotifierProvider.notifier)
+                .read(notificationRemoteSettingsProvider.notifier)
                 .updateEarthquakeRegions(
                   regions
                       .map(
-                        (e) =>
-                            e.regionId == region.regionId
-                                ? e.copyWith(minJmaIntensity: intensity)
-                                : e,
+                        (e) => e.regionId == region.regionId
+                            ? e.copyWith(minJmaIntensity: intensity)
+                            : e,
                       )
                       .toList(),
                 );
             void delete() => ref
-                .read(notificationRemoteSettingsNotifierProvider.notifier)
+                .read(notificationRemoteSettingsProvider.notifier)
                 .updateEarthquakeRegions(
                   regions.where((e) => e.regionId != region.regionId).toList(),
                 );
@@ -197,7 +191,7 @@ class _RegionsChoiceView extends ConsumerWidget {
               onDismissed: (direction) async {
                 unawaited(HapticFeedback.mediumImpact());
                 ref
-                    .read(notificationRemoteSettingsNotifierProvider.notifier)
+                    .read(notificationRemoteSettingsProvider.notifier)
                     .updateEarthquakeRegions(
                       regions
                           .where((e) => e.regionId != region.regionId)
@@ -228,39 +222,37 @@ class _RegionsChoiceView extends ConsumerWidget {
                     ),
                     DropdownButton<JmaForecastIntensity>(
                       value: region.minJmaIntensity,
-                      onChanged:
-                          (value) => value != null ? update(value) : null,
-                      items:
-                          JmaForecastIntensity.values
-                              .whereNot(
-                                (e) => [
-                                  JmaForecastIntensity.zero,
-                                  JmaForecastIntensity.unknown,
-                                ].contains(e),
-                              )
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(
-                                    '震度${e.type.fromPlusMinus}'
-                                    "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                      onChanged: (value) =>
+                          value != null ? update(value) : null,
+                      items: JmaForecastIntensity.values
+                          .whereNot(
+                            (e) => [
+                              JmaForecastIntensity.zero,
+                              JmaForecastIntensity.unknown,
+                            ].contains(e),
+                          )
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(
+                                '震度${e.type.fromPlusMinus}'
+                                "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
+                              ),
+                            ),
+                          )
+                          .toList(),
                     ),
                   ],
                 ),
-                subtitle:
-                    isNotificationEnabled
-                        ? null
-                        : const Row(
-                          children: [
-                            Icon(Icons.warning, color: Colors.orange),
-                            SizedBox(width: 8),
-                            Expanded(child: Text(' (この震度は全国の地震情報に含まれています)')),
-                          ],
-                        ),
+                subtitle: isNotificationEnabled
+                    ? null
+                    : const Row(
+                        children: [
+                          Icon(Icons.warning, color: Colors.orange),
+                          SizedBox(width: 8),
+                          Expanded(child: Text(' (この震度は全国の地震情報に含まれています)')),
+                        ],
+                      ),
                 onTap: () async {
                   await showDialog<JmaForecastIntensity>(
                     context: context,
@@ -328,40 +320,40 @@ class _AddRegionFloatingActionButton extends StatelessWidget {
       heroTag: 'add_region',
       label: const Text('地域を追加'),
       icon: const Icon(Icons.add),
-      onPressed:
-          canAddRegion
-              ? () async => showDialog<void>(
-                context: context,
-                builder: (context) {
-                  return _AddRegionChoiceDialog(
-                    alreadySelectedRegions: regions,
-                  );
-                },
-              )
-              : () async => showDialog<void>(
-                context: context,
-                builder: (context) {
-                  return DefaultTextStyle(
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onErrorContainer,
-                    ),
-                    child: AlertDialog(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.errorContainer,
-                      title: const Text('地域を追加'),
-                      content: const Text('地域は10個以上選択できません'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+      onPressed: canAddRegion
+          ? () async => showDialog<void>(
+              context: context,
+              builder: (context) {
+                return _AddRegionChoiceDialog(
+                  alreadySelectedRegions: regions,
+                );
+              },
+            )
+          : () async => showDialog<void>(
+              context: context,
+              builder: (context) {
+                return DefaultTextStyle(
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                  ),
+                  child: AlertDialog(
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.errorContainer,
+                    title: const Text('地域を追加'),
+                    content: const Text('地域は10個以上選択できません'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
     );
   }
 }
@@ -373,11 +365,10 @@ class _AddRegionChoiceDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tableRegions =
-        ref
-            .watch(jmaCodeTableProvider)
-            .areaInformationPrefectureEarthquake
-            .items;
+    final tableRegions = ref
+        .watch(jmaCodeTableProvider)
+        .areaInformationPrefectureEarthquake
+        .items;
     return AlertDialog(
       actions: [
         TextButton(
@@ -391,80 +382,71 @@ class _AddRegionChoiceDialog extends ConsumerWidget {
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children:
-              tableRegions.map((region) {
-                final isSelected = alreadySelectedRegions.any(
-                  (e) => e.regionId == int.parse(region.code),
-                );
-                return SimpleDialogOption(
-                  onPressed:
-                      isSelected
-                          ? null
-                          : () async {
-                            final intensity = await showDialog<
-                              JmaForecastIntensity
-                            >(
-                              context: context,
-                              builder: (context) {
-                                return SimpleDialog(
-                                  title: Text(region.name),
-                                  children:
-                                      JmaForecastIntensity.values
-                                          .whereNot(
-                                            (e) => [
-                                              JmaForecastIntensity.zero,
-                                              JmaForecastIntensity.unknown,
-                                            ].contains(e),
-                                          )
-                                          .map(
-                                            (e) => SimpleDialogOption(
-                                              onPressed:
-                                                  () =>
-                                                      Navigator.pop(context, e),
-                                              child: Text(
-                                                '震度${e.type.fromPlusMinus}'
-                                                "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
-                                                style: const TextStyle(),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                );
-                              },
-                            );
-                            if (intensity == null) {
-                              return;
-                            }
-                            ref
-                                .read(
-                                  notificationRemoteSettingsNotifierProvider
-                                      .notifier,
+          children: tableRegions.map((region) {
+            final isSelected = alreadySelectedRegions.any(
+              (e) => e.regionId == int.parse(region.code),
+            );
+            return SimpleDialogOption(
+              onPressed: isSelected
+                  ? null
+                  : () async {
+                      final intensity = await showDialog<JmaForecastIntensity>(
+                        context: context,
+                        builder: (context) {
+                          return SimpleDialog(
+                            title: Text(region.name),
+                            children: JmaForecastIntensity.values
+                                .whereNot(
+                                  (e) => [
+                                    JmaForecastIntensity.zero,
+                                    JmaForecastIntensity.unknown,
+                                  ].contains(e),
                                 )
-                                .updateEarthquakeRegions([
-                                  ...alreadySelectedRegions,
-                                  NotificationRemoteSettingsEarthquakeRegion(
-                                    regionId: int.parse(region.code),
-                                    minJmaIntensity: intensity,
-                                    name: region.name,
+                                .map(
+                                  (e) => SimpleDialogOption(
+                                    onPressed: () => Navigator.pop(context, e),
+                                    child: Text(
+                                      '震度${e.type.fromPlusMinus}'
+                                      "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
+                                      style: const TextStyle(),
+                                    ),
                                   ),
-                                ]);
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                          },
-                  child:
-                      isSelected
-                          ? Text(
-                            '${region.name} (選択済み)',
-                            style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withValues(alpha: 0.7),
-                            ),
+                                )
+                                .toList(),
+                          );
+                        },
+                      );
+                      if (intensity == null) {
+                        return;
+                      }
+                      ref
+                          .read(
+                            notificationRemoteSettingsProvider.notifier,
                           )
-                          : Text(region.name),
-                );
-              }).toList(),
+                          .updateEarthquakeRegions([
+                            ...alreadySelectedRegions,
+                            NotificationRemoteSettingsEarthquakeRegion(
+                              regionId: int.parse(region.code),
+                              minJmaIntensity: intensity,
+                              name: region.name,
+                            ),
+                          ]);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+              child: isSelected
+                  ? Text(
+                      '${region.name} (選択済み)',
+                      style: TextStyle(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    )
+                  : Text(region.name),
+            );
+          }).toList(),
         ),
       ),
     );

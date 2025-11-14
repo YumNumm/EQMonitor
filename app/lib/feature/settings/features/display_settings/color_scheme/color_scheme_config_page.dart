@@ -14,53 +14,44 @@ class ColorSchemeConfigPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('震度配色設定')),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            RadioListTile.adaptive(
-              value: IntensityColorModel.eqmonitor(),
-              groupValue: state,
-              onChanged:
-                  (value) async => ref
-                      .read(intensityColorProvider.notifier)
-                      .update(IntensityColorModel.eqmonitor()),
-              title: const Text('EQMonitor'),
-              subtitle: Padding(
-                padding: const EdgeInsets.all(4),
-                child: _IntensityWidgets(
-                  colorModel: IntensityColorModel.eqmonitor(),
+        child: RadioGroup(
+          onChanged: (value) async => ref
+              .read(intensityColorProvider.notifier)
+              .update(value!),
+          groupValue: state,
+          child: Column(
+            children: [
+              RadioListTile.adaptive(
+                value: IntensityColorModel.eqmonitor(),
+                title: const Text('EQMonitor'),
+                subtitle: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: _IntensityWidgets(
+                    colorModel: IntensityColorModel.eqmonitor(),
+                  ),
                 ),
               ),
-            ),
-            RadioListTile.adaptive(
-              value: IntensityColorModel.jma(),
-              groupValue: state,
-              onChanged:
-                  (value) async => ref
-                      .read(intensityColorProvider.notifier)
-                      .update(IntensityColorModel.jma()),
-              title: const Text('気象庁配色'),
-              subtitle: Padding(
-                padding: const EdgeInsets.all(4),
-                child: _IntensityWidgets(colorModel: IntensityColorModel.jma()),
-              ),
-            ),
-            RadioListTile.adaptive(
-              value: IntensityColorModel.earthQuickly(),
-              groupValue: state,
-              onChanged:
-                  (value) async => ref
-                      .read(intensityColorProvider.notifier)
-                      .update(IntensityColorModel.earthQuickly()),
-              title: const Text('EarthQuickly'),
-              subtitle: Padding(
-                padding: const EdgeInsets.all(4),
-                child: _IntensityWidgets(
-                  colorModel: IntensityColorModel.earthQuickly(),
+              RadioListTile.adaptive(
+                value: IntensityColorModel.jma(),
+                title: const Text('気象庁配色'),
+                subtitle: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: _IntensityWidgets(colorModel: IntensityColorModel.jma()),
                 ),
               ),
-            ),
-            const SizedBox(height: kFloatingActionButtonMargin * 4),
-          ],
+              RadioListTile.adaptive(
+                value: IntensityColorModel.earthQuickly(),
+                title: const Text('EarthQuickly'),
+                subtitle: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: _IntensityWidgets(
+                    colorModel: IntensityColorModel.earthQuickly(),
+                  ),
+                ),
+              ),
+              const SizedBox(height: kFloatingActionButtonMargin * 4),
+            ],
+          ),
         ),
       ),
     );

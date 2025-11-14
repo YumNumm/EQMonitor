@@ -35,6 +35,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preference_app_group/shared_preference_app_group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:core/core.dart' as core;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -130,6 +131,7 @@ Future<void> main() async {
               'group.net.yumnumm.eqmonitor',
             )
           : Future<void>.value(),
+      core.initializeTimeZones(),
     ).wait,
   ).wait;
   initLicenses();
@@ -162,7 +164,7 @@ Future<void> main() async {
       kyoshinMonitorInternalObservationPointsConvertedProvider.future,
     ),
     container.read(travelTimeInternalProvider.future),
-    container.read(permissionNotifierProvider.notifier).initialize(),
+    container.read(permissionProvider.notifier).initialize(),
   ).wait;
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));

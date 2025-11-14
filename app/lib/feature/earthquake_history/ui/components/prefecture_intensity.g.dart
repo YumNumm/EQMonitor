@@ -8,6 +8,9 @@ part of 'prefecture_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(_calculator)
 const _calculatorProvider = _CalculatorFamily._();
 
@@ -33,7 +36,7 @@ final class _CalculatorProvider
        );
 
   @override
-  String debugGetCreateSourceHash() => _$calculatorHash();
+  String debugGetCreateSourceHash() => _$_calculatorHash();
 
   @override
   String toString() {
@@ -64,7 +67,7 @@ final class _CalculatorProvider
   }
 }
 
-String _$calculatorHash() => r'04b6761f20dbdfc38319c53807b92dff5751d6b0';
+String _$_calculatorHash() => r'04b6761f20dbdfc38319c53807b92dff5751d6b0';
 
 final class _CalculatorFamily extends $Family
     with
@@ -87,6 +90,3 @@ final class _CalculatorFamily extends $Family
   @override
   String toString() => r'_calculatorProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

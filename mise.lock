@@ -1,0 +1,31 @@
+[[tools."aqua:suzuki-shunsuke/tfcmt"]]
+version = "4.14.12"
+backend = "aqua:suzuki-shunsuke/tfcmt"
+
+[[tools.flutter]]
+version = "3.35.7-stable"
+backend = "asdf:flutter"
+
+[[tools.java]]
+version = "21.0.2"
+backend = "core:java"
+
+[[tools.node]]
+version = "25.1.0"
+backend = "core:node"
+
+[[tools."pipx:codemagic-cli-tools"]]
+version = "0.61.1"
+backend = "pipx:codemagic-cli-tools"
+
+[[tools.tflint]]
+version = "0.59.1"
+backend = "aqua:terraform-linters/tflint"
+
+[[tools.uv]]
+version = "0.9.8"
+backend = "aqua:astral-sh/uv"
+
+[[tools.websocat]]
+version = "1.14.0"
+backend = "aqua:vi/websocat"
