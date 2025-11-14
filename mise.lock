@@ -12,7 +12,7 @@ size = 38265008
 url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.5/biome-darwin-arm64"
 
 [[tools.flutter]]
-version = "3.35.7-stable"
+version = "3.38.1-stable"
 backend = "asdf:flutter"
 
 [[tools."gem:cocoapods"]]
