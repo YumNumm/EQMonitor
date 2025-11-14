@@ -421,6 +421,16 @@ RouteBase get $settingsRoute => GoRouteData.$route(
                 ),
               ],
             ),
+            GoRouteData.$route(
+              path: 'fnet',
+              factory: $FnetRoute._fromState,
+              routes: [
+                GoRouteData.$route(
+                  path: 'catalog',
+                  factory: $FnetCatalogRoute._fromState,
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -917,6 +927,48 @@ mixin $AquaCatalogRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/nied/aqua/catalog');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $FnetRoute on GoRouteData {
+  static FnetRoute _fromState(GoRouterState state) => const FnetRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/nied/fnet');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $FnetCatalogRoute on GoRouteData {
+  static FnetCatalogRoute _fromState(GoRouterState state) =>
+      const FnetCatalogRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/fnet/catalog');
 
   @override
   void go(BuildContext context) => context.go(location);

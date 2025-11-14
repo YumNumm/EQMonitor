@@ -14,6 +14,8 @@ import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_obs
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
+import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
+import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
@@ -211,6 +213,12 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
               path: 'aqua',
               routes: [
                 TypedGoRoute<AquaCatalogRoute>(path: 'catalog'),
+              ],
+            ),
+            TypedGoRoute<FnetRoute>(
+              path: 'fnet',
+              routes: [
+                TypedGoRoute<FnetCatalogRoute>(path: 'catalog'),
               ],
             ),
           ],
@@ -442,6 +450,24 @@ class AquaCatalogRoute extends GoRouteData with $AquaCatalogRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const AquaCatalogPage();
+  }
+}
+
+class FnetRoute extends GoRouteData with $FnetRoute {
+  const FnetRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const FnetPage();
+  }
+}
+
+class FnetCatalogRoute extends GoRouteData with $FnetCatalogRoute {
+  const FnetCatalogRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const FnetCatalogPage();
   }
 }
 
