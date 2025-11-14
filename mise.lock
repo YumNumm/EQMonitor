@@ -2,6 +2,10 @@
 version = "4.14.12"
 backend = "aqua:suzuki-shunsuke/tfcmt"
 
+[[tools.biome]]
+version = "2.3.4"
+backend = "aqua:biomejs/biome"
+
 [[tools.flutter]]
 version = "3.35.7-stable"
 backend = "asdf:flutter"
@@ -17,6 +21,10 @@ backend = "core:node"
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.61.1"
 backend = "pipx:codemagic-cli-tools"
+
+[[tools.pnpm]]
+version = "10.20.0"
+backend = "aqua:pnpm/pnpm"
 
 [[tools.tflint]]
 version = "0.59.1"
