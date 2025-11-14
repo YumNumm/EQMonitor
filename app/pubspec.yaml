@@ -81,14 +81,12 @@ dependencies:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
   # maplibre: ^0.2.1
-  maplibre: ^0.3.0
+  maplibre: ^0.3.1
   nied_api_client:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
-  permission_handler: ^12.0.0+1
-  pointer_interceptor: ^0.10.1+2
   purchases_flutter: ^9.1.0
   riverpod_annotation: ^3.0.3
   screenshot: 3.0.0
@@ -124,7 +122,6 @@ dev_dependencies:
   freezed: ^3.0.6
   go_router_builder: ^4.0.1
   json_serializable: ^6.9.0
-  pedantic_mono: ^1.29.0
   retrofit_generator: ^10.0.0
   riverpod_generator: ^3.0.3
   riverpod_lint: ^3.0.3
