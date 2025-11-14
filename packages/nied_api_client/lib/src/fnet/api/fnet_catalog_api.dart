@@ -9,7 +9,7 @@ abstract class FnetCatalogApi {
 
   /// 指定された年月のカタログデータを取得
   /// @param year 年 (例: 2025)
-  /// @param month 月 (例: 11)
+  /// @param yearMonth 年月 (例: 202511)
   @GET('/data/{year}/{yearMonth}_UT.txt')
   Future<String> getCatalog(
     @Path('year') int year,

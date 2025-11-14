@@ -5,7 +5,7 @@ part 'fnet_earthquake_event.g.dart';
 
 /// F-net地震イベント
 @freezed
-class FnetEarthquakeEvent with _$FnetEarthquakeEvent {
+abstract class FnetEarthquakeEvent with _$FnetEarthquakeEvent {
   const factory FnetEarthquakeEvent({
     /// 発生時刻 (UTC)
     required DateTime originTime,
@@ -62,7 +62,7 @@ class FnetEarthquakeEvent with _$FnetEarthquakeEvent {
 
 /// 断層パラメータのペア（2つの可能な断層面解）
 @freezed
-class FaultParameterPair with _$FaultParameterPair {
+abstract class FaultParameterPair with _$FaultParameterPair {
   const factory FaultParameterPair({
     required double plane1,
     required double plane2,
@@ -86,7 +86,7 @@ class FaultParameterPair with _$FaultParameterPair {
 
 /// モーメントテンソル成分
 @freezed
-class MomentTensor with _$MomentTensor {
+abstract class MomentTensor with _$MomentTensor {
   const factory MomentTensor({
     required double mxx,
     required double mxy,

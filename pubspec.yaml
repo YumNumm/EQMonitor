@@ -25,7 +25,6 @@ workspace:
   - packages/kyoshin_monitor_image_parser
   - packages/nied_api_client
   - packages/core
-    - packages/fnet_types
   # <ADD_PACKAGE_HERE>
 dependencies:
   melos: ^7.1.1

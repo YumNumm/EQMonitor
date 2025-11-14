@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:nied_api_client/src/fnet/fnet_api_client.dart';
 import 'package:nied_api_client/src/hinet/hinet_api_client.dart';
 
 /// NIED (National Research Institute for Earth Science and Disaster Resilience) APIクライアント
@@ -13,6 +14,7 @@ class NiedApiClient {
   final Dio _dio;
 
   HinetApiClient? _hinet;
+  FnetApiClient? _fnet;
 
   /// Hi-net APIクライアント
   ///
@@ -20,5 +22,13 @@ class NiedApiClient {
   HinetApiClient get hinet {
     _hinet ??= HinetApiClient(_dio);
     return _hinet!;
+  }
+
+  /// F-net APIクライアント
+  ///
+  /// F-netの地震カタログデータにアクセスします
+  FnetApiClient get fnet {
+    _fnet ??= FnetApiClient(dio: _dio);
+    return _fnet!;
   }
 }
