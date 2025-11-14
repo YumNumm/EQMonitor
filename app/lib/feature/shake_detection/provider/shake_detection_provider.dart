@@ -18,6 +18,7 @@ class ShakeDetection extends _$ShakeDetection {
   @override
   Future<List<ShakeDetectionEvent>> build() async {
     return [];
+    // ignore: dead_code
     final apiResult = await ref.watch(
       _fetchShakeDetectionEventsProvider.future,
     );
@@ -139,7 +140,7 @@ class ShakeDetectionKmoniPointsMerged
 }
 
 @Riverpod(keepAlive: true)
-Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(Ref ref) async =>
+Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(Ref ref) =>
     ref.watch(eqApiProvider).v1.getLatestShakeDetectionEvents();
 
 enum ShakeDetectionLevel {

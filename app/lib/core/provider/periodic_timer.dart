@@ -42,15 +42,12 @@ class PeriodicTimer extends _$PeriodicTimer {
     // 次のタイミングを計算する
     final nextTime = interval - (_stopwatch?.elapsed ?? Duration.zero);
     if (nextTime.isNegative) {
-      // ignore: avoid_print
       print('[PeriodicTimer] Adding event immediately (nextTime: $nextTime)');
       _streamController.add(null);
       _timer = Timer.periodic(interval, _onTimer);
     } else {
-      // ignore: avoid_print
       print('[PeriodicTimer] Setting delay adjust timer (nextTime: $nextTime)');
       _timerForDelayAdjust = Timer(nextTime, () {
-        // ignore: avoid_print
         print('[PeriodicTimer] Delay adjust timer triggered');
         _streamController.add(null);
         _timerForDelayAdjust?.cancel();
@@ -72,7 +69,6 @@ class PeriodicTimer extends _$PeriodicTimer {
   }
 
   void _onTimer(Timer timer) {
-    // ignore: avoid_print
     print('[PeriodicTimer] Timer triggered');
     _stopwatch?.reset();
     _streamController.add(null);

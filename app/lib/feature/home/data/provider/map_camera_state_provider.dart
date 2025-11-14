@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/map_camera_state.dart';
@@ -15,9 +17,9 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     ref.listen(eewAliveTelegramProvider, (previous, next) {
       final eews = next ?? [];
       if (eews.isNotEmpty) {
-        _fitToEews(eews);
+        unawaited(_fitToEews(eews));
       } else if (previous != null && previous.isNotEmpty) {
-        _returnToHome();
+        unawaited(_returnToHome());
       }
     });
 
@@ -104,4 +106,3 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     await _returnToHome();
   }
 }
-

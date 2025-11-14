@@ -10,18 +10,18 @@ List<Feature<Point>> eewHypocenterPoints(Ref ref) {
 
   return eews
       .where((e) => e.latitude != null && e.longitude != null && !e.isCanceled)
-      .map((eew) => Feature(
-            geometry: Point(
-              Geographic(lon: eew.longitude!, lat: eew.latitude!),
-            ),
-            properties: {
-              'magnitude': eew.magnitude,
-              'depth': eew.depth,
-              'isLowPrecise':
-                  eew.isIpfOnePoint || eew.isLevelEew || (eew.isPlum ?? false),
-            },
-          ))
+      .map(
+        (eew) => Feature(
+          geometry: Point(
+            Geographic(lon: eew.longitude!, lat: eew.latitude!),
+          ),
+          properties: {
+            'magnitude': eew.magnitude,
+            'depth': eew.depth,
+            'isLowPrecise':
+                eew.isIpfOnePoint || eew.isLevelEew || (eew.isPlum ?? false),
+          },
+        ),
+      )
       .toList();
 }
-
-
