@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:charset_converter/charset_converter.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html_parser;
-import 'package:intl/intl.dart';
 import 'package:nied_api_client/src/hinet/aqua/model/angle_pair.dart';
 import 'package:nied_api_client/src/hinet/aqua/model/aqua_event.dart';
 import 'package:nied_api_client/src/hinet/aqua/model/aqua_event_type.dart';
@@ -12,9 +11,6 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// AQUAカタログHTMLパーサー
 class AquaHtmlParser {
-  /// 日時フォーマット（例: 2025-09-29 23:33:08）
-  static final _dateTimeFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-
   /// カタログHTMLをパースしてイベントリストを返す
   Future<List<AquaEvent>> parseCatalog({
     required Uint8List bytes,
