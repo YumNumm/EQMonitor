@@ -13,7 +13,7 @@ NotificationRemoteAuthenticationService notificationRemoteAuthenticateService(
 ) => NotificationRemoteAuthenticationService(
   api: ref.watch(eqApiProvider),
   apiAuthenticationService: ref.watch(
-    apiAuthenticationNotifierProvider.notifier,
+    apiAuthenticationProvider.notifier,
   ),
   ref: ref,
 );
@@ -46,7 +46,7 @@ class NotificationRemoteAuthenticationService {
 
   Future<FcmTokenUpdateResponse> updateToken({required String fcmToken}) async {
     final authorization = await _ref.read(
-      apiAuthenticationNotifierProvider.future,
+      apiAuthenticationProvider.future,
     );
     if (authorization == null) {
       throw UnauthorizedException();

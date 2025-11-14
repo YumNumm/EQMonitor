@@ -8,8 +8,11 @@ part of 'api_authentication_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(ApiAuthenticationNotifier)
-const apiAuthenticationNotifierProvider = ApiAuthenticationNotifierProvider._();
+const apiAuthenticationProvider = ApiAuthenticationNotifierProvider._();
 
 final class ApiAuthenticationNotifierProvider
     extends $AsyncNotifierProvider<ApiAuthenticationNotifier, String?> {
@@ -18,7 +21,7 @@ final class ApiAuthenticationNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'apiAuthenticationNotifierProvider',
+        name: r'apiAuthenticationProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -53,6 +56,3 @@ abstract class _$ApiAuthenticationNotifier extends $AsyncNotifier<String?> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

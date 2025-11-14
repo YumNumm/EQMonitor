@@ -12,8 +12,8 @@ part 'notification_remote_settings_saved_state.g.dart';
 
 @riverpod
 bool notificationRemoteSettingsHasChangedFromSavedState(Ref ref) =>
-    ref.watch(notificationRemoteSettingsSavedStateNotifierProvider) !=
-    ref.watch(notificationRemoteSettingsNotifierProvider);
+    ref.watch(notificationRemoteSettingsSavedStateProvider) !=
+    ref.watch(notificationRemoteSettingsProvider);
 
 @Riverpod(keepAlive: true)
 class NotificationRemoteSettingsSavedStateNotifier
@@ -23,7 +23,7 @@ class NotificationRemoteSettingsSavedStateNotifier
     final api = ref.read(eqApiProvider);
     final String? token;
     try {
-      token = await ref.read(apiAuthenticationNotifierProvider.future);
+      token = await ref.read(apiAuthenticationProvider.future);
     } on Exception catch (e) {
       throw UnauthorizedException(innerException: e);
     }
@@ -37,7 +37,7 @@ class NotificationRemoteSettingsSavedStateNotifier
   Future<void> updateEarthquake({
     required NotificationSettingsRequest request,
   }) async {
-    final token = await ref.read(apiAuthenticationNotifierProvider.future);
+    final token = await ref.read(apiAuthenticationProvider.future);
     if (token == null) {
       throw UnauthorizedException();
     }
@@ -48,8 +48,9 @@ class NotificationRemoteSettingsSavedStateNotifier
       authorization: 'Bearer $token',
     );
 
-    final areaInformationPrefectureEarthquake =
-        ref.read(jmaCodeTableProvider).areaInformationPrefectureEarthquake;
+    final areaInformationPrefectureEarthquake = ref
+        .read(jmaCodeTableProvider)
+        .areaInformationPrefectureEarthquake;
 
     if (state case AsyncData(:final value)) {
       state = AsyncData(
@@ -80,7 +81,7 @@ class NotificationRemoteSettingsSavedStateNotifier
   }
 
   Future<void> updateEew({required NotificationSettingsRequest request}) async {
-    final token = await ref.read(apiAuthenticationNotifierProvider.future);
+    final token = await ref.read(apiAuthenticationProvider.future);
     if (token == null) {
       throw UnauthorizedException();
     }
@@ -91,8 +92,9 @@ class NotificationRemoteSettingsSavedStateNotifier
       authorization: 'Bearer $token',
     );
 
-    final areaForecastLocalEew =
-        ref.read(jmaCodeTableProvider).areaForecastLocalEew;
+    final areaForecastLocalEew = ref
+        .read(jmaCodeTableProvider)
+        .areaForecastLocalEew;
 
     if (state case AsyncData(:final value)) {
       state = AsyncData(
@@ -126,59 +128,57 @@ class NotificationRemoteSettingsSavedStateNotifier
   NotificationRemoteSettingsState _fromResponse(
     NotificationSettingsResponse response,
   ) {
-    final areaInformationPrefectureEarthquake =
-        ref.read(jmaCodeTableProvider).areaInformationPrefectureEarthquake;
-    final areaForecastLocalEew =
-        ref.read(jmaCodeTableProvider).areaForecastLocalEew;
+    final areaInformationPrefectureEarthquake = ref
+        .read(jmaCodeTableProvider)
+        .areaInformationPrefectureEarthquake;
+    final areaForecastLocalEew = ref
+        .read(jmaCodeTableProvider)
+        .areaForecastLocalEew;
 
     return NotificationRemoteSettingsState(
       earthquake: NotificationRemoteSettingsEarthquake(
-        global:
-            response.earthquake
-                .firstWhereOrNull((r) => r.regionId == 0)
-                ?.minJmaIntensity,
-        regions:
-            response.earthquake
-                .where((r) => r.regionId != 0)
-                .map((r) {
-                  final prefecture = areaInformationPrefectureEarthquake
-                      .nameFindByCode(r.regionId);
-                  if (prefecture == null) {
-                    return null;
-                  }
-                  return NotificationRemoteSettingsEarthquakeRegion(
-                    regionId: r.regionId,
-                    minJmaIntensity: r.minJmaIntensity,
-                    name: prefecture,
-                  );
-                })
-                .nonNulls
-                .toList(),
+        global: response.earthquake
+            .firstWhereOrNull((r) => r.regionId == 0)
+            ?.minJmaIntensity,
+        regions: response.earthquake
+            .where((r) => r.regionId != 0)
+            .map((r) {
+              final prefecture = areaInformationPrefectureEarthquake
+                  .nameFindByCode(r.regionId);
+              if (prefecture == null) {
+                return null;
+              }
+              return NotificationRemoteSettingsEarthquakeRegion(
+                regionId: r.regionId,
+                minJmaIntensity: r.minJmaIntensity,
+                name: prefecture,
+              );
+            })
+            .nonNulls
+            .toList(),
       ),
       eew: NotificationRemoteSettingsEew(
-        global:
-            response.eew
-                .firstWhereOrNull((r) => r.regionId == 0)
-                ?.minJmaIntensity,
-        regions:
-            response.eew
-                .where((r) => r.regionId != 0)
-                .map((r) {
-                  final region = areaForecastLocalEew.nameFindByCode(
-                    r.regionId,
-                  );
-                  if (region == null) {
-                    return null;
-                  }
+        global: response.eew
+            .firstWhereOrNull((r) => r.regionId == 0)
+            ?.minJmaIntensity,
+        regions: response.eew
+            .where((r) => r.regionId != 0)
+            .map((r) {
+              final region = areaForecastLocalEew.nameFindByCode(
+                r.regionId,
+              );
+              if (region == null) {
+                return null;
+              }
 
-                  return NotificationRemoteSettingsEewRegion(
-                    regionId: r.regionId,
-                    minJmaIntensity: r.minJmaIntensity,
-                    name: region,
-                  );
-                })
-                .nonNulls
-                .toList(),
+              return NotificationRemoteSettingsEewRegion(
+                regionId: r.regionId,
+                minJmaIntensity: r.minJmaIntensity,
+                name: region,
+              );
+            })
+            .nonNulls
+            .toList(),
       ),
     );
   }

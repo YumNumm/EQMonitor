@@ -8,8 +8,11 @@ part of 'earthquake_history_details_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(EarthquakeHistoryDetailsNotifier)
-const earthquakeHistoryDetailsNotifierProvider =
+const earthquakeHistoryDetailsProvider =
     EarthquakeHistoryDetailsNotifierFamily._();
 
 final class EarthquakeHistoryDetailsNotifierProvider
@@ -23,7 +26,7 @@ final class EarthquakeHistoryDetailsNotifierProvider
     required int super.argument,
   }) : super(
          retry: null,
-         name: r'earthquakeHistoryDetailsNotifierProvider',
+         name: r'earthquakeHistoryDetailsProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
@@ -34,7 +37,7 @@ final class EarthquakeHistoryDetailsNotifierProvider
 
   @override
   String toString() {
-    return r'earthquakeHistoryDetailsNotifierProvider'
+    return r'earthquakeHistoryDetailsProvider'
         ''
         '($argument)';
   }
@@ -57,7 +60,7 @@ final class EarthquakeHistoryDetailsNotifierProvider
 }
 
 String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'8cdbb878aba7678a78260d89fc29555f5d9b54bc';
+    r'60002a48c650d7dc0e190db114bc44e7186a9bac';
 
 final class EarthquakeHistoryDetailsNotifierFamily extends $Family
     with
@@ -71,7 +74,7 @@ final class EarthquakeHistoryDetailsNotifierFamily extends $Family
   const EarthquakeHistoryDetailsNotifierFamily._()
     : super(
         retry: null,
-        name: r'earthquakeHistoryDetailsNotifierProvider',
+        name: r'earthquakeHistoryDetailsProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
@@ -81,7 +84,7 @@ final class EarthquakeHistoryDetailsNotifierFamily extends $Family
       EarthquakeHistoryDetailsNotifierProvider._(argument: eventId, from: this);
 
   @override
-  String toString() => r'earthquakeHistoryDetailsNotifierProvider';
+  String toString() => r'earthquakeHistoryDetailsProvider';
 }
 
 abstract class _$EarthquakeHistoryDetailsNotifier
@@ -111,6 +114,3 @@ abstract class _$EarthquakeHistoryDetailsNotifier
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

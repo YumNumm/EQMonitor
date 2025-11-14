@@ -4,7 +4,7 @@ version: 1.0.0
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: 3.8.1
+  sdk: 3.9.2
 
 resolution: workspace
 
@@ -21,4 +21,4 @@ dev_dependencies:
   build_runner: ^2.4.7
   eqmonitor_lints:
     path: ../eqmonitor_lints
-  retrofit_generator: ^9.1.9
+  retrofit_generator: ^10.0.0

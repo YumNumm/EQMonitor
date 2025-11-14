@@ -96,7 +96,7 @@ jobs:
           rm environment.tar.gz
           ls -l environment/
 
-      - uses: irgaly/xcode-cache@bfac98e3b3325d8326505f899f6688663c99ad2c # v1.9.1
+      - uses: irgaly/xcode-cache@4141f139f00e335c6e1031fb93e667181f86146f # v1.9.2
         with:
           key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.sha }}
           restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
@@ -146,7 +146,7 @@ jobs:
           ls -lah app/build/
 
       - name: Upload ipa as artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: EQMonitor-ios.ipa
           path: app/eqmonitor.ipa
@@ -165,7 +165,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download ipa
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           name: EQMonitor-ios.ipa
           path: build
@@ -208,7 +208,7 @@ jobs:
 
       # Java 17を明示的に設定
       - name: Setup Java
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -272,14 +272,14 @@ jobs:
             --dart-define-from-file=../environment/.env.prod
 
       - name: Upload aab as artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: EQMonitor-android.aab
           path: app/build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: error
 
       - name: Upload apk as artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: EQMonitor-android.apk
           path: app/build/app/outputs/flutter-apk/app-release.apk
@@ -291,7 +291,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Download artifact aab
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           name: EQMonitor-android.aab
           path: build

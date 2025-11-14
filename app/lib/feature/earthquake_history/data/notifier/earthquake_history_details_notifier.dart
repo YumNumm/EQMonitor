@@ -20,7 +20,7 @@ class EarthquakeHistoryDetailsNotifier
 
     final extended = await ref.read(earthquakeV1ExtendedProvider(data).future);
     ref.listen(
-      earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter()),
+      earthquakeHistoryProvider(const EarthquakeHistoryParameter()),
       (_, next) {
         if (next is AsyncData) {
           final earthquakes = next.value;

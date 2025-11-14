@@ -8,8 +8,11 @@ part of 'notification_remote_settings_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(NotificationRemoteSettingsNotifier)
-const notificationRemoteSettingsNotifierProvider =
+const notificationRemoteSettingsProvider =
     NotificationRemoteSettingsNotifierProvider._();
 
 final class NotificationRemoteSettingsNotifierProvider
@@ -23,7 +26,7 @@ final class NotificationRemoteSettingsNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'notificationRemoteSettingsNotifierProvider',
+        name: r'notificationRemoteSettingsProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -40,7 +43,7 @@ final class NotificationRemoteSettingsNotifierProvider
 }
 
 String _$notificationRemoteSettingsNotifierHash() =>
-    r'b48de9bf3bc6eead56c4350b5f3dfa81154a92ac';
+    r'c219f16f61b06266efcef029662d988e721ded8f';
 
 abstract class _$NotificationRemoteSettingsNotifier
     extends $AsyncNotifier<NotificationRemoteSettingsState> {
@@ -69,6 +72,3 @@ abstract class _$NotificationRemoteSettingsNotifier
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

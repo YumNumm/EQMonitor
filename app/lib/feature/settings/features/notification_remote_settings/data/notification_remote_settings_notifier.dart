@@ -13,7 +13,7 @@ class NotificationRemoteSettingsNotifier
   @override
   Future<NotificationRemoteSettingsState> build() async {
     final savedState = ref.watch(
-      notificationRemoteSettingsSavedStateNotifierProvider.future,
+      notificationRemoteSettingsSavedStateProvider.future,
     );
     return savedState;
   }
@@ -82,7 +82,7 @@ class NotificationRemoteSettingsNotifier
 
   Future<void> save() async {
     final savedState = ref
-        .read(notificationRemoteSettingsSavedStateNotifierProvider)
+        .read(notificationRemoteSettingsSavedStateProvider)
         .value;
     if (savedState == null) {
       throw Exception('Saved state is null');
@@ -92,7 +92,7 @@ class NotificationRemoteSettingsNotifier
         final global = value.earthquake.global;
         log('Earthquake要素を更新中...', name: 'NotificationRemoteSettingsNotifier');
         await ref
-            .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
+            .read(notificationRemoteSettingsSavedStateProvider.notifier)
             .updateEarthquake(
               request: NotificationSettingsRequest(
                 global: global != null
@@ -121,7 +121,7 @@ class NotificationRemoteSettingsNotifier
         final global = value.eew.global;
         log('EEW要素を更新中...', name: 'NotificationRemoteSettingsNotifier');
         await ref
-            .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
+            .read(notificationRemoteSettingsSavedStateProvider.notifier)
             .updateEew(
               request: NotificationSettingsRequest(
                 global: global != null
