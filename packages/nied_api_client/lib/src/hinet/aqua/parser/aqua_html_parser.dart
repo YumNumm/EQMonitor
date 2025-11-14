@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:charset_converter/charset_converter.dart';
+import 'package:charset/charset.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:nied_api_client/src/hinet/aqua/model/angle_pair.dart';
@@ -15,7 +15,7 @@ class AquaHtmlParser {
   Future<List<AquaEvent>> parseCatalog({
     required Uint8List bytes,
   }) async {
-    final decoded = await CharsetConverter.decode('euc-jp', bytes);
+    final decoded = const EucJPCodec().decode(bytes);
     final document = html_parser.parse(decoded);
     final events = <AquaEvent>[];
 

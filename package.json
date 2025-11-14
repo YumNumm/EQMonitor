@@ -1,0 +1,17 @@
+{
+  "name": "EQMonitor",
+  "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "engineStrict": true,
+  "devDependencies": {
+    "@biomejs/biome": "2.2.3",
+    "@types/ws": "^8.18.1",
+    "turbo": "^2.5.6"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint"
+  }
+}

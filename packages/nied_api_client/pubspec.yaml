@@ -10,7 +10,7 @@ environment:
 resolution: workspace
 
 dependencies:
-  charset_converter: ^2.3.0
+  charset: ^2.0.1
   core:
     path: ../core
   dio: ^5.9.0

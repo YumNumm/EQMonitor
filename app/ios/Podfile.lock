@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - objective_c (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - objective_c (from `.symlinks/plugins/objective_c/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  objective_c:
+    :path: ".symlinks/plugins/objective_c/ios"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  objective_c: 89e720c30d716b036faf9c9684022048eee1eee2
+
+PODFILE CHECKSUM: 474c89de82ea32ce8797bfa74c1e03ad5c96d99e
+
+COCOAPODS: 1.16.2
