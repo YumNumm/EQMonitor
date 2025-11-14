@@ -42,6 +42,12 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 1. [mise](https://mise.jdx.dev/)をインストールしてください
 
+1. flutterなどの依存関係をダウンロードします
+
+  ```bash
+  mise install
+  ```
+
 1. Swift Package Managerを利用するために、以下のコマンドを実行してください
 
     - [Swift Package Manager for app developers](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
