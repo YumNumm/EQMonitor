@@ -18,6 +18,7 @@ class ShakeDetection extends _$ShakeDetection {
   @override
   Future<List<ShakeDetectionEvent>> build() async {
     return [];
+    // ignore: dead_code
     final apiResult = await ref.watch(
       _fetchShakeDetectionEventsProvider.future,
     );
