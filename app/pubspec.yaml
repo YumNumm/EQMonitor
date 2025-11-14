@@ -58,7 +58,7 @@ dependencies:
   geobase: ^1.5.0
   geodata: ^1.3.0
   geolocator: ^14.0.1
-  go_router: ^16.0.0
+  go_router: ^17.0.0
   google_fonts: ^6.2.1
   hooks_riverpod: ^3.0.3
   image: ^4.4.0
