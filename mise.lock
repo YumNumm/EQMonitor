@@ -20,15 +20,25 @@ version = "1.16.2"
 backend = "gem:cocoapods"
 
 [[tools.java]]
-version = "21.0.2"
+version = "25.0.1"
 backend = "core:java"
 
+[tools.java.platforms.macos-arm64]
+checksum = "sha256:9175d602f3be2ffa241eb01d24ba4541e29a4dfa2095d4bdc1c9eb4bf4d56705"
+size = 215408868
+url = "https://download.java.net/java/GA/jdk25.0.1/2fbf10d8c78e40bd87641c434705079d/8/GPL/openjdk-25.0.1_macos-aarch64_bin.tar.gz"
+
 [[tools.node]]
-version = "25.1.0"
+version = "25.2.0"
 backend = "core:node"
 
+[tools.node.platforms.macos-arm64]
+checksum = "sha256:5ce975101e85598d2f1f84b297e8bd7ff315e46fa644be1ffc76f0c48de480bb"
+size = 52638870
+url = "https://nodejs.org/dist/v25.2.0/node-v25.2.0-darwin-arm64.tar.gz"
+
 [[tools."pipx:codemagic-cli-tools"]]
-version = "0.61.1"
+version = "0.62.1"
 backend = "pipx:codemagic-cli-tools"
 
 [[tools.pnpm]]
@@ -49,8 +59,13 @@ version = "0.59.1"
 backend = "aqua:terraform-linters/tflint"
 
 [[tools.uv]]
-version = "0.9.8"
+version = "0.9.9"
 backend = "aqua:astral-sh/uv"
+
+[tools.uv.platforms.macos-arm64]
+checksum = "sha256:737e1c2c4f97577aa7764141846e27de915eebb3b2a0f467451089a64824d2f7"
+size = 18176790
+url = "https://github.com/astral-sh/uv/releases/download/0.9.9/uv-aarch64-apple-darwin.tar.gz"
 
 [[tools.websocat]]
 version = "1.14.0"

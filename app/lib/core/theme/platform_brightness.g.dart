@@ -44,7 +44,7 @@ final class PlatformBrightnessProvider
 }
 
 String _$platformBrightnessHash() =>
-    r'e43fc04a4fd2a5fecc5c7c47cc022f3e56179bc9';
+    r'117b27ff2ca9dcf9927b67a91b92fb1027c9d297';
 
 abstract class _$PlatformBrightness extends $Notifier<Brightness> {
   Brightness build();
