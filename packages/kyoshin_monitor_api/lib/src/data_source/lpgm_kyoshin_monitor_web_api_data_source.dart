@@ -25,7 +25,7 @@ class LpgmKyoshinMonitorWebApiDataSource {
   );
 
   /// PsWaveImg
-  Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
+  Future<List<int>> getPsWaveImageData(DateTime dateTime) =>
       _client.getPsWaveImageData(
         date: dateFormat.format(dateTime),
         dateTime: dateTimeFormat.format(dateTime),
@@ -36,7 +36,7 @@ class LpgmKyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     DateTime dateTime,
-  ) async => _client.getRealtimeImageData(
+  )  => _client.getRealtimeImageData(
     type: type.urlString,
     layer: layer.urlString,
     date: dateFormat.format(dateTime),

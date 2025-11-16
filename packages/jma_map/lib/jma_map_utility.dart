@@ -16,7 +16,6 @@ class JmaMapUtility {
       final dataList = mapData.data.map((data) {
         final dataType = data.dataType;
         final bytes = Uint8List.fromList(data.bytes);
-        print('${data.property.name}: ${bytes.lengthInBytes / 1024} KB');
         switch (dataType) {
           case JmaMap_JmaMapData_DataType.LINE_STRING:
             final lineString = LineString.decode(bytes);

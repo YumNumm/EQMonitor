@@ -5,6 +5,7 @@ analyzer:
     avoid_print: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
+    unnecessary_async: ignore
   enable-experiment:
     - dot-shorthands
 

@@ -11,7 +11,7 @@ part 'eew_alive_telegram.g.dart';
 List<EewV1> eewAliveNormalTelegram(Ref ref) {
   final state = ref.watch(eewAliveTelegramProvider) ?? [];
   return state.where((e) {
-    if (e.isPlum ?? false || e.isLevelEew || e.isIpfOnePoint) {
+    if (e.isPlum ?? e.isLevelEew || e.isIpfOnePoint) {
       return false;
     }
     return true;
