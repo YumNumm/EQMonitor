@@ -46,24 +46,9 @@ jobs:
               platforms+=("android")
             fi
           elif [ "${{ github.event_name }}" = "push" ]; then
-            # コミットメッセージに [release only $platform] を含む場合は、
-            # そのプラットフォームのみデプロイする
-            if [[ github.event.head_commit.message =~ \[release[[:space:]]+only[[:space:]]+([a-z,[:space:]]+)\] ]]; then
-              # [release only platform1,platform2] の形式からプラットフォームを抽出
-              IFS=',' read -ra selected_platforms <<< "${BASH_REMATCH[1]}"
-              # 空白を削除して配列に追加
-              for platform in "${selected_platforms[@]}"; do
-                platform=$(echo "$platform" | tr -d '[:space:]')
-                if [[ " ios android" =~ " $platform " ]]; then
-                  platforms+=("$platform")
-                fi
-                echo "platform: $platform"
-              done
-            else
               # [release only] タグがない場合は全プラットフォームをデプロイ
               echo "commit message does not contain [release only platform], deploy all platforms"
               platforms+=("ios" "android")
-            fi
           else
             echo "Unknown event name: ${{ github.event_name }}"
             exit 1
@@ -96,9 +81,8 @@ jobs:
 
       - name: Set environment variables
         run: |
-          for line in $(mise env --dotenv); do
-            echo $line >> "$GITHUB_ENV"
-            echo "::add-mask::${line#*=}"
+          for value in $(mise env --refacted --values); do
+            echo "::add-mask::$value"
           done
 
       - name: Enable Swift Package Manager
@@ -106,14 +90,15 @@ jobs:
           flutter config --enable-swift-package-manager
 
       - name: Resolve dependencies
-        working-directory: apps/app
+        working-directory: app
         run: dart pub get --enforce-lockfile
 
       - name: Configure iOS
-        working-directory: apps/app
+        working-directory: app
         run: |
           flutter build ios --config-only \
             --no-codesign \
+            --no-pub \
             --build-number=${{ github.run_number }} \
             --dart-define-from-file=environments/.env.prod \
             --dart-define COMMIT_INFORMATION=${{ github.ref_name }}-${{ github.sha }}
@@ -121,18 +106,12 @@ jobs:
       - name: Extract App Store Connect API Key
         working-directory: app/ios
         run: |
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 -d \
-            > AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
-          ls -l AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
-
-      - name: Extract App Store Connect API Key
-        working-directory: apps/app/ios
-        run: |
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+          ls -l AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
 
       - name: Archive
-        working-directory: apps/app
+        working-directory: app
         run: |
           xcodebuild archive \
             -workspace ios/Runner.xcworkspace \
@@ -145,7 +124,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO | xcbeautify
 
       - name: Embed entitlements
-        working-directory: apps/app
+        working-directory: app
         run: |
           codesign \
             --entitlements ios/Runner/Runner.entitlements \
@@ -153,7 +132,7 @@ jobs:
             --sign "-" build/ios/Runner.xcarchive/Products/Applications/Runner.app
 
       - name: Archive
-        working-directory: apps/app
+        working-directory: app
         run: |
           xcodebuild -exportArchive \
             -archivePath build/ios/Runner.xcarchive \
@@ -162,15 +141,15 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID $APP_STORE_CONNECT_API_KEY_ISSUER_ID \
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
-            -authenticationKeyPath ${{ github.workspace }}/apps/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8 \
+            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8 \
           | xcbeautify --renderer github-actions
 
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: FlutterKaigi 2025-ios.ipa
-          path: apps/app/FlutterKaigi 2025.ipa
+          name: EQMonitor-ios.ipa
+          path: app/FlutterKaigi 2025.ipa
           if-no-files-found: error
 
 
