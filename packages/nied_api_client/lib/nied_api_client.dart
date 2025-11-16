@@ -4,6 +4,10 @@
 /// 防災科学技術研究所が提供する各種APIにアクセスするためのライブラリ
 library;
 
+export 'src/fnet/api/fnet_catalog_api.dart';
+export 'src/fnet/fnet_api_client.dart';
+export 'src/fnet/model/fnet_earthquake_event.dart';
+export 'src/fnet/parser/fnet_catalog_parser.dart';
 export 'src/hinet/aqua/api/aqua_catalog_api.dart';
 export 'src/hinet/aqua/aqua_api_client.dart';
 export 'src/hinet/aqua/model/aqua_event.dart';
