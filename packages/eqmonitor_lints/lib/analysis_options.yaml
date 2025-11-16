@@ -6,8 +6,6 @@ formatter:
 linter:
   rules:
     diagnostic_describe_all_properties: false
-    avoid_print: ignore
-    lines_longer_than_80_chars: ignore
     document_ignores: false
     # NOTE: dart format で末尾カンマ削除 -> dart analyze で末尾カンマが必要とループするため無効化中
     require_trailing_commas: ignore
@@ -20,11 +18,12 @@ analyzer:
   errors:
     # https://pub.dev/packages/freezed#install
     invalid_annotation_target: ignore
+    avoid_print: ignore
+    lines_longer_than_80_chars: ignore
   plugins:
     - custom_lint
   exclude:
     - "**/DerivedData/**"
-
 custom_lint:
   rules:
     - prefer_clock_now: false

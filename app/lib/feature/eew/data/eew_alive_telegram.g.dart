@@ -55,7 +55,7 @@ final class EewAliveNormalTelegramProvider
 }
 
 String _$eewAliveNormalTelegramHash() =>
-    r'3d5ba64b3f98437062584f49208f9898a32358f3';
+    r'7f675965e740729ae41accb3b058d7fe4f216dff';
 
 /// イベント終了していないEEW
 

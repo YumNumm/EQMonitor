@@ -166,4 +166,4 @@ final class _FetchShakeDetectionEventsProvider
 }
 
 String _$_fetchShakeDetectionEventsHash() =>
-    r'f38c3e2f402f56379e8ee0ebb8c8eef755723690';
+    r'7232b579c015a3c4de7d370eaa51ca1dbf8d5f24';

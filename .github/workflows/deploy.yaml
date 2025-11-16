@@ -18,9 +18,12 @@ on:
         default: true
         type: boolean
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   define-matrix:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     timeout-minutes: 1
     outputs:
       deploy-ios: ${{ steps.define-environment-matrix.outputs.deploy-ios }}
@@ -74,7 +77,7 @@ jobs:
   build-ios:
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-ios }}
-    runs-on: macos-latest
+    runs-on: macos-26
     timeout-minutes: 30
     steps:
       # https://github.com/actions/checkout
@@ -83,32 +86,37 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup application runtime & Resolve dependencies
-        uses: ./.github/actions/setup-application-runtime
-
-      - name: Setup macOS Environment
-        uses: ./.github/actions/setup-macos-environment
-
-      - name: Extract Dotenv
-        run: |
-          echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
-          tar -xzf environment.tar.gz
-          rm environment.tar.gz
-          ls -l environment/
-
-      - uses: irgaly/xcode-cache@4141f139f00e335c6e1031fb93e667181f86146f # v1.9.2
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v3.1.1
         with:
-          key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.sha }}
-          restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
+          install_args: "flutter xcbeautify"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --dotenv); do
+            echo $line >> "$GITHUB_ENV"
+            echo "::add-mask::${line#*=}"
+          done
 
       - name: Enable Swift Package Manager
-        run: flutter config --enable-swift-package-manager
-
-      - name: Build iOS
-        working-directory: app
         run: |
-          flutter build ipa \
-            --dart-define-from-file=../environment/.env.prod
+          flutter config --enable-swift-package-manager
+
+      - name: Resolve dependencies
+        working-directory: apps/app
+        run: dart pub get --enforce-lockfile
+
+      - name: Configure iOS
+        working-directory: apps/app
+        run: |
+          flutter build ios --config-only \
+            --no-codesign \
+            --build-number=${{ github.run_number }} \
+            --dart-define-from-file=environments/.env.prod \
+            --dart-define COMMIT_INFORMATION=${{ github.ref_name }}-${{ github.sha }}
 
       - name: Extract App Store Connect API Key
         working-directory: app/ios
@@ -117,40 +125,54 @@ jobs:
             > AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
           ls -l AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
 
-      - name: Archive
-        working-directory: app
+      - name: Extract App Store Connect API Key
+        working-directory: apps/app/ios
         run: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -sdk iphoneos \
-            -configuration Release archive \
-            -archivePath build/ios/Runner.xcarchive \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            CODE_SIGNING_REQUIRED=YES \
-            CODE_SIGNING_ALLOWED=YES | xcbeautify
+          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
+            > AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
 
+      - name: Archive
+        working-directory: apps/app
+        run: |
+          xcodebuild archive \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/ios/Runner.xcarchive \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO | xcbeautify
+
+      - name: Embed entitlements
+        working-directory: apps/app
+        run: |
+          codesign \
+            --entitlements ios/Runner/Runner.entitlements \
+            --force \
+            --sign "-" build/ios/Runner.xcarchive/Products/Applications/Runner.app
+
+      - name: Archive
+        working-directory: apps/app
+        run: |
           xcodebuild -exportArchive \
             -archivePath build/ios/Runner.xcarchive \
             -exportOptionsPlist ios/ExportOptions.plist \
             -exportPath . \
             -allowProvisioningUpdates \
-            -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
-            -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 \
-          | xcbeautify
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_API_KEY_ISSUER_ID \
+            -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
+            -authenticationKeyPath ${{ github.workspace }}/apps/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8 \
+          | xcbeautify --renderer github-actions
 
-      - name: List files
-        run: |
-          ls -lah app/
-          echo "---"
-          ls -lah app/build/
-
+      # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: EQMonitor-ios.ipa
-          path: app/eqmonitor.ipa
+          name: FlutterKaigi 2025-ios.ipa
+          path: apps/app/FlutterKaigi 2025.ipa
           if-no-files-found: error
+
 
   deploy-ios:
     needs: build-ios
