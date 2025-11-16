@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'replay_data.freezed.dart';
@@ -59,7 +61,8 @@ abstract class JmaXmlTelegramReplayData
 
   @override
   String toString() =>
-      'JmaXmlTelegramReplayData(time: $time, title: $title, telegram: ${telegram.substring(0, 10)}...)';
+      'JmaXmlTelegramReplayData(time: $time, title: $title, '
+      'telegram: ${telegram.substring(0, 10)}...)';
 }
 
 @freezed
@@ -88,7 +91,8 @@ abstract class JmaBinaryTelegramReplayData
 
   @override
   String toString() =>
-      'JmaBinaryTelegramReplayData(time: $time, telegramType: $telegramType, data: ${data.length} bytes)';
+      'JmaBinaryTelegramReplayData(time: $time, telegramType: $telegramType, '
+      'data: ${data.length} bytes)';
 }
 
 @freezed
@@ -245,7 +249,8 @@ enum ReplayDataType {
   kyoshinMonitorEewJson(101),
   keviJson(1000),
   snpLogEntry(1001),
-  axisJson(1002);
+  axisJson(1002)
+  ;
 
   const ReplayDataType(this.value);
   final int value;
@@ -256,7 +261,8 @@ enum ImageType {
   pga(1),
   pgv(2),
   psWave(3),
-  estShindo(4);
+  estShindo(4)
+  ;
 
   const ImageType(this.value);
   final int value;
@@ -264,7 +270,8 @@ enum ImageType {
 
 enum JsonType {
   eew(0),
-  eewWarning(1);
+  eewWarning(1)
+  ;
 
   const JsonType(this.value);
   final int value;

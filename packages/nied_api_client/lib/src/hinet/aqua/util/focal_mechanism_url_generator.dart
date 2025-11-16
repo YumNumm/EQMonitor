@@ -1,5 +1,4 @@
 import 'package:nied_api_client/src/hinet/aqua/model/aqua_event_type.dart';
-import 'package:timezone/timezone.dart';
 
 /// 発震機構解画像のURL生成ユーティリティ
 class FocalMechanismUrlGenerator {
