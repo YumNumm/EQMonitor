@@ -28,7 +28,6 @@ class ReplayDataParser {
       data.offsetInBytes + magicHeader.length,
     );
     final (header, headerOffset) = _readHeader(headerDataView);
-    print((header, headerOffset));
 
     final dataView = Uint8List.view(
       data.buffer,
@@ -52,7 +51,6 @@ class ReplayDataParser {
     if (headerData is! List<dynamic>) {
       throw Exception('Header is invalid: ${headerData.runtimeType}');
     }
-    print(headerData);
     final header = ReplayFileHeader.fromMsgPack(headerData);
     assert(
       header.version == 0,

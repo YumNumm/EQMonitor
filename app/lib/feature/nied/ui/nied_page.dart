@@ -18,6 +18,12 @@ class NiedPage extends StatelessWidget {
             leading: const Icon(Icons.waves),
             onTap: () async => const AquaRoute().push<void>(context),
           ),
+          ListTile(
+            title: const Text('F-net'),
+            subtitle: const Text('広帯域地震観測網'),
+            leading: const Icon(Icons.sensors),
+            onTap: () async => const FnetRoute().push<void>(context),
+          ),
         ],
       ),
     );

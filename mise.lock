@@ -6,11 +6,6 @@ backend = "aqua:suzuki-shunsuke/tfcmt"
 version = "2.3.5"
 backend = "aqua:biomejs/biome"
 
-[tools.biome.platforms.macos-arm64]
-checksum = "sha256:d01b992c2c83123eb4fa13f2762908fdb769ed2f7e6a298cda293bf36e8fa4b5"
-size = 38265008
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.5/biome-darwin-arm64"
-
 [[tools.flutter]]
 version = "3.38.1-stable"
 backend = "asdf:flutter"
@@ -20,25 +15,20 @@ version = "1.16.2"
 backend = "gem:cocoapods"
 
 [[tools.java]]
-version = "21.0.2"
+version = "25.0.1"
 backend = "core:java"
 
 [[tools.node]]
-version = "25.1.0"
+version = "25.2.0"
 backend = "core:node"
 
 [[tools."pipx:codemagic-cli-tools"]]
-version = "0.61.1"
+version = "0.62.1"
 backend = "pipx:codemagic-cli-tools"
 
 [[tools.pnpm]]
 version = "10.22.0"
 backend = "aqua:pnpm/pnpm"
-
-[tools.pnpm.platforms.macos-arm64]
-checksum = "sha256:818bfd5782292cc74673e5f5f365ffc88cc735b1eff6ded342322eb7f2d2ce94"
-size = 62505632
-url = "https://github.com/pnpm/pnpm/releases/download/v10.22.0/pnpm-macos-arm64"
 
 [[tools.ruby]]
 version = "3.4.7"
@@ -49,7 +39,7 @@ version = "0.59.1"
 backend = "aqua:terraform-linters/tflint"
 
 [[tools.uv]]
-version = "0.9.8"
+version = "0.9.9"
 backend = "aqua:astral-sh/uv"
 
 [[tools.websocat]]
