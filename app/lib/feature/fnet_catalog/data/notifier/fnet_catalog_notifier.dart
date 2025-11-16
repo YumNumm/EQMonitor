@@ -1,14 +1,13 @@
+import 'package:eqmonitor/feature/fnet_catalog/data/repository/fnet_catalog_repository.dart';
 import 'package:nied_api_client/nied_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../repository/fnet_catalog_repository.dart';
 
 part 'fnet_catalog_notifier.g.dart';
 
 @riverpod
 class FnetCatalogNotifier extends _$FnetCatalogNotifier {
   @override
-  Future<List<FnetEarthquakeEvent>> build({
+  Future<List<FnetEvent>> build({
     required int year,
     int? month,
   }) async {

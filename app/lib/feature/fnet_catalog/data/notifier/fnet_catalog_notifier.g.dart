@@ -15,8 +15,7 @@ part of 'fnet_catalog_notifier.dart';
 const fnetCatalogProvider = FnetCatalogNotifierFamily._();
 
 final class FnetCatalogNotifierProvider
-    extends
-        $AsyncNotifierProvider<FnetCatalogNotifier, List<FnetEarthquakeEvent>> {
+    extends $AsyncNotifierProvider<FnetCatalogNotifier, List<FnetEvent>> {
   const FnetCatalogNotifierProvider._({
     required FnetCatalogNotifierFamily super.from,
     required ({int year, int? month}) super.argument,
@@ -54,15 +53,15 @@ final class FnetCatalogNotifierProvider
 }
 
 String _$fnetCatalogNotifierHash() =>
-    r'978c5e1dc7ca01ebd6a6bf3d4674eb3aeba2ddbd';
+    r'51b2970b8ace4be75b206eb581091ddd988fd569';
 
 final class FnetCatalogNotifierFamily extends $Family
     with
         $ClassFamilyOverride<
           FnetCatalogNotifier,
-          AsyncValue<List<FnetEarthquakeEvent>>,
-          List<FnetEarthquakeEvent>,
-          FutureOr<List<FnetEarthquakeEvent>>,
+          AsyncValue<List<FnetEvent>>,
+          List<FnetEvent>,
+          FutureOr<List<FnetEvent>>,
           ({int year, int? month})
         > {
   const FnetCatalogNotifierFamily._()
@@ -84,31 +83,22 @@ final class FnetCatalogNotifierFamily extends $Family
   String toString() => r'fnetCatalogProvider';
 }
 
-abstract class _$FnetCatalogNotifier
-    extends $AsyncNotifier<List<FnetEarthquakeEvent>> {
+abstract class _$FnetCatalogNotifier extends $AsyncNotifier<List<FnetEvent>> {
   late final _$args = ref.$arg as ({int year, int? month});
   int get year => _$args.year;
   int? get month => _$args.month;
 
-  FutureOr<List<FnetEarthquakeEvent>> build({required int year, int? month});
+  FutureOr<List<FnetEvent>> build({required int year, int? month});
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(year: _$args.year, month: _$args.month);
-    final ref =
-        this.ref
-            as $Ref<
-              AsyncValue<List<FnetEarthquakeEvent>>,
-              List<FnetEarthquakeEvent>
-            >;
+    final ref = this.ref as $Ref<AsyncValue<List<FnetEvent>>, List<FnetEvent>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<List<FnetEarthquakeEvent>>,
-                List<FnetEarthquakeEvent>
-              >,
-              AsyncValue<List<FnetEarthquakeEvent>>,
+              AnyNotifier<AsyncValue<List<FnetEvent>>, List<FnetEvent>>,
+              AsyncValue<List<FnetEvent>>,
               Object?,
               Object?
             >;

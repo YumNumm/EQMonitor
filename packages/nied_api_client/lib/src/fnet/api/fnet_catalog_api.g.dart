@@ -12,7 +12,7 @@ part of 'fnet_catalog_api.dart';
 
 class _FnetCatalogApi implements FnetCatalogApi {
   _FnetCatalogApi(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://www.fnet.bosai.go.jp/event/mcata';
+    baseUrl ??= 'https://www.fnet.bosai.go.jp/event/mcata/data/';
   }
 
   final Dio _dio;
