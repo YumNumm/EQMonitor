@@ -163,7 +163,6 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
           ),
         );
       case null:
-        print('geometry is null: $feature');
         continue;
       case _:
         throw UnimplementedError(

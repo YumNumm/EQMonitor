@@ -19,7 +19,7 @@ class SheetHeader extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          if (action != null) action!,
+          ?action,
         ],
       ),
     );

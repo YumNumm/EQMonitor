@@ -1,10 +1,11 @@
-import 'package:intl/intl.dart';
 import 'package:nied_api_client/src/hinet/fnet/model/fnet_event.dart';
 
 /// F-netカタログデータのパーサー
 class FnetCatalogParser {
+  const FnetCatalogParser();
+
   /// カタログテキストをパースしてイベントリストを返す
-  static List<FnetEvent> parse(String content) {
+  List<FnetEvent> parse(String content) {
     final lines = content.split('\n');
     final events = <FnetEvent>[];
 
@@ -17,7 +18,7 @@ class FnetCatalogParser {
       try {
         final event = _parseLine(line);
         events.add(event);
-      } catch (e) {
+      } on Exception catch (_) {
         // パースエラーは無視して次の行へ
         continue;
       }
@@ -26,11 +27,11 @@ class FnetCatalogParser {
     return events;
   }
 
-  static FnetEvent _parseLine(String line) {
+  FnetEvent _parseLine(String line) {
     final parts = line.split(RegExp(r'\s+'));
 
     if (parts.length < 20) {
-      throw FormatException('Invalid line format: not enough fields');
+      throw const FormatException('Invalid line format: not enough fields');
     }
 
     // 日時のパース (例: 2025/11/01,14:44:06.18)

@@ -55,7 +55,7 @@ class _FnetCatalogList extends HookConsumerWidget {
         final targetYear = selectedMonth?.year ?? now.year;
         final targetMonth = selectedMonth?.month ?? now.month;
 
-        return niedApiClient.hinet.fnet.getEventsByMonth(
+        return niedApiClient.fnet.getEventsByMonth(
           year: targetYear,
           month: targetMonth,
         );
@@ -178,17 +178,16 @@ class _MonthSelector extends StatelessWidget {
             ),
           ),
           OutlinedButton.icon(
-            onPressed: () {
-              showDialog<Month?>(
+            onPressed: () async {
+              final result = await showDialog<Month?>(
                 context: context,
                 builder: (context) => _MonthPickerDialog(
                   initialMonth: selectedMonth,
                 ),
-              ).then((result) {
-                if (result != null) {
-                  onMonthChanged(result);
-                }
-              });
+              );
+              if (result != null) {
+                onMonthChanged(result);
+              }
             },
             icon: const Icon(Icons.calendar_today, size: 18),
             label: const Text('月を選択'),

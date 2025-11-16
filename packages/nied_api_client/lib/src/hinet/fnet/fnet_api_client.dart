@@ -9,9 +9,12 @@ import 'package:nied_api_client/src/hinet/fnet/parser/fnet_catalog_parser.dart';
 class FnetApiClient {
   FnetApiClient({
     required FnetCatalogApi api,
-  }) : _api = api;
+    required FnetCatalogParser parser,
+  }) : _api = api,
+       _parser = parser;
 
   final FnetCatalogApi _api;
+  final FnetCatalogParser _parser;
 
   /// 指定した年月の地震イベントリストを取得
   ///
@@ -24,7 +27,7 @@ class FnetApiClient {
   }) async {
     final yearMonth = DateFormat('yyyyMM').format(DateTime(year, month));
     final content = await _api.getCatalog(year, yearMonth);
-    return FnetCatalogParser.parse(content);
+    return _parser.parse(content);
   }
 
   /// 指定した期間の地震イベントリストを取得
@@ -59,7 +62,7 @@ class FnetApiClient {
   }
 
   /// 最新の地震イベントリストを取得（当月）
-  Future<List<FnetEvent>> getLatestEvents() async {
+  Future<List<FnetEvent>> getLatestEvents() {
     final now = DateTime.now().toUtc();
     return getEventsByMonth(year: now.year, month: now.month);
   }

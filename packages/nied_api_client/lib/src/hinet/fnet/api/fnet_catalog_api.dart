@@ -11,7 +11,7 @@ abstract class FnetCatalogApi {
   /// 指定した年月のカタログデータを取得
   ///
   /// [year] 年（例: 2025）
-  /// [month] 月（例: 11）
+  /// [yearMonth] 年月（例: 202511）
   /// Returns カタログテキスト
   @GET('{year}/{yearMonth}_UT.txt')
   Future<String> getCatalog(

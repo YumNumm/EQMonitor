@@ -11,14 +11,14 @@ class KyoshinMonitorWebApiDataSource {
   final KyoshinMonitorWebApiClient _client;
 
   /// データ時間
-  Future<DataTime> getLatestDataTime() async => _client.getLatestDataTime();
+  Future<DataTime> getLatestDataTime() => _client.getLatestDataTime();
 
   /// メンテナンスメッセージ
-  Future<MaintenanceMessage> getMaintenanceMessage() async =>
+  Future<MaintenanceMessage> getMaintenanceMessage() =>
       _client.getMaintenanceMessage();
 
   /// ベース画像
-  Future<List<int>> getBaseMapImageData(BaseMapTheme theme) async =>
+  Future<List<int>> getBaseMapImageData(BaseMapTheme theme) =>
       _client.getBaseMapImageData(theme: theme.urlString);
 
   /// スケール
@@ -26,14 +26,14 @@ class KyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     BaseMapTheme theme,
-  ) async => _client.getScaleImageData(
+  ) => _client.getScaleImageData(
     type: type.urlString,
     layer: layer.urlString,
     theme: theme.urlString,
   );
 
   /// PsWaveImg
-  Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
+  Future<List<int>> getPsWaveImageData(DateTime dateTime) =>
       _client.getPsWaveImageData(
         date: dateFormat.format(dateTime),
         dateTime: dateTimeFormat.format(dateTime),
@@ -44,7 +44,7 @@ class KyoshinMonitorWebApiDataSource {
     required DateTime dateTime,
     required RealtimeLayer layer,
     required RealtimeDataType type,
-  }) async {
+  }) {
     assert(
       !type.isLpgm,
       'LPGM系列の場合はLpgmKyoshinMonitorWebApiDataSourceを使用してください',
@@ -58,7 +58,7 @@ class KyoshinMonitorWebApiDataSource {
   }
 
   /// 予想震度
-  Future<List<int>> getEstShindoImageData(DateTime dateTime) async =>
+  Future<List<int>> getEstShindoImageData(DateTime dateTime) =>
       _client.getEstShindoImageData(
         date: dateFormat.format(dateTime),
         dateTime: dateTimeFormat.format(dateTime),
@@ -131,7 +131,8 @@ enum RealtimeDataType {
 
   /// 階級データ(周期7秒台)
   /// Lpgm系列でのみ利用可
-  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true);
+  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', isLpgm: true)
+  ;
 
   const RealtimeDataType(
     this.displayName,
@@ -154,7 +155,8 @@ enum RealtimeLayer {
   surface('地上', 's'),
 
   /// 地下
-  underground('地下', 'b');
+  underground('地下', 'b')
+  ;
 
   const RealtimeLayer(this.displayName, this.urlString);
 
@@ -167,7 +169,8 @@ enum RealtimeLayer {
 
 enum BaseMapTheme {
   white('白', 'w'),
-  gray('グレー', 'b');
+  gray('グレー', 'b')
+  ;
 
   const BaseMapTheme(this.displayName, this.urlString);
 
