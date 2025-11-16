@@ -236,7 +236,7 @@ class _SettingSection extends StatelessWidget {
                   ),
                 ),
               ),
-              if (trailing != null) trailing!,
+              ?trailing,
             ],
           ),
           if (description != null)
