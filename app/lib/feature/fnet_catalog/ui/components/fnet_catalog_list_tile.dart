@@ -9,7 +9,7 @@ class FnetCatalogListTile extends StatelessWidget {
     super.key,
   });
 
-  final FnetEarthquakeEvent event;
+  final FnetEvent event;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class FnetCatalogListTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Mw${event.mtMagnitude.toStringAsFixed(1)}',
+                        'Mw${event.momentMagnitude.toStringAsFixed(1)}',
                         style: theme.textTheme.bodySmall,
                       ),
                     ],
@@ -87,24 +87,22 @@ class FnetCatalogListTile extends StatelessWidget {
     );
   }
 
-  void _showDetails(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) {
-          return _DetailSheet(
-            event: event,
-            scrollController: scrollController,
-          );
-        },
-      ),
-    );
-  }
+  void _showDetails(BuildContext context) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) => DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      expand: false,
+      builder: (context, scrollController) {
+        return _DetailSheet(
+          event: event,
+          scrollController: scrollController,
+        );
+      },
+    ),
+  );
 }
 
 class _MagnitudeChip extends StatelessWidget {
@@ -122,7 +120,7 @@ class _MagnitudeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color),
       ),
@@ -138,10 +136,18 @@ class _MagnitudeChip extends StatelessWidget {
   }
 
   Color _getMagnitudeColor(double magnitude) {
-    if (magnitude >= 7.0) return Colors.purple;
-    if (magnitude >= 6.0) return Colors.red;
-    if (magnitude >= 5.0) return Colors.orange;
-    if (magnitude >= 4.0) return Colors.yellow[700]!;
+    if (magnitude >= 7.0) {
+      return Colors.purple;
+    }
+    if (magnitude >= 6.0) {
+      return Colors.red;
+    }
+    if (magnitude >= 5.0) {
+      return Colors.orange;
+    }
+    if (magnitude >= 4.0) {
+      return Colors.yellow[700]!;
+    }
     return Colors.green;
   }
 }
@@ -184,7 +190,7 @@ class _DetailSheet extends StatelessWidget {
     required this.scrollController,
   });
 
-  final FnetEarthquakeEvent event;
+  final FnetEvent event;
   final ScrollController scrollController;
 
   @override
@@ -192,7 +198,7 @@ class _DetailSheet extends StatelessWidget {
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss.SSS');
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -204,7 +210,7 @@ class _DetailSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -245,7 +251,7 @@ class _DetailSheet extends StatelessWidget {
                     ),
                     _buildRow(
                       'モーメントマグニチュード',
-                      event.mtMagnitude.toStringAsFixed(1),
+                      event.momentMagnitude.toStringAsFixed(1),
                     ),
                     _buildRow(
                       '地震モーメント',

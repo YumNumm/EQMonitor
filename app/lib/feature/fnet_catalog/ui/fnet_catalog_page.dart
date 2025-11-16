@@ -1,9 +1,8 @@
+import 'package:eqmonitor/feature/fnet_catalog/data/notifier/fnet_catalog_notifier.dart';
+import 'package:eqmonitor/feature/fnet_catalog/ui/components/fnet_catalog_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../data/notifier/fnet_catalog_notifier.dart';
-import 'components/fnet_catalog_list_tile.dart';
 
 /// F-netカタログページ
 class FnetCatalogPage extends HookConsumerWidget {
@@ -16,7 +15,7 @@ class FnetCatalogPage extends HookConsumerWidget {
     final selectedMonth = useState<int?>(null);
 
     final state = ref.watch(
-      fnetCatalogNotifierProvider(
+      fnetCatalogProvider(
         year: selectedYear.value,
         month: selectedMonth.value,
       ),
@@ -42,49 +41,50 @@ class FnetCatalogPage extends HookConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(
-            fnetCatalogNotifierProvider(
+            fnetCatalogProvider(
               year: selectedYear.value,
               month: selectedMonth.value,
             ),
           );
         },
         child: switch (state) {
-          AsyncData(:final value) => value.isEmpty
-              ? const Center(
-                  child: Text('データがありません'),
-                )
-              : ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    final event = value[index];
-                    return FnetCatalogListTile(event: event);
-                  },
-                ),
-          AsyncError(:final error) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('エラーが発生しました\n$error'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.invalidate(
-                        fnetCatalogNotifierProvider(
-                          year: selectedYear.value,
-                          month: selectedMonth.value,
-                        ),
-                      );
+          AsyncData(:final value) =>
+            value.isEmpty
+                ? const Center(
+                    child: Text('データがありません'),
+                  )
+                : ListView.builder(
+                    itemCount: value.length,
+                    itemBuilder: (context, index) {
+                      final event = value[index];
+                      return FnetCatalogListTile(event: event);
                     },
-                    child: const Text('再読み込み'),
                   ),
-                ],
-              ),
+          AsyncError(:final error) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                Text('エラーが発生しました\n$error'),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(
+                      fnetCatalogProvider(
+                        year: selectedYear.value,
+                        month: selectedMonth.value,
+                      ),
+                    );
+                  },
+                  child: const Text('再読み込み'),
+                ),
+              ],
             ),
+          ),
           _ => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            child: CircularProgressIndicator(),
+          ),
         },
       ),
     );
@@ -115,7 +115,7 @@ class _FilterBar extends StatelessWidget {
         children: [
           Expanded(
             child: DropdownButtonFormField<int>(
-              value: selectedYear,
+              initialValue: selectedYear,
               decoration: const InputDecoration(
                 labelText: '年',
                 border: OutlineInputBorder(),
@@ -140,7 +140,7 @@ class _FilterBar extends StatelessWidget {
           const SizedBox(width: 16),
           Expanded(
             child: DropdownButtonFormField<int?>(
-              value: selectedMonth,
+              initialValue: selectedMonth,
               decoration: const InputDecoration(
                 labelText: '月',
                 border: OutlineInputBorder(),
@@ -151,7 +151,6 @@ class _FilterBar extends StatelessWidget {
               ),
               items: [
                 const DropdownMenuItem<int?>(
-                  value: null,
                   child: Text('全て'),
                 ),
                 ...List.generate(12, (index) => index + 1).map((month) {

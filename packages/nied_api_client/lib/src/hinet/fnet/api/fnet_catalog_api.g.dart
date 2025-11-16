@@ -31,7 +31,7 @@ class _FnetCatalogApi implements FnetCatalogApi {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '${year}/${yearMonth}_UT.txt',
+            '/data/${year}/${yearMonth}_UT.txt',
             queryParameters: queryParameters,
             data: _data,
           )

@@ -6,7 +6,6 @@ library;
 
 export 'src/fnet/api/fnet_catalog_api.dart';
 export 'src/fnet/fnet_api_client.dart';
-export 'src/fnet/model/fnet_earthquake_event.dart';
 export 'src/fnet/parser/fnet_catalog_parser.dart';
 export 'src/hinet/aqua/api/aqua_catalog_api.dart';
 export 'src/hinet/aqua/aqua_api_client.dart';
@@ -16,9 +15,6 @@ export 'src/hinet/aqua/model/focal_mechanism.dart';
 export 'src/hinet/aqua/model/language.dart';
 export 'src/hinet/aqua/parser/aqua_html_parser.dart';
 export 'src/hinet/aqua/util/focal_mechanism_url_generator.dart';
-export 'src/hinet/fnet/api/fnet_catalog_api.dart';
-export 'src/hinet/fnet/fnet_api_client.dart';
 export 'src/hinet/fnet/model/fnet_event.dart';
-export 'src/hinet/fnet/parser/fnet_catalog_parser.dart';
 export 'src/hinet/hinet_api_client.dart';
 export 'src/nied_api_client.dart';

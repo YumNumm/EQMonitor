@@ -2,21 +2,9 @@
 version = "4.14.12"
 backend = "aqua:suzuki-shunsuke/tfcmt"
 
-<<<<<<< HEAD
 [[tools.biome]]
 version = "2.3.5"
 backend = "aqua:biomejs/biome"
-
-[tools.biome.platforms.macos-arm64]
-checksum = "sha256:d01b992c2c83123eb4fa13f2762908fdb769ed2f7e6a298cda293bf36e8fa4b5"
-size = 38265008
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.5/biome-darwin-arm64"
-=======
-[tools."aqua:suzuki-shunsuke/tfcmt".platforms.linux-x64]
-checksum = "sha256:08e0ac75a743fde6948d8482f992c90b8bee5e99fe1b5e4de11ccea428e66a86"
-size = 4695416
-url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt_linux_amd64.tar.gz"
->>>>>>> 0a08d0f1490fdc902d175d415269dbaa3b5d21da
 
 [[tools.flutter]]
 version = "3.38.1-stable"
@@ -30,33 +18,9 @@ backend = "gem:cocoapods"
 version = "25.0.1"
 backend = "core:java"
 
-<<<<<<< HEAD
-[tools.java.platforms.macos-arm64]
-checksum = "sha256:9175d602f3be2ffa241eb01d24ba4541e29a4dfa2095d4bdc1c9eb4bf4d56705"
-size = 215408868
-url = "https://download.java.net/java/GA/jdk25.0.1/2fbf10d8c78e40bd87641c434705079d/8/GPL/openjdk-25.0.1_macos-aarch64_bin.tar.gz"
-=======
-[tools.java.platforms.linux-x64]
-checksum = "sha256:a2def047a73941e01a73739f92755f86b895811afb1f91243db214cff5bdac3f"
-size = 203616881
-url = "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
->>>>>>> 0a08d0f1490fdc902d175d415269dbaa3b5d21da
-
 [[tools.node]]
 version = "25.2.0"
 backend = "core:node"
-
-<<<<<<< HEAD
-[tools.node.platforms.macos-arm64]
-checksum = "sha256:5ce975101e85598d2f1f84b297e8bd7ff315e46fa644be1ffc76f0c48de480bb"
-size = 52638870
-url = "https://nodejs.org/dist/v25.2.0/node-v25.2.0-darwin-arm64.tar.gz"
-=======
-[tools.node.platforms.linux-x64]
-checksum = "sha256:0b8de924cd43546a2098c091b73002442cd61340622b2c1489df408755de21fc"
-size = 54581244
-url = "https://nodejs.org/dist/v25.1.0/node-v25.1.0-linux-x64.tar.gz"
->>>>>>> 0a08d0f1490fdc902d175d415269dbaa3b5d21da
 
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.62.1"
@@ -66,11 +30,6 @@ backend = "pipx:codemagic-cli-tools"
 version = "10.22.0"
 backend = "aqua:pnpm/pnpm"
 
-[tools.pnpm.platforms.macos-arm64]
-checksum = "sha256:818bfd5782292cc74673e5f5f365ffc88cc735b1eff6ded342322eb7f2d2ce94"
-size = 62505632
-url = "https://github.com/pnpm/pnpm/releases/download/v10.22.0/pnpm-macos-arm64"
-
 [[tools.ruby]]
 version = "3.4.7"
 backend = "core:ruby"
@@ -79,38 +38,14 @@ backend = "core:ruby"
 version = "0.59.1"
 backend = "aqua:terraform-linters/tflint"
 
-[tools.tflint.platforms.linux-x64]
-checksum = "sha256:6108d84282292f11d793dc8038ce08fbc629dcd25324d6f13c63d8100b52e01f"
-size = 16335399
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.59.1/tflint_linux_amd64.zip"
-
 [[tools.uv]]
 version = "0.9.9"
 backend = "aqua:astral-sh/uv"
-
-<<<<<<< HEAD
-[tools.uv.platforms.macos-arm64]
-checksum = "sha256:737e1c2c4f97577aa7764141846e27de915eebb3b2a0f467451089a64824d2f7"
-size = 18176790
-url = "https://github.com/astral-sh/uv/releases/download/0.9.9/uv-aarch64-apple-darwin.tar.gz"
-=======
-[tools.uv.platforms.linux-x64]
-checksum = "sha256:7763091b882874ae80d162ff77284032ce83174da68c3a759988c81e677e1286"
-size = 21566033
-url = "https://github.com/astral-sh/uv/releases/download/0.9.8/uv-x86_64-unknown-linux-musl.tar.gz"
->>>>>>> 0a08d0f1490fdc902d175d415269dbaa3b5d21da
 
 [[tools.websocat]]
 version = "1.14.0"
 backend = "aqua:vi/websocat"
 
-<<<<<<< HEAD
 [[tools.xcbeautify]]
 version = "3.1.0"
 backend = "aqua:cpisciotta/xcbeautify"
-=======
-[tools.websocat.platforms.linux-x64]
-checksum = "blake3:0a3027e1be724706e4156bca6098653425bfa8375d88cc0b8fd1fd41ccb6df89"
-size = 7304728
-url = "https://github.com/vi/websocat/releases/download/v1.14.0/websocat.x86_64-unknown-linux-musl"
->>>>>>> 0a08d0f1490fdc902d175d415269dbaa3b5d21da
