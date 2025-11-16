@@ -1,12 +1,8 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_controller_card.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_details_map_layer_modal.dart';
-import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lat_lng/lat_lng.dart' as app_lat_lng;
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   const EarthquakeHistoryDetailsMapView({required this.earthquake, super.key});
@@ -27,57 +23,27 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
       _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
   }
-
-  MapCameraPosition _calculateCameraPosition(
-    EarthquakeV1Extended earthquake,
-    double screenWidth,
-    double screenHeight,
-    bool isFarEarthquake,
-  ) {
-    if (earthquake.latitude != null && earthquake.longitude != null) {
-      final lat = earthquake.latitude!;
-      final lng = earthquake.longitude!;
-
-      final maxIntensity = earthquake.maxIntensity;
-      final zoom = switch (maxIntensity) {
-        _ when isFarEarthquake => 4.0,
-        _ => 5.0,
-      };
-
-      return MapCameraPosition(
-        target: app_lat_lng.LatLng(lat, lng),
-        zoom: zoom,
-      );
-    } else {
-      return MapCameraPosition.fitBounds(
-        screenWidth: screenWidth,
-        screenHeight: screenHeight,
-        bounds: (minLat: 30.0, minLng: 128.8, maxLat: 45.8, maxLng: 145.1),
-        padding: 16,
-      );
-    }
-  }
 }
 
-class _MapHeader extends ConsumerWidget {
-  const _MapHeader({required this.initialPosition});
+// class _MapHeader extends ConsumerWidget {
+//   const _MapHeader({required this.initialPosition});
 
-  final MapCameraPosition initialPosition;
+//   final MapCameraPosition initialPosition;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox.shrink(),
-        const Column(),
-        EarthquakeHistoryControllerCard(
-          onLayerButtonTap: () async =>
-              EarthquakeHistoryDetailsMapLayerModal.show(context),
-          onLocationButtonTap: () async => throw UnimplementedError(),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const SizedBox.shrink(),
+//         const Column(),
+//         EarthquakeHistoryControllerCard(
+//           onLayerButtonTap: () async =>
+//               EarthquakeHistoryDetailsMapLayerModal.show(context),
+//           onLocationButtonTap: () async => throw UnimplementedError(),
+//         ),
+//       ],
+//     );
+//   }
+// }

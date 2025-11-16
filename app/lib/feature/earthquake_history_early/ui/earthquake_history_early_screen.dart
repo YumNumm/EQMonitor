@@ -47,7 +47,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.info),
-            onPressed: () async =>
+            onPressed: () =>
                 _EarthquakeHistoryEarlyInformationModal.show(context),
           ),
         ],
@@ -58,7 +58,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
         onRefresh: () async => ref.refresh(
           earthquakeHistoryEarlyProvider(parameter.value).notifier,
         ),
-        onScrollEnd: () async => ref
+        onScrollEnd: () => ref
             .read(
               earthquakeHistoryEarlyProvider(
                 parameter.value,
@@ -213,7 +213,7 @@ class _SliverListBody extends HookConsumerWidget {
               final item = data.$1[index];
               return EarthquakeHistoryEarlyListTile(
                 item: item,
-                onTap: () async => EarthquakeHistoryEarlyDetailsRoute(
+                onTap: () => EarthquakeHistoryEarlyDetailsRoute(
                   id: item.id,
                 ).push<void>(context),
               );
@@ -254,7 +254,7 @@ class _SliverListBody extends HookConsumerWidget {
                           text: '地震履歴',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () async => const EarthquakeHistoryRoute()
+                            ..onTap = () => const EarthquakeHistoryRoute()
                                 .push<void>(context),
                         ),
                         const TextSpan(text: 'を使ってください'),
@@ -291,7 +291,7 @@ class _SliverListBody extends HookConsumerWidget {
 class _EarthquakeHistoryEarlyInformationModal extends StatelessWidget {
   const _EarthquakeHistoryEarlyInformationModal();
 
-  static Future<void> show(BuildContext context) async => showModalBottomSheet(
+  static Future<void> show(BuildContext context) => showModalBottomSheet(
     context: context,
     builder: (_) => const _EarthquakeHistoryEarlyInformationModal(),
   );

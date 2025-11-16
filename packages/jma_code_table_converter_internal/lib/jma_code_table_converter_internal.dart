@@ -51,6 +51,7 @@ class JmaCodeTableConverter {
     return AreaInformationPrefectureEarthquake(
       items: [
         for (final e in data)
+          // ignore: lines_longer_than_80_chars
           AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem(
             code: e[0],
             name: e[1],

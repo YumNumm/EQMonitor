@@ -4,11 +4,11 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
-import 'package:eqmonitor/core/provider/config/permission/permission_notifier.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
@@ -18,7 +18,6 @@ import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
-import 'package:eqmonitor/feature/donation/data/donation_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/firebase_options.dart';
@@ -32,10 +31,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preference_app_group/shared_preference_app_group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:core/core.dart' as core;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -124,13 +121,7 @@ Future<void> main() async {
             ),
     ).wait,
     (
-      initInAppPurchase(),
       kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
-      !kIsWeb && Platform.isIOS
-          ? SharedPreferenceAppGroup.setAppGroup(
-              'group.net.yumnumm.eqmonitor',
-            )
-          : Future<void>.value(),
       core.initializeTimeZones(),
     ).wait,
   ).wait;
@@ -153,8 +144,8 @@ Future<void> main() async {
         iosDeviceInfoProvider.overrideWithValue(results.$1.$4!),
       applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$6!),
       jmaCodeTableProvider.overrideWithValue(results.$1.$7),
-      if (results.$2.$2 != null)
-        kyoshinColorMapProvider.overrideWithValue(results.$2.$2!),
+      if (results.$2.$1 != null)
+        kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
     ],
     observers: [if (kDebugMode) CustomProviderObserver(talker)],
   );
@@ -164,7 +155,6 @@ Future<void> main() async {
       kyoshinMonitorInternalObservationPointsConvertedProvider.future,
     ),
     container.read(travelTimeInternalProvider.future),
-    container.read(permissionProvider.notifier).initialize(),
   ).wait;
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));

@@ -24,7 +24,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
           return null;
         }
 
-        _initializeLayer(styleController);
+        unawaited(_initializeLayer(styleController));
 
         return () => _cleanupLayer(styleController);
       },
@@ -37,7 +37,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
           return null;
         }
 
-        _updatePoints(styleController, points);
+        unawaited(_updatePoints(styleController, points));
 
         return null;
       },

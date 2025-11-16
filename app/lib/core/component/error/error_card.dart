@@ -88,7 +88,7 @@ class ErrorCard extends StatelessWidget {
               if (onReload != null) ...[
                 const SizedBox(height: 8),
                 FilledButton.tonalIcon(
-                  onPressed: () async =>
+                  onPressed: () =>
                       FullScreenCircularProgressIndicator.showUntil(
                         context,
                         onReload!,
