@@ -73,7 +73,7 @@ jobs:
 
       - name: Extract SOPS Age Key File
         run: |
-          echo "${{ secrets.AGE_KEY }}" | base64 -d > .config/age/age.txt
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
