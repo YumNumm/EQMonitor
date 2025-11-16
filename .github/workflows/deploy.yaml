@@ -73,7 +73,7 @@ jobs:
 
       - name: Copy mise.local.toml
         run: |
-          cp mise.local.toml .config/mise/mise.local.toml
+          cp mise.local.toml.example mise.local.toml
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
