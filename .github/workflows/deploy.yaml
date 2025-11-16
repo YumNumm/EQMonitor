@@ -20,6 +20,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  XCODE_VERSION: 26.1
 
 jobs:
   define-matrix:
@@ -75,11 +76,20 @@ jobs:
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
 
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml .config/mise/mise.local.toml
+
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v3.1.1
         with:
           install_args: "flutter xcbeautify"
+
+      # https://github.com/maxim-lobanov/setup-xcode
+      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Enable Swift Package Manager
         run: |
@@ -170,15 +180,19 @@ jobs:
       - name: List files
         run: ls -lah build/
 
-      - name: Setup macOS Environment
-        uses: ./.github/actions/setup-macos-environment
-
-      - name: Extract App Store Connect API Key
+      - name: Extract SOPS Age Key File
         run: |
-          mkdir ~/.private_keys
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 -d \
-            > ~/.private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
-          ls -l ~/.private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml .config/mise/mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v3.1.1
+        with:
+          install_args: "xcbeautify"
 
       - name: Upload Ipa to App Store Connect
         run: |
