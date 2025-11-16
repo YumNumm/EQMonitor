@@ -1,8 +1,8 @@
 name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
 environment:
-  sdk: 3.9.2
-  flutter: 3.35.7
+  sdk: 3.10.0
+  flutter: 3.38.1
 workspace:
   - app
   - packages/_base
@@ -30,6 +30,7 @@ dependencies:
   melos: ^7.1.1
 dependency_overrides:
   protobuf: ^4.2.0
+  objective_c: ^9.0.0
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   command:
@@ -38,8 +39,8 @@ melos:
     bootstrap:
       runPubGetInParallel: false
       environment:
-        sdk: 3.9.2
-        flutter: 3.35.7
+        sdk: 3.10.0
+        flutter: 3.38.1
   scripts:
     analyze:
       run: |

@@ -1,12 +1,17 @@
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "4.14.12"
-flutter = "3.35.7-stable"
-java = "21"
-node = "25.1.0"
-"pipx:codemagic-cli-tools" = "0.61.1"
+biome = "latest"
+flutter = "3.38.1-stable"
+"gem:cocoapods" = "latest"
+java = "25"
+node = "25.2.0"
+"pipx:codemagic-cli-tools" = "0.62.1"
+pnpm = "latest"
+ruby = "latest"
 tflint = "0.59.1"
-uv = "0.9.8"
+uv = "0.9.9"
 websocat = "1.14.0"
+xcbeautify = "latest"
 
 [settings]
 lockfile = true

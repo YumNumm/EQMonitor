@@ -10,7 +10,7 @@ class LpgmKyoshinMonitorWebApiDataSource {
   final LpgmKyoshinMonitorWebApiClient _client;
 
   /// ベース画像
-  Future<List<int>> getBaseMapImageData(BaseMapTheme theme) async =>
+  Future<List<int>> getBaseMapImageData(BaseMapTheme theme) =>
       _client.getBaseMapImageData(theme: theme.urlString);
 
   /// スケール
@@ -18,14 +18,14 @@ class LpgmKyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     BaseMapTheme theme,
-  ) async => _client.getScaleImageData(
+  ) => _client.getScaleImageData(
     type: type.urlString,
     layer: layer.urlString,
     theme: theme.urlString,
   );
 
   /// PsWaveImg
-  Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
+  Future<List<int>> getPsWaveImageData(DateTime dateTime) =>
       _client.getPsWaveImageData(
         date: dateFormat.format(dateTime),
         dateTime: dateTimeFormat.format(dateTime),
@@ -36,7 +36,7 @@ class LpgmKyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     DateTime dateTime,
-  ) async => _client.getRealtimeImageData(
+  )  => _client.getRealtimeImageData(
     type: type.urlString,
     layer: layer.urlString,
     date: dateFormat.format(dateTime),

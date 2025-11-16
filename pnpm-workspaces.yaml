@@ -1,0 +1,5 @@
+packages:
+  - "apis/*"
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - bufferutil

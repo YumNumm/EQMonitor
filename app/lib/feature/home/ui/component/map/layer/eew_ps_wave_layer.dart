@@ -30,7 +30,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
           return null;
         }
 
-        _initializeLayer(styleController);
+        unawaited(_initializeLayer(styleController));
 
         return () => _cleanupLayer(styleController);
       },
@@ -45,7 +45,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
 
         final timer = Timer.periodic(
           const Duration(milliseconds: 100),
-          (_) => _updateWaves(ref, styleController),
+          (_) => unawaited(_updateWaves(ref, styleController)),
         );
 
         return timer.cancel;
@@ -119,8 +119,11 @@ class EewPsWaveLayer extends HookConsumerWidget {
     final now = ref.read(timeTickerProvider()).value ?? DateTime.now();
     final travelTimeMap = ref.read(travelTimeDepthMapProvider);
 
-    final (pWaveGeojson, sWaveGeojson) =
-        _calculateGeoJson(eews, now, travelTimeMap);
+    final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(
+      eews,
+      now,
+      travelTimeMap,
+    );
 
     await style.updateGeoJsonSource(id: _pWaveSourceId, data: pWaveGeojson);
     await style.updateGeoJsonSource(id: _sWaveSourceId, data: sWaveGeojson);
@@ -230,5 +233,3 @@ class EewPsWaveLayer extends HookConsumerWidget {
     await style.removeSource(_sWaveSourceId);
   }
 }
-
-

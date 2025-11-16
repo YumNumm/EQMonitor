@@ -10,13 +10,5 @@ class HinetApiClient {
 
   final Dio _dio;
 
-  AquaApiClient? _aqua;
-
-  /// AQUA APIクライアント
-  ///
-  /// AQUAシステム（Accurate and QUick Analysis System for Source Parameters）のAPIにアクセスします
-  AquaApiClient get aqua {
-    _aqua ??= AquaApiClient(_dio);
-    return _aqua!;
-  }
+  AquaApiClient get aqua => AquaApiClient(_dio);
 }

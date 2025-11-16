@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
-import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -47,16 +46,6 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const _AppVersionInformation(),
-          BorderedContainer(
-            accentColor: Theme.of(context).colorScheme.secondaryContainer,
-            padding: EdgeInsets.zero,
-            child: ListTile(
-              title: const Text('EQMonitorを応援する'),
-              subtitle: const Text('開発者に寄付することで、アプリの開発を支援できます'),
-              leading: const Icon(Icons.lightbulb),
-              onTap: () async => const DonationRoute().push<void>(context),
-            ),
-          ),
           const SettingsSectionHeader(text: '各種設定'),
           ListTile(
             title: const Text('通知条件設定'),
@@ -91,7 +80,7 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('サーバの稼働状況'),
             subtitle: const Text('外部Webサイトへ遷移します'),
             leading: const Icon(Icons.network_ping),
-            onTap: () async => launchUrlString(
+            onTap: () => launchUrlString(
               'https://status.eqmonitor.app/',
               mode: LaunchMode.externalApplication,
             ),
@@ -117,7 +106,7 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: const Text('デバッグメニュー'),
               leading: const Icon(Icons.bug_report),
-              onTap: () async => const DebugRoute().push<void>(context),
+              onTap: () => const DebugRoute().push<void>(context),
             ),
           ],
         ],
