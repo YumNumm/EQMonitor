@@ -167,7 +167,9 @@ jobs:
 
   deploy-ios:
     needs: build-ios
-    runs-on: macos-latest
+    runs-on: macos-26
+    environment:
+      name: EQMonitor-iOS
     timeout-minutes: 10
     steps:
       # https://github.com/actions/checkout
@@ -307,6 +309,8 @@ jobs:
     needs: build-android
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    environment:
+      name: EQMonitor-Android
     steps:
       - name: Download artifact aab
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0

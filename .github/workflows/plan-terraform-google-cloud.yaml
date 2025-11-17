@@ -1,0 +1,170 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "terraform/**/*.tf"
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  define-matrix:
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    outputs:
+      targets: ${{ steps.define-matrix.outputs.targets }}
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Define matrix
+        id: define-matrix
+        run: |
+          dirs="googlecloud/environments/production"
+
+          # JSONの配列に変換し、outputsに設定
+          targets=$(echo "$dirs" | jq -R . | jq -sc .)
+          echo "targets=${targets}" >> $GITHUB_OUTPUT
+
+  lint:
+    name: Terraform Lint (${{ matrix.target }})
+    needs:
+      - define-matrix
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
+    defaults:
+      run:
+        working-directory: terraform/${{ matrix.target }}
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v3.1.1
+        with:
+          install_args: "terraform tflint aqua:suzuki-shunsuke/tfcmt"
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo $line >> "$GITHUB_ENV"
+            echo "::add-mask::${line#*=}"
+          done
+
+      - name: Extract backend.tfbackend
+        run: |
+          echo "$TERRAFORM_BACKEND_CONFIGURATION" | base64 -d  \
+            > backend.tfbackend
+
+      - name: Check directory is not empty
+        run: |
+          if [ -z "$(ls -A)" ]; then
+            echo "Directory is empty! Please add a Terraform file to the directory."
+            exit 1
+          fi
+
+      - name: Terraform init
+        run: terraform init -backend-config=backend.tfbackend
+
+      - name: Terraform fmt
+        run: terraform fmt -check -diff
+
+      - name: tflint
+        run: tflint
+
+  plan:
+    name: Terraform Plan (${{ matrix.target }})
+    needs:
+      - lint
+      - define-matrix
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v3.1.1
+        with:
+          install_args: "terraform tflint aqua:suzuki-shunsuke/tfcmt"
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo $line >> "$GITHUB_ENV"
+            echo "::add-mask::${line#*=}"
+          done
+
+      - name: Change directory
+        working-directory: terraform/${{ matrix.target }}
+        run: |
+          echo "Changed directory to terraform/${{ matrix.target }}"
+
+      - name: Extract backend.tfbackend
+        working-directory: terraform/${{ matrix.target }}
+        run: |
+          echo "$TERRAFORM_BACKEND_CONFIGURATION" | base64 -d  \
+            > backend.tfbackend
+
+      - name: Check directory is not empty
+        working-directory: terraform/${{ matrix.target }}
+        run: |
+          if [ -z "$(ls -A)" ]; then
+            echo "Directory is empty! Please add a Terraform file to the directory."
+            exit 1
+          fi
+
+      - name: Terraform init
+        working-directory: terraform/${{ matrix.target }}
+        id: init
+        run: terraform init -backend-config=backend.tfbackend
+
+      - name: Terraform fmt
+        working-directory: terraform/${{ matrix.target }}
+        id: fmt
+        run: terraform fmt -check -diff
+
+      - name: Terraform validate
+        working-directory: terraform/${{ matrix.target }}
+        id: validate
+        run: terraform validate
+
+      - name: Terraform plan
+        working-directory: terraform/${{ matrix.target }}
+        id: plan
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tfcmt plan \
+            -patch \
+            -var "target:${{ matrix.target }}" \
+          -- terraform plan -input=false
