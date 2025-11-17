@@ -9,7 +9,7 @@ resource "google_iam_workload_identity_pool" "github_actions_app_pool" {
   description               = var.identity_pool_description
 }
 
-resource "google_iam_workload_identity_pool_provider" "github_actions_techoapp_provider" {
+resource "google_iam_workload_identity_pool_provider" "github_actions_app_provider" {
   project                            = var.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_actions_app_pool.workload_identity_pool_id
   workload_identity_pool_provider_id = var.provider_id
@@ -28,8 +28,9 @@ resource "google_iam_workload_identity_pool_provider" "github_actions_techoapp_p
   }
 }
 
-resource "google_service_account_iam_binding" "github_actions_techoapp_binding" {
-  service_account_id = var.service_account_name
+resource "google_service_account_iam_binding" "github_actions_app_binding" {
+  for_each = toset(var.service_account_names)
+  service_account_id = each.value
   role               = "roles/iam.workloadIdentityUser"
   members = [
     "principalSet://iam.googleapis.com/projects/${data.google_project.project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_actions_app_pool.workload_identity_pool_id}/attribute.repository/${var.identity_assertion_repository}"
