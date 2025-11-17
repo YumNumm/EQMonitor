@@ -17,5 +17,5 @@ module "workload_identity" {
   identity_pool_provider_description  = "Workload identity pool provider for GitHub Actions"
   identity_assertion_repository       = "YumNumm/EQMonitor"
   service_account_name                = module.iam.github_actions_eqmonitor_service_account_name
-  provider_id                         = "github-actions--provider"
+  provider_id                         = "github-actions-provider"
 }
