@@ -9,7 +9,7 @@ module "iam" {
 
 module "workload_identity" {
   source                              = "../../module/workload_identity"
-  pool_id                             = "github-actions-pool"
+  pool_id                             = "github-actions-identity-pool"
   project_id                          = local.project_id
   identity_pool_display_name          = "GitHub Actions Pool"
   identity_pool_description           = "Workload identity pool for GitHub Actions"
@@ -17,5 +17,5 @@ module "workload_identity" {
   identity_pool_provider_description  = "Workload identity pool provider for GitHub Actions"
   identity_assertion_repository       = "YumNumm/EQMonitor"
   service_account_names                = [module.iam.github_actions_writer_service_account_name, module.iam.github_actions_app_distro_service_account_name]
-  provider_id                         = "github-actions-provider"
+  provider_id                         = "github-actions-identity-provider"
 }
