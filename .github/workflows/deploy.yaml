@@ -134,7 +134,7 @@ jobs:
             -archivePath build/ios/Runner.xcarchive \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-          | xcbeautify--renderer github-actions
+          | xcbeautify --renderer github-actions
 
       - name: Embed entitlements
         working-directory: app
