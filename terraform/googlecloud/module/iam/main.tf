@@ -1,3 +1,9 @@
+# https://console.cloud.google.com/apis/library/iamcredentials.googleapis.com?project=eqmonitor-main
+resource "google_project_service" "iamcredentials_service" {
+  project = var.project_id
+  service = "iamcredentials.googleapis.com"
+}
+
 resource "google_service_account" "github_actions_app_distro_service_account" {
   account_id   = "actions-eqmonitor-appdistro"
   display_name = "GitHub Actions EQMonitor Service Account"
