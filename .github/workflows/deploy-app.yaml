@@ -273,13 +273,11 @@ jobs:
         with:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
-          create_credentials_file: true
 
       - name: Fetch latest build number from Google Play Store
         id: fetch-latest-build-number
         run: |
           LATEST_BUILD_NUMBER=$(google-play get-latest-build-number \
-            --credentials="@file:${{ steps.auth.outputs.credentials_file_path }}" \
             --package-name="net.yumnumm.eqmonitor" || echo "0")
 
           BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
