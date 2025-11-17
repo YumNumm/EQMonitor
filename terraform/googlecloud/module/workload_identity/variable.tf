@@ -38,7 +38,7 @@ variable "identity_assertion_repository" {
   description = "Assertion repository"
 }
 
-variable "service_account_name" {
-  type        = string
-  description = "Service account name"
+variable "service_account_names" {
+  type        = list(string)
+  description = "Service account names"
 }
