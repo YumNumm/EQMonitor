@@ -39,6 +39,7 @@ android {
     namespace = "net.yumnumm.eqmonitor"
     buildToolsVersion = "36.1.0"
     compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         // flutter_local_notificationsで利用
