@@ -213,40 +213,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup application runtime & Resolve dependencies
-        uses: ./.github/actions/setup-application-runtime
+      - name: Extract SOPS Age Key File
+        run: |
+          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
 
-      # Java 17を明示的に設定
-      - name: Setup Java
-        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+      - name: Copy mise.local.toml
+        run: |
+          cp mise.local.toml.example mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v3.1.1
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          install_args: "flutter java uv python pipx:codemagic-cli-tools"
 
       - name: Accept Android License
-        run: yes | flutter doctor --android-licenses || true
+        run: yes | flutter doctor --android-licenses
 
       - name: Extract keystore
         run: |
-          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > app/android/app/key.jks
-          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > app/android/app/google-services.json
-          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > app/android/key.properties
+          echo '$SIGNING_KEY' | base64 -d > app/android/app/key.jks
+          echo '$KEY_PROPERTIES' | base64 -d  > app/android/key.properties
 
-      - name: Extract Dotenv
-        run: |
-          echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
-          tar -xzf environment.tar.gz
-          rm environment.tar.gz
-          ls -l environment/
-
-      - name: Install Codemagic CLI Tools
-        run: |
-          pip3 install codemagic-cli-tools
+      # TODO: Workload Identity Federation
 
       - name: Fetch latest build number from Google Play Store
         id: fetch-latest-build-number
         run: |
-          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" > service-account.json
           LATEST_BUILD_NUMBER=$(google-play get-latest-build-number \
             --credentials="@file:service-account.json" \
             --package-name="net.yumnumm.eqmonitor" || echo "0")
@@ -254,12 +247,6 @@ jobs:
           echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
           echo "Build Number set to ${BUILD_NUMBER}."
           rm service-account.json
-
-      # Flutterのキャッシュをクリア
-      - name: Clean Flutter cache
-        run: |
-          flutter clean
-          flutter pub get
 
       - name: Build Android (AAB)
         working-directory: app
