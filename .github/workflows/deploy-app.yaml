@@ -277,7 +277,10 @@ jobs:
       - name: Fetch latest build number from Google Play Store
         id: fetch-latest-build-number
         run: |
+          echo "::add-mask::${{ steps.auth.outputs.auth_token }}"
+          GOOGLE_CLOUD_AUTH_TOKEN="${{ steps.auth.outputs.auth_token }}"
           LATEST_BUILD_NUMBER=$(google-play get-latest-build-number \
+            --credentials="@env:GOOGLE_CLOUD_AUTH_TOKEN" \
             --package-name="net.yumnumm.eqmonitor" || echo "0")
 
           BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
