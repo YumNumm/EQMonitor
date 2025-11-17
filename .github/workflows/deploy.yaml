@@ -94,6 +94,10 @@ jobs:
         working-directory: app
         run: dart pub get --enforce-lockfile
 
+      - name: Extract environment variables
+        run: |
+          cp environment/.env.dev environment/.env.prod
+
       - name: Configure iOS
         working-directory: app
         run: |
