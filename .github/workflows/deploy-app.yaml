@@ -1,10 +1,10 @@
-name: Deploy
+name: Deploy App
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
 
 on:
-  # push:
+  push:
   workflow_dispatch:
     inputs:
       ios:
@@ -143,6 +143,8 @@ jobs:
             --entitlements ios/Runner/Runner.entitlements \
             --force \
             --sign "-" build/ios/Runner.xcarchive/Products/Applications/Runner.app
+
+          codesign --display --entitlements :- build/ios/Runner.xcarchive/Products/Applications/Runner.app/Runner  || true
 
       - name: Archive
         working-directory: app
