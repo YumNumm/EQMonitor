@@ -81,6 +81,13 @@ jobs:
         with:
           install_args: "flutter xcbeautify"
 
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo $line >> "$GITHUB_ENV"
+            echo "::add-mask::${line#*=}"
+          done
+
       # https://github.com/maxim-lobanov/setup-xcode
       - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
@@ -193,6 +200,13 @@ jobs:
         with:
           install_args: "xcbeautify"
 
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo $line >> "$GITHUB_ENV"
+            echo "::add-mask::${line#*=}"
+          done
+
       - name: Upload Ipa to App Store Connect
         run: |
           xcrun altool \
@@ -226,6 +240,13 @@ jobs:
         uses: jdx/mise-action@5083fe46898c414b2475087cc79da59e7da859e8 # v3.1.1
         with:
           install_args: "flutter java uv python pipx:codemagic-cli-tools"
+
+      - name: Set environment variables
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo $line >> "$GITHUB_ENV"
+            echo "::add-mask::${line#*=}"
+          done
 
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
