@@ -152,7 +152,7 @@ jobs:
             -exportOptionsPlist ios/ExportOptions.plist \
             -exportPath . \
             -allowProvisioningUpdates \
-            -authenticationKeyIssuerID $APP_STORE_CONNECT_API_KEY_ISSUER_ID \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
             -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8 \
           | xcbeautify --renderer github-actions
@@ -164,7 +164,6 @@ jobs:
           name: EQMonitor-ios.ipa
           path: app/FlutterKaigi 2025.ipa
           if-no-files-found: error
-
 
   deploy-ios:
     needs: build-ios
