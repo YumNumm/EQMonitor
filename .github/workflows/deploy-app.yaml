@@ -290,6 +290,11 @@ jobs:
         run: |
           cp environment/.env.dev environment/.env.prod
 
+      - name: Copy gradle.properties
+        working-directory: app/android
+        run: |
+          cp gradle.ci.properties gradle.properties
+
       - name: Build Android (AAB)
         working-directory: app
         env:
@@ -297,6 +302,7 @@ jobs:
         run: |
           flutter build appbundle \
             --release \
+            --no-pub
             --build-number=${BUILD_NUMBER} \
             --dart-define-from-file=../environment/.env.prod
 
@@ -309,7 +315,7 @@ jobs:
 
   deploy-android:
     needs: build-android
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     timeout-minutes: 10
     permissions:
       contents: read
