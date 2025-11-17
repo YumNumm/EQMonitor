@@ -4,7 +4,6 @@ locals {
 
 module "iam" {
   source     = "../../module/iam"
-  prefix     = "production"
   project_id = local.project_id
 }
 

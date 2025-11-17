@@ -1,5 +1,5 @@
 resource "google_service_account" "github_actions_eqmonitor_service_account" {
-  account_id   = "actions-eqmonitor-${var.prefix}"
+  account_id   = "actions-eqmonitor"
   display_name = "GitHub Actions EQMonitor Service Account"
   project      = var.project_id
 }
