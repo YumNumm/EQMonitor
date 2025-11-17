@@ -29,8 +29,8 @@ resource "google_iam_workload_identity_pool_provider" "github_actions_app_provid
 }
 
 resource "google_service_account_iam_binding" "github_actions_app_binding" {
-  count = length(var.service_account_names)
-  service_account_id = var.service_account_names[count.index]
+  for_each = toset(var.service_account_names)
+  service_account_id = each.value
   role               = "roles/iam.workloadIdentityUser"
   members = [
     "principalSet://iam.googleapis.com/projects/${data.google_project.project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_actions_app_pool.workload_identity_pool_id}/attribute.repository/${var.identity_assertion_repository}"
