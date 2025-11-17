@@ -12,6 +12,8 @@ tflint = "0.59.1"
 uv = "0.9.9"
 websocat = "1.14.0"
 xcbeautify = "latest"
+gcloud = "latest"
+terraform = "latest"
 
 [settings]
 lockfile = true
