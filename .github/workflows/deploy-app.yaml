@@ -1,7 +1,4 @@
 name: Deploy App
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: false
 
 on:
   push:
@@ -60,6 +57,9 @@ jobs:
     if: ${{ needs.define-matrix.outputs.deploy-ios }}
     runs-on: macos-26
     timeout-minutes: 30
+    concurrency:
+      group: ${{ github.workflow }}-android
+      cancel-in-progress: false
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
@@ -172,6 +172,9 @@ jobs:
     runs-on: macos-26
     environment:
       name: EQMonitor-iOS
+    concurrency:
+      group: ${{ github.workflow }}-ios
+      cancel-in-progress: false
     timeout-minutes: 10
     steps:
       # https://github.com/actions/checkout
