@@ -35,3 +35,4 @@ resource "google_service_account_iam_binding" "github_actions_techoapp_binding" 
     "principalSet://iam.googleapis.com/projects/${data.google_project.project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_actions_app_pool.workload_identity_pool_id}/attribute.repository/${var.identity_assertion_repository}"
   ]
 }
+ 
