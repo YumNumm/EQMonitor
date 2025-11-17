@@ -128,7 +128,7 @@ jobs:
           echo "Changed directory to terraform/${{ matrix.target }}"
 
       - name: Extract backend.tfbackend
-        working-directory: terraform/${{ matrix.target }}
+        working-directory: terraform
         run: |
           echo "$TERRAFORM_BACKEND_CONFIGURATION" | base64 -d  \
             > backend.tfbackend
