@@ -18,6 +18,8 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   XCODE_VERSION: 26.1
+  GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER: projects/179553945248/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-identity-provider
+  GOOGLE_CLOUD_SERVICE_ACCOUNT: actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com
 
 jobs:
   define-matrix:
@@ -271,8 +273,8 @@ jobs:
         id: auth
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         with:
-          workload_identity_provider: "projects/179553945248/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider"
-          service_account: "actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com"
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
           create_credentials_file: true
 
       - name: Fetch latest build number from Google Play Store
@@ -373,8 +375,8 @@ jobs:
         id: auth
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         with:
-          workload_identity_provider: "projects/179553945248/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider"
-          service_account: "actions-eqmonitor-appdistro@eqmonitor-main.iam.gserviceaccount.com"
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
           create_credentials_file: true
 
       - name: Upload to Google Play
