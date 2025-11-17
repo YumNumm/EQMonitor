@@ -1,0 +1,8 @@
+[env.'_']
+source = "scripts/export_sops_key_path.sh"
+
+# About redaction, See: https://mise.jdx.dev/environments/secrets/sops.html#redaction
+file = { path = ".env.json", redact = true }
+
+[settings.sops]
+age_key_file = "{{ config_root }}/.config/age/age.txt"

@@ -1295,13 +1295,13 @@ packages:
     source: hosted
     version: "2.0.0"
   objective_c:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: objective_c
-      sha256: d8e589a70ad743902771e52abda620d5bdc8b67e03128a81517b400098e82dd4
+      sha256: "87103d96b19be76dc34b5ef859fecae78561d49779d5480b73c23b4dec8b9ec4"
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.0+1"
+    version: "8.1.0"
   octo_image:
     dependency: transitive
     description:
