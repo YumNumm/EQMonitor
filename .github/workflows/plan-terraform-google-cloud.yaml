@@ -96,6 +96,8 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      pull-requests: write
+      issues: write
     strategy:
       matrix:
         target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
