@@ -63,6 +63,7 @@ jobs:
           done
 
       - name: Extract backend.tfbackend
+        working-directory: terraform
         run: |
           echo "$TERRAFORM_BACKEND_CONFIGURATION" | base64 -d  \
             > backend.tfbackend
