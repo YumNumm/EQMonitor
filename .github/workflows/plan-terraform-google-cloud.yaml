@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - develop
-    paths:
-      - "terraform/**/*.tf"
     types:
       - opened
       - synchronize
