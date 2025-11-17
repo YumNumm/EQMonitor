@@ -148,6 +148,7 @@ jobs:
 
       - name: Terraform apply
         id: apply
+        working-directory: terraform/${{ matrix.target }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: tfcmt apply -var "target:${{ matrix.target }}" -- terraform apply --auto-approve
