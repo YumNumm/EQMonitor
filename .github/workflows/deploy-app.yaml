@@ -261,6 +261,10 @@ jobs:
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
 
+      - name: Resolve dependencies
+        working-directory: app
+        run: flutter pub get --enforce-lockfile
+
       - name: Extract keystore
         run: |
           echo "$SIGNING_KEY" | base64 -d > app/android/app/key.jks
@@ -274,11 +278,14 @@ jobs:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
 
+      - name: Set Google Cloud Auth Token
+        run: |
+          echo "GOOGLE_CLOUD_AUTH_TOKEN=${{ steps.auth.outputs.auth_token }}" >> $GITHUB_ENV
+          echo "::add-mask::${{ steps.auth.outputs.auth_token }}"
+
       - name: Fetch latest build number from Google Play Store
         id: fetch-latest-build-number
         run: |
-          echo "::add-mask::${{ steps.auth.outputs.auth_token }}"
-          GOOGLE_CLOUD_AUTH_TOKEN="${{ steps.auth.outputs.auth_token }}"
           LATEST_BUILD_NUMBER=$(google-play get-latest-build-number \
             --credentials="@env:GOOGLE_CLOUD_AUTH_TOKEN" \
             --package-name="net.yumnumm.eqmonitor" || echo "0")
