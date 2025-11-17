@@ -95,6 +95,9 @@ jobs:
       - define-matrix
     runs-on: ubuntu-slim
     timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       matrix:
         target: ${{ fromJson(needs.define-matrix.outputs.targets) }}

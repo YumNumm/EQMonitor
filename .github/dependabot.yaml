@@ -26,17 +26,3 @@ updates:
       dependencies:
         patterns:
           - "*"
-  - package-ecosystem: "bundler"
-    directory: "/app/android"
-    schedule:
-      interval: "daily"
-      # Monday at 9am JST
-      timezone: "Asia/Tokyo"
-      time: "09:00"
-  - package-ecosystem: "bundler"
-    directory: "/app/ios"
-    schedule:
-      interval: "daily"
-      # Monday at 9am JST
-      timezone: "Asia/Tokyo"
-      time: "09:00"
