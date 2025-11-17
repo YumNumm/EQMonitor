@@ -92,7 +92,7 @@ jobs:
 
       - name: Resolve dependencies
         working-directory: app
-        run: dart pub get --enforce-lockfile
+        run: flutter pub get --enforce-lockfile
 
       - name: Extract environment variables
         run: |
