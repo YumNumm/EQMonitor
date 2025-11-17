@@ -4,10 +4,23 @@ resource "google_project_service" "iamcredentials_service" {
   service = "iamcredentials.googleapis.com"
 }
 
+# https://console.cloud.google.com/apis/library/iam.googleapis.com?project=eqmonitor-main
+resource "google_project_service" "iam_service" {
+  project = var.project_id
+  service = "iam.googleapis.com"
+}
+
+# https://console.cloud.google.com/apis/library/firebaseappdistribution.googleapis.com?project=eqmonitor-main
+resource "google_project_service" "firebaseappdistribution_service" {
+  project = var.project_id
+  service = "firebaseappdistribution.googleapis.com"
+}
+
 resource "google_service_account" "github_actions_app_distro_service_account" {
   account_id   = "actions-eqmonitor-appdistro"
   display_name = "GitHub Actions EQMonitor Service Account"
   project      = var.project_id
+  depends_on = [ google_project_service.iamcredentials_service, google_project_service.firebaseappdistribution_service ]
 }
 
 resource "google_project_iam_member" "github_actions_app_distro_admin_member" {
