@@ -253,8 +253,8 @@ jobs:
 
       - name: Extract keystore
         run: |
-          echo '$SIGNING_KEY' | base64 -d > app/android/app/key.jks
-          echo '$KEY_PROPERTIES' | base64 -d  > app/android/key.properties
+          echo "$SIGNING_KEY" | base64 -d > app/android/app/key.jks
+          echo "$KEY_PROPERTIES" | base64 -d  > app/android/key.properties
 
       # TODO: Workload Identity Federation
 
