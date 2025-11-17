@@ -95,9 +95,8 @@ jobs:
         run: dart pub get --enforce-lockfile
 
       - name: Extract environment variables
-        working-directory: app
         run: |
-          cp app/environments/.env.dev app/environments/.env.prod
+          cp environment/.env.dev environment/.env.prod
 
       - name: Configure iOS
         working-directory: app
@@ -106,7 +105,7 @@ jobs:
             --no-codesign \
             --no-pub \
             --build-number=${{ github.run_number }} \
-            --dart-define-from-file=environments/.env.prod \
+            --dart-define-from-file=../environment/.env.prod \
             --dart-define COMMIT_INFORMATION=${{ github.ref_name }}-${{ github.sha }}
 
       - name: Extract App Store Connect API Key
