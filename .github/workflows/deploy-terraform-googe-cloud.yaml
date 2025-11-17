@@ -7,7 +7,6 @@ on:
     branches:
       - develop
 
-
 jobs:
   define-matrix:
     runs-on: ubuntu-slim
@@ -97,6 +96,11 @@ jobs:
     environment: GoogleCloud-Production
     runs-on: ubuntu-slim
     timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      issues: write
     strategy:
       matrix:
         target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
