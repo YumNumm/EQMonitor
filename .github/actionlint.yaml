@@ -1,0 +1,9 @@
+self-hosted-runner:
+  labels: []
+
+config-variables: null
+
+paths:
+ .github/workflows/**/*.yaml:
+   ignore:
+     - label "ubuntu-slim" is unknown
