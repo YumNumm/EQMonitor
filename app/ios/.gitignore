@@ -40,3 +40,5 @@ vendor/
 credentials.json
 
 .bundle
+
+/SourcePackages
