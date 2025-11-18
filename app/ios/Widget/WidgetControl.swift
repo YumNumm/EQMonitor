@@ -10,7 +10,7 @@ import SwiftUI
 import WidgetKit
 
 struct WidgetControl: ControlWidget {
-    static let kind: String = "net.yumnumm.eqmonitor.dev.Widget"
+    static let kind: String = "net.yumnumm.eqmonitor${APP_ID_SUFFIX}.Widget"
 
     var body: some ControlWidgetConfiguration {
         AppIntentControlConfiguration(
