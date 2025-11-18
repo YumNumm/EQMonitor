@@ -178,3 +178,4 @@ secret/
 
 /devtools_options.yaml
 /mise.local.toml
+/node_modules
