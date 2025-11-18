@@ -356,7 +356,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@9dc7d5dd454262207dea3ab5a06a3df6afc8ff26 # v3.1.1
         with:
-          install_args: "flutter java uv python pipx:codemagic-cli-tools"
+          install_args: "uv python pipx:codemagic-cli-tools"
 
       - name: Set environment variables
         run: |
@@ -401,12 +401,17 @@ jobs:
         with:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
-          create_credentials_file: true
+          token_format: access_token
+
+      - name: Set Google Cloud Auth Token
+        run: |
+          echo "GOOGLE_CLOUD_AUTH_TOKEN=${{ steps.auth.outputs.auth_token }}" >> $GITHUB_ENV
+          echo "::add-mask::${{ steps.auth.outputs.auth_token }}"
 
       - name: Upload to Google Play
         run: |
           google-play bundles publish \
-            --credentials="@file:${{ steps.auth.outputs.credentials_file_path }}" \
-            --bundle app.aab \
+            --credentials="@env:GOOGLE_CLOUD_AUTH_TOKEN" \
+            --bundle build/app-release.aab \
             --track "internal" \
             --release-notes="@file:release-notes.json"
