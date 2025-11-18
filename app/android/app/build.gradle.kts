@@ -39,13 +39,12 @@ android {
     namespace = "net.yumnumm.eqmonitor"
     buildToolsVersion = "36.1.0"
     compileSdk = 36
-    ndkVersion = "28.2.13676358"
+    ndkVersion = "29.0.14206865"
 
     compileOptions {
-        // flutter_local_notificationsで利用
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
