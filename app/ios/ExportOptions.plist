@@ -4,8 +4,6 @@
 <dict>
 	<key>destination</key>
 	<string>export</string>
-	<key>generateAppStoreInformation</key>
-	<false/>
 	<key>manageAppVersionAndBuildNumber</key>
 	<true/>
 	<key>method</key>
@@ -16,15 +14,7 @@
 	<true/>
 	<key>teamID</key>
 	<string>CPL7H8SHVM</string>
-	<key>testFlightInternalTestingOnly</key>
-	<false/>
 	<key>uploadSymbols</key>
 	<true/>
-	<key>compileBitcode</key>
-	<false/>
-	<key>provisioningProfiles</key>
-	<dict/>
-	<key>signingCertificate</key>
-	<string>Apple Distribution</string>
 </dict>
 </plist>
