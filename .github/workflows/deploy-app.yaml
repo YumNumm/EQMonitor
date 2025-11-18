@@ -312,9 +312,15 @@ jobs:
         run: |
           flutter build appbundle \
             --release \
-            --no-pub
+            --no-pub \
             --build-number=${BUILD_NUMBER} \
             --dart-define-from-file=../environment/.env.prod
+
+      - name: Copy AAB to expected location
+        run: |
+          mkdir -p app/build/app/outputs/bundle/release
+          find app/android/app -name "app-release.aab" -type f -exec cp {} app/build/app/outputs/bundle/release/app-release.aab \;
+          ls -lh app/build/app/outputs/bundle/release/
 
       - name: Upload aab as artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
