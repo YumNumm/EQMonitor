@@ -49,6 +49,10 @@ backend = "pipx:codemagic-cli-tools"
 version = "10.22.0"
 backend = "aqua:pnpm/pnpm"
 
+[[tools.python]]
+version = "3.14.0"
+backend = "core:python"
+
 [[tools.ruby]]
 version = "3.4.7"
 backend = "core:ruby"
@@ -67,13 +71,13 @@ size = 16335399
 url = "https://github.com/terraform-linters/tflint/releases/download/v0.59.1/tflint_linux_amd64.zip"
 
 [[tools.uv]]
-version = "0.9.9"
+version = "0.9.10"
 backend = "aqua:astral-sh/uv"
 
-[tools.uv.platforms.linux-x64]
-checksum = "sha256:7763091b882874ae80d162ff77284032ce83174da68c3a759988c81e677e1286"
-size = 21566033
-url = "https://github.com/astral-sh/uv/releases/download/0.9.8/uv-x86_64-unknown-linux-musl.tar.gz"
+[tools.uv.platforms.macos-arm64]
+checksum = "sha256:af171d5a4eb1c502819de32740aa811ff71851b1f5ec2d8bd0dda302ed9554c2"
+size = 18205991
+url = "https://github.com/astral-sh/uv/releases/download/0.9.10/uv-aarch64-apple-darwin.tar.gz"
 
 [[tools.websocat]]
 version = "1.14.0"
