@@ -24,13 +24,13 @@ version = "1.16.2"
 backend = "gem:cocoapods"
 
 [[tools.java]]
-version = "25.0.1"
+version = "17.0.2"
 backend = "core:java"
 
-[tools.java.platforms.linux-x64]
-checksum = "sha256:a2def047a73941e01a73739f92755f86b895811afb1f91243db214cff5bdac3f"
-size = 203616881
-url = "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
+[tools.java.platforms.macos-arm64]
+checksum = "sha256:602d7de72526368bb3f80d95c4427696ea639d2e0cc40455f53ff0bbb18c27c8"
+size = 182209404
+url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
 
 [[tools.node]]
 version = "25.2.0"
