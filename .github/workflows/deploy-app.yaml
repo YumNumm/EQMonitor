@@ -160,7 +160,7 @@ jobs:
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
             -authenticationKeyPath "${{ github.workspace }}/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
           | xcbeautify --renderer github-actions
-          ls -lah app
+          ls -lah .
 
       # https://github.com/actions/upload-artifact
       - name: Upload ipa as artifact
