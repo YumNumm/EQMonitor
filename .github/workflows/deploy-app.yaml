@@ -158,8 +158,9 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
-            -authenticationKeyPath "${{ github.workspace }}/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
-          | xcbeautify --renderer github-actions
+            -authenticationKeyPath "${{ github.workspace }}/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8"
+          #    \
+          # | xcbeautify --renderer github-actions
           ls -lah .
 
       # https://github.com/actions/upload-artifact
