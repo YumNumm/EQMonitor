@@ -54,6 +54,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>QRコードを読み取るためにカメラを利用します</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
 	<key>NSLocationAlwaysUsageDescription</key>
