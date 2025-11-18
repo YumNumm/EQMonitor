@@ -375,6 +375,8 @@ jobs:
         run: |
           ls -lah build/
           mv build/*.aab build/app.aab
+          echo "--------------------------------"
+          ls -lah build/
 
       - name: Output release version
         run: |
@@ -410,4 +412,4 @@ jobs:
           firebase appdistribution:distribute \
             --app "net.yumnumm.eqmonitor" \
             --release-notes="@file:changelog.txt" \
-            --file="build/app.aab" \
+            build/app.aab \
