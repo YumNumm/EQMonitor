@@ -20,15 +20,6 @@ if (project.hasProperty("dart-defines")) {
   }
 }
 
-tasks.register<Copy>("copySources") {
-    from("src/${dartDefines["flavor"]}/res")
-    into("src/main/res")
-}
-
-tasks.whenTaskAdded {
-    dependsOn("copySources")
-}
-
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
@@ -89,9 +80,6 @@ android {
             versionNameSuffix = ".d"
             resValue("string", "app_name", "EQMonitor (Debug)")
         }
-    }
-    buildFeatures {
-        viewBinding = true
     }
 }
 
