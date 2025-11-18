@@ -11,6 +11,10 @@ url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt
 version = "2.3.5"
 backend = "aqua:biomejs/biome"
 
+[[tools.firebase]]
+version = "14.22.0"
+backend = "aqua:firebase/firebase-tools"
+
 [[tools.flutter]]
 version = "3.38.1-stable"
 backend = "asdf:flutter"
@@ -33,13 +37,8 @@ size = 182209404
 url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
 
 [[tools.node]]
-version = "25.2.0"
+version = "24.4.0"
 backend = "core:node"
-
-[tools.node.platforms.linux-x64]
-checksum = "sha256:0b8de924cd43546a2098c091b73002442cd61340622b2c1489df408755de21fc"
-size = 54581244
-url = "https://nodejs.org/dist/v25.1.0/node-v25.1.0-linux-x64.tar.gz"
 
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.62.1"
@@ -91,3 +90,7 @@ url = "https://github.com/vi/websocat/releases/download/v1.14.0/websocat.x86_64-
 [[tools.xcbeautify]]
 version = "3.1.0"
 backend = "aqua:cpisciotta/xcbeautify"
+
+[[tools.yq]]
+version = "4.48.1"
+backend = "aqua:mikefarah/yq"
