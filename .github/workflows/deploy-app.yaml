@@ -120,9 +120,14 @@ jobs:
       - name: Extract App Store Connect API Key
         working-directory: app/ios
         run: |
-          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
+          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | tr -d '[:space:]' | base64 -D \
             > AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
           ls -l AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+          # SHA-256ハッシュを表示（デバッグ用）
+          shasum -a 256 AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+          # 先頭行がPEMヘッダーであることを確認
+          head -n 1 AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8 | grep -q "BEGIN PRIVATE KEY" || \
+            (echo "Error: Invalid PEM format" && exit 1)
 
       - name: Archive
         working-directory: app
