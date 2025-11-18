@@ -410,6 +410,7 @@ jobs:
           FIREBASE_APP_ID: 1:179553945248:android:11ffcfb483c098ad6fabc5
         run: |
           firebase appdistribution:distribute \
-            --app "net.yumnumm.eqmonitor" \
+            --app "$FIREBASE_APP_ID" \
             --release-notes="@file:changelog.txt" \
             build/app.aab \
+            --groups "main"
