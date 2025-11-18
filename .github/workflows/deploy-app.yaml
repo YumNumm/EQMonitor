@@ -278,7 +278,6 @@ jobs:
         with:
           workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
-          token_format: access_token
 
       - name: Set Google Cloud Auth Token
         run: |
