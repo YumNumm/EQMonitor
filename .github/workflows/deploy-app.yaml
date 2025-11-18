@@ -355,7 +355,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@9dc7d5dd454262207dea3ab5a06a3df6afc8ff26 # v3.1.1
         with:
-          install_args: "uv python pipx:codemagic-cli-tools"
+          install_args: "firebase yq"
 
       - name: Set environment variables
         run: |
@@ -373,8 +373,8 @@ jobs:
       - name: Output release version
         run: |
           VERSION=$(yq .version app/pubspec.yaml -r)
-          echo "release_version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "[$VERSION]" > changelog.tmp
+          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
+          echo "[$VERSION - $REF_NAME]" > changelog.tmp
 
       - name: Output git log
         run: |
@@ -382,16 +382,11 @@ jobs:
           LAST_TAG=$(git describe --tags --abbrev=0)
           git log $LAST_TAG..HEAD --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
-          # 最大500文字
-          head -c 500 changelog.tmp > changelog.txt
-          if [ $(wc -c < changelog.txt) -gt 500 ]; then
+          # 最大2000文字
+          head -c 2000 changelog.tmp > changelog.txt
+          if [ $(wc -c < changelog.txt) -gt 2000 ]; then
             echo '...' >> changelog.txt
           fi
-
-      - name: Generate JSON
-        run: |
-          jq -Rs '[{language: "ja-JP", text: .}]' changelog.txt > release-notes.json
-          cat release-notes.json | jq
 
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
@@ -402,15 +397,11 @@ jobs:
           service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
           token_format: access_token
 
-      - name: Set Google Cloud Auth Token
+      - name: Upload to Firebase App Distribution
+        env:
+          FIREBASE_APP_ID: 1:179553945248:android:11ffcfb483c098ad6fabc5
         run: |
-          echo "GOOGLE_CLOUD_AUTH_TOKEN=${{ steps.auth.outputs.auth_token }}" >> $GITHUB_ENV
-          echo "::add-mask::${{ steps.auth.outputs.auth_token }}"
-
-      - name: Upload to Google Play
-        run: |
-          google-play bundles publish \
-            --credentials="@env:GOOGLE_CLOUD_AUTH_TOKEN" \
-            --bundle build/app-release.aab \
-            --track "internal" \
-            --release-notes="@file:release-notes.json"
+          firebase appdistribution:distribute \
+            --app "net.yumnumm.eqmonitor" \
+            --release-notes="@file:changelog.txt" \
+            --file="build/app-release.aab" \
