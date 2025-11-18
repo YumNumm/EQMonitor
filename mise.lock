@@ -8,12 +8,22 @@ size = 4695416
 url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt_linux_amd64.tar.gz"
 
 [[tools.biome]]
-version = "2.3.5"
+version = "2.3.6"
 backend = "aqua:biomejs/biome"
 
+[tools.biome.platforms.macos-arm64]
+checksum = "sha256:522fe306acf1e1e557e30df8ccb9be792d59d4c0100fcfdbadec4aef8d72635b"
+size = 38794288
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.6/biome-darwin-arm64"
+
 [[tools.firebase]]
-version = "14.22.0"
+version = "14.25.0"
 backend = "aqua:firebase/firebase-tools"
+
+[tools.firebase.platforms.macos-arm64]
+checksum = "sha256:575dea199475502214d51c8a0ae8f337230add7b89aadf745167b1ca13f0c632"
+size = 282080347
+url = "https://github.com/firebase/firebase-tools/releases/download/v14.25.0/firebase-tools-macos"
 
 [[tools.flutter]]
 version = "3.38.1-stable"
@@ -37,8 +47,13 @@ size = 182209404
 url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
 
 [[tools.node]]
-version = "24.4.0"
+version = "24.11.1"
 backend = "core:node"
+
+[tools.node.platforms.macos-arm64]
+checksum = "sha256:b05aa3a66efe680023f930bd5af3fdbbd542794da5644ca2ad711d68cbd4dc35"
+size = 51177814
+url = "https://nodejs.org/dist/v24.11.1/node-v24.11.1-darwin-arm64.tar.gz"
 
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.62.1"
@@ -92,5 +107,10 @@ version = "3.1.0"
 backend = "aqua:cpisciotta/xcbeautify"
 
 [[tools.yq]]
-version = "4.48.1"
+version = "4.48.2"
 backend = "aqua:mikefarah/yq"
+
+[tools.yq.platforms.macos-arm64]
+checksum = "sha256:b3a77a428fda2daced121c937be7f5dfb8107fc62ec506064f1d23bc09415dcb"
+size = 10997522
+url = "https://github.com/mikefarah/yq/releases/download/v4.48.2/yq_darwin_arm64"

@@ -371,6 +371,11 @@ jobs:
           name: EQMonitor-android.aab
           path: build
 
+      - name: List files & rename
+        run: |
+          ls -lah build/
+          mv build/*.aab build/app.aab
+
       - name: Output release version
         run: |
           VERSION=$(yq .version app/pubspec.yaml -r)
@@ -405,4 +410,4 @@ jobs:
           firebase appdistribution:distribute \
             --app "net.yumnumm.eqmonitor" \
             --release-notes="@file:changelog.txt" \
-            --file="build/app-release.aab" \
+            --file="build/app.aab" \
