@@ -17,6 +17,8 @@ terraform = "latest"
 python = "latest"
 firebase = "latest"
 yq = "latest"
+actionlint = "latest"
+pinact = "latest"
 
 [settings]
 lockfile = true
