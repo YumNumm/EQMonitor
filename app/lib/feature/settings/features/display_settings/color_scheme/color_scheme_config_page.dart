@@ -15,9 +15,8 @@ class ColorSchemeConfigPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('震度配色設定')),
       body: SingleChildScrollView(
         child: RadioGroup(
-          onChanged: (value) async => ref
-              .read(intensityColorProvider.notifier)
-              .update(value!),
+          onChanged: (value) async =>
+              ref.read(intensityColorProvider.notifier).update(value!),
           groupValue: state,
           child: Column(
             children: [
@@ -36,7 +35,9 @@ class ColorSchemeConfigPage extends ConsumerWidget {
                 title: const Text('気象庁配色'),
                 subtitle: Padding(
                   padding: const EdgeInsets.all(4),
-                  child: _IntensityWidgets(colorModel: IntensityColorModel.jma()),
+                  child: _IntensityWidgets(
+                    colorModel: IntensityColorModel.jma(),
+                  ),
                 ),
               ),
               RadioListTile.adaptive(

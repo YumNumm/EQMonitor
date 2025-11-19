@@ -10,17 +10,16 @@ class KyoshinObservationPointConverter {
     final file = File(path);
     final body = await file.readAsString();
     final json = jsonDecode(body) as List<dynamic>;
-    final result =
-        json
-            .map((e) {
-              try {
-                return ObservationModel.fromJson(e as Map<String, dynamic>);
-              } on Exception catch (_) {
-                return null;
-              }
-            })
-            .whereType<ObservationModel>()
-            .toList();
+    final result = json
+        .map((e) {
+          try {
+            return ObservationModel.fromJson(e as Map<String, dynamic>);
+          } on Exception catch (_) {
+            return null;
+          }
+        })
+        .whereType<ObservationModel>()
+        .toList();
     return result;
   }
 

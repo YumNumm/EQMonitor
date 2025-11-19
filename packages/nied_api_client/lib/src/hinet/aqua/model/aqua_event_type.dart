@@ -8,7 +8,8 @@ enum AquaEventType {
 
   /// AQUA-MT (Moment Tensor)
   @JsonValue('M')
-  mt('M', 'AQUA-MT');
+  mt('M', 'AQUA-MT')
+  ;
 
   const AquaEventType(this.code, this.fullName);
 

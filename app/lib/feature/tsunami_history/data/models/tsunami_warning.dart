@@ -29,7 +29,8 @@ enum TsunamiWarning {
   forecastFromAdvisory('72', '津波予報（若干の海面変動）'),
 
   /// 津波予報（若干の海面変動）- 大津波警報または津波警報の解除、津波予報（若干の海面変動）への切替
-  forecastFromWarning('73', '津波予報（若干の海面変動）');
+  forecastFromWarning('73', '津波予報（若干の海面変動）')
+  ;
 
   const TsunamiWarning(this.code, this.displayName);
 

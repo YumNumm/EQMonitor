@@ -18,7 +18,8 @@ enum TelegramType {
   vxse62('長周期地震動に関する観測情報'),
   vyse50('南海トラフ地震臨時情報'),
   vyse51('南海トラフ地震関連解説情報'),
-  vyse52('南海トラフ地震関連解説情報');
+  vyse52('南海トラフ地震関連解説情報')
+  ;
 
   const TelegramType(this.type);
   final String type;
@@ -32,7 +33,8 @@ enum SchemaType {
   earthquakeCounts('earthquake-counts'),
   earthquakeHypocenterUpdate('earthquake-hypocenter-update'),
   earthquakeNankai('earthquake-nankai'),
-  tsunamiInformation('tsunami-information');
+  tsunamiInformation('tsunami-information')
+  ;
 
   const SchemaType(this.type);
   final String type;

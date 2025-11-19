@@ -22,8 +22,9 @@ class EewsByEventId extends _$EewsByEventId {
         return;
       }
       if (next case AsyncData(value: final value)) {
-        final eews =
-            value.where((e) => e.eventId.toString() == eventId).toList();
+        final eews = value
+            .where((e) => e.eventId.toString() == eventId)
+            .toList();
         final currentEews = state.value ?? <EewV1>[];
         for (final eew in eews) {
           if (!currentEews.contains(eew)) {

@@ -33,12 +33,11 @@ class JmaIntensityIcon extends ConsumerWidget {
       _ => intensity.type.replaceAll('-', '').replaceAll('+', ''),
     };
     // 震度の弱・強の表記
-    final suffix =
-        intensity.type.contains('-')
-            ? '-'
-            : intensity.type.contains('+')
-            ? '+'
-            : '';
+    final suffix = intensity.type.contains('-')
+        ? '-'
+        : intensity.type.contains('+')
+        ? '+'
+        : '';
     final intensitySubText = switch (intensity) {
       JmaIntensity.fiveUpperNoInput => '弱以上',
       _ =>
@@ -59,42 +58,41 @@ class JmaIntensityIcon extends ConsumerWidget {
             color: bg,
             border: Border.all(color: borderColor, width: 5),
           ),
-          child:
-              (intensity == JmaIntensity.fiveUpperNoInput)
-                  ? const SizedBox.shrink()
-                  : Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(2),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              intensityMainText,
-                              style: TextStyle(
-                                color: fg,
-                                fontSize: 100,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: FontFamily.jetBrainsMono,
-                              ),
+          child: (intensity == JmaIntensity.fiveUpperNoInput)
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            intensityMainText,
+                            style: TextStyle(
+                              color: fg,
+                              fontSize: 100,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontFamily.jetBrainsMono,
                             ),
-                            Text(
-                              suffix,
-                              style: TextStyle(
-                                color: fg,
-                                fontSize: 80,
-                                fontFamily: FontFamily.jetBrainsMono,
-                                fontFamilyFallback: const [
-                                  FontFamily.notoSansJP,
-                                ],
-                              ),
+                          ),
+                          Text(
+                            suffix,
+                            style: TextStyle(
+                              color: fg,
+                              fontSize: 80,
+                              fontFamily: FontFamily.jetBrainsMono,
+                              fontFamilyFallback: const [
+                                FontFamily.notoSansJP,
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                ),
         ),
       ),
       IntensityIconType.smallWithoutText => SizedBox(

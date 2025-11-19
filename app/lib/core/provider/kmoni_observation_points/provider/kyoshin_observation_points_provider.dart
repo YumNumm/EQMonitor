@@ -18,16 +18,15 @@ kyoshinMonitorInternalObservationPointsConverted(Ref ref) async {
   final result = await ref.watch(
     kyoshinMonitorInternalObservationPointsProvider.future,
   );
-  final points =
-      result.points
-          .map(
-            (e) => KyoshinMonitorObservationPoint(
-              code: e.code,
-              x: e.point.x,
-              y: e.point.y,
-            ),
-          )
-          .toList();
+  final points = result.points
+      .map(
+        (e) => KyoshinMonitorObservationPoint(
+          code: e.code,
+          x: e.point.x,
+          y: e.point.y,
+        ),
+      )
+      .toList();
 
   return points;
 }

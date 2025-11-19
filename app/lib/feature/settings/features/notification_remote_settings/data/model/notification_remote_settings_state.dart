@@ -5,7 +5,8 @@ part 'notification_remote_settings_state.freezed.dart';
 part 'notification_remote_settings_state.g.dart';
 
 @freezed
-abstract class NotificationRemoteSettingsState with _$NotificationRemoteSettingsState {
+abstract class NotificationRemoteSettingsState
+    with _$NotificationRemoteSettingsState {
   const factory NotificationRemoteSettingsState({
     required NotificationRemoteSettingsEew eew,
     required NotificationRemoteSettingsEarthquake earthquake,
@@ -16,7 +17,8 @@ abstract class NotificationRemoteSettingsState with _$NotificationRemoteSettings
 }
 
 @freezed
-abstract class NotificationRemoteSettingsEew with _$NotificationRemoteSettingsEew {
+abstract class NotificationRemoteSettingsEew
+    with _$NotificationRemoteSettingsEew {
   const factory NotificationRemoteSettingsEew({
     required JmaForecastIntensity? global,
     required List<NotificationRemoteSettingsEewRegion> regions,

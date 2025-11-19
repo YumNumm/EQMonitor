@@ -109,7 +109,8 @@ sealed class TsunamiBody {
 enum TsunamiBodyType {
   vtse41('津波警報・注意報・予報a'),
   vtse51('津波情報a'),
-  vtse52('沖合の津波観測に関する情報');
+  vtse52('沖合の津波観測に関する情報')
+  ;
 
   const TsunamiBodyType(this.value);
   final String value;
@@ -202,7 +203,8 @@ enum TsunamiForecastFirstHeightCondition {
   firstTideDetected('第１波の到達を確認'),
 
   /// "ただちに津波来襲と予測"
-  immediately('ただちに津波来襲と予測');
+  immediately('ただちに津波来襲と予測')
+  ;
 
   const TsunamiForecastFirstHeightCondition(this.value);
   final String value;
@@ -225,7 +227,8 @@ enum TsunamiMaxHeightCondition {
   high('高い'),
 
   /// 巨大
-  huge('巨大');
+  huge('巨大')
+  ;
 
   const TsunamiMaxHeightCondition(this.value);
   final String value;
@@ -297,7 +300,8 @@ abstract class TsunamiObservationStation with _$TsunamiObservationStation {
 @JsonEnum(valueField: 'value')
 enum TsunamiObservationStationFirstHeightIntial {
   push('押し'),
-  pull('引き');
+  pull('引き')
+  ;
 
   const TsunamiObservationStationFirstHeightIntial(this.value);
   final String value;
@@ -312,7 +316,8 @@ enum TsunamiObservationStationCondition {
   observing('観測中'),
 
   /// 重要
-  important('重要');
+  important('重要')
+  ;
 
   const TsunamiObservationStationCondition(this.value);
   final String value;
@@ -342,7 +347,8 @@ abstract class TsunamiEstimation with _$TsunamiEstimation {
 @JsonEnum(valueField: 'value')
 enum TsunamiEstimationFirstHeightCondition {
   /// 早いところでは既に津波到達と推定
-  alreadyArrived('早いところでは既に津波到達と推定');
+  alreadyArrived('早いところでは既に津波到達と推定')
+  ;
 
   const TsunamiEstimationFirstHeightCondition(this.value);
   final String value;
@@ -456,7 +462,8 @@ enum EarthquakeMagnitudeCondition {
   unknown('Ｍ不明'),
 
   /// Ｍ８を超える巨大地震
-  huge('Ｍ８を超える巨大地震');
+  huge('Ｍ８を超える巨大地震')
+  ;
 
   const EarthquakeMagnitudeCondition(this.value);
   final String value;

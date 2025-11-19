@@ -78,7 +78,8 @@ class FcmEarthquakeTopic implements FcmTopic {
 enum FcmTopics {
   all('all'),
   notice('notice'),
-  vzse40('vzse40');
+  vzse40('vzse40')
+  ;
 
   const FcmTopics(this.topic);
   final String topic;

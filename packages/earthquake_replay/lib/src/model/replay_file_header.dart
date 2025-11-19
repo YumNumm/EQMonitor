@@ -34,7 +34,8 @@ enum ReplayFileCompressionMode {
   none(0),
   messagePackCSharpLz4BlockArray(1),
   gzip(2),
-  brotli(3);
+  brotli(3)
+  ;
 
   const ReplayFileCompressionMode(this.value);
   final int value;

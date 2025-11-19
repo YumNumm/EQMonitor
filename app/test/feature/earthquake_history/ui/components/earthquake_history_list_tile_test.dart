@@ -403,8 +403,9 @@ void main() async {
       expect(find.byType(Chip), findsNothing);
     });
     group('最大長周期地震動階級が0以外の場合', () {
-      for (final intensity in [...JmaLgIntensity.values]
-        ..remove(JmaLgIntensity.zero)) {
+      for (final intensity in [
+        ...JmaLgIntensity.values,
+      ]..remove(JmaLgIntensity.zero)) {
         testWidgets('最大長周期地震動階級が$intensityの場合、Chipとそのラベルが表示されること', (
           tester,
         ) async {
