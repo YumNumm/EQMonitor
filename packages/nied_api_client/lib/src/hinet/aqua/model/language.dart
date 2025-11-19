@@ -4,7 +4,8 @@ enum Language {
   japanese('ja'),
 
   /// 英語
-  english('en');
+  english('en')
+  ;
 
   const Language(this.code);
 

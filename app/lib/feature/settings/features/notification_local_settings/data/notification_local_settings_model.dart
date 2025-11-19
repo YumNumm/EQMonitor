@@ -5,7 +5,8 @@ part 'notification_local_settings_model.freezed.dart';
 part 'notification_local_settings_model.g.dart';
 
 @freezed
-abstract class NotificationLocalSettingsModel with _$NotificationLocalSettingsModel {
+abstract class NotificationLocalSettingsModel
+    with _$NotificationLocalSettingsModel {
   const factory NotificationLocalSettingsModel({
     @Default(EewSettings()) EewSettings eew,
     @Default(EarthquakeSettings()) EarthquakeSettings earthquake,

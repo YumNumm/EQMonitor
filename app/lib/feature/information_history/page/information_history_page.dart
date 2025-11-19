@@ -45,9 +45,8 @@ class InformationHistoryPage extends HookConsumerWidget {
             AsyncError(:final error) => SliverFillRemaining(
               child: ErrorCard(
                 error: error,
-                onReload:
-                    () async =>
-                        ref.refresh(informationHistoryViewModelProvider),
+                onReload: () async =>
+                    ref.refresh(informationHistoryViewModelProvider),
               ),
             ),
             _ => const _LoadingSliverview(),
@@ -101,10 +100,9 @@ class _InformationDataSliverListView extends HookConsumerWidget {
         return ListTile(
           title: Text(item.title.toHalfWidth),
           subtitle: Text('${dateFormat.format(item.createdAt.toLocal())}頃発表'),
-          onTap:
-              () async => InformationHistoryDetailsRoute(
-                $extra: item,
-              ).push<void>(context),
+          onTap: () async => InformationHistoryDetailsRoute(
+            $extra: item,
+          ).push<void>(context),
           tileColor: switch (item.level) {
             Level.info => Colors.transparent,
             Level.warning => Colors.yellow.withValues(alpha: 0.2),

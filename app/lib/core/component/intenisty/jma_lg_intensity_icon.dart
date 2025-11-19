@@ -81,26 +81,25 @@ class JmaLgIntensityIcon extends ConsumerWidget {
           child: Center(
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child:
-                  (customText != null)
-                      ? Text(
-                        customText!,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      )
-                      : Text(
-                        intensity.type,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
+              child: (customText != null)
+                  ? Text(
+                      customText!,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
                       ),
+                    )
+                  : Text(
+                      intensity.type,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
+                    ),
             ),
           ),
         ),

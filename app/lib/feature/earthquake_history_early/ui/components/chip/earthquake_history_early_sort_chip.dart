@@ -49,11 +49,10 @@ class EarthquakeHistoryEarlySortChip extends StatelessWidget {
             await showModalBottomSheet<(EarthquakeEarlySortType, bool)?>(
               clipBehavior: Clip.antiAlias,
               context: context,
-              builder:
-                  (context) => _SortModal(
-                    currentSortType: type,
-                    currentAscending: ascending,
-                  ),
+              builder: (context) => _SortModal(
+                currentSortType: type,
+                currentAscending: ascending,
+              ),
             );
         if (result != null) {
           onChanged?.call(result.$1, result.$2);
@@ -149,10 +148,9 @@ class _SortModal extends HookConsumerWidget {
                 child: const Text('キャンセル'),
               ),
               TextButton(
-                onPressed:
-                    () => Navigator.of(
-                      context,
-                    ).pop((type.value, ascending.value)),
+                onPressed: () => Navigator.of(
+                  context,
+                ).pop((type.value, ascending.value)),
                 child: const Text('完了'),
               ),
             ],

@@ -298,7 +298,8 @@ class __IntensityFillModeSegmentedControlState
 
 enum _IntensityMode {
   intensity('震度'),
-  lpgm('長周期地震動階級');
+  lpgm('長周期地震動階級')
+  ;
 
   const _IntensityMode(this.name);
   final String name;

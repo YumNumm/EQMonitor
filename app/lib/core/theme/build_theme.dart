@@ -10,14 +10,6 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
     extensions: [?customColors],
     useMaterial3: true,
     fontFamily: FontFamily.notoSansJP,
-    pageTransitionsTheme: const PageTransitionsTheme(
-      builders: {
-        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
-        // TargetPlatform.android: ZoomPageTransitionsBuilder(),
-        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-      },
-    ),
     cupertinoOverrideTheme: CupertinoThemeData(
       brightness: colorScheme?.brightness,
       applyThemeToAll: true,

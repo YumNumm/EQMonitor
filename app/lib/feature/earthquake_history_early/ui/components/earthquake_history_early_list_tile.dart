@@ -56,12 +56,9 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
           _ => '',
         };
     final intensityColorState = ref.watch(intensityColorProvider);
-    final intensityColor =
-        maxIntensity != null
-            ? intensityColorState
-                .fromJmaForecastIntensity(maxIntensity)
-                .background
-            : null;
+    final intensityColor = maxIntensity != null
+        ? intensityColorState.fromJmaForecastIntensity(maxIntensity).background
+        : null;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
     final trailingText = switch (null) {
@@ -69,8 +66,9 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
       _ => '',
     };
     return ListTile(
-      tileColor:
-          showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
+      tileColor: showBackgroundColor
+          ? intensityColor?.withValues(alpha: 0.4)
+          : null,
       onTap: onTap,
       title: Text(
         title,
@@ -87,14 +85,13 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
           ),
         ],
       ),
-      leading:
-          maxIntensity != null
-              ? JmaForecastIntensityIcon(
-                intensity: maxIntensity,
-                type: IntensityIconType.filled,
-                showSuffix: !item.maxIntensityIsEarly,
-              )
-              : null,
+      leading: maxIntensity != null
+          ? JmaForecastIntensityIcon(
+              intensity: maxIntensity,
+              type: IntensityIconType.filled,
+              showSuffix: !item.maxIntensityIsEarly,
+            )
+          : null,
       trailing: Text(
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(

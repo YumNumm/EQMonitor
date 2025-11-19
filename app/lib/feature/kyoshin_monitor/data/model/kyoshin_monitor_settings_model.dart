@@ -36,7 +36,8 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
 }
 
 @freezed
-abstract class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
+abstract class KyoshinMonitorSettingsApiModel
+    with _$KyoshinMonitorSettingsApiModel {
   const factory KyoshinMonitorSettingsApiModel({
     /// 強震モニタ APIのベースURL
     @Default(KyoshinMonitorEndpoint.kmoni)
@@ -62,7 +63,8 @@ abstract class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiMo
 @JsonEnum(valueField: 'url')
 enum KyoshinMonitorEndpoint {
   kmoni('http://www.kmoni.bosai.go.jp'),
-  lmoniexp('https://smi.lmoniexp.bosai.go.jp');
+  lmoniexp('https://smi.lmoniexp.bosai.go.jp')
+  ;
 
   const KyoshinMonitorEndpoint(this.url);
 

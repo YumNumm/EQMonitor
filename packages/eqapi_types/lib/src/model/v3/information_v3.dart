@@ -31,7 +31,8 @@ abstract class InformationV3 with _$InformationV3 {
 enum Author {
   developer('開発者'),
   jma('気象庁'),
-  unknown('不明');
+  unknown('不明')
+  ;
 
   const Author(this.name);
   final String name;
