@@ -391,6 +391,6 @@ jobs:
         run: |
           firebase appdistribution:distribute \
             --app "$FIREBASE_APP_ID" \
-            --release-note-file "changelog.txt" \
+            --release-notes-file "changelog.txt" \
             --groups "main" \
             build/app.aab
