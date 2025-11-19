@@ -63,48 +63,47 @@ class EewNotificationStatusWidget extends StatelessWidget {
     }
     return Text.rich(
       TextSpan(
-        children:
-            (eew.global == JmaForecastIntensity.zero)
-                ? [
-                  const TextSpan(
-                    text: 'すべての緊急地震速報を通知します',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+        children: (eew.global == JmaForecastIntensity.zero)
+            ? [
+                const TextSpan(
+                  text: 'すべての緊急地震速報を通知します',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ]
+            : [
+                const TextSpan(
+                  text: '以下の条件のいずれかを満たした時に通知します\n',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                if (eew.global != null) ...[
+                  const TextSpan(text: '・任意の地域で'),
+                  TextSpan(
+                    text:
+                        '震度'
+                        '${eew.global!.type.fromPlusMinus}'
+                        '${eew.global != JmaForecastIntensity.seven ? "以上" : ""}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ]
-                : [
-                  const TextSpan(
-                    text: '以下の条件のいずれかを満たした時に通知します\n',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  if (eew.global != null) ...[
-                    const TextSpan(text: '・任意の地域で'),
-                    TextSpan(
-                      text:
-                          '震度'
-                          '${eew.global!.type.fromPlusMinus}'
-                          '${eew.global != JmaForecastIntensity.seven ? "以上" : ""}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const TextSpan(text: 'が予想'),
-                  ],
-                  if (enabledRegions.isNotEmpty)
-                    ...enabledRegions
-                        .mapIndexed(
-                          (index, region) => [
-                            TextSpan(text: '\n・${region.name}で'),
-                            TextSpan(
-                              text:
-                                  '震度${region.minJmaIntensity.type.fromPlusMinus}'
-                                  '${region.minJmaIntensity != JmaForecastIntensity.seven ? "以上" : ""}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const TextSpan(text: 'が予想'),
-                          ],
-                        )
-                        .flattened,
+                  const TextSpan(text: 'が予想'),
                 ],
+                if (enabledRegions.isNotEmpty)
+                  ...enabledRegions
+                      .mapIndexed(
+                        (index, region) => [
+                          TextSpan(text: '\n・${region.name}で'),
+                          TextSpan(
+                            text:
+                                '震度${region.minJmaIntensity.type.fromPlusMinus}'
+                                '${region.minJmaIntensity != JmaForecastIntensity.seven ? "以上" : ""}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const TextSpan(text: 'が予想'),
+                        ],
+                      )
+                      .flattened,
+              ],
       ),
     );
   }

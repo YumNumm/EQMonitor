@@ -147,7 +147,8 @@ enum ShakeDetectionLevel {
   low(Colors.green),
   middle(Colors.yellow),
   high(Colors.red),
-  highest(Colors.purple);
+  highest(Colors.purple)
+  ;
 
   const ShakeDetectionLevel(this.color);
   final Color color;

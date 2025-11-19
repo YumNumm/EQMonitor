@@ -25,18 +25,16 @@ class AboutThisAppScreen extends HookWidget {
               ListTile(
                 title: const Text('利用規約'),
                 leading: const Icon(Icons.description),
-                onTap:
-                    () async => const TermOfServiceRoute(
-                      $extra: null,
-                    ).push<void>(context),
+                onTap: () async => const TermOfServiceRoute(
+                  $extra: null,
+                ).push<void>(context),
               ),
               ListTile(
                 title: const Text('プライバシーポリシー'),
                 leading: const Icon(Icons.info),
-                onTap:
-                    () async => const PrivacyPolicyRoute(
-                      $extra: null,
-                    ).push<void>(context),
+                onTap: () async => const PrivacyPolicyRoute(
+                  $extra: null,
+                ).push<void>(context),
               ),
               ListTile(
                 title: const Text('ライセンス情報'),

@@ -21,64 +21,62 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
 
     final maxIntensity = item.maxIntensity;
     final colorScheme = switch (maxIntensity) {
-      final JmaForecastIntensity intensity => intensityColorScheme
-          .fromJmaForecastIntensity(intensity),
+      final JmaForecastIntensity intensity =>
+        intensityColorScheme.fromJmaForecastIntensity(intensity),
       _ => null,
     };
 
-    final maxIntensityWidget =
-        maxIntensity != null
-            ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  '最大震度',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                JmaForecastIntensityIcon(
-                  type: IntensityIconType.filled,
-                  size: 60,
-                  intensity: maxIntensity,
-                  showSuffix: !item.maxIntensityIsEarly,
-                ),
-              ],
-            )
-            : null;
+    final maxIntensityWidget = maxIntensity != null
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                '最大震度',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              JmaForecastIntensityIcon(
+                type: IntensityIconType.filled,
+                size: 60,
+                intensity: maxIntensity,
+                showSuffix: !item.maxIntensityIsEarly,
+              ),
+            ],
+          )
+        : null;
 
     // 「MaxInt, 震源地, 規模」
-    final hypoWidget =
-        item.name == '詳細不明'
-            ? null
-            : Row(
-              textBaseline: TextBaseline.ideographic,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              children: [
-                Text(
-                  '震源地',
-                  style: textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
-                  ),
+    final hypoWidget = item.name == '詳細不明'
+        ? null
+        : Row(
+            textBaseline: TextBaseline.ideographic,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            children: [
+              Text(
+                '震源地',
+                style: textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
                 ),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: item.name,
-                          style: textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+              ),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: item.name,
+                        style: textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            );
+              ),
+            ],
+          );
 
     // 地震発生時刻
     final originTime = item.originTime.toLocal();

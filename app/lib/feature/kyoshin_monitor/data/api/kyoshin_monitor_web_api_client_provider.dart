@@ -10,12 +10,11 @@ part 'kyoshin_monitor_web_api_client_provider.g.dart';
 KyoshinMonitorWebApiClient kyoshinMonitorWebApiClient(Ref ref) =>
     KyoshinMonitorWebApiClient(
       ref.watch(kyoshinMonitorDioProvider),
-      baseUrl:
-          ref
-              .watch(
-                kyoshinMonitorSettingsProvider.select((v) => v.api.endpoint),
-              )
-              .url,
+      baseUrl: ref
+          .watch(
+            kyoshinMonitorSettingsProvider.select((v) => v.api.endpoint),
+          )
+          .url,
     );
 
 @Riverpod(keepAlive: true)

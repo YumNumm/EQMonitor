@@ -15,11 +15,10 @@ import 'package:sheet/route.dart';
 
 part 'prefecture_lpgm_intensity.g.dart';
 
-typedef _Arg =
-    ({
-      List<ObservedRegionLpgmIntensity>? prefectures,
-      List<ObservedRegionLpgmIntensity>? stations,
-    });
+typedef _Arg = ({
+  List<ObservedRegionLpgmIntensity>? prefectures,
+  List<ObservedRegionLpgmIntensity>? stations,
+});
 
 @riverpod
 Future<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> _lpgmCalculator(
@@ -113,16 +112,16 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
                   subtitle: Text(
                     kv.value.map((e) => e.name).join(', ').toHalfWidth,
                   ),
-                  onTap:
-                      hasStations
-                          ? () async => _PrefectureModalBottomSheet.show(
-                            context: context,
-                            intensity: kv.key,
-                            prefectures: kv.value,
-                          )
-                          : null,
-                  trailing:
-                      hasStations ? const Icon(Icons.chevron_right) : null,
+                  onTap: hasStations
+                      ? () async => _PrefectureModalBottomSheet.show(
+                          context: context,
+                          intensity: kv.key,
+                          prefectures: kv.value,
+                        )
+                      : null,
+                  trailing: hasStations
+                      ? const Icon(Icons.chevron_right)
+                      : null,
                 );
               }(),
           ],
@@ -199,10 +198,9 @@ class _PrefectureListTile extends HookWidget {
     return AnimatedCrossFade(
       firstChild: shrinked,
       secondChild: expanded,
-      crossFadeState:
-          isExpanded.value
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
+      crossFadeState: isExpanded.value
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       duration: const Duration(milliseconds: 300),
     );
   }

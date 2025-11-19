@@ -4,7 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 enum TelegramStatus {
   normal('通常'),
   training('訓練'),
-  test('試験');
+  test('試験')
+  ;
 
   const TelegramStatus(this.type);
   final String type;
@@ -15,7 +16,8 @@ enum TelegramInfoType {
   issue('発表'),
   correction('訂正'),
   delay('遅延'),
-  cancel('取消');
+  cancel('取消')
+  ;
 
   const TelegramInfoType(this.type);
   final String type;
@@ -34,7 +36,8 @@ enum JmaIntensity {
   seven('7'),
 
   /// 震度5弱以上未入電
-  fiveUpperNoInput('!5-');
+  fiveUpperNoInput('!5-')
+  ;
 
   const JmaIntensity(this.type);
   final String type;
@@ -74,7 +77,8 @@ enum JmaForecastIntensity {
   sixLower('6-'),
   sixUpper('6+'),
   seven('7'),
-  unknown('不明');
+  unknown('不明')
+  ;
 
   const JmaForecastIntensity(this.type);
   final String type;
@@ -128,7 +132,8 @@ enum JmaForecastIntensityOver {
   sixUpper('6+'),
   seven('7'),
   unknown('不明'),
-  over('over');
+  over('over')
+  ;
 
   const JmaForecastIntensityOver(this.type);
   final String type;
@@ -156,7 +161,8 @@ enum JmaLgIntensity {
   one('1'),
   two('2'),
   three('3'),
-  four('4');
+  four('4')
+  ;
 
   const JmaLgIntensity(this.type);
   final String type;
@@ -187,7 +193,8 @@ enum JmaForecastLgIntensity {
   two('2'),
   three('3'),
   four('4'),
-  unknown('不明');
+  unknown('不明')
+  ;
 
   const JmaForecastLgIntensity(this.type);
   final String type;
@@ -205,7 +212,8 @@ enum JmaForecastLgIntensityOver {
   three('3'),
   four('4'),
   unknown('不明'),
-  over('over');
+  over('over')
+  ;
 
   const JmaForecastLgIntensityOver(this.type);
   final String type;
@@ -227,7 +235,8 @@ enum LgType {
   one('1'),
   two('2'),
   three('3'),
-  four('4');
+  four('4')
+  ;
 
   const LgType(this.type);
   final String type;

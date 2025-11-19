@@ -174,7 +174,8 @@ enum PublicTable {
   intensitySubDivision('intensity_sub_division'),
   telegram('telegram'),
   tsunami('tsunami'),
-  shakeDetectionEvents('shake_detection_events');
+  shakeDetectionEvents('shake_detection_events')
+  ;
 
   const PublicTable(this.tableName);
   final String tableName;
@@ -260,7 +261,8 @@ abstract class RealtimePostgresDeletePayload<T extends V1Database>
 enum RealtimePostgresChangesListenEvent {
   insert('INSERT'),
   update('UPDATE'),
-  delete('DELETE');
+  delete('DELETE')
+  ;
 
   const RealtimePostgresChangesListenEvent(this.value);
   final String value;

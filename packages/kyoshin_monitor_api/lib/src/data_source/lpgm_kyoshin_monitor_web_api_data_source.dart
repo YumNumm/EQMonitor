@@ -36,7 +36,7 @@ class LpgmKyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     DateTime dateTime,
-  )  => _client.getRealtimeImageData(
+  ) => _client.getRealtimeImageData(
     type: type.urlString,
     layer: layer.urlString,
     date: dateFormat.format(dateTime),

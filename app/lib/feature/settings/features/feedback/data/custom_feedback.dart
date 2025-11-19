@@ -22,7 +22,8 @@ abstract class CustomFeedback with _$CustomFeedback {
 enum FeedbackType {
   bugReport('バグ報告'),
   featureRequest('機能リクエスト'),
-  other('その他');
+  other('その他')
+  ;
 
   const FeedbackType(this.label);
   final String label;

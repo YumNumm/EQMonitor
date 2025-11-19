@@ -38,16 +38,15 @@ class _DebugButton extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: FloatingActionButton.small(
-        onPressed:
-            () async => Navigator.of(context).push<void>(
-              ModalBottomSheetRoute(
-                isScrollControlled: false,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                ),
-                builder: (context) => const _DebugModal(),
-              ),
+        onPressed: () async => Navigator.of(context).push<void>(
+          ModalBottomSheetRoute(
+            isScrollControlled: false,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
+            builder: (context) => const _DebugModal(),
+          ),
+        ),
         child: const Icon(Icons.bug_report),
       ),
     );
@@ -70,7 +69,8 @@ class _SheetBody extends ConsumerWidget {
             ListTile(
               title: const Text('津波情報'),
               leading: const Icon(Icons.tsunami),
-              onTap: () async => const TsunamiHistoryRoute().push<void>(context),
+              onTap: () async =>
+                  const TsunamiHistoryRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('設定'),
@@ -98,8 +98,9 @@ class _ShakeDetectionList extends ConsumerWidget {
 
     return switch (shakeDetectionEvents) {
       AsyncData(:final value) when value.isNotEmpty => Column(
-        children:
-            value.map((event) => ShakeDetectionCard(event: event)).toList(),
+        children: value
+            .map((event) => ShakeDetectionCard(event: event))
+            .toList(),
       ),
       _ => const SizedBox.shrink(),
     };
@@ -144,38 +145,37 @@ class _DebugModal extends ConsumerWidget {
                     JmaForecastIntensity.values[Random().nextInt(
                       JmaForecastIntensity.values.length,
                     )],
-                regions:
-                    [
-                      for (final region
-                          in ref.read(jmaCodeTableProvider).areaEpicenter.items)
-                        () {
-                          if (Random().nextDouble() > 0.9) {
-                            return EstimatedIntensityRegion(
-                              code: region.code,
-                              name: region.name,
-                              arrivalTime: null,
-                              isPlum: false,
-                              isWarning: false,
-                              forecastMaxInt: ForecastMaxInt(
-                                from: JmaForecastIntensity.one,
-                                to:
-                                    JmaForecastIntensityOver
-                                        .values[Random().nextInt(
+                regions: [
+                  for (final region
+                      in ref.read(jmaCodeTableProvider).areaEpicenter.items)
+                    () {
+                      if (Random().nextDouble() > 0.9) {
+                        return EstimatedIntensityRegion(
+                          code: region.code,
+                          name: region.name,
+                          arrivalTime: null,
+                          isPlum: false,
+                          isWarning: false,
+                          forecastMaxInt: ForecastMaxInt(
+                            from: JmaForecastIntensity.one,
+                            to:
+                                JmaForecastIntensityOver.values[Random()
+                                    .nextInt(
                                       JmaForecastIntensityOver.values.length,
                                     )],
-                              ),
-                              forecastMaxLgInt: ForecastMaxLgInt(
-                                from: JmaForecastLgIntensity.one,
-                                to:
-                                    JmaForecastLgIntensityOver
-                                        .values[Random().nextInt(
+                          ),
+                          forecastMaxLgInt: ForecastMaxLgInt(
+                            from: JmaForecastLgIntensity.one,
+                            to:
+                                JmaForecastLgIntensityOver.values[Random()
+                                    .nextInt(
                                       JmaForecastLgIntensityOver.values.length,
                                     )],
-                              ),
-                            );
-                          }
-                        }(),
-                    ].nonNulls.toList(),
+                          ),
+                        );
+                      }
+                    }(),
+                ].nonNulls.toList(),
               );
               print(eew.regions);
               ref.read(eewProvider.notifier).upsert(eew);

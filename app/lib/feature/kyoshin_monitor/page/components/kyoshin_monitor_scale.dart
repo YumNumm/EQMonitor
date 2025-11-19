@@ -165,7 +165,8 @@ enum KyoshinMonitorScaleType {
   pgv,
 
   /// 最大変位（PGD: Peak Ground Displacement）
-  pgd;
+  pgd
+  ;
 
   /// 値を0-1の範囲に正規化する
   ///
@@ -213,8 +214,10 @@ enum KyoshinMonitorScaleType {
 
   /// スケール値のリストを取得
   List<double> get scaleValues => switch (this) {
-    KyoshinMonitorScaleType.intensity =>
-      List.generate(11, (i) => i - 3).map((e) => e.toDouble()).toList(),
+    KyoshinMonitorScaleType.intensity => List.generate(
+      11,
+      (i) => i - 3,
+    ).map((e) => e.toDouble()).toList(),
     KyoshinMonitorScaleType.pga => _generateLogValues(0.01, 1000),
     KyoshinMonitorScaleType.pgv => _generateLogValues(0.001, 100),
     KyoshinMonitorScaleType.pgd => _generateLogValues(0.0001, 10),
@@ -326,10 +329,9 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
           Alignment.topCenter,
       },
     );
-    final paint =
-        Paint()
-          ..shader = gradient.createShader(rect)
-          ..style = PaintingStyle.fill;
+    final paint = Paint()
+      ..shader = gradient.createShader(rect)
+      ..style = PaintingStyle.fill;
 
     canvas.drawRect(rect, paint);
 
@@ -340,15 +342,15 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     );
 
     // 目盛り線の描画用のペイント
-    final tickPaint =
-        Paint()
-          ..color = textColor
-          ..strokeWidth = 1.0
-          ..style = PaintingStyle.stroke;
+    final tickPaint = Paint()
+      ..color = textColor
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
 
     // 目盛りを描画する間隔を決定（震度は1固定）
-    final interval =
-        type == KyoshinMonitorScaleType.intensity ? 1 : tickInterval;
+    final interval = type == KyoshinMonitorScaleType.intensity
+        ? 1
+        : tickInterval;
 
     // 描画する目盛りのインデックスを準備
     var indices = List.generate(
@@ -367,8 +369,8 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       final stop = colorStops[i];
       final basePosition =
           gradientDirection == KyoshinMonitorScaleGradientDirection.reverse
-              ? 1 - stop.position
-              : stop.position;
+          ? 1 - stop.position
+          : stop.position;
       final position =
           basePosition *
           (orientation == KyoshinMonitorScaleOrientation.horizontal
@@ -420,10 +422,9 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
           );
         case KyoshinMonitorScaleOrientation.vertical:
           // 重ならない場合は通常通り表示
-          final x =
-              textPosition == KyoshinMonitorScaleTextPosition.start
-                  ? -textPainter.width - 6
-                  : size.width + 6;
+          final x = textPosition == KyoshinMonitorScaleTextPosition.start
+              ? -textPainter.width - 6
+              : size.width + 6;
           textPainter.paint(
             canvas,
             Offset(x, position - textPainter.height / 2),

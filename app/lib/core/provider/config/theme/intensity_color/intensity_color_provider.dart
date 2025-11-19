@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';

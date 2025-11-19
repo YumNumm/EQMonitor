@@ -33,12 +33,11 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
         .replaceAll('-', '')
         .replaceAll('+', '');
     // 震度の弱・強の表記
-    final intensitySubText =
-        intensity.type.contains('-')
-            ? '弱'
-            : intensity.type.contains('+')
-            ? '強'
-            : '';
+    final intensitySubText = intensity.type.contains('-')
+        ? '弱'
+        : intensity.type.contains('+')
+        ? '強'
+        : '';
 
     return SizedBox(
       height: size,
@@ -134,18 +133,16 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
         .replaceAll('-', '')
         .replaceAll('+', '');
     // 震度の弱・強の表記
-    final suffix =
-        intensity.type.contains('-')
-            ? '-'
-            : intensity.type.contains('+')
-            ? '+'
-            : '';
-    final intensitySubText =
-        intensity.type.contains('-')
-            ? '弱'
-            : intensity.type.contains('+')
-            ? '強'
-            : '';
+    final suffix = intensity.type.contains('-')
+        ? '-'
+        : intensity.type.contains('+')
+        ? '+'
+        : '';
+    final intensitySubText = intensity.type.contains('-')
+        ? '弱'
+        : intensity.type.contains('+')
+        ? '強'
+        : '';
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
       IntensityIconType.small => SizedBox(
