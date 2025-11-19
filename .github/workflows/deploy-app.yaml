@@ -2,6 +2,8 @@ name: Deploy App
 
 on:
   push:
+    branches:
+      - develop
   workflow_dispatch:
     inputs:
       ios:
