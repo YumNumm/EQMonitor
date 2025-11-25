@@ -1,0 +1,12 @@
+export 'disaster_category.dart';
+export 'eew_forecast_region.dart';
+export 'epicenter_and_hypocenter.dart';
+export 'information_type.dart';
+export 'notification_on_disaster_prevention.dart';
+export 'preamble.dart';
+export 'prefecture.dart';
+export 'report_classification.dart';
+export 'seismic_intensity.dart';
+export 'tsunami_forecast_region.dart';
+export 'tsunami_height.dart';
+export 'tsunami_warning_code.dart';
