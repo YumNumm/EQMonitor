@@ -43,12 +43,7 @@ class HypocenterCoordinates {
 /// QZSS Disaster and Crisis Report base sealed class.
 ///
 /// This is a sealed class representing all types of DCR/DCX reports.
-@Freezed(
-  copyWith: false,
-  toJson: false,
-  fromJson: false,
-  equal: false,
-)
+@Freezed(copyWith: false, toJson: false, fromJson: false, equal: false)
 sealed class QzssDcReport with _$QzssDcReport {
   const QzssDcReport._();
 

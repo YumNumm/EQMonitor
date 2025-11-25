@@ -105,18 +105,19 @@ class TsunamiDecoder {
       informationType: params.informationType.nameJa,
       informationTypeEn: params.informationType.nameEn,
       informationTypeNo: params.informationType.code,
-      notificationsOnDisasterPrevention:
-          notifications.map((e) => e.message).toList(),
+      notificationsOnDisasterPrevention: notifications
+          .map((e) => e.message)
+          .toList(),
       notificationsOnDisasterPreventionRaw: notificationCodes,
       tsunamiWarningCode: tsunamiWarningCode.name,
       tsunamiWarningCodeRaw: warningCode,
       expectedTsunamiArrivalTimes: expectedArrivalTimes,
       tsunamiHeights: tsunamiHeights.map((e) => e.name).toList(),
       tsunamiHeightsRaw: tsunamiHeightCodes,
-      tsunamiForecastRegions:
-          tsunamiForecastRegions.map((e) => e.name).toList(),
+      tsunamiForecastRegions: tsunamiForecastRegions
+          .map((e) => e.name)
+          .toList(),
       tsunamiForecastRegionsRaw: tsunamiForecastRegionCodes,
     );
   }
 }
-
