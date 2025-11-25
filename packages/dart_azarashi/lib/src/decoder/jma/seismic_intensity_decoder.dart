@@ -14,21 +14,24 @@ class SeismicIntensityDecoder {
     final message = params.message;
     final sentence = params.sentence;
 
-    // Extract occurrence time of earthquake (bits 43-58, 16 bits)
-    final occurrenceTime = JmaCommonDecoder.extractDayHourMin(params, 43);
+    // Extract occurrence time of earthquake (bits 53-68, 16 bits)
+    final occurrenceTime = JmaCommonDecoder.extractDayHourMin(params, 53);
 
     // Extract seismic intensities and prefectures
-    // Each entry: 3 bits intensity + 47 bits prefecture bitmap = 50 bits
-    // Maximum 3 entries
+    // Each entry: 3 bits intensity + 6 bits prefecture = 9 bits
+    // Maximum 16 entries
     final seismicIntensities = <JmaSeismicIntensity>[];
     final seismicIntensityCodes = <int>[];
     final prefectures = <String>[];
     final prefectureCodes = <int>[];
 
-    var slider = 59;
-    for (var entry = 0; entry < 3; entry++) {
-      final intensityCode = QzssDcrDecoder.extractField(message, slider, 3);
-      if (intensityCode == 0) {
+    for (var i = 0; i < 16; i++) {
+      final offset = 69 + i * 9;
+      final intensityCode = QzssDcrDecoder.extractField(message, offset, 3);
+      final prefectureCode =
+          QzssDcrDecoder.extractField(message, offset + 3, 6);
+
+      if (intensityCode == 0 && prefectureCode == 0) {
         break;
       }
 
@@ -44,23 +47,16 @@ class SeismicIntensityDecoder {
       seismicIntensities.add(intensity);
       seismicIntensityCodes.add(intensityCode);
 
-      // Extract prefecture bitmap (47 bits)
-      final prefectureNames = <String>[];
-      final codes = <int>[];
-      for (var i = 0; i < 47; i++) {
-        if (QzssDcrDecoder.extractField(message, slider + 3 + i, 1) == 1) {
-          final prefecture =
-              JmaPrefecture.values.where((e) => e.code == i + 1).firstOrNull;
-          if (prefecture != null) {
-            prefectureNames.add(prefecture.name);
-            codes.add(i + 1);
-          }
-        }
+      final prefecture =
+          JmaPrefecture.values.where((e) => e.code == prefectureCode).firstOrNull;
+      if (prefecture == null) {
+        throw QzssDcrDecoderException(
+          'Undefined JMA Prefecture: $prefectureCode',
+          sentence: sentence,
+        );
       }
-      prefectures.add(prefectureNames.join('、'));
-      prefectureCodes.addAll(codes);
-
-      slider += 50;
+      prefectures.add(prefecture.name);
+      prefectureCodes.add(prefectureCode);
     }
 
     return QzssDcReport.seismicIntensity(
@@ -92,4 +88,3 @@ class SeismicIntensityDecoder {
     );
   }
 }
-

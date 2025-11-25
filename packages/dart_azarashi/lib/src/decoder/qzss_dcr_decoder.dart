@@ -23,8 +23,8 @@ class QzssDcrDecoder {
   }) {
     final messageBytes = Uint8List.fromList(message);
 
-    // Extract preamble (first 6 bits)
-    final preambleCode = extractField(messageBytes, 0, 6);
+    // Extract preamble (8 bits)
+    final preambleCode = extractField(messageBytes, 0, 8);
     final preambleEnum = QzssDcrPreamble.values
         .where((e) => e.code == preambleCode)
         .firstOrNull;
@@ -37,8 +37,16 @@ class QzssDcrDecoder {
     }
     final preamble = preambleEnum.symbol;
 
-    // Extract message type (bits 6-12)
-    final messageTypeCode = extractField(messageBytes, 6, 6);
+    // Check CRC
+    if (!_verifyCrc(messageBytes, sentence)) {
+      throw QzssDcrDecoderException(
+        'CRC Mismatch',
+        sentence: sentence,
+      );
+    }
+
+    // Extract message type (bits 8-13, 6 bits)
+    final messageTypeCode = extractField(messageBytes, 8, 6);
 
     // Generate raw bytes
     final Uint8List raw;
@@ -98,12 +106,39 @@ class QzssDcrDecoder {
     required Uint8List raw,
     required String preamble,
   }) {
-    // Extract provider identifier (A3)
-    final a3 = extractField(message, 30, 5);
+    // Extract CAMF fields
+    // a1: bits 24-25 (2 bits)
+    final a1 = extractField(message, 24, 2);
+    // a2: bits 26-34 (9 bits) - country code
+    final a2 = extractField(message, 26, 9);
+    // a3: bits 35-39 (5 bits) - provider identifier
+    final a3 = extractField(message, 35, 5);
+    // vn: bits 214-219 (6 bits)
+    final vn = extractField(message, 214, 6);
 
-    // Determine DCX message type based on provider
+    // Determine DCX message type based on CAMF fields
+    // Check if it's a null message (all fields zero)
+    final a4 = extractField(message, 40, 7);
+    final a5 = extractField(message, 47, 2);
+    final a6 = extractField(message, 49, 1);
+    final a7 = extractField(message, 50, 14);
+    final a8 = extractField(message, 64, 2);
+    final a9 = extractField(message, 66, 1);
+    final a10 = extractField(message, 67, 3);
+    final a11 = extractField(message, 70, 10);
+
     String dcxMessageType;
-    if (a3 == 0) {
+    if (a1 == 0 &&
+        a3 == 0 &&
+        a4 == 0 &&
+        a5 == 0 &&
+        a6 == 0 &&
+        a7 == 0 &&
+        a8 == 0 &&
+        a9 == 0 &&
+        a10 == 0 &&
+        a11 == 0 &&
+        vn == 0) {
       dcxMessageType = 'Null Message';
       return QzssDcReport.dcxNull(
         sentence: sentence,
@@ -119,10 +154,8 @@ class QzssDcrDecoder {
       );
     }
 
-    // Check A2 (country code)
-    final a2 = extractField(message, 21, 9);
+    // Check if it's outside Japan
     if (a2 != 111) {
-      // Not Japan
       dcxMessageType = 'Information from Organizations outside Japan';
       return QzssDcReport.dcxOutsideJapan(
         sentence: sentence,
@@ -140,7 +173,7 @@ class QzssDcrDecoder {
 
     // Japan providers
     switch (a3) {
-      case 1:
+      case 1: // FMMC
         dcxMessageType = 'L-Alert';
         return QzssDcReport.dcxLAlert(
           sentence: sentence,
@@ -154,7 +187,8 @@ class QzssDcrDecoder {
           messageType: 'DCX',
           dcxMessageType: dcxMessageType,
         );
-      case 2:
+      case 2: // FDMA
+      case 3: // Related ministries
         dcxMessageType = 'J-Alert';
         return QzssDcReport.dcxJAlert(
           sentence: sentence,
@@ -168,7 +202,7 @@ class QzssDcrDecoder {
           messageType: 'DCX',
           dcxMessageType: dcxMessageType,
         );
-      case 3:
+      case 4: // Information from local government
         dcxMessageType = 'Municipality-Transmitted Information';
         return QzssDcReport.dcxMTInfo(
           sentence: sentence,
@@ -197,6 +231,37 @@ class QzssDcrDecoder {
           dcxMessageType: dcxMessageType,
         );
     }
+  }
+
+  /// Verifies the CRC of the message.
+  ///
+  /// Returns true if CRC is valid, false otherwise.
+  static bool _verifyCrc(Uint8List message, String sentence) {
+    var crc = 0;
+    var crcRemainingLen = 226;
+
+    // Create data: first 28 bytes + byte 29 with last 6 bits cleared
+    final data = <int>[...message.sublist(0, 28), message[28] & 0xC0];
+
+    for (final byte in data) {
+      crc ^= (byte << 16);
+      for (var i = 0; i < 8; i++) {
+        crc <<= 1;
+        if ((crc & 0x1000000) != 0) {
+          crc ^= 0x1864cfb; // CRC-24Q polynomial
+        }
+        crcRemainingLen -= 1;
+        if (crcRemainingLen == 0) {
+          break;
+        }
+      }
+    }
+    crc &= 0xffffff;
+
+    // Extract CRC from message (bits 226-249, 24 bits)
+    final messageCrc = extractField(message, 226, 24);
+
+    return crc == messageCrc;
   }
 
   /// Extracts a field from message bytes.

@@ -15,12 +15,12 @@ class TsunamiDecoder {
     final message = params.message;
     final sentence = params.sentence;
 
-    // Extract notifications on disaster prevention (bits 43-69, 3x9 bits)
+    // Extract notifications on disaster prevention (bits 53-79, 3x9 bits)
     final (notifications, notificationCodes) =
-        JmaCommonDecoder.extractNotificationOnDisasterPrevention(message, 43);
+        JmaCommonDecoder.extractNotificationOnDisasterPrevention(message, 53);
 
-    // Extract tsunami warning code (bits 70-73, 4 bits)
-    final warningCode = QzssDcrDecoder.extractField(message, 70, 4);
+    // Extract tsunami warning code (bits 80-83, 4 bits)
+    final warningCode = QzssDcrDecoder.extractField(message, 80, 4);
     final tsunamiWarningCode = JmaTsunamiWarningCode.values
         .where((e) => e.code == warningCode)
         .firstOrNull;
@@ -39,8 +39,13 @@ class TsunamiDecoder {
     final tsunamiForecastRegions = <JmaTsunamiForecastRegion>[];
     final tsunamiForecastRegionCodes = <int>[];
 
-    var slider = 74;
+    var slider = 84;
     for (var entry = 0; entry < 5; entry++) {
+      // Check if entry is all zeros (end of entries)
+      if (QzssDcrDecoder.extractField(message, slider, 26) == 0) {
+        break;
+      }
+
       // Extract arrival time (12 bits)
       final arrivalTime = JmaCommonDecoder.extractExpectedTsunamiArrivalTime(
         message,
@@ -50,9 +55,6 @@ class TsunamiDecoder {
 
       // Extract height (4 bits)
       final heightCode = QzssDcrDecoder.extractField(message, slider + 12, 4);
-      if (heightCode == 0) {
-        break; // End of entries
-      }
       final height = JmaTsunamiHeight.values
           .where((e) => e.code == heightCode)
           .firstOrNull;
