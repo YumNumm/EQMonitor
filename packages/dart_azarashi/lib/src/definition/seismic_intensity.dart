@@ -114,4 +114,3 @@ enum JmaSeismicIntensity {
   static JmaSeismicIntensity fromCode(int code) =>
       values.firstWhere((e) => e.code == code);
 }
-
