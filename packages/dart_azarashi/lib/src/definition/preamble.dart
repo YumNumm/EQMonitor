@@ -1,11 +1,11 @@
 /// QZSS DCR Preamble definitions.
 ///
 /// See IS-QZSS-DCR-015 Table 4.1.2-1.
+/// Preamble is 8 bits.
 enum QzssDcrPreamble {
-  a(0x15, 'A'),
-  b(0x1A, 'B'),
-  c(0x26, 'C'),
-  d(0x31, 'D');
+  a(0x53, 'A'), // 01010011
+  b(0x9A, 'B'), // 10011010
+  c(0xC6, 'C'); // 11000110
 
   const QzssDcrPreamble(this.code, this.symbol);
 
