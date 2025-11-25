@@ -12,10 +12,7 @@ class JmaCommonDecoder {
   const JmaCommonDecoder._();
 
   /// Extracts day, hour, minute field and returns DateTime.
-  static DateTime extractDayHourMin(
-    JmaCommonParams params,
-    int slider,
-  ) {
+  static DateTime extractDayHourMin(JmaCommonParams params, int slider) {
     final message = params.message;
     final sentence = params.sentence;
     final reportTime = params.reportTime;
@@ -76,10 +73,7 @@ class JmaCommonDecoder {
 
   /// Extracts notification on disaster prevention fields.
   static (List<JmaNotificationOnDisasterPrevention>, List<int>)
-      extractNotificationOnDisasterPrevention(
-    Uint8List message,
-    int slider,
-  ) {
+  extractNotificationOnDisasterPrevention(Uint8List message, int slider) {
     final notifications = <JmaNotificationOnDisasterPrevention>[];
     final codes = <int>[];
 
@@ -233,4 +227,3 @@ class JmaCommonDecoder {
     return DateTime.utc(taDate.year, taDate.month, taDate.day, taH, taM);
   }
 }
-
