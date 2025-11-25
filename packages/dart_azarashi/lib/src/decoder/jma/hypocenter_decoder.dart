@@ -10,27 +10,27 @@ class HypocenterDecoder {
     final message = params.message;
     final sentence = params.sentence;
 
-    // Extract notifications on disaster prevention (bits 43-69, 3x9 bits)
+    // Extract notifications on disaster prevention (bits 53-79, 3x9 bits)
     final (notifications, notificationCodes) =
-        JmaCommonDecoder.extractNotificationOnDisasterPrevention(message, 43);
+        JmaCommonDecoder.extractNotificationOnDisasterPrevention(message, 53);
 
-    // Extract occurrence time of earthquake (bits 70-85, 16 bits)
-    final occurrenceTime = JmaCommonDecoder.extractDayHourMin(params, 70);
+    // Extract occurrence time of earthquake (bits 80-95, 16 bits)
+    final occurrenceTime = JmaCommonDecoder.extractDayHourMin(params, 80);
 
-    // Extract depth of hypocenter (bits 86-94, 9 bits)
-    final (depth, depthRaw) = JmaCommonDecoder.extractDepth(message, 86);
+    // Extract depth of hypocenter (bits 96-104, 9 bits)
+    final (depth, depthRaw) = JmaCommonDecoder.extractDepth(message, 96);
 
-    // Extract magnitude (bits 95-101, 7 bits)
+    // Extract magnitude (bits 105-111, 7 bits)
     final (magnitude, magnitudeRaw) =
-        JmaCommonDecoder.extractMagnitude(message, 95);
+        JmaCommonDecoder.extractMagnitude(message, 105);
 
-    // Extract seismic epicenter (bits 102-111, 10 bits)
+    // Extract seismic epicenter (bits 112-121, 10 bits)
     final (epicenter, epicenterRaw) =
-        JmaCommonDecoder.extractSeismicEpicenter(message, 102, sentence);
+        JmaCommonDecoder.extractSeismicEpicenter(message, 112, sentence);
 
-    // Extract coordinates of hypocenter (bits 112-152, 41 bits)
+    // Extract coordinates of hypocenter (bits 122-162, 41 bits)
     final coordinates =
-        JmaCommonDecoder.extractLatLon(message, 112, sentence);
+        JmaCommonDecoder.extractLatLon(message, 122, sentence);
 
     return QzssDcReport.hypocenter(
       sentence: params.sentence,
