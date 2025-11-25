@@ -25,14 +25,17 @@ class QzssDcrDecoder {
 
     // Extract preamble (first 6 bits)
     final preambleCode = extractField(messageBytes, 0, 6);
-    final preamble = qzssDcrPreamble[preambleCode];
+    final preambleEnum = QzssDcrPreamble.values
+        .where((e) => e.code == preambleCode)
+        .firstOrNull;
 
-    if (preamble == null) {
+    if (preambleEnum == null) {
       throw QzssDcrDecoderException(
         'Unknown Preamble: $preambleCode',
         sentence: sentence,
       );
     }
+    final preamble = preambleEnum.symbol;
 
     // Extract message type (bits 6-12)
     final messageTypeCode = extractField(messageBytes, 6, 6);
