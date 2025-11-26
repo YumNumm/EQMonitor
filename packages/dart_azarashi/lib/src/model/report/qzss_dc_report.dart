@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'qzss_dc_report.freezed.dart';
+part 'qzss_dc_report.g.dart';
 
 /// Hypocenter coordinates data class.
 class HypocenterCoordinates {
@@ -43,7 +44,7 @@ class HypocenterCoordinates {
 /// QZSS Disaster and Crisis Report base sealed class.
 ///
 /// This is a sealed class representing all types of DCR/DCX reports.
-@Freezed(copyWith: false, toJson: false, fromJson: false, equal: false)
+@freezed
 sealed class QzssDcReport with _$QzssDcReport {
   const QzssDcReport._();
 
@@ -94,6 +95,7 @@ sealed class QzssDcReport with _$QzssDcReport {
   /// Hypocenter Report.
   const factory QzssDcReport.hypocenter({
     required String sentence,
+    @Uint8ListConverter()
     required Uint8List message,
     required String nmea,
     String? messageHeader,
@@ -270,4 +272,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String messageType,
     required String dcxMessageType,
   }) = QzssDcReportDcxUnknown;
+
+  factory QzssDcReport.fromJson(Map<String, dynamic> json) => _$QzssDcReportFromJson(json);
 }

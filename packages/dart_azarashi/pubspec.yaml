@@ -1,7 +1,6 @@
 name: dart_azarashi
 description: A Dart implementation of QZQSM DCR Decoder (azarashi) - Decodes disaster and crisis management reports from QZSS satellites.
 version: 1.0.0
-
 publish_to: "none"
 
 environment:
@@ -14,6 +13,8 @@ executables:
 
 dependencies:
   args: ^2.6.0
+  core:
+    path: ../core
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
 
