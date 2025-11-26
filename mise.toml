@@ -1,7 +1,7 @@
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "4.14.12"
 biome = "latest"
-flutter = "3.38.1-stable"
+flutter = "3.38.3-stable"
 "gem:cocoapods" = "latest"
 java = "17"
 node = "lts"
