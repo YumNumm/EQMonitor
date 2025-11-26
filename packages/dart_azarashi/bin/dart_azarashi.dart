@@ -25,18 +25,8 @@ void main(List<String> arguments) {
       help: 'Output the source messages',
       defaultsTo: false,
     )
-    ..addFlag(
-      'verbose',
-      abbr: 'v',
-      help: 'Verbose mode',
-      defaultsTo: false,
-    )
-    ..addFlag(
-      'help',
-      abbr: 'h',
-      help: 'Show help',
-      negatable: false,
-    );
+    ..addFlag('verbose', abbr: 'v', help: 'Verbose mode', defaultsTo: false)
+    ..addFlag('help', abbr: 'h', help: 'Show help', negatable: false);
 
   late final ArgResults results;
   try {
@@ -72,79 +62,81 @@ void main(List<String> arguments) {
     inputStream = file.openRead().transform(const SystemEncoding().decoder);
   }
 
-  inputStream.transform(const LineSplitter()).listen(
-    (line) {
-      if (line.trim().isEmpty) return;
+  inputStream
+      .transform(const LineSplitter())
+      .listen(
+        (line) {
+          if (line.trim().isEmpty) return;
 
-      final now = DateTime.now().toIso8601String();
+          final now = DateTime.now().toIso8601String();
 
-      try {
-        final QzssDcReport report;
+          try {
+            final QzssDcReport report;
 
-        switch (type) {
-          case 'hex':
-            report = azarashi.hexDecoder.decode(line);
-          case 'nmea':
-            report = azarashi.nmeaDecoder.decode(line);
-          case 'ublox':
-            // u-blox binary requires special handling
-            stderr.writeln('Error: ublox type requires binary input');
-            return;
-          default:
-            stderr.writeln('Error: Unknown type: $type');
-            return;
-        }
+            switch (type) {
+              case 'hex':
+                report = azarashi.hexDecoder.decode(line);
+              case 'nmea':
+                report = azarashi.nmeaDecoder.decode(line);
+              case 'ublox':
+                // u-blox binary requires special handling
+                stderr.writeln('Error: ublox type requires binary input');
+                return;
+              default:
+                stderr.writeln('Error: Unknown type: $type');
+                return;
+            }
 
-        stdout.writeln('$now --------------------------------');
-        if (verbose) {
-          _printVerbose(report);
-        } else {
-          stdout.writeln(report);
-        }
-        stdout.writeln();
+            stdout.writeln('$now --------------------------------');
+            if (verbose) {
+              _printVerbose(report);
+            } else {
+              stdout.writeln(report);
+            }
+            stdout.writeln();
 
-        if (showSource) {
-          stdout.writeln('# src: $line');
-          final rawBytes = switch (report) {
-            QzssDcReportEarthquakeEarlyWarning(:final raw) => raw,
-            QzssDcReportHypocenter(:final raw) => raw,
-            QzssDcReportSeismicIntensity(:final raw) => raw,
-            QzssDcReportTsunami(:final raw) => raw,
-            QzssDcReportDcxNull(:final raw) => raw,
-            QzssDcReportDcxOutsideJapan(:final raw) => raw,
-            QzssDcReportDcxLAlert(:final raw) => raw,
-            QzssDcReportDcxJAlert(:final raw) => raw,
-            QzssDcReportDcxMTInfo(:final raw) => raw,
-            QzssDcReportDcxUnknown(:final raw) => raw,
-          };
-          final hex = rawBytes
-              .map((b) => b.toRadixString(16).padLeft(2, '0').toUpperCase())
-              .join();
-          stdout.writeln('# hex: $hex');
-          stdout.writeln();
-        }
-      } on QzssDcrDecoderException catch (e) {
-        stderr.writeln('$now --------------------------------');
-        stderr.writeln('# [QzssDcrDecoderException] $e');
-        stderr.writeln();
-      } on QzssDcrDecoderNotImplementedError catch (e) {
-        stderr.writeln('$now --------------------------------');
-        stderr.writeln('# [QzssDcrDecoderNotImplementedError] $e');
-        stderr.writeln();
-      } catch (e) {
-        stderr.writeln('$now --------------------------------');
-        stderr.writeln('# [${e.runtimeType}] $e');
-        stderr.writeln();
-      }
-    },
-    onDone: () {
-      exit(0);
-    },
-    onError: (Object e) {
-      stderr.writeln('Error: $e');
-      exit(1);
-    },
-  );
+            if (showSource) {
+              stdout.writeln('# src: $line');
+              final rawBytes = switch (report) {
+                QzssDcReportEarthquakeEarlyWarning(:final raw) => raw,
+                QzssDcReportHypocenter(:final raw) => raw,
+                QzssDcReportSeismicIntensity(:final raw) => raw,
+                QzssDcReportTsunami(:final raw) => raw,
+                QzssDcReportDcxNull(:final raw) => raw,
+                QzssDcReportDcxOutsideJapan(:final raw) => raw,
+                QzssDcReportDcxLAlert(:final raw) => raw,
+                QzssDcReportDcxJAlert(:final raw) => raw,
+                QzssDcReportDcxMTInfo(:final raw) => raw,
+                QzssDcReportDcxUnknown(:final raw) => raw,
+              };
+              final hex = rawBytes
+                  .map((b) => b.toRadixString(16).padLeft(2, '0').toUpperCase())
+                  .join();
+              stdout.writeln('# hex: $hex');
+              stdout.writeln();
+            }
+          } on QzssDcrDecoderException catch (e) {
+            stderr.writeln('$now --------------------------------');
+            stderr.writeln('# [QzssDcrDecoderException] $e');
+            stderr.writeln();
+          } on QzssDcrDecoderNotImplementedError catch (e) {
+            stderr.writeln('$now --------------------------------');
+            stderr.writeln('# [QzssDcrDecoderNotImplementedError] $e');
+            stderr.writeln();
+          } catch (e) {
+            stderr.writeln('$now --------------------------------');
+            stderr.writeln('# [${e.runtimeType}] $e');
+            stderr.writeln();
+          }
+        },
+        onDone: () {
+          exit(0);
+        },
+        onError: (Object e) {
+          stderr.writeln('Error: $e');
+          exit(1);
+        },
+      );
 }
 
 void _printUsage(ArgParser parser) {
@@ -163,75 +155,6 @@ void _printUsage(ArgParser parser) {
 void _printVerbose(QzssDcReport report) {
   stdout.writeln('Type: ${report.runtimeType}');
   stdout.writeln('Sentence: ${report.sentence}');
+  print(JsonEncoder.withIndent('  ').convert(report.toJson()));
 
-  // Print additional fields based on report type
-  switch (report) {
-    case QzssDcReportEarthquakeEarlyWarning():
-      stdout.writeln('Report Classification: ${report.reportClassification}');
-      stdout.writeln('Disaster Category: ${report.disasterCategory}');
-      stdout.writeln('Report Time: ${report.reportTime}');
-      stdout.writeln('Information Type: ${report.informationType}');
-      stdout.writeln(
-        'Occurrence Time: ${report.occurrenceTimeOfEarthquake}',
-      );
-      stdout.writeln('Epicenter: ${report.seismicEpicenter}');
-      stdout.writeln('Magnitude: ${report.magnitude}');
-      stdout.writeln(
-        'Seismic Intensity: ${report.seismicIntensityLowerLimit}'
-        ' - ${report.seismicIntensityUpperLimit}',
-      );
-      stdout.writeln('Depth: ${report.depthOfHypocenter}');
-      stdout.writeln('EEW Regions: ${report.eewForecastRegions.join(", ")}');
-    case QzssDcReportSeismicIntensity():
-      stdout.writeln('Report Classification: ${report.reportClassification}');
-      stdout.writeln('Disaster Category: ${report.disasterCategory}');
-      stdout.writeln('Report Time: ${report.reportTime}');
-      stdout.writeln('Information Type: ${report.informationType}');
-      stdout.writeln(
-        'Occurrence Time: ${report.occurrenceTimeOfEarthquake}',
-      );
-      stdout.writeln('Seismic Intensities: ${report.seismicIntensities}');
-      stdout.writeln('Prefectures: ${report.prefectures}');
-    case QzssDcReportHypocenter():
-      stdout.writeln('Report Classification: ${report.reportClassification}');
-      stdout.writeln('Disaster Category: ${report.disasterCategory}');
-      stdout.writeln('Report Time: ${report.reportTime}');
-      stdout.writeln('Information Type: ${report.informationType}');
-      stdout.writeln(
-        'Occurrence Time: ${report.occurrenceTimeOfEarthquake}',
-      );
-      stdout.writeln('Epicenter: ${report.seismicEpicenter}');
-      final coords = report.coordinatesOfHypocenter;
-      stdout.writeln('Latitude: ${coords.latitude}');
-      stdout.writeln('Longitude: ${coords.longitude}');
-      stdout.writeln('Depth: ${report.depthOfHypocenter}');
-      stdout.writeln('Magnitude: ${report.magnitude}');
-    case QzssDcReportTsunami():
-      stdout.writeln('Report Classification: ${report.reportClassification}');
-      stdout.writeln('Disaster Category: ${report.disasterCategory}');
-      stdout.writeln('Report Time: ${report.reportTime}');
-      stdout.writeln('Information Type: ${report.informationType}');
-      stdout.writeln('Tsunami Warning Code: ${report.tsunamiWarningCode}');
-      stdout.writeln('Tsunami Regions: ${report.tsunamiForecastRegions}');
-      stdout.writeln('Tsunami Heights: ${report.tsunamiHeights}');
-      stdout.writeln('Arrival Times: ${report.expectedTsunamiArrivalTimes}');
-    case QzssDcReportDcxJAlert():
-      stdout.writeln('Category: J-Alert');
-      stdout.writeln('DCX Message Type: ${report.dcxMessageType}');
-    case QzssDcReportDcxLAlert():
-      stdout.writeln('Category: L-Alert');
-      stdout.writeln('DCX Message Type: ${report.dcxMessageType}');
-    case QzssDcReportDcxNull():
-      stdout.writeln('Category: Null');
-      stdout.writeln('DCX Message Type: ${report.dcxMessageType}');
-    case QzssDcReportDcxOutsideJapan():
-      stdout.writeln('Category: Outside Japan');
-      stdout.writeln('DCX Message Type: ${report.dcxMessageType}');
-    case QzssDcReportDcxMTInfo():
-      stdout.writeln('Category: Municipality-Transmitted Info');
-      stdout.writeln('DCX Message Type: ${report.dcxMessageType}');
-    case QzssDcReportDcxUnknown():
-      stdout.writeln('Category: Unknown');
-      stdout.writeln('DCX Message Type: ${report.dcxMessageType}');
-  }
 }
