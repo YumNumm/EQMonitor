@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -112,6 +111,136 @@ $EewAccuracyCopyWith<$Res>? get accuracy {
 }
 }
 
+
+/// Adds pattern-matching-related methods to [EewV1].
+extension EewV1Patterns on EewV1 {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EewV1 value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EewV1() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EewV1 value)  $default,){
+final _that = this;
+switch (_that) {
+case _EewV1():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EewV1 value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EewV1() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int eventId,  String type,  String schemaType,  String status,  String infoType,  DateTime reportTime,  bool isCanceled,  bool isLastInfo,  bool? isPlum,  EewAccuracy? accuracy,  int? serialNo,  String? headline,  bool? isWarning,  DateTime? originTime,  DateTime? arrivalTime,  String? hypoName,  int? depth,  double? latitude,  double? longitude,  double? magnitude,  JmaForecastIntensity? forecastMaxIntensity,  bool? forecastMaxIntensityIsOver,  JmaForecastLgIntensity? forecastMaxLpgmIntensity,  bool? forecastMaxLpgmIntensityIsOver,  List<EstimatedIntensityRegion>? regions)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EewV1() when $default != null:
+return $default(_that.id,_that.eventId,_that.type,_that.schemaType,_that.status,_that.infoType,_that.reportTime,_that.isCanceled,_that.isLastInfo,_that.isPlum,_that.accuracy,_that.serialNo,_that.headline,_that.isWarning,_that.originTime,_that.arrivalTime,_that.hypoName,_that.depth,_that.latitude,_that.longitude,_that.magnitude,_that.forecastMaxIntensity,_that.forecastMaxIntensityIsOver,_that.forecastMaxLpgmIntensity,_that.forecastMaxLpgmIntensityIsOver,_that.regions);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int eventId,  String type,  String schemaType,  String status,  String infoType,  DateTime reportTime,  bool isCanceled,  bool isLastInfo,  bool? isPlum,  EewAccuracy? accuracy,  int? serialNo,  String? headline,  bool? isWarning,  DateTime? originTime,  DateTime? arrivalTime,  String? hypoName,  int? depth,  double? latitude,  double? longitude,  double? magnitude,  JmaForecastIntensity? forecastMaxIntensity,  bool? forecastMaxIntensityIsOver,  JmaForecastLgIntensity? forecastMaxLpgmIntensity,  bool? forecastMaxLpgmIntensityIsOver,  List<EstimatedIntensityRegion>? regions)  $default,) {final _that = this;
+switch (_that) {
+case _EewV1():
+return $default(_that.id,_that.eventId,_that.type,_that.schemaType,_that.status,_that.infoType,_that.reportTime,_that.isCanceled,_that.isLastInfo,_that.isPlum,_that.accuracy,_that.serialNo,_that.headline,_that.isWarning,_that.originTime,_that.arrivalTime,_that.hypoName,_that.depth,_that.latitude,_that.longitude,_that.magnitude,_that.forecastMaxIntensity,_that.forecastMaxIntensityIsOver,_that.forecastMaxLpgmIntensity,_that.forecastMaxLpgmIntensityIsOver,_that.regions);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int eventId,  String type,  String schemaType,  String status,  String infoType,  DateTime reportTime,  bool isCanceled,  bool isLastInfo,  bool? isPlum,  EewAccuracy? accuracy,  int? serialNo,  String? headline,  bool? isWarning,  DateTime? originTime,  DateTime? arrivalTime,  String? hypoName,  int? depth,  double? latitude,  double? longitude,  double? magnitude,  JmaForecastIntensity? forecastMaxIntensity,  bool? forecastMaxIntensityIsOver,  JmaForecastLgIntensity? forecastMaxLpgmIntensity,  bool? forecastMaxLpgmIntensityIsOver,  List<EstimatedIntensityRegion>? regions)?  $default,) {final _that = this;
+switch (_that) {
+case _EewV1() when $default != null:
+return $default(_that.id,_that.eventId,_that.type,_that.schemaType,_that.status,_that.infoType,_that.reportTime,_that.isCanceled,_that.isLastInfo,_that.isPlum,_that.accuracy,_that.serialNo,_that.headline,_that.isWarning,_that.originTime,_that.arrivalTime,_that.hypoName,_that.depth,_that.latitude,_that.longitude,_that.magnitude,_that.forecastMaxIntensity,_that.forecastMaxIntensityIsOver,_that.forecastMaxLpgmIntensity,_that.forecastMaxLpgmIntensityIsOver,_that.regions);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()
@@ -344,6 +473,136 @@ $ForecastMaxLgIntCopyWith<$Res>? get forecastMaxLgInt {
 }
 
 
+/// Adds pattern-matching-related methods to [EstimatedIntensityRegion].
+extension EstimatedIntensityRegionPatterns on EstimatedIntensityRegion {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EstimatedIntensityRegion value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EstimatedIntensityRegion() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EstimatedIntensityRegion value)  $default,){
+final _that = this;
+switch (_that) {
+case _EstimatedIntensityRegion():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EstimatedIntensityRegion value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EstimatedIntensityRegion() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(name: 'isPlum')  bool isPlum, @JsonKey(name: 'isWarning')  bool isWarning, @JsonKey(name: 'forecastMaxInt')  ForecastMaxInt forecastMaxInt, @JsonKey(name: 'forecastMaxLgInt')  ForecastMaxLgInt? forecastMaxLgInt, @JsonKey(name: 'arrivalTime')  DateTime? arrivalTime)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EstimatedIntensityRegion() when $default != null:
+return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.forecastMaxInt,_that.forecastMaxLgInt,_that.arrivalTime);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(name: 'isPlum')  bool isPlum, @JsonKey(name: 'isWarning')  bool isWarning, @JsonKey(name: 'forecastMaxInt')  ForecastMaxInt forecastMaxInt, @JsonKey(name: 'forecastMaxLgInt')  ForecastMaxLgInt? forecastMaxLgInt, @JsonKey(name: 'arrivalTime')  DateTime? arrivalTime)  $default,) {final _that = this;
+switch (_that) {
+case _EstimatedIntensityRegion():
+return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.forecastMaxInt,_that.forecastMaxLgInt,_that.arrivalTime);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(name: 'isPlum')  bool isPlum, @JsonKey(name: 'isWarning')  bool isWarning, @JsonKey(name: 'forecastMaxInt')  ForecastMaxInt forecastMaxInt, @JsonKey(name: 'forecastMaxLgInt')  ForecastMaxLgInt? forecastMaxLgInt, @JsonKey(name: 'arrivalTime')  DateTime? arrivalTime)?  $default,) {final _that = this;
+switch (_that) {
+case _EstimatedIntensityRegion() when $default != null:
+return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.forecastMaxInt,_that.forecastMaxLgInt,_that.arrivalTime);case _:
+  return null;
+
+}
+}
+
+}
+
 /// @nodoc
 @JsonSerializable()
 
@@ -516,6 +775,136 @@ as int,
 }
 
 
+/// Adds pattern-matching-related methods to [EewAccuracy].
+extension EewAccuracyPatterns on EewAccuracy {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EewAccuracy value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EewAccuracy() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EewAccuracy value)  $default,){
+final _that = this;
+switch (_that) {
+case _EewAccuracy():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EewAccuracy value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EewAccuracy() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)  List<int> epicenters, @JsonKey(fromJson: int.parse, toJson: intToString)  int depth, @JsonKey(fromJson: int.parse, toJson: intToString)  int magnitudeCalculation, @JsonKey(fromJson: int.parse, toJson: intToString)  int numberOfMagnitudeCalculation)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EewAccuracy() when $default != null:
+return $default(_that.epicenters,_that.depth,_that.magnitudeCalculation,_that.numberOfMagnitudeCalculation);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)  List<int> epicenters, @JsonKey(fromJson: int.parse, toJson: intToString)  int depth, @JsonKey(fromJson: int.parse, toJson: intToString)  int magnitudeCalculation, @JsonKey(fromJson: int.parse, toJson: intToString)  int numberOfMagnitudeCalculation)  $default,) {final _that = this;
+switch (_that) {
+case _EewAccuracy():
+return $default(_that.epicenters,_that.depth,_that.magnitudeCalculation,_that.numberOfMagnitudeCalculation);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)  List<int> epicenters, @JsonKey(fromJson: int.parse, toJson: intToString)  int depth, @JsonKey(fromJson: int.parse, toJson: intToString)  int magnitudeCalculation, @JsonKey(fromJson: int.parse, toJson: intToString)  int numberOfMagnitudeCalculation)?  $default,) {final _that = this;
+switch (_that) {
+case _EewAccuracy() when $default != null:
+return $default(_that.epicenters,_that.depth,_that.magnitudeCalculation,_that.numberOfMagnitudeCalculation);case _:
+  return null;
+
+}
+}
+
+}
+
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
@@ -666,6 +1055,136 @@ as JmaForecastIntensityOver,
 }
 
 
+/// Adds pattern-matching-related methods to [ForecastMaxInt].
+extension ForecastMaxIntPatterns on ForecastMaxInt {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ForecastMaxInt value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ForecastMaxInt() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ForecastMaxInt value)  $default,){
+final _that = this;
+switch (_that) {
+case _ForecastMaxInt():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ForecastMaxInt value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ForecastMaxInt() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaForecastIntensity from,  JmaForecastIntensityOver to)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ForecastMaxInt() when $default != null:
+return $default(_that.from,_that.to);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaForecastIntensity from,  JmaForecastIntensityOver to)  $default,) {final _that = this;
+switch (_that) {
+case _ForecastMaxInt():
+return $default(_that.from,_that.to);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaForecastIntensity from,  JmaForecastIntensityOver to)?  $default,) {final _that = this;
+switch (_that) {
+case _ForecastMaxInt() when $default != null:
+return $default(_that.from,_that.to);case _:
+  return null;
+
+}
+}
+
+}
+
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
@@ -801,6 +1320,136 @@ as JmaForecastLgIntensityOver,
 
 }
 
+
+/// Adds pattern-matching-related methods to [ForecastMaxLgInt].
+extension ForecastMaxLgIntPatterns on ForecastMaxLgInt {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ForecastMaxLgInt value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ForecastMaxLgInt() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ForecastMaxLgInt value)  $default,){
+final _that = this;
+switch (_that) {
+case _ForecastMaxLgInt():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ForecastMaxLgInt value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ForecastMaxLgInt() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaForecastLgIntensity from,  JmaForecastLgIntensityOver to)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ForecastMaxLgInt() when $default != null:
+return $default(_that.from,_that.to);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaForecastLgIntensity from,  JmaForecastLgIntensityOver to)  $default,) {final _that = this;
+switch (_that) {
+case _ForecastMaxLgInt():
+return $default(_that.from,_that.to);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaForecastLgIntensity from,  JmaForecastLgIntensityOver to)?  $default,) {final _that = this;
+switch (_that) {
+case _ForecastMaxLgInt() when $default != null:
+return $default(_that.from,_that.to);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 
