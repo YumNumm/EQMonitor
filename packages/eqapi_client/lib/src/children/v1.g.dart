@@ -4,11 +4,13 @@
 
 part of 'v1.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _V1 implements V1 {
   _V1(this._dio, {this.baseUrl, this.errorLogger});
@@ -61,7 +63,7 @@ class _V1 implements V1 {
           .map((dynamic i) => EarthquakeV1.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -91,7 +93,7 @@ class _V1 implements V1 {
     try {
       _value = EarthquakeV1.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -134,7 +136,7 @@ class _V1 implements V1 {
           .map((dynamic i) => RegionItem.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -170,7 +172,7 @@ class _V1 implements V1 {
           .map((dynamic i) => InformationV1.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -206,7 +208,7 @@ class _V1 implements V1 {
           .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -236,7 +238,7 @@ class _V1 implements V1 {
           .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -268,7 +270,7 @@ class _V1 implements V1 {
           .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -327,7 +329,7 @@ class _V1 implements V1 {
           )
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -360,7 +362,7 @@ class _V1 implements V1 {
           )
           .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -393,3 +395,5 @@ class _V1 implements V1 {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on
