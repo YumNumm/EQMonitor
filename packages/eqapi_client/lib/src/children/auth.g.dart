@@ -4,11 +4,13 @@
 
 part of 'auth.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _AuthApiClient implements AuthApiClient {
   _AuthApiClient(this._dio, {this.baseUrl, this.errorLogger});
@@ -43,7 +45,7 @@ class _AuthApiClient implements AuthApiClient {
     try {
       _value = FcmTokenUpdateResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -76,7 +78,7 @@ class _AuthApiClient implements AuthApiClient {
     try {
       _value = FcmTokenUpdateResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -159,7 +161,7 @@ class _AuthApiClient implements AuthApiClient {
     try {
       _value = NotificationSettingsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     final httpResponse = HttpResponse(_value, _result);
@@ -193,3 +195,5 @@ class _AuthApiClient implements AuthApiClient {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on
