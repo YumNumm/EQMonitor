@@ -6,10 +6,18 @@ import '../../definition/report_classification.dart';
 import '../../model/exception.dart';
 import '../../model/report/qzss_dc_report.dart';
 import '../qzss_dcr_decoder.dart';
+import 'ash_fall_decoder.dart';
 import 'earthquake_early_warning_decoder.dart';
+import 'flood_decoder.dart';
 import 'hypocenter_decoder.dart';
+import 'marine_decoder.dart';
+import 'nankai_trough_earthquake_decoder.dart';
+import 'northwest_pacific_tsunami_decoder.dart';
 import 'seismic_intensity_decoder.dart';
 import 'tsunami_decoder.dart';
+import 'typhoon_decoder.dart';
+import 'volcano_decoder.dart';
+import 'weather_decoder.dart';
 
 /// JMA (Japan Meteorological Agency) Decoder.
 ///
@@ -51,8 +59,9 @@ class JmaDecoder {
 
     // Extract disaster category (bits 17-20, 4 bits)
     final dcCode = QzssDcrDecoder.extractField(message, 17, 4);
-    final disasterCategory =
-        JmaDisasterCategory.values.where((e) => e.code == dcCode).firstOrNull;
+    final disasterCategory = JmaDisasterCategory.values
+        .where((e) => e.code == dcCode)
+        .firstOrNull;
     if (disasterCategory == null) {
       throw QzssDcrDecoderException(
         'Undefined Disaster Category: $dcCode',
@@ -65,8 +74,9 @@ class JmaDecoder {
 
     // Extract information type (bits 41-42, 2 bits)
     final itCode = QzssDcrDecoder.extractField(message, 41, 2);
-    final informationType =
-        JmaInformationType.values.where((e) => e.code == itCode).firstOrNull;
+    final informationType = JmaInformationType.values
+        .where((e) => e.code == itCode)
+        .firstOrNull;
     if (informationType == null) {
       throw QzssDcrDecoderException(
         'Undefined Information Type: $itCode',
@@ -99,21 +109,24 @@ class JmaDecoder {
         return HypocenterDecoder.decode(commonParams);
       case JmaDisasterCategory.seismicIntensity:
         return SeismicIntensityDecoder.decode(commonParams);
+      case JmaDisasterCategory.nankaiTroughEarthquake:
+        return NankaiTroughEarthquakeDecoder.decode(commonParams);
       case JmaDisasterCategory.tsunami:
         return TsunamiDecoder.decode(commonParams);
-      // TODO: 他のデコーダーを実装
-      case JmaDisasterCategory.nankaiTroughEarthquake:
       case JmaDisasterCategory.northwestPacificTsunami:
+        return NorthwestPacificTsunamiDecoder.decode(commonParams);
       case JmaDisasterCategory.volcano:
+        return VolcanoDecoder.decode(commonParams);
       case JmaDisasterCategory.ashFall:
+        return AshFallDecoder.decode(commonParams);
       case JmaDisasterCategory.weather:
+        return WeatherDecoder.decode(commonParams);
       case JmaDisasterCategory.flood:
+        return FloodDecoder.decode(commonParams);
       case JmaDisasterCategory.typhoon:
+        return TyphoonDecoder.decode(commonParams);
       case JmaDisasterCategory.marine:
-        throw QzssDcrDecoderNotImplementedError(
-          'Unsupported Disaster Category: ${disasterCategory.nameJa}',
-          sentence: sentence,
-        );
+        return MarineDecoder.decode(commonParams);
     }
   }
 
@@ -203,4 +216,3 @@ class JmaCommonParams {
   final DateTime reportTime;
   final JmaInformationType informationType;
 }
-
