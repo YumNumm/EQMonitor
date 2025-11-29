@@ -21,8 +21,6 @@ dependencies:
   core:
     path: ../packages/core
   crypto: ^3.0.6
-  dart_azarashi:
-    path: ../packages/dart_azarashi
   device_info_plus: ^12.1.0
   dio: ^5.8.0+1
   dynamic_color: ^1.7.0

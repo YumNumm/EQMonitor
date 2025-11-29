@@ -110,8 +110,9 @@ class LatestQzssDcReport extends _$LatestQzssDcReport {
   @override
   QzssDcReport? build() {
     final connection = ref.watch(qzssSerialPortConnectionProvider);
-    final connectionNotifier =
-        ref.watch(qzssSerialPortConnectionProvider.notifier);
+    final connectionNotifier = ref.watch(
+      qzssSerialPortConnectionProvider.notifier,
+    );
 
     if (connection.isConnected) {
       final stream = connectionNotifier.reportStream;
