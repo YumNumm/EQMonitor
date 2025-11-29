@@ -47,6 +47,37 @@ class QzssDcrReportWidget extends HookConsumerWidget {
       );
     }
 
+    // 災害カテゴリーのテキスト変換
+    final disasterCategoryText = switch (report.disasterCategory) {
+      DisasterCategory.earthquake => '地震',
+      DisasterCategory.hypocenter => '震源',
+      DisasterCategory.tsunami => '津波',
+      DisasterCategory.northwestPacificTsunami => '北西太平洋津波',
+      DisasterCategory.volcanoRelated => '火山',
+      DisasterCategory.ashFall => '降灰',
+      DisasterCategory.weatherRelated => '気象',
+      DisasterCategory.floodRelated => '洪水',
+      DisasterCategory.typhoonRelated => '台風',
+      DisasterCategory.marineRelated => '海上',
+      DisasterCategory.nankaiTroughEarthquakeRelated => '南海トラフ地震',
+      DisasterCategory.testOrTraining => 'テスト/訓練',
+      DisasterCategory.futureUse => '将来使用',
+    };
+
+    // 報告分類のテキスト変換
+    final reportClassificationText = switch (report.reportClassification) {
+      ReportClassification.normal => '通常',
+      ReportClassification.training => '訓練',
+      ReportClassification.test => 'テスト',
+    };
+
+    // 情報タイプのテキスト変換
+    final informationTypeText = switch (report.informationType) {
+      InformationType.issue => '発表',
+      InformationType.correction => '訂正',
+      InformationType.cancel => '取消',
+    };
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -82,49 +113,44 @@ class QzssDcrReportWidget extends HookConsumerWidget {
             const SizedBox(height: 8),
 
             // 災害カテゴリー
-            _buildInfoRow(
-              context,
-              'カテゴリー',
-              _getDisasterCategoryText(report.disasterCategory),
+            _InfoRow(
+              label: 'カテゴリー',
+              value: disasterCategoryText,
               icon: Icons.warning_amber,
             ),
 
             // 報告分類
-            _buildInfoRow(
-              context,
-              '報告分類',
-              _getReportClassificationText(report.reportClassification),
+            _InfoRow(
+              label: '報告分類',
+              value: reportClassificationText,
               icon: Icons.info_outline,
             ),
 
             // 情報タイプ
-            _buildInfoRow(
-              context,
-              '情報タイプ',
-              _getInformationTypeText(report.informationType),
+            _InfoRow(
+              label: '情報タイプ',
+              value: informationTypeText,
               icon: Icons.article_outlined,
             ),
 
             // 衛星ID
-            _buildInfoRow(
-              context,
-              '衛星ID',
-              'QZS-${report.satelliteId}',
+            _InfoRow(
+              label: '衛星ID',
+              value: 'QZS-${report.satelliteId}',
               icon: Icons.satellite,
             ),
 
             // 受信時刻（現在時刻）
-            _buildInfoRow(
-              context,
-              '受信時刻',
-              DateFormat('yyyy/MM/dd HH:mm:ss').format(DateTime.now()),
+            _InfoRow(
+              label: '受信時刻',
+              value: DateFormat('yyyy/MM/dd HH:mm:ss').format(DateTime.now()),
               icon: Icons.access_time,
             ),
 
             const SizedBox(height: 16),
 
             // デコード内容（JMAの場合）
-            if (report.jma != null) _buildJmaInfo(context, report.jma!),
+            if (report.jma != null) _JmaInfoCard(jma: report.jma!),
 
             // 生データ（デバッグ用）
             const SizedBox(height: 16),
@@ -147,13 +173,21 @@ class QzssDcrReportWidget extends HookConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildInfoRow(
-    BuildContext context,
-    String label,
-    String value, {
-    IconData? icon,
-  }) {
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({
+    required this.label,
+    required this.value,
+    this.icon,
+  });
+
+  final String label;
+  final String value;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -184,8 +218,17 @@ class QzssDcrReportWidget extends HookConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildJmaInfo(BuildContext context, JmaReport jma) {
+class _JmaInfoCard extends StatelessWidget {
+  const _JmaInfoCard({
+    required this.jma,
+  });
+
+  final JmaReport jma;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -213,39 +256,5 @@ class QzssDcrReportWidget extends HookConsumerWidget {
         ],
       ),
     );
-  }
-
-  String _getDisasterCategoryText(DisasterCategory category) {
-    return switch (category) {
-      DisasterCategory.earthquake => '地震',
-      DisasterCategory.hypocenter => '震源',
-      DisasterCategory.tsunami => '津波',
-      DisasterCategory.northwestPacificTsunami => '北西太平洋津波',
-      DisasterCategory.volcanoRelated => '火山',
-      DisasterCategory.ashFall => '降灰',
-      DisasterCategory.weatherRelated => '気象',
-      DisasterCategory.floodRelated => '洪水',
-      DisasterCategory.typhoonRelated => '台風',
-      DisasterCategory.marineRelated => '海上',
-      DisasterCategory.nankaiTroughEarthquakeRelated => '南海トラフ地震',
-      DisasterCategory.testOrTraining => 'テスト/訓練',
-      DisasterCategory.futureUse => '将来使用',
-    };
-  }
-
-  String _getReportClassificationText(ReportClassification classification) {
-    return switch (classification) {
-      ReportClassification.normal => '通常',
-      ReportClassification.training => '訓練',
-      ReportClassification.test => 'テスト',
-    };
-  }
-
-  String _getInformationTypeText(InformationType type) {
-    return switch (type) {
-      InformationType.issue => '発表',
-      InformationType.correction => '訂正',
-      InformationType.cancel => '取消',
-    };
   }
 }
