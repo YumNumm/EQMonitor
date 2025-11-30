@@ -1,45 +1,16 @@
+import 'dart:async';
+
 import 'package:dart_azarashi/dart_azarashi.dart';
+import 'package:eqmonitor/feature/qzss_dcr/data/model/qzss_serial_port_state.dart';
+import 'package:eqmonitor/feature/qzss_dcr/data/service/qzss_serial_port_service.dart';
 import 'package:libserialport_plus/libserialport_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../service/qzss_serial_port_service.dart';
 
 part 'qzss_serial_port_provider.g.dart';
 
 /// 利用可能なシリアルポートのリストを取得
 @riverpod
-List<String> availableSerialPorts(AvailableSerialPortsRef ref) {
-  return SerialPort.getAvailablePorts();
-}
-
-/// QZSSシリアルポート接続の状態
-class QzssSerialPortState {
-  const QzssSerialPortState({
-    required this.isConnected,
-    required this.portName,
-    required this.baudRate,
-    this.error,
-  });
-
-  final bool isConnected;
-  final String? portName;
-  final int baudRate;
-  final String? error;
-
-  QzssSerialPortState copyWith({
-    bool? isConnected,
-    String? portName,
-    int? baudRate,
-    String? error,
-  }) {
-    return QzssSerialPortState(
-      isConnected: isConnected ?? this.isConnected,
-      portName: portName ?? this.portName,
-      baudRate: baudRate ?? this.baudRate,
-      error: error ?? this.error,
-    );
-  }
-}
+List<String> availableSerialPorts(Ref ref) => SerialPort.getAvailablePorts();
 
 /// QZSSシリアルポート接続管理プロバイダー
 @riverpod
@@ -49,7 +20,7 @@ class QzssSerialPortConnection extends _$QzssSerialPortConnection {
   @override
   QzssSerialPortState build() {
     ref.onDispose(() {
-      _service?.dispose();
+      unawaited(_service?.dispose());
     });
 
     return const QzssSerialPortState(
@@ -131,3 +102,4 @@ class LatestQzssDcReport extends _$LatestQzssDcReport {
     state = null;
   }
 }
+
