@@ -71,6 +71,7 @@ class QzssSerialPortConnection extends _$QzssSerialPortConnection {
     );
   }
 
+  // ignore: avoid_public_notifier_properties
   /// 災危通報ストリーム
   Stream<QzssDcReport>? get reportStream => _service?.reportStream;
 }
@@ -102,4 +103,3 @@ class LatestQzssDcReport extends _$LatestQzssDcReport {
     state = null;
   }
 }
-

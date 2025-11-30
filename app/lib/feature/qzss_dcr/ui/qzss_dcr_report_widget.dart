@@ -23,20 +23,20 @@ class QzssDcrReportWidget extends HookConsumerWidget {
               Icon(
                 Icons.satellite_alt,
                 size: 48,
-                color: colorScheme.primary.withOpacity(0.5),
+                color: colorScheme.primary.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(
                 '災危通報を受信していません',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface.withOpacity(0.6),
+                  color: colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'GNSS受信機を接続し、衛星からの信号を受信してください',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurface.withOpacity(0.4),
+                  color: colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -47,34 +47,25 @@ class QzssDcrReportWidget extends HookConsumerWidget {
     }
 
     // 災害カテゴリーのテキスト変換
-    final disasterCategoryText = switch (report.disasterCategory) {
-      DisasterCategory.earthquake => '地震',
-      DisasterCategory.hypocenter => '震源',
-      DisasterCategory.tsunami => '津波',
-      DisasterCategory.northwestPacificTsunami => '北西太平洋津波',
-      DisasterCategory.volcanoRelated => '火山',
-      DisasterCategory.ashFall => '降灰',
-      DisasterCategory.weatherRelated => '気象',
-      DisasterCategory.floodRelated => '洪水',
-      DisasterCategory.typhoonRelated => '台風',
-      DisasterCategory.marineRelated => '海上',
-      DisasterCategory.nankaiTroughEarthquakeRelated => '南海トラフ地震',
-      DisasterCategory.testOrTraining => 'テスト/訓練',
-      DisasterCategory.futureUse => '将来使用',
-    };
-
-    // 報告分類のテキスト変換
-    final reportClassificationText = switch (report.reportClassification) {
-      ReportClassification.normal => '通常',
-      ReportClassification.training => '訓練',
-      ReportClassification.test => 'テスト',
-    };
-
-    // 情報タイプのテキスト変換
-    final informationTypeText = switch (report.informationType) {
-      InformationType.issue => '発表',
-      InformationType.correction => '訂正',
-      InformationType.cancel => '取消',
+    final disasterCategoryText = switch (report) {
+      QzssDcReportEarthquakeEarlyWarning() => '地震',
+      QzssDcReportHypocenter() => '震源',
+      QzssDcReportSeismicIntensity() => '震度',
+      QzssDcReportTsunami() => '津波',
+      QzssDcReportNorthwestPacificTsunami() => '北西太平洋津波',
+      QzssDcReportVolcano() => '火山',
+      QzssDcReportAshFall() => '降灰',
+      QzssDcReportWeather() => '気象',
+      QzssDcReportFlood() => '洪水',
+      QzssDcReportTyphoon() => '台風',
+      QzssDcReportMarine() => '海上',
+      QzssDcReportNankaiTroughEarthquake() => '南海トラフ地震',
+      QzssDcReportDcxOutsideJapan() => '海外情報',
+      QzssDcReportDcxLAlert() => 'L-Alert',
+      QzssDcReportDcxJAlert() => 'J-Alert',
+      QzssDcReportDcxMTInfo() => 'Municipality-Transmitted Information',
+      QzssDcReportDcxUnknown() => 'Unknown',
+      QzssDcReportDcxNull() => 'DCX Null',
     };
 
     return Card(
@@ -117,21 +108,6 @@ class QzssDcrReportWidget extends HookConsumerWidget {
               value: disasterCategoryText,
               icon: Icons.warning_amber,
             ),
-
-            // 報告分類
-            _InfoRow(
-              label: '報告分類',
-              value: reportClassificationText,
-              icon: Icons.info_outline,
-            ),
-
-            // 情報タイプ
-            _InfoRow(
-              label: '情報タイプ',
-              value: informationTypeText,
-              icon: Icons.article_outlined,
-            ),
-
             // 衛星ID
             _InfoRow(
               label: '衛星ID',
@@ -149,7 +125,6 @@ class QzssDcrReportWidget extends HookConsumerWidget {
             const SizedBox(height: 16),
 
             // デコード内容（JMAの場合）
-            if (report.jma != null) _JmaInfoCard(jma: report.jma),
 
             // 生データ（デバッグ用）
             const SizedBox(height: 16),
@@ -218,43 +193,3 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
-
-class _JmaInfoCard extends StatelessWidget {
-  const _JmaInfoCard({
-    required this.jma,
-  });
-
-  final JmaReport jma;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'JMA情報',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.primary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            jma.toString(),
-            style: theme.textTheme.bodyMedium,
-          ),
-        ],
-      ),
-    );
-  }
-}
-

@@ -68,9 +68,6 @@ class QzssSerialPortService {
     // UBX-RXM-SFRBXを有効化
     _port!.write(_valSetRamUbxRxmSfrbxUart1On);
 
-    // 少し待つ
-    await Future<void>.delayed(const Duration(milliseconds: 100));
-
     // リーダーを作成してデータを読み取る
     _reader = SerialPortReader(_port!);
     _subscription = _reader!.stream.listen(_onData);
