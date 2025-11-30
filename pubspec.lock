@@ -1126,6 +1126,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.3"
+  libserialport_plus:
+    dependency: transitive
+    description:
+      name: libserialport_plus
+      sha256: d984d639de352a2e670e633f962df4b2460ecbaa4b2ad15013c36e6cd1de0067
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.12"
   lints:
     dependency: transitive
     description:
