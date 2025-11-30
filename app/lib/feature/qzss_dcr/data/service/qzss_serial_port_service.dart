@@ -59,13 +59,11 @@ class QzssSerialPortService {
     // ポートを開く
     _port = SerialPort(portName);
 
-    // ボーレートを設定
-    final config = _port!.getConfig();
-    config.baudRate = baudRate;
-    _port!.setConfig(config);
-
     // ポートを開く
-    _port!.open(SerialPortMode.readWrite);
+    _port!.open();
+
+    // ボーレートを設定
+    _port!.setConfig(SerialPortConfig(baudRate: baudRate));
 
     // UBX-RXM-SFRBXを有効化
     _port!.write(_valSetRamUbxRxmSfrbxUart1On);
@@ -83,7 +81,7 @@ class QzssSerialPortService {
     await _subscription?.cancel();
     _subscription = null;
 
-    _reader?.close();
+    await _reader?.close();
     _reader = null;
 
     _port?.close();
@@ -92,9 +90,9 @@ class QzssSerialPortService {
   }
 
   final _buffer = <int>[];
-  bool _readingNmea = false;
-  bool _readingUbx = false;
-  int _ubxPayloadLength = 0;
+  var _readingNmea = false;
+  var _readingUbx = false;
+  var _ubxPayloadLength = 0;
 
   void _onData(Uint8List data) {
     for (final byte in data) {
@@ -150,25 +148,17 @@ class QzssSerialPortService {
   }
 
   void _processUbxMessage(Uint8List message) {
-    try {
-      final sentence = _ubloxDecoder.decode(message);
-      if (sentence != null) {
-        final report = _nmeaDecoder.decode(sentence);
-        _controller.add(report);
-      }
-    } catch (e) {
-      // エラーは無視
+    final sentence = _ubloxDecoder.decode(message);
+    if (sentence != null) {
+      final report = _nmeaDecoder.decode(sentence);
+      _controller.add(report);
     }
   }
 
   void _processNmeaSentence(String sentence) {
-    try {
-      if (sentence.startsWith(r'$QZQSM')) {
-        final report = _nmeaDecoder.decode(sentence);
-        _controller.add(report);
-      }
-    } catch (e) {
-      // エラーは無視
+    if (sentence.startsWith(r'$QZQSM')) {
+      final report = _nmeaDecoder.decode(sentence);
+      _controller.add(report);
     }
   }
 
