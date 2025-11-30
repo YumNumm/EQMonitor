@@ -1,9 +1,8 @@
 import 'package:dart_azarashi/dart_azarashi.dart';
+import 'package:eqmonitor/feature/qzss_dcr/data/provider/qzss_serial_port_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-
-import '../provider/qzss_serial_port_provider.dart';
 
 class QzssDcrReportWidget extends HookConsumerWidget {
   const QzssDcrReportWidget({super.key});
@@ -150,7 +149,7 @@ class QzssDcrReportWidget extends HookConsumerWidget {
             const SizedBox(height: 16),
 
             // デコード内容（JMAの場合）
-            if (report.jma != null) _JmaInfoCard(jma: report.jma!),
+            if (report.jma != null) _JmaInfoCard(jma: report.jma),
 
             // 生データ（デバッグ用）
             const SizedBox(height: 16),
@@ -258,3 +257,4 @@ class _JmaInfoCard extends StatelessWidget {
     );
   }
 }
+
