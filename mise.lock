@@ -17,13 +17,13 @@ size = 4695416
 url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt_linux_amd64.tar.gz"
 
 [[tools.biome]]
-version = "2.3.7"
+version = "2.3.8"
 backend = "aqua:biomejs/biome"
 
 [tools.biome.platforms.macos-arm64]
-checksum = "sha256:8937d986d9cac12b6ee728f528beac088dc637c7ef2749b1f3e36ddc486a1fef"
-size = 38910064
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.7/biome-darwin-arm64"
+checksum = "sha256:a7d005e3263322feae3ec5d1aa41c14dfe047a537b42e06ab3d1be2314b91c82"
+size = 39257680
+url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.8/biome-darwin-arm64"
 
 [[tools.firebase]]
 version = "14.26.0"
@@ -65,21 +65,26 @@ size = 51177814
 url = "https://nodejs.org/dist/v24.11.1/node-v24.11.1-darwin-arm64.tar.gz"
 
 [[tools.pinact]]
-version = "3.4.4"
+version = "3.4.5"
 backend = "aqua:suzuki-shunsuke/pinact"
+
+[tools.pinact.platforms.macos-arm64]
+checksum = "sha256:1b067e4990dadafe2e916db00c5e6d17e3faa9885d91bd99ce2d8b1487281299"
+size = 4404234
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.4.5/pinact_darwin_arm64.tar.gz"
 
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.62.1"
 backend = "pipx:codemagic-cli-tools"
 
 [[tools.pnpm]]
-version = "10.23.0"
+version = "10.24.0"
 backend = "aqua:pnpm/pnpm"
 
 [tools.pnpm.platforms.macos-arm64]
-checksum = "sha256:aebc1cf4550d8ee3010a6cb42aeefc094ff2d1904fc0f59e9c906351a6b0f620"
-size = 62466000
-url = "https://github.com/pnpm/pnpm/releases/download/v10.23.0/pnpm-macos-arm64"
+checksum = "sha256:e3978826faa5fa7fdf63b752afc7a1bc4585ecd591b899fb956ebdd4e49f5db8"
+size = 62467360
+url = "https://github.com/pnpm/pnpm/releases/download/v10.24.0/pnpm-macos-arm64"
 
 [[tools.python]]
 version = "3.14.0"
@@ -108,13 +113,13 @@ size = 16335399
 url = "https://github.com/terraform-linters/tflint/releases/download/v0.59.1/tflint_linux_amd64.zip"
 
 [[tools.uv]]
-version = "0.9.12"
+version = "0.9.13"
 backend = "aqua:astral-sh/uv"
 
 [tools.uv.platforms.macos-arm64]
-checksum = "sha256:6bf1148aa48bc42853e8216982a89f6909e1932a51f4d8dce27815e8954e4664"
-size = 18521174
-url = "https://github.com/astral-sh/uv/releases/download/0.9.12/uv-aarch64-apple-darwin.tar.gz"
+checksum = "sha256:9c594dce1c237e11680be2b6d1331448eeb6f8a1453fb851a66a40291bb624de"
+size = 18455072
+url = "https://github.com/astral-sh/uv/releases/download/0.9.13/uv-aarch64-apple-darwin.tar.gz"
 
 [[tools.websocat]]
 version = "1.14.0"

@@ -19,6 +19,8 @@
     {
       "layers" : [
         {
+          "glass" : false,
+          "hidden" : false,
           "image-name" : "レイヤー-3 3.svg",
           "name" : "レイヤー-3 3"
         }
