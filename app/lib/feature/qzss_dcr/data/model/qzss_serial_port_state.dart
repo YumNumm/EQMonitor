@@ -12,4 +12,3 @@ abstract class QzssSerialPortState with _$QzssSerialPortState {
     String? error,
   }) = _QzssSerialPortState;
 }
-
