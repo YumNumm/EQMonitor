@@ -390,10 +390,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: dd0e8e02186b2196c7848c9d394a5fd6e5b57a43a546082c5820b1ec72317e33
+      sha256: "4df8babf73058181227e18b08e6ea3520cf5fc5d796888d33b7cb0f33f984b7c"
       url: "https://pub.dev"
     source: hosted
-    version: "12.2.0"
+    version: "12.3.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -728,10 +728,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_secure_storage
-      sha256: f7eceb0bc6f4fd0441e29d43cab9ac2a1c5ffd7ea7b64075136b718c46954874
+      sha256: "79d53f3393ac2b73bcba45317b6c1a29002f89c680225cdea0bd6770a1682ce0"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.0-beta.4"
+    version: "10.0.0-beta.5"
   flutter_secure_storage_darwin:
     dependency: transitive
     description:
@@ -1122,10 +1122,10 @@ packages:
     dependency: transitive
     description:
       name: lean_builder
-      sha256: "6511c632f60435fa824283a9660b94de1b8768c1501f6910b773034bf8af7035"
+      sha256: f3ddb3b2c29285a726d739f3eaa4877a2478068f975b51231d032711efbc02d8
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.3"
+    version: "0.1.4"
   libserialport_plus:
     dependency: transitive
     description:
@@ -1379,10 +1379,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
-      sha256: "97390a0719146c7c3e71b6866c34f1cde92685933165c1c671984390d2aca776"
+      sha256: "6d13aece7b3f5c5a9731eaf553ff9dcbc2eff41087fd2df587fd0fed9a3eb0c4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.4"
+    version: "2.5.1"
   path_provider_linux:
     dependency: transitive
     description:
@@ -1539,10 +1539,10 @@ packages:
     dependency: transitive
     description:
       name: purchases_flutter
-      sha256: "68c617bcbdca56886b84942c8d5d65fab8b3d85c897d652c8756291dad1fd971"
+      sha256: d91ca4d2abaca098af7b9e5736490950811c0f2e9c2b236f6a467ff52ecdfd39
       url: "https://pub.dev"
     source: hosted
-    version: "9.9.8"
+    version: "9.9.9"
   retrofit:
     dependency: transitive
     description:
@@ -1873,34 +1873,34 @@ packages:
     dependency: transitive
     description:
       name: talker
-      sha256: f17bde91ef86a51803974804bc6c0e161d14b496522bbc646c531be2c702e390
+      sha256: "31b3081b6787c93b41bc14182229681a4a48b8b22f4b368f3493e7f41825a36d"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.1"
   talker_dio_logger:
     dependency: transitive
     description:
       name: talker_dio_logger
-      sha256: "322e8fee094d5fdce10f0439fec5625fb73fd282622b37c794bdaab4e1fc2b1b"
+      sha256: "5534edf33aa913bdc9b4c733baee4795a884e46e6e632b024762738b53622da5"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.1"
   talker_flutter:
     dependency: transitive
     description:
       name: talker_flutter
-      sha256: "5869c80c046a8e0478560fa2ebb40a3f0e025a9948bcdea50c12343cba681820"
+      sha256: cd276e639841ddcd50effe86bc16e04ff9a58d1a06d470b0c3c7d62f13579ae8
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.1"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: "87c66fefded42446d8c6365643582f3d180c0ce09485c129e9a88fa14d0d34eb"
+      sha256: "5e2cc1dd9cbb7811c44ed620b5365768e30b86b6a65e909a5c2324722517f077"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.1"
   term_glyph:
     dependency: transitive
     description:
