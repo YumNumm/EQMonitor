@@ -1,5 +1,5 @@
 packages:
-  - apis/*
+  - api/*
   - utils/appbundle-uploader
 
 onlyBuiltDependencies:
