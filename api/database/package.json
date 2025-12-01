@@ -1,0 +1,18 @@
+{
+	"name": "database",
+	"main": "index.ts",
+	"type": "module",
+	"packageManager": "pnpm",
+	"dependencies": {
+		"dotenv": "^17.2.3",
+		"drizzle-orm": "^0.44.7",
+		"pg": "^8.16.3"
+	},
+	"devDependencies": {
+		"@types/pg": "^8.15.6",
+		"drizzle-kit": "^0.31.7",
+		"ts-config": "workspace:*",
+		"tsx": "^4.20.6",
+		"typescript": "^5.9.3"
+	}
+}

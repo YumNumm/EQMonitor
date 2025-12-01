@@ -1,0 +1,6 @@
+{
+  "name": "ts-config",
+  "main": "tsconfig.json",
+  "type": "module",
+  "packageManager": "pnpm"
+}

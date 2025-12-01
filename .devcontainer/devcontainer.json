@@ -1,0 +1,15 @@
+{
+	"name": "Ubuntu",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/base:noble",
+	"features": {
+		"ghcr.io/itsmechlark/features/postgresql:1": {
+			"version": "latest"
+		},
+		"ghcr.io/atty303/devcontainer-features/mise:1": {
+			"trust": true,
+			"install": true,
+			"activate": "path"
+		}
+	}
+}
