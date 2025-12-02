@@ -1,38 +1,22 @@
 [[tools.actionlint]]
 version = "1.7.9"
 backend = "aqua:rhysd/actionlint"
-
-[tools.actionlint.platforms.macos-arm64]
-checksum = "sha256:855e49e823fc68c6371fd6967e359cde11912d8d44fed343283c8e6e943bd789"
-size = 2068001
-url = "https://github.com/rhysd/actionlint/releases/download/v1.7.9/actionlint_1.7.9_darwin_arm64.tar.gz"
+"platforms.macos-arm64" = { checksum = "sha256:855e49e823fc68c6371fd6967e359cde11912d8d44fed343283c8e6e943bd789", url = "https://github.com/rhysd/actionlint/releases/download/v1.7.9/actionlint_1.7.9_darwin_arm64.tar.gz"}
 
 [[tools."aqua:suzuki-shunsuke/tfcmt"]]
 version = "4.14.12"
 backend = "aqua:suzuki-shunsuke/tfcmt"
-
-[tools."aqua:suzuki-shunsuke/tfcmt".platforms.linux-x64]
-checksum = "sha256:08e0ac75a743fde6948d8482f992c90b8bee5e99fe1b5e4de11ccea428e66a86"
-size = 4695416
-url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt_linux_amd64.tar.gz"
+"platforms.linux-x64" = { checksum = "sha256:08e0ac75a743fde6948d8482f992c90b8bee5e99fe1b5e4de11ccea428e66a86", url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt_linux_amd64.tar.gz"}
 
 [[tools.biome]]
 version = "2.3.8"
 backend = "aqua:biomejs/biome"
-
-[tools.biome.platforms.macos-arm64]
-checksum = "sha256:a7d005e3263322feae3ec5d1aa41c14dfe047a537b42e06ab3d1be2314b91c82"
-size = 39257680
-url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.8/biome-darwin-arm64"
+"platforms.macos-arm64" = { checksum = "sha256:a7d005e3263322feae3ec5d1aa41c14dfe047a537b42e06ab3d1be2314b91c82", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.8/biome-darwin-arm64"}
 
 [[tools.firebase]]
 version = "14.26.0"
 backend = "aqua:firebase/firebase-tools"
-
-[tools.firebase.platforms.macos-arm64]
-checksum = "sha256:bc90516ec094b4d993dbf211bb98dc6b3c07712cf86172934b1283164326849a"
-size = 290157683
-url = "https://github.com/firebase/firebase-tools/releases/download/v14.26.0/firebase-tools-macos"
+"platforms.macos-arm64" = { checksum = "sha256:bc90516ec094b4d993dbf211bb98dc6b3c07712cf86172934b1283164326849a", url = "https://github.com/firebase/firebase-tools/releases/download/v14.26.0/firebase-tools-macos"}
 
 [[tools.flutter]]
 version = "3.38.3-stable"
@@ -49,29 +33,17 @@ backend = "gem:cocoapods"
 [[tools.java]]
 version = "17.0.2"
 backend = "core:java"
-
-[tools.java.platforms.macos-arm64]
-checksum = "sha256:602d7de72526368bb3f80d95c4427696ea639d2e0cc40455f53ff0bbb18c27c8"
-size = 182209404
-url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
+"platforms.macos-arm64" = { checksum = "sha256:602d7de72526368bb3f80d95c4427696ea639d2e0cc40455f53ff0bbb18c27c8", url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"}
 
 [[tools.node]]
 version = "24.11.1"
 backend = "core:node"
-
-[tools.node.platforms.macos-arm64]
-checksum = "sha256:b05aa3a66efe680023f930bd5af3fdbbd542794da5644ca2ad711d68cbd4dc35"
-size = 51177814
-url = "https://nodejs.org/dist/v24.11.1/node-v24.11.1-darwin-arm64.tar.gz"
+"platforms.macos-arm64" = { checksum = "sha256:b05aa3a66efe680023f930bd5af3fdbbd542794da5644ca2ad711d68cbd4dc35", url = "https://nodejs.org/dist/v24.11.1/node-v24.11.1-darwin-arm64.tar.gz"}
 
 [[tools.pinact]]
 version = "3.4.5"
 backend = "aqua:suzuki-shunsuke/pinact"
-
-[tools.pinact.platforms.macos-arm64]
-checksum = "sha256:1b067e4990dadafe2e916db00c5e6d17e3faa9885d91bd99ce2d8b1487281299"
-size = 4404234
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.4.5/pinact_darwin_arm64.tar.gz"
+"platforms.macos-arm64" = { checksum = "sha256:1b067e4990dadafe2e916db00c5e6d17e3faa9885d91bd99ce2d8b1487281299", url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.4.5/pinact_darwin_arm64.tar.gz"}
 
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.62.1"
@@ -80,11 +52,7 @@ backend = "pipx:codemagic-cli-tools"
 [[tools.pnpm]]
 version = "10.24.0"
 backend = "aqua:pnpm/pnpm"
-
-[tools.pnpm.platforms.macos-arm64]
-checksum = "sha256:e3978826faa5fa7fdf63b752afc7a1bc4585ecd591b899fb956ebdd4e49f5db8"
-size = 62467360
-url = "https://github.com/pnpm/pnpm/releases/download/v10.24.0/pnpm-macos-arm64"
+"platforms.macos-arm64" = { checksum = "sha256:e3978826faa5fa7fdf63b752afc7a1bc4585ecd591b899fb956ebdd4e49f5db8", url = "https://github.com/pnpm/pnpm/releases/download/v10.24.0/pnpm-macos-arm64"}
 
 [[tools.python]]
 version = "3.14.0"
@@ -97,53 +65,29 @@ backend = "core:ruby"
 [[tools.terraform]]
 version = "1.14.0"
 backend = "aqua:hashicorp/terraform"
-
-[tools.terraform.platforms.macos-arm64]
-checksum = "sha256:57fde1cc2534a7e8c48aaae2ad2954084502852c25d731fc957e4b831f75e16e"
-size = 28704173
-url = "https://releases.hashicorp.com/terraform/1.14.0/terraform_1.14.0_darwin_arm64.zip"
+"platforms.macos-arm64" = { checksum = "sha256:57fde1cc2534a7e8c48aaae2ad2954084502852c25d731fc957e4b831f75e16e", url = "https://releases.hashicorp.com/terraform/1.14.0/terraform_1.14.0_darwin_arm64.zip"}
 
 [[tools.tflint]]
 version = "0.59.1"
 backend = "aqua:terraform-linters/tflint"
-
-[tools.tflint.platforms.linux-x64]
-checksum = "sha256:6108d84282292f11d793dc8038ce08fbc629dcd25324d6f13c63d8100b52e01f"
-size = 16335399
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.59.1/tflint_linux_amd64.zip"
+"platforms.linux-x64" = { checksum = "sha256:6108d84282292f11d793dc8038ce08fbc629dcd25324d6f13c63d8100b52e01f", url = "https://github.com/terraform-linters/tflint/releases/download/v0.59.1/tflint_linux_amd64.zip"}
 
 [[tools.uv]]
 version = "0.9.13"
 backend = "aqua:astral-sh/uv"
-
-[tools.uv.platforms.macos-arm64]
-checksum = "sha256:9c594dce1c237e11680be2b6d1331448eeb6f8a1453fb851a66a40291bb624de"
-size = 18455072
-url = "https://github.com/astral-sh/uv/releases/download/0.9.13/uv-aarch64-apple-darwin.tar.gz"
+"platforms.macos-arm64" = { checksum = "sha256:9c594dce1c237e11680be2b6d1331448eeb6f8a1453fb851a66a40291bb624de", url = "https://github.com/astral-sh/uv/releases/download/0.9.13/uv-aarch64-apple-darwin.tar.gz"}
 
 [[tools.websocat]]
 version = "1.14.0"
 backend = "aqua:vi/websocat"
-
-[tools.websocat.platforms.linux-x64]
-checksum = "blake3:0a3027e1be724706e4156bca6098653425bfa8375d88cc0b8fd1fd41ccb6df89"
-size = 7304728
-url = "https://github.com/vi/websocat/releases/download/v1.14.0/websocat.x86_64-unknown-linux-musl"
+"platforms.linux-x64" = { checksum = "blake3:0a3027e1be724706e4156bca6098653425bfa8375d88cc0b8fd1fd41ccb6df89", url = "https://github.com/vi/websocat/releases/download/v1.14.0/websocat.x86_64-unknown-linux-musl"}
 
 [[tools.xcbeautify]]
 version = "3.1.1"
 backend = "aqua:cpisciotta/xcbeautify"
-
-[tools.xcbeautify.platforms.macos-arm64]
-checksum = "sha256:6099d0ed50e340adf0da9c1e103a62045e6c66c1dcf786440a9783bb49dcc69f"
-size = 830682
-url = "https://github.com/cpisciotta/xcbeautify/releases/download/3.1.1/xcbeautify-3.1.1-arm64-apple-macosx.zip"
+"platforms.macos-arm64" = { checksum = "sha256:6099d0ed50e340adf0da9c1e103a62045e6c66c1dcf786440a9783bb49dcc69f", url = "https://github.com/cpisciotta/xcbeautify/releases/download/3.1.1/xcbeautify-3.1.1-arm64-apple-macosx.zip"}
 
 [[tools.yq]]
 version = "4.49.2"
 backend = "aqua:mikefarah/yq"
-
-[tools.yq.platforms.macos-arm64]
-checksum = "sha256:b0b70ede2b392ba02091b8137b42db819a7968cf232d595dd7394ac5668b4a0b"
-size = 10997522
-url = "https://github.com/mikefarah/yq/releases/download/v4.49.2/yq_darwin_arm64"
+"platforms.macos-arm64" = { checksum = "sha256:b0b70ede2b392ba02091b8137b42db819a7968cf232d595dd7394ac5668b4a0b", url = "https://github.com/mikefarah/yq/releases/download/v4.49.2/yq_darwin_arm64"}
