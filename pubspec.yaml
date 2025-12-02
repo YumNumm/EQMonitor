@@ -12,7 +12,6 @@ workspace:
   - packages/extensions
   - packages/jma_code_table_converter_internal
   - packages/jma_code_table_types
-  - packages/jma_map
   - packages/jma_parameter_api_client
   - packages/jma_parameter_converter_internal
   - packages/jma_parameter_types
