@@ -1,9 +1,0 @@
-packages:
-  - api/*
-  - packages/*
-  - services/*
-
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - bufferutil
-  - esbuild
