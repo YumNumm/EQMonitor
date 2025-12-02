@@ -1,6 +1,7 @@
 packages:
   - api/*
-  - utils/appbundle-uploader
+  - packages/*
+  - services/*
 
 onlyBuiltDependencies:
   - '@biomejs/biome'
