@@ -9,6 +9,9 @@ import logging
 import shutil
 from tqdm import tqdm
 
+MIN_ZOOM = 1
+MAX_ZOOM = 7
+
 # coloramaをインポート（色付きの出力用）
 try:
     from colorama import init, Fore, Style
@@ -183,117 +186,52 @@ def main():
     os.makedirs("data/pbf_tiles", exist_ok=True)
     os.makedirs("data/pmtiles", exist_ok=True)
 
-    # 個別ファイルの変換
-    logger.info(f"{Fore.YELLOW}個別ファイルをPBF Tiles (XYZ)形式に変換しています...")
-    success_individual = 0
-    for geojson_file in tqdm(
-        geojson_files,
-        desc=f"{Fore.BLUE}個別変換",
-        bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.CYAN, Fore.RESET),
-    ):
-        filename = os.path.basename(geojson_file)
-        basename = os.path.splitext(filename)[0]
-        output_dir = f"data/pbf_tiles/{basename}"
+    # # 個別ファイルの変換
+    # logger.info(f"{Fore.YELLOW}個別ファイルをPBF Tiles (XYZ)形式に変換しています...")
+    # success_individual = 0
+    # for geojson_file in tqdm(
+    #     geojson_files,
+    #     desc=f"{Fore.BLUE}個別変換",
+    #     bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.CYAN, Fore.RESET),
+    # ):
+    #     filename = os.path.basename(geojson_file)
+    #     basename = os.path.splitext(filename)[0]
+    #     output_dir = f"data/pbf_tiles/{basename}"
 
-        logger.info(f"{Fore.YELLOW}変換中: {basename}")
-        if convert_to_pbf_xyz(
-            [geojson_file], output_dir, 1, 14, ["--drop-densest-as-needed"]
-        ):
-            logger.info(f"{Fore.GREEN}  成功: {output_dir}")
-            success_individual += 1
-        else:
-            logger.error(f"  失敗: {basename}")
+    #     logger.info(f"{Fore.YELLOW}変換中: {basename}")
+    #     if convert_to_pbf_xyz(
+    #         [geojson_file], output_dir, 1, 7, ["--drop-densest-as-needed"]
+    #     ):
+    #         logger.info(f"{Fore.GREEN}  成功: {output_dir}")
+    #         success_individual += 1
+    #     else:
+    #         logger.error(f"  失敗: {basename}")
 
-    # 統合ファイルの変換（PBF XYZ）
-    logger.info(
-        f"\n{Fore.YELLOW}すべてのデータを統合したPBF Tiles (XYZ)を作成しています..."
-    )
-    output_combined_dir = "data/pbf_tiles/earthquake_tsunami_all"
-    success_combined_xyz = convert_to_pbf_xyz(
-        geojson_files, output_combined_dir, 1, 14, ["--drop-densest-as-needed"]
-    )
+    # # 統合ファイルの変換（PBF XYZ）
+    # logger.info(
+    #     f"\n{Fore.YELLOW}すべてのデータを統合したPBF Tiles (XYZ)を作成しています..."
+    # )
+    # output_combined_dir = "data/pbf_tiles/earthquake_tsunami_all"
+    # success_combined_xyz = convert_to_pbf_xyz(
+    #     geojson_files, output_combined_dir, 1, 14, ["--drop-densest-as-needed"]
+    # )
 
-    if success_combined_xyz:
-        logger.info(f"{Fore.GREEN}成功: {output_combined_dir}")
-    else:
-        logger.error(f"失敗: {output_combined_dir}")
+    # if success_combined_xyz:
+    #     logger.info(f"{Fore.GREEN}成功: {output_combined_dir}")
+    # else:
+    #     logger.error(f"失敗: {output_combined_dir}")
 
     # 統合ファイルの変換（PMTiles）
     logger.info(f"\n{Fore.YELLOW}すべてのデータを統合したPMTilesを作成しています...")
     output_combined_pmtiles = "data/pmtiles/earthquake_tsunami_all.pmtiles"
     success_combined_pmtiles = convert_to_pmtiles(
-        geojson_files, output_combined_pmtiles, 1, 14, ["--drop-densest-as-needed"]
+        geojson_files, output_combined_pmtiles, MIN_ZOOM, MAX_ZOOM, ["--drop-densest-as-needed"]
     )
 
     if success_combined_pmtiles:
         logger.info(f"{Fore.GREEN}成功: {output_combined_pmtiles}")
     else:
         logger.error(f"失敗: {output_combined_pmtiles}")
-
-    # 結果表示
-    logger.info(f"\n{Fore.CYAN}変換結果:")
-    logger.info(
-        f"- 個別ファイル: {success_individual}/{len(geojson_files)}ファイル成功"
-    )
-    logger.info(
-        f"- 統合PBF Tiles (XYZ)ファイル: {'成功' if success_combined_xyz else '失敗'}"
-    )
-    logger.info(
-        f"- 統合PMTilesファイル: {'成功' if success_combined_pmtiles else '失敗'}"
-    )
-
-    # XYZタイルのディレクトリサイズ計算関数
-    def get_dir_size(path):
-        total_size = 0
-        for dirpath, dirnames, filenames in os.walk(path):
-            for f in filenames:
-                fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
-        return total_size / (1024 * 1024)  # MB単位
-
-    # 作成されたファイルを表示
-    if success_individual > 0 or success_combined_xyz or success_combined_pmtiles:
-        logger.info(f"\n{Fore.CYAN}作成されたファイル:")
-        if success_individual > 0:
-            for pbf_dir in glob.glob("data/pbf_tiles/*"):
-                if os.path.isdir(pbf_dir) and pbf_dir != output_combined_dir:
-                    dir_size = get_dir_size(pbf_dir)
-                    # ズームレベル数とタイル数も表示
-                    zoom_levels = len(
-                        [
-                            d
-                            for d in os.listdir(pbf_dir)
-                            if os.path.isdir(os.path.join(pbf_dir, d))
-                        ]
-                    )
-                    tile_count = sum(len(files) for _, _, files in os.walk(pbf_dir))
-                    logger.info(
-                        f"- {pbf_dir} ({dir_size:.2f} MB, ズームレベル: {zoom_levels}, タイル数: {tile_count})"
-                    )
-
-        if success_combined_xyz:
-            dir_size = get_dir_size(output_combined_dir)
-            zoom_levels = len(
-                [
-                    d
-                    for d in os.listdir(output_combined_dir)
-                    if os.path.isdir(os.path.join(output_combined_dir, d))
-                ]
-            )
-            tile_count = sum(len(files) for _, _, files in os.walk(output_combined_dir))
-            logger.info(
-                f"- {output_combined_dir} ({dir_size:.2f} MB, ズームレベル: {zoom_levels}, タイル数: {tile_count})"
-            )
-
-        if success_combined_pmtiles:
-            for pmtiles_file in glob.glob("data/pmtiles/*.pmtiles"):
-                size = os.path.getsize(pmtiles_file) / (
-                    1024 * 1024
-                )  # サイズをMB単位で計算
-                logger.info(f"- {pmtiles_file} ({size:.2f} MB)")
-    else:
-        logger.error("PBF Tiles・PMTilesファイルが生成されませんでした")
-        sys.exit(1)
 
 
 if __name__ == "__main__":

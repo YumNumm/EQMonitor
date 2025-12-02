@@ -9,6 +9,9 @@ environment:
 resolution: workspace
 
 dependencies:
+  archive: ^4.0.7
+  crypto: ^3.0.7
+  html: ^0.15.6
   http: ^1.2.1
   jma_code_table_types:
     git:
