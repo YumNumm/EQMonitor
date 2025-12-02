@@ -38,7 +38,18 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 ## 環境構築
 
+> [!INFO]
+> バックエンド実装は、[`YumNumm/eqmonitor-backend`](https://github.com/YumNumm/eqmonitor-backend)に格納されています。(Private Repository)
+> 本リポジトリの`/backend`にsubmoduleとして追加されています
+
 下記のコマンドをターミナルから実行してください。
+
+1. プロジェクトをcloneします。
+
+```bash
+git clone --recursive https://github.com/EQMonitor/EQMonitor.git
+cd EQMonitor
+```
 
 1. [mise](https://mise.jdx.dev/)をインストールしてください
 
