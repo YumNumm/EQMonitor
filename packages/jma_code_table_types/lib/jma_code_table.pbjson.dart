@@ -13,76 +13,53 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use jmaCodeTableHeaderDescriptor instead')
+const JmaCodeTableHeader$json = {
+  '1': 'JmaCodeTableHeader',
+  '2': [
+    {'1': 'date_version', '3': 1, '4': 1, '5': 9, '10': 'dateVersion'},
+    {'1': 'fetched_at', '3': 2, '4': 1, '5': 9, '10': 'fetchedAt'},
+    {'1': 'source_url', '3': 3, '4': 1, '5': 9, '10': 'sourceUrl'},
+    {'1': 'sha384', '3': 4, '4': 1, '5': 9, '10': 'sha384'},
+  ],
+};
+
+/// Descriptor for `JmaCodeTableHeader`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List jmaCodeTableHeaderDescriptor = $convert.base64Decode(
+    'ChJKbWFDb2RlVGFibGVIZWFkZXISIQoMZGF0ZV92ZXJzaW9uGAEgASgJUgtkYXRlVmVyc2lvbh'
+    'IdCgpmZXRjaGVkX2F0GAIgASgJUglmZXRjaGVkQXQSHQoKc291cmNlX3VybBgDIAEoCVIJc291'
+    'cmNlVXJsEhYKBnNoYTM4NBgEIAEoCVIGc2hhMzg0');
+
 @$core.Deprecated('Use jmaCodeTableDescriptor instead')
 const JmaCodeTable$json = {
   '1': 'JmaCodeTable',
   '2': [
-    {
-      '1': 'area_forecast_local_eew',
-      '3': 22,
-      '4': 1,
-      '5': 11,
-      '6': '.AreaForecastLocalEew',
-      '10': 'areaForecastLocalEew'
-    },
-    {
-      '1': 'area_information_prefecture_earthquake',
-      '3': 23,
-      '4': 1,
-      '5': 11,
-      '6': '.AreaInformationPrefectureEarthquake',
-      '10': 'areaInformationPrefectureEarthquake'
-    },
-    {
-      '1': 'area_epicenter',
-      '3': 41,
-      '4': 1,
-      '5': 11,
-      '6': '.AreaEpicenter',
-      '10': 'areaEpicenter'
-    },
-    {
-      '1': 'area_epicenter_abbreviation',
-      '3': 42,
-      '4': 1,
-      '5': 11,
-      '6': '.AreaEpicenterAbbreviation',
-      '10': 'areaEpicenterAbbreviation'
-    },
-    {
-      '1': 'area_epicenter_detail',
-      '3': 43,
-      '4': 1,
-      '5': 11,
-      '6': '.AreaEpicenterDetail',
-      '10': 'areaEpicenterDetail'
-    },
+    {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.JmaCodeTableHeader', '10': 'header'},
+    {'1': 'area_forecast_local_eew', '3': 22, '4': 1, '5': 11, '6': '.AreaForecastLocalEew', '10': 'areaForecastLocalEew'},
+    {'1': 'area_information_prefecture_earthquake', '3': 23, '4': 1, '5': 11, '6': '.AreaInformationPrefectureEarthquake', '10': 'areaInformationPrefectureEarthquake'},
+    {'1': 'area_epicenter', '3': 41, '4': 1, '5': 11, '6': '.AreaEpicenter', '10': 'areaEpicenter'},
+    {'1': 'area_epicenter_abbreviation', '3': 42, '4': 1, '5': 11, '6': '.AreaEpicenterAbbreviation', '10': 'areaEpicenterAbbreviation'},
+    {'1': 'area_epicenter_detail', '3': 43, '4': 1, '5': 11, '6': '.AreaEpicenterDetail', '10': 'areaEpicenterDetail'},
   ],
 };
 
 /// Descriptor for `JmaCodeTable`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jmaCodeTableDescriptor = $convert.base64Decode(
-    'CgxKbWFDb2RlVGFibGUSTAoXYXJlYV9mb3JlY2FzdF9sb2NhbF9lZXcYFiABKAsyFS5BcmVhRm'
-    '9yZWNhc3RMb2NhbEVld1IUYXJlYUZvcmVjYXN0TG9jYWxFZXcSeQomYXJlYV9pbmZvcm1hdGlv'
-    'bl9wcmVmZWN0dXJlX2VhcnRocXVha2UYFyABKAsyJC5BcmVhSW5mb3JtYXRpb25QcmVmZWN0dX'
-    'JlRWFydGhxdWFrZVIjYXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZUVhcnRocXVha2USNQoOYXJl'
-    'YV9lcGljZW50ZXIYKSABKAsyDi5BcmVhRXBpY2VudGVyUg1hcmVhRXBpY2VudGVyEloKG2FyZW'
-    'FfZXBpY2VudGVyX2FiYnJldmlhdGlvbhgqIAEoCzIaLkFyZWFFcGljZW50ZXJBYmJyZXZpYXRp'
-    'b25SGWFyZWFFcGljZW50ZXJBYmJyZXZpYXRpb24SSAoVYXJlYV9lcGljZW50ZXJfZGV0YWlsGC'
-    'sgASgLMhQuQXJlYUVwaWNlbnRlckRldGFpbFITYXJlYUVwaWNlbnRlckRldGFpbA==');
+    'CgxKbWFDb2RlVGFibGUSKwoGaGVhZGVyGAEgASgLMhMuSm1hQ29kZVRhYmxlSGVhZGVyUgZoZW'
+    'FkZXISTAoXYXJlYV9mb3JlY2FzdF9sb2NhbF9lZXcYFiABKAsyFS5BcmVhRm9yZWNhc3RMb2Nh'
+    'bEVld1IUYXJlYUZvcmVjYXN0TG9jYWxFZXcSeQomYXJlYV9pbmZvcm1hdGlvbl9wcmVmZWN0dX'
+    'JlX2VhcnRocXVha2UYFyABKAsyJC5BcmVhSW5mb3JtYXRpb25QcmVmZWN0dXJlRWFydGhxdWFr'
+    'ZVIjYXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZUVhcnRocXVha2USNQoOYXJlYV9lcGljZW50ZX'
+    'IYKSABKAsyDi5BcmVhRXBpY2VudGVyUg1hcmVhRXBpY2VudGVyEloKG2FyZWFfZXBpY2VudGVy'
+    'X2FiYnJldmlhdGlvbhgqIAEoCzIaLkFyZWFFcGljZW50ZXJBYmJyZXZpYXRpb25SGWFyZWFFcG'
+    'ljZW50ZXJBYmJyZXZpYXRpb24SSAoVYXJlYV9lcGljZW50ZXJfZGV0YWlsGCsgASgLMhQuQXJl'
+    'YUVwaWNlbnRlckRldGFpbFITYXJlYUVwaWNlbnRlckRldGFpbA==');
 
 @$core.Deprecated('Use areaForecastLocalEewDescriptor instead')
 const AreaForecastLocalEew$json = {
   '1': 'AreaForecastLocalEew',
   '2': [
-    {
-      '1': 'items',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.AreaForecastLocalEew.AreaForecastLocalEewItem',
-      '10': 'items'
-    },
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaForecastLocalEew.AreaForecastLocalEewItem', '10': 'items'},
   ],
   '3': [AreaForecastLocalEew_AreaForecastLocalEewItem$json],
 };
@@ -110,24 +87,13 @@ final $typed_data.Uint8List areaForecastLocalEewDescriptor = $convert.base64Deco
 const AreaInformationPrefectureEarthquake$json = {
   '1': 'AreaInformationPrefectureEarthquake',
   '2': [
-    {
-      '1': 'items',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6':
-          '.AreaInformationPrefectureEarthquake.AreaInformationPrefectureEarthquakeItem',
-      '10': 'items'
-    },
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaInformationPrefectureEarthquake.AreaInformationPrefectureEarthquakeItem', '10': 'items'},
   ],
-  '3': [
-    AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json
-  ],
+  '3': [AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json],
 };
 
 @$core.Deprecated('Use areaInformationPrefectureEarthquakeDescriptor instead')
-const AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json =
-    {
+const AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json = {
   '1': 'AreaInformationPrefectureEarthquakeItem',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
@@ -136,25 +102,17 @@ const AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeIte
 };
 
 /// Descriptor for `AreaInformationPrefectureEarthquake`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List areaInformationPrefectureEarthquakeDescriptor =
-    $convert.base64Decode(
-        'CiNBcmVhSW5mb3JtYXRpb25QcmVmZWN0dXJlRWFydGhxdWFrZRJiCgVpdGVtcxgBIAMoCzJMLk'
-        'FyZWFJbmZvcm1hdGlvblByZWZlY3R1cmVFYXJ0aHF1YWtlLkFyZWFJbmZvcm1hdGlvblByZWZl'
-        'Y3R1cmVFYXJ0aHF1YWtlSXRlbVIFaXRlbXMaUQonQXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZU'
-        'VhcnRocXVha2VJdGVtEhIKBGNvZGUYASABKAlSBGNvZGUSEgoEbmFtZRgCIAEoCVIEbmFtZQ==');
+final $typed_data.Uint8List areaInformationPrefectureEarthquakeDescriptor = $convert.base64Decode(
+    'CiNBcmVhSW5mb3JtYXRpb25QcmVmZWN0dXJlRWFydGhxdWFrZRJiCgVpdGVtcxgBIAMoCzJMLk'
+    'FyZWFJbmZvcm1hdGlvblByZWZlY3R1cmVFYXJ0aHF1YWtlLkFyZWFJbmZvcm1hdGlvblByZWZl'
+    'Y3R1cmVFYXJ0aHF1YWtlSXRlbVIFaXRlbXMaUQonQXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZU'
+    'VhcnRocXVha2VJdGVtEhIKBGNvZGUYASABKAlSBGNvZGUSEgoEbmFtZRgCIAEoCVIEbmFtZQ==');
 
 @$core.Deprecated('Use areaEpicenterDescriptor instead')
 const AreaEpicenter$json = {
   '1': 'AreaEpicenter',
   '2': [
-    {
-      '1': 'items',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.AreaEpicenter.AreaEpicenterItem',
-      '10': 'items'
-    },
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaEpicenter.AreaEpicenterItem', '10': 'items'},
   ],
   '3': [AreaEpicenter_AreaEpicenterItem$json],
 };
@@ -178,14 +136,7 @@ final $typed_data.Uint8List areaEpicenterDescriptor = $convert.base64Decode(
 const AreaEpicenterAbbreviation$json = {
   '1': 'AreaEpicenterAbbreviation',
   '2': [
-    {
-      '1': 'items',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.AreaEpicenterAbbreviation.AreaEpicenterAbbreviationItem',
-      '10': 'items'
-    },
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaEpicenterAbbreviation.AreaEpicenterAbbreviationItem', '10': 'items'},
   ],
   '3': [AreaEpicenterAbbreviation_AreaEpicenterAbbreviationItem$json],
 };
@@ -210,14 +161,7 @@ final $typed_data.Uint8List areaEpicenterAbbreviationDescriptor = $convert.base6
 const AreaEpicenterDetail$json = {
   '1': 'AreaEpicenterDetail',
   '2': [
-    {
-      '1': 'items',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.AreaEpicenterDetail.AreaEpicenterDetailItem',
-      '10': 'items'
-    },
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaEpicenterDetail.AreaEpicenterDetailItem', '10': 'items'},
   ],
   '3': [AreaEpicenterDetail_AreaEpicenterDetailItem$json],
 };
@@ -236,3 +180,4 @@ final $typed_data.Uint8List areaEpicenterDetailDescriptor = $convert.base64Decod
     'ChNBcmVhRXBpY2VudGVyRGV0YWlsEkIKBWl0ZW1zGAEgAygLMiwuQXJlYUVwaWNlbnRlckRldG'
     'FpbC5BcmVhRXBpY2VudGVyRGV0YWlsSXRlbVIFaXRlbXMaQQoXQXJlYUVwaWNlbnRlckRldGFp'
     'bEl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCgRuYW1lGAIgASgJUgRuYW1l');
+
