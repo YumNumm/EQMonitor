@@ -23,6 +23,11 @@
     "dev": {
       "persistent": true,
       "cache": false
+    },
+    "check": {
+      "dependsOn": [
+        "^check"
+      ]
     }
   }
 }
