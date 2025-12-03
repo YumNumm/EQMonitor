@@ -70,8 +70,8 @@ dependencies:
     path: ../packages/jma_code_table_types
   jma_map:
     path: ../packages/jma_map
-  jma_parameter_api_client:
-    path: ../packages/jma_parameter_api_client
+  jma_parameter_types:
+    path: ../packages/jma_parameter_types
   json_annotation: ^4.9.0
   kyoshin_monitor_api:
     path: ../packages/kyoshin_monitor_api
