@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'estimated_intensity_provider.freezed.dart';

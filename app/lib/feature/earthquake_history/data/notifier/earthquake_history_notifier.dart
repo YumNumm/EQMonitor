@@ -13,7 +13,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
