@@ -4,7 +4,8 @@
 enum JmaInformationType {
   issue(0, '発表', 'Issue'),
   correction(1, '訂正', 'Correction'),
-  cancellation(2, '取消', 'Cancellation');
+  cancellation(2, '取消', 'Cancellation')
+  ;
 
   const JmaInformationType(this.code, this.nameJa, this.nameEn);
 

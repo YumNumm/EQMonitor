@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import '../definition/preamble.dart';
-import '../model/exception.dart';
-import '../model/report/qzss_dc_report.dart';
-import 'jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/definition/preamble.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Main decoder for QZSS DCR messages.
 ///
@@ -244,7 +244,7 @@ class QzssDcrDecoder {
     final data = <int>[...message.sublist(0, 28), message[28] & 0xC0];
 
     for (final byte in data) {
-      crc ^= (byte << 16);
+      crc ^= byte << 16;
       for (var i = 0; i < 8; i++) {
         crc <<= 1;
         if ((crc & 0x1000000) != 0) {
@@ -287,8 +287,6 @@ class QzssDcrDecoder {
     }
 
     // Shift right to remove bits after the end position
-    result = result >> (8 - ((slider + size) & 7));
-
-    return result;
+    return result >> (8 - ((slider + size) & 7));
   }
 }

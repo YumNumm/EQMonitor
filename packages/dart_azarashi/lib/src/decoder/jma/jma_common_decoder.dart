@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
-import '../../definition/epicenter_and_hypocenter.dart';
-import '../../definition/notification_on_disaster_prevention.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/epicenter_and_hypocenter.dart';
+import 'package:dart_azarashi/src/definition/notification_on_disaster_prevention.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Common decoder utilities for JMA messages.
 class JmaCommonDecoder {

@@ -1,23 +1,23 @@
 import 'dart:typed_data';
 
-import '../../definition/disaster_category.dart';
-import '../../definition/information_type.dart';
-import '../../definition/report_classification.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'ash_fall_decoder.dart';
-import 'earthquake_early_warning_decoder.dart';
-import 'flood_decoder.dart';
-import 'hypocenter_decoder.dart';
-import 'marine_decoder.dart';
-import 'nankai_trough_earthquake_decoder.dart';
-import 'northwest_pacific_tsunami_decoder.dart';
-import 'seismic_intensity_decoder.dart';
-import 'tsunami_decoder.dart';
-import 'typhoon_decoder.dart';
-import 'volcano_decoder.dart';
-import 'weather_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/ash_fall_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/earthquake_early_warning_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/flood_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/hypocenter_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/marine_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/nankai_trough_earthquake_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/northwest_pacific_tsunami_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/seismic_intensity_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/tsunami_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/typhoon_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/volcano_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/weather_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/disaster_category.dart';
+import 'package:dart_azarashi/src/definition/information_type.dart';
+import 'package:dart_azarashi/src/definition/report_classification.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// JMA (Japan Meteorological Agency) Decoder.
 ///

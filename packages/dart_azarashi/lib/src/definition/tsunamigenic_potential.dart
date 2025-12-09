@@ -19,7 +19,8 @@ enum JmaTsunamigenicPotential {
     4,
     'There is a Very Small Possibility of a destructive Local Tsunami',
   ),
-  possibilityOfTsunami(7, 'There is Possibility of a Tsunami');
+  possibilityOfTsunami(7, 'There is Possibility of a Tsunami')
+  ;
 
   const JmaTsunamigenicPotential(this.code, this.descriptionEn);
 

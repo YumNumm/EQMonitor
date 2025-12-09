@@ -1,11 +1,11 @@
-import '../../definition/ash_fall_warning_code.dart';
-import '../../definition/local_government.dart';
-import '../../definition/volcano_name.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/ash_fall_warning_code.dart';
+import 'package:dart_azarashi/src/definition/local_government.dart';
+import 'package:dart_azarashi/src/definition/volcano_name.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Ash Fall Decoder.
 ///

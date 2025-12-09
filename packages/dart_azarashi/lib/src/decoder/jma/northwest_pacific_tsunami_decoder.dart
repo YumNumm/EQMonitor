@@ -1,11 +1,11 @@
-import '../../definition/coastal_region.dart';
-import '../../definition/northwest_pacific_tsunami_height.dart';
-import '../../definition/tsunamigenic_potential.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/coastal_region.dart';
+import 'package:dart_azarashi/src/definition/northwest_pacific_tsunami_height.dart';
+import 'package:dart_azarashi/src/definition/tsunamigenic_potential.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Northwest Pacific Tsunami Decoder.
 ///

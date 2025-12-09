@@ -67,7 +67,8 @@ enum JmaCoastalRegion {
   zhoushan(85, 'Zhoushan (Coasts of East China Sea)'),
   wenzhou(86, 'Wenzhou (Coasts of East China Sea)'),
   unknown(99, 'Unknown'),
-  otherRegion(100, 'Other region');
+  otherRegion(100, 'Other region')
+  ;
 
   const JmaCoastalRegion(this.code, this.nameEn);
 

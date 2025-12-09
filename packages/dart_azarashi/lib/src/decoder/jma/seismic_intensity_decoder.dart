@@ -1,10 +1,10 @@
-import '../../definition/prefecture.dart';
-import '../../definition/seismic_intensity.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/prefecture.dart';
+import 'package:dart_azarashi/src/definition/seismic_intensity.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Seismic Intensity Decoder.
 class SeismicIntensityDecoder {
@@ -28,8 +28,11 @@ class SeismicIntensityDecoder {
     for (var i = 0; i < 16; i++) {
       final offset = 69 + i * 9;
       final intensityCode = QzssDcrDecoder.extractField(message, offset, 3);
-      final prefectureCode =
-          QzssDcrDecoder.extractField(message, offset + 3, 6);
+      final prefectureCode = QzssDcrDecoder.extractField(
+        message,
+        offset + 3,
+        6,
+      );
 
       if (intensityCode == 0 && prefectureCode == 0) {
         break;
@@ -47,8 +50,9 @@ class SeismicIntensityDecoder {
       seismicIntensities.add(intensity);
       seismicIntensityCodes.add(intensityCode);
 
-      final prefecture =
-          JmaPrefecture.values.where((e) => e.code == prefectureCode).firstOrNull;
+      final prefecture = JmaPrefecture.values
+          .where((e) => e.code == prefectureCode)
+          .firstOrNull;
       if (prefecture == null) {
         throw QzssDcrDecoderException(
           'Undefined JMA Prefecture: $prefectureCode',

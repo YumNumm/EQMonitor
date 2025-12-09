@@ -5,7 +5,8 @@ enum JmaTyphoonScaleCategory {
   none(0, 'なし'),
   large(1, '大型'),
   veryLarge(2, '超大型'),
-  other(15, 'その他の大きさ階級分類');
+  other(15, 'その他の大きさ階級分類')
+  ;
 
   const JmaTyphoonScaleCategory(this.code, this.nameJa);
 
