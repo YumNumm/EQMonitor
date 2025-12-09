@@ -183,46 +183,46 @@ def main():
     os.makedirs("data/pbf_tiles", exist_ok=True)
     os.makedirs("data/pmtiles", exist_ok=True)
 
-    # 個別ファイルの変換
-    logger.info(f"{Fore.YELLOW}個別ファイルをPBF Tiles (XYZ)形式に変換しています...")
-    success_individual = 0
-    for geojson_file in tqdm(
-        geojson_files,
-        desc=f"{Fore.BLUE}個別変換",
-        bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.CYAN, Fore.RESET),
-    ):
-        filename = os.path.basename(geojson_file)
-        basename = os.path.splitext(filename)[0]
-        output_dir = f"data/pbf_tiles/{basename}"
+    # # 個別ファイルの変換
+    # logger.info(f"{Fore.YELLOW}個別ファイルをPBF Tiles (XYZ)形式に変換しています...")
+    # success_individual = 0
+    # for geojson_file in tqdm(
+    #     geojson_files,
+    #     desc=f"{Fore.BLUE}個別変換",
+    #     bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.CYAN, Fore.RESET),
+    # ):
+    #     filename = os.path.basename(geojson_file)
+    #     basename = os.path.splitext(filename)[0]
+    #     output_dir = f"data/pbf_tiles/{basename}"
 
-        logger.info(f"{Fore.YELLOW}変換中: {basename}")
-        if convert_to_pbf_xyz(
-            [geojson_file], output_dir, 1, 14, ["--drop-densest-as-needed"]
-        ):
-            logger.info(f"{Fore.GREEN}  成功: {output_dir}")
-            success_individual += 1
-        else:
-            logger.error(f"  失敗: {basename}")
+    #     logger.info(f"{Fore.YELLOW}変換中: {basename}")
+    #     if convert_to_pbf_xyz(
+    #         [geojson_file], output_dir, 1, 14, ["--drop-densest-as-needed"]
+    #     ):
+    #         logger.info(f"{Fore.GREEN}  成功: {output_dir}")
+    #         success_individual += 1
+    #     else:
+    #         logger.error(f"  失敗: {basename}")
 
-    # 統合ファイルの変換（PBF XYZ）
-    logger.info(
-        f"\n{Fore.YELLOW}すべてのデータを統合したPBF Tiles (XYZ)を作成しています..."
-    )
-    output_combined_dir = "data/pbf_tiles/earthquake_tsunami_all"
-    success_combined_xyz = convert_to_pbf_xyz(
-        geojson_files, output_combined_dir, 1, 14, ["--drop-densest-as-needed"]
-    )
+    # # 統合ファイルの変換（PBF XYZ）
+    # logger.info(
+    #     f"\n{Fore.YELLOW}すべてのデータを統合したPBF Tiles (XYZ)を作成しています..."
+    # )
+    # output_combined_dir = "data/pbf_tiles/earthquake_tsunami_all"
+    # success_combined_xyz = convert_to_pbf_xyz(
+    #     geojson_files, output_combined_dir, 1, 14, ["--drop-densest-as-needed"]
+    # )
 
-    if success_combined_xyz:
-        logger.info(f"{Fore.GREEN}成功: {output_combined_dir}")
-    else:
-        logger.error(f"失敗: {output_combined_dir}")
+    # if success_combined_xyz:
+    #     logger.info(f"{Fore.GREEN}成功: {output_combined_dir}")
+    # else:
+    #     logger.error(f"失敗: {output_combined_dir}")
 
     # 統合ファイルの変換（PMTiles）
     logger.info(f"\n{Fore.YELLOW}すべてのデータを統合したPMTilesを作成しています...")
     output_combined_pmtiles = "data/pmtiles/earthquake_tsunami_all.pmtiles"
     success_combined_pmtiles = convert_to_pmtiles(
-        geojson_files, output_combined_pmtiles, 1, 14, ["--drop-densest-as-needed"]
+        geojson_files, output_combined_pmtiles, 0, 8, ["--drop-densest-as-needed"]
     )
 
     if success_combined_pmtiles:
