@@ -29,7 +29,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
     final dateTextStyle = theme.textTheme.bodyMedium!.copyWith(
       letterSpacing: -0.5,
-      fontFamily: FontFamily.jetBrainsMono,
+      fontFamily: FontFamily.notoSansMono,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 

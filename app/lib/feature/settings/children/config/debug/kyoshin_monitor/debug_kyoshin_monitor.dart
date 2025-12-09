@@ -21,7 +21,7 @@ class DebugKyoshinMonitorPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text(
             'KyoshinMonitor',
-            style: TextStyle(fontFamily: FontFamily.jetBrainsMono),
+            style: TextStyle(fontFamily: FontFamily.notoSansMono),
           ),
           actions: const [],
         ),
@@ -43,13 +43,13 @@ class _Body extends ConsumerWidget {
 
     final titleTextStyle = textTheme.titleMedium!.copyWith(
       fontWeight: FontWeight.bold,
-      fontFamily: FontFamily.jetBrainsMono,
+      fontFamily: FontFamily.notoSansMono,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
     final bodyTextStyle = textTheme.bodySmall!.copyWith(
       fontWeight: FontWeight.w400,
-      fontFamily: FontFamily.jetBrainsMono,
+      fontFamily: FontFamily.notoSansMono,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 

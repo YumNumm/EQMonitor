@@ -99,7 +99,7 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('FCM Token'),
             subtitle: Text(
               notificationToken?.fcmToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
             onTap: () async => Clipboard.setData(
               ClipboardData(text: notificationToken?.fcmToken ?? ''),
@@ -109,7 +109,7 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('APNS Token'),
             subtitle: Text(
               notificationToken?.apnsToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
             onTap: () async => Clipboard.setData(
               ClipboardData(text: notificationToken?.apnsToken ?? ''),
@@ -120,7 +120,7 @@ class _DebugWidget extends ConsumerWidget {
             subtitle: Text(
               'Earthquake: ${ref.watch(jmaParameterProvider).value?.earthquakeStatus.toString() ?? 'null'}\n'
               'Tsunami   : ${ref.watch(jmaParameterProvider).value?.tsunamiStatus.toString() ?? 'null'}',
-              style: const TextStyle(fontFamily: FontFamily.jetBrainsMono),
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
           ),
         ],

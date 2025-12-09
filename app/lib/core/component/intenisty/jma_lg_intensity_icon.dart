@@ -48,8 +48,8 @@ class JmaLgIntensityIcon extends ConsumerWidget {
                     style: TextStyle(
                       color: fg,
                       fontSize: 100,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: FontFamily.jetBrainsMono,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontFamily.notoSansMono,
                     ),
                   ),
                 ],
@@ -87,8 +87,8 @@ class JmaLgIntensityIcon extends ConsumerWidget {
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontFamily.notoSansMono,
                       ),
                     )
                   : Text(
@@ -96,8 +96,8 @@ class JmaLgIntensityIcon extends ConsumerWidget {
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontFamily.notoSansMono,
                       ),
                     ),
             ),

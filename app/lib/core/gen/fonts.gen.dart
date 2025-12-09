@@ -11,9 +11,9 @@
 class FontFamily {
   FontFamily._();
 
-  /// Font family: JetBrainsMono
-  static const String jetBrainsMono = 'JetBrainsMono';
-
   /// Font family: NotoSansJP
   static const String notoSansJP = 'NotoSansJP';
+
+  /// Font family: NotoSansMono
+  static const String notoSansMono = 'NotoSansMono';
 }
