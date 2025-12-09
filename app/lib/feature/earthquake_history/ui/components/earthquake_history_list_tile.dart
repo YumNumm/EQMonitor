@@ -2,13 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:jma_code_table_types/jma_code_table.pb.dart';
@@ -154,7 +154,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           Text(
             subTitle,
             style: TextStyle(
-              fontFamily: GoogleFonts.notoSansJp().fontFamily,
+              fontFamily: FontFamily.notoSansMono,
+              fontFamilyFallback: const [FontFamily.notoSansJP],
+              letterSpacing: -0.2,
               color: descriptionTextColor,
             ),
           ),
@@ -188,6 +190,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         style: theme.textTheme.labelLarge!.copyWith(
           fontWeight: FontWeight.bold,
           color: magnitudeTextColor,
+          fontFamily: FontFamily.notoSansMono,
+          letterSpacing: -0.5,
         ),
       ),
       dense: dense,
