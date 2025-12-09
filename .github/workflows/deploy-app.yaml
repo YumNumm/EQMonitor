@@ -280,7 +280,7 @@ jobs:
 
       - name: Extract environment variables
         run: |
-          cp environment/.env.dev environment/.env.prod
+          echo "$DART_DEFINE_PRODUCTION" | base64 -d > environment/.env.prod
 
       - name: Copy gradle.properties
         working-directory: app/android
