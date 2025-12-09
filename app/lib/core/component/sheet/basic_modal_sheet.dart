@@ -39,7 +39,10 @@ class BasicModalSheet extends HookWidget {
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  margin: const EdgeInsets.only(
+                    top: 8,
+                    bottom: 4,
+                  ),
                   width: 36,
                   height: 4,
                   alignment: Alignment.center,
