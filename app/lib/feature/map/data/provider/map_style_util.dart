@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,7 +18,7 @@ MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil();
 class MapStyleUtil {
   Future<String> _saveStyleJson(Map<String, dynamic> json) async {
     final jsonStr = jsonEncode(json);
-    final hash = md5.convert(utf8.encode(jsonStr)).toString();
+    final hash = sha256.convert(utf8.encode(jsonStr)).toString();
 
     final dir = await getApplicationDocumentsDirectory();
     final documentDir = dir.path;
@@ -24,7 +26,7 @@ class MapStyleUtil {
 
     await Directory(stylesDir).create(recursive: true);
     final styleFile = File('$stylesDir/$hash.json');
-    await styleFile.writeAsString(jsonEncode(json));
+    await styleFile.writeAsString(jsonStr);
     return styleFile.path;
   }
 
@@ -32,33 +34,31 @@ class MapStyleUtil {
     if (kIsWeb) {
       return 'https://v2.map.eqmonitor.app/style-light.json';
     }
+
+    // copy PMTiles to temporary directory
+    final dir = await getApplicationDocumentsDirectory();
+    final documentDir = dir.path;
+    final pmtilesDir = '$documentDir/pmtiles';
+    await Directory(pmtilesDir).create(recursive: true);
+    final pmtilesFile = File('$pmtilesDir/earthquake_tsunami_all.pmtiles');
+    final assetPath = Assets.map.earthquakeTsunamiAll;
+    final assetFile = await rootBundle.load(assetPath);
+    await pmtilesFile.writeAsBytes(assetFile.buffer.asUint8List());
+
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',
       'center': [139.767125, 35.681236],
       'zoom': 5,
       'sources': {
-        // 'eqmonitor_map': {
-        //   'type': 'vector',
-        //   // 'url': 'file://$overviewAssetPath',
-        //   'minzoom': 1,
-        //   'maxzoom': 5,
-        //   'bounds': [-180, -85.051129, 180, 83.634101],
-        // },
         'eqmonitor_map': {
           'type': 'vector',
           // 'url': 'https://map.eqmonitor.app/tiles/tiles.json',
           'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
+          // 'url': 'pmtiles://file://${pmtilesFile.path}',
           'attribution': '© 気象庁, Natural Earth',
           'minzoom': 1,
           'maxzoom': 10,
-        },
-        'osm': {
-          'type': 'raster',
-          'tiles': ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-          'tileSize': 256,
-          'attribution': '© OpenStreetMap contributors',
-          'maxzoom': 19,
         },
       },
       'sprite': '',
@@ -71,12 +71,6 @@ class MapStyleUtil {
             'background-color': colorScheme.backgroundColor.toHexStringRGB(),
           },
         },
-        // {
-        //   'id': 'osm',
-        //   'type': 'raster',
-        //   'source': 'osm',
-        //   'paint': {'raster-opacity': 0.2},
-        // },
         {
           'id': BaseLayer.countriesFill.name,
           'source': 'eqmonitor_map',

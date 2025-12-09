@@ -573,8 +573,8 @@ class _UnknownInfoWidget extends StatelessWidget {
         Text(
           value,
           style: textTheme.displaySmall!.copyWith(
-            fontWeight: FontWeight.w900,
-            fontFamily: FontFamily.jetBrainsMono,
+            fontWeight: FontWeight.bold,
+            fontFamily: FontFamily.notoSansMono,
             fontFamilyFallback: [FontFamily.notoSansJP],
           ),
         ),

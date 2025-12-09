@@ -10,6 +10,13 @@ environment:
 
 resolution: workspace
 
+dependency_overrides:
+  maplibre_ios:
+    git:
+      url: https://github.com/YumNumm/flutter-maplibre.git
+      ref: cf94596ac91f28d085f3bc7957e60200e5efab26
+      path: maplibre_ios
+
 dependencies:
   app_settings:
     git:
@@ -86,8 +93,8 @@ dependencies:
   # maplibre: ^0.2.1
   maplibre:
     git:
-      url: https://github.com/josxha/flutter-maplibre.git
-      ref: 581afd1a2a034ffab66373b8579fdeee332caf11
+      url: https://github.com/YumNumm/flutter-maplibre.git
+      ref: cf94596ac91f28d085f3bc7957e60200e5efab26
       path: maplibre
   nied_api_client:
     path: ../packages/nied_api_client
@@ -153,26 +160,20 @@ flutter:
     - assets/fonts/
     - assets/docs/
     - assets/parameter/
-
-  shaders:
-    - shaders/introduction.frag
+    - assets/map/
+    - assets/fonts/NotoSansJP/
+    - assets/fonts/NotoSansMono/
 
   fonts:
     - family: NotoSansJP
       fonts:
-        # - asset: assets/fonts/NotoSansJP-Regular.ttf
-        # weight: 400
-        - asset: assets/fonts/NotoSansJP-Medium.ttf
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Medium.ttf
           weight: 500
-        - asset: assets/fonts/NotoSansJP-Bold.ttf
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf
           weight: 700
-        - asset: assets/fonts/NotoSansJP-Black.ttf
-          weight: 900
-    - family: JetBrainsMono
+    - family: NotoSansMono
       fonts:
-        - asset: assets/fonts/JetBrainsMono-Medium.ttf
+        - asset: assets/fonts/NotoSansMono/NotoSansMono-Medium.ttf
           weight: 500
-        - asset: assets/fonts/JetBrainsMono-Bold.ttf
+        - asset: assets/fonts/NotoSansMono/NotoSansMono-Bold.ttf
           weight: 700
-        - asset: assets/fonts/JetBrainsMono-ExtraBold.ttf
-          weight: 900

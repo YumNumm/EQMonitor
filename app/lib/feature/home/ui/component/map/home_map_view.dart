@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_controller_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
@@ -54,12 +55,21 @@ class _MapContent extends HookConsumerWidget {
       onMapCreated: (controller) {
         ref.read(homeMapCameraStateProvider.notifier).setController(controller);
       },
-      children: const [
-        EewEstimatedIntensityLayer(),
-        KyoshinMonitorObservationLayer(),
-        EewPsWaveLayer(),
-        EewHypocenterLayer(),
-        SafeArea(child: _MapHeader()),
+      children: [
+        const EewEstimatedIntensityLayer(),
+        const KyoshinMonitorObservationLayer(),
+        Consumer(
+          builder: (context, ref, _) {
+            final eews = ref.watch(eewAliveTelegramProvider) ?? [];
+            return EewPsWaveLayer(eews: eews);
+          },
+        ),
+        Consumer(
+          builder: (context, ref, _) => EewHypocenterLayer(
+            eews: ref.watch(eewAliveTelegramProvider) ?? [],
+          ),
+        ),
+        const SafeArea(child: _MapHeader()),
       ],
     );
 

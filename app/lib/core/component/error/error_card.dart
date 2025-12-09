@@ -71,7 +71,7 @@ class ErrorCard extends StatelessWidget {
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
-                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  fontFamily: GoogleFonts.notoSansMono().fontFamily,
                 ),
               ),
               if (suffixMessage != null) ...[
@@ -80,7 +80,7 @@ class ErrorCard extends StatelessWidget {
                   suffixMessage!,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onErrorContainer,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    fontFamily: GoogleFonts.notoSansMono().fontFamily,
                   ),
                 ),
               ],
@@ -179,7 +179,7 @@ class _DeviceIdText extends ConsumerWidget {
       'デバイスID: ${state?.id ?? "Unknown"}',
       style: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onErrorContainer,
-        fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+        fontFamily: GoogleFonts.notoSansMono().fontFamily,
       ),
     );
   }
