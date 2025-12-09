@@ -85,6 +85,7 @@ class EewWidget extends ConsumerWidget {
               '緊急地震速報 ${isWarning ? "警報" : "予報"}',
               style: textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
               ),
             ),
             if (eew.isLevelEew)
@@ -111,7 +112,10 @@ class EewWidget extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: Text(
                   'PLUM法',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: FontFamily.notoSansMono,
+                  ),
                 ),
               ),
           ],
@@ -122,6 +126,8 @@ class EewWidget extends ConsumerWidget {
           style: textTheme.titleMedium!.copyWith(
             fontWeight: FontWeight.bold,
             color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+            fontFamily: FontFamily.notoSansMono,
+            letterSpacing: -0.5,
           ),
         ),
       ],
@@ -129,7 +135,13 @@ class EewWidget extends ConsumerWidget {
     final maxIntensityWidget = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('最大震度'),
+        const Text(
+          '最大震度',
+          style: TextStyle(
+            fontFamily: FontFamily.notoSansJP,
+            letterSpacing: -0.5,
+          ),
+        ),
         JmaForecastIntensityWidget(size: 60, intensity: maxIntensity),
       ],
     );
@@ -167,7 +179,11 @@ class EewWidget extends ConsumerWidget {
       '${DateFormat('yyyy/MM/dd HH:mm:ss').format(happenedTime.toLocal())}'
       ' '
       '${(eew.originTime == null || (eew.isPlum ?? false)) ? "検知" : "発生"}',
-      style: textTheme.bodyMedium,
+      style: textTheme.bodyMedium!.copyWith(
+        fontFamily: FontFamily.notoSansMono,
+        fontFamilyFallback: const [FontFamily.notoSansJP],
+        letterSpacing: -0.5,
+      ),
     );
 
     // 「M 8.0 / 深さ100km」
@@ -190,6 +206,7 @@ class EewWidget extends ConsumerWidget {
                   text: eew.magnitude!.toString().split('.').first,
                   style: textTheme.displaySmall!.copyWith(
                     fontWeight: FontWeight.bold,
+                    fontFamily: FontFamily.notoSansMono,
                   ),
                 ),
                 TextSpan(
@@ -203,6 +220,7 @@ class EewWidget extends ConsumerWidget {
                   text: eew.magnitude!.toString().split('.').last,
                   style: textTheme.displaySmall!.copyWith(
                     fontWeight: FontWeight.bold,
+                    fontFamily: FontFamily.notoSansMono,
                   ),
                 ),
               ],
@@ -233,12 +251,14 @@ class EewWidget extends ConsumerWidget {
             eew.depth.toString(),
             style: textTheme.displaySmall!.copyWith(
               fontWeight: FontWeight.bold,
+              fontFamily: FontFamily.notoSansMono,
             ),
           ),
           Text(
             'km',
             style: textTheme.titleMedium!.copyWith(
               color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+              fontFamily: FontFamily.notoSansMono,
             ),
           ),
         ] else
@@ -375,7 +395,9 @@ class EewWidget extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 100,
                   fontWeight: FontWeight.bold,
-                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.4),
+                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.2),
+                  fontFamily: FontFamily.notoSansMono,
+                  letterSpacing: -0.5,
                 ),
               ),
             ),

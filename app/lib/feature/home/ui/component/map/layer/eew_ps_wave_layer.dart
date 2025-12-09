@@ -37,7 +37,8 @@ class EewPsWaveLayer extends HookConsumerWidget {
           eew.longitude != null &&
           eew.depth != null &&
           eew.originTime != null &&
-          !eew.isCanceled && eew.isLowPrecise,
+          !eew.isCanceled &&
+          !eew.isLowPrecise,
     );
 
     final isInitialized = useRef(false);

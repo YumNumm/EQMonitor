@@ -18,28 +18,80 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
     final intensityData = ref.watch(estimatedIntensityProvider);
     final colorModel = ref.watch(intensityColorProvider);
 
+    final isInitialized = useRef(false);
+
+    // レイヤーの初期化
     useEffect(
       () {
         if (styleController == null) {
           return null;
         }
 
-        unawaited(_initializeLayers(styleController, colorModel));
+        unawaited(() async {
+          final futures = JmaForecastIntensity.values.map((intensity) {
+            final layerId = _getLayerId(intensity);
+            final color = colorModel
+                .fromJmaForecastIntensity(intensity)
+                .background;
 
-        return () => _cleanupLayers(styleController);
+            return styleController.addLayer(
+              FillStyleLayer(
+                id: layerId,
+                sourceId: 'eqmonitor_map',
+                paint: {
+                  'fill-color': color.toHexString(),
+                },
+              ),
+            );
+          });
+
+          await Future.wait(futures);
+          isInitialized.value = true;
+        }());
+
+        return () async {
+          final futures = JmaForecastIntensity.values.map(
+            (intensity) => styleController.removeLayer(_getLayerId(intensity)),
+          );
+          await Future.wait(futures);
+        };
       },
       [styleController],
     );
 
+    // データ更新
     useEffect(
       () {
-        if (styleController == null || intensityData.value == null) {
+        if (styleController == null ||
+            !isInitialized.value ||
+            intensityData.value == null) {
           return null;
         }
 
-        unawaited(
-          _updateLayers(styleController, intensityData.value!, colorModel),
-        );
+        unawaited(() async {
+          final removeFutures = JmaForecastIntensity.values.map(
+            (intensity) => styleController.removeLayer(_getLayerId(intensity)),
+          );
+          await Future.wait(removeFutures);
+
+          final addFutures = JmaForecastIntensity.values.map((intensity) {
+            final layerId = _getLayerId(intensity);
+            final color = colorModel
+                .fromJmaForecastIntensity(intensity)
+                .background;
+
+            return styleController.addLayer(
+              FillStyleLayer(
+                id: layerId,
+                sourceId: 'eqmonitor_map',
+                paint: {
+                  'fill-color': color.toHexString(),
+                },
+              ),
+            );
+          });
+          await Future.wait(addFutures);
+        }());
 
         return null;
       },
@@ -48,76 +100,12 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
 
     return const SizedBox.shrink();
   }
+}
 
-  Future<void> _initializeLayers(
-    StyleController style,
-    IntensityColorModel intensityColorModel,
-  ) async {
-    for (final intensity in JmaForecastIntensity.values) {
-      final layerId = _getLayerId(intensity);
-      final color = intensityColorModel
-          .fromJmaForecastIntensity(intensity)
-          .background;
-
-      await style.addLayer(
-        FillStyleLayer(
-          id: layerId,
-          sourceId: 'eqmonitor_map',
-          paint: {
-            'fill-color': _colorToHex(color),
-            'fill-opacity': 0.5,
-          },
-        ),
-      );
-    }
-  }
-
-  Future<void> _updateLayers(
-    StyleController style,
-    List<EstimatedIntensityPoint> points,
-    IntensityColorModel intensityColorModel,
-  ) async {
-    for (final intensity in JmaForecastIntensity.values) {
-      final layerId = _getLayerId(intensity);
-
-      await style.removeLayer(layerId);
-
-      final color = intensityColorModel
-          .fromJmaForecastIntensity(intensity)
-          .background;
-
-      await style.addLayer(
-        FillStyleLayer(
-          id: layerId,
-          sourceId: 'eqmonitor_map',
-          paint: {
-            'fill-color': _colorToHex(color),
-            'fill-opacity': 0.5,
-          },
-        ),
-      );
-    }
-  }
-
-  String _getLayerId(JmaForecastIntensity intensity) {
-    final base = intensity.type
-        .replaceAll('-', 'low')
-        .replaceAll('+', 'high')
-        .replaceAll('不明', 'unknown');
-    return 'eew-estimated-intensity-fill-$base';
-  }
-
-  String _colorToHex(Color color) {
-    final r = (color.r * 255).round();
-    final g = (color.g * 255).round();
-    final b = (color.b * 255).round();
-    return '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'
-        .toUpperCase();
-  }
-
-  Future<void> _cleanupLayers(StyleController style) async {
-    for (final intensity in JmaForecastIntensity.values) {
-      await style.removeLayer(_getLayerId(intensity));
-    }
-  }
+String _getLayerId(JmaForecastIntensity intensity) {
+  final base = intensity.type
+      .replaceAll('-', 'low')
+      .replaceAll('+', 'high')
+      .replaceAll('不明', 'unknown');
+  return 'eew-estimated-intensity-fill-$base';
 }
