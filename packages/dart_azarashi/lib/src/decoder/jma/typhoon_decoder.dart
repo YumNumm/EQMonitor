@@ -1,11 +1,11 @@
-import '../../definition/typhoon_intensity_category.dart';
-import '../../definition/typhoon_reference_time_type.dart';
-import '../../definition/typhoon_scale_category.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/typhoon_intensity_category.dart';
+import 'package:dart_azarashi/src/definition/typhoon_reference_time_type.dart';
+import 'package:dart_azarashi/src/definition/typhoon_scale_category.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Typhoon Decoder.
 ///

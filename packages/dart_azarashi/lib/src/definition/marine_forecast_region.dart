@@ -50,7 +50,8 @@ enum JmaMarineForecastRegion {
   eastChinaSeaSouth(6010, '東シナ海南部'),
   okinawaEast(6020, '沖縄東方海上'),
   okinawaSouth(6030, '沖縄南方海上'),
-  other(10000, 'その他の地方海上予報区');
+  other(10000, 'その他の地方海上予報区')
+  ;
 
   const JmaMarineForecastRegion(this.code, this.nameJa);
 

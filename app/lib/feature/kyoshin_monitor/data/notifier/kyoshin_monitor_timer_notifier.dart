@@ -37,14 +37,14 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 
     // Resync timer
     var isResyncing = false;
-    ref
-      ..listen(
-        kyoshinMonitorSettingsProvider.select((v) => v.api.delayAdjustInterval),
-        (_, next) => ref
-            .read(periodicTimerProvider('KyoshinMonitorTimerNotifier').notifier)
-            .setInterval(next),
-      )
-      ..listen(periodicTimerProvider('KyoshinMonitorTimerNotifier'), (
+    final interval = ref.watch(
+      kyoshinMonitorSettingsProvider.select((v) => v.api.imageFetchInterval),
+    );
+    ref.listen(
+      periodicTimerProvider(
+        interval,
+      ),
+      (
         _,
         next,
       ) async {
@@ -69,7 +69,8 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
           }
         }
         isResyncing = false;
-      });
+      },
+    );
 
     ref.onDispose(streamController.close);
     yield* streamController.stream;
@@ -122,24 +123,13 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 
 @riverpod
 Stream<void> _kyoshinMonitorDelayAdujustTiming(Ref ref) {
-  const key = 'kyoshin_monitor_delay_adjust_timing';
   final streamController = StreamController<void>();
-  ref
-    ..listen(periodicTimerProvider(key), (previous, next) {
-      streamController.add(null);
-    })
-    ..listen(
-      kyoshinMonitorSettingsProvider.select((v) => v.api.delayAdjustInterval),
-      (_, next) {
-        ref.read(periodicTimerProvider(key).notifier).setInterval(next);
-      },
-    );
-
-  ref
-      .read(periodicTimerProvider(key).notifier)
-      .setInterval(
-        ref.read(kyoshinMonitorSettingsProvider).api.delayAdjustInterval,
-      );
+  final delayAdjustInterval = ref.watch(
+    kyoshinMonitorSettingsProvider.select((v) => v.api.delayAdjustInterval),
+  );
+  ref.listen(periodicTimerProvider(delayAdjustInterval), (previous, next) {
+    streamController.add(null);
+  });
 
   ref.onDispose(streamController.close);
   return streamController.stream;

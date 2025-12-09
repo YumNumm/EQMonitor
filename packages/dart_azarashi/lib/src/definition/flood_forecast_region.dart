@@ -5,7 +5,7 @@ class JmaFloodForecastRegion {
   const JmaFloodForecastRegion._();
 
   /// Map of flood forecast region codes to names.
-  static const Map<int, String> regions = {
+  static const regions = <int, String>{
     10175000100: '新川(北海道道央)',
     19999999999: '北海道のその他の河川',
     20036000100: '堤川・駒込川(青森県)',

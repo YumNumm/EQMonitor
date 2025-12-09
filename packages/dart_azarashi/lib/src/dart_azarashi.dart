@@ -1,6 +1,6 @@
-import 'decoder/hex_decoder.dart';
-import 'decoder/nmea_decoder.dart';
-import 'decoder/ublox_decoder.dart';
+import 'package:dart_azarashi/src/decoder/hex_decoder.dart';
+import 'package:dart_azarashi/src/decoder/nmea_decoder.dart';
+import 'package:dart_azarashi/src/decoder/ublox_decoder.dart';
 
 /// Main entry point for the dart_azarashi library.
 ///

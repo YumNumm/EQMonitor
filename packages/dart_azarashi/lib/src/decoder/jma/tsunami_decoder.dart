@@ -1,11 +1,11 @@
-import '../../definition/tsunami_forecast_region.dart';
-import '../../definition/tsunami_height.dart';
-import '../../definition/tsunami_warning_code.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/tsunami_forecast_region.dart';
+import 'package:dart_azarashi/src/definition/tsunami_height.dart';
+import 'package:dart_azarashi/src/definition/tsunami_warning_code.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Tsunami Decoder.
 class TsunamiDecoder {

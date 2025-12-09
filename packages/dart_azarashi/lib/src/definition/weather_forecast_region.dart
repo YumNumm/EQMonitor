@@ -5,7 +5,7 @@ class JmaWeatherForecastRegion {
   const JmaWeatherForecastRegion._();
 
   /// Map of weather forecast region codes to names.
-  static const Map<int, String> regions = {
+  static const regions = <int, String>{
     11000: '宗谷地方',
     12000: '上川・留萌地方',
     12010: '上川地方',

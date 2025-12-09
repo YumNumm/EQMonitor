@@ -1,6 +1,6 @@
-import '../model/exception.dart';
-import '../model/report/qzss_dc_report.dart';
-import 'qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Decoder for hexadecimal string format messages (63 characters).
 class HexDecoder {
@@ -45,10 +45,9 @@ class HexDecoder {
 
   String _messageToNmea(List<int> message, {int? satelliteId}) {
     final satId = satelliteId ?? 55;
-    final messageHex =
-        message
-            .map((b) => b.toRadixString(16).padLeft(2, '0').toUpperCase())
-            .join();
+    final messageHex = message
+        .map((b) => b.toRadixString(16).padLeft(2, '0').toUpperCase())
+        .join();
     // Remove the last character (padding)
     final messageHexTrimmed = messageHex.substring(0, messageHex.length - 1);
 

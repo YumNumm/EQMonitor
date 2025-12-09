@@ -1,11 +1,11 @@
-import '../../definition/local_government.dart';
-import '../../definition/volcanic_warning_code.dart';
-import '../../definition/volcano_name.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/local_government.dart';
+import 'package:dart_azarashi/src/definition/volcanic_warning_code.dart';
+import 'package:dart_azarashi/src/definition/volcano_name.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Volcano Decoder.
 ///
@@ -61,7 +61,8 @@ class VolcanoDecoder {
       }
 
       final lgCode = QzssDcrDecoder.extractField(message, offset, 23);
-      final localGovernment = JmaLocalGovernment.fromCode(lgCode) ??
+      final localGovernment =
+          JmaLocalGovernment.fromCode(lgCode) ??
           JmaLocalGovernment.undefinedDescription(lgCode);
       localGovernments.add(localGovernment);
       localGovernmentsRaw.add(lgCode);

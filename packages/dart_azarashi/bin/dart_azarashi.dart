@@ -23,9 +23,8 @@ void main(List<String> arguments) {
       'source',
       abbr: 's',
       help: 'Output the source messages',
-      defaultsTo: false,
     )
-    ..addFlag('verbose', abbr: 'v', help: 'Verbose mode', defaultsTo: false)
+    ..addFlag('verbose', abbr: 'v', help: 'Verbose mode')
     ..addFlag('help', abbr: 'h', help: 'Show help', negatable: false);
 
   late final ArgResults results;
@@ -48,7 +47,7 @@ void main(List<String> arguments) {
   final showSource = results.flag('source');
   final verbose = results.flag('verbose');
 
-  final azarashi = DartAzarashi();
+  const azarashi = DartAzarashi();
   final Stream<String> inputStream;
 
   if (inputPath == 'stdin') {
@@ -66,7 +65,9 @@ void main(List<String> arguments) {
       .transform(const LineSplitter())
       .listen(
         (line) {
-          if (line.trim().isEmpty) return;
+          if (line.trim().isEmpty) {
+            return;
+          }
 
           final now = DateTime.now().toIso8601String();
 
@@ -127,10 +128,12 @@ void main(List<String> arguments) {
             stderr.writeln('$now --------------------------------');
             stderr.writeln('# [QzssDcrDecoderException] $e');
             stderr.writeln();
+          // ignore: avoid_catching_errors
           } on QzssDcrDecoderNotImplementedError catch (e) {
             stderr.writeln('$now --------------------------------');
             stderr.writeln('# [QzssDcrDecoderNotImplementedError] $e');
             stderr.writeln();
+          // ignore: avoid_catches_without_on_clauses
           } catch (e) {
             stderr.writeln('$now --------------------------------');
             stderr.writeln('# [${e.runtimeType}] $e');
@@ -156,13 +159,12 @@ void _printUsage(ArgParser parser) {
   stdout.writeln(parser.usage);
   stdout.writeln();
   stdout.writeln('Examples:');
-  stdout.writeln('  echo "\$QZQSM,58,..." | dart_azarashi -t nmea');
+  stdout.writeln(r'  echo "$QZQSM,58,..." | dart_azarashi -t nmea');
   stdout.writeln('  dart_azarashi -t hex -f input.txt');
 }
 
 void _printVerbose(QzssDcReport report) {
   stdout.writeln('Type: ${report.runtimeType}');
   stdout.writeln('Sentence: ${report.sentence}');
-  print(JsonEncoder.withIndent('  ').convert(report.toJson()));
-
+  print(const JsonEncoder.withIndent('  ').convert(report.toJson()));
 }
