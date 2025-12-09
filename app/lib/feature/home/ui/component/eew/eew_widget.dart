@@ -93,7 +93,7 @@ class EewWidget extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: Text(
                   'レベル法',
-                  style: TextStyle(fontWeight: FontWeight.w900),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             if (eew.isIpfOnePoint)
@@ -102,7 +102,7 @@ class EewWidget extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: Text(
                   '1点観測点による検知',
-                  style: TextStyle(fontWeight: FontWeight.w900),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             if (eew.isPlum ?? false)
@@ -111,7 +111,7 @@ class EewWidget extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: Text(
                   'PLUM法',
-                  style: TextStyle(fontWeight: FontWeight.w900),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
           ],
@@ -151,7 +151,7 @@ class EewWidget extends ConsumerWidget {
           child: Text(
             eew.hypoName ?? '不明',
             style: textTheme.headlineMedium!.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -166,7 +166,7 @@ class EewWidget extends ConsumerWidget {
     final timeWidget = Text(
       '${DateFormat('yyyy/MM/dd HH:mm:ss').format(happenedTime.toLocal())}'
       ' '
-      '${eew.originTime == null ? "検知" : "発生"}',
+      '${(eew.originTime == null || (eew.isPlum ?? false)) ? "検知" : "発生"}',
       style: textTheme.bodyMedium,
     );
 
@@ -189,7 +189,7 @@ class EewWidget extends ConsumerWidget {
                 TextSpan(
                   text: eew.magnitude!.toString().split('.').first,
                   style: textTheme.displaySmall!.copyWith(
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 TextSpan(
@@ -202,7 +202,7 @@ class EewWidget extends ConsumerWidget {
                 TextSpan(
                   text: eew.magnitude!.toString().split('.').last,
                   style: textTheme.displaySmall!.copyWith(
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -212,7 +212,7 @@ class EewWidget extends ConsumerWidget {
           Text(
             '不明',
             style: textTheme.displaySmall!.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
             ),
           ),
       ],
@@ -232,7 +232,7 @@ class EewWidget extends ConsumerWidget {
           Text(
             eew.depth.toString(),
             style: textTheme.displaySmall!.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
             ),
           ),
           Text(
@@ -245,7 +245,7 @@ class EewWidget extends ConsumerWidget {
           Text(
             '不明',
             style: textTheme.displaySmall!.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
             ),
           ),
       ],
@@ -257,29 +257,11 @@ class EewWidget extends ConsumerWidget {
       children: [
         const Row(),
         hypoWidget,
-        if (eew.isPlum ?? false) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              'PLUM法による仮定震源要素',
-              style: textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
-        ] else if (eew.isLevelEew) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              'レベル法による仮定震源要素',
-              style: textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
+        if ((eew.isPlum ?? false) || eew.isLevelEew)
+          ...[
         ] else
           AnimatedOpacity(
-            opacity: (eew.isIpfOnePoint || eew.isLevelEew) ? 0.7 : 1,
+            opacity: (eew.isIpfOnePoint) ? 0.7 : 1,
             duration: const Duration(milliseconds: 400),
             child: Wrap(
               children: [
@@ -377,7 +359,7 @@ class EewWidget extends ConsumerWidget {
                 (index).toString(),
                 style: TextStyle(
                   fontSize: 100,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.bold,
                   fontFamily: monoFont,
                   color: textTheme.bodyMedium!.color!.withValues(alpha: 0.3),
                 ),
@@ -392,7 +374,7 @@ class EewWidget extends ConsumerWidget {
                 eew.status,
                 style: TextStyle(
                   fontSize: 100,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.bold,
                   color: textTheme.bodyMedium!.color!.withValues(alpha: 0.4),
                 ),
               ),

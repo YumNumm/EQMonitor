@@ -30,38 +30,12 @@ class $AssetsDocsGen {
 class $AssetsFontsGen {
   const $AssetsFontsGen();
 
-  /// File path: assets/fonts/JetBrainsMono-Bold.ttf
-  String get jetBrainsMonoBold => 'assets/fonts/JetBrainsMono-Bold.ttf';
+  /// Directory path: assets/fonts/NotoSansJP
+  $AssetsFontsNotoSansJPGen get notoSansJP => const $AssetsFontsNotoSansJPGen();
 
-  /// File path: assets/fonts/JetBrainsMono-ExtraBold.ttf
-  String get jetBrainsMonoExtraBold =>
-      'assets/fonts/JetBrainsMono-ExtraBold.ttf';
-
-  /// File path: assets/fonts/JetBrainsMono-Medium.ttf
-  String get jetBrainsMonoMedium => 'assets/fonts/JetBrainsMono-Medium.ttf';
-
-  /// File path: assets/fonts/NotoSansJP-Black.ttf
-  String get notoSansJPBlack => 'assets/fonts/NotoSansJP-Black.ttf';
-
-  /// File path: assets/fonts/NotoSansJP-Bold.ttf
-  String get notoSansJPBold => 'assets/fonts/NotoSansJP-Bold.ttf';
-
-  /// File path: assets/fonts/NotoSansJP-Medium.ttf
-  String get notoSansJPMedium => 'assets/fonts/NotoSansJP-Medium.ttf';
-
-  /// File path: assets/fonts/NotoSansJP-Regular.ttf
-  String get notoSansJPRegular => 'assets/fonts/NotoSansJP-Regular.ttf';
-
-  /// List of all assets
-  List<String> get values => [
-    jetBrainsMonoBold,
-    jetBrainsMonoExtraBold,
-    jetBrainsMonoMedium,
-    notoSansJPBlack,
-    notoSansJPBold,
-    notoSansJPMedium,
-    notoSansJPRegular,
-  ];
+  /// Directory path: assets/fonts/NotoSansMono
+  $AssetsFontsNotoSansMonoGen get notoSansMono =>
+      const $AssetsFontsNotoSansMonoGen();
 }
 
 class $AssetsImagesGen {
@@ -84,6 +58,17 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [icon, iconForeground];
 }
 
+class $AssetsMapGen {
+  const $AssetsMapGen();
+
+  /// File path: assets/map/earthquake_tsunami_all.pmtiles
+  String get earthquakeTsunamiAll =>
+      'assets/map/earthquake_tsunami_all.pmtiles';
+
+  /// List of all assets
+  List<String> get values => [earthquakeTsunamiAll];
+}
+
 class $AssetsParameterGen {
   const $AssetsParameterGen();
 
@@ -95,6 +80,38 @@ class $AssetsParameterGen {
 
   /// List of all assets
   List<String> get values => [earthquake, tsunami];
+}
+
+class $AssetsFontsNotoSansJPGen {
+  const $AssetsFontsNotoSansJPGen();
+
+  /// File path: assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf
+  String get notoSansJPBold => 'assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf';
+
+  /// File path: assets/fonts/NotoSansJP/NotoSansJP-Medium.ttf
+  String get notoSansJPMedium =>
+      'assets/fonts/NotoSansJP/NotoSansJP-Medium.ttf';
+
+  /// List of all assets
+  List<String> get values => [notoSansJPBold, notoSansJPMedium];
+}
+
+class $AssetsFontsNotoSansMonoGen {
+  const $AssetsFontsNotoSansMonoGen();
+
+  /// File path: assets/fonts/NotoSansMono/NotoSansMono-Bold.ttf
+  String get notoSansMonoBold =>
+      'assets/fonts/NotoSansMono/NotoSansMono-Bold.ttf';
+
+  /// File path: assets/fonts/NotoSansMono/NotoSansMono-Medium.ttf
+  String get notoSansMonoMedium =>
+      'assets/fonts/NotoSansMono/NotoSansMono-Medium.ttf';
+
+  /// File path: assets/fonts/NotoSansMono/OFL.txt
+  String get ofl => 'assets/fonts/NotoSansMono/OFL.txt';
+
+  /// List of all assets
+  List<String> get values => [notoSansMonoBold, notoSansMonoMedium, ofl];
 }
 
 class $AssetsImagesMapGen {
@@ -140,6 +157,7 @@ class Assets {
   static const String kyoshinMonitorScale = 'assets/kyoshin_monitor_scale.json';
   static const String kyoshinObservationPoint =
       'assets/kyoshin_observation_point.pb';
+  static const $AssetsMapGen map = $AssetsMapGen();
   static const $AssetsParameterGen parameter = $AssetsParameterGen();
   static const String tjma2001 = 'assets/tjma2001.csv';
 

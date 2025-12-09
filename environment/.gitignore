@@ -1,3 +1,2 @@
 .env*
-!/.env.dev
 !/.env.example

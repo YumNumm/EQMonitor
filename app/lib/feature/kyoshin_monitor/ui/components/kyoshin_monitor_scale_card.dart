@@ -40,7 +40,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
                 ? type.title
                 : '${type.title.toUpperCase()} [${type.unit}]',
             style: theme.textTheme.bodySmall!.copyWith(
-              fontFamily: FontFamily.jetBrainsMono,
+              fontFamily: FontFamily.notoSansMono,
               textBaseline: TextBaseline.alphabetic,
               fontWeight: FontWeight.bold,
             ),
@@ -55,7 +55,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
             textColor: theme.colorScheme.onSurface,
             tickInterval: 3,
             textStyle: theme.textTheme.bodySmall!.copyWith(
-              fontFamily: FontFamily.jetBrainsMono,
+              fontFamily: FontFamily.notoSansMono,
               textBaseline: TextBaseline.alphabetic,
               fontSize: 10,
             ),

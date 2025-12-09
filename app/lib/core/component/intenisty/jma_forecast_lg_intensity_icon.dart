@@ -63,8 +63,8 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
                     style: TextStyle(
                       color: fg,
                       fontSize: 100,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: FontFamily.jetBrainsMono,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontFamily.notoSansMono,
                     ),
                   )
                 else if (intensity == JmaForecastLgIntensity.unknown)
@@ -75,7 +75,7 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.bold,
                         fontFamily: FontFamily.notoSansJP,
                       ),
                     ),
@@ -86,8 +86,8 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
                     style: TextStyle(
                       color: fg,
                       fontSize: 100,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: FontFamily.jetBrainsMono,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontFamily.notoSansMono,
                     ),
                   ),
                   Text(
@@ -95,8 +95,8 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
                     style: TextStyle(
                       color: fg,
                       fontSize: 50,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: FontFamily.jetBrainsMono,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontFamily.notoSansMono,
                       fontFamilyFallback: const [FontFamily.notoSansJP],
                     ),
                   ),

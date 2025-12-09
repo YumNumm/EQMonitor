@@ -74,7 +74,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                               color: fg,
                               fontSize: 100,
                               fontWeight: FontWeight.bold,
-                              fontFamily: FontFamily.jetBrainsMono,
+                              fontFamily: FontFamily.notoSansMono,
                             ),
                           ),
                           Text(
@@ -82,7 +82,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                             style: TextStyle(
                               color: fg,
                               fontSize: 80,
-                              fontFamily: FontFamily.jetBrainsMono,
+                              fontFamily: FontFamily.notoSansMono,
                               fontFamilyFallback: const [
                                 FontFamily.notoSansJP,
                               ],
@@ -128,8 +128,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontFamily.notoSansMono,
                       ),
                     )
                   else ...[
@@ -138,8 +138,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontFamily.notoSansMono,
                       ),
                     ),
                     if (showSuffix)
@@ -148,8 +148,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                         style: TextStyle(
                           color: fg,
                           fontSize: 50,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontFamily.notoSansMono,
                           fontFamilyFallback: const [FontFamily.notoSansJP],
                         ),
                       ),
