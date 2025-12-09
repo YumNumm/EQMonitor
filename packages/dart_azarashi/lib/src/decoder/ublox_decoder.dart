@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import '../model/exception.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
 
 /// UBXプロトコルのメッセージをデコードし、NMEA形式($QZQSM)に変換する
 ///
@@ -30,7 +30,7 @@ class UbloxDecoder {
   static const gnssIdQzss = 0x05;
 
   /// PRNから衛星IDへの変換テーブル
-  static const Map<int, String> _satelliteIdMap = {
+  static const _satelliteIdMap = <int, String>{
     183: '55', // QZS01
     184: '56', // QZS02
     185: '57', // QZS04
@@ -127,7 +127,7 @@ class UbloxDecoder {
     hexData.write(((data[31] & 0xC0) >> 4).toRadixString(16));
 
     // $QZQSMセンテンスを生成
-    final sentence = '\$QZQSM,$satelliteId,${hexData.toString()}';
+    final sentence = '\$QZQSM,$satelliteId,$hexData';
 
     // チェックサム計算
     var checksum = 0;

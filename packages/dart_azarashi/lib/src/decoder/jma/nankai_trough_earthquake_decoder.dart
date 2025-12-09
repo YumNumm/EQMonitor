@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
-import '../../definition/information_serial_code.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/information_serial_code.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Nankai Trough Earthquake Decoder.
 ///

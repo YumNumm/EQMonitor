@@ -1,10 +1,10 @@
-import '../../definition/weather_forecast_region.dart';
-import '../../definition/weather_related_disaster_sub_category.dart';
-import '../../definition/weather_warning_state.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/weather_forecast_region.dart';
+import 'package:dart_azarashi/src/definition/weather_related_disaster_sub_category.dart';
+import 'package:dart_azarashi/src/definition/weather_warning_state.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Weather Decoder.
 ///

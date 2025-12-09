@@ -1,6 +1,6 @@
-import '../../model/report/qzss_dc_report.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Hypocenter Decoder.
 class HypocenterDecoder {
@@ -21,16 +21,20 @@ class HypocenterDecoder {
     final (depth, depthRaw) = JmaCommonDecoder.extractDepth(message, 96);
 
     // Extract magnitude (bits 105-111, 7 bits)
-    final (magnitude, magnitudeRaw) =
-        JmaCommonDecoder.extractMagnitude(message, 105);
+    final (magnitude, magnitudeRaw) = JmaCommonDecoder.extractMagnitude(
+      message,
+      105,
+    );
 
     // Extract seismic epicenter (bits 112-121, 10 bits)
-    final (epicenter, epicenterRaw) =
-        JmaCommonDecoder.extractSeismicEpicenter(message, 112, sentence);
+    final (epicenter, epicenterRaw) = JmaCommonDecoder.extractSeismicEpicenter(
+      message,
+      112,
+      sentence,
+    );
 
     // Extract coordinates of hypocenter (bits 122-162, 41 bits)
-    final coordinates =
-        JmaCommonDecoder.extractLatLon(message, 122, sentence);
+    final coordinates = JmaCommonDecoder.extractLatLon(message, 122, sentence);
 
     return QzssDcReport.hypocenter(
       sentence: params.sentence,
@@ -53,8 +57,9 @@ class HypocenterDecoder {
       informationType: params.informationType.nameJa,
       informationTypeEn: params.informationType.nameEn,
       informationTypeNo: params.informationType.code,
-      notificationsOnDisasterPrevention:
-          notifications.map((e) => e.message).toList(),
+      notificationsOnDisasterPrevention: notifications
+          .map((e) => e.message)
+          .toList(),
       notificationsOnDisasterPreventionRaw: notificationCodes,
       occurrenceTimeOfEarthquake: occurrenceTime,
       depthOfHypocenter: depth,
@@ -67,4 +72,3 @@ class HypocenterDecoder {
     );
   }
 }
-

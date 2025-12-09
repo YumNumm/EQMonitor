@@ -64,9 +64,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -101,6 +98,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required int seismicIntensityUpperLimitRaw,
     required List<String> eewForecastRegions,
     required List<int> eewForecastRegionsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportEarthquakeEarlyWarning;
 
   /// Hypocenter Report.
@@ -108,9 +108,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -135,6 +132,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String seismicEpicenter,
     required int seismicEpicenterRaw,
     required HypocenterCoordinates coordinatesOfHypocenter,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportHypocenter;
 
   /// Seismic Intensity Report.
@@ -142,9 +142,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -164,6 +161,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required List<int> seismicIntensitiesRaw,
     required List<String> prefectures,
     required List<int> prefecturesRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportSeismicIntensity;
 
   /// Tsunami Report.
@@ -171,9 +171,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -197,6 +194,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required List<int> tsunamiHeightsRaw,
     required List<String> tsunamiForecastRegions,
     required List<int> tsunamiForecastRegionsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportTsunami;
 
   /// Nankai Trough Earthquake Report.
@@ -204,9 +204,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -226,6 +223,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     @Uint8ListConverter() required Uint8List textInformation,
     required int pageNumber,
     required int totalPage,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportNankaiTroughEarthquake;
 
   /// Northwest Pacific Tsunami Report.
@@ -233,9 +233,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -257,6 +254,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required List<int> tsunamiHeightsRaw,
     required List<String> coastalRegionsEn,
     required List<int> coastalRegionsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportNorthwestPacificTsunami;
 
   /// Flood Report.
@@ -264,9 +264,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -285,6 +282,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required List<int> floodWarningLevelsRaw,
     required List<String> floodForecastRegions,
     required List<int> floodForecastRegionsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportFlood;
 
   /// Marine Report.
@@ -292,9 +292,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -313,6 +310,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required List<int> marineWarningCodesRaw,
     required List<String> marineForecastRegions,
     required List<int> marineForecastRegionsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportMarine;
 
   /// Weather Report.
@@ -320,9 +320,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -343,6 +340,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required List<int> weatherRelatedDisasterSubCategoriesRaw,
     required List<String> weatherForecastRegions,
     required List<int> weatherForecastRegionsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportWeather;
 
   /// Volcano Report.
@@ -350,9 +350,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -375,6 +372,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required int volcanoNameRaw,
     required List<String> localGovernments,
     required List<int> localGovernmentsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportVolcano;
 
   /// Ash Fall Report.
@@ -382,9 +382,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -409,6 +406,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required List<int> ashFallWarningCodesRaw,
     required List<String> localGovernments,
     required List<int> localGovernmentsRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportAshFall;
 
   /// Typhoon Report.
@@ -416,9 +416,6 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
@@ -450,6 +447,9 @@ sealed class QzssDcReport with _$QzssDcReport {
     required int maximumWindSpeedRaw,
     required String maximumGustWindSpeed,
     required int maximumGustWindSpeedRaw,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportTyphoon;
 
   /// DCX Null Message.
@@ -457,13 +457,13 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
     required String dcxMessageType,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportDcxNull;
 
   /// DCX Outside Japan Message.
@@ -471,13 +471,13 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
     required String dcxMessageType,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportDcxOutsideJapan;
 
   /// DCX L-Alert Message.
@@ -485,13 +485,13 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
     required String dcxMessageType,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportDcxLAlert;
 
   /// DCX J-Alert Message.
@@ -499,13 +499,13 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
     required String dcxMessageType,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportDcxJAlert;
 
   /// DCX Municipality-Transmitted Information Message.
@@ -513,13 +513,13 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
     required String dcxMessageType,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportDcxMTInfo;
 
   /// DCX Unknown Message.
@@ -527,13 +527,13 @@ sealed class QzssDcReport with _$QzssDcReport {
     required String sentence,
     @Uint8ListConverter() required Uint8List message,
     required String nmea,
-    String? messageHeader,
-    int? satelliteId,
-    int? satellitePrn,
     @Uint8ListConverter() required Uint8List raw,
     required String preamble,
     required String messageType,
     required String dcxMessageType,
+    String? messageHeader,
+    int? satelliteId,
+    int? satellitePrn,
   }) = QzssDcReportDcxUnknown;
 
   factory QzssDcReport.fromJson(Map<String, dynamic> json) =>

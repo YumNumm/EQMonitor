@@ -346,7 +346,8 @@ enum JmaEpicenterAndHypocenter {
   arcticNearby(978, '北極付近'),
   antarcticNearby(979, '南極付近'),
   distantPlace(999, '遠地'),
-  other(1000, 'その他の震央地名');
+  other(1000, 'その他の震央地名')
+  ;
 
   const JmaEpicenterAndHypocenter(this.code, this.name);
 
@@ -356,4 +357,3 @@ enum JmaEpicenterAndHypocenter {
   static JmaEpicenterAndHypocenter fromCode(int code) =>
       values.firstWhere((e) => e.code == code);
 }
-

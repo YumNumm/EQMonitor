@@ -11,14 +11,16 @@ part of 'periodic_timer.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(PeriodicTimer)
+@ProviderFor(periodicTimer)
 const periodicTimerProvider = PeriodicTimerFamily._();
 
 final class PeriodicTimerProvider
-    extends $StreamNotifierProvider<PeriodicTimer, void> {
+    extends
+        $FunctionalProvider<AsyncValue<DateTime>, DateTime, Stream<DateTime>>
+    with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
   const PeriodicTimerProvider._({
     required PeriodicTimerFamily super.from,
-    required String super.argument,
+    required Duration super.argument,
   }) : super(
          retry: null,
          name: r'periodicTimerProvider',
@@ -39,7 +41,14 @@ final class PeriodicTimerProvider
 
   @$internal
   @override
-  PeriodicTimer create() => PeriodicTimer();
+  $StreamProviderElement<DateTime> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<DateTime> create(Ref ref) {
+    final argument = this.argument as Duration;
+    return periodicTimer(ref, argument);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -52,17 +61,10 @@ final class PeriodicTimerProvider
   }
 }
 
-String _$periodicTimerHash() => r'0a25841a4523504a834b5503d1ed90863da606a1';
+String _$periodicTimerHash() => r'ed4a0ae2de687786e5fb1114a76320dee93dca54';
 
 final class PeriodicTimerFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          PeriodicTimer,
-          AsyncValue<void>,
-          void,
-          Stream<void>,
-          String
-        > {
+    with $FunctionalFamilyOverride<Stream<DateTime>, Duration> {
   const PeriodicTimerFamily._()
     : super(
         retry: null,
@@ -72,31 +74,9 @@ final class PeriodicTimerFamily extends $Family
         isAutoDispose: true,
       );
 
-  PeriodicTimerProvider call(String key) =>
-      PeriodicTimerProvider._(argument: key, from: this);
+  PeriodicTimerProvider call(Duration interval) =>
+      PeriodicTimerProvider._(argument: interval, from: this);
 
   @override
   String toString() => r'periodicTimerProvider';
-}
-
-abstract class _$PeriodicTimer extends $StreamNotifier<void> {
-  late final _$args = ref.$arg as String;
-  String get key => _$args;
-
-  Stream<void> build(String key);
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<void>, void>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<void>, void>,
-              AsyncValue<void>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, null);
-  }
 }

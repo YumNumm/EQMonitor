@@ -1,10 +1,10 @@
-import '../../definition/eew_forecast_region.dart';
-import '../../definition/seismic_intensity.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_common_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_common_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/eew_forecast_region.dart';
+import 'package:dart_azarashi/src/definition/seismic_intensity.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Earthquake Early Warning Decoder.
 class EarthquakeEarlyWarningDecoder {
@@ -16,10 +16,10 @@ class EarthquakeEarlyWarningDecoder {
 
     // Extract long period ground motion lower limit (bits 47-49, 3 bits)
     final lgllCode = QzssDcrDecoder.extractField(message, 47, 3);
-    final longPeriodGroundMotionLowerLimit =
-        JmaLongPeriodGroundMotionLowerLimit.values
-            .where((e) => e.code == lgllCode)
-            .firstOrNull;
+    final longPeriodGroundMotionLowerLimit = JmaLongPeriodGroundMotionLowerLimit
+        .values
+        .where((e) => e.code == lgllCode)
+        .firstOrNull;
     if (longPeriodGroundMotionLowerLimit == null) {
       throw QzssDcrDecoderException(
         'Undefined JMA Long-period Ground Motion Lower Limit: $lgllCode',
@@ -29,10 +29,10 @@ class EarthquakeEarlyWarningDecoder {
 
     // Extract long period ground motion upper limit (bits 50-52, 3 bits)
     final lgulCode = QzssDcrDecoder.extractField(message, 50, 3);
-    final longPeriodGroundMotionUpperLimit =
-        JmaLongPeriodGroundMotionUpperLimit.values
-            .where((e) => e.code == lgulCode)
-            .firstOrNull;
+    final longPeriodGroundMotionUpperLimit = JmaLongPeriodGroundMotionUpperLimit
+        .values
+        .where((e) => e.code == lgulCode)
+        .firstOrNull;
     if (longPeriodGroundMotionUpperLimit == null) {
       throw QzssDcrDecoderException(
         'Undefined JMA Long-period Ground Motion Upper Limit: $lgulCode',
@@ -51,12 +51,17 @@ class EarthquakeEarlyWarningDecoder {
     final (depth, depthRaw) = JmaCommonDecoder.extractDepth(message, 96);
 
     // Extract magnitude (bits 105-111, 7 bits)
-    final (magnitude, magnitudeRaw) =
-        JmaCommonDecoder.extractMagnitude(message, 105);
+    final (magnitude, magnitudeRaw) = JmaCommonDecoder.extractMagnitude(
+      message,
+      105,
+    );
 
     // Extract seismic epicenter (bits 112-121, 10 bits)
-    final (epicenter, epicenterRaw) =
-        JmaCommonDecoder.extractSeismicEpicenter(message, 112, sentence);
+    final (epicenter, epicenterRaw) = JmaCommonDecoder.extractSeismicEpicenter(
+      message,
+      112,
+      sentence,
+    );
 
     // Check if assumptive
     final assumptive = depthRaw == 10 && magnitudeRaw == 10;
@@ -125,8 +130,9 @@ class EarthquakeEarlyWarningDecoder {
       longPeriodGroundMotionLowerLimitRaw: lgllCode,
       longPeriodGroundMotionUpperLimit: longPeriodGroundMotionUpperLimit.name,
       longPeriodGroundMotionUpperLimitRaw: lgulCode,
-      notificationsOnDisasterPrevention:
-          notifications.map((e) => e.message).toList(),
+      notificationsOnDisasterPrevention: notifications
+          .map((e) => e.message)
+          .toList(),
       notificationsOnDisasterPreventionRaw: notificationCodes,
       occurrenceTimeOfEarthquake: occurrenceTime,
       depthOfHypocenter: depth,
@@ -145,4 +151,3 @@ class EarthquakeEarlyWarningDecoder {
     );
   }
 }
-

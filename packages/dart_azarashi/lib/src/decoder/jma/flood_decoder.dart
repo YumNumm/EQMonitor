@@ -1,9 +1,9 @@
-import '../../definition/flood_forecast_region.dart';
-import '../../definition/flood_warning_level.dart';
-import '../../model/exception.dart';
-import '../../model/report/qzss_dc_report.dart';
-import '../qzss_dcr_decoder.dart';
-import 'jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/jma/jma_decoder.dart';
+import 'package:dart_azarashi/src/decoder/qzss_dcr_decoder.dart';
+import 'package:dart_azarashi/src/definition/flood_forecast_region.dart';
+import 'package:dart_azarashi/src/definition/flood_warning_level.dart';
+import 'package:dart_azarashi/src/model/exception.dart';
+import 'package:dart_azarashi/src/model/report/qzss_dc_report.dart';
 
 /// Flood Decoder.
 ///

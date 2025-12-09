@@ -18,7 +18,7 @@ class JmaLocalGovernment {
 
   /// Map of local government codes to names.
   /// This is a partial list focusing on major cities and prefectural "other" entries.
-  static const Map<int, String> _localGovernments = {
+  static const _localGovernments = <int, String>{
     // Hokkaido
     110000: '北海道札幌市',
     120200: '北海道函館市',

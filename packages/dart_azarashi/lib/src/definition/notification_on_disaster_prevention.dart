@@ -19,7 +19,10 @@ enum JmaNotificationOnDisasterPrevention {
   tsunamiHighTideCaution(110, '津波と満潮が重なると、津波はより高くなりますので十分な注意が必要です。'),
   tsunamiHigherPossible(111, '場所によっては、観測した津波の高さよりさらに大きな津波が到達しているおそれがあります。'),
   tsunamiMayGetHigher(112, '今後、津波の高さは更に高くなることも考えられます。'),
-  tsunamiAlreadyArrived(113, '沖合での観測値をもとに津波が推定されている沿岸では、早いところでは、既に津波が到達していると推定されます。'),
+  tsunamiAlreadyArrived(
+    113,
+    '沖合での観測値をもとに津波が推定されている沿岸では、早いところでは、既に津波が到達していると推定されます。',
+  ),
   tsunamiMaxWaveDelay(114, '津波による潮位変化が観測されてから最大波が観測されるまでに数時間以上かかることがあります。'),
   tsunamiHigherAtCoast(115, '沖合での観測値であり、沿岸では津波はさらに高くなります。'),
   majorTsunamiWarning(
@@ -57,7 +60,10 @@ enum JmaNotificationOnDisasterPrevention {
     213,
     '今後もしばらく海面変動が続くと思われますので、海水浴や磯釣り等を行う際は注意してください。',
   ),
-  seaLevelChangeCautionFishing2(214, '今後もしばらく海面変動が続くと思われますので、磯釣り等を行う際は注意してください。'),
+  seaLevelChangeCautionFishing2(
+    214,
+    '今後もしばらく海面変動が続くと思われますので、磯釣り等を行う際は注意してください。',
+  ),
   noTsunamiConcern(215, 'この地震による津波の心配はありません。'),
   tsunamiPossibleSeafloor(216, '震源が海底の場合、津波が発生するおそれがあります。'),
   attentionFutureInfo(217, '今後の情報に注意してください。'),
@@ -67,8 +73,14 @@ enum JmaNotificationOnDisasterPrevention {
   indianOceanWideTsunamiPossible(224, 'インド洋の広域に津波発生の可能性があります。'),
   indianOceanTsunamiPossible(225, 'インド洋で津波発生の可能性があります。'),
   nearSourceTsunamiPossible(226, '震源の近傍で津波発生の可能性があります。'),
-  nearSourceSmallTsunamiPossible(227, '震源の近傍で小さな津波発生の可能性がありますが、被害をもたらす津波の心配はありません。'),
-  shallowSeaEarthquakeTsunami(228, '一般的に、この規模の地震が海域の浅い領域で発生すると、津波が発生することがあります。'),
+  nearSourceSmallTsunamiPossible(
+    227,
+    '震源の近傍で小さな津波発生の可能性がありますが、被害をもたらす津波の心配はありません。',
+  ),
+  shallowSeaEarthquakeTsunami(
+    228,
+    '一般的に、この規模の地震が海域の浅い領域で発生すると、津波が発生することがあります。',
+  ),
   japanTsunamiInvestigating(229, '日本への津波の有無については現在調査中です。'),
   noTsunamiImpactJapan(230, 'この地震による日本への津波の影響はありません。'),
   eewIssued(241, 'この地震について、緊急地震速報を発表しています。'),
@@ -77,7 +89,8 @@ enum JmaNotificationOnDisasterPrevention {
   eewIssuedNoIntensity(244, 'この地震について、緊急地震速報を発表しています。この地震で震度1以上は観測されていません。'),
   eewNoStrongShaking(245, 'この地震で緊急地震速報を発表しましたが、強い揺れは観測されませんでした。'),
   epicenterCorrection(256, '震源要素を訂正します。'),
-  otherDisasterPrevention(500, 'その他の防災上の留意事項');
+  otherDisasterPrevention(500, 'その他の防災上の留意事項')
+  ;
 
   const JmaNotificationOnDisasterPrevention(this.code, this.message);
 
@@ -87,4 +100,3 @@ enum JmaNotificationOnDisasterPrevention {
   static JmaNotificationOnDisasterPrevention fromCode(int code) =>
       values.firstWhere((e) => e.code == code);
 }
-

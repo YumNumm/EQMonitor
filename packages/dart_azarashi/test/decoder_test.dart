@@ -2,7 +2,7 @@ import 'package:dart_azarashi/dart_azarashi.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final azarashi = DartAzarashi();
+  const azarashi = DartAzarashi();
 
   group('scenario1 - 緊急地震速報、震度、震源、津波', () {
     test('緊急地震速報', () {

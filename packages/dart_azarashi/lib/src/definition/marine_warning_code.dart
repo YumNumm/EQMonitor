@@ -10,7 +10,8 @@ enum JmaMarineWarningCode {
   galeWarning(21, '海上強風警報'),
   stormWarning(22, '海上暴風警報'),
   typhoonWarning(23, '海上台風警報'),
-  other(31, 'その他の警報等情報要素 海上警報');
+  other(31, 'その他の警報等情報要素 海上警報')
+  ;
 
   const JmaMarineWarningCode(this.code, this.nameJa);
 

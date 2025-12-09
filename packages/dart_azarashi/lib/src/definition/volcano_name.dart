@@ -5,7 +5,7 @@ class JmaVolcanoName {
   const JmaVolcanoName._();
 
   /// Map of volcano codes to names.
-  static const Map<int, String> volcanoes = {
+  static const volcanoes = <int, String>{
     101: '知床硫黄山',
     102: '羅臼岳',
     103: '摩周',
