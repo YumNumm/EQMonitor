@@ -1,9 +1,11 @@
-import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -20,20 +22,19 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final intensity = item.intensity;
+    final jmaParameter = ref.watch(jmaParameterProvider).value;
 
     if (intensity == null) {
       return const SizedBox.shrink();
     }
 
-    // maxIntensity が null でないものだけを抽出してグループ化
-    final prefecturesWithIntensity = intensity.prefectures
-        .where((p) => p.maxIntensity != null)
-        .toList();
-
-    final groupedByIntensity = prefecturesWithIntensity
-        .groupListsBy((p) => p.maxIntensity!)
-        .entries
-        .sorted((a, b) => b.key.index.compareTo(a.key.index));
+    // EarthquakeParameterがロードされていればツリー構造に変換
+    final intensityTree = jmaParameter != null
+        ? convertToIntensityTree(
+            intensity: intensity,
+            parameter: jmaParameter.earthquake,
+          )
+        : null;
 
     return BorderedContainer(
       elevation: 1,
@@ -41,69 +42,58 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
       child: Column(
         children: [
           const SheetHeader(title: '各地の震度'),
-          for (final kv in groupedByIntensity) ...[
-            ListTile(
-              visualDensity: VisualDensity.compact,
-              titleAlignment: ListTileTitleAlignment.titleHeight,
-              leading: IntensityValueIcon(
-                intensity: kv.key,
-                type: IntensityIconType.filled,
-                size: 40,
+          if (intensityTree != null)
+            for (final entry in intensityTree.byIntensity.entries) ...[
+              ListTile(
+                visualDensity: VisualDensity.compact,
+                titleAlignment: ListTileTitleAlignment.titleHeight,
+                leading: IntensityValueIcon(
+                  intensity: entry.key,
+                  type: IntensityIconType.filled,
+                  size: 40,
+                ),
+                title:
+                    Text('震度${entry.key.value}', style: textTheme.titleMedium),
+                subtitle: Text(
+                  entry.value.map((e) => e.region.name).join(', '),
+                  style: const TextStyle(fontFamily: FontFamily.notoSansJP),
+                ),
+                onTap: () async => _RegionModalBottomSheet.show(
+                  context: context,
+                  intensityValue: entry.key,
+                  regions: entry.value,
+                ),
+                trailing: const Icon(Icons.chevron_right),
               ),
-              title: Text('震度${kv.key.value}', style: textTheme.titleMedium),
-              subtitle: Text(
-                kv.value.map((e) => e.value.name).join(', '),
-                style: const TextStyle(fontFamily: FontFamily.notoSansJP),
-              ),
-              onTap: intensity.cities != null
-                  ? () async => _PrefectureModalBottomSheet.show(
-                        context: context,
-                        intensityValue: kv.key,
-                        prefectures: kv.value,
-                        cities: intensity.cities,
-                        stations: intensity.stations,
-                      )
-                  : null,
-              trailing:
-                  intensity.cities != null ? const Icon(Icons.chevron_right) : null,
-            ),
-          ],
+            ],
         ],
       ),
     );
   }
 }
 
-class _PrefectureModalBottomSheet extends StatelessWidget {
-  const _PrefectureModalBottomSheet({
+class _RegionModalBottomSheet extends StatelessWidget {
+  const _RegionModalBottomSheet({
     required this.intensityValue,
-    required this.prefectures,
-    required this.cities,
-    required this.stations,
+    required this.regions,
   });
 
   static Future<void> show({
     required BuildContext context,
     required IntensityValue intensityValue,
-    required List<IntensityItem> prefectures,
-    required List<IntensityItem>? cities,
-    required List<IntensityStationItem>? stations,
+    required List<RegionIntensityNode> regions,
   }) =>
       Navigator.of(context).push(
         SheetRoute(
-          builder: (context) => _PrefectureModalBottomSheet(
+          builder: (context) => _RegionModalBottomSheet(
             intensityValue: intensityValue,
-            prefectures: prefectures,
-            cities: cities,
-            stations: stations,
+            regions: regions,
           ),
         ),
       );
 
   final IntensityValue intensityValue;
-  final List<IntensityItem> prefectures;
-  final List<IntensityItem>? cities;
-  final List<IntensityStationItem>? stations;
+  final List<RegionIntensityNode> regions;
 
   @override
   Widget build(BuildContext context) {
@@ -111,79 +101,52 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
       appBar: AppBar(title: Text('震度${intensityValue.value}の地域')),
       body: ListView(
         children: [
-          for (final prefecture in prefectures)
-            _PrefectureListTile(
-              prefecture: prefecture,
-              cities: cities,
-              stations: stations,
-            ),
+          for (final region in regions)
+            _RegionListTile(region: region),
         ],
       ),
     );
   }
 }
 
-class _PrefectureListTile extends HookWidget {
-  const _PrefectureListTile({
-    required this.prefecture,
-    required this.cities,
-    required this.stations,
-  });
+class _RegionListTile extends HookWidget {
+  const _RegionListTile({required this.region});
 
-  final IntensityItem prefecture;
-  final List<IntensityItem>? cities;
-  final List<IntensityStationItem>? stations;
+  final RegionIntensityNode region;
 
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
-    final prefectureCode = prefecture.value.code;
-
-    // この都道府県に属する市区町村
-    final relatedCities = cities
-            ?.where((c) => c.value.code.startsWith(prefectureCode))
-            .toList() ??
-        [];
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     final shrinked = ListTile(
       title: Text(
-        prefecture.value.name,
+        region.region.name,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      trailing: relatedCities.isNotEmpty ? const Icon(Icons.expand_more) : null,
-      onTap: relatedCities.isNotEmpty ? () => isExpanded.value = true : null,
+      trailing:
+          region.cities.isNotEmpty ? const Icon(Icons.expand_more) : null,
+      onTap: region.cities.isNotEmpty ? () => isExpanded.value = true : null,
     );
 
-    final expanded = ListTile(
-      title: Text(
-        prefecture.value.name,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (final city in relatedCities)
-            Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: '${city.value.name} ',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(
-                    text: '震度${city.maxIntensity?.value ?? '不明'}',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-      onTap: () => isExpanded.value = false,
-      trailing: const Icon(Icons.expand_less),
+    final expanded = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          title: Text(
+            region.region.name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: const Icon(Icons.expand_less),
+          onTap: () => isExpanded.value = false,
+        ),
+        for (final city in region.cities)
+          _CityListTile(city: city, colorScheme: colorScheme),
+      ],
     );
 
-    if (relatedCities.isEmpty) {
+    if (region.cities.isEmpty) {
       return shrinked;
     }
 
@@ -193,6 +156,101 @@ class _PrefectureListTile extends HookWidget {
       crossFadeState:
           isExpanded.value ? CrossFadeState.showSecond : CrossFadeState.showFirst,
       duration: const Duration(milliseconds: 300),
+    );
+  }
+}
+
+class _CityListTile extends HookWidget {
+  const _CityListTile({
+    required this.city,
+    required this.colorScheme,
+  });
+
+  final CityIntensityNode city;
+  final ColorScheme colorScheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final isExpanded = useState(false);
+
+    final cityHeader = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        children: [
+          if (city.maxIntensity != null)
+            IntensityValueIcon(
+              intensity: city.maxIntensity!,
+              type: IntensityIconType.filled,
+              size: 24,
+            ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              city.city.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          if (city.stations.isNotEmpty)
+            IconButton(
+              icon: Icon(
+                isExpanded.value ? Icons.expand_less : Icons.expand_more,
+              ),
+              onPressed: () => isExpanded.value = !isExpanded.value,
+              visualDensity: VisualDensity.compact,
+            ),
+        ],
+      ),
+    );
+
+    if (city.stations.isEmpty || !isExpanded.value) {
+      return InkWell(
+        onTap: city.stations.isNotEmpty
+            ? () => isExpanded.value = !isExpanded.value
+            : null,
+        child: cityHeader,
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () => isExpanded.value = !isExpanded.value,
+          child: cityHeader,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 48, right: 16, bottom: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final station in city.stations)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    children: [
+                      if (station.intensity?.maxIntensity != null)
+                        IntensityValueIcon(
+                          intensity: station.intensity!.maxIntensity!,
+                          type: IntensityIconType.filled,
+                          size: 18,
+                        ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          station.station.name,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
