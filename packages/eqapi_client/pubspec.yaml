@@ -11,9 +11,7 @@ resolution: workspace
 dependencies:
   dio: ^5.3.4
   eqapi_types:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/eqapi_types
+    path: ../eqapi_types
   retrofit: ^4.0.3
 
 dev_dependencies:

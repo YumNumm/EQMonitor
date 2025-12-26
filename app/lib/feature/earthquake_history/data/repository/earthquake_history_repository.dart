@@ -14,26 +14,33 @@ class EarthquakeHistoryRepository {
 
   final EqApi _api;
 
-  Future<EqApiV1Response<EarthquakeV1>> fetchEarthquakeLists({
-    int limit = 25,
-    int offset = 0,
+  Future<EarthquakeListResponse> fetchEarthquakeList({
+    int? limit,
+    String? cursor,
     double? magnitudeLte,
     double? magnitudeGte,
-    double? depthLte,
-    double? depthGte,
-    JmaIntensity? intensityLte,
-    JmaIntensity? intensityGte,
+    int? depthLte,
+    int? depthGte,
+    String? intensityLte,
+    String? intensityGte,
+    List<String>? statuses,
   }) async {
-    final result = await _api.v1.getEarthquakes(
+    return _api.earthquake.getList(
       limit: limit,
-      offset: offset,
+      cursor: cursor,
       magnitudeLte: magnitudeLte,
       magnitudeGte: magnitudeGte,
       depthLte: depthLte,
       depthGte: depthGte,
-      intensityLte: intensityLte?.type,
-      intensityGte: intensityGte?.type,
+      intensityLte: intensityLte,
+      intensityGte: intensityGte,
+      statuses: statuses,
     );
-    return (count: result.response.count, items: result.data);
+  }
+
+  Future<EarthquakeDetailResponse> fetchEarthquakeDetail({
+    required String eventId,
+  }) async {
+    return _api.earthquake.getDetail(eventId: eventId);
   }
 }

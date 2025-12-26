@@ -15,7 +15,7 @@ part of 'eew_by_event_id.dart';
 const eewsByEventIdProvider = EewsByEventIdFamily._();
 
 final class EewsByEventIdProvider
-    extends $AsyncNotifierProvider<EewsByEventId, List<EewV1>> {
+    extends $AsyncNotifierProvider<EewsByEventId, List<EewItemWithRelations>> {
   const EewsByEventIdProvider._({
     required EewsByEventIdFamily super.from,
     required String super.argument,
@@ -52,15 +52,15 @@ final class EewsByEventIdProvider
   }
 }
 
-String _$eewsByEventIdHash() => r'cd83c02b16e6fd89ac1f52581f12210d0d41f2d3';
+String _$eewsByEventIdHash() => r'87262186659c31032867d38d565f3f6ecd4314b5';
 
 final class EewsByEventIdFamily extends $Family
     with
         $ClassFamilyOverride<
           EewsByEventId,
-          AsyncValue<List<EewV1>>,
-          List<EewV1>,
-          FutureOr<List<EewV1>>,
+          AsyncValue<List<EewItemWithRelations>>,
+          List<EewItemWithRelations>,
+          FutureOr<List<EewItemWithRelations>>,
           String
         > {
   const EewsByEventIdFamily._()
@@ -79,21 +79,30 @@ final class EewsByEventIdFamily extends $Family
   String toString() => r'eewsByEventIdProvider';
 }
 
-abstract class _$EewsByEventId extends $AsyncNotifier<List<EewV1>> {
+abstract class _$EewsByEventId
+    extends $AsyncNotifier<List<EewItemWithRelations>> {
   late final _$args = ref.$arg as String;
   String get eventId => _$args;
 
-  FutureOr<List<EewV1>> build(String eventId);
+  FutureOr<List<EewItemWithRelations>> build(String eventId);
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<List<EewV1>>, List<EewV1>>;
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<EewItemWithRelations>>,
+              List<EewItemWithRelations>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<EewV1>>, List<EewV1>>,
-              AsyncValue<List<EewV1>>,
+              AnyNotifier<
+                AsyncValue<List<EewItemWithRelations>>,
+                List<EewItemWithRelations>
+              >,
+              AsyncValue<List<EewItemWithRelations>>,
               Object?,
               Object?
             >;

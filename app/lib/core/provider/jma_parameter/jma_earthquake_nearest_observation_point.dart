@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:geobase/geobase.dart';
-import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

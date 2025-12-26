@@ -2,14 +2,11 @@ import 'dart:math';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
-import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
-import 'package:eqmonitor/feature/home/ui/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
-import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -64,14 +61,7 @@ class _SheetBody extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const EewWidgets(),
-            const _ShakeDetectionList(),
             const HomeEarthquakeHistorySheet(),
-            ListTile(
-              title: const Text('津波情報'),
-              leading: const Icon(Icons.tsunami),
-              onTap: () async =>
-                  const TsunamiHistoryRoute().push<void>(context),
-            ),
             ListTile(
               title: const Text('設定'),
               leading: const Icon(Icons.settings),
@@ -89,24 +79,6 @@ class _SheetBody extends ConsumerWidget {
   }
 }
 
-class _ShakeDetectionList extends ConsumerWidget {
-  const _ShakeDetectionList();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final shakeDetectionEvents = ref.watch(shakeDetectionProvider);
-
-    return switch (shakeDetectionEvents) {
-      AsyncData(:final value) when value.isNotEmpty => Column(
-        children: value
-            .map((event) => ShakeDetectionCard(event: event))
-            .toList(),
-      ),
-      _ => const SizedBox.shrink(),
-    };
-  }
-}
-
 class _DebugModal extends ConsumerWidget {
   const _DebugModal();
 
@@ -120,67 +92,53 @@ class _DebugModal extends ConsumerWidget {
           ListTile(
             title: const Text('ADD EEW SAMPLE'),
             onTap: () async {
-              final eew = EewV1(
-                id: Random().nextInt(1000000000),
-                eventId: Random().nextInt(1000000000),
-                type: 'type',
-                schemaType: 'schemaType',
-                status: 'TEST',
-                infoType: 'infoType',
-                reportTime: DateTime.now(),
+              final random = Random();
+              final eew = EewItemWithRelations(
+                eventId: DateTime.now().toString().replaceAll(
+                  RegExp('[^0-9]'),
+                  '',
+                ),
+                type: TelegramType.vxse45,
+                status: TelegramStatus.normal,
+                infoType: TelegramInfoType.publication,
+                serialNo: random.nextInt(100) + 1,
+                headline: 'XX沖で地震 XX地方では強い揺れに警戒',
                 isCanceled: false,
-                isLastInfo: Random().nextBool(),
-                isWarning: Random().nextBool(),
-                isPlum: Random().nextBool(),
-                accuracy: null,
-                serialNo: Random().nextInt(100),
-                latitude: 30 + Random().nextDouble() * 10,
-                longitude: 130 + Random().nextDouble() * 10,
-                arrivalTime: DateTime.now(),
-                hypoName: 'テスト震源地',
-                magnitude: (Random().nextDouble() * 100).toInt() / 10,
-                depth: Random().nextInt(15) * 10,
+                isLastInfo: random.nextBool(),
+                isWarning: random.nextBool(),
+                isPlum: random.nextBool(),
                 originTime: DateTime.now(),
-                forecastMaxIntensity:
-                    JmaForecastIntensity.values[Random().nextInt(
-                      JmaForecastIntensity.values.length,
-                    )],
-                regions: [
-                  for (final region
-                      in ref
-                          .read(jmaCodeTableProvider)
-                          .areaForecastLocalEew
-                          .items)
-                    () {
-                      if (Random().nextDouble() > 0.9) {
-                        return EstimatedIntensityRegion(
-                          code: region.code,
-                          name: region.name,
-                          arrivalTime: null,
-                          isPlum: false,
-                          isWarning: false,
-                          forecastMaxInt: ForecastMaxInt(
-                            from: JmaForecastIntensity.one,
-                            to:
-                                JmaForecastIntensityOver.values[Random()
-                                    .nextInt(
-                                      JmaForecastIntensityOver.values.length,
-                                    )],
-                          ),
-                          forecastMaxLgInt: ForecastMaxLgInt(
-                            from: JmaForecastLgIntensity.one,
-                            to:
-                                JmaForecastLgIntensityOver.values[Random()
-                                    .nextInt(
-                                      JmaForecastLgIntensityOver.values.length,
-                                    )],
-                          ),
-                        );
-                      }
-                    }(),
-                ].nonNulls.toList(),
+                arrivalTime: DateTime.now(),
+                hypocenter: EewHypocenter(
+                  value: const CodeName(code: '000', name: 'テスト震源地'),
+                  coordinates: Coordinate.latLng(
+                    latitude: 30 + random.nextDouble() * 10,
+                    longitude: 130 + random.nextDouble() * 10,
+                  ),
+                  magnitude: 5 + random.nextDouble() * 3,
+                  depth: 10 + random.nextInt(100),
+                ),
+                forecastIntensity: EewIntensity(
+                  maxIntensity: EewIntensityValue(
+                    value: IntensityValue.values[random.nextInt(IntensityValue.values.length)],
+                    isOver: random.nextBool(),
+                  ),
+                  maxLpgmIntensity: EewLpgmIntensityValue(
+                    value: LpgmIntensityValue.values[random.nextInt(LpgmIntensityValue.values.length)],
+                    isOver: random.nextBool(),
+                  ),
+                  regions: [],
+                ),
+                accuracy: EewAccuracy(
+                  depth: random.nextInt(4),
+                  epicenter: random.nextInt(4),
+                  magnitude: random.nextInt(4),
+                ),
+                editorialOffice: '気象庁',
+                reportTime: DateTime.now(),
+                intensityRegions: [],
+                warning: null,
               );
-              print(eew.regions);
               ref.read(eewProvider.notifier).upsert(eew);
             },
           ),

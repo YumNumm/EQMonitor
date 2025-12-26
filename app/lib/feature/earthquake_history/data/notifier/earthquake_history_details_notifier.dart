@@ -1,8 +1,5 @@
-import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/api/eq_api.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
+import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_details_notifier.g.dart';
@@ -11,29 +8,9 @@ part 'earthquake_history_details_notifier.g.dart';
 class EarthquakeHistoryDetailsNotifier
     extends _$EarthquakeHistoryDetailsNotifier {
   @override
-  Future<EarthquakeV1Extended> build(int eventId) async {
-    final api = ref.watch(eqApiProvider);
-    final response = await api.v1.getEarthquakeDetail(
-      eventId: eventId.toString(),
-    );
-    final data = response.data;
-
-    final extended = await ref.read(earthquakeV1ExtendedProvider(data).future);
-    ref.listen(
-      earthquakeHistoryProvider(const EarthquakeHistoryParameter()),
-      (_, next) {
-        if (next is AsyncData) {
-          final earthquakes = next.value;
-          final target = earthquakes?.$1.firstWhereOrNull(
-            (earthquake) => earthquake.eventId == eventId,
-          );
-          if (target != null && target.intensityRegions != null) {
-            state = AsyncData(target);
-          }
-        }
-      },
-    );
-
-    return extended;
+  Future<Earthquake> build(String eventId) async {
+    final repository = ref.watch(earthquakeHistoryRepositoryProvider);
+    final response = await repository.fetchEarthquakeDetail(eventId: eventId);
+    return response.earthquake;
   }
 }

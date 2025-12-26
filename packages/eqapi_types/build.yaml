@@ -9,3 +9,4 @@ targets:
         options:
           checked: true
           field_rename: snake
+          union_value_case: pascal

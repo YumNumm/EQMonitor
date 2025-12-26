@@ -1,8 +1,0 @@
-packages:
-  - api/*
-  - utils/appbundle-uploader
-
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - bufferutil
-  - esbuild
