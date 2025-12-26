@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EewTable extends StatelessWidget {
-  const EewTable({required this.eews, super.key});
+  const EewTable({
+    required this.eews,
+    this.selectedIndex,
+    this.onSelect,
+    super.key,
+  });
 
   final List<EewItemWithRelations> eews;
+  final int? selectedIndex;
+  final void Function(int index)? onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +27,7 @@ class EewTable extends StatelessWidget {
           child: DataTable(
             horizontalMargin: 0,
             columnSpacing: 10,
+            showCheckboxColumn: false,
             border: TableBorder.symmetric(
               borderRadius: BorderRadius.circular(8),
               outside: BorderSide(color: colorScheme.surface),
@@ -45,20 +53,25 @@ class EewTable extends StatelessWidget {
                   ),
                 )
                 .toList(),
-            rows: eews
-                .map(
-                  (eew) => DataRow(
-                    color: WidgetStateProperty.all(
-                      eew.isWarning ?? false
-                          ? colorScheme.errorContainer.withValues(alpha: 0.7)
-                          : colorScheme.surfaceContainer,
-                    ),
-                    cells: _EewTableColumn.values
-                        .map((c) => DataCell(Text(c.value(eew).value)))
-                        .toList(),
-                  ),
-                )
-                .toList(),
+            rows: List.generate(eews.length, (index) {
+              final eew = eews[index];
+              final isSelected = selectedIndex == index;
+              return DataRow(
+                selected: isSelected,
+                onSelectChanged: onSelect != null ? (_) => onSelect!(index) : null,
+                color: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return colorScheme.primaryContainer;
+                  }
+                  return eew.isWarning ?? false
+                      ? colorScheme.errorContainer.withValues(alpha: 0.7)
+                      : colorScheme.surfaceContainer;
+                }),
+                cells: _EewTableColumn.values
+                    .map((c) => DataCell(Text(c.value(eew).value)))
+                    .toList(),
+              );
+            }),
           ),
         ),
       ),

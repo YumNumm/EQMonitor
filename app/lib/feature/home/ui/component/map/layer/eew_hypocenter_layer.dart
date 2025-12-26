@@ -152,6 +152,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
                 },
               };
             }
+
             await (
               styleController.updateGeoJsonSource(
                 id: sourceId.normal,
