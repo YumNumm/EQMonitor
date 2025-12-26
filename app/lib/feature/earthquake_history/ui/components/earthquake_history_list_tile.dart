@@ -1,11 +1,10 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -67,14 +66,16 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         _,
         final IntensityValue maxInt,
         final List<String> regionNames,
-      ) when regionNames.length >= 2 =>
+      )
+          when regionNames.length >= 2 =>
         '最大震度${maxInt.value}を${regionNames.first}などで観測',
       (
         _,
         _,
         final IntensityValue maxInt,
         final List<String> regionNames,
-      ) when regionNames.isNotEmpty =>
+      )
+          when regionNames.isNotEmpty =>
         '最大震度${maxInt.value}を${regionNames.first}で観測',
       (_, _, final IntensityValue maxInt, _) => '最大震度${maxInt.value}を観測',
       _ => '',
@@ -100,7 +101,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final trailingText = _formatMagnitude(hypocenter?.magnitude);
 
     final chips = <Widget>[
-      if (maxLpgmIntensity != null && maxLpgmIntensity != LpgmIntensityValue.zero)
+      if (maxLpgmIntensity != null &&
+          maxLpgmIntensity != LpgmIntensityValue.zero)
         Chip(
           label: Text('最大長周期地震動階級 ${maxLpgmIntensity.value}'),
           padding: EdgeInsets.zero,

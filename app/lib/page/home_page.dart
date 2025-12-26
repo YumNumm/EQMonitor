@@ -120,24 +120,28 @@ class _DebugModal extends ConsumerWidget {
                 ),
                 forecastIntensity: EewIntensity(
                   maxIntensity: EewIntensityValue(
-                    value: IntensityValue.values[random.nextInt(IntensityValue.values.length)],
+                    value: IntensityValue
+                        .values[random.nextInt(IntensityValue.values.length)],
                     isOver: random.nextBool(),
                   ),
-                  maxLpgmIntensity: EewLpgmIntensityValue(
-                    value: LpgmIntensityValue.values[random.nextInt(LpgmIntensityValue.values.length)],
+                  maxLpgmIntensity: EewIntensityLpgmValue(
+                    value:
+                        LpgmIntensityValue.values[random.nextInt(
+                          LpgmIntensityValue.values.length,
+                        )],
                     isOver: random.nextBool(),
                   ),
                   regions: [],
                 ),
                 accuracy: EewAccuracy(
+                  epicenters: [random.nextInt(4)],
                   depth: random.nextInt(4),
-                  epicenter: random.nextInt(4),
-                  magnitude: random.nextInt(4),
+                  magnitudeCalculation: random.nextInt(4),
+                  numberOfMagnitudeCalculation: random.nextInt(10),
                 ),
                 editorialOffice: '気象庁',
                 reportTime: DateTime.now(),
                 intensityRegions: [],
-                warning: null,
               );
               ref.read(eewProvider.notifier).upsert(eew);
             },

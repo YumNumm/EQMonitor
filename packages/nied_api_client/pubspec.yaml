@@ -30,5 +30,5 @@ dev_dependencies:
   http_mock_adapter: ^0.6.1
   json_serializable: ^6.11.1
   mocktail: ^1.0.4
-  retrofit_generator: ^10.0.0
+  retrofit_generator: ^10.2.1
   test: ^1.26.2
