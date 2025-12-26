@@ -4,6 +4,7 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -103,6 +104,12 @@ class _SearchParameter extends StatelessWidget {
                       max: parameter.depthLte,
                       onChanged: (min, max) => onChanged(
                         parameter.updateDepth(min, max),
+                      ),
+                    ),
+                    StatusFilterChip(
+                      statuses: parameter.statuses,
+                      onChanged: (statuses) => onChanged(
+                        parameter.updateStatuses(statuses),
                       ),
                     ),
                   ]
