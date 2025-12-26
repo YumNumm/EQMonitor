@@ -98,16 +98,12 @@ class _EarthquakeInformationBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final epicenterName = hypocenter?.code?.name;
-    final epicenterDetailName = hypocenter?.detailedCode?.name;
+    final epicenterName = hypocenter?.value.name;
+    final epicenterDetailName = hypocenter?.detailed?.name;
 
-    final isMagnitudeAndDepthUnknown =
-        (hypocenter?.magnitude?.condition != null ||
-            hypocenter?.magnitude == null) &&
-        hypocenter?.depth == null;
-
+    final isMagnitudeAndDepthUnknown = _isMagnitudeUnknown() && _isDepthUnknown();
     final isEarthquakeNull =
-        isMagnitudeAndDepthUnknown && hypocenter?.code == null;
+        isMagnitudeAndDepthUnknown && hypocenter == null;
 
     final timeText = _getTimeText();
     final timeWidget =
@@ -128,8 +124,8 @@ class _EarthquakeInformationBody extends StatelessWidget {
             epicenterDetailName: epicenterDetailName,
           ),
         ] else ...[
-          _MagnitudeWidget(hypocenter: hypocenter),
-          _DepthWidget(hypocenter: hypocenter),
+          _MagnitudeWidget(magnitude: hypocenter?.magnitude),
+          _DepthWidget(depth: hypocenter?.depth),
           const SizedBox(width: double.infinity),
           _HypocenterWidget(
             epicenterName: epicenterName,
@@ -140,6 +136,16 @@ class _EarthquakeInformationBody extends StatelessWidget {
         ?timeWidget,
       ],
     );
+  }
+
+  bool _isMagnitudeUnknown() {
+    final magnitude = hypocenter?.magnitude;
+    return magnitude == null || magnitude is MagnitudeUnknown;
+  }
+
+  bool _isDepthUnknown() {
+    final depth = hypocenter?.depth;
+    return depth == null || depth is DepthUnknown;
   }
 
   String? _getTimeText() {
@@ -215,89 +221,56 @@ class _HypocenterWidget extends StatelessWidget {
 }
 
 class _MagnitudeWidget extends StatelessWidget {
-  const _MagnitudeWidget({required this.hypocenter});
+  const _MagnitudeWidget({required this.magnitude});
 
-  final Hypocenter? hypocenter;
+  final Magnitude? magnitude;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final magnitude = hypocenter?.magnitude;
+
+    final (text, showM) = switch (magnitude) {
+      MagnitudeNormal(:final value) => (value.toStringAsFixed(1), true),
+      MagnitudeUnknown() => ('不明', false),
+      MagnitudeOverM8() => ('8超', true),
+      null => ('調査中', false),
+    };
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        if (magnitude?.condition == null)
+        if (showM)
           Text('M', style: textTheme.labelStyle(textTheme.titleSmall!)),
         Flexible(
           child: Text(
-            _getMagnitudeText(),
-            style: _getMagnitudeStyle(textTheme),
+            text,
+            style: textTheme.valueStyle(
+              showM ? textTheme.headlineLarge! : textTheme.headlineMedium!,
+            ),
           ),
         ),
       ],
     );
   }
-
-  String _getMagnitudeText() {
-    final magnitude = hypocenter?.magnitude;
-    return switch ((magnitude?.condition, magnitude?.value)) {
-      (final String cond, _) => cond,
-      (_, final double value) => value.toStringAsFixed(1),
-      _ => '調査中',
-    };
-  }
-
-  TextStyle _getMagnitudeStyle(TextTheme textTheme) {
-    final baseStyle = hypocenter?.magnitude?.condition != null
-        ? textTheme.headlineMedium!
-        : textTheme.headlineLarge!;
-
-    return textTheme.valueStyle(baseStyle);
-  }
 }
 
 class _DepthWidget extends StatelessWidget {
-  const _DepthWidget({required this.hypocenter});
+  const _DepthWidget({required this.depth});
 
-  final Hypocenter? hypocenter;
+  final Depth? depth;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final depth = hypocenter?.depth;
 
-    if (depth == null) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          Text('深さ', style: textTheme.labelStyle(textTheme.titleSmall!)),
-          Text('調査中', style: textTheme.valueStyle(textTheme.headlineMedium!)),
-        ],
-      );
-    }
-
-    final depthText = switch (depth) {
-      '0km' || 'ごく浅い' => 'ごく浅い',
-      '700km以上' => '700km以上',
-      _ => depth,
+    final (text, isSpecial) = switch (depth) {
+      DepthShallow() => ('ごく浅い', true),
+      DepthNormal(:final value) => ('${value}km', false),
+      DepthOver700() => ('700km以上', true),
+      DepthUnknown() || null => ('調査中', true),
     };
-
-    if (depthText == 'ごく浅い' || depthText == '700km以上') {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          Text('深さ', style: textTheme.labelStyle(textTheme.titleSmall!)),
-          Text(depthText, style: textTheme.valueStyle(textTheme.headlineMedium!)),
-        ],
-      );
-    }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -305,7 +278,12 @@ class _DepthWidget extends StatelessWidget {
       textBaseline: TextBaseline.alphabetic,
       children: [
         Text('深さ', style: textTheme.labelStyle(textTheme.titleSmall!)),
-        Text(depth, style: textTheme.valueStyle(textTheme.headlineLarge!)),
+        Text(
+          text,
+          style: textTheme.valueStyle(
+            isSpecial ? textTheme.headlineMedium! : textTheme.headlineLarge!,
+          ),
+        ),
       ],
     );
   }

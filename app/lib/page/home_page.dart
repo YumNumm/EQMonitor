@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
-import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_widget.dart';
@@ -93,64 +92,41 @@ class _DebugModal extends ConsumerWidget {
           ListTile(
             title: const Text('ADD EEW SAMPLE'),
             onTap: () async {
-              final eew = EewV1(
-                id: Random().nextInt(1000000000),
-                eventId: Random().nextInt(1000000000),
-                type: 'type',
-                schemaType: 'schemaType',
-                status: 'TEST',
-                infoType: 'infoType',
-                reportTime: DateTime.now(),
+              final random = Random();
+              final eew = EewItemWithRelations(
+                eventId: DateTime.now().toString().replaceAll(RegExp('[^0-9]'), ''),
+                type: TelegramType.vxse45,
+                status: TelegramStatus.normal,
+                infoType: TelegramInfoType.publication,
+                serialNo: random.nextInt(100) + 1,
+                headline: 'XX沖で地震 XX地方では強い揺れに警戒',
                 isCanceled: false,
-                isLastInfo: Random().nextBool(),
-                isWarning: Random().nextBool(),
-                isPlum: Random().nextBool(),
-                accuracy: null,
-                serialNo: Random().nextInt(100),
-                latitude: 30 + Random().nextDouble() * 10,
-                longitude: 130 + Random().nextDouble() * 10,
-                arrivalTime: DateTime.now(),
-                hypoName: 'テスト震源地',
-                magnitude: (Random().nextDouble() * 100).toInt() / 10,
-                depth: Random().nextInt(15) * 10,
+                isLastInfo: random.nextBool(),
+                isWarning: random.nextBool(),
+                isPlum: random.nextBool(),
                 originTime: DateTime.now(),
-                forecastMaxIntensity:
-                    JmaForecastIntensity.values[Random().nextInt(
-                      JmaForecastIntensity.values.length,
-                    )],
-                regions: [
-                  for (final region
-                      in ref.read(jmaCodeTableProvider).areaEpicenter.items)
-                    () {
-                      if (Random().nextDouble() > 0.9) {
-                        return EstimatedIntensityRegion(
-                          code: region.code,
-                          name: region.name,
-                          arrivalTime: null,
-                          isPlum: false,
-                          isWarning: false,
-                          forecastMaxInt: ForecastMaxInt(
-                            from: JmaForecastIntensity.one,
-                            to:
-                                JmaForecastIntensityOver.values[Random()
-                                    .nextInt(
-                                      JmaForecastIntensityOver.values.length,
-                                    )],
-                          ),
-                          forecastMaxLgInt: ForecastMaxLgInt(
-                            from: JmaForecastLgIntensity.one,
-                            to:
-                                JmaForecastLgIntensityOver.values[Random()
-                                    .nextInt(
-                                      JmaForecastLgIntensityOver.values.length,
-                                    )],
-                          ),
-                        );
-                      }
-                    }(),
-                ].nonNulls.toList(),
+                arrivalTime: DateTime.now(),
+                hypocenter: EewHypocenter(
+                  value: const CodeName(code: '000', name: 'テスト震源地'),
+                  coordinates: Coordinate.latLng(
+                    latitude: 30 + random.nextDouble() * 10,
+                    longitude: 130 + random.nextDouble() * 10,
+                  ),
+                  magnitude: (random.nextDouble() * 60 + 20) / 10,
+                  depth: random.nextInt(15) * 10,
+                ),
+                forecastIntensity: EewIntensity(
+                  maxIntensity: EewIntensityValue(
+                    value: IntensityValue.values[random.nextInt(IntensityValue.values.length)],
+                    isOver: random.nextBool(),
+                  ),
+                  regions: [],
+                ),
+                reportTime: DateTime.now(),
+                intensityRegions: [],
               );
-              print(eew.regions);
+              // ignore: avoid_print
+              print(eew);
               ref.read(eewProvider.notifier).upsert(eew);
             },
           ),

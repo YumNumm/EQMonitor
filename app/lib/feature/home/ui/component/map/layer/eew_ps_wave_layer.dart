@@ -130,7 +130,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
   }
 
   (String, String) _calculateGeoJson(
-    List<EewV1> eews,
+    List<EewItemWithRelations> eews,
     DateTime now,
     TravelTimeDepthMap travelTimeMap,
   ) {
@@ -138,14 +138,23 @@ class EewPsWaveLayer extends HookConsumerWidget {
     final sWaveFeatures = <Map<String, dynamic>>[];
 
     for (final eew in eews) {
-      final lat = eew.latitude;
-      final lng = eew.longitude;
-      final depth = eew.depth;
-      final originTime = eew.originTime;
-
-      if (lat == null || lng == null || depth == null || originTime == null) {
+      final hypocenter = eew.hypocenter;
+      if (hypocenter == null) {
         continue;
       }
+      final coords = hypocenter.coordinates;
+      if (coords is! CoordinateLatLng) {
+        continue;
+      }
+      final depth = hypocenter.depth;
+      final originTime = eew.originTime;
+
+      if (depth == null || originTime == null) {
+        continue;
+      }
+
+      final lat = coords.latitude;
+      final lng = coords.longitude;
 
       final elapsed = now.difference(originTime).inMilliseconds / 1000;
       final travelTime = travelTimeMap.getTravelTime(depth, elapsed);

@@ -1,12 +1,10 @@
 // ignore_for_file: provider_dependencies
-import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -41,7 +39,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   List<CalculationPoint>? _calculationPoints;
 
   List<EstimatedIntensityPoint> calc(
-    List<EewV1> eews,
+    List<EewItemWithRelations> eews,
     EarthquakeParameter parameter,
   ) {
     // 計算前にPointを用意
@@ -51,23 +49,38 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     final calculator = ref.read(estimatedIntensityDataSourceProvider);
     final results = <List<double>>[];
 
-    final targetEews = eews.where(
-      (e) => !e.isCanceled && e.latitude != null && e.longitude != null,
-    );
+    final targetEews = eews.where((e) {
+      if (e.isCanceled) {
+        return false;
+      }
+      final coords = e.hypocenter?.coordinates;
+      return coords is CoordinateLatLng;
+    });
     if (targetEews.isEmpty) {
       return [];
     }
 
     for (final eew in targetEews) {
+      final hypocenter = eew.hypocenter!;
+      final coords = hypocenter.coordinates as CoordinateLatLng;
+      final magnitude = hypocenter.magnitude;
+      final depth = hypocenter.depth;
+      if (magnitude == null || depth == null) {
+        continue;
+      }
       final result = calculator
           .getEstimatedIntensity(
             points: _calculationPoints!.toList(),
-            jmaMagnitude: eew.magnitude!,
-            depth: eew.depth!,
-            hypocenter: (lat: eew.latitude!, lon: eew.longitude!),
+            jmaMagnitude: magnitude,
+            depth: depth,
+            hypocenter: (lat: coords.latitude, lon: coords.longitude),
           )
           .toList();
       results.add(result);
+    }
+
+    if (results.isEmpty) {
+      return [];
     }
 
     // resultsのIterableそれぞれは同じ長さであることを確認
@@ -94,7 +107,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   }
 
   Future<Iterable<EstimatedIntensityPoint>> calcInIsolate(
-    List<EewV1> eews,
+    List<EewItemWithRelations> eews,
     EarthquakeParameter parameter,
   ) async =>
       // TODO(YumNumm): 並列計算
@@ -151,11 +164,6 @@ Stream<Map<String, double>> estimatedIntensityCity(Ref ref) async* {
 @Riverpod(keepAlive: true)
 Stream<Map<String, double>> estimatedIntensityRegion(Ref ref) async* {
   final estimatedIntensity = ref.watch(estimatedIntensityProvider).value;
-  log(
-    'estimatedIntensityRegion: ${estimatedIntensity.runtimeType}, '
-    '${estimatedIntensity?.length}',
-    name: 'estimatedIntensityRegion',
-  );
   if (estimatedIntensity != null) {
     final map = <String, double>{};
     for (final item in estimatedIntensity) {
@@ -166,7 +174,6 @@ Stream<Map<String, double>> estimatedIntensityRegion(Ref ref) async* {
         map[item.regionCode] = math.max(currentValue, item.intensity);
       }
     }
-    log('estimatedIntensityRegion: ${map.entries.length}');
     yield map;
   }
 }

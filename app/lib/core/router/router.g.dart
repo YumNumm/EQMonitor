@@ -51,16 +51,14 @@ RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
 
 mixin $EarthquakeHistoryDetailsRoute on GoRouteData {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
-      EarthquakeHistoryDetailsRoute(
-        eventId: int.parse(state.pathParameters['eventId']!),
-      );
+      EarthquakeHistoryDetailsRoute(eventId: state.pathParameters['eventId']!);
 
   EarthquakeHistoryDetailsRoute get _self =>
       this as EarthquakeHistoryDetailsRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/earthquake-history-details/${Uri.encodeComponent(_self.eventId.toString())}',
+    '/earthquake-history-details/${Uri.encodeComponent(_self.eventId)}',
   );
 
   @override
@@ -218,20 +216,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
   factory: $SettingsRoute._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'notification',
-      factory: $NotificationRoute._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'earthquake',
-          factory: $NotificationEarthquakeRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'eew',
-          factory: $NotificationEewRoute._fromState,
-        ),
-      ],
-    ),
-    GoRouteData.$route(
       path: 'display',
       factory: $DisplayRoute._fromState,
       routes: [
@@ -328,70 +312,6 @@ mixin $SettingsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $NotificationRoute on GoRouteData {
-  static NotificationRoute _fromState(GoRouterState state) =>
-      const NotificationRoute();
-
-  @override
-  String get location => GoRouteData.$location('/settings/notification');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $NotificationEarthquakeRoute on GoRouteData {
-  static NotificationEarthquakeRoute _fromState(GoRouterState state) =>
-      const NotificationEarthquakeRoute();
-
-  @override
-  String get location =>
-      GoRouteData.$location('/settings/notification/earthquake');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $NotificationEewRoute on GoRouteData {
-  static NotificationEewRoute _fromState(GoRouterState state) =>
-      const NotificationEewRoute();
-
-  @override
-  String get location => GoRouteData.$location('/settings/notification/eew');
 
   @override
   void go(BuildContext context) => context.go(location);

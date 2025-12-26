@@ -58,7 +58,7 @@ class _IntensityFilterModal extends HookWidget {
   static const IntensityValue initialMax = IntensityFilterChip.initialMax;
 
   // スライダーで使用する震度値（zeroとfiveLowerNoInputを除外）
-  static const _sliderValues = [
+  static const List<IntensityValue> _sliderValues = [
     IntensityValue.one,
     IntensityValue.two,
     IntensityValue.three,
