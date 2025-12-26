@@ -36,128 +36,129 @@ class IntensityValueIcon extends ConsumerWidget {
     final suffix = intensity.value.contains('-')
         ? '-'
         : intensity.value.contains('+')
-            ? '+'
-            : '';
+        ? '+'
+        : '';
     final intensitySubText = switch (intensity) {
       IntensityValue.fiveLowerNoInput => '弱以上',
-      _ => intensity.value.contains('-')
-          ? '弱'
-          : intensity.value.contains('+')
-              ? '強'
-              : '',
+      _ =>
+        intensity.value.contains('-')
+            ? '弱'
+            : intensity.value.contains('+')
+            ? '強'
+            : '',
     };
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
       IntensityIconType.small => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: bg,
-              border: Border.all(color: borderColor, width: 5),
-            ),
-            child: (intensity == IntensityValue.fiveLowerNoInput)
-                ? const SizedBox.shrink()
-                : Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(2),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              intensityMainText,
-                              style: TextStyle(
-                                color: fg,
-                                fontSize: 100,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: FontFamily.jetBrainsMono,
-                              ),
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bg,
+            border: Border.all(color: borderColor, width: 5),
+          ),
+          child: (intensity == IntensityValue.fiveLowerNoInput)
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            intensityMainText,
+                            style: TextStyle(
+                              color: fg,
+                              fontSize: 100,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontFamily.notoSansMono,
                             ),
-                            Text(
-                              suffix,
-                              style: TextStyle(
-                                color: fg,
-                                fontSize: 80,
-                                fontFamily: FontFamily.jetBrainsMono,
-                                fontFamilyFallback: const [
-                                  FontFamily.notoSansJP,
-                                ],
-                              ),
+                          ),
+                          Text(
+                            suffix,
+                            style: TextStyle(
+                              color: fg,
+                              fontSize: 80,
+                              fontFamily: FontFamily.notoSansMono,
+                              fontFamilyFallback: const [
+                                FontFamily.notoSansJP,
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-          ),
+                ),
         ),
+      ),
       IntensityIconType.smallWithoutText => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: bg,
-              border: Border.all(color: borderColor, width: 5),
-            ),
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bg,
+            border: Border.all(color: borderColor, width: 5),
           ),
         ),
+      ),
       IntensityIconType.filled => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: bg,
-              borderRadius: BorderRadius.circular(size / 5),
-            ),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    if (customText != null)
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(size / 5),
+          ),
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  if (customText != null)
+                    Text(
+                      customText!,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.notoSansMono,
+                      ),
+                    )
+                  else ...[
+                    Text(
+                      intensityMainText,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.notoSansMono,
+                      ),
+                    ),
+                    if (showSuffix)
                       Text(
-                        customText!,
+                        intensitySubText,
                         style: TextStyle(
                           color: fg,
-                          fontSize: 100,
+                          fontSize: 50,
                           fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      )
-                    else ...[
-                      Text(
-                        intensityMainText,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
+                          fontFamily: FontFamily.notoSansMono,
+                          fontFamilyFallback: const [FontFamily.notoSansJP],
                         ),
                       ),
-                      if (showSuffix)
-                        Text(
-                          intensitySubText,
-                          style: TextStyle(
-                            color: fg,
-                            fontSize: 50,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: FontFamily.jetBrainsMono,
-                            fontFamilyFallback: const [FontFamily.notoSansJP],
-                          ),
-                        ),
-                    ],
                   ],
-                ),
+                ],
               ),
             ),
           ),
         ),
+      ),
     };
   }
 }

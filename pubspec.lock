@@ -1145,10 +1145,10 @@ packages:
     dependency: transitive
     description:
       name: lean_builder
-      sha256: "4f3d70c34c52cc5034e8cc6f53d35aa3a32fb373b78fb4c29cf45cd1dcf06942"
+      sha256: "6af3cfbf34400eb14b89fe20111e5981e7083362f00ea10b9ed2a6e833250d76"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.6"
   libserialport_plus:
     dependency: transitive
     description:
@@ -1571,10 +1571,10 @@ packages:
     dependency: transitive
     description:
       name: purchases_flutter
-      sha256: e62dba6e5bbe985797b6ff0fc00e0ce3188f6cd3983b9d5a1a89a3e40dc79f9f
+      sha256: "0a8ce3855dacb8c28e1e8de99cfe5592be2cb350c1210259d6fa4d9d0b152f89"
       url: "https://pub.dev"
     source: hosted
-    version: "9.10.1"
+    version: "9.10.2"
   retrofit:
     dependency: transitive
     description:
@@ -2129,10 +2129,10 @@ packages:
     dependency: transitive
     description:
       name: watcher
-      sha256: f52385d4f73589977c80797e60fe51014f7f2b957b5e9a62c3f6ada439889249
+      sha256: "592ab6e2892f67760543fb712ff0177f4ec76c031f02f5b4ff8d3fc5eb9fb61a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.1.4"
   web:
     dependency: transitive
     description:

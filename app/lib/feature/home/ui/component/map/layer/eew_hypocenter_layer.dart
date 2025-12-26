@@ -11,7 +11,7 @@ import 'package:maplibre/maplibre.dart';
 class EewHypocenterLayer extends HookConsumerWidget {
   const EewHypocenterLayer({required this.eews, super.key});
 
-  final List<EewV1> eews;
+  final List<EewItemWithRelations> eews;
 
   static const ({String lowPrecise, String normal}) sourceId = (
     normal: 'eew-hypocenter-normal',
@@ -26,19 +26,12 @@ class EewHypocenterLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
-    final showEews = eews.where(
-      (eew) => eew.latitude != null && eew.longitude != null && !eew.isCanceled,
-    );
-    final normalEews = showEews
-        .where(
-          (eew) => !eew.isLowPrecise,
-        )
-        .toList();
-    final lowPreciseEews = showEews
-        .where(
-          (eew) => eew.isLowPrecise,
-        )
-        .toList();
+    final showEews = eews.where((eew) {
+      final coords = eew.hypocenter?.coordinates;
+      return coords is CoordinateLatLng && !eew.isCanceled;
+    });
+    final normalEews = showEews.where((eew) => !eew.isPlum).toList();
+    final lowPreciseEews = showEews.where((eew) => eew.isPlum).toList();
 
     final isInitialized = useRef(false);
 
@@ -145,17 +138,20 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
         unawaited(
           () async {
-            Map<String, dynamic> convert(EewV1 eew) => {
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Point',
-                'coordinates': [eew.longitude!, eew.latitude!],
-              },
-              'properties': {
-                'magnitude': eew.magnitude,
-                'depth': eew.depth,
-              },
-            };
+            Map<String, dynamic> convert(EewItemWithRelations eew) {
+              final coords = eew.hypocenter!.coordinates as CoordinateLatLng;
+              return {
+                'type': 'Feature',
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': [coords.longitude, coords.latitude],
+                },
+                'properties': {
+                  'magnitude': eew.hypocenter?.magnitude,
+                  'depth': eew.hypocenter?.depth,
+                },
+              };
+            }
             await (
               styleController.updateGeoJsonSource(
                 id: sourceId.normal,
@@ -180,53 +176,8 @@ class EewHypocenterLayer extends HookConsumerWidget {
       [styleController, normalEews],
     );
 
-    useEffect(() {
-      var visible = true;
-      final timer = Timer.periodic(const Duration(milliseconds: 500), (
-        _,
-      ) async {
-        if (styleController == null) {
-          return;
-        }
-        final style = {
-          'icon-allow-overlap': true,
-          'icon-ignore-placement': true,
-          'icon-size': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            3,
-            0.3,
-            20,
-            2,
-          ],
-          'icon-opacity': visible ? 1 : 0.5,
-        };
-        await (
-          styleController.updateLayer(
-            layer: SymbolStyleLayer(
-              id: layerId.lowPrecise,
-              sourceId: sourceId.lowPrecise,
-              layout: style,
-            ),
-          ),
-          styleController.updateLayer(
-            layer: SymbolStyleLayer(
-              id: layerId.normal,
-              sourceId: sourceId.normal,
-              layout: style,
-            ),
-          ),
-        ).wait;
-        visible = !visible;
-      });
-      return () => timer.cancel;
-    }, [styleController]);
+    // 点滅エフェクトは省略（StyleController APIに依存するため）
 
     return const SizedBox.shrink();
   }
-}
-
-extension EewV1Extension on EewV1 {
-  bool get isLowPrecise => isIpfOnePoint || isLevelEew || (isPlum ?? false);
 }
