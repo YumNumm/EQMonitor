@@ -8,10 +8,10 @@ part 'eew_alive_telegram.g.dart';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 @Riverpod(keepAlive: true)
-List<EewV1> eewAliveNormalTelegram(Ref ref) {
+List<EewItemWithRelations> eewAliveNormalTelegram(Ref ref) {
   final state = ref.watch(eewAliveTelegramProvider) ?? [];
   return state.where((e) {
-    if (e.isPlum ?? e.isLevelEew || e.isIpfOnePoint) {
+    if (e.isPlum) {
       return false;
     }
     return true;
@@ -22,7 +22,7 @@ List<EewV1> eewAliveNormalTelegram(Ref ref) {
 @Riverpod(keepAlive: true)
 class EewAliveTelegram extends _$EewAliveTelegram {
   @override
-  List<EewV1>? build() {
+  List<EewItemWithRelations>? build() {
     final state = ref.watch(eewProvider);
     final value = state.value;
     final tickerTime = ref.watch(timeTickerProvider());
@@ -38,8 +38,11 @@ class EewAliveTelegram extends _$EewAliveTelegram {
   }
 
   @override
-  bool updateShouldNotify(List<EewV1>? previous, List<EewV1>? next) {
-    return !const ListEquality<EewV1>().equals(previous, next);
+  bool updateShouldNotify(
+    List<EewItemWithRelations>? previous,
+    List<EewItemWithRelations>? next,
+  ) {
+    return !const ListEquality<EewItemWithRelations>().equals(previous, next);
   }
 }
 
@@ -47,19 +50,17 @@ class EewAliveTelegram extends _$EewAliveTelegram {
 EewAliveChecker eewAliveChecker(Ref ref) => EewAliveChecker();
 
 class EewAliveChecker {
-  /// イベント終了の判定
-  bool checkMarkAsEventEnded({required EewV1 eew, required DateTime now}) {
-    // 発生時刻から1時間以上経過している場合、イベント終了と判定する(早期return)
+  bool checkMarkAsEventEnded({
+    required EewItemWithRelations eew,
+    required DateTime now,
+  }) {
     final reportTime = eew.reportTime.toUtc();
     if (now.toUtc().difference(reportTime).inHours > 1) {
       return true;
     }
-    // 最新のEEWが取消の場合、発表から180秒を経過している場合、イベント終了と判定する
     if (eew.isCanceled) {
-      final reportTime = eew.reportTime.toUtc();
       return now.toUtc().difference(reportTime).inSeconds > 180;
     }
-    // 最新のEEWが通常の場合
     final originTime = eew.originTime?.toUtc();
     final arrivalTime = eew.arrivalTime?.toUtc();
     final happenedTime = originTime ?? arrivalTime;
@@ -67,19 +68,16 @@ class EewAliveChecker {
       return false;
     }
     final happenedDiff = now.toUtc().difference(happenedTime).inSeconds;
-    final depth = eew.depth;
+    final depth = eew.hypocenter?.depth;
 
-    // M6.0以上 or EEW警報の場合、360秒でイベント終了と判定する
     final isWarning = eew.isWarning ?? eew.headline?.contains('強い揺れ') ?? false;
-    final magnitude = eew.magnitude;
+    final magnitude = eew.hypocenter?.magnitude;
     if ((magnitude != null && magnitude >= 6.0) || isWarning) {
       return happenedDiff > 360;
     }
-    // 深さ不明/150km未満の場合、地震発生/検知から250秒でイベント終了と判定する
     if (depth == null || depth < 150) {
       return happenedDiff > 250;
     } else {
-      // 深さ150km以上の場合、地震発生/検知から400秒でイベント終了と判定する
       return happenedDiff > 400;
     }
   }

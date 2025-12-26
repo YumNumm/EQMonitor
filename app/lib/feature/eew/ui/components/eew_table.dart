@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class EewTable extends StatelessWidget {
   const EewTable({required this.eews, super.key});
 
-  final List<EewV1> eews;
+  final List<EewItemWithRelations> eews;
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +50,7 @@ class EewTable extends StatelessWidget {
                   (eew) => DataRow(
                     color: WidgetStateProperty.all(
                       eew.isWarning ?? false
-                          ? colorScheme.errorContainer.withValues(
-                              alpha: 0.7,
-                            )
+                          ? colorScheme.errorContainer.withValues(alpha: 0.7)
                           : colorScheme.surfaceContainer,
                     ),
                     cells: _EewTableColumn.values
@@ -84,8 +82,7 @@ enum _EewTableColumn {
   magnitude(name: 'M', isNumeric: true),
   maxIntensity(name: '予想最大震度', isNumeric: true),
   maxLongPeriodIntensity(name: '予想最大長周期\n地震動階級', isNumeric: true),
-  accuracy(name: '精度', isNumeric: false)
-  ;
+  accuracy(name: '精度', isNumeric: false);
 
   const _EewTableColumn({
     required this.name,
@@ -99,16 +96,14 @@ enum _EewTableColumn {
 }
 
 extension _EewTableColumnEx on _EewTableColumn {
-  _EewTableColumnValue value(EewV1 eew) => switch (this) {
+  _EewTableColumnValue value(EewItemWithRelations eew) => switch (this) {
     _EewTableColumn.serialNo => _EewTableColumnValue(
-      value: eew.serialNo?.toString() ?? '',
+      value: eew.serialNo.toString(),
       isNumeric: true,
     ),
     _EewTableColumn.originTime => _EewTableColumnValue(
       value: eew.originTime != null
-          ? DateFormat(
-              'yyyy/MM/dd HH:mm:ss',
-            ).format(eew.originTime!.toLocal())
+          ? DateFormat('yyyy/MM/dd HH:mm:ss').format(eew.originTime!.toLocal())
           : '',
       isNumeric: false,
     ),
@@ -119,43 +114,64 @@ extension _EewTableColumnEx on _EewTableColumn {
       isNumeric: false,
     ),
     _EewTableColumn.epicenterName => _EewTableColumnValue(
-      value: eew.hypoName ?? '',
+      value: eew.hypocenter?.value.name ?? '',
       isNumeric: false,
     ),
     _EewTableColumn.epicenterLatitude => _EewTableColumnValue(
-      value: eew.latitude?.toString() ?? '',
+      value: () {
+        final coords = eew.hypocenter?.coordinates;
+        if (coords case CoordinateLatLng(:final latitude)) {
+          return latitude.toString();
+        }
+        return '';
+      }(),
       isNumeric: true,
     ),
     _EewTableColumn.epicenterLongitude => _EewTableColumnValue(
-      value: eew.longitude?.toString() ?? '',
+      value: () {
+        final coords = eew.hypocenter?.coordinates;
+        if (coords case CoordinateLatLng(:final longitude)) {
+          return longitude.toString();
+        }
+        return '';
+      }(),
       isNumeric: true,
     ),
     _EewTableColumn.magnitude => _EewTableColumnValue(
-      value: eew.magnitude != null ? 'M${eew.magnitude}' : '',
+      value: eew.hypocenter?.magnitude != null
+          ? 'M${eew.hypocenter!.magnitude}'
+          : '',
       isNumeric: true,
     ),
     _EewTableColumn.maxIntensity => _EewTableColumnValue(
-      value: eew.forecastMaxIntensity != null
-          ? '震度 ${eew.forecastMaxIntensity!.type.replaceAll('-', '弱').replaceAll('+', '強')}'
-                '${eew.forecastMaxIntensityIsOver ?? false ? '以上' : ''}'
-          : '',
+      value: () {
+        final intensity = eew.forecastIntensity?.maxIntensity;
+        if (intensity == null) {
+          return '';
+        }
+        final typeStr = intensity.value.value.replaceAll('-', '弱').replaceAll('+', '強');
+        return '震度 $typeStr${intensity.isOver ? '以上' : ''}';
+      }(),
       isNumeric: false,
     ),
     _EewTableColumn.epicenterDepth => _EewTableColumnValue(
-      value: eew.depth != null ? '${eew.depth}km' : '',
+      value: eew.hypocenter?.depth != null
+          ? '${eew.hypocenter!.depth}km'
+          : '',
       isNumeric: true,
     ),
     _EewTableColumn.maxLongPeriodIntensity => _EewTableColumnValue(
-      value: eew.forecastMaxLpgmIntensity?.type != null
-          ? '長周期地震動階級 ${eew.forecastMaxLpgmIntensity!.type}'
-          : '',
+      value: () {
+        final lpgmIntensity = eew.forecastIntensity?.maxLpgmIntensity;
+        if (lpgmIntensity == null) {
+          return '';
+        }
+        return '長周期地震動階級 ${lpgmIntensity.value.value}';
+      }(),
       isNumeric: false,
     ),
     _EewTableColumn.accuracy when eew.accuracy != null => _EewTableColumnValue(
-      value: () {
-        final accuracy = eew.accuracy!;
-        return '${accuracy.depth}';
-      }(),
+      value: '${eew.accuracy!.depth}',
       isNumeric: true,
     ),
     _EewTableColumn.accuracy => const _EewTableColumnValue(

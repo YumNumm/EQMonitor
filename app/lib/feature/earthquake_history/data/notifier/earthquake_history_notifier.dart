@@ -159,9 +159,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
     final items = [...currentState.items];
     for (final item in newItems) {
-      final index = items.indexWhereOrNull(
+      final rawIndex = items.indexWhere(
         (e) => e.eventId == item.eventId,
       );
+      final index = rawIndex == -1 ? null : rawIndex;
       if (index == null) {
         items.add(item);
       } else {
