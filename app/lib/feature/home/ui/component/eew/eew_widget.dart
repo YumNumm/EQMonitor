@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/custom_chip.dart';
+import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
@@ -72,7 +73,7 @@ class EewWidget extends ConsumerWidget {
       intensityScheme.background,
     );
 
-    final isWarning = eew.isWarning ?? eew.headline?.contains('強い揺れ') ?? false;
+    final isWarning = eew.isWarningOrFallback;
     final header = Wrap(
       alignment: WrapAlignment.spaceBetween,
       crossAxisAlignment: WrapCrossAlignment.center,
