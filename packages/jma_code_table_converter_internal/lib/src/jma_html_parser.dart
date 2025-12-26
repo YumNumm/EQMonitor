@@ -6,8 +6,7 @@ import 'package:http/http.dart' as http;
 /// 気象庁技術資料ページのHTMLパーサー
 class JmaHtmlParser {
   /// 気象庁技術資料ページのURL
-  static const String tecMaterialUrl =
-      'https://xml.kishou.go.jp/tec_material.html';
+  static const tecMaterialUrl = 'https://xml.kishou.go.jp/tec_material.html';
 
   /// 個別コード表のZIPファイルURLを取得する
   ///
@@ -28,7 +27,9 @@ class JmaHtmlParser {
     final links = document.querySelectorAll('a');
     for (final link in links) {
       final href = link.attributes['href'];
-      if (href == null) continue;
+      if (href == null) {
+        continue;
+      }
 
       // jmaxml_yyyyMMdd_Code.zip パターンにマッチするリンクを探す
       final match = RegExp(r'jmaxml_(\d{8})_Code\.zip').firstMatch(href);
