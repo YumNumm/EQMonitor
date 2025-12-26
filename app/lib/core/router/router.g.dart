@@ -11,6 +11,7 @@ part of 'router.dart';
 List<RouteBase> get $appRoutes => [
   $earthquakeHistoryRoute,
   $earthquakeHistoryDetailsRoute,
+  $telegramListByEventIdRoute,
   $informationHistoryRoute,
   $informationHistoryDetailsRoute,
   $homeRoute,
@@ -59,6 +60,36 @@ mixin $EarthquakeHistoryDetailsRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/earthquake-history-details/${Uri.encodeComponent(_self.eventId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $telegramListByEventIdRoute => GoRouteData.$route(
+  path: '/telegram-list/:eventId',
+  factory: $TelegramListByEventIdRoute._fromState,
+);
+
+mixin $TelegramListByEventIdRoute on GoRouteData {
+  static TelegramListByEventIdRoute _fromState(GoRouterState state) =>
+      TelegramListByEventIdRoute(eventId: state.pathParameters['eventId']!);
+
+  TelegramListByEventIdRoute get _self => this as TelegramListByEventIdRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/telegram-list/${Uri.encodeComponent(_self.eventId)}',
   );
 
   @override
