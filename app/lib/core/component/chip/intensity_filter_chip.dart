@@ -5,16 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class IntensityFilterChip extends StatelessWidget {
   const IntensityFilterChip({this.min, this.max, this.onChanged, super.key});
 
-  /// 震度の範囲が変更された時に呼ばれる
-  /// `min` と `max` にはそれぞれ下限値と上限値が渡される
-  /// どちらかが `null` の場合はその値は指定されていないことを示す
-  final void Function(JmaIntensity?, JmaIntensity?)? onChanged;
+  final void Function(IntensityValue?, IntensityValue?)? onChanged;
 
-  final JmaIntensity? min;
-  final JmaIntensity? max;
+  final IntensityValue? min;
+  final IntensityValue? max;
 
-  static const JmaIntensity initialMin = JmaIntensity.one;
-  static const JmaIntensity initialMax = JmaIntensity.seven;
+  static const IntensityValue initialMin = IntensityValue.one;
+  static const IntensityValue initialMax = IntensityValue.seven;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,7 @@ class IntensityFilterChip extends StatelessWidget {
     return RawChip(
       onSelected: (_) async {
         final result =
-            await showModalBottomSheet<(JmaIntensity?, JmaIntensity?)?>(
+            await showModalBottomSheet<(IntensityValue?, IntensityValue?)?>(
               clipBehavior: Clip.antiAlias,
               context: context,
               builder: (context) =>
@@ -54,16 +51,29 @@ class _IntensityFilterModal extends HookWidget {
     this.currentMax = initialMax,
   });
 
-  final JmaIntensity? currentMin;
-  final JmaIntensity? currentMax;
+  final IntensityValue? currentMin;
+  final IntensityValue? currentMax;
 
-  static const JmaIntensity initialMin = IntensityFilterChip.initialMin;
-  static const JmaIntensity initialMax = IntensityFilterChip.initialMax;
+  static const IntensityValue initialMin = IntensityFilterChip.initialMin;
+  static const IntensityValue initialMax = IntensityFilterChip.initialMax;
+
+  // スライダーで使用する震度値（zeroとfiveLowerNoInputを除外）
+  static const _sliderValues = [
+    IntensityValue.one,
+    IntensityValue.two,
+    IntensityValue.three,
+    IntensityValue.four,
+    IntensityValue.fiveLower,
+    IntensityValue.fiveUpper,
+    IntensityValue.sixLower,
+    IntensityValue.sixUpper,
+    IntensityValue.seven,
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final min = useState<JmaIntensity>(currentMin ?? initialMin);
-    final max = useState<JmaIntensity>(currentMax ?? initialMax);
+    final min = useState<IntensityValue>(currentMin ?? initialMin);
+    final max = useState<IntensityValue>(currentMax ?? initialMax);
 
     final theme = Theme.of(context);
     final sheetBar = Container(
@@ -79,6 +89,11 @@ class _IntensityFilterModal extends HookWidget {
         ],
       ),
     );
+
+    int valueToIndex(IntensityValue v) =>
+        _sliderValues.indexOf(v).clamp(0, _sliderValues.length - 1);
+    IntensityValue indexToValue(int i) =>
+        _sliderValues[i.clamp(0, _sliderValues.length - 1)];
 
     return SafeArea(
       child: Column(
@@ -98,16 +113,16 @@ class _IntensityFilterModal extends HookWidget {
           const SizedBox(height: 24),
           RangeSlider(
             values: RangeValues(
-              min.value.index.toDouble(),
-              max.value.index.toDouble(),
+              valueToIndex(min.value).toDouble(),
+              valueToIndex(max.value).toDouble(),
             ),
-            max: JmaIntensity.seven.index.toDouble(),
+            max: (_sliderValues.length - 1).toDouble(),
             onChanged: (state) {
-              min.value = JmaIntensity.values[state.start.toInt()];
-              max.value = JmaIntensity.values[state.end.toInt()];
+              min.value = indexToValue(state.start.toInt());
+              max.value = indexToValue(state.end.toInt());
             },
             labels: RangeLabels('震度${min.value}', '震度${max.value}'),
-            divisions: JmaIntensity.seven.index,
+            divisions: _sliderValues.length - 1,
           ),
           const SizedBox(height: 16),
           Center(
@@ -140,9 +155,9 @@ class _IntensityFilterModal extends HookWidget {
   }
 }
 
-extension MinMaxJmaIntensity on (JmaIntensity?, JmaIntensity?) {
-  JmaIntensity? get min => this.$1;
-  JmaIntensity? get max => this.$2;
+extension MinMaxIntensityValue on (IntensityValue?, IntensityValue?) {
+  IntensityValue? get min => this.$1;
+  IntensityValue? get max => this.$2;
 
   bool get isMinSelected =>
       min == IntensityFilterChip.initialMin || min == null;
@@ -152,19 +167,15 @@ extension MinMaxJmaIntensity on (JmaIntensity?, JmaIntensity?) {
   bool get isAllSelected => isMinSelected && isMaxSelected;
 
   String get toRangeString {
-    // 何も指定していない時
     if (isAllSelected) {
       return '全て';
     }
-    // どちらも同じの時
     if (min == max) {
       return '震度$min';
     }
-    // 下限値のみ指定している時
     if (isMaxSelected) {
       return '震度$min 以上';
     }
-    // 上限値のみ指定している時
     if (isMinSelected) {
       return '震度$max 以下';
     }

@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -27,7 +26,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then((_) async {
           if (parameter.value == const EarthquakeHistoryParameter() &&
-              state.value?.$1.length == 5) {
+              (state.value?.items.length ?? 0) <= 10) {
             await ref
                 .read(
                   earthquakeHistoryProvider(parameter.value).notifier,
@@ -100,13 +99,10 @@ class _SearchParameter extends StatelessWidget {
                           onChanged(parameter.updateMagnitude(min, max)),
                     ),
                     DepthFilterChip(
-                      min: parameter.depthGte?.toInt(),
-                      max: parameter.depthLte?.toInt(),
+                      min: parameter.depthGte,
+                      max: parameter.depthLte,
                       onChanged: (min, max) => onChanged(
-                        parameter.updateDepth(
-                          min?.toDouble(),
-                          max?.toDouble(),
-                        ),
+                        parameter.updateDepth(min, max),
                       ),
                     ),
                   ]
@@ -133,7 +129,7 @@ class _SliverListBody extends HookConsumerWidget {
 
   final Future<void> Function()? onRefresh;
   final void Function()? onScrollEnd;
-  final AsyncValue<(List<EarthquakeV1Extended>, int)> state;
+  final AsyncValue<EarthquakeHistoryNotifierState> state;
   final EarthquakeHistoryParameter parameter;
 
   @override
@@ -153,24 +149,25 @@ class _SliverListBody extends HookConsumerWidget {
     }, [controller, state, onScrollEnd, onRefresh]);
 
     Widget listView({
-      required (List<EarthquakeV1Extended>, int) data,
+      required List<EarthquakePartial> items,
+      required bool hasNext,
       Widget loading = const Padding(
         padding: EdgeInsets.all(48),
         child: Center(child: CircularProgressIndicator.adaptive()),
       ),
     }) {
-      if (data.$1.isEmpty) {
+      if (items.isEmpty) {
         return const EarthquakeHistoryNotFound();
       }
       return ListView.separated(
         controller: controller,
         clipBehavior: Clip.antiAlias,
         padding: EdgeInsets.zero,
-        itemCount: data.$1.length + 1,
+        itemCount: items.length + 1,
         separatorBuilder: (context, index) =>
             const Divider(height: 0, indent: 0, endIndent: 0, thickness: 0),
         itemBuilder: (context, index) {
-          if (index == data.$1.length) {
+          if (index == items.length) {
             if (state.isLoading) {
               return loading;
             }
@@ -178,14 +175,13 @@ class _SliverListBody extends HookConsumerWidget {
               final error = state.error!;
               return ErrorCard(error: error, onReload: onRefresh);
             }
-            final hasNext = state.value?.hasNext ?? false;
             if (hasNext) {
               return loading;
             } else {
               return const EarthquakeHistoryAllFetched();
             }
           }
-          final item = data.$1[index];
+          final item = items[index];
           return EarthquakeHistoryListTile(
             item: item,
             onTap: () async => EarthquakeHistoryDetailsRoute(
@@ -200,28 +196,12 @@ class _SliverListBody extends HookConsumerWidget {
       onRefresh: () async => onRefresh?.call(),
       child: switch (state) {
         AsyncError(:final error) => () {
-          if (error is EarthquakeParameterHasNotInitializedException) {
-            final parameterState = ref.watch(jmaParameterProvider);
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('観測点情報が初期化されていません'),
-                  if (parameterState.isLoading)
-                    const CircularProgressIndicator.adaptive()
-                  else
-                    FilledButton(
-                      child: const Text('観測点情報を再取得'),
-                      onPressed: () async =>
-                          ref.invalidate(jmaParameterProvider),
-                    ),
-                ],
-              ),
-            );
-          }
           final valueOrNull = state.value;
           if (valueOrNull != null) {
-            return listView(data: valueOrNull);
+            return listView(
+              items: valueOrNull.items,
+              hasNext: valueOrNull.hasNext,
+            );
           }
           return ErrorCard(
             error: error,
@@ -229,7 +209,10 @@ class _SliverListBody extends HookConsumerWidget {
                 ref.refresh(earthquakeHistoryProvider(parameter)),
           );
         }(),
-        AsyncData(:final value) => listView(data: value),
+        AsyncData(:final value) => listView(
+          items: value.items,
+          hasNext: value.hasNext,
+        ),
         _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
     );
