@@ -159,21 +159,18 @@ flutter:
     - assets/docs/
     - assets/parameter/
 
-  shaders:
-    - shaders/introduction.frag
-
   fonts:
     - family: NotoSansJP
       fonts:
         # - asset: assets/fonts/NotoSansJP-Regular.ttf
         # weight: 400
-        - asset: assets/fonts/NotoSansJP-Medium.ttf
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Medium.ttf
           weight: 500
-        - asset: assets/fonts/NotoSansJP-Bold.ttf
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf
           weight: 700
     - family: NotoSansMono
       fonts:
-        - asset: assets/fonts/NotoSansMono-Medium.ttf
+        - asset: assets/fonts/NotoSansMono/NotoSansMono-Medium.ttf
           weight: 500
-        - asset: assets/fonts/NotoSansMono-Bold.ttf
+        - asset: assets/fonts/NotoSansMono/NotoSansMono-Bold.ttf
           weight: 700
