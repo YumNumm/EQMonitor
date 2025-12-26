@@ -31,8 +31,9 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
     final cardColor = cardBackgroundColor.withValues(alpha: 0.3);
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8)
-          .add(const EdgeInsets.only(bottom: 4)),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 8,
+      ).add(const EdgeInsets.only(bottom: 4)),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -101,13 +102,14 @@ class _EarthquakeInformationBody extends StatelessWidget {
     final epicenterName = hypocenter?.value.name;
     final epicenterDetailName = hypocenter?.detailed?.name;
 
-    final isMagnitudeAndDepthUnknown = _isMagnitudeUnknown() && _isDepthUnknown();
-    final isEarthquakeNull =
-        isMagnitudeAndDepthUnknown && hypocenter == null;
+    final isMagnitudeAndDepthUnknown =
+        _isMagnitudeUnknown() && _isDepthUnknown();
+    final isEarthquakeNull = isMagnitudeAndDepthUnknown && hypocenter == null;
 
     final timeText = _getTimeText();
-    final timeWidget =
-        timeText != null ? Wrap(children: [Text(timeText)]) : null;
+    final timeWidget = timeText != null
+        ? Wrap(children: [Text(timeText)])
+        : null;
 
     return Wrap(
       spacing: 8,
@@ -118,7 +120,9 @@ class _EarthquakeInformationBody extends StatelessWidget {
         if (isEarthquakeNull)
           _EarthquakeNullWidget(hasIntensityDetails: hasIntensityDetails)
         else if (isMagnitudeAndDepthUnknown) ...[
-          _MagnitudeDepthUnknownWidget(hasIntensityDetails: hasIntensityDetails),
+          _MagnitudeDepthUnknownWidget(
+            hasIntensityDetails: hasIntensityDetails,
+          ),
           _HypocenterWidget(
             epicenterName: epicenterName,
             epicenterDetailName: epicenterDetailName,

@@ -29,80 +29,80 @@ class LpgmIntensityIcon extends ConsumerWidget {
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
       IntensityIconType.small => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: bg,
-              border: Border.all(color: borderColor, width: 5),
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bg,
+            border: Border.all(color: borderColor, width: 5),
+          ),
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    intensity.value,
+                    style: TextStyle(
+                      color: fg,
+                      fontSize: 100,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: FontFamily.notoSansMono,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+          ),
+        ),
+      ),
+      IntensityIconType.smallWithoutText => SizedBox(
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bg,
+            border: Border.all(color: borderColor, width: 5),
+          ),
+        ),
+      ),
+      IntensityIconType.filled => SizedBox(
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(size / 5),
+          ),
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: (customText != null)
+                  ? Text(
+                      customText!,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.notoSansMono,
+                      ),
+                    )
+                  : Text(
                       intensity.value,
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
                         fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamily: FontFamily.notoSansMono,
                       ),
                     ),
-                  ],
-                ),
-              ),
             ),
           ),
         ),
-      IntensityIconType.smallWithoutText => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: bg,
-              border: Border.all(color: borderColor, width: 5),
-            ),
-          ),
-        ),
-      IntensityIconType.filled => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: bg,
-              borderRadius: BorderRadius.circular(size / 5),
-            ),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: (customText != null)
-                    ? Text(
-                        customText!,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      )
-                    : Text(
-                        intensity.value,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      ),
-              ),
-            ),
-          ),
-        ),
+      ),
     };
   }
 }
