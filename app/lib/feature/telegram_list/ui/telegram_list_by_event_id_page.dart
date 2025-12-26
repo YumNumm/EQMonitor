@@ -1,5 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/telegram_list/data/notifier/telegram_list_by_event_id_notifier.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/telegram_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -101,9 +102,23 @@ class _TelegramListView extends StatelessWidget {
           return _buildFooter(context);
         }
         final telegram = items[index];
-        return TelegramListTile(telegram: telegram);
+        return TelegramListTile(
+          telegram: telegram,
+          onTap: _getOnTapCallback(context, telegram),
+        );
       },
     );
+  }
+
+  VoidCallback? _getOnTapCallback(BuildContext context, Telegram telegram) {
+    return switch (telegram.type) {
+      TelegramType.vxse43 ||
+      TelegramType.vxse44 ||
+      TelegramType.vxse45 =>
+        () => EewDetailsByEventIdRoute(eventId: telegram.eventId)
+            .push<void>(context),
+      _ => null,
+    };
   }
 
   Widget _buildFooter(BuildContext context) {
