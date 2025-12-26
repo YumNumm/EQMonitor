@@ -78,7 +78,7 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
     with $EarthquakeHistoryDetailsRoute {
   const EarthquakeHistoryDetailsRoute({required this.eventId});
 
-  final int eventId;
+  final String eventId;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
