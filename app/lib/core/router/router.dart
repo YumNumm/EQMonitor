@@ -29,6 +29,7 @@ import 'package:eqmonitor/feature/settings/children/config/earthquake_history/ea
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
+import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -80,6 +81,21 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EarthquakeHistoryDetailsPage(eventId: eventId);
+  }
+}
+
+@TypedGoRoute<TelegramListByEventIdRoute>(
+  path: '/telegram-list/:eventId',
+)
+class TelegramListByEventIdRoute extends GoRouteData
+    with $TelegramListByEventIdRoute {
+  const TelegramListByEventIdRoute({required this.eventId});
+
+  final String eventId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TelegramListByEventIdPage(eventId: eventId);
   }
 }
 

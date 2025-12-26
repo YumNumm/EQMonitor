@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
@@ -133,8 +134,8 @@ class _IntensityIcons extends ConsumerWidget {
                   runSpacing: 8,
                   children: [
                     if (showingLpgmIntensity && maxLgIntensity != null)
-                      for (final intensity in [...LpgmIntensityValue.values]
-                          .where(
+                      for (final intensity
+                          in [...LpgmIntensityValue.values].where(
                             (e) =>
                                 e != LpgmIntensityValue.zero &&
                                 e.index <= maxLgIntensity!.index,
@@ -189,10 +190,38 @@ class _Sheet extends StatelessWidget {
                   PrefectureIntensityWidget(item: item),
                   if (item.intensity?.maxLpgmIntensity != null)
                     PrefectureLpgmIntensityWidget(item: item),
+                  _TelegramListButton(eventId: item.eventId),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TelegramListButton extends StatelessWidget {
+  const _TelegramListButton({required this.eventId});
+
+  final String eventId;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: FilledButton.tonalIcon(
+        onPressed: () =>
+            TelegramListByEventIdRoute(eventId: eventId).push<void>(context),
+        icon: const Icon(Icons.list_alt),
+        label: const Text('電文一覧を見る'),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(double.infinity, 48),
+          backgroundColor: colorScheme.secondaryContainer,
+          foregroundColor: colorScheme.onSecondaryContainer,
         ),
       ),
     );
