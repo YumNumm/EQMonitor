@@ -19,13 +19,23 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final intensity = item.intensity;
+    final maxLpgmIntensity = intensity?.maxLpgmIntensity;
 
-    if (intensity == null || intensity.lpgmPrefectures == null) {
+    // LPGM情報がない場合は何も表示しない
+    if (intensity == null || maxLpgmIntensity == null) {
       return const SizedBox.shrink();
     }
 
-    final groupedByLpgmIntensity = intensity.lpgmPrefectures!
+    // prefectures から maxLpgmIntensity を持つものを抽出してグループ化
+    final lpgmPrefectures = intensity.prefectures
         .where((p) => p.maxLpgmIntensity != null)
+        .toList();
+
+    if (lpgmPrefectures.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final groupedByLpgmIntensity = lpgmPrefectures
         .groupListsBy((p) => p.maxLpgmIntensity!)
         .entries
         .sorted((a, b) => b.key.index.compareTo(a.key.index));
@@ -52,15 +62,15 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
                 style: textTheme.titleMedium,
               ),
               subtitle: Text(kv.value.map((e) => e.value.name).join(', ')),
-              onTap: intensity.lpgmStations != null
+              onTap: intensity.stations != null
                   ? () async => _PrefectureModalBottomSheet.show(
                         context: context,
                         lpgmIntensity: kv.key,
                         prefectures: kv.value,
-                        stations: intensity.lpgmStations,
+                        stations: intensity.stations,
                       )
                   : null,
-              trailing: intensity.lpgmStations != null
+              trailing: intensity.stations != null
                   ? const Icon(Icons.chevron_right)
                   : null,
             ),
@@ -82,7 +92,7 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
     required BuildContext context,
     required LpgmIntensityValue lpgmIntensity,
     required List<IntensityItem> prefectures,
-    required List<IntensityItem>? stations,
+    required List<IntensityStationItem>? stations,
   }) =>
       Navigator.of(context).push(
         SheetRoute(
@@ -96,12 +106,12 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
 
   final LpgmIntensityValue lpgmIntensity;
   final List<IntensityItem> prefectures;
-  final List<IntensityItem>? stations;
+  final List<IntensityStationItem>? stations;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('長周期地震動階級$lpgmIntensityの観測点')),
+      appBar: AppBar(title: Text('長周期地震動階級${lpgmIntensity.value}の観測点')),
       body: ListView(
         children: [
           for (final prefecture in prefectures)
@@ -122,7 +132,7 @@ class _PrefectureListTile extends HookWidget {
   });
 
   final IntensityItem prefecture;
-  final List<IntensityItem>? stations;
+  final List<IntensityStationItem>? stations;
 
   @override
   Widget build(BuildContext context) {

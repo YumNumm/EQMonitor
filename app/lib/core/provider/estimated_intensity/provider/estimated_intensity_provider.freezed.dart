@@ -12,7 +12,7 @@ part of 'estimated_intensity_provider.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$EstimatedIntensityPoint implements DiagnosticableTreeMixin {
+mixin _$EstimatedIntensityPoint {
 
  String get regionCode; String get cityCode; EarthquakeParameterStationItem get station; double get intensity;
 /// Create a copy of EstimatedIntensityPoint
@@ -22,12 +22,6 @@ mixin _$EstimatedIntensityPoint implements DiagnosticableTreeMixin {
 $EstimatedIntensityPointCopyWith<EstimatedIntensityPoint> get copyWith => _$EstimatedIntensityPointCopyWithImpl<EstimatedIntensityPoint>(this as EstimatedIntensityPoint, _$identity);
 
 
-@override
-void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
-    ..add(DiagnosticsProperty('type', 'EstimatedIntensityPoint'))
-    ..add(DiagnosticsProperty('regionCode', regionCode))..add(DiagnosticsProperty('cityCode', cityCode))..add(DiagnosticsProperty('station', station))..add(DiagnosticsProperty('intensity', intensity));
-}
 
 @override
 bool operator ==(Object other) {
@@ -39,7 +33,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,regionCode,cityCode,station,intensity);
 
 @override
-String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+String toString() {
   return 'EstimatedIntensityPoint(regionCode: $regionCode, cityCode: $cityCode, station: $station, intensity: $intensity)';
 }
 
@@ -214,7 +208,7 @@ return $default(_that.regionCode,_that.cityCode,_that.station,_that.intensity);c
 /// @nodoc
 
 
-class _EstimatedIntensityPoint with DiagnosticableTreeMixin implements EstimatedIntensityPoint {
+class _EstimatedIntensityPoint implements EstimatedIntensityPoint {
   const _EstimatedIntensityPoint({required this.regionCode, required this.cityCode, required this.station, required this.intensity});
   
 
@@ -230,12 +224,6 @@ class _EstimatedIntensityPoint with DiagnosticableTreeMixin implements Estimated
 _$EstimatedIntensityPointCopyWith<_EstimatedIntensityPoint> get copyWith => __$EstimatedIntensityPointCopyWithImpl<_EstimatedIntensityPoint>(this, _$identity);
 
 
-@override
-void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
-    ..add(DiagnosticsProperty('type', 'EstimatedIntensityPoint'))
-    ..add(DiagnosticsProperty('regionCode', regionCode))..add(DiagnosticsProperty('cityCode', cityCode))..add(DiagnosticsProperty('station', station))..add(DiagnosticsProperty('intensity', intensity));
-}
 
 @override
 bool operator ==(Object other) {
@@ -247,7 +235,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,regionCode,cityCode,station,intensity);
 
 @override
-String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+String toString() {
   return 'EstimatedIntensityPoint(regionCode: $regionCode, cityCode: $cityCode, station: $station, intensity: $intensity)';
 }
 

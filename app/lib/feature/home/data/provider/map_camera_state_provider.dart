@@ -30,7 +30,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     _controller = controller;
   }
 
-  Future<void> _fitToEews(List<EewV1> eews) async {
+  Future<void> _fitToEews(List<EewItemWithRelations> eews) async {
     if (_controller == null) {
       return;
     }
@@ -56,10 +56,11 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     state = state.copyWith(isAtHome: true);
   }
 
-  LngLatBounds _calculateBounds(List<EewV1> eews) {
-    final validEews = eews
-        .where((e) => e.latitude != null && e.longitude != null)
-        .toList();
+  LngLatBounds _calculateBounds(List<EewItemWithRelations> eews) {
+    final validEews = eews.where((e) {
+      final coords = e.hypocenter?.coordinates;
+      return coords is CoordinateLatLng;
+    }).toList();
 
     if (validEews.isEmpty) {
       return const LngLatBounds(
@@ -70,14 +71,17 @@ class HomeMapCameraState extends _$HomeMapCameraState {
       );
     }
 
-    var minLat = validEews.first.latitude!;
-    var maxLat = validEews.first.latitude!;
-    var minLng = validEews.first.longitude!;
-    var maxLng = validEews.first.longitude!;
+    final firstCoords =
+        validEews.first.hypocenter!.coordinates as CoordinateLatLng;
+    var minLat = firstCoords.latitude;
+    var maxLat = firstCoords.latitude;
+    var minLng = firstCoords.longitude;
+    var maxLng = firstCoords.longitude;
 
     for (final eew in validEews) {
-      final lat = eew.latitude!;
-      final lng = eew.longitude!;
+      final coords = eew.hypocenter!.coordinates as CoordinateLatLng;
+      final lat = coords.latitude;
+      final lng = coords.longitude;
 
       if (lat < minLat) {
         minLat = lat;

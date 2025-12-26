@@ -24,9 +24,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
           }
           // serial_no の昇順でソート
           final sortedEews = useMemoized(
-            () => eews.sorted(
-              (a, b) => (a.serialNo ?? 0).compareTo(b.serialNo ?? 0),
-            ),
+            () => eews.sorted((a, b) => a.serialNo.compareTo(b.serialNo)),
             [eews],
           );
           return EewTable(eews: sortedEews);

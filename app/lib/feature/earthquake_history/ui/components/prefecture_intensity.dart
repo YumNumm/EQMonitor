@@ -21,12 +21,16 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
     final textTheme = theme.textTheme;
     final intensity = item.intensity;
 
-    if (intensity == null || intensity.prefectures == null) {
+    if (intensity == null) {
       return const SizedBox.shrink();
     }
 
-    final groupedByIntensity = intensity.prefectures!
+    // maxIntensity が null でないものだけを抽出してグループ化
+    final prefecturesWithIntensity = intensity.prefectures
         .where((p) => p.maxIntensity != null)
+        .toList();
+
+    final groupedByIntensity = prefecturesWithIntensity
         .groupListsBy((p) => p.maxIntensity!)
         .entries
         .sorted((a, b) => b.key.index.compareTo(a.key.index));
@@ -46,7 +50,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                 type: IntensityIconType.filled,
                 size: 40,
               ),
-              title: Text('震度${kv.key}', style: textTheme.titleMedium),
+              title: Text('震度${kv.key.value}', style: textTheme.titleMedium),
               subtitle: Text(
                 kv.value.map((e) => e.value.name).join(', '),
                 style: const TextStyle(fontFamily: FontFamily.notoSansJP),
@@ -83,7 +87,7 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
     required IntensityValue intensityValue,
     required List<IntensityItem> prefectures,
     required List<IntensityItem>? cities,
-    required List<IntensityItem>? stations,
+    required List<IntensityStationItem>? stations,
   }) =>
       Navigator.of(context).push(
         SheetRoute(
@@ -99,12 +103,12 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
   final IntensityValue intensityValue;
   final List<IntensityItem> prefectures;
   final List<IntensityItem>? cities;
-  final List<IntensityItem>? stations;
+  final List<IntensityStationItem>? stations;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('震度$intensityValueの地域')),
+      appBar: AppBar(title: Text('震度${intensityValue.value}の地域')),
       body: ListView(
         children: [
           for (final prefecture in prefectures)
@@ -128,7 +132,7 @@ class _PrefectureListTile extends HookWidget {
 
   final IntensityItem prefecture;
   final List<IntensityItem>? cities;
-  final List<IntensityItem>? stations;
+  final List<IntensityStationItem>? stations;
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +171,7 @@ class _PrefectureListTile extends HookWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
-                    text: '震度${city.maxIntensity}',
+                    text: '震度${city.maxIntensity?.value ?? '不明'}',
                     style: const TextStyle(color: Colors.grey),
                   ),
                 ],
