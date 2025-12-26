@@ -5,8 +5,6 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
-import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
-import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
@@ -34,9 +32,6 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_earthquake_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
-import 'package:eqmonitor/feature/tsunami_history/data/models/tsunami_models.dart';
-import 'package:eqmonitor/feature/tsunami_history/page/tsunami_details_page.dart';
-import 'package:eqmonitor/feature/tsunami_history/page/tsunami_history_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -115,37 +110,9 @@ class InformationHistoryDetailsRoute extends GoRouteData
       InformationHistoryDetailsPage(data: $extra);
 }
 
-@TypedGoRoute<TsunamiHistoryRoute>(path: '/tsunami-history')
-class TsunamiHistoryRoute extends GoRouteData with $TsunamiHistoryRoute {
-  const TsunamiHistoryRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const TsunamiHistoryPage();
-}
-
-@TypedGoRoute<TsunamiDetailsRoute>(
-  path: '/tsunami-details',
-)
-class TsunamiDetailsRoute extends GoRouteData with $TsunamiDetailsRoute {
-  const TsunamiDetailsRoute({required this.$extra});
-
-  final TsunamiEvent $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      TsunamiDetailsPage(event: $extra);
-}
-
 @TypedGoRoute<HomeRoute>(
   path: '/',
   routes: [
-    TypedGoRoute<EarthquakeHistoryEarlyRoute>(
-      path: 'earthquake-history-early',
-      routes: [
-        TypedGoRoute<EarthquakeHistoryEarlyDetailsRoute>(path: 'details/:id'),
-      ],
-    ),
     TypedGoRoute<EewDetailsByEventIdRoute>(
       path: 'eew-details-by-event-id/:eventId',
     ),
@@ -354,18 +321,6 @@ class AboutThisAppRoute extends GoRouteData with $AboutThisAppRoute {
       const AboutThisAppScreen();
 }
 
-class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData
-    with $EarthquakeHistoryEarlyDetailsRoute {
-  const EarthquakeHistoryEarlyDetailsRoute({required this.id});
-
-  final String id;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return EarthquakeHistoryEarlyDetailsScreen(id: id);
-  }
-}
-
 class EewDetailsByEventIdRoute extends GoRouteData
     with $EewDetailsByEventIdRoute {
   const EewDetailsByEventIdRoute({required this.eventId});
@@ -375,16 +330,6 @@ class EewDetailsByEventIdRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EewDetailsByEventIdPage(eventId: eventId);
-  }
-}
-
-class EarthquakeHistoryEarlyRoute extends GoRouteData
-    with $EarthquakeHistoryEarlyRoute {
-  const EarthquakeHistoryEarlyRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const EarthquakeHistoryEarlyScreen();
   }
 }
 

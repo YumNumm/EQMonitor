@@ -7,9 +7,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
-import 'package:eqmonitor/feature/home/ui/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
-import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -64,14 +62,7 @@ class _SheetBody extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const EewWidgets(),
-            const _ShakeDetectionList(),
             const HomeEarthquakeHistorySheet(),
-            ListTile(
-              title: const Text('津波情報'),
-              leading: const Icon(Icons.tsunami),
-              onTap: () async =>
-                  const TsunamiHistoryRoute().push<void>(context),
-            ),
             ListTile(
               title: const Text('設定'),
               leading: const Icon(Icons.settings),
@@ -86,24 +77,6 @@ class _SheetBody extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class _ShakeDetectionList extends ConsumerWidget {
-  const _ShakeDetectionList();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final shakeDetectionEvents = ref.watch(shakeDetectionProvider);
-
-    return switch (shakeDetectionEvents) {
-      AsyncData(:final value) when value.isNotEmpty => Column(
-        children: value
-            .map((event) => ShakeDetectionCard(event: event))
-            .toList(),
-      ),
-      _ => const SizedBox.shrink(),
-    };
   }
 }
 

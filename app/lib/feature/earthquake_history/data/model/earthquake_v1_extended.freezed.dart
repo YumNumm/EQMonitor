@@ -28,12 +28,12 @@ $EarthquakeV1ExtendedCopyWith<EarthquakeV1Extended> get copyWith => _$Earthquake
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeV1Extended&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other.maxIntensityRegionNames, maxIntensityRegionNames));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeV1Extended&&const DeepCollectionEquality().equals(other.earthquake, earthquake)&&const DeepCollectionEquality().equals(other.maxIntensityRegionNames, maxIntensityRegionNames));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,earthquake,const DeepCollectionEquality().hash(maxIntensityRegionNames));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(earthquake),const DeepCollectionEquality().hash(maxIntensityRegionNames));
 
 @override
 String toString() {
@@ -52,7 +52,7 @@ $Res call({
 });
 
 
-$EarthquakeV1CopyWith<$Res> get earthquake;
+
 
 }
 /// @nodoc
@@ -65,23 +65,14 @@ class _$EarthquakeV1ExtendedCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeV1Extended
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? earthquake = null,Object? maxIntensityRegionNames = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? earthquake = freezed,Object? maxIntensityRegionNames = freezed,}) {
   return _then(_self.copyWith(
-earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeV1,maxIntensityRegionNames: freezed == maxIntensityRegionNames ? _self.maxIntensityRegionNames : maxIntensityRegionNames // ignore: cast_nullable_to_non_nullable
 as List<String>?,
   ));
 }
-/// Create a copy of EarthquakeV1Extended
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeV1CopyWith<$Res> get earthquake {
-  
-  return $EarthquakeV1CopyWith<$Res>(_self.earthquake, (value) {
-    return _then(_self.copyWith(earthquake: value));
-  });
-}
+
 }
 
 
@@ -246,12 +237,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeV1Extended&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake)&&const DeepCollectionEquality().equals(other._maxIntensityRegionNames, _maxIntensityRegionNames));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeV1Extended&&const DeepCollectionEquality().equals(other.earthquake, earthquake)&&const DeepCollectionEquality().equals(other._maxIntensityRegionNames, _maxIntensityRegionNames));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,earthquake,const DeepCollectionEquality().hash(_maxIntensityRegionNames));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(earthquake),const DeepCollectionEquality().hash(_maxIntensityRegionNames));
 
 @override
 String toString() {
@@ -270,7 +261,7 @@ $Res call({
 });
 
 
-@override $EarthquakeV1CopyWith<$Res> get earthquake;
+
 
 }
 /// @nodoc
@@ -283,24 +274,15 @@ class __$EarthquakeV1ExtendedCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeV1Extended
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? earthquake = null,Object? maxIntensityRegionNames = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? earthquake = freezed,Object? maxIntensityRegionNames = freezed,}) {
   return _then(_EarthquakeV1Extended(
-earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+earthquake: freezed == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakeV1,maxIntensityRegionNames: freezed == maxIntensityRegionNames ? _self._maxIntensityRegionNames : maxIntensityRegionNames // ignore: cast_nullable_to_non_nullable
 as List<String>?,
   ));
 }
 
-/// Create a copy of EarthquakeV1Extended
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EarthquakeV1CopyWith<$Res> get earthquake {
-  
-  return $EarthquakeV1CopyWith<$Res>(_self.earthquake, (value) {
-    return _then(_self.copyWith(earthquake: value));
-  });
-}
+
 }
 
 // dart format on
