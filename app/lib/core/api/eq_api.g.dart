@@ -49,4 +49,4 @@ final class EqApiProvider extends $FunctionalProvider<EqApi, EqApi, EqApi>
   }
 }
 
-String _$eqApiHash() => r'e9c1e9be905ca9b7fcd56b1715c1e2426c95b5b0';
+String _$eqApiHash() => r'5bb60dfef842d8ecc96b5f7aa23874975918dc4b';
