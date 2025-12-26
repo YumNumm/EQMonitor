@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -84,35 +83,4 @@ class WebsocketMessages extends _$WebsocketMessages {
   }
 
   void emit(Map<String, dynamic> data) => _controller.add(data);
-}
-
-@Riverpod(keepAlive: true)
-Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(Ref ref) {
-  final controller = StreamController<RealtimePostgresChangesPayloadBase>();
-  ref
-    ..listen(websocketMessagesProvider, (previous, next) {
-      final value = next.value;
-      if (value != null) {
-        controller.add(RealtimePostgresChangesPayloadBase.fromJson(value));
-      }
-    })
-    ..onDispose(controller.close);
-  return controller.stream;
-}
-
-@Riverpod(keepAlive: true)
-Stream<RealtimePostgresChangesPayloadTable> websocketTableMessages(Ref ref) {
-  final controller = StreamController<RealtimePostgresChangesPayloadTable>();
-  ref
-    ..listen(websocketParsedMessagesProvider, (previous, next) {
-      final value = next.value;
-      if (value == null || next.isLoading) {
-        return;
-      }
-      if (value is RealtimePostgresChangesPayloadTable) {
-        controller.add(value);
-      }
-    })
-    ..onDispose(controller.close);
-  return controller.stream;
 }
