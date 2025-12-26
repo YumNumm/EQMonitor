@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const EewDetailsByEventIdPage({required this.eventId, super.key});
+class EewDetailsScreen extends HookConsumerWidget {
+  const EewDetailsScreen({required this.eventId, super.key});
 
   final String eventId;
 
@@ -23,7 +23,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildEewList(List<EewV1> eews) {
+  Widget _buildEewList(List<EewItemWithRelations> eews) {
     if (eews.isEmpty) {
       return const Center(child: Text('データがありません'));
     }
@@ -41,7 +41,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
 class _EewCard extends StatelessWidget {
   const _EewCard({required this.eew});
 
-  final EewV1 eew;
+  final EewItemWithRelations eew;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +50,8 @@ class _EewCard extends StatelessWidget {
         ? dateFormat.format(eew.originTime!)
         : '不明';
     final reportTime = dateFormat.format(eew.reportTime);
+    final hypocenter = eew.hypocenter;
+    final forecastIntensity = eew.forecastIntensity;
 
     return Card(
       margin: const EdgeInsets.all(8),
@@ -65,10 +67,10 @@ class _EewCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text('発生時刻: $originTime'),
             Text('報告時刻: $reportTime'),
-            Text('震源地: ${eew.hypoName ?? "不明"}'),
-            Text('深さ: ${eew.depth}km'),
-            Text('マグニチュード: ${eew.magnitude}'),
-            Text('最大予測震度: ${eew.forecastMaxIntensity?.toString() ?? '不明'}'),
+            Text('震源地: ${hypocenter?.value.name ?? "不明"}'),
+            Text('深さ: ${hypocenter?.depth ?? "不明"}km'),
+            Text('マグニチュード: ${hypocenter?.magnitude ?? "不明"}'),
+            Text('最大予測震度: ${forecastIntensity?.maxIntensity?.value.value ?? '不明'}'),
             if (eew.isWarning ?? false)
               const Chip(
                 label: Text('警報'),

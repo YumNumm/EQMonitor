@@ -17,13 +17,10 @@ const earthquakeHistoryDetailsProvider =
 
 final class EarthquakeHistoryDetailsNotifierProvider
     extends
-        $AsyncNotifierProvider<
-          EarthquakeHistoryDetailsNotifier,
-          EarthquakeV1Extended
-        > {
+        $AsyncNotifierProvider<EarthquakeHistoryDetailsNotifier, Earthquake> {
   const EarthquakeHistoryDetailsNotifierProvider._({
     required EarthquakeHistoryDetailsNotifierFamily super.from,
-    required int super.argument,
+    required String super.argument,
   }) : super(
          retry: null,
          name: r'earthquakeHistoryDetailsProvider',
@@ -60,16 +57,16 @@ final class EarthquakeHistoryDetailsNotifierProvider
 }
 
 String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'60002a48c650d7dc0e190db114bc44e7186a9bac';
+    r'fb5cd9c4df2fe95e30472f4139832954674aef3e';
 
 final class EarthquakeHistoryDetailsNotifierFamily extends $Family
     with
         $ClassFamilyOverride<
           EarthquakeHistoryDetailsNotifier,
-          AsyncValue<EarthquakeV1Extended>,
-          EarthquakeV1Extended,
-          FutureOr<EarthquakeV1Extended>,
-          int
+          AsyncValue<Earthquake>,
+          Earthquake,
+          FutureOr<Earthquake>,
+          String
         > {
   const EarthquakeHistoryDetailsNotifierFamily._()
     : super(
@@ -80,7 +77,7 @@ final class EarthquakeHistoryDetailsNotifierFamily extends $Family
         isAutoDispose: true,
       );
 
-  EarthquakeHistoryDetailsNotifierProvider call(int eventId) =>
+  EarthquakeHistoryDetailsNotifierProvider call(String eventId) =>
       EarthquakeHistoryDetailsNotifierProvider._(argument: eventId, from: this);
 
   @override
@@ -88,26 +85,21 @@ final class EarthquakeHistoryDetailsNotifierFamily extends $Family
 }
 
 abstract class _$EarthquakeHistoryDetailsNotifier
-    extends $AsyncNotifier<EarthquakeV1Extended> {
-  late final _$args = ref.$arg as int;
-  int get eventId => _$args;
+    extends $AsyncNotifier<Earthquake> {
+  late final _$args = ref.$arg as String;
+  String get eventId => _$args;
 
-  FutureOr<EarthquakeV1Extended> build(int eventId);
+  FutureOr<Earthquake> build(String eventId);
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref =
-        this.ref
-            as $Ref<AsyncValue<EarthquakeV1Extended>, EarthquakeV1Extended>;
+    final ref = this.ref as $Ref<AsyncValue<Earthquake>, Earthquake>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<EarthquakeV1Extended>,
-                EarthquakeV1Extended
-              >,
-              AsyncValue<EarthquakeV1Extended>,
+              AnyNotifier<AsyncValue<Earthquake>, Earthquake>,
+              AsyncValue<Earthquake>,
               Object?,
               Object?
             >;

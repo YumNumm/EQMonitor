@@ -9,6 +9,9 @@ import logging
 import shutil
 from tqdm import tqdm
 
+MIN_ZOOM = 1
+MAX_ZOOM = 7
+
 # coloramaをインポート（色付きの出力用）
 try:
     from colorama import init, Fore, Style
@@ -229,71 +232,6 @@ def main():
         logger.info(f"{Fore.GREEN}成功: {output_combined_pmtiles}")
     else:
         logger.error(f"失敗: {output_combined_pmtiles}")
-
-    # 結果表示
-    logger.info(f"\n{Fore.CYAN}変換結果:")
-    logger.info(
-        f"- 個別ファイル: {success_individual}/{len(geojson_files)}ファイル成功"
-    )
-    logger.info(
-        f"- 統合PBF Tiles (XYZ)ファイル: {'成功' if success_combined_xyz else '失敗'}"
-    )
-    logger.info(
-        f"- 統合PMTilesファイル: {'成功' if success_combined_pmtiles else '失敗'}"
-    )
-
-    # XYZタイルのディレクトリサイズ計算関数
-    def get_dir_size(path):
-        total_size = 0
-        for dirpath, dirnames, filenames in os.walk(path):
-            for f in filenames:
-                fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
-        return total_size / (1024 * 1024)  # MB単位
-
-    # 作成されたファイルを表示
-    if success_individual > 0 or success_combined_xyz or success_combined_pmtiles:
-        logger.info(f"\n{Fore.CYAN}作成されたファイル:")
-        if success_individual > 0:
-            for pbf_dir in glob.glob("data/pbf_tiles/*"):
-                if os.path.isdir(pbf_dir) and pbf_dir != output_combined_dir:
-                    dir_size = get_dir_size(pbf_dir)
-                    # ズームレベル数とタイル数も表示
-                    zoom_levels = len(
-                        [
-                            d
-                            for d in os.listdir(pbf_dir)
-                            if os.path.isdir(os.path.join(pbf_dir, d))
-                        ]
-                    )
-                    tile_count = sum(len(files) for _, _, files in os.walk(pbf_dir))
-                    logger.info(
-                        f"- {pbf_dir} ({dir_size:.2f} MB, ズームレベル: {zoom_levels}, タイル数: {tile_count})"
-                    )
-
-        if success_combined_xyz:
-            dir_size = get_dir_size(output_combined_dir)
-            zoom_levels = len(
-                [
-                    d
-                    for d in os.listdir(output_combined_dir)
-                    if os.path.isdir(os.path.join(output_combined_dir, d))
-                ]
-            )
-            tile_count = sum(len(files) for _, _, files in os.walk(output_combined_dir))
-            logger.info(
-                f"- {output_combined_dir} ({dir_size:.2f} MB, ズームレベル: {zoom_levels}, タイル数: {tile_count})"
-            )
-
-        if success_combined_pmtiles:
-            for pmtiles_file in glob.glob("data/pmtiles/*.pmtiles"):
-                size = os.path.getsize(pmtiles_file) / (
-                    1024 * 1024
-                )  # サイズをMB単位で計算
-                logger.info(f"- {pmtiles_file} ({size:.2f} MB)")
-    else:
-        logger.error("PBF Tiles・PMTilesファイルが生成されませんでした")
-        sys.exit(1)
 
 
 if __name__ == "__main__":

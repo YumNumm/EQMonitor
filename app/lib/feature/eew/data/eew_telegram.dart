@@ -6,33 +6,22 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
-import 'package:extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:web_socket_client/web_socket_client.dart';
 
 part 'eew_telegram.g.dart';
 
 @Riverpod(keepAlive: true)
 class Eew extends _$Eew {
   @override
-  AsyncValue<List<EewV1>> build() {
+  AsyncValue<List<EewItemWithRelations>> build() {
     final restResult = ref.watch(_eewRestProvider);
 
-    // WebSocketのListen開始
-    ref
-      ..listen(websocketTableMessagesProvider, (_, next) {
-        final valueOrNull = next.value;
-        if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
-          _upsert(valueOrNull.newData);
-        }
-      })
-      ..listen(appLifecycleProvider, (_, next) {
-        if (next == AppLifecycleState.resumed) {
-          log('AppLifecycleState.resumed: Refetch EEW');
-          _refetchRestApi();
-        }
-      });
+    ref.listen(appLifecycleProvider, (_, next) {
+      if (next == AppLifecycleState.resumed) {
+        log('AppLifecycleState.resumed: Refetch EEW');
+        _refetchRestApi();
+      }
+    });
 
     final refreshTimer = Timer.periodic(
       const Duration(seconds: 10),
@@ -43,11 +32,6 @@ class Eew extends _$Eew {
   }
 
   void _refetchRestApi() {
-    // WebSocketが接続されている場合は、パス
-    final webSocketState = ref.read(websocketStatusProvider);
-    if (webSocketState is Connected || webSocketState is Reconnected) {
-      return;
-    }
     if (ref.read(appLifecycleProvider) != AppLifecycleState.resumed) {
       return;
     }
@@ -55,17 +39,14 @@ class Eew extends _$Eew {
     ref.invalidate(_eewRestProvider);
   }
 
-  /// [item]をstateに追加する
-  /// 既に同じeventIdが存在する場合は、serialNoが大きい方を採用する
-  void _upsert(EewV1 item) {
+  void _upsert(EewItemWithRelations item) {
     final dataView = state.value ?? [];
     final data = [...dataView];
-    final index = data.indexWhereOrNull((e) => e.eventId == item.eventId);
+    final rawIndex = data.indexWhere((e) => e.eventId == item.eventId);
+    final index = rawIndex == -1 ? null : rawIndex;
     if (index != null) {
       final previous = data[index];
-      final previousSerialNo = previous.serialNo ?? 0;
-      final newSerialNo = item.serialNo ?? 0;
-      if (previousSerialNo <= newSerialNo) {
+      if (previous.serialNo <= item.serialNo) {
         data[index] = item;
       }
     } else {
@@ -74,14 +55,14 @@ class Eew extends _$Eew {
     state = AsyncData(data);
   }
 
-  void upsert(EewV1 eew) {
+  void upsert(EewItemWithRelations eew) {
     _upsert(eew);
   }
 }
 
 @Riverpod(keepAlive: true)
-Future<List<EewV1>> _eewRest(Ref ref) async {
+Future<List<EewItemWithRelations>> _eewRest(Ref ref) async {
   final api = ref.watch(eqApiProvider);
-  final result = await api.v1.getEewLatest();
-  return result.data;
+  final result = await api.eew.getLatest();
+  return result.items;
 }

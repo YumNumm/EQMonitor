@@ -1,3 +1,6 @@
+min_version = "2025.11.11"
+experimental_monorepo_root = true
+
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "4.14.12"
 biome = "latest"
@@ -23,4 +26,4 @@ pinact = "latest"
 [settings]
 lockfile = true
 experimental = true
-plugin_autoupdate_last_check_duration = '1 week'
+plugin_autoupdate_last_check_duration = "1 week"

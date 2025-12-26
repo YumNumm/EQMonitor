@@ -9,21 +9,30 @@ backend = "aqua:suzuki-shunsuke/tfcmt"
 "platforms.linux-x64" = { checksum = "sha256:08e0ac75a743fde6948d8482f992c90b8bee5e99fe1b5e4de11ccea428e66a86", url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.12/tfcmt_linux_amd64.tar.gz"}
 
 [[tools.biome]]
-version = "2.3.8"
+version = "2.3.10"
 backend = "aqua:biomejs/biome"
+<<<<<<< HEAD
 "platforms.macos-arm64" = { checksum = "sha256:a7d005e3263322feae3ec5d1aa41c14dfe047a537b42e06ab3d1be2314b91c82", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.8/biome-darwin-arm64"}
 
 [[tools.firebase]]
 version = "14.27.0"
 backend = "aqua:firebase/firebase-tools"
 "platforms.macos-arm64" = { checksum = "sha256:288dc65f214b811fa62b0d88a326d00c95c011c651190ad533150143304ab567", url = "https://github.com/firebase/firebase-tools/releases/download/v14.27.0/firebase-tools-macos"}
+=======
+"platforms.macos-arm64" = { checksum = "sha256:adc11155b54557baab9498376472e7371ac5ca798a15c7134212d1ed1c4a1102", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.10/biome-darwin-arm64"}
+
+[[tools.firebase]]
+version = "15.1.0"
+backend = "aqua:firebase/firebase-tools"
+"platforms.macos-arm64" = { checksum = "sha256:e211695079336271d7d867526db554f06e90a84f240f758c83b0b7283559d240", url = "https://github.com/firebase/firebase-tools/releases/download/v15.1.0/firebase-tools-macos"}
+>>>>>>> feature/backend
 
 [[tools.flutter]]
 version = "3.38.3-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
-version = "548.0.0"
+version = "550.0.0"
 backend = "asdf:gcloud"
 
 [[tools."gem:cocoapods"]]
@@ -36,36 +45,54 @@ backend = "core:java"
 "platforms.macos-arm64" = { checksum = "sha256:602d7de72526368bb3f80d95c4427696ea639d2e0cc40455f53ff0bbb18c27c8", url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"}
 
 [[tools.node]]
-version = "24.11.1"
+version = "24.12.0"
 backend = "core:node"
+<<<<<<< HEAD
 "platforms.macos-arm64" = { checksum = "sha256:b05aa3a66efe680023f930bd5af3fdbbd542794da5644ca2ad711d68cbd4dc35", url = "https://nodejs.org/dist/v24.11.1/node-v24.11.1-darwin-arm64.tar.gz"}
 
 [[tools.pinact]]
 version = "3.4.6"
 backend = "aqua:suzuki-shunsuke/pinact"
 "platforms.macos-arm64" = { checksum = "sha256:1d6e8239537eada29e94285ea1e5d1a1db27db9320a9621c9e1d6427f118aee4", url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.4.6/pinact_darwin_arm64.tar.gz"}
+=======
+
+[[tools.pinact]]
+version = "3.6.0"
+backend = "aqua:suzuki-shunsuke/pinact"
+"platforms.macos-arm64" = { checksum = "sha256:b5b8229a2f00b209d7168e41a335e612bd2ccf6e0e41dd830a7cfc65a06532bf", url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.6.0/pinact_darwin_arm64.tar.gz"}
+>>>>>>> feature/backend
 
 [[tools."pipx:codemagic-cli-tools"]]
 version = "0.62.1"
 backend = "pipx:codemagic-cli-tools"
 
 [[tools.pnpm]]
-version = "10.24.0"
+version = "10.26.2"
 backend = "aqua:pnpm/pnpm"
+<<<<<<< HEAD
 "platforms.macos-arm64" = { checksum = "sha256:e3978826faa5fa7fdf63b752afc7a1bc4585ecd591b899fb956ebdd4e49f5db8", url = "https://github.com/pnpm/pnpm/releases/download/v10.24.0/pnpm-macos-arm64"}
+=======
+"platforms.macos-arm64" = { checksum = "sha256:3951f85e0dc46296f661320ef6f32c9773aedc3251b8b32e98f7f7df80065030", url = "https://github.com/pnpm/pnpm/releases/download/v10.26.2/pnpm-macos-arm64"}
+>>>>>>> feature/backend
 
 [[tools.python]]
 version = "3.14.2"
 backend = "core:python"
 
 [[tools.ruby]]
-version = "3.4.7"
+version = "4.0.0"
 backend = "core:ruby"
 
 [[tools.terraform]]
+<<<<<<< HEAD
 version = "1.14.1"
 backend = "aqua:hashicorp/terraform"
 "platforms.macos-arm64" = { checksum = "sha256:4e98074e6b8a4b4f692780101d82cd9974c521e4cd6def4ab6299594619cda53", url = "https://releases.hashicorp.com/terraform/1.14.1/terraform_1.14.1_darwin_arm64.zip"}
+=======
+version = "1.14.3"
+backend = "aqua:hashicorp/terraform"
+"platforms.macos-arm64" = { checksum = "sha256:c45e74c19f38ec7fcb55f74b9788a75a2cbb07da45343b197ae4a41637e571b6", url = "https://releases.hashicorp.com/terraform/1.14.3/terraform_1.14.3_darwin_arm64.zip"}
+>>>>>>> feature/backend
 
 [[tools.tflint]]
 version = "0.59.1"
@@ -75,7 +102,11 @@ backend = "aqua:terraform-linters/tflint"
 [[tools.uv]]
 version = "0.9.16"
 backend = "aqua:astral-sh/uv"
+<<<<<<< HEAD
 "platforms.macos-arm64" = { checksum = "sha256:db6d7fb299c35dc9bbbeb89cfa9aa55a9584f637d370c0a4c62a50df9c9294a7", url = "https://github.com/astral-sh/uv/releases/download/0.9.16/uv-aarch64-apple-darwin.tar.gz"}
+=======
+"platforms.macos-arm64" = { checksum = "sha256:9c594dce1c237e11680be2b6d1331448eeb6f8a1453fb851a66a40291bb624de", url = "https://github.com/astral-sh/uv/releases/download/0.9.13/uv-aarch64-apple-darwin.tar.gz"}
+>>>>>>> feature/backend
 
 [[tools.websocat]]
 version = "1.14.0"
@@ -83,11 +114,19 @@ backend = "aqua:vi/websocat"
 "platforms.linux-x64" = { checksum = "blake3:0a3027e1be724706e4156bca6098653425bfa8375d88cc0b8fd1fd41ccb6df89", url = "https://github.com/vi/websocat/releases/download/v1.14.0/websocat.x86_64-unknown-linux-musl"}
 
 [[tools.xcbeautify]]
-version = "3.1.1"
+version = "3.1.2"
 backend = "aqua:cpisciotta/xcbeautify"
+<<<<<<< HEAD
 "platforms.macos-arm64" = { checksum = "sha256:6099d0ed50e340adf0da9c1e103a62045e6c66c1dcf786440a9783bb49dcc69f", url = "https://github.com/cpisciotta/xcbeautify/releases/download/3.1.1/xcbeautify-3.1.1-arm64-apple-macosx.zip"}
+=======
+"platforms.macos-arm64" = { checksum = "sha256:aead540db1695134943e204150b893ca1931b9d49645f61a4d25e67a2e27fbff", url = "https://github.com/cpisciotta/xcbeautify/releases/download/3.1.2/xcbeautify-3.1.2-arm64-apple-macosx.zip"}
+>>>>>>> feature/backend
 
 [[tools.yq]]
-version = "4.49.2"
+version = "4.50.1"
 backend = "aqua:mikefarah/yq"
+<<<<<<< HEAD
 "platforms.macos-arm64" = { checksum = "sha256:b0b70ede2b392ba02091b8137b42db819a7968cf232d595dd7394ac5668b4a0b", url = "https://github.com/mikefarah/yq/releases/download/v4.49.2/yq_darwin_arm64"}
+=======
+"platforms.macos-arm64" = { checksum = "sha256:589cd3e27b2a0ae62fc4513c7d18db56203aaf88bf7c480f0cb3d4f4d0ac5514", url = "https://github.com/mikefarah/yq/releases/download/v4.50.1/yq_darwin_arm64"}
+>>>>>>> feature/backend

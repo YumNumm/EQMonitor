@@ -58,7 +58,7 @@ final class EarthquakeHistoryNotifierProvider
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'665e3f603eae24c71097102072af43158ab519dd';
+    r'a9cb3f59114fc5ca5ad5c7f706918875fa8e476c';
 
 final class EarthquakeHistoryNotifierFamily extends $Family
     with
@@ -117,86 +117,4 @@ abstract class _$EarthquakeHistoryNotifier
             >;
     element.handleValue(ref, created);
   }
-}
-
-@ProviderFor(earthquakeV1Extended)
-const earthquakeV1ExtendedProvider = EarthquakeV1ExtendedFamily._();
-
-final class EarthquakeV1ExtendedProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<EarthquakeV1Extended>,
-          EarthquakeV1Extended,
-          FutureOr<EarthquakeV1Extended>
-        >
-    with
-        $FutureModifier<EarthquakeV1Extended>,
-        $FutureProvider<EarthquakeV1Extended> {
-  const EarthquakeV1ExtendedProvider._({
-    required EarthquakeV1ExtendedFamily super.from,
-    required EarthquakeV1 super.argument,
-  }) : super(
-         retry: null,
-         name: r'earthquakeV1ExtendedProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$earthquakeV1ExtendedHash();
-
-  @override
-  String toString() {
-    return r'earthquakeV1ExtendedProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<EarthquakeV1Extended> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<EarthquakeV1Extended> create(Ref ref) {
-    final argument = this.argument as EarthquakeV1;
-    return earthquakeV1Extended(ref, argument);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is EarthquakeV1ExtendedProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$earthquakeV1ExtendedHash() =>
-    r'19ec401d223bac3130f06c83f3d01bef8eaf68f8';
-
-final class EarthquakeV1ExtendedFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<EarthquakeV1Extended>,
-          EarthquakeV1
-        > {
-  const EarthquakeV1ExtendedFamily._()
-    : super(
-        retry: null,
-        name: r'earthquakeV1ExtendedProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  EarthquakeV1ExtendedProvider call(EarthquakeV1 data) =>
-      EarthquakeV1ExtendedProvider._(argument: data, from: this);
-
-  @override
-  String toString() => r'earthquakeV1ExtendedProvider';
 }
