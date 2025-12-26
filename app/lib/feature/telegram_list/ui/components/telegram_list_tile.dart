@@ -63,7 +63,16 @@ class TelegramListTile extends StatelessWidget {
           ],
         ],
       ),
-      trailing: _StatusBadge(status: telegram.status),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _StatusBadge(status: telegram.status),
+          if (onTap != null) ...[
+            const SizedBox(width: 8),
+            const Icon(Icons.chevron_right),
+          ],
+        ],
+      ),
       isThreeLine: true,
     );
   }
