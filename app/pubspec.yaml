@@ -10,6 +10,13 @@ environment:
 
 resolution: workspace
 
+dependency_overrides:
+  maplibre_ios:
+    git:
+      url: https://github.com/josxha/flutter-maplibre.git
+      ref: 2b3f46ca2519081e26558f88ed517857ad2beaac
+      path: maplibre_ios
+
 dependencies:
   app_settings:
     git:
