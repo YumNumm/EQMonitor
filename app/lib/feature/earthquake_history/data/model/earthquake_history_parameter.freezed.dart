@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeHistoryParameter {
 
- double? get magnitudeLte; double? get magnitudeGte; double? get depthLte; double? get depthGte; JmaIntensity? get intensityLte; JmaIntensity? get intensityGte;
+ double? get magnitudeLte; double? get magnitudeGte; int? get depthLte; int? get depthGte; IntensityValue? get intensityLte; IntensityValue? get intensityGte;
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $EarthquakeHistoryParameterCopyWith<$Res>  {
   factory $EarthquakeHistoryParameterCopyWith(EarthquakeHistoryParameter value, $Res Function(EarthquakeHistoryParameter) _then) = _$EarthquakeHistoryParameterCopyWithImpl;
 @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, double? depthLte, double? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, IntensityValue? intensityLte, IntensityValue? intensityGte
 });
 
 
@@ -67,10 +67,10 @@ class _$EarthquakeHistoryParameterCopyWithImpl<$Res>
 magnitudeLte: freezed == magnitudeLte ? _self.magnitudeLte : magnitudeLte // ignore: cast_nullable_to_non_nullable
 as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitudeGte // ignore: cast_nullable_to_non_nullable
 as double?,depthLte: freezed == depthLte ? _self.depthLte : depthLte // ignore: cast_nullable_to_non_nullable
-as double?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
-as double?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,
+as int?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
+as int?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
+as IntensityValue?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
+as IntensityValue?,
   ));
 }
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  double? depthLte,  double? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte);case _:
@@ -176,7 +176,7 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  double? depthLte,  double? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter():
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte);case _:
@@ -196,7 +196,7 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  double? depthLte,  double? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte);case _:
@@ -216,10 +216,10 @@ class _EarthquakeHistoryParameter implements EarthquakeHistoryParameter {
 
 @override final  double? magnitudeLte;
 @override final  double? magnitudeGte;
-@override final  double? depthLte;
-@override final  double? depthGte;
-@override final  JmaIntensity? intensityLte;
-@override final  JmaIntensity? intensityGte;
+@override final  int? depthLte;
+@override final  int? depthGte;
+@override final  IntensityValue? intensityLte;
+@override final  IntensityValue? intensityGte;
 
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
@@ -251,7 +251,7 @@ abstract mixin class _$EarthquakeHistoryParameterCopyWith<$Res> implements $Eart
   factory _$EarthquakeHistoryParameterCopyWith(_EarthquakeHistoryParameter value, $Res Function(_EarthquakeHistoryParameter) _then) = __$EarthquakeHistoryParameterCopyWithImpl;
 @override @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, double? depthLte, double? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, IntensityValue? intensityLte, IntensityValue? intensityGte
 });
 
 
@@ -273,10 +273,10 @@ class __$EarthquakeHistoryParameterCopyWithImpl<$Res>
 magnitudeLte: freezed == magnitudeLte ? _self.magnitudeLte : magnitudeLte // ignore: cast_nullable_to_non_nullable
 as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitudeGte // ignore: cast_nullable_to_non_nullable
 as double?,depthLte: freezed == depthLte ? _self.depthLte : depthLte // ignore: cast_nullable_to_non_nullable
-as double?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
-as double?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,
+as int?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
+as int?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
+as IntensityValue?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
+as IntensityValue?,
   ));
 }
 

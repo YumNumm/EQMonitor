@@ -2,11 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
-import 'package:eqmonitor/core/gen/assets.gen.dart';
-import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,89 +27,64 @@ class MapStyleUtil {
   }
 
   Future<String> getStyle({required MapColorScheme colorScheme}) async {
-    if (kIsWeb) {
-      return 'https://v2.map.eqmonitor.app/style-light.json';
-    }
-
-    // copy PMTiles to temporary directory
-    final dir = await getApplicationDocumentsDirectory();
-    final documentDir = dir.path;
-    final pmtilesDir = '$documentDir/pmtiles';
-    await Directory(pmtilesDir).create(recursive: true);
-    final pmtilesFile = File('$pmtilesDir/earthquake_tsunami_all.pmtiles');
-    final assetPath = Assets.map.earthquakeTsunamiAll;
-    final assetFile = await rootBundle.load(assetPath);
-    await pmtilesFile.writeAsBytes(assetFile.buffer.asUint8List());
-
     final json = {
       'version': 8,
-      'name': 'EQMonitor Style',
-      'center': [139.767125, 35.681236],
-      'zoom': 5,
+      'name': 'EQMonitor Light',
       'sources': {
-        'eqmonitor_map': {
+        'world': {
           'type': 'vector',
-          // 'url': 'https://map.eqmonitor.app/tiles/tiles.json',
-          'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
-          // 'url': 'pmtiles://file://${pmtilesFile.path}',
-          'attribution': '© 気象庁, Natural Earth',
-          'minzoom': 1,
-          'maxzoom': 10,
+          'url': 'pmtiles://https://v2.map.eqmonitor.app/world.pmtiles',
+        },
+        'japan': {
+          'type': 'vector',
+          'url': 'pmtiles://https://v2.map.eqmonitor.app/japan.pmtiles',
+        },
+        'overview': {
+          'type': 'vector',
+          'url': 'pmtiles://https://v2.map.eqmonitor.app/overview.pmtiles',
         },
       },
-      'sprite': '',
-      'glyphs': 'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
       'layers': [
         {
-          'id': BaseLayer.background.name,
+          'id': 'background',
           'type': 'background',
-          'paint': {
-            'background-color': colorScheme.backgroundColor.toHexStringRGB(),
-          },
+          'paint': {'background-color': '#ffffff'},
         },
         {
-          'id': BaseLayer.countriesFill.name,
-          'source': 'eqmonitor_map',
-          'source-layer': 'countries',
-          'type': 'fill',
-          'layout': {'visibility': 'visible'},
-          'paint': {'fill-color': colorScheme.worldLandColor.toHexStringRGB()},
-        },
-        {
-          'id': BaseLayer.countriesLines.name,
-          'source': 'eqmonitor_map',
-          'source-layer': 'countries',
+          'id': 'countries',
           'type': 'line',
-          'layout': {'visibility': 'visible'},
-          'paint': {
-            'line-color': colorScheme.worldLineColor.toHexStringRGB(),
-            'line-width': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              3,
-              0.5,
-              5.5,
-              1,
-            ],
-          },
+          'source': 'world',
+          'source-layer': 'countries',
+          'paint': {'line-color': '#cccccc', 'line-width': 1},
         },
         {
-          'id': BaseLayer.areaForecastLocalEFill.name,
-          'source': 'eqmonitor_map',
+          'id': 'areaForecastLocalE',
+          'type': 'line',
+          'source': 'japan',
           'source-layer': 'areaForecastLocalE',
-          'type': 'fill',
-          'paint': {'fill-color': colorScheme.japanLandColor.toHexStringRGB()},
+          'paint': {'line-color': '#666666', 'line-width': 1},
         },
-        // areaForecastLocalEew_line
         {
-          'id': BaseLayer.areaForecastLocalEewLine.name,
-          'source': 'eqmonitor_map',
+          'id': 'areaForecastLocalEew',
+          'type': 'line',
+          'source': 'japan',
           'source-layer': 'areaForecastLocalEew',
+          'paint': {'line-color': '#ff9900', 'line-width': 1},
+        },
+        {
+          'id': 'areaInformationCityQuake',
           'type': 'line',
-          'layout': {'line-cap': 'round', 'line-join': 'round'},
+          'source': 'japan',
+          'source-layer': 'areaInformationCityQuake',
+          'paint': {'line-color': '#ff0033', 'line-width': 1},
+        },
+        {
+          'id': 'areaTsunami',
+          'type': 'line',
+          'source': 'japan',
+          'source-layer': 'areaTsunami',
           'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': '#3366cc',
             'line-width': [
               'interpolate',
               ['linear'],
@@ -122,49 +93,6 @@ class MapStyleUtil {
               0.5,
               5.5,
               1,
-            ],
-          },
-        },
-        {
-          'id': BaseLayer.areaForecastLocalELine.name,
-          'source': 'eqmonitor_map',
-          'source-layer': 'areaForecastLocalE',
-          'type': 'line',
-          'layout': {'line-cap': 'round', 'line-join': 'round'},
-          'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
-            'line-opacity': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              3,
-              0,
-              5,
-              0.2,
-              5.5,
-              1,
-            ],
-            'line-width': 0.5,
-          },
-        },
-        // areaInformationCityQuake
-        {
-          'id': BaseLayer.areaInformationCityQuakeLine.name,
-          'source': 'eqmonitor_map',
-          'source-layer': 'areaInformationCityQuake',
-          'type': 'line',
-          'layout': {'line-cap': 'round', 'line-join': 'round'},
-          'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
-            'line-width': 0.5,
-            'line-opacity': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              7,
-              0,
-              9.5,
-              0.3,
             ],
           },
         },

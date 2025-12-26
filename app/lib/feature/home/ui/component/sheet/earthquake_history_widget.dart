@@ -35,7 +35,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
           const SheetHeader(title: '地震履歴'),
           switch (state) {
             AsyncData(:final value) => () {
-              final data = value.$1.take(3).toList();
+              final data = value.items.take(3).toList();
               if (data.isEmpty) {
                 return const SizedBox.shrink();
               }

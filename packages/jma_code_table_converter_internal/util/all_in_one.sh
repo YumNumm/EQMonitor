@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -euo pipefail
 rm -rf tmp
 mkdir tmp
 
@@ -12,10 +14,10 @@ unzip -O sjis tmp/jmaxml_20240216_Code.zip -d tmp > /dev/null
 
 echo "------ Converting XLS to CSV ------"
 cd util/xls_to_csv
-echo "syncing rye..."
-rye sync > /dev/null
+echo "syncing uv..."
+uv sync > /dev/null
 echo "converting..."
-rye run python3 src/xls_to_csv/main.py \
+uv run python3 src/xls_to_csv/main.py \
    -i ../../tmp/地震火山関連コード表.xls \
    -o ../../tmp/output
 cd ../..

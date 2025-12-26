@@ -1,7 +1,16 @@
 syntax = "proto3";
 
+// コード表ヘッダー（バージョン管理用）
+message JmaCodeTableHeader {
+  string date_version = 1;  // yyyyMMdd形式の日付バージョン
+  string fetched_at = 2;    // ISO8601形式の取得時刻
+  string source_url = 3;    // ダウンロード元URL
+  string sha384 = 4;        // ZIPファイルのSHA384ハッシュ
+}
+
 // 気象庁地震関連コード表
 message JmaCodeTable {
+  JmaCodeTableHeader header = 1;
   AreaForecastLocalEew area_forecast_local_eew = 22;
   AreaInformationPrefectureEarthquake area_information_prefecture_earthquake = 23;
   AreaEpicenter area_epicenter = 41;
@@ -29,9 +38,7 @@ message AreaInformationPrefectureEarthquake {
     string code = 1;
     string name = 2;
   }
-
 }
-
 
 // 41. 震央地名
 // (011, 北海道地方)

@@ -1,35 +1,43 @@
 import 'package:dio/dio.dart';
-import 'package:eqapi_client/src/children/auth.dart';
-import 'package:eqapi_client/src/children/objects.dart';
-import 'package:eqapi_client/src/children/v1.dart';
-import 'package:eqapi_client/src/v2_api_client.dart';
+import 'package:eqapi_client/src/v2/v2_clients.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:retrofit/retrofit.dart';
 
-export 'children/v1.dart';
+export 'v2/v2_clients.dart';
 
 part 'eqapi_client.g.dart';
 
+/// EQ APIクライアント
 class EqApi {
-  EqApi({required this.dio, required this.objectsDio});
+  EqApi({required this.dio});
 
   final Dio dio;
-  final Dio objectsDio;
 
-  V1 get v1 => V1(dio);
+  /// 地震情報API
+  EarthquakeApiClient get earthquake => EarthquakeApiClient(dio);
 
-  V2ApiClient get v2 => V2ApiClient(dio);
+  /// 緊急地震速報API
+  EewApiClient get eew => EewApiClient(dio);
 
-  AuthApiClient get auth => AuthApiClient(dio);
+  /// 通知設定API
+  NotificationSettingsApiClient get notification =>
+      NotificationSettingsApiClient(dio);
 
+  /// 電文API
+  TelegramApiClient get telegram => TelegramApiClient(dio);
+
+  /// WebSocket API
+  WebsocketApiClient get websocket => WebsocketApiClient(dio);
+
+  /// V3 API (互換性維持)
   V3 get v3 => V3(dio);
-
-  Objects get objects => Objects(objectsDio);
 }
 
+/// V3 API (互換性維持)
 @RestApi()
 abstract class V3 {
   factory V3(Dio dio, {String baseUrl}) = _V3;
+
   @GET('/v3/information')
   Future<InformationV3Result> getInformation({
     @Query('offset') int offset = 0,

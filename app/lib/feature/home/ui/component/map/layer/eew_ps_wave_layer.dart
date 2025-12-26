@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:clock/clock.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +14,7 @@ import 'package:maplibre/maplibre.dart';
 class EewPsWaveLayer extends HookConsumerWidget {
   const EewPsWaveLayer({required this.eews, super.key});
 
-  final List<EewV1> eews;
+  final List<EewItemWithRelations> eews;
 
   static const ({String pWave, String sWave}) sourceId = (
     pWave: 'eew-p-wave',
@@ -31,15 +31,14 @@ class EewPsWaveLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
-    final showEews = eews.where(
-      (eew) =>
-          eew.latitude != null &&
-          eew.longitude != null &&
-          eew.depth != null &&
+    final showEews = eews.where((eew) {
+      final coords = eew.hypocenter?.coordinates;
+      return coords is CoordinateLatLng &&
+          eew.hypocenter?.depth != null &&
           eew.originTime != null &&
           !eew.isCanceled &&
-          !eew.isLowPrecise,
-    );
+          !eew.isPlum;
+    });
 
     final isInitialized = useRef(false);
 
@@ -172,88 +171,109 @@ class EewPsWaveLayer extends HookConsumerWidget {
 
     return const SizedBox.shrink();
   }
-}
 
-(String, String) _calculateGeoJson(
-  List<EewV1> eews,
-  DateTime now,
-  TravelTimeDepthMap travelTimeMap,
-) {
-  final pWaveFeatures = <Map<String, dynamic>>[];
-  final sWaveFeatures = <Map<String, dynamic>>[];
+  (String, String) _calculateGeoJson(
+    List<EewItemWithRelations> eews,
+    DateTime now,
+    TravelTimeDepthMap travelTimeMap,
+  ) {
+    final pWaveFeatures = <Map<String, dynamic>>[];
+    final sWaveFeatures = <Map<String, dynamic>>[];
 
-  for (final eew in eews) {
-    final lat = eew.latitude!;
-    final lng = eew.longitude!;
-    final depth = eew.depth!;
-    final originTime = eew.originTime!;
+    for (final eew in eews) {
+      final hypocenter = eew.hypocenter;
+      if (hypocenter == null) {
+        continue;
+      }
+      final coords = hypocenter.coordinates;
+      if (coords is! CoordinateLatLng) {
+        continue;
+      }
+      final depth = hypocenter.depth;
+      final originTime = eew.originTime;
 
-    final elapsed = now.difference(originTime).inMilliseconds / 1000;
-    final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
+      if (depth == null || originTime == null) {
+        continue;
+      }
 
-    final isWarning =
-        eew.isWarning ?? (eew.headline?.contains('強い揺れ') ?? false);
-    final lineColor = isWarning ? '#FF0000' : '#FFA500';
-    final fillColor = isWarning ? '#FF0000' : '#FFA500';
+      final lat = coords.latitude;
+      final lng = coords.longitude;
 
-    if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
-      pWaveFeatures.add(<String, dynamic>{
-        'type': 'Feature',
-        'geometry': <String, dynamic>{
-          'type': 'Polygon',
-          'coordinates': [
-            _generateCircleCoordinates(lat, lng, travelTime.pDistance!),
-          ],
-        },
-        'properties': <String, dynamic>{},
-      });
+      final elapsed = now.difference(originTime).inMilliseconds / 1000;
+      final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
+
+      final isWarning =
+          eew.isWarning ?? (eew.headline?.contains('強い揺れ') ?? false);
+      final lineColor = isWarning ? '#FF0000' : '#FFA500';
+      final fillColor = isWarning ? '#FF0000' : '#FFA500';
+
+      if (travelTime.pDistance != null && travelTime.pDistance! > 0) {
+        pWaveFeatures.add(<String, dynamic>{
+          'type': 'Feature',
+          'geometry': <String, dynamic>{
+            'type': 'Polygon',
+            'coordinates': [
+              _generateCircleCoordinates(
+                lat,
+                lng,
+                travelTime.pDistance!,
+              ),
+            ],
+          },
+          'properties': <String, dynamic>{},
+        });
+      }
+
+      if (travelTime.sDistance != null && travelTime.sDistance! > 0) {
+        sWaveFeatures.add({
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Polygon',
+            'coordinates': [
+              _generateCircleCoordinates(
+                lat,
+                lng,
+                travelTime.sDistance!,
+              ),
+            ],
+          },
+          'properties': {
+            'lineColor': lineColor,
+            'fillColor': fillColor,
+          },
+        });
+      }
     }
 
-    if (travelTime.sDistance != null && travelTime.sDistance! > 0) {
-      sWaveFeatures.add({
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Polygon',
-          'coordinates': [
-            _generateCircleCoordinates(lat, lng, travelTime.sDistance!),
-          ],
-        },
-        'properties': {
-          'lineColor': lineColor,
-          'fillColor': fillColor,
-        },
-      });
+    final pWaveGeojson = jsonEncode({
+      'type': 'FeatureCollection',
+      'features': pWaveFeatures,
+    });
+
+    final sWaveGeojson = jsonEncode({
+      'type': 'FeatureCollection',
+      'features': sWaveFeatures,
+    });
+
+    return (pWaveGeojson, sWaveGeojson);
+  }
+
+  List<List<double>> _generateCircleCoordinates(
+    double lat,
+    double lng,
+    double radiusKm,
+  ) {
+    const distance = latlong2.Distance();
+    final center = latlong2.LatLng(lat, lng);
+    final coordinates = <List<double>>[];
+
+    for (var bearing = 0; bearing < 360; bearing += 4) {
+      final point = distance.offset(center, radiusKm * 1000, bearing);
+      coordinates.add([point.longitude, point.latitude]);
     }
+
+    coordinates.add(coordinates.first);
+
+    return coordinates;
   }
-
-  final pWaveGeojson = jsonEncode({
-    'type': 'FeatureCollection',
-    'features': pWaveFeatures,
-  });
-
-  final sWaveGeojson = jsonEncode({
-    'type': 'FeatureCollection',
-    'features': sWaveFeatures,
-  });
-
-  return (pWaveGeojson, sWaveGeojson);
-}
-
-List<List<double>> _generateCircleCoordinates(
-  double lat,
-  double lng,
-  double radiusKm,
-) {
-  const distance = latlong2.Distance();
-  final center = latlong2.LatLng(lat, lng);
-  final coordinates = <List<double>>[];
-
-  for (var bearing = 0; bearing < 360; bearing += 8) {
-    final point = distance.offset(center, radiusKm * 1000, bearing);
-    coordinates.add([point.longitude, point.latitude]);
-  }
-
-  coordinates.add(coordinates.first);
-
-  return coordinates;
 }

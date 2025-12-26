@@ -17,9 +17,12 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
       EarthquakeParameterStationItem(
         code: e.code,
         name: e.name,
+        nameKana: e.kana,
         latitude: e.latitude,
         longitude: e.longitude,
         arv400: arv,
+        status: _parseStationStatus(e.status),
+        owner: _parseStationOwner(e.owner),
       ),
     );
   });
@@ -39,17 +42,55 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
     (e) => EarthquakeParameterRegionItem(
       code: e.key.code,
       name: e.key.name,
+      nameKana: e.key.kana,
       cities: e.value.entries.map(
         (e) => EarthquakeParameterCityItem(
           code: e.key.code,
           name: e.key.name,
+          nameKana: e.key.kana,
           stations: e.value.map((e) => e.$2),
         ),
       ),
     ),
   );
   print('regions: ${regions.length}');
-  return EarthquakeParameter(regions: regions);
+  return EarthquakeParameter(
+    header: EarthquakeParameterHeader(
+      version: parameter.version,
+      changeTime: parameter.changeTime.toIso8601String(),
+    ),
+    regions: regions,
+  );
+}
+
+StationStatus _parseStationStatus(String status) {
+  switch (status) {
+    case '現':
+      return StationStatus.OPERATIONAL;
+    case '変':
+      return StationStatus.CHANGE;
+    case '新':
+      return StationStatus.CREATED;
+    case '廃':
+      return StationStatus.DISCONTINUED;
+    default:
+      return StationStatus.OPERATIONAL;
+  }
+}
+
+StationOwner _parseStationOwner(String owner) {
+  switch (owner) {
+    case '気象庁':
+      return StationOwner.JMA;
+    case '都道府県':
+      return StationOwner.PREFECTURE;
+    case '市町村':
+      return StationOwner.CITY;
+    case '防災科研':
+      return StationOwner.NIED;
+    default:
+      return StationOwner.OTHERS;
+  }
 }
 
 Future<double?> getArv({
