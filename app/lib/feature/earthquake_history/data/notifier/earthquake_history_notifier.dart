@@ -62,6 +62,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           intensityLte: param.intensityLte?.value,
           magnitudeGte: param.magnitudeGte,
           magnitudeLte: param.magnitudeLte,
+          statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
           limit: limit,
         );
     return (
@@ -101,6 +102,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         intensityLte: parameter.intensityLte?.value,
         magnitudeGte: parameter.magnitudeGte,
         magnitudeLte: parameter.magnitudeLte,
+        statuses: parameter.statuses?.map((s) => s.name.toUpperCase()).toList(),
         cursor: currentState.nextToken,
         limit: 50,
       );
