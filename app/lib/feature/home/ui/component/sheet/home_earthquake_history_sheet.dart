@@ -1,7 +1,7 @@
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -31,20 +31,19 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           children: [
             const _Header(),
             switch (state) {
-              AsyncData(:final value) =>
-                value.$1.isEmpty
-                    ? const EarthquakeHistoryNotFound()
-                    : _EarthquakeList(earthquakes: value.$1),
+              AsyncData(:final value) => value.items.isEmpty
+                  ? const EarthquakeHistoryNotFound()
+                  : _EarthquakeList(earthquakes: value.items),
               AsyncError(:final error) => ErrorCard(
-                error: error,
-                margin: EdgeInsets.zero,
-                onReload: () async => ref.refresh(
-                  earthquakeHistoryProvider(
-                    const EarthquakeHistoryParameter(),
+                  error: error,
+                  margin: EdgeInsets.zero,
+                  onReload: () async => ref.refresh(
+                    earthquakeHistoryProvider(
+                      const EarthquakeHistoryParameter(),
+                    ),
                   ),
+                  padding: const EdgeInsets.all(8),
                 ),
-                padding: const EdgeInsets.all(8),
-              ),
               _ => const Center(child: CircularProgressIndicator.adaptive()),
             },
           ],
@@ -89,7 +88,7 @@ class _Header extends StatelessWidget {
 class _EarthquakeList extends StatelessWidget {
   const _EarthquakeList({required this.earthquakes});
 
-  final List<EarthquakeV1Extended> earthquakes;
+  final List<EarthquakePartial> earthquakes;
 
   @override
   Widget build(BuildContext context) {

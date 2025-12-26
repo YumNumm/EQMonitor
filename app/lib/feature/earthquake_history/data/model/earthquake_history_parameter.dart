@@ -11,17 +11,17 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
   const factory EarthquakeHistoryParameter({
     double? magnitudeLte,
     double? magnitudeGte,
-    double? depthLte,
-    double? depthGte,
-    JmaIntensity? intensityLte,
-    JmaIntensity? intensityGte,
+    int? depthLte,
+    int? depthGte,
+    IntensityValue? intensityLte,
+    IntensityValue? intensityGte,
   }) = _EarthquakeHistoryParameter;
 }
 
 extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
   EarthquakeHistoryParameter updateIntensity(
-    JmaIntensity? min,
-    JmaIntensity? max,
+    IntensityValue? min,
+    IntensityValue? max,
   ) => copyWith(
     intensityGte: IntensityFilterChip.initialMin == min ? null : min,
     intensityLte: IntensityFilterChip.initialMax == max ? null : max,
@@ -33,7 +33,7 @@ extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
         magnitudeLte: MagnitudeFilterChip.initialMax == max ? null : max,
       );
 
-  EarthquakeHistoryParameter updateDepth(double? min, double? max) => copyWith(
+  EarthquakeHistoryParameter updateDepth(int? min, int? max) => copyWith(
     depthGte: DepthFilterChip.initialMin == min ? null : min,
     depthLte: DepthFilterChip.initialMax == max ? null : max,
   );
