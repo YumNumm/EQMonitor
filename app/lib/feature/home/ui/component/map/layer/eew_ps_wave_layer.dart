@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:clock/clock.dart';
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -201,8 +202,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
       final elapsed = now.difference(originTime).inMilliseconds / 1000;
       final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
 
-      final isWarning =
-          eew.isWarning ?? (eew.headline?.contains('強い揺れ') ?? false);
+      final isWarning = eew.isWarningOrFallback;
       final lineColor = isWarning ? '#FF0000' : '#FFA500';
       final fillColor = isWarning ? '#FF0000' : '#FFA500';
 
