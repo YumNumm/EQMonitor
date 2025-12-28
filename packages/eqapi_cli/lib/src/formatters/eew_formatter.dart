@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:intl/intl.dart';
 
@@ -295,59 +293,5 @@ class EewFormatter {
       return '警報';
     }
     return '予報';
-  }
-
-  static String toJsonList(EewListResponse response) {
-    final encoder = JsonEncoder.withIndent('  ');
-    return encoder.convert({
-      'items': response.items.map((e) => _eewToMap(e)).toList(),
-      'nextToken': response.nextToken,
-      'nextPooling': response.nextPooling,
-    });
-  }
-
-  static String toJsonLatest(EewLatestResponse response) {
-    final encoder = JsonEncoder.withIndent('  ');
-    return encoder.convert({
-      'items': response.items.map((e) => _eewToMap(e)).toList(),
-    });
-  }
-
-  static String toJsonArray(EewArrayResponse response) {
-    final encoder = JsonEncoder.withIndent('  ');
-    return encoder.convert({
-      'items': response.items.map((e) => _eewToMap(e)).toList(),
-    });
-  }
-
-  static String toJsonItem(EewItemWithRelations item) {
-    final encoder = JsonEncoder.withIndent('  ');
-    return encoder.convert(_eewToMap(item));
-  }
-
-  static Map<String, dynamic> _eewToMap(EewItemWithRelations eew) {
-    return {
-      'eventId': eew.eventId,
-      'serialNo': eew.serialNo,
-      'type': eew.type.value,
-      'status': eew.status.value,
-      'infoType': eew.infoType.value,
-      'reportTime': eew.reportTime.toIso8601String(),
-      'originTime': eew.originTime?.toIso8601String(),
-      'isCanceled': eew.isCanceled,
-      'isWarning': eew.isWarning,
-      'isLastInfo': eew.isLastInfo,
-      'isPlum': eew.isPlum,
-      'hypocenter': eew.hypocenter != null
-          ? {
-              'name': eew.hypocenter!.value.name,
-              'code': eew.hypocenter!.value.code,
-              'magnitude': eew.hypocenter!.magnitude,
-              'depth': eew.hypocenter!.depth,
-            }
-          : null,
-      'maxIntensity': eew.forecastIntensity?.maxIntensity?.value.value,
-      'intensityRegionsCount': eew.intensityRegions.length,
-    };
   }
 }

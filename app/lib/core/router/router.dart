@@ -5,6 +5,10 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
+import 'package:eqmonitor/feature/earthquake_replay/ui/earthquake_replay_page.dart';
+import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
+import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_selection_page.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
@@ -67,6 +71,45 @@ class EarthquakeHistoryRoute extends GoRouteData with $EarthquakeHistoryRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeHistoryPage();
+}
+
+@TypedGoRoute<EarthquakeSearchSelectionRoute>(path: '/earthquake-search')
+class EarthquakeSearchSelectionRoute extends GoRouteData
+    with $EarthquakeSearchSelectionRoute {
+  const EarthquakeSearchSelectionRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeSearchSelectionPage();
+}
+
+@TypedGoRoute<EarthquakeSearchResultRoute>(
+  path: '/earthquake-search/:type/:code',
+)
+class EarthquakeSearchResultRoute extends GoRouteData
+    with $EarthquakeSearchResultRoute {
+  const EarthquakeSearchResultRoute({
+    required this.type,
+    required this.code,
+    this.name,
+  });
+
+  final String type;
+  final String code;
+  final String? name;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final searchType = EarthquakeSearchType.values.firstWhere(
+      (e) => e.name == type,
+      orElse: () => EarthquakeSearchType.region,
+    );
+    return EarthquakeSearchResultPage(
+      type: searchType,
+      code: code,
+      name: name ?? code,
+    );
+  }
 }
 
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
@@ -179,6 +222,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
+        TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -349,6 +393,15 @@ class PlaygroundRoute extends GoRouteData with $PlaygroundRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const PlaygroundPage();
+  }
+}
+
+class EarthquakeReplayRoute extends GoRouteData with $EarthquakeReplayRoute {
+  const EarthquakeReplayRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const EarthquakeReplayPage();
   }
 }
 

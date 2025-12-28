@@ -11,12 +11,16 @@ import 'package:maplibre/maplibre.dart';
 
 class EewDetailsMapView extends HookConsumerWidget {
   const EewDetailsMapView({
-    required this.eew,
+    required this.selectedEew,
     required this.displayMode,
+    required this.initialCenter,
+    required this.initZoom,
     super.key,
   });
 
-  final EewItemWithRelations? eew;
+  final EewItemWithRelations? selectedEew;
+  final Geographic initialCenter;
+  final double initZoom;
   final EewDisplayMode displayMode;
 
   @override
@@ -26,7 +30,9 @@ class EewDetailsMapView extends HookConsumerWidget {
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => _MapContent(
         styleString: value.styleString!,
-        eew: eew,
+        selectedEew: selectedEew,
+        initialCenter: initialCenter,
+        initZoom: initZoom,
         displayMode: displayMode,
       ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
@@ -38,44 +44,33 @@ class EewDetailsMapView extends HookConsumerWidget {
 class _MapContent extends StatelessWidget {
   const _MapContent({
     required this.styleString,
-    required this.eew,
+    required this.selectedEew,
     required this.displayMode,
+    required this.initialCenter,
+    required this.initZoom,
   });
 
   final String styleString;
-  final EewItemWithRelations? eew;
+  final EewItemWithRelations? selectedEew;
+  final Geographic initialCenter;
+  final double initZoom;
   final EewDisplayMode displayMode;
 
   @override
   Widget build(BuildContext context) {
-    final initialCenter = _getInitialCenter();
-
     final mapOptions = MapOptions(
       initCenter: initialCenter,
-      initZoom: 5,
+      initZoom: initZoom,
       initStyle: styleString,
     );
 
     return MapLibreMap(
       options: mapOptions,
       children: [
-        EewForecastRegionLayer(eew: eew, displayMode: displayMode),
-        EewStaticPsWaveLayer(eew: eew),
-        EewHypocenterLayer(eews: eew != null ? [eew!] : []),
+        EewForecastRegionLayer(eew: selectedEew, displayMode: displayMode),
+        EewStaticPsWaveLayer(eew: selectedEew),
+        EewHypocenterLayer(eews: selectedEew != null ? [selectedEew!] : []),
       ],
     );
-  }
-
-  Geographic _getInitialCenter() {
-    if (eew == null) {
-      return const Geographic(lon: 138, lat: 36);
-    }
-
-    final coords = eew!.hypocenter?.coordinates;
-    if (coords case CoordinateLatLng(:final latitude, :final longitude)) {
-      return Geographic(lon: longitude, lat: latitude);
-    }
-
-    return const Geographic(lon: 138, lat: 36);
   }
 }

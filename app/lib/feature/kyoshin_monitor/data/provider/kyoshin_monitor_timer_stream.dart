@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ui';
 
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/periodic_timer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
@@ -19,6 +21,17 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
   ref
     ..listen(kyoshinMonitorTimerProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
+        final lifecycle = ref.read(appLifecycleProvider);
+        final isBackground = [
+          AppLifecycleState.paused,
+          AppLifecycleState.detached,
+          AppLifecycleState.inactive,
+        ].contains(lifecycle);
+
+        if (isBackground) {
+          return;
+        }
+
         final delay = value.delayFromDevice;
         streamController.add(DateTime.now().subtract(delay));
       }
