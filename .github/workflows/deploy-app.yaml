@@ -150,6 +150,22 @@ jobs:
 
           codesign --display --entitlements :- build/ios/Runner.xcarchive/Products/Applications/Runner.app/Runner  || true
 
+      - name: Debug - Verify API Key configuration
+        run: |
+          echo "Checking API Key configuration..."
+          echo "API_KEY_ID is set: ${APP_STORE_CONNECT_API_KEY_ID:+YES}"
+          echo "API_ISSUER_ID is set: ${APP_STORE_CONNECT_API_ISSUER_ID:+YES}"
+          echo "API_KEY_BASE64 is set: ${APP_STORE_CONNECT_API_KEY_BASE64:+YES}"
+          KEY_PATH="${{ github.workspace }}/app/ios/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          if [ -f "$KEY_PATH" ]; then
+            echo "✅ API Key file exists at: $KEY_PATH"
+            ls -la "$KEY_PATH"
+            sha256sum "$KEY_PATH"
+          else
+            echo "❌ API Key file NOT found at: $KEY_PATH"
+            exit 1
+          fi
+
       - name: Archive
         working-directory: app
         run: |
@@ -161,8 +177,6 @@ jobs:
             -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
             -authenticationKeyPath "${{ github.workspace }}/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8"
-          #    \
-          # | xcbeautify --renderer github-actions
           ls -lah .
 
       # https://github.com/actions/upload-artifact
