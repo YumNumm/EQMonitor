@@ -91,6 +91,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
             'line-color': '#0000FF',
             'line-width': 1,
           },
+          
         ),
       ),
       styleController.addLayer(

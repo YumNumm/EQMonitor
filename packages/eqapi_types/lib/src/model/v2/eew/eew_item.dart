@@ -60,7 +60,6 @@ abstract class EewItemWithRelations with _$EewItemWithRelations {
     required bool isPlum,
     String? editorialOffice,
     required DateTime reportTime,
-    required List<EewIntensityItem> intensityRegions,
     EewWarning? warning,
   }) = _EewItemWithRelations;
 

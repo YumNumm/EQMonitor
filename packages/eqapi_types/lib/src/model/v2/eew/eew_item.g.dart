@@ -189,12 +189,6 @@ _EewItemWithRelations _$EewItemWithRelationsFromJson(
         'report_time',
         (v) => DateTime.parse(v as String),
       ),
-      intensityRegions: $checkedConvert(
-        'intensity_regions',
-        (v) => (v as List<dynamic>)
-            .map((e) => EewIntensityItem.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
       warning: $checkedConvert(
         'warning',
         (v) =>
@@ -216,7 +210,6 @@ _EewItemWithRelations _$EewItemWithRelationsFromJson(
     'isPlum': 'is_plum',
     'editorialOffice': 'editorial_office',
     'reportTime': 'report_time',
-    'intensityRegions': 'intensity_regions',
   },
 );
 
@@ -240,6 +233,5 @@ Map<String, dynamic> _$EewItemWithRelationsToJson(
   'is_plum': instance.isPlum,
   'editorial_office': instance.editorialOffice,
   'report_time': instance.reportTime.toIso8601String(),
-  'intensity_regions': instance.intensityRegions,
   'warning': instance.warning,
 };

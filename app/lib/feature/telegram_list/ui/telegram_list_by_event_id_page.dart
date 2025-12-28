@@ -41,11 +41,11 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
             ref.read(telegramListByEventIdProvider(eventId).notifier).refresh(),
         child: switch (asyncState) {
           AsyncData(:final value) => _TelegramListView(
-              items: value.items,
-              hasNext: value.hasNext,
-              isLoading: asyncState.isLoading,
-              scrollController: scrollController,
-            ),
+            items: value.items,
+            hasNext: value.hasNext,
+            isLoading: asyncState.isLoading,
+            scrollController: scrollController,
+          ),
           AsyncError(:final error) when asyncState.hasValue =>
             _TelegramListView(
               items: asyncState.value!.items,
@@ -58,11 +58,11 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
                   .refresh(),
             ),
           AsyncError(:final error) => ErrorCard(
-              error: error,
-              onReload: () async => ref
-                  .read(telegramListByEventIdProvider(eventId).notifier)
-                  .refresh(),
-            ),
+            error: error,
+            onReload: () async => ref
+                .read(telegramListByEventIdProvider(eventId).notifier)
+                .refresh(),
+          ),
           _ => const Center(child: CircularProgressIndicator()),
         },
       ),
@@ -114,9 +114,9 @@ class _TelegramListView extends StatelessWidget {
     return switch (telegram.type) {
       TelegramType.vxse43 ||
       TelegramType.vxse44 ||
-      TelegramType.vxse45 =>
-        () => EewDetailsByEventIdRoute(eventId: telegram.eventId)
-            .push<void>(context),
+      TelegramType.vxse45 => () => EewDetailsByEventIdRoute(
+        eventId: telegram.eventId,
+      ).push<void>(context),
       _ => null,
     };
   }

@@ -141,7 +141,6 @@ class _DebugModal extends ConsumerWidget {
                 ),
                 editorialOffice: '気象庁',
                 reportTime: DateTime.now(),
-                intensityRegions: [],
               );
               ref.read(eewProvider.notifier).upsert(eew);
             },

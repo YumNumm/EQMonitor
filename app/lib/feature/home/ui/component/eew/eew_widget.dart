@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/custom_chip.dart';
-import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
+import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/extension/intensity_value_ext.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
@@ -52,7 +52,8 @@ class EewWidget extends ConsumerWidget {
     if (eew.isCanceled) {
       return BorderedContainer(
         elevation: 1,
-        margin: const EdgeInsets.symmetric(horizontal: 12) +
+        margin:
+            const EdgeInsets.symmetric(horizontal: 12) +
             const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Center(
@@ -66,8 +67,12 @@ class EewWidget extends ConsumerWidget {
 
     final forecastIntensity = eew.forecastIntensity;
     final maxIntensityValue = forecastIntensity?.maxIntensity?.value;
-    final maxIntensity = maxIntensityValue?.toJmaForecastIntensity ?? JmaForecastIntensity.unknown;
-    final intensityScheme = intensityColorScheme.fromJmaForecastIntensity(maxIntensity);
+    final maxIntensity =
+        maxIntensityValue?.toJmaForecastIntensity ??
+        JmaForecastIntensity.unknown;
+    final intensityScheme = intensityColorScheme.fromJmaForecastIntensity(
+      maxIntensity,
+    );
     final (_, backgroundColor) = (
       intensityScheme.foreground,
       intensityScheme.background,
