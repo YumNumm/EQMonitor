@@ -116,10 +116,7 @@ class _InfoRow extends StatelessWidget {
 
 bool _isEewTelegram(TelegramType type) {
   return switch (type) {
-    TelegramType.vxse43 ||
-    TelegramType.vxse44 ||
-    TelegramType.vxse45 =>
-      true,
+    TelegramType.vxse43 || TelegramType.vxse44 || TelegramType.vxse45 => true,
     _ => false,
   };
 }

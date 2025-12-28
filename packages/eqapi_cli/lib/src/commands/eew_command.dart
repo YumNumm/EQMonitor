@@ -57,7 +57,7 @@ class EewListCommand extends Command<void> {
       );
 
       if (jsonOutput) {
-        print(EewFormatter.toJsonList(response));
+        print(response.toJson());
       } else {
         print(EewFormatter.formatList(response));
       }
@@ -95,7 +95,7 @@ class EewLatestCommand extends Command<void> {
       final response = await ApiClient.api.eew.getLatest();
 
       if (jsonOutput) {
-        print(EewFormatter.toJsonLatest(response));
+        print(response.toJson());
       } else {
         print(EewFormatter.formatLatest(response));
       }
@@ -148,7 +148,7 @@ class EewDetailCommand extends Command<void> {
         );
 
         if (jsonOutput) {
-          print(EewFormatter.toJsonItem(response));
+          print(response.toJson());
         } else {
           print(EewFormatter.formatItem(response));
         }
@@ -158,7 +158,7 @@ class EewDetailCommand extends Command<void> {
         );
 
         if (jsonOutput) {
-          print(EewFormatter.toJsonArray(response));
+          print(response.toJson());
         } else {
           print(EewFormatter.formatArray(response));
         }

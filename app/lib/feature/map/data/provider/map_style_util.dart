@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,7 +30,7 @@ class MapStyleUtil {
   Future<String> getStyle({required MapColorScheme colorScheme}) async {
     final json = {
       'version': 8,
-      'name': 'EQMonitor Light',
+      'name': 'EQMonitor Style',
       'sources': {
         'world': {
           'type': 'vector',
@@ -45,46 +46,34 @@ class MapStyleUtil {
         },
       },
       'layers': [
+        // 背景
         {
-          'id': 'background',
+          'id': BaseLayer.background.name,
           'type': 'background',
-          'paint': {'background-color': '#ffffff'},
+          'paint': {
+            'background-color': colorScheme.backgroundColor.toHexStringRGB(),
+          },
         },
+        // 世界地図（塗りつぶし）
         {
-          'id': 'countries',
+          'id': BaseLayer.countriesFill.name,
+          'type': 'fill',
+          'source': 'world',
+          'source-layer': 'countries',
+          'layout': {'visibility': 'visible'},
+          'paint': {
+            'fill-color': colorScheme.worldLandColor.toHexStringRGB(),
+          },
+        },
+        // 世界地図（境界線）
+        {
+          'id': BaseLayer.countriesLine.name,
           'type': 'line',
           'source': 'world',
           'source-layer': 'countries',
-          'paint': {'line-color': '#cccccc', 'line-width': 1},
-        },
-        {
-          'id': 'areaForecastLocalE',
-          'type': 'line',
-          'source': 'japan',
-          'source-layer': 'areaForecastLocalE',
-          'paint': {'line-color': '#666666', 'line-width': 1},
-        },
-        {
-          'id': 'areaForecastLocalEew',
-          'type': 'line',
-          'source': 'japan',
-          'source-layer': 'areaForecastLocalEew',
-          'paint': {'line-color': '#ff9900', 'line-width': 1},
-        },
-        {
-          'id': 'areaInformationCityQuake',
-          'type': 'line',
-          'source': 'japan',
-          'source-layer': 'areaInformationCityQuake',
-          'paint': {'line-color': '#ff0033', 'line-width': 1},
-        },
-        {
-          'id': 'areaTsunami',
-          'type': 'line',
-          'source': 'japan',
-          'source-layer': 'areaTsunami',
+          'layout': {'visibility': 'visible'},
           'paint': {
-            'line-color': '#3366cc',
+            'line-color': colorScheme.worldLineColor.toHexStringRGB(),
             'line-width': [
               'interpolate',
               ['linear'],
@@ -93,6 +82,80 @@ class MapStyleUtil {
               0.5,
               5.5,
               1,
+            ],
+          },
+        },
+        // 日本地図（塗りつぶし）- areaForecastLocalE
+        {
+          'id': BaseLayer.areaForecastLocalEFill.name,
+          'type': 'fill',
+          'source': 'japan',
+          'source-layer': 'areaForecastLocalE',
+          'paint': {
+            'fill-color': colorScheme.japanLandColor.toHexStringRGB(),
+          },
+        },
+        // 緊急地震速報用区域（境界線）
+        {
+          'id': BaseLayer.areaForecastLocalEewLine.name,
+          'type': 'line',
+          'source': 'japan',
+          'source-layer': 'areaForecastLocalEew',
+          'layout': {'line-cap': 'round', 'line-join': 'round'},
+          'paint': {
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-width': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              3,
+              0.5,
+              5.5,
+              1,
+            ],
+          },
+        },
+        // 日本地図（境界線）- areaForecastLocalE
+        {
+          'id': BaseLayer.areaForecastLocalELine.name,
+          'type': 'line',
+          'source': 'japan',
+          'source-layer': 'areaForecastLocalE',
+          'layout': {'line-cap': 'round', 'line-join': 'round'},
+          'paint': {
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-opacity': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              3,
+              0,
+              5,
+              0.2,
+              5.5,
+              1,
+            ],
+            'line-width': 0.5,
+          },
+        },
+        // 市区町村（境界線）
+        {
+          'id': BaseLayer.areaInformationCityQuakeLine.name,
+          'type': 'line',
+          'source': 'japan',
+          'source-layer': 'areaInformationCityQuake',
+          'layout': {'line-cap': 'round', 'line-join': 'round'},
+          'paint': {
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-width': 0.5,
+            'line-opacity': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              7,
+              0,
+              9.5,
+              0.3,
             ],
           },
         },
@@ -105,8 +168,8 @@ class MapStyleUtil {
 
 enum BaseLayer {
   background,
-  countriesLines,
   countriesFill,
+  countriesLine,
   areaForecastLocalEFill,
   areaForecastLocalEewLine,
   areaForecastLocalELine,

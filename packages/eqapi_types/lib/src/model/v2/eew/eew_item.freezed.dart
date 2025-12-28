@@ -401,7 +401,7 @@ $EewAccuracyCopyWith<$Res>? get accuracy {
 mixin _$EewItemWithRelations {
 
 /// yyyyMMddHHmmss形式のイベントID
- String get eventId; TelegramType get type; TelegramStatus get status; TelegramInfoType get infoType; int get serialNo; String? get headline; bool get isCanceled; bool? get isWarning; bool get isLastInfo; DateTime? get originTime; DateTime? get arrivalTime; EewHypocenter? get hypocenter; EewIntensity? get forecastIntensity; EewAccuracy? get accuracy; bool get isPlum; String? get editorialOffice; DateTime get reportTime; List<EewIntensityItem> get intensityRegions; EewWarning? get warning;
+ String get eventId; TelegramType get type; TelegramStatus get status; TelegramInfoType get infoType; int get serialNo; String? get headline; bool get isCanceled; bool? get isWarning; bool get isLastInfo; DateTime? get originTime; DateTime? get arrivalTime; EewHypocenter? get hypocenter; EewIntensity? get forecastIntensity; EewAccuracy? get accuracy; bool get isPlum; String? get editorialOffice; DateTime get reportTime; EewWarning? get warning;
 /// Create a copy of EewItemWithRelations
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -414,16 +414,16 @@ $EewItemWithRelationsCopyWith<EewItemWithRelations> get copyWith => _$EewItemWit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewItemWithRelations&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&const DeepCollectionEquality().equals(other.intensityRegions, intensityRegions)&&(identical(other.warning, warning) || other.warning == warning));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewItemWithRelations&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.warning, warning) || other.warning == warning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,eventId,type,status,infoType,serialNo,headline,isCanceled,isWarning,isLastInfo,originTime,arrivalTime,hypocenter,forecastIntensity,accuracy,isPlum,editorialOffice,reportTime,const DeepCollectionEquality().hash(intensityRegions),warning]);
+int get hashCode => Object.hash(runtimeType,eventId,type,status,infoType,serialNo,headline,isCanceled,isWarning,isLastInfo,originTime,arrivalTime,hypocenter,forecastIntensity,accuracy,isPlum,editorialOffice,reportTime,warning);
 
 @override
 String toString() {
-  return 'EewItemWithRelations(eventId: $eventId, type: $type, status: $status, infoType: $infoType, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, accuracy: $accuracy, isPlum: $isPlum, editorialOffice: $editorialOffice, reportTime: $reportTime, intensityRegions: $intensityRegions, warning: $warning)';
+  return 'EewItemWithRelations(eventId: $eventId, type: $type, status: $status, infoType: $infoType, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, accuracy: $accuracy, isPlum: $isPlum, editorialOffice: $editorialOffice, reportTime: $reportTime, warning: $warning)';
 }
 
 
@@ -434,7 +434,7 @@ abstract mixin class $EewItemWithRelationsCopyWith<$Res>  {
   factory $EewItemWithRelationsCopyWith(EewItemWithRelations value, $Res Function(EewItemWithRelations) _then) = _$EewItemWithRelationsCopyWithImpl;
 @useResult
 $Res call({
- String eventId, TelegramType type, TelegramStatus status, TelegramInfoType infoType, int serialNo, String? headline, bool isCanceled, bool? isWarning, bool isLastInfo, DateTime? originTime, DateTime? arrivalTime, EewHypocenter? hypocenter, EewIntensity? forecastIntensity, EewAccuracy? accuracy, bool isPlum, String? editorialOffice, DateTime reportTime, List<EewIntensityItem> intensityRegions, EewWarning? warning
+ String eventId, TelegramType type, TelegramStatus status, TelegramInfoType infoType, int serialNo, String? headline, bool isCanceled, bool? isWarning, bool isLastInfo, DateTime? originTime, DateTime? arrivalTime, EewHypocenter? hypocenter, EewIntensity? forecastIntensity, EewAccuracy? accuracy, bool isPlum, String? editorialOffice, DateTime reportTime, EewWarning? warning
 });
 
 
@@ -451,7 +451,7 @@ class _$EewItemWithRelationsCopyWithImpl<$Res>
 
 /// Create a copy of EewItemWithRelations
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? type = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? headline = freezed,Object? isCanceled = null,Object? isWarning = freezed,Object? isLastInfo = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? accuracy = freezed,Object? isPlum = null,Object? editorialOffice = freezed,Object? reportTime = null,Object? intensityRegions = null,Object? warning = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? type = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? headline = freezed,Object? isCanceled = null,Object? isWarning = freezed,Object? isLastInfo = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? accuracy = freezed,Object? isPlum = null,Object? editorialOffice = freezed,Object? reportTime = null,Object? warning = freezed,}) {
   return _then(_self.copyWith(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -470,8 +470,7 @@ as EewIntensity?,accuracy: freezed == accuracy ? _self.accuracy : accuracy // ig
 as EewAccuracy?,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullable_to_non_nullable
 as bool,editorialOffice: freezed == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
 as String?,reportTime: null == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
-as DateTime,intensityRegions: null == intensityRegions ? _self.intensityRegions : intensityRegions // ignore: cast_nullable_to_non_nullable
-as List<EewIntensityItem>,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as DateTime,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
 as EewWarning?,
   ));
 }
@@ -605,10 +604,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  TelegramType type,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  EewHypocenter? hypocenter,  EewIntensity? forecastIntensity,  EewAccuracy? accuracy,  bool isPlum,  String? editorialOffice,  DateTime reportTime,  List<EewIntensityItem> intensityRegions,  EewWarning? warning)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  TelegramType type,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  EewHypocenter? hypocenter,  EewIntensity? forecastIntensity,  EewAccuracy? accuracy,  bool isPlum,  String? editorialOffice,  DateTime reportTime,  EewWarning? warning)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewItemWithRelations() when $default != null:
-return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.forecastIntensity,_that.accuracy,_that.isPlum,_that.editorialOffice,_that.reportTime,_that.intensityRegions,_that.warning);case _:
+return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.forecastIntensity,_that.accuracy,_that.isPlum,_that.editorialOffice,_that.reportTime,_that.warning);case _:
   return orElse();
 
 }
@@ -626,10 +625,10 @@ return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.seria
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  TelegramType type,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  EewHypocenter? hypocenter,  EewIntensity? forecastIntensity,  EewAccuracy? accuracy,  bool isPlum,  String? editorialOffice,  DateTime reportTime,  List<EewIntensityItem> intensityRegions,  EewWarning? warning)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  TelegramType type,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  EewHypocenter? hypocenter,  EewIntensity? forecastIntensity,  EewAccuracy? accuracy,  bool isPlum,  String? editorialOffice,  DateTime reportTime,  EewWarning? warning)  $default,) {final _that = this;
 switch (_that) {
 case _EewItemWithRelations():
-return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.forecastIntensity,_that.accuracy,_that.isPlum,_that.editorialOffice,_that.reportTime,_that.intensityRegions,_that.warning);case _:
+return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.forecastIntensity,_that.accuracy,_that.isPlum,_that.editorialOffice,_that.reportTime,_that.warning);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -646,10 +645,10 @@ return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.seria
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  TelegramType type,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  EewHypocenter? hypocenter,  EewIntensity? forecastIntensity,  EewAccuracy? accuracy,  bool isPlum,  String? editorialOffice,  DateTime reportTime,  List<EewIntensityItem> intensityRegions,  EewWarning? warning)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  TelegramType type,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  EewHypocenter? hypocenter,  EewIntensity? forecastIntensity,  EewAccuracy? accuracy,  bool isPlum,  String? editorialOffice,  DateTime reportTime,  EewWarning? warning)?  $default,) {final _that = this;
 switch (_that) {
 case _EewItemWithRelations() when $default != null:
-return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.forecastIntensity,_that.accuracy,_that.isPlum,_that.editorialOffice,_that.reportTime,_that.intensityRegions,_that.warning);case _:
+return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.forecastIntensity,_that.accuracy,_that.isPlum,_that.editorialOffice,_that.reportTime,_that.warning);case _:
   return null;
 
 }
@@ -661,7 +660,7 @@ return $default(_that.eventId,_that.type,_that.status,_that.infoType,_that.seria
 @JsonSerializable()
 
 class _EewItemWithRelations implements EewItemWithRelations {
-  const _EewItemWithRelations({required this.eventId, required this.type, required this.status, required this.infoType, required this.serialNo, this.headline, required this.isCanceled, this.isWarning, required this.isLastInfo, this.originTime, this.arrivalTime, this.hypocenter, this.forecastIntensity, this.accuracy, required this.isPlum, this.editorialOffice, required this.reportTime, required final  List<EewIntensityItem> intensityRegions, this.warning}): _intensityRegions = intensityRegions;
+  const _EewItemWithRelations({required this.eventId, required this.type, required this.status, required this.infoType, required this.serialNo, this.headline, required this.isCanceled, this.isWarning, required this.isLastInfo, this.originTime, this.arrivalTime, this.hypocenter, this.forecastIntensity, this.accuracy, required this.isPlum, this.editorialOffice, required this.reportTime, this.warning});
   factory _EewItemWithRelations.fromJson(Map<String, dynamic> json) => _$EewItemWithRelationsFromJson(json);
 
 /// yyyyMMddHHmmss形式のイベントID
@@ -682,13 +681,6 @@ class _EewItemWithRelations implements EewItemWithRelations {
 @override final  bool isPlum;
 @override final  String? editorialOffice;
 @override final  DateTime reportTime;
- final  List<EewIntensityItem> _intensityRegions;
-@override List<EewIntensityItem> get intensityRegions {
-  if (_intensityRegions is EqualUnmodifiableListView) return _intensityRegions;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_intensityRegions);
-}
-
 @override final  EewWarning? warning;
 
 /// Create a copy of EewItemWithRelations
@@ -704,16 +696,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewItemWithRelations&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&const DeepCollectionEquality().equals(other._intensityRegions, _intensityRegions)&&(identical(other.warning, warning) || other.warning == warning));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewItemWithRelations&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.warning, warning) || other.warning == warning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,eventId,type,status,infoType,serialNo,headline,isCanceled,isWarning,isLastInfo,originTime,arrivalTime,hypocenter,forecastIntensity,accuracy,isPlum,editorialOffice,reportTime,const DeepCollectionEquality().hash(_intensityRegions),warning]);
+int get hashCode => Object.hash(runtimeType,eventId,type,status,infoType,serialNo,headline,isCanceled,isWarning,isLastInfo,originTime,arrivalTime,hypocenter,forecastIntensity,accuracy,isPlum,editorialOffice,reportTime,warning);
 
 @override
 String toString() {
-  return 'EewItemWithRelations(eventId: $eventId, type: $type, status: $status, infoType: $infoType, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, accuracy: $accuracy, isPlum: $isPlum, editorialOffice: $editorialOffice, reportTime: $reportTime, intensityRegions: $intensityRegions, warning: $warning)';
+  return 'EewItemWithRelations(eventId: $eventId, type: $type, status: $status, infoType: $infoType, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, accuracy: $accuracy, isPlum: $isPlum, editorialOffice: $editorialOffice, reportTime: $reportTime, warning: $warning)';
 }
 
 
@@ -724,7 +716,7 @@ abstract mixin class _$EewItemWithRelationsCopyWith<$Res> implements $EewItemWit
   factory _$EewItemWithRelationsCopyWith(_EewItemWithRelations value, $Res Function(_EewItemWithRelations) _then) = __$EewItemWithRelationsCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, TelegramType type, TelegramStatus status, TelegramInfoType infoType, int serialNo, String? headline, bool isCanceled, bool? isWarning, bool isLastInfo, DateTime? originTime, DateTime? arrivalTime, EewHypocenter? hypocenter, EewIntensity? forecastIntensity, EewAccuracy? accuracy, bool isPlum, String? editorialOffice, DateTime reportTime, List<EewIntensityItem> intensityRegions, EewWarning? warning
+ String eventId, TelegramType type, TelegramStatus status, TelegramInfoType infoType, int serialNo, String? headline, bool isCanceled, bool? isWarning, bool isLastInfo, DateTime? originTime, DateTime? arrivalTime, EewHypocenter? hypocenter, EewIntensity? forecastIntensity, EewAccuracy? accuracy, bool isPlum, String? editorialOffice, DateTime reportTime, EewWarning? warning
 });
 
 
@@ -741,7 +733,7 @@ class __$EewItemWithRelationsCopyWithImpl<$Res>
 
 /// Create a copy of EewItemWithRelations
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? type = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? headline = freezed,Object? isCanceled = null,Object? isWarning = freezed,Object? isLastInfo = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? accuracy = freezed,Object? isPlum = null,Object? editorialOffice = freezed,Object? reportTime = null,Object? intensityRegions = null,Object? warning = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? type = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? headline = freezed,Object? isCanceled = null,Object? isWarning = freezed,Object? isLastInfo = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? accuracy = freezed,Object? isPlum = null,Object? editorialOffice = freezed,Object? reportTime = null,Object? warning = freezed,}) {
   return _then(_EewItemWithRelations(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -760,8 +752,7 @@ as EewIntensity?,accuracy: freezed == accuracy ? _self.accuracy : accuracy // ig
 as EewAccuracy?,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullable_to_non_nullable
 as bool,editorialOffice: freezed == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
 as String?,reportTime: null == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
-as DateTime,intensityRegions: null == intensityRegions ? _self._intensityRegions : intensityRegions // ignore: cast_nullable_to_non_nullable
-as List<EewIntensityItem>,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as DateTime,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
 as EewWarning?,
   ));
 }

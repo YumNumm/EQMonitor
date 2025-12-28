@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
@@ -8,6 +9,7 @@ import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:maplibre/maplibre.dart';
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
   const EewDetailsByEventIdPage({required this.eventId, super.key});
@@ -39,7 +41,8 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             (a, b) => a.serialNo.compareTo(b.serialNo),
           );
 
-          final selectedEew = selectedIndex.value != null &&
+          final selectedEew =
+              selectedIndex.value != null &&
                   selectedIndex.value! < sortedEews.length
               ? sortedEews[selectedIndex.value!]
               : null;
@@ -50,6 +53,19 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             onSelect: (index) => selectedIndex.value = index,
             selectedEew: selectedEew,
             displayMode: displayMode.value,
+            initialCenter:
+                eews
+                    .map((eew) => eew.hypocenter?.coordinates)
+                    .whereType<CoordinateLatLng>()
+                    .firstOrNull
+                    ?.let(
+                      (c) => Geographic(
+                        lat: c.latitude,
+                        lon: c.longitude,
+                      ),
+                    ) ??
+                const Geographic(lat: 35.6895, lon: 139.6917),
+            initZoom: 5,
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -100,6 +116,8 @@ class _ResponsiveLayout extends StatelessWidget {
     required this.onSelect,
     required this.selectedEew,
     required this.displayMode,
+    required this.initialCenter,
+    required this.initZoom,
   });
 
   final List<EewItemWithRelations> eews;
@@ -107,6 +125,8 @@ class _ResponsiveLayout extends StatelessWidget {
   final void Function(int) onSelect;
   final EewItemWithRelations? selectedEew;
   final EewDisplayMode displayMode;
+  final Geographic initialCenter;
+  final double initZoom;
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +141,10 @@ class _ResponsiveLayout extends StatelessWidget {
         );
 
         final mapWidget = EewDetailsMapView(
-          eew: selectedEew,
+          selectedEew: selectedEew,
           displayMode: displayMode,
+          initialCenter: initialCenter,
+          initZoom: initZoom,
         );
 
         if (isLandscape) {
