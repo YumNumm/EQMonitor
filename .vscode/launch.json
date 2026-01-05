@@ -1,49 +1,53 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "EQMonitor Development Debug",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main.dart",
-      "cwd": "app",
-      "args": [
-        "--web-port",
-        "62130",
-        "--dart-define-from-file=environment/.env.dev"
-      ]
-    },
-    {
-      "name": "EQMonitor Development Profile",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main.dart",
-      "cwd": "app",
-      "flutterMode": "profile",
-      "args": [
-        "--dart-define-from-file=environment/.env.dev"
-      ]
-    },
-    {
-      "name": "EQMonitor Development Release",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main.dart",
-      "cwd": "app",
-      "flutterMode": "release",
-      "args": [
-        "--dart-define-from-file=environment/.env.dev"
-      ]
-    },
-    {
-      "name": "EQMonitor Production Release",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main.dart",
-      "cwd": "app",
-      "args": [
-        "--dart-define-from-file=environment/.env.prod"
-      ]
-    }
-  ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "EQMonitor Development Debug",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"cwd": "app",
+			"args": [
+				"--web-port",
+				"62130",
+				"--dart-define-from-file=environment/.env.dev"
+			]
+		},
+		{
+			"name": "EQMonitor Development Profile",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"cwd": "app",
+			"flutterMode": "profile",
+			"args": ["--dart-define-from-file=environment/.env.dev"]
+		},
+		{
+			"name": "EQMonitor Development Release",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"cwd": "app",
+			"flutterMode": "release",
+			"args": ["--dart-define-from-file=environment/.env.dev"]
+		},
+		{
+			"name": "EQMonitor Production Debug",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"cwd": "app",
+			"flutterMode": "debug",
+			"args": ["--dart-define-from-file=environment/.env.prod"]
+		},
+		{
+			"name": "EQMonitor Production Release",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"cwd": "app",
+			"flutterMode": "release",
+			"args": ["--dart-define-from-file=environment/.env.prod"]
+		}
+	]
 }
