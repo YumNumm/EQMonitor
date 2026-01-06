@@ -12,7 +12,7 @@ part of 'kyoshin_monitor_web_api_data_source.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinMonitorWebApiDataSource)
-const kyoshinMonitorWebApiDataSourceProvider =
+final kyoshinMonitorWebApiDataSourceProvider =
     KyoshinMonitorWebApiDataSourceProvider._();
 
 final class KyoshinMonitorWebApiDataSourceProvider
@@ -23,7 +23,7 @@ final class KyoshinMonitorWebApiDataSourceProvider
           KyoshinMonitorWebApiDataSource
         >
     with $Provider<KyoshinMonitorWebApiDataSource> {
-  const KyoshinMonitorWebApiDataSourceProvider._()
+  KyoshinMonitorWebApiDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -63,7 +63,7 @@ String _$kyoshinMonitorWebApiDataSourceHash() =>
     r'd7894c1f5e3516e8509dfbc86a879350b6787948';
 
 @ProviderFor(lpgmKyoshinMonitorWebApiDataSource)
-const lpgmKyoshinMonitorWebApiDataSourceProvider =
+final lpgmKyoshinMonitorWebApiDataSourceProvider =
     LpgmKyoshinMonitorWebApiDataSourceProvider._();
 
 final class LpgmKyoshinMonitorWebApiDataSourceProvider
@@ -74,7 +74,7 @@ final class LpgmKyoshinMonitorWebApiDataSourceProvider
           LpgmKyoshinMonitorWebApiDataSource
         >
     with $Provider<LpgmKyoshinMonitorWebApiDataSource> {
-  const LpgmKyoshinMonitorWebApiDataSourceProvider._()
+  LpgmKyoshinMonitorWebApiDataSourceProvider._()
     : super(
         from: null,
         argument: null,

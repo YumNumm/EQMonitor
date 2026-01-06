@@ -12,7 +12,7 @@ part of 'kyoshin_color_map.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinColorMap)
-const kyoshinColorMapProvider = KyoshinColorMapProvider._();
+final kyoshinColorMapProvider = KyoshinColorMapProvider._();
 
 final class KyoshinColorMapProvider
     extends
@@ -22,7 +22,7 @@ final class KyoshinColorMapProvider
           List<KyoshinColorMapModel>
         >
     with $Provider<List<KyoshinColorMapModel>> {
-  const KyoshinColorMapProvider._()
+  KyoshinColorMapProvider._()
     : super(
         from: null,
         argument: null,

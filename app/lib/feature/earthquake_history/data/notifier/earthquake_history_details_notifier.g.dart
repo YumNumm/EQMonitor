@@ -12,13 +12,13 @@ part of 'earthquake_history_details_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EarthquakeHistoryDetailsNotifier)
-const earthquakeHistoryDetailsProvider =
+final earthquakeHistoryDetailsProvider =
     EarthquakeHistoryDetailsNotifierFamily._();
 
 final class EarthquakeHistoryDetailsNotifierProvider
     extends
         $AsyncNotifierProvider<EarthquakeHistoryDetailsNotifier, Earthquake> {
-  const EarthquakeHistoryDetailsNotifierProvider._({
+  EarthquakeHistoryDetailsNotifierProvider._({
     required EarthquakeHistoryDetailsNotifierFamily super.from,
     required String super.argument,
   }) : super(
@@ -68,7 +68,7 @@ final class EarthquakeHistoryDetailsNotifierFamily extends $Family
           FutureOr<Earthquake>,
           String
         > {
-  const EarthquakeHistoryDetailsNotifierFamily._()
+  EarthquakeHistoryDetailsNotifierFamily._()
     : super(
         retry: null,
         name: r'earthquakeHistoryDetailsProvider',
@@ -93,7 +93,6 @@ abstract class _$EarthquakeHistoryDetailsNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<Earthquake>, Earthquake>;
     final element =
         ref.element
@@ -103,6 +102,6 @@ abstract class _$EarthquakeHistoryDetailsNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

@@ -12,12 +12,12 @@ part of 'package_info.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(packageInfo)
-const packageInfoProvider = PackageInfoProvider._();
+final packageInfoProvider = PackageInfoProvider._();
 
 final class PackageInfoProvider
     extends $FunctionalProvider<PackageInfo, PackageInfo, PackageInfo>
     with $Provider<PackageInfo> {
-  const PackageInfoProvider._()
+  PackageInfoProvider._()
     : super(
         from: null,
         argument: null,

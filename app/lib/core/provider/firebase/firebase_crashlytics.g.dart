@@ -12,7 +12,7 @@ part of 'firebase_crashlytics.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(firebaseCrashlytics)
-const firebaseCrashlyticsProvider = FirebaseCrashlyticsProvider._();
+final firebaseCrashlyticsProvider = FirebaseCrashlyticsProvider._();
 
 final class FirebaseCrashlyticsProvider
     extends
@@ -22,7 +22,7 @@ final class FirebaseCrashlyticsProvider
           FirebaseCrashlytics
         >
     with $Provider<FirebaseCrashlytics> {
-  const FirebaseCrashlyticsProvider._()
+  FirebaseCrashlyticsProvider._()
     : super(
         from: null,
         argument: null,

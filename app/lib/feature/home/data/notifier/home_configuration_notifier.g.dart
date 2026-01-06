@@ -12,12 +12,12 @@ part of 'home_configuration_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(HomeConfigurationNotifier)
-const homeConfigurationProvider = HomeConfigurationNotifierProvider._();
+final homeConfigurationProvider = HomeConfigurationNotifierProvider._();
 
 final class HomeConfigurationNotifierProvider
     extends
         $NotifierProvider<HomeConfigurationNotifier, HomeConfigurationModel> {
-  const HomeConfigurationNotifierProvider._()
+  HomeConfigurationNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,7 +53,6 @@ abstract class _$HomeConfigurationNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<HomeConfigurationModel, HomeConfigurationModel>;
     final element =
@@ -64,6 +63,6 @@ abstract class _$HomeConfigurationNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

@@ -12,13 +12,13 @@ part of 'periodic_timer.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(periodicTimer)
-const periodicTimerProvider = PeriodicTimerFamily._();
+final periodicTimerProvider = PeriodicTimerFamily._();
 
 final class PeriodicTimerProvider
     extends
         $FunctionalProvider<AsyncValue<DateTime>, DateTime, Stream<DateTime>>
     with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
-  const PeriodicTimerProvider._({
+  PeriodicTimerProvider._({
     required PeriodicTimerFamily super.from,
     required Duration super.argument,
   }) : super(
@@ -65,7 +65,7 @@ String _$periodicTimerHash() => r'ed4a0ae2de687786e5fb1114a76320dee93dca54';
 
 final class PeriodicTimerFamily extends $Family
     with $FunctionalFamilyOverride<Stream<DateTime>, Duration> {
-  const PeriodicTimerFamily._()
+  PeriodicTimerFamily._()
     : super(
         retry: null,
         name: r'periodicTimerProvider',

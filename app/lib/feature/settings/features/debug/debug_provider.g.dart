@@ -12,10 +12,10 @@ part of 'debug_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(Debug)
-const debugProvider = DebugProvider._();
+final debugProvider = DebugProvider._();
 
 final class DebugProvider extends $NotifierProvider<Debug, bool> {
-  const DebugProvider._()
+  DebugProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,7 +49,6 @@ abstract class _$Debug extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -59,6 +58,6 @@ abstract class _$Debug extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

@@ -12,7 +12,7 @@ part of 'information_history_view_model.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(InformationHistoryViewModel)
-const informationHistoryViewModelProvider =
+final informationHistoryViewModelProvider =
     InformationHistoryViewModelProvider._();
 
 final class InformationHistoryViewModelProvider
@@ -21,7 +21,7 @@ final class InformationHistoryViewModelProvider
           InformationHistoryViewModel,
           AsyncValue<List<InformationV3>>?
         > {
-  const InformationHistoryViewModelProvider._()
+  InformationHistoryViewModelProvider._()
     : super(
         from: null,
         argument: null,
@@ -59,7 +59,6 @@ abstract class _$InformationHistoryViewModel
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -77,6 +76,6 @@ abstract class _$InformationHistoryViewModel
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
