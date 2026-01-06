@@ -13,7 +13,7 @@ part of 'eew_alive_telegram.dart';
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 
 @ProviderFor(eewAliveNormalTelegram)
-const eewAliveNormalTelegramProvider = EewAliveNormalTelegramProvider._();
+final eewAliveNormalTelegramProvider = EewAliveNormalTelegramProvider._();
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 
@@ -26,7 +26,7 @@ final class EewAliveNormalTelegramProvider
         >
     with $Provider<List<EewItemWithRelations>> {
   /// イベント終了していないEEWのうち、精度が低いものを除外したもの
-  const EewAliveNormalTelegramProvider._()
+  EewAliveNormalTelegramProvider._()
     : super(
         from: null,
         argument: null,
@@ -66,13 +66,13 @@ String _$eewAliveNormalTelegramHash() =>
 /// イベント終了していないEEW
 
 @ProviderFor(EewAliveTelegram)
-const eewAliveTelegramProvider = EewAliveTelegramProvider._();
+final eewAliveTelegramProvider = EewAliveTelegramProvider._();
 
 /// イベント終了していないEEW
 final class EewAliveTelegramProvider
     extends $NotifierProvider<EewAliveTelegram, List<EewItemWithRelations>?> {
   /// イベント終了していないEEW
-  const EewAliveTelegramProvider._()
+  EewAliveTelegramProvider._()
     : super(
         from: null,
         argument: null,
@@ -109,7 +109,6 @@ abstract class _$EewAliveTelegram
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<List<EewItemWithRelations>?, List<EewItemWithRelations>?>;
@@ -124,18 +123,18 @@ abstract class _$EewAliveTelegram
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(eewAliveChecker)
-const eewAliveCheckerProvider = EewAliveCheckerProvider._();
+final eewAliveCheckerProvider = EewAliveCheckerProvider._();
 
 final class EewAliveCheckerProvider
     extends
         $FunctionalProvider<EewAliveChecker, EewAliveChecker, EewAliveChecker>
     with $Provider<EewAliveChecker> {
-  const EewAliveCheckerProvider._()
+  EewAliveCheckerProvider._()
     : super(
         from: null,
         argument: null,

@@ -12,7 +12,7 @@ part of 'travel_time_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(travelTime)
-const travelTimeProvider = TravelTimeProvider._();
+final travelTimeProvider = TravelTimeProvider._();
 
 final class TravelTimeProvider
     extends
@@ -22,7 +22,7 @@ final class TravelTimeProvider
           TravelTimeTables
         >
     with $Provider<TravelTimeTables> {
-  const TravelTimeProvider._()
+  TravelTimeProvider._()
     : super(
         from: null,
         argument: null,
@@ -58,7 +58,7 @@ final class TravelTimeProvider
 String _$travelTimeHash() => r'64b0091c63436d40dd0f6043fcc05e804ad00964';
 
 @ProviderFor(travelTimeInternal)
-const travelTimeInternalProvider = TravelTimeInternalProvider._();
+final travelTimeInternalProvider = TravelTimeInternalProvider._();
 
 final class TravelTimeInternalProvider
     extends
@@ -68,7 +68,7 @@ final class TravelTimeInternalProvider
           FutureOr<TravelTimeTables>
         >
     with $FutureModifier<TravelTimeTables>, $FutureProvider<TravelTimeTables> {
-  const TravelTimeInternalProvider._()
+  TravelTimeInternalProvider._()
     : super(
         from: null,
         argument: null,
@@ -98,7 +98,7 @@ String _$travelTimeInternalHash() =>
     r'e3fd821da9e8d04c0ff59076ebb98b85ac978e3f';
 
 @ProviderFor(travelTimeDepthMap)
-const travelTimeDepthMapProvider = TravelTimeDepthMapProvider._();
+final travelTimeDepthMapProvider = TravelTimeDepthMapProvider._();
 
 final class TravelTimeDepthMapProvider
     extends
@@ -108,7 +108,7 @@ final class TravelTimeDepthMapProvider
           TravelTimeDepthMap
         >
     with $Provider<TravelTimeDepthMap> {
-  const TravelTimeDepthMapProvider._()
+  TravelTimeDepthMapProvider._()
     : super(
         from: null,
         argument: null,

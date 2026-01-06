@@ -12,13 +12,13 @@ part of 'application_documents_directory.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(applicationDocumentsDirectory)
-const applicationDocumentsDirectoryProvider =
+final applicationDocumentsDirectoryProvider =
     ApplicationDocumentsDirectoryProvider._();
 
 final class ApplicationDocumentsDirectoryProvider
     extends $FunctionalProvider<Directory, Directory, Directory>
     with $Provider<Directory> {
-  const ApplicationDocumentsDirectoryProvider._()
+  ApplicationDocumentsDirectoryProvider._()
     : super(
         from: null,
         argument: null,

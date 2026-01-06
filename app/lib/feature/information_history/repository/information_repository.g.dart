@@ -12,7 +12,7 @@ part of 'information_repository.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(informationRepository)
-const informationRepositoryProvider = InformationRepositoryProvider._();
+final informationRepositoryProvider = InformationRepositoryProvider._();
 
 final class InformationRepositoryProvider
     extends
@@ -22,7 +22,7 @@ final class InformationRepositoryProvider
           InformationRepository
         >
     with $Provider<InformationRepository> {
-  const InformationRepositoryProvider._()
+  InformationRepositoryProvider._()
     : super(
         from: null,
         argument: null,

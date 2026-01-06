@@ -12,7 +12,7 @@ part of 'telegram_list_by_event_id_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(TelegramListByEventId)
-const telegramListByEventIdProvider = TelegramListByEventIdFamily._();
+final telegramListByEventIdProvider = TelegramListByEventIdFamily._();
 
 final class TelegramListByEventIdProvider
     extends
@@ -20,7 +20,7 @@ final class TelegramListByEventIdProvider
           TelegramListByEventId,
           TelegramListByEventIdState
         > {
-  const TelegramListByEventIdProvider._({
+  TelegramListByEventIdProvider._({
     required TelegramListByEventIdFamily super.from,
     required String super.argument,
   }) : super(
@@ -68,7 +68,7 @@ final class TelegramListByEventIdFamily extends $Family
           FutureOr<TelegramListByEventIdState>,
           String
         > {
-  const TelegramListByEventIdFamily._()
+  TelegramListByEventIdFamily._()
     : super(
         retry: null,
         name: r'telegramListByEventIdProvider',
@@ -93,7 +93,6 @@ abstract class _$TelegramListByEventId
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<
@@ -111,6 +110,6 @@ abstract class _$TelegramListByEventId
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

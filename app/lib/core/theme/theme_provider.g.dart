@@ -12,11 +12,11 @@ part of 'theme_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ThemeModeNotifier)
-const themeModeProvider = ThemeModeNotifierProvider._();
+final themeModeProvider = ThemeModeNotifierProvider._();
 
 final class ThemeModeNotifierProvider
     extends $NotifierProvider<ThemeModeNotifier, ThemeMode> {
-  const ThemeModeNotifierProvider._()
+  ThemeModeNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,7 +50,6 @@ abstract class _$ThemeModeNotifier extends $Notifier<ThemeMode> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
     final element =
         ref.element
@@ -60,16 +59,16 @@ abstract class _$ThemeModeNotifier extends $Notifier<ThemeMode> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(BrightnessNotifier)
-const brightnessProvider = BrightnessNotifierProvider._();
+final brightnessProvider = BrightnessNotifierProvider._();
 
 final class BrightnessNotifierProvider
     extends $NotifierProvider<BrightnessNotifier, ui.Brightness> {
-  const BrightnessNotifierProvider._()
+  BrightnessNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -104,7 +103,6 @@ abstract class _$BrightnessNotifier extends $Notifier<ui.Brightness> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ui.Brightness, ui.Brightness>;
     final element =
         ref.element
@@ -114,6 +112,6 @@ abstract class _$BrightnessNotifier extends $Notifier<ui.Brightness> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

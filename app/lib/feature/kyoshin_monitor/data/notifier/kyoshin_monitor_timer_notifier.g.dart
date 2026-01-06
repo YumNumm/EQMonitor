@@ -12,7 +12,7 @@ part of 'kyoshin_monitor_timer_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(KyoshinMonitorTimerNotifier)
-const kyoshinMonitorTimerProvider = KyoshinMonitorTimerNotifierProvider._();
+final kyoshinMonitorTimerProvider = KyoshinMonitorTimerNotifierProvider._();
 
 final class KyoshinMonitorTimerNotifierProvider
     extends
@@ -20,7 +20,7 @@ final class KyoshinMonitorTimerNotifierProvider
           KyoshinMonitorTimerNotifier,
           KyoshinMonitorTimerState
         > {
-  const KyoshinMonitorTimerNotifierProvider._()
+  KyoshinMonitorTimerNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,7 +48,6 @@ abstract class _$KyoshinMonitorTimerNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -66,18 +65,18 @@ abstract class _$KyoshinMonitorTimerNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(_kyoshinMonitorDelayAdujustTiming)
-const _kyoshinMonitorDelayAdujustTimingProvider =
+final _kyoshinMonitorDelayAdujustTimingProvider =
     _KyoshinMonitorDelayAdujustTimingProvider._();
 
 final class _KyoshinMonitorDelayAdujustTimingProvider
     extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
     with $FutureModifier<void>, $StreamProvider<void> {
-  const _KyoshinMonitorDelayAdujustTimingProvider._()
+  _KyoshinMonitorDelayAdujustTimingProvider._()
     : super(
         from: null,
         argument: null,

@@ -12,12 +12,12 @@ part of 'map_style_util.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(mapStyleUtil)
-const mapStyleUtilProvider = MapStyleUtilProvider._();
+final mapStyleUtilProvider = MapStyleUtilProvider._();
 
 final class MapStyleUtilProvider
     extends $FunctionalProvider<MapStyleUtil, MapStyleUtil, MapStyleUtil>
     with $Provider<MapStyleUtil> {
-  const MapStyleUtilProvider._()
+  MapStyleUtilProvider._()
     : super(
         from: null,
         argument: null,

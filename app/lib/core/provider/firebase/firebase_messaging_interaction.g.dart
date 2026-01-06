@@ -12,7 +12,7 @@ part of 'firebase_messaging_interaction.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(firebaseMessagingInteraction)
-const firebaseMessagingInteractionProvider =
+final firebaseMessagingInteractionProvider =
     FirebaseMessagingInteractionProvider._();
 
 final class FirebaseMessagingInteractionProvider
@@ -23,7 +23,7 @@ final class FirebaseMessagingInteractionProvider
           Stream<RemoteMessage>
         >
     with $FutureModifier<RemoteMessage>, $StreamProvider<RemoteMessage> {
-  const FirebaseMessagingInteractionProvider._()
+  FirebaseMessagingInteractionProvider._()
     : super(
         from: null,
         argument: null,

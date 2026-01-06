@@ -12,11 +12,11 @@ part of 'dio_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(dio)
-const dioProvider = DioProvider._();
+final dioProvider = DioProvider._();
 
 final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
-  const DioProvider._()
+  DioProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,11 +52,11 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
 String _$dioHash() => r'a29caf5d4b43ef7992d10d454a5cb5f7745d0df5';
 
 @ProviderFor(IsDioProxyEnabled)
-const isDioProxyEnabledProvider = IsDioProxyEnabledProvider._();
+final isDioProxyEnabledProvider = IsDioProxyEnabledProvider._();
 
 final class IsDioProxyEnabledProvider
     extends $NotifierProvider<IsDioProxyEnabled, bool> {
-  const IsDioProxyEnabledProvider._()
+  IsDioProxyEnabledProvider._()
     : super(
         from: null,
         argument: null,
@@ -90,7 +90,6 @@ abstract class _$IsDioProxyEnabled extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -100,6 +99,6 @@ abstract class _$IsDioProxyEnabled extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

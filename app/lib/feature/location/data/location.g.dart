@@ -12,13 +12,13 @@ part of 'location.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(locationStream)
-const locationStreamProvider = LocationStreamProvider._();
+final locationStreamProvider = LocationStreamProvider._();
 
 final class LocationStreamProvider
     extends
         $FunctionalProvider<AsyncValue<Position>, Position, Stream<Position>>
     with $FutureModifier<Position>, $StreamProvider<Position> {
-  const LocationStreamProvider._()
+  LocationStreamProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,7 +48,7 @@ String _$locationStreamHash() => r'512cf5869f3db7a5bc88d1c027ab5cc84e006ab8';
 /// 近隣の強震観測点
 
 @ProviderFor(closestKmoniObservationPointStream)
-const closestKmoniObservationPointStreamProvider =
+final closestKmoniObservationPointStreamProvider =
     ClosestKmoniObservationPointStreamProvider._();
 
 /// 近隣の強震観測点
@@ -64,7 +64,7 @@ final class ClosestKmoniObservationPointStreamProvider
         $FutureModifier<(KyoshinObservationPoint, double)>,
         $StreamProvider<(KyoshinObservationPoint, double)> {
   /// 近隣の強震観測点
-  const ClosestKmoniObservationPointStreamProvider._()
+  ClosestKmoniObservationPointStreamProvider._()
     : super(
         from: null,
         argument: null,

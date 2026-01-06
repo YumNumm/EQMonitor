@@ -12,11 +12,11 @@ part of 'ntp_config_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(NtpConfig)
-const ntpConfigProvider = NtpConfigProvider._();
+final ntpConfigProvider = NtpConfigProvider._();
 
 final class NtpConfigProvider
     extends $NotifierProvider<NtpConfig, NtpConfigModel> {
-  const NtpConfigProvider._()
+  NtpConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,7 +50,6 @@ abstract class _$NtpConfig extends $Notifier<NtpConfigModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<NtpConfigModel, NtpConfigModel>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$NtpConfig extends $Notifier<NtpConfigModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
