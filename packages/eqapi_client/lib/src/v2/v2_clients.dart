@@ -1,3 +1,4 @@
+export 'device_api_client.dart';
 export 'earthquake_api_client.dart';
 export 'eew_api_client.dart';
 export 'notification_api_client.dart';

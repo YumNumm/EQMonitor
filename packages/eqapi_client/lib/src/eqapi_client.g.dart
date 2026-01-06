@@ -48,7 +48,7 @@ class _V3 implements V3 {
     try {
       _value = InformationV3Result.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -75,7 +75,7 @@ class _V3 implements V3 {
     try {
       _value = AppInformation.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;

@@ -46,7 +46,7 @@ class _TelegramApiClient implements TelegramApiClient {
     try {
       _value = TelegramListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -81,7 +81,7 @@ class _TelegramApiClient implements TelegramApiClient {
     try {
       _value = TelegramListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -116,7 +116,7 @@ class _TelegramApiClient implements TelegramApiClient {
     try {
       _value = TelegramListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -143,7 +143,7 @@ class _TelegramApiClient implements TelegramApiClient {
     try {
       _value = TelegramDetailResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;

@@ -42,7 +42,7 @@ class _NotificationSettingsApiClient implements NotificationSettingsApiClient {
     try {
       _value = NotificationSettings.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -72,7 +72,7 @@ class _NotificationSettingsApiClient implements NotificationSettingsApiClient {
     try {
       _value = NotificationSettings.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -99,7 +99,7 @@ class _NotificationSettingsApiClient implements NotificationSettingsApiClient {
     try {
       _value = EarthquakeNotificationSettings.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -129,7 +129,7 @@ class _NotificationSettingsApiClient implements NotificationSettingsApiClient {
     try {
       _value = EarthquakeNotificationSettings.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -156,7 +156,7 @@ class _NotificationSettingsApiClient implements NotificationSettingsApiClient {
     try {
       _value = EewNotificationSettings.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -186,7 +186,7 @@ class _NotificationSettingsApiClient implements NotificationSettingsApiClient {
     try {
       _value = EewNotificationSettings.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
