@@ -1,4 +1,5 @@
 export 'common/common.dart';
+export 'device/device_exports.dart';
 export 'earthquake/earthquake_exports.dart';
 export 'eew/eew_exports.dart';
 export 'enum/enums.dart';
