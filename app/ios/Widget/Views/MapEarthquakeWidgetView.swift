@@ -39,7 +39,7 @@ struct MapEarthquakeWidgetView: View {
                             .frame(maxWidth: geometry.size.width - (widgetFamily == .systemSmall ? 20 : 32), alignment: .leading)
 
                         HStack(spacing: widgetFamily == .systemSmall ? 3 : 6) {
-                            Text(earthquake.formattedMagnitude)
+                            Text(earthquake.magnitude)
                                 .font(.system(size: widgetFamily == .systemSmall ? 11 : 14, weight: .semibold).monospaced())
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)

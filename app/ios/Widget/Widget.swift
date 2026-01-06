@@ -11,7 +11,7 @@ import SwiftUI
 struct EarthquakeEntry: TimelineEntry {
     let date: Date
     let configuration: EarthquakeWidgetIntent
-    let earthquakes: [EarthquakeItem]
+    let earthquakes: [EarthquakeDisplayItem]
     let error: String?
 }
 
@@ -23,7 +23,7 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
         EarthquakeEntry(
             date: Date(),
             configuration: EarthquakeWidgetIntent(),
-            earthquakes: mockEarthquakes(),
+            earthquakes: EarthquakeDisplayItem.mockData,
             error: nil
         )
     }
@@ -32,7 +32,7 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
         EarthquakeEntry(
             date: Date(),
             configuration: configuration,
-            earthquakes: mockEarthquakes(),
+            earthquakes: EarthquakeDisplayItem.mockData,
             error: nil
         )
     }
@@ -40,14 +40,11 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
     func timeline(for configuration: EarthquakeWidgetIntent, in context: Context) async -> Timeline<EarthquakeEntry> {
         let currentDate = Date()
 
-        // APIクライアント初期化
-        let baseURL = ConfigReader.getAPIBaseURL()
-
         do {
-            let apiService = try EarthquakeAPIService(baseURL: baseURL)
+            let apiService = EarthquakeAPIService.shared
 
             // 地域コードを決定
-            let regionId: String? = {
+            let regionCode: String? = {
                 switch configuration.regionType {
                 case .nationwide:
                     return nil
@@ -59,10 +56,16 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
                 }
             }()
 
-            let earthquakes = try await apiService.fetchEarthquakes(
-                limit: 10,
-                regionId: regionId
-            )
+            let earthquakes: [EarthquakeDisplayItem]
+
+            if let code = regionCode {
+                earthquakes = try await apiService.fetchEarthquakesByRegion(
+                    regionCode: code,
+                    limit: 10
+                )
+            } else {
+                earthquakes = try await apiService.fetchEarthquakes(limit: 10)
+            }
 
             let entry = EarthquakeEntry(
                 date: currentDate,
@@ -99,48 +102,6 @@ struct EarthquakeTimelineProvider: AppIntentTimelineProvider {
             return Timeline(entries: [entry], policy: .after(nextUpdate))
         }
     }
-
-    // モックデータ（プレビュー用）
-    private func mockEarthquakes() -> [EarthquakeItem] {
-        [
-            EarthquakeItem(
-                id: "mock1",
-                magnitude: 6.4,
-                magnitudeCondition: nil,
-                maxIntensity: "5-",
-                hypocenterName: "XXX県沖",
-                depth: 10,
-                originTime: Date().addingTimeInterval(-1200),
-                headline: nil,
-                latitude: 35.0,
-                longitude: 139.0
-            ),
-            EarthquakeItem(
-                id: "mock2",
-                magnitude: nil,
-                magnitudeCondition: "不明",
-                maxIntensity: "4",
-                hypocenterName: "YY地方西部",
-                depth: nil,
-                originTime: Date().addingTimeInterval(-14400),
-                headline: nil,
-                latitude: 35.5,
-                longitude: 139.5
-            ),
-            EarthquakeItem(
-                id: "mock3",
-                magnitude: 8.0,
-                magnitudeCondition: nil,
-                maxIntensity: "5-",
-                hypocenterName: "ZZZZ",
-                depth: 700,
-                originTime: Date().addingTimeInterval(-86400),
-                headline: nil,
-                latitude: 36.0,
-                longitude: 140.0
-            )
-        ]
-    }
 }
 
 struct EarthquakeWidget: Widget {
@@ -172,44 +133,7 @@ struct EarthquakeWidget: Widget {
     EarthquakeEntry(
         date: .now,
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
-        earthquakes: [
-            EarthquakeItem(
-                id: "preview1",
-                magnitude: 6.4,
-                magnitudeCondition: nil,
-                maxIntensity: "5-",
-                hypocenterName: "XXX県沖",
-                depth: 10,
-                originTime: Date().addingTimeInterval(-1200),
-                headline: nil,
-                latitude: 35.0,
-                longitude: 139.0
-            ),
-            EarthquakeItem(
-                id: "preview2",
-                magnitude: nil,
-                magnitudeCondition: "不明",
-                maxIntensity: "4",
-                hypocenterName: "YY地方西部",
-                depth: nil,
-                originTime: Date().addingTimeInterval(-14400),
-                headline: nil,
-                latitude: 35.5,
-                longitude: 139.5
-            ),
-            EarthquakeItem(
-                id: "preview3",
-                magnitude: 8.0,
-                magnitudeCondition: nil,
-                maxIntensity: "5-",
-                hypocenterName: "ZZZZ",
-                depth: 700,
-                originTime: Date().addingTimeInterval(-86400),
-                headline: nil,
-                latitude: 36.0,
-                longitude: 140.0
-            )
-        ],
+        earthquakes: EarthquakeDisplayItem.mockData,
         error: nil
     )
 }
@@ -220,38 +144,7 @@ struct EarthquakeWidget: Widget {
     EarthquakeEntry(
         date: .now,
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
-        earthquakes: [
-            EarthquakeItem(
-                id: "preview1",
-                magnitude: 6.4,
-                magnitudeCondition: nil,
-                maxIntensity: "5-",
-                hypocenterName: "XXX県沖",
-                depth: 10,
-                originTime: Date().addingTimeInterval(-1200),
-                headline: nil
-            ),
-            EarthquakeItem(
-                id: "preview2",
-                magnitude: nil,
-                magnitudeCondition: "不明",
-                maxIntensity: "4",
-                hypocenterName: "YY地方西部",
-                depth: nil,
-                originTime: Date().addingTimeInterval(-14400),
-                headline: nil
-            ),
-            EarthquakeItem(
-                id: "preview3",
-                magnitude: 8.0,
-                magnitudeCondition: nil,
-                maxIntensity: "5+",
-                hypocenterName: "ZZZZ",
-                depth: 700,
-                originTime: Date().addingTimeInterval(-86400),
-                headline: nil
-            )
-        ],
+        earthquakes: EarthquakeDisplayItem.mockData,
         error: nil
     )
 }
@@ -265,44 +158,7 @@ struct EarthquakeWidget: Widget {
             regionType: .specificRegion,
             region: RegionEntity(id: "350", name: "東京都２３区")
         ),
-        earthquakes: [
-            EarthquakeItem(
-                id: "preview1",
-                magnitude: 6.4,
-                magnitudeCondition: nil,
-                maxIntensity: "5-",
-                hypocenterName: "東京都２３区",
-                depth: 10,
-                originTime: Date().addingTimeInterval(-1200),
-                headline: nil,
-                latitude: 35.6762,
-                longitude: 139.6503
-            ),
-            EarthquakeItem(
-                id: "preview2",
-                magnitude: 5.2,
-                magnitudeCondition: nil,
-                maxIntensity: "4",
-                hypocenterName: "東京都多摩東部",
-                depth: 20,
-                originTime: Date().addingTimeInterval(-14400),
-                headline: nil,
-                latitude: 35.6897,
-                longitude: 139.4026
-            ),
-            EarthquakeItem(
-                id: "preview3",
-                magnitude: 4.8,
-                magnitudeCondition: nil,
-                maxIntensity: "3",
-                hypocenterName: "神奈川県東部",
-                depth: 30,
-                originTime: Date().addingTimeInterval(-28800),
-                headline: nil,
-                latitude: 35.4437,
-                longitude: 139.6380
-            )
-        ],
+        earthquakes: EarthquakeDisplayItem.mockData,
         error: nil
     )
 }
@@ -325,27 +181,25 @@ struct EarthquakeWidget: Widget {
         date: .now,
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
         earthquakes: [
-            EarthquakeItem(
-                id: "preview1",
-                magnitude: 7.2,
-                magnitudeCondition: nil,
-                maxIntensity: "6+",
+            EarthquakeDisplayItem(
+                id: "20260106120000",
                 hypocenterName: "能登半島沖",
-                depth: 15,
+                magnitude: "M7.2",
+                magnitudeValue: 7.2,
+                maxIntensity: .sixUpper,
+                depth: "15km",
                 originTime: Date().addingTimeInterval(-600),
-                headline: nil,
                 latitude: 37.5,
                 longitude: 137.0
             ),
-            EarthquakeItem(
-                id: "preview2",
-                magnitude: 5.8,
-                magnitudeCondition: nil,
-                maxIntensity: "5+",
+            EarthquakeDisplayItem(
+                id: "20260106110000",
                 hypocenterName: "石川県能登地方",
-                depth: 12,
+                magnitude: "M5.8",
+                magnitudeValue: 5.8,
+                maxIntensity: .fiveUpper,
+                depth: "12km",
                 originTime: Date().addingTimeInterval(-3600),
-                headline: nil,
                 latitude: 37.3,
                 longitude: 136.8
             )

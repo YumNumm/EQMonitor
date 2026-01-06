@@ -38,15 +38,14 @@ struct MapEarthquakeWidget: Widget {
         date: .now,
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
         earthquakes: [
-            EarthquakeItem(
+            EarthquakeDisplayItem(
                 id: "preview1",
-                magnitude: 6.4,
-                magnitudeCondition: nil,
-                maxIntensity: "5-",
                 hypocenterName: "能登半島沖",
-                depth: 10,
+                magnitude: "M6.4",
+                magnitudeValue: 6.4,
+                maxIntensity: .fiveLower,
+                depth: "10km",
                 originTime: Date().addingTimeInterval(-1200),
-                headline: nil,
                 latitude: 37.5,
                 longitude: 137.0
             )
@@ -62,15 +61,14 @@ struct MapEarthquakeWidget: Widget {
         date: .now,
         configuration: EarthquakeWidgetIntent(regionType: .nationwide),
         earthquakes: [
-            EarthquakeItem(
+            EarthquakeDisplayItem(
                 id: "preview1",
-                magnitude: 7.2,
-                magnitudeCondition: nil,
-                maxIntensity: "6+",
                 hypocenterName: "石川県能登地方",
-                depth: 15,
+                magnitude: "M7.2",
+                magnitudeValue: 7.2,
+                maxIntensity: .sixUpper,
+                depth: "15km",
                 originTime: Date().addingTimeInterval(-600),
-                headline: nil,
                 latitude: 37.3,
                 longitude: 136.8
             )

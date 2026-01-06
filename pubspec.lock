@@ -261,10 +261,10 @@ packages:
     dependency: transitive
     description:
       name: code_builder
-      sha256: "11654819532ba94c34de52ff5feb52bd81cba1de00ef2ed622fd50295f9d4243"
+      sha256: "6a6cab2ba4680d6423f34a9b972a4c9a94ebe1b62ecec4e1a1f2cba91fd1319d"
       url: "https://pub.dev"
     source: hosted
-    version: "4.11.0"
+    version: "4.11.1"
   collection:
     dependency: transitive
     description:
@@ -437,10 +437,10 @@ packages:
     dependency: transitive
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   es_compression:
     dependency: transitive
     description:
@@ -1570,18 +1570,18 @@ packages:
     dependency: transitive
     description:
       name: purchases_flutter
-      sha256: "0a8ce3855dacb8c28e1e8de99cfe5592be2cb350c1210259d6fa4d9d0b152f89"
+      sha256: "3e7d7ac44a0656f3758cfc96221f58b123d1c595ff575eec9e0d2f98f8810f40"
       url: "https://pub.dev"
     source: hosted
-    version: "9.10.2"
+    version: "9.10.3"
   retrofit:
     dependency: transitive
     description:
       name: retrofit
-      sha256: "84063c18a00d55af41d6b8401edf8473e8c215bd7068ef7ec5e34c60657ffdbe"
+      sha256: "0f629ed26b2c48c66fe54bd548313c6fdf7955be18bff37e08a46dd3f97f8eaf"
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.1"
+    version: "4.9.2"
   retrofit_generator:
     dependency: transitive
     description:
