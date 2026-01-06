@@ -12,7 +12,7 @@ part of 'secure_storage.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(secureStorage)
-const secureStorageProvider = SecureStorageProvider._();
+final secureStorageProvider = SecureStorageProvider._();
 
 final class SecureStorageProvider
     extends
@@ -22,7 +22,7 @@ final class SecureStorageProvider
           FlutterSecureStorage
         >
     with $Provider<FlutterSecureStorage> {
-  const SecureStorageProvider._()
+  SecureStorageProvider._()
     : super(
         from: null,
         argument: null,

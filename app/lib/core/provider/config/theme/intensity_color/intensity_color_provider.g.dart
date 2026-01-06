@@ -12,11 +12,11 @@ part of 'intensity_color_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(IntensityColor)
-const intensityColorProvider = IntensityColorProvider._();
+final intensityColorProvider = IntensityColorProvider._();
 
 final class IntensityColorProvider
     extends $NotifierProvider<IntensityColor, IntensityColorModel> {
-  const IntensityColorProvider._()
+  IntensityColorProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,7 +50,6 @@ abstract class _$IntensityColor extends $Notifier<IntensityColorModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<IntensityColorModel, IntensityColorModel>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$IntensityColor extends $Notifier<IntensityColorModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

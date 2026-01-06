@@ -12,7 +12,7 @@ part of 'device_info.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(androidDeviceInfo)
-const androidDeviceInfoProvider = AndroidDeviceInfoProvider._();
+final androidDeviceInfoProvider = AndroidDeviceInfoProvider._();
 
 final class AndroidDeviceInfoProvider
     extends
@@ -22,7 +22,7 @@ final class AndroidDeviceInfoProvider
           AndroidDeviceInfo
         >
     with $Provider<AndroidDeviceInfo> {
-  const AndroidDeviceInfoProvider._()
+  AndroidDeviceInfoProvider._()
     : super(
         from: null,
         argument: null,
@@ -59,12 +59,12 @@ final class AndroidDeviceInfoProvider
 String _$androidDeviceInfoHash() => r'02f1a66ec8a7e96d418eb9cb0a981fd40d5d2523';
 
 @ProviderFor(iosDeviceInfo)
-const iosDeviceInfoProvider = IosDeviceInfoProvider._();
+final iosDeviceInfoProvider = IosDeviceInfoProvider._();
 
 final class IosDeviceInfoProvider
     extends $FunctionalProvider<IosDeviceInfo, IosDeviceInfo, IosDeviceInfo>
     with $Provider<IosDeviceInfo> {
-  const IosDeviceInfoProvider._()
+  IosDeviceInfoProvider._()
     : super(
         from: null,
         argument: null,

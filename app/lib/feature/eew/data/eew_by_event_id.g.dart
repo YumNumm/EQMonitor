@@ -12,11 +12,11 @@ part of 'eew_by_event_id.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EewsByEventId)
-const eewsByEventIdProvider = EewsByEventIdFamily._();
+final eewsByEventIdProvider = EewsByEventIdFamily._();
 
 final class EewsByEventIdProvider
     extends $AsyncNotifierProvider<EewsByEventId, List<EewItemWithRelations>> {
-  const EewsByEventIdProvider._({
+  EewsByEventIdProvider._({
     required EewsByEventIdFamily super.from,
     required String super.argument,
   }) : super(
@@ -63,7 +63,7 @@ final class EewsByEventIdFamily extends $Family
           FutureOr<List<EewItemWithRelations>>,
           String
         > {
-  const EewsByEventIdFamily._()
+  EewsByEventIdFamily._()
     : super(
         retry: null,
         name: r'eewsByEventIdProvider',
@@ -88,7 +88,6 @@ abstract class _$EewsByEventId
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<
@@ -106,6 +105,6 @@ abstract class _$EewsByEventId
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

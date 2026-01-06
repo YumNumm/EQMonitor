@@ -12,13 +12,13 @@ part of 'kyoshin_monitor_timer_stream.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinMonitorTimerStream)
-const kyoshinMonitorTimerStreamProvider = KyoshinMonitorTimerStreamProvider._();
+final kyoshinMonitorTimerStreamProvider = KyoshinMonitorTimerStreamProvider._();
 
 final class KyoshinMonitorTimerStreamProvider
     extends
         $FunctionalProvider<AsyncValue<DateTime>, DateTime, Stream<DateTime>>
     with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
-  const KyoshinMonitorTimerStreamProvider._()
+  KyoshinMonitorTimerStreamProvider._()
     : super(
         from: null,
         argument: null,

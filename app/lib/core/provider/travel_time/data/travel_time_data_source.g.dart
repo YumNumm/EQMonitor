@@ -12,7 +12,7 @@ part of 'travel_time_data_source.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(travelTimeDataSource)
-const travelTimeDataSourceProvider = TravelTimeDataSourceProvider._();
+final travelTimeDataSourceProvider = TravelTimeDataSourceProvider._();
 
 final class TravelTimeDataSourceProvider
     extends
@@ -22,7 +22,7 @@ final class TravelTimeDataSourceProvider
           TravelTimeDataSource
         >
     with $Provider<TravelTimeDataSource> {
-  const TravelTimeDataSourceProvider._()
+  TravelTimeDataSourceProvider._()
     : super(
         from: null,
         argument: null,

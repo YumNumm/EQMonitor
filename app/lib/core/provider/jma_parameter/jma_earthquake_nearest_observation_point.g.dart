@@ -12,7 +12,7 @@ part of 'jma_earthquake_nearest_observation_point.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(jmaEarthquakeNearestObservationPoint)
-const jmaEarthquakeNearestObservationPointProvider =
+final jmaEarthquakeNearestObservationPointProvider =
     JmaEarthquakeNearestObservationPointFamily._();
 
 final class JmaEarthquakeNearestObservationPointProvider
@@ -25,7 +25,7 @@ final class JmaEarthquakeNearestObservationPointProvider
     with
         $FutureModifier<(EarthquakeParameterStationItem, double)?>,
         $FutureProvider<(EarthquakeParameterStationItem, double)?> {
-  const JmaEarthquakeNearestObservationPointProvider._({
+  JmaEarthquakeNearestObservationPointProvider._({
     required JmaEarthquakeNearestObservationPointFamily super.from,
     required LatLng super.argument,
   }) : super(
@@ -79,7 +79,7 @@ final class JmaEarthquakeNearestObservationPointFamily extends $Family
           FutureOr<(EarthquakeParameterStationItem, double)?>,
           LatLng
         > {
-  const JmaEarthquakeNearestObservationPointFamily._()
+  JmaEarthquakeNearestObservationPointFamily._()
     : super(
         retry: null,
         name: r'jmaEarthquakeNearestObservationPointProvider',

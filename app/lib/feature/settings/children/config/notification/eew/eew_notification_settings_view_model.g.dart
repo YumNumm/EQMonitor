@@ -12,12 +12,12 @@ part of 'eew_notification_settings_view_model.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EewNotificationsSettingsViewModel)
-const eewNotificationsSettingsViewModelProvider =
+final eewNotificationsSettingsViewModelProvider =
     EewNotificationsSettingsViewModelProvider._();
 
 final class EewNotificationsSettingsViewModelProvider
     extends $NotifierProvider<EewNotificationsSettingsViewModel, FcmEewTopic?> {
-  const EewNotificationsSettingsViewModelProvider._()
+  EewNotificationsSettingsViewModelProvider._()
     : super(
         from: null,
         argument: null,
@@ -55,7 +55,6 @@ abstract class _$EewNotificationsSettingsViewModel
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<FcmEewTopic?, FcmEewTopic?>;
     final element =
         ref.element
@@ -65,6 +64,6 @@ abstract class _$EewNotificationsSettingsViewModel
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
