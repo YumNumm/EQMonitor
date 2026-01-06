@@ -2,10 +2,13 @@
 //  EarthquakeAPIClient.swift
 //  Widget
 //
-//  Created by Widget Generator
+//  API v2 クライアント
+//  Dart定義: packages/eqapi_client/lib/src/v2/earthquake_api_client.dart
 //
 
 import Foundation
+
+// MARK: - API Error Types
 
 enum APIError: Error, LocalizedError {
     case networkError(Error)
@@ -30,7 +33,8 @@ enum APIError: Error, LocalizedError {
     }
 }
 
-// DecodingErrorの詳細を取得
+// MARK: - DecodingError Extension
+
 extension DecodingError {
     var detailedDescription: String {
         switch self {
@@ -48,47 +52,133 @@ extension DecodingError {
     }
 }
 
+// MARK: - API Service
+
 class EarthquakeAPIService {
     private let baseURL: URL
+    private let decoder: JSONDecoder
 
     init(baseURL: URL) {
         self.baseURL = baseURL
+
+        // JSONDecoderの設定
+        self.decoder = JSONDecoder()
+
+        // ISO8601日付フォーマットの設定
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        self.decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+
+            // 複数の形式を試行
+            // 1. ISO8601 with fractional seconds: 2025-10-10T21:24:00.123+09:00
+            // 2. ISO8601 standard: 2025-10-10T21:24:00+09:00
+            // 3. Without colon in timezone: 2025-10-10T21:24:00+0900
+
+            let formatters: [ISO8601DateFormatter] = {
+                let f1 = ISO8601DateFormatter()
+                f1.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+                let f2 = ISO8601DateFormatter()
+                f2.formatOptions = [.withInternetDateTime]
+
+                return [f1, f2]
+            }()
+
+            for formatter in formatters {
+                if let date = formatter.date(from: dateString) {
+                    return date
+                }
+            }
+
+            // タイムゾーン部分の修正を試みる（+09 -> +09:00）
+            let normalizedString = Self.normalizeTimezone(dateString)
+            for formatter in formatters {
+                if let date = formatter.date(from: normalizedString) {
+                    return date
+                }
+            }
+
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Invalid date format: \(dateString)"
+                )
+            )
+        }
     }
 
-    func fetchEarthquakes(
-        limit: Int = 10,
-        regionId: String? = nil
-    ) async throws -> [EarthquakeItem] {
-        var urlComponents: URLComponents
-
-        if let regionId = regionId {
-            // 地域別エンドポイント
-            guard let components = URLComponents(string: "\(baseURL.absoluteString)/earthquake/region") else {
-                throw APIError.invalidURL
-            }
-            urlComponents = components
-            urlComponents.queryItems = [
-                URLQueryItem(name: "limit", value: String(limit)),
-                URLQueryItem(name: "regionId", value: regionId)
-            ]
-        } else {
-            // 全国エンドポイント
-            guard let components = URLComponents(string: "\(baseURL.absoluteString)/earthquake") else {
-                throw APIError.invalidURL
-            }
-            urlComponents = components
-            urlComponents.queryItems = [
-                URLQueryItem(name: "limit", value: String(limit))
-            ]
+    /// タイムゾーン表記を正規化
+    private static func normalizeTimezone(_ dateString: String) -> String {
+        // +09 -> +09:00, -05 -> -05:00 などを正規化
+        let pattern = #"([+-])(\d{2})$"#
+        if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
+            let range = NSRange(dateString.startIndex..<dateString.endIndex, in: dateString)
+            return regex.stringByReplacingMatches(in: dateString, options: [], range: range, withTemplate: "$1$2:00")
         }
+        return dateString
+    }
+
+    // MARK: - Fetch Earthquakes (全国)
+
+    /// 地震情報一覧を取得
+    /// - Parameters:
+    ///   - limit: 取得件数（デフォルト10件）
+    /// - Returns: Widget表示用の地震情報配列
+    func fetchEarthquakes(limit: Int = 10) async throws -> [EarthquakeDisplayItem] {
+        guard var urlComponents = URLComponents(string: "\(baseURL.absoluteString)/v2/earthquake") else {
+            throw APIError.invalidURL
+        }
+
+        urlComponents.queryItems = [
+            URLQueryItem(name: "limit", value: String(limit))
+        ]
 
         guard let url = urlComponents.url else {
             throw APIError.invalidURL
         }
 
+        let response: EarthquakeListResponse = try await performRequest(url: url)
+        return response.items.toDisplayItems()
+    }
+
+    // MARK: - Fetch Earthquakes by Region
+
+    /// 地域別の地震情報を取得
+    /// - Parameters:
+    ///   - regionCode: 震度細分区域コード
+    ///   - limit: 取得件数（デフォルト10件）
+    /// - Returns: Widget表示用の地震情報配列
+    func fetchEarthquakesByRegion(regionCode: String, limit: Int = 10) async throws -> [EarthquakeDisplayItem] {
+        guard var urlComponents = URLComponents(string: "\(baseURL.absoluteString)/v2/earthquake/intensity/region") else {
+            throw APIError.invalidURL
+        }
+
+        urlComponents.queryItems = [
+            URLQueryItem(name: "code", value: regionCode),
+            URLQueryItem(name: "limit", value: String(limit))
+        ]
+
+        guard let url = urlComponents.url else {
+            throw APIError.invalidURL
+        }
+
+        let response: IntensityRegionSearchResponse = try await performRequest(url: url)
+        return response.items.toDisplayItems()
+    }
+
+    // MARK: - Private Request Helper
+
+    private func performRequest<T: Decodable>(url: URL) async throws -> T {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("EQMonitor-iOS-Widget/1.0", forHTTPHeaderField: "User-Agent")
+
+        // タイムアウト設定
+        request.timeoutInterval = 15
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -101,22 +191,22 @@ class EarthquakeAPIService {
                 throw APIError.serverError(httpResponse.statusCode)
             }
 
-            let decoder = JSONDecoder()
-
+            #if DEBUG
             // デバッグ: レスポンスの内容をログ出力
             if let jsonString = String(data: data, encoding: .utf8) {
-                print("API Response: \(jsonString.prefix(500))")
+                print("API Response (\(url.lastPathComponent)): \(jsonString.prefix(500))")
             }
+            #endif
 
             do {
-                let earthquakeResponse = try decoder.decode(EarthquakeResponse.self, from: data)
-                return earthquakeResponse.data.map { EarthquakeItem(from: $0) }
+                return try decoder.decode(T.self, from: data)
             } catch let decodingError as DecodingError {
-                // デコードエラーの詳細をログ出力
+                #if DEBUG
                 print("Decoding Error: \(decodingError.detailedDescription)")
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print("Failed JSON: \(jsonString)")
                 }
+                #endif
                 throw APIError.decodingError(decodingError.detailedDescription)
             }
 
@@ -128,13 +218,25 @@ class EarthquakeAPIService {
     }
 }
 
-// xconfigから設定を読み込むヘルパー
+// MARK: - Config Reader
+
+/// xconfigから設定を読み込むヘルパー
 class ConfigReader {
+    /// APIベースURLを取得
     static func getAPIBaseURL() -> URL {
         if let urlString = Bundle.main.object(forInfoDictionaryKey: "REST_API_URL") as? String,
+           !urlString.isEmpty,
            let url = URL(string: urlString) {
             return url
         }
+        // フォールバック
         return URL(string: "https://v2.api.eqmonitor.app")!
     }
+}
+
+// MARK: - Shared Instance
+
+extension EarthquakeAPIService {
+    /// 共有インスタンス
+    static let shared = EarthquakeAPIService(baseURL: ConfigReader.getAPIBaseURL())
 }
