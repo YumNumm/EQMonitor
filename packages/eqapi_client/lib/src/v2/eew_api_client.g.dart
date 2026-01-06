@@ -46,7 +46,7 @@ class _EewApiClient implements EewApiClient {
     try {
       _value = EewListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -73,7 +73,7 @@ class _EewApiClient implements EewApiClient {
     try {
       _value = EewLatestResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -100,7 +100,7 @@ class _EewApiClient implements EewApiClient {
     try {
       _value = EewArrayResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -130,7 +130,7 @@ class _EewApiClient implements EewApiClient {
     try {
       _value = EewItemWithRelations.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
