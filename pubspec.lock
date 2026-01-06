@@ -68,12 +68,11 @@ packages:
   app_settings:
     dependency: transitive
     description:
-      path: "."
-      ref: ebbf71824a21cded805d5894f8df8f5af44ec069
-      resolved-ref: ebbf71824a21cded805d5894f8df8f5af44ec069
-      url: "https://github.com/spencerccf/app_settings.git"
-    source: git
-    version: "6.1.2"
+      name: app_settings
+      sha256: "64d50e666fd96ae90301bf71205f05019286f940ad6f5fed3d1be19c6af7546a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   archive:
     dependency: transitive
     description:
@@ -1201,20 +1200,20 @@ packages:
     dependency: "direct overridden"
     description:
       path: maplibre
-      ref: "26a2f4aaf7ed8d8c4d0e997c5dca4f1c40f812f8"
-      resolved-ref: "26a2f4aaf7ed8d8c4d0e997c5dca4f1c40f812f8"
+      ref: a6aff508942967f3140af51fa6c3fdf8b979d416
+      resolved-ref: a6aff508942967f3140af51fa6c3fdf8b979d416
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
-    version: "0.3.2"
+    version: "0.3.3"
   maplibre_ios:
     dependency: "direct overridden"
     description:
       path: maplibre_ios
-      ref: "26a2f4aaf7ed8d8c4d0e997c5dca4f1c40f812f8"
-      resolved-ref: "26a2f4aaf7ed8d8c4d0e997c5dca4f1c40f812f8"
+      ref: a6aff508942967f3140af51fa6c3fdf8b979d416
+      resolved-ref: a6aff508942967f3140af51fa6c3fdf8b979d416
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
-    version: "0.3.2"
+    version: "0.3.3"
   maps_toolkit:
     dependency: transitive
     description:
