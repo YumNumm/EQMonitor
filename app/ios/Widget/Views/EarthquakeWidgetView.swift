@@ -104,7 +104,7 @@ struct LargeWidgetView: View {
     }
 
     // ウィジェットサイズに応じた表示件数
-    var displayedEarthquakes: [EarthquakeItem] {
+    var displayedEarthquakes: [EarthquakeDisplayItem] {
         let maxCount: Int
         switch widgetFamily {
         case .systemMedium:
@@ -224,7 +224,7 @@ struct SmallWidgetView: View {
 
 // 地震行（大きいサイズ用）
 struct EarthquakeRow: View {
-    let earthquake: EarthquakeItem
+    let earthquake: EarthquakeDisplayItem
     let showDivider: Bool
     let availableWidth: CGFloat
 
@@ -232,19 +232,32 @@ struct EarthquakeRow: View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(earthquake.hypocenterName)
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(.primary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                        .truncationMode(.tail)
-                        .frame(maxWidth: availableWidth - 120, alignment: .leading)
+                    HStack(spacing: 4) {
+                        Text(earthquake.hypocenterName)
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .truncationMode(.tail)
+
+                        // テスト・訓練バッジ
+                        if let badge = earthquake.statusBadge {
+                            Text(badge)
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(Color.orange)
+                                .clipShape(RoundedRectangle(cornerRadius: 3))
+                        }
+                    }
+                    .frame(maxWidth: availableWidth - 120, alignment: .leading)
 
                     HStack(spacing: 4) {
-                        Text(earthquake.formattedMagnitude)
+                        Text(earthquake.magnitude)
                             .font(.system(size: 12).monospaced())
 
-                        Text("深さ\(earthquake.formattedDepth)")
+                        Text("深さ\(earthquake.depth)")
                             .font(.system(size: 12))
 
                         Text("/")
@@ -285,21 +298,34 @@ struct EarthquakeRow: View {
 
 // コンパクト地震行（小さいサイズ用）
 struct CompactEarthquakeRow: View {
-    let earthquake: EarthquakeItem
+    let earthquake: EarthquakeDisplayItem
     let availableWidth: CGFloat
 
     var body: some View {
         HStack(alignment: .center, spacing: 4) {
             VStack(alignment: .leading, spacing: 1) {
-                Text(earthquake.hypocenterName)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                    .truncationMode(.tail)
-                    .frame(maxWidth: availableWidth * 0.5, alignment: .leading)
+                HStack(spacing: 2) {
+                    Text(earthquake.hypocenterName)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .truncationMode(.tail)
 
-                Text("\(earthquake.formattedMagnitude) \(earthquake.formattedDepth)")
+                    // テスト・訓練バッジ（コンパクト）
+                    if let badge = earthquake.statusBadge {
+                        Text(badge)
+                            .font(.system(size: 7, weight: .bold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 2)
+                            .padding(.vertical, 1)
+                            .background(Color.orange)
+                            .clipShape(RoundedRectangle(cornerRadius: 2))
+                    }
+                }
+                .frame(maxWidth: availableWidth * 0.5, alignment: .leading)
+
+                Text("\(earthquake.magnitude) \(earthquake.depth)")
                     .font(.system(size: 9).monospaced())
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
