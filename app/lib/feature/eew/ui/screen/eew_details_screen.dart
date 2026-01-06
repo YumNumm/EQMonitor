@@ -70,7 +70,9 @@ class _EewCard extends StatelessWidget {
             Text('震源地: ${hypocenter?.value.name ?? "不明"}'),
             Text('深さ: ${hypocenter?.depth ?? "不明"}km'),
             Text('マグニチュード: ${hypocenter?.magnitude ?? "不明"}'),
-            Text('最大予測震度: ${forecastIntensity?.maxIntensity?.value.value ?? '不明'}'),
+            Text(
+              '最大予測震度: ${forecastIntensity?.maxIntensity?.value.value ?? '不明'}',
+            ),
             if (eew.isWarning ?? false)
               const Chip(
                 label: Text('警報'),

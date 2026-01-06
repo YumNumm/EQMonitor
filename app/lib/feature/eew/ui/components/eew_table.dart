@@ -58,7 +58,9 @@ class EewTable extends StatelessWidget {
               final isSelected = selectedIndex == index;
               return DataRow(
                 selected: isSelected,
-                onSelectChanged: onSelect != null ? (_) => onSelect!(index) : null,
+                onSelectChanged: onSelect != null
+                    ? (_) => onSelect!(index)
+                    : null,
                 color: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
                     return colorScheme.primaryContainer;
@@ -95,7 +97,8 @@ enum _EewTableColumn {
   magnitude(name: 'M', isNumeric: true),
   maxIntensity(name: '予想最大震度', isNumeric: true),
   maxLongPeriodIntensity(name: '予想最大長周期\n地震動階級', isNumeric: true),
-  accuracy(name: '精度', isNumeric: false);
+  accuracy(name: '精度', isNumeric: false)
+  ;
 
   const _EewTableColumn({
     required this.name,
@@ -162,15 +165,15 @@ extension _EewTableColumnEx on _EewTableColumn {
         if (intensity == null) {
           return '';
         }
-        final typeStr = intensity.value.value.replaceAll('-', '弱').replaceAll('+', '強');
+        final typeStr = intensity.value.value
+            .replaceAll('-', '弱')
+            .replaceAll('+', '強');
         return '震度 $typeStr${intensity.isOver ? '以上' : ''}';
       }(),
       isNumeric: false,
     ),
     _EewTableColumn.epicenterDepth => _EewTableColumnValue(
-      value: eew.hypocenter?.depth != null
-          ? '${eew.hypocenter!.depth}km'
-          : '',
+      value: eew.hypocenter?.depth != null ? '${eew.hypocenter!.depth}km' : '',
       isNumeric: true,
     ),
     _EewTableColumn.maxLongPeriodIntensity => _EewTableColumnValue(

@@ -9,24 +9,27 @@ part 'eew_hypocenter_points_provider.g.dart';
 List<Feature<Point>> eewHypocenterPoints(Ref ref) {
   final eews = ref.watch(eewAliveTelegramProvider) ?? [];
 
-  return eews.where((e) {
-    if (e.isCanceled) {
-      return false;
-    }
-    final coords = e.hypocenter?.coordinates;
-    return coords is CoordinateLatLng;
-  }).map((eew) {
-    final hypocenter = eew.hypocenter!;
-    final coords = hypocenter.coordinates as CoordinateLatLng;
-    return Feature(
-      geometry: Point(
-        Geographic(lon: coords.longitude, lat: coords.latitude),
-      ),
-      properties: {
-        'magnitude': hypocenter.magnitude,
-        'depth': hypocenter.depth,
-        'isLowPrecise': eew.isPlum,
-      },
-    );
-  }).toList();
+  return eews
+      .where((e) {
+        if (e.isCanceled) {
+          return false;
+        }
+        final coords = e.hypocenter?.coordinates;
+        return coords is CoordinateLatLng;
+      })
+      .map((eew) {
+        final hypocenter = eew.hypocenter!;
+        final coords = hypocenter.coordinates as CoordinateLatLng;
+        return Feature(
+          geometry: Point(
+            Geographic(lon: coords.longitude, lat: coords.latitude),
+          ),
+          properties: {
+            'magnitude': hypocenter.magnitude,
+            'depth': hypocenter.depth,
+            'isLowPrecise': eew.isPlum,
+          },
+        );
+      })
+      .toList();
 }

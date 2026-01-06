@@ -17,8 +17,22 @@ import 'dart:typed_data' as $typed_data;
 const TsunamiParameter$json = {
   '1': 'TsunamiParameter',
   '2': [
-    {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.TsunamiParameterHeader', '10': 'header'},
-    {'1': 'items', '3': 2, '4': 3, '5': 11, '6': '.TsunamiParameterItem', '10': 'items'},
+    {
+      '1': 'header',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.TsunamiParameterHeader',
+      '10': 'header'
+    },
+    {
+      '1': 'items',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.TsunamiParameterItem',
+      '10': 'items'
+    },
   ],
 };
 
@@ -38,9 +52,10 @@ const TsunamiParameterHeader$json = {
 };
 
 /// Descriptor for `TsunamiParameterHeader`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List tsunamiParameterHeaderDescriptor = $convert.base64Decode(
-    'ChZUc3VuYW1pUGFyYW1ldGVySGVhZGVyEhgKB3ZlcnNpb24YASABKAlSB3ZlcnNpb24SHgoKY2'
-    'hhbmdlVGltZRgCIAEoCVIKY2hhbmdlVGltZQ==');
+final $typed_data.Uint8List tsunamiParameterHeaderDescriptor =
+    $convert.base64Decode(
+        'ChZUc3VuYW1pUGFyYW1ldGVySGVhZGVyEhgKB3ZlcnNpb24YASABKAlSB3ZlcnNpb24SHgoKY2'
+        'hhbmdlVGltZRgCIAEoCVIKY2hhbmdlVGltZQ==');
 
 @$core.Deprecated('Use tsunamiParameterItemDescriptor instead')
 const TsunamiParameterItem$json = {
@@ -63,4 +78,3 @@ final $typed_data.Uint8List tsunamiParameterItemDescriptor = $convert.base64Deco
     'UYAiABKAlSCnByZWZlY3R1cmUSEgoEY29kZRgDIAEoCVIEY29kZRISCgRuYW1lGAQgASgJUgRu'
     'YW1lEhoKCG5hbWVLYW5hGAUgASgJUghuYW1lS2FuYRIUCgVvd25lchgGIAEoCVIFb3duZXISGg'
     'oIbGF0aXR1ZGUYByABKAFSCGxhdGl0dWRlEhwKCWxvbmdpdHVkZRgIIAEoAVIJbG9uZ2l0dWRl');
-

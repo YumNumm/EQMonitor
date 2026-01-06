@@ -64,11 +64,11 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
               subtitle: Text(kv.value.map((e) => e.value.name).join(', ')),
               onTap: intensity.stations != null
                   ? () async => _PrefectureModalBottomSheet.show(
-                        context: context,
-                        lpgmIntensity: kv.key,
-                        prefectures: kv.value,
-                        stations: intensity.stations,
-                      )
+                      context: context,
+                      lpgmIntensity: kv.key,
+                      prefectures: kv.value,
+                      stations: intensity.stations,
+                    )
                   : null,
               trailing: intensity.stations != null
                   ? const Icon(Icons.chevron_right)
@@ -93,16 +93,15 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
     required LpgmIntensityValue lpgmIntensity,
     required List<IntensityItem> prefectures,
     required List<IntensityStationItem>? stations,
-  }) =>
-      Navigator.of(context).push(
-        SheetRoute(
-          builder: (context) => _PrefectureModalBottomSheet(
-            lpgmIntensity: lpgmIntensity,
-            prefectures: prefectures,
-            stations: stations,
-          ),
-        ),
-      );
+  }) => Navigator.of(context).push(
+    SheetRoute(
+      builder: (context) => _PrefectureModalBottomSheet(
+        lpgmIntensity: lpgmIntensity,
+        prefectures: prefectures,
+        stations: stations,
+      ),
+    ),
+  );
 
   final LpgmIntensityValue lpgmIntensity;
   final List<IntensityItem> prefectures;
@@ -139,7 +138,8 @@ class _PrefectureListTile extends HookWidget {
     final isExpanded = useState(false);
     final prefectureCode = prefecture.value.code;
 
-    final relatedStations = stations
+    final relatedStations =
+        stations
             ?.where((s) => s.value.code.startsWith(prefectureCode))
             .toList() ??
         [];
@@ -149,9 +149,10 @@ class _PrefectureListTile extends HookWidget {
         prefecture.value.name,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      trailing: relatedStations.isNotEmpty ? const Icon(Icons.expand_more) : null,
-      onTap:
-          relatedStations.isNotEmpty ? () => isExpanded.value = true : null,
+      trailing: relatedStations.isNotEmpty
+          ? const Icon(Icons.expand_more)
+          : null,
+      onTap: relatedStations.isNotEmpty ? () => isExpanded.value = true : null,
     );
 
     final expanded = ListTile(
@@ -171,8 +172,9 @@ class _PrefectureListTile extends HookWidget {
     return AnimatedCrossFade(
       firstChild: shrinked,
       secondChild: expanded,
-      crossFadeState:
-          isExpanded.value ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      crossFadeState: isExpanded.value
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       duration: const Duration(milliseconds: 300),
     );
   }

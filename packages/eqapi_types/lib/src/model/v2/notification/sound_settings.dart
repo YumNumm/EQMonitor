@@ -11,7 +11,8 @@ enum IntensitySoundMode {
   @JsonValue('location_intensity')
   locationIntensity('location_intensity'),
   @JsonValue('registered_max')
-  registeredMax('registered_max');
+  registeredMax('registered_max')
+  ;
 
   const IntensitySoundMode(this.value);
   final String value;

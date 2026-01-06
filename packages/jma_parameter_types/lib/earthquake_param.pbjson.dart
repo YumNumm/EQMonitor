@@ -50,8 +50,22 @@ final $typed_data.Uint8List stationOwnerDescriptor = $convert.base64Decode(
 const EarthquakeParameter$json = {
   '1': 'EarthquakeParameter',
   '2': [
-    {'1': 'header', '3': 1, '4': 1, '5': 11, '6': '.EarthquakeParameterHeader', '10': 'header'},
-    {'1': 'regions', '3': 2, '4': 3, '5': 11, '6': '.EarthquakeParameterRegionItem', '10': 'regions'},
+    {
+      '1': 'header',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.EarthquakeParameterHeader',
+      '10': 'header'
+    },
+    {
+      '1': 'regions',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.EarthquakeParameterRegionItem',
+      '10': 'regions'
+    },
   ],
 };
 
@@ -71,9 +85,10 @@ const EarthquakeParameterHeader$json = {
 };
 
 /// Descriptor for `EarthquakeParameterHeader`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List earthquakeParameterHeaderDescriptor = $convert.base64Decode(
-    'ChlFYXJ0aHF1YWtlUGFyYW1ldGVySGVhZGVyEhgKB3ZlcnNpb24YASABKAlSB3ZlcnNpb24SHg'
-    'oKY2hhbmdlVGltZRgCIAEoCVIKY2hhbmdlVGltZQ==');
+final $typed_data.Uint8List earthquakeParameterHeaderDescriptor =
+    $convert.base64Decode(
+        'ChlFYXJ0aHF1YWtlUGFyYW1ldGVySGVhZGVyEhgKB3ZlcnNpb24YASABKAlSB3ZlcnNpb24SHg'
+        'oKY2hhbmdlVGltZRgCIAEoCVIKY2hhbmdlVGltZQ==');
 
 @$core.Deprecated('Use earthquakeParameterRegionItemDescriptor instead')
 const EarthquakeParameterRegionItem$json = {
@@ -82,15 +97,23 @@ const EarthquakeParameterRegionItem$json = {
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     {'1': 'nameKana', '3': 3, '4': 1, '5': 9, '10': 'nameKana'},
-    {'1': 'cities', '3': 4, '4': 3, '5': 11, '6': '.EarthquakeParameterCityItem', '10': 'cities'},
+    {
+      '1': 'cities',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.EarthquakeParameterCityItem',
+      '10': 'cities'
+    },
   ],
 };
 
 /// Descriptor for `EarthquakeParameterRegionItem`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List earthquakeParameterRegionItemDescriptor = $convert.base64Decode(
-    'Ch1FYXJ0aHF1YWtlUGFyYW1ldGVyUmVnaW9uSXRlbRISCgRjb2RlGAEgASgJUgRjb2RlEhIKBG'
-    '5hbWUYAiABKAlSBG5hbWUSGgoIbmFtZUthbmEYAyABKAlSCG5hbWVLYW5hEjQKBmNpdGllcxgE'
-    'IAMoCzIcLkVhcnRocXVha2VQYXJhbWV0ZXJDaXR5SXRlbVIGY2l0aWVz');
+final $typed_data.Uint8List earthquakeParameterRegionItemDescriptor =
+    $convert.base64Decode(
+        'Ch1FYXJ0aHF1YWtlUGFyYW1ldGVyUmVnaW9uSXRlbRISCgRjb2RlGAEgASgJUgRjb2RlEhIKBG'
+        '5hbWUYAiABKAlSBG5hbWUSGgoIbmFtZUthbmEYAyABKAlSCG5hbWVLYW5hEjQKBmNpdGllcxgE'
+        'IAMoCzIcLkVhcnRocXVha2VQYXJhbWV0ZXJDaXR5SXRlbVIGY2l0aWVz');
 
 @$core.Deprecated('Use earthquakeParameterCityItemDescriptor instead')
 const EarthquakeParameterCityItem$json = {
@@ -99,15 +122,23 @@ const EarthquakeParameterCityItem$json = {
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     {'1': 'nameKana', '3': 3, '4': 1, '5': 9, '10': 'nameKana'},
-    {'1': 'stations', '3': 4, '4': 3, '5': 11, '6': '.EarthquakeParameterStationItem', '10': 'stations'},
+    {
+      '1': 'stations',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.EarthquakeParameterStationItem',
+      '10': 'stations'
+    },
   ],
 };
 
 /// Descriptor for `EarthquakeParameterCityItem`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List earthquakeParameterCityItemDescriptor = $convert.base64Decode(
-    'ChtFYXJ0aHF1YWtlUGFyYW1ldGVyQ2l0eUl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCgRuYW'
-    '1lGAIgASgJUgRuYW1lEhoKCG5hbWVLYW5hGAMgASgJUghuYW1lS2FuYRI7CghzdGF0aW9ucxgE'
-    'IAMoCzIfLkVhcnRocXVha2VQYXJhbWV0ZXJTdGF0aW9uSXRlbVIIc3RhdGlvbnM=');
+final $typed_data.Uint8List earthquakeParameterCityItemDescriptor =
+    $convert.base64Decode(
+        'ChtFYXJ0aHF1YWtlUGFyYW1ldGVyQ2l0eUl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCgRuYW'
+        '1lGAIgASgJUgRuYW1lEhoKCG5hbWVLYW5hGAMgASgJUghuYW1lS2FuYRI7CghzdGF0aW9ucxgE'
+        'IAMoCzIfLkVhcnRocXVha2VQYXJhbWV0ZXJTdGF0aW9uSXRlbVIIc3RhdGlvbnM=');
 
 @$core.Deprecated('Use earthquakeParameterStationItemDescriptor instead')
 const EarthquakeParameterStationItem$json = {
@@ -118,8 +149,22 @@ const EarthquakeParameterStationItem$json = {
     {'1': 'nameKana', '3': 3, '4': 1, '5': 9, '10': 'nameKana'},
     {'1': 'latitude', '3': 4, '4': 1, '5': 1, '10': 'latitude'},
     {'1': 'longitude', '3': 5, '4': 1, '5': 1, '10': 'longitude'},
-    {'1': 'status', '3': 6, '4': 1, '5': 14, '6': '.StationStatus', '10': 'status'},
-    {'1': 'owner', '3': 7, '4': 1, '5': 14, '6': '.StationOwner', '10': 'owner'},
+    {
+      '1': 'status',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.StationStatus',
+      '10': 'status'
+    },
+    {
+      '1': 'owner',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.StationOwner',
+      '10': 'owner'
+    },
     {'1': 'arv_400', '3': 8, '4': 1, '5': 1, '10': 'arv400'},
   ],
 };
@@ -131,4 +176,3 @@ final $typed_data.Uint8List earthquakeParameterStationItemDescriptor = $convert.
     'ZRgEIAEoAVIIbGF0aXR1ZGUSHAoJbG9uZ2l0dWRlGAUgASgBUglsb25naXR1ZGUSJgoGc3RhdH'
     'VzGAYgASgOMg4uU3RhdGlvblN0YXR1c1IGc3RhdHVzEiMKBW93bmVyGAcgASgOMg0uU3RhdGlv'
     'bk93bmVyUgVvd25lchIXCgdhcnZfNDAwGAggASgBUgZhcnY0MDA=');
-
