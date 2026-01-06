@@ -19,23 +19,9 @@ class EewCommand extends Command<void> {
 class EewListCommand extends Command<void> {
   EewListCommand() {
     argParser
-      ..addOption(
-        'limit',
-        abbr: 'l',
-        help: '取得件数 (1-100)',
-        defaultsTo: '10',
-      )
-      ..addOption(
-        'cursor',
-        abbr: 'c',
-        help: 'ページングカーソル',
-      )
-      ..addFlag(
-        'json',
-        abbr: 'j',
-        help: 'JSON形式で出力',
-        negatable: false,
-      );
+      ..addOption('limit', abbr: 'l', help: '取得件数 (1-100)', defaultsTo: '10')
+      ..addOption('cursor', abbr: 'c', help: 'ページングカーソル')
+      ..addFlag('json', abbr: 'j', help: 'JSON形式で出力', negatable: false);
   }
 
   @override
@@ -73,12 +59,7 @@ class EewListCommand extends Command<void> {
 
 class EewLatestCommand extends Command<void> {
   EewLatestCommand() {
-    argParser.addFlag(
-      'json',
-      abbr: 'j',
-      help: 'JSON形式で出力',
-      negatable: false,
-    );
+    argParser.addFlag('json', abbr: 'j', help: 'JSON形式で出力', negatable: false);
   }
 
   @override
@@ -114,17 +95,8 @@ class EewDetailCommand extends Command<void> {
         help: 'イベントID (yyyyMMddHHmmss形式)',
         mandatory: true,
       )
-      ..addOption(
-        'serial-no',
-        abbr: 's',
-        help: 'シリアル番号（指定しない場合は全件取得）',
-      )
-      ..addFlag(
-        'json',
-        abbr: 'j',
-        help: 'JSON形式で出力',
-        negatable: false,
-      );
+      ..addOption('serial-no', abbr: 's', help: 'シリアル番号（指定しない場合は全件取得）')
+      ..addFlag('json', abbr: 'j', help: 'JSON形式で出力', negatable: false);
   }
 
   @override
@@ -153,9 +125,7 @@ class EewDetailCommand extends Command<void> {
           print(EewFormatter.formatItem(response));
         }
       } else {
-        final response = await ApiClient.api.eew.getByEventId(
-          eventId: eventId,
-        );
+        final response = await ApiClient.api.eew.getByEventId(eventId: eventId);
 
         if (jsonOutput) {
           print(response.toJson());

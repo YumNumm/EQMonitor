@@ -151,8 +151,7 @@ abstract class IntensityPrefectureSearchResponse
 
   factory IntensityPrefectureSearchResponse.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$IntensityPrefectureSearchResponseFromJson(json);
+  ) => _$IntensityPrefectureSearchResponseFromJson(json);
 }
 
 /// 市区町村検索レスポンス

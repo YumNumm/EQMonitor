@@ -6,10 +6,7 @@ import 'package:eqapi_cli/src/commands/earthquake_command.dart';
 import 'package:eqapi_cli/src/commands/eew_command.dart';
 
 Future<void> main(List<String> arguments) async {
-  final runner = CommandRunner<void>(
-    'eqapi',
-    'CLI tool for EQMonitor API v2',
-  )
+  final runner = CommandRunner<void>('eqapi', 'CLI tool for EQMonitor API v2')
     ..addCommand(EarthquakeCommand())
     ..addCommand(EewCommand());
 

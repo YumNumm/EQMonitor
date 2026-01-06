@@ -8,7 +8,8 @@ enum TelegramStatus {
   @JsonValue('TRAINING')
   training('TRAINING'),
   @JsonValue('TEST')
-  test('TEST');
+  test('TEST')
+  ;
 
   const TelegramStatus(this.value);
   final String value;
