@@ -13,6 +13,9 @@ class EqApi {
 
   final Dio dio;
 
+  /// デバイスAPI
+  DeviceApiClient get device => DeviceApiClient(dio);
+
   /// 地震情報API
   EarthquakeApiClient get earthquake => EarthquakeApiClient(dio);
 

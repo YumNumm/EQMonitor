@@ -63,7 +63,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     try {
       _value = EarthquakeListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -90,7 +90,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     try {
       _value = EarthquakeDetailResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -140,7 +140,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     try {
       _value = IntensityRegionSearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -190,7 +190,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     try {
       _value = IntensityPrefectureSearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -240,7 +240,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     try {
       _value = IntensityCitySearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -290,7 +290,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     try {
       _value = IntensityStationSearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
