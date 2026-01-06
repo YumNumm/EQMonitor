@@ -105,7 +105,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   purchases_flutter: ^9.1.0
-  riverpod_annotation: ^3.0.3
+  riverpod_annotation: ^4.0.0
   screenshot: 3.0.0
   share_plus: ^12.0.0
   shared_preferences: ^2.3.3
@@ -137,7 +137,7 @@ dev_dependencies:
   freezed: ^3.0.6
   go_router_builder: ^4.0.1
   json_serializable: ^6.9.0
-  riverpod_generator: ^3.0.3
+  riverpod_generator: ^4.0.0+1
   riverpod_lint: ^3.0.3
   test: ^1.25.7
 
