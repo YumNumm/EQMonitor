@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/flutterfire",
       "state" : {
-        "revision" : "1fc2adfbeb6e132e49ba72d04c727227f9827b3e",
-        "version" : "4.2.1-firebase-core-swift"
+        "revision" : "39bdb5b1ef392e8c31c60209e333b45e408099e8",
+        "version" : "4.3.0-firebase-core-swift"
       }
     },
     {
@@ -149,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution",
       "state" : {
-        "revision" : "0edf46449e7cc888c7a4d7ed403461915137604b",
-        "version" : "6.19.3"
+        "revision" : "38b6eb680b84c8eee5c2bb1045ad28ce003fd89d",
+        "version" : "6.21.2"
       }
     },
     {
@@ -176,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-hybrid-common.git",
       "state" : {
-        "revision" : "8d667ded9bea1bb371a4346115207516051d3ac3",
-        "version" : "17.21.0"
+        "revision" : "52c04e7004e596fdcd79ef9327bcb9f84c691938",
+        "version" : "17.25.0"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios-spm",
       "state" : {
-        "revision" : "2ae461666d96399aaab0207c6a941d8c130b1783",
-        "version" : "5.49.0"
+        "revision" : "8ef238a3add691f410a5b50789630582c9431f38",
+        "version" : "5.51.1"
       }
     },
     {
