@@ -38,7 +38,8 @@ enum TelegramType {
   @JsonValue('NANKAI')
   nankai('NANKAI'),
   @JsonValue('VYSE60')
-  vyse60('VYSE60');
+  vyse60('VYSE60')
+  ;
 
   const TelegramType(this.value);
   final String value;

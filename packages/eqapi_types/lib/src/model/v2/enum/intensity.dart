@@ -24,7 +24,8 @@ enum IntensityValue {
   @JsonValue('6+')
   sixUpper('6+'),
   @JsonValue('7')
-  seven('7');
+  seven('7')
+  ;
 
   const IntensityValue(this.value);
   final String value;
@@ -48,7 +49,8 @@ enum LpgmIntensityValue {
   @JsonValue('3')
   three('3'),
   @JsonValue('4')
-  four('4');
+  four('4')
+  ;
 
   const LpgmIntensityValue(this.value);
   final String value;

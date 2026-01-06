@@ -56,8 +56,7 @@ abstract class EarthquakeNotificationSettingsRequest
 
   factory EarthquakeNotificationSettingsRequest.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$EarthquakeNotificationSettingsRequestFromJson(json);
+  ) => _$EarthquakeNotificationSettingsRequestFromJson(json);
 }
 
 /// EEW通知設定

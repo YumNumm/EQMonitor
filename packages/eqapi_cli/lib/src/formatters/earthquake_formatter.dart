@@ -84,7 +84,9 @@ class EarthquakeFormatter {
       buffer.writeln('\n【震源情報】');
       buffer.writeln('  震源地: ${hypo.value.name} (コード: ${hypo.value.code})');
       if (hypo.detailed != null) {
-        buffer.writeln('  詳細地名: ${hypo.detailed!.name} (コード: ${hypo.detailed!.code})');
+        buffer.writeln(
+          '  詳細地名: ${hypo.detailed!.name} (コード: ${hypo.detailed!.code})',
+        );
       }
 
       // 座標
@@ -140,7 +142,9 @@ class EarthquakeFormatter {
       buffer.writeln('\n  [都道府県別震度]');
       for (final pref in intensity.prefectures) {
         if (pref.maxIntensity != null) {
-          buffer.writeln('    ${pref.value.name}: 震度${pref.maxIntensity!.value}');
+          buffer.writeln(
+            '    ${pref.value.name}: 震度${pref.maxIntensity!.value}',
+          );
         }
       }
 
@@ -148,7 +152,9 @@ class EarthquakeFormatter {
       buffer.writeln('\n  [地域別震度]');
       for (final region in intensity.regions) {
         if (region.maxIntensity != null) {
-          buffer.writeln('    ${region.value.name}: 震度${region.maxIntensity!.value}');
+          buffer.writeln(
+            '    ${region.value.name}: 震度${region.maxIntensity!.value}',
+          );
         }
       }
     }

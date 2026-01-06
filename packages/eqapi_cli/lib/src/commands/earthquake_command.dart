@@ -18,25 +18,10 @@ class EarthquakeCommand extends Command<void> {
 class EarthquakeListCommand extends Command<void> {
   EarthquakeListCommand() {
     argParser
-      ..addOption(
-        'limit',
-        abbr: 'l',
-        help: '取得件数 (1-100)',
-        defaultsTo: '10',
-      )
-      ..addOption(
-        'cursor',
-        abbr: 'c',
-        help: 'ページングカーソル',
-      )
-      ..addOption(
-        'magnitude-gte',
-        help: 'マグニチュード下限',
-      )
-      ..addOption(
-        'magnitude-lte',
-        help: 'マグニチュード上限',
-      )
+      ..addOption('limit', abbr: 'l', help: '取得件数 (1-100)', defaultsTo: '10')
+      ..addOption('cursor', abbr: 'c', help: 'ページングカーソル')
+      ..addOption('magnitude-gte', help: 'マグニチュード下限')
+      ..addOption('magnitude-lte', help: 'マグニチュード上限')
       ..addOption(
         'intensity-gte',
         help: '最大震度下限 (1, 2, 3, 4, 5-, 5+, 6-, 6+, 7)',
@@ -45,12 +30,7 @@ class EarthquakeListCommand extends Command<void> {
         'intensity-lte',
         help: '最大震度上限 (1, 2, 3, 4, 5-, 5+, 6-, 6+, 7)',
       )
-      ..addFlag(
-        'json',
-        abbr: 'j',
-        help: 'JSON形式で出力',
-        negatable: false,
-      );
+      ..addFlag('json', abbr: 'j', help: 'JSON形式で出力', negatable: false);
   }
 
   @override
@@ -63,10 +43,12 @@ class EarthquakeListCommand extends Command<void> {
   Future<void> run() async {
     final limit = int.tryParse(argResults!['limit'] as String) ?? 10;
     final cursor = argResults!['cursor'] as String?;
-    final magnitudeGte =
-        double.tryParse(argResults!['magnitude-gte'] as String? ?? '');
-    final magnitudeLte =
-        double.tryParse(argResults!['magnitude-lte'] as String? ?? '');
+    final magnitudeGte = double.tryParse(
+      argResults!['magnitude-gte'] as String? ?? '',
+    );
+    final magnitudeLte = double.tryParse(
+      argResults!['magnitude-lte'] as String? ?? '',
+    );
     final intensityGte = argResults!['intensity-gte'] as String?;
     final intensityLte = argResults!['intensity-lte'] as String?;
     final jsonOutput = argResults!['json'] as bool;
@@ -105,12 +87,7 @@ class EarthquakeDetailCommand extends Command<void> {
         help: 'イベントID (yyyyMMddHHmmss形式)',
         mandatory: true,
       )
-      ..addFlag(
-        'json',
-        abbr: 'j',
-        help: 'JSON形式で出力',
-        negatable: false,
-      );
+      ..addFlag('json', abbr: 'j', help: 'JSON形式で出力', negatable: false);
   }
 
   @override

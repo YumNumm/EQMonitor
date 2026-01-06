@@ -52,8 +52,10 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                   type: IntensityIconType.filled,
                   size: 40,
                 ),
-                title:
-                    Text('震度${entry.key.value}', style: textTheme.titleMedium),
+                title: Text(
+                  '震度${entry.key.value}',
+                  style: textTheme.titleMedium,
+                ),
                 subtitle: Text(
                   entry.value.map((e) => e.region.name).join(', '),
                   style: const TextStyle(fontFamily: FontFamily.notoSansJP),
@@ -82,15 +84,14 @@ class _RegionModalBottomSheet extends StatelessWidget {
     required BuildContext context,
     required IntensityValue intensityValue,
     required List<RegionIntensityNode> regions,
-  }) =>
-      Navigator.of(context).push(
-        SheetRoute(
-          builder: (context) => _RegionModalBottomSheet(
-            intensityValue: intensityValue,
-            regions: regions,
-          ),
-        ),
-      );
+  }) => Navigator.of(context).push(
+    SheetRoute(
+      builder: (context) => _RegionModalBottomSheet(
+        intensityValue: intensityValue,
+        regions: regions,
+      ),
+    ),
+  );
 
   final IntensityValue intensityValue;
   final List<RegionIntensityNode> regions;
@@ -101,8 +102,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
       appBar: AppBar(title: Text('震度${intensityValue.value}の地域')),
       body: ListView(
         children: [
-          for (final region in regions)
-            _RegionListTile(region: region),
+          for (final region in regions) _RegionListTile(region: region),
         ],
       ),
     );
@@ -125,8 +125,7 @@ class _RegionListTile extends HookWidget {
         region.region.name,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      trailing:
-          region.cities.isNotEmpty ? const Icon(Icons.expand_more) : null,
+      trailing: region.cities.isNotEmpty ? const Icon(Icons.expand_more) : null,
       onTap: region.cities.isNotEmpty ? () => isExpanded.value = true : null,
     );
 
@@ -153,8 +152,9 @@ class _RegionListTile extends HookWidget {
     return AnimatedCrossFade(
       firstChild: shrinked,
       secondChild: expanded,
-      crossFadeState:
-          isExpanded.value ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      crossFadeState: isExpanded.value
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       duration: const Duration(milliseconds: 300),
     );
   }

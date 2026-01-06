@@ -10,7 +10,8 @@ enum TelegramInfoType {
   @JsonValue('DELAY')
   delay('DELAY'),
   @JsonValue('CANCELLATION')
-  cancellation('CANCELLATION');
+  cancellation('CANCELLATION')
+  ;
 
   const TelegramInfoType(this.value);
   final String value;

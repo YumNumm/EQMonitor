@@ -128,12 +128,12 @@ void main(List<String> arguments) {
             stderr.writeln('$now --------------------------------');
             stderr.writeln('# [QzssDcrDecoderException] $e');
             stderr.writeln();
-          // ignore: avoid_catching_errors
+            // ignore: avoid_catching_errors
           } on QzssDcrDecoderNotImplementedError catch (e) {
             stderr.writeln('$now --------------------------------');
             stderr.writeln('# [QzssDcrDecoderNotImplementedError] $e');
             stderr.writeln();
-          // ignore: avoid_catches_without_on_clauses
+            // ignore: avoid_catches_without_on_clauses
           } catch (e) {
             stderr.writeln('$now --------------------------------');
             stderr.writeln('# [${e.runtimeType}] $e');

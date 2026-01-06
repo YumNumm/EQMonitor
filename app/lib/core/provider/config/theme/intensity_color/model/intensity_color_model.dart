@@ -290,7 +290,8 @@ extension IntensityColorModelExt on IntensityColorModel {
         IntensityValue.two => two,
         IntensityValue.three => three,
         IntensityValue.four => four,
-        IntensityValue.fiveLowerNoInput || IntensityValue.fiveLower => fiveLower,
+        IntensityValue.fiveLowerNoInput ||
+        IntensityValue.fiveLower => fiveLower,
         IntensityValue.fiveUpper => fiveUpper,
         IntensityValue.sixLower => sixLower,
         IntensityValue.sixUpper => sixUpper,
