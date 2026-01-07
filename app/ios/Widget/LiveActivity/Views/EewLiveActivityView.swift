@@ -154,7 +154,7 @@ struct EewLockScreenView: View {
 
     private func formatDateTime(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M/d HH:mm:ss"
+        formatter.dateFormat = "MM/dd HH:mm:ss"
         formatter.locale = Locale(identifier: "ja_JP")
         return formatter.string(from: date)
     }
