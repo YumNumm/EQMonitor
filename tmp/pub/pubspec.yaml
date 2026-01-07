@@ -1,0 +1,43 @@
+name: live_activities
+description: Support iOS Live Activities, Android RemoteViews and iPhone's Dynamic Island.
+version: 2.4.3
+homepage: https://dimitridessus.fr/
+repository: https://github.com/istornz/live_activities
+
+environment:
+  sdk: ^3.10.0
+  flutter: ">=3.38.0"
+
+screenshots:
+  - description: 'Display a live activity on the iPhone 14 Pro+ dynamic island.'
+    path: images/showcase/static/dynamic_island.webp
+  - description: 'Display a live activity on the lockscreen.'
+    path: images/showcase/static/lockscreen_live_activity.webp
+  - description: 'Create a new live activity with the live_activities plugin.'
+    path: images/showcase/animations/create_live_activity.webp
+  - description: 'Update a live activity with the live_activities plugin.'
+    path: images/showcase/animations/update_live_activity.webp
+  - description: 'live_activities plugin logo.'
+    path: images/logo.webp
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.8
+  flutter_app_group_directory: ^1.1.0
+  path_provider: ^2.1.5
+  image: ^4.5.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: LiveActivitiesPlugin
+      android:
+        package: com.example.live_activities
+        pluginClass: LiveActivitiesPlugin

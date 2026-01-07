@@ -1,5 +1,6 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
+import 'package:eqmonitor/core/provider/live_activity/live_activity_manager.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
@@ -19,6 +20,9 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // アプリ起動中は常にLive Activity関連のトークン監視を有効化する
+    ref.watch(liveActivityManagerProvider);
+
     final theme = ref.watch(themeModeProvider);
     final routerConfig = ref.watch(goRouterProvider);
 

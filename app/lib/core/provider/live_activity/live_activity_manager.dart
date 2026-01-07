@@ -6,8 +6,8 @@ import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:live_activities/live_activities.dart';
-import 'package:live_activities/models/activity_update.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'live_activity_manager.g.dart';
@@ -26,8 +26,15 @@ class LiveActivityManager extends _$LiveActivityManager {
   static const _appGroupId = 'group.net.yumnumm.eqmonitor';
   static const _urlScheme = 'eqmonitor';
 
+  static const _nativeMethodChannel = MethodChannel(
+    'eqmonitor/live_activity_observer',
+  );
+  static const _nativeEventChannel = EventChannel(
+    'eqmonitor/live_activity_observer/events',
+  );
+
   StreamSubscription<String>? _pushToStartTokenSubscription;
-  StreamSubscription<ActivityUpdate>? _activityUpdateSubscription;
+  StreamSubscription<Map<String, dynamic>>? _nativeActivityUpdateSubscription;
 
   @override
   Future<void> build() async {
@@ -46,12 +53,12 @@ class LiveActivityManager extends _$LiveActivityManager {
     // pushToStartトークンの監視
     await _listenToPushToStartToken(liveActivities);
 
-    // Live Activity更新の監視
-    _listenToActivityUpdates(liveActivities);
+    // サーバ起点のLive Activity開始/更新（push-to-start）を監視
+    await _listenToNativeLiveActivityUpdates();
 
     ref.onDispose(() {
       _pushToStartTokenSubscription?.cancel();
-      _activityUpdateSubscription?.cancel();
+      _nativeActivityUpdateSubscription?.cancel();
     });
   }
 
@@ -74,33 +81,61 @@ class LiveActivityManager extends _$LiveActivityManager {
     );
   }
 
-  void _listenToActivityUpdates(LiveActivities liveActivities) {
-    _activityUpdateSubscription = liveActivities.activityUpdateStream.listen(
-      (event) async {
-        event.map(
-          active: (activity) async {
-            await _registerUpdateToken(
-              activityId: activity.activityId,
-              updateToken: activity.activityToken,
-            );
+  Future<void> _listenToNativeLiveActivityUpdates() async {
+    _nativeActivityUpdateSubscription = _nativeEventChannel
+        .receiveBroadcastStream()
+        .map((event) => Map<String, dynamic>.from(event as Map))
+        .listen(
+          (event) async {
+            final status = event['status'] as String?;
+            final activityId = event['activityId'] as String?;
+            if (status == null || activityId == null) {
+              talker.warning('Live Activityイベント形式が不正です: $event');
+              return;
+            }
+
+            switch (status) {
+              case 'active':
+                final token = event['token'] as String?;
+                final eventId = event['eventId'] as String?;
+                final type = event['type'] as String?;
+                if (token == null || eventId == null || type == null) {
+                  talker.warning('Live Activity activeイベントの必須項目が不足: $event');
+                  return;
+                }
+
+                final startTrigger = _startTriggerFromType(type);
+                if (startTrigger == null) {
+                  talker.warning('未知のLive Activity typeを受信しました: type=$type');
+                  return;
+                }
+
+                await _registerUpdateToken(
+                  activityId: activityId,
+                  updateToken: token,
+                  eventId: eventId,
+                  startTrigger: startTrigger,
+                );
+              case 'ended':
+                await _notifySessionEnded(activityId);
+              case 'stale':
+                talker.info('Live ActivityがStaleになりました: $activityId');
+              default:
+                talker.warning('不明なLive Activity更新イベントを受信しました: $event');
+            }
           },
-          ended: (activity) async {
-            await _notifySessionEnded(activity.activityId);
-          },
-          stale: (activity) {
-            talker.info(
-              'Live ActivityがStaleになりました: ${activity.activityId}',
-            );
-          },
-          unknown: (_) {
-            talker.warning('不明なLive Activity更新イベントを受信しました');
+          onError: (Object error, StackTrace st) {
+            talker.error('Live Activityネイティブ監視でエラーが発生しました', error, st);
           },
         );
-      },
-      onError: (Object error) {
-        talker.error('Live Activity更新の監視でエラーが発生しました', error);
-      },
-    );
+
+    // 監視開始はEventChannelのonListen側で行うが、
+    // 念のため明示的に開始も試みる（実装側で冪等）
+    try {
+      await _nativeMethodChannel.invokeMethod<void>('start');
+    } on PlatformException catch (e, st) {
+      talker.error('Live Activityネイティブ監視の開始に失敗しました', e, st);
+    }
   }
 
   /// pushToStartトークンをサーバに登録
@@ -122,14 +157,11 @@ class LiveActivityManager extends _$LiveActivityManager {
   }
 
   /// updateTokenをサーバに登録
-  ///
-  /// Note: Push-to-Startで開始されたLive Activityの場合、
-  /// eventIdとstartTriggerはAPNsペイロードに含まれているため、
-  /// サーバ側でeventIdとの紐付けは既に完了している。
-  /// クライアント側ではupdateTokenの登録のみ行う。
   Future<void> _registerUpdateToken({
     required String activityId,
     required String updateToken,
+    required String eventId,
+    required LiveActivityStartTrigger startTrigger,
   }) async {
     try {
       talker.info(
@@ -137,23 +169,33 @@ class LiveActivityManager extends _$LiveActivityManager {
         'activityId=$activityId, token=${updateToken.substring(0, 8)}...',
       );
 
-      // Push-to-Startで開始されたLive Activityの場合、
-      // サーバ側でeventIdとの紐付けが完了しているため、
-      // updateTokenの登録はactivityIdをキーとして行う
-      // TODO(yumnumm): APIが実装されたら有効化
-      // final deviceId = await ref.read(deviceIdProvider.future);
-      // final eqApi = ref.read(eqApiProvider);
-      // await eqApi.device.registerLiveActivityToken(
-      //   deviceId: deviceId,
-      //   liveActivityId: activityId,
-      //   request: LiveActivityTokenRequest(
-      //     token: updateToken,
-      //     eventId: eventId,
-      //     startTrigger: startTrigger,
-      //   ),
-      // );
+      final deviceId = await ref.read(deviceIdProvider.future);
+      final eqApi = ref.read(eqApiProvider);
+      await eqApi.device.registerLiveActivityToken(
+        deviceId: deviceId,
+        liveActivityId: activityId,
+        request: LiveActivityTokenRequest(
+          token: updateToken,
+          eventId: eventId,
+          startTrigger: startTrigger,
+        ),
+      );
+      talker.info(
+        'Live Activity updateTokenを登録しました: activityId=$activityId, eventId=$eventId, startTrigger=${startTrigger.value}',
+      );
     } on Exception catch (e, st) {
       talker.error('updateTokenの登録に失敗しました', e, st);
+    }
+  }
+
+  LiveActivityStartTrigger? _startTriggerFromType(String type) {
+    switch (type) {
+      case 'eew':
+        return LiveActivityStartTrigger.eew;
+      case 'shake_detection':
+        return LiveActivityStartTrigger.shakeDetection;
+      default:
+        return null;
     }
   }
 
