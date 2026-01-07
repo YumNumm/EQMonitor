@@ -808,6 +808,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.1"
+  flutter_udid:
+    dependency: transitive
+    description:
+      name: flutter_udid
+      sha256: "75a84371d51e1c87c38d6610d47777560a373a8139b2c0c2d8ce86b01a107dbb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
