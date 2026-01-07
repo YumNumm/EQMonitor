@@ -117,3 +117,71 @@ _FcmTokenRequest _$FcmTokenRequestFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$FcmTokenRequestToJson(_FcmTokenRequest instance) =>
     <String, dynamic>{'token': instance.token};
+
+_LiveActivityTokenRequest _$LiveActivityTokenRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_LiveActivityTokenRequest',
+  json,
+  ($checkedConvert) {
+    final val = _LiveActivityTokenRequest(
+      token: $checkedConvert('token', (v) => v as String),
+      eventId: $checkedConvert('event_id', (v) => v as String),
+      startTrigger: $checkedConvert(
+        'start_trigger',
+        (v) => $enumDecode(_$LiveActivityStartTriggerEnumMap, v),
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {'eventId': 'event_id', 'startTrigger': 'start_trigger'},
+);
+
+Map<String, dynamic> _$LiveActivityTokenRequestToJson(
+  _LiveActivityTokenRequest instance,
+) => <String, dynamic>{
+  'token': instance.token,
+  'event_id': instance.eventId,
+  'start_trigger': _$LiveActivityStartTriggerEnumMap[instance.startTrigger]!,
+};
+
+const _$LiveActivityStartTriggerEnumMap = {
+  LiveActivityStartTrigger.shakeDetection: 'shake_detection',
+  LiveActivityStartTrigger.eew: 'eew',
+};
+
+_LiveActivityInfo _$LiveActivityInfoFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_LiveActivityInfo',
+      json,
+      ($checkedConvert) {
+        final val = _LiveActivityInfo(
+          liveActivityId: $checkedConvert(
+            'live_activity_id',
+            (v) => v as String,
+          ),
+          eventId: $checkedConvert('event_id', (v) => v as String),
+          startTrigger: $checkedConvert(
+            'start_trigger',
+            (v) => $enumDecode(_$LiveActivityStartTriggerEnumMap, v),
+          ),
+          createdAt: $checkedConvert('created_at', (v) => v as String),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'liveActivityId': 'live_activity_id',
+        'eventId': 'event_id',
+        'startTrigger': 'start_trigger',
+        'createdAt': 'created_at',
+      },
+    );
+
+Map<String, dynamic> _$LiveActivityInfoToJson(
+  _LiveActivityInfo instance,
+) => <String, dynamic>{
+  'live_activity_id': instance.liveActivityId,
+  'event_id': instance.eventId,
+  'start_trigger': _$LiveActivityStartTriggerEnumMap[instance.startTrigger]!,
+  'created_at': instance.createdAt,
+};
