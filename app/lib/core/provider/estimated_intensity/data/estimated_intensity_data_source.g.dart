@@ -12,7 +12,7 @@ part of 'estimated_intensity_data_source.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(estimatedIntensityDataSource)
-const estimatedIntensityDataSourceProvider =
+final estimatedIntensityDataSourceProvider =
     EstimatedIntensityDataSourceProvider._();
 
 final class EstimatedIntensityDataSourceProvider
@@ -23,7 +23,7 @@ final class EstimatedIntensityDataSourceProvider
           EstimatedIntensityDataSource
         >
     with $Provider<EstimatedIntensityDataSource> {
-  const EstimatedIntensityDataSourceProvider._()
+  EstimatedIntensityDataSourceProvider._()
     : super(
         from: null,
         argument: null,

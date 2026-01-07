@@ -12,7 +12,7 @@ part of 'kyoshin_monitor_image_parser_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinMonitorImageParser)
-const kyoshinMonitorImageParserProvider = KyoshinMonitorImageParserProvider._();
+final kyoshinMonitorImageParserProvider = KyoshinMonitorImageParserProvider._();
 
 final class KyoshinMonitorImageParserProvider
     extends
@@ -22,7 +22,7 @@ final class KyoshinMonitorImageParserProvider
           KyoshinMonitorImageParser
         >
     with $Provider<KyoshinMonitorImageParser> {
-  const KyoshinMonitorImageParserProvider._()
+  KyoshinMonitorImageParserProvider._()
     : super(
         from: null,
         argument: null,

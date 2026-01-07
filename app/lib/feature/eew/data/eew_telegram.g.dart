@@ -12,11 +12,11 @@ part of 'eew_telegram.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(Eew)
-const eewProvider = EewProvider._();
+final eewProvider = EewProvider._();
 
 final class EewProvider
     extends $NotifierProvider<Eew, AsyncValue<List<EewItemWithRelations>>> {
-  const EewProvider._()
+  EewProvider._()
     : super(
         from: null,
         argument: null,
@@ -51,7 +51,6 @@ abstract class _$Eew extends $Notifier<AsyncValue<List<EewItemWithRelations>>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -69,12 +68,12 @@ abstract class _$Eew extends $Notifier<AsyncValue<List<EewItemWithRelations>>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(_eewRest)
-const _eewRestProvider = _EewRestProvider._();
+final _eewRestProvider = _EewRestProvider._();
 
 final class _EewRestProvider
     extends
@@ -86,7 +85,7 @@ final class _EewRestProvider
     with
         $FutureModifier<List<EewItemWithRelations>>,
         $FutureProvider<List<EewItemWithRelations>> {
-  const _EewRestProvider._()
+  _EewRestProvider._()
     : super(
         from: null,
         argument: null,

@@ -38,9 +38,6 @@ QzssDcReportEarthquakeEarlyWarning _$QzssDcReportEarthquakeEarlyWarningFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
@@ -93,6 +90,9 @@ QzssDcReportEarthquakeEarlyWarning _$QzssDcReportEarthquakeEarlyWarningFromJson(
   eewForecastRegionsRaw: (json['eewForecastRegionsRaw'] as List<dynamic>)
       .map((e) => (e as num).toInt())
       .toList(),
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -102,9 +102,6 @@ Map<String, dynamic> _$QzssDcReportEarthquakeEarlyWarningToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -144,6 +141,9 @@ Map<String, dynamic> _$QzssDcReportEarthquakeEarlyWarningToJson(
   'seismicIntensityUpperLimitRaw': instance.seismicIntensityUpperLimitRaw,
   'eewForecastRegions': instance.eewForecastRegions,
   'eewForecastRegionsRaw': instance.eewForecastRegionsRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -153,9 +153,6 @@ QzssDcReportHypocenter _$QzssDcReportHypocenterFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
@@ -190,6 +187,9 @@ QzssDcReportHypocenter _$QzssDcReportHypocenterFromJson(
   coordinatesOfHypocenter: HypocenterCoordinates.fromJson(
     json['coordinatesOfHypocenter'] as Map<String, dynamic>,
   ),
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -199,9 +199,6 @@ Map<String, dynamic> _$QzssDcReportHypocenterToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -229,6 +226,9 @@ Map<String, dynamic> _$QzssDcReportHypocenterToJson(
   'seismicEpicenter': instance.seismicEpicenter,
   'seismicEpicenterRaw': instance.seismicEpicenterRaw,
   'coordinatesOfHypocenter': instance.coordinatesOfHypocenter.toJson(),
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -238,9 +238,6 @@ QzssDcReportSeismicIntensity _$QzssDcReportSeismicIntensityFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
@@ -270,6 +267,9 @@ QzssDcReportSeismicIntensity _$QzssDcReportSeismicIntensityFromJson(
   prefecturesRaw: (json['prefecturesRaw'] as List<dynamic>)
       .map((e) => (e as num).toInt())
       .toList(),
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -279,9 +279,6 @@ Map<String, dynamic> _$QzssDcReportSeismicIntensityToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -302,6 +299,9 @@ Map<String, dynamic> _$QzssDcReportSeismicIntensityToJson(
   'seismicIntensitiesRaw': instance.seismicIntensitiesRaw,
   'prefectures': instance.prefectures,
   'prefecturesRaw': instance.prefecturesRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -310,9 +310,6 @@ QzssDcReportTsunami _$QzssDcReportTsunamiFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -354,6 +351,9 @@ QzssDcReportTsunami _$QzssDcReportTsunamiFromJson(Map<String, dynamic> json) =>
           (json['tsunamiForecastRegionsRaw'] as List<dynamic>)
               .map((e) => (e as num).toInt())
               .toList(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -363,9 +363,6 @@ Map<String, dynamic> _$QzssDcReportTsunamiToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -393,6 +390,9 @@ Map<String, dynamic> _$QzssDcReportTsunamiToJson(
   'tsunamiHeightsRaw': instance.tsunamiHeightsRaw,
   'tsunamiForecastRegions': instance.tsunamiForecastRegions,
   'tsunamiForecastRegionsRaw': instance.tsunamiForecastRegionsRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -402,9 +402,6 @@ QzssDcReportNankaiTroughEarthquake _$QzssDcReportNankaiTroughEarthquakeFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
@@ -426,6 +423,9 @@ QzssDcReportNankaiTroughEarthquake _$QzssDcReportNankaiTroughEarthquakeFromJson(
   ),
   pageNumber: (json['pageNumber'] as num).toInt(),
   totalPage: (json['totalPage'] as num).toInt(),
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -435,9 +435,6 @@ Map<String, dynamic> _$QzssDcReportNankaiTroughEarthquakeToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -459,6 +456,9 @@ Map<String, dynamic> _$QzssDcReportNankaiTroughEarthquakeToJson(
   ),
   'pageNumber': instance.pageNumber,
   'totalPage': instance.totalPage,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -468,9 +468,6 @@ _$QzssDcReportNorthwestPacificTsunamiFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -504,6 +501,9 @@ _$QzssDcReportNorthwestPacificTsunamiFromJson(Map<String, dynamic> json) =>
       coastalRegionsRaw: (json['coastalRegionsRaw'] as List<dynamic>)
           .map((e) => (e as num).toInt())
           .toList(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -513,9 +513,6 @@ Map<String, dynamic> _$QzssDcReportNorthwestPacificTsunamiToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -539,6 +536,9 @@ Map<String, dynamic> _$QzssDcReportNorthwestPacificTsunamiToJson(
   'tsunamiHeightsRaw': instance.tsunamiHeightsRaw,
   'coastalRegionsEn': instance.coastalRegionsEn,
   'coastalRegionsRaw': instance.coastalRegionsRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -547,9 +547,6 @@ QzssDcReportFlood _$QzssDcReportFloodFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -577,6 +574,9 @@ QzssDcReportFlood _$QzssDcReportFloodFromJson(Map<String, dynamic> json) =>
           (json['floodForecastRegionsRaw'] as List<dynamic>)
               .map((e) => (e as num).toInt())
               .toList(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -585,9 +585,6 @@ Map<String, dynamic> _$QzssDcReportFloodToJson(QzssDcReportFlood instance) =>
       'sentence': instance.sentence,
       'message': const Uint8ListConverter().toJson(instance.message),
       'nmea': instance.nmea,
-      'messageHeader': instance.messageHeader,
-      'satelliteId': instance.satelliteId,
-      'satellitePrn': instance.satellitePrn,
       'raw': const Uint8ListConverter().toJson(instance.raw),
       'preamble': instance.preamble,
       'messageType': instance.messageType,
@@ -606,6 +603,9 @@ Map<String, dynamic> _$QzssDcReportFloodToJson(QzssDcReportFlood instance) =>
       'floodWarningLevelsRaw': instance.floodWarningLevelsRaw,
       'floodForecastRegions': instance.floodForecastRegions,
       'floodForecastRegionsRaw': instance.floodForecastRegionsRaw,
+      'messageHeader': instance.messageHeader,
+      'satelliteId': instance.satelliteId,
+      'satellitePrn': instance.satellitePrn,
       'runtimeType': instance.$type,
     };
 
@@ -614,9 +614,6 @@ QzssDcReportMarine _$QzssDcReportMarineFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -644,6 +641,9 @@ QzssDcReportMarine _$QzssDcReportMarineFromJson(Map<String, dynamic> json) =>
           (json['marineForecastRegionsRaw'] as List<dynamic>)
               .map((e) => (e as num).toInt())
               .toList(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -652,9 +652,6 @@ Map<String, dynamic> _$QzssDcReportMarineToJson(QzssDcReportMarine instance) =>
       'sentence': instance.sentence,
       'message': const Uint8ListConverter().toJson(instance.message),
       'nmea': instance.nmea,
-      'messageHeader': instance.messageHeader,
-      'satelliteId': instance.satelliteId,
-      'satellitePrn': instance.satellitePrn,
       'raw': const Uint8ListConverter().toJson(instance.raw),
       'preamble': instance.preamble,
       'messageType': instance.messageType,
@@ -673,6 +670,9 @@ Map<String, dynamic> _$QzssDcReportMarineToJson(QzssDcReportMarine instance) =>
       'marineWarningCodesRaw': instance.marineWarningCodesRaw,
       'marineForecastRegions': instance.marineForecastRegions,
       'marineForecastRegionsRaw': instance.marineForecastRegionsRaw,
+      'messageHeader': instance.messageHeader,
+      'satelliteId': instance.satelliteId,
+      'satellitePrn': instance.satellitePrn,
       'runtimeType': instance.$type,
     };
 
@@ -681,9 +681,6 @@ QzssDcReportWeather _$QzssDcReportWeatherFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -715,6 +712,9 @@ QzssDcReportWeather _$QzssDcReportWeatherFromJson(Map<String, dynamic> json) =>
           (json['weatherForecastRegionsRaw'] as List<dynamic>)
               .map((e) => (e as num).toInt())
               .toList(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -724,9 +724,6 @@ Map<String, dynamic> _$QzssDcReportWeatherToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -749,6 +746,9 @@ Map<String, dynamic> _$QzssDcReportWeatherToJson(
       instance.weatherRelatedDisasterSubCategoriesRaw,
   'weatherForecastRegions': instance.weatherForecastRegions,
   'weatherForecastRegionsRaw': instance.weatherForecastRegionsRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -757,9 +757,6 @@ QzssDcReportVolcano _$QzssDcReportVolcanoFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -787,6 +784,9 @@ QzssDcReportVolcano _$QzssDcReportVolcanoFromJson(Map<String, dynamic> json) =>
       localGovernmentsRaw: (json['localGovernmentsRaw'] as List<dynamic>)
           .map((e) => (e as num).toInt())
           .toList(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -796,9 +796,6 @@ Map<String, dynamic> _$QzssDcReportVolcanoToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -821,6 +818,9 @@ Map<String, dynamic> _$QzssDcReportVolcanoToJson(
   'volcanoNameRaw': instance.volcanoNameRaw,
   'localGovernments': instance.localGovernments,
   'localGovernmentsRaw': instance.localGovernmentsRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -829,9 +829,6 @@ QzssDcReportAshFall _$QzssDcReportAshFallFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -866,6 +863,9 @@ QzssDcReportAshFall _$QzssDcReportAshFallFromJson(Map<String, dynamic> json) =>
       localGovernmentsRaw: (json['localGovernmentsRaw'] as List<dynamic>)
           .map((e) => (e as num).toInt())
           .toList(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -875,9 +875,6 @@ Map<String, dynamic> _$QzssDcReportAshFallToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -902,6 +899,9 @@ Map<String, dynamic> _$QzssDcReportAshFallToJson(
   'ashFallWarningCodesRaw': instance.ashFallWarningCodesRaw,
   'localGovernments': instance.localGovernments,
   'localGovernmentsRaw': instance.localGovernmentsRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -910,9 +910,6 @@ QzssDcReportTyphoon _$QzssDcReportTyphoonFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
@@ -948,6 +945,9 @@ QzssDcReportTyphoon _$QzssDcReportTyphoonFromJson(Map<String, dynamic> json) =>
       maximumWindSpeedRaw: (json['maximumWindSpeedRaw'] as num).toInt(),
       maximumGustWindSpeed: json['maximumGustWindSpeed'] as String,
       maximumGustWindSpeedRaw: (json['maximumGustWindSpeedRaw'] as num).toInt(),
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -957,9 +957,6 @@ Map<String, dynamic> _$QzssDcReportTyphoonToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
@@ -991,6 +988,9 @@ Map<String, dynamic> _$QzssDcReportTyphoonToJson(
   'maximumWindSpeedRaw': instance.maximumWindSpeedRaw,
   'maximumGustWindSpeed': instance.maximumGustWindSpeed,
   'maximumGustWindSpeedRaw': instance.maximumGustWindSpeedRaw,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -999,13 +999,13 @@ QzssDcReportDcxNull _$QzssDcReportDcxNullFromJson(Map<String, dynamic> json) =>
       sentence: json['sentence'] as String,
       message: const Uint8ListConverter().fromJson(json['message'] as String),
       nmea: json['nmea'] as String,
-      messageHeader: json['messageHeader'] as String?,
-      satelliteId: (json['satelliteId'] as num?)?.toInt(),
-      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       raw: const Uint8ListConverter().fromJson(json['raw'] as String),
       preamble: json['preamble'] as String,
       messageType: json['messageType'] as String,
       dcxMessageType: json['dcxMessageType'] as String,
+      messageHeader: json['messageHeader'] as String?,
+      satelliteId: (json['satelliteId'] as num?)?.toInt(),
+      satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
       $type: json['runtimeType'] as String?,
     );
 
@@ -1015,13 +1015,13 @@ Map<String, dynamic> _$QzssDcReportDcxNullToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
   'dcxMessageType': instance.dcxMessageType,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -1031,13 +1031,13 @@ QzssDcReportDcxOutsideJapan _$QzssDcReportDcxOutsideJapanFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
   dcxMessageType: json['dcxMessageType'] as String,
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -1047,13 +1047,13 @@ Map<String, dynamic> _$QzssDcReportDcxOutsideJapanToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
   'dcxMessageType': instance.dcxMessageType,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -1063,13 +1063,13 @@ QzssDcReportDcxLAlert _$QzssDcReportDcxLAlertFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
   dcxMessageType: json['dcxMessageType'] as String,
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -1079,13 +1079,13 @@ Map<String, dynamic> _$QzssDcReportDcxLAlertToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
   'dcxMessageType': instance.dcxMessageType,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -1095,13 +1095,13 @@ QzssDcReportDcxJAlert _$QzssDcReportDcxJAlertFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
   dcxMessageType: json['dcxMessageType'] as String,
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -1111,13 +1111,13 @@ Map<String, dynamic> _$QzssDcReportDcxJAlertToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
   'dcxMessageType': instance.dcxMessageType,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -1127,13 +1127,13 @@ QzssDcReportDcxMTInfo _$QzssDcReportDcxMTInfoFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
   dcxMessageType: json['dcxMessageType'] as String,
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -1143,13 +1143,13 @@ Map<String, dynamic> _$QzssDcReportDcxMTInfoToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
   'dcxMessageType': instance.dcxMessageType,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
 
@@ -1159,13 +1159,13 @@ QzssDcReportDcxUnknown _$QzssDcReportDcxUnknownFromJson(
   sentence: json['sentence'] as String,
   message: const Uint8ListConverter().fromJson(json['message'] as String),
   nmea: json['nmea'] as String,
-  messageHeader: json['messageHeader'] as String?,
-  satelliteId: (json['satelliteId'] as num?)?.toInt(),
-  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   raw: const Uint8ListConverter().fromJson(json['raw'] as String),
   preamble: json['preamble'] as String,
   messageType: json['messageType'] as String,
   dcxMessageType: json['dcxMessageType'] as String,
+  messageHeader: json['messageHeader'] as String?,
+  satelliteId: (json['satelliteId'] as num?)?.toInt(),
+  satellitePrn: (json['satellitePrn'] as num?)?.toInt(),
   $type: json['runtimeType'] as String?,
 );
 
@@ -1175,12 +1175,12 @@ Map<String, dynamic> _$QzssDcReportDcxUnknownToJson(
   'sentence': instance.sentence,
   'message': const Uint8ListConverter().toJson(instance.message),
   'nmea': instance.nmea,
-  'messageHeader': instance.messageHeader,
-  'satelliteId': instance.satelliteId,
-  'satellitePrn': instance.satellitePrn,
   'raw': const Uint8ListConverter().toJson(instance.raw),
   'preamble': instance.preamble,
   'messageType': instance.messageType,
   'dcxMessageType': instance.dcxMessageType,
+  'messageHeader': instance.messageHeader,
+  'satelliteId': instance.satelliteId,
+  'satellitePrn': instance.satellitePrn,
   'runtimeType': instance.$type,
 };
