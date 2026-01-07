@@ -192,7 +192,6 @@ class EarthquakeAPIService {
             }
 
             #if DEBUG
-            // デバッグ: レスポンスの内容をログ出力
             if let jsonString = String(data: data, encoding: .utf8) {
                 print("API Response (\(url.lastPathComponent)): \(jsonString.prefix(500))")
             }
