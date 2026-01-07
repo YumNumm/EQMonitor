@@ -9,6 +9,13 @@ part 'device_api_client.g.dart';
 abstract class DeviceApiClient {
   factory DeviceApiClient(Dio dio, {String baseUrl}) = _DeviceApiClient;
 
+  /// デバイスを作成または更新
+  @PUT('/v2/device/{deviceId}')
+  Future<Device> upsertDevice({
+    @Path('deviceId') required String deviceId,
+    @Body() required DeviceUpsertRequest request,
+  });
+
   /// デバイス情報を取得
   @GET('/v2/device/{deviceId}')
   Future<Device> getDevice({
