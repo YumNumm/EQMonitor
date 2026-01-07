@@ -101,10 +101,10 @@ class DebugDeviceApiPage extends HookConsumerWidget {
         ),
         body: SingleChildScrollView(
           primary: true,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   BorderedContainer(
@@ -195,7 +195,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   BorderedContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -454,7 +454,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   BorderedContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -528,7 +528,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   BorderedContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
