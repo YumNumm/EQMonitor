@@ -26,6 +26,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/term_of_ser
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/device_api/debug_device_api_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
@@ -223,6 +224,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
+        TypedGoRoute<DebugDeviceApiRoute>(path: 'device-api'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -374,6 +376,15 @@ class DebugJmaMapRoute extends GoRouteData with $DebugJmaMapRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugJmaMapPage();
+  }
+}
+
+class DebugDeviceApiRoute extends GoRouteData with $DebugDeviceApiRoute {
+  const DebugDeviceApiRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugDeviceApiPage();
   }
 }
 
