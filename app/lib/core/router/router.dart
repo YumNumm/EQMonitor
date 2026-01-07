@@ -26,8 +26,10 @@ import 'package:eqmonitor/feature/settings/children/application_info/term_of_ser
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/device_api/debug_device_api_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/notification_settings/debug_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
@@ -223,6 +225,10 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
+        TypedGoRoute<DebugDeviceApiRoute>(path: 'device-api'),
+        TypedGoRoute<DebugNotificationSettingsRoute>(
+          path: 'notification-settings',
+        ),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -374,6 +380,25 @@ class DebugJmaMapRoute extends GoRouteData with $DebugJmaMapRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugJmaMapPage();
+  }
+}
+
+class DebugDeviceApiRoute extends GoRouteData with $DebugDeviceApiRoute {
+  const DebugDeviceApiRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugDeviceApiPage();
+  }
+}
+
+class DebugNotificationSettingsRoute extends GoRouteData
+    with $DebugNotificationSettingsRoute {
+  const DebugNotificationSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugNotificationSettingsPage();
   }
 }
 

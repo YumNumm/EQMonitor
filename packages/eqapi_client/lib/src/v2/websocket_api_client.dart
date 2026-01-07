@@ -11,5 +11,7 @@ abstract class WebsocketApiClient {
 
   /// WebSocket接続用のチケットを発行
   @GET('/v2/websocket/ticket')
-  Future<WebsocketTicketResponse> getTicket();
+  Future<WebsocketTicketResponse> getTicket({
+    @Header('X-Device-ID') required String deviceId,
+  });
 }
