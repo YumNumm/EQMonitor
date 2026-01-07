@@ -425,3 +425,97 @@ struct EmptyView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+
+// MARK: - Previews
+
+#Preview("Small", as: .systemSmall) {
+    EarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: EarthquakeDisplayItem.mockData,
+        error: nil
+    )
+}
+
+#Preview("Medium", as: .systemMedium) {
+    EarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: EarthquakeDisplayItem.mockData,
+        error: nil
+    )
+}
+
+#Preview("Large", as: .systemLarge) {
+    EarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(
+            regionType: .specificRegion,
+            region: RegionEntity(id: "350", name: "東京都２３区")
+        ),
+        earthquakes: EarthquakeDisplayItem.mockData,
+        error: nil
+    )
+}
+
+#Preview("Small - Error", as: .systemSmall) {
+    EarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [],
+        error: "ネットワークエラー: インターネット接続がありません"
+    )
+}
+
+#Preview("Small - Empty", as: .systemSmall) {
+    EarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [],
+        error: nil
+    )
+}
+
+#Preview("Large - 震度6強", as: .systemLarge) {
+    EarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [
+            EarthquakeDisplayItem(
+                id: "20260106120000",
+                hypocenterName: "能登半島沖",
+                magnitude: "M7.2",
+                magnitudeValue: 7.2,
+                maxIntensity: .sixUpper,
+                depth: "15km",
+                originTime: Date().addingTimeInterval(-600),
+                latitude: 37.5,
+                longitude: 137.0
+            ),
+            EarthquakeDisplayItem(
+                id: "20260106110000",
+                hypocenterName: "石川県能登地方",
+                magnitude: "M5.8",
+                magnitudeValue: 5.8,
+                maxIntensity: .fiveUpper,
+                depth: "12km",
+                originTime: Date().addingTimeInterval(-3600),
+                latitude: 37.3,
+                longitude: 136.8
+            )
+        ],
+        error: nil
+    )
+}
