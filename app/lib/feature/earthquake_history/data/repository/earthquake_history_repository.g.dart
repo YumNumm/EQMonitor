@@ -12,7 +12,7 @@ part of 'earthquake_history_repository.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(earthquakeHistoryRepository)
-const earthquakeHistoryRepositoryProvider =
+final earthquakeHistoryRepositoryProvider =
     EarthquakeHistoryRepositoryProvider._();
 
 final class EarthquakeHistoryRepositoryProvider
@@ -23,7 +23,7 @@ final class EarthquakeHistoryRepositoryProvider
           EarthquakeHistoryRepository
         >
     with $Provider<EarthquakeHistoryRepository> {
-  const EarthquakeHistoryRepositoryProvider._()
+  EarthquakeHistoryRepositoryProvider._()
     : super(
         from: null,
         argument: null,

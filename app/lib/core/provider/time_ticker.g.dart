@@ -12,13 +12,13 @@ part of 'time_ticker.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(timeTicker)
-const timeTickerProvider = TimeTickerFamily._();
+final timeTickerProvider = TimeTickerFamily._();
 
 final class TimeTickerProvider
     extends
         $FunctionalProvider<AsyncValue<DateTime>, DateTime, Stream<DateTime>>
     with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
-  const TimeTickerProvider._({
+  TimeTickerProvider._({
     required TimeTickerFamily super.from,
     required Duration super.argument,
   }) : super(
@@ -65,7 +65,7 @@ String _$timeTickerHash() => r'b6558f45ff8da20b7a1b356a6b43ccd6c0d6d89f';
 
 final class TimeTickerFamily extends $Family
     with $FunctionalFamilyOverride<Stream<DateTime>, Duration> {
-  const TimeTickerFamily._()
+  TimeTickerFamily._()
     : super(
         retry: null,
         name: r'timeTickerProvider',

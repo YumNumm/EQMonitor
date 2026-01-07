@@ -12,11 +12,11 @@ part of 'platform_brightness.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(PlatformBrightness)
-const platformBrightnessProvider = PlatformBrightnessProvider._();
+final platformBrightnessProvider = PlatformBrightnessProvider._();
 
 final class PlatformBrightnessProvider
     extends $NotifierProvider<PlatformBrightness, Brightness> {
-  const PlatformBrightnessProvider._()
+  PlatformBrightnessProvider._()
     : super(
         from: null,
         argument: null,
@@ -51,7 +51,6 @@ abstract class _$PlatformBrightness extends $Notifier<Brightness> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Brightness, Brightness>;
     final element =
         ref.element
@@ -61,6 +60,6 @@ abstract class _$PlatformBrightness extends $Notifier<Brightness> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

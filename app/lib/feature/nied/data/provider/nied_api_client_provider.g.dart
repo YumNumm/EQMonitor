@@ -12,12 +12,12 @@ part of 'nied_api_client_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(niedApiClient)
-const niedApiClientProvider = NiedApiClientProvider._();
+final niedApiClientProvider = NiedApiClientProvider._();
 
 final class NiedApiClientProvider
     extends $FunctionalProvider<NiedApiClient, NiedApiClient, NiedApiClient>
     with $Provider<NiedApiClient> {
-  const NiedApiClientProvider._()
+  NiedApiClientProvider._()
     : super(
         from: null,
         argument: null,

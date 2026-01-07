@@ -12,11 +12,11 @@ part of 'nied_dio_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(niedDio)
-const niedDioProvider = NiedDioProvider._();
+final niedDioProvider = NiedDioProvider._();
 
 final class NiedDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
-  const NiedDioProvider._()
+  NiedDioProvider._()
     : super(
         from: null,
         argument: null,

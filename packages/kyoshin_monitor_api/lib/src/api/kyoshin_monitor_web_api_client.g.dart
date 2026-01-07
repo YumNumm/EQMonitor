@@ -44,7 +44,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = DataTime.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -71,7 +71,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = MaintenanceMessage.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -103,7 +103,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -139,7 +139,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -166,7 +166,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = Eew.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -201,7 +201,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -238,7 +238,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -273,7 +273,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     try {
       _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;

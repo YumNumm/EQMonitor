@@ -12,12 +12,12 @@ part of 'kyoshin_monitor_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(KyoshinMonitorNotifier)
-const kyoshinMonitorProvider = KyoshinMonitorNotifierProvider._();
+final kyoshinMonitorProvider = KyoshinMonitorNotifierProvider._();
 
 final class KyoshinMonitorNotifierProvider
     extends
         $AsyncNotifierProvider<KyoshinMonitorNotifier, KyoshinMonitorState> {
-  const KyoshinMonitorNotifierProvider._()
+  KyoshinMonitorNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -45,7 +45,6 @@ abstract class _$KyoshinMonitorNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<KyoshinMonitorState>, KyoshinMonitorState>;
     final element =
@@ -56,6 +55,6 @@ abstract class _$KyoshinMonitorNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
