@@ -56,6 +56,9 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
     final earthquakeState =
         useState<AsyncValue<EarthquakeNotificationSettings>?>(null);
     final eewState = useState<AsyncValue<EewNotificationSettings>?>(null);
+    final earthquakeRegionsState =
+        useState<AsyncValue<List<RegionSetting>>?>(null);
+    final eewRegionsState = useState<AsyncValue<List<RegionSetting>>?>(null);
 
     // Editable values
     final tsunamiEnabled = useState<bool>(true);
@@ -141,7 +144,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
         primary: true,
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -168,7 +171,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 // General Notification Settings
                 BorderedContainer(
@@ -196,7 +199,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                           onChanged: (value) => trainingEnabled.value = value,
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(8),
                           child: Wrap(
                             spacing: 8,
                             runSpacing: 8,
@@ -271,7 +274,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                         ),
                         if (generalState.value != null)
                           Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(8),
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
@@ -302,7 +305,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 // Earthquake Notification Settings
                 BorderedContainer(
@@ -361,7 +364,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                               estimatedIntensityEnabled.value = value,
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(8),
                           child: Wrap(
                             spacing: 8,
                             runSpacing: 8,
@@ -441,7 +444,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                         ),
                         if (earthquakeState.value != null)
                           Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(8),
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
@@ -479,7 +482,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 // EEW Notification Settings
                 BorderedContainer(
@@ -537,7 +540,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                           onChanged: (value) => startLiveActivity.value = value,
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(8),
                           child: Wrap(
                             spacing: 8,
                             runSpacing: 8,
@@ -619,7 +622,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                         ),
                         if (eewState.value != null)
                           Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(8),
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
@@ -640,6 +643,198 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                       'start_live_activity':
                                           value.startLiveActivity,
                                     }),
+                                  AsyncError(:final error) => _formatError(
+                                    error,
+                                  ),
+                                  _ => 'Loading...',
+                                },
+                                style: TextStyle(
+                                  fontFamily: FontFamily.notoSansMono,
+                                  fontSize: 12,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Earthquake Regions
+                BorderedContainer(
+                  child: Theme(
+                    data: theme.copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      title: Text(
+                        '地震 地域設定',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: deviceIdController.text.isEmpty
+                                    ? null
+                                    : () async {
+                                        earthquakeRegionsState.value =
+                                            const AsyncValue<
+                                              List<RegionSetting>
+                                            >.loading();
+                                        try {
+                                          final regions = await ref
+                                              .read(eqApiProvider)
+                                              .device
+                                              .getEarthquakeRegions(
+                                                deviceId:
+                                                    deviceIdController.text,
+                                              );
+                                          earthquakeRegionsState.value =
+                                              AsyncValue.data(regions);
+                                        } catch (e, s) {
+                                          earthquakeRegionsState.value =
+                                              AsyncValue<
+                                                List<RegionSetting>
+                                              >.error(e, s);
+                                        }
+                                      },
+                                icon: const Icon(Icons.download, size: 18),
+                                label: const Text('Get Regions'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (earthquakeRegionsState.value != null)
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: colorScheme.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: SelectableText(
+                                switch (earthquakeRegionsState.value!) {
+                                  AsyncData(:final value) =>
+                                    const JsonEncoder.withIndent('  ').convert(
+                                      value
+                                          .map(
+                                            (e) => {
+                                              'region_id': e.regionId,
+                                              'region_name': e.regionName,
+                                              'is_current_location':
+                                                  e.isCurrentLocation,
+                                              'min_jma_intensity':
+                                                  e.minJmaIntensity.value,
+                                              'created_at': e.createdAt,
+                                              'updated_at': e.updatedAt,
+                                            },
+                                          )
+                                          .toList(),
+                                    ),
+                                  AsyncError(:final error) => _formatError(
+                                    error,
+                                  ),
+                                  _ => 'Loading...',
+                                },
+                                style: TextStyle(
+                                  fontFamily: FontFamily.notoSansMono,
+                                  fontSize: 12,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // EEW Regions
+                BorderedContainer(
+                  child: Theme(
+                    data: theme.copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      title: Text(
+                        'EEW 地域設定',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: deviceIdController.text.isEmpty
+                                    ? null
+                                    : () async {
+                                        eewRegionsState.value =
+                                            const AsyncValue<
+                                              List<RegionSetting>
+                                            >.loading();
+                                        try {
+                                          final regions = await ref
+                                              .read(eqApiProvider)
+                                              .device
+                                              .getEewRegions(
+                                                deviceId:
+                                                    deviceIdController.text,
+                                              );
+                                          eewRegionsState.value =
+                                              AsyncValue.data(regions);
+                                        } catch (e, s) {
+                                          eewRegionsState.value =
+                                              AsyncValue<
+                                                List<RegionSetting>
+                                              >.error(e, s);
+                                        }
+                                      },
+                                icon: const Icon(Icons.download, size: 18),
+                                label: const Text('Get Regions'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (eewRegionsState.value != null)
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: colorScheme.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: SelectableText(
+                                switch (eewRegionsState.value!) {
+                                  AsyncData(:final value) =>
+                                    const JsonEncoder.withIndent('  ').convert(
+                                      value
+                                          .map(
+                                            (e) => {
+                                              'region_id': e.regionId,
+                                              'region_name': e.regionName,
+                                              'is_current_location':
+                                                  e.isCurrentLocation,
+                                              'min_jma_intensity':
+                                                  e.minJmaIntensity.value,
+                                              'created_at': e.createdAt,
+                                              'updated_at': e.updatedAt,
+                                            },
+                                          )
+                                          .toList(),
+                                    ),
                                   AsyncError(:final error) => _formatError(
                                     error,
                                   ),
