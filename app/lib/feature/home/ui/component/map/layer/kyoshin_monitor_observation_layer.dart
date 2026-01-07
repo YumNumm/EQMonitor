@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/data/provider/kyoshin_monitor_points_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,11 +18,14 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final styleController = MapController.maybeOf(context)?.style;
+    final controller = MapController.of(context);
+    final styleController = controller.style;
     final points = ref.watch(kyoshinMonitorPointsProvider);
     final useKmoni = ref.watch(
       kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
     );
+
+    final eventProvider = MapLibreEventProvider.of(context);
 
     useEffect(
       () {
@@ -30,7 +35,20 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
 
         unawaited(_initializeLayer(styleController));
 
-        return () => _cleanupLayer(styleController);
+        final stream = eventProvider.eventStream.listen((
+          event,
+        ) {
+          // if (event is MapEventClick) {
+          //   talker.debug('click: ${event.screenPoint}');
+          //   final features = controller.queryLayers(event.screenPoint);
+          //   talker.debug('features: $features');
+          // }
+        });
+
+        return () {
+          unawaited(_cleanupLayer(styleController));
+          unawaited(stream.cancel());
+        };
       },
       [styleController, useKmoni],
     );

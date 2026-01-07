@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -15,13 +16,13 @@ part 'dio_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Dio dio(Ref ref) {
-  final key = ref.watch(telegramUrlProvider).apiAuthorization;
-  final authorization = key != null ? 'Bearer $key' : null;
+  final package = ref.watch(packageInfoProvider);
+
   final dio = Dio(
     BaseOptions(
       headers: {
-        'user-agent': 'eqmonitor',
-        'authorization': ?authorization,
+        'user-agent':
+            '${package.packageName}/${package.version}+${package.buildNumber}',
       },
       baseUrl: ref.watch(telegramUrlProvider).restApiUrl,
       contentType: ContentType.json.value,
@@ -29,13 +30,6 @@ Dio dio(Ref ref) {
       sendTimeout: const Duration(milliseconds: 5000),
     ),
   );
-  if (ref.watch(isDioProxyEnabledProvider)) {
-    HttpOverrides.global = _HttpOverrides();
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () =>
-          HttpClient()..findProxy = (url) => 'PROXY 192.168.151.154:9090',
-    );
-  }
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(
@@ -47,32 +41,4 @@ Dio dio(Ref ref) {
     ),
   );
   return dio;
-}
-
-class _HttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..findProxy = (url) => 'PROXY 192.168.151.154:9090';
-  }
-}
-
-@Riverpod(keepAlive: true)
-class IsDioProxyEnabled extends _$IsDioProxyEnabled {
-  @override
-  bool build() {
-    if (kIsWeb || !kDebugMode) {
-      return false;
-    }
-    final prefs = ref.read(sharedPreferencesProvider);
-    return prefs.getBool(_key) ?? false;
-  }
-
-  Future<void> set({required bool value}) async {
-    state = value;
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setBool(_key, value);
-  }
-
-  static const _key = 'is_dio_proxy_enabled';
 }

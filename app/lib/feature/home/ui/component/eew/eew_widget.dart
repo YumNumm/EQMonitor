@@ -207,7 +207,7 @@ class EewWidget extends ConsumerWidget {
                   ),
                 ),
                 TextSpan(
-                  text: magnitude.toString().split('.').last,
+                  text: magnitude.toString().split('.').last.substring(0, 2),
                   style: textTheme.displaySmall!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontFamily: FontFamily.notoSansMono,
