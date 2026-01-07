@@ -15,6 +15,8 @@ import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
+import 'package:eqmonitor/core/provider/secure_storage.dart';
+import 'package:eqmonitor/core/provider/initial_route.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
@@ -91,6 +93,12 @@ Future<void> main() async {
 
   final deviceInfo = DeviceInfoPlugin();
 
+  // SecureStorageからuserIdを事前に読み取る
+  final secureStorage = secureStorageProvider;
+  final storage = ProviderContainer().read(secureStorage);
+  final userId = await storage.read(key: 'user_id');
+  final isSetupCompleted = userId != null;
+
   final results = await (
     (
       SharedPreferences.getInstance(),
@@ -146,6 +154,10 @@ Future<void> main() async {
       jmaCodeTableProvider.overrideWithValue(results.$1.$7),
       if (results.$2.$1 != null)
         kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
+      // 初期設定が完了していない場合はセットアップ画面へ
+      initialRouteProvider.overrideWithValue(
+        isSetupCompleted ? '/' : '/setup',
+      ),
     ],
     observers: [if (kDebugMode) CustomProviderObserver(talker)],
   );

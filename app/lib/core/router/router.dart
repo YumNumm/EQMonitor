@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/provider/initial_route.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
@@ -35,6 +36,7 @@ import 'package:eqmonitor/feature/settings/children/config/earthquake_history/ea
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
+import 'package:eqmonitor/feature/setup/ui/setup_screen.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
@@ -49,16 +51,19 @@ import 'package:talker_flutter/talker_flutter.dart';
 part 'router.g.dart';
 
 @Riverpod(keepAlive: true)
-GoRouter goRouter(Ref ref) => GoRouter(
-  routes: $appRoutes,
-  navigatorKey: App.navigatorKey,
-  initialLocation: const HomeRoute().location,
-  observers: [
-    _NavigatorObserver(talker),
-    FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-  ],
-  debugLogDiagnostics: kDebugMode,
-);
+GoRouter goRouter(Ref ref) {
+  final initialLocation = ref.watch(initialRouteProvider);
+  return GoRouter(
+    routes: $appRoutes,
+    navigatorKey: App.navigatorKey,
+    initialLocation: initialLocation,
+    observers: [
+      _NavigatorObserver(talker),
+      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+    ],
+    debugLogDiagnostics: kDebugMode,
+  );
+}
 
 class GoRouterRedirectException implements Exception {
   GoRouterRedirectException(this.message);
@@ -482,6 +487,16 @@ class KyoshinMonitorAboutRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const KyoshinMonitorAboutPage();
+  }
+}
+
+@TypedGoRoute<SetupRoute>(path: '/setup')
+class SetupRoute extends GoRouteData with $SetupRoute {
+  const SetupRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const SetupScreen();
   }
 }
 

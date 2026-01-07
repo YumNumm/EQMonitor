@@ -19,6 +19,7 @@ List<RouteBase> get $appRoutes => [
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
+  $setupRoute,
 ];
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
@@ -945,6 +946,29 @@ mixin $FnetCatalogRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/nied/fnet/catalog');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $setupRoute =>
+    GoRouteData.$route(path: '/setup', factory: $SetupRoute._fromState);
+
+mixin $SetupRoute on GoRouteData {
+  static SetupRoute _fromState(GoRouterState state) => const SetupRoute();
+
+  @override
+  String get location => GoRouteData.$location('/setup');
 
   @override
   void go(BuildContext context) => context.go(location);
