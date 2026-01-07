@@ -68,27 +68,28 @@ struct EewLockScreenView: View {
 
             // ヘッダーコンテンツ
             HStack(alignment: .center) {
-                // タイトル
+                // タイトル（白文字）
                 Text(headerTitle)
                     .font(.system(size: 17, weight: .heavy))
-                    .foregroundColor(headerTextColor)
+                    .foregroundColor(.white)
 
                 Spacer()
 
-                // Serial Number
+                // Serial Number（数値部分を大きく）
                 if let serialNo = state.serialNo {
                     HStack(alignment: .firstTextBaseline, spacing: 0) {
                         Text("#")
-                            .font(.system(size: 12, weight: .medium, design: .monospaced))
-                            .foregroundColor(secondaryTextColor)
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.7))
                         Text("\(serialNo)")
-                            .font(.system(size: 15, weight: .bold, design: .monospaced))
-                            .foregroundColor(.primary)
+                            .font(.system(size: 17, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
                     }
                 }
 
-                // アプリアイコン
+                // アプリアイコン（renderingMode(.original)で色を維持）
                 Image("AppIconForeground")
+                    .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 24, height: 24)
@@ -97,26 +98,12 @@ struct EewLockScreenView: View {
             .padding(.horizontal, standardMargin)
             .padding(.top, 8)
             .padding(.bottom, 6)
+            .background(headerBackgroundColor)
 
             // メインコンテンツ
             HStack(alignment: .top, spacing: 10) {
-                // 現在地予想震度表示（正方形）+ 発生時刻
-                VStack(spacing: 3) {
-                    forecastIntensityView
-
-                    // 発生時刻（予想震度の下）
-                    if let originTime = state.originTime,
-                       let date = ISO8601DateFormatter().date(from: originTime) {
-                        VStack(spacing: 0) {
-                            Text("発生")
-                                .font(.system(size: 9, weight: .medium))
-                                .foregroundColor(secondaryTextColor)
-                            Text(formatDateTime(date))
-                                .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                                .foregroundColor(secondaryTextColor)
-                        }
-                    }
-                }
+                // 現在地予想震度表示（正方形）
+                forecastIntensityView
 
                 // 震源情報
                 VStack(alignment: .leading, spacing: 2) {
@@ -125,15 +112,15 @@ struct EewLockScreenView: View {
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(secondaryTextColor)
 
-                    // 震源地名
+                    // 震源地名（大きく）
                     if let name = state.hypocenterName {
                         Text(name)
-                            .font(.system(size: 18, weight: .bold))
+                            .font(.system(size: 20, weight: .bold))
                             .foregroundColor(.primary)
                             .lineLimit(1)
                     }
 
-                    // M, 深さ
+                    // M, 深さ, 発生時刻（縦に並べる）
                     detailsView
                 }
 
@@ -169,11 +156,11 @@ struct EewLockScreenView: View {
         }
     }
 
-    private var headerTextColor: Color {
+    private var headerBackgroundColor: Color {
         if let isWarning = state.isWarning, isWarning {
-            return .red
+            return Color(red: 0.7, green: 0.1, blue: 0.1)
         } else {
-            return .orange
+            return Color(red: 0.8, green: 0.4, blue: 0.05)
         }
     }
 
@@ -200,30 +187,47 @@ struct EewLockScreenView: View {
         }
     }
 
-    // MARK: - Details
+    // MARK: - Details (M, 深さ, 発生時刻を縦に)
 
     private var detailsView: some View {
-        HStack(spacing: 12) {
-            // マグニチュード
-            if let magnitude = state.magnitude {
-                HStack(alignment: .firstTextBaseline, spacing: 1) {
-                    Text("M")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(secondaryTextColor)
-                    Text(String(format: "%.1f", magnitude))
-                        .font(.system(size: 17, weight: .bold, design: .monospaced))
-                        .foregroundColor(.primary)
+        VStack(alignment: .leading, spacing: 3) {
+            // M, 深さ（横並び）
+            HStack(spacing: 14) {
+                // マグニチュード（文字間隔を詰める、数値を大きく）
+                if let magnitude = state.magnitude {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("M")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(secondaryTextColor)
+                        Text(String(format: "%.1f", magnitude))
+                            .font(.system(size: 19, weight: .bold, design: .monospaced))
+                            .tracking(-1) // 文字間隔を詰める
+                            .foregroundColor(.primary)
+                    }
+                }
+
+                // 深さ（数値を大きく）
+                if let depth = state.depth {
+                    depthView(depth: depth)
                 }
             }
 
-            // 深さ
-            if let depth = state.depth {
-                depthView(depth: depth)
+            // 発生時刻（M, 深さの下）
+            if let originTime = state.originTime,
+               let date = ISO8601DateFormatter().date(from: originTime) {
+                HStack(spacing: 4) {
+                    Text("発生")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundColor(secondaryTextColor)
+                    Text(formatDateTime(date))
+                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                        .foregroundColor(secondaryTextColor)
+                }
             }
         }
     }
 
-    // 深さ表示
+    // 深さ表示（数値を大きく）
     private func depthView(depth: Int) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
             Text("深さ")
@@ -233,12 +237,13 @@ struct EewLockScreenView: View {
             if depth == 0 {
                 // ごく浅い
                 Text("ごく浅い")
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.primary)
             } else if depth >= 700 {
                 // 700km以上
                 Text("\(depth)")
-                    .font(.system(size: 17, weight: .bold, design: .monospaced))
+                    .font(.system(size: 19, weight: .bold, design: .monospaced))
+                    .tracking(-1)
                     .foregroundColor(.primary)
                 Text("km以上")
                     .font(.system(size: 10, weight: .medium))
@@ -246,7 +251,8 @@ struct EewLockScreenView: View {
             } else {
                 // 通常
                 Text("\(depth)")
-                    .font(.system(size: 17, weight: .bold, design: .monospaced))
+                    .font(.system(size: 19, weight: .bold, design: .monospaced))
+                    .tracking(-1)
                     .foregroundColor(.primary)
                 Text("km")
                     .font(.system(size: 10, weight: .medium))
