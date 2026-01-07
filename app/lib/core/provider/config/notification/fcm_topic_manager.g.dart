@@ -12,11 +12,11 @@ part of 'fcm_topic_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(FcmTopicManager)
-const fcmTopicManagerProvider = FcmTopicManagerProvider._();
+final fcmTopicManagerProvider = FcmTopicManagerProvider._();
 
 final class FcmTopicManagerProvider
     extends $NotifierProvider<FcmTopicManager, List<String>> {
-  const FcmTopicManagerProvider._()
+  FcmTopicManagerProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,7 +50,6 @@ abstract class _$FcmTopicManager extends $Notifier<List<String>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<List<String>, List<String>>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$FcmTopicManager extends $Notifier<List<String>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

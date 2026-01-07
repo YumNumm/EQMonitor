@@ -12,12 +12,12 @@ part of 'websocket_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(websocket)
-const websocketProvider = WebsocketProvider._();
+final websocketProvider = WebsocketProvider._();
 
 final class WebsocketProvider
     extends $FunctionalProvider<WebSocket, WebSocket, WebSocket>
     with $Provider<WebSocket> {
-  const WebsocketProvider._()
+  WebsocketProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,11 +53,11 @@ final class WebsocketProvider
 String _$websocketHash() => r'cb3408b7a0df5a6b8c4cbe5c07a567970771172a';
 
 @ProviderFor(WebsocketStatus)
-const websocketStatusProvider = WebsocketStatusProvider._();
+final websocketStatusProvider = WebsocketStatusProvider._();
 
 final class WebsocketStatusProvider
     extends $NotifierProvider<WebsocketStatus, ConnectionState> {
-  const WebsocketStatusProvider._()
+  WebsocketStatusProvider._()
     : super(
         from: null,
         argument: null,
@@ -91,7 +91,6 @@ abstract class _$WebsocketStatus extends $Notifier<ConnectionState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ConnectionState, ConnectionState>;
     final element =
         ref.element
@@ -101,16 +100,16 @@ abstract class _$WebsocketStatus extends $Notifier<ConnectionState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(WebsocketMessages)
-const websocketMessagesProvider = WebsocketMessagesProvider._();
+final websocketMessagesProvider = WebsocketMessagesProvider._();
 
 final class WebsocketMessagesProvider
     extends $StreamNotifierProvider<WebsocketMessages, Map<String, dynamic>> {
-  const WebsocketMessagesProvider._()
+  WebsocketMessagesProvider._()
     : super(
         from: null,
         argument: null,
@@ -137,7 +136,6 @@ abstract class _$WebsocketMessages
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<AsyncValue<Map<String, dynamic>>, Map<String, dynamic>>;
@@ -152,6 +150,6 @@ abstract class _$WebsocketMessages
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

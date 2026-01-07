@@ -12,11 +12,11 @@ part of 'map_configuration_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(MapConfigurationNotifier)
-const mapConfigurationProvider = MapConfigurationNotifierProvider._();
+final mapConfigurationProvider = MapConfigurationNotifierProvider._();
 
 final class MapConfigurationNotifierProvider
     extends $AsyncNotifierProvider<MapConfigurationNotifier, MapConfiguration> {
-  const MapConfigurationNotifierProvider._()
+  MapConfigurationNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -44,7 +44,6 @@ abstract class _$MapConfigurationNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<MapConfiguration>, MapConfiguration>;
     final element =
@@ -55,6 +54,6 @@ abstract class _$MapConfigurationNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

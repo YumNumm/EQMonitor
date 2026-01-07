@@ -9,6 +9,13 @@ part 'device_api_client.g.dart';
 abstract class DeviceApiClient {
   factory DeviceApiClient(Dio dio, {String baseUrl}) = _DeviceApiClient;
 
+  /// デバイスを作成または更新
+  @PUT('/v2/device/{deviceId}')
+  Future<Device> upsertDevice({
+    @Path('deviceId') required String deviceId,
+    @Body() required DeviceUpsertRequest request,
+  });
+
   /// デバイス情報を取得
   @GET('/v2/device/{deviceId}')
   Future<Device> getDevice({
@@ -23,9 +30,16 @@ abstract class DeviceApiClient {
     @Path('deviceId') required String deviceId,
   });
 
-  /// APNsトークンを登録
-  @POST('/v2/device/{deviceId}/apns/{tokenType}')
-  Future<ApnsToken> registerApnsToken({
+  /// 特定タイプのAPNsトークンを取得
+  @GET('/v2/device/{deviceId}/apns/{tokenType}')
+  Future<ApnsToken> getApnsToken({
+    @Path('deviceId') required String deviceId,
+    @Path('tokenType') required String tokenType,
+  });
+
+  /// APNsトークンを更新（存在しない場合は作成）
+  @PATCH('/v2/device/{deviceId}/apns/{tokenType}')
+  Future<ApnsToken> updateApnsToken({
     @Path('deviceId') required String deviceId,
     @Path('tokenType') required String tokenType,
     @Body() required ApnsTokenRequest request,
@@ -46,9 +60,9 @@ abstract class DeviceApiClient {
     @Path('deviceId') required String deviceId,
   });
 
-  /// FCMトークンを登録
-  @PUT('/v2/device/{deviceId}/fcm')
-  Future<FcmToken> registerFcmToken({
+  /// FCMトークンを更新（存在しない場合は作成）
+  @PATCH('/v2/device/{deviceId}/fcm')
+  Future<FcmToken> updateFcmToken({
     @Path('deviceId') required String deviceId,
     @Body() required FcmTokenRequest request,
   });

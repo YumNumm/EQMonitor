@@ -12,12 +12,12 @@ part of 'jma_code_table_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(jmaCodeTable)
-const jmaCodeTableProvider = JmaCodeTableProvider._();
+final jmaCodeTableProvider = JmaCodeTableProvider._();
 
 final class JmaCodeTableProvider
     extends $FunctionalProvider<JmaCodeTable, JmaCodeTable, JmaCodeTable>
     with $Provider<JmaCodeTable> {
-  const JmaCodeTableProvider._()
+  JmaCodeTableProvider._()
     : super(
         from: null,
         argument: null,

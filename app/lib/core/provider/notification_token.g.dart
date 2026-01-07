@@ -38,7 +38,7 @@ Map<String, dynamic> _$NotificationTokenModelToJson(
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(notificationToken)
-const notificationTokenProvider = NotificationTokenProvider._();
+final notificationTokenProvider = NotificationTokenProvider._();
 
 final class NotificationTokenProvider
     extends
@@ -50,7 +50,7 @@ final class NotificationTokenProvider
     with
         $FutureModifier<NotificationTokenModel>,
         $FutureProvider<NotificationTokenModel> {
-  const NotificationTokenProvider._()
+  NotificationTokenProvider._()
     : super(
         from: null,
         argument: null,

@@ -41,6 +41,25 @@ const _$DeviceTypeEnumMap = {
   DeviceType.android: 'ANDROID',
 };
 
+_DeviceUpsertRequest _$DeviceUpsertRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_DeviceUpsertRequest', json, ($checkedConvert) {
+      final val = _DeviceUpsertRequest(
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$DeviceTypeEnumMap, v),
+        ),
+        userId: $checkedConvert('user_id', (v) => v as String),
+      );
+      return val;
+    }, fieldKeyMap: const {'userId': 'user_id'});
+
+Map<String, dynamic> _$DeviceUpsertRequestToJson(
+  _DeviceUpsertRequest instance,
+) => <String, dynamic>{
+  'type': _$DeviceTypeEnumMap[instance.type]!,
+  'user_id': instance.userId,
+};
+
 _ApnsToken _$ApnsTokenFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_ApnsToken', json, ($checkedConvert) {
       final val = _ApnsToken(
