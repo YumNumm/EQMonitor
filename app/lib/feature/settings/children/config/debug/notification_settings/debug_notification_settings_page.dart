@@ -56,8 +56,9 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
     final earthquakeState =
         useState<AsyncValue<EarthquakeNotificationSettings>?>(null);
     final eewState = useState<AsyncValue<EewNotificationSettings>?>(null);
-    final earthquakeRegionsState =
-        useState<AsyncValue<List<RegionSetting>>?>(null);
+    final earthquakeRegionsState = useState<AsyncValue<List<RegionSetting>>?>(
+      null,
+    );
     final eewRegionsState = useState<AsyncValue<List<RegionSetting>>?>(null);
 
     // Editable values
