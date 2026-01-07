@@ -331,15 +331,19 @@ struct ArrivalCountdownView: View {
             Text("到達済")
                 .font(.system(size: 16, weight: .black, design: .monospaced))
                 .foregroundColor(.red)
+                .frame(maxWidth: .infinity, alignment: .trailing)
         } else {
             VStack(alignment: .trailing, spacing: 0) {
                 Text("到達まで")
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(secondaryTextColor)
-                Text(arrivalDate, style: .relative)
+                // .timer スタイルで "0:40" 形式のカウントダウン表示
+                Text(timerInterval: Date()...arrivalDate, countsDown: true)
                     .font(.system(size: 16, weight: .bold, design: .monospaced))
                     .foregroundColor(.primary)
+                    .multilineTextAlignment(.trailing)
             }
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 }
