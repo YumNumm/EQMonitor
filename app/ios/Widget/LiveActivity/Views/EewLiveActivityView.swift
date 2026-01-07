@@ -8,12 +8,74 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - Stripe Line (HIG準拠: インセットしたコンテナ形状)
+// MARK: - Header Container (HIG準拠: インセットコンテナ形状)
+// "When separating a block of content, place it in an inset container shape"
 
 @available(iOS 16.1, *)
-struct StripeLine: View {
+struct HeaderContainer: View {
     let isWarning: Bool
-    let height: CGFloat
+    let title: String
+    let serialNo: Int?
+
+    private let stripeHeight: CGFloat = 8
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // 上部: ストライプパターン
+            StripePattern(isWarning: isWarning)
+                .frame(height: stripeHeight)
+
+            // 下部: ヘッダーコンテンツ
+            HStack(alignment: .center) {
+                // タイトル（白文字）
+                Text(title)
+                    .font(.system(size: 17, weight: .heavy))
+                    .foregroundColor(.white)
+
+                Spacer()
+
+                // Serial Number
+                if let serialNo = serialNo {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("#")
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.7))
+                        Text("\(serialNo)")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
+                    }
+                }
+
+                // アプリアイコン
+                Image("AppIconForeground")
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 24, height: 24)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(backgroundColor)
+        }
+        // HIG: ContainerRelativeShapeで角丸をWidgetに合わせる
+        .clipShape(ContainerRelativeShape())
+    }
+
+    private var backgroundColor: Color {
+        if isWarning {
+            return Color(red: 0.7, green: 0.1, blue: 0.1)
+        } else {
+            return Color(red: 0.8, green: 0.4, blue: 0.05)
+        }
+    }
+}
+
+// MARK: - Stripe Pattern
+
+@available(iOS 16.1, *)
+struct StripePattern: View {
+    let isWarning: Bool
 
     var body: some View {
         GeometryReader { geometry in
@@ -23,9 +85,8 @@ struct StripeLine: View {
                 : [Color.orange, Color(red: 0.5, green: 0.25, blue: 0.0)]
 
             Canvas { context, size in
-                // 十分な余裕を持って描画
-                let totalWidth = size.width * 3
-                var x: CGFloat = -size.height * 3
+                let totalWidth = size.width + size.height * 2
+                var x: CGFloat = -size.height
 
                 while x < totalWidth {
                     var path = Path()
@@ -35,15 +96,12 @@ struct StripeLine: View {
                     path.addLine(to: CGPoint(x: x + size.height, y: 0))
                     path.closeSubpath()
 
-                    let colorIndex = Int((x + size.height * 3) / stripeWidth) % 2
+                    let colorIndex = Int((x + size.height) / stripeWidth) % 2
                     context.fill(path, with: .color(colors[abs(colorIndex)]))
                     x += stripeWidth
                 }
             }
         }
-        .frame(height: height)
-        // HIG: ContainerRelativeShapeで角丸をWidgetに合わせる
-        .clipShape(ContainerRelativeShape())
     }
 }
 
@@ -58,47 +116,15 @@ struct EewLockScreenView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // ストライプライン（HIG準拠: インセットしたコンテナ形状）
-            StripeLine(
+            // ヘッダーコンテナ（HIG準拠: インセットしたコンテナ形状）
+            HeaderContainer(
                 isWarning: state.isWarning ?? false,
-                height: 6
+                title: headerTitle,
+                serialNo: state.serialNo
             )
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
-
-            // ヘッダーコンテンツ
-            HStack(alignment: .center) {
-                // タイトル（白文字）
-                Text(headerTitle)
-                    .font(.system(size: 17, weight: .heavy))
-                    .foregroundColor(.white)
-
-                Spacer()
-
-                // Serial Number（数値部分を大きく）
-                if let serialNo = state.serialNo {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("#")
-                            .font(.system(size: 13, weight: .medium, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.7))
-                        Text("\(serialNo)")
-                            .font(.system(size: 17, weight: .bold, design: .monospaced))
-                            .foregroundColor(.white)
-                    }
-                }
-
-                // アプリアイコン（renderingMode(.original)で色を維持）
-                Image("AppIconForeground")
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 24, height: 24)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
-            }
-            .padding(.horizontal, standardMargin)
-            .padding(.top, 8)
-            .padding(.bottom, 6)
-            .background(headerBackgroundColor)
+            .padding(.bottom, 8)
 
             // メインコンテンツ
             HStack(alignment: .top, spacing: 10) {
@@ -132,7 +158,6 @@ struct EewLockScreenView: View {
                 }
             }
             .padding(.horizontal, standardMargin)
-            .padding(.top, 6)
             .padding(.bottom, standardMargin)
         }
     }
@@ -153,14 +178,6 @@ struct EewLockScreenView: View {
             return "緊急地震速報（警報）"
         } else {
             return "緊急地震速報"
-        }
-    }
-
-    private var headerBackgroundColor: Color {
-        if let isWarning = state.isWarning, isWarning {
-            return Color(red: 0.7, green: 0.1, blue: 0.1)
-        } else {
-            return Color(red: 0.8, green: 0.4, blue: 0.05)
         }
     }
 
