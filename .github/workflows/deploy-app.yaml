@@ -210,16 +210,13 @@ jobs:
           name: EQMonitor-ios.ipa
           path: build
 
-      - name: List files
-        run: ls -lah build/
-
       - name: Extract SOPS Age Key File
         run: |
           echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
 
       - name: Copy mise.local.toml
         run: |
-         cp mise.local.toml.example mise.local.toml
+          cp mise.local.toml.example mise.local.toml
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
@@ -240,8 +237,8 @@ jobs:
             --upload-app \
             -f build/eqmonitor.ipa \
             --type ios \
-            --apiIssuer ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
-            --apiKey ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+            --apiIssuer $APP_STORE_CONNECT_API_KEY_ISSUER_ID \
+            --apiKey $APP_STORE_CONNECT_API_KEY_ID
 
   build-android:
     needs: define-matrix
