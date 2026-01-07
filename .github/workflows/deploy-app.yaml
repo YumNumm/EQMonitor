@@ -3,7 +3,8 @@ name: Deploy App
 on:
   push:
     branches:
-      - develop
+      # - develop
+      - "*"
   workflow_dispatch:
     inputs:
       ios:
