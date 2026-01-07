@@ -13,14 +13,14 @@ resolution: workspace
 dependency_overrides:
   maplibre:
     git:
-      url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: a6aff508942967f3140af51fa6c3fdf8b979d416
+      url: https://github.com/josxha/flutter-maplibre.git
+      ref: 75a9632f32e96539fb9d79cb44abed4bd93fafab 
       path: maplibre
 
   maplibre_ios:
     git:
-      url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: a6aff508942967f3140af51fa6c3fdf8b979d416
+      url: https://github.com/josxha/flutter-maplibre.git
+      ref: 75a9632f32e96539fb9d79cb44abed4bd93fafab
       path: maplibre_ios
 
 dependencies:
