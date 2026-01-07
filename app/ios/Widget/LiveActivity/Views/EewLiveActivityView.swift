@@ -8,20 +8,20 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - Warning Stripe Pattern
+// MARK: - Header Stripe Line
 
 @available(iOS 16.1, *)
-struct WarningStripeView: View {
+struct HeaderStripeLine: View {
     let isWarning: Bool
     let height: CGFloat
-    
+
     var body: some View {
         GeometryReader { geometry in
-            let stripeWidth: CGFloat = 12
-            let colors = isWarning ? [Color.red, Color.black] : [Color.orange, Color.orange.opacity(0.3)]
-            
+            let stripeWidth: CGFloat = 8
+            let colors = isWarning ? [Color.red, Color.black] : [Color.orange, Color.orange.opacity(0.4)]
+
             HStack(spacing: 0) {
-                ForEach(0..<Int(geometry.size.width / stripeWidth) + 2, id: \.self) { index in
+                ForEach(0..<Int(geometry.size.width / stripeWidth) + 4, id: \.self) { index in
                     Rectangle()
                         .fill(colors[index % 2])
                         .frame(width: stripeWidth)
@@ -42,41 +42,45 @@ struct EewLockScreenView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // 上部の警報/予報ストライプ
-            WarningStripeView(
-                isWarning: state.isWarning ?? false,
-                height: 16
-            )
-            
-            VStack(spacing: 10) {
-                // ヘッダー
+            // ヘッダー部分
+            VStack(spacing: 0) {
                 HStack {
                     headerView
                     Spacer()
                     serialInfoView
                 }
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 8)
 
-                // メインコンテンツ
-                HStack(alignment: .center, spacing: 16) {
-                    // 現在地予想震度表示
-                    forecastIntensityView
+                // ヘッダー下のストライプライン
+                HeaderStripeLine(
+                    isWarning: state.isWarning ?? false,
+                    height: 6
+                )
+            }
 
-                    // 震源情報
-                    VStack(alignment: .leading, spacing: 6) {
-                        hypocenterNameView
-                        detailsView
-                    }
+            // メインコンテンツ
+            HStack(alignment: .center, spacing: 14) {
+                // 現在地予想震度表示
+                forecastIntensityView
 
-                    Spacer()
+                // 震源情報
+                VStack(alignment: .leading, spacing: 4) {
+                    hypocenterNameView
+                    detailsView
+                }
 
-                    // 現在地到達情報
-                    if let location = state.location {
-                        arrivalView(location: location)
-                    }
+                Spacer()
+
+                // 現在地到達情報
+                if let location = state.location {
+                    arrivalView(location: location)
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.top, 10)
+            .padding(.bottom, 12)
         }
         .background(backgroundColor)
     }
@@ -84,11 +88,9 @@ struct EewLockScreenView: View {
     // MARK: - Header
 
     private var headerView: some View {
-        HStack(spacing: 6) {
-            Text(headerTitle)
-                .font(.system(size: 15, weight: .bold))
-                .foregroundColor(warningColor)
-        }
+        Text(headerTitle)
+            .font(.system(size: 16, weight: .heavy))
+            .foregroundColor(headerTextColor)
     }
 
     private var headerTitle: String {
@@ -99,11 +101,11 @@ struct EewLockScreenView: View {
         }
     }
 
-    private var warningColor: Color {
+    private var headerTextColor: Color {
         if let isWarning = state.isWarning, isWarning {
-            return .red
+            return .white
         } else {
-            return .orange
+            return .white
         }
     }
 
@@ -112,25 +114,22 @@ struct EewLockScreenView: View {
     private var serialInfoView: some View {
         HStack(spacing: 6) {
             if let serialNo = state.serialNo {
-                HStack(alignment: .firstTextBaseline, spacing: 1) {
-                    Text("第")
-                        .font(.system(size: 11))
-                        .foregroundColor(.primary.opacity(0.7))
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
+                    Text("#")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.8))
                     Text("\(serialNo)")
-                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
-                        .foregroundColor(.primary)
-                    Text("報")
-                        .font(.system(size: 11))
-                        .foregroundColor(.primary.opacity(0.7))
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
                 }
             }
             if let isFinal = state.isFinal, isFinal {
                 Text("最終")
                     .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 4)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 5)
                     .padding(.vertical, 2)
-                    .background(Color.blue.opacity(0.15))
+                    .background(Color.white.opacity(0.25))
                     .cornerRadius(4)
             }
         }
@@ -142,18 +141,18 @@ struct EewLockScreenView: View {
         Group {
             if let location = state.location,
                let intensity = location.forecastIntensityValue {
-                VStack(spacing: 3) {
+                VStack(spacing: 2) {
                     Text("予想震度")
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.8))
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.primary.opacity(0.7))
                     LargeIntensityBadge(intensity: intensity)
                 }
             } else if let intensity = state.intensityValue {
                 // 現在地情報がない場合は最大震度を表示
-                VStack(spacing: 3) {
+                VStack(spacing: 2) {
                     Text("最大震度")
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.8))
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.primary.opacity(0.7))
                     LargeIntensityBadge(intensity: intensity)
                 }
             }
@@ -166,7 +165,7 @@ struct EewLockScreenView: View {
         Group {
             if let name = state.hypocenterName {
                 Text(name)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.primary)
                     .lineLimit(1)
             }
@@ -174,28 +173,25 @@ struct EewLockScreenView: View {
     }
 
     private var detailsView: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             if let magnitude = state.magnitude {
-                HStack(alignment: .firstTextBaseline, spacing: 1) {
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
                     Text("M")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.7))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.primary.opacity(0.6))
                     Text(String(format: "%.1f", magnitude))
-                        .font(.system(size: 16, weight: .bold, design: .monospaced))
+                        .font(.system(size: 17, weight: .bold, design: .monospaced))
                         .foregroundColor(.primary)
                 }
             }
             if let depth = state.depth {
-                HStack(alignment: .firstTextBaseline, spacing: 1) {
-                    Text("深さ")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.7))
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
                     Text("\(depth)")
-                        .font(.system(size: 16, weight: .bold, design: .monospaced))
+                        .font(.system(size: 17, weight: .bold, design: .monospaced))
                         .foregroundColor(.primary)
                     Text("km")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.7))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.primary.opacity(0.6))
                 }
             }
         }
@@ -206,8 +202,8 @@ struct EewLockScreenView: View {
     private func arrivalView(location: LocationInfo) -> some View {
         VStack(alignment: .trailing, spacing: 4) {
             Text(location.regionName)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(.primary.opacity(0.8))
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.primary.opacity(0.85))
 
             if let arrivalDate = location.arrivalDate {
                 ArrivalCountdownView(arrivalDate: arrivalDate)
@@ -219,9 +215,11 @@ struct EewLockScreenView: View {
 
     private var backgroundColor: Color {
         if let isWarning = state.isWarning, isWarning {
-            return Color.red.opacity(0.08)
+            // 警報: 目立つ赤色（コントラスト確保のため彩度を調整）
+            return Color(red: 0.75, green: 0.15, blue: 0.15)
         } else {
-            return Color.orange.opacity(0.08)
+            // 予報: オレンジ色
+            return Color(red: 0.85, green: 0.45, blue: 0.1)
         }
     }
 }
@@ -236,14 +234,14 @@ struct LargeIntensityBadge: View {
         let parts = intensity.formattedParts
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text(parts.main)
-                .font(.system(size: 38, weight: .bold, design: .monospaced))
+                .font(.system(size: 40, weight: .black, design: .monospaced))
             if let sub = parts.sub {
                 Text(sub)
-                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                    .font(.system(size: 18, weight: .bold, design: .monospaced))
             }
         }
         .foregroundColor(intensity.textColor)
-        .frame(minWidth: 52)
+        .frame(minWidth: 54)
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
         .background(intensity.backgroundColor)
@@ -262,15 +260,15 @@ struct ArrivalCountdownView: View {
 
         if isArrived {
             Text("到達済")
-                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .font(.system(size: 17, weight: .black, design: .monospaced))
                 .foregroundColor(.red)
         } else {
             VStack(alignment: .trailing, spacing: 0) {
                 Text("到達まで")
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(.primary.opacity(0.8))
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(.primary.opacity(0.7))
                 Text(arrivalDate, style: .relative)
-                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                    .font(.system(size: 17, weight: .bold, design: .monospaced))
                     .foregroundColor(.primary)
             }
         }
