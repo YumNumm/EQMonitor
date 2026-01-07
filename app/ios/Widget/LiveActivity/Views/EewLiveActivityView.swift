@@ -8,6 +8,41 @@
 import SwiftUI
 import WidgetKit
 
+// MARK: - Stripe Pattern Background
+
+@available(iOS 16.1, *)
+struct StripePatternBackground: View {
+    let isWarning: Bool
+
+    var body: some View {
+        GeometryReader { geometry in
+            let stripeWidth: CGFloat = 10
+            let colors = isWarning
+                ? [Color.red, Color.black]
+                : [Color.orange, Color(red: 0.4, green: 0.2, blue: 0.0)]
+
+            Canvas { context, size in
+                // 斜めストライプを描画
+                let totalWidth = size.width + size.height
+                var x: CGFloat = -size.height
+
+                while x < totalWidth {
+                    var path = Path()
+                    path.move(to: CGPoint(x: x, y: size.height))
+                    path.addLine(to: CGPoint(x: x + stripeWidth, y: size.height))
+                    path.addLine(to: CGPoint(x: x + size.height + stripeWidth, y: 0))
+                    path.addLine(to: CGPoint(x: x + size.height, y: 0))
+                    path.closeSubpath()
+
+                    let colorIndex = Int(x / stripeWidth) % 2
+                    context.fill(path, with: .color(colors[abs(colorIndex)]))
+                    x += stripeWidth
+                }
+            }
+        }
+    }
+}
+
 @available(iOS 16.1, *)
 struct EewLockScreenView: View {
     let state: LiveActivityContentState
@@ -17,22 +52,22 @@ struct EewLockScreenView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // ヘッダー部分
+            // ヘッダー部分（ストライプ背景のコンテナ）
+            // HIG: "place it in an inset container shape"
             HStack {
                 headerView
                 Spacer()
                 serialInfoView
             }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(
+                StripePatternBackground(isWarning: state.isWarning ?? false)
+            )
+            // HIG: "match its corner radius to the outer corner radius by subtracting the margin"
+            .clipShape(ContainerRelativeShape())
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
-            .padding(.bottom, 10)
-
-            // HIG: "When separating a block of content, use a thick line"
-            // ヘッダー下の区切り線（インセットして配置）
-            Rectangle()
-                .fill(separatorColor)
-                .frame(height: 3)
-                .padding(.horizontal, standardMargin)
 
             // メインコンテンツ
             HStack(alignment: .center, spacing: 12) {
@@ -56,15 +91,14 @@ struct EewLockScreenView: View {
             .padding(.top, 10)
             .padding(.bottom, standardMargin)
         }
-        .background(backgroundColor)
     }
 
     // MARK: - Header
 
     private var headerView: some View {
         Text(headerTitle)
-            .font(.system(size: 17, weight: .heavy))
-            .foregroundColor(headerTextColor)
+            .font(.system(size: 16, weight: .heavy))
+            .foregroundColor(.white)
     }
 
     private var headerTitle: String {
@@ -72,21 +106,6 @@ struct EewLockScreenView: View {
             return "緊急地震速報（警報）"
         } else {
             return "緊急地震速報"
-        }
-    }
-
-    private var headerTextColor: Color {
-        // 背景色に応じて白色を使用（コントラスト確保）
-        .white
-    }
-
-    private var separatorColor: Color {
-        if let isWarning = state.isWarning, isWarning {
-            // 警報: 白と赤のコントラスト
-            return .white.opacity(0.5)
-        } else {
-            // 予報: 白とオレンジのコントラスト
-            return .white.opacity(0.4)
         }
     }
 
@@ -189,19 +208,6 @@ struct EewLockScreenView: View {
             if let arrivalDate = location.arrivalDate {
                 ArrivalCountdownView(arrivalDate: arrivalDate)
             }
-        }
-    }
-
-    // MARK: - Background
-    // HIG: "If you set a custom background color, ensure sufficient contrast"
-
-    private var backgroundColor: Color {
-        if let isWarning = state.isWarning, isWarning {
-            // 警報: 濃い赤色（白文字とのコントラスト確保）
-            return Color(red: 0.7, green: 0.1, blue: 0.1)
-        } else {
-            // 予報: 濃いオレンジ色（白文字とのコントラスト確保）
-            return Color(red: 0.8, green: 0.4, blue: 0.05)
         }
     }
 }
