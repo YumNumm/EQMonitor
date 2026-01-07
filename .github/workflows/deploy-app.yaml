@@ -3,7 +3,8 @@ name: Deploy App
 on:
   push:
     branches:
-      - develop
+      # - develop
+      - "*"
   workflow_dispatch:
     inputs:
       ios:
@@ -120,11 +121,10 @@ jobs:
             --dart-define COMMIT_INFORMATION=${{ github.ref_name }}-${{ github.sha }}
 
       - name: Extract App Store Connect API Key
-        working-directory: app/ios
         run: |
-          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | tr -d '[:space:]' | base64 -D \
-            > AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
-          ls -l AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+          mkdir ~/.private_keys
+          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
+            > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
 
       - name: Archive
         working-directory: app
@@ -150,22 +150,6 @@ jobs:
 
           codesign --display --entitlements :- build/ios/Runner.xcarchive/Products/Applications/Runner.app/Runner  || true
 
-      - name: Debug - Verify API Key configuration
-        run: |
-          echo "Checking API Key configuration..."
-          echo "API_KEY_ID is set: ${APP_STORE_CONNECT_API_KEY_ID:+YES}"
-          echo "API_ISSUER_ID is set: ${APP_STORE_CONNECT_API_ISSUER_ID:+YES}"
-          echo "API_KEY_BASE64 is set: ${APP_STORE_CONNECT_API_KEY_BASE64:+YES}"
-          KEY_PATH="${{ github.workspace }}/app/ios/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
-          if [ -f "$KEY_PATH" ]; then
-            echo "✅ API Key file exists at: $KEY_PATH"
-            ls -la "$KEY_PATH"
-            sha256sum "$KEY_PATH"
-          else
-            echo "❌ API Key file NOT found at: $KEY_PATH"
-            exit 1
-          fi
-
       - name: Archive
         working-directory: app
         run: |
@@ -176,7 +160,7 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
-            -authenticationKeyPath "${{ github.workspace }}/app/ios/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8"
+            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8"
           ls -lah .
 
       # https://github.com/actions/upload-artifact
@@ -231,13 +215,19 @@ jobs:
             echo "::add-mask::${line#*=}"
           done
 
+      - name: Extract App Store Connect API Key
+        run: |
+          mkdir ~/.private_keys
+          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
+            > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+
       - name: Upload Ipa to App Store Connect
         run: |
           xcrun altool \
             --upload-app \
             -f build/eqmonitor.ipa \
             --type ios \
-            --apiIssuer $APP_STORE_CONNECT_API_KEY_ISSUER_ID \
+            --apiIssuer $APP_STORE_CONNECT_API_ISSUER_ID \
             --apiKey $APP_STORE_CONNECT_API_KEY_ID
 
   build-android:
