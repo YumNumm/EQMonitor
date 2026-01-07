@@ -92,37 +92,39 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         return (mainNumber, subText)
     }
 
-    /// 背景色
+    /// 背景色（コントラスト改善版）
     var backgroundColor: Color {
         switch self {
         case .zero:
-            return Color(red: 0.75, green: 0.75, blue: 0.75) // グレー
+            return Color(red: 0.6, green: 0.6, blue: 0.6) // グレー
         case .one:
-            return Color(red: 0.95, green: 0.95, blue: 0.95) // 白に近い
+            return Color(red: 0.9, green: 0.9, blue: 0.9) // 白に近い
         case .two:
-            return Color(red: 0.6, green: 0.85, blue: 1.0) // 水色
+            return Color(red: 0.3, green: 0.7, blue: 0.95) // 水色
         case .three:
-            return Color(red: 0.2, green: 0.6, blue: 1.0) // 青
+            return Color(red: 0.1, green: 0.45, blue: 0.9) // 青
         case .four:
-            return Color(red: 1.0, green: 0.9, blue: 0.4) // 黄色
+            return Color(red: 0.9, green: 0.75, blue: 0.1) // 黄色（暗め）
         case .fiveLowerNoInput, .fiveLower:
-            return Color(red: 1.0, green: 0.65, blue: 0.2) // オレンジ
+            return Color(red: 0.95, green: 0.5, blue: 0.1) // オレンジ
         case .fiveUpper:
-            return Color(red: 1.0, green: 0.4, blue: 0.2) // 濃いオレンジ
+            return Color(red: 0.9, green: 0.3, blue: 0.1) // 濃いオレンジ
         case .sixLower:
-            return Color(red: 1.0, green: 0.2, blue: 0.3) // 赤
+            return Color(red: 0.9, green: 0.15, blue: 0.2) // 赤
         case .sixUpper:
-            return Color(red: 0.85, green: 0.1, blue: 0.2) // 濃い赤
+            return Color(red: 0.75, green: 0.05, blue: 0.15) // 濃い赤
         case .seven:
-            return Color(red: 0.6, green: 0.1, blue: 0.4) // 紫
+            return Color(red: 0.5, green: 0.05, blue: 0.35) // 紫
         }
     }
 
-    /// テキスト色
+    /// テキスト色（コントラスト改善版）
     var textColor: Color {
         switch self {
-        case .zero, .one, .two, .three, .four:
+        case .one, .four:
             return .black
+        case .zero, .two, .three:
+            return .white
         default:
             return .white
         }
