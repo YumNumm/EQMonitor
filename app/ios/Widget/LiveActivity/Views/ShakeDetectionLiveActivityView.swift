@@ -8,62 +8,85 @@
 import SwiftUI
 import WidgetKit
 
+// MARK: - Shake Detection Top Line
+
+@available(iOS 16.1, *)
+struct ShakeDetectionTopLine: View {
+    let level: ShakeDetectionLevel
+    let height: CGFloat
+    
+    var body: some View {
+        Rectangle()
+            .fill(level.backgroundColor)
+            .frame(height: height)
+    }
+}
+
 @available(iOS 16.1, *)
 struct ShakeDetectionLockScreenView: View {
     let state: LiveActivityContentState
     
     var body: some View {
-        VStack(spacing: 8) {
-            // ヘッダー
-            HStack {
-                headerView
-                Spacer()
-                timeView
+        VStack(spacing: 0) {
+            // 上部のライン
+            if let level = state.shakeLevel {
+                ShakeDetectionTopLine(level: level, height: 8)
             }
             
-            // メインコンテンツ
-            HStack(alignment: .center, spacing: 12) {
-                // 揺れレベル表示
-                levelView
-                
-                // 詳細情報
-                VStack(alignment: .leading, spacing: 4) {
-                    if let level = state.shakeLevel {
-                        Text(level.displayString)
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
-                    
-                    if let location = state.location {
-                        Text(location.regionName)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        if let intensity = location.intensity {
-                            Text("計測震度: \(String(format: "%.1f", intensity))")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
+            VStack(spacing: 10) {
+                // ヘッダー
+                HStack {
+                    headerView
+                    Spacer()
+                    timeView
                 }
                 
-                Spacer()
+                // メインコンテンツ
+                HStack(alignment: .center, spacing: 16) {
+                    // 揺れレベル表示
+                    levelView
+                    
+                    // 詳細情報
+                    VStack(alignment: .leading, spacing: 6) {
+                        if let level = state.shakeLevel {
+                            Text(level.displayString)
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(.primary)
+                        }
+                        
+                        if let location = state.location {
+                            Text(location.regionName)
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.primary.opacity(0.8))
+                            
+                            if let intensity = location.intensity {
+                                HStack(alignment: .firstTextBaseline, spacing: 2) {
+                                    Text("計測震度")
+                                        .font(.system(size: 11, weight: .medium))
+                                        .foregroundColor(.primary.opacity(0.7))
+                                    Text(String(format: "%.1f", intensity))
+                                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                        .foregroundColor(.primary)
+                                }
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
         }
-        .padding()
-        .background(backgroundGradient)
+        .background(backgroundColor)
     }
     
     // MARK: - Header
     
     private var headerView: some View {
-        HStack(spacing: 4) {
-            Image(systemName: "waveform.path.ecg")
-                .foregroundColor(levelColor)
-            Text("揺れを検知しました")
-                .font(.headline)
-                .fontWeight(.bold)
-        }
+        Text("揺れを検知しました")
+            .font(.system(size: 15, weight: .bold))
+            .foregroundColor(levelColor)
     }
     
     private var levelColor: Color {
@@ -78,11 +101,11 @@ struct ShakeDetectionLockScreenView: View {
                let date = ISO8601DateFormatter().date(from: detectedAt) {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text("検知時刻")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundColor(.primary.opacity(0.7))
                     Text(date, style: .time)
-                        .font(.caption)
-                        .monospacedDigit()
+                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                        .foregroundColor(.primary)
                 }
             }
         }
@@ -100,16 +123,9 @@ struct ShakeDetectionLockScreenView: View {
     
     // MARK: - Background
     
-    private var backgroundGradient: some ShapeStyle {
+    private var backgroundColor: Color {
         let color = state.shakeLevel?.backgroundColor ?? .orange
-        return LinearGradient(
-            colors: [
-                color.opacity(0.15),
-                color.opacity(0.05)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
+        return color.opacity(0.1)
     }
 }
 
@@ -120,26 +136,25 @@ struct ShakeLevelBadge: View {
     let level: ShakeDetectionLevel
     
     var body: some View {
-        VStack(spacing: 2) {
-            Image(systemName: iconName)
-                .font(.system(size: 24))
-                .foregroundColor(level.textColor)
-        }
-        .frame(width: 50, height: 50)
-        .background(level.backgroundColor)
-        .cornerRadius(8)
+        Text(level.shortDisplayString)
+            .font(.system(size: 28, weight: .bold, design: .monospaced))
+            .foregroundColor(level.textColor)
+            .frame(width: 56, height: 56)
+            .background(level.backgroundColor)
+            .cornerRadius(8)
     }
-    
-    private var iconName: String {
-        switch level {
-        case .weaker, .weak:
-            return "waveform.path.ecg"
-        case .medium:
-            return "waveform"
-        case .strong:
-            return "waveform.badge.exclamationmark"
-        case .stronger:
-            return "exclamationmark.triangle.fill"
+}
+
+// MARK: - ShakeDetectionLevel Extension
+
+extension ShakeDetectionLevel {
+    var shortDisplayString: String {
+        switch self {
+        case .weaker: return "微"
+        case .weak: return "弱"
+        case .medium: return "中"
+        case .strong: return "強"
+        case .stronger: return "激"
         }
     }
 }
@@ -169,7 +184,6 @@ struct ShakeLevelBadge: View {
             intensity: 3.2
         )
     ))
-    .previewLayout(.sizeThatFits)
 }
 
 @available(iOS 17.0, *)
@@ -195,7 +209,6 @@ struct ShakeLevelBadge: View {
             intensity: 0.8
         )
     ))
-    .previewLayout(.sizeThatFits)
 }
 
 @available(iOS 17.0, *)
@@ -221,5 +234,29 @@ struct ShakeLevelBadge: View {
             intensity: 5.2
         )
     ))
-    .previewLayout(.sizeThatFits)
+}
+
+@available(iOS 17.0, *)
+#Preview("Shake Detection - Medium") {
+    ShakeDetectionLockScreenView(state: LiveActivityContentState(
+        eventId: "shake-event-uuid",
+        type: "shake_detection",
+        hypocenterName: nil,
+        magnitude: nil,
+        depth: nil,
+        originTime: nil,
+        maxIntensity: nil,
+        serialNo: nil,
+        isFinal: nil,
+        isWarning: nil,
+        level: "Medium",
+        detectedAt: ISO8601DateFormatter().string(from: Date()),
+        location: LocationInfo(
+            regionName: "千葉県北西部",
+            forecastIntensity: nil,
+            forecastLpgmIntensity: nil,
+            arrivalTime: nil,
+            intensity: 2.1
+        )
+    ))
 }
