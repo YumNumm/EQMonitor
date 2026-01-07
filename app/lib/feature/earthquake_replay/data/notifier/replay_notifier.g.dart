@@ -12,11 +12,11 @@ part of 'replay_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ReplayNotifier)
-const replayProvider = ReplayNotifierProvider._();
+final replayProvider = ReplayNotifierProvider._();
 
 final class ReplayNotifierProvider
     extends $NotifierProvider<ReplayNotifier, ReplayState?> {
-  const ReplayNotifierProvider._()
+  ReplayNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,7 +50,6 @@ abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ReplayState?, ReplayState?>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

@@ -12,11 +12,11 @@ part of 'map_camera_state_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(HomeMapCameraState)
-const homeMapCameraStateProvider = HomeMapCameraStateProvider._();
+final homeMapCameraStateProvider = HomeMapCameraStateProvider._();
 
 final class HomeMapCameraStateProvider
     extends $NotifierProvider<HomeMapCameraState, MapCameraState> {
-  const HomeMapCameraStateProvider._()
+  HomeMapCameraStateProvider._()
     : super(
         from: null,
         argument: null,
@@ -51,7 +51,6 @@ abstract class _$HomeMapCameraState extends $Notifier<MapCameraState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<MapCameraState, MapCameraState>;
     final element =
         ref.element
@@ -61,6 +60,6 @@ abstract class _$HomeMapCameraState extends $Notifier<MapCameraState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

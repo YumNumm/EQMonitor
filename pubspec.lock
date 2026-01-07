@@ -808,6 +808,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.1"
+  flutter_udid:
+    dependency: transitive
+    description:
+      name: flutter_udid
+      sha256: "75a84371d51e1c87c38d6610d47777560a373a8139b2c0c2d8ce86b01a107dbb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1208,18 +1216,18 @@ packages:
     dependency: "direct overridden"
     description:
       path: maplibre
-      ref: a6aff508942967f3140af51fa6c3fdf8b979d416
-      resolved-ref: a6aff508942967f3140af51fa6c3fdf8b979d416
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
+      ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
+      resolved-ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
+      url: "https://github.com/josxha/flutter-maplibre.git"
     source: git
     version: "0.3.3"
   maplibre_ios:
     dependency: "direct overridden"
     description:
       path: maplibre_ios
-      ref: a6aff508942967f3140af51fa6c3fdf8b979d416
-      resolved-ref: a6aff508942967f3140af51fa6c3fdf8b979d416
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
+      ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
+      resolved-ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
+      url: "https://github.com/josxha/flutter-maplibre.git"
     source: git
     version: "0.3.3"
   maps_toolkit:

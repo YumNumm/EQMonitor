@@ -13,7 +13,7 @@ part of 'qzss_serial_port_provider.dart';
 /// 利用可能なシリアルポートのリストを取得
 
 @ProviderFor(availableSerialPorts)
-const availableSerialPortsProvider = AvailableSerialPortsProvider._();
+final availableSerialPortsProvider = AvailableSerialPortsProvider._();
 
 /// 利用可能なシリアルポートのリストを取得
 
@@ -21,7 +21,7 @@ final class AvailableSerialPortsProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
   /// 利用可能なシリアルポートのリストを取得
-  const AvailableSerialPortsProvider._()
+  AvailableSerialPortsProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,13 +60,13 @@ String _$availableSerialPortsHash() =>
 /// QZSSシリアルポート接続管理プロバイダー
 
 @ProviderFor(QzssSerialPortConnection)
-const qzssSerialPortConnectionProvider = QzssSerialPortConnectionProvider._();
+final qzssSerialPortConnectionProvider = QzssSerialPortConnectionProvider._();
 
 /// QZSSシリアルポート接続管理プロバイダー
 final class QzssSerialPortConnectionProvider
     extends $NotifierProvider<QzssSerialPortConnection, QzssSerialPortState> {
   /// QZSSシリアルポート接続管理プロバイダー
-  const QzssSerialPortConnectionProvider._()
+  QzssSerialPortConnectionProvider._()
     : super(
         from: null,
         argument: null,
@@ -104,7 +104,6 @@ abstract class _$QzssSerialPortConnection
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<QzssSerialPortState, QzssSerialPortState>;
     final element =
         ref.element
@@ -114,20 +113,20 @@ abstract class _$QzssSerialPortConnection
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// 最新の災危通報レポート
 
 @ProviderFor(LatestQzssDcReport)
-const latestQzssDcReportProvider = LatestQzssDcReportProvider._();
+final latestQzssDcReportProvider = LatestQzssDcReportProvider._();
 
 /// 最新の災危通報レポート
 final class LatestQzssDcReportProvider
     extends $NotifierProvider<LatestQzssDcReport, QzssDcReport?> {
   /// 最新の災危通報レポート
-  const LatestQzssDcReportProvider._()
+  LatestQzssDcReportProvider._()
     : super(
         from: null,
         argument: null,
@@ -164,7 +163,6 @@ abstract class _$LatestQzssDcReport extends $Notifier<QzssDcReport?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<QzssDcReport?, QzssDcReport?>;
     final element =
         ref.element
@@ -174,6 +172,6 @@ abstract class _$LatestQzssDcReport extends $Notifier<QzssDcReport?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

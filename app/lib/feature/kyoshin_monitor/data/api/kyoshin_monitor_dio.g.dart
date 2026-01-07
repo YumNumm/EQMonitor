@@ -12,11 +12,11 @@ part of 'kyoshin_monitor_dio.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinMonitorDio)
-const kyoshinMonitorDioProvider = KyoshinMonitorDioProvider._();
+final kyoshinMonitorDioProvider = KyoshinMonitorDioProvider._();
 
 final class KyoshinMonitorDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
-  const KyoshinMonitorDioProvider._()
+  KyoshinMonitorDioProvider._()
     : super(
         from: null,
         argument: null,

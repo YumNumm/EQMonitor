@@ -30,6 +30,18 @@ abstract class Device with _$Device {
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
 }
 
+/// デバイス作成/更新リクエスト
+@freezed
+abstract class DeviceUpsertRequest with _$DeviceUpsertRequest {
+  const factory DeviceUpsertRequest({
+    required DeviceType type,
+    @JsonKey(name: 'user_id') required String userId,
+  }) = _DeviceUpsertRequest;
+
+  factory DeviceUpsertRequest.fromJson(Map<String, dynamic> json) =>
+      _$DeviceUpsertRequestFromJson(json);
+}
+
 /// APNsトークンタイプ
 @JsonEnum(valueField: 'value')
 enum ApnsTokenType {

@@ -12,7 +12,7 @@ part of 'jma_parameter.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(jmaParameter)
-const jmaParameterProvider = JmaParameterProvider._();
+final jmaParameterProvider = JmaParameterProvider._();
 
 final class JmaParameterProvider
     extends
@@ -24,7 +24,7 @@ final class JmaParameterProvider
     with
         $FutureModifier<JmaParameterState>,
         $FutureProvider<JmaParameterState> {
-  const JmaParameterProvider._()
+  JmaParameterProvider._()
     : super(
         from: null,
         argument: null,

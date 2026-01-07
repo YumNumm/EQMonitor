@@ -12,7 +12,7 @@ part of 'nearest_jma_feature.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(jmaMapAreaForecastLocalEewInside)
-const jmaMapAreaForecastLocalEewInsideProvider =
+final jmaMapAreaForecastLocalEewInsideProvider =
     JmaMapAreaForecastLocalEewInsideFamily._();
 
 final class JmaMapAreaForecastLocalEewInsideProvider
@@ -25,7 +25,7 @@ final class JmaMapAreaForecastLocalEewInsideProvider
     with
         $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
         $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  const JmaMapAreaForecastLocalEewInsideProvider._({
+  JmaMapAreaForecastLocalEewInsideProvider._({
     required JmaMapAreaForecastLocalEewInsideFamily super.from,
     required LatLng super.argument,
   }) : super(
@@ -79,7 +79,7 @@ final class JmaMapAreaForecastLocalEewInsideFamily extends $Family
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
           LatLng
         > {
-  const JmaMapAreaForecastLocalEewInsideFamily._()
+  JmaMapAreaForecastLocalEewInsideFamily._()
     : super(
         retry: null,
         name: r'jmaMapAreaForecastLocalEewInsideProvider',
@@ -96,7 +96,7 @@ final class JmaMapAreaForecastLocalEewInsideFamily extends $Family
 }
 
 @ProviderFor(jmaMapAreaForecastLocalEInside)
-const jmaMapAreaForecastLocalEInsideProvider =
+final jmaMapAreaForecastLocalEInsideProvider =
     JmaMapAreaForecastLocalEInsideFamily._();
 
 final class JmaMapAreaForecastLocalEInsideProvider
@@ -109,7 +109,7 @@ final class JmaMapAreaForecastLocalEInsideProvider
     with
         $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
         $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  const JmaMapAreaForecastLocalEInsideProvider._({
+  JmaMapAreaForecastLocalEInsideProvider._({
     required JmaMapAreaForecastLocalEInsideFamily super.from,
     required LatLng super.argument,
   }) : super(
@@ -163,7 +163,7 @@ final class JmaMapAreaForecastLocalEInsideFamily extends $Family
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
           LatLng
         > {
-  const JmaMapAreaForecastLocalEInsideFamily._()
+  JmaMapAreaForecastLocalEInsideFamily._()
     : super(
         retry: null,
         name: r'jmaMapAreaForecastLocalEInsideProvider',
@@ -180,7 +180,7 @@ final class JmaMapAreaForecastLocalEInsideFamily extends $Family
 }
 
 @ProviderFor(jmaMapAreaInformationCityInside)
-const jmaMapAreaInformationCityInsideProvider =
+final jmaMapAreaInformationCityInsideProvider =
     JmaMapAreaInformationCityInsideFamily._();
 
 final class JmaMapAreaInformationCityInsideProvider
@@ -193,7 +193,7 @@ final class JmaMapAreaInformationCityInsideProvider
     with
         $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
         $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  const JmaMapAreaInformationCityInsideProvider._({
+  JmaMapAreaInformationCityInsideProvider._({
     required JmaMapAreaInformationCityInsideFamily super.from,
     required LatLng super.argument,
   }) : super(
@@ -247,7 +247,7 @@ final class JmaMapAreaInformationCityInsideFamily extends $Family
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
           LatLng
         > {
-  const JmaMapAreaInformationCityInsideFamily._()
+  JmaMapAreaInformationCityInsideFamily._()
     : super(
         retry: null,
         name: r'jmaMapAreaInformationCityInsideProvider',
@@ -264,7 +264,7 @@ final class JmaMapAreaInformationCityInsideFamily extends $Family
 }
 
 @ProviderFor(jmaMapAreaTsunamiNearest)
-const jmaMapAreaTsunamiNearestProvider = JmaMapAreaTsunamiNearestFamily._();
+final jmaMapAreaTsunamiNearestProvider = JmaMapAreaTsunamiNearestFamily._();
 
 final class JmaMapAreaTsunamiNearestProvider
     extends
@@ -276,7 +276,7 @@ final class JmaMapAreaTsunamiNearestProvider
     with
         $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
         $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
-  const JmaMapAreaTsunamiNearestProvider._({
+  JmaMapAreaTsunamiNearestProvider._({
     required JmaMapAreaTsunamiNearestFamily super.from,
     required LatLng super.argument,
   }) : super(
@@ -330,7 +330,7 @@ final class JmaMapAreaTsunamiNearestFamily extends $Family
           FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
           LatLng
         > {
-  const JmaMapAreaTsunamiNearestFamily._()
+  JmaMapAreaTsunamiNearestFamily._()
     : super(
         retry: null,
         name: r'jmaMapAreaTsunamiNearestProvider',

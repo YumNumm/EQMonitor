@@ -12,7 +12,7 @@ part of 'kyoshin_monitor_points_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinMonitorPoints)
-const kyoshinMonitorPointsProvider = KyoshinMonitorPointsProvider._();
+final kyoshinMonitorPointsProvider = KyoshinMonitorPointsProvider._();
 
 final class KyoshinMonitorPointsProvider
     extends
@@ -22,7 +22,7 @@ final class KyoshinMonitorPointsProvider
           List<Feature<Point>>
         >
     with $Provider<List<Feature<Point>>> {
-  const KyoshinMonitorPointsProvider._()
+  KyoshinMonitorPointsProvider._()
     : super(
         from: null,
         argument: null,
