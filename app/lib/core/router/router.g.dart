@@ -375,6 +375,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $EarthquakeReplayRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'device-api',
+          factory: $DebugDeviceApiRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'nied',
           factory: $NiedRoute._fromState,
           routes: [
@@ -790,6 +794,27 @@ mixin $EarthquakeReplayRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/earthquake-replay');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugDeviceApiRoute on GoRouteData {
+  static DebugDeviceApiRoute _fromState(GoRouterState state) =>
+      const DebugDeviceApiRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/device-api');
 
   @override
   void go(BuildContext context) => context.go(location);

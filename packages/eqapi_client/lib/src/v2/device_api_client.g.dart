@@ -78,7 +78,37 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<ApnsToken> registerApnsToken({
+  Future<ApnsToken> getApnsToken({
+    required String deviceId,
+    required String tokenType,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ApnsToken>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/device/${deviceId}/apns/${tokenType}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApnsToken _value;
+    try {
+      _value = ApnsToken.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApnsToken> updateApnsToken({
     required String deviceId,
     required String tokenType,
     required ApnsTokenRequest request,
@@ -89,7 +119,7 @@ class _DeviceApiClient implements DeviceApiClient {
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _options = _setStreamType<ApnsToken>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             '/v2/device/${deviceId}/apns/${tokenType}',
@@ -159,7 +189,7 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<FcmToken> registerFcmToken({
+  Future<FcmToken> updateFcmToken({
     required String deviceId,
     required FcmTokenRequest request,
   }) async {
@@ -169,7 +199,7 @@ class _DeviceApiClient implements DeviceApiClient {
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _options = _setStreamType<FcmToken>(
-      Options(method: 'PUT', headers: _headers, extra: _extra)
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             '/v2/device/${deviceId}/fcm',
