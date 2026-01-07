@@ -37,6 +37,8 @@ struct EQMonitorLiveActivityWidget: Widget {
             } minimal: {
                 MinimalView(state: context.state)
             }
+            // HIG: Tint your Live Activity's key line color
+            .keylineTint(context.state.isWarning == true ? .red : .orange)
         }
     }
 }
@@ -57,6 +59,8 @@ struct LockScreenLiveActivityView: View {
 }
 
 // MARK: - Dynamic Island Compact Views
+// HIG: "Keep content as narrow as possible and ensure it's snug against the TrueDepth camera"
+// HIG: "Use the compact presentation to show dynamic, up-to-date information that's essential"
 
 @available(iOS 16.1, *)
 struct CompactLeadingView: View {
@@ -64,26 +68,28 @@ struct CompactLeadingView: View {
 
     var body: some View {
         if state.isEew {
-            // EEW: 予想震度アイコン
+            // EEW: 予想震度（コンパクトに）
             if let location = state.location,
                let intensity = location.forecastIntensityValue {
-                IntensityBadge(intensity: intensity, size: .compact)
+                CompactIntensityBadge(intensity: intensity)
             } else if let intensity = state.intensityValue {
-                IntensityBadge(intensity: intensity, size: .compact)
+                CompactIntensityBadge(intensity: intensity)
             } else {
-                Text("EEW")
-                    .font(.system(size: 10, weight: .bold, design: .monospaced))
-                    .foregroundColor(.orange)
+                Image("AppIconForeground")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 20, height: 20)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
             }
         } else {
             // 揺れ検知: レベル表示
             if let level = state.shakeLevel {
                 Text(level.shortDisplayString)
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .font(.system(size: 16, weight: .black, design: .monospaced))
                     .foregroundColor(level.textColor)
-                    .padding(4)
+                    .frame(width: 24, height: 24)
                     .background(level.backgroundColor)
-                    .cornerRadius(4)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
             }
         }
     }
@@ -95,27 +101,54 @@ struct CompactTrailingView: View {
 
     var body: some View {
         if state.isEew {
-            // EEW: 報番号または警報マーク
+            // EEW: 警報/予報
             if let isWarning = state.isWarning, isWarning {
                 Text("警報")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 11, weight: .heavy))
                     .foregroundColor(.red)
-            } else if let serialNo = state.serialNo {
-                Text("#\(serialNo)")
-                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
+            } else {
+                Text("予報")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(.orange)
             }
         } else {
             // 揺れ検知: 時刻表示
             if let detectedAt = state.detectedAt,
                let date = ISO8601DateFormatter().date(from: detectedAt) {
                 Text(date, style: .time)
-                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
             }
         }
     }
 }
 
+// MARK: - Compact Intensity Badge
+
+@available(iOS 16.1, *)
+struct CompactIntensityBadge: View {
+    let intensity: IntensityValue
+
+    var body: some View {
+        let parts = intensity.formattedParts
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
+            Text(parts.main)
+                .font(.system(size: 16, weight: .black, design: .monospaced))
+            if let sub = parts.sub {
+                Text(sub)
+                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+            }
+        }
+        .foregroundColor(intensity.textColor)
+        .frame(minWidth: 24, minHeight: 24)
+        .padding(.horizontal, 2)
+        .background(intensity.backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 6))
+    }
+}
+
 // MARK: - Dynamic Island Minimal View
+// HIG: "Ensure that your Live Activity is recognizable in the minimal presentation"
+// HIG: "If possible, display updated information rather than just a logo"
 
 @available(iOS 16.1, *)
 struct MinimalView: View {
@@ -123,27 +156,50 @@ struct MinimalView: View {
 
     var body: some View {
         if state.isEew {
+            // 震度を表示（認識しやすく）
             if let location = state.location,
                let intensity = location.forecastIntensityValue {
-                IntensityBadge(intensity: intensity, size: .minimal)
+                MinimalIntensityBadge(intensity: intensity)
             } else if let intensity = state.intensityValue {
-                IntensityBadge(intensity: intensity, size: .minimal)
+                MinimalIntensityBadge(intensity: intensity)
             } else {
-                Text("!")
-                    .font(.system(size: 12, weight: .bold, design: .monospaced))
-                    .foregroundColor(.orange)
+                Image("AppIconForeground")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 18, height: 18)
             }
         } else {
             if let level = state.shakeLevel {
                 Text(level.shortDisplayString)
-                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .font(.system(size: 14, weight: .black, design: .monospaced))
                     .foregroundColor(level.textColor)
             }
         }
     }
 }
 
+// MARK: - Minimal Intensity Badge
+
+@available(iOS 16.1, *)
+struct MinimalIntensityBadge: View {
+    let intensity: IntensityValue
+
+    var body: some View {
+        let parts = intensity.formattedParts
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
+            Text(parts.main)
+                .font(.system(size: 14, weight: .black, design: .monospaced))
+            if let sub = parts.sub {
+                Text(sub)
+                    .font(.system(size: 6, weight: .bold, design: .monospaced))
+            }
+        }
+        .foregroundColor(intensity.textColor)
+    }
+}
+
 // MARK: - Dynamic Island Expanded Views
+// HIG: "Maintain the relative placement of elements to create a coherent layout between presentations"
 
 @available(iOS 16.1, *)
 struct ExpandedLeadingView: View {
@@ -155,32 +211,54 @@ struct ExpandedLeadingView: View {
                let intensity = location.forecastIntensityValue {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("予想震度")
-                        .font(.system(size: 10, weight: .medium))
+                        .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.secondary)
-                    IntensityBadge(intensity: intensity, size: .expanded)
+                    ExpandedIntensityBadge(intensity: intensity)
                 }
             } else if let intensity = state.intensityValue {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("最大震度")
-                        .font(.system(size: 10, weight: .medium))
+                        .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.secondary)
-                    IntensityBadge(intensity: intensity, size: .expanded)
+                    ExpandedIntensityBadge(intensity: intensity)
                 }
             }
         } else if let level = state.shakeLevel {
             VStack(alignment: .leading, spacing: 2) {
-                Text("揺れ検知")
-                    .font(.system(size: 10, weight: .medium))
+                Text("揺れ")
+                    .font(.system(size: 9, weight: .medium))
                     .foregroundColor(.secondary)
                 Text(level.shortDisplayString)
-                    .font(.system(size: 22, weight: .bold, design: .monospaced))
+                    .font(.system(size: 24, weight: .black, design: .monospaced))
                     .foregroundColor(level.textColor)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
+                    .frame(width: 36, height: 36)
                     .background(level.backgroundColor)
-                    .cornerRadius(6)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
         }
+    }
+}
+
+// MARK: - Expanded Intensity Badge
+
+@available(iOS 16.1, *)
+struct ExpandedIntensityBadge: View {
+    let intensity: IntensityValue
+
+    var body: some View {
+        let parts = intensity.formattedParts
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
+            Text(parts.main)
+                .font(.system(size: 28, weight: .black, design: .monospaced))
+            if let sub = parts.sub {
+                Text(sub)
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+            }
+        }
+        .foregroundColor(intensity.textColor)
+        .frame(width: 44, height: 44)
+        .background(intensity.backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
@@ -190,32 +268,41 @@ struct ExpandedTrailingView: View {
 
     var body: some View {
         if state.isEew {
-            VStack(alignment: .trailing, spacing: 2) {
+            VStack(alignment: .trailing, spacing: 3) {
+                // 警報/予報
                 if let isWarning = state.isWarning {
                     Text(isWarning ? "警報" : "予報")
-                        .font(.system(size: 12, weight: .heavy))
+                        .font(.system(size: 13, weight: .heavy))
                         .foregroundColor(isWarning ? .red : .orange)
                 }
-                if let serialNo = state.serialNo {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("#")
-                            .font(.system(size: 10, weight: .medium, design: .monospaced))
-                            .foregroundColor(.secondary)
-                        Text("\(serialNo)")
-                            .font(.system(size: 13, weight: .bold, design: .monospaced))
+                // Serial Number + アイコン
+                HStack(spacing: 4) {
+                    if let serialNo = state.serialNo {
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                            Text("#")
+                                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                .foregroundColor(.secondary)
+                            Text("\(serialNo)")
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        }
                     }
+                    Image("AppIconForeground")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 20, height: 20)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
                 }
             }
         } else {
-            // 揺れ検知の場合は時刻表示
+            // 揺れ検知
             if let detectedAt = state.detectedAt,
                let date = ISO8601DateFormatter().date(from: detectedAt) {
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text("検知時刻")
-                        .font(.system(size: 9))
+                    Text("検知")
+                        .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.secondary)
                     Text(date, style: .time)
-                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                        .font(.system(size: 13, weight: .bold, design: .monospaced))
                 }
             }
         }
@@ -228,15 +315,20 @@ struct ExpandedCenterView: View {
 
     var body: some View {
         if state.isEew {
-            if let hypocenterName = state.hypocenterName {
-                Text(hypocenterName)
-                    .font(.system(size: 17, weight: .bold))
-                    .lineLimit(1)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("震源地")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundColor(.secondary)
+                if let hypocenterName = state.hypocenterName {
+                    Text(hypocenterName)
+                        .font(.system(size: 16, weight: .bold))
+                        .lineLimit(1)
+                }
             }
         } else {
             if let level = state.shakeLevel {
                 Text(level.displayString)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.system(size: 14, weight: .bold))
             }
         }
     }
@@ -250,22 +342,27 @@ struct ExpandedBottomView: View {
         HStack {
             if state.isEew {
                 // EEW情報
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
+                    // マグニチュード
                     if let magnitude = state.magnitude {
-                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        HStack(alignment: .firstTextBaseline, spacing: 1) {
                             Text("M")
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(.system(size: 11, weight: .semibold))
                                 .foregroundColor(.secondary)
                             Text(String(format: "%.1f", magnitude))
-                                .font(.system(size: 15, weight: .bold, design: .monospaced))
+                                .font(.system(size: 16, weight: .bold, design: .monospaced))
                         }
                     }
+                    // 深さ
                     if let depth = state.depth {
-                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        HStack(alignment: .firstTextBaseline, spacing: 1) {
+                            Text("深さ")
+                                .font(.system(size: 9, weight: .medium))
+                                .foregroundColor(.secondary)
                             Text("\(depth)")
-                                .font(.system(size: 15, weight: .bold, design: .monospaced))
+                                .font(.system(size: 16, weight: .bold, design: .monospaced))
                             Text("km")
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(.system(size: 9, weight: .medium))
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -279,17 +376,17 @@ struct ExpandedBottomView: View {
                 // 揺れ検知情報
                 if let location = state.location {
                     Text(location.regionName)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 13, weight: .semibold))
                 }
                 Spacer()
                 if let location = state.location,
                    let intensity = location.intensity {
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text("計測震度")
-                            .font(.system(size: 10, weight: .medium))
+                            .font(.system(size: 9, weight: .medium))
                             .foregroundColor(.secondary)
                         Text(String(format: "%.1f", intensity))
-                            .font(.system(size: 13, weight: .bold, design: .monospaced))
+                            .font(.system(size: 14, weight: .bold, design: .monospaced))
                     }
                 }
             }
@@ -304,78 +401,24 @@ struct ArrivalInfoView: View {
     let location: LocationInfo
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 4) {
             Text(location.regionName)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundColor(.secondary)
+                .lineLimit(1)
 
             if let arrivalDate = location.arrivalDate {
                 let isArrived = arrivalDate <= Date()
                 if isArrived {
                     Text("到達済")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .font(.system(size: 12, weight: .black, design: .monospaced))
                         .foregroundColor(.red)
                 } else {
                     Text(arrivalDate, style: .relative)
-                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
                 }
             }
         }
-    }
-}
-
-// MARK: - Intensity Badge
-
-@available(iOS 16.1, *)
-struct IntensityBadge: View {
-    let intensity: IntensityValue
-    let size: BadgeSize
-
-    enum BadgeSize {
-        case minimal
-        case compact
-        case expanded
-
-        var fontSize: CGFloat {
-            switch self {
-            case .minimal: return 10
-            case .compact: return 12
-            case .expanded: return 20
-            }
-        }
-
-        var subFontSize: CGFloat {
-            switch self {
-            case .minimal: return 5
-            case .compact: return 6
-            case .expanded: return 10
-            }
-        }
-
-        var padding: CGFloat {
-            switch self {
-            case .minimal: return 2
-            case .compact: return 4
-            case .expanded: return 6
-            }
-        }
-    }
-
-    var body: some View {
-        let parts = intensity.formattedParts
-        HStack(alignment: .firstTextBaseline, spacing: 0) {
-            Text(parts.main)
-                .font(.system(size: size.fontSize, weight: .bold, design: .monospaced))
-            if let sub = parts.sub {
-                Text(sub)
-                    .font(.system(size: size.subFontSize, weight: .bold, design: .monospaced))
-            }
-        }
-        .foregroundColor(intensity.textColor)
-        .padding(.horizontal, size.padding)
-        .padding(.vertical, size.padding / 2)
-        .background(intensity.backgroundColor)
-        .cornerRadius(4)
     }
 }
 
@@ -409,6 +452,81 @@ struct IntensityBadge: View {
 }
 
 @available(iOS 17.0, *)
+#Preview("EEW - Compact Warning", as: .dynamicIsland(.compact), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+    EQMonitorLiveActivityWidget()
+} contentStates: {
+    LiveActivityContentState(
+        eventId: "20240101123456",
+        type: "eew",
+        hypocenterName: "能登半島沖",
+        magnitude: 6.2,
+        depth: 10,
+        originTime: "2024-01-01T16:10:00+09:00",
+        maxIntensity: "6+",
+        serialNo: 3,
+        isFinal: false,
+        isWarning: true,
+        level: nil,
+        detectedAt: nil,
+        location: LocationInfo(
+            regionName: "石川県加賀",
+            forecastIntensity: "5+",
+            forecastLpgmIntensity: nil,
+            arrivalTime: nil,
+            intensity: nil
+        )
+    )
+}
+
+@available(iOS 17.0, *)
+#Preview("EEW - Compact Forecast", as: .dynamicIsland(.compact), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+    EQMonitorLiveActivityWidget()
+} contentStates: {
+    LiveActivityContentState(
+        eventId: "20240101123456",
+        type: "eew",
+        hypocenterName: "茨城県沖",
+        magnitude: 4.2,
+        depth: 40,
+        originTime: "2024-01-01T16:10:00+09:00",
+        maxIntensity: "3",
+        serialNo: 1,
+        isFinal: false,
+        isWarning: false,
+        level: nil,
+        detectedAt: nil,
+        location: nil
+    )
+}
+
+@available(iOS 17.0, *)
+#Preview("EEW - Minimal", as: .dynamicIsland(.minimal), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+    EQMonitorLiveActivityWidget()
+} contentStates: {
+    LiveActivityContentState(
+        eventId: "20240101123456",
+        type: "eew",
+        hypocenterName: "石川県能登地方",
+        magnitude: 7.6,
+        depth: 16,
+        originTime: "2024-01-01T16:10:00+09:00",
+        maxIntensity: "7",
+        serialNo: 5,
+        isFinal: false,
+        isWarning: true,
+        level: nil,
+        detectedAt: nil,
+        location: LocationInfo(
+            regionName: "東京都23区",
+            forecastIntensity: "5-",
+            forecastLpgmIntensity: "2",
+            arrivalTime: nil,
+            intensity: nil
+        )
+    )
+}
+
+@available(iOS 17.0, *)
 #Preview("Shake Detection - Lock Screen", as: .content, using: LiveActivitiesAppAttributes(eventId: "shake-event-uuid", type: "shake_detection")) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
@@ -431,33 +549,6 @@ struct IntensityBadge: View {
             forecastLpgmIntensity: nil,
             arrivalTime: nil,
             intensity: 3.2
-        )
-    )
-}
-
-@available(iOS 17.0, *)
-#Preview("EEW - Compact", as: .dynamicIsland(.compact), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
-    EQMonitorLiveActivityWidget()
-} contentStates: {
-    LiveActivityContentState(
-        eventId: "20240101123456",
-        type: "eew",
-        hypocenterName: "能登半島沖",
-        magnitude: 5.2,
-        depth: 10,
-        originTime: "2024-01-01T16:10:00+09:00",
-        maxIntensity: "5+",
-        serialNo: 3,
-        isFinal: false,
-        isWarning: false,
-        level: nil,
-        detectedAt: nil,
-        location: LocationInfo(
-            regionName: "石川県加賀",
-            forecastIntensity: "4",
-            forecastLpgmIntensity: nil,
-            arrivalTime: nil,
-            intensity: nil
         )
     )
 }
