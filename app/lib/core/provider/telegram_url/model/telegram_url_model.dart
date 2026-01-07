@@ -8,7 +8,6 @@ abstract class TelegramUrlModel with _$TelegramUrlModel {
   const factory TelegramUrlModel({
     required String restApiUrl,
     required String wsApiUrl,
-    required String? apiAuthorization,
   }) = _TelegramUrlModel;
 
   factory TelegramUrlModel.fromJson(Map<String, dynamic> json) =>

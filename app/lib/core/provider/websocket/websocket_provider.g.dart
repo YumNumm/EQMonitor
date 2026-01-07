@@ -15,8 +15,13 @@ part of 'websocket_provider.dart';
 final websocketProvider = WebsocketProvider._();
 
 final class WebsocketProvider
-    extends $FunctionalProvider<WebSocket, WebSocket, WebSocket>
-    with $Provider<WebSocket> {
+    extends
+        $FunctionalProvider<
+          AsyncValue<WebSocket>,
+          WebSocket,
+          FutureOr<WebSocket>
+        >
+    with $FutureModifier<WebSocket>, $FutureProvider<WebSocket> {
   WebsocketProvider._()
     : super(
         from: null,
@@ -33,30 +38,22 @@ final class WebsocketProvider
 
   @$internal
   @override
-  $ProviderElement<WebSocket> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<WebSocket> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  WebSocket create(Ref ref) {
+  FutureOr<WebSocket> create(Ref ref) {
     return websocket(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(WebSocket value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<WebSocket>(value),
-    );
   }
 }
 
-String _$websocketHash() => r'cb3408b7a0df5a6b8c4cbe5c07a567970771172a';
+String _$websocketHash() => r'300cd513ac92d70c9940e33c792a14fa5a211ba7';
 
 @ProviderFor(WebsocketStatus)
 final websocketStatusProvider = WebsocketStatusProvider._();
 
 final class WebsocketStatusProvider
-    extends $NotifierProvider<WebsocketStatus, ConnectionState> {
+    extends $StreamNotifierProvider<WebsocketStatus, ConnectionState> {
   WebsocketStatusProvider._()
     : super(
         from: null,
@@ -74,29 +71,21 @@ final class WebsocketStatusProvider
   @$internal
   @override
   WebsocketStatus create() => WebsocketStatus();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ConnectionState value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ConnectionState>(value),
-    );
-  }
 }
 
-String _$websocketStatusHash() => r'9c6c47911232f1770b32d1b13f4364abf4900063';
+String _$websocketStatusHash() => r'67b0bba038065e4ef01b347c94e498ea8c01db6e';
 
-abstract class _$WebsocketStatus extends $Notifier<ConnectionState> {
-  ConnectionState build();
+abstract class _$WebsocketStatus extends $StreamNotifier<ConnectionState> {
+  Stream<ConnectionState> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<ConnectionState, ConnectionState>;
+    final ref = this.ref as $Ref<AsyncValue<ConnectionState>, ConnectionState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ConnectionState, ConnectionState>,
-              ConnectionState,
+              AnyNotifier<AsyncValue<ConnectionState>, ConnectionState>,
+              AsyncValue<ConnectionState>,
               Object?,
               Object?
             >;
@@ -128,7 +117,7 @@ final class WebsocketMessagesProvider
   WebsocketMessages create() => WebsocketMessages();
 }
 
-String _$websocketMessagesHash() => r'16cf86bb5810b07fac6e2bac65de369b306f6d9c';
+String _$websocketMessagesHash() => r'49e5055d213c85bbf8cea7dbed4725d26524fc52';
 
 abstract class _$WebsocketMessages
     extends $StreamNotifier<Map<String, dynamic>> {

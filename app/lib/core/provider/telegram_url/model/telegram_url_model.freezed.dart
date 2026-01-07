@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TelegramUrlModel {
 
- String get restApiUrl; String get wsApiUrl; String? get apiAuthorization;
+ String get restApiUrl; String get wsApiUrl;
 /// Create a copy of TelegramUrlModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TelegramUrlModelCopyWith<TelegramUrlModel> get copyWith => _$TelegramUrlModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramUrlModel&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.apiAuthorization, apiAuthorization) || other.apiAuthorization == apiAuthorization));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramUrlModel&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,wsApiUrl,apiAuthorization);
+int get hashCode => Object.hash(runtimeType,restApiUrl,wsApiUrl);
 
 @override
 String toString() {
-  return 'TelegramUrlModel(restApiUrl: $restApiUrl, wsApiUrl: $wsApiUrl, apiAuthorization: $apiAuthorization)';
+  return 'TelegramUrlModel(restApiUrl: $restApiUrl, wsApiUrl: $wsApiUrl)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TelegramUrlModelCopyWith<$Res>  {
   factory $TelegramUrlModelCopyWith(TelegramUrlModel value, $Res Function(TelegramUrlModel) _then) = _$TelegramUrlModelCopyWithImpl;
 @useResult
 $Res call({
- String restApiUrl, String wsApiUrl, String? apiAuthorization
+ String restApiUrl, String wsApiUrl
 });
 
 
@@ -65,12 +65,11 @@ class _$TelegramUrlModelCopyWithImpl<$Res>
 
 /// Create a copy of TelegramUrlModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? wsApiUrl = null,Object? apiAuthorization = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? wsApiUrl = null,}) {
   return _then(_self.copyWith(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
 as String,wsApiUrl: null == wsApiUrl ? _self.wsApiUrl : wsApiUrl // ignore: cast_nullable_to_non_nullable
-as String,apiAuthorization: freezed == apiAuthorization ? _self.apiAuthorization : apiAuthorization // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  String wsApiUrl,  String? apiAuthorization)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  String wsApiUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TelegramUrlModel() when $default != null:
-return $default(_that.restApiUrl,_that.wsApiUrl,_that.apiAuthorization);case _:
+return $default(_that.restApiUrl,_that.wsApiUrl);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.restApiUrl,_that.wsApiUrl,_that.apiAuthorization);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  String wsApiUrl,  String? apiAuthorization)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  String wsApiUrl)  $default,) {final _that = this;
 switch (_that) {
 case _TelegramUrlModel():
-return $default(_that.restApiUrl,_that.wsApiUrl,_that.apiAuthorization);case _:
+return $default(_that.restApiUrl,_that.wsApiUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.restApiUrl,_that.wsApiUrl,_that.apiAuthorization);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  String wsApiUrl,  String? apiAuthorization)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  String wsApiUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _TelegramUrlModel() when $default != null:
-return $default(_that.restApiUrl,_that.wsApiUrl,_that.apiAuthorization);case _:
+return $default(_that.restApiUrl,_that.wsApiUrl);case _:
   return null;
 
 }
@@ -211,12 +210,11 @@ return $default(_that.restApiUrl,_that.wsApiUrl,_that.apiAuthorization);case _:
 @JsonSerializable()
 
 class _TelegramUrlModel implements TelegramUrlModel {
-  const _TelegramUrlModel({required this.restApiUrl, required this.wsApiUrl, required this.apiAuthorization});
+  const _TelegramUrlModel({required this.restApiUrl, required this.wsApiUrl});
   factory _TelegramUrlModel.fromJson(Map<String, dynamic> json) => _$TelegramUrlModelFromJson(json);
 
 @override final  String restApiUrl;
 @override final  String wsApiUrl;
-@override final  String? apiAuthorization;
 
 /// Create a copy of TelegramUrlModel
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TelegramUrlModel&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.apiAuthorization, apiAuthorization) || other.apiAuthorization == apiAuthorization));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TelegramUrlModel&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,wsApiUrl,apiAuthorization);
+int get hashCode => Object.hash(runtimeType,restApiUrl,wsApiUrl);
 
 @override
 String toString() {
-  return 'TelegramUrlModel(restApiUrl: $restApiUrl, wsApiUrl: $wsApiUrl, apiAuthorization: $apiAuthorization)';
+  return 'TelegramUrlModel(restApiUrl: $restApiUrl, wsApiUrl: $wsApiUrl)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$TelegramUrlModelCopyWith<$Res> implements $TelegramUrlMod
   factory _$TelegramUrlModelCopyWith(_TelegramUrlModel value, $Res Function(_TelegramUrlModel) _then) = __$TelegramUrlModelCopyWithImpl;
 @override @useResult
 $Res call({
- String restApiUrl, String wsApiUrl, String? apiAuthorization
+ String restApiUrl, String wsApiUrl
 });
 
 
@@ -268,12 +266,11 @@ class __$TelegramUrlModelCopyWithImpl<$Res>
 
 /// Create a copy of TelegramUrlModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? wsApiUrl = null,Object? apiAuthorization = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? wsApiUrl = null,}) {
   return _then(_TelegramUrlModel(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
 as String,wsApiUrl: null == wsApiUrl ? _self.wsApiUrl : wsApiUrl // ignore: cast_nullable_to_non_nullable
-as String,apiAuthorization: freezed == apiAuthorization ? _self.apiAuthorization : apiAuthorization // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 

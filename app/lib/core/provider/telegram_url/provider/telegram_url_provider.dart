@@ -19,7 +19,6 @@ class TelegramUrl extends _$TelegramUrl {
     return const TelegramUrlModel(
       restApiUrl: Env.restApiUrl,
       wsApiUrl: Env.wsApiUrl,
-      apiAuthorization: Env.apiAuthorization,
     );
   }
 
