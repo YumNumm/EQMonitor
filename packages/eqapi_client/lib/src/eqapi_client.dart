@@ -29,6 +29,9 @@ class EqApi {
   /// 電文API
   TelegramApiClient get telegram => TelegramApiClient(dio);
 
+  /// ユーザーAPI
+  UserApiClient get user => UserApiClient(dio);
+
   /// WebSocket API
   WebsocketApiClient get websocket => WebsocketApiClient(dio);
 
