@@ -8,60 +8,34 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - Header Stripe Line
-
-@available(iOS 16.1, *)
-struct HeaderStripeLine: View {
-    let isWarning: Bool
-    let height: CGFloat
-
-    var body: some View {
-        GeometryReader { geometry in
-            let stripeWidth: CGFloat = 8
-            let colors = isWarning ? [Color.red, Color.black] : [Color.orange, Color.orange.opacity(0.4)]
-
-            HStack(spacing: 0) {
-                ForEach(0..<Int(geometry.size.width / stripeWidth) + 4, id: \.self) { index in
-                    Rectangle()
-                        .fill(colors[index % 2])
-                        .frame(width: stripeWidth)
-                }
-            }
-            .frame(height: height)
-            .rotationEffect(.degrees(-45), anchor: .center)
-            .offset(x: -geometry.size.width / 4)
-        }
-        .frame(height: height)
-        .clipped()
-    }
-}
-
 @available(iOS 16.1, *)
 struct EewLockScreenView: View {
     let state: LiveActivityContentState
 
+    // HIG: The standard layout margin for Live Activities on the Lock Screen is 14 points.
+    private let standardMargin: CGFloat = 14
+
     var body: some View {
         VStack(spacing: 0) {
             // ヘッダー部分
-            VStack(spacing: 0) {
-                HStack {
-                    headerView
-                    Spacer()
-                    serialInfoView
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
-                .padding(.bottom, 8)
-
-                // ヘッダー下のストライプライン
-                HeaderStripeLine(
-                    isWarning: state.isWarning ?? false,
-                    height: 6
-                )
+            HStack {
+                headerView
+                Spacer()
+                serialInfoView
             }
+            .padding(.horizontal, standardMargin)
+            .padding(.top, standardMargin)
+            .padding(.bottom, 10)
+
+            // HIG: "When separating a block of content, use a thick line"
+            // ヘッダー下の区切り線（インセットして配置）
+            Rectangle()
+                .fill(separatorColor)
+                .frame(height: 3)
+                .padding(.horizontal, standardMargin)
 
             // メインコンテンツ
-            HStack(alignment: .center, spacing: 14) {
+            HStack(alignment: .center, spacing: 12) {
                 // 現在地予想震度表示
                 forecastIntensityView
 
@@ -78,9 +52,9 @@ struct EewLockScreenView: View {
                     arrivalView(location: location)
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, standardMargin)
             .padding(.top, 10)
-            .padding(.bottom, 12)
+            .padding(.bottom, standardMargin)
         }
         .background(backgroundColor)
     }
@@ -89,7 +63,7 @@ struct EewLockScreenView: View {
 
     private var headerView: some View {
         Text(headerTitle)
-            .font(.system(size: 16, weight: .heavy))
+            .font(.system(size: 17, weight: .heavy))
             .foregroundColor(headerTextColor)
     }
 
@@ -102,10 +76,17 @@ struct EewLockScreenView: View {
     }
 
     private var headerTextColor: Color {
+        // 背景色に応じて白色を使用（コントラスト確保）
+        .white
+    }
+
+    private var separatorColor: Color {
         if let isWarning = state.isWarning, isWarning {
-            return .white
+            // 警報: 白と赤のコントラスト
+            return .white.opacity(0.5)
         } else {
-            return .white
+            // 予報: 白とオレンジのコントラスト
+            return .white.opacity(0.4)
         }
     }
 
@@ -116,19 +97,19 @@ struct EewLockScreenView: View {
             if let serialNo = state.serialNo {
                 HStack(alignment: .firstTextBaseline, spacing: 0) {
                     Text("#")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundColor(.white.opacity(0.8))
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.7))
                     Text("\(serialNo)")
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .font(.system(size: 15, weight: .bold, design: .monospaced))
                         .foregroundColor(.white)
                 }
             }
             if let isFinal = state.isFinal, isFinal {
                 Text("最終")
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.system(size: 12, weight: .bold))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 2)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
                     .background(Color.white.opacity(0.25))
                     .cornerRadius(4)
             }
@@ -143,7 +124,7 @@ struct EewLockScreenView: View {
                let intensity = location.forecastIntensityValue {
                 VStack(spacing: 2) {
                     Text("予想震度")
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(.primary.opacity(0.7))
                     LargeIntensityBadge(intensity: intensity)
                 }
@@ -151,7 +132,7 @@ struct EewLockScreenView: View {
                 // 現在地情報がない場合は最大震度を表示
                 VStack(spacing: 2) {
                     Text("最大震度")
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(.primary.opacity(0.7))
                     LargeIntensityBadge(intensity: intensity)
                 }
@@ -173,24 +154,24 @@ struct EewLockScreenView: View {
     }
 
     private var detailsView: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             if let magnitude = state.magnitude {
-                HStack(alignment: .firstTextBaseline, spacing: 0) {
+                HStack(alignment: .firstTextBaseline, spacing: 1) {
                     Text("M")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(.primary.opacity(0.6))
                     Text(String(format: "%.1f", magnitude))
-                        .font(.system(size: 17, weight: .bold, design: .monospaced))
+                        .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.primary)
                 }
             }
             if let depth = state.depth {
-                HStack(alignment: .firstTextBaseline, spacing: 0) {
+                HStack(alignment: .firstTextBaseline, spacing: 1) {
                     Text("\(depth)")
-                        .font(.system(size: 17, weight: .bold, design: .monospaced))
+                        .font(.system(size: 18, weight: .bold, design: .monospaced))
                         .foregroundColor(.primary)
                     Text("km")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(.primary.opacity(0.6))
                 }
             }
@@ -202,7 +183,7 @@ struct EewLockScreenView: View {
     private func arrivalView(location: LocationInfo) -> some View {
         VStack(alignment: .trailing, spacing: 4) {
             Text(location.regionName)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(.primary.opacity(0.85))
 
             if let arrivalDate = location.arrivalDate {
@@ -212,14 +193,15 @@ struct EewLockScreenView: View {
     }
 
     // MARK: - Background
+    // HIG: "If you set a custom background color, ensure sufficient contrast"
 
     private var backgroundColor: Color {
         if let isWarning = state.isWarning, isWarning {
-            // 警報: 目立つ赤色（コントラスト確保のため彩度を調整）
-            return Color(red: 0.75, green: 0.15, blue: 0.15)
+            // 警報: 濃い赤色（白文字とのコントラスト確保）
+            return Color(red: 0.7, green: 0.1, blue: 0.1)
         } else {
-            // 予報: オレンジ色
-            return Color(red: 0.85, green: 0.45, blue: 0.1)
+            // 予報: 濃いオレンジ色（白文字とのコントラスト確保）
+            return Color(red: 0.8, green: 0.4, blue: 0.05)
         }
     }
 }
@@ -234,18 +216,18 @@ struct LargeIntensityBadge: View {
         let parts = intensity.formattedParts
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text(parts.main)
-                .font(.system(size: 40, weight: .black, design: .monospaced))
+                .font(.system(size: 42, weight: .black, design: .monospaced))
             if let sub = parts.sub {
                 Text(sub)
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
             }
         }
         .foregroundColor(intensity.textColor)
-        .frame(minWidth: 54)
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
+        .frame(minWidth: 56)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
         .background(intensity.backgroundColor)
-        .cornerRadius(8)
+        .cornerRadius(10)
     }
 }
 
@@ -260,15 +242,15 @@ struct ArrivalCountdownView: View {
 
         if isArrived {
             Text("到達済")
-                .font(.system(size: 17, weight: .black, design: .monospaced))
+                .font(.system(size: 18, weight: .black, design: .monospaced))
                 .foregroundColor(.red)
         } else {
             VStack(alignment: .trailing, spacing: 0) {
                 Text("到達まで")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: 11, weight: .semibold))
                     .foregroundColor(.primary.opacity(0.7))
                 Text(arrivalDate, style: .relative)
-                    .font(.system(size: 17, weight: .bold, design: .monospaced))
+                    .font(.system(size: 18, weight: .bold, design: .monospaced))
                     .foregroundColor(.primary)
             }
         }
