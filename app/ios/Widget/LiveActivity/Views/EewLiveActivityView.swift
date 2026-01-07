@@ -8,7 +8,7 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - Stripe Line
+// MARK: - Stripe Line (HIG準拠: インセットしたコンテナ形状)
 
 @available(iOS 16.1, *)
 struct StripeLine: View {
@@ -24,8 +24,8 @@ struct StripeLine: View {
 
             Canvas { context, size in
                 // 十分な余裕を持って描画
-                let totalWidth = size.width * 2
-                var x: CGFloat = -size.height * 2
+                let totalWidth = size.width * 3
+                var x: CGFloat = -size.height * 3
 
                 while x < totalWidth {
                     var path = Path()
@@ -35,13 +35,15 @@ struct StripeLine: View {
                     path.addLine(to: CGPoint(x: x + size.height, y: 0))
                     path.closeSubpath()
 
-                    let colorIndex = Int((x + size.height * 2) / stripeWidth) % 2
+                    let colorIndex = Int((x + size.height * 3) / stripeWidth) % 2
                     context.fill(path, with: .color(colors[abs(colorIndex)]))
                     x += stripeWidth
                 }
             }
         }
         .frame(height: height)
+        // HIG: ContainerRelativeShapeで角丸をWidgetに合わせる
+        .clipShape(ContainerRelativeShape())
     }
 }
 
@@ -51,64 +53,68 @@ struct EewLockScreenView: View {
 
     // HIG: The standard layout margin for Live Activities on the Lock Screen is 14 points.
     private let standardMargin: CGFloat = 14
+    // 薄い文字色を統一
+    private let secondaryTextColor: Color = .primary.opacity(0.55)
 
     var body: some View {
         VStack(spacing: 0) {
-            // ヘッダー部分
-            VStack(spacing: 0) {
-                // ストライプライン（ヘッダー上部、内側）
-                StripeLine(
-                    isWarning: state.isWarning ?? false,
-                    height: 5
-                )
-                .padding(.horizontal, standardMargin)
-                .padding(.top, standardMargin)
+            // ストライプライン（HIG準拠: インセットしたコンテナ形状）
+            StripeLine(
+                isWarning: state.isWarning ?? false,
+                height: 6
+            )
+            .padding(.horizontal, standardMargin)
+            .padding(.top, standardMargin)
 
-                // ヘッダーコンテンツ
-                HStack(alignment: .center) {
-                    // タイトル（白色、大きく）
-                    Text(headerTitle)
-                        .font(.system(size: 17, weight: .heavy))
-                        .foregroundColor(.white)
+            // ヘッダーコンテンツ
+            HStack(alignment: .center) {
+                // タイトル
+                Text(headerTitle)
+                    .font(.system(size: 17, weight: .heavy))
+                    .foregroundColor(headerTextColor)
 
-                    Spacer()
+                Spacer()
 
-                    // Serial Number
-                    if let serialNo = state.serialNo {
-                        HStack(alignment: .firstTextBaseline, spacing: 0) {
-                            Text("#")
-                                .font(.system(size: 12, weight: .medium, design: .monospaced))
-                                .foregroundColor(.white.opacity(0.7))
-                            Text("\(serialNo)")
-                                .font(.system(size: 15, weight: .bold, design: .monospaced))
-                                .foregroundColor(.white)
-                        }
+                // Serial Number
+                if let serialNo = state.serialNo {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("#")
+                            .font(.system(size: 12, weight: .medium, design: .monospaced))
+                            .foregroundColor(secondaryTextColor)
+                        Text("\(serialNo)")
+                            .font(.system(size: 15, weight: .bold, design: .monospaced))
+                            .foregroundColor(.primary)
                     }
-
-                    // アプリアイコン
-                    Image("AppIconForeground")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
-                .padding(.horizontal, standardMargin)
-                .padding(.top, 6)
-                .padding(.bottom, 6)
+
+                // アプリアイコン
+                Image("AppIconForeground")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 24, height: 24)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
             }
-            .background(headerBackgroundColor)
+            .padding(.horizontal, standardMargin)
+            .padding(.top, 8)
+            .padding(.bottom, 6)
 
             // メインコンテンツ
             HStack(alignment: .top, spacing: 10) {
-                // 現在地予想震度表示（正方形）
-                VStack(spacing: 2) {
+                // 現在地予想震度表示（正方形）+ 発生時刻
+                VStack(spacing: 3) {
                     forecastIntensityView
+
                     // 発生時刻（予想震度の下）
                     if let originTime = state.originTime,
                        let date = ISO8601DateFormatter().date(from: originTime) {
-                        Text(date, style: .time)
-                            .font(.system(size: 11, weight: .semibold, design: .monospaced))
-                            .foregroundColor(.primary.opacity(0.6))
+                        VStack(spacing: 0) {
+                            Text("発生")
+                                .font(.system(size: 9, weight: .medium))
+                                .foregroundColor(secondaryTextColor)
+                            Text(formatDateTime(date))
+                                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                                .foregroundColor(secondaryTextColor)
+                        }
                     }
                 }
 
@@ -117,7 +123,7 @@ struct EewLockScreenView: View {
                     // 震源地ラベル
                     Text("震源地")
                         .font(.system(size: 10, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.5))
+                        .foregroundColor(secondaryTextColor)
 
                     // 震源地名
                     if let name = state.hypocenterName {
@@ -139,9 +145,18 @@ struct EewLockScreenView: View {
                 }
             }
             .padding(.horizontal, standardMargin)
-            .padding(.top, 8)
+            .padding(.top, 6)
             .padding(.bottom, standardMargin)
         }
+    }
+
+    // MARK: - Date Formatter
+
+    private func formatDateTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M/d HH:mm:ss"
+        formatter.locale = Locale(identifier: "ja_JP")
+        return formatter.string(from: date)
     }
 
     // MARK: - Header
@@ -154,11 +169,11 @@ struct EewLockScreenView: View {
         }
     }
 
-    private var headerBackgroundColor: Color {
+    private var headerTextColor: Color {
         if let isWarning = state.isWarning, isWarning {
-            return Color(red: 0.7, green: 0.1, blue: 0.1)
+            return .red
         } else {
-            return Color(red: 0.8, green: 0.4, blue: 0.05)
+            return .orange
         }
     }
 
@@ -171,14 +186,14 @@ struct EewLockScreenView: View {
                 VStack(spacing: 2) {
                     Text("予想震度")
                         .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.primary.opacity(0.7))
+                        .foregroundColor(secondaryTextColor)
                     SquareIntensityBadge(intensity: intensity)
                 }
             } else if let intensity = state.intensityValue {
                 VStack(spacing: 2) {
                     Text("最大震度")
                         .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.primary.opacity(0.7))
+                        .foregroundColor(secondaryTextColor)
                     SquareIntensityBadge(intensity: intensity)
                 }
             }
@@ -194,7 +209,7 @@ struct EewLockScreenView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 1) {
                     Text("M")
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.primary.opacity(0.5))
+                        .foregroundColor(secondaryTextColor)
                     Text(String(format: "%.1f", magnitude))
                         .font(.system(size: 17, weight: .bold, design: .monospaced))
                         .foregroundColor(.primary)
@@ -213,7 +228,7 @@ struct EewLockScreenView: View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
             Text("深さ")
                 .font(.system(size: 10, weight: .medium))
-                .foregroundColor(.primary.opacity(0.5))
+                .foregroundColor(secondaryTextColor)
 
             if depth == 0 {
                 // ごく浅い
@@ -227,7 +242,7 @@ struct EewLockScreenView: View {
                     .foregroundColor(.primary)
                 Text("km以上")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(.primary.opacity(0.5))
+                    .foregroundColor(secondaryTextColor)
             } else {
                 // 通常
                 Text("\(depth)")
@@ -235,7 +250,7 @@ struct EewLockScreenView: View {
                     .foregroundColor(.primary)
                 Text("km")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(.primary.opacity(0.5))
+                    .foregroundColor(secondaryTextColor)
             }
         }
     }
@@ -246,7 +261,7 @@ struct EewLockScreenView: View {
         VStack(alignment: .trailing, spacing: 3) {
             Text(location.regionName)
                 .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(.primary.opacity(0.8))
+                .foregroundColor(.primary.opacity(0.85))
 
             if let arrivalDate = location.arrivalDate {
                 ArrivalCountdownView(arrivalDate: arrivalDate)
@@ -284,6 +299,7 @@ struct SquareIntensityBadge: View {
 @available(iOS 16.1, *)
 struct ArrivalCountdownView: View {
     let arrivalDate: Date
+    private let secondaryTextColor: Color = .primary.opacity(0.55)
 
     var body: some View {
         let isArrived = arrivalDate <= Date()
@@ -296,7 +312,7 @@ struct ArrivalCountdownView: View {
             VStack(alignment: .trailing, spacing: 0) {
                 Text("到達まで")
                     .font(.system(size: 10, weight: .semibold))
-                    .foregroundColor(.primary.opacity(0.6))
+                    .foregroundColor(secondaryTextColor)
                 Text(arrivalDate, style: .relative)
                     .font(.system(size: 16, weight: .bold, design: .monospaced))
                     .foregroundColor(.primary)
