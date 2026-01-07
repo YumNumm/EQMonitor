@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint
 
-part of 'websocket_api_client.dart';
+part of 'user_api_client.dart';
 
 // dart format off
 
@@ -12,8 +12,8 @@ part of 'websocket_api_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
-class _WebsocketApiClient implements WebsocketApiClient {
-  _WebsocketApiClient(this._dio, {this.baseUrl, this.errorLogger});
+class _UserApiClient implements UserApiClient {
+  _UserApiClient(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -22,26 +22,52 @@ class _WebsocketApiClient implements WebsocketApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<WebsocketTicketResponse> getTicket({required String deviceId}) async {
+  Future<User> createUser() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'X-Device-ID': deviceId};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<WebsocketTicketResponse>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+    final _options = _setStreamType<User>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/websocket/ticket',
+            '/v2/user',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late WebsocketTicketResponse _value;
+    late User _value;
     try {
-      _value = WebsocketTicketResponse.fromJson(_result.data!);
+      _value = User.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<User> getUser({required String userId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<User>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/user/${userId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late User _value;
+    try {
+      _value = User.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
