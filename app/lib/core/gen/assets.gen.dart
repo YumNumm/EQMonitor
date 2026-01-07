@@ -47,6 +47,17 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [icon, iconForeground];
 }
 
+class $AssetsMapGen {
+  const $AssetsMapGen();
+
+  /// File path: assets/map/earthquake_tsunami_all.pmtiles
+  String get earthquakeTsunamiAll =>
+      'assets/map/earthquake_tsunami_all.pmtiles';
+
+  /// List of all assets
+  List<String> get values => [earthquakeTsunamiAll];
+}
+
 class $AssetsParameterGen {
   const $AssetsParameterGen();
 
@@ -102,6 +113,7 @@ class Assets {
   static const String kyoshinMonitorScale = 'assets/kyoshin_monitor_scale.json';
   static const String kyoshinObservationPoint =
       'assets/kyoshin_observation_point.pb';
+  static const $AssetsMapGen map = $AssetsMapGen();
   static const $AssetsParameterGen parameter = $AssetsParameterGen();
   static const String tjma2001 = 'assets/tjma2001.csv';
 
