@@ -1,5 +1,5 @@
 terraform {
-  required_version = "1.13.5"
+  required_version = "1.14.3"
 
   required_providers {
     # https://registry.terraform.io/providers/hashicorp/google/latest
