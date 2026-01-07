@@ -1,13 +1,50 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
+import 'package:eqmonitor/core/provider/user_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+/// エラーメッセージをフォーマットするヘルパー関数
+String _formatError(Object error) {
+  if (error is DioException) {
+    final buffer = StringBuffer();
+    buffer.writeln('Error: ${error.type}');
+
+    if (error.response != null) {
+      final response = error.response!;
+      buffer.writeln('Status Code: ${response.statusCode}');
+      buffer.writeln('Status Message: ${response.statusMessage ?? 'N/A'}');
+
+      if (response.data != null) {
+        buffer.writeln('Response Body:');
+        try {
+          if (response.data is Map || response.data is List) {
+            buffer.write(
+              const JsonEncoder.withIndent('  ').convert(response.data),
+            );
+          } else {
+            buffer.write(response.data.toString());
+          }
+        } catch (e) {
+          buffer.write(response.data.toString());
+        }
+      }
+    } else {
+      buffer.writeln('Message: ${error.message}');
+    }
+
+    return buffer.toString();
+  }
+  return error.toString();
+}
 
 class DebugDeviceApiPage extends HookConsumerWidget {
   const DebugDeviceApiPage({super.key});
@@ -15,6 +52,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceIdController = useTextEditingController();
+    final userIdController = useTextEditingController();
     final fcmTokenController = useTextEditingController();
     final apnsTokenController = useTextEditingController();
     final apnsTokenTypeController = useTextEditingController(
@@ -25,9 +63,23 @@ class DebugDeviceApiPage extends HookConsumerWidget {
     final apnsTokensState = useState<AsyncValue<List<ApnsToken>>?>(null);
     final apnsTokenState = useState<AsyncValue<ApnsToken>?>(null);
     final fcmTokenState = useState<AsyncValue<FcmToken?>?>(null);
+    final deviceTypeState = useState<DeviceType>(DeviceType.ios);
+    final userState = useState<AsyncValue<User>?>(null);
 
     final notificationToken = ref.watch(notificationTokenProvider).value;
+    final deviceIdAsync = ref.watch(deviceIdProvider);
+    final userIdAsync = ref.watch(userIdProvider);
     useEffect(() {
+      deviceIdAsync.whenData((deviceId) {
+        if (deviceIdController.text.isEmpty) {
+          deviceIdController.text = deviceId;
+        }
+      });
+      userIdAsync.whenData((userId) {
+        if (userId != null && userIdController.text.isEmpty) {
+          userIdController.text = userId;
+        }
+      });
       if (fcmTokenController.text.isEmpty &&
           notificationToken?.fcmToken != null) {
         fcmTokenController.text = notificationToken!.fcmToken!;
@@ -37,7 +89,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
         apnsTokenController.text = notificationToken!.apnsToken!;
       }
       return null;
-    }, [notificationToken]);
+    }, [notificationToken, deviceIdAsync, userIdAsync]);
 
     return DefaultTextStyle.merge(
       child: Scaffold(
@@ -55,6 +107,95 @@ class DebugDeviceApiPage extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  BorderedContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'User',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontFamily.notoSansMono,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: userIdController,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter user ID (UUID)',
+                            border: OutlineInputBorder(),
+                            labelText: 'User ID',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                userState.value =
+                                    const AsyncValue<User>.loading();
+                                try {
+                                  final user = await ref
+                                      .read(eqApiProvider)
+                                      .user
+                                      .createUser();
+                                  userState.value = AsyncValue.data(user);
+                                  await ref
+                                      .read(userIdProvider.notifier)
+                                      .save(user.id);
+                                  userIdController.text = user.id;
+                                } catch (e, s) {
+                                  userState.value =
+                                      AsyncValue<User>.error(e, s);
+                                }
+                              },
+                              child: const Text('Create User'),
+                            ),
+                            ElevatedButton(
+                              onPressed: userIdController.text.isEmpty
+                                  ? null
+                                  : () async {
+                                      userState.value =
+                                          const AsyncValue<User>.loading();
+                                      try {
+                                        final user = await ref
+                                            .read(eqApiProvider)
+                                            .user
+                                            .getUser(
+                                              userId: userIdController.text,
+                                            );
+                                        userState.value = AsyncValue.data(user);
+                                      } catch (e, s) {
+                                        userState.value =
+                                            AsyncValue<User>.error(e, s);
+                                      }
+                                    },
+                              child: const Text('Get User'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        if (userState.value != null)
+                          Text(
+                            switch (userState.value!) {
+                              AsyncData(:final value) =>
+                                const JsonEncoder.withIndent('  ').convert({
+                                  'id': value.id,
+                                }),
+                              AsyncError(:final error) => _formatError(error),
+                              _ => 'Loading...',
+                            },
+                            style: const TextStyle(
+                              fontFamily: FontFamily.notoSansMono,
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   BorderedContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,26 +230,86 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: deviceIdController.text.isEmpty
-                              ? null
-                              : () async {
-                                  deviceState.value =
-                                      const AsyncValue<Device>.loading();
-                                  try {
-                                    final device = await ref
-                                        .read(eqApiProvider)
-                                        .device
-                                        .getDevice(
-                                          deviceId: deviceIdController.text,
-                                        );
-                                    deviceState.value = AsyncValue.data(device);
-                                  } catch (e, s) {
-                                    deviceState.value =
-                                        AsyncValue<Device>.error(e, s);
-                                  }
-                                },
-                          child: const Text('Get Device'),
+                        TextField(
+                          controller: userIdController,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter user ID (UUID)',
+                            border: OutlineInputBorder(),
+                            labelText: 'User ID',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        SegmentedButton<DeviceType>(
+                          segments: const [
+                            ButtonSegment<DeviceType>(
+                              value: DeviceType.ios,
+                              label: Text('iOS'),
+                            ),
+                            ButtonSegment<DeviceType>(
+                              value: DeviceType.android,
+                              label: Text('Android'),
+                            ),
+                          ],
+                          selected: {deviceTypeState.value},
+                          onSelectionChanged: (Set<DeviceType> newSelection) {
+                            deviceTypeState.value = newSelection.first;
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            ElevatedButton(
+                              onPressed: deviceIdController.text.isEmpty
+                                  ? null
+                                  : () async {
+                                      deviceState.value =
+                                          const AsyncValue<Device>.loading();
+                                      try {
+                                        final device = await ref
+                                            .read(eqApiProvider)
+                                            .device
+                                            .getDevice(
+                                              deviceId: deviceIdController.text,
+                                            );
+                                        deviceState.value =
+                                            AsyncValue.data(device);
+                                      } catch (e, s) {
+                                        deviceState.value =
+                                            AsyncValue<Device>.error(e, s);
+                                      }
+                                    },
+                              child: const Text('Get Device'),
+                            ),
+                            ElevatedButton(
+                              onPressed: deviceIdController.text.isEmpty ||
+                                      userIdController.text.isEmpty
+                                  ? null
+                                  : () async {
+                                      deviceState.value =
+                                          const AsyncValue<Device>.loading();
+                                      try {
+                                        final device = await ref
+                                            .read(eqApiProvider)
+                                            .device
+                                            .upsertDevice(
+                                              deviceId: deviceIdController.text,
+                                              request: DeviceUpsertRequest(
+                                                type: deviceTypeState.value,
+                                                userId: userIdController.text,
+                                              ),
+                                            );
+                                        deviceState.value =
+                                            AsyncValue.data(device);
+                                      } catch (e, s) {
+                                        deviceState.value =
+                                            AsyncValue<Device>.error(e, s);
+                                      }
+                                    },
+                              child: const Text('Register/Update Device'),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 8),
                         if (deviceState.value != null)
@@ -122,7 +323,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                   'createdAt': value.createdAt,
                                   'updatedAt': value.updatedAt,
                                 }),
-                              AsyncError(:final error) => error.toString(),
+                              AsyncError(:final error) => _formatError(error),
                               _ => 'Loading...',
                             },
                             style: const TextStyle(
@@ -242,7 +443,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                     : const JsonEncoder.withIndent(
                                         '  ',
                                       ).convert({'token': value.token}),
-                              AsyncError(:final error) => error.toString(),
+                              AsyncError(:final error) => _formatError(error),
                               _ => 'Loading...',
                             },
                             style: const TextStyle(
@@ -316,7 +517,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                       )
                                       .toList(),
                                 ),
-                              AsyncError(:final error) => error.toString(),
+                              AsyncError(:final error) => _formatError(error),
                               _ => 'Loading...',
                             },
                             style: const TextStyle(
@@ -453,7 +654,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                   'type': value.type.value,
                                   'token': value.token,
                                 }),
-                              AsyncError(:final error) => error.toString(),
+                              AsyncError(:final error) => _formatError(error),
                               _ => 'Loading...',
                             },
                             style: const TextStyle(
