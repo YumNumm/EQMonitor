@@ -12,7 +12,7 @@ part of 'firebase_messaging.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(firebaseMessaging)
-const firebaseMessagingProvider = FirebaseMessagingProvider._();
+final firebaseMessagingProvider = FirebaseMessagingProvider._();
 
 final class FirebaseMessagingProvider
     extends
@@ -22,7 +22,7 @@ final class FirebaseMessagingProvider
           FirebaseMessaging
         >
     with $Provider<FirebaseMessaging> {
-  const FirebaseMessagingProvider._()
+  FirebaseMessagingProvider._()
     : super(
         from: null,
         argument: null,

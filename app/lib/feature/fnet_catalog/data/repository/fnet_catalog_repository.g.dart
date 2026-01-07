@@ -12,7 +12,7 @@ part of 'fnet_catalog_repository.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(fnetCatalogRepository)
-const fnetCatalogRepositoryProvider = FnetCatalogRepositoryProvider._();
+final fnetCatalogRepositoryProvider = FnetCatalogRepositoryProvider._();
 
 final class FnetCatalogRepositoryProvider
     extends
@@ -22,7 +22,7 @@ final class FnetCatalogRepositoryProvider
           FnetCatalogRepository
         >
     with $Provider<FnetCatalogRepository> {
-  const FnetCatalogRepositoryProvider._()
+  FnetCatalogRepositoryProvider._()
     : super(
         from: null,
         argument: null,

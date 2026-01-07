@@ -12,11 +12,11 @@ part of 'telegram_url_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(TelegramUrl)
-const telegramUrlProvider = TelegramUrlProvider._();
+final telegramUrlProvider = TelegramUrlProvider._();
 
 final class TelegramUrlProvider
     extends $NotifierProvider<TelegramUrl, TelegramUrlModel> {
-  const TelegramUrlProvider._()
+  TelegramUrlProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,7 +50,6 @@ abstract class _$TelegramUrl extends $Notifier<TelegramUrlModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<TelegramUrlModel, TelegramUrlModel>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$TelegramUrl extends $Notifier<TelegramUrlModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

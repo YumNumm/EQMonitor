@@ -12,11 +12,11 @@ part of 'eq_api.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(eqApi)
-const eqApiProvider = EqApiProvider._();
+final eqApiProvider = EqApiProvider._();
 
 final class EqApiProvider extends $FunctionalProvider<EqApi, EqApi, EqApi>
     with $Provider<EqApi> {
-  const EqApiProvider._()
+  EqApiProvider._()
     : super(
         from: null,
         argument: null,

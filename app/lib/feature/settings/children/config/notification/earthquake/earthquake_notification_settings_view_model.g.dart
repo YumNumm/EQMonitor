@@ -12,7 +12,7 @@ part of 'earthquake_notification_settings_view_model.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EarthquakeNotificationSettingsViewModel)
-const earthquakeNotificationSettingsViewModelProvider =
+final earthquakeNotificationSettingsViewModelProvider =
     EarthquakeNotificationSettingsViewModelProvider._();
 
 final class EarthquakeNotificationSettingsViewModelProvider
@@ -21,7 +21,7 @@ final class EarthquakeNotificationSettingsViewModelProvider
           EarthquakeNotificationSettingsViewModel,
           FcmEarthquakeTopic?
         > {
-  const EarthquakeNotificationSettingsViewModelProvider._()
+  EarthquakeNotificationSettingsViewModelProvider._()
     : super(
         from: null,
         argument: null,
@@ -59,7 +59,6 @@ abstract class _$EarthquakeNotificationSettingsViewModel
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<FcmEarthquakeTopic?, FcmEarthquakeTopic?>;
     final element =
         ref.element
@@ -69,6 +68,6 @@ abstract class _$EarthquakeNotificationSettingsViewModel
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

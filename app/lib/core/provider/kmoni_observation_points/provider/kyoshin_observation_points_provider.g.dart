@@ -12,7 +12,7 @@ part of 'kyoshin_observation_points_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinMonitorObservationPoints)
-const kyoshinMonitorObservationPointsProvider =
+final kyoshinMonitorObservationPointsProvider =
     KyoshinMonitorObservationPointsProvider._();
 
 final class KyoshinMonitorObservationPointsProvider
@@ -23,7 +23,7 @@ final class KyoshinMonitorObservationPointsProvider
           List<KyoshinMonitorObservationPoint>
         >
     with $Provider<List<KyoshinMonitorObservationPoint>> {
-  const KyoshinMonitorObservationPointsProvider._()
+  KyoshinMonitorObservationPointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -62,7 +62,7 @@ String _$kyoshinMonitorObservationPointsHash() =>
     r'40cd77fd1f9eb6228c3a3c0884124ab2ee05b870';
 
 @ProviderFor(kyoshinMonitorInternalObservationPointsConverted)
-const kyoshinMonitorInternalObservationPointsConvertedProvider =
+final kyoshinMonitorInternalObservationPointsConvertedProvider =
     KyoshinMonitorInternalObservationPointsConvertedProvider._();
 
 final class KyoshinMonitorInternalObservationPointsConvertedProvider
@@ -75,7 +75,7 @@ final class KyoshinMonitorInternalObservationPointsConvertedProvider
     with
         $FutureModifier<List<KyoshinMonitorObservationPoint>>,
         $FutureProvider<List<KyoshinMonitorObservationPoint>> {
-  const KyoshinMonitorInternalObservationPointsConvertedProvider._()
+  KyoshinMonitorInternalObservationPointsConvertedProvider._()
     : super(
         from: null,
         argument: null,
@@ -106,7 +106,7 @@ String _$kyoshinMonitorInternalObservationPointsConvertedHash() =>
     r'51427c40b3db363acc7c314492e24e72b2081f6a';
 
 @ProviderFor(kyoshinObservationPoints)
-const kyoshinObservationPointsProvider = KyoshinObservationPointsProvider._();
+final kyoshinObservationPointsProvider = KyoshinObservationPointsProvider._();
 
 final class KyoshinObservationPointsProvider
     extends
@@ -116,7 +116,7 @@ final class KyoshinObservationPointsProvider
           KyoshinObservationPoints
         >
     with $Provider<KyoshinObservationPoints> {
-  const KyoshinObservationPointsProvider._()
+  KyoshinObservationPointsProvider._()
     : super(
         from: null,
         argument: null,
@@ -154,7 +154,7 @@ String _$kyoshinObservationPointsHash() =>
     r'5ed1439d3d32d21fb6e339c80b5f4070edbafc10';
 
 @ProviderFor(kyoshinMonitorInternalObservationPoints)
-const kyoshinMonitorInternalObservationPointsProvider =
+final kyoshinMonitorInternalObservationPointsProvider =
     KyoshinMonitorInternalObservationPointsProvider._();
 
 final class KyoshinMonitorInternalObservationPointsProvider
@@ -167,7 +167,7 @@ final class KyoshinMonitorInternalObservationPointsProvider
     with
         $FutureModifier<KyoshinObservationPoints>,
         $FutureProvider<KyoshinObservationPoints> {
-  const KyoshinMonitorInternalObservationPointsProvider._()
+  KyoshinMonitorInternalObservationPointsProvider._()
     : super(
         from: null,
         argument: null,

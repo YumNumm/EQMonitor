@@ -12,7 +12,7 @@ part of 'eew_hypocenter_points_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(eewHypocenterPoints)
-const eewHypocenterPointsProvider = EewHypocenterPointsProvider._();
+final eewHypocenterPointsProvider = EewHypocenterPointsProvider._();
 
 final class EewHypocenterPointsProvider
     extends
@@ -22,7 +22,7 @@ final class EewHypocenterPointsProvider
           List<Feature<Point>>
         >
     with $Provider<List<Feature<Point>>> {
-  const EewHypocenterPointsProvider._()
+  EewHypocenterPointsProvider._()
     : super(
         from: null,
         argument: null,

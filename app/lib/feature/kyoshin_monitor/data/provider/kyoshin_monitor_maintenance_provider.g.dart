@@ -12,7 +12,7 @@ part of 'kyoshin_monitor_maintenance_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(kyoshinMonitorMaintenance)
-const kyoshinMonitorMaintenanceProvider = KyoshinMonitorMaintenanceProvider._();
+final kyoshinMonitorMaintenanceProvider = KyoshinMonitorMaintenanceProvider._();
 
 final class KyoshinMonitorMaintenanceProvider
     extends
@@ -24,7 +24,7 @@ final class KyoshinMonitorMaintenanceProvider
     with
         $FutureModifier<kmoni_api.MaintenanceMessage>,
         $FutureProvider<kmoni_api.MaintenanceMessage> {
-  const KyoshinMonitorMaintenanceProvider._()
+  KyoshinMonitorMaintenanceProvider._()
     : super(
         from: null,
         argument: null,

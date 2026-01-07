@@ -12,7 +12,7 @@ part of 'jma_map_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(jmaMap)
-const jmaMapProvider = JmaMapProvider._();
+final jmaMapProvider = JmaMapProvider._();
 
 final class JmaMapProvider
     extends
@@ -24,7 +24,7 @@ final class JmaMapProvider
     with
         $FutureModifier<Map<JmaMapType, JmaMap_JmaMapData>>,
         $FutureProvider<Map<JmaMapType, JmaMap_JmaMapData>> {
-  const JmaMapProvider._()
+  JmaMapProvider._()
     : super(
         from: null,
         argument: null,
