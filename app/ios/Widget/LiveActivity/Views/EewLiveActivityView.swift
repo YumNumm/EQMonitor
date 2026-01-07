@@ -135,7 +135,7 @@ struct EewLockScreenView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     // 震源地ラベル
                     Text("震源地")
-                        .font(.system(size: 10, weight: .medium))
+                        .font(.system(size: 12, weight: .medium))
                         .foregroundColor(secondaryTextColor)
 
                     // 震源地名（大きく）
@@ -177,7 +177,7 @@ struct EewLockScreenView: View {
         if let isWarning = state.isWarning, isWarning {
             return "緊急地震速報（警報）"
         } else {
-            return "緊急地震速報"
+            return "緊急地震速報（予報）"
         }
     }
 
@@ -210,14 +210,14 @@ struct EewLockScreenView: View {
         VStack(alignment: .leading, spacing: 3) {
             // M, 深さ（横並び）
             HStack(spacing: 14) {
-                // マグニチュード（文字間隔を詰める、数値を大きく）
+                // マグニチュード（文字間隔を詰める、数値を太く）
                 if let magnitude = state.magnitude {
                     HStack(alignment: .firstTextBaseline, spacing: 0) {
                         Text("M")
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundColor(secondaryTextColor)
                         Text(String(format: "%.1f", magnitude))
-                            .font(.system(size: 19, weight: .bold, design: .monospaced))
+                            .font(.system(size: 19, weight: .black, design: .monospaced))
                             .tracking(-1) // 文字間隔を詰める
                             .foregroundColor(.primary)
                     }
@@ -254,12 +254,12 @@ struct EewLockScreenView: View {
             if depth == 0 {
                 // ごく浅い
                 Text("ごく浅い")
-                    .font(.system(size: 17, weight: .bold))
+                    .font(.system(size: 17, weight: .black))
                     .foregroundColor(.primary)
             } else if depth >= 700 {
                 // 700km以上
                 Text("\(depth)")
-                    .font(.system(size: 19, weight: .bold, design: .monospaced))
+                    .font(.system(size: 19, weight: .black, design: .monospaced))
                     .tracking(-1)
                     .foregroundColor(.primary)
                 Text("km以上")
@@ -268,7 +268,7 @@ struct EewLockScreenView: View {
             } else {
                 // 通常
                 Text("\(depth)")
-                    .font(.system(size: 19, weight: .bold, design: .monospaced))
+                    .font(.system(size: 19, weight: .black, design: .monospaced))
                     .tracking(-1)
                     .foregroundColor(.primary)
                 Text("km")
