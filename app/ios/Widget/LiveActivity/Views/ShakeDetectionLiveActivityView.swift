@@ -8,111 +8,124 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - Shake Detection Top Line
-
-@available(iOS 16.1, *)
-struct ShakeDetectionTopLine: View {
-    let level: ShakeDetectionLevel
-    let height: CGFloat
-    
-    var body: some View {
-        Rectangle()
-            .fill(level.backgroundColor)
-            .frame(height: height)
-    }
-}
-
 @available(iOS 16.1, *)
 struct ShakeDetectionLockScreenView: View {
     let state: LiveActivityContentState
-    
+
+    // HIG: The standard layout margin for Live Activities on the Lock Screen is 14 points.
+    private let standardMargin: CGFloat = 14
+
     var body: some View {
         VStack(spacing: 0) {
-            // 上部のライン
-            if let level = state.shakeLevel {
-                ShakeDetectionTopLine(level: level, height: 8)
+            // ヘッダー
+            HStack {
+                headerView
+                Spacer()
+                timeView
             }
-            
-            VStack(spacing: 10) {
-                // ヘッダー
-                HStack {
-                    headerView
-                    Spacer()
-                    timeView
-                }
-                
-                // メインコンテンツ
-                HStack(alignment: .center, spacing: 16) {
-                    // 揺れレベル表示
-                    levelView
-                    
-                    // 詳細情報
-                    VStack(alignment: .leading, spacing: 6) {
-                        if let level = state.shakeLevel {
-                            Text(level.displayString)
-                                .font(.system(size: 18, weight: .bold))
-                                .foregroundColor(.primary)
-                        }
-                        
-                        if let location = state.location {
-                            Text(location.regionName)
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.primary.opacity(0.8))
-                            
-                            if let intensity = location.intensity {
-                                HStack(alignment: .firstTextBaseline, spacing: 2) {
-                                    Text("計測震度")
-                                        .font(.system(size: 11, weight: .medium))
-                                        .foregroundColor(.primary.opacity(0.7))
-                                    Text(String(format: "%.1f", intensity))
-                                        .font(.system(size: 14, weight: .bold, design: .monospaced))
-                                        .foregroundColor(.primary)
-                                }
+            .padding(.horizontal, standardMargin)
+            .padding(.top, standardMargin)
+            .padding(.bottom, 10)
+
+            // HIG: "When separating a block of content, use a thick line"
+            // インセットした区切り線
+            Rectangle()
+                .fill(separatorColor)
+                .frame(height: 3)
+                .padding(.horizontal, standardMargin)
+
+            // メインコンテンツ
+            HStack(alignment: .center, spacing: 14) {
+                // 揺れレベル表示
+                levelView
+
+                // 詳細情報
+                VStack(alignment: .leading, spacing: 5) {
+                    if let level = state.shakeLevel {
+                        Text(level.displayString)
+                            .font(.system(size: 19, weight: .bold))
+                            .foregroundColor(.primary)
+                    }
+
+                    if let location = state.location {
+                        Text(location.regionName)
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(.primary.opacity(0.85))
+
+                        if let intensity = location.intensity {
+                            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                                Text("計測震度")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(.primary.opacity(0.6))
+                                Text(String(format: "%.1f", intensity))
+                                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                    .foregroundColor(.primary)
                             }
                         }
                     }
-                    
-                    Spacer()
                 }
+
+                Spacer()
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.horizontal, standardMargin)
+            .padding(.top, 10)
+            .padding(.bottom, standardMargin)
         }
         .background(backgroundColor)
     }
-    
+
     // MARK: - Header
-    
+
     private var headerView: some View {
         Text("揺れを検知しました")
-            .font(.system(size: 15, weight: .bold))
-            .foregroundColor(levelColor)
+            .font(.system(size: 17, weight: .heavy))
+            .foregroundColor(headerColor)
     }
-    
-    private var levelColor: Color {
-        state.shakeLevel?.backgroundColor ?? .orange
+
+    private var headerColor: Color {
+        // レベルに応じた色（背景とのコントラストを確保）
+        if let level = state.shakeLevel {
+            switch level {
+            case .weaker, .weak:
+                return .primary
+            case .medium:
+                return Color(red: 0.7, green: 0.5, blue: 0.0)
+            case .strong:
+                return Color(red: 0.9, green: 0.3, blue: 0.1)
+            case .stronger:
+                return Color(red: 0.8, green: 0.1, blue: 0.1)
+            }
+        }
+        return .primary
     }
-    
+
+    private var separatorColor: Color {
+        if let level = state.shakeLevel {
+            return level.backgroundColor.opacity(0.8)
+        }
+        return .orange.opacity(0.5)
+    }
+
     // MARK: - Time View
-    
+
     private var timeView: some View {
         Group {
             if let detectedAt = state.detectedAt,
                let date = ISO8601DateFormatter().date(from: detectedAt) {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text("検知時刻")
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.7))
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.primary.opacity(0.6))
                     Text(date, style: .time)
-                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
                         .foregroundColor(.primary)
                 }
             }
         }
     }
-    
+
     // MARK: - Level View
-    
+
     private var levelView: some View {
         Group {
             if let level = state.shakeLevel {
@@ -120,12 +133,14 @@ struct ShakeDetectionLockScreenView: View {
             }
         }
     }
-    
+
     // MARK: - Background
-    
+    // HIG: デフォルトの背景色を使用（ダークモードでもライトモードでも適切に表示）
+
     private var backgroundColor: Color {
-        let color = state.shakeLevel?.backgroundColor ?? .orange
-        return color.opacity(0.1)
+        // システムのデフォルト背景色を使用
+        // Lock Screenのコンテキストに合わせて自動調整される
+        Color.clear
     }
 }
 
@@ -134,14 +149,14 @@ struct ShakeDetectionLockScreenView: View {
 @available(iOS 16.1, *)
 struct ShakeLevelBadge: View {
     let level: ShakeDetectionLevel
-    
+
     var body: some View {
         Text(level.shortDisplayString)
-            .font(.system(size: 28, weight: .bold, design: .monospaced))
+            .font(.system(size: 32, weight: .black, design: .monospaced))
             .foregroundColor(level.textColor)
-            .frame(width: 56, height: 56)
+            .frame(width: 60, height: 60)
             .background(level.backgroundColor)
-            .cornerRadius(8)
+            .cornerRadius(10)
     }
 }
 
