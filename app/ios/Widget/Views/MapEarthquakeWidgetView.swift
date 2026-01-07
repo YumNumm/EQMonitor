@@ -125,3 +125,72 @@ struct MapSnapshotView: View {
         }
     }
 }
+
+// MARK: - Previews
+
+#Preview("Map - Small", as: .systemSmall) {
+    MapEarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [EarthquakeDisplayItem.singleMockData],
+        error: nil
+    )
+}
+
+#Preview("Map - Medium", as: .systemMedium) {
+    MapEarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [EarthquakeDisplayItem.singleMockData],
+        error: nil
+    )
+}
+
+#Preview("Map - Medium 震度6強", as: .systemMedium) {
+    MapEarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [
+            EarthquakeDisplayItem(
+                id: "20260106120000",
+                hypocenterName: "能登半島沖",
+                magnitude: "M7.2",
+                magnitudeValue: 7.2,
+                maxIntensity: .sixUpper,
+                depth: "15km",
+                originTime: Date().addingTimeInterval(-600),
+                latitude: 37.5,
+                longitude: 137.0
+            )
+        ],
+        error: nil
+    )
+}
+
+#Preview("Map - Error", as: .systemSmall) {
+    MapEarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [],
+        error: "ネットワークエラー: インターネット接続がありません"
+    )
+}
+
+#Preview("Map - Empty", as: .systemSmall) {
+    MapEarthquakeWidget()
+} timeline: {
+    EarthquakeEntry(
+        date: .now,
+        configuration: EarthquakeWidgetIntent(regionType: .nationwide),
+        earthquakes: [],
+        error: nil
+    )
+}
