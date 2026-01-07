@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:maplibre/maplibre.dart';
 
@@ -14,7 +15,10 @@ abstract class MapCameraState with _$MapCameraState {
   }) = _MapCameraState;
 
   factory MapCameraState.home() => const MapCameraState(
-    center: Geographic(lon: 137, lat: 37.5),
-    zoom: 5,
+    center: Geographic(
+      lon: JapanBounds.centerLng,
+      lat: JapanBounds.centerLat,
+    ),
+    zoom: 5.5,
   );
 }

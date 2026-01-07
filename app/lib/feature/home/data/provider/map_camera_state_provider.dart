@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/map_camera_state.dart';
+import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -47,10 +48,10 @@ class HomeMapCameraState extends _$HomeMapCameraState {
 
     await _controller?.fitBounds(
       bounds: const LngLatBounds(
-        longitudeWest: 128.8,
-        longitudeEast: 145.1,
-        latitudeSouth: 30,
-        latitudeNorth: 45.8,
+        longitudeWest: JapanBounds.minLng,
+        longitudeEast: JapanBounds.maxLng,
+        latitudeSouth: JapanBounds.minLat,
+        latitudeNorth: JapanBounds.maxLat,
       ),
     );
     state = state.copyWith(isAtHome: true);
@@ -64,10 +65,10 @@ class HomeMapCameraState extends _$HomeMapCameraState {
 
     if (validEews.isEmpty) {
       return const LngLatBounds(
-        longitudeWest: 128.8,
-        longitudeEast: 145.1,
-        latitudeSouth: 30,
-        latitudeNorth: 45.8,
+        longitudeWest: JapanBounds.minLng,
+        longitudeEast: JapanBounds.maxLng,
+        latitudeSouth: JapanBounds.minLat,
+        latitudeNorth: JapanBounds.maxLat,
       );
     }
 

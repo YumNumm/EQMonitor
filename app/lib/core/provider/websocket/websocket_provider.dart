@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'dart:ui';
 
+import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:eqmonitor/core/util/env.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -15,16 +15,29 @@ import 'package:web_socket_client/web_socket_client.dart';
 part 'websocket_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-WebSocket websocket(Ref ref) {
-  final apiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
-  final uri = Uri.parse(apiUrl);
+Future<WebSocket> websocket(Ref ref) async {
+  // チケットを取得
+  final deviceId = await ref.watch(deviceIdProvider.future);
+  final eqApi = ref.watch(eqApiProvider);
+  final response = await eqApi.websocket.getTicket(deviceId: deviceId);
+  talker.debug(
+    'WebSocket Ticketを取得しました: ${response.ticket.substring(0, 8)}..., '
+    '有効期限: ${response.expiresAt.toIso8601String()}',
+  );
+  final ticket = response.ticket;
+  final wsApiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
+
+  // チケットをクエリパラメータに追加
+  final uri = Uri.parse(wsApiUrl).replace(
+    queryParameters: {'ticket': ticket},
+  );
+
   final backoff = BinaryExponentialBackoff(
     initial: const Duration(milliseconds: 100),
     maximumStep: 10,
   );
   final socket = WebSocket(
     uri,
-    headers: {HttpHeaders.authorizationHeader: Env.apiAuthorization},
     pingInterval: const Duration(seconds: 5),
     backoff: backoff,
   );
@@ -43,20 +56,22 @@ WebSocket websocket(Ref ref) {
       }
     });
 
-  log('WebSocket connection created');
+  log('WebSocket connection created with ticket');
   return socket;
 }
 
 @Riverpod(keepAlive: true)
 class WebsocketStatus extends _$WebsocketStatus {
   @override
-  ConnectionState build() {
-    final socket = ref.watch(websocketProvider);
-    socket.connection.listen((status) {
-      state = status;
-      talker.log('WebSocket state: $status');
+  Stream<ConnectionState> build() async* {
+    final socket = await ref.watch(websocketProvider.future);
+    final streamController = StreamController<ConnectionState>();
+    final subscription = socket.connection.listen(streamController.add);
+    ref.onDispose(() async {
+      await streamController.close();
+      await subscription.cancel();
     });
-    return socket.connection.state;
+    yield* streamController.stream;
   }
 }
 
@@ -66,18 +81,29 @@ class WebsocketMessages extends _$WebsocketMessages {
 
   @override
   Stream<Map<String, dynamic>> build() async* {
-    final socket = ref.watch(websocketProvider);
+    final socketAsync = ref.watch(websocketProvider);
     _controller = StreamController<Map<String, dynamic>>();
     ref.onDispose(() {
       unawaited(_controller.close());
     });
-    socket.messages.listen((message) {
-      talker.log('WebSocket message: $message');
-      final decoded = jsonDecode(message.toString());
-      if (decoded is Map<String, dynamic>) {
-        _controller.add(decoded);
-      }
-    });
+
+    await socketAsync.when(
+      data: (socket) async {
+        socket.messages.listen((message) {
+          talker.log('WebSocket message: $message');
+          final decoded = jsonDecode(message.toString());
+          if (decoded is Map<String, dynamic>) {
+            _controller.add(decoded);
+          }
+        });
+      },
+      loading: () async {
+        talker.warning('WebSocket is loading...');
+      },
+      error: (error, stack) async {
+        talker.error('Failed to setup WebSocket listener: $error', stack);
+      },
+    );
 
     yield* _controller.stream;
   }

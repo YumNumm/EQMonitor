@@ -12,6 +12,8 @@ import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monito
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
+import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -42,38 +44,44 @@ class _MapContent extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraState = ref.watch(homeMapCameraStateProvider);
 
-    final mapOptions = MapOptions(
-      initCenter: cameraState.center,
-      initZoom: cameraState.zoom,
-      initBearing: cameraState.bearing,
-      initPitch: cameraState.pitch,
-      initStyle: styleString,
+    final initialOptions = calculateJapanViewMapOptions(
+      context: context,
+      styleString: styleString,
     );
 
-    final mapWidget = MapLibreMap(
-      options: mapOptions,
-      onMapCreated: (controller) {
-        ref.read(homeMapCameraStateProvider.notifier).setController(controller);
-      },
-      children: [
-        const EewEstimatedIntensityLayer(),
-        const KyoshinMonitorObservationLayer(),
-        Consumer(
-          builder: (context, ref, _) {
-            final eews = ref.watch(eewAliveTelegramProvider) ?? [];
-            return EewPsWaveLayer(eews: eews);
-          },
-        ),
-        Consumer(
-          builder: (context, ref, _) => EewHypocenterLayer(
-            eews: ref.watch(eewAliveTelegramProvider) ?? [],
-          ),
-        ),
-        const SafeArea(child: _MapHeader()),
-      ],
-    );
+    return MapLibreEventProvider(
+      child: Builder(
+        builder: (context) {
+          final mapWidget = MapLibreMap(
+            options: initialOptions,
+            onMapCreated: (controller) {
+              ref
+                  .read(homeMapCameraStateProvider.notifier)
+                  .setController(controller);
+            },
+            onEvent: (event) => MapLibreEventProvider.of(context).emit(event),
+            children: [
+              const EewEstimatedIntensityLayer(),
+              const KyoshinMonitorObservationLayer(),
+              Consumer(
+                builder: (context, ref, _) {
+                  final eews = ref.watch(eewAliveTelegramProvider) ?? [];
+                  return EewPsWaveLayer(eews: eews);
+                },
+              ),
+              Consumer(
+                builder: (context, ref, _) => EewHypocenterLayer(
+                  eews: ref.watch(eewAliveTelegramProvider) ?? [],
+                ),
+              ),
+              const SafeArea(child: _MapHeader()),
+            ],
+          );
 
-    return SizedBox.expand(child: mapWidget);
+          return SizedBox.expand(child: mapWidget);
+        },
+      ),
+    );
   }
 }
 
