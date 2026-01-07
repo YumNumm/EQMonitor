@@ -94,6 +94,7 @@ dependencies:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
   libserialport_plus: ^0.0.12
+  live_activities: ^2.4.3
   # maplibre: ^0.2.1
   maplibre:
     git:

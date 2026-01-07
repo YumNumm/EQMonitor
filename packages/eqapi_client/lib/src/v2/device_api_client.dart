@@ -187,4 +187,27 @@ abstract class DeviceApiClient {
     @Path('deviceId') required String deviceId,
     @Path('regionId') required int regionId,
   });
+
+  // === Live Activity ===
+
+  /// Live Activity一覧を取得
+  @GET('/v2/device/{deviceId}/live-activity')
+  Future<List<LiveActivityInfo>> getLiveActivities({
+    @Path('deviceId') required String deviceId,
+  });
+
+  /// Live ActivityのupdateTokenを登録
+  @PUT('/v2/device/{deviceId}/live-activity/{liveActivityId}/token')
+  Future<void> registerLiveActivityToken({
+    @Path('deviceId') required String deviceId,
+    @Path('liveActivityId') required String liveActivityId,
+    @Body() required LiveActivityTokenRequest request,
+  });
+
+  /// Live ActivityのupdateTokenを削除
+  @DELETE('/v2/device/{deviceId}/live-activity/{liveActivityId}/token')
+  Future<void> deleteLiveActivityToken({
+    @Path('deviceId') required String deviceId,
+    @Path('liveActivityId') required String liveActivityId,
+  });
 }

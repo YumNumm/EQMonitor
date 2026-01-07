@@ -103,6 +103,12 @@ class _DebugWidget extends ConsumerWidget {
                 const DebugNotificationSettingsRoute().push(context),
           ),
           ListTile(
+            title: const Text('Live Activity'),
+            leading: const Icon(Icons.phone_iphone),
+            onTap: () async =>
+                const DebugLiveActivityRoute().push(context),
+          ),
+          ListTile(
             title: const Text('震源アイコン生成'),
             leading: const Icon(Icons.place),
             onTap: () async => Navigator.of(context).push(

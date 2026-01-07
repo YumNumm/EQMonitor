@@ -99,3 +99,42 @@ abstract class FcmTokenRequest with _$FcmTokenRequest {
   factory FcmTokenRequest.fromJson(Map<String, dynamic> json) =>
       _$FcmTokenRequestFromJson(json);
 }
+
+/// Live Activityの開始トリガー
+@JsonEnum(valueField: 'value')
+enum LiveActivityStartTrigger {
+  @JsonValue('shake_detection')
+  shakeDetection('shake_detection'),
+  @JsonValue('eew')
+  eew('eew');
+
+  const LiveActivityStartTrigger(this.value);
+  final String value;
+}
+
+/// Live Activity updateTokenリクエスト
+@freezed
+abstract class LiveActivityTokenRequest with _$LiveActivityTokenRequest {
+  const factory LiveActivityTokenRequest({
+    required String token,
+    required String eventId,
+    required LiveActivityStartTrigger startTrigger,
+  }) = _LiveActivityTokenRequest;
+
+  factory LiveActivityTokenRequest.fromJson(Map<String, dynamic> json) =>
+      _$LiveActivityTokenRequestFromJson(json);
+}
+
+/// Live Activity情報
+@freezed
+abstract class LiveActivityInfo with _$LiveActivityInfo {
+  const factory LiveActivityInfo({
+    required String liveActivityId,
+    required String eventId,
+    required LiveActivityStartTrigger startTrigger,
+    required String createdAt,
+  }) = _LiveActivityInfo;
+
+  factory LiveActivityInfo.fromJson(Map<String, dynamic> json) =>
+      _$LiveActivityInfoFromJson(json);
+}

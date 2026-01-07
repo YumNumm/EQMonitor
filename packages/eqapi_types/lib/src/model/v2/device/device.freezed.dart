@@ -1607,4 +1607,545 @@ as String,
 
 }
 
+
+/// @nodoc
+mixin _$LiveActivityTokenRequest {
+
+ String get token; String get eventId; LiveActivityStartTrigger get startTrigger;
+/// Create a copy of LiveActivityTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LiveActivityTokenRequestCopyWith<LiveActivityTokenRequest> get copyWith => _$LiveActivityTokenRequestCopyWithImpl<LiveActivityTokenRequest>(this as LiveActivityTokenRequest, _$identity);
+
+  /// Serializes this LiveActivityTokenRequest to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveActivityTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.startTrigger, startTrigger) || other.startTrigger == startTrigger));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,token,eventId,startTrigger);
+
+@override
+String toString() {
+  return 'LiveActivityTokenRequest(token: $token, eventId: $eventId, startTrigger: $startTrigger)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LiveActivityTokenRequestCopyWith<$Res>  {
+  factory $LiveActivityTokenRequestCopyWith(LiveActivityTokenRequest value, $Res Function(LiveActivityTokenRequest) _then) = _$LiveActivityTokenRequestCopyWithImpl;
+@useResult
+$Res call({
+ String token, String eventId, LiveActivityStartTrigger startTrigger
+});
+
+
+
+
+}
+/// @nodoc
+class _$LiveActivityTokenRequestCopyWithImpl<$Res>
+    implements $LiveActivityTokenRequestCopyWith<$Res> {
+  _$LiveActivityTokenRequestCopyWithImpl(this._self, this._then);
+
+  final LiveActivityTokenRequest _self;
+  final $Res Function(LiveActivityTokenRequest) _then;
+
+/// Create a copy of LiveActivityTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? eventId = null,Object? startTrigger = null,}) {
+  return _then(_self.copyWith(
+token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,startTrigger: null == startTrigger ? _self.startTrigger : startTrigger // ignore: cast_nullable_to_non_nullable
+as LiveActivityStartTrigger,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LiveActivityTokenRequest].
+extension LiveActivityTokenRequestPatterns on LiveActivityTokenRequest {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LiveActivityTokenRequest value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LiveActivityTokenRequest() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LiveActivityTokenRequest value)  $default,){
+final _that = this;
+switch (_that) {
+case _LiveActivityTokenRequest():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LiveActivityTokenRequest value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LiveActivityTokenRequest() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  String eventId,  LiveActivityStartTrigger startTrigger)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LiveActivityTokenRequest() when $default != null:
+return $default(_that.token,_that.eventId,_that.startTrigger);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  String eventId,  LiveActivityStartTrigger startTrigger)  $default,) {final _that = this;
+switch (_that) {
+case _LiveActivityTokenRequest():
+return $default(_that.token,_that.eventId,_that.startTrigger);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  String eventId,  LiveActivityStartTrigger startTrigger)?  $default,) {final _that = this;
+switch (_that) {
+case _LiveActivityTokenRequest() when $default != null:
+return $default(_that.token,_that.eventId,_that.startTrigger);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _LiveActivityTokenRequest implements LiveActivityTokenRequest {
+  const _LiveActivityTokenRequest({required this.token, required this.eventId, required this.startTrigger});
+  factory _LiveActivityTokenRequest.fromJson(Map<String, dynamic> json) => _$LiveActivityTokenRequestFromJson(json);
+
+@override final  String token;
+@override final  String eventId;
+@override final  LiveActivityStartTrigger startTrigger;
+
+/// Create a copy of LiveActivityTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LiveActivityTokenRequestCopyWith<_LiveActivityTokenRequest> get copyWith => __$LiveActivityTokenRequestCopyWithImpl<_LiveActivityTokenRequest>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LiveActivityTokenRequestToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveActivityTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.startTrigger, startTrigger) || other.startTrigger == startTrigger));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,token,eventId,startTrigger);
+
+@override
+String toString() {
+  return 'LiveActivityTokenRequest(token: $token, eventId: $eventId, startTrigger: $startTrigger)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LiveActivityTokenRequestCopyWith<$Res> implements $LiveActivityTokenRequestCopyWith<$Res> {
+  factory _$LiveActivityTokenRequestCopyWith(_LiveActivityTokenRequest value, $Res Function(_LiveActivityTokenRequest) _then) = __$LiveActivityTokenRequestCopyWithImpl;
+@override @useResult
+$Res call({
+ String token, String eventId, LiveActivityStartTrigger startTrigger
+});
+
+
+
+
+}
+/// @nodoc
+class __$LiveActivityTokenRequestCopyWithImpl<$Res>
+    implements _$LiveActivityTokenRequestCopyWith<$Res> {
+  __$LiveActivityTokenRequestCopyWithImpl(this._self, this._then);
+
+  final _LiveActivityTokenRequest _self;
+  final $Res Function(_LiveActivityTokenRequest) _then;
+
+/// Create a copy of LiveActivityTokenRequest
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? eventId = null,Object? startTrigger = null,}) {
+  return _then(_LiveActivityTokenRequest(
+token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,startTrigger: null == startTrigger ? _self.startTrigger : startTrigger // ignore: cast_nullable_to_non_nullable
+as LiveActivityStartTrigger,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$LiveActivityInfo {
+
+ String get liveActivityId; String get eventId; LiveActivityStartTrigger get startTrigger; String get createdAt;
+/// Create a copy of LiveActivityInfo
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LiveActivityInfoCopyWith<LiveActivityInfo> get copyWith => _$LiveActivityInfoCopyWithImpl<LiveActivityInfo>(this as LiveActivityInfo, _$identity);
+
+  /// Serializes this LiveActivityInfo to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveActivityInfo&&(identical(other.liveActivityId, liveActivityId) || other.liveActivityId == liveActivityId)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.startTrigger, startTrigger) || other.startTrigger == startTrigger)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,liveActivityId,eventId,startTrigger,createdAt);
+
+@override
+String toString() {
+  return 'LiveActivityInfo(liveActivityId: $liveActivityId, eventId: $eventId, startTrigger: $startTrigger, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LiveActivityInfoCopyWith<$Res>  {
+  factory $LiveActivityInfoCopyWith(LiveActivityInfo value, $Res Function(LiveActivityInfo) _then) = _$LiveActivityInfoCopyWithImpl;
+@useResult
+$Res call({
+ String liveActivityId, String eventId, LiveActivityStartTrigger startTrigger, String createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$LiveActivityInfoCopyWithImpl<$Res>
+    implements $LiveActivityInfoCopyWith<$Res> {
+  _$LiveActivityInfoCopyWithImpl(this._self, this._then);
+
+  final LiveActivityInfo _self;
+  final $Res Function(LiveActivityInfo) _then;
+
+/// Create a copy of LiveActivityInfo
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? liveActivityId = null,Object? eventId = null,Object? startTrigger = null,Object? createdAt = null,}) {
+  return _then(_self.copyWith(
+liveActivityId: null == liveActivityId ? _self.liveActivityId : liveActivityId // ignore: cast_nullable_to_non_nullable
+as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,startTrigger: null == startTrigger ? _self.startTrigger : startTrigger // ignore: cast_nullable_to_non_nullable
+as LiveActivityStartTrigger,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LiveActivityInfo].
+extension LiveActivityInfoPatterns on LiveActivityInfo {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LiveActivityInfo value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LiveActivityInfo() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LiveActivityInfo value)  $default,){
+final _that = this;
+switch (_that) {
+case _LiveActivityInfo():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LiveActivityInfo value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LiveActivityInfo() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String liveActivityId,  String eventId,  LiveActivityStartTrigger startTrigger,  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LiveActivityInfo() when $default != null:
+return $default(_that.liveActivityId,_that.eventId,_that.startTrigger,_that.createdAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String liveActivityId,  String eventId,  LiveActivityStartTrigger startTrigger,  String createdAt)  $default,) {final _that = this;
+switch (_that) {
+case _LiveActivityInfo():
+return $default(_that.liveActivityId,_that.eventId,_that.startTrigger,_that.createdAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String liveActivityId,  String eventId,  LiveActivityStartTrigger startTrigger,  String createdAt)?  $default,) {final _that = this;
+switch (_that) {
+case _LiveActivityInfo() when $default != null:
+return $default(_that.liveActivityId,_that.eventId,_that.startTrigger,_that.createdAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _LiveActivityInfo implements LiveActivityInfo {
+  const _LiveActivityInfo({required this.liveActivityId, required this.eventId, required this.startTrigger, required this.createdAt});
+  factory _LiveActivityInfo.fromJson(Map<String, dynamic> json) => _$LiveActivityInfoFromJson(json);
+
+@override final  String liveActivityId;
+@override final  String eventId;
+@override final  LiveActivityStartTrigger startTrigger;
+@override final  String createdAt;
+
+/// Create a copy of LiveActivityInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LiveActivityInfoCopyWith<_LiveActivityInfo> get copyWith => __$LiveActivityInfoCopyWithImpl<_LiveActivityInfo>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LiveActivityInfoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveActivityInfo&&(identical(other.liveActivityId, liveActivityId) || other.liveActivityId == liveActivityId)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.startTrigger, startTrigger) || other.startTrigger == startTrigger)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,liveActivityId,eventId,startTrigger,createdAt);
+
+@override
+String toString() {
+  return 'LiveActivityInfo(liveActivityId: $liveActivityId, eventId: $eventId, startTrigger: $startTrigger, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LiveActivityInfoCopyWith<$Res> implements $LiveActivityInfoCopyWith<$Res> {
+  factory _$LiveActivityInfoCopyWith(_LiveActivityInfo value, $Res Function(_LiveActivityInfo) _then) = __$LiveActivityInfoCopyWithImpl;
+@override @useResult
+$Res call({
+ String liveActivityId, String eventId, LiveActivityStartTrigger startTrigger, String createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$LiveActivityInfoCopyWithImpl<$Res>
+    implements _$LiveActivityInfoCopyWith<$Res> {
+  __$LiveActivityInfoCopyWithImpl(this._self, this._then);
+
+  final _LiveActivityInfo _self;
+  final $Res Function(_LiveActivityInfo) _then;
+
+/// Create a copy of LiveActivityInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? liveActivityId = null,Object? eventId = null,Object? startTrigger = null,Object? createdAt = null,}) {
+  return _then(_LiveActivityInfo(
+liveActivityId: null == liveActivityId ? _self.liveActivityId : liveActivityId // ignore: cast_nullable_to_non_nullable
+as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,startTrigger: null == startTrigger ? _self.startTrigger : startTrigger // ignore: cast_nullable_to_non_nullable
+as LiveActivityStartTrigger,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 // dart format on
