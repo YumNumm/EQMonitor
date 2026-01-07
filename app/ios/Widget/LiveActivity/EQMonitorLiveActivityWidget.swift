@@ -46,7 +46,7 @@ struct EQMonitorLiveActivityWidget: Widget {
 @available(iOS 16.1, *)
 struct LockScreenLiveActivityView: View {
     let context: ActivityViewContext<LiveActivitiesAppAttributes>
-    
+
     var body: some View {
         if context.state.isEew {
             EewLockScreenView(state: context.state)
@@ -61,7 +61,7 @@ struct LockScreenLiveActivityView: View {
 @available(iOS 16.1, *)
 struct CompactLeadingView: View {
     let state: LiveActivityContentState
-    
+
     var body: some View {
         if state.isEew {
             // EEW: 予想震度アイコン
@@ -92,7 +92,7 @@ struct CompactLeadingView: View {
 @available(iOS 16.1, *)
 struct CompactTrailingView: View {
     let state: LiveActivityContentState
-    
+
     var body: some View {
         if state.isEew {
             // EEW: 報番号または警報マーク
@@ -120,7 +120,7 @@ struct CompactTrailingView: View {
 @available(iOS 16.1, *)
 struct MinimalView: View {
     let state: LiveActivityContentState
-    
+
     var body: some View {
         if state.isEew {
             if let location = state.location,
@@ -148,7 +148,7 @@ struct MinimalView: View {
 @available(iOS 16.1, *)
 struct ExpandedLeadingView: View {
     let state: LiveActivityContentState
-    
+
     var body: some View {
         if state.isEew {
             if let location = state.location,
@@ -187,25 +187,22 @@ struct ExpandedLeadingView: View {
 @available(iOS 16.1, *)
 struct ExpandedTrailingView: View {
     let state: LiveActivityContentState
-    
+
     var body: some View {
         if state.isEew {
             VStack(alignment: .trailing, spacing: 2) {
                 if let isWarning = state.isWarning {
                     Text(isWarning ? "警報" : "予報")
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 12, weight: .heavy))
                         .foregroundColor(isWarning ? .red : .orange)
                 }
                 if let serialNo = state.serialNo {
-                    HStack(spacing: 1) {
-                        Text("第")
-                            .font(.system(size: 9))
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("#")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
                             .foregroundColor(.secondary)
                         Text("\(serialNo)")
-                            .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                        Text("報")
-                            .font(.system(size: 9))
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 13, weight: .bold, design: .monospaced))
                     }
                 }
             }
@@ -228,12 +225,12 @@ struct ExpandedTrailingView: View {
 @available(iOS 16.1, *)
 struct ExpandedCenterView: View {
     let state: LiveActivityContentState
-    
+
     var body: some View {
         if state.isEew {
             if let hypocenterName = state.hypocenterName {
                 Text(hypocenterName)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 17, weight: .bold))
                     .lineLimit(1)
             }
         } else {
@@ -248,30 +245,27 @@ struct ExpandedCenterView: View {
 @available(iOS 16.1, *)
 struct ExpandedBottomView: View {
     let state: LiveActivityContentState
-    
+
     var body: some View {
         HStack {
             if state.isEew {
                 // EEW情報
-                HStack(spacing: 12) {
+                HStack(spacing: 10) {
                     if let magnitude = state.magnitude {
-                        HStack(alignment: .firstTextBaseline, spacing: 1) {
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
                             Text("M")
-                                .font(.system(size: 10, weight: .medium))
+                                .font(.system(size: 10, weight: .semibold))
                                 .foregroundColor(.secondary)
                             Text(String(format: "%.1f", magnitude))
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .font(.system(size: 15, weight: .bold, design: .monospaced))
                         }
                     }
                     if let depth = state.depth {
-                        HStack(alignment: .firstTextBaseline, spacing: 1) {
-                            Text("深さ")
-                                .font(.system(size: 10, weight: .medium))
-                                .foregroundColor(.secondary)
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
                             Text("\(depth)")
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .font(.system(size: 15, weight: .bold, design: .monospaced))
                             Text("km")
-                                .font(.system(size: 10, weight: .medium))
+                                .font(.system(size: 10, weight: .semibold))
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -308,13 +302,13 @@ struct ExpandedBottomView: View {
 @available(iOS 16.1, *)
 struct ArrivalInfoView: View {
     let location: LocationInfo
-    
+
     var body: some View {
         HStack(spacing: 6) {
             Text(location.regionName)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundColor(.secondary)
-            
+
             if let arrivalDate = location.arrivalDate {
                 let isArrived = arrivalDate <= Date()
                 if isArrived {
@@ -336,12 +330,12 @@ struct ArrivalInfoView: View {
 struct IntensityBadge: View {
     let intensity: IntensityValue
     let size: BadgeSize
-    
+
     enum BadgeSize {
         case minimal
         case compact
         case expanded
-        
+
         var fontSize: CGFloat {
             switch self {
             case .minimal: return 10
@@ -349,7 +343,7 @@ struct IntensityBadge: View {
             case .expanded: return 20
             }
         }
-        
+
         var subFontSize: CGFloat {
             switch self {
             case .minimal: return 5
@@ -357,7 +351,7 @@ struct IntensityBadge: View {
             case .expanded: return 10
             }
         }
-        
+
         var padding: CGFloat {
             switch self {
             case .minimal: return 2
@@ -366,7 +360,7 @@ struct IntensityBadge: View {
             }
         }
     }
-    
+
     var body: some View {
         let parts = intensity.formattedParts
         HStack(alignment: .firstTextBaseline, spacing: 0) {
