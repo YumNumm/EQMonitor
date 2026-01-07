@@ -6,16 +6,16 @@ import 'package:maplibre/maplibre.dart';
 /// 日本全国の緯度経度範囲
 class JapanBounds {
   /// 最小緯度（沖縄付近）
-  static const minLat = 24;
+  static const double minLat = 24;
 
   /// 最大緯度（北海道付近）
-  static const maxLat = 46;
+  static const double maxLat = 46;
 
   /// 最小経度（与那国島付近）
-  static const minLng = 122.5;
+  static const double minLng = 122.5;
 
   /// 最大経度（北海道東端付近）
-  static const maxLng = 146;
+  static const double maxLng = 146;
 
   /// 中心緯度
   static const double centerLat = (minLat + maxLat) / 2;
