@@ -13,13 +13,13 @@ part of 'app_lifecycle.dart';
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
 
 @ProviderFor(AppLifecycle)
-const appLifecycleProvider = AppLifecycleProvider._();
+final appLifecycleProvider = AppLifecycleProvider._();
 
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
 final class AppLifecycleProvider
     extends $NotifierProvider<AppLifecycle, AppLifecycleState> {
   /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
-  const AppLifecycleProvider._()
+  AppLifecycleProvider._()
     : super(
         from: null,
         argument: null,
@@ -55,7 +55,6 @@ abstract class _$AppLifecycle extends $Notifier<AppLifecycleState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AppLifecycleState, AppLifecycleState>;
     final element =
         ref.element
@@ -65,6 +64,6 @@ abstract class _$AppLifecycle extends $Notifier<AppLifecycleState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

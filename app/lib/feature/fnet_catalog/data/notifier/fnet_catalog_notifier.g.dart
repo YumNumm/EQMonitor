@@ -12,11 +12,11 @@ part of 'fnet_catalog_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(FnetCatalogNotifier)
-const fnetCatalogProvider = FnetCatalogNotifierFamily._();
+final fnetCatalogProvider = FnetCatalogNotifierFamily._();
 
 final class FnetCatalogNotifierProvider
     extends $AsyncNotifierProvider<FnetCatalogNotifier, List<FnetEvent>> {
-  const FnetCatalogNotifierProvider._({
+  FnetCatalogNotifierProvider._({
     required FnetCatalogNotifierFamily super.from,
     required ({int year, int? month}) super.argument,
   }) : super(
@@ -64,7 +64,7 @@ final class FnetCatalogNotifierFamily extends $Family
           FutureOr<List<FnetEvent>>,
           ({int year, int? month})
         > {
-  const FnetCatalogNotifierFamily._()
+  FnetCatalogNotifierFamily._()
     : super(
         retry: null,
         name: r'fnetCatalogProvider',
@@ -92,7 +92,6 @@ abstract class _$FnetCatalogNotifier extends $AsyncNotifier<List<FnetEvent>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(year: _$args.year, month: _$args.month);
     final ref = this.ref as $Ref<AsyncValue<List<FnetEvent>>, List<FnetEvent>>;
     final element =
         ref.element
@@ -102,6 +101,9 @@ abstract class _$FnetCatalogNotifier extends $AsyncNotifier<List<FnetEvent>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(
+      ref,
+      () => build(year: _$args.year, month: _$args.month),
+    );
   }
 }

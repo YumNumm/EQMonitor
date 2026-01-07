@@ -12,7 +12,7 @@ part of 'estimated_intensity_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EstimatedIntensity)
-const estimatedIntensityProvider = EstimatedIntensityProvider._();
+final estimatedIntensityProvider = EstimatedIntensityProvider._();
 
 final class EstimatedIntensityProvider
     extends
@@ -20,7 +20,7 @@ final class EstimatedIntensityProvider
           EstimatedIntensity,
           List<EstimatedIntensityPoint>
         > {
-  const EstimatedIntensityProvider._()
+  EstimatedIntensityProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,7 +48,6 @@ abstract class _$EstimatedIntensity
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -66,12 +65,12 @@ abstract class _$EstimatedIntensity
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(estimatedIntensityCity)
-const estimatedIntensityCityProvider = EstimatedIntensityCityProvider._();
+final estimatedIntensityCityProvider = EstimatedIntensityCityProvider._();
 
 final class EstimatedIntensityCityProvider
     extends
@@ -83,7 +82,7 @@ final class EstimatedIntensityCityProvider
     with
         $FutureModifier<Map<String, double>>,
         $StreamProvider<Map<String, double>> {
-  const EstimatedIntensityCityProvider._()
+  EstimatedIntensityCityProvider._()
     : super(
         from: null,
         argument: null,
@@ -113,7 +112,7 @@ String _$estimatedIntensityCityHash() =>
     r'd260dc423fc1c3c73e9ce87ab6e57ac836789ae0';
 
 @ProviderFor(estimatedIntensityRegion)
-const estimatedIntensityRegionProvider = EstimatedIntensityRegionProvider._();
+final estimatedIntensityRegionProvider = EstimatedIntensityRegionProvider._();
 
 final class EstimatedIntensityRegionProvider
     extends
@@ -125,7 +124,7 @@ final class EstimatedIntensityRegionProvider
     with
         $FutureModifier<Map<String, double>>,
         $StreamProvider<Map<String, double>> {
-  const EstimatedIntensityRegionProvider._()
+  EstimatedIntensityRegionProvider._()
     : super(
         from: null,
         argument: null,

@@ -12,7 +12,7 @@ part of 'earthquake_history_config_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EarthquakeHistoryConfigNotifier)
-const earthquakeHistoryConfigProvider =
+final earthquakeHistoryConfigProvider =
     EarthquakeHistoryConfigNotifierProvider._();
 
 final class EarthquakeHistoryConfigNotifierProvider
@@ -21,7 +21,7 @@ final class EarthquakeHistoryConfigNotifierProvider
           EarthquakeHistoryConfigNotifier,
           EarthquakeHistoryConfig
         > {
-  const EarthquakeHistoryConfigNotifierProvider._()
+  EarthquakeHistoryConfigNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -57,7 +57,6 @@ abstract class _$EarthquakeHistoryConfigNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<EarthquakeHistoryConfig, EarthquakeHistoryConfig>;
     final element =
@@ -68,6 +67,6 @@ abstract class _$EarthquakeHistoryConfigNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

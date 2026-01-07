@@ -12,7 +12,7 @@ part of 'earthquake_search_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(EarthquakeSearchNotifier)
-const earthquakeSearchProvider = EarthquakeSearchNotifierFamily._();
+final earthquakeSearchProvider = EarthquakeSearchNotifierFamily._();
 
 final class EarthquakeSearchNotifierProvider
     extends
@@ -20,7 +20,7 @@ final class EarthquakeSearchNotifierProvider
           EarthquakeSearchNotifier,
           EarthquakeSearchNotifierState
         > {
-  const EarthquakeSearchNotifierProvider._({
+  EarthquakeSearchNotifierProvider._({
     required EarthquakeSearchNotifierFamily super.from,
     required EarthquakeSearchParameter super.argument,
   }) : super(
@@ -69,7 +69,7 @@ final class EarthquakeSearchNotifierFamily extends $Family
           FutureOr<EarthquakeSearchNotifierState>,
           EarthquakeSearchParameter
         > {
-  const EarthquakeSearchNotifierFamily._()
+  EarthquakeSearchNotifierFamily._()
     : super(
         retry: null,
         name: r'earthquakeSearchProvider',
@@ -96,7 +96,6 @@ abstract class _$EarthquakeSearchNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<
@@ -114,6 +113,6 @@ abstract class _$EarthquakeSearchNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
