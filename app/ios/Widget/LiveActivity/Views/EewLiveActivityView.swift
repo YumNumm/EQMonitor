@@ -232,8 +232,8 @@ struct EewLockScreenView: View {
                         .font(.system(size: 10, weight: .bold))
                         .foregroundColor(secondaryTextColor)
                     Text(timerInterval: Date()...arrivalDate, countsDown: true)
-                        .font(.system(size: 11, weight: .semibold, design: .monospaced))
-                        .foregroundColor(secondaryTextColor)
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
                         .tracking(-1)
                         .contentTransition(.numericText(countsDown: true))
                 }
