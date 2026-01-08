@@ -272,6 +272,7 @@ struct ExpandedTrailingView: View {
                 // 警報/予報
                 if let isWarning = state.isWarning {
                     Text(isWarning ? "警報" : "予報")
+                    
                         .font(.system(size: 13, weight: .heavy))
                         .foregroundColor(isWarning ? .red : .orange)
                 }
@@ -439,6 +440,7 @@ struct ArrivalInfoView: View {
         serialNo: 5,
         isFinal: false,
         isWarning: true,
+        headline: "石川県能登地方で地震 石川 新潟で強い揺れ",
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -466,6 +468,7 @@ struct ArrivalInfoView: View {
         serialNo: 3,
         isFinal: false,
         isWarning: true,
+        headline: "能登半島沖で地震 石川県加賀で強い揺れ",
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -493,6 +496,7 @@ struct ArrivalInfoView: View {
         serialNo: 1,
         isFinal: false,
         isWarning: false,
+        headline: "茨城県沖で地震",
         level: nil,
         detectedAt: nil,
         location: nil
@@ -514,6 +518,7 @@ struct ArrivalInfoView: View {
         serialNo: 5,
         isFinal: false,
         isWarning: true,
+        headline: "石川県能登地方で地震 石川 新潟で強い揺れ",
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -541,6 +546,7 @@ struct ArrivalInfoView: View {
         serialNo: nil,
         isFinal: nil,
         isWarning: nil,
+        headline: nil,
         level: "Strong",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
