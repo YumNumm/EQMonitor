@@ -16,7 +16,6 @@ struct HeaderContainer: View {
     let isWarning: Bool
     let headline: String?
     let serialNo: Int?
-    let arrivalDate: Date?
 
     private let stripeHeight: CGFloat = 8
 
@@ -27,7 +26,7 @@ struct HeaderContainer: View {
                 .frame(height: stripeHeight)
 
             // 下部: ヘッダーコンテンツ
-            HStack(alignment: arrivalDate != nil ? .top : .center) {
+            HStack(alignment: .center) {
                 // 左側: EEWタイプとheadline
                 VStack(alignment: .leading, spacing: 2) {
                     // 緊急地震速報(予報) or 緊急地震速報(警報)
@@ -47,30 +46,15 @@ struct HeaderContainer: View {
 
                 Spacer()
 
-                // 右端: serialNo + 到達カウントダウン
-                VStack(alignment: .trailing, spacing: 2) {
-                    // serialNo
-                    if let serialNo = serialNo {
-                        HStack(alignment: .firstTextBaseline, spacing: 0) {
-                            Text("#")
-                                .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                                .foregroundColor(.white.opacity(0.7))
-                            Text("\(serialNo)")
-                                .font(.system(size: 18, weight: .black, design: .monospaced))
-                                .foregroundColor(.white)
-                        }
-                    }
-
-                    // 到達カウントダウン（横並び）
-                    if let arrivalDate = arrivalDate {
-                        HStack(alignment: .firstTextBaseline, spacing: 4) {
-                            Text("到達まで")
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.7))
-                            Text(timerInterval: Date()...arrivalDate, countsDown: true)
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                                .foregroundColor(.white)
-                        }
+                // 右端: serialNo
+                if let serialNo = serialNo {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("#")
+                            .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.7))
+                        Text("\(serialNo)")
+                            .font(.system(size: 18, weight: .black, design: .monospaced))
+                            .foregroundColor(.white)
                     }
                 }
             }
@@ -143,8 +127,7 @@ struct EewLockScreenView: View {
             HeaderContainer(
                 isWarning: state.isWarning ?? false,
                 headline: state.headline,
-                serialNo: state.serialNo,
-                arrivalDate: state.location?.arrivalDate
+                serialNo: state.serialNo
             )
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
@@ -185,7 +168,7 @@ struct EewLockScreenView: View {
         return formatter.string(from: date)
     }
 
-    // MARK: - Details (M, 深さ, 発生時刻を縦に)
+    // MARK: - Details (M, 深さ, 発生時刻, 到達までを縦に)
 
     private var detailsView: some View {
         VStack(alignment: .leading, spacing: 3) {
@@ -220,6 +203,19 @@ struct EewLockScreenView: View {
                     Text(formatDateTime(date))
                         .font(.system(size: 12, weight: .semibold, design: .monospaced))
                         .foregroundColor(secondaryTextColor)
+                }
+            }
+
+            // 到達カウントダウン（発生時刻の下）
+            if let arrivalDate = state.location?.arrivalDate {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("到達まで")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundColor(secondaryTextColor)
+                    Text(timerInterval: Date()...arrivalDate, countsDown: true)
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.primary)
+                        .contentTransition(.numericText(countsDown: true))
                 }
             }
         }
@@ -296,7 +292,7 @@ struct SquareIntensityBadge: View {
         var badgeSize: CGFloat {
             switch self {
             case .normal: return 56
-            case .small: return 44
+            case .small: return 38
             case .compact: return 32
             }
         }
@@ -304,7 +300,7 @@ struct SquareIntensityBadge: View {
         var mainFontSize: CGFloat {
             switch self {
             case .normal: return 36
-            case .small: return 28
+            case .small: return 24
             case .compact: return 22
             }
         }
@@ -312,7 +308,7 @@ struct SquareIntensityBadge: View {
         var subFontSize: CGFloat {
             switch self {
             case .normal: return 15
-            case .small: return 11
+            case .small: return 10
             case .compact: return 10
             }
         }
@@ -373,6 +369,7 @@ struct ArrivalCountdownView: View {
                 .font(.system(size: 16, weight: .bold, design: .monospaced))
                 .foregroundColor(.primary)
                 .multilineTextAlignment(.trailing)
+                .contentTransition(.numericText(countsDown: true))
         }
         .frame(alignment: .trailing)
 
