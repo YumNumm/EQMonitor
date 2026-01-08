@@ -134,24 +134,20 @@ struct EewLockScreenView: View {
             .padding(.bottom, 4)
 
             // メインコンテンツ
-            HStack(alignment: .bottom, spacing: 8) {
-                // 左側: 最大震度 + 震源情報
-                VStack(alignment: .leading, spacing: 4) {
-                    // 最大震度
-                    if let intensity = state.intensityValue {
-                        HStack(spacing: 4) {
-                            Text("最大震度")
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundColor(secondaryTextColor)
-                            SquareIntensityBadge(intensity: intensity, size: .compact)
-                        }
+            HStack(alignment: .bottom, spacing: 10) {
+                // 左側: 最大震度（正方形）
+                if let intensity = state.intensityValue {
+                    VStack(spacing: 2) {
+                        Text("最大震度")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(secondaryTextColor)
+                        SquareIntensityBadge(intensity: intensity, size: .normal)
                     }
-
-                    // M, 深さ, 発生時刻
-                    detailsView
                 }
 
-                Spacer(minLength: 0)
+                // 中央: M, 深さ, 発生時刻
+                detailsView
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
                 // 右側: 現在地到達情報 + 予想震度（上揃え）
                 if let location = state.location {
