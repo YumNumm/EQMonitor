@@ -171,9 +171,16 @@ struct EewLockScreenView: View {
 
     // MARK: - Date Formatter
 
-    private func formatDateTime(_ date: Date) -> String {
+    private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd HH:mm:ss"
+        formatter.dateFormat = "MM/dd"
+        formatter.locale = Locale(identifier: "ja_JP")
+        return formatter.string(from: date)
+    }
+
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
         formatter.locale = Locale(identifier: "ja_JP")
         return formatter.string(from: date)
     }
@@ -214,13 +221,17 @@ struct EewLockScreenView: View {
 
             // 発生/検知時刻（M, 深さの下）
             if let date = state.timeDate {
-                HStack(spacing: 4) {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text(state.timeLabel)
                         .font(.system(size: 10, weight: .bold))
                         .foregroundColor(secondaryTextColor)
-                    Text(formatDateTime(date))
+                    Text(formatDate(date))
                         .font(.system(size: 11, weight: .semibold, design: .monospaced))
-                        .foregroundColor(secondaryTextColor)
+                        .foregroundColor(.white)
+                        .tracking(-1)
+                    Text(formatTime(date))
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
                         .tracking(-1)
                 }
             }
