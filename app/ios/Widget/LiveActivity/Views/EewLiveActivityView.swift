@@ -134,29 +134,27 @@ struct EewLockScreenView: View {
             .padding(.bottom, 4)
 
             // メインコンテンツ
-            HStack(alignment: .bottom, spacing: 10) {
-                // 左側: 予想最大震度
-                maxIntensityView
+            HStack(alignment: .bottom, spacing: 8) {
+                // 左側: 震源地名
+                hypocenterView
 
-                // 中央: 震源情報（横幅最大）
-                VStack(alignment: .leading, spacing: 2) {
-                    // 震源地ラベル
-                    Text("震源地")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(secondaryTextColor)
-
-                    // 震源地名（大きく）
-                    if let name = state.hypocenterName {
-                        Text(name)
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
+                // 中央: 最大震度 + 震源情報
+                VStack(alignment: .leading, spacing: 4) {
+                    // 最大震度
+                    if let intensity = state.intensityValue {
+                        HStack(spacing: 4) {
+                            Text("最大震度")
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundColor(secondaryTextColor)
+                            SquareIntensityBadge(intensity: intensity, size: .compact)
+                        }
                     }
 
-                    // M, 深さ, 発生時刻（縦に並べる）
+                    // M, 深さ, 発生時刻
                     detailsView
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Spacer(minLength: 0)
 
                 // 右側: 現在地到達情報 + 予想震度（上揃え）
                 if let location = state.location {
@@ -168,6 +166,25 @@ struct EewLockScreenView: View {
         }
     }
 
+    // MARK: - Hypocenter View (震源地)
+
+    private var hypocenterView: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("震源地")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(secondaryTextColor)
+
+            if let name = state.hypocenterName {
+                Text(name)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(.primary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+            }
+        }
+        .frame(maxWidth: 100, alignment: .leading)
+    }
+
     // MARK: - Date Formatter
 
     private func formatDateTime(_ date: Date) -> String {
@@ -175,21 +192,6 @@ struct EewLockScreenView: View {
         formatter.dateFormat = "MM/dd HH:mm:ss"
         formatter.locale = Locale(identifier: "ja_JP")
         return formatter.string(from: date)
-    }
-
-    // MARK: - Max Intensity (予想最大震度)
-
-    private var maxIntensityView: some View {
-        Group {
-            if let intensity = state.intensityValue {
-                VStack(spacing: 2) {
-                    Text("最大震度")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(secondaryTextColor)
-                    SquareIntensityBadge(intensity: intensity)
-                }
-            }
-        }
     }
 
     // MARK: - Details (M, 深さ, 発生時刻を縦に)
@@ -306,11 +308,13 @@ struct SquareIntensityBadge: View {
     enum Size {
         case normal
         case small
+        case compact  // 横長でコンパクト
 
         var badgeSize: CGFloat {
             switch self {
             case .normal: return 56
             case .small: return 44
+            case .compact: return 32
             }
         }
 
@@ -318,6 +322,7 @@ struct SquareIntensityBadge: View {
             switch self {
             case .normal: return 36
             case .small: return 28
+            case .compact: return 22
             }
         }
 
@@ -325,15 +330,23 @@ struct SquareIntensityBadge: View {
             switch self {
             case .normal: return 15
             case .small: return 11
+            case .compact: return 10
             }
         }
 
         // HIG準拠: 連続的な角丸（continuous corner radius）
-        // iOSの標準的なコンポーネントでは、サイズに応じた角丸を使用
         var cornerRadius: CGFloat {
             switch self {
             case .normal: return 12
             case .small: return 10
+            case .compact: return 8
+            }
+        }
+
+        var horizontalPadding: CGFloat {
+            switch self {
+            case .normal, .small: return 0
+            case .compact: return 6
             }
         }
     }
@@ -347,15 +360,15 @@ struct SquareIntensityBadge: View {
             Text(parts.main)
                 .font(.system(size: size.mainFontSize, weight: .bold, design: .monospaced))
             if let sub = parts.sub {
-                // 強弱の文字を太く
                 Text(sub)
                     .font(.system(size: size.subFontSize, weight: .heavy))
             }
         }
         .foregroundColor(intensity.textColor)
-        .frame(width: size.badgeSize, height: size.badgeSize)
+        .frame(height: size.badgeSize)
+        .frame(minWidth: size.badgeSize)
+        .padding(.horizontal, size.horizontalPadding)
         .background(intensity.backgroundColor)
-        // HIG準拠: RoundedRectangleのcontinuousスタイルでスムーズな角丸
         .clipShape(RoundedRectangle(cornerRadius: size.cornerRadius, style: .continuous))
     }
 }
