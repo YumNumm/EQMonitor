@@ -182,24 +182,33 @@ struct EewLockScreenView: View {
 
     private var detailsView: some View {
         VStack(alignment: .leading, spacing: 3) {
-            // M, 深さ（横並び）
-            HStack(spacing: 14) {
-                // マグニチュード（文字間隔を詰める、数値を太く）
-                if let magnitude = state.magnitude {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("M")
-                            .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                            .foregroundColor(secondaryTextColor)
-                        Text(String(format: "%.1f", magnitude))
-                            .font(.system(size: 18, weight: .bold, design: .monospaced))
-                            .tracking(-2)
-                            .foregroundColor(.primary)
+            // PLUM法/レベル法/1点検知の場合は特別な表示
+            if state.isPlum == true {
+                detectionMethodLabel("PLUM法による検知")
+            } else if state.isLevel == true {
+                detectionMethodLabel("レベル法による検知")
+            } else if state.isOnePoint == true {
+                detectionMethodLabel("低精度の緊急地震速報")
+            } else {
+                // 通常のM, 深さ（横並び）
+                HStack(spacing: 14) {
+                    // マグニチュード（文字間隔を詰める、数値を太く）
+                    if let magnitude = state.magnitude {
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                            Text("M")
+                                .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                                .foregroundColor(secondaryTextColor)
+                            Text(String(format: "%.1f", magnitude))
+                                .font(.system(size: 18, weight: .bold, design: .monospaced))
+                                .tracking(-2)
+                                .foregroundColor(.primary)
+                        }
                     }
-                }
 
-                // 深さ（数値を大きく）
-                if let depth = state.depth {
-                    depthView(depth: depth)
+                    // 深さ（数値を大きく）
+                    if let depth = state.depth {
+                        depthView(depth: depth)
+                    }
                 }
             }
 
@@ -210,8 +219,8 @@ struct EewLockScreenView: View {
                         .font(.system(size: 10, weight: .bold))
                         .foregroundColor(secondaryTextColor)
                     Text(formatDateTime(date))
-                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                        .foregroundColor(.primary)
+                        .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                        .foregroundColor(secondaryTextColor)
                         .tracking(-1)
                 }
             }
@@ -223,13 +232,20 @@ struct EewLockScreenView: View {
                         .font(.system(size: 10, weight: .bold))
                         .foregroundColor(secondaryTextColor)
                     Text(timerInterval: Date()...arrivalDate, countsDown: true)
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
-                        .foregroundColor(.primary)
+                        .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                        .foregroundColor(secondaryTextColor)
                         .tracking(-1)
                         .contentTransition(.numericText(countsDown: true))
                 }
             }
         }
+    }
+
+    // 検知方法ラベル（PLUM法/レベル法/1点検知）
+    private func detectionMethodLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 11, weight: .bold))
+            .foregroundColor(.orange)
     }
 
     // 深さ表示（数値を大きく）
@@ -515,6 +531,99 @@ struct ArrivalCountdownView: View {
             arrivalTime: nil,
             intensity: nil
         )
+    )
+}
+
+@available(iOS 17.0, *)
+#Preview("EEW - PLUM法", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+    EQMonitorLiveActivityWidget()
+} contentStates: {
+    LiveActivityContentState(
+        eventId: "20240101123456",
+        type: "eew",
+        hypocenterName: "関東地方",
+        magnitude: nil,
+        depth: nil,
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
+        maxIntensity: "5-",
+        serialNo: 1,
+        isFinal: false,
+        isWarning: false,
+        isCanceled: false,
+        headline: "関東地方で地震",
+        isPlum: true,
+        isLevel: false,
+        isOnePoint: false,
+        level: nil,
+        detectedAt: nil,
+        location: LocationInfo(
+            regionName: "東京都23区",
+            forecastIntensity: "4",
+            forecastLpgmIntensity: nil,
+            arrivalTime: ISO8601DateFormatter().string(from: Date().addingTimeInterval(15)),
+            intensity: nil
+        )
+    )
+}
+
+@available(iOS 17.0, *)
+#Preview("EEW - レベル法", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+    EQMonitorLiveActivityWidget()
+} contentStates: {
+    LiveActivityContentState(
+        eventId: "20240101123456",
+        type: "eew",
+        hypocenterName: "仮定震源",
+        magnitude: nil,
+        depth: nil,
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: false,
+        maxIntensity: "4",
+        serialNo: 1,
+        isFinal: false,
+        isWarning: false,
+        isCanceled: false,
+        headline: "地震発生",
+        isPlum: false,
+        isLevel: true,
+        isOnePoint: false,
+        level: nil,
+        detectedAt: nil,
+        location: LocationInfo(
+            regionName: "神奈川県東部",
+            forecastIntensity: "3",
+            forecastLpgmIntensity: nil,
+            arrivalTime: nil,
+            intensity: nil
+        )
+    )
+}
+
+@available(iOS 17.0, *)
+#Preview("EEW - 1点検知", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+    EQMonitorLiveActivityWidget()
+} contentStates: {
+    LiveActivityContentState(
+        eventId: "20240101123456",
+        type: "eew",
+        hypocenterName: "茨城県沖",
+        magnitude: 4.0,
+        depth: 30,
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
+        maxIntensity: "3",
+        serialNo: 1,
+        isFinal: false,
+        isWarning: false,
+        isCanceled: false,
+        headline: "茨城県沖で地震",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: true,
+        level: nil,
+        detectedAt: nil,
+        location: nil
     )
 }
 
