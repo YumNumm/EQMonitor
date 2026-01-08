@@ -152,9 +152,12 @@ struct EewLockScreenView: View {
                     }
                 }
 
-                // 中央: M, 深さ, 発生時刻
-                detailsView
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                // 中央: M, 深さ, 発生時刻（上詰め）
+                VStack(alignment: .leading) {
+                    detailsView
+                    Spacer(minLength: 0)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 // 右側: 現在地到達情報 + 予想震度（上揃え）
                 if let location = state.location {
