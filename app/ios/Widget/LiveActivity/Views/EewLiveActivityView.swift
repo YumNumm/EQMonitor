@@ -50,10 +50,10 @@ struct HeaderContainer: View {
                 if let serialNo = serialNo {
                     HStack(alignment: .firstTextBaseline, spacing: 0) {
                         Text("#")
-                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .font(.system(size: 12, weight: .semibold, design: .monospaced))
                             .foregroundColor(.white.opacity(0.7))
                         Text("\(serialNo)")
-                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .font(.system(size: 18, weight: .black, design: .monospaced))
                             .foregroundColor(.white)
                     }
                 }
@@ -205,8 +205,8 @@ struct EewLockScreenView: View {
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(secondaryTextColor)
                         Text(String(format: "%.1f", magnitude))
-                            .font(.system(size: 19, weight: .black, design: .monospaced))
-                            .tracking(-4) // 文字間隔を詰める
+                            .font(.system(size: 19, weight: .bold, design: .monospaced))
+                            .tracking(-2)
                             .foregroundColor(.primary)
                     }
                 }
@@ -242,12 +242,12 @@ struct EewLockScreenView: View {
             if depth == 0 {
                 // ごく浅い
                 Text("ごく浅い")
-                    .font(.system(size: 17, weight: .black))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.primary)
             } else if depth >= 700 {
                 // 700km以上
                 Text("\(depth)")
-                    .font(.system(size: 19, weight: .black, design: .monospaced))
+                    .font(.system(size: 19, weight: .bold, design: .monospaced))
                     .tracking(-1)
                     .foregroundColor(.primary)
                 Text("km以上")
@@ -256,7 +256,7 @@ struct EewLockScreenView: View {
             } else {
                 // 通常
                 Text("\(depth)")
-                    .font(.system(size: 19, weight: .black, design: .monospaced))
+                    .font(.system(size: 19, weight: .bold, design: .monospaced))
                     .tracking(-1)
                     .foregroundColor(.primary)
                 Text("km")
@@ -272,7 +272,7 @@ struct EewLockScreenView: View {
         VStack(alignment: .trailing, spacing: 4) {
             // 現在地名
             Text(location.regionName)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(.primary.opacity(0.85))
 
             // カウントダウンと予想震度を横並び
@@ -345,7 +345,7 @@ struct SquareIntensityBadge: View {
         let parts = intensity.formattedParts
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text(parts.main)
-                .font(.system(size: size.mainFontSize, weight: .black, design: .monospaced))
+                .font(.system(size: size.mainFontSize, weight: .bold, design: .monospaced))
             if let sub = parts.sub {
                 // 強弱の文字を太く
                 Text(sub)
@@ -386,7 +386,7 @@ struct ArrivalCountdownView: View {
 // MARK: - Preview
 
 @available(iOS 17.0, *)
-#Preview("EEW Lock Screen - Warning", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview("EEW - Content", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
@@ -395,12 +395,12 @@ struct ArrivalCountdownView: View {
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
         depth: 16,
-        originTime: "2024-01-01T07:10:09+09:00",
-        maxIntensity: "7",
-        serialNo: 5,
+        originTime: "2024-01-01T16:10:00+09:00",
+        maxIntensity: "6+",
+        serialNo: 32,
         isFinal: false,
         isWarning: true,
-        headline: "石川県能登地方で地震 石川 新潟で強い揺れ",
+        headline: "石川県で地震 北陸 甲信 東海 関東 東北 近畿で強い揺れ",
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -414,7 +414,35 @@ struct ArrivalCountdownView: View {
 }
 
 @available(iOS 17.0, *)
-#Preview("EEW Lock Screen - Forecast", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview("EEW - Compact Warning", as: .dynamicIsland(.compact), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+    EQMonitorLiveActivityWidget()
+} contentStates: {
+    LiveActivityContentState(
+        eventId: "20240101123456",
+        type: "eew",
+        hypocenterName: "能登半島沖",
+        magnitude: 6.2,
+        depth: 10,
+        originTime: "2024-01-01T16:10:00+09:00",
+        maxIntensity: "6+",
+        serialNo: 3,
+        isFinal: false,
+        isWarning: true,
+        headline: "能登半島沖で地震 石川県加賀で強い揺れ",
+        level: nil,
+        detectedAt: nil,
+        location: LocationInfo(
+            regionName: "石川県加賀",
+            forecastIntensity: "5+",
+            forecastLpgmIntensity: nil,
+            arrivalTime: nil,
+            intensity: nil
+        )
+    )
+}
+
+@available(iOS 17.0, *)
+#Preview("EEW - Compact Forecast", as: .dynamicIsland(.compact), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
@@ -423,7 +451,7 @@ struct ArrivalCountdownView: View {
         hypocenterName: "茨城県沖",
         magnitude: 4.2,
         depth: 40,
-        originTime: "2024-01-01T12:34:56+09:00",
+        originTime: "2024-01-01T16:10:00+09:00",
         maxIntensity: "3",
         serialNo: 1,
         isFinal: false,
@@ -436,55 +464,27 @@ struct ArrivalCountdownView: View {
 }
 
 @available(iOS 17.0, *)
-#Preview("EEW Lock Screen - Warning Final", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview("EEW - Minimal", as: .dynamicIsland(.minimal), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
         eventId: "20240101123456",
         type: "eew",
-        hypocenterName: "能登半島沖",
-        magnitude: 5.8,
-        depth: 10,
+        hypocenterName: "石川県能登地方",
+        magnitude: 7.6,
+        depth: 16,
         originTime: "2024-01-01T16:10:00+09:00",
-        maxIntensity: "6+",
-        serialNo: 12,
-        isFinal: true,
-        isWarning: true,
-        headline: "能登半島沖で地震 石川県加賀で強い揺れ",
-        level: nil,
-        detectedAt: nil,
-        location: LocationInfo(
-            regionName: "石川県加賀",
-            forecastIntensity: "6-",
-            forecastLpgmIntensity: "3",
-            arrivalTime: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-5)),
-            intensity: nil
-        )
-    )
-}
-
-@available(iOS 17.0, *)
-#Preview("EEW Lock Screen - Shallow", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
-    EQMonitorLiveActivityWidget()
-} contentStates: {
-    LiveActivityContentState(
-        eventId: "20240101123456",
-        type: "eew",
-        hypocenterName: "熊本県熊本地方",
-        magnitude: 5.0,
-        depth: 0,
-        originTime: "2024-01-01T12:00:00+09:00",
-        maxIntensity: "5+",
-        serialNo: 3,
+        maxIntensity: "7",
+        serialNo: 5,
         isFinal: false,
         isWarning: true,
-        headline: "熊本県熊本地方で地震 熊本で強い揺れ",
+        headline: "石川県能登地方で地震 石川 新潟で強い揺れ",
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
-            regionName: "熊本県",
-            forecastIntensity: "5+",
-            forecastLpgmIntensity: nil,
+            regionName: "東京都23区",
+            forecastIntensity: "5-",
+            forecastLpgmIntensity: "2",
             arrivalTime: nil,
             intensity: nil
         )
@@ -492,73 +492,29 @@ struct ArrivalCountdownView: View {
 }
 
 @available(iOS 17.0, *)
-#Preview("EEW Lock Screen - Deep", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview("Shake Detection - Lock Screen", as: .content, using: LiveActivitiesAppAttributes(eventId: "shake-event-uuid", type: "shake_detection")) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
-        eventId: "20240101123456",
-        type: "eew",
-        hypocenterName: "小笠原諸島西方沖",
-        magnitude: 8.1,
-        depth: 700,
-        originTime: "2024-01-01T12:00:00+09:00",
-        maxIntensity: "4",
-        serialNo: 5,
-        isFinal: false,
-        isWarning: false,
-        headline: "小笠原諸島西方沖で地震",
-        level: nil,
-        detectedAt: nil,
-        location: nil
-    )
-}
-
-@available(iOS 17.0, *)
-#Preview("EEW Lock Screen - Long Headline", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
-    EQMonitorLiveActivityWidget()
-} contentStates: {
-    LiveActivityContentState(
-        eventId: "20240101123456",
-        type: "eew",
-        hypocenterName: "三重県南東沖",
-        magnitude: 8.5,
-        depth: 30,
-        originTime: "2024-01-01T12:00:00+09:00",
-        maxIntensity: "6+",
-        serialNo: 8,
-        isFinal: false,
-        isWarning: true,
-        headline: "三重県南東沖で地震 北陸 甲信 東海 東北 関東 近畿で強い揺れ",
-        level: nil,
-        detectedAt: nil,
+        eventId: "shake-event-uuid",
+        type: "shake_detection",
+        hypocenterName: nil,
+        magnitude: nil,
+        depth: nil,
+        originTime: nil,
+        maxIntensity: nil,
+        serialNo: nil,
+        isFinal: nil,
+        isWarning: nil,
+        headline: nil,
+        level: "Strong",
+        detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
             regionName: "東京都23区",
-            forecastIntensity: "5+",
-            forecastLpgmIntensity: "3",
-            arrivalTime: ISO8601DateFormatter().string(from: Date().addingTimeInterval(60)),
-            intensity: nil
+            forecastIntensity: nil,
+            forecastLpgmIntensity: nil,
+            arrivalTime: nil,
+            intensity: 3.2
         )
-    )
-}
-
-@available(iOS 17.0, *)
-#Preview("EEW Lock Screen - No Headline", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
-    EQMonitorLiveActivityWidget()
-} contentStates: {
-    LiveActivityContentState(
-        eventId: "20240101123456",
-        type: "eew",
-        hypocenterName: "千葉県東方沖",
-        magnitude: 4.0,
-        depth: 50,
-        originTime: "2024-01-01T12:00:00+09:00",
-        maxIntensity: "3",
-        serialNo: 1,
-        isFinal: false,
-        isWarning: false,
-        headline: nil,
-        level: nil,
-        detectedAt: nil,
-        location: nil
     )
 }
