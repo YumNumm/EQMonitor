@@ -259,10 +259,15 @@ struct EewLockScreenView: View {
 
     private func arrivalView(location: LocationInfo) -> some View {
         VStack(alignment: .trailing, spacing: 4) {
-            // 現在地名
-            Text(location.regionName)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.primary.opacity(0.85))
+            // 現在地名（アイコン付き）
+            HStack(spacing: 2) {
+                Image(systemName: "location.fill")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(.primary.opacity(0.6))
+                Text(location.regionName)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.primary.opacity(0.85))
+            }
 
             // 現在地予想震度
             if let intensity = location.forecastIntensityValue {
