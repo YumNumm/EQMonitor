@@ -15,6 +15,7 @@ import WidgetKit
 struct HeaderContainer: View {
     let isWarning: Bool
     let headline: String?
+    let serialNo: Int?
 
     private let stripeHeight: CGFloat = 8
 
@@ -25,22 +26,38 @@ struct HeaderContainer: View {
                 .frame(height: stripeHeight)
 
             // 下部: ヘッダーコンテンツ
-            VStack(alignment: .leading, spacing: 2) {
-                // 緊急地震速報(予報) or 緊急地震速報(警報)
-                Text(eewTypeLabel)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.85))
+            HStack(alignment: .top) {
+                // 左側: EEWタイプとheadline
+                VStack(alignment: .leading, spacing: 2) {
+                    // 緊急地震速報(予報) or 緊急地震速報(警報)
+                    Text(eewTypeLabel)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.85))
 
-                // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
-                if let headline = headline, !headline.isEmpty {
-                    Text(headline)
-                        .font(.system(size: 15, weight: .heavy))
-                        .foregroundColor(.white)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.8)
+                    // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
+                    if let headline = headline, !headline.isEmpty {
+                        Text(headline)
+                            .font(.system(size: 15, weight: .heavy))
+                            .foregroundColor(.white)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.8)
+                    }
+                }
+
+                Spacer()
+
+                // 右端: serialNo
+                if let serialNo = serialNo {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("#")
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.7))
+                        Text("\(serialNo)")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white)
+                    }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(backgroundColor)
@@ -109,7 +126,8 @@ struct EewLockScreenView: View {
         VStack(spacing: 0) {
             HeaderContainer(
                 isWarning: state.isWarning ?? false,
-                headline: state.headline
+                headline: state.headline,
+                serialNo: state.serialNo
             )
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
@@ -120,7 +138,7 @@ struct EewLockScreenView: View {
                 // 左側: 予想最大震度
                 maxIntensityView
 
-                // 中央: 震源情報
+                // 中央: 震源情報（横幅最大）
                 VStack(alignment: .leading, spacing: 2) {
                     // 震源地ラベル
                     Text("震源地")
@@ -138,31 +156,15 @@ struct EewLockScreenView: View {
                     // M, 深さ, 発生時刻（縦に並べる）
                     detailsView
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                // 右側: 現在地到達情報 + 予想震度
+                // 右側: 現在地到達情報 + 予想震度（上揃え）
                 if let location = state.location {
                     arrivalView(location: location)
                 }
             }
             .padding(.horizontal, standardMargin)
             .padding(.bottom, standardMargin)
-            .overlay(alignment: .bottomTrailing) {
-                // serialNo を右下に表示
-                if let serialNo = state.serialNo {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("#")
-                            .font(.system(size: 10, weight: .medium, design: .monospaced))
-                            .foregroundColor(secondaryTextColor)
-                        Text("\(serialNo)")
-                            .font(.system(size: 12, weight: .bold, design: .monospaced))
-                            .foregroundColor(secondaryTextColor)
-                    }
-                    .padding(.trailing, standardMargin)
-                    .padding(.bottom, 2)
-                }
-            }
         }
     }
 
@@ -290,6 +292,9 @@ struct EewLockScreenView: View {
                     }
                 }
             }
+
+            // 上揃えにするためのSpacer
+            Spacer(minLength: 0)
         }
     }
 }
