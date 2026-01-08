@@ -36,12 +36,19 @@ struct LiveActivityContentState: Codable, Hashable {
     let hypocenterName: String?
     let magnitude: Double?
     let depth: Int?
-    let originTime: String?
+    let time: String?  // 発生時刻または検知時刻（ISO8601形式）
+    let isOriginTime: Bool?  // trueなら発生時刻、falseなら検知時刻
     let maxIntensity: String?
     let serialNo: Int?
     let isFinal: Bool?
     let isWarning: Bool?
+    let isCanceled: Bool?  // キャンセル報かどうか
     let headline: String?  // 例: "石川県能登地方で地震" または警報時 "XX YYで強い揺れ"
+
+    // === 検知方法フラグ ===
+    let isPlum: Bool?  // PLUM法による検知
+    let isLevel: Bool?  // レベル法による検知
+    let isOnePoint: Bool?  // 1点検知（IPF法1点）
 
     // === 揺れ検知用フィールド ===
     let level: String?
@@ -72,6 +79,21 @@ struct LiveActivityContentState: Codable, Hashable {
     var shakeLevel: ShakeDetectionLevel? {
         guard let level = level else { return nil }
         return ShakeDetectionLevel(rawValue: level)
+    }
+
+    /// 時刻（Date型）
+    var timeDate: Date? {
+        guard let time = time else { return nil }
+        return ISO8601DateFormatter().date(from: time)
+    }
+
+    /// 時刻ラベル（「地震発生」または「地震検知」）
+    var timeLabel: String {
+        if isOriginTime ?? true {
+            return "地震発生"
+        } else {
+            return "地震検知"
+        }
     }
 }
 

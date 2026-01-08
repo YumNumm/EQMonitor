@@ -156,7 +156,6 @@ struct MinimalView: View {
 
     var body: some View {
         if state.isEew {
-            // 震度を表示（認識しやすく）
             if let location = state.location,
                let intensity = location.forecastIntensityValue {
                 MinimalIntensityBadge(intensity: intensity)
@@ -165,6 +164,7 @@ struct MinimalView: View {
             } else {
                 Image("AppIconForeground")
                     .resizable()
+                    .scaledToFit()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 18, height: 18)
             }
@@ -249,14 +249,14 @@ struct ExpandedIntensityBadge: View {
         let parts = intensity.formattedParts
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text(parts.main)
-                .font(.system(size: 28, weight: .black, design: .monospaced))
+                .font(.system(size: 28, weight: .heavy, design: .monospaced))
             if let sub = parts.sub {
                 Text(sub)
                     .font(.system(size: 12, weight: .bold, design: .monospaced))
             }
         }
         .foregroundColor(intensity.textColor)
-        .frame(width: 44, height: 44)
+        .frame(width: 38, height: 38)
         .background(intensity.backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
@@ -268,11 +268,11 @@ struct ExpandedTrailingView: View {
 
     var body: some View {
         if state.isEew {
-            VStack(alignment: .trailing, spacing: 3) {
+            VStack(alignment: .trailing, spacing: 2) {
                 // 警報/予報
                 if let isWarning = state.isWarning {
                     Text(isWarning ? "警報" : "予報")
-                    
+
                         .font(.system(size: 13, weight: .heavy))
                         .foregroundColor(isWarning ? .red : .orange)
                 }
@@ -352,18 +352,19 @@ struct ExpandedBottomView: View {
                                 .foregroundColor(.secondary)
                             Text(String(format: "%.1f", magnitude))
                                 .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                .tracking(-2)
                         }
                     }
                     // 深さ
                     if let depth = state.depth {
                         HStack(alignment: .firstTextBaseline, spacing: 1) {
                             Text("深さ")
-                                .font(.system(size: 9, weight: .medium))
+                                .font(.system(size: 11, weight: .medium))
                                 .foregroundColor(.secondary)
                             Text("\(depth)")
                                 .font(.system(size: 16, weight: .bold, design: .monospaced))
                             Text("km")
-                                .font(.system(size: 9, weight: .medium))
+                                .font(.system(size: 11, weight: .medium))
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -409,15 +410,9 @@ struct ArrivalInfoView: View {
                 .lineLimit(1)
 
             if let arrivalDate = location.arrivalDate {
-                let isArrived = arrivalDate <= Date()
-                if isArrived {
-                    Text("到達済")
-                        .font(.system(size: 12, weight: .black, design: .monospaced))
-                        .foregroundColor(.red)
-                } else {
-                    Text(arrivalDate, style: .relative)
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                }
+                Text(arrivalDate, style: .relative)
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+
             }
         }
     }
@@ -426,26 +421,31 @@ struct ArrivalInfoView: View {
 // MARK: - Preview
 
 @available(iOS 17.0, *)
-#Preview("EEW - Dynamic Island Expanded", as: .dynamicIsland(.expanded), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview("EEW - Content", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
         eventId: "20240101123456",
         type: "eew",
         hypocenterName: "石川県能登地方",
-        magnitude: 7.6,
-        depth: 16,
-        originTime: "2024-01-01T16:10:00+09:00",
-        maxIntensity: "7",
-        serialNo: 5,
+        magnitude: 6.3,
+        depth: 70,
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
+        maxIntensity: "6+",
+        serialNo: 32,
         isFinal: false,
         isWarning: true,
-        headline: "石川県能登地方で地震 石川 新潟で強い揺れ",
+        isCanceled: false,
+        headline: "釧路沖で地震 北海道で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
-            regionName: "東京都23区",
-            forecastIntensity: "5-",
+            regionName: "根室地方南部",
+            forecastIntensity: "4",
             forecastLpgmIntensity: "2",
             arrivalTime: ISO8601DateFormatter().string(from: Date().addingTimeInterval(30)),
             intensity: nil
@@ -463,12 +463,17 @@ struct ArrivalInfoView: View {
         hypocenterName: "能登半島沖",
         magnitude: 6.2,
         depth: 10,
-        originTime: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
         maxIntensity: "6+",
         serialNo: 3,
         isFinal: false,
         isWarning: true,
+        isCanceled: false,
         headline: "能登半島沖で地震 石川県加賀で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -491,12 +496,17 @@ struct ArrivalInfoView: View {
         hypocenterName: "茨城県沖",
         magnitude: 4.2,
         depth: 40,
-        originTime: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
         maxIntensity: "3",
         serialNo: 1,
         isFinal: false,
         isWarning: false,
+        isCanceled: false,
         headline: "茨城県沖で地震",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: nil
@@ -513,12 +523,17 @@ struct ArrivalInfoView: View {
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
         depth: 16,
-        originTime: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
         maxIntensity: "7",
         serialNo: 5,
         isFinal: false,
         isWarning: true,
+        isCanceled: false,
         headline: "石川県能登地方で地震 石川 新潟で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -541,12 +556,17 @@ struct ArrivalInfoView: View {
         hypocenterName: nil,
         magnitude: nil,
         depth: nil,
-        originTime: nil,
+        time: nil,
+        isOriginTime: nil,
         maxIntensity: nil,
         serialNo: nil,
         isFinal: nil,
         isWarning: nil,
+        isCanceled: nil,
         headline: nil,
+        isPlum: nil,
+        isLevel: nil,
+        isOnePoint: nil,
         level: "Strong",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(

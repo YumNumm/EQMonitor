@@ -203,11 +203,10 @@ struct EewLockScreenView: View {
                 }
             }
 
-            // 発生時刻（M, 深さの下）
-            if let originTime = state.originTime,
-               let date = ISO8601DateFormatter().date(from: originTime) {
+            // 発生/検知時刻（M, 深さの下）
+            if let date = state.timeDate {
                 HStack(spacing: 4) {
-                    Text("地震発生")
+                    Text(state.timeLabel)
                         .font(.system(size: 10, weight: .bold))
                         .foregroundColor(secondaryTextColor)
                     Text(formatDateTime(date))
@@ -403,12 +402,17 @@ struct ArrivalCountdownView: View {
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
         depth: 16,
-        originTime: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
         maxIntensity: "6+",
         serialNo: 32,
         isFinal: false,
         isWarning: true,
+        isCanceled: false,
         headline: "石川県で地震 北陸 甲信 東海 関東 東北 近畿で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -431,12 +435,17 @@ struct ArrivalCountdownView: View {
         hypocenterName: "能登半島沖",
         magnitude: 6.2,
         depth: 10,
-        originTime: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
         maxIntensity: "6+",
         serialNo: 3,
         isFinal: false,
         isWarning: true,
+        isCanceled: false,
         headline: "能登半島沖で地震 石川県加賀で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -459,12 +468,17 @@ struct ArrivalCountdownView: View {
         hypocenterName: "茨城県沖",
         magnitude: 4.2,
         depth: 40,
-        originTime: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
         maxIntensity: "3",
         serialNo: 1,
         isFinal: false,
         isWarning: false,
+        isCanceled: false,
         headline: "茨城県沖で地震",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: nil
@@ -481,12 +495,17 @@ struct ArrivalCountdownView: View {
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
         depth: 16,
-        originTime: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-01T16:10:00+09:00",
+        isOriginTime: true,
         maxIntensity: "7",
         serialNo: 5,
         isFinal: false,
         isWarning: true,
+        isCanceled: false,
         headline: "石川県能登地方で地震 石川 新潟で強い揺れ",
+        isPlum: false,
+        isLevel: false,
+        isOnePoint: false,
         level: nil,
         detectedAt: nil,
         location: LocationInfo(
@@ -509,12 +528,17 @@ struct ArrivalCountdownView: View {
         hypocenterName: nil,
         magnitude: nil,
         depth: nil,
-        originTime: nil,
+        time: nil,
+        isOriginTime: nil,
         maxIntensity: nil,
         serialNo: nil,
         isFinal: nil,
         isWarning: nil,
+        isCanceled: nil,
         headline: nil,
+        isPlum: nil,
+        isLevel: nil,
+        isOnePoint: nil,
         level: "Strong",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
