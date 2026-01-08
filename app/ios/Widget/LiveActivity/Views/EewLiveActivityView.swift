@@ -15,22 +15,22 @@ import WidgetKit
 struct HeaderContainer: View {
     let isWarning: Bool
     let headline: String?
-    
+
     private let stripeHeight: CGFloat = 8
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // 上部: ストライプパターン
             StripePattern(isWarning: isWarning)
                 .frame(height: stripeHeight)
-            
+
             // 下部: ヘッダーコンテンツ
             VStack(alignment: .leading, spacing: 2) {
                 // 緊急地震速報(予報) or 緊急地震速報(警報)
                 Text(eewTypeLabel)
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundColor(.white.opacity(0.85))
-                
+
                 // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
                 if let headline = headline, !headline.isEmpty {
                     Text(headline)
@@ -48,11 +48,11 @@ struct HeaderContainer: View {
         // HIG: ContainerRelativeShapeで角丸をWidgetに合わせる
         .clipShape(ContainerRelativeShape())
     }
-    
+
     private var eewTypeLabel: String {
         isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
     }
-    
+
     private var backgroundColor: Color {
         if isWarning {
             return Color(red: 0.7, green: 0.1, blue: 0.1)
@@ -67,18 +67,18 @@ struct HeaderContainer: View {
 @available(iOS 16.1, *)
 struct StripePattern: View {
     let isWarning: Bool
-    
+
     var body: some View {
         GeometryReader { geometry in
             let stripeWidth: CGFloat = 8
             let colors = isWarning
             ? [Color.red, Color.black]
             : [Color.orange, Color(red: 0.5, green: 0.25, blue: 0.0)]
-            
+
             Canvas { context, size in
                 let totalWidth = size.width + size.height * 2
                 var x: CGFloat = -size.height
-                
+
                 while x < totalWidth {
                     var path = Path()
                     path.move(to: CGPoint(x: x, y: size.height))
@@ -86,7 +86,7 @@ struct StripePattern: View {
                     path.addLine(to: CGPoint(x: x + size.height + stripeWidth, y: 0))
                     path.addLine(to: CGPoint(x: x + size.height, y: 0))
                     path.closeSubpath()
-                    
+
                     let colorIndex = Int((x + size.height) / stripeWidth) % 2
                     context.fill(path, with: .color(colors[abs(colorIndex)]))
                     x += stripeWidth
@@ -99,12 +99,12 @@ struct StripePattern: View {
 @available(iOS 16.1, *)
 struct EewLockScreenView: View {
     let state: LiveActivityContentState
-    
+
     // HIG: The standard layout margin for Live Activities on the Lock Screen is 14 points.
     private let standardMargin: CGFloat = 14
     // 薄い文字色を統一
     private let secondaryTextColor: Color = .primary.opacity(0.55)
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HeaderContainer(
@@ -114,19 +114,19 @@ struct EewLockScreenView: View {
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
             .padding(.bottom, 4)
-            
+
             // メインコンテンツ
             HStack(alignment: .bottom, spacing: 10) {
                 // 左側: 予想最大震度
                 maxIntensityView
-                
+
                 // 中央: 震源情報
                 VStack(alignment: .leading, spacing: 2) {
                     // 震源地ラベル
                     Text("震源地")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(secondaryTextColor)
-                    
+
                     // 震源地名（大きく）
                     if let name = state.hypocenterName {
                         Text(name)
@@ -134,13 +134,13 @@ struct EewLockScreenView: View {
                             .foregroundColor(.primary)
                             .lineLimit(1)
                     }
-                    
+
                     // M, 深さ, 発生時刻（縦に並べる）
                     detailsView
                 }
-                
+
                 Spacer()
-                
+
                 // 右側: 現在地到達情報 + 予想震度
                 if let location = state.location {
                     arrivalView(location: location)
@@ -165,18 +165,18 @@ struct EewLockScreenView: View {
             }
         }
     }
-    
+
     // MARK: - Date Formatter
-    
+
     private func formatDateTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd HH:mm:ss"
         formatter.locale = Locale(identifier: "ja_JP")
         return formatter.string(from: date)
     }
-    
+
     // MARK: - Max Intensity (予想最大震度)
-    
+
     private var maxIntensityView: some View {
         Group {
             if let intensity = state.intensityValue {
@@ -189,9 +189,9 @@ struct EewLockScreenView: View {
             }
         }
     }
-    
+
     // MARK: - Details (M, 深さ, 発生時刻を縦に)
-    
+
     private var detailsView: some View {
         VStack(alignment: .leading, spacing: 3) {
             // M, 深さ（横並び）
@@ -200,21 +200,21 @@ struct EewLockScreenView: View {
                 if let magnitude = state.magnitude {
                     HStack(alignment: .firstTextBaseline, spacing: 0) {
                         Text("M")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(secondaryTextColor)
                         Text(String(format: "%.1f", magnitude))
                             .font(.system(size: 19, weight: .black, design: .monospaced))
-                            .tracking(-1) // 文字間隔を詰める
+                            .tracking(-4) // 文字間隔を詰める
                             .foregroundColor(.primary)
                     }
                 }
-                
+
                 // 深さ（数値を大きく）
                 if let depth = state.depth {
                     depthView(depth: depth)
                 }
             }
-            
+
             // 発生時刻（M, 深さの下）
             if let originTime = state.originTime,
                let date = ISO8601DateFormatter().date(from: originTime) {
@@ -229,14 +229,14 @@ struct EewLockScreenView: View {
             }
         }
     }
-    
+
     // 深さ表示（数値を大きく）
     private func depthView(depth: Int) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
             Text("深さ")
-                .font(.system(size: 10, weight: .medium))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(secondaryTextColor)
-            
+
             if depth == 0 {
                 // ごく浅い
                 Text("ごく浅い")
@@ -263,28 +263,31 @@ struct EewLockScreenView: View {
             }
         }
     }
-    
+
     // MARK: - Arrival Info
-    
+
     private func arrivalView(location: LocationInfo) -> some View {
         VStack(alignment: .trailing, spacing: 4) {
             // 現在地名
             Text(location.regionName)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(.primary.opacity(0.85))
-            
-            // 到達カウントダウン
-            if let arrivalDate = location.arrivalDate {
-                ArrivalCountdownView(arrivalDate: arrivalDate)
-            }
-            
-            // 現在地予想震度
-            if let intensity = location.forecastIntensityValue {
-                VStack(spacing: 2) {
-                    Text("予想震度")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(secondaryTextColor)
-                    SquareIntensityBadge(intensity: intensity, size: .small)
+
+            // カウントダウンと予想震度を横並び
+            HStack(alignment: .bottom, spacing: 8) {
+                // 到達カウントダウン
+                if let arrivalDate = location.arrivalDate {
+                    ArrivalCountdownView(arrivalDate: arrivalDate)
+                }
+
+                // 現在地予想震度
+                if let intensity = location.forecastIntensityValue {
+                    VStack(spacing: 2) {
+                        Text("予想震度")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(secondaryTextColor)
+                        SquareIntensityBadge(intensity: intensity, size: .small)
+                    }
                 }
             }
         }
@@ -298,28 +301,28 @@ struct SquareIntensityBadge: View {
     enum Size {
         case normal
         case small
-        
+
         var badgeSize: CGFloat {
             switch self {
             case .normal: return 56
             case .small: return 44
             }
         }
-        
+
         var mainFontSize: CGFloat {
             switch self {
             case .normal: return 36
             case .small: return 28
             }
         }
-        
+
         var subFontSize: CGFloat {
             switch self {
             case .normal: return 15
             case .small: return 11
             }
         }
-        
+
         // HIG準拠: 連続的な角丸（continuous corner radius）
         // iOSの標準的なコンポーネントでは、サイズに応じた角丸を使用
         var cornerRadius: CGFloat {
@@ -329,10 +332,10 @@ struct SquareIntensityBadge: View {
             }
         }
     }
-    
+
     let intensity: IntensityValue
     var size: Size = .normal
-    
+
     var body: some View {
         let parts = intensity.formattedParts
         HStack(alignment: .firstTextBaseline, spacing: 0) {
@@ -358,9 +361,9 @@ struct SquareIntensityBadge: View {
 struct ArrivalCountdownView: View {
     let arrivalDate: Date
     private let secondaryTextColor: Color = .primary.opacity(0.55)
-    
+
     var body: some View {
-        
+
         VStack(alignment: .trailing, spacing: 0) {
             Text("到達まで")
                 .font(.system(size: 10, weight: .semibold))
@@ -371,7 +374,7 @@ struct ArrivalCountdownView: View {
                 .multilineTextAlignment(.trailing)
         }
         .frame(alignment: .trailing)
-        
+
     }
 }
 
