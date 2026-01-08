@@ -16,6 +16,7 @@ struct HeaderContainer: View {
     let isWarning: Bool
     let headline: String?
     let serialNo: Int?
+    let arrivalDate: Date?
 
     private let stripeHeight: CGFloat = 8
 
@@ -26,7 +27,7 @@ struct HeaderContainer: View {
                 .frame(height: stripeHeight)
 
             // 下部: ヘッダーコンテンツ
-            HStack(alignment: .top) {
+            HStack(alignment: arrivalDate != nil ? .top : .center) {
                 // 左側: EEWタイプとheadline
                 VStack(alignment: .leading, spacing: 2) {
                     // 緊急地震速報(予報) or 緊急地震速報(警報)
@@ -46,15 +47,31 @@ struct HeaderContainer: View {
 
                 Spacer()
 
-                // 右端: serialNo
-                if let serialNo = serialNo {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("#")
-                            .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.7))
-                        Text("\(serialNo)")
-                            .font(.system(size: 18, weight: .black, design: .monospaced))
-                            .foregroundColor(.white)
+                // 右端: serialNo + 到達カウントダウン
+                VStack(alignment: .trailing, spacing: 2) {
+                    // serialNo
+                    if let serialNo = serialNo {
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                            Text("#")
+                                .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                                .foregroundColor(.white.opacity(0.7))
+                            Text("\(serialNo)")
+                                .font(.system(size: 18, weight: .black, design: .monospaced))
+                                .foregroundColor(.white)
+                        }
+                    }
+
+                    // 到達カウントダウン
+                    if let arrivalDate = arrivalDate {
+                        VStack(alignment: .trailing, spacing: 0) {
+                            Text("到達まで")
+                                .font(.system(size: 9, weight: .semibold))
+                                .foregroundColor(.white.opacity(0.7))
+                            Text(timerInterval: Date()...arrivalDate, countsDown: true)
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.trailing)
+                        }
                     }
                 }
             }
@@ -127,7 +144,8 @@ struct EewLockScreenView: View {
             HeaderContainer(
                 isWarning: state.isWarning ?? false,
                 headline: state.headline,
-                serialNo: state.serialNo
+                serialNo: state.serialNo,
+                arrivalDate: state.location?.arrivalDate
             )
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
@@ -251,21 +269,13 @@ struct EewLockScreenView: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(.primary.opacity(0.85))
 
-            // カウントダウンと予想震度を横並び
-            HStack(alignment: .bottom, spacing: 8) {
-                // 到達カウントダウン
-                if let arrivalDate = location.arrivalDate {
-                    ArrivalCountdownView(arrivalDate: arrivalDate)
-                }
-
-                // 現在地予想震度
-                if let intensity = location.forecastIntensityValue {
-                    VStack(spacing: 2) {
-                        Text("予想震度")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(secondaryTextColor)
-                        SquareIntensityBadge(intensity: intensity, size: .small)
-                    }
+            // 現在地予想震度
+            if let intensity = location.forecastIntensityValue {
+                VStack(spacing: 2) {
+                    Text("予想震度")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(secondaryTextColor)
+                    SquareIntensityBadge(intensity: intensity, size: .small)
                 }
             }
 
