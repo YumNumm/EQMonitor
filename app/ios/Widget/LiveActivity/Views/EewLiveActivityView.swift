@@ -135,10 +135,7 @@ struct EewLockScreenView: View {
 
             // メインコンテンツ
             HStack(alignment: .bottom, spacing: 8) {
-                // 左側: 震源地名
-                hypocenterView
-
-                // 中央: 最大震度 + 震源情報
+                // 左側: 最大震度 + 震源情報
                 VStack(alignment: .leading, spacing: 4) {
                     // 最大震度
                     if let intensity = state.intensityValue {
@@ -164,25 +161,6 @@ struct EewLockScreenView: View {
             .padding(.horizontal, standardMargin)
             .padding(.bottom, standardMargin)
         }
-    }
-
-    // MARK: - Hypocenter View (震源地)
-
-    private var hypocenterView: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text("震源地")
-                .font(.system(size: 10, weight: .medium))
-                .foregroundColor(secondaryTextColor)
-
-            if let name = state.hypocenterName {
-                Text(name)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.8)
-            }
-        }
-        .frame(maxWidth: 100, alignment: .leading)
     }
 
     // MARK: - Date Formatter
