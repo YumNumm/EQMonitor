@@ -189,6 +189,7 @@ extension ShakeDetectionLevel {
         serialNo: nil,
         isFinal: nil,
         isWarning: nil,
+        headline: nil,
         level: "Strong",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
@@ -214,6 +215,7 @@ extension ShakeDetectionLevel {
         serialNo: nil,
         isFinal: nil,
         isWarning: nil,
+        headline: nil,
         level: "Weak",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
@@ -239,6 +241,7 @@ extension ShakeDetectionLevel {
         serialNo: nil,
         isFinal: nil,
         isWarning: nil,
+        headline: nil,
         level: "Stronger",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
@@ -264,6 +267,7 @@ extension ShakeDetectionLevel {
         serialNo: nil,
         isFinal: nil,
         isWarning: nil,
+        headline: nil,
         level: "Medium",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(

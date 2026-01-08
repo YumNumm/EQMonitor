@@ -41,6 +41,7 @@ struct LiveActivityContentState: Codable, Hashable {
     let serialNo: Int?
     let isFinal: Bool?
     let isWarning: Bool?
+    let headline: String?  // 例: "石川県能登地方で地震" または警報時 "XX YYで強い揺れ"
 
     // === 揺れ検知用フィールド ===
     let level: String?
