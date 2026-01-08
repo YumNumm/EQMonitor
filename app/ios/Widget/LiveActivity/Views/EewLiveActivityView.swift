@@ -197,7 +197,7 @@ struct EewLockScreenView: View {
             if let originTime = state.originTime,
                let date = ISO8601DateFormatter().date(from: originTime) {
                 HStack(spacing: 4) {
-                    Text("発生")
+                    Text("地震発生")
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(secondaryTextColor)
                     Text(formatDateTime(date))
@@ -209,7 +209,7 @@ struct EewLockScreenView: View {
             // 到達カウントダウン（発生時刻の下）
             if let arrivalDate = state.location?.arrivalDate {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("到達まで")
+                    Text("主要動到達まで")
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(secondaryTextColor)
                     Text(timerInterval: Date()...arrivalDate, countsDown: true)
@@ -259,23 +259,20 @@ struct EewLockScreenView: View {
 
     private func arrivalView(location: LocationInfo) -> some View {
         VStack(alignment: .trailing, spacing: 4) {
-            // 現在地名（アイコン付き）
-            HStack(spacing: 2) {
-                Image(systemName: "location.fill")
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundColor(.primary.opacity(0.6))
-                    .symbolEffect(.pulse)
-                Text(location.regionName)
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(.primary.opacity(0.85))
-            }
-
-            // 現在地予想震度
+            // 現在地予想震度（地名と結合）
             if let intensity = location.forecastIntensityValue {
                 VStack(spacing: 2) {
-                    Text("予想震度")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(secondaryTextColor)
+                    // 地名の予想震度（アイコン付き）
+                    HStack(spacing: 2) {
+                        Image(systemName: "location.fill")
+                            .font(.system(size: 9, weight: .semibold))
+                            .foregroundColor(secondaryTextColor)
+                            .symbolEffect(.pulse)
+                        Text("\(location.regionName)の予想震度")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(secondaryTextColor)
+                            .lineLimit(1)
+                    }
                     SquareIntensityBadge(intensity: intensity, size: .small)
                 }
             }
