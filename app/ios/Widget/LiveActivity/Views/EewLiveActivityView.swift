@@ -264,6 +264,7 @@ struct EewLockScreenView: View {
                 Image(systemName: "location.fill")
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(.primary.opacity(0.6))
+                    .symbolEffect(.pulse)
                 Text(location.regionName)
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(.primary.opacity(0.85))
