@@ -61,16 +61,15 @@ struct HeaderContainer: View {
                         }
                     }
 
-                    // 到達カウントダウン
+                    // 到達カウントダウン（横並び）
                     if let arrivalDate = arrivalDate {
-                        VStack(alignment: .trailing, spacing: 0) {
+                        HStack(alignment: .firstTextBaseline, spacing: 4) {
                             Text("到達まで")
-                                .font(.system(size: 9, weight: .semibold))
+                                .font(.system(size: 10, weight: .semibold))
                                 .foregroundColor(.white.opacity(0.7))
                             Text(timerInterval: Date()...arrivalDate, countsDown: true)
                                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                                 .foregroundColor(.white)
-                                .multilineTextAlignment(.trailing)
                         }
                     }
                 }
