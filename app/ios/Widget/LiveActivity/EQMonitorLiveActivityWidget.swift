@@ -6,13 +6,14 @@
 //
 
 import ActivityKit
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 @available(iOS 16.1, *)
 struct EQMonitorLiveActivityWidget: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: LiveActivitiesAppAttributes.self) { context in
+        ActivityConfiguration(for: LiveActivitiesAppAttributes.self) {
+            context in
             // Lock Screen / Banner表示
             LockScreenLiveActivityView(context: context)
         } dynamicIsland: { context in
@@ -70,7 +71,8 @@ struct CompactLeadingView: View {
         if state.isEew {
             // EEW: 予想震度（コンパクトに）
             if let location = state.location,
-               let intensity = location.forecastIntensityValue {
+                let intensity = location.forecastIntensityValue
+            {
                 CompactIntensityBadge(intensity: intensity)
             } else if let intensity = state.intensityValue {
                 CompactIntensityBadge(intensity: intensity)
@@ -85,7 +87,9 @@ struct CompactLeadingView: View {
             // 揺れ検知: レベル表示
             if let level = state.shakeLevel {
                 Text(level.shortDisplayString)
-                    .font(.system(size: 16, weight: .black, design: .monospaced))
+                    .font(
+                        .system(size: 16, weight: .black, design: .monospaced)
+                    )
                     .foregroundColor(level.textColor)
                     .frame(width: 24, height: 24)
                     .background(level.backgroundColor)
@@ -114,9 +118,16 @@ struct CompactTrailingView: View {
         } else {
             // 揺れ検知: 時刻表示
             if let detectedAt = state.detectedAt,
-               let date = ISO8601DateFormatter().date(from: detectedAt) {
+                let date = ISO8601DateFormatter().date(from: detectedAt)
+            {
                 Text(date, style: .time)
-                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                    .font(
+                        .system(
+                            size: 11,
+                            weight: .semibold,
+                            design: .monospaced
+                        )
+                    )
             }
         }
     }
@@ -157,7 +168,8 @@ struct MinimalView: View {
     var body: some View {
         if state.isEew {
             if let location = state.location,
-               let intensity = location.forecastIntensityValue {
+                let intensity = location.forecastIntensityValue
+            {
                 MinimalIntensityBadge(intensity: intensity)
             } else if let intensity = state.intensityValue {
                 MinimalIntensityBadge(intensity: intensity)
@@ -171,7 +183,9 @@ struct MinimalView: View {
         } else {
             if let level = state.shakeLevel {
                 Text(level.shortDisplayString)
-                    .font(.system(size: 14, weight: .black, design: .monospaced))
+                    .font(
+                        .system(size: 14, weight: .black, design: .monospaced)
+                    )
                     .foregroundColor(level.textColor)
             }
         }
@@ -208,7 +222,8 @@ struct ExpandedLeadingView: View {
     var body: some View {
         if state.isEew {
             if let location = state.location,
-               let intensity = location.forecastIntensityValue {
+                let intensity = location.forecastIntensityValue
+            {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("予想震度")
                         .font(.system(size: 9, weight: .medium))
@@ -229,7 +244,9 @@ struct ExpandedLeadingView: View {
                     .font(.system(size: 9, weight: .medium))
                     .foregroundColor(.secondary)
                 Text(level.shortDisplayString)
-                    .font(.system(size: 24, weight: .black, design: .monospaced))
+                    .font(
+                        .system(size: 24, weight: .black, design: .monospaced)
+                    )
                     .foregroundColor(level.textColor)
                     .frame(width: 36, height: 36)
                     .background(level.backgroundColor)
@@ -281,10 +298,22 @@ struct ExpandedTrailingView: View {
                     if let serialNo = state.serialNo {
                         HStack(alignment: .firstTextBaseline, spacing: 0) {
                             Text("#")
-                                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                                .font(
+                                    .system(
+                                        size: 10,
+                                        weight: .medium,
+                                        design: .monospaced
+                                    )
+                                )
                                 .foregroundColor(.secondary)
                             Text("\(serialNo)")
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .font(
+                                    .system(
+                                        size: 14,
+                                        weight: .bold,
+                                        design: .monospaced
+                                    )
+                                )
                         }
                     }
                     Image("AppIconForeground")
@@ -297,13 +326,20 @@ struct ExpandedTrailingView: View {
         } else {
             // 揺れ検知
             if let detectedAt = state.detectedAt,
-               let date = ISO8601DateFormatter().date(from: detectedAt) {
+                let date = ISO8601DateFormatter().date(from: detectedAt)
+            {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text("検知")
                         .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.secondary)
                     Text(date, style: .time)
-                        .font(.system(size: 13, weight: .bold, design: .monospaced))
+                        .font(
+                            .system(
+                                size: 13,
+                                weight: .bold,
+                                design: .monospaced
+                            )
+                        )
                 }
             }
         }
@@ -351,7 +387,13 @@ struct ExpandedBottomView: View {
                                 .font(.system(size: 11, weight: .semibold))
                                 .foregroundColor(.secondary)
                             Text(String(format: "%.1f", magnitude))
-                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                .font(
+                                    .system(
+                                        size: 16,
+                                        weight: .bold,
+                                        design: .monospaced
+                                    )
+                                )
                                 .tracking(-2)
                         }
                     }
@@ -362,7 +404,13 @@ struct ExpandedBottomView: View {
                                 .font(.system(size: 11, weight: .medium))
                                 .foregroundColor(.secondary)
                             Text("\(depth)")
-                                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                .font(
+                                    .system(
+                                        size: 16,
+                                        weight: .bold,
+                                        design: .monospaced
+                                    )
+                                )
                             Text("km")
                                 .font(.system(size: 11, weight: .medium))
                                 .foregroundColor(.secondary)
@@ -382,13 +430,20 @@ struct ExpandedBottomView: View {
                 }
                 Spacer()
                 if let location = state.location,
-                   let intensity = location.intensity {
+                    let intensity = location.intensity
+                {
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text("計測震度")
                             .font(.system(size: 9, weight: .medium))
                             .foregroundColor(.secondary)
                         Text(String(format: "%.1f", intensity))
-                            .font(.system(size: 14, weight: .bold, design: .monospaced))
+                            .font(
+                                .system(
+                                    size: 14,
+                                    weight: .bold,
+                                    design: .monospaced
+                                )
+                            )
                     }
                 }
             }
@@ -421,7 +476,11 @@ struct ArrivalInfoView: View {
 // MARK: - Preview
 
 @available(iOS 17.0, *)
-#Preview("EEW - Content", as: .content, using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview(
+    "EEW - Content",
+    as: .content,
+    using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")
+) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
@@ -430,14 +489,14 @@ struct ArrivalInfoView: View {
         hypocenterName: "石川県能登地方",
         magnitude: 6.3,
         depth: 70,
-        time: "2024-01-01T16:10:00+09:00",
+        time: "2024-01-23T12:34:56+09:00",
         isOriginTime: true,
         maxIntensity: "6+",
-        serialNo: 32,
+        serialNo: 47,
         isFinal: false,
         isWarning: true,
         isCanceled: false,
-        headline: "釧路沖で地震 北海道で強い揺れ",
+        headline: "【サンプル】釧路沖で地震 北海道で強い揺れ",
         isPlum: false,
         isLevel: false,
         isOnePoint: false,
@@ -447,14 +506,20 @@ struct ArrivalInfoView: View {
             regionName: "根室地方南部",
             forecastIntensity: "4",
             forecastLpgmIntensity: "2",
-            arrivalTime: ISO8601DateFormatter().string(from: Date().addingTimeInterval(30)),
+            arrivalTime: ISO8601DateFormatter().string(
+                from: Date().addingTimeInterval(30)
+            ),
             intensity: nil
         )
     )
 }
 
 @available(iOS 17.0, *)
-#Preview("EEW - Compact Warning", as: .dynamicIsland(.compact), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview(
+    "EEW - Compact Warning",
+    as: .dynamicIsland(.compact),
+    using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")
+) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
@@ -487,7 +552,11 @@ struct ArrivalInfoView: View {
 }
 
 @available(iOS 17.0, *)
-#Preview("EEW - Compact Forecast", as: .dynamicIsland(.compact), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview(
+    "EEW - Compact Forecast",
+    as: .dynamicIsland(.compact),
+    using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")
+) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
@@ -514,7 +583,11 @@ struct ArrivalInfoView: View {
 }
 
 @available(iOS 17.0, *)
-#Preview("EEW - Minimal", as: .dynamicIsland(.minimal), using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")) {
+#Preview(
+    "EEW - Minimal",
+    as: .dynamicIsland(.minimal),
+    using: LiveActivitiesAppAttributes(eventId: "20240101123456", type: "eew")
+) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
@@ -547,7 +620,14 @@ struct ArrivalInfoView: View {
 }
 
 @available(iOS 17.0, *)
-#Preview("Shake Detection - Lock Screen", as: .content, using: LiveActivitiesAppAttributes(eventId: "shake-event-uuid", type: "shake_detection")) {
+#Preview(
+    "Shake Detection - Lock Screen",
+    as: .content,
+    using: LiveActivitiesAppAttributes(
+        eventId: "shake-event-uuid",
+        type: "shake_detection"
+    )
+) {
     EQMonitorLiveActivityWidget()
 } contentStates: {
     LiveActivityContentState(
