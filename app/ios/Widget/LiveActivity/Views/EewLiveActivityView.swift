@@ -17,6 +17,7 @@ struct HeaderContainer: View {
     let headline: String?
     let serialNo: Int?
     let isFinal: Bool
+    let arrivalDate: Date?
 
     private let stripeHeight: CGFloat = 8
 
@@ -28,12 +29,12 @@ struct HeaderContainer: View {
 
             // 下部: ヘッダーコンテンツ
             HStack(alignment: .center) {
-                // 左側: EEWタイプとheadline
+                // 左側: EEWタイプ + serialNo + headline
                 VStack(alignment: .leading, spacing: 2) {
-                    // 緊急地震速報(予報) or 緊急地震速報(警報)
-                    Text(eewTypeLabel)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.85))
+                    // 「緊急地震速報(警報) 第N報」または「緊急地震速報(警報) 第N報(最終)」
+                    Text(eewTypeLabelWithSerial)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.9))
 
                     // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
                     if let headline = headline, !headline.isEmpty {
@@ -47,20 +48,17 @@ struct HeaderContainer: View {
 
                 Spacer()
 
-                // 右端: serialNo（最終報の場合は「# 最終32」）
-                if let serialNo = serialNo {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("#")
-                            .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                // 右端: 主要動到達までのカウントダウン
+                if let arrivalDate = arrivalDate, arrivalDate > Date() {
+                    VStack(alignment: .trailing, spacing: 0) {
+                        Text("主要動到達まで")
+                            .font(.system(size: 9, weight: .semibold))
                             .foregroundColor(.white.opacity(0.7))
-                        if isFinal {
-                            Text("最終")
-                                .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                                .foregroundColor(.white)
-                        }
-                        Text("\(serialNo)")
+                        Text(timerInterval: Date()...arrivalDate, countsDown: true)
                             .font(.system(size: 18, weight: .black, design: .monospaced))
                             .foregroundColor(.white)
+                            .tracking(-1)
+                            .contentTransition(.numericText(countsDown: true))
                     }
                 }
             }
@@ -68,12 +66,19 @@ struct HeaderContainer: View {
             .padding(.vertical, 8)
             .background(backgroundColor)
         }
-        // HIG: ContainerRelativeShapeで角丸をWidgetに合わせる
         .clipShape(ContainerRelativeShape())
     }
 
-    private var eewTypeLabel: String {
-        isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
+    private var eewTypeLabelWithSerial: String {
+        let typeLabel = isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
+        if let serialNo = serialNo {
+            if isFinal {
+                return "\(typeLabel) 第\(serialNo)報(最終)"
+            } else {
+                return "\(typeLabel) 第\(serialNo)報"
+            }
+        }
+        return typeLabel
     }
 
     private var backgroundColor: Color {
@@ -134,7 +139,8 @@ struct EewLockScreenView: View {
                 isWarning: state.isWarning ?? false,
                 headline: state.headline,
                 serialNo: state.serialNo,
-                isFinal: state.isFinal ?? false
+                isFinal: state.isFinal ?? false,
+                arrivalDate: state.location?.arrivalDate
             )
             .padding(.horizontal, standardMargin)
             .padding(.top, standardMargin)
@@ -235,20 +241,6 @@ struct EewLockScreenView: View {
                         .tracking(-1)
                 }
             }
-
-            // 到達カウントダウン（発生時刻の下）
-            if let arrivalDate = state.location?.arrivalDate {
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("主要動到達まで")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(secondaryTextColor)
-                    Text(timerInterval: Date()...arrivalDate, countsDown: true)
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
-                        .foregroundColor(.white)
-                        .tracking(-1)
-                        .contentTransition(.numericText(countsDown: true))
-                }
-            }
         }
     }
 
@@ -306,12 +298,11 @@ struct EewLockScreenView: View {
                             .font(.system(size: 9, weight: .semibold))
                             .foregroundColor(secondaryTextColor)
                             .symbolEffect(.pulse)
-                        Text("\(location.regionName)の予想震度")
+                        Text("\(location.regionName)")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(secondaryTextColor)
-                            .lineLimit(1)
+                            .foregroundColor(.primary)
                     }
-                    SquareIntensityBadge(intensity: intensity, size: .small)
+                    SquareIntensityBadge(intensity: intensity, size: .normal)
                 }
             }
 
@@ -332,24 +323,24 @@ struct SquareIntensityBadge: View {
 
         var badgeSize: CGFloat {
             switch self {
-            case .normal: return 56
+            case .normal: return 50
             case .small: return 38
-            case .compact: return 32
+            case .compact: return 24
             }
         }
 
         var mainFontSize: CGFloat {
             switch self {
-            case .normal: return 36
-            case .small: return 24
-            case .compact: return 22
+            case .normal: return 38
+            case .small: return 28
+            case .compact: return 18
             }
         }
 
         var subFontSize: CGFloat {
             switch self {
-            case .normal: return 15
-            case .small: return 10
+            case .normal: return 16
+            case .small: return 12
             case .compact: return 10
             }
         }
