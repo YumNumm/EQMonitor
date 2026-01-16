@@ -136,8 +136,13 @@ jobs:
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -archivePath build/ios/Runner.xcarchive \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES \
+            -allowProvisioningUpdates \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
+            -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
+            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
           | xcbeautify --renderer github-actions
 
       - name: Create IPA
@@ -150,7 +155,12 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
-            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8"
+            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES \
+          | xcbeautify --renderer github-actions
+          echo "--------------------------------"
           ls -lah .
 
       # https://github.com/actions/upload-artifact
