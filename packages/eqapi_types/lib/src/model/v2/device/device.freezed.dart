@@ -1611,7 +1611,7 @@ as String,
 /// @nodoc
 mixin _$LiveActivityTokenRequest {
 
- String get token; String get eventId; LiveActivityStartTrigger get startTrigger;
+ String get token;
 /// Create a copy of LiveActivityTokenRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1624,16 +1624,16 @@ $LiveActivityTokenRequestCopyWith<LiveActivityTokenRequest> get copyWith => _$Li
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveActivityTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.startTrigger, startTrigger) || other.startTrigger == startTrigger));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveActivityTokenRequest&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,eventId,startTrigger);
+int get hashCode => Object.hash(runtimeType,token);
 
 @override
 String toString() {
-  return 'LiveActivityTokenRequest(token: $token, eventId: $eventId, startTrigger: $startTrigger)';
+  return 'LiveActivityTokenRequest(token: $token)';
 }
 
 
@@ -1644,7 +1644,7 @@ abstract mixin class $LiveActivityTokenRequestCopyWith<$Res>  {
   factory $LiveActivityTokenRequestCopyWith(LiveActivityTokenRequest value, $Res Function(LiveActivityTokenRequest) _then) = _$LiveActivityTokenRequestCopyWithImpl;
 @useResult
 $Res call({
- String token, String eventId, LiveActivityStartTrigger startTrigger
+ String token
 });
 
 
@@ -1661,12 +1661,10 @@ class _$LiveActivityTokenRequestCopyWithImpl<$Res>
 
 /// Create a copy of LiveActivityTokenRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? eventId = null,Object? startTrigger = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,}) {
   return _then(_self.copyWith(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
-as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,startTrigger: null == startTrigger ? _self.startTrigger : startTrigger // ignore: cast_nullable_to_non_nullable
-as LiveActivityStartTrigger,
+as String,
   ));
 }
 
@@ -1751,10 +1749,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  String eventId,  LiveActivityStartTrigger startTrigger)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LiveActivityTokenRequest() when $default != null:
-return $default(_that.token,_that.eventId,_that.startTrigger);case _:
+return $default(_that.token);case _:
   return orElse();
 
 }
@@ -1772,10 +1770,10 @@ return $default(_that.token,_that.eventId,_that.startTrigger);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  String eventId,  LiveActivityStartTrigger startTrigger)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token)  $default,) {final _that = this;
 switch (_that) {
 case _LiveActivityTokenRequest():
-return $default(_that.token,_that.eventId,_that.startTrigger);case _:
+return $default(_that.token);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1792,10 +1790,10 @@ return $default(_that.token,_that.eventId,_that.startTrigger);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  String eventId,  LiveActivityStartTrigger startTrigger)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token)?  $default,) {final _that = this;
 switch (_that) {
 case _LiveActivityTokenRequest() when $default != null:
-return $default(_that.token,_that.eventId,_that.startTrigger);case _:
+return $default(_that.token);case _:
   return null;
 
 }
@@ -1807,12 +1805,10 @@ return $default(_that.token,_that.eventId,_that.startTrigger);case _:
 @JsonSerializable()
 
 class _LiveActivityTokenRequest implements LiveActivityTokenRequest {
-  const _LiveActivityTokenRequest({required this.token, required this.eventId, required this.startTrigger});
+  const _LiveActivityTokenRequest({required this.token});
   factory _LiveActivityTokenRequest.fromJson(Map<String, dynamic> json) => _$LiveActivityTokenRequestFromJson(json);
 
 @override final  String token;
-@override final  String eventId;
-@override final  LiveActivityStartTrigger startTrigger;
 
 /// Create a copy of LiveActivityTokenRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -1827,16 +1823,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveActivityTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.startTrigger, startTrigger) || other.startTrigger == startTrigger));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveActivityTokenRequest&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,eventId,startTrigger);
+int get hashCode => Object.hash(runtimeType,token);
 
 @override
 String toString() {
-  return 'LiveActivityTokenRequest(token: $token, eventId: $eventId, startTrigger: $startTrigger)';
+  return 'LiveActivityTokenRequest(token: $token)';
 }
 
 
@@ -1847,7 +1843,7 @@ abstract mixin class _$LiveActivityTokenRequestCopyWith<$Res> implements $LiveAc
   factory _$LiveActivityTokenRequestCopyWith(_LiveActivityTokenRequest value, $Res Function(_LiveActivityTokenRequest) _then) = __$LiveActivityTokenRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String token, String eventId, LiveActivityStartTrigger startTrigger
+ String token
 });
 
 
@@ -1864,12 +1860,10 @@ class __$LiveActivityTokenRequestCopyWithImpl<$Res>
 
 /// Create a copy of LiveActivityTokenRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? eventId = null,Object? startTrigger = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? token = null,}) {
   return _then(_LiveActivityTokenRequest(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
-as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,startTrigger: null == startTrigger ? _self.startTrigger : startTrigger // ignore: cast_nullable_to_non_nullable
-as LiveActivityStartTrigger,
+as String,
   ));
 }
 

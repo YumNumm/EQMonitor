@@ -25,15 +25,21 @@ Live Activityは以下の2つのトリガーで開始されます。
 | 終了条件 | 揺れ検知イベントが終了した場合（最終更新から60秒間新規データなし） |
 | 終了タイミング | Live Activity開始時に`stale-date`を設定（開始から10分後）。終了条件を満たしたら`dismissal-date`を送信 |
 
-#### 表示内容
+#### 表示内容 (ShakeDetectionContentState)
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
 | `eventId` | `string` | イベントID（Primary Key） |
 | `level` | `ShakeDetectionLevel` | 観測した揺れの強さ |
-| `detectedAt` | `ISO8601 string` | 検知した日時（JSTで表示） |
-| `locationRegionName` | `string?` | 現在地の地域名（現在地で検知された場合） |
-| `locationIntensity` | `number?` | 現在地の揺れの強さ（現在地で検知された場合） |
+| `detectedAt` | `ISO8601 string?` | 検知した日時（JSTで表示） |
+| `location` | `LocationInfo?` | 現在地情報（現在地で検知された場合） |
+
+#### LocationInfo (揺れ検知用)
+
+| フィールド | 型 | 説明 |
+|-----------|-----|------|
+| `regionName` | `string` | 現在地の地域名 |
+| `intensity` | `number?` | 現在地の揺れの強さ |
 
 ```typescript
 // ShakeDetectionLevel
@@ -53,30 +59,85 @@ type ShakeDetectionLevel =
 | 更新条件 | 続報が発表された場合 |
 | 終了条件 | 最終報が発表されてから180秒経過 |
 
-#### 表示内容
+#### 表示内容 (EewContentState)
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
 | `eventId` | `string` | イベントID（Primary Key） |
-| `serialNo` | `number` | 報番号 |
-| `hypocenterName` | `string` | 震源地名 |
-| `magnitude` | `number` | マグニチュード |
-| `depth` | `number` | 震源の深さ (km) |
-| `originTime` | `ISO8601 string` | 地震の発生時刻 |
-| `maxIntensity` | `JmaIntensity` | 予想最大震度 |
-| `isFinal` | `boolean` | 最終報かどうか |
-| `isWarning` | `boolean` | 警報かどうか |
+| `serialNo` | `number?` | 報番号 |
+| `headline` | `string?` | 見出し（後述のルールで生成） |
+| `hypocenterName` | `string?` | 震源地名（キャンセル時はnull） |
+| `magnitude` | `number?` | マグニチュード（キャンセル時はnull） |
+| `depth` | `number?` | 震源の深さ (km)（キャンセル時はnull） |
+| `time` | `ISO8601 string?` | 発生時刻または検知時刻（キャンセル時はnull） |
+| `isOriginTime` | `boolean?` | 発生時刻かどうか（falseの場合は検知時刻） |
+| `maxIntensity` | `JmaIntensity?` | 予想最大震度（キャンセル時はnull） |
+| `isFinal` | `boolean?` | 最終報かどうか |
+| `isWarning` | `boolean?` | 警報かどうか |
+| `isCanceled` | `boolean?` | キャンセル報かどうか |
+| `isPlum` | `boolean?` | PLUM法による検知かどうか |
+| `isLevel` | `boolean?` | レベル法による検知かどうか |
+| `isOnePoint` | `boolean?` | 1点検知かどうか |
+| `location` | `LocationInfo?` | 現在地情報（揺れが予想される場合） |
 
-#### 現在地情報（揺れが予想される場合）
+#### 検知方法フラグ
+
+緊急地震速報には複数の検知方法があり、それぞれ以下のフラグで判定します：
+
+| フラグ | 説明 | 判定条件 |
+|--------|------|----------|
+| `isPlum` | PLUM法による検知 | `condition === "仮定震源要素"` かつ `originTime`がある |
+| `isLevel` | レベル法による検知 | `condition === "仮定震源要素"` かつ `originTime`がない かつ `epicenters[0] === "1"` |
+| `isOnePoint` | 1点検知（IPF法1点） | `epicenters[0] === "1"` かつ `condition`がない |
+
+> **Note:** PLUM法・レベル法は仮定震源要素を使用するため、震源位置の精度は低くなります。1点検知は通常のIPF法ですが、観測点が1点のみのため精度は低くなります。これらのフラグはクライアント側で表示内容を調整するために使用します。
+
+#### 時刻フィールド
+
+`time`フィールドには発生時刻（originTime）または検知時刻（arrivalTime）が格納されます。`isOriginTime`フラグでどちらの時刻かを判別します。
+
+| `isOriginTime` | `time`の内容 | 表示例 |
+|----------------|-------------|--------|
+| `true` | 発生時刻（originTime） | 「16:10:00発生」 |
+| `false` | 検知時刻（arrivalTime） | 「16:10:00検知」 |
+
+**時刻の決定ロジック:**
+
+1. `originTime`（発生時刻）がある場合 → `time = originTime`, `isOriginTime = true`
+2. `originTime`がない場合 → `time = arrivalTime`, `isOriginTime = false`
+3. キャンセル報の場合 → `time = null`, `isOriginTime = false`
+
+> **Note:** PLUM法やレベル法では発生時刻が特定できない場合があります。その場合は検知時刻を使用し、`isOriginTime = false`となります。クライアント側ではこのフラグを参照して「発生」「検知」の表示を切り替えてください。
+
+#### headline生成ルール
+
+`headline`フィールドはサーバ側で以下のルールに従って生成します：
+
+1. **基本文言の決定**
+   - `hypocenterReduceName`（短縮震源名）がある場合：「{hypocenterReduceName}で地震」
+   - ない場合：「地震発生」
+
+2. **強い揺れの追記（警報時のみ）**
+   - `zones`（警報対象地域）が1件以上ある場合：基本文言 + 「 で強い揺れ」
+   - `zones`が0件または存在しない場合：基本文言のみ
+
+例：
+
+- 警報あり（zones > 0）・震源名あり：「能登地方で地震 で強い揺れ」
+- 警報なし（zones = 0）・震源名あり：「千葉県東方沖で地震」
+- キャンセル報（震源名なし）：「地震発生」
+
+#### LocationInfo (EEW用・揺れが予想される場合)
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
-| `arrivalTime` | `ISO8601 string?` | 到達予想時刻（nullable） |
-| `forecastIntensity` | `JmaIntensity` | 予想最大震度 |
-| `forecastLpgmIntensity` | `JmaLpgmIntensity?` | 予想最大長周期地震動階級 |
 | `regionName` | `string` | 現在地の地名（細分化地域名） |
+| `forecastIntensity` | `JmaIntensity?` | 予想最大震度 |
+| `forecastLpgmIntensity` | `JmaLpgmIntensity?` | 予想最大長周期地震動階級 |
+| `arrivalTime` | `ISO8601 string?` | 到達予想時刻（nullable） |
+| `intensity` | `number?` | 実測震度（EEWでは使用しない、nullで送信） |
 
-> **Note:** 現在地情報はすべてサーバ側で計算します。APNsペイロードサイズ制限（4KB）を考慮し、クライアント側での計算は行いません。ユーザの現在地（regionId）は通知設定から取得します。
+> **Note:** 現在地情報はすべてサーバ側で計算します。APNsペイロードサイズ制限（4KB）を考慮し、クライアント側での計算は行いません。ユーザの現在地（regionId）は通知設定から取得します。`LocationInfo`はEEWと揺れ検知で共通の型ですが、EEWでは`forecastIntensity`/`forecastLpgmIntensity`/`arrivalTime`を使用し、揺れ検知では`intensity`を使用します。
 
 ---
 
@@ -311,7 +372,14 @@ Live Activityが終了した場合、アプリからサーバにトークン削�
 
 ## 5. APNs Push Notification Payload
 
-### 5.1 Live Activity開始 (Push-to-Start)
+EEWと揺れ検知では異なる`attributes-type`を使用します。
+
+| Live Activityの種類 | attributes-type | content-stateの型 |
+|---------------------|-----------------|------------------|
+| EEW | `EewLiveActivityAttributes` | `EewContentState` |
+| 揺れ検知 | `ShakeDetectionLiveActivityAttributes` | `ShakeDetectionContentState` |
+
+### 5.1 EEW Live Activity開始 (Push-to-Start)
 
 ```json
 {
@@ -321,26 +389,32 @@ Live Activityが終了した場合、アプリからサーバにトークン削�
     "event": "start",
     "content-state": {
       "eventId": "20240101123456",
-      "type": "eew",
+      "headline": "能登地方で地震 で強い揺れ",
       "hypocenterName": "石川県能登地方",
       "magnitude": 7.6,
       "depth": 16,
-      "originTime": "2024-01-01T16:10:00+09:00",
+      "time": "2024-01-01T16:10:00+09:00",
+      "isOriginTime": true,
       "maxIntensity": "7",
       "serialNo": 1,
       "isFinal": false,
       "isWarning": true,
+      "isCanceled": false,
+      "isPlum": false,
+      "isLevel": false,
+      "isOnePoint": false,
       "location": {
         "regionName": "東京都23区",
         "forecastIntensity": "4",
         "forecastLpgmIntensity": "2",
-        "arrivalTime": "2024-01-01T16:12:30+09:00"
+        "arrivalTime": "2024-01-01T16:12:30+09:00",
+        "intensity": null
       }
     },
-    "attributes-type": "LiveActivitiesAppAttributes",
+    "attributes-type": "EewLiveActivityAttributes",
     "attributes": {
-      "eventId": "20240101123456",
-      "type": "eew"
+      "id": "959D7057-505A-4DDA-B14A-D72F96DF9F6F",
+      "eventId": "20240101123456"
     },
     "alert": {
       "title": "緊急地震速報（警報）",
@@ -350,7 +424,7 @@ Live Activityが終了した場合、アプリからサーバにトークン削�
 }
 ```
 
-### 5.2 Live Activity更新
+### 5.2 EEW Live Activity更新
 
 ```json
 {
@@ -360,20 +434,26 @@ Live Activityが終了した場合、アプリからサーバにトークン削�
     "event": "update",
     "content-state": {
       "eventId": "20240101123456",
-      "type": "eew",
+      "headline": "能登地方で地震 で強い揺れ",
       "hypocenterName": "石川県能登地方",
       "magnitude": 7.6,
       "depth": 16,
-      "originTime": "2024-01-01T16:10:00+09:00",
+      "time": "2024-01-01T16:10:00+09:00",
+      "isOriginTime": true,
       "maxIntensity": "7",
       "serialNo": 5,
       "isFinal": false,
       "isWarning": true,
+      "isCanceled": false,
+      "isPlum": false,
+      "isLevel": false,
+      "isOnePoint": false,
       "location": {
         "regionName": "東京都23区",
         "forecastIntensity": "5-",
         "forecastLpgmIntensity": "3",
-        "arrivalTime": "2024-01-01T16:12:30+09:00"
+        "arrivalTime": "2024-01-01T16:12:30+09:00",
+        "intensity": null
       }
     },
     "alert": {
@@ -384,7 +464,7 @@ Live Activityが終了した場合、アプリからサーバにトークン削�
 }
 ```
 
-### 5.3 Live Activity終了
+### 5.3 EEW Live Activity終了
 
 ```json
 {
@@ -394,21 +474,59 @@ Live Activityが終了した場合、アプリからサーバにトークン削�
     "dismissal-date": 1704067800,
     "content-state": {
       "eventId": "20240101123456",
-      "type": "eew",
+      "headline": "能登地方で地震 で強い揺れ",
       "hypocenterName": "石川県能登地方",
       "magnitude": 7.6,
       "depth": 16,
-      "originTime": "2024-01-01T16:10:00+09:00",
+      "time": "2024-01-01T16:10:00+09:00",
+      "isOriginTime": true,
       "maxIntensity": "7",
       "serialNo": 10,
       "isFinal": true,
-      "isWarning": true
+      "isWarning": true,
+      "isCanceled": false,
+      "isPlum": false,
+      "isLevel": false,
+      "isOnePoint": false,
+      "location": null
     }
   }
 }
 ```
 
-### 5.4 揺れ検知 Live Activity Payload
+### 5.4 EEW Live Activityキャンセル
+
+緊急地震速報がキャンセルされた場合のペイロードです。`isCanceled`が`true`となり、震源情報などがnullになります。
+
+```json
+{
+  "aps": {
+    "timestamp": 1704067800,
+    "event": "end",
+    "dismissal-date": 1704067800,
+    "content-state": {
+      "eventId": "20240101123456",
+      "headline": "地震発生",
+      "hypocenterName": null,
+      "magnitude": null,
+      "depth": null,
+      "time": null,
+      "isOriginTime": false,
+      "maxIntensity": null,
+      "serialNo": 2,
+      "isFinal": true,
+      "isWarning": false,
+      "isCanceled": true,
+      "isPlum": false,
+      "isLevel": false,
+      "isOnePoint": false,
+      "location": null
+    }
+  }
+}
+```
+
+### 5.5 揺れ検知 Live Activity開始 (Push-to-Start)
 
 ```json
 {
@@ -418,22 +536,76 @@ Live Activityが終了した場合、アプリからサーバにトークン削�
     "event": "start",
     "content-state": {
       "eventId": "shake-event-uuid",
-      "type": "shake_detection",
       "level": "Strong",
       "detectedAt": "2024-01-01T16:10:00+09:00",
       "location": {
         "regionName": "東京都23区",
+        "forecastIntensity": null,
+        "forecastLpgmIntensity": null,
+        "arrivalTime": null,
         "intensity": 3.2
       }
     },
-    "attributes-type": "LiveActivitiesAppAttributes",
+    "attributes-type": "ShakeDetectionLiveActivityAttributes",
     "attributes": {
-      "eventId": "shake-event-uuid",
-      "type": "shake_detection"
+      "id": "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+      "eventId": "shake-event-uuid"
     },
     "alert": {
       "title": "揺れを検知しました",
       "body": "強い揺れ - 東京都23区"
+    }
+  }
+}
+```
+
+### 5.6 揺れ検知 Live Activity更新
+
+```json
+{
+  "aps": {
+    "timestamp": 1704067260,
+    "stale-date": 1704067560,
+    "event": "update",
+    "content-state": {
+      "eventId": "shake-event-uuid",
+      "level": "Stronger",
+      "detectedAt": "2024-01-01T16:10:00+09:00",
+      "location": {
+        "regionName": "東京都23区",
+        "forecastIntensity": null,
+        "forecastLpgmIntensity": null,
+        "arrivalTime": null,
+        "intensity": 4.5
+      }
+    },
+    "alert": {
+      "title": "揺れの強さが変化しました",
+      "body": "非常に強い揺れ - 東京都23区"
+    }
+  }
+}
+```
+
+### 5.7 揺れ検知 Live Activity終了
+
+```json
+{
+  "aps": {
+    "timestamp": 1704067800,
+    "event": "end",
+    "dismissal-date": 1704067800,
+    "content-state": {
+      "eventId": "shake-event-uuid",
+      "level": "Strong",
+      "detectedAt": "2024-01-01T16:10:00+09:00",
+      "location": {
+        "regionName": "東京都23区",
+        "forecastIntensity": null,
+        "forecastLpgmIntensity": null,
+        "arrivalTime": null,
+        "intensity": 3.2
+      }
     }
   }
 }
@@ -556,31 +728,147 @@ Future<void> initialize() async {
 
 ### 7.3 iOS Widget Extension
 
-Widget Extension内で`LiveActivitiesAppAttributes`を定義します。
+Widget Extension内でLive Activity用のAttributesを定義します。**EEWと揺れ検知で別々のAttributesを使用します。**
+
+#### attributes-typeの指定
+
+APNsペイロードの`attributes-type`フィールドで、使用するAttributesを指定します：
+
+| Live Activityの種類 | attributes-type |
+|---------------------|-----------------|
+| EEW | `EewLiveActivityAttributes` |
+| 揺れ検知 | `ShakeDetectionLiveActivityAttributes` |
+
+#### EEW用 (EewLiveActivityAttributes)
 
 ```swift
 import ActivityKit
-import WidgetKit
 import SwiftUI
 
-struct LiveActivitiesAppAttributes: ActivityAttributes, Identifiable {
-    public typealias LiveDeliveryData = ContentState
-
-    public struct ContentState: Codable, Hashable {
-        // 動的なコンテンツ（更新可能）
-    }
-
-    var id = UUID()
-    var eventId: String
-    var type: String  // "eew" or "shake_detection"
+struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
+    public typealias ContentState = EewContentState
+    public var id = UUID()
+    let eventId: String
 }
 
-extension LiveActivitiesAppAttributes {
-    func prefixedKey(_ key: String) -> String {
-        return "\(id)_\(key)"
+struct EewContentState: Codable, Hashable {
+    let eventId: String
+    let hypocenterName: String?
+    let magnitude: Double?
+    let depth: Int?
+    let time: String?
+    let isOriginTime: Bool?
+    let maxIntensity: String?
+    let serialNo: Int?
+    let isFinal: Bool?
+    let isWarning: Bool?
+    let isCanceled: Bool?
+    let headline: String?
+    let isPlum: Bool?
+    let isLevel: Bool?
+    let isOnePoint: Bool?
+    let location: LocationInfo?
+
+    // Computed Properties
+    var intensityValue: IntensityValue? {
+        guard let maxIntensity = maxIntensity else { return nil }
+        return IntensityValue(rawValue: maxIntensity)
+    }
+
+    var timeDate: Date? {
+        guard let time = time else { return nil }
+        return ISO8601DateFormatter().date(from: time)
+    }
+
+    var timeLabel: String {
+        (isOriginTime ?? true) ? "地震発生" : "地震検知"
     }
 }
 ```
+
+#### 揺れ検知用 (ShakeDetectionLiveActivityAttributes)
+
+```swift
+import ActivityKit
+import SwiftUI
+
+struct ShakeDetectionLiveActivityAttributes: ActivityAttributes, Identifiable {
+    public typealias ContentState = ShakeDetectionContentState
+    public var id = UUID()
+    let eventId: String
+}
+
+struct ShakeDetectionContentState: Codable, Hashable {
+    let eventId: String
+    let level: String?
+    let detectedAt: String?
+    let location: LocationInfo?
+
+    // Computed Properties
+    var shakeLevel: ShakeDetectionLevel? {
+        guard let level = level else { return nil }
+        return ShakeDetectionLevel(rawValue: level)
+    }
+
+    var detectedDate: Date? {
+        guard let detectedAt = detectedAt else { return nil }
+        return ISO8601DateFormatter().date(from: detectedAt)
+    }
+}
+
+enum ShakeDetectionLevel: String, Codable, CaseIterable {
+    case weaker = "Weaker"
+    case weak = "Weak"
+    case medium = "Medium"
+    case strong = "Strong"
+    case stronger = "Stronger"
+
+    var displayString: String {
+        switch self {
+        case .weaker: return "微弱な揺れ"
+        case .weak: return "弱い揺れ"
+        case .medium: return "揺れ"
+        case .strong: return "強い揺れ"
+        case .stronger: return "非常に強い揺れ"
+        }
+    }
+}
+```
+
+#### 共通型 (LocationInfo)
+
+EEWと揺れ検知で共通のLocationInfo型を使用します。用途に応じて使用するフィールドが異なります。
+
+```swift
+struct LocationInfo: Codable, Hashable {
+    let regionName: String
+    let forecastIntensity: String?    // EEW用: 予想震度
+    let forecastLpgmIntensity: String? // EEW用: 予想長周期地震動階級
+    let arrivalTime: String?           // EEW用: 到達予想時刻
+    let intensity: Double?             // 揺れ検知用: 実測震度
+
+    // Computed Properties
+    var forecastIntensityValue: IntensityValue? {
+        guard let forecastIntensity = forecastIntensity else { return nil }
+        return IntensityValue(rawValue: forecastIntensity)
+    }
+
+    var arrivalDate: Date? {
+        guard let arrivalTime = arrivalTime else { return nil }
+        return ISO8601DateFormatter().date(from: arrivalTime)
+    }
+}
+```
+
+| フィールド | EEWでの使用 | 揺れ検知での使用 |
+|-----------|------------|-----------------|
+| `regionName` | ✅ 使用 | ✅ 使用 |
+| `forecastIntensity` | ✅ 使用 | ❌ null |
+| `forecastLpgmIntensity` | ✅ 使用 | ❌ null |
+| `arrivalTime` | ✅ 使用 | ❌ null |
+| `intensity` | ❌ null | ✅ 使用 |
+
+> **Important:** 各Attributesは`Identifiable`プロトコルに準拠しているため、APNs Push-to-Startのペイロードの`attributes`オブジェクトには`id`フィールド（UUID文字列）を含める必要があります。サーバー側でUUIDを生成して送信します。
 
 ---
 
