@@ -27,9 +27,9 @@ import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_se
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/device_api/debug_device_api_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/live_activity/debug_live_activity_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification_settings/debug_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
