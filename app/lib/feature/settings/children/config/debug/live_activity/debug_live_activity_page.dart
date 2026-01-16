@@ -379,6 +379,7 @@ class _EewLiveActivitySection extends StatelessWidget {
       'serialNo': 1,
       'isFinal': false,
       'isWarning': isWarning,
+      'headline': isWarning ? '石川県能登地方で地震 石川 新潟で強い揺れ' : '茨城県沖で地震',
     };
 
     if (isWarning) {

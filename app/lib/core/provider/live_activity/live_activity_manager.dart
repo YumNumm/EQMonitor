@@ -124,9 +124,8 @@ class LiveActivityManager extends _$LiveActivityManager {
   /// updateTokenをサーバに登録
   ///
   /// Note: Push-to-Startで開始されたLive Activityの場合、
-  /// eventIdとstartTriggerはAPNsペイロードに含まれているため、
-  /// サーバ側でeventIdとの紐付けは既に完了している。
-  /// クライアント側ではupdateTokenの登録のみ行う。
+  /// サーバ側でactivityIdとeventId/triggerの紐付けが完了しているため、
+  /// クライアント側ではactivityIdとupdateTokenのみを送信する。
   Future<void> _registerUpdateToken({
     required String activityId,
     required String updateToken,
@@ -137,21 +136,16 @@ class LiveActivityManager extends _$LiveActivityManager {
         'activityId=$activityId, token=${updateToken.substring(0, 8)}...',
       );
 
-      // Push-to-Startで開始されたLive Activityの場合、
-      // サーバ側でeventIdとの紐付けが完了しているため、
-      // updateTokenの登録はactivityIdをキーとして行う
-      // TODO(yumnumm): APIが実装されたら有効化
-      // final deviceId = await ref.read(deviceIdProvider.future);
-      // final eqApi = ref.read(eqApiProvider);
-      // await eqApi.device.registerLiveActivityToken(
-      //   deviceId: deviceId,
-      //   liveActivityId: activityId,
-      //   request: LiveActivityTokenRequest(
-      //     token: updateToken,
-      //     eventId: eventId,
-      //     startTrigger: startTrigger,
-      //   ),
-      // );
+      final deviceId = await ref.read(deviceIdProvider.future);
+      final eqApi = ref.read(eqApiProvider);
+
+      await eqApi.device.registerLiveActivityToken(
+        deviceId: deviceId,
+        liveActivityId: activityId,
+        request: LiveActivityTokenRequest(token: updateToken),
+      );
+
+      talker.info('updateTokenを登録しました: activityId=$activityId');
     } on Exception catch (e, st) {
       talker.error('updateTokenの登録に失敗しました', e, st);
     }
