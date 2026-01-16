@@ -126,7 +126,7 @@ jobs:
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
 
-      - name: Archive
+      - name: Create XCArchive
         working-directory: app
         run: |
           xcodebuild archive \
@@ -140,17 +140,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
           | xcbeautify --renderer github-actions
 
-      - name: Embed entitlements
-        working-directory: app
-        run: |
-          codesign \
-            --entitlements ios/Runner/Runner.entitlements \
-            --force \
-            --sign "-" build/ios/Runner.xcarchive/Products/Applications/Runner.app
-
-          codesign --display --entitlements :- build/ios/Runner.xcarchive/Products/Applications/Runner.app/Runner  || true
-
-      - name: Archive
+      - name: Create IPA
         working-directory: app
         run: |
           xcodebuild -exportArchive \
