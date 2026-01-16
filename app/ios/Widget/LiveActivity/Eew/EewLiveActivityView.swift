@@ -1,0 +1,560 @@
+//
+//  EewLiveActivityView.swift
+//  Widget
+//
+//  緊急地震速報用のLive Activity表示
+//
+
+import SwiftUI
+import WidgetKit
+
+// MARK: - 共通カラー定義
+
+/// 薄い文字色（ラベル、補助テキスト用）
+private let eewSecondaryTextColor: Color = .primary.opacity(0.55)
+/// ヘッダー内の薄い文字色（白ベース）
+private let eewHeaderSecondaryTextColor: Color = .white.opacity(0.7)
+
+// MARK: - 共通スタイル（ViewModifier）
+
+/// ラベル用スタイル（震源地、M、深さ、発生、主要動到達まで など）
+@available(iOS 16.1, *)
+struct EewLabelStyle: ViewModifier {
+    enum Variant {
+        case primary      // メインコンテンツ内のラベル
+        case header       // ヘッダー内のラベル（白ベース）
+    }
+
+    let variant: Variant
+
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: 10, weight: .bold))
+            .foregroundColor(variant == .header ? eewHeaderSecondaryTextColor : eewSecondaryTextColor)
+    }
+}
+
+@available(iOS 16.1, *)
+extension View {
+    /// EEW用ラベルスタイルを適用
+    func eewLabelStyle(_ variant: EewLabelStyle.Variant = .primary) -> some View {
+        modifier(EewLabelStyle(variant: variant))
+    }
+}
+
+// MARK: - Header Container (HIG準拠: インセットコンテナ形状)
+// "When separating a block of content, place it in an inset container shape"
+
+@available(iOS 16.1, *)
+struct HeaderContainer: View {
+    let isWarning: Bool
+    let headline: String?
+    let serialNo: Int?
+    let isFinal: Bool
+    let arrivalDate: Date?
+
+    private let stripeHeight: CGFloat = 8
+
+    var body: some View {
+        VStack(spacing: 0) {
+            StripePattern(isWarning: isWarning)
+                .frame(height: stripeHeight)
+
+            HStack(alignment: .center, spacing: 8) {
+                VStack(alignment: .leading, spacing: 2) {
+                    // 「緊急地震速報(警報|予報) 第N報」または「緊急地震速報(xx) 第N報(最終)」
+                    Text(eewTypeLabelWithSerial)
+                        .font(
+                            .system(
+                                size: 12,
+                                weight: .semibold,
+                                design: .monospaced
+                            )
+                        )
+                        .foregroundColor(eewHeaderSecondaryTextColor)
+
+                    // headline: "XXXで地震" または警報時 "XX YYで強い揺れ"
+                    if let headline = headline, !headline.isEmpty {
+                        Text(headline)
+                            .font(.system(size: 15, weight: .heavy))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                // 主要動到達までのカウントダウン
+                if let arrivalDate = arrivalDate, arrivalDate > Date() {
+                    VStack(alignment: .trailing, spacing: 0) {
+                        Text("主要動到達まで")
+                            .eewLabelStyle(.header)
+                        // Workaround: countsDownの時に、横いっぱいに広がろうとするのを防ぐ
+                        // See: https://stackoverflow.com/questions/66210592/widgetkit-timer-text-style-expands-it-to-fill-the-width-instead-of-taking-spa
+                        Text("00:00")
+                            .font(
+                                .system(
+                                    size: 18,
+                                    weight: .black,
+                                    design: .monospaced
+                                )
+                            )
+                            .tracking(-0.5)
+                            .hidden()
+                            .overlay(alignment: .trailing) {
+                                Text(
+                                    timerInterval: Date()...arrivalDate,
+                                    countsDown: true
+                                )
+                                .contentTransition(.numericText(countsDown: true))
+                                .font(.system(size: 18, weight: .black))
+                                .foregroundColor(.white)
+                                .monospacedDigit()
+                                .tracking(-0.5)                            }
+                    }
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(backgroundColor)
+        }
+        .clipShape(ContainerRelativeShape())
+    }
+
+    private var eewTypeLabelWithSerial: String {
+        let typeLabel = isWarning ? "緊急地震速報(警報)" : "緊急地震速報(予報)"
+        if let serialNo = serialNo {
+            if isFinal {
+                return "\(typeLabel) 第\(serialNo)報(最終)"
+            } else {
+                return "\(typeLabel) 第\(serialNo)報"
+            }
+        }
+        return typeLabel
+    }
+
+    private var backgroundColor: Color {
+        if isWarning {
+            return Color(red: 0.7, green: 0.1, blue: 0.1)
+        } else {
+            return Color(red: 0.8, green: 0.4, blue: 0.05)
+        }
+    }
+}
+
+// MARK: - Stripe Pattern
+
+@available(iOS 16.1, *)
+struct StripePattern: View {
+    let isWarning: Bool
+
+    var body: some View {
+        GeometryReader { geometry in
+            let stripeWidth: CGFloat = 8
+            let colors = isWarning
+            ? [Color.red, Color.black]
+            : [Color.orange, Color(red: 0.5, green: 0.25, blue: 0.0)]
+
+            Canvas {
+ context,
+ size in
+                let totalWidth = size.width + size.height * 2
+                var x: CGFloat = -size.height
+
+                while x < totalWidth {
+                    var path = Path()
+                    path.move(to: CGPoint(x: x, y: size.height))
+                    path
+                        .addLine(
+                            to: CGPoint(x: x + stripeWidth, y: size.height)
+                        )
+                    path
+                        .addLine(
+                            to: CGPoint(x: x + size.height + stripeWidth, y: 0)
+                        )
+                    path.addLine(to: CGPoint(x: x + size.height, y: 0))
+                    path.closeSubpath()
+
+                    let colorIndex = Int((x + size.height) / stripeWidth) % 2
+                    context.fill(path, with: .color(colors[abs(colorIndex)]))
+                    x += stripeWidth
+                }
+            }
+        }
+    }
+}
+
+@available(iOS 16.1, *)
+struct EewLockScreenView: View {
+    let state: EewContentState
+
+    // HIG: The standard layout margin for Live Activities on the Lock Screen is 14 points.
+    private let standardMargin: CGFloat = 14
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HeaderContainer(
+                isWarning: state.isWarning ?? false,
+                headline: state.headline,
+                serialNo: state.serialNo,
+                isFinal: state.isFinal ?? false,
+                arrivalDate: state.location?.arrivalDate
+            )
+            .padding(.horizontal, standardMargin)
+            .padding(.top, standardMargin)
+            .padding(.bottom, 4)
+
+            // メインコンテンツ
+            HStack(alignment: .bottom, spacing: 10) {
+                // 左側: 最大震度（正方形）
+                if let intensity = state.intensityValue {
+                    VStack(spacing: 2) {
+                        Text("最大震度")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(.white)
+                        SquareIntensityBadge(
+                            intensity: intensity,
+                            size: .normal
+                        )
+                    }
+                }
+
+                detailsView
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                if let location = state.location {
+                    arrivalView(location: location)
+                }
+            }
+            .padding(.horizontal, standardMargin)
+            .padding(.bottom, standardMargin)
+        }
+    }
+
+    // MARK: - Date Formatter
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd"
+        formatter.locale = Locale(identifier: "ja_JP")
+        return formatter.string(from: date)
+    }
+
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        formatter.locale = Locale(identifier: "ja_JP")
+        return formatter.string(from: date)
+    }
+
+    // MARK: - Details (震源地, M, 深さ, 発生時刻を縦に)
+
+    private var detailsView: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if let hypocenterName = state.hypocenterName {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text(
+                        state.isPlum == true || state.isLevel == true ? "検知観測点" : "震源地"
+                    )
+                    .eewLabelStyle()
+                    Text(hypocenterName)
+                        .font(.system(size: 16, weight: .heavy))
+                        .foregroundColor(.white)
+                        .lineLimit(1)
+                }
+            }
+
+            // PLUM法/レベル法/1点検知の場合は特別な表示
+            if state.isPlum == true {
+                detectionMethodLabel("PLUM法による検知")
+            } else if state.isLevel == true {
+                detectionMethodLabel("レベル法による検知")
+            } else if state.isOnePoint == true {
+                detectionMethodLabel("低精度の緊急地震速報")
+            } else {
+                HStack(spacing: 14) {
+                    if let magnitude = state.magnitude {
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                            Text("M")
+                                .eewLabelStyle()
+                            Text(String(format: "%.1f", magnitude))
+                                .font(
+                                    .system(
+                                        size: 18,
+                                        weight: .bold,
+                                        design: .monospaced
+                                    )
+                                )
+                                .tracking(-2.5)
+                                .foregroundColor(.primary)
+                        }
+                    }
+                    if let depth = state.depth {
+                        depthView(depth: depth)
+                    }
+                }
+            }
+
+            // 発生/検知時刻
+            if let date = state.timeDate {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text(state.timeLabel)
+                        .eewLabelStyle()
+                    Text(formatDate(date))
+                        .font(
+                            .system(
+                                size: 12,
+                                weight: .semibold,
+                                design: .monospaced
+                            )
+                        )
+                        .foregroundColor(.white)
+                        .tracking(-1)
+                    Text(formatTime(date))
+                        .font(
+                            .system(
+                                size: 14,
+                                weight: .bold,
+                                design: .monospaced
+                            )
+                        )
+                        .foregroundColor(.white)
+                        .tracking(-1)
+                }
+            }
+        }
+    }
+
+    // 検知方法ラベル（PLUM法/レベル法/1点検知）
+    private func detectionMethodLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 14, weight: .bold, design: .monospaced))
+            .lineLimit(1)
+    }
+
+    // 深さ表示（数値を大きく）
+    private func depthView(depth: Int) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
+            Text("深さ")
+                .eewLabelStyle()
+
+            if depth == 0 {
+                // ごく浅い
+                Text("ごく浅い")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundColor(.primary)
+            } else if depth >= 700 {
+                // 700km以上
+                Text("\(depth)")
+                    .font(.system(size: 18, weight: .bold, design: .monospaced))
+                    .tracking(-1)
+                    .foregroundColor(.primary)
+                Text("km以上")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(eewSecondaryTextColor)
+            } else {
+                // 通常
+                Text("\(depth)")
+                    .font(.system(size: 18, weight: .bold, design: .monospaced))
+                    .tracking(-1)
+                    .foregroundColor(.primary)
+                Text("km")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(eewSecondaryTextColor)
+            }
+        }
+    }
+
+    // MARK: - Arrival Info
+
+    private func arrivalView(location: LocationInfo) -> some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            // 現在地予想震度（地名と結合）
+            if let intensity = location.forecastIntensityValue {
+                VStack(spacing: 2) {
+                    // 地名の予想震度（アイコン付き）
+                    HStack(spacing: 2) {
+                        Image(systemName: "location.fill")
+                            .font(.system(size: 9, weight: .semibold))
+                            .foregroundColor(eewSecondaryTextColor)
+                            .symbolEffect(.pulse)
+                        Text("\(location.regionName)")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.primary)
+                    }
+                    SquareIntensityBadge(intensity: intensity, size: .normal)
+                }
+            }
+
+            // 上揃えにするためのSpacer
+            Spacer(minLength: 0)
+        }
+    }
+}
+
+// MARK: - Square Intensity Badge
+
+@available(iOS 16.1, *)
+struct SquareIntensityBadge: View {
+    enum Size {
+        case normal
+        case small
+        case compact  // 横長でコンパクト
+
+        var badgeSize: CGFloat {
+            switch self {
+            case .normal: return 50
+            case .small: return 38
+            case .compact: return 24
+            }
+        }
+
+        var mainFontSize: CGFloat {
+            switch self {
+            case .normal: return 38
+            case .small: return 28
+            case .compact: return 18
+            }
+        }
+
+        var subFontSize: CGFloat {
+            switch self {
+            case .normal: return 16
+            case .small: return 12
+            case .compact: return 10
+            }
+        }
+
+        // HIG準拠: 連続的な角丸（continuous corner radius）
+        var cornerRadius: CGFloat {
+            switch self {
+            case .normal: return 12
+            case .small: return 10
+            case .compact: return 8
+            }
+        }
+
+        var horizontalPadding: CGFloat {
+            switch self {
+            case .normal, .small: return 0
+            case .compact: return 6
+            }
+        }
+    }
+
+    let intensity: IntensityValue
+    var size: Size = .normal
+
+    var body: some View {
+        let parts = intensity.formattedParts
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
+            Text(parts.main)
+                .font(
+                    .system(
+                        size: size.mainFontSize,
+                        weight: .bold,
+                        design: .monospaced
+                    )
+                )
+            if let sub = parts.sub {
+                Text(sub)
+                    .font(.system(size: size.subFontSize, weight: .heavy))
+            }
+        }
+        .foregroundColor(intensity.textColor)
+        .frame(height: size.badgeSize)
+        .frame(minWidth: size.badgeSize)
+        .padding(.horizontal, size.horizontalPadding)
+        .background(intensity.backgroundColor)
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: size.cornerRadius,
+                style: .continuous
+            )
+        )
+    }
+}
+
+// MARK: - Arrival Countdown View
+
+@available(iOS 16.1, *)
+struct ArrivalCountdownView: View {
+    let arrivalDate: Date
+
+    var body: some View {
+
+        VStack(alignment: .trailing, spacing: 0) {
+            Text("到達まで")
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(eewSecondaryTextColor)
+            Text(timerInterval: Date()...arrivalDate, countsDown: true)
+                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .foregroundColor(.primary)
+                .multilineTextAlignment(.trailing)
+                .contentTransition(.numericText(countsDown: true))
+        }
+        .frame(alignment: .trailing)
+
+    }
+}
+
+// MARK: - Preview
+
+struct EewLiveActivityWidget_Previews: PreviewProvider {
+    static let attributes = EewLiveActivityAttributes(eventId: "20240101123456")
+
+    static var previews: some View {
+        // Lock Screen
+        attributes
+            .previewContext(.noto32, viewKind: .content)
+            .previewDisplayName("Lock Screen - 警報")
+
+        attributes
+            .previewContext(.ibarakiForecast, viewKind: .content)
+            .previewDisplayName("Lock Screen - 予報")
+
+        attributes
+            .previewContext(.notoFinal, viewKind: .content)
+            .previewDisplayName("Lock Screen - 最終報")
+
+        attributes
+            .previewContext(.plum, viewKind: .content)
+            .previewDisplayName("Lock Screen - PLUM法")
+
+        attributes
+            .previewContext(.levelMethod, viewKind: .content)
+            .previewDisplayName("Lock Screen - レベル法")
+
+        attributes
+            .previewContext(.onePoint, viewKind: .content)
+            .previewDisplayName("Lock Screen - 1点検知")
+
+        // Dynamic Island - Compact
+        attributes
+            .previewContext(.noto32, viewKind: .dynamicIsland(.compact))
+            .previewDisplayName("Compact - 警報")
+
+        attributes
+            .previewContext(.ibarakiForecast, viewKind: .dynamicIsland(.compact))
+            .previewDisplayName("Compact - 予報")
+
+        // Dynamic Island - Expanded
+        attributes
+            .previewContext(.noto32, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 警報")
+
+        attributes
+            .previewContext(.ibarakiForecast, viewKind: .dynamicIsland(.expanded))
+            .previewDisplayName("Expanded - 予報")
+
+        // Dynamic Island - Minimal
+        attributes
+            .previewContext(.noto32, viewKind: .dynamicIsland(.minimal))
+            .previewDisplayName("Minimal - 警報")
+
+        attributes
+            .previewContext(.ibarakiForecast, viewKind: .dynamicIsland(.minimal))
+            .previewDisplayName("Minimal - 予報")
+    }
+}
+
