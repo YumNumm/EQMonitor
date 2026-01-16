@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/live_activity/live_activity_manager.dart';
@@ -323,7 +324,9 @@ class _PushToStartTokenSectionState extends State<_PushToStartTokenSection> {
   }
 
   Future<void> _copyToken() async {
-    if (_token == null) return;
+    if (_token == null) {
+      return;
+    }
 
     await Clipboard.setData(ClipboardData(text: _token!));
     if (mounted) {
@@ -508,7 +511,7 @@ class _ActiveActivitiesSectionState extends State<_ActiveActivitiesSection> {
   @override
   void initState() {
     super.initState();
-    _loadActivities();
+    unawaited(_loadActivities());
   }
 
   Future<void> _loadActivities() async {

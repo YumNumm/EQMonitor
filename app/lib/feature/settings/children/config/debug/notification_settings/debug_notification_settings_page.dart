@@ -348,7 +348,9 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                               ),
                             ],
                             onChanged: (value) {
-                              if (value != null) soundMode.value = value;
+                              if (value != null) {
+                                soundMode.value = value;
+                              }
                             },
                           ),
                         ),
@@ -532,7 +534,9 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                               ),
                             ],
                             onChanged: (value) {
-                              if (value != null) eewSoundMode.value = value;
+                              if (value != null) {
+                                eewSoundMode.value = value;
+                              }
                             },
                           ),
                         ),
