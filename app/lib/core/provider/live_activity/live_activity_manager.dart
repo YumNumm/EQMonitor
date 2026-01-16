@@ -50,8 +50,10 @@ class LiveActivityManager extends _$LiveActivityManager {
     _listenToActivityUpdates(liveActivities);
 
     ref.onDispose(() {
-      _pushToStartTokenSubscription?.cancel();
-      _activityUpdateSubscription?.cancel();
+      unawaited(() async {
+        await _pushToStartTokenSubscription?.cancel();
+        await _activityUpdateSubscription?.cancel();
+      }());
     });
   }
 
@@ -63,21 +65,21 @@ class LiveActivityManager extends _$LiveActivityManager {
       return;
     }
 
-    _pushToStartTokenSubscription =
-        liveActivities.pushToStartTokenUpdateStream.listen(
-      (token) async {
-        await _registerPushToStartToken(token);
-      },
-      onError: (Object error) {
-        talker.error('pushToStartTokenの監視でエラーが発生しました', error);
-      },
-    );
+    _pushToStartTokenSubscription = liveActivities.pushToStartTokenUpdateStream
+        .listen(
+          (token) async {
+            await _registerPushToStartToken(token);
+          },
+          onError: (Object error) {
+            talker.error('pushToStartTokenの監視でエラーが発生しました', error);
+          },
+        );
   }
 
   void _listenToActivityUpdates(LiveActivities liveActivities) {
     _activityUpdateSubscription = liveActivities.activityUpdateStream.listen(
       (event) async {
-        event.map(
+        await event.map(
           active: (activity) async {
             await _registerUpdateToken(
               activityId: activity.activityId,
