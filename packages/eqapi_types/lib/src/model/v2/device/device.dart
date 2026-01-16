@@ -113,12 +113,11 @@ enum LiveActivityStartTrigger {
 }
 
 /// Live Activity updateTokenリクエスト
+/// Note: eventIdとstartTriggerはサーバ側でactivityIdから逆引きするため不要
 @freezed
 abstract class LiveActivityTokenRequest with _$LiveActivityTokenRequest {
   const factory LiveActivityTokenRequest({
     required String token,
-    required String eventId,
-    required LiveActivityStartTrigger startTrigger,
   }) = _LiveActivityTokenRequest;
 
   factory LiveActivityTokenRequest.fromJson(Map<String, dynamic> json) =>
