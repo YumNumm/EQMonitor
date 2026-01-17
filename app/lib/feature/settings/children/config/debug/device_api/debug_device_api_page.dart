@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_catches_without_on_clauses
+
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
@@ -33,8 +36,11 @@ String _formatError(Object error) {
           } else {
             buffer.write(response.data.toString());
           }
-        } catch (e) {
-          buffer.write(response.data.toString());
+        } on Exception catch (e) {
+          log(e.toString());
+          buffer.write(
+            response.data.toString(),
+          );
         }
       }
     } else {
@@ -101,10 +107,10 @@ class DebugDeviceApiPage extends HookConsumerWidget {
         ),
         body: SingleChildScrollView(
           primary: true,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   BorderedContainer(
@@ -146,9 +152,11 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                       .read(userIdProvider.notifier)
                                       .save(user.id);
                                   userIdController.text = user.id;
-                                } catch (e, s) {
-                                  userState.value =
-                                      AsyncValue<User>.error(e, s);
+                                } on Exception catch (e, s) {
+                                  userState.value = AsyncValue<User>.error(
+                                    e,
+                                    s,
+                                  );
                                 }
                               },
                               child: const Text('Create User'),
@@ -167,7 +175,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                               userId: userIdController.text,
                                             );
                                         userState.value = AsyncValue.data(user);
-                                      } catch (e, s) {
+                                      } on Exception catch (e, s) {
                                         userState.value =
                                             AsyncValue<User>.error(e, s);
                                       }
@@ -251,7 +259,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                             ),
                           ],
                           selected: {deviceTypeState.value},
-                          onSelectionChanged: (Set<DeviceType> newSelection) {
+                          onSelectionChanged: (newSelection) {
                             deviceTypeState.value = newSelection.first;
                           },
                         ),
@@ -273,9 +281,10 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                             .getDevice(
                                               deviceId: deviceIdController.text,
                                             );
-                                        deviceState.value =
-                                            AsyncValue.data(device);
-                                      } catch (e, s) {
+                                        deviceState.value = AsyncValue.data(
+                                          device,
+                                        );
+                                      } on Exception catch (e, s) {
                                         deviceState.value =
                                             AsyncValue<Device>.error(e, s);
                                       }
@@ -283,7 +292,8 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                               child: const Text('Get Device'),
                             ),
                             ElevatedButton(
-                              onPressed: deviceIdController.text.isEmpty ||
+                              onPressed:
+                                  deviceIdController.text.isEmpty ||
                                       userIdController.text.isEmpty
                                   ? null
                                   : () async {
@@ -300,9 +310,10 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                                 userId: userIdController.text,
                                               ),
                                             );
-                                        deviceState.value =
-                                            AsyncValue.data(device);
-                                      } catch (e, s) {
+                                        deviceState.value = AsyncValue.data(
+                                          device,
+                                        );
+                                      } on Exception catch (e, s) {
                                         deviceState.value =
                                             AsyncValue<Device>.error(e, s);
                                       }
@@ -374,7 +385,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                         fcmTokenState.value = AsyncValue.data(
                                           token,
                                         );
-                                      } catch (e, s) {
+                                      } on Exception catch (e, s) {
                                         fcmTokenState.value =
                                             AsyncValue<FcmToken?>.error(e, s);
                                       }
@@ -402,7 +413,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                         fcmTokenState.value = AsyncValue.data(
                                           token,
                                         );
-                                      } catch (e, s) {
+                                      } on Exception catch (e, s) {
                                         fcmTokenState.value =
                                             AsyncValue<FcmToken?>.error(e, s);
                                       }
@@ -424,7 +435,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                             );
                                         fcmTokenState.value =
                                             const AsyncValue.data(null);
-                                      } catch (e, s) {
+                                      } on Exception catch (e, s) {
                                         fcmTokenState.value =
                                             AsyncValue<FcmToken?>.error(e, s);
                                       }
@@ -489,7 +500,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                         apnsTokensState.value = AsyncValue.data(
                                           tokens,
                                         );
-                                      } catch (e, s) {
+                                      } on Exception catch (e, s) {
                                         apnsTokensState.value =
                                             AsyncValue<List<ApnsToken>>.error(
                                               e,
@@ -580,7 +591,7 @@ class DebugDeviceApiPage extends HookConsumerWidget {
                                         apnsTokenState.value = AsyncValue.data(
                                           token,
                                         );
-                                      } catch (e, s) {
+                                      } on Exception catch (e, s) {
                                         apnsTokenState.value =
                                             AsyncValue<ApnsToken>.error(e, s);
                                       }
