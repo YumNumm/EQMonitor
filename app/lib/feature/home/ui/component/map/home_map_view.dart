@@ -42,8 +42,6 @@ class _MapContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cameraState = ref.watch(homeMapCameraStateProvider);
-
     final initialOptions = calculateJapanViewMapOptions(
       context: context,
       styleString: styleString,
