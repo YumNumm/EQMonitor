@@ -12,7 +12,7 @@ class JapanBounds {
   static const double maxLat = 46;
 
   /// 最小経度（与那国島付近）
-  static const double minLng = 122.5;
+  static const minLng = 122.5;
 
   /// 最大経度（北海道東端付近）
   static const double maxLng = 146;
@@ -36,7 +36,7 @@ MapOptions calculateJapanViewMapOptions({
   required String styleString,
   double padding = 0.9,
 }) {
-  final size = MediaQuery.of(context).size;
+  final size = MediaQuery.sizeOf(context);
   final zoom = calculateZoomLevel(
     minLat: JapanBounds.minLat,
     maxLat: JapanBounds.maxLat,

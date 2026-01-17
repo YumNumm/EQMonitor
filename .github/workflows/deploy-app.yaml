@@ -3,8 +3,7 @@ name: Deploy App
 on:
   push:
     branches:
-      # - develop
-      - "*"
+      - develop
   workflow_dispatch:
     inputs:
       ios:
@@ -126,7 +125,7 @@ jobs:
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
 
-      - name: Archive
+      - name: Create XCArchive
         working-directory: app
         run: |
           xcodebuild archive \
@@ -136,21 +135,16 @@ jobs:
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -archivePath build/ios/Runner.xcarchive \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES \
+            -allowProvisioningUpdates \
+            -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
+            -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
+            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
           | xcbeautify --renderer github-actions
 
-      - name: Embed entitlements
-        working-directory: app
-        run: |
-          codesign \
-            --entitlements ios/Runner/Runner.entitlements \
-            --force \
-            --sign "-" build/ios/Runner.xcarchive/Products/Applications/Runner.app
-
-          codesign --display --entitlements :- build/ios/Runner.xcarchive/Products/Applications/Runner.app/Runner  || true
-
-      - name: Archive
+      - name: Create IPA
         working-directory: app
         run: |
           xcodebuild -exportArchive \
@@ -160,7 +154,12 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
-            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8"
+            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES \
+          | xcbeautify --renderer github-actions
+          echo "--------------------------------"
           ls -lah .
 
       # https://github.com/actions/upload-artifact
@@ -185,7 +184,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+
+      # https://github.com/maxim-lobanov/setup-xcode
+      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Show Xcode version
+        run: xcodebuild -version
 
       # https://github.com/actions/download-artifact
       - name: Download ipa

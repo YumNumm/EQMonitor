@@ -223,20 +223,20 @@ void main() {
 
       // Act - 小さい範囲
       final zoomSmall = calculateZoomLevel(
-        minLat: 35.0,
-        maxLat: 36.0,
-        minLng: 139.0,
-        maxLng: 140.0,
+        minLat: 35,
+        maxLat: 36,
+        minLng: 139,
+        maxLng: 140,
         screenWidth: screenWidth,
         screenHeight: screenHeight,
       );
 
       // Act - 大きい範囲
       final zoomLarge = calculateZoomLevel(
-        minLat: 30.0,
-        maxLat: 45.0,
-        minLng: 130.0,
-        maxLng: 145.0,
+        minLat: 30,
+        maxLat: 45,
+        minLng: 130,
+        maxLng: 145,
         screenWidth: screenWidth,
         screenHeight: screenHeight,
       );
@@ -258,8 +258,8 @@ void main() {
         maxLat: maxLat,
         minLng: minLng,
         maxLng: maxLng,
-        screenWidth: 375.0,
-        screenHeight: 667.0,
+        screenWidth: 375,
+        screenHeight: 667,
       );
 
       // Act - 大きい画面
@@ -268,8 +268,8 @@ void main() {
         maxLat: maxLat,
         minLng: minLng,
         maxLng: maxLng,
-        screenWidth: 1920.0,
-        screenHeight: 1080.0,
+        screenWidth: 1920,
+        screenHeight: 1080,
       );
 
       // Assert - 画面が大きいほどズームレベルが大きい

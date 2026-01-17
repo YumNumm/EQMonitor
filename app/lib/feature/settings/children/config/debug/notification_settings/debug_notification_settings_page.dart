@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_catches_without_on_clauses
+
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -346,7 +348,9 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                               ),
                             ],
                             onChanged: (value) {
-                              if (value != null) soundMode.value = value;
+                              if (value != null) {
+                                soundMode.value = value;
+                              }
                             },
                           ),
                         ),
@@ -530,7 +534,9 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                               ),
                             ],
                             onChanged: (value) {
-                              if (value != null) eewSoundMode.value = value;
+                              if (value != null) {
+                                eewSoundMode.value = value;
+                              }
                             },
                           ),
                         ),
