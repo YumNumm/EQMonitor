@@ -58,7 +58,7 @@ struct HeaderContainer: View {
                     if let headline = headline, !headline.isEmpty {
                         Text(headline)
                             .font(.system(size: 15, weight: .heavy))
-                            .foregroundColor(.white)
+                            .foregroundColor(.primary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
                     }
@@ -289,7 +289,7 @@ struct EewLockScreenView: View {
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
                     .tracking(-1)
                     .foregroundColor(.primary)
-                Text("km以上")
+                Text(" km以上")
                     .font(.system(size: 10, weight: .medium))
                     .foregroundColor(eewSecondaryTextColor)
             } else {
@@ -298,7 +298,7 @@ struct EewLockScreenView: View {
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
                     .tracking(-1)
                     .foregroundColor(.primary)
-                Text("km")
+                Text(" km")
                     .font(.system(size: 10, weight: .medium))
                     .foregroundColor(eewSecondaryTextColor)
             }

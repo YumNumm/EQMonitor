@@ -94,12 +94,10 @@ dependencies:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
   libserialport_plus: ^0.0.12
-  live_activities: ^2.4.3
-  # maplibre: ^0.2.1
   maplibre:
     git:
       url: https://github.com/josxha/flutter-maplibre.git
-      ref: 2b3f46ca2519081e26558f88ed517857ad2beaac
+      ref: 86ccdfc16d8f637a4385f554d31dd01fd0561462
       path: maplibre
   nied_api_client:
     path: ../packages/nied_api_client
