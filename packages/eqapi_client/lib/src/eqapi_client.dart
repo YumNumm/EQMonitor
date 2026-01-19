@@ -22,10 +22,6 @@ class EqApi {
   /// 緊急地震速報API
   EewApiClient get eew => EewApiClient(dio);
 
-  /// 通知設定API
-  NotificationSettingsApiClient get notification =>
-      NotificationSettingsApiClient(dio);
-
   /// 電文API
   TelegramApiClient get telegram => TelegramApiClient(dio);
 
