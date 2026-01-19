@@ -45,10 +45,10 @@ packages:
     dependency: transitive
     description:
       name: analyzer_buffer
-      sha256: aba2f75e63b3135fd1efaa8b6abefe1aa6e41b6bd9806221620fa48f98156033
+      sha256: ff4bd291778c7417fe53fe24ee0d0a1f1ffe281a2d4ea887e7094f16e36eace7
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.11"
+    version: "0.3.0"
   analyzer_plugin:
     dependency: transitive
     description:
@@ -357,18 +357,18 @@ packages:
     dependency: transitive
     description:
       name: custom_lint_visitor
-      sha256: "91f2a81e9f0abb4b9f3bb529f78b6227ce6050300d1ae5b1e2c69c66c7a566d8"
+      sha256: e466d17856197cf9bce7ca03804d784fddab809db7bda787f3d2799ac89faadd
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+8.4.0"
+    version: "1.0.0+9.0.0"
   dart_style:
     dependency: transitive
     description:
       name: dart_style
-      sha256: a9c30492da18ff84efe2422ba2d319a89942d93e58eb0b73d32abe822ef54b7b
+      sha256: "8a0aa2b9bae196552b71575efc94580e447546c26c7120577bb6f81fbd33b52e"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.3"
+    version: "3.1.4"
   dartx:
     dependency: transitive
     description:
@@ -614,14 +614,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_app_group_directory:
-    dependency: transitive
-    description:
-      name: flutter_app_group_directory
-      sha256: "680ef9b2dee84c237cd7bb7fc78bc45867b32556a8a5f0de61278078b9fefd05"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -735,10 +727,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_riverpod
-      sha256: "38ec6c303e2c83ee84512f5fc2a82ae311531021938e63d7137eccc107bf3c02"
+      sha256: a3cd0547353c1990bf5ad64f73143e5ce7a780409639559ad83a743ff3b945e4
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   flutter_secure_storage:
     dependency: transitive
     description:
@@ -825,10 +817,10 @@ packages:
     dependency: transitive
     description:
       name: freezed
-      sha256: "13065f10e135263a4f5a4391b79a8efc5fb8106f8dd555a9e49b750b45393d77"
+      sha256: "03dd9b7423ff0e31b7e01b2204593e5e1ac5ee553b6ea9d8184dff4a26b9fb07"
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.3"
+    version: "3.2.4"
   freezed_annotation:
     dependency: transitive
     description:
@@ -1009,10 +1001,10 @@ packages:
     dependency: transitive
     description:
       name: hooks_riverpod
-      sha256: b880efcd17757af0aa242e5dceac2fb781a014c22a32435a5daa8f17e9d5d8a9
+      sha256: a1d8edb761d954242e8c8fb76568506b2d4c57eb5e99b9733255be11c9afa17e
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   hotreloader:
     dependency: transitive
     description:
@@ -1144,10 +1136,10 @@ packages:
     dependency: transitive
     description:
       name: json_serializable
-      sha256: c5b2ee75210a0f263c6c7b9eeea80553dbae96ea1bf57f02484e806a3ffdffa3
+      sha256: "5b89c1e32ae3840bb20a1b3434e3a590173ad3cb605896fb0f60487ce2f8104e"
       url: "https://pub.dev"
     source: hosted
-    version: "6.11.2"
+    version: "6.11.4"
   latlong2:
     dependency: transitive
     description:
@@ -1220,14 +1212,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  live_activities:
-    dependency: transitive
-    description:
-      name: live_activities
-      sha256: "98a73bde9a05c9bcda17775817f11da8003f259dc4bbfee0a6a739ce45be2c54"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.6"
   logger:
     dependency: transitive
     description:
@@ -1486,54 +1470,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
-  permission_handler:
-    dependency: transitive
-    description:
-      name: permission_handler
-      sha256: bc917da36261b00137bbc8896bf1482169cd76f866282368948f032c8c1caae1
-      url: "https://pub.dev"
-    source: hosted
-    version: "12.0.1"
-  permission_handler_android:
-    dependency: transitive
-    description:
-      name: permission_handler_android
-      sha256: "1e3bc410ca1bf84662104b100eb126e066cb55791b7451307f9708d4007350e6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "13.0.1"
-  permission_handler_apple:
-    dependency: transitive
-    description:
-      name: permission_handler_apple
-      sha256: f000131e755c54cf4d84a5d8bd6e4149e262cc31c5a8b1d698de1ac85fa41023
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.4.7"
-  permission_handler_html:
-    dependency: transitive
-    description:
-      name: permission_handler_html
-      sha256: "38f000e83355abb3392140f6bc3030660cfaef189e1f87824facb76300b4ff24"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.3+5"
-  permission_handler_platform_interface:
-    dependency: transitive
-    description:
-      name: permission_handler_platform_interface
-      sha256: eb99b295153abce5d683cac8c02e22faab63e50679b937fa1bf67d58bb282878
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
-  permission_handler_windows:
-    dependency: transitive
-    description:
-      name: permission_handler_windows
-      sha256: "1a790728016f79a41216d88672dbc5df30e686e811ad4e698bfc51f76ad91f1e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   petitparser:
     dependency: transitive
     description:
@@ -1690,42 +1626,42 @@ packages:
     dependency: transitive
     description:
       name: riverpod
-      sha256: "16ff608d21e8ea64364f2b7c049c94a02ab81668f78845862b6e88b71dd4935a"
+      sha256: "9026676260f31bb5279cc5e59ca292145d8bab4aabede9aa2555c2a626ec66f1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   riverpod_analyzer_utils:
     dependency: transitive
     description:
       name: riverpod_analyzer_utils
-      sha256: "947b05d04c52a546a2ac6b19ef2a54b08520ff6bdf9f23d67957a4c8df1c3bc0"
+      sha256: e55bc08c084a424e1bbdc303fe8ea75daafe4269b68fd0e0f6f1678413715b66
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-dev.8"
+    version: "1.0.0-dev.9"
   riverpod_annotation:
     dependency: transitive
     description:
       name: riverpod_annotation
-      sha256: cc1474bc2df55ec3c1da1989d139dcef22cd5e2bd78da382e867a69a8eca2e46
+      sha256: a56df27d7bb6d6d26684e856666842afacfe6d4db09696e6fd0f5ffb05a8d3ca
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   riverpod_generator:
     dependency: transitive
     description:
       name: riverpod_generator
-      sha256: e43b1537229cc8f487f09b0c20d15dba840acbadcf5fc6dad7ad5e8ab75950dc
+      sha256: "04315efcee46f89b68f6bba2187a8664a542e562d02f24c5ccd330ae15672d0c"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0+1"
+    version: "4.0.2"
   riverpod_lint:
     dependency: transitive
     description:
       name: riverpod_lint
-      sha256: "4d2eb0d19bbe7e3323bd0ce4553b2e6170d161a13914bfdd85a3612329edcb43"
+      sha256: "96a45be0113fc8b0aa58f809c6b1c8a0287412c912fdea27904d5cb50c49dfc9"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.2"
   rxdart:
     dependency: transitive
     description:
@@ -1880,10 +1816,10 @@ packages:
     dependency: transitive
     description:
       name: source_helper
-      sha256: "6a3c6cc82073a8797f8c4dc4572146114a39652851c157db37e964d9c7038723"
+      sha256: "4a85e90b50694e652075cbe4575665539d253e6ec10e46e76b45368ab5e3caae"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.8"
+    version: "1.3.10"
   source_map_stack_trace:
     dependency: transitive
     description:
