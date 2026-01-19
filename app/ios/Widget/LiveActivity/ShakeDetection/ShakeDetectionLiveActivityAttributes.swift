@@ -73,6 +73,38 @@ enum ShakeDetectionLevel: String, Codable, CaseIterable {
         default: return .white
         }
     }
+
+    /// ストライプパターン用の2色
+    var stripeColors: [Color] {
+        switch self {
+        case .weaker:
+            return [Color(red: 0.75, green: 0.75, blue: 0.75), Color(red: 0.5, green: 0.5, blue: 0.5)]
+        case .weak:
+            return [Color(red: 0.6, green: 0.85, blue: 1.0), Color(red: 0.3, green: 0.6, blue: 0.8)]
+        case .medium:
+            return [Color.yellow, Color.orange]
+        case .strong:
+            return [Color.orange, Color(red: 0.8, green: 0.4, blue: 0.05)]
+        case .stronger:
+            return [Color.red, Color.black]
+        }
+    }
+
+    /// ヘッダー背景色
+    var headerBackgroundColor: Color {
+        switch self {
+        case .weaker:
+            return Color(red: 0.5, green: 0.5, blue: 0.5)
+        case .weak:
+            return Color(red: 0.3, green: 0.5, blue: 0.7)
+        case .medium:
+            return Color(red: 0.8, green: 0.4, blue: 0.05)
+        case .strong:
+            return Color(red: 0.9, green: 0.3, blue: 0.1)
+        case .stronger:
+            return Color(red: 0.7, green: 0.1, blue: 0.1)
+        }
+    }
 }
 
 extension ShakeDetectionLiveActivityAttributes {
