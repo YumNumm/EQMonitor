@@ -30,7 +30,7 @@ workspace:
 dependencies:
   melos: ^7.1.1
 dependency_overrides:
-  protobuf: ^4.2.0
+  analyzer: ^9.0.0
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   command:

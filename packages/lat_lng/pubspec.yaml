@@ -11,6 +11,6 @@ dependencies:
   latlong2: ^0.9.0
 
 dev_dependencies:
-  altive_lints: ^1.16.0
+  altive_lints: ^2.1.0
   eqmonitor_lints:
     path: ../eqmonitor_lints
