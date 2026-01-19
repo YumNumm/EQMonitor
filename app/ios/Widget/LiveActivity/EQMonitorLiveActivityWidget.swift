@@ -68,7 +68,7 @@ struct ShakeDetectionLiveActivityWidget: Widget {
             } minimal: {
                 ShakeMinimalView(state: context.state)
             }
-            .keylineTint(.orange)
+            .keylineTint(context.state.shakeLevel?.backgroundColor ?? .orange)
         }
     }
 }
@@ -343,15 +343,6 @@ struct ShakeExpandedBottomView: View {
                     .font(.system(size: 13, weight: .semibold))
             }
             Spacer()
-            if let location = state.location, let intensity = location.intensity {
-                HStack(alignment: .firstTextBaseline, spacing: 2) {
-                    Text("計測震度")
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundColor(.secondary)
-                    Text(String(format: "%.1f", intensity))
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
-                }
-            }
         }
     }
 }

@@ -8,37 +8,18 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - 共通カラー定義
+// MARK: - EEW用カラー定義（共通定義のエイリアス）
 
-/// 薄い文字色（ラベル、補助テキスト用）
-private let eewSecondaryTextColor: Color = .primary.opacity(0.55)
-/// ヘッダー内の薄い文字色（白ベース）
-private let eewHeaderSecondaryTextColor: Color = .white.opacity(0.7)
+private let eewSecondaryTextColor: Color = liveActivitySecondaryTextColor
+private let eewHeaderSecondaryTextColor: Color = liveActivityHeaderSecondaryTextColor
 
-// MARK: - 共通スタイル（ViewModifier）
-
-/// ラベル用スタイル（震源地、M、深さ、発生、主要動到達まで など）
-@available(iOS 16.1, *)
-struct EewLabelStyle: ViewModifier {
-    enum Variant {
-        case primary      // メインコンテンツ内のラベル
-        case header       // ヘッダー内のラベル（白ベース）
-    }
-
-    let variant: Variant
-
-    func body(content: Content) -> some View {
-        content
-            .font(.system(size: 10, weight: .bold))
-            .foregroundColor(variant == .header ? eewHeaderSecondaryTextColor : eewSecondaryTextColor)
-    }
-}
+// MARK: - EEW用スタイル（共通スタイルのエイリアス）
 
 @available(iOS 16.1, *)
 extension View {
-    /// EEW用ラベルスタイルを適用
-    func eewLabelStyle(_ variant: EewLabelStyle.Variant = .primary) -> some View {
-        modifier(EewLabelStyle(variant: variant))
+    /// EEW用ラベルスタイルを適用（共通スタイルのラッパー）
+    func eewLabelStyle(_ variant: LiveActivityLabelStyle.Variant = .primary) -> some View {
+        liveActivityLabelStyle(variant)
     }
 }
 
@@ -142,47 +123,6 @@ struct HeaderContainer: View {
     }
 }
 
-// MARK: - Stripe Pattern
-
-@available(iOS 16.1, *)
-struct StripePattern: View {
-    let isWarning: Bool
-
-    var body: some View {
-        GeometryReader { geometry in
-            let stripeWidth: CGFloat = 8
-            let colors = isWarning
-            ? [Color.red, Color.black]
-            : [Color.orange, Color(red: 0.5, green: 0.25, blue: 0.0)]
-
-            Canvas {
- context,
- size in
-                let totalWidth = size.width + size.height * 2
-                var x: CGFloat = -size.height
-
-                while x < totalWidth {
-                    var path = Path()
-                    path.move(to: CGPoint(x: x, y: size.height))
-                    path
-                        .addLine(
-                            to: CGPoint(x: x + stripeWidth, y: size.height)
-                        )
-                    path
-                        .addLine(
-                            to: CGPoint(x: x + size.height + stripeWidth, y: 0)
-                        )
-                    path.addLine(to: CGPoint(x: x + size.height, y: 0))
-                    path.closeSubpath()
-
-                    let colorIndex = Int((x + size.height) / stripeWidth) % 2
-                    context.fill(path, with: .color(colors[abs(colorIndex)]))
-                    x += stripeWidth
-                }
-            }
-        }
-    }
-}
 
 @available(iOS 16.1, *)
 struct EewLockScreenView: View {
