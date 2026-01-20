@@ -14,3 +14,7 @@ dev_dependencies:
   altive_lints: ^2.1.0
   eqmonitor_lints:
     path: ../eqmonitor_lints
+  ffigen: ^20.1.1
+dependencies:
+  ffi: ^2.1.5
+  objective_c: ^9.2.2
