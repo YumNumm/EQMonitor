@@ -50,27 +50,30 @@ Future<void> main(List<String> args) => build(
     logger.info('iOS SDK path: $iosSdkPath');
 
     // Compile Swift to generate Objective-C header
-    final swiftcResult = await Process.run('swiftc', [
-      '-sdk',
-      iosSdkPath,
-      '-target',
-      'arm64-apple-ios16.0',
-      '-emit-objc-header',
-      '-emit-objc-header-path',
-      generatedHeaderPath.toFilePath(),
-      '-emit-library',
-      '-o',
-      '/dev/null',
-      // 'libLiveActivityUtil.dylib',
-      '-module-name',
-      'LiveActivityUtil',
-      '-c',
-      packageRoot
-          .resolve(
-            'ios/LiveActivityUtil/Sources/LiveActivityUtil/LiveActivityUtil.swift',
-          )
-          .toFilePath(),
-    ]);
+    final swiftcResult = await Process.run(
+      'swiftc',
+      [
+        '-sdk',
+        iosSdkPath,
+        '-target', 'arm64-apple-ios16.0',
+        '-emit-objc-header',
+        '-emit-objc-header-path',
+        generatedHeaderPath.toFilePath(),
+        '-emit-library',
+        '-o',
+        // '/dev/null',
+        '../../app/ios/Runner/Frameworks/libLiveActivityUtil.dylib',
+        '-module-name',
+        'LiveActivityUtil',
+        '-c',
+        packageRoot
+            .resolve(
+              'ios/LiveActivityUtil/Sources/LiveActivityUtil/EQMLiveActivityUtil.swift',
+            )
+            .toFilePath(),
+      ],
+      workingDirectory: packageRoot.toFilePath(),
+    );
 
     if (swiftcResult.exitCode != 0) {
       logger.error('swiftc failed: ${swiftcResult.stderr}');

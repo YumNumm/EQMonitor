@@ -28,6 +28,16 @@ ffi.Pointer<objc.ObjCBlockImpl> listnerBlock,
 ffi.Pointer<objc.DOBJC_Context> context,
 );
 
+@ffi.Native<ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Pointer<objc.ObjCBlockImpl> )>(isLeaf: true)
+external ffi.Pointer<objc.ObjCBlockImpl> _NativeLibrary_wrapListenerBlock_xtuoz7(ffi.Pointer<objc.ObjCBlockImpl> block,
+);
+
+@ffi.Native<ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.DOBJC_Context> )>(isLeaf: true)
+external ffi.Pointer<objc.ObjCBlockImpl> _NativeLibrary_wrapBlockingBlock_xtuoz7(ffi.Pointer<objc.ObjCBlockImpl> block,
+ffi.Pointer<objc.ObjCBlockImpl> listnerBlock,
+ffi.Pointer<objc.DOBJC_Context> context,
+);
+
 late final _class_NSObject = objc.getClass("NSObject");
 late final _sel_version = objc.registerName("version");
 final _objc_msgSend_1hz7y9r = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Long Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> )>>().asFunction<int Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> )>();
@@ -1803,6 +1813,123 @@ _objc_msgSend_vij4rw(object$.ref.pointer, _sel_enumerateLinguisticTagsInRange_sc
 late final _class_EQMLiveActivityUtil = objc.getClass("EQMLiveActivityUtil");
 late final _sel_isKindOfClass_ = objc.registerName("isKindOfClass:");
 late final _sel_pushToStartToken = objc.registerName("pushToStartToken");
+
+/// Construction methods for `objc.ObjCBlock<ffi.Void Function(objc.NSString)>`.
+abstract final class ObjCBlock_ffiVoid_NSString {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString)> fromPointer(ffi.Pointer<objc.ObjCBlockImpl> pointer,
+      {bool retain = false, bool release = false}) =>
+      objc.ObjCBlock<ffi.Void Function(objc.NSString)>(pointer, retain: retain, release: release);
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString)> fromFunctionPointer(ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> arg0)>> ptr) =>
+      objc.ObjCBlock<ffi.Void Function(objc.NSString)>(objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+          retain: false, release: true);
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString)> fromFunction(void Function(objc.NSString ) fn,
+          {bool keepIsolateAlive = true}) =>
+      objc.ObjCBlock<ffi.Void Function(objc.NSString)>(objc.newClosureBlock(_closureCallable, (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(objc.NSString.fromPointer(arg0, retain: true, release: true)), keepIsolateAlive),
+          retain: false, release: true);
+
+  /// Creates a listener block from a Dart function.
+  ///
+  /// This is based on FFI's NativeCallable.listener, and has the same
+  /// capabilities and limitations. This block can be invoked from any thread,
+  /// but only supports void functions, and is not run synchronously. See
+  /// NativeCallable.listener for more details.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString)> listener(void Function(objc.NSString ) fn,
+          {bool keepIsolateAlive = true}) {
+    final raw = objc.newClosureBlock(_listenerCallable.nativeFunction.cast(),
+        (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(objc.NSString.fromPointer(arg0, retain: false, release: true)), keepIsolateAlive);
+    final wrapper = _NativeLibrary_wrapListenerBlock_xtuoz7(raw);
+    objc.objectRelease(raw.cast());
+    return objc.ObjCBlock<ffi.Void Function(objc.NSString)>(wrapper, retain: false, release: true);
+  }
+
+  /// Creates a blocking block from a Dart function.
+  ///
+  /// This callback can be invoked from any native thread, and will block the
+  /// caller until the callback is handled by the Dart isolate that created
+  /// the block. Async functions are not supported.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC. If the owner isolate
+  /// has shut down, and the block is invoked by native code, it may block
+  /// indefinitely, or have other undefined behavior.
+  static objc.ObjCBlock<ffi.Void Function(objc.NSString)> blocking(void Function(objc.NSString ) fn,
+          {bool keepIsolateAlive = true}) {
+    final raw = objc.newClosureBlock(_blockingCallable.nativeFunction.cast(),
+        (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(objc.NSString.fromPointer(arg0, retain: false, release: true)), keepIsolateAlive);
+    final rawListener = objc.newClosureBlock(
+        _blockingListenerCallable.nativeFunction.cast(),
+        (ffi.Pointer<objc.ObjCObjectImpl> arg0) => fn(objc.NSString.fromPointer(arg0, retain: false, release: true)), keepIsolateAlive);
+    final wrapper = _NativeLibrary_wrapBlockingBlock_xtuoz7(raw, rawListener, objc.objCContext);
+    objc.objectRelease(raw.cast());
+    objc.objectRelease(rawListener.cast());
+    return objc.ObjCBlock<ffi.Void Function(objc.NSString)>(wrapper, retain: false, release: true);
+  }
+
+  static void _listenerTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0) {
+    (objc.getBlockClosure(block) as void Function(ffi.Pointer<objc.ObjCObjectImpl> ))(arg0);
+    objc.objectRelease(block.cast());
+  }
+  static ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )> _listenerCallable =
+      ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>.listener(_listenerTrampoline )
+          ..keepIsolateAlive = false;
+  static void _blockingTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<ffi.Void> waiter, ffi.Pointer<objc.ObjCObjectImpl> arg0) {
+    try {
+      (objc.getBlockClosure(block) as void Function(ffi.Pointer<objc.ObjCObjectImpl> ))(arg0);
+    } catch (e) {
+    } finally {
+      objc.signalWaiter(waiter);
+      objc.objectRelease(block.cast());
+    }
+  }
+  static ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )> _blockingCallable =
+      ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )>.isolateLocal(
+          _blockingTrampoline )..keepIsolateAlive = false;
+  static ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )> _blockingListenerCallable =
+      ffi.NativeCallable<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<ffi.Void> , ffi.Pointer<objc.ObjCObjectImpl> )>.listener(
+          _blockingTrampoline )..keepIsolateAlive = false;
+  static void _fnPtrTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0) =>
+          block.ref.target.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> arg0)>>()
+              .asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> )>()(arg0);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable = ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>(_fnPtrTrampoline ).cast();
+  static void _closureTrampoline(
+      ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0) =>
+      (objc.getBlockClosure(block) as void Function(ffi.Pointer<objc.ObjCObjectImpl> ))(arg0);
+  static ffi.Pointer<ffi.Void> _closureCallable = ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>(_closureTrampoline ).cast();
+}
+
+/// Call operator for `objc.ObjCBlock<ffi.Void Function(objc.NSString)>`.
+extension ObjCBlock_ffiVoid_NSString$CallExtension on objc.ObjCBlock<ffi.Void Function(objc.NSString)> {
+  void call(objc.NSString arg0) =>ref.pointer.ref.invoke.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCBlockImpl> block, ffi.Pointer<objc.ObjCObjectImpl> arg0)>>()
+  .asFunction<void Function(ffi.Pointer<objc.ObjCBlockImpl> , ffi.Pointer<objc.ObjCObjectImpl> )>()(
+    ref.pointer, arg0.ref.pointer);
+}
+
+late final _sel_observePushToStartTokenUpdates_ = objc.registerName("observePushToStartTokenUpdates:");
+final _objc_msgSend_f167m6 = objc.msgSendPointer.cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCBlockImpl> )>>().asFunction<void Function(ffi.Pointer<objc.ObjCObjectImpl> , ffi.Pointer<objc.ObjCSelector> , ffi.Pointer<objc.ObjCBlockImpl> )>();
 late final _sel_isLiveActivitySupported = objc.registerName("isLiveActivitySupported");
 late final _sel_isPushToStartSupported = objc.registerName("isPushToStartSupported");
 late final _sel_init = objc.registerName("init");
@@ -1844,34 +1971,10 @@ extension type EQMLiveActivityUtil._(objc.ObjCObject object$) implements objc.Ob
   }
 
 
-  /// isLiveActivitySupported
-  static bool isLiveActivitySupported() {
-  objc.checkOsVersionInternal('EQMLiveActivityUtil.isLiveActivitySupported', iOS: (false, (16, 1, 0)));
-    return _objc_msgSend_91o635(_class_EQMLiveActivityUtil, _sel_isLiveActivitySupported);
-
-  }
-
-
-  /// isPushToStartSupported
-  static bool isPushToStartSupported() {
-  objc.checkOsVersionInternal('EQMLiveActivityUtil.isPushToStartSupported', iOS: (false, (16, 1, 0)));
-    return _objc_msgSend_91o635(_class_EQMLiveActivityUtil, _sel_isPushToStartSupported);
-
-  }
-
-
   /// new
   static EQMLiveActivityUtil new$() {
     final $ret = _objc_msgSend_151sglz(_class_EQMLiveActivityUtil, _sel_new);
     return EQMLiveActivityUtil.fromPointer($ret, retain: false, release: true);
-  }
-
-
-  /// pushToStartToken
-  static objc.NSString? pushToStartToken() {
-  objc.checkOsVersionInternal('EQMLiveActivityUtil.pushToStartToken', iOS: (false, (17, 2, 0)));
-    final $ret = _objc_msgSend_151sglz(_class_EQMLiveActivityUtil, _sel_pushToStartToken);
-    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
   }
   /// Returns a new instance of EQMLiveActivityUtil constructed with the default `new` method.
   EQMLiveActivityUtil() : this.as(new$().object$);
@@ -1885,6 +1988,38 @@ extension EQMLiveActivityUtil$Methods on EQMLiveActivityUtil {
   objc.checkOsVersionInternal('EQMLiveActivityUtil.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
     final $ret = _objc_msgSend_151sglz(object$.ref.retainAndReturnPointer(), _sel_init);
     return EQMLiveActivityUtil.fromPointer($ret, retain: false, release: true);
+  }
+
+
+  /// isLiveActivitySupported
+  bool isLiveActivitySupported() {
+  objc.checkOsVersionInternal('EQMLiveActivityUtil.isLiveActivitySupported', iOS: (false, (16, 1, 0)));
+    return _objc_msgSend_91o635(object$.ref.pointer, _sel_isLiveActivitySupported);
+
+  }
+
+
+  /// isPushToStartSupported
+  bool isPushToStartSupported() {
+  objc.checkOsVersionInternal('EQMLiveActivityUtil.isPushToStartSupported', iOS: (false, (16, 1, 0)));
+    return _objc_msgSend_91o635(object$.ref.pointer, _sel_isPushToStartSupported);
+
+  }
+
+
+  /// observePushToStartTokenUpdates:
+  void observePushToStartTokenUpdates(objc.ObjCBlock<ffi.Void Function(objc.NSString)> onUpdate) {
+  objc.checkOsVersionInternal('EQMLiveActivityUtil.observePushToStartTokenUpdates:', iOS: (false, (17, 2, 0)));
+_objc_msgSend_f167m6(object$.ref.pointer, _sel_observePushToStartTokenUpdates_, onUpdate.ref.pointer);
+
+  }
+
+
+  /// pushToStartToken
+  objc.NSString? pushToStartToken() {
+  objc.checkOsVersionInternal('EQMLiveActivityUtil.pushToStartToken', iOS: (false, (17, 2, 0)));
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_pushToStartToken);
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
   }
 
 }
