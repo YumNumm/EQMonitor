@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.dart';
@@ -59,7 +60,19 @@ class _MapContent extends HookConsumerWidget {
             },
             onEvent: (event) => MapLibreEventProvider.of(context).emit(event),
             children: [
-              const EewEstimatedIntensityLayer(),
+              Consumer(
+                builder: (context, ref, _) {
+                  final regions = ref
+                      .watch(eewAliveTelegramProvider)
+                      ?.map((eew) => eew.forecastIntensity?.regions)
+                      .nonNulls
+                      .flattened
+                      .toList();
+                  return EewEstimatedIntensityLayer(
+                    eewRegions: regions ?? [],
+                  );
+                },
+              ),
               const KyoshinMonitorObservationLayer(),
               Consumer(
                 builder: (context, ref, _) {

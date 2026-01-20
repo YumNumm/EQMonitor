@@ -8,9 +8,10 @@ environment:
 resolution: workspace
 
 dependencies:
-  protobuf: ^4.0.0
+  protobuf: ^5.1.0
 
 dev_dependencies:
-  altive_lints: ^1.16.0
+  altive_lints: ^2.1.0
   eqmonitor_lints:
     path: ../eqmonitor_lints
+  test: ^1.29.0

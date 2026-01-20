@@ -20,9 +20,10 @@ dependencies:
   json_annotation: ^4.8.1
 
 dev_dependencies:
-  altive_lints: ^1.16.0
+  altive_lints: ^2.1.0
   build_runner: ^2.4.4
   eqmonitor_lints:
     path: ../eqmonitor_lints
   freezed: ^3.0.6
   json_serializable: ^6.7.0
+  test: ^1.29.0
