@@ -36,6 +36,7 @@ message JmaMap {
 			Property property = 2;
 			LatLng polylabel = 3;
 			bytes bytes = 4;
+			DataType dataType = 5;
 
 			message Polygon {
 				repeated LatLng latLngs = 1;
