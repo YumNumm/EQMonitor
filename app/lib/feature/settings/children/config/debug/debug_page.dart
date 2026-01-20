@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:live_activity_util/live_activity_util.dart';
 
 class DebugPage extends ConsumerWidget {
   const DebugPage({super.key});
@@ -103,12 +104,6 @@ class _DebugWidget extends ConsumerWidget {
                 const DebugNotificationSettingsRoute().push(context),
           ),
           ListTile(
-            title: const Text('Live Activity'),
-            leading: const Icon(Icons.phone_iphone),
-            onTap: () async =>
-                const DebugLiveActivityRoute().push(context),
-          ),
-          ListTile(
             title: const Text('震源アイコン生成'),
             leading: const Icon(Icons.place),
             onTap: () async => Navigator.of(context).push(
@@ -144,6 +139,39 @@ class _DebugWidget extends ConsumerWidget {
               'Tsunami   : ${ref.watch(jmaParameterProvider).value?.tsunami.header.version ?? 'null'}',
               style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
+          ),
+          ListTile(
+            title: const Text('GET Push To Start Token'),
+            onTap: () async {
+              try {
+                final util = EQMLiveActivityUtil().init();
+                final isSupported = util.isLiveActivitySupported();
+                final isPushToStartSupported = util.isPushToStartSupported();
+                final token = util.pushToStartToken();
+                print('isSupported: $isSupported');
+                print('isPushToStartSupported: $isPushToStartSupported');
+                print('token: $token');
+                await Clipboard.setData(
+                  ClipboardData(text: token?.toString() ?? ''),
+                );
+                // ignore: use_build_context_synchronously
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'isSupported: $isSupported\n isPushToStartSupported: $isPushToStartSupported\n token: $token',
+                    ),
+                  ),
+                );
+              } on Exception catch (e) {
+                print('error: $e');
+                // ignore: use_build_context_synchronously
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('ERROR: $e'),
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),

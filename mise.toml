@@ -21,6 +21,7 @@ firebase = "latest"
 yq = "latest"
 actionlint = "latest"
 pinact = "latest"
+swiftformat = "latest"
 
 [settings]
 lockfile = true

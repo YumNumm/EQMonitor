@@ -1,0 +1,25 @@
+name: live_activity_util
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.10.0
+  flutter: ^3.38.0
+
+resolution: workspace
+
+dev_dependencies:
+  altive_lints: ^2.1.0
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  test: ^1.29.0
+
+dependencies:
+  code_assets: ^1.0.0
+  ffi: ^2.1.5
+  ffigen: ^20.1.1
+  hooks: ^1.0.0
+  native_toolchain_c: ^0.17.4
+  path: ^1.9.1
