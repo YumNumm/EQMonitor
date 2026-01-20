@@ -1,13 +1,14 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: jma_map.proto
-//
+// Generated from jma_map.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
 
 import 'dart:core' as $core;
 
@@ -23,53 +24,47 @@ class JmaMap_JmaMapData_JmaMapDataItem_Polygon extends $pb.GeneratedMessage {
   factory JmaMap_JmaMapData_JmaMapDataItem_Polygon({
     $core.Iterable<JmaMap_LatLng>? latLngs,
   }) {
-    final $result = create();
-    if (latLngs != null) {
-      $result.latLngs.addAll(latLngs);
-    }
-    return $result;
+    final result = create();
+    if (latLngs != null) result.latLngs.addAll(latLngs);
+    return result;
   }
-  JmaMap_JmaMapData_JmaMapDataItem_Polygon._() : super();
+
+  JmaMap_JmaMapData_JmaMapDataItem_Polygon._();
+
   factory JmaMap_JmaMapData_JmaMapDataItem_Polygon.fromBuffer(
-          $core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JmaMap_JmaMapData_JmaMapDataItem_Polygon.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JmaMap_JmaMapData_JmaMapDataItem_Polygon.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'JmaMap.JmaMapData.JmaMapDataItem.Polygon',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'net.yumnumm.eqmonitor.jma_map'),
       createEmptyInstance: create)
-    ..pc<JmaMap_LatLng>(1, _omitFieldNames ? '' : 'latLngs', $pb.PbFieldType.PM,
+    ..pPM<JmaMap_LatLng>(1, _omitFieldNames ? '' : 'latLngs',
         protoName: 'latLngs', subBuilder: JmaMap_LatLng.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JmaMap_JmaMapData_JmaMapDataItem_Polygon clone() =>
-      JmaMap_JmaMapData_JmaMapDataItem_Polygon()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  JmaMap_JmaMapData_JmaMapDataItem_Polygon clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JmaMap_JmaMapData_JmaMapDataItem_Polygon copyWith(
           void Function(JmaMap_JmaMapData_JmaMapDataItem_Polygon) updates) =>
       super.copyWith((message) =>
               updates(message as JmaMap_JmaMapData_JmaMapDataItem_Polygon))
           as JmaMap_JmaMapData_JmaMapDataItem_Polygon;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData_JmaMapDataItem_Polygon create() =>
       JmaMap_JmaMapData_JmaMapDataItem_Polygon._();
+  @$core.override
   JmaMap_JmaMapData_JmaMapDataItem_Polygon createEmptyInstance() => create();
-  static $pb.PbList<JmaMap_JmaMapData_JmaMapDataItem_Polygon>
-      createRepeated() =>
-          $pb.PbList<JmaMap_JmaMapData_JmaMapDataItem_Polygon>();
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData_JmaMapDataItem_Polygon getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<
@@ -86,26 +81,22 @@ class JmaMap_JmaMapData_JmaMapDataItem_Property extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? nameKana,
   }) {
-    final $result = create();
-    if (code != null) {
-      $result.code = code;
-    }
-    if (name != null) {
-      $result.name = name;
-    }
-    if (nameKana != null) {
-      $result.nameKana = nameKana;
-    }
-    return $result;
+    final result = create();
+    if (code != null) result.code = code;
+    if (name != null) result.name = name;
+    if (nameKana != null) result.nameKana = nameKana;
+    return result;
   }
-  JmaMap_JmaMapData_JmaMapDataItem_Property._() : super();
+
+  JmaMap_JmaMapData_JmaMapDataItem_Property._();
+
   factory JmaMap_JmaMapData_JmaMapDataItem_Property.fromBuffer(
-          $core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JmaMap_JmaMapData_JmaMapDataItem_Property.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JmaMap_JmaMapData_JmaMapDataItem_Property.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'JmaMap.JmaMapData.JmaMapDataItem.Property',
@@ -117,29 +108,23 @@ class JmaMap_JmaMapData_JmaMapDataItem_Property extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'nameKana', protoName: 'nameKana')
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JmaMap_JmaMapData_JmaMapDataItem_Property clone() =>
-      JmaMap_JmaMapData_JmaMapDataItem_Property()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  JmaMap_JmaMapData_JmaMapDataItem_Property clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JmaMap_JmaMapData_JmaMapDataItem_Property copyWith(
           void Function(JmaMap_JmaMapData_JmaMapDataItem_Property) updates) =>
       super.copyWith((message) =>
               updates(message as JmaMap_JmaMapData_JmaMapDataItem_Property))
           as JmaMap_JmaMapData_JmaMapDataItem_Property;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData_JmaMapDataItem_Property create() =>
       JmaMap_JmaMapData_JmaMapDataItem_Property._();
+  @$core.override
   JmaMap_JmaMapData_JmaMapDataItem_Property createEmptyInstance() => create();
-  static $pb.PbList<JmaMap_JmaMapData_JmaMapDataItem_Property>
-      createRepeated() =>
-          $pb.PbList<JmaMap_JmaMapData_JmaMapDataItem_Property>();
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData_JmaMapDataItem_Property getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<
@@ -149,10 +134,7 @@ class JmaMap_JmaMapData_JmaMapDataItem_Property extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set code($core.String v) {
-    $_setString(0, v);
-  }
-
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
@@ -161,10 +143,7 @@ class JmaMap_JmaMapData_JmaMapDataItem_Property extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String v) {
-    $_setString(1, v);
-  }
-
+  set name($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
@@ -173,10 +152,7 @@ class JmaMap_JmaMapData_JmaMapDataItem_Property extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.String get nameKana => $_getSZ(2);
   @$pb.TagNumber(3)
-  set nameKana($core.String v) {
-    $_setString(2, v);
-  }
-
+  set nameKana($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
   $core.bool hasNameKana() => $_has(2);
   @$pb.TagNumber(3)
@@ -191,31 +167,24 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
     $core.List<$core.int>? bytes,
     JmaMap_JmaMapData_DataType? dataType,
   }) {
-    final $result = create();
-    if (bounds != null) {
-      $result.bounds = bounds;
-    }
-    if (property != null) {
-      $result.property = property;
-    }
-    if (polylabel != null) {
-      $result.polylabel = polylabel;
-    }
-    if (bytes != null) {
-      $result.bytes = bytes;
-    }
-    if (dataType != null) {
-      $result.dataType = dataType;
-    }
-    return $result;
+    final result = create();
+    if (bounds != null) result.bounds = bounds;
+    if (property != null) result.property = property;
+    if (polylabel != null) result.polylabel = polylabel;
+    if (bytes != null) result.bytes = bytes;
+    if (dataType != null) result.dataType = dataType;
+    return result;
   }
-  JmaMap_JmaMapData_JmaMapDataItem._() : super();
-  factory JmaMap_JmaMapData_JmaMapDataItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JmaMap_JmaMapData_JmaMapDataItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  JmaMap_JmaMapData_JmaMapDataItem._();
+
+  factory JmaMap_JmaMapData_JmaMapDataItem.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JmaMap_JmaMapData_JmaMapDataItem.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'JmaMap.JmaMapData.JmaMapDataItem',
@@ -231,36 +200,27 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
         subBuilder: JmaMap_LatLng.create)
     ..a<$core.List<$core.int>>(
         4, _omitFieldNames ? '' : 'bytes', $pb.PbFieldType.OY)
-    ..e<JmaMap_JmaMapData_DataType>(
-        5, _omitFieldNames ? '' : 'dataType', $pb.PbFieldType.OE,
-        protoName: 'dataType',
-        defaultOrMaker: JmaMap_JmaMapData_DataType.POLYGON,
-        valueOf: JmaMap_JmaMapData_DataType.valueOf,
-        enumValues: JmaMap_JmaMapData_DataType.values)
+    ..aE<JmaMap_JmaMapData_DataType>(5, _omitFieldNames ? '' : 'dataType',
+        protoName: 'dataType', enumValues: JmaMap_JmaMapData_DataType.values)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JmaMap_JmaMapData_JmaMapDataItem clone() =>
-      JmaMap_JmaMapData_JmaMapDataItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  JmaMap_JmaMapData_JmaMapDataItem clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JmaMap_JmaMapData_JmaMapDataItem copyWith(
           void Function(JmaMap_JmaMapData_JmaMapDataItem) updates) =>
       super.copyWith(
               (message) => updates(message as JmaMap_JmaMapData_JmaMapDataItem))
           as JmaMap_JmaMapData_JmaMapDataItem;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData_JmaMapDataItem create() =>
       JmaMap_JmaMapData_JmaMapDataItem._();
+  @$core.override
   JmaMap_JmaMapData_JmaMapDataItem createEmptyInstance() => create();
-  static $pb.PbList<JmaMap_JmaMapData_JmaMapDataItem> createRepeated() =>
-      $pb.PbList<JmaMap_JmaMapData_JmaMapDataItem>();
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData_JmaMapDataItem getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<JmaMap_JmaMapData_JmaMapDataItem>(
@@ -270,10 +230,7 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   JmaMap_LatLngBounds get bounds => $_getN(0);
   @$pb.TagNumber(1)
-  set bounds(JmaMap_LatLngBounds v) {
-    $_setField(1, v);
-  }
-
+  set bounds(JmaMap_LatLngBounds value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasBounds() => $_has(0);
   @$pb.TagNumber(1)
@@ -284,10 +241,8 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   JmaMap_JmaMapData_JmaMapDataItem_Property get property => $_getN(1);
   @$pb.TagNumber(2)
-  set property(JmaMap_JmaMapData_JmaMapDataItem_Property v) {
-    $_setField(2, v);
-  }
-
+  set property(JmaMap_JmaMapData_JmaMapDataItem_Property value) =>
+      $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasProperty() => $_has(1);
   @$pb.TagNumber(2)
@@ -298,10 +253,7 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   JmaMap_LatLng get polylabel => $_getN(2);
   @$pb.TagNumber(3)
-  set polylabel(JmaMap_LatLng v) {
-    $_setField(3, v);
-  }
-
+  set polylabel(JmaMap_LatLng value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasPolylabel() => $_has(2);
   @$pb.TagNumber(3)
@@ -312,10 +264,7 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.List<$core.int> get bytes => $_getN(3);
   @$pb.TagNumber(4)
-  set bytes($core.List<$core.int> v) {
-    $_setBytes(3, v);
-  }
-
+  set bytes($core.List<$core.int> value) => $_setBytes(3, value);
   @$pb.TagNumber(4)
   $core.bool hasBytes() => $_has(3);
   @$pb.TagNumber(4)
@@ -324,10 +273,7 @@ class JmaMap_JmaMapData_JmaMapDataItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   JmaMap_JmaMapData_DataType get dataType => $_getN(4);
   @$pb.TagNumber(5)
-  set dataType(JmaMap_JmaMapData_DataType v) {
-    $_setField(5, v);
-  }
-
+  set dataType(JmaMap_JmaMapData_DataType value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasDataType() => $_has(4);
   @$pb.TagNumber(5)
@@ -339,57 +285,46 @@ class JmaMap_JmaMapData extends $pb.GeneratedMessage {
     JmaMap_JmaMapData_JmaMapType? mapType,
     $core.Iterable<JmaMap_JmaMapData_JmaMapDataItem>? data,
   }) {
-    final $result = create();
-    if (mapType != null) {
-      $result.mapType = mapType;
-    }
-    if (data != null) {
-      $result.data.addAll(data);
-    }
-    return $result;
+    final result = create();
+    if (mapType != null) result.mapType = mapType;
+    if (data != null) result.data.addAll(data);
+    return result;
   }
-  JmaMap_JmaMapData._() : super();
-  factory JmaMap_JmaMapData.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JmaMap_JmaMapData.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  JmaMap_JmaMapData._();
+
+  factory JmaMap_JmaMapData.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JmaMap_JmaMapData.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'JmaMap.JmaMapData',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'net.yumnumm.eqmonitor.jma_map'),
       createEmptyInstance: create)
-    ..e<JmaMap_JmaMapData_JmaMapType>(
-        1, _omitFieldNames ? '' : 'mapType', $pb.PbFieldType.OE,
-        protoName: 'mapType',
-        defaultOrMaker: JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_EEW,
-        valueOf: JmaMap_JmaMapData_JmaMapType.valueOf,
-        enumValues: JmaMap_JmaMapData_JmaMapType.values)
-    ..pc<JmaMap_JmaMapData_JmaMapDataItem>(
-        2, _omitFieldNames ? '' : 'data', $pb.PbFieldType.PM,
+    ..aE<JmaMap_JmaMapData_JmaMapType>(1, _omitFieldNames ? '' : 'mapType',
+        protoName: 'mapType', enumValues: JmaMap_JmaMapData_JmaMapType.values)
+    ..pPM<JmaMap_JmaMapData_JmaMapDataItem>(2, _omitFieldNames ? '' : 'data',
         subBuilder: JmaMap_JmaMapData_JmaMapDataItem.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JmaMap_JmaMapData clone() => JmaMap_JmaMapData()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  JmaMap_JmaMapData clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JmaMap_JmaMapData copyWith(void Function(JmaMap_JmaMapData) updates) =>
       super.copyWith((message) => updates(message as JmaMap_JmaMapData))
           as JmaMap_JmaMapData;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData create() => JmaMap_JmaMapData._();
+  @$core.override
   JmaMap_JmaMapData createEmptyInstance() => create();
-  static $pb.PbList<JmaMap_JmaMapData> createRepeated() =>
-      $pb.PbList<JmaMap_JmaMapData>();
   @$core.pragma('dart2js:noInline')
   static JmaMap_JmaMapData getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<JmaMap_JmaMapData>(create);
@@ -398,10 +333,7 @@ class JmaMap_JmaMapData extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   JmaMap_JmaMapData_JmaMapType get mapType => $_getN(0);
   @$pb.TagNumber(1)
-  set mapType(JmaMap_JmaMapData_JmaMapType v) {
-    $_setField(1, v);
-  }
-
+  set mapType(JmaMap_JmaMapData_JmaMapType value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMapType() => $_has(0);
   @$pb.TagNumber(1)
@@ -416,22 +348,20 @@ class JmaMap_LatLngBounds extends $pb.GeneratedMessage {
     JmaMap_LatLng? southWest,
     JmaMap_LatLng? northEast,
   }) {
-    final $result = create();
-    if (southWest != null) {
-      $result.southWest = southWest;
-    }
-    if (northEast != null) {
-      $result.northEast = northEast;
-    }
-    return $result;
+    final result = create();
+    if (southWest != null) result.southWest = southWest;
+    if (northEast != null) result.northEast = northEast;
+    return result;
   }
-  JmaMap_LatLngBounds._() : super();
-  factory JmaMap_LatLngBounds.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JmaMap_LatLngBounds.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  JmaMap_LatLngBounds._();
+
+  factory JmaMap_LatLngBounds.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JmaMap_LatLngBounds.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'JmaMap.LatLngBounds',
@@ -444,24 +374,20 @@ class JmaMap_LatLngBounds extends $pb.GeneratedMessage {
         protoName: 'northEast', subBuilder: JmaMap_LatLng.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JmaMap_LatLngBounds clone() => JmaMap_LatLngBounds()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  JmaMap_LatLngBounds clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JmaMap_LatLngBounds copyWith(void Function(JmaMap_LatLngBounds) updates) =>
       super.copyWith((message) => updates(message as JmaMap_LatLngBounds))
           as JmaMap_LatLngBounds;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JmaMap_LatLngBounds create() => JmaMap_LatLngBounds._();
+  @$core.override
   JmaMap_LatLngBounds createEmptyInstance() => create();
-  static $pb.PbList<JmaMap_LatLngBounds> createRepeated() =>
-      $pb.PbList<JmaMap_LatLngBounds>();
   @$core.pragma('dart2js:noInline')
   static JmaMap_LatLngBounds getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<JmaMap_LatLngBounds>(create);
@@ -470,10 +396,7 @@ class JmaMap_LatLngBounds extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   JmaMap_LatLng get southWest => $_getN(0);
   @$pb.TagNumber(1)
-  set southWest(JmaMap_LatLng v) {
-    $_setField(1, v);
-  }
-
+  set southWest(JmaMap_LatLng value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasSouthWest() => $_has(0);
   @$pb.TagNumber(1)
@@ -484,10 +407,7 @@ class JmaMap_LatLngBounds extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   JmaMap_LatLng get northEast => $_getN(1);
   @$pb.TagNumber(2)
-  set northEast(JmaMap_LatLng v) {
-    $_setField(2, v);
-  }
-
+  set northEast(JmaMap_LatLng value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasNorthEast() => $_has(1);
   @$pb.TagNumber(2)
@@ -501,50 +421,44 @@ class JmaMap_LatLng extends $pb.GeneratedMessage {
     $core.double? lat,
     $core.double? lng,
   }) {
-    final $result = create();
-    if (lat != null) {
-      $result.lat = lat;
-    }
-    if (lng != null) {
-      $result.lng = lng;
-    }
-    return $result;
+    final result = create();
+    if (lat != null) result.lat = lat;
+    if (lng != null) result.lng = lng;
+    return result;
   }
-  JmaMap_LatLng._() : super();
-  factory JmaMap_LatLng.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JmaMap_LatLng.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  JmaMap_LatLng._();
+
+  factory JmaMap_LatLng.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JmaMap_LatLng.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'JmaMap.LatLng',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'net.yumnumm.eqmonitor.jma_map'),
       createEmptyInstance: create)
-    ..a<$core.double>(1, _omitFieldNames ? '' : 'lat', $pb.PbFieldType.OD)
-    ..a<$core.double>(2, _omitFieldNames ? '' : 'lng', $pb.PbFieldType.OD)
+    ..aD(1, _omitFieldNames ? '' : 'lat')
+    ..aD(2, _omitFieldNames ? '' : 'lng')
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JmaMap_LatLng clone() => JmaMap_LatLng()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  JmaMap_LatLng clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JmaMap_LatLng copyWith(void Function(JmaMap_LatLng) updates) =>
       super.copyWith((message) => updates(message as JmaMap_LatLng))
           as JmaMap_LatLng;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JmaMap_LatLng create() => JmaMap_LatLng._();
+  @$core.override
   JmaMap_LatLng createEmptyInstance() => create();
-  static $pb.PbList<JmaMap_LatLng> createRepeated() =>
-      $pb.PbList<JmaMap_LatLng>();
   @$core.pragma('dart2js:noInline')
   static JmaMap_LatLng getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<JmaMap_LatLng>(create);
@@ -553,10 +467,7 @@ class JmaMap_LatLng extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.double get lat => $_getN(0);
   @$pb.TagNumber(1)
-  set lat($core.double v) {
-    $_setDouble(0, v);
-  }
-
+  set lat($core.double value) => $_setDouble(0, value);
   @$pb.TagNumber(1)
   $core.bool hasLat() => $_has(0);
   @$pb.TagNumber(1)
@@ -565,10 +476,7 @@ class JmaMap_LatLng extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get lng => $_getN(1);
   @$pb.TagNumber(2)
-  set lng($core.double v) {
-    $_setDouble(1, v);
-  }
-
+  set lng($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasLng() => $_has(1);
   @$pb.TagNumber(2)
@@ -579,46 +487,42 @@ class JmaMap extends $pb.GeneratedMessage {
   factory JmaMap({
     $core.Iterable<JmaMap_JmaMapData>? data,
   }) {
-    final $result = create();
-    if (data != null) {
-      $result.data.addAll(data);
-    }
-    return $result;
+    final result = create();
+    if (data != null) result.data.addAll(data);
+    return result;
   }
-  JmaMap._() : super();
-  factory JmaMap.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory JmaMap.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  JmaMap._();
+
+  factory JmaMap.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JmaMap.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'JmaMap',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'net.yumnumm.eqmonitor.jma_map'),
       createEmptyInstance: create)
-    ..pc<JmaMap_JmaMapData>(
-        1, _omitFieldNames ? '' : 'data', $pb.PbFieldType.PM,
+    ..pPM<JmaMap_JmaMapData>(1, _omitFieldNames ? '' : 'data',
         subBuilder: JmaMap_JmaMapData.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  JmaMap clone() => JmaMap()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  JmaMap clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JmaMap copyWith(void Function(JmaMap) updates) =>
       super.copyWith((message) => updates(message as JmaMap)) as JmaMap;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JmaMap create() => JmaMap._();
+  @$core.override
   JmaMap createEmptyInstance() => create();
-  static $pb.PbList<JmaMap> createRepeated() => $pb.PbList<JmaMap>();
   @$core.pragma('dart2js:noInline')
   static JmaMap getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<JmaMap>(create);
@@ -628,6 +532,7 @@ class JmaMap extends $pb.GeneratedMessage {
   $pb.PbList<JmaMap_JmaMapData> get data => $_getList(0);
 }
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames =
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
     $core.bool.fromEnvironment('protobuf.omit_message_names');
