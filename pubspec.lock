@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "0.3.4"
   analyzer:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: analyzer
       sha256: "70e4b1ef8003c64793a9e268a551a82869a8a96f39deb73dea28084b0e8bf75e"
@@ -217,14 +217,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.4"
-  ci:
-    dependency: transitive
-    description:
-      name: ci
-      sha256: "145d095ce05cddac4d797a158bc4cf3b6016d1fe63d8c3d2fbd7212590adca13"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
   cli_config:
     dependency: transitive
     description:
@@ -258,13 +250,13 @@ packages:
     source: hosted
     version: "1.1.2"
   code_assets:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: code_assets
-      sha256: ae0db647e668cbb295a3527f0938e4039e004c80099dce2f964102373f5ce0b5
+      sha256: "83ccdaa064c980b5596c35dd64a8d3ecc68620174ab9b90b6343b753aa721687"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.10"
+    version: "1.0.0"
   code_builder:
     dependency: transitive
     description:
@@ -337,38 +329,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  custom_lint:
-    dependency: transitive
-    description:
-      name: custom_lint
-      sha256: "751ee9440920f808266c3ec2553420dea56d3c7837dd2d62af76b11be3fcece5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.1"
-  custom_lint_core:
-    dependency: transitive
-    description:
-      name: custom_lint_core
-      sha256: "85b339346154d5646952d44d682965dfe9e12cae5febd706f0db3aa5010d6423"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.1"
-  custom_lint_visitor:
-    dependency: transitive
-    description:
-      name: custom_lint_visitor
-      sha256: e466d17856197cf9bce7ca03804d784fddab809db7bda787f3d2799ac89faadd
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+9.0.0"
   dart_style:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: dart_style
-      sha256: "8a0aa2b9bae196552b71575efc94580e447546c26c7120577bb6f81fbd33b52e"
+      sha256: a9c30492da18ff84efe2422ba2d319a89942d93e58eb0b73d32abe822ef54b7b
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "3.1.3"
   dartx:
     dependency: transitive
     description:
@@ -385,14 +353,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
-  dependency_validator:
-    dependency: transitive
-    description:
-      name: dependency_validator
-      sha256: a5928c0e3773808027bdafeb13fb4be0e4fdd79819773ad3df34d0fcf42636f2
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.3"
   device_info_plus:
     dependency: transitive
     description:
@@ -998,13 +958,13 @@ packages:
     source: hosted
     version: "2.0.0"
   hooks:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: hooks
-      sha256: "5410b9f4f6c9f01e8ff0eb81c9801ea13a3c3d39f8f0b1613cda08e27eab3c18"
+      sha256: "5d309c86e7ce34cd8e37aa71cb30cb652d3829b900ab145e4d9da564b31d59f7"
       url: "https://pub.dev"
     source: hosted
-    version: "0.20.5"
+    version: "1.0.0"
   hooks_riverpod:
     dependency: transitive
     description:
@@ -1109,13 +1069,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
-  jma_map:
-    dependency: transitive
-    description:
-      path: "packages/jma_map"
-      relative: true
-    source: path
-    version: "1.0.0"
   jni:
     dependency: transitive
     description:
@@ -1124,14 +1077,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.2"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      sha256: "53385261521cc4a0c4658fd0ad07a7d14591cf8fc33abbceae306ddb974888dc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.2"
   json_annotation:
     dependency: transitive
     description:
@@ -1240,20 +1185,20 @@ packages:
     dependency: "direct overridden"
     description:
       path: maplibre
-      ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
-      resolved-ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
-      url: "https://github.com/josxha/flutter-maplibre.git"
+      ref: e9ed961ccac19b898783cd49ffaf623e8c74a39e
+      resolved-ref: e9ed961ccac19b898783cd49ffaf623e8c74a39e
+      url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
-    version: "0.3.3"
+    version: "0.3.3+1"
   maplibre_ios:
     dependency: "direct overridden"
     description:
       path: maplibre_ios
-      ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
-      resolved-ref: "75a9632f32e96539fb9d79cb44abed4bd93fafab"
-      url: "https://github.com/josxha/flutter-maplibre.git"
+      ref: e9ed961ccac19b898783cd49ffaf623e8c74a39e
+      resolved-ref: e9ed961ccac19b898783cd49ffaf623e8c74a39e
+      url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
-    version: "0.3.3"
+    version: "0.3.3+1"
   maps_toolkit:
     dependency: transitive
     description:
@@ -1346,10 +1291,10 @@ packages:
     dependency: transitive
     description:
       name: native_toolchain_c
-      sha256: f8872ea6c7a50ce08db9ae280ca2b8efdd973157ce462826c82f3c3051d154ce
+      sha256: "89e83885ba09da5fdf2cdacc8002a712ca238c28b7f717910b34bcd27b0d03ac"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.2"
+    version: "0.17.4"
   node_preamble:
     dependency: transitive
     description:
@@ -1367,7 +1312,7 @@ packages:
     source: hosted
     version: "2.0.0"
   objective_c:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: objective_c
       sha256: "55eb67ede1002d9771b3f9264d2c9d30bc364f0267bc1c6cc0883280d5f0c7cb"
@@ -1575,13 +1520,13 @@ packages:
     source: hosted
     version: "2.0.0"
   protobuf:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: protobuf
-      sha256: "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06"
+      sha256: "2fcc8a202ca7ec17dab7c97d6b6d91cf03aa07fe6f65f8afbb6dfa52cc5bd902"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "5.1.0"
   pub_semver:
     dependency: transitive
     description:
@@ -1824,10 +1769,10 @@ packages:
     dependency: transitive
     description:
       name: source_gen
-      sha256: "585bc140f20da42c584ece2df28f4d9ef2566955332b626f655957b3a8c8ad54"
+      sha256: "1d562a3c1f713904ebbed50d2760217fd8a51ca170ac4b05b0db490699dbac17"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.2"
+    version: "4.2.0"
   source_helper:
     dependency: transitive
     description:
@@ -1992,26 +1937,26 @@ packages:
     dependency: transitive
     description:
       name: test
-      sha256: "75906bf273541b676716d1ca7627a17e4c4070a3a16272b7a3dc7da3b9f3f6b7"
+      sha256: "54c516bbb7cee2754d327ad4fca637f78abfc3cbcc5ace83b3eda117e42cd71a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.26.3"
+    version: "1.29.0"
   test_api:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: test_api
-      sha256: ab2726c1a94d3176a45960b6234466ec367179b87dd74f1611adb1f3b5fb9d55
+      sha256: "93167629bfc610f71560ab9312acdda4959de4df6fac7492c89ff0d3886f6636"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.7"
+    version: "0.7.9"
   test_core:
     dependency: transitive
     description:
       name: test_core
-      sha256: "0cc24b5ff94b38d2ae73e1eb43cc302b77964fbf67abad1e296025b78deb53d0"
+      sha256: "394f07d21f0f2255ec9e3989f21e54d3c7dc0e6e9dbce160e5a9c1a6be0e2943"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.12"
+    version: "0.6.15"
   time:
     dependency: transitive
     description:
