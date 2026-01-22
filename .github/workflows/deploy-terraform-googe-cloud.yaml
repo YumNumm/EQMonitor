@@ -49,7 +49,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@c53b9236f0b3370f31520f8b142f141256d839c6 # v3.1.1
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.1.1
         with:
           install_args: "terraform tflint aqua:suzuki-shunsuke/tfcmt"
 
@@ -121,7 +121,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@c53b9236f0b3370f31520f8b142f141256d839c6 # v3.1.1
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.1.1
         with:
           install_args: "terraform tflint aqua:suzuki-shunsuke/tfcmt"
 
