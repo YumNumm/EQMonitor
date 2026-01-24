@@ -5,6 +5,7 @@ import Foundation
 
 #if os(iOS)
   @available(iOS 16.1, *)
+  @objc(EQMLiveActivityUtil)
   @objcMembers public class EQMLiveActivityUtil: NSObject {
     @available(iOS 17.2, *)
     public func pushToStartToken() -> String? {

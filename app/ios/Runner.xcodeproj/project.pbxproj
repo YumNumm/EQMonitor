@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		2709A8772F1FFFF400FBE962 /* libLiveActivityUtil.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* libLiveActivityUtil.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		2709A8772F1FFFF400FBE962 /* libLiveActivityUtil.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* libLiveActivityUtil.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
 		2709A8782F20000D00FBE962 /* libLiveActivityUtil.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* libLiveActivityUtil.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2709A8792F20001B00FBE962 /* libLiveActivityUtil.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* libLiveActivityUtil.dylib */; };
+		2709AB5B2F211EB400FBE962 /* libLiveActivityUtil.dylib in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2709A8752F1FFFF400FBE962 /* libLiveActivityUtil.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		4A6E6F82172719E05F9BD593 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */; };
 		4F115C462BE9682B00DAAD73 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4F115C452BE9682B00DAAD73 /* PrivacyInfo.xcprivacy */; };
@@ -56,6 +57,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				2709AB5B2F211EB400FBE962 /* libLiveActivityUtil.dylib in Embed Foundation Extensions */,
 				85C54D0C2E96C7EA00BFBBAB /* WidgetExtension.appex in Embed Foundation Extensions */,
 				85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */,
 			);
@@ -64,7 +66,7 @@
 		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
