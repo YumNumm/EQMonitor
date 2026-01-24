@@ -13,7 +13,9 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   const EarthquakeHistoryPage({super.key});
@@ -155,47 +157,55 @@ class _SliverListBody extends HookConsumerWidget {
       return null;
     }, [controller, state, onScrollEnd, onRefresh]);
 
-    Widget listView({
+    Widget buildStickyHeaderList({
       required List<EarthquakePartial> items,
       required bool hasNext,
-      Widget loading = const Padding(
-        padding: EdgeInsets.all(48),
-        child: Center(child: CircularProgressIndicator.adaptive()),
-      ),
     }) {
       if (items.isEmpty) {
         return const EarthquakeHistoryNotFound();
       }
-      return ListView.separated(
+
+      // 日付ごとにグループ化
+      final groupedItems = _groupByDate(items);
+
+      return CustomScrollView(
         controller: controller,
-        clipBehavior: Clip.antiAlias,
-        padding: EdgeInsets.zero,
-        itemCount: items.length + 1,
-        separatorBuilder: (context, index) =>
-            const Divider(height: 0, indent: 0, endIndent: 0, thickness: 0),
-        itemBuilder: (context, index) {
-          if (index == items.length) {
-            if (state.isLoading) {
-              return loading;
-            }
-            if (state.hasError) {
-              final error = state.error!;
-              return ErrorCard(error: error, onReload: onRefresh);
-            }
-            if (hasNext) {
-              return loading;
-            } else {
-              return const EarthquakeHistoryAllFetched();
-            }
-          }
-          final item = items[index];
-          return EarthquakeHistoryListTile(
-            item: item,
-            onTap: () async => EarthquakeHistoryDetailsRoute(
-              eventId: item.eventId,
-            ).push<void>(context),
-          );
-        },
+        slivers: [
+          for (final entry in groupedItems.entries) ...[
+            SliverStickyHeader(
+              header: _DateHeader(date: entry.key),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final item = entry.value[index];
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        EarthquakeHistoryListTile(
+                          item: item,
+                          onTap: () async => EarthquakeHistoryDetailsRoute(
+                            eventId: item.eventId,
+                          ).push<void>(context),
+                        ),
+                        const Divider(
+                          height: 0,
+                          indent: 0,
+                          endIndent: 0,
+                          thickness: 0,
+                        ),
+                      ],
+                    );
+                  },
+                  childCount: entry.value.length,
+                ),
+              ),
+            ),
+          ],
+          // ローディング/エラー/完了表示
+          SliverToBoxAdapter(
+            child: _buildFooter(hasNext, ref),
+          ),
+        ],
       );
     }
 
@@ -205,7 +215,7 @@ class _SliverListBody extends HookConsumerWidget {
         AsyncError(:final error) => () {
           final valueOrNull = state.value;
           if (valueOrNull != null) {
-            return listView(
+            return buildStickyHeaderList(
               items: valueOrNull.items,
               hasNext: valueOrNull.hasNext,
             );
@@ -216,12 +226,73 @@ class _SliverListBody extends HookConsumerWidget {
                 ref.refresh(earthquakeHistoryProvider(parameter)),
           );
         }(),
-        AsyncData(:final value) => listView(
+        AsyncData(:final value) => buildStickyHeaderList(
           items: value.items,
           hasNext: value.hasNext,
         ),
         _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
+    );
+  }
+
+  Widget _buildFooter(bool hasNext, WidgetRef ref) {
+    const loading = Padding(
+      padding: EdgeInsets.all(48),
+      child: Center(child: CircularProgressIndicator.adaptive()),
+    );
+
+    if (state.isLoading) {
+      return loading;
+    }
+    if (state.hasError) {
+      final error = state.error!;
+      return ErrorCard(error: error, onReload: onRefresh);
+    }
+    if (hasNext) {
+      return loading;
+    } else {
+      return const EarthquakeHistoryAllFetched();
+    }
+  }
+
+  /// 地震データを日付(JST)ごとにグループ化する
+  Map<String, List<EarthquakePartial>> _groupByDate(
+    List<EarthquakePartial> items,
+  ) {
+    final dateFormatter = DateFormat('yyyy/MM/dd');
+    final grouped = <String, List<EarthquakePartial>>{};
+
+    for (final item in items) {
+      // originTimeを優先し、なければarrivalTimeを使用
+      final dateTime = item.originTime ?? item.arrivalTime;
+      final dateKey =
+          dateTime != null ? dateFormatter.format(dateTime.toLocal()) : '不明';
+
+      grouped.putIfAbsent(dateKey, () => []).add(item);
+    }
+
+    return grouped;
+  }
+}
+
+class _DateHeader extends StatelessWidget {
+  const _DateHeader({required this.date});
+
+  final String date;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      color: theme.colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Text(
+        date,
+        style: theme.textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }
