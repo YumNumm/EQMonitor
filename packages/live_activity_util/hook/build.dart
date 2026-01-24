@@ -64,11 +64,11 @@ Future<void> main(List<String> args) => build(
         // '/dev/null',
         '../../app/ios/Runner/Frameworks/libLiveActivityUtil.dylib',
         '-module-name',
-        'LiveActivityUtil',
+        'live_activity_util',
         '-c',
         packageRoot
             .resolve(
-              'ios/LiveActivityUtil/Sources/LiveActivityUtil/EQMLiveActivityUtil.swift',
+              'ios/live_activity_util/Sources/live_activity_util/EQMLiveActivityUtil.swift',
             )
             .toFilePath(),
       ],
@@ -130,7 +130,7 @@ Future<void> main(List<String> args) => build(
     final objcSourcePath = libDir.uri.resolve('live_activity_util.dart.m');
     final cBuilder = CBuilder.library(
       name: 'live_activity_util',
-      assetName: 'live_activity_util.dart.m',
+      assetName: 'live_activity_util.g.dart',
       sources: [
         objcSourcePath.toFilePath(),
       ],

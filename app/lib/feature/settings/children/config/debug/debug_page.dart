@@ -144,7 +144,8 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('GET Push To Start Token'),
             onTap: () async {
               try {
-                final util = EQMLiveActivityUtil().init();
+                // DynamicLibrary.open('libLiveActivityUtil.dylib');
+                final util = EQMLiveActivityUtil.alloc();
                 final isSupported = util.isLiveActivitySupported();
                 final isPushToStartSupported = util.isPushToStartSupported();
                 final token = util.pushToStartToken();

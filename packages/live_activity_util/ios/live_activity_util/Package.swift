@@ -4,19 +4,20 @@
 import PackageDescription
 
 let package = Package(
-  name: "LiveActivityUtil",
+  name: "live_activity_util",
   platforms: [
     .iOS(.v13)
   ],
   products: [
     .library(
-      name: "LiveActivityUtil",
-      targets: ["LiveActivityUtil"],
+      name: "live_activity_util",
+      targets: ["live_activity_util"]
     )
   ],
   targets: [
     .target(
-      name: "LiveActivityUtil"
+      name: "live_activity_util"
     )
-  ],
+  ]
+
 )
