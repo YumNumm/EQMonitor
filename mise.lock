@@ -1,0 +1,75 @@
+[[tools.actionlint]]
+version = "1.7.10"
+backend = "aqua:rhysd/actionlint"
+
+[[tools."aqua:suzuki-shunsuke/tfcmt"]]
+version = "4.14.14"
+backend = "aqua:suzuki-shunsuke/tfcmt"
+
+[[tools.biome]]
+version = "2.3.12"
+backend = "aqua:biomejs/biome"
+
+[[tools.firebase]]
+version = "15.4.0"
+backend = "aqua:firebase/firebase-tools"
+
+[[tools.flutter]]
+version = "3.38.7-stable"
+backend = "asdf:flutter"
+
+[[tools.gcloud]]
+version = "553.0.0"
+backend = "asdf:gcloud"
+
+[[tools."gem:cocoapods"]]
+version = "1.16.2"
+backend = "gem:cocoapods"
+
+[[tools.java]]
+version = "25.0.2"
+backend = "core:java"
+
+[[tools.node]]
+version = "25.4.0"
+backend = "core:node"
+
+[[tools.pinact]]
+version = "3.8.0"
+backend = "aqua:suzuki-shunsuke/pinact"
+
+[[tools."pipx:codemagic-cli-tools"]]
+version = "0.62.1"
+backend = "pipx:codemagic-cli-tools"
+
+[[tools.pnpm]]
+version = "10.28.1"
+backend = "aqua:pnpm/pnpm"
+
+[[tools.python]]
+version = "3.14.2"
+backend = "core:python"
+
+[[tools.swiftformat]]
+version = "0.58.7"
+backend = "github:nicklockwood/SwiftFormat[rename_exe=swiftformat]"
+
+[[tools.terraform]]
+version = "1.14.3"
+backend = "aqua:hashicorp/terraform"
+
+[[tools.tflint]]
+version = "0.60.0"
+backend = "aqua:terraform-linters/tflint"
+
+[[tools.websocat]]
+version = "1.14.1"
+backend = "aqua:vi/websocat"
+
+[[tools.xcbeautify]]
+version = "3.1.2"
+backend = "aqua:cpisciotta/xcbeautify"
+
+[[tools.yq]]
+version = "4.50.1"
+backend = "aqua:mikefarah/yq"

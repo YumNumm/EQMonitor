@@ -2,9 +2,9 @@ min_version = "2025.11.11"
 experimental_monorepo_root = true
 
 [tools]
-"aqua:suzuki-shunsuke/tfcmt" = "4.14.13"
+"aqua:suzuki-shunsuke/tfcmt" = "4.14.14"
 biome = "latest"
-flutter = "3.38.5-stable"
+flutter = "3.38.7-stable"
 "gem:cocoapods" = "latest"
 java = "25"
 node = "25"
