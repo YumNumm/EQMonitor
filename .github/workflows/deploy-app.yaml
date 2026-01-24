@@ -67,7 +67,7 @@ jobs:
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -81,7 +81,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@c53b9236f0b3370f31520f8b142f141256d839c6 # v3.1.1
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.1.1
         with:
           install_args: "flutter xcbeautify"
 
@@ -182,7 +182,7 @@ jobs:
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 1
 
@@ -211,7 +211,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@c53b9236f0b3370f31520f8b142f141256d839c6 # v3.1.1
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.1.1
         with:
           install_args: "xcbeautify"
 
@@ -247,7 +247,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Extract SOPS Age Key File
         run: |
@@ -259,7 +259,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@c53b9236f0b3370f31520f8b142f141256d839c6 # v3.1.1
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.1.1
         with:
           install_args: "flutter java uv python pipx:codemagic-cli-tools"
 
@@ -330,7 +330,7 @@ jobs:
       name: EQMonitor-Android
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -344,7 +344,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@c53b9236f0b3370f31520f8b142f141256d839c6 # v3.1.1
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.1.1
         with:
           install_args: "firebase yq"
 
