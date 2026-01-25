@@ -1812,7 +1812,7 @@ _objc_msgSend_vij4rw(object$.ref.pointer, _sel_enumerateLinguisticTagsInRange_sc
 
 late final _class_EQMLiveActivityUtil = objc.getClass("EQMLiveActivityUtil");
 late final _sel_isKindOfClass_ = objc.registerName("isKindOfClass:");
-late final _sel_asyncPushToStartToken = objc.registerName("asyncPushToStartToken");
+late final _sel_pushToStartToken = objc.registerName("pushToStartToken");
 
 /// Construction methods for `objc.ObjCBlock<ffi.Void Function(objc.NSString)>`.
 abstract final class ObjCBlock_ffiVoid_NSString {
@@ -1983,14 +1983,6 @@ extension type EQMLiveActivityUtil._(objc.ObjCObject object$) implements objc.Ob
 
 extension EQMLiveActivityUtil$Methods on EQMLiveActivityUtil {
 
-  /// asyncPushToStartToken
-  objc.NSString? asyncPushToStartToken() {
-  objc.checkOsVersionInternal('EQMLiveActivityUtil.asyncPushToStartToken', iOS: (false, (17, 2, 0)));
-    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_asyncPushToStartToken);
-    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
-  }
-
-
   /// init
   EQMLiveActivityUtil init() {
   objc.checkOsVersionInternal('EQMLiveActivityUtil.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
@@ -2020,6 +2012,14 @@ extension EQMLiveActivityUtil$Methods on EQMLiveActivityUtil {
   objc.checkOsVersionInternal('EQMLiveActivityUtil.observePushToStartTokenUpdates:', iOS: (false, (17, 2, 0)));
 _objc_msgSend_f167m6(object$.ref.pointer, _sel_observePushToStartTokenUpdates_, onUpdate.ref.pointer);
 
+  }
+
+
+  /// pushToStartToken
+  objc.NSString? pushToStartToken() {
+  objc.checkOsVersionInternal('EQMLiveActivityUtil.pushToStartToken', iOS: (false, (17, 2, 0)));
+    final $ret = _objc_msgSend_151sglz(object$.ref.pointer, _sel_pushToStartToken);
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
   }
 
 }
