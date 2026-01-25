@@ -148,21 +148,21 @@ class _DebugWidget extends ConsumerWidget {
                 final util = EQMLiveActivityUtil.alloc();
                 final isSupported = util.isLiveActivitySupported();
                 final isPushToStartSupported = util.isPushToStartSupported();
-                final token = util.pushToStartToken();
+                // final token = util.pushToStartToken();
                 print('isSupported: $isSupported');
                 print('isPushToStartSupported: $isPushToStartSupported');
-                print('token: ${token}');
-                await Clipboard.setData(
-                  ClipboardData(text: token?.toString() ?? ''),
-                );
-                // ignore: use_build_context_synchronously
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'isSupported: $isSupported\n isPushToStartSupported: $isPushToStartSupported\n token: $token',
-                    ),
-                  ),
-                );
+                // print('token: ${token}');
+                // await Clipboard.setData(
+                //   ClipboardData(text: token?.toString() ?? ''),
+                // );
+                // // ignore: use_build_context_synchronously
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(
+                //     content: Text(
+                //       'isSupported: $isSupported\n isPushToStartSupported: $isPushToStartSupported\n token: $token',
+                //     ),
+                //   ),
+                // );
               } on Exception catch (e) {
                 print('error: $e');
                 // ignore: use_build_context_synchronously
