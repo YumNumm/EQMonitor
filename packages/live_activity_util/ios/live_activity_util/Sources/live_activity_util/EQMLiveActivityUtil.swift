@@ -20,7 +20,7 @@ import Foundation
 
     @available(iOS 17.2, *)
     public func observePushToStartTokenUpdates(
-      _ onUpdate: @escaping @convention(block) (NSString) -> Void
+      _ onUpdate: @escaping @Sendable @convention(block) (NSString) -> Void
     ) {
       Task {
         for await tokenData in Activity<MockLiveActivityAttributes>.pushToStartTokenUpdates {

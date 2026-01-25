@@ -10,13 +10,15 @@
 	<true/>
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
-	<key>com.apple.security.network.client</key>
+	<key>com.apple.security.device.serial</key>
 	<true/>
-	<key>com.apple.security.network.server</key>
+	<key>com.apple.security.network.client</key>
 	<true/>
 	<key>com.apple.security.personal-information.location</key>
 	<true/>
-	<key>com.apple.security.device.serial</key>
-	<true/>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)net.yumnumm.eqmonitor</string>
+	</array>
 </dict>
 </plist>

@@ -27,8 +27,9 @@ version = "1.16.2"
 backend = "gem:cocoapods"
 
 [[tools.java]]
-version = "25.0.2"
+version = "17.0.2"
 backend = "core:java"
+"platforms.macos-arm64" = { checksum = "sha256:602d7de72526368bb3f80d95c4427696ea639d2e0cc40455f53ff0bbb18c27c8", url = "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"}
 
 [[tools.node]]
 version = "25.4.0"
