@@ -16,13 +16,13 @@ dependency_overrides:
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e9ed961ccac19b898783cd49ffaf623e8c74a39e
+      ref: 0089fe9a1b7285bf0b4218b0fe4be259ec49ea92
       path: maplibre
 
   maplibre_ios:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: e9ed961ccac19b898783cd49ffaf623e8c74a39e
+      ref: 0089fe9a1b7285bf0b4218b0fe4be259ec49ea92
       path: maplibre_ios
   objective_c: 9.2.2
   protobuf: 5.1.0
@@ -97,13 +97,12 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  libserialport_plus: ^0.0.12
   live_activity_util:
     path: ../packages/live_activity_util
   maplibre:
     git:
       url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: 86ccdfc16d8f637a4385f554d31dd01fd0561462
+      ref: 0089fe9a1b7285bf0b4218b0fe4be259ec49ea92
       path: maplibre
   nied_api_client:
     path: ../packages/nied_api_client
