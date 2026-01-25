@@ -151,7 +151,7 @@ class _DebugWidget extends ConsumerWidget {
                 final token = util.pushToStartToken();
                 print('isSupported: $isSupported');
                 print('isPushToStartSupported: $isPushToStartSupported');
-                print('token: $token');
+                print('token: ${token}');
                 await Clipboard.setData(
                   ClipboardData(text: token?.toString() ?? ''),
                 );

@@ -31,7 +31,7 @@ Future<void> main(List<String> args) => build(
     logger.info('Package root: ${packageRoot.toFilePath()}');
     logger.info('Output root: ${buildDirectory.toFilePath()}');
 
-    final libDir = Directory.fromUri(packageRoot.resolve('lib/'));
+    final libDir = Directory.fromUri(packageRoot.resolve('lib/src/'));
     if (!libDir.existsSync()) {
       libDir.createSync(recursive: true);
     }
