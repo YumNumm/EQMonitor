@@ -1,15 +1,14 @@
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
-import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor/feature/settings/features/notification/data/provider/notification_token_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:live_activity_util/live_activity_util.dart';
 
 class DebugPage extends ConsumerWidget {
   const DebugPage({super.key});
@@ -30,7 +29,7 @@ class _DebugWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider);
 
-    final notificationToken = ref.watch(notificationTokenProvider).value;
+    final notificationToken = ref.watch(notificationTokenStreamProvider).value;
 
     return ListTileTheme(
       dense: true,
@@ -93,11 +92,6 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const EarthquakeReplayRoute().push(context),
           ),
           ListTile(
-            title: const Text('Device API'),
-            leading: const Icon(Icons.devices),
-            onTap: () async => const DebugDeviceApiRoute().push(context),
-          ),
-          ListTile(
             title: const Text('Notification Settings'),
             leading: const Icon(Icons.notifications),
             onTap: () async =>
@@ -133,46 +127,24 @@ class _DebugWidget extends ConsumerWidget {
             ),
           ),
           ListTile(
+            title: const Text('Push To Start Token'),
+            subtitle: Text(
+              notificationToken?.apnsPushToStartToken?.toString() ?? 'null',
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+            ),
+            onTap: () async => Clipboard.setData(
+              ClipboardData(
+                text: notificationToken?.apnsPushToStartToken ?? '',
+              ),
+            ),
+          ),
+          ListTile(
             title: const Text('観測点パラメータ'),
             subtitle: Text(
               'Earthquake: ${ref.watch(jmaParameterProvider).value?.earthquake.header.version ?? 'null'}\n'
               'Tsunami   : ${ref.watch(jmaParameterProvider).value?.tsunami.header.version ?? 'null'}',
               style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
-          ),
-          ListTile(
-            title: const Text('GET Push To Start Token'),
-            onTap: () async {
-              try {
-                // DynamicLibrary.open('libLiveActivityUtil.dylib');
-                final util = EQMLiveActivityUtil.alloc();
-                final isSupported = util.isLiveActivitySupported();
-                final isPushToStartSupported = util.isPushToStartSupported();
-                // final token = util.pushToStartToken();
-                print('isSupported: $isSupported');
-                print('isPushToStartSupported: $isPushToStartSupported');
-                // print('token: ${token}');
-                // await Clipboard.setData(
-                //   ClipboardData(text: token?.toString() ?? ''),
-                // );
-                // // ignore: use_build_context_synchronously
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   SnackBar(
-                //     content: Text(
-                //       'isSupported: $isSupported\n isPushToStartSupported: $isPushToStartSupported\n token: $token',
-                //     ),
-                //   ),
-                // );
-              } on Exception catch (e) {
-                print('error: $e');
-                // ignore: use_build_context_synchronously
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('ERROR: $e'),
-                  ),
-                );
-              }
-            },
           ),
         ],
       ),
