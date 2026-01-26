@@ -28,7 +28,9 @@ final class CustomProviderObserver extends ProviderObserver {
   void didDisposeProvider(
     ProviderObserverContext context,
   ) => switch (context.provider.name) {
-    'timeTickerProvider' || 'eewAliveTelegramProvider' => null,
+    'timeTickerProvider' ||
+    'eewAliveTelegramProvider' ||
+    'kyoshinMonitorPointsProvider' => null,
     _
         when context.provider.name?.contains('LayerControllerProvider') ??
             false =>
@@ -43,10 +45,12 @@ final class CustomProviderObserver extends ProviderObserver {
     Object? newValue,
   ) => switch (context.provider.name) {
     'mapViewModelProvider' ||
-    'kyoshinMonitorTimerStreamProvider' ||
     'periodicTimerProvider' ||
     'timeTickerProvider' ||
-    'kyoshinMonitorProvider' => null,
+    'kyoshinMonitorTimerStreamProvider' ||
+    'kyoshinMonitorTimerProvider' ||
+    'kyoshinMonitorProvider' ||
+    'kyoshinMonitorPointsProvider' => null,
     _
         when context.provider.name?.contains('LayerControllerProvider') ??
             false =>
