@@ -76,7 +76,7 @@ class _Header extends StatelessWidget {
     return Row(
       children: [
         Text(
-          '最近の地震',
+          '全国の地震',
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
