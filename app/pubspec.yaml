@@ -76,6 +76,7 @@ dependencies:
   geodata: ^1.3.0
   geolocator: ^14.0.1
   go_router: ^17.0.0
+  google_api_availability: ^5.0.1
   google_fonts: ^7.0.2
   hooks_riverpod: ^3.0.3
   image: ^4.4.0
@@ -97,6 +98,7 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
+  libserialport_plus: ^0.0.12
   live_activity_util:
     path: ../packages/live_activity_util
   maplibre:
@@ -107,6 +109,7 @@ dependencies:
   nied_api_client:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
+  objective_c: ^9.2.2
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   purchases_flutter: ^9.1.0
