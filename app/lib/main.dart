@@ -56,6 +56,9 @@ Future<void> main() async {
       // ignore: avoid_redundant_argument_values
       useConsoleLogs: kDebugMode,
     ),
+    logger: TalkerLogger(
+      formatter: const ColoredLoggerFormatter(),
+    ),
   );
   if (!kIsWeb) {
     talker.configure(observer: CrashlyticsTalkerObserver());
@@ -147,7 +150,10 @@ Future<void> main() async {
       if (results.$2.$1 != null)
         kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
     ],
-    observers: [if (kDebugMode) CustomProviderObserver(talker)],
+    observers: [
+      if (kDebugMode) CustomProviderObserver(talker),
+    ],
+    retry: (_, _) => null,
   );
 
   await (

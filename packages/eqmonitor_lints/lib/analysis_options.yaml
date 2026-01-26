@@ -22,3 +22,4 @@ analyzer:
     lines_longer_than_80_chars: ignore
   exclude:
     - "**/DerivedData/**"
+    - "**/build/**"
