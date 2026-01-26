@@ -72,7 +72,6 @@ Stream<String> _apnsPushToStartTokenStream(Ref ref) async* {
     'APNs Token is only supported on iOS and macOS',
   );
 
-  final _ = eqmLiveActivityUtil.pushToStartToken()?.toDartString();
   final initialToken = eqmLiveActivityUtil.pushToStartToken()?.toDartString();
   if (initialToken != null) {
     yield initialToken;
@@ -80,7 +79,6 @@ Stream<String> _apnsPushToStartTokenStream(Ref ref) async* {
 
   final controller = StreamController<String>.broadcast();
   ref.onDispose(controller.close);
-
 
   eqmLiveActivityUtil.observePushToStartTokenUpdates(
     ObjCBlock_ffiVoid_NSString.listener(
