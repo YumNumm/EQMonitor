@@ -136,6 +136,7 @@ jobs:
             -destination 'generic/platform=iOS' \
             -archivePath build/ios/Runner.xcarchive \
             CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGNING_ALLOWED=YES \
             -allowProvisioningUpdates \
@@ -156,6 +157,7 @@ jobs:
             -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
             -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
             CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGNING_ALLOWED=YES \
           | xcbeautify --renderer github-actions
@@ -376,15 +378,15 @@ jobs:
 
       - name: Output git log
         run: |
-         # LAST TAG
-          LAST_TAG=$(git describe --tags --abbrev=0)
-          git log $LAST_TAG..HEAD --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
+          # LAST TAG
+           LAST_TAG=$(git describe --tags --abbrev=0)
+           git log $LAST_TAG..HEAD --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
-          # 最大2000文字
-          head -c 2000 changelog.tmp > changelog.txt
-          if [ $(wc -c < changelog.txt) -gt 2000 ]; then
-            echo '...' >> changelog.txt
-          fi
+           # 最大2000文字
+           head -c 2000 changelog.tmp > changelog.txt
+           if [ $(wc -c < changelog.txt) -gt 2000 ]; then
+             echo '...' >> changelog.txt
+           fi
 
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
