@@ -5,7 +5,6 @@ experimental_monorepo_root = true
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
 biome = "latest"
 flutter = "3.38.7-stable"
-"gem:cocoapods" = "latest"
 java = "17"
 node = "lts"
 "pipx:codemagic-cli-tools" = "latest"
