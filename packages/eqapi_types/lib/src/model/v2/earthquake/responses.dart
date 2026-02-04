@@ -180,3 +180,41 @@ abstract class IntensityStationSearchResponse
   factory IntensityStationSearchResponse.fromJson(Map<String, dynamic> json) =>
       _$IntensityStationSearchResponseFromJson(json);
 }
+
+/// 震源地情報
+@freezed
+abstract class EpicenterInfo with _$EpicenterInfo {
+  const factory EpicenterInfo({
+    required int code,
+    required String name,
+  }) = _EpicenterInfo;
+
+  factory EpicenterInfo.fromJson(Map<String, dynamic> json) =>
+      _$EpicenterInfoFromJson(json);
+}
+
+/// 震源地検索レスポンスの項目
+@freezed
+abstract class EpicenterSearchItem with _$EpicenterSearchItem {
+  const factory EpicenterSearchItem({
+    required String eventId,
+    required EpicenterInfo epicenter,
+    required EarthquakePartial earthquake,
+  }) = _EpicenterSearchItem;
+
+  factory EpicenterSearchItem.fromJson(Map<String, dynamic> json) =>
+      _$EpicenterSearchItemFromJson(json);
+}
+
+/// 震源地検索レスポンス
+@freezed
+abstract class EpicenterSearchResponse with _$EpicenterSearchResponse {
+  const factory EpicenterSearchResponse({
+    required List<EpicenterSearchItem> items,
+    String? nextToken,
+    String? nextPooling,
+  }) = _EpicenterSearchResponse;
+
+  factory EpicenterSearchResponse.fromJson(Map<String, dynamic> json) =>
+      _$EpicenterSearchResponseFromJson(json);
+}

@@ -30,9 +30,9 @@ abstract class EarthquakeApiClient {
   });
 
   /// 震度細分区域から地震検索
-  @GET('/v2/earthquake/intensity/region')
+  @GET('/v2/earthquake/intensity/region/{code}')
   Future<IntensityRegionSearchResponse> searchByRegion({
-    @Query('code') required String code,
+    @Path('code') required String code,
     @Query('limit') int? limit,
     @Query('cursor') String? cursor,
     @Query('magnitudeLte') double? magnitudeLte,
@@ -45,9 +45,9 @@ abstract class EarthquakeApiClient {
   });
 
   /// 都道府県から地震検索
-  @GET('/v2/earthquake/intensity/prefecture')
+  @GET('/v2/earthquake/intensity/prefecture/{code}')
   Future<IntensityPrefectureSearchResponse> searchByPrefecture({
-    @Query('code') required String code,
+    @Path('code') required String code,
     @Query('limit') int? limit,
     @Query('cursor') String? cursor,
     @Query('magnitudeLte') double? magnitudeLte,
@@ -60,9 +60,9 @@ abstract class EarthquakeApiClient {
   });
 
   /// 市区町村から地震検索
-  @GET('/v2/earthquake/intensity/city')
+  @GET('/v2/earthquake/intensity/city/{code}')
   Future<IntensityCitySearchResponse> searchByCity({
-    @Query('code') required String code,
+    @Path('code') required String code,
     @Query('limit') int? limit,
     @Query('cursor') String? cursor,
     @Query('magnitudeLte') double? magnitudeLte,
@@ -75,9 +75,24 @@ abstract class EarthquakeApiClient {
   });
 
   /// 観測点から地震検索
-  @GET('/v2/earthquake/intensity/station')
+  @GET('/v2/earthquake/intensity/station/{code}')
   Future<IntensityStationSearchResponse> searchByStation({
-    @Query('code') required String code,
+    @Path('code') required String code,
+    @Query('limit') int? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') double? magnitudeLte,
+    @Query('magnitudeGte') double? magnitudeGte,
+    @Query('depthLte') int? depthLte,
+    @Query('depthGte') int? depthGte,
+    @Query('intensityLte') String? intensityLte,
+    @Query('intensityGte') String? intensityGte,
+    @Query('statuses') List<String>? statuses,
+  });
+
+  /// 震源地から地震検索
+  @GET('/v2/earthquake/epicenter/{code}')
+  Future<EpicenterSearchResponse> searchByEpicenter({
+    @Path('code') required int code,
     @Query('limit') int? limit,
     @Query('cursor') String? cursor,
     @Query('magnitudeLte') double? magnitudeLte,

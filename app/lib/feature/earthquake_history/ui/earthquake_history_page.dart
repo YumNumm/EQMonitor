@@ -1,16 +1,13 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
-import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
-import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
-import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_search_parameter_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -19,6 +16,17 @@ import 'package:intl/intl.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   const EarthquakeHistoryPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const Scaffold(
+      body: _SliverListBody(),
+    );
+  }
+}
+
+class _SliverListBody extends HookConsumerWidget {
+  const _SliverListBody();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,121 +49,24 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       return null;
     }, [parameter.value]);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('地震履歴'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: _SearchParameter(
-            parameter: parameter.value,
-            onChanged: (value) => parameter.value = value,
-          ),
-        ),
-      ),
-      body: _SliverListBody(
-        state: state,
-        parameter: parameter.value,
-        onRefresh: () async => ref
-            .read(
-              earthquakeHistoryProvider(
-                parameter.value,
-              ).notifier,
-            )
-            .refresh(),
-        onScrollEnd: () async => ref
-            .read(
-              earthquakeHistoryProvider(
-                parameter.value,
-              ).notifier,
-            )
-            .fetchNextData(),
-      ),
-    );
-  }
-}
+    Future<void> onRefresh() async =>
+        ref.read(earthquakeHistoryProvider(parameter.value).notifier).refresh();
 
-class _SearchParameter extends StatelessWidget {
-  const _SearchParameter({required this.parameter, required this.onChanged});
-
-  final EarthquakeHistoryParameter parameter;
-  final void Function(EarthquakeHistoryParameter) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          children:
-              [
-                    IntensityFilterChip(
-                      min: parameter.intensityGte,
-                      max: parameter.intensityLte,
-                      onChanged: (min, max) =>
-                          onChanged(parameter.updateIntensity(min, max)),
-                    ),
-                    MagnitudeFilterChip(
-                      min: parameter.magnitudeGte,
-                      max: parameter.magnitudeLte,
-                      onChanged: (min, max) =>
-                          onChanged(parameter.updateMagnitude(min, max)),
-                    ),
-                    DepthFilterChip(
-                      min: parameter.depthGte,
-                      max: parameter.depthLte,
-                      onChanged: (min, max) => onChanged(
-                        parameter.updateDepth(min, max),
-                      ),
-                    ),
-                    StatusFilterChip(
-                      statuses: parameter.statuses,
-                      onChanged: (statuses) => onChanged(
-                        parameter.updateStatuses(statuses),
-                      ),
-                    ),
-                  ]
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: e,
-                    ),
-                  )
-                  .toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class _SliverListBody extends HookConsumerWidget {
-  const _SliverListBody({
-    required this.state,
-    required this.parameter,
-    this.onRefresh,
-    this.onScrollEnd,
-  });
-
-  final Future<void> Function()? onRefresh;
-  final void Function()? onScrollEnd;
-  final AsyncValue<EarthquakeHistoryNotifierState> state;
-  final EarthquakeHistoryParameter parameter;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     final controller = PrimaryScrollController.of(context);
     useEffect(() {
-      controller.addListener(() {
+      controller.addListener(() async {
         if (state.hasError || state.isRefreshing || !state.hasValue) {
           return;
         }
         if (controller.position.pixels >=
             controller.position.maxScrollExtent - 100) {
-          onScrollEnd?.call();
+          await ref
+              .read(earthquakeHistoryProvider(parameter.value).notifier)
+              .fetchNextData();
         }
       });
       return null;
-    }, [controller, state, onScrollEnd, onRefresh]);
+    }, [controller, state]);
 
     Widget buildStickyHeaderList({
       required List<EarthquakePartial> items,
@@ -171,6 +82,27 @@ class _SliverListBody extends HookConsumerWidget {
       return CustomScrollView(
         controller: controller,
         slivers: [
+          SliverAppBar(
+            pinned: true,
+            centerTitle: false,
+            title: const Text('地震履歴'),
+            actions: [
+              OutlinedButton.icon(
+                label: const Text('検索条件'),
+                icon: const Icon(Icons.search),
+                onPressed: () async {
+                  final result =
+                      await EarthquakeHistorySearchParameterModal.show(
+                        context,
+                        initialParameter: parameter.value,
+                      );
+                  if (result != null) {
+                    parameter.value = result;
+                  }
+                },
+              ),
+            ],
+          ),
           for (final entry in groupedItems.entries) ...[
             SliverStickyHeader(
               header: _DateHeader(date: entry.key),
@@ -178,6 +110,7 @@ class _SliverListBody extends HookConsumerWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final item = entry.value[index];
+                    final theme = Theme.of(context);
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -186,12 +119,14 @@ class _SliverListBody extends HookConsumerWidget {
                           onTap: () async => EarthquakeHistoryDetailsRoute(
                             eventId: item.eventId,
                           ).push<void>(context),
+                          visualDensity: VisualDensity.compact,
                         ),
-                        const Divider(
+                        Divider(
                           height: 0,
                           indent: 0,
                           endIndent: 0,
                           thickness: 0,
+                          color: theme.colorScheme.onInverseSurface,
                         ),
                       ],
                     );
@@ -203,14 +138,24 @@ class _SliverListBody extends HookConsumerWidget {
           ],
           // ローディング/エラー/完了表示
           SliverToBoxAdapter(
-            child: _buildFooter(hasNext, ref),
+            child: switch (state) {
+              AsyncError(:final error) => ErrorCard(
+                error: error,
+                onReload: onRefresh,
+              ),
+              AsyncData(:final value) =>
+                value.hasNext
+                    ? const EarthquakeHistoryAllFetched()
+                    : const SizedBox.shrink(),
+              _ => const SizedBox.shrink(),
+            },
           ),
         ],
       );
     }
 
     return RefreshIndicator(
-      onRefresh: () async => onRefresh?.call(),
+      onRefresh: () async => onRefresh.call(),
       child: switch (state) {
         AsyncError(:final error) => () {
           final valueOrNull = state.value;
@@ -223,7 +168,7 @@ class _SliverListBody extends HookConsumerWidget {
           return ErrorCard(
             error: error,
             onReload: () async =>
-                ref.refresh(earthquakeHistoryProvider(parameter)),
+                ref.refresh(earthquakeHistoryProvider(parameter.value)),
           );
         }(),
         AsyncData(:final value) => buildStickyHeaderList(
@@ -233,26 +178,6 @@ class _SliverListBody extends HookConsumerWidget {
         _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
     );
-  }
-
-  Widget _buildFooter(bool hasNext, WidgetRef ref) {
-    const loading = Padding(
-      padding: EdgeInsets.all(48),
-      child: Center(child: CircularProgressIndicator.adaptive()),
-    );
-
-    if (state.isLoading) {
-      return loading;
-    }
-    if (state.hasError) {
-      final error = state.error!;
-      return ErrorCard(error: error, onReload: onRefresh);
-    }
-    if (hasNext) {
-      return loading;
-    } else {
-      return const EarthquakeHistoryAllFetched();
-    }
   }
 
   /// 地震データを日付(JST)ごとにグループ化する
@@ -265,8 +190,9 @@ class _SliverListBody extends HookConsumerWidget {
     for (final item in items) {
       // originTimeを優先し、なければarrivalTimeを使用
       final dateTime = item.originTime ?? item.arrivalTime;
-      final dateKey =
-          dateTime != null ? dateFormatter.format(dateTime.toLocal()) : '不明';
+      final dateKey = dateTime != null
+          ? dateFormatter.format(dateTime.toLocal())
+          : '不明';
 
       grouped.putIfAbsent(dateKey, () => []).add(item);
     }
