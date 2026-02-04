@@ -53,18 +53,93 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   }) async {
     ref.invalidate(earthquakeHistoryDetailsProvider);
 
-    final result = await ref
-        .read(earthquakeHistoryRepositoryProvider)
-        .fetchEarthquakeList(
-          depthGte: param.depthGte,
-          depthLte: param.depthLte,
-          intensityGte: param.intensityGte?.value,
-          intensityLte: param.intensityLte?.value,
-          magnitudeGte: param.magnitudeGte,
-          magnitudeLte: param.magnitudeLte,
-          statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
-          limit: limit,
-        );
+    return _fetchData(param: param, limit: limit, cursor: null);
+  }
+
+  Future<EarthquakeHistoryNotifierState> _fetchData({
+    required EarthquakeHistoryParameter param,
+    required int limit,
+    required String? cursor,
+  }) async {
+    final repository = ref.read(earthquakeHistoryRepositoryProvider);
+    final statuses = param.statuses?.map((s) => s.name.toUpperCase()).toList();
+
+    // 震央地検索の場合
+    if (param.hasEpicenterFilter && param.epicenterCode != null) {
+      final result = await repository.searchByEpicenter(
+        code: param.epicenterCode!,
+        limit: limit,
+        cursor: cursor,
+        depthGte: param.depthGte,
+        depthLte: param.depthLte,
+        intensityGte: param.intensityGte?.value,
+        intensityLte: param.intensityLte?.value,
+        magnitudeGte: param.magnitudeGte,
+        magnitudeLte: param.magnitudeLte,
+        statuses: statuses,
+      );
+      return (
+        items: result.items.map((e) => e.earthquake).toList(),
+        nextToken: result.nextToken,
+      );
+    }
+
+    // 地域検索（都道府県）の場合
+    if (param.hasRegionFilter &&
+        param.regionCode != null &&
+        param.regionSearchType == RegionSearchType.prefecture) {
+      final result = await repository.searchByPrefecture(
+        code: param.regionCode!,
+        limit: limit,
+        cursor: cursor,
+        depthGte: param.depthGte,
+        depthLte: param.depthLte,
+        intensityGte: param.regionIntensityGte?.value,
+        intensityLte: param.regionIntensityLte?.value,
+        magnitudeGte: param.magnitudeGte,
+        magnitudeLte: param.magnitudeLte,
+        statuses: statuses,
+      );
+      return (
+        items: result.items.map((e) => e.earthquake).toList(),
+        nextToken: result.nextToken,
+      );
+    }
+
+    // 地域検索（市区町村）の場合
+    if (param.hasRegionFilter &&
+        param.regionCode != null &&
+        param.regionSearchType == RegionSearchType.city) {
+      final result = await repository.searchByCity(
+        code: param.regionCode!,
+        limit: limit,
+        cursor: cursor,
+        depthGte: param.depthGte,
+        depthLte: param.depthLte,
+        intensityGte: param.regionIntensityGte?.value,
+        intensityLte: param.regionIntensityLte?.value,
+        magnitudeGte: param.magnitudeGte,
+        magnitudeLte: param.magnitudeLte,
+        statuses: statuses,
+      );
+      return (
+        items: result.items.map((e) => e.earthquake).toList(),
+        nextToken: result.nextToken,
+      );
+    }
+
+    // 通常の地震一覧取得
+    final result = await repository.fetchEarthquakeList(
+      depthGte: param.depthGte,
+      depthLte: param.depthLte,
+      intensityGte: param.intensityGte?.value,
+      intensityLte: param.intensityLte?.value,
+      magnitudeGte: param.magnitudeGte,
+      magnitudeLte: param.magnitudeLte,
+      statuses: statuses,
+      limit: limit,
+      cursor: cursor,
+    );
     return (
       items: result.items,
       nextToken: result.nextToken,
@@ -94,17 +169,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
 
     state = await state.guardPlus(() async {
-      final repository = ref.read(earthquakeHistoryRepositoryProvider);
-      final result = await repository.fetchEarthquakeList(
-        depthGte: parameter.depthGte,
-        depthLte: parameter.depthLte,
-        intensityGte: parameter.intensityGte?.value,
-        intensityLte: parameter.intensityLte?.value,
-        magnitudeGte: parameter.magnitudeGte,
-        magnitudeLte: parameter.magnitudeLte,
-        statuses: parameter.statuses?.map((s) => s.name.toUpperCase()).toList(),
-        cursor: currentState.nextToken,
+      final result = await _fetchData(
+        param: parameter,
         limit: 50,
+        cursor: currentState.nextToken,
       );
       final mergedItems = <EarthquakePartial>[
         ...currentState.items,

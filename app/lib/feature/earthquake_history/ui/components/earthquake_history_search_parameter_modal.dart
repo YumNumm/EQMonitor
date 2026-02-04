@@ -303,6 +303,45 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                                         _MagnitudeRangeSelector.initialMax
                                 ? magnitudeMax.value
                                 : null,
+                            // 震央地名
+                            epicenterCode:
+                                isEpicenterEnabled.value &&
+                                    selectedEpicenterCode.value != null
+                                ? int.tryParse(selectedEpicenterCode.value!)
+                                : null,
+                            epicenterName:
+                                isEpicenterEnabled.value &&
+                                    selectedEpicenterCode.value != null
+                                ? selectedEpicenterName.value
+                                : null,
+                            // 地域の震度
+                            regionSearchType:
+                                isRegionIntensityEnabled.value &&
+                                    selectedRegionCode.value != null
+                                ? (selectedRegionType.value == 'prefecture'
+                                      ? RegionSearchType.prefecture
+                                      : RegionSearchType.city)
+                                : null,
+                            regionCode: isRegionIntensityEnabled.value
+                                ? selectedRegionCode.value
+                                : null,
+                            regionName: isRegionIntensityEnabled.value
+                                ? selectedRegionName.value
+                                : null,
+                            regionIntensityGte:
+                                isRegionIntensityEnabled.value &&
+                                    selectedRegionCode.value != null &&
+                                    regionIntensityMin.value !=
+                                        _IntensityRangeSelector.initialMin
+                                ? regionIntensityMin.value
+                                : null,
+                            regionIntensityLte:
+                                isRegionIntensityEnabled.value &&
+                                    selectedRegionCode.value != null &&
+                                    regionIntensityMax.value !=
+                                        _IntensityRangeSelector.initialMax
+                                ? regionIntensityMax.value
+                                : null,
                           );
                           Navigator.of(context).pop(parameter);
                         },
@@ -423,6 +462,7 @@ class _DateRangeSelector extends StatelessWidget {
           context: context,
           firstDate: DateTime(1919),
           lastDate: DateTime.now(),
+          initialEntryMode: DatePickerEntryMode.input,
           initialDateRange: dateRange,
           builder: (context, child) {
             return Theme(
