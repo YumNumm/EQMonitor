@@ -33,6 +33,8 @@ Dio dio(Ref ref) {
         errorPen: AnsiPen()..red(),
         requestPen: AnsiPen()..yellow(),
         responsePen: AnsiPen()..green(),
+        printResponseData: false,
+        printErrorMessage: false,
       ),
       talker: talker,
     ),

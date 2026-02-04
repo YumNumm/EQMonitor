@@ -111,7 +111,6 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'code': code,
       r'limit': limit,
       r'cursor': cursor,
       r'magnitudeLte': magnitudeLte,
@@ -129,7 +128,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/earthquake/intensity/region',
+            '/v2/earthquake/intensity/region/${code}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -161,7 +160,6 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'code': code,
       r'limit': limit,
       r'cursor': cursor,
       r'magnitudeLte': magnitudeLte,
@@ -179,7 +177,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/earthquake/intensity/prefecture',
+            '/v2/earthquake/intensity/prefecture/${code}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -211,7 +209,6 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'code': code,
       r'limit': limit,
       r'cursor': cursor,
       r'magnitudeLte': magnitudeLte,
@@ -229,7 +226,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/earthquake/intensity/city',
+            '/v2/earthquake/intensity/city/${code}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -261,7 +258,6 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'code': code,
       r'limit': limit,
       r'cursor': cursor,
       r'magnitudeLte': magnitudeLte,
@@ -279,7 +275,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/earthquake/intensity/station',
+            '/v2/earthquake/intensity/station/${code}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -289,6 +285,55 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     late IntensityStationSearchResponse _value;
     try {
       _value = IntensityStationSearchResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<EpicenterSearchResponse> searchByEpicenter({
+    required int code,
+    int? limit,
+    String? cursor,
+    double? magnitudeLte,
+    double? magnitudeGte,
+    int? depthLte,
+    int? depthGte,
+    String? intensityLte,
+    String? intensityGte,
+    List<String>? statuses,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte,
+      r'intensityGte': intensityGte,
+      r'statuses': statuses,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<EpicenterSearchResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/earthquake/epicenter/${code}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late EpicenterSearchResponse _value;
+    try {
+      _value = EpicenterSearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

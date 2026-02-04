@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,7 +18,9 @@ class TravelTimeDataSource {
       final list = row.split(',');
       try {
         travelTimeTable.add(TravelTimeTable.fromList(list));
-      } on Exception catch (_) {}
+      } on Exception catch (e) {
+        talker.error(e.toString());
+      }
     }
     return travelTimeTable;
   }
