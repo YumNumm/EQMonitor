@@ -151,4 +151,31 @@ class EarthquakeHistoryRepository {
       statuses: statuses,
     );
   }
+
+  /// 震源地から地震検索
+  Future<EpicenterSearchResponse> searchByEpicenter({
+    required int code,
+    int? limit,
+    String? cursor,
+    double? magnitudeLte,
+    double? magnitudeGte,
+    int? depthLte,
+    int? depthGte,
+    String? intensityLte,
+    String? intensityGte,
+    List<String>? statuses,
+  }) async {
+    return _api.earthquake.searchByEpicenter(
+      code: code,
+      limit: limit,
+      cursor: cursor,
+      magnitudeLte: magnitudeLte,
+      magnitudeGte: magnitudeGte,
+      depthLte: depthLte,
+      depthGte: depthGte,
+      intensityLte: intensityLte,
+      intensityGte: intensityGte,
+      statuses: statuses,
+    );
+  }
 }
