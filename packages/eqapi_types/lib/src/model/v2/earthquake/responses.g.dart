@@ -406,3 +406,68 @@ Map<String, dynamic> _$IntensityStationSearchResponseToJson(
   'next_token': instance.nextToken,
   'next_pooling': instance.nextPooling,
 };
+
+_EpicenterInfo _$EpicenterInfoFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_EpicenterInfo', json, ($checkedConvert) {
+      final val = _EpicenterInfo(
+        code: $checkedConvert('code', (v) => (v as num).toInt()),
+        name: $checkedConvert('name', (v) => v as String),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$EpicenterInfoToJson(_EpicenterInfo instance) =>
+    <String, dynamic>{'code': instance.code, 'name': instance.name};
+
+_EpicenterSearchItem _$EpicenterSearchItemFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_EpicenterSearchItem', json, ($checkedConvert) {
+      final val = _EpicenterSearchItem(
+        eventId: $checkedConvert('event_id', (v) => v as String),
+        epicenter: $checkedConvert(
+          'epicenter',
+          (v) => EpicenterInfo.fromJson(v as Map<String, dynamic>),
+        ),
+        earthquake: $checkedConvert(
+          'earthquake',
+          (v) => EarthquakePartial.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'eventId': 'event_id'});
+
+Map<String, dynamic> _$EpicenterSearchItemToJson(
+  _EpicenterSearchItem instance,
+) => <String, dynamic>{
+  'event_id': instance.eventId,
+  'epicenter': instance.epicenter,
+  'earthquake': instance.earthquake,
+};
+
+_EpicenterSearchResponse _$EpicenterSearchResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_EpicenterSearchResponse',
+  json,
+  ($checkedConvert) {
+    final val = _EpicenterSearchResponse(
+      items: $checkedConvert(
+        'items',
+        (v) => (v as List<dynamic>)
+            .map((e) => EpicenterSearchItem.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      ),
+      nextToken: $checkedConvert('next_token', (v) => v as String?),
+      nextPooling: $checkedConvert('next_pooling', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {'nextToken': 'next_token', 'nextPooling': 'next_pooling'},
+);
+
+Map<String, dynamic> _$EpicenterSearchResponseToJson(
+  _EpicenterSearchResponse instance,
+) => <String, dynamic>{
+  'items': instance.items,
+  'next_token': instance.nextToken,
+  'next_pooling': instance.nextPooling,
+};

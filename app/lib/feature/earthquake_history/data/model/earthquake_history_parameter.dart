@@ -8,9 +8,19 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_parameter.freezed.dart';
 
+/// 地域検索タイプ
+enum RegionSearchType {
+  /// 都道府県
+  prefecture,
+
+  /// 市区町村
+  city,
+}
+
 @freezed
 abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
   const factory EarthquakeHistoryParameter({
+    // 基本フィルター
     double? magnitudeLte,
     double? magnitudeGte,
     int? depthLte,
@@ -18,7 +28,30 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     IntensityValue? intensityLte,
     IntensityValue? intensityGte,
     List<TelegramStatus>? statuses,
+
+    // 震央地名フィルター
+    int? epicenterCode,
+    String? epicenterName,
+
+    // 地域の震度フィルター
+    RegionSearchType? regionSearchType,
+    String? regionCode,
+    String? regionName,
+    IntensityValue? regionIntensityLte,
+    IntensityValue? regionIntensityGte,
   }) = _EarthquakeHistoryParameter;
+
+  const EarthquakeHistoryParameter._();
+
+  /// 震央地名でのフィルタリングが有効かどうか
+  bool get hasEpicenterFilter => epicenterCode != null;
+
+  /// 地域の震度でのフィルタリングが有効かどうか
+  bool get hasRegionFilter => regionCode != null;
+
+  /// 特殊なエンドポイントが必要かどうか
+  /// （震央地名または地域の震度フィルターが有効な場合）
+  bool get requiresSpecialEndpoint => hasEpicenterFilter || hasRegionFilter;
 }
 
 extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
