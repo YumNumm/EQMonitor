@@ -4,8 +4,17 @@ on:
   push:
     branches:
       - develop
+    # paths:
+    #   - "packages/eqmonitor_api/openapi/openapi.json"
+  pull_request:
+    branches:
+      - develop
+    types:
+      - opened
+      - synchronize
     paths:
       - "packages/eqmonitor_api/openapi/openapi.json"
+  workflow_dispatch:
 
 jobs:
   generate-openapi-client:

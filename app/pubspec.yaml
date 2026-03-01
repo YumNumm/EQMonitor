@@ -42,10 +42,6 @@ dependencies:
   dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
-  eqapi_client:
-    path: ../packages/eqapi_client
-  eqapi_types:
-    path: ../packages/eqapi_types
   extensions:
     path: ../packages/extensions
   feedback: ^3.1.0
