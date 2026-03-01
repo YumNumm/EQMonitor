@@ -1,0 +1,210 @@
+swagger_parser:
+  # You must provide the file path and/or url to the OpenApi schema.
+
+  # Sets the OpenApi schema path directory for api definition.
+  schema_path: openapi/openapi.json
+
+  # Sets the url of the OpenApi schema.
+  # schema_url: https://petstore.swagger.io/v2/swagger.json
+
+  # Required. Sets output directory for generated files (Clients and DTOs).
+  output_directory: lib
+
+  # Optional. Set API name for folder and export file
+  # If not specified, the file name is used.
+  name: null
+
+  # Optional. Sets the programming language.
+  # Current available languages are: dart, kotlin.
+  language: dart
+
+  # Optional (dart only).
+  # Current available serializers are: json_serializable, freezed, dart_mappable.
+  json_serializer: freezed
+
+  # Optional. Set default content-type for all requests.
+  default_content_type: "application/json"
+
+  # Optional (dart only).
+  # Support @Extras annotation for interceptors.
+  # If the value is 'true', then the annotation will be added to all requests.
+  extras_parameter_by_default: false
+
+  # Optional (dart only).
+  # Generate static OpenAPI metadata (tags, operationId, externalDocsUrl) for each request.
+  # If extras_parameter_by_default is true, this metadata is also used as the default `extras` value.
+  # Disabled by default.
+  add_openapi_metadata: false
+
+  # Optional (dart only).
+  # Support @DioOptions annotation for interceptors.
+  # If the value is 'true', then the annotation will be added to all requests.
+  dio_options_parameter_by_default: false
+
+  # Optional (dart only). Set 'true' to generate root client
+  # with interface and all clients instances.
+  root_client: true
+
+  # Optional (dart only). Set root client name.
+  root_client_name: ApiClient
+
+  # Optional (dart only). Set 'true' to generate export file.
+  export_file: true
+
+  # Optional. Set to 'true' to put the all api in its folder.
+  put_in_folder: false
+
+  # Optional. Set 'true' to put all clients in clients folder.
+  put_clients_in_folder: true
+
+  # Optional. Set to 'true' to squash all clients in one client.
+  merge_clients: false
+
+  # Optional. Set postfix for Client class and file.
+  client_postfix: ApiClient
+
+  # Optional. Set 'true' to use only the endpoint path for the method name.
+  # Set 'false' to use operationId
+  path_method_name: true
+
+  # Optional (dart only). Set 'true' to include toJson() in enums.
+  # If set to false, serialization will use .name instead.
+  enums_to_json: true
+
+  # Optional. Set 'true' to set enum prefix from parent component.
+  enums_parent_prefix: true
+
+  # Optional (dart only). Set 'true' to maintain backwards compatibility
+  # when adding new values on the backend.
+  unknown_enum_value: false
+
+  # Optional. Set 'false' to not put a comment at the beginning of the generated files.
+  mark_files_as_generated: true
+
+  # Optional (dart only). Set 'true' to wrap all request return types with HttpResponse.
+  original_http_response: true
+
+  # Optional. Set regex replacement rules for the names of the generated classes/enums.
+  # All rules are applied in order.
+  replacement_rules:
+    # Example of rule
+    # - pattern: "[0-9]+"
+    #   replacement: ""
+
+  # Optional. Set raw regex replacement rules for the names of the raw schema objects.
+  # Applies to the raw schema objects before the generator will try to parse them into a Dart class.
+  # Useful when raw schema objects have names that are not valid Dart class names (e.g. "filters[name]")
+  replacement_rules_for_raw_schema:
+  #  - pattern: "\\]\\["
+  #    replacement: "_"
+  #  - pattern: "\\[]\\["
+  #    replacement: "_"
+  #  - pattern: "\\["
+  #    replacement: "_"
+  #  - pattern: "\\]"
+  #    replacement: "_"
+
+  # Optional. Set paths to be included on endpoint generation.
+  #
+  # Also supports wildcard paths (e.g. `/path/*/update` or `/path/**`)
+  #
+  # If set, only endpoints with these paths will be included in the generated clients.
+  # include_paths:
+    # - "/some/concrete/path/{id}"
+    # - "/some/wildcard/*/path"
+    # - "/another/wildcard/**"
+
+  # Optional (dart & json_serializable only). Set field parsers for JSON serializable.
+  #
+  # Field parsers are used to parse specific fields of a DTO.
+  #
+  # Parser must implements JsonConverter<T, Object?> interface from json_annotation package.
+  # field_parsers:
+  #   - apply_to_type: "int"
+  #     parser_name: "CustomIntParser"
+  #     parser_absolute_path: "package:your_package/lib/utils/parsers/custom_int_parser.dart"
+  #   - apply_to_type: "int?"
+  #     parser_name: "CustomNullableIntParser"
+  #     parser_absolute_path: "package:your_package/lib/utils/parsers/custom_nullable_int_parser.dart"
+  #   - apply_to_type: "bool"
+  #     parser_name: "CustomBoolParser"
+  #     parser_absolute_path: "package:your_package/lib/utils/parsers/custom_bool_parser.dart"
+
+  # Optional. Skip parameters with names.
+  # skipped_parameters:
+  #   - "X-Some-Token"
+
+  # Optional (dart & freezed only). Set 'true' to use Freezed 3.x code generation syntax.
+  # Set 'false' to maintain compatibility with Freezed 2.x.
+  use_freezed3: true
+
+  # Optional (dart & freezed/dart_mappable). Set string value to use fallbackUnion parameter.
+  # For freezed: adds fallbackUnion: <value> to the @Freezed annotation.
+  # For dart_mappable: creates additional fallback variant for unknown discriminator values.
+  # When not set (null) or empty, no fallback union is generated.
+  # Examples: "unknown"
+  # Default: "" (no fallbackUnion parameter)
+  # fallback_union: ""
+
+  # Optional (dart_mappable only). Set false to generate sealed classes for union types.
+  # Set true to generate when/maybeWhen convenience methods for legacy support of deprecated union features from versions prior to 3.31.
+  # Default: false
+  # dart_mappable_convenient_when: false
+
+  # DART ONLY
+  # Optional. Set `true` to use MultipartFile instead of File as argument type for file parameters.
+  use_multipart_file: true
+
+  # DART ONLY
+  # Optional. Set `true` to generate URL constants for all endpoints.
+  generate_urls_constants: true
+
+  # DART ONLY
+  # Optional. Set tags to be excluded on endpoint generation.
+  #
+  # Endpoints with these tags will not be included in the generated clients.
+  # exclude_tags:
+  #   - "sellPet"
+
+  # DART ONLY
+  # Optional. Set tags to be included on endpoint generation.
+  #
+  # If set, only endpoints with these tags will be included in the generated clients.
+  # **NOTE: This will override the [exclude_tags] if set.**
+  # include_tags:
+    # - "buyPet"
+
+  # DART ONLY
+  # Optional. Set fallback client name for endpoints without tags.
+  #
+  # In general the first tag of an endpoint defines in which client the
+  # endpoint will be included. If no tag is specified, the fallback client
+  # name will be used.
+
+  # defaults to 'fallback' which results in a client named `FallbackClient`.
+  # fallback_client: "fallback"
+
+  # Optional. Set to true to merge all generated code into a single file.
+  #
+  # This is useful when using swagger_parser together with build_runner, which needs to map
+  # input files to output files 1-to-1.
+  # merge_outputs: false
+
+  # DART ONLY
+  # Optional. Set `true` to generate includeIfNull annotations for nullable fields.
+  # If set to `false`, includeIfNull annotations will not be generated.
+  include_if_null: true
+
+  # DART ONLY
+  # Optional. Set `true` to infer required properties from nullability.
+  # When enabled and the schema has no explicit required array:
+  # - Properties without nullable: true are marked as required
+  # - Properties with nullable: true remain optional
+  # If the schema defines a required array, this option has no effect.
+  infer_required_from_nullable: true
+
+  # DART/FLUTTER ONLY
+  # Optional. Set `true` to generate Retrofit clients with `Parser.FlutterCompute`
+  # and serialize/deserialize top-level functions for isolate-based multithreading.
+  # This enables parsing models on a separate thread using Flutter's compute function.
+  use_flutter_compute: false
