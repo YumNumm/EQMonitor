@@ -37,6 +37,55 @@ void main(List<String> args) async {
     await _run('dart', ['run', 'swagger_parser'], packageDir.path);
   });
 
+  /// swagger_parser が生成した震度 enum のメンバー名を修正する。
+  ///
+  /// swagger_parser は `+` `-` `!` をセパレータとして除去するため、
+  /// `5-` と `5+` が両方 `value5` になり重複エラーが起きる。
+  /// ここで以下の置換を行う:
+  ///   - `!5-`  (undefined0)  → value5unknown
+  ///   - `{N}-` (value{N})    → value{N}minus
+  ///   - `{N}+` (value{N})    → value{N}plus
+  await _step('震度 enum メンバー名をパッチ', () async {
+    final modelsDir = Directory('${packageDir.path}/lib/models');
+
+    if (!modelsDir.existsSync()) return;
+
+    final dartFiles = modelsDir.listSync().whereType<File>().where(
+      (f) => f.path.endsWith('.dart') && !f.path.endsWith('.g.dart'),
+    );
+
+    for (final file in dartFiles) {
+      var content = file.readAsStringSync();
+      final original = content;
+
+      // `!5-` の自動生成コメントを除去し undefined0 → value5unknown に置換
+      content = content.replaceAll(
+        RegExp(
+          r"  /// Incorrect name has been replaced\. Original name: `!5-`\.\n",
+        ),
+        '',
+      );
+      content = content.replaceAll("undefined0('!5-')", "value5unknown('!5-')");
+
+      // value{N}('{N}-') → value{N}minus('{N}-')
+      content = content.replaceAllMapped(
+        RegExp(r"value(\d+)\('(\d+)-'\)"),
+        (m) => "value${m[1]}minus('${m[2]}-')",
+      );
+
+      // value{N}('{N}+') → value{N}plus('{N}+')
+      content = content.replaceAllMapped(
+        RegExp(r"value(\d+)\('(\d+)\+'\)"),
+        (m) => "value${m[1]}plus('${m[2]}+')",
+      );
+
+      if (content != original) {
+        file.writeAsStringSync(content);
+        stdout.writeln('  patched: ${file.path}');
+      }
+    }
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
