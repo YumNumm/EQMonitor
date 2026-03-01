@@ -3387,41 +3387,29 @@
                       "description": "コードと名前のペア"
                     },
                     "Coordinate": {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "LAT_LNG"
-                            },
-                            "latitude": {
-                              "type": "number"
-                            },
-                            "longitude": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "latitude",
-                            "longitude"
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "enum": [
+                            "LAT_LNG",
+                            "UNKNOWN"
                           ]
                         },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "UNKNOWN"
-                            },
-                            "condition": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "condition"
-                          ]
+                        "latitude": {
+                          "type": "number",
+                          "description": "緯度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "description": "経度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "condition": {
+                          "type": "string",
+                          "description": "不明の場合のみ出現する"
                         }
+                      },
+                      "required": [
+                        "type"
                       ],
                       "examples": [
                         {
@@ -3967,41 +3955,29 @@
                       "description": "コードと名前のペア"
                     },
                     "Coordinate": {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "LAT_LNG"
-                            },
-                            "latitude": {
-                              "type": "number"
-                            },
-                            "longitude": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "latitude",
-                            "longitude"
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "enum": [
+                            "LAT_LNG",
+                            "UNKNOWN"
                           ]
                         },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "UNKNOWN"
-                            },
-                            "condition": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "condition"
-                          ]
+                        "latitude": {
+                          "type": "number",
+                          "description": "緯度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "description": "経度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "condition": {
+                          "type": "string",
+                          "description": "不明の場合のみ出現する"
                         }
+                      },
+                      "required": [
+                        "type"
                       ],
                       "examples": [
                         {
@@ -4512,41 +4488,29 @@
                       "description": "コードと名前のペア"
                     },
                     "Coordinate": {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "LAT_LNG"
-                            },
-                            "latitude": {
-                              "type": "number"
-                            },
-                            "longitude": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "latitude",
-                            "longitude"
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "enum": [
+                            "LAT_LNG",
+                            "UNKNOWN"
                           ]
                         },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "UNKNOWN"
-                            },
-                            "condition": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "condition"
-                          ]
+                        "latitude": {
+                          "type": "number",
+                          "description": "緯度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "description": "経度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "condition": {
+                          "type": "string",
+                          "description": "不明の場合のみ出現する"
                         }
+                      },
+                      "required": [
+                        "type"
                       ],
                       "examples": [
                         {
@@ -5126,41 +5090,29 @@
                       "description": "コードと名前のペア"
                     },
                     "Coordinate": {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "LAT_LNG"
-                            },
-                            "latitude": {
-                              "type": "number"
-                            },
-                            "longitude": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "latitude",
-                            "longitude"
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "enum": [
+                            "LAT_LNG",
+                            "UNKNOWN"
                           ]
                         },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "const": "UNKNOWN"
-                            },
-                            "condition": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "type",
-                            "condition"
-                          ]
+                        "latitude": {
+                          "type": "number",
+                          "description": "緯度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "description": "経度(typeがLAT_LNGのときのみ出現する)"
+                        },
+                        "condition": {
+                          "type": "string",
+                          "description": "不明の場合のみ出現する"
                         }
+                      },
+                      "required": [
+                        "type"
                       ],
                       "examples": [
                         {
@@ -5701,119 +5653,6 @@
                 },
                 "components": {
                   "schemas": {
-                    "Telegram": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "event_id": {
-                          "type": "string"
-                        },
-                        "serial_no": {
-                          "type": "number"
-                        },
-                        "type": {
-                          "enum": [
-                            "VZSE40",
-                            "VXSE42",
-                            "VXSE43",
-                            "VXSE44",
-                            "VXSE45",
-                            "VXSE47",
-                            "VTSE41",
-                            "VTSE51",
-                            "VTSE52",
-                            "VXSE51",
-                            "VXSE52",
-                            "VXSE53",
-                            "VXSE56",
-                            "VXSE60",
-                            "VXSE61",
-                            "VXSE62",
-                            "NANKAI",
-                            "VYSE60",
-                            "SHINDO_DB"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "enum": [
-                            "NORMAL",
-                            "TRAINING",
-                            "TEST"
-                          ]
-                        },
-                        "info_type": {
-                          "enum": [
-                            "PUBLICATION",
-                            "CORRECTION",
-                            "DELAY",
-                            "CANCELLATION"
-                          ]
-                        },
-                        "editorial_office": {
-                          "type": "string"
-                        },
-                        "publishing_office": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "press_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "report_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "target_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "revoke_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "headline": {
-                          "type": "string"
-                        },
-                        "info_kind": {
-                          "type": "string"
-                        },
-                        "info_kind_version": {
-                          "type": "string"
-                        },
-                        "hash": {
-                          "type": "string"
-                        },
-                        "created_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "body": {}
-                      },
-                      "required": [
-                        "id",
-                        "event_id",
-                        "type",
-                        "title",
-                        "status",
-                        "info_type",
-                        "editorial_office",
-                        "publishing_office",
-                        "press_at",
-                        "report_at",
-                        "info_kind",
-                        "info_kind_version",
-                        "hash",
-                        "created_at"
-                      ]
-                    },
                     "TelegramListResponse": {
                       "type": "object",
                       "properties": {
@@ -5828,7 +5667,116 @@
                         "items": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/Telegram"
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "event_id": {
+                                "type": "string"
+                              },
+                              "serial_no": {
+                                "type": "number"
+                              },
+                              "type": {
+                                "enum": [
+                                  "VZSE40",
+                                  "VXSE42",
+                                  "VXSE43",
+                                  "VXSE44",
+                                  "VXSE45",
+                                  "VXSE47",
+                                  "VTSE41",
+                                  "VTSE51",
+                                  "VTSE52",
+                                  "VXSE51",
+                                  "VXSE52",
+                                  "VXSE53",
+                                  "VXSE56",
+                                  "VXSE60",
+                                  "VXSE61",
+                                  "VXSE62",
+                                  "NANKAI",
+                                  "VYSE60",
+                                  "SHINDO_DB"
+                                ]
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "enum": [
+                                  "NORMAL",
+                                  "TRAINING",
+                                  "TEST"
+                                ]
+                              },
+                              "info_type": {
+                                "enum": [
+                                  "PUBLICATION",
+                                  "CORRECTION",
+                                  "DELAY",
+                                  "CANCELLATION"
+                                ]
+                              },
+                              "editorial_office": {
+                                "type": "string"
+                              },
+                              "publishing_office": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "press_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "report_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "target_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "revoke_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "headline": {
+                                "type": "string"
+                              },
+                              "info_kind": {
+                                "type": "string"
+                              },
+                              "info_kind_version": {
+                                "type": "string"
+                              },
+                              "hash": {
+                                "type": "string"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "event_id",
+                              "type",
+                              "title",
+                              "status",
+                              "info_type",
+                              "editorial_office",
+                              "publishing_office",
+                              "press_at",
+                              "report_at",
+                              "info_kind",
+                              "info_kind_version",
+                              "hash",
+                              "created_at"
+                            ]
                           }
                         }
                       },
@@ -5932,119 +5880,6 @@
                 },
                 "components": {
                   "schemas": {
-                    "Telegram": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "event_id": {
-                          "type": "string"
-                        },
-                        "serial_no": {
-                          "type": "number"
-                        },
-                        "type": {
-                          "enum": [
-                            "VZSE40",
-                            "VXSE42",
-                            "VXSE43",
-                            "VXSE44",
-                            "VXSE45",
-                            "VXSE47",
-                            "VTSE41",
-                            "VTSE51",
-                            "VTSE52",
-                            "VXSE51",
-                            "VXSE52",
-                            "VXSE53",
-                            "VXSE56",
-                            "VXSE60",
-                            "VXSE61",
-                            "VXSE62",
-                            "NANKAI",
-                            "VYSE60",
-                            "SHINDO_DB"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "enum": [
-                            "NORMAL",
-                            "TRAINING",
-                            "TEST"
-                          ]
-                        },
-                        "info_type": {
-                          "enum": [
-                            "PUBLICATION",
-                            "CORRECTION",
-                            "DELAY",
-                            "CANCELLATION"
-                          ]
-                        },
-                        "editorial_office": {
-                          "type": "string"
-                        },
-                        "publishing_office": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "press_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "report_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "target_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "revoke_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "headline": {
-                          "type": "string"
-                        },
-                        "info_kind": {
-                          "type": "string"
-                        },
-                        "info_kind_version": {
-                          "type": "string"
-                        },
-                        "hash": {
-                          "type": "string"
-                        },
-                        "created_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "body": {}
-                      },
-                      "required": [
-                        "id",
-                        "event_id",
-                        "type",
-                        "title",
-                        "status",
-                        "info_type",
-                        "editorial_office",
-                        "publishing_office",
-                        "press_at",
-                        "report_at",
-                        "info_kind",
-                        "info_kind_version",
-                        "hash",
-                        "created_at"
-                      ]
-                    },
                     "TelegramListResponse": {
                       "type": "object",
                       "properties": {
@@ -6059,7 +5894,116 @@
                         "items": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/Telegram"
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "event_id": {
+                                "type": "string"
+                              },
+                              "serial_no": {
+                                "type": "number"
+                              },
+                              "type": {
+                                "enum": [
+                                  "VZSE40",
+                                  "VXSE42",
+                                  "VXSE43",
+                                  "VXSE44",
+                                  "VXSE45",
+                                  "VXSE47",
+                                  "VTSE41",
+                                  "VTSE51",
+                                  "VTSE52",
+                                  "VXSE51",
+                                  "VXSE52",
+                                  "VXSE53",
+                                  "VXSE56",
+                                  "VXSE60",
+                                  "VXSE61",
+                                  "VXSE62",
+                                  "NANKAI",
+                                  "VYSE60",
+                                  "SHINDO_DB"
+                                ]
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "enum": [
+                                  "NORMAL",
+                                  "TRAINING",
+                                  "TEST"
+                                ]
+                              },
+                              "info_type": {
+                                "enum": [
+                                  "PUBLICATION",
+                                  "CORRECTION",
+                                  "DELAY",
+                                  "CANCELLATION"
+                                ]
+                              },
+                              "editorial_office": {
+                                "type": "string"
+                              },
+                              "publishing_office": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "press_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "report_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "target_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "revoke_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "headline": {
+                                "type": "string"
+                              },
+                              "info_kind": {
+                                "type": "string"
+                              },
+                              "info_kind_version": {
+                                "type": "string"
+                              },
+                              "hash": {
+                                "type": "string"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "event_id",
+                              "type",
+                              "title",
+                              "status",
+                              "info_type",
+                              "editorial_office",
+                              "publishing_office",
+                              "press_at",
+                              "report_at",
+                              "info_kind",
+                              "info_kind_version",
+                              "hash",
+                              "created_at"
+                            ]
                           }
                         }
                       },
@@ -6163,119 +6107,6 @@
                 },
                 "components": {
                   "schemas": {
-                    "Telegram": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "event_id": {
-                          "type": "string"
-                        },
-                        "serial_no": {
-                          "type": "number"
-                        },
-                        "type": {
-                          "enum": [
-                            "VZSE40",
-                            "VXSE42",
-                            "VXSE43",
-                            "VXSE44",
-                            "VXSE45",
-                            "VXSE47",
-                            "VTSE41",
-                            "VTSE51",
-                            "VTSE52",
-                            "VXSE51",
-                            "VXSE52",
-                            "VXSE53",
-                            "VXSE56",
-                            "VXSE60",
-                            "VXSE61",
-                            "VXSE62",
-                            "NANKAI",
-                            "VYSE60",
-                            "SHINDO_DB"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "enum": [
-                            "NORMAL",
-                            "TRAINING",
-                            "TEST"
-                          ]
-                        },
-                        "info_type": {
-                          "enum": [
-                            "PUBLICATION",
-                            "CORRECTION",
-                            "DELAY",
-                            "CANCELLATION"
-                          ]
-                        },
-                        "editorial_office": {
-                          "type": "string"
-                        },
-                        "publishing_office": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "press_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "report_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "target_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "revoke_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "headline": {
-                          "type": "string"
-                        },
-                        "info_kind": {
-                          "type": "string"
-                        },
-                        "info_kind_version": {
-                          "type": "string"
-                        },
-                        "hash": {
-                          "type": "string"
-                        },
-                        "created_at": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "body": {}
-                      },
-                      "required": [
-                        "id",
-                        "event_id",
-                        "type",
-                        "title",
-                        "status",
-                        "info_type",
-                        "editorial_office",
-                        "publishing_office",
-                        "press_at",
-                        "report_at",
-                        "info_kind",
-                        "info_kind_version",
-                        "hash",
-                        "created_at"
-                      ]
-                    },
                     "TelegramListResponse": {
                       "type": "object",
                       "properties": {
@@ -6290,7 +6121,116 @@
                         "items": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/Telegram"
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "event_id": {
+                                "type": "string"
+                              },
+                              "serial_no": {
+                                "type": "number"
+                              },
+                              "type": {
+                                "enum": [
+                                  "VZSE40",
+                                  "VXSE42",
+                                  "VXSE43",
+                                  "VXSE44",
+                                  "VXSE45",
+                                  "VXSE47",
+                                  "VTSE41",
+                                  "VTSE51",
+                                  "VTSE52",
+                                  "VXSE51",
+                                  "VXSE52",
+                                  "VXSE53",
+                                  "VXSE56",
+                                  "VXSE60",
+                                  "VXSE61",
+                                  "VXSE62",
+                                  "NANKAI",
+                                  "VYSE60",
+                                  "SHINDO_DB"
+                                ]
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "enum": [
+                                  "NORMAL",
+                                  "TRAINING",
+                                  "TEST"
+                                ]
+                              },
+                              "info_type": {
+                                "enum": [
+                                  "PUBLICATION",
+                                  "CORRECTION",
+                                  "DELAY",
+                                  "CANCELLATION"
+                                ]
+                              },
+                              "editorial_office": {
+                                "type": "string"
+                              },
+                              "publishing_office": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "press_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "report_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "target_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "revoke_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "headline": {
+                                "type": "string"
+                              },
+                              "info_kind": {
+                                "type": "string"
+                              },
+                              "info_kind_version": {
+                                "type": "string"
+                              },
+                              "hash": {
+                                "type": "string"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "event_id",
+                              "type",
+                              "title",
+                              "status",
+                              "info_type",
+                              "editorial_office",
+                              "publishing_office",
+                              "press_at",
+                              "report_at",
+                              "info_kind",
+                              "info_kind_version",
+                              "hash",
+                              "created_at"
+                            ]
                           }
                         }
                       },
@@ -6929,10 +6869,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "tsunami_enabled",
-          "training_enabled"
-        ]
+        "required": []
       },
       "SoundSettings": {
         "type": "object",
@@ -6974,12 +6911,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "enabled",
-          "sound",
-          "hypocenter_update_enabled",
-          "estimated_intensity_enabled"
-        ]
+        "required": []
       },
       "RegionSettingRequest": {
         "type": "object",
@@ -7054,11 +6986,7 @@
             ]
           }
         },
-        "required": [
-          "region_name",
-          "is_current_location",
-          "min_jma_intensity"
-        ]
+        "required": []
       },
       "EewSettingsRequest": {
         "type": "object",
@@ -7076,12 +7004,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "enabled",
-          "override_silent_mode",
-          "sound",
-          "start_live_activity"
-        ]
+        "required": []
       },
       "OriginTimePrecisionEnum": {
         "enum": [
@@ -7111,41 +7034,29 @@
         "description": "コードと名前のペア"
       },
       "Coordinate": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "LAT_LNG"
-              },
-              "latitude": {
-                "type": "number"
-              },
-              "longitude": {
-                "type": "number"
-              }
-            },
-            "required": [
-              "type",
-              "latitude",
-              "longitude"
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "LAT_LNG",
+              "UNKNOWN"
             ]
           },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "UNKNOWN"
-              },
-              "condition": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "type",
-              "condition"
-            ]
+          "latitude": {
+            "type": "number",
+            "description": "緯度(typeがLAT_LNGのときのみ出現する)"
+          },
+          "longitude": {
+            "type": "number",
+            "description": "経度(typeがLAT_LNGのときのみ出現する)"
+          },
+          "condition": {
+            "type": "string",
+            "description": "不明の場合のみ出現する"
           }
+        },
+        "required": [
+          "type"
         ],
         "examples": [
           {
@@ -7161,44 +7072,22 @@
         "description": "震源座標"
       },
       "Magnitude": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "NORMAL"
-              },
-              "value": {
-                "type": "number"
-              }
-            },
-            "required": [
-              "type",
-              "value"
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "NORMAL",
+              "UNKNOWN",
+              "OVER_M8"
             ]
           },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "UNKNOWN"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "OVER_M8"
-              }
-            },
-            "required": [
-              "type"
-            ]
+          "value": {
+            "type": "number",
+            "description": "typeがNORMALのときのみ出現する"
           }
+        },
+        "required": [
+          "type"
         ],
         "description": "地震の規模を表すマグニチュード",
         "examples": [
@@ -7212,55 +7101,23 @@
         ]
       },
       "Depth": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "SHALLOW"
-              }
-            },
-            "required": [
-              "type"
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "SHALLOW",
+              "NORMAL",
+              "OVER_700",
+              "UNKNOWN"
             ]
           },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "NORMAL"
-              },
-              "value": {
-                "type": "number"
-              }
-            },
-            "required": [
-              "type",
-              "value"
-            ]
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "OVER_700"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "const": "UNKNOWN"
-              }
-            },
-            "required": [
-              "type"
-            ]
+          "value": {
+            "type": "number",
+            "description": "typeがNORMALのときのみ出現する"
           }
+        },
+        "required": [
+          "type"
         ],
         "description": "震源の深さ",
         "examples": [
