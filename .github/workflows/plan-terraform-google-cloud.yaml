@@ -29,7 +29,7 @@ jobs:
     name: Terraform Lint (${{ matrix.target }})
     needs:
       - define-matrix
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     strategy:
       matrix:
@@ -92,7 +92,7 @@ jobs:
     needs:
       - lint
       - define-matrix
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     permissions:
       contents: read
