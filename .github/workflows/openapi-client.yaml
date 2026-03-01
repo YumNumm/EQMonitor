@@ -84,14 +84,13 @@ jobs:
         id: cpr
         with:
           token: ${{ steps.app-token.outputs.token }}
-          base: ${{ github.event.repository.default_branch }}
+          base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.event.repository.default_branch }}
           delete-branch: true
           draft: true
           add-paths: "packages/eqmonitor_api/lib/**/*"
           signoff: true
           sign-commits: true
           commit-message: "chore: regenerate OpenAPI client"
-          committer: "GitHub Actions <noreply@github.com>"
           branch: "regenerate-openapi-client/patch"
           labels: "Auto Update"
           reviewers: ${{ github.actor }}
