@@ -177,5 +177,5 @@ secret/
 *.p8
 
 /devtools_options.yaml
-/mise.local.toml
 **/node_modules
+/mise.local*
