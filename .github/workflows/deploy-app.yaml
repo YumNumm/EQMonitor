@@ -51,9 +51,9 @@ jobs:
             exit 1
           fi
 
-          echo "デプロイするプラットフォーム: ${platforms[@]}"
+          echo "デプロイするプラットフォーム: ${platforms[*]}"
           for platform in "${platforms[@]}"; do
-            echo "deploy-${platform}=true" >> $GITHUB_OUTPUT
+            echo "deploy-${platform}=true" >> "$GITHUB_OUTPUT"
           done
 
   build-ios:
@@ -88,8 +88,9 @@ jobs:
       - name: Set environment variables
         run: |
           for line in $(mise env --redacted --dotenv); do
-            echo $line >> "$GITHUB_ENV"
-            echo "::add-mask::${line#*=}"
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
           done
 
       # https://github.com/maxim-lobanov/setup-xcode
@@ -121,9 +122,9 @@ jobs:
 
       - name: Extract App Store Connect API Key
         run: |
-          mkdir ~/.private_keys
+          mkdir -p "$HOME/.private_keys"
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
-            > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+            > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
       - name: Create XCArchive
         working-directory: app
@@ -138,8 +139,8 @@ jobs:
             CODE_SIGN_STYLE=Automatic \
             DEVELOPMENT_TEAM=CPL7H8SHVM \
             -allowProvisioningUpdates \
-            -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
-            -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
+            -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
             -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
           | xcbeautify --renderer github-actions
 
@@ -151,8 +152,8 @@ jobs:
             -exportOptionsPlist ios/ExportOptions.plist \
             -exportPath . \
             -allowProvisioningUpdates \
-            -authenticationKeyIssuerID $APP_STORE_CONNECT_API_ISSUER_ID \
-            -authenticationKeyID $APP_STORE_CONNECT_API_KEY_ID \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
+            -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
             -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
           | xcbeautify --renderer github-actions
           echo "--------------------------------"
@@ -214,15 +215,16 @@ jobs:
       - name: Set environment variables
         run: |
           for line in $(mise env --redacted --dotenv); do
-            echo $line >> "$GITHUB_ENV"
-            echo "::add-mask::${line#*=}"
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
           done
 
       - name: Extract App Store Connect API Key
         run: |
-          mkdir ~/.private_keys
+          mkdir -p "$HOME/.private_keys"
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
-            > ~/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+            > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
       - name: Upload Ipa to App Store Connect
         run: |
@@ -230,8 +232,8 @@ jobs:
             --upload-app \
             -f build/eqmonitor.ipa \
             --type ios \
-            --apiIssuer $APP_STORE_CONNECT_API_ISSUER_ID \
-            --apiKey $APP_STORE_CONNECT_API_KEY_ID
+            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
 
   build-android:
     needs: define-matrix
@@ -262,8 +264,9 @@ jobs:
       - name: Set environment variables
         run: |
           for line in $(mise env --redacted --dotenv); do
-            echo $line >> "$GITHUB_ENV"
-            echo "::add-mask::${line#*=}"
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
           done
 
       - name: Accept Android License
@@ -279,7 +282,7 @@ jobs:
           echo "$KEY_PROPERTIES" | base64 -d  > app/android/key.properties
 
           BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
-          echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+          echo "BUILD_NUMBER=${BUILD_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "Build Number set to ${BUILD_NUMBER}."
 
       - name: Extract environment variables
@@ -299,7 +302,7 @@ jobs:
           flutter build appbundle \
             --release \
             --no-pub \
-            --build-number=${BUILD_NUMBER} \
+            --build-number="${BUILD_NUMBER}" \
             --dart-define-from-file=../environment/.env.prod
 
       - name: Copy AAB to expected location
@@ -347,8 +350,9 @@ jobs:
       - name: Set environment variables
         run: |
           for line in $(mise env --redacted --dotenv); do
-            echo $line >> "$GITHUB_ENV"
-            echo "::add-mask::${line#*=}"
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
           done
 
       - name: Download artifact aab
@@ -374,11 +378,11 @@ jobs:
         run: |
           # LAST TAG
            LAST_TAG=$(git describe --tags --abbrev=0)
-           git log $LAST_TAG..HEAD --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
+           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
            # 最大2000文字
            head -c 2000 changelog.tmp > changelog.txt
-           if [ $(wc -c < changelog.txt) -gt 2000 ]; then
+           if [ "$(wc -c < changelog.txt)" -gt 2000 ]; then
              echo '...' >> changelog.txt
            fi
 
