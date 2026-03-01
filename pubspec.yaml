@@ -6,8 +6,7 @@ environment:
 workspace:
   - app
   - packages/_base
-  - packages/eqapi_client
-  - packages/eqapi_types
+  - packages/eqmonitor_api
   - packages/eqmonitor_lints
   - packages/extensions
   - packages/jma_map
