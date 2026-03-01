@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
       TZ: Asia/Tokyo
@@ -26,26 +26,6 @@ jobs:
 
       - name: Setup Application Runtime
         uses: ./.github/actions/setup-application-runtime
-
-      # Certificateを取得するために、Deploy Keyを設定
-      - name: Set up ssh key
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_ID_ED25519 }}" | base64 -d > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          eval $(ssh-agent -s)
-          echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-
-      - name: Pre set up ruby
-        run: cp .ruby-version app/android/.ruby-version
-
-      - name: Set up ruby
-        # https://github.com/ruby/setup-ruby
-        uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1.288.0
-        with:
-          bundler-cache: true
-          working-directory: app/android
 
       - name: Resolve dependencies
         run: melos bootstrap
@@ -74,7 +54,7 @@ jobs:
           if-no-files-found: error
 
   deploy-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs: build-android
     steps:
       # https://github.com/actions/checkout
@@ -109,7 +89,7 @@ jobs:
         run: bundle exec fastlane upload
 
   build-ios:
-    runs-on: macos-14
+    runs-on: macos-26
     timeout-minutes: 60
     env:
       TZ: Asia/Tokyo
@@ -129,16 +109,6 @@ jobs:
 
       - name: Setup Application Runtime
         uses: ./.github/actions/setup-application-runtime
-
-      # Certificateを取得するために、Deploy Keyを設定
-      - name: Set up ssh key
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_ID_ED25519 }}" | base64 -d > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          eval $(ssh-agent -s)
-          echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       # https://github.com/maxim-lobanov/setup-xcode
       - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
@@ -214,7 +184,7 @@ jobs:
           if-no-files-found: error
 
   deploy-ios:
-    runs-on: macos-latest
+    runs-on: macos-26
     needs: build-ios
     steps:
       # https://github.com/actions/checkout
