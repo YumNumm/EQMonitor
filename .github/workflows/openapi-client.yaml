@@ -1,0 +1,100 @@
+name: Generate OpenAPI Client
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - "packages/eqmonitor_api/openapi/openapi.json"
+
+jobs:
+  generate-openapi-client:
+    name: Generate OpenAPI Client
+    # FlutterはLinux ARM64をサポートしていないため、Linux AMD64を利用
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # https://github.com/actions/create-github-app-token
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        id: app-token
+        with:
+          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
+          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
+          owner: YumNumm
+          repositories: EQMonitor
+
+      # https://github.com/actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          token: ${{ steps.app-token.outputs.token }}
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.6.1
+        env:
+          # See: https://mise.jdx.dev/getting-started.html#github-api-rate-limiting
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        with:
+          install_args: "flutter"
+
+      - name: Resolve dependencies
+        working-directory: packages/eqmonitor_api
+        run: dart pub get --enforce-lockfile
+
+      - name: Generate OpenAPI Client
+        id: generate-openapi-client
+        working-directory: packages/eqmonitor_api
+        run: |
+          {
+            echo "log<<EOL"
+            dart run bin/generate.dart -openapiFile "$PWD/openapi/openapi.json"
+            echo "EOL"
+          } | tee -a "$GITHUB_OUTPUT"
+
+      - name: Format generated code
+        working-directory: packages/eqmonitor_api
+        run: dart format lib/
+
+      - name: Check if there are changes
+        working-directory: packages/eqmonitor_api
+        run: |
+          has_changes=$([[ -n "$(git status --porcelain -- lib/)" ]] && echo true || echo false)
+          echo "has_changes=$has_changes"
+          echo "has_changes=$has_changes" >> "$GITHUB_OUTPUT"
+
+      # https://github.com/peter-evans/create-pull-request
+      - name: Create PR for regenerate OpenAPI client
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        if: steps.generate-openapi-client.outputs.has_changes == 'true'
+        id: cpr
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          base: ${{ github.event.repository.default_branch }}
+          delete-branch: true
+          draft: true
+          add-paths: "packages/eqmonitor_api/lib/**/*"
+          signoff: true
+          sign-commits: true
+          commit-message: "chore: regenerate OpenAPI client"
+          committer: "GitHub Actions <noreply@github.com>"
+          branch: "regenerate-openapi-client/patch"
+          labels: "Auto Update"
+          reviewers: ${{ github.actor }}
+          title: "Regenerate OpenAPI client"
+          body: |
+            Regenerate OpenAPI client by GitHub Actions
+            by: ${{github.actor}}
+
+            <details>
+            <summary><h2>📝 Generate OpenAPI Client Log</h2></summary>
+
+            ```log
+            ${{ steps.generate-openapi-client.outputs.log }}
+            ```
+            </details>
