@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
       TZ: Asia/Tokyo
@@ -54,7 +54,7 @@ jobs:
           if-no-files-found: error
 
   deploy-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs: build-android
     steps:
       # https://github.com/actions/checkout
@@ -89,7 +89,7 @@ jobs:
         run: bundle exec fastlane upload
 
   build-ios:
-    runs-on: macos-14
+    runs-on: macos-26
     timeout-minutes: 60
     env:
       TZ: Asia/Tokyo
@@ -184,7 +184,7 @@ jobs:
           if-no-files-found: error
 
   deploy-ios:
-    runs-on: macos-latest
+    runs-on: macos-26
     needs: build-ios
     steps:
       # https://github.com/actions/checkout
