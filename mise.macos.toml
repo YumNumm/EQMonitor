@@ -1,5 +1,2 @@
-# macOS環境専用のツール設定
-# MISE_ENV=macos が設定されている場合に読み込まれます
-
 [tools]
 "gem:cocoapods" = "latest"
