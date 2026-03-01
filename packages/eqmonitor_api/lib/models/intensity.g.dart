@@ -56,11 +56,11 @@ const _$MaxIntensityEnumMap = {
   MaxIntensity.value2: 2,
   MaxIntensity.value3: 3,
   MaxIntensity.value4: 4,
-  MaxIntensity.undefined0: '!5-',
-  MaxIntensity.value5: '5-',
-  MaxIntensity.value5: '5+',
-  MaxIntensity.value6: '6-',
-  MaxIntensity.value6: '6+',
+  MaxIntensity.value5unknown: '!5-',
+  MaxIntensity.value5minus: '5-',
+  MaxIntensity.value5plus: '5+',
+  MaxIntensity.value6minus: '6-',
+  MaxIntensity.value6plus: '6+',
   MaxIntensity.value7: 7,
 };
 

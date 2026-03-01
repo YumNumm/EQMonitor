@@ -16,18 +16,16 @@ enum IntensityItemMaxIntensity {
   value3(3),
   @JsonValue(4)
   value4(4),
-
-  /// Incorrect name has been replaced. Original name: `!5-`.
   @JsonValue('!5-')
-  undefined0('!5-'),
+  value5unknown('!5-'),
   @JsonValue('5-')
-  value5('5-'),
+  value5minus('5-'),
   @JsonValue('5+')
-  value5('5+'),
+  value5plus('5+'),
   @JsonValue('6-')
-  value6('6-'),
+  value6minus('6-'),
   @JsonValue('6+')
-  value6('6+'),
+  value6plus('6+'),
   @JsonValue(7)
   value7(7);
 
