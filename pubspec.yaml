@@ -1,33 +1,11 @@
 name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
 environment:
-  sdk: ^3.10.0
-  flutter: ^3.38.0
+  sdk: ^3.11.0
+  flutter: ^3.41.0
 workspace:
   - app
-  - packages/_base
-  - packages/eqmonitor_api
-  - packages/eqmonitor_lints
-  - packages/extensions
-  - packages/jma_map
-  - packages/jma_code_table_converter_internal
-  - packages/jma_code_table_types
-  - packages/jma_parameter_api_client
-  - packages/jma_parameter_converter_internal
-  - packages/jma_parameter_types
-  - packages/kyoshin_observation_point_converter_internal
-  - packages/kyoshin_observation_point_types
-  - packages/lat_lng
-  - packages/earthquake_replay
-  - packages/msgpack_dart
-  - packages/kyoshin_monitor_api
-  - packages/kyoshin_monitor_image_parser
-  - packages/nied_api_client
-  - packages/core
-  - packages/dart_azarashi
-  - packages/eqapi_cli
-  - packages/live_activity_util
-  # <ADD_PACKAGE_HERE>
+  - packages/*
 dependencies:
   melos: ^7.1.1
 dependency_overrides:
@@ -43,8 +21,8 @@ melos:
     bootstrap:
       runPubGetInParallel: false
       environment:
-        sdk: ^3.10.0
-        flutter: ^3.38.0
+        sdk: ^3.11.0
+        flutter: ^3.41.0
   scripts:
     analyze:
       run: |
