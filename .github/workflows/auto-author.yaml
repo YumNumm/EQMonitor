@@ -1,0 +1,16 @@
+name: Assign author
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  auto-author:
+    name: Assign author to PR
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    steps:
+      # https://github.com/technote-space/assign-author
+      - name: Assign author to PR
+        uses: toshimaru/auto-author-assign@4d585cc37690897bd9015942ed6e766aa7cdb97f #v3.0.1
