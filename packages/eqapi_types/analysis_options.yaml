@@ -1,4 +1,0 @@
-include: package:eqmonitor_lints/analysis_options.yaml
-analyzer:
-  errors:
-    always_put_required_named_parameters_first: ignore
