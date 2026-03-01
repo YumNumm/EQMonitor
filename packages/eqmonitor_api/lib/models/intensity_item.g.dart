@@ -49,11 +49,11 @@ const _$IntensityItemMaxIntensityEnumMap = {
   IntensityItemMaxIntensity.value2: 2,
   IntensityItemMaxIntensity.value3: 3,
   IntensityItemMaxIntensity.value4: 4,
-  IntensityItemMaxIntensity.undefined0: '!5-',
-  IntensityItemMaxIntensity.value5: '5-',
-  IntensityItemMaxIntensity.value5: '5+',
-  IntensityItemMaxIntensity.value6: '6-',
-  IntensityItemMaxIntensity.value6: '6+',
+  IntensityItemMaxIntensity.value5unknown: '!5-',
+  IntensityItemMaxIntensity.value5minus: '5-',
+  IntensityItemMaxIntensity.value5plus: '5+',
+  IntensityItemMaxIntensity.value6minus: '6-',
+  IntensityItemMaxIntensity.value6plus: '6+',
   IntensityItemMaxIntensity.value7: 7,
 };
 
