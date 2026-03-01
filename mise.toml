@@ -21,6 +21,7 @@ yq = "latest"
 actionlint = "latest"
 pinact = "latest"
 swiftformat = "latest"
+shellcheck = "latest"
 
 [settings]
 lockfile = true
