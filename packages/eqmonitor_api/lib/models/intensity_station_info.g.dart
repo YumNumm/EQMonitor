@@ -59,11 +59,11 @@ const _$IntensityStationInfoIntensityEnumMap = {
   IntensityStationInfoIntensity.value2: 2,
   IntensityStationInfoIntensity.value3: 3,
   IntensityStationInfoIntensity.value4: 4,
-  IntensityStationInfoIntensity.undefined0: '!5-',
-  IntensityStationInfoIntensity.value5: '5-',
-  IntensityStationInfoIntensity.value5: '5+',
-  IntensityStationInfoIntensity.value6: '6-',
-  IntensityStationInfoIntensity.value6: '6+',
+  IntensityStationInfoIntensity.value5unknown: '!5-',
+  IntensityStationInfoIntensity.value5minus: '5-',
+  IntensityStationInfoIntensity.value5plus: '5+',
+  IntensityStationInfoIntensity.value6minus: '6-',
+  IntensityStationInfoIntensity.value6plus: '6+',
   IntensityStationInfoIntensity.value7: 7,
 };
 
