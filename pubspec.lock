@@ -250,7 +250,7 @@ packages:
     source: hosted
     version: "1.1.2"
   code_assets:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: code_assets
       sha256: "83ccdaa064c980b5596c35dd64a8d3ecc68620174ab9b90b6343b753aa721687"
@@ -330,7 +330,7 @@ packages:
     source: hosted
     version: "1.0.2"
   dart_style:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: dart_style
       sha256: a9c30492da18ff84efe2422ba2d319a89942d93e58eb0b73d32abe822ef54b7b
@@ -1046,7 +1046,7 @@ packages:
     source: hosted
     version: "2.0.0"
   hooks:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: hooks
       sha256: "5d309c86e7ce34cd8e37aa71cb30cb652d3829b900ab145e4d9da564b31d59f7"
@@ -1217,10 +1217,10 @@ packages:
     dependency: transitive
     description:
       name: lean_builder
-      sha256: ee4117b03e93a4eb83e1a78c8e7a1dc22188d43bb142309982be48673a1b3a53
+      sha256: "6af3cfbf34400eb14b89fe20111e5981e7083362f00ea10b9ed2a6e833250d76"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.7"
+    version: "0.1.6"
   libserialport_plus:
     dependency: transitive
     description:
@@ -1262,7 +1262,7 @@ packages:
     source: hosted
     version: "1.3.0"
   maplibre:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       path: maplibre
       ref: ca009f4e8da0801a6dff5e47a27e57c4cb7f9aa1
@@ -1271,14 +1271,21 @@ packages:
     source: git
     version: "0.3.3+2"
   maplibre_ios:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: maplibre_ios
-      ref: ca009f4e8da0801a6dff5e47a27e57c4cb7f9aa1
-      resolved-ref: ca009f4e8da0801a6dff5e47a27e57c4cb7f9aa1
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
-    source: git
-    version: "0.3.3+2"
+      name: maplibre_ios
+      sha256: b294d1effa863f733280ff0a4705fa35306c191f6e7da195e75638c0d0da7141
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
+  maplibre_platform_interface:
+    dependency: transitive
+    description:
+      name: maplibre_platform_interface
+      sha256: "7c5cbf7ee221c57d6b82245f3a41d82e1f75d3ab57d3c05754cf8aef46f83f91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
   maps_toolkit:
     dependency: transitive
     description:
@@ -1392,13 +1399,13 @@ packages:
     source: hosted
     version: "2.0.0"
   objective_c:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: objective_c
-      sha256: "55eb67ede1002d9771b3f9264d2c9d30bc364f0267bc1c6cc0883280d5f0c7cb"
+      sha256: "100a1c87616ab6ed41ec263b083c0ef3261ee6cd1dc3b0f35f8ddfa4f996fe52"
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.2"
+    version: "9.3.0"
   octo_image:
     dependency: transitive
     description:
@@ -1600,13 +1607,13 @@ packages:
     source: hosted
     version: "2.0.0"
   protobuf:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: protobuf
-      sha256: "2fcc8a202ca7ec17dab7c97d6b6d91cf03aa07fe6f65f8afbb6dfa52cc5bd902"
+      sha256: "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "6.0.0"
   pub_semver:
     dependency: transitive
     description:
@@ -2025,12 +2032,12 @@ packages:
     dependency: transitive
     description:
       name: test
-      sha256: "280d6d890011ca966ad08df7e8a4ddfab0fb3aa49f96ed6de56e3521347a9ae7"
+      sha256: "54c516bbb7cee2754d327ad4fca637f78abfc3cbcc5ace83b3eda117e42cd71a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.30.0"
+    version: "1.29.0"
   test_api:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: test_api
       sha256: "93167629bfc610f71560ab9312acdda4959de4df6fac7492c89ff0d3886f6636"
@@ -2041,10 +2048,10 @@ packages:
     dependency: transitive
     description:
       name: test_core
-      sha256: "0381bd1585d1a924763c308100f2138205252fb90c9d4eeaf28489ee65ccde51"
+      sha256: "394f07d21f0f2255ec9e3989f21e54d3c7dc0e6e9dbce160e5a9c1a6be0e2943"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.16"
+    version: "0.6.15"
   time:
     dependency: transitive
     description:
@@ -2209,10 +2216,10 @@ packages:
     dependency: transitive
     description:
       name: watcher
-      sha256: "1398c9f081a753f9226febe8900fce8f7d0a67163334e1c94a2438339d79d635"
+      sha256: "592ab6e2892f67760543fb712ff0177f4ec76c031f02f5b4ff8d3fc5eb9fb61a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.1.4"
   web:
     dependency: transitive
     description:
