@@ -13,7 +13,7 @@ resolution: workspace
 dependencies:
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
-  timezone: ^0.10.1
+  timezone: ^0.11.0
 
 dev_dependencies:
   altive_lints: ^2.1.0
