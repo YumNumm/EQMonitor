@@ -17,13 +17,13 @@ backend = "aqua:suzuki-shunsuke/tfcmt"
 "platforms.windows-x64" = { checksum = "sha256:3dd936f59d888a4eefce850615aa22e2ad27f6aa58e03a19ebfc0e4d5eb4e2ab", url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.15/tfcmt_windows_amd64.tar.gz"}
 
 [[tools.biome]]
-version = "2.4.4"
+version = "2.4.5"
 backend = "aqua:biomejs/biome"
-"platforms.linux-arm64" = { checksum = "sha256:708cfaa01d12b2bb1649c5b7d97f3de24a1741fbcfcf0a461c5f9be4875c760b", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.4/biome-linux-arm64"}
-"platforms.linux-x64" = { checksum = "sha256:ba5073017ec03a700e5b9270b2454df7dbec6a5124611bb785b68ae717506d45", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.4/biome-linux-x64"}
-"platforms.macos-arm64" = { checksum = "sha256:e89011b1714a20ebd4b683321ba7184ce2a79a28f4ee3d33bda74a4ea749062a", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.4/biome-darwin-arm64"}
-"platforms.macos-x64" = { checksum = "sha256:4fad0d5015ebb6be52b89398ed0e90721ee0239f4cdea0c347257a0a286e8d84", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.4/biome-darwin-x64"}
-"platforms.windows-x64" = { checksum = "sha256:8a09016cabaac8575abb42d19c55075fa7ca81c955f777604a2fb971a44a7ed5", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.4/biome-win32-x64.exe"}
+"platforms.linux-arm64" = { checksum = "sha256:98a109d54bfea7df1e82b73aa7d37fc2caa880d12105eb2495efe0d653955518", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.5/biome-linux-arm64"}
+"platforms.linux-x64" = { checksum = "sha256:a31815f19b0b90fa043eb23fbf769ed931fbcde6d98bb89894ea8be1387d8394", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.5/biome-linux-x64"}
+"platforms.macos-arm64" = { checksum = "sha256:b50a1a5adca140554f44f6c89edcf6383b0b2e3baf9dcd08d597d1fd59f92544", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.5/biome-darwin-arm64"}
+"platforms.macos-x64" = { checksum = "sha256:7f4d800ddc37c84a0a09aac1cd1ec77d1bbbdd5f97727f36f2062f6b639714e9", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.5/biome-darwin-x64"}
+"platforms.windows-x64" = { checksum = "sha256:8d382e6a5cd88f381eb7c2825bcce4fec0660fe366e93f95c8e6e2415fe16d21", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.5/biome-win32-x64.exe"}
 
 [[tools.firebase]]
 version = "15.8.0"
@@ -38,13 +38,8 @@ version = "3.41.2-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
-version = "558.0.0"
+version = "559.0.0"
 backend = "vfox:gcloud"
-"platforms.linux-arm64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-558.0.0-linux-arm.tar.gz"}
-"platforms.linux-x64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-558.0.0-linux-x86_64.tar.gz"}
-"platforms.macos-arm64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-558.0.0-darwin-arm.tar.gz"}
-"platforms.macos-x64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-558.0.0-darwin-x86_64.tar.gz"}
-"platforms.windows-x64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-558.0.0-windows-x86_64.zip"}
 
 [[tools.java]]
 version = "17.0.2"
