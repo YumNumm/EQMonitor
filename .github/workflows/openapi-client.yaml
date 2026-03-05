@@ -45,7 +45,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.6.1
+        uses: jdx/mise-action@e79ddf65a11cec7b0e882bedced08d6e976efb2d # v3.6.2
         env:
           # See: https://mise.jdx.dev/getting-started.html#github-api-rate-limiting
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
