@@ -34,12 +34,17 @@ backend = "aqua:firebase/firebase-tools"
 "platforms.windows-x64" = { checksum = "sha256:c8e6259aff660862722180755b4ea79fcfe5c661ae0a7cd4057e8d8631fc67ab", url = "https://github.com/firebase/firebase-tools/releases/download/v15.8.0/firebase-tools-win.exe"}
 
 [[tools.flutter]]
-version = "3.41.3-stable"
+version = "3.41.4-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
 version = "559.0.0"
 backend = "vfox:gcloud"
+"platforms.linux-arm64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-559.0.0-linux-arm.tar.gz"}
+"platforms.linux-x64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-559.0.0-linux-x86_64.tar.gz"}
+"platforms.macos-arm64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-559.0.0-darwin-arm.tar.gz"}
+"platforms.macos-x64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-559.0.0-darwin-x86_64.tar.gz"}
+"platforms.windows-x64" = { url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-559.0.0-windows-x86_64.zip"}
 
 [[tools.java]]
 version = "17.0.2"
@@ -79,11 +84,11 @@ backend = "aqua:pnpm/pnpm"
 [[tools.python]]
 version = "3.14.3"
 backend = "core:python"
-"platforms.linux-arm64" = { checksum = "sha256:e9b0aef9baafb6b9e7a4d47b82d6d9778eeafb2c95d23fb5247d3a5f8e52c5a5", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.14.3+20260211-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:759457004082459a402f369225b82565d88ca8257d9fd11c642a1c76ab0cb1cc", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.14.3+20260211-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:348647e4c13b662f7b0d218ccf472688038679815fb1a429ca664b7dce324237", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.14.3+20260211-aarch64-apple-darwin-install_only_stripped.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:107c71b272b5eeecd7b7b607c4fac0796b0f221bc3391e6155a349789cc7eb17", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.14.3+20260211-x86_64-apple-darwin-install_only_stripped.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:dc5feea0e16807e7c7b2d20af3f2c18c7153f9cbd4b54063172553fda60c5a1f", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.14.3+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"}
+"platforms.linux-arm64" = { checksum = "sha256:89e2cfba1b1ca974a8d2b7aa054d8c32a9301b1168fde2bf1c9a5270488c018f", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260310/cpython-3.14.3+20260310-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:0023aa5e9930a70585e1b639055f4928f76080b2e1dcc2458453b595155a50ee", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260310/cpython-3.14.3+20260310-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:1a98bbe7e63547d2f764bc9119f6d604dfb333f21afab5f4885dc362b4f3a921", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260310/cpython-3.14.3+20260310-aarch64-apple-darwin-install_only_stripped.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:a974fefb14c2b724ca87830240d36fc865780391ec9e1e2db28a1d5f58f5fae2", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260310/cpython-3.14.3+20260310-x86_64-apple-darwin-install_only_stripped.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:8458fdf45b9b47685a7dea76d72a4b8cf946091fe48cac43d3564f7f318e8c0f", url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260310/cpython-3.14.3+20260310-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"}
 
 [[tools.shellcheck]]
 version = "0.11.0"
