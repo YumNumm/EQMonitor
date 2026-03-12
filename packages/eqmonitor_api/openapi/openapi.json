@@ -61,7 +61,7 @@
         "tags": [
           "Device"
         ],
-        "description": "デバイスを作成または更新",
+        "description": "デバイスを作成または更新（認証必須）",
         "responses": {
           "200": {
             "description": "デバイス情報（更新）",
@@ -85,6 +85,9 @@
           },
           "400": {
             "description": "不正なリクエスト"
+          },
+          "401": {
+            "description": "認証エラー"
           },
           "500": {
             "description": "内部サーバエラー",
@@ -127,6 +130,12 @@
           },
           "400": {
             "description": "不正なデバイスID形式"
+          },
+          "401": {
+            "description": "認証エラー"
+          },
+          "403": {
+            "description": "他のユーザーのデバイス"
           },
           "404": {
             "description": "デバイスが見つからない"
@@ -1433,6 +1442,141 @@
         }
       }
     },
+    "/v2/device/{deviceId}/notification/history": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationHistory",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/NotificationHistoryQueryParams"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ],
+        "tags": [
+          "Notification"
+        ],
+        "description": "デバイスの通知履歴を取得",
+        "responses": {
+          "200": {
+            "description": "通知履歴",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationHistoryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "デバイスが見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "サービス利用不可",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/device/{deviceId}/notification/test": {
+      "post": {
+        "operationId": "postV2DeviceByDeviceIdNotificationTest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestNotificationRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notification"
+        ],
+        "description": "テスト通知を送信",
+        "responses": {
+          "201": {
+            "description": "テスト通知を送信",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestNotificationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "デバイスまたはトークンが見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "サービス利用不可",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/earthquake": {
       "get": {
         "operationId": "getV2Earthquake",
@@ -2164,44 +2308,13 @@
         }
       }
     },
-    "/v2/user": {
-      "post": {
-        "operationId": "postV2User",
-        "tags": [
-          "User"
-        ],
-        "description": "ユーザーを作成",
-        "responses": {
-          "201": {
-            "description": "作成されたユーザー情報",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "内部サーバエラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/user/{userId}": {
+    "/v2/user/me": {
       "get": {
-        "operationId": "getV2UserByUserId",
+        "operationId": "getV2UserMe",
         "tags": [
           "User"
         ],
-        "description": "ユーザー情報を取得",
+        "description": "自分のユーザー情報を取得",
         "responses": {
           "200": {
             "description": "ユーザー情報",
@@ -2213,8 +2326,8 @@
               }
             }
           },
-          "400": {
-            "description": "不正なユーザーID形式"
+          "401": {
+            "description": "認証エラー"
           },
           "404": {
             "description": "ユーザーが見つからない"
@@ -2229,17 +2342,7 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "userId",
-            "required": true
-          }
-        ]
+        }
       }
     },
     "/v2/websocket/ticket": {
@@ -2248,7 +2351,7 @@
         "tags": [
           "WebSocket"
         ],
-        "description": "WebSocket接続用のチケットを発行",
+        "description": "WebSocket接続用のチケットを発行（認証必須）",
         "responses": {
           "200": {
             "description": "発行されたチケット",
@@ -2262,6 +2365,9 @@
           },
           "401": {
             "description": "認証エラー"
+          },
+          "403": {
+            "description": "他のユーザーのデバイス"
           },
           "404": {
             "description": "デバイスが見つからない"
@@ -2297,6 +2403,13 @@
           "user_id": {
             "type": "string"
           },
+          "locale": {
+            "enum": [
+              "ja",
+              "en",
+              "zh"
+            ]
+          },
           "created_at": {
             "type": "string"
           },
@@ -2308,6 +2421,7 @@
           "id",
           "type",
           "user_id",
+          "locale",
           "created_at",
           "updated_at"
         ]
@@ -2695,6 +2809,134 @@
           }
         },
         "required": []
+      },
+      "NotificationLogItem": {
+        "type": "object",
+        "properties": {
+          "stream_id": {
+            "type": "string"
+          },
+          "device_id": {
+            "type": "string"
+          },
+          "framework": {
+            "enum": [
+              "FCM",
+              "APNS"
+            ]
+          },
+          "result": {
+            "enum": [
+              "OK",
+              "NG"
+            ]
+          },
+          "error_code": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "stream_id",
+          "device_id",
+          "framework",
+          "result",
+          "created_at"
+        ]
+      },
+      "NotificationHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationLogItem"
+            }
+          },
+          "next_cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "NotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "NOT_FOUND"
+          },
+          "message": {
+            "const": "Not Found"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ServiceUnavailableResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "SERVICE_UNAVAILABLE"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "TestNotificationRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "silent",
+              "normal",
+              "critical"
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "TestNotificationResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "framework": {
+            "enum": [
+              "FCM",
+              "APNS"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "framework"
+        ]
       },
       "Intensity": {
         "enum": [
@@ -3308,21 +3550,6 @@
           "earthquake"
         ]
       },
-      "NotFoundResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "NOT_FOUND"
-          },
-          "message": {
-            "const": "Not Found"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ]
-      },
       "IntensityRegionInfo": {
         "type": "object",
         "properties": {
@@ -3820,30 +4047,30 @@
       "EewAccuracy": {
         "type": "object",
         "properties": {
-          "epicenters": {
-            "type": "array",
-            "items": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "number"
-              }
-            ],
-            "minItems": 2
+          "epicenter": {
+            "type": "number",
+            "description": "震央位置の精度値"
+          },
+          "hypocenter": {
+            "type": "number",
+            "description": "震源位置の精度値"
           },
           "depth": {
-            "type": "number"
+            "type": "number",
+            "description": "深さの精度値"
           },
           "magnitude_calculation": {
-            "type": "number"
+            "type": "number",
+            "description": "マグニチュードの精度値"
           },
           "number_of_magnitude_calculation": {
-            "type": "number"
+            "type": "number",
+            "description": "マグニチュード計算使用観測点数"
           }
         },
         "required": [
-          "epicenters",
+          "epicenter",
+          "hypocenter",
           "depth",
           "magnitude_calculation",
           "number_of_magnitude_calculation"
@@ -4341,6 +4568,16 @@
           "type": "number"
         },
         "required": true
+      },
+      "NotificationHistoryQueryParams": {
+        "in": "query",
+        "name": "limit",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": "20"
+        }
       },
       "EarthquakeQueryParams": {
         "in": "query",
