@@ -18,15 +18,15 @@ _EarthquakePartial _$EarthquakePartialFromJson(
       eventId: $checkedConvert('event_id', (v) => v as String),
       status: $checkedConvert(
         'status',
-        (v) => $enumDecode(_$EarthquakePartialStatusEnumMap, v),
+        (v) => $enumDecode(_$TelegramStatusEnumMap, v),
       ),
       originTimePrecision: $checkedConvert(
         'origin_time_precision',
-        (v) => $enumDecode(_$OriginTimePrecisionEnumEnumMap, v),
+        (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v),
       ),
       datasource: $checkedConvert(
         'datasource',
-        (v) => $enumDecode(_$EarthquakeDatasourceEnumEnumMap, v),
+        (v) => $enumDecode(_$EarthquakeDatasourceEnumMap, v),
       ),
       originTime: $checkedConvert(
         'origin_time',
@@ -74,23 +74,23 @@ Map<String, dynamic> _$EarthquakePartialToJson(_EarthquakePartial instance) =>
       'intensity': ?instance.intensity,
     };
 
-const _$EarthquakePartialStatusEnumMap = {
-  EarthquakePartialStatus.normal: 'NORMAL',
-  EarthquakePartialStatus.training: 'TRAINING',
-  EarthquakePartialStatus.test: 'TEST',
+const _$TelegramStatusEnumMap = {
+  TelegramStatus.normal: 'NORMAL',
+  TelegramStatus.training: 'TRAINING',
+  TelegramStatus.test: 'TEST',
 };
 
-const _$OriginTimePrecisionEnumEnumMap = {
-  OriginTimePrecisionEnum.millisecond: 'MILLISECOND',
-  OriginTimePrecisionEnum.second: 'SECOND',
-  OriginTimePrecisionEnum.minute: 'MINUTE',
-  OriginTimePrecisionEnum.hour: 'HOUR',
-  OriginTimePrecisionEnum.day: 'DAY',
-  OriginTimePrecisionEnum.month: 'MONTH',
+const _$OriginTimePrecisionEnumMap = {
+  OriginTimePrecision.millisecond: 'MILLISECOND',
+  OriginTimePrecision.second: 'SECOND',
+  OriginTimePrecision.minute: 'MINUTE',
+  OriginTimePrecision.hour: 'HOUR',
+  OriginTimePrecision.day: 'DAY',
+  OriginTimePrecision.month: 'MONTH',
 };
 
-const _$EarthquakeDatasourceEnumEnumMap = {
-  EarthquakeDatasourceEnum.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
-  EarthquakeDatasourceEnum.jmaDisasterInformationXml:
+const _$EarthquakeDatasourceEnumMap = {
+  EarthquakeDatasource.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
+  EarthquakeDatasource.jmaDisasterInformationXml:
       'JMA_DISASTER_INFORMATION_XML',
 };

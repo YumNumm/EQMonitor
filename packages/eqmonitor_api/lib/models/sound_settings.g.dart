@@ -13,7 +13,7 @@ _SoundSettings _$SoundSettingsFromJson(Map<String, dynamic> json) =>
       final val = _SoundSettings(
         mode: $checkedConvert(
           'mode',
-          (v) => $enumDecode(_$SoundSettingsModeEnumMap, v),
+          (v) => $enumDecode(_$IntensitySoundModeEnumMap, v),
         ),
         map: $checkedConvert(
           'map',
@@ -28,8 +28,8 @@ _SoundSettings _$SoundSettingsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$SoundSettingsToJson(_SoundSettings instance) =>
     <String, dynamic>{'mode': instance.mode, 'map': ?instance.map};
 
-const _$SoundSettingsModeEnumMap = {
-  SoundSettingsMode.maxIntensity: 'max_intensity',
-  SoundSettingsMode.locationIntensity: 'location_intensity',
-  SoundSettingsMode.registeredMax: 'registered_max',
+const _$IntensitySoundModeEnumMap = {
+  IntensitySoundMode.maxIntensity: 'max_intensity',
+  IntensitySoundMode.locationIntensity: 'location_intensity',
+  IntensitySoundMode.registeredMax: 'registered_max',
 };

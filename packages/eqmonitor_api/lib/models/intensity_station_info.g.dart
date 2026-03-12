@@ -19,12 +19,11 @@ _IntensityStationInfo _$IntensityStationInfoFromJson(
       name: $checkedConvert('name', (v) => v as String),
       intensity: $checkedConvert(
         'intensity',
-        (v) => $enumDecodeNullable(_$IntensityStationInfoIntensityEnumMap, v),
+        (v) => v == null ? null : Intensity.fromJson(v as Map<String, dynamic>),
       ),
       lpgmIntensity: $checkedConvert(
         'lpgm_intensity',
-        (v) =>
-            $enumDecodeNullable(_$IntensityStationInfoLpgmIntensityEnumMap, v),
+        (v) => $enumDecodeNullable(_$LpgmIntensityEnumMap, v),
       ),
       sva: $checkedConvert('sva', (v) => v as num?),
       prePeriods: $checkedConvert(
@@ -53,24 +52,10 @@ Map<String, dynamic> _$IntensityStationInfoToJson(
   'pre_periods': instance.prePeriods,
 };
 
-const _$IntensityStationInfoIntensityEnumMap = {
-  IntensityStationInfoIntensity.value0: 0,
-  IntensityStationInfoIntensity.value1: 1,
-  IntensityStationInfoIntensity.value2: 2,
-  IntensityStationInfoIntensity.value3: 3,
-  IntensityStationInfoIntensity.value4: 4,
-  IntensityStationInfoIntensity.value5unknown: '!5-',
-  IntensityStationInfoIntensity.value5minus: '5-',
-  IntensityStationInfoIntensity.value5plus: '5+',
-  IntensityStationInfoIntensity.value6minus: '6-',
-  IntensityStationInfoIntensity.value6plus: '6+',
-  IntensityStationInfoIntensity.value7: 7,
-};
-
-const _$IntensityStationInfoLpgmIntensityEnumMap = {
-  IntensityStationInfoLpgmIntensity.value0: 0,
-  IntensityStationInfoLpgmIntensity.value1: 1,
-  IntensityStationInfoLpgmIntensity.value2: 2,
-  IntensityStationInfoLpgmIntensity.value3: 3,
-  IntensityStationInfoLpgmIntensity.value4: 4,
+const _$LpgmIntensityEnumMap = {
+  LpgmIntensity.value0: 0,
+  LpgmIntensity.value1: 1,
+  LpgmIntensity.value2: 2,
+  LpgmIntensity.value3: 3,
+  LpgmIntensity.value4: 4,
 };

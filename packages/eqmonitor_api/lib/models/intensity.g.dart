@@ -15,7 +15,7 @@ _Intensity _$IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
     final val = _Intensity(
       maxIntensity: $checkedConvert(
         'max_intensity',
-        (v) => $enumDecode(_$MaxIntensityEnumMap, v),
+        (v) => Intensity.fromJson(v as Map<String, dynamic>),
       ),
       prefectures: $checkedConvert(
         'prefectures',
@@ -31,7 +31,7 @@ _Intensity _$IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       maxLpgmIntensity: $checkedConvert(
         'max_lpgm_intensity',
-        (v) => $enumDecodeNullable(_$MaxLpgmIntensityEnumMap, v),
+        (v) => $enumDecodeNullable(_$LpgmIntensityEnumMap, v),
       ),
     );
     return val;
@@ -50,24 +50,10 @@ Map<String, dynamic> _$IntensityToJson(_Intensity instance) =>
       'max_lpgm_intensity': ?instance.maxLpgmIntensity,
     };
 
-const _$MaxIntensityEnumMap = {
-  MaxIntensity.value0: 0,
-  MaxIntensity.value1: 1,
-  MaxIntensity.value2: 2,
-  MaxIntensity.value3: 3,
-  MaxIntensity.value4: 4,
-  MaxIntensity.value5unknown: '!5-',
-  MaxIntensity.value5minus: '5-',
-  MaxIntensity.value5plus: '5+',
-  MaxIntensity.value6minus: '6-',
-  MaxIntensity.value6plus: '6+',
-  MaxIntensity.value7: 7,
-};
-
-const _$MaxLpgmIntensityEnumMap = {
-  MaxLpgmIntensity.value0: 0,
-  MaxLpgmIntensity.value1: 1,
-  MaxLpgmIntensity.value2: 2,
-  MaxLpgmIntensity.value3: 3,
-  MaxLpgmIntensity.value4: 4,
+const _$LpgmIntensityEnumMap = {
+  LpgmIntensity.value0: 0,
+  LpgmIntensity.value1: 1,
+  LpgmIntensity.value2: 2,
+  LpgmIntensity.value3: 3,
+  LpgmIntensity.value4: 4,
 };

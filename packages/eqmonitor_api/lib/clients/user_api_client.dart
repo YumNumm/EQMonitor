@@ -24,10 +24,11 @@ abstract class UserApiClient {
   });
 }
 
-abstract class UserApiClientUrls {
-  /// /v2/user
-  static const postV2User = "/v2/user";
 
-  /// /v2/user/{userId}
-  static const getV2UserUserId = "/v2/user/{userId}";
+abstract class UserApiClientUrls {
+	/// /v2/user
+	static const postV2User = "/v2/user";
+	/// /v2/user/{userId}
+	static const getV2UserUserId = "/v2/user/{userId}";
 }
+

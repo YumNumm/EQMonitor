@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Intensity {
 
-@JsonKey(name: 'max_intensity') MaxIntensity get maxIntensity; List<IntensityItem> get prefectures; List<IntensityItem> get regions;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') MaxLpgmIntensity? get maxLpgmIntensity;
+@JsonKey(name: 'max_intensity') Intensity get maxIntensity; List<IntensityItem> get prefectures; List<IntensityItem> get regions;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') LpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $IntensityCopyWith<$Res>  {
   factory $IntensityCopyWith(Intensity value, $Res Function(Intensity) _then) = _$IntensityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') MaxIntensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') MaxLpgmIntensity? maxLpgmIntensity
+@JsonKey(name: 'max_intensity') Intensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') LpgmIntensity? maxLpgmIntensity
 });
 
 
-
+$IntensityCopyWith<$Res> get maxIntensity;
 
 }
 /// @nodoc
@@ -68,13 +68,22 @@ class _$IntensityCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? prefectures = null,Object? regions = null,Object? maxLpgmIntensity = freezed,}) {
   return _then(_self.copyWith(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as MaxIntensity,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
+as Intensity,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
 as List<IntensityItem>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<IntensityItem>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as MaxLpgmIntensity?,
+as LpgmIntensity?,
   ));
 }
-
+/// Create a copy of Intensity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$IntensityCopyWith<$Res> get maxIntensity {
+  
+  return $IntensityCopyWith<$Res>(_self.maxIntensity, (value) {
+    return _then(_self.copyWith(maxIntensity: value));
+  });
+}
 }
 
 
@@ -156,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  MaxIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  MaxLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  Intensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  LpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Intensity() when $default != null:
 return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity);case _:
@@ -177,7 +186,7 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  MaxIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  MaxLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  Intensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  LpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _Intensity():
 return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity);case _:
@@ -197,7 +206,7 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  MaxIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  MaxLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  Intensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  LpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _Intensity() when $default != null:
 return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity);case _:
@@ -215,7 +224,7 @@ class _Intensity implements Intensity {
   const _Intensity({@JsonKey(name: 'max_intensity') required this.maxIntensity, required final  List<IntensityItem> prefectures, required final  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _prefectures = prefectures,_regions = regions;
   factory _Intensity.fromJson(Map<String, dynamic> json) => _$IntensityFromJson(json);
 
-@override@JsonKey(name: 'max_intensity') final  MaxIntensity maxIntensity;
+@override@JsonKey(name: 'max_intensity') final  Intensity maxIntensity;
  final  List<IntensityItem> _prefectures;
 @override List<IntensityItem> get prefectures {
   if (_prefectures is EqualUnmodifiableListView) return _prefectures;
@@ -230,7 +239,7 @@ class _Intensity implements Intensity {
   return EqualUnmodifiableListView(_regions);
 }
 
-@override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  MaxLpgmIntensity? maxLpgmIntensity;
+@override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  LpgmIntensity? maxLpgmIntensity;
 
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
@@ -265,11 +274,11 @@ abstract mixin class _$IntensityCopyWith<$Res> implements $IntensityCopyWith<$Re
   factory _$IntensityCopyWith(_Intensity value, $Res Function(_Intensity) _then) = __$IntensityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') MaxIntensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') MaxLpgmIntensity? maxLpgmIntensity
+@JsonKey(name: 'max_intensity') Intensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') LpgmIntensity? maxLpgmIntensity
 });
 
 
-
+@override $IntensityCopyWith<$Res> get maxIntensity;
 
 }
 /// @nodoc
@@ -285,14 +294,23 @@ class __$IntensityCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? prefectures = null,Object? regions = null,Object? maxLpgmIntensity = freezed,}) {
   return _then(_Intensity(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as MaxIntensity,prefectures: null == prefectures ? _self._prefectures : prefectures // ignore: cast_nullable_to_non_nullable
+as Intensity,prefectures: null == prefectures ? _self._prefectures : prefectures // ignore: cast_nullable_to_non_nullable
 as List<IntensityItem>,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
 as List<IntensityItem>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as MaxLpgmIntensity?,
+as LpgmIntensity?,
   ));
 }
 
-
+/// Create a copy of Intensity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$IntensityCopyWith<$Res> get maxIntensity {
+  
+  return $IntensityCopyWith<$Res>(_self.maxIntensity, (value) {
+    return _then(_self.copyWith(maxIntensity: value));
+  });
+}
 }
 
 // dart format on
