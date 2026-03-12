@@ -7,6 +7,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/apns_token_request.dart';
 import '../models/apns_token_response.dart';
+import '../models/apns_token_type.dart';
 import '../models/device_response.dart';
 import '../models/earthquake_settings_request.dart';
 import '../models/earthquake_settings_response.dart';
@@ -21,7 +22,6 @@ import '../models/notification_settings_response.dart';
 import '../models/region_setting_patch_request.dart';
 import '../models/region_setting_request.dart';
 import '../models/region_setting_response.dart';
-import '../models/type.dart';
 
 part 'device_api_client.g.dart';
 
@@ -50,22 +50,22 @@ abstract class DeviceApiClient {
   /// 特定タイプのAPNsトークンを取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdApnsType)
   Future<HttpResponse<ApnsTokenResponse>> getV2DeviceDeviceIdApnsType({
-    @Path('type') required Type type,
+    @Path('type') required ApnsTokenType type,
     @Path('deviceId') required String deviceId,
   });
 
   /// APNsトークンを更新（存在しない場合は作成）
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdApnsType)
   Future<HttpResponse<ApnsTokenResponse>> patchV2DeviceDeviceIdApnsType({
-    @Path('type') required Type type,
+    @Path('type') required ApnsTokenType type,
     @Path('deviceId') required String deviceId,
-    @Body() ApnsTokenRequest? body,
+    @Body() required ApnsTokenRequest body,
   });
 
   /// APNsトークンを削除
   @DELETE(DeviceApiClientUrls.deleteV2DeviceDeviceIdApnsType)
   Future<HttpResponse<void>> deleteV2DeviceDeviceIdApnsType({
-    @Path('type') required Type type,
+    @Path('type') required ApnsTokenType type,
     @Path('deviceId') required String deviceId,
   });
 
@@ -79,7 +79,7 @@ abstract class DeviceApiClient {
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdFcm)
   Future<HttpResponse<FcmTokenResponse?>> patchV2DeviceDeviceIdFcm({
     @Path('deviceId') required String deviceId,
-    @Body() FcmTokenRequest? body,
+    @Body() required FcmTokenRequest body,
   });
 
   /// FCMトークンを削除
@@ -90,98 +90,82 @@ abstract class DeviceApiClient {
 
   /// Live Activity updateToken一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdLiveActivity)
-  Future<HttpResponse<List<LiveActivityTokenResponse>>>
-  getV2DeviceDeviceIdLiveActivity({@Path('deviceId') required String deviceId});
+  Future<HttpResponse<List<LiveActivityTokenResponse>>> getV2DeviceDeviceIdLiveActivity({
+    @Path('deviceId') required String deviceId,
+  });
 
   /// Live Activity updateTokenを更新。notification-resolverで作成されたレコードのtokenを更新する。
   @PUT(DeviceApiClientUrls.putV2DeviceDeviceIdLiveActivityLiveActivityIdToken)
-  Future<HttpResponse<LiveActivityTokenResponse>>
-  putV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
+  Future<HttpResponse<LiveActivityTokenResponse>> putV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
     @Path('liveActivityId') required String liveActivityId,
     @Path('deviceId') required String deviceId,
-    @Body() LiveActivityTokenRequest? body,
+    @Body() required LiveActivityTokenRequest body,
   });
 
   /// Live Activity updateTokenを削除
-  @DELETE(
-    DeviceApiClientUrls.deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken,
-  )
-  Future<HttpResponse<void>>
-  deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken)
+  Future<HttpResponse<void>> deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
     @Path('liveActivityId') required String liveActivityId,
     @Path('deviceId') required String deviceId,
   });
 
   /// 全般通知設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdSettingsNotification)
-  Future<HttpResponse<NotificationSettingsResponse>>
-  getV2DeviceDeviceIdSettingsNotification({
+  Future<HttpResponse<NotificationSettingsResponse>> getV2DeviceDeviceIdSettingsNotification({
     @Path('deviceId') required String deviceId,
   });
 
   /// 全般通知設定を更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdSettingsNotification)
-  Future<HttpResponse<NotificationSettingsResponse>>
-  patchV2DeviceDeviceIdSettingsNotification({
+  Future<HttpResponse<NotificationSettingsResponse>> patchV2DeviceDeviceIdSettingsNotification({
     @Path('deviceId') required String deviceId,
-    @Body() NotificationSettingsRequest? body,
+    @Body() required NotificationSettingsRequest body,
   });
 
   /// 地震通知設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdSettingsEarthquake)
-  Future<HttpResponse<EarthquakeSettingsResponse>>
-  getV2DeviceDeviceIdSettingsEarthquake({
+  Future<HttpResponse<EarthquakeSettingsResponse>> getV2DeviceDeviceIdSettingsEarthquake({
     @Path('deviceId') required String deviceId,
   });
 
   /// 地震通知設定を更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdSettingsEarthquake)
-  Future<HttpResponse<EarthquakeSettingsResponse>>
-  patchV2DeviceDeviceIdSettingsEarthquake({
+  Future<HttpResponse<EarthquakeSettingsResponse>> patchV2DeviceDeviceIdSettingsEarthquake({
     @Path('deviceId') required String deviceId,
-    @Body() EarthquakeSettingsRequest? body,
+    @Body() required EarthquakeSettingsRequest body,
   });
 
   /// 地震通知リージョン設定一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdSettingsEarthquakeRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>>
-  getV2DeviceDeviceIdSettingsEarthquakeRegions({
+  Future<HttpResponse<List<RegionSettingResponse>>> getV2DeviceDeviceIdSettingsEarthquakeRegions({
     @Path('deviceId') required String deviceId,
   });
 
   /// 地震通知リージョン設定を一括更新（全件上書き）
   @PUT(DeviceApiClientUrls.putV2DeviceDeviceIdSettingsEarthquakeRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>>
-  putV2DeviceDeviceIdSettingsEarthquakeRegions({
+  Future<HttpResponse<List<RegionSettingResponse>>> putV2DeviceDeviceIdSettingsEarthquakeRegions({
     @Path('deviceId') required String deviceId,
-    @Body() List<RegionSettingRequest>? body,
+    @Body() required List<RegionSettingRequest> body,
   });
 
   /// 特定のリージョン設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId)
-  Future<HttpResponse<RegionSettingResponse>>
-  getV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
+  Future<HttpResponse<RegionSettingResponse>> getV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
     @Path('regionId') required num regionId,
     @Path('deviceId') required String deviceId,
   });
 
   /// 特定のリージョン設定を更新
-  @PATCH(
-    DeviceApiClientUrls.patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId,
-  )
-  Future<HttpResponse<RegionSettingResponse>>
-  patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
+  @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId)
+  Future<HttpResponse<RegionSettingResponse>> patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
     @Path('regionId') required num regionId,
     @Path('deviceId') required String deviceId,
-    @Body() RegionSettingPatchRequest? body,
+    @Body() required RegionSettingPatchRequest body,
   });
 
   /// 特定のリージョン設定を削除
-  @DELETE(
-    DeviceApiClientUrls.deleteV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId,
-  )
-  Future<HttpResponse<void>>
-  deleteV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId)
+  Future<HttpResponse<void>> deleteV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
     @Path('regionId') required num regionId,
     @Path('deviceId') required String deviceId,
   });
@@ -196,39 +180,35 @@ abstract class DeviceApiClient {
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdSettingsEew)
   Future<HttpResponse<EewSettingsResponse>> patchV2DeviceDeviceIdSettingsEew({
     @Path('deviceId') required String deviceId,
-    @Body() EewSettingsRequest? body,
+    @Body() required EewSettingsRequest body,
   });
 
   /// EEW通知リージョン設定一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdSettingsEewRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>>
-  getV2DeviceDeviceIdSettingsEewRegions({
+  Future<HttpResponse<List<RegionSettingResponse>>> getV2DeviceDeviceIdSettingsEewRegions({
     @Path('deviceId') required String deviceId,
   });
 
   /// EEW通知リージョン設定を一括更新（全件上書き）
   @PUT(DeviceApiClientUrls.putV2DeviceDeviceIdSettingsEewRegions)
-  Future<HttpResponse<List<RegionSettingResponse>>>
-  putV2DeviceDeviceIdSettingsEewRegions({
+  Future<HttpResponse<List<RegionSettingResponse>>> putV2DeviceDeviceIdSettingsEewRegions({
     @Path('deviceId') required String deviceId,
-    @Body() List<RegionSettingRequest>? body,
+    @Body() required List<RegionSettingRequest> body,
   });
 
   /// 特定のリージョン設定を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdSettingsEewRegionsRegionId)
-  Future<HttpResponse<RegionSettingResponse>>
-  getV2DeviceDeviceIdSettingsEewRegionsRegionId({
+  Future<HttpResponse<RegionSettingResponse>> getV2DeviceDeviceIdSettingsEewRegionsRegionId({
     @Path('regionId') required num regionId,
     @Path('deviceId') required String deviceId,
   });
 
   /// 特定のリージョン設定を更新
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdSettingsEewRegionsRegionId)
-  Future<HttpResponse<RegionSettingResponse>>
-  patchV2DeviceDeviceIdSettingsEewRegionsRegionId({
+  Future<HttpResponse<RegionSettingResponse>> patchV2DeviceDeviceIdSettingsEewRegionsRegionId({
     @Path('regionId') required num regionId,
     @Path('deviceId') required String deviceId,
-    @Body() RegionSettingPatchRequest? body,
+    @Body() required RegionSettingPatchRequest body,
   });
 
   /// 特定のリージョン設定を削除
@@ -239,110 +219,63 @@ abstract class DeviceApiClient {
   });
 }
 
+
 abstract class DeviceApiClientUrls {
-  /// /v2/device/{deviceId}
-  static const putV2DeviceDeviceId = "/v2/device/{deviceId}";
-
-  /// /v2/device/{deviceId}
-  static const getV2DeviceDeviceId = "/v2/device/{deviceId}";
-
-  /// /v2/device/{deviceId}/apns
-  static const getV2DeviceDeviceIdApns = "/v2/device/{deviceId}/apns";
-
-  /// /v2/device/{deviceId}/apns/{type}
-  static const getV2DeviceDeviceIdApnsType =
-      "/v2/device/{deviceId}/apns/{type}";
-
-  /// /v2/device/{deviceId}/apns/{type}
-  static const patchV2DeviceDeviceIdApnsType =
-      "/v2/device/{deviceId}/apns/{type}";
-
-  /// /v2/device/{deviceId}/apns/{type}
-  static const deleteV2DeviceDeviceIdApnsType =
-      "/v2/device/{deviceId}/apns/{type}";
-
-  /// /v2/device/{deviceId}/fcm
-  static const getV2DeviceDeviceIdFcm = "/v2/device/{deviceId}/fcm";
-
-  /// /v2/device/{deviceId}/fcm
-  static const patchV2DeviceDeviceIdFcm = "/v2/device/{deviceId}/fcm";
-
-  /// /v2/device/{deviceId}/fcm
-  static const deleteV2DeviceDeviceIdFcm = "/v2/device/{deviceId}/fcm";
-
-  /// /v2/device/{deviceId}/live-activity
-  static const getV2DeviceDeviceIdLiveActivity =
-      "/v2/device/{deviceId}/live-activity";
-
-  /// /v2/device/{deviceId}/live-activity/{liveActivityId}/token
-  static const putV2DeviceDeviceIdLiveActivityLiveActivityIdToken =
-      "/v2/device/{deviceId}/live-activity/{liveActivityId}/token";
-
-  /// /v2/device/{deviceId}/live-activity/{liveActivityId}/token
-  static const deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken =
-      "/v2/device/{deviceId}/live-activity/{liveActivityId}/token";
-
-  /// /v2/device/{deviceId}/settings/notification
-  static const getV2DeviceDeviceIdSettingsNotification =
-      "/v2/device/{deviceId}/settings/notification";
-
-  /// /v2/device/{deviceId}/settings/notification
-  static const patchV2DeviceDeviceIdSettingsNotification =
-      "/v2/device/{deviceId}/settings/notification";
-
-  /// /v2/device/{deviceId}/settings/earthquake
-  static const getV2DeviceDeviceIdSettingsEarthquake =
-      "/v2/device/{deviceId}/settings/earthquake";
-
-  /// /v2/device/{deviceId}/settings/earthquake
-  static const patchV2DeviceDeviceIdSettingsEarthquake =
-      "/v2/device/{deviceId}/settings/earthquake";
-
-  /// /v2/device/{deviceId}/settings/earthquake/regions
-  static const getV2DeviceDeviceIdSettingsEarthquakeRegions =
-      "/v2/device/{deviceId}/settings/earthquake/regions";
-
-  /// /v2/device/{deviceId}/settings/earthquake/regions
-  static const putV2DeviceDeviceIdSettingsEarthquakeRegions =
-      "/v2/device/{deviceId}/settings/earthquake/regions";
-
-  /// /v2/device/{deviceId}/settings/earthquake/regions/{regionId}
-  static const getV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId =
-      "/v2/device/{deviceId}/settings/earthquake/regions/{regionId}";
-
-  /// /v2/device/{deviceId}/settings/earthquake/regions/{regionId}
-  static const patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId =
-      "/v2/device/{deviceId}/settings/earthquake/regions/{regionId}";
-
-  /// /v2/device/{deviceId}/settings/earthquake/regions/{regionId}
-  static const deleteV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId =
-      "/v2/device/{deviceId}/settings/earthquake/regions/{regionId}";
-
-  /// /v2/device/{deviceId}/settings/eew
-  static const getV2DeviceDeviceIdSettingsEew =
-      "/v2/device/{deviceId}/settings/eew";
-
-  /// /v2/device/{deviceId}/settings/eew
-  static const patchV2DeviceDeviceIdSettingsEew =
-      "/v2/device/{deviceId}/settings/eew";
-
-  /// /v2/device/{deviceId}/settings/eew/regions
-  static const getV2DeviceDeviceIdSettingsEewRegions =
-      "/v2/device/{deviceId}/settings/eew/regions";
-
-  /// /v2/device/{deviceId}/settings/eew/regions
-  static const putV2DeviceDeviceIdSettingsEewRegions =
-      "/v2/device/{deviceId}/settings/eew/regions";
-
-  /// /v2/device/{deviceId}/settings/eew/regions/{regionId}
-  static const getV2DeviceDeviceIdSettingsEewRegionsRegionId =
-      "/v2/device/{deviceId}/settings/eew/regions/{regionId}";
-
-  /// /v2/device/{deviceId}/settings/eew/regions/{regionId}
-  static const patchV2DeviceDeviceIdSettingsEewRegionsRegionId =
-      "/v2/device/{deviceId}/settings/eew/regions/{regionId}";
-
-  /// /v2/device/{deviceId}/settings/eew/regions/{regionId}
-  static const deleteV2DeviceDeviceIdSettingsEewRegionsRegionId =
-      "/v2/device/{deviceId}/settings/eew/regions/{regionId}";
+	/// /v2/device/{deviceId}
+	static const putV2DeviceDeviceId = "/v2/device/{deviceId}";
+	/// /v2/device/{deviceId}
+	static const getV2DeviceDeviceId = "/v2/device/{deviceId}";
+	/// /v2/device/{deviceId}/apns
+	static const getV2DeviceDeviceIdApns = "/v2/device/{deviceId}/apns";
+	/// /v2/device/{deviceId}/apns/{type}
+	static const getV2DeviceDeviceIdApnsType = "/v2/device/{deviceId}/apns/{type}";
+	/// /v2/device/{deviceId}/apns/{type}
+	static const patchV2DeviceDeviceIdApnsType = "/v2/device/{deviceId}/apns/{type}";
+	/// /v2/device/{deviceId}/apns/{type}
+	static const deleteV2DeviceDeviceIdApnsType = "/v2/device/{deviceId}/apns/{type}";
+	/// /v2/device/{deviceId}/fcm
+	static const getV2DeviceDeviceIdFcm = "/v2/device/{deviceId}/fcm";
+	/// /v2/device/{deviceId}/fcm
+	static const patchV2DeviceDeviceIdFcm = "/v2/device/{deviceId}/fcm";
+	/// /v2/device/{deviceId}/fcm
+	static const deleteV2DeviceDeviceIdFcm = "/v2/device/{deviceId}/fcm";
+	/// /v2/device/{deviceId}/live-activity
+	static const getV2DeviceDeviceIdLiveActivity = "/v2/device/{deviceId}/live-activity";
+	/// /v2/device/{deviceId}/live-activity/{liveActivityId}/token
+	static const putV2DeviceDeviceIdLiveActivityLiveActivityIdToken = "/v2/device/{deviceId}/live-activity/{liveActivityId}/token";
+	/// /v2/device/{deviceId}/live-activity/{liveActivityId}/token
+	static const deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken = "/v2/device/{deviceId}/live-activity/{liveActivityId}/token";
+	/// /v2/device/{deviceId}/settings/notification
+	static const getV2DeviceDeviceIdSettingsNotification = "/v2/device/{deviceId}/settings/notification";
+	/// /v2/device/{deviceId}/settings/notification
+	static const patchV2DeviceDeviceIdSettingsNotification = "/v2/device/{deviceId}/settings/notification";
+	/// /v2/device/{deviceId}/settings/earthquake
+	static const getV2DeviceDeviceIdSettingsEarthquake = "/v2/device/{deviceId}/settings/earthquake";
+	/// /v2/device/{deviceId}/settings/earthquake
+	static const patchV2DeviceDeviceIdSettingsEarthquake = "/v2/device/{deviceId}/settings/earthquake";
+	/// /v2/device/{deviceId}/settings/earthquake/regions
+	static const getV2DeviceDeviceIdSettingsEarthquakeRegions = "/v2/device/{deviceId}/settings/earthquake/regions";
+	/// /v2/device/{deviceId}/settings/earthquake/regions
+	static const putV2DeviceDeviceIdSettingsEarthquakeRegions = "/v2/device/{deviceId}/settings/earthquake/regions";
+	/// /v2/device/{deviceId}/settings/earthquake/regions/{regionId}
+	static const getV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId = "/v2/device/{deviceId}/settings/earthquake/regions/{regionId}";
+	/// /v2/device/{deviceId}/settings/earthquake/regions/{regionId}
+	static const patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId = "/v2/device/{deviceId}/settings/earthquake/regions/{regionId}";
+	/// /v2/device/{deviceId}/settings/earthquake/regions/{regionId}
+	static const deleteV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId = "/v2/device/{deviceId}/settings/earthquake/regions/{regionId}";
+	/// /v2/device/{deviceId}/settings/eew
+	static const getV2DeviceDeviceIdSettingsEew = "/v2/device/{deviceId}/settings/eew";
+	/// /v2/device/{deviceId}/settings/eew
+	static const patchV2DeviceDeviceIdSettingsEew = "/v2/device/{deviceId}/settings/eew";
+	/// /v2/device/{deviceId}/settings/eew/regions
+	static const getV2DeviceDeviceIdSettingsEewRegions = "/v2/device/{deviceId}/settings/eew/regions";
+	/// /v2/device/{deviceId}/settings/eew/regions
+	static const putV2DeviceDeviceIdSettingsEewRegions = "/v2/device/{deviceId}/settings/eew/regions";
+	/// /v2/device/{deviceId}/settings/eew/regions/{regionId}
+	static const getV2DeviceDeviceIdSettingsEewRegionsRegionId = "/v2/device/{deviceId}/settings/eew/regions/{regionId}";
+	/// /v2/device/{deviceId}/settings/eew/regions/{regionId}
+	static const patchV2DeviceDeviceIdSettingsEewRegionsRegionId = "/v2/device/{deviceId}/settings/eew/regions/{regionId}";
+	/// /v2/device/{deviceId}/settings/eew/regions/{regionId}
+	static const deleteV2DeviceDeviceIdSettingsEewRegionsRegionId = "/v2/device/{deviceId}/settings/eew/regions/{regionId}";
 }
+

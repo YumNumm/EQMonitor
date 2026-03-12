@@ -10,9 +10,10 @@ part 'code_name.g.dart';
 /// コードと名前のペア
 @Freezed()
 abstract class CodeName with _$CodeName {
-  const factory CodeName({required String code, required String name}) =
-      _CodeName;
-
-  factory CodeName.fromJson(Map<String, Object?> json) =>
-      _$CodeNameFromJson(json);
+  const factory CodeName({
+    required String code,
+    required String name,
+  }) = _CodeName;
+  
+  factory CodeName.fromJson(Map<String, Object?> json) => _$CodeNameFromJson(json);
 }

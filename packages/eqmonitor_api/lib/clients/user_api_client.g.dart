@@ -22,12 +22,12 @@ class _UserApiClient implements UserApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<InvalidType>> postV2User() async {
+  Future<HttpResponse<UserResponse>> postV2User() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<UserResponse>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -37,10 +37,10 @@ class _UserApiClient implements UserApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late UserResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = UserResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -50,14 +50,14 @@ class _UserApiClient implements UserApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2UserUserId({
+  Future<HttpResponse<UserResponse>> getV2UserUserId({
     required String userId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<UserResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -67,10 +67,10 @@ class _UserApiClient implements UserApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late UserResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = UserResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

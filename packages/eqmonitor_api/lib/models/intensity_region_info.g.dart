@@ -18,15 +18,13 @@ _IntensityRegionInfo _$IntensityRegionInfoFromJson(Map<String, dynamic> json) =>
           name: $checkedConvert('name', (v) => v as String),
           intensity: $checkedConvert(
             'intensity',
-            (v) =>
-                $enumDecodeNullable(_$IntensityRegionInfoIntensityEnumMap, v),
+            (v) => v == null
+                ? null
+                : Intensity.fromJson(v as Map<String, dynamic>),
           ),
           lpgmIntensity: $checkedConvert(
             'lpgm_intensity',
-            (v) => $enumDecodeNullable(
-              _$IntensityRegionInfoLpgmIntensityEnumMap,
-              v,
-            ),
+            (v) => $enumDecodeNullable(_$LpgmIntensityEnumMap, v),
           ),
         );
         return val;
@@ -43,24 +41,10 @@ Map<String, dynamic> _$IntensityRegionInfoToJson(
   'lpgm_intensity': instance.lpgmIntensity,
 };
 
-const _$IntensityRegionInfoIntensityEnumMap = {
-  IntensityRegionInfoIntensity.value0: 0,
-  IntensityRegionInfoIntensity.value1: 1,
-  IntensityRegionInfoIntensity.value2: 2,
-  IntensityRegionInfoIntensity.value3: 3,
-  IntensityRegionInfoIntensity.value4: 4,
-  IntensityRegionInfoIntensity.value5unknown: '!5-',
-  IntensityRegionInfoIntensity.value5minus: '5-',
-  IntensityRegionInfoIntensity.value5plus: '5+',
-  IntensityRegionInfoIntensity.value6minus: '6-',
-  IntensityRegionInfoIntensity.value6plus: '6+',
-  IntensityRegionInfoIntensity.value7: 7,
-};
-
-const _$IntensityRegionInfoLpgmIntensityEnumMap = {
-  IntensityRegionInfoLpgmIntensity.value0: 0,
-  IntensityRegionInfoLpgmIntensity.value1: 1,
-  IntensityRegionInfoLpgmIntensity.value2: 2,
-  IntensityRegionInfoLpgmIntensity.value3: 3,
-  IntensityRegionInfoLpgmIntensity.value4: 4,
+const _$LpgmIntensityEnumMap = {
+  LpgmIntensity.value0: 0,
+  LpgmIntensity.value1: 1,
+  LpgmIntensity.value2: 2,
+  LpgmIntensity.value3: 3,
+  LpgmIntensity.value4: 4,
 };

@@ -3820,30 +3820,30 @@
       "EewAccuracy": {
         "type": "object",
         "properties": {
-          "epicenters": {
-            "type": "array",
-            "items": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "number"
-              }
-            ],
-            "minItems": 2
+          "epicenter": {
+            "type": "number",
+            "description": "震央位置の精度値"
+          },
+          "hypocenter": {
+            "type": "number",
+            "description": "震源位置の精度値"
           },
           "depth": {
-            "type": "number"
+            "type": "number",
+            "description": "深さの精度値"
           },
           "magnitude_calculation": {
-            "type": "number"
+            "type": "number",
+            "description": "マグニチュードの精度値"
           },
           "number_of_magnitude_calculation": {
-            "type": "number"
+            "type": "number",
+            "description": "マグニチュード計算使用観測点数"
           }
         },
         "required": [
-          "epicenters",
+          "epicenter",
+          "hypocenter",
           "depth",
           "magnitude_calculation",
           "number_of_magnitude_calculation"

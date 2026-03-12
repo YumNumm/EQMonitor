@@ -21,8 +21,7 @@ _RegionSettingPatchRequest _$RegionSettingPatchRequestFromJson(
       ),
       minJmaIntensity: $checkedConvert(
         'min_jma_intensity',
-        (v) =>
-            $enumDecode(_$RegionSettingPatchRequestMinJmaIntensityEnumMap, v),
+        (v) => $enumDecode(_$JmaIntensityEnumMap, v),
       ),
       regionName: $checkedConvert('region_name', (v) => v as String?),
     );
@@ -43,16 +42,16 @@ Map<String, dynamic> _$RegionSettingPatchRequestToJson(
   'region_name': ?instance.regionName,
 };
 
-const _$RegionSettingPatchRequestMinJmaIntensityEnumMap = {
-  RegionSettingPatchRequestMinJmaIntensity.value0: 0,
-  RegionSettingPatchRequestMinJmaIntensity.value1: 1,
-  RegionSettingPatchRequestMinJmaIntensity.value2: 2,
-  RegionSettingPatchRequestMinJmaIntensity.value3: 3,
-  RegionSettingPatchRequestMinJmaIntensity.value4: 4,
-  RegionSettingPatchRequestMinJmaIntensity.value5unknown: '!5-',
-  RegionSettingPatchRequestMinJmaIntensity.value5minus: '5-',
-  RegionSettingPatchRequestMinJmaIntensity.value5plus: '5+',
-  RegionSettingPatchRequestMinJmaIntensity.value6minus: '6-',
-  RegionSettingPatchRequestMinJmaIntensity.value6plus: '6+',
-  RegionSettingPatchRequestMinJmaIntensity.value7: 7,
+const _$JmaIntensityEnumMap = {
+  JmaIntensity.value0: 0,
+  JmaIntensity.value1: 1,
+  JmaIntensity.value2: 2,
+  JmaIntensity.value3: 3,
+  JmaIntensity.value4: 4,
+  JmaIntensity.value5unknown: '!5-',
+  JmaIntensity.value5minus: '5-',
+  JmaIntensity.value5plus: '5+',
+  JmaIntensity.value6minus: '6-',
+  JmaIntensity.value6plus: '6+',
+  JmaIntensity.value7: 7,
 };
