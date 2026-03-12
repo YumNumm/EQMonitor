@@ -86,6 +86,10 @@ void main(List<String> args) async {
     }
   });
 
+  await _step(r'$unknown 文字列補間パッチ', () async {
+    await _patchGeneratedFiles(libDir);
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
@@ -117,6 +121,24 @@ Future<void> _step(String label, Future<void> Function() action) async {
   stdout.writeln(
     '  Done (${(sw.elapsedMilliseconds / 1000).toStringAsFixed(1)}s)',
   );
+}
+
+/// swagger_parser が生成するenumの toJson() 内の文字列リテラルで
+/// `$unknown` が補間として解釈されるのを修正する。
+Future<void> _patchGeneratedFiles(Directory libDir) async {
+  final dartFiles = libDir
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where((f) => f.path.endsWith('.dart'));
+
+  for (final file in dartFiles) {
+    final original = file.readAsStringSync();
+    final patched = original.replaceAll(r'$unknown', r'\$unknown');
+    if (patched != original) {
+      file.writeAsStringSync(patched);
+      stdout.writeln('  Patched: ${file.path}');
+    }
+  }
 }
 
 Future<void> _run(String exe, List<String> args, String cwd) async {
