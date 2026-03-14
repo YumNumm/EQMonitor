@@ -87,7 +87,7 @@ IntensityTree convertToIntensityTree({
   // 都道府県の最大震度でグループ化
   final groupedByIntensity = regionNodes
       .where((r) => r.maxIntensity != null)
-      .groupListsBy((r) => r.maxIntensity!);
+      .groupListsBy((r) => r.maxIntensity);
 
   // 震度降順でソート
   final sortedMap = Map.fromEntries(

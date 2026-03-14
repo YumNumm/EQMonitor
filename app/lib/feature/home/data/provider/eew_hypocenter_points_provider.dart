@@ -18,7 +18,7 @@ List<Feature<Point>> eewHypocenterPoints(Ref ref) {
         return coords is CoordinateLatLng;
       })
       .map((eew) {
-        final hypocenter = eew.hypocenter!;
+        final hypocenter = eew.hypocenter;
         final coords = hypocenter.coordinates as CoordinateLatLng;
         return Feature(
           geometry: Point(

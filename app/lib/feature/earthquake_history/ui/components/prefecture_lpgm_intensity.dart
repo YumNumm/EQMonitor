@@ -36,7 +36,7 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
     }
 
     final groupedByLpgmIntensity = lpgmPrefectures
-        .groupListsBy((p) => p.maxLpgmIntensity!)
+        .groupListsBy((p) => p.maxLpgmIntensity)
         .entries
         .sorted((a, b) => b.key.index.compareTo(a.key.index));
 

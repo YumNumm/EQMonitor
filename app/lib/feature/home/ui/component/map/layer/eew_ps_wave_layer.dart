@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:clock/clock.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
