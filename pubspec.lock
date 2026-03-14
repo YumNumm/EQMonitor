@@ -1272,12 +1272,19 @@ packages:
   maplibre:
     dependency: transitive
     description:
-      path: maplibre
-      ref: ca009f4e8da0801a6dff5e47a27e57c4cb7f9aa1
-      resolved-ref: ca009f4e8da0801a6dff5e47a27e57c4cb7f9aa1
-      url: "https://github.com/YumNumm/flutter-maplibre.git"
-    source: git
-    version: "0.3.3+2"
+      name: maplibre
+      sha256: "11c0ed2b2cae80a2546bd0a416d95602593728ba26aac48ab96b6cd469f32750"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
+  maplibre_android:
+    dependency: transitive
+    description:
+      name: maplibre_android
+      sha256: a9f9246d68f751c7e2d0f569897f2e5445b9d89d426ec5ed9ab360cb33e4d7b5
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
   maplibre_ios:
     dependency: transitive
     description:
@@ -1291,6 +1298,14 @@ packages:
     description:
       name: maplibre_platform_interface
       sha256: "7c5cbf7ee221c57d6b82245f3a41d82e1f75d3ab57d3c05754cf8aef46f83f91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
+  maplibre_web:
+    dependency: transitive
+    description:
+      name: maplibre_web
+      sha256: bec1325ea2315a5df1f6e8f69179a59da0ce997b13dd7e93b5f4f267323958bf
       url: "https://pub.dev"
     source: hosted
     version: "0.3.4+1"

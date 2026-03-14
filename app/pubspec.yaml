@@ -85,11 +85,7 @@ dependencies:
   libserialport_plus: ^0.1.0
   live_activity_util:
     path: ../packages/live_activity_util
-  maplibre:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: ca009f4e8da0801a6dff5e47a27e57c4cb7f9aa1
-      path: maplibre
+  maplibre: ^0.3.3+2
   nied_api_client:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
