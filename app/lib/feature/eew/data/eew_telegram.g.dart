@@ -111,4 +111,4 @@ final class _EewRestProvider
   }
 }
 
-String _$_eewRestHash() => r'a56a6977a4e5e3985f1e435f78ee8b8627c508ae';
+String _$_eewRestHash() => r'1bb47e7c7f121e354b3b1c9c3ae9ce69ce53a991';

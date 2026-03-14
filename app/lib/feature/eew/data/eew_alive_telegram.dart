@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/eew_extension.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -62,7 +62,7 @@ class Eew extends _$Eew {
 
 @Riverpod(keepAlive: true)
 Future<List<EewItemWithRelations>> _eewRest(Ref ref) async {
-  final api = ref.watch(eqApiProvider);
-  final result = await api.eew.getLatest();
-  return result.items;
+  final api = ref.watch(apiClientProvider);
+  final response = await api.eew.getV2EewLatest();
+  return response.data.items;
 }
