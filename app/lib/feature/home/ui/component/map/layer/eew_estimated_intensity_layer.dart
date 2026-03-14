@@ -51,9 +51,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
         unawaited(() async {
           await JmaIntensity.values.map((intensity) {
             final layerId = _getLayerId(intensity);
-            final color = colorModel
-                .fromJmaIntensity(intensity)
-                .background;
+            final color = colorModel.fromJmaIntensity(intensity).background;
 
             return styleController.addLayer(
               FillStyleLayer(
@@ -86,31 +84,32 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(() async {
-          await JmaIntensity.values
-              .map(
-                (intensity) => styleController.updateFilter(
-                  id: _getLayerId(intensity),
-                  filter: [
-                    'all',
-                    [
-                      'in',
-                      'region',
-                      regionMaxIntensities
-                          .where(
-                            (r) =>
-                                // TODO(eqmonitor_api): intensity は codegen バグにより常に unknown
-                                JmaIntensity.unknown ==
-                                intensity,
-                          )
-                          .map((r) => r.code)
-                          .toList(),
-                    ],
-                  ],
-                ),
-              )
-              .wait;
-        }());
+        // TODO(YumNumm): 予想震度レイヤー
+        // unawaited(() async {
+        //   await JmaIntensity.values
+        //       .map(
+        //         (intensity) => styleController.updateFilter(
+        //           id: _getLayerId(intensity),
+        //           filter: [
+        //             'all',
+        //             [
+        //               'in',
+        //               'region',
+        //               regionMaxIntensities
+        //                   .where(
+        //                     (r) =>
+        //                         // TODO(eqmonitor_api): intensity は codegen バグにより常に unknown
+        //                         JmaIntensity.unknown ==
+        //                         intensity,
+        //                   )
+        //                   .map((r) => r.code)
+        //                   .toList(),
+        //             ],
+        //           ],
+        //         ),
+        //       )
+        //       .wait;
+        // }());
 
         return null;
       },
