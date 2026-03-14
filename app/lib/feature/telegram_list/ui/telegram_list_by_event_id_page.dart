@@ -1,8 +1,9 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:eqmonitor/feature/telegram_list/data/notifier/telegram_list_by_event_id_notifier.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/telegram_list_tile.dart';
-import 'package:eqmonitor_api/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -80,7 +81,7 @@ class _TelegramListView extends StatelessWidget {
     this.onReload,
   });
 
-  final List<Items> items;
+  final List<TelegramItem> items;
   final bool hasNext;
   final bool isLoading;
   final ScrollController scrollController;
@@ -110,7 +111,7 @@ class _TelegramListView extends StatelessWidget {
     );
   }
 
-  VoidCallback? _getOnTapCallback(BuildContext context, Items telegram) {
+  VoidCallback? _getOnTapCallback(BuildContext context, TelegramItem telegram) {
     return switch (telegram.type) {
       TelegramType.vxse43 ||
       TelegramType.vxse44 ||

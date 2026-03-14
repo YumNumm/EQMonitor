@@ -15,7 +15,7 @@ part of 'eew_by_event_id.dart';
 final eewsByEventIdProvider = EewsByEventIdFamily._();
 
 final class EewsByEventIdProvider
-    extends $AsyncNotifierProvider<EewsByEventId, List<EewItemWithRelations>> {
+    extends $AsyncNotifierProvider<EewsByEventId, List<EewTelegramItem>> {
   EewsByEventIdProvider._({
     required EewsByEventIdFamily super.from,
     required String super.argument,
@@ -52,15 +52,15 @@ final class EewsByEventIdProvider
   }
 }
 
-String _$eewsByEventIdHash() => r'f6e445298a97b78a032763d42d34a4949682ed29';
+String _$eewsByEventIdHash() => r'abc6b17f4fec14136c0714750488e466370d7f26';
 
 final class EewsByEventIdFamily extends $Family
     with
         $ClassFamilyOverride<
           EewsByEventId,
-          AsyncValue<List<EewItemWithRelations>>,
-          List<EewItemWithRelations>,
-          FutureOr<List<EewItemWithRelations>>,
+          AsyncValue<List<EewTelegramItem>>,
+          List<EewTelegramItem>,
+          FutureOr<List<EewTelegramItem>>,
           String
         > {
   EewsByEventIdFamily._()
@@ -79,29 +79,25 @@ final class EewsByEventIdFamily extends $Family
   String toString() => r'eewsByEventIdProvider';
 }
 
-abstract class _$EewsByEventId
-    extends $AsyncNotifier<List<EewItemWithRelations>> {
+abstract class _$EewsByEventId extends $AsyncNotifier<List<EewTelegramItem>> {
   late final _$args = ref.$arg as String;
   String get eventId => _$args;
 
-  FutureOr<List<EewItemWithRelations>> build(String eventId);
+  FutureOr<List<EewTelegramItem>> build(String eventId);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
-            as $Ref<
-              AsyncValue<List<EewItemWithRelations>>,
-              List<EewItemWithRelations>
-            >;
+            as $Ref<AsyncValue<List<EewTelegramItem>>, List<EewTelegramItem>>;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<List<EewItemWithRelations>>,
-                List<EewItemWithRelations>
+                AsyncValue<List<EewTelegramItem>>,
+                List<EewTelegramItem>
               >,
-              AsyncValue<List<EewItemWithRelations>>,
+              AsyncValue<List<EewTelegramItem>>,
               Object?,
               Object?
             >;

@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
-import 'package:eqmonitor_api/export.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'telegram_list_by_event_id_notifier.g.dart';
 
 typedef TelegramListByEventIdState = ({
-  List<Items> items,
+  List<TelegramItem> items,
   String? nextToken,
 });
 
@@ -26,7 +26,7 @@ class TelegramListByEventId extends _$TelegramListByEventId {
     );
     final data = response.data;
     return (
-      items: data.items,
+      items: data.items.map((e) => e.toTelegramItem).toList(),
       nextToken: data.nextToken,
     );
   }
@@ -54,9 +54,9 @@ class TelegramListByEventId extends _$TelegramListByEventId {
         limit: '50',
       );
       final data = response.data;
-      final mergedItems = <Items>[
+      final mergedItems = <TelegramItem>[
         ...currentState.items,
-        ...data.items,
+        ...data.items.map((e) => e.toTelegramItem),
       ].sorted((a, b) => b.pressAt.compareTo(a.pressAt));
       return (
         items: mergedItems,

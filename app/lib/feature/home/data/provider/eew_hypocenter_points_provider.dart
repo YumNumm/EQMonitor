@@ -1,4 +1,3 @@
-import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,15 +13,16 @@ List<Feature<Point>> eewHypocenterPoints(Ref ref) {
         if (e.isCanceled) {
           return false;
         }
-        final coords = e.hypocenter?.coordinates;
-        return coords != null && coords.type == CoordinateType.latLng;
+        return e.hypocenter?.hasLatLng ?? false;
       })
       .map((eew) {
         final hypocenter = eew.hypocenter!;
-        final coords = hypocenter.coordinates;
         return Feature(
           geometry: Point(
-            Geographic(lon: coords.longitude!.toDouble(), lat: coords.latitude!.toDouble()),
+            Geographic(
+              lon: hypocenter.longitude!,
+              lat: hypocenter.latitude!,
+            ),
           ),
           properties: {
             'magnitude': hypocenter.magnitude,

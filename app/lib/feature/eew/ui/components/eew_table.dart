@@ -1,5 +1,4 @@
-import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +10,7 @@ class EewTable extends StatelessWidget {
     super.key,
   });
 
-  final List<EewItemWithRelations> eews;
+  final List<EewTelegramItem> eews;
   final int? selectedIndex;
   final void Function(int index)? onSelect;
 
@@ -113,7 +112,7 @@ enum _EewTableColumn {
 }
 
 extension _EewTableColumnEx on _EewTableColumn {
-  _EewTableColumnValue value(EewItemWithRelations eew) => switch (this) {
+  _EewTableColumnValue value(EewTelegramItem eew) => switch (this) {
     _EewTableColumn.serialNo => _EewTableColumnValue(
       value: eew.serialNo.toString(),
       isNumeric: true,
@@ -131,14 +130,14 @@ extension _EewTableColumnEx on _EewTableColumn {
       isNumeric: false,
     ),
     _EewTableColumn.epicenterName => _EewTableColumnValue(
-      value: eew.hypocenter?.value.name ?? '',
+      value: eew.hypocenter?.name ?? '',
       isNumeric: false,
     ),
     _EewTableColumn.epicenterLatitude => _EewTableColumnValue(
       value: () {
-        final coords = eew.hypocenter?.coordinates;
-        if (coords != null && coords.type == CoordinateType.latLng) {
-          return coords.latitude!.toString();
+        final hypo = eew.hypocenter;
+        if (hypo != null && hypo.hasLatLng) {
+          return hypo.latitude!.toString();
         }
         return '';
       }(),
@@ -146,9 +145,9 @@ extension _EewTableColumnEx on _EewTableColumn {
     ),
     _EewTableColumn.epicenterLongitude => _EewTableColumnValue(
       value: () {
-        final coords = eew.hypocenter?.coordinates;
-        if (coords != null && coords.type == CoordinateType.latLng) {
-          return coords.longitude!.toString();
+        final hypo = eew.hypocenter;
+        if (hypo != null && hypo.hasLatLng) {
+          return hypo.longitude!.toString();
         }
         return '';
       }(),
@@ -162,13 +161,13 @@ extension _EewTableColumnEx on _EewTableColumn {
     ),
     _EewTableColumn.maxIntensity => _EewTableColumnValue(
       value: () {
-        final intensity = eew.forecastIntensity?.maxIntensity;
+        final intensity = eew.forecastIntensity;
         if (intensity == null) {
           return '';
         }
-        // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）。暫定で空文字
+        // TODO(eqmonitor_api): maxIntensity は codegen バグにより常に unknown
         const typeStr = '?';
-        return '震度 $typeStr${intensity.isOver ? '以上' : ''}';
+        return '震度 $typeStr${intensity.maxIntensityIsOver ? '以上' : ''}';
       }(),
       isNumeric: false,
     ),
@@ -182,7 +181,7 @@ extension _EewTableColumnEx on _EewTableColumn {
         if (lpgmIntensity == null) {
           return '';
         }
-        return '長周期地震動階級 ${lpgmIntensity.value.toJmaLpgmIntensity.label}';
+        return '長周期地震動階級 ${lpgmIntensity.label}';
       }(),
       isNumeric: false,
     ),

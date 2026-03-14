@@ -1,6 +1,6 @@
-import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_forecast_region_layer.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_static_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
@@ -18,7 +18,7 @@ class EewDetailsMapView extends HookConsumerWidget {
     super.key,
   });
 
-  final EewItemWithRelations? selectedEew;
+  final EewTelegramItem? selectedEew;
   final Geographic initialCenter;
   final double initZoom;
   final EewDisplayMode displayMode;
@@ -51,7 +51,7 @@ class _MapContent extends StatelessWidget {
   });
 
   final String styleString;
-  final EewItemWithRelations? selectedEew;
+  final EewTelegramItem? selectedEew;
   final Geographic initialCenter;
   final double initZoom;
   final EewDisplayMode displayMode;

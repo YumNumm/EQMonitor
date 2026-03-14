@@ -26,3 +26,21 @@ extension TelegramInfoTypeToApiExtension on TelegramInfoType {
     .cancellation => .cancellation,
   };
 }
+
+extension EewInfoTypeApiExtension on api.EewItemWithRelationsInfoType {
+  TelegramInfoType get toTelegramInfoType => switch (this) {
+    .publication => .publication,
+    .correction => .correction,
+    .delay => .delay,
+    .cancellation => .cancellation,
+  };
+}
+
+extension InfoTypeApiExtension on api.InfoType {
+  TelegramInfoType get toTelegramInfoType => switch (this) {
+    .publication => .publication,
+    .correction => .correction,
+    .delay => .delay,
+    .cancellation => .cancellation,
+  };
+}

@@ -1,4 +1,6 @@
-import 'package:eqmonitor_api/export.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +11,7 @@ class TelegramListTile extends StatelessWidget {
     super.key,
   });
 
-  final Items telegram;
+  final TelegramItem telegram;
   final VoidCallback? onTap;
 
   @override
@@ -35,7 +37,7 @@ class TelegramListTile extends StatelessWidget {
           const SizedBox(height: 4),
           _InfoRow(
             label: '電文種別',
-            value: telegram.type.toString(),
+            value: telegram.type.name,
           ),
           if (isEew && serialNo != null)
             _InfoRow(

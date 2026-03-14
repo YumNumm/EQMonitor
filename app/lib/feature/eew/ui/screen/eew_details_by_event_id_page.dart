@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_table.dart';
 import 'package:flutter/material.dart';
@@ -55,14 +55,14 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             displayMode: displayMode.value,
             initialCenter:
                 eews
-                    .map((eew) => eew.hypocenter?.coordinates)
+                    .map((eew) => eew.hypocenter)
                     .nonNulls
-                    .where((c) => c.type == CoordinateType.latLng)
+                    .where((h) => h.hasLatLng)
                     .firstOrNull
                     ?.let(
-                      (c) => Geographic(
-                        lat: c.latitude!.toDouble(),
-                        lon: c.longitude!.toDouble(),
+                      (h) => Geographic(
+                        lat: h.latitude!,
+                        lon: h.longitude!,
                       ),
                     ) ??
                 const Geographic(lat: 35.6895, lon: 139.6917),
@@ -121,10 +121,10 @@ class _ResponsiveLayout extends StatelessWidget {
     required this.initZoom,
   });
 
-  final List<EewItemWithRelations> eews;
+  final List<EewTelegramItem> eews;
   final int? selectedIndex;
   final void Function(int) onSelect;
-  final EewItemWithRelations? selectedEew;
+  final EewTelegramItem? selectedEew;
   final EewDisplayMode displayMode;
   final Geographic initialCenter;
   final double initZoom;
