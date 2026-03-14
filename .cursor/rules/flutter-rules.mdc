@@ -1,0 +1,159 @@
+---
+description: Flutter / Dart のコーディング規約
+globs: *.dart
+---
+# EQMonitor Flutter Rules
+
+## ツール・コマンド
+
+- Flutter / Dart に関するコマンドは常に `mise exec --` 経由で実行する
+- 依存追加は `flutter pub add` を使う（pubspec.yaml を直接編集しない）
+- コード生成: `dart run build_runner build --delete-conflicting-outputs`
+
+## 設計原則
+
+- SOLID 原則を厳格に適用する
+- Presentation（Widget）・Domain（ロジック）・Data（リポジトリ / API）のレイヤー構成
+- レイヤー内の命令的な処理は、パッケージ側の宣言的な実装で代替できないか検討する（不可能または機能欠損が生じる場合は命令的な実装も可）
+
+## ディレクトリ構成
+
+### 全体構造
+
+```
+lib/
+├── core/          # アプリ全体の根幹（共通コンポーネント・テーマ・ルーター・ユーティリティ等）
+├── features/      # 機能単位のモジュール
+├── page/          # トップレベルのページ（必要に応じて）
+├── app.dart
+└── main.dart
+```
+
+### features/${NAME}/ の構造
+
+```
+features/${NAME}/
+├── data/
+│   ├── model/
+│   ├── repository/
+│   ├── data_source/   # (任意) 複数APIや複雑性がある場合のみ
+│   ├── notifier/
+│   ├── provider/
+│   └── flow/
+└── ui/
+    ├── page/          # *_page.dart を配置
+    └── components/    # 再利用可能な Widget を配置
+```
+
+### Data 層の各ディレクトリの役割
+
+#### `data/model/`
+
+- アプリ固有の型定義を行う
+- API パッケージの型は `as api` でエイリアス import し、アプリの型に変換する extension を定義する
+- Freezed を積極的に利用する
+
+```dart
+import 'package:eqapi_types/eqapi_types.dart' as api;
+
+extension EarthquakeModelConverter on api.EarthquakeResponse {
+  EarthquakeModel toModel() => EarthquakeModel(...);
+}
+```
+
+#### `data/repository/`
+
+- API の Fetch と型変換を担う
+- API 通信を行うものは `Future<Result<T, ApiException>>` を返す（例外あり）
+- Riverpod で DI する
+- 基本的にすべての外部データアクセスは repository を経由する
+
+#### `data/data_source/`
+
+- 複数の API がある場合や、1 つのレイヤーだと複雑になる場合にのみ使用する
+- repository が data_source を利用する形で構成する
+
+#### `data/notifier/`
+
+- アプリケーションの状態を保持する
+- `@riverpod` アノテーションを使用する
+- 副作用を持つ関数は Riverpod 3 の Mutation を利用する
+
+#### `data/provider/`
+
+- notifier を持たない、派生・加工された状態（computed provider）のみを配置する
+- DI や API クライアント初期化は repository 層で行う
+
+#### `data/flow/`
+
+- 非同期処理の後にダイアログ表示や画面遷移など UI 操作を伴うユースケースを記述する
+- UI 層と UI 処理ロジックを分離して可読性を確保する
+- Riverpod 関連で唯一、関数の引数に `WidgetRef ref` と `BuildContext context` を持つことが許される
+
+### UI 層の各ディレクトリの役割
+
+#### `ui/page/`
+
+- 画面全体を表す Widget を `*_page.dart` として配置する
+- ファイル名のサフィックスは `_page.dart` に統一する（`_screen.dart` は使わない）
+
+#### `ui/components/`
+
+- その feature 内で再利用する Widget を配置する
+- feature をまたいで共通利用する Widget は `lib/core/component/` に配置する
+
+## 状態管理
+
+- Riverpod + flutter_hooks を使用する
+- StatefulWidget は基本的に利用しない。HookWidget または HookConsumerWidget で状態を管理する
+- UI ステート（エフェメラル）とアプリステートを分離する
+
+## ルーティング
+
+- go_router を使用する
+- すべて go_router_builder を使用
+
+## 型安全
+
+- `dynamic`、`any`、`Object` 型は `Map<String, dynamic>` 以外での利用を禁止
+- Null Safety: `!` 演算子の使用を禁止する。`?` とフロー解析（`if (x != null)`）で安全に扱う
+
+## Widget 設計
+
+- Widget のコードを不用意に長くしない。再利用しない Widget は private class で作成する
+- Widget に関数やゲッターを定義することを禁止する
+- 適度に変数・定数に Widget を切り出して可読性を維持する
+- build メソッドは純粋かつ高速に保つ。副作用やネットワーク呼び出しを含めない
+- `const` コンストラクタを積極的に使用する
+- リスト表示には `ListView.builder` または `SliverList` を使用する
+  - 基本的に `SingleChildScrollView` は利用しない
+- テキストを含む要素に固定の高さ（`height`、`SizedBox` 等）を数値指定しない（textScale 拡大時の overflow 防止）
+- `Row` 内に `Text` を配置する場合等に、overflow を防ぐために `Expanded` や `Flexible` を適切に使用する
+
+## ビジュアルデザイン（Material 3）
+
+- `ThemeData` + `ColorScheme.fromSeed` でテーマを構築する
+- Light / Dark モード両対応（`ThemeMode.system`）
+- `google_fonts` で統一的なタイプスケールを定義する
+- カスタムトークン（色・サイズ）には `ThemeExtension` を使用する
+- レスポンシブ対応には `LayoutBuilder` を使用する
+
+## 命名規則
+
+- 型名: `PascalCase`
+- メンバー: `camelCase`
+- ファイル名: `snake_case`
+- 画面ファイル: `*_page.dart`（`*_screen.dart` は使わない）
+
+## ログ
+
+- 基本的に talker を使用する
+- `dart:developer` の `log()` も利用可
+- `print()` の使用を禁止する
+
+## コードスタイル
+
+- 不用意に static method にしない（必要な箇所のみ）
+- 関数は簡潔に保つ（目安: 20 行以内）
+- コメントはコード上明らかな部分には不要。複雑な処理や実装意図が読み取りにくい箇所にのみ書く
+- 重い処理（JSON パース等）には `compute()` で Isolate を活用する
