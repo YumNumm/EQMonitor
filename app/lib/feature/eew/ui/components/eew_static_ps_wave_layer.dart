@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:eqmonitor_api/export.dart';
-import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +13,7 @@ import 'package:maplibre/maplibre.dart';
 class EewStaticPsWaveLayer extends HookConsumerWidget {
   const EewStaticPsWaveLayer({required this.eew, super.key});
 
-  final EewItemWithRelations? eew;
+  final EewTelegramItem? eew;
 
   static const _pWaveSourceId = 'eew-static-p-wave';
   static const _sWaveSourceId = 'eew-static-s-wave';
@@ -126,7 +125,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
 
   Future<void> _updateLayers(
     StyleController styleController,
-    EewItemWithRelations? eew,
+    EewTelegramItem? eew,
     TravelTimeDepthMap travelTimeMap,
   ) async {
     if (eew == null) {
@@ -135,13 +134,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     }
 
     final hypocenter = eew.hypocenter;
-    if (hypocenter == null) {
-      await _clearLayers(styleController);
-      return;
-    }
-
-    final coords = hypocenter.coordinates;
-    if (coords.type != CoordinateType.latLng) {
+    if (hypocenter == null || !hypocenter.hasLatLng) {
       await _clearLayers(styleController);
       return;
     }
@@ -155,10 +148,10 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     }
 
     final elapsed = eew.reportTime.difference(originTime).inMilliseconds / 1000;
-    final travelTime = travelTimeMap.getTravelTime(depth.toInt(), elapsed);
+    final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
 
-    final lat = coords.latitude!.toDouble();
-    final lng = coords.longitude!.toDouble();
+    final lat = hypocenter.latitude!;
+    final lng = hypocenter.longitude!;
 
     final isWarning = eew.isWarningOrFallback;
     final lineColor = isWarning ? '#FF0000' : '#FFA500';

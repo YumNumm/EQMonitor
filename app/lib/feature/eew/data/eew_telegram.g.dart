@@ -15,7 +15,7 @@ part of 'eew_telegram.dart';
 final eewProvider = EewProvider._();
 
 final class EewProvider
-    extends $NotifierProvider<Eew, AsyncValue<List<EewItemWithRelations>>> {
+    extends $NotifierProvider<Eew, AsyncValue<List<EewTelegramItem>>> {
   EewProvider._()
     : super(
         from: null,
@@ -35,36 +35,37 @@ final class EewProvider
   Eew create() => Eew();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AsyncValue<List<EewItemWithRelations>> value) {
+  Override overrideWithValue(AsyncValue<List<EewTelegramItem>> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride:
-          $SyncValueProvider<AsyncValue<List<EewItemWithRelations>>>(value),
+      providerOverride: $SyncValueProvider<AsyncValue<List<EewTelegramItem>>>(
+        value,
+      ),
     );
   }
 }
 
-String _$eewHash() => r'e50717622616bc55537d3bd768100aa08a97fa05';
+String _$eewHash() => r'8e75023c07bb30de6a215458e1373e61c24b7b8f';
 
-abstract class _$Eew extends $Notifier<AsyncValue<List<EewItemWithRelations>>> {
-  AsyncValue<List<EewItemWithRelations>> build();
+abstract class _$Eew extends $Notifier<AsyncValue<List<EewTelegramItem>>> {
+  AsyncValue<List<EewTelegramItem>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<List<EewItemWithRelations>>,
-              AsyncValue<List<EewItemWithRelations>>
+              AsyncValue<List<EewTelegramItem>>,
+              AsyncValue<List<EewTelegramItem>>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<List<EewItemWithRelations>>,
-                AsyncValue<List<EewItemWithRelations>>
+                AsyncValue<List<EewTelegramItem>>,
+                AsyncValue<List<EewTelegramItem>>
               >,
-              AsyncValue<List<EewItemWithRelations>>,
+              AsyncValue<List<EewTelegramItem>>,
               Object?,
               Object?
             >;
@@ -78,13 +79,13 @@ final _eewRestProvider = _EewRestProvider._();
 final class _EewRestProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<EewItemWithRelations>>,
-          List<EewItemWithRelations>,
-          FutureOr<List<EewItemWithRelations>>
+          AsyncValue<List<EewTelegramItem>>,
+          List<EewTelegramItem>,
+          FutureOr<List<EewTelegramItem>>
         >
     with
-        $FutureModifier<List<EewItemWithRelations>>,
-        $FutureProvider<List<EewItemWithRelations>> {
+        $FutureModifier<List<EewTelegramItem>>,
+        $FutureProvider<List<EewTelegramItem>> {
   _EewRestProvider._()
     : super(
         from: null,
@@ -101,14 +102,14 @@ final class _EewRestProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<EewItemWithRelations>> $createElement(
+  $FutureProviderElement<List<EewTelegramItem>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<EewItemWithRelations>> create(Ref ref) {
+  FutureOr<List<EewTelegramItem>> create(Ref ref) {
     return _eewRest(ref);
   }
 }
 
-String _$_eewRestHash() => r'1bb47e7c7f121e354b3b1c9c3ae9ce69ce53a991';
+String _$_eewRestHash() => r'bd74fe0a84391aaf1690c13e2dd5f8ad63828425';

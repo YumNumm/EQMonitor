@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,7 +13,7 @@ import 'package:maplibre/maplibre.dart';
 class EewEstimatedIntensityLayer extends HookConsumerWidget {
   const EewEstimatedIntensityLayer({required this.eewRegions, super.key});
 
-  final List<EewIntensityItem> eewRegions;
+  final List<EewForecastRegionInfo> eewRegions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,13 +25,13 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
     // regionごとの最大震度を取ったもの
     final regionMaxIntensities = useMemoized(() {
       return eewRegions
-          .groupListsBy((element) => element.value.code)
+          .groupListsBy((element) => element.code)
           .map(
             (key, values) => MapEntry(
               key,
               values
                   .sortedBy(
-                    // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
+                    // TODO(eqmonitor_api): intensity は codegen バグにより常に unknown
                     (e) => 0,
                   )
                   .last,
@@ -99,11 +99,11 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
                       regionMaxIntensities
                           .where(
                             (r) =>
-                                // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
+                                // TODO(eqmonitor_api): intensity は codegen バグにより常に unknown
                                 JmaIntensity.unknown ==
                                 intensity,
                           )
-                          .map((r) => r.value.code)
+                          .map((r) => r.code)
                           .toList(),
                     ],
                   ],

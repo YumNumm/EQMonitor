@@ -1,15 +1,14 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/extension/eew_extension.dart';
-import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_alive_telegram.g.dart';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 @Riverpod(keepAlive: true)
-List<EewItemWithRelations> eewAliveNormalTelegram(Ref ref) {
+List<EewTelegramItem> eewAliveNormalTelegram(Ref ref) {
   final state = ref.watch(eewAliveTelegramProvider) ?? [];
   return state.where((e) {
     if (e.isPlum) {
@@ -23,7 +22,7 @@ List<EewItemWithRelations> eewAliveNormalTelegram(Ref ref) {
 @Riverpod(keepAlive: true)
 class EewAliveTelegram extends _$EewAliveTelegram {
   @override
-  List<EewItemWithRelations>? build() {
+  List<EewTelegramItem>? build() {
     final state = ref.watch(eewProvider);
     final value = state.value;
     final tickerTime = ref.watch(timeTickerProvider());
@@ -40,10 +39,10 @@ class EewAliveTelegram extends _$EewAliveTelegram {
 
   @override
   bool updateShouldNotify(
-    List<EewItemWithRelations>? previous,
-    List<EewItemWithRelations>? next,
+    List<EewTelegramItem>? previous,
+    List<EewTelegramItem>? next,
   ) {
-    return !const ListEquality<EewItemWithRelations>().equals(previous, next);
+    return !const ListEquality<EewTelegramItem>().equals(previous, next);
   }
 }
 
@@ -52,7 +51,7 @@ EewAliveChecker eewAliveChecker(Ref ref) => EewAliveChecker();
 
 class EewAliveChecker {
   bool checkMarkAsEventEnded({
-    required EewItemWithRelations eew,
+    required EewTelegramItem eew,
     required DateTime now,
   }) {
     final reportTime = eew.reportTime.toUtc();

@@ -4,8 +4,8 @@ import 'dart:ui';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_telegram.g.dart';
@@ -13,7 +13,7 @@ part 'eew_telegram.g.dart';
 @Riverpod(keepAlive: true)
 class Eew extends _$Eew {
   @override
-  AsyncValue<List<EewItemWithRelations>> build() {
+  AsyncValue<List<EewTelegramItem>> build() {
     final restResult = ref.watch(_eewRestProvider);
 
     ref.listen(appLifecycleProvider, (_, next) {
@@ -39,7 +39,7 @@ class Eew extends _$Eew {
     ref.invalidate(_eewRestProvider);
   }
 
-  void _upsert(EewItemWithRelations item) {
+  void _upsert(EewTelegramItem item) {
     final dataView = state.value ?? [];
     final data = [...dataView];
     final rawIndex = data.indexWhere((e) => e.eventId == item.eventId);
@@ -55,14 +55,16 @@ class Eew extends _$Eew {
     state = AsyncData(data);
   }
 
-  void upsert(EewItemWithRelations eew) {
+  void upsert(EewTelegramItem eew) {
     _upsert(eew);
   }
 }
 
 @Riverpod(keepAlive: true)
-Future<List<EewItemWithRelations>> _eewRest(Ref ref) async {
+Future<List<EewTelegramItem>> _eewRest(Ref ref) async {
   final api = ref.watch(apiClientProvider);
   final response = await api.eew.getV2EewLatest();
-  return response.data.items;
+  return response.data.items
+      .map((e) => e.toEewTelegramItem())
+      .toList();
 }

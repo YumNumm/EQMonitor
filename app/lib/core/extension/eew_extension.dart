@@ -1,9 +1,3 @@
-import 'package:eqmonitor_api/export.dart';
-
-extension EewItemWithRelationsExtension on EewItemWithRelations {
-  /// 警報かどうかを判定する
-  ///
-  /// `isWarning` が null の場合は `headline` に「強い揺れ」が含まれるかで判定
-  bool get isWarningOrFallback =>
-      isWarning ?? headline?.contains('強い揺れ') ?? false;
-}
+// `isWarningOrFallback` is now defined on `EewTelegramItem` directly.
+// This file is kept for backward compatibility but no longer provides
+// any extension. Remove it when all references are cleaned up.

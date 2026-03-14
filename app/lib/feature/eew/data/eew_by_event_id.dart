@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
-import 'package:eqmonitor_api/export.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_by_event_id.g.dart';
@@ -10,7 +10,7 @@ part 'eew_by_event_id.g.dart';
 @riverpod
 class EewsByEventId extends _$EewsByEventId {
   @override
-  Future<List<EewItemWithRelations>> build(String eventId) async {
+  Future<List<EewTelegramItem>> build(String eventId) async {
     final client = ref.watch(apiClientProvider);
     final response = await client.eew.getV2EewEventId(eventId: eventId);
 
@@ -21,7 +21,7 @@ class EewsByEventId extends _$EewsByEventId {
       }
       if (next case AsyncData(value: final value)) {
         final eews = value.where((e) => e.eventId == eventId).toList();
-        final currentEews = state.value ?? <EewItemWithRelations>[];
+        final currentEews = state.value ?? <EewTelegramItem>[];
         for (final eew in eews) {
           if (!currentEews.any((e) => e.serialNo == eew.serialNo)) {
             state = AsyncData([...currentEews, eew]);
@@ -30,6 +30,8 @@ class EewsByEventId extends _$EewsByEventId {
       }
     });
 
-    return response.data.items;
+    return response.data.items
+        .map((e) => e.toEewTelegramItem())
+        .toList();
   }
 }

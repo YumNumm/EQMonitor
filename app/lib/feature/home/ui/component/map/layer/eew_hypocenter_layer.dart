@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,7 +11,7 @@ import 'package:maplibre/maplibre.dart';
 class EewHypocenterLayer extends HookConsumerWidget {
   const EewHypocenterLayer({required this.eews, super.key});
 
-  final List<EewItemWithRelations> eews;
+  final List<EewTelegramItem> eews;
 
   static const ({String lowPrecise, String normal}) sourceId = (
     normal: 'eew-hypocenter-normal',
@@ -27,8 +27,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
 
     final showEews = eews.where((eew) {
-      final coords = eew.hypocenter?.coordinates;
-      return coords != null && coords.type == CoordinateType.latLng && !eew.isCanceled;
+      return (eew.hypocenter?.hasLatLng ?? false) && !eew.isCanceled;
     });
     final normalEews = showEews.where((eew) => !eew.isPlum).toList();
     final lowPreciseEews = showEews.where((eew) => eew.isPlum).toList();
@@ -42,7 +41,6 @@ class EewHypocenterLayer extends HookConsumerWidget {
         }
 
         unawaited(() async {
-          // 画像追加
           await (
             styleController.addImageFromAssets(
               id: 'normal-hypocenter',
@@ -138,17 +136,17 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
         unawaited(
           () async {
-            Map<String, dynamic> convert(EewItemWithRelations eew) {
-              final coords = eew.hypocenter!.coordinates;
+            Map<String, dynamic> convert(EewTelegramItem eew) {
+              final hypo = eew.hypocenter!;
               return {
                 'type': 'Feature',
                 'geometry': {
                   'type': 'Point',
-                  'coordinates': [coords.longitude, coords.latitude],
+                  'coordinates': [hypo.longitude, hypo.latitude],
                 },
                 'properties': {
-                  'magnitude': eew.hypocenter?.magnitude,
-                  'depth': eew.hypocenter?.depth,
+                  'magnitude': hypo.magnitude,
+                  'depth': hypo.depth,
                 },
               };
             }
@@ -176,8 +174,6 @@ class EewHypocenterLayer extends HookConsumerWidget {
       },
       [styleController, normalEews],
     );
-
-    // 点滅エフェクトは省略（StyleController APIに依存するため）
 
     return const SizedBox.shrink();
   }

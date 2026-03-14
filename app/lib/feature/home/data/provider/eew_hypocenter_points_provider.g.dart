@@ -57,4 +57,4 @@ final class EewHypocenterPointsProvider
 }
 
 String _$eewHypocenterPointsHash() =>
-    r'3f583a588bb68170a90b5ded73263ecd16c47e17';
+    r'1c455f708729fa9fbf95d6f49f54e20240f3d7db';
