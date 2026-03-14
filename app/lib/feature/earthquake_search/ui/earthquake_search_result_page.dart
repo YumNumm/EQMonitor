@@ -5,14 +5,13 @@ import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
-import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_result.dart';
@@ -250,10 +249,10 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
     final theme = Theme.of(context);
     final earthquake = item.earthquakePartial;
     final hypocenter = earthquake.hypocenter;
-    final localIntensity = intensityToJmaIntensity(item.localIntensity);
+    final localIntensity = item.localIntensity;
 
-    final hypoName = hypocenter?.value.name;
-    final hypoDetailName = hypocenter?.detailed?.name;
+    final hypoName = hypocenter?.name;
+    final hypoDetailName = hypocenter?.detailedName;
 
     final title = switch ((hypoName, hypoDetailName)) {
       (final String hypoName, final String hypoDetailName) =>
@@ -271,8 +270,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       _ => '',
     };
 
-    final maxIntensity =
-        intensityToJmaIntensity(earthquake.intensity?.maxIntensity);
+    final maxIntensity = earthquake.intensity?.maxIntensity;
     final maxIntensityText =
         maxIntensity != null ? '最大震度 ${maxIntensity.label}' : null;
 
@@ -322,15 +320,15 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
     );
   }
 
-  String _formatMagnitude(Magnitude? magnitude) {
+  String _formatMagnitude(EarthquakeMagnitude? magnitude) {
     if (magnitude == null) {
       return '';
     }
-    return switch (magnitude.type) {
-      MagnitudeType.normal =>
-        'M${magnitude.value?.toStringAsFixed(1) ?? '—'}',
-      MagnitudeType.unknown => 'M不明',
-      MagnitudeType.overM8 => 'M8超',
+    return switch (magnitude) {
+      EarthquakeMagnitudeValue(:final value) =>
+        'M${value.toStringAsFixed(1)}',
+      EarthquakeMagnitudeUnknown() => 'M不明',
+      EarthquakeMagnitudeOverM8() => 'M8超',
     };
   }
 }

@@ -6,9 +6,9 @@ import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
-import 'package:eqmonitor_api/models/earthquake_partial.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -61,9 +61,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     required int limit,
     required String? cursor,
   }) async {
-    final repository = ref.read(earthquakeHistoryRepositoryProvider);
+    final repository =
+        await ref.read(earthquakeHistoryRepositoryProvider.future);
     if (cursor != null) {
-      // 新APIは cursor 未対応のため初回のみ取得
       return (items: <EarthquakePartial>[], nextToken: null);
     }
 
@@ -158,7 +158,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (parameter != const EarthquakeHistoryParameter()) {
       return;
     }
-    final repository = ref.read(earthquakeHistoryRepositoryProvider);
+    final repository =
+        await ref.read(earthquakeHistoryRepositoryProvider.future);
     final result = await repository.fetchEarthquakeList(limit: 10);
     _upsertItems(result.items);
   }
@@ -183,7 +184,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
     log('refreshIfWebsocketNotConnected');
 
-    final repository = ref.read(earthquakeHistoryRepositoryProvider);
+    final repository =
+        await ref.read(earthquakeHistoryRepositoryProvider.future);
     final result = await repository.fetchEarthquakeList(limit: 10);
     _upsertItems(result.items);
   }

@@ -19,7 +19,7 @@ final class EarthquakeHistoryDetailsNotifierProvider
     extends
         $AsyncNotifierProvider<
           EarthquakeHistoryDetailsNotifier,
-          EarthquakeDetailResponse
+          EarthquakePartial
         > {
   EarthquakeHistoryDetailsNotifierProvider._({
     required EarthquakeHistoryDetailsNotifierFamily super.from,
@@ -60,15 +60,15 @@ final class EarthquakeHistoryDetailsNotifierProvider
 }
 
 String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'da7b66e40a3bf1f11f9c7ee8fa2c9dd386d58af5';
+    r'9729a91f5fbebb8bfa963705b73a6734a834d176';
 
 final class EarthquakeHistoryDetailsNotifierFamily extends $Family
     with
         $ClassFamilyOverride<
           EarthquakeHistoryDetailsNotifier,
-          AsyncValue<EarthquakeDetailResponse>,
-          EarthquakeDetailResponse,
-          FutureOr<EarthquakeDetailResponse>,
+          AsyncValue<EarthquakePartial>,
+          EarthquakePartial,
+          FutureOr<EarthquakePartial>,
           String
         > {
   EarthquakeHistoryDetailsNotifierFamily._()
@@ -88,28 +88,21 @@ final class EarthquakeHistoryDetailsNotifierFamily extends $Family
 }
 
 abstract class _$EarthquakeHistoryDetailsNotifier
-    extends $AsyncNotifier<EarthquakeDetailResponse> {
+    extends $AsyncNotifier<EarthquakePartial> {
   late final _$args = ref.$arg as String;
   String get eventId => _$args;
 
-  FutureOr<EarthquakeDetailResponse> build(String eventId);
+  FutureOr<EarthquakePartial> build(String eventId);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref
-            as $Ref<
-              AsyncValue<EarthquakeDetailResponse>,
-              EarthquakeDetailResponse
-            >;
+        this.ref as $Ref<AsyncValue<EarthquakePartial>, EarthquakePartial>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<EarthquakeDetailResponse>,
-                EarthquakeDetailResponse
-              >,
-              AsyncValue<EarthquakeDetailResponse>,
+              AnyNotifier<AsyncValue<EarthquakePartial>, EarthquakePartial>,
+              AsyncValue<EarthquakePartial>,
               Object?,
               Object?
             >;

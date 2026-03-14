@@ -18,13 +18,14 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
   Future<EarthquakeSearchNotifierState> build(
     EarthquakeSearchParameter parameter,
   ) async {
-    return _fetchInitialData(limit: 50);
+    return _fetchData(limit: 50);
   }
 
-  Future<EarthquakeSearchNotifierState> _fetchInitialData({
+  Future<EarthquakeSearchNotifierState> _fetchData({
     required int limit,
   }) async {
-    final repository = ref.read(earthquakeHistoryRepositoryProvider);
+    final repository =
+        await ref.read(earthquakeHistoryRepositoryProvider.future);
     final param = parameter;
 
     return switch (param.type) {
@@ -38,7 +39,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
               .map(
                 (e) => EarthquakeSearchResultItem.region(
                   eventId: e.eventId,
-                  region: e.region,
+                  region: e.area,
                   earthquake: e.earthquake,
                 ),
               )
@@ -56,7 +57,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
               .map(
                 (e) => EarthquakeSearchResultItem.prefecture(
                   eventId: e.eventId,
-                  prefecture: e.prefecture,
+                  prefecture: e.area,
                   earthquake: e.earthquake,
                 ),
               )
@@ -74,7 +75,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
               .map(
                 (e) => EarthquakeSearchResultItem.city(
                   eventId: e.eventId,
-                  city: e.city,
+                  city: e.area,
                   earthquake: e.earthquake,
                 ),
               )
@@ -106,7 +107,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard<EarthquakeSearchNotifierState>(
-      () => _fetchInitialData(limit: 50),
+      () => _fetchData(limit: 50),
     );
   }
 
@@ -120,90 +121,14 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
     }
 
     state = await state.guardPlus(() async {
-      final repository = ref.read(earthquakeHistoryRepositoryProvider);
-      final param = parameter;
-
-      final (items, nextToken) = await switch (param.type) {
-        EarthquakeSearchType.region => () async {
-          final result = await repository.searchByRegion(
-            code: param.code,
-            limit: 50,
-          );
-          return (
-            result.items
-                .map(
-                  (e) => EarthquakeSearchResultItem.region(
-                    eventId: e.eventId,
-                    region: e.region,
-                    earthquake: e.earthquake,
-                  ),
-                )
-                .toList(),
-            result.nextToken,
-          );
-        }(),
-        EarthquakeSearchType.prefecture => () async {
-          final result = await repository.searchByPrefecture(
-            code: param.code,
-            limit: 50,
-          );
-          return (
-            result.items
-                .map(
-                  (e) => EarthquakeSearchResultItem.prefecture(
-                    eventId: e.eventId,
-                    prefecture: e.prefecture,
-                    earthquake: e.earthquake,
-                  ),
-                )
-                .toList(),
-            result.nextToken,
-          );
-        }(),
-        EarthquakeSearchType.city => () async {
-          final result = await repository.searchByCity(
-            code: param.code,
-            limit: 50,
-          );
-          return (
-            result.items
-                .map(
-                  (e) => EarthquakeSearchResultItem.city(
-                    eventId: e.eventId,
-                    city: e.city,
-                    earthquake: e.earthquake,
-                  ),
-                )
-                .toList(),
-            result.nextToken,
-          );
-        }(),
-        EarthquakeSearchType.station => () async {
-          final result = await repository.searchByStation(
-            code: param.code,
-            limit: 50,
-          );
-          return (
-            result.items
-                .map(
-                  (e) => EarthquakeSearchResultItem.station(
-                    eventId: e.eventId,
-                    station: e.station,
-                    earthquake: e.earthquake,
-                  ),
-                )
-                .toList(),
-            result.nextToken,
-          );
-        }(),
-      };
+      final result = await _fetchData(limit: 50);
 
       final mergedItems = <EarthquakeSearchResultItem>[
         ...currentState.items,
-        ...items,
+        ...result.items,
       ].sortedBy<String>((a) => a.eventId).reversed.toList();
 
-      return (items: mergedItems, nextToken: nextToken);
+      return (items: mergedItems, nextToken: result.nextToken);
     });
   }
 }
