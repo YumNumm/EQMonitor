@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:clock/clock.dart';
-import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +13,7 @@ import 'package:maplibre/maplibre.dart';
 class EewPsWaveLayer extends HookConsumerWidget {
   const EewPsWaveLayer({required this.eews, super.key});
 
-  final List<EewItemWithRelations> eews;
+  final List<EewTelegramItem> eews;
 
   static const ({String pWave, String sWave}) sourceId = (
     pWave: 'eew-p-wave',
@@ -32,9 +31,10 @@ class EewPsWaveLayer extends HookConsumerWidget {
     final styleController = MapController.maybeOf(context)?.style;
 
     final showEews = eews.where((eew) {
-      final coords = eew.hypocenter?.coordinates;
-      return coords is CoordinateLatLng &&
-          eew.hypocenter?.depth != null &&
+      final hypo = eew.hypocenter;
+      return hypo != null &&
+          hypo.hasLatLng &&
+          hypo.depth != null &&
           eew.originTime != null &&
           !eew.isCanceled &&
           !eew.isPlum;
@@ -173,7 +173,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
   }
 
   (String, String) _calculateGeoJson(
-    List<EewItemWithRelations> eews,
+    List<EewTelegramItem> eews,
     DateTime now,
     TravelTimeDepthMap travelTimeMap,
   ) {
@@ -182,11 +182,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
 
     for (final eew in eews) {
       final hypocenter = eew.hypocenter;
-      if (hypocenter == null) {
-        continue;
-      }
-      final coords = hypocenter.coordinates;
-      if (coords is! CoordinateLatLng) {
+      if (hypocenter == null || !hypocenter.hasLatLng) {
         continue;
       }
       final depth = hypocenter.depth;
@@ -196,8 +192,8 @@ class EewPsWaveLayer extends HookConsumerWidget {
         continue;
       }
 
-      final lat = coords.latitude;
-      final lng = coords.longitude;
+      final lat = hypocenter.latitude!;
+      final lng = hypocenter.longitude!;
 
       final elapsed = now.difference(originTime).inMilliseconds / 1000;
       final travelTime = travelTimeMap.getTravelTime(depth, elapsed);

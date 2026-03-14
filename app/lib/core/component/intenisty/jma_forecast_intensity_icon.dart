@@ -1,6 +1,6 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
     this.size = 50,
   });
 
-  final JmaForecastIntensity intensity;
+  final JmaIntensity intensity;
   final IntensityIconType type;
   final double size;
   final String? customText;
@@ -26,18 +26,10 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel =
         (colorModel ?? ref.watch(intensityColorProvider))!;
-    final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
+    final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
-    // 震度の整数部分
-    final intensityMainText = intensity.type
-        .replaceAll('-', '')
-        .replaceAll('+', '');
-    // 震度の弱・強の表記
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
-        ? '強'
-        : '';
+    final intensityMainText = intensity.mainText;
+    final intensitySubText = intensity.suffix;
 
     return SizedBox(
       height: size,
@@ -65,7 +57,7 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
                       fontFamily: FontFamily.notoSansMono,
                     ),
                   )
-                else if (intensity == JmaForecastIntensity.unknown)
+                else if (intensity == JmaIntensity.unknown)
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
@@ -117,7 +109,7 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
     this.showSuffix = true,
   });
 
-  final JmaForecastIntensity intensity;
+  final JmaIntensity intensity;
   final IntensityIconType type;
   final double size;
   final String? customText;
@@ -126,23 +118,15 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
+    final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
-    // 震度の整数部分
-    final intensityMainText = intensity.type
-        .replaceAll('-', '')
-        .replaceAll('+', '');
-    // 震度の弱・強の表記
-    final suffix = intensity.type.contains('-')
+    final intensityMainText = intensity.mainText;
+    final suffix = intensity.label.contains('-')
         ? '-'
-        : intensity.type.contains('+')
+        : intensity.label.contains('+')
         ? '+'
         : '';
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
-        ? '強'
-        : '';
+    final intensitySubText = intensity.suffix;
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
       IntensityIconType.small => SizedBox(

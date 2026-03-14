@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityRegionInfo {
 
- String get code; String get name;@JsonKey(includeIfNull: true) IntensityRegionInfoIntensity? get intensity;@JsonKey(includeIfNull: true, name: 'lpgm_intensity') IntensityRegionInfoLpgmIntensity? get lpgmIntensity;
+ String get code; String get name;@JsonKey(includeIfNull: true) JmaIntensity? get intensity;@JsonKey(includeIfNull: true, name: 'lpgm_intensity') JmaLpgmIntensity? get lpgmIntensity;
 /// Create a copy of IntensityRegionInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $IntensityRegionInfoCopyWith<$Res>  {
   factory $IntensityRegionInfoCopyWith(IntensityRegionInfo value, $Res Function(IntensityRegionInfo) _then) = _$IntensityRegionInfoCopyWithImpl;
 @useResult
 $Res call({
- String code, String name,@JsonKey(includeIfNull: true) IntensityRegionInfoIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') IntensityRegionInfoLpgmIntensity? lpgmIntensity
+ String code, String name,@JsonKey(includeIfNull: true) JmaIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') JmaLpgmIntensity? lpgmIntensity
 });
 
 
@@ -70,8 +70,8 @@ class _$IntensityRegionInfoCopyWithImpl<$Res>
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfoIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfoLpgmIntensity?,
+as JmaIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  IntensityRegionInfoIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  IntensityRegionInfoLpgmIntensity? lpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  JmaIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  JmaLpgmIntensity? lpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityRegionInfo() when $default != null:
 return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity);case _:
@@ -177,7 +177,7 @@ return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  IntensityRegionInfoIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  IntensityRegionInfoLpgmIntensity? lpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  JmaIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  JmaLpgmIntensity? lpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityRegionInfo():
 return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity);case _:
@@ -197,7 +197,7 @@ return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(includeIfNull: true)  IntensityRegionInfoIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  IntensityRegionInfoLpgmIntensity? lpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(includeIfNull: true)  JmaIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  JmaLpgmIntensity? lpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityRegionInfo() when $default != null:
 return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity);case _:
@@ -217,8 +217,8 @@ class _IntensityRegionInfo implements IntensityRegionInfo {
 
 @override final  String code;
 @override final  String name;
-@override@JsonKey(includeIfNull: true) final  IntensityRegionInfoIntensity? intensity;
-@override@JsonKey(includeIfNull: true, name: 'lpgm_intensity') final  IntensityRegionInfoLpgmIntensity? lpgmIntensity;
+@override@JsonKey(includeIfNull: true) final  JmaIntensity? intensity;
+@override@JsonKey(includeIfNull: true, name: 'lpgm_intensity') final  JmaLpgmIntensity? lpgmIntensity;
 
 /// Create a copy of IntensityRegionInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$IntensityRegionInfoCopyWith<$Res> implements $IntensityRe
   factory _$IntensityRegionInfoCopyWith(_IntensityRegionInfo value, $Res Function(_IntensityRegionInfo) _then) = __$IntensityRegionInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name,@JsonKey(includeIfNull: true) IntensityRegionInfoIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') IntensityRegionInfoLpgmIntensity? lpgmIntensity
+ String code, String name,@JsonKey(includeIfNull: true) JmaIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') JmaLpgmIntensity? lpgmIntensity
 });
 
 
@@ -275,8 +275,8 @@ class __$IntensityRegionInfoCopyWithImpl<$Res>
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfoIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfoLpgmIntensity?,
+as JmaIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 

@@ -1,10 +1,10 @@
 // ignore_for_file: provider_dependencies
 import 'dart:math' as math;
 
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,10 +39,9 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   List<CalculationPoint>? _calculationPoints;
 
   List<EstimatedIntensityPoint> calc(
-    List<EewItemWithRelations> eews,
+    List<EewTelegramItem> eews,
     EarthquakeParameter parameter,
   ) {
-    // 計算前にPointを用意
     _cachedPoints ??= _generateCachedPoints(parameter);
     _calculationPoints ??= _generateCalculationPoints(_cachedPoints!);
 
@@ -53,8 +52,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
       if (e.isCanceled) {
         return false;
       }
-      final coords = e.hypocenter?.coordinates;
-      return coords is CoordinateLatLng;
+      return e.hypocenter?.hasLatLng ?? false;
     });
     if (targetEews.isEmpty) {
       return [];
@@ -62,7 +60,6 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
     for (final eew in targetEews) {
       final hypocenter = eew.hypocenter!;
-      final coords = hypocenter.coordinates as CoordinateLatLng;
       final magnitude = hypocenter.magnitude;
       final depth = hypocenter.depth;
       if (magnitude == null || depth == null) {
@@ -73,7 +70,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
             points: _calculationPoints!.toList(),
             jmaMagnitude: magnitude,
             depth: depth,
-            hypocenter: (lat: coords.latitude, lon: coords.longitude),
+            hypocenter: (lat: hypocenter.latitude!, lon: hypocenter.longitude!),
           )
           .toList();
       results.add(result);
@@ -83,14 +80,12 @@ class EstimatedIntensity extends _$EstimatedIntensity {
       return [];
     }
 
-    // resultsのIterableそれぞれは同じ長さであることを確認
     assert(
       results.every((e) => e.length == _calculationPoints!.length),
       'results length must be same as calculationPoints length',
     );
 
     final result = <EstimatedIntensityPoint>[];
-    // それぞれについて最大の値を取る
     for (var index = 0; index < results.first.length; index++) {
       final values = results.map((e) => e[index]);
       final max = values.reduce(math.max);
@@ -107,7 +102,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   }
 
   Future<Iterable<EstimatedIntensityPoint>> calcInIsolate(
-    List<EewItemWithRelations> eews,
+    List<EewTelegramItem> eews,
     EarthquakeParameter parameter,
   ) async =>
       // TODO(YumNumm): 並列計算

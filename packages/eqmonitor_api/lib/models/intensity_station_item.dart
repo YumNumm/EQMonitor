@@ -5,8 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'code_name.dart';
-import 'intensity_item_max_intensity.dart';
-import 'intensity_item_max_lpgm_intensity.dart';
+import 'jma_intensity.dart';
+import 'jma_lpgm_intensity.dart';
 import 'pre_periods.dart';
 
 part 'intensity_station_item.freezed.dart';
@@ -22,12 +22,11 @@ abstract class IntensityStationItem with _$IntensityStationItem {
 
     /// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
     required List<PrePeriods> prePeriods,
-    @JsonKey(includeIfNull: false, name: 'max_intensity')
-    IntensityItemMaxIntensity? maxIntensity,
-    @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')
-    IntensityItemMaxLpgmIntensity? maxLpgmIntensity,
+    @JsonKey(includeIfNull: false,name: 'max_intensity')
+    JmaIntensity? maxIntensity,
+    @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
+    JmaLpgmIntensity? maxLpgmIntensity,
   }) = _IntensityStationItem;
-
-  factory IntensityStationItem.fromJson(Map<String, Object?> json) =>
-      _$IntensityStationItemFromJson(json);
+  
+  factory IntensityStationItem.fromJson(Map<String, Object?> json) => _$IntensityStationItemFromJson(json);
 }

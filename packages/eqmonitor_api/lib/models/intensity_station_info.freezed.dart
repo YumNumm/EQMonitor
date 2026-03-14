@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityStationInfo {
 
- String get code; String get name;@JsonKey(includeIfNull: true) IntensityStationInfoIntensity? get intensity;@JsonKey(includeIfNull: true, name: 'lpgm_intensity') IntensityStationInfoLpgmIntensity? get lpgmIntensity;@JsonKey(includeIfNull: true) num? get sva;@JsonKey(includeIfNull: true, name: 'pre_periods') List<PrePeriods2>? get prePeriods;
+ String get code; String get name;@JsonKey(includeIfNull: true) JmaIntensity? get intensity;@JsonKey(includeIfNull: true, name: 'lpgm_intensity') JmaLpgmIntensity? get lpgmIntensity;@JsonKey(includeIfNull: true) num? get sva;@JsonKey(includeIfNull: true, name: 'pre_periods') List<PrePeriods2>? get prePeriods;
 /// Create a copy of IntensityStationInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $IntensityStationInfoCopyWith<$Res>  {
   factory $IntensityStationInfoCopyWith(IntensityStationInfo value, $Res Function(IntensityStationInfo) _then) = _$IntensityStationInfoCopyWithImpl;
 @useResult
 $Res call({
- String code, String name,@JsonKey(includeIfNull: true) IntensityStationInfoIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') IntensityStationInfoLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: true) num? sva,@JsonKey(includeIfNull: true, name: 'pre_periods') List<PrePeriods2>? prePeriods
+ String code, String name,@JsonKey(includeIfNull: true) JmaIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') JmaLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: true) num? sva,@JsonKey(includeIfNull: true, name: 'pre_periods') List<PrePeriods2>? prePeriods
 });
 
 
@@ -70,8 +70,8 @@ class _$IntensityStationInfoCopyWithImpl<$Res>
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as IntensityStationInfoIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityStationInfoLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num?,prePeriods: freezed == prePeriods ? _self.prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods2>?,
   ));
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  IntensityStationInfoIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  IntensityStationInfoLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: true)  num? sva, @JsonKey(includeIfNull: true, name: 'pre_periods')  List<PrePeriods2>? prePeriods)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  JmaIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: true)  num? sva, @JsonKey(includeIfNull: true, name: 'pre_periods')  List<PrePeriods2>? prePeriods)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityStationInfo() when $default != null:
 return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity,_that.sva,_that.prePeriods);case _:
@@ -179,7 +179,7 @@ return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  IntensityStationInfoIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  IntensityStationInfoLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: true)  num? sva, @JsonKey(includeIfNull: true, name: 'pre_periods')  List<PrePeriods2>? prePeriods)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JsonKey(includeIfNull: true)  JmaIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: true)  num? sva, @JsonKey(includeIfNull: true, name: 'pre_periods')  List<PrePeriods2>? prePeriods)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationInfo():
 return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity,_that.sva,_that.prePeriods);case _:
@@ -199,7 +199,7 @@ return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(includeIfNull: true)  IntensityStationInfoIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  IntensityStationInfoLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: true)  num? sva, @JsonKey(includeIfNull: true, name: 'pre_periods')  List<PrePeriods2>? prePeriods)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JsonKey(includeIfNull: true)  JmaIntensity? intensity, @JsonKey(includeIfNull: true, name: 'lpgm_intensity')  JmaLpgmIntensity? lpgmIntensity, @JsonKey(includeIfNull: true)  num? sva, @JsonKey(includeIfNull: true, name: 'pre_periods')  List<PrePeriods2>? prePeriods)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationInfo() when $default != null:
 return $default(_that.code,_that.name,_that.intensity,_that.lpgmIntensity,_that.sva,_that.prePeriods);case _:
@@ -219,8 +219,8 @@ class _IntensityStationInfo implements IntensityStationInfo {
 
 @override final  String code;
 @override final  String name;
-@override@JsonKey(includeIfNull: true) final  IntensityStationInfoIntensity? intensity;
-@override@JsonKey(includeIfNull: true, name: 'lpgm_intensity') final  IntensityStationInfoLpgmIntensity? lpgmIntensity;
+@override@JsonKey(includeIfNull: true) final  JmaIntensity? intensity;
+@override@JsonKey(includeIfNull: true, name: 'lpgm_intensity') final  JmaLpgmIntensity? lpgmIntensity;
 @override@JsonKey(includeIfNull: true) final  num? sva;
  final  List<PrePeriods2>? _prePeriods;
 @override@JsonKey(includeIfNull: true, name: 'pre_periods') List<PrePeriods2>? get prePeriods {
@@ -265,7 +265,7 @@ abstract mixin class _$IntensityStationInfoCopyWith<$Res> implements $IntensityS
   factory _$IntensityStationInfoCopyWith(_IntensityStationInfo value, $Res Function(_IntensityStationInfo) _then) = __$IntensityStationInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name,@JsonKey(includeIfNull: true) IntensityStationInfoIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') IntensityStationInfoLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: true) num? sva,@JsonKey(includeIfNull: true, name: 'pre_periods') List<PrePeriods2>? prePeriods
+ String code, String name,@JsonKey(includeIfNull: true) JmaIntensity? intensity,@JsonKey(includeIfNull: true, name: 'lpgm_intensity') JmaLpgmIntensity? lpgmIntensity,@JsonKey(includeIfNull: true) num? sva,@JsonKey(includeIfNull: true, name: 'pre_periods') List<PrePeriods2>? prePeriods
 });
 
 
@@ -287,8 +287,8 @@ class __$IntensityStationInfoCopyWithImpl<$Res>
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as IntensityStationInfoIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityStationInfoLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num?,prePeriods: freezed == prePeriods ? _self._prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods2>?,
   ));

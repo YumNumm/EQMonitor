@@ -13,12 +13,14 @@ part 'web_socket_api_client.g.dart';
 abstract class WebSocketApiClient {
   factory WebSocketApiClient(Dio dio, {String? baseUrl}) = _WebSocketApiClient;
 
-  /// WebSocket接続用のチケットを発行
+  /// WebSocket接続用のチケットを発行（認証必須）
   @GET(WebSocketApiClientUrls.getV2WebsocketTicket)
   Future<HttpResponse<WebsocketTicketResponse>> getV2WebsocketTicket();
 }
 
+
 abstract class WebSocketApiClientUrls {
-  /// /v2/websocket/ticket
-  static const getV2WebsocketTicket = "/v2/websocket/ticket";
+	/// /v2/websocket/ticket
+	static const getV2WebsocketTicket = "/v2/websocket/ticket";
 }
+

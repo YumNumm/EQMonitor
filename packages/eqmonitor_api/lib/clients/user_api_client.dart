@@ -5,6 +5,8 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../models/session_response.dart';
+import '../models/user_device_response.dart';
 import '../models/user_response.dart';
 
 part 'user_api_client.g.dart';
@@ -13,21 +15,46 @@ part 'user_api_client.g.dart';
 abstract class UserApiClient {
   factory UserApiClient(Dio dio, {String? baseUrl}) = _UserApiClient;
 
-  /// ユーザーを作成
-  @POST(UserApiClientUrls.postV2User)
-  Future<HttpResponse<UserResponse>> postV2User();
+  /// 自分のユーザー情報を取得
+  @GET(UserApiClientUrls.getV2UserMe)
+  Future<HttpResponse<UserResponse>> getV2UserMe();
 
-  /// ユーザー情報を取得
-  @GET(UserApiClientUrls.getV2UserUserId)
-  Future<HttpResponse<UserResponse>> getV2UserUserId({
-    @Path('userId') required String userId,
+  /// プロフィールを更新（name, image）
+  @PATCH(UserApiClientUrls.patchV2UserMe)
+  Future<HttpResponse<UserResponse>> patchV2UserMe();
+
+  /// アカウントを削除
+  @DELETE(UserApiClientUrls.deleteV2UserMe)
+  Future<HttpResponse<void>> deleteV2UserMe();
+
+  /// 自分のデバイス一覧を取得
+  @GET(UserApiClientUrls.getV2UserMeDevices)
+  Future<HttpResponse<List<UserDeviceResponse>>> getV2UserMeDevices();
+
+  /// アクティブセッション一覧を取得
+  @GET(UserApiClientUrls.getV2UserMeSessions)
+  Future<HttpResponse<List<SessionResponse>>> getV2UserMeSessions();
+
+  /// セッションを無効化
+  @DELETE(UserApiClientUrls.deleteV2UserMeSessionsToken)
+  Future<HttpResponse<void>> deleteV2UserMeSessionsToken({
+    @Path('token') required String token,
   });
 }
 
-abstract class UserApiClientUrls {
-  /// /v2/user
-  static const postV2User = "/v2/user";
 
-  /// /v2/user/{userId}
-  static const getV2UserUserId = "/v2/user/{userId}";
+abstract class UserApiClientUrls {
+	/// /v2/user/me
+	static const getV2UserMe = "/v2/user/me";
+	/// /v2/user/me
+	static const patchV2UserMe = "/v2/user/me";
+	/// /v2/user/me
+	static const deleteV2UserMe = "/v2/user/me";
+	/// /v2/user/me/devices
+	static const getV2UserMeDevices = "/v2/user/me/devices";
+	/// /v2/user/me/sessions
+	static const getV2UserMeSessions = "/v2/user/me/sessions";
+	/// /v2/user/me/sessions/{token}
+	static const deleteV2UserMeSessionsToken = "/v2/user/me/sessions/{token}";
 }
+

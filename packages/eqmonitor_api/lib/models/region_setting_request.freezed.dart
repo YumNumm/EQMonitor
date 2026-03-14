@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegionSettingRequest {
 
-@JsonKey(name: 'region_id') num get regionId;@JsonKey(name: 'is_current_location') bool get isCurrentLocation;@JsonKey(name: 'min_jma_intensity') RegionSettingRequestMinJmaIntensity get minJmaIntensity;@JsonKey(includeIfNull: false, name: 'region_name') String? get regionName;
+@JsonKey(name: 'region_id') num get regionId;@JsonKey(name: 'is_current_location') bool get isCurrentLocation;@JsonKey(name: 'min_jma_intensity') JmaIntensity get minJmaIntensity;@JsonKey(includeIfNull: false, name: 'region_name') String? get regionName;
 /// Create a copy of RegionSettingRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RegionSettingRequestCopyWith<$Res>  {
   factory $RegionSettingRequestCopyWith(RegionSettingRequest value, $Res Function(RegionSettingRequest) _then) = _$RegionSettingRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') RegionSettingRequestMinJmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName
+@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') JmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName
 });
 
 
@@ -70,7 +70,7 @@ class _$RegionSettingRequestCopyWithImpl<$Res>
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
 as num,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-as RegionSettingRequestMinJmaIntensity,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  RegionSettingRequestMinJmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegionSettingRequest() when $default != null:
 return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName);case _:
@@ -177,7 +177,7 @@ return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  RegionSettingRequestMinJmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)  $default,) {final _that = this;
 switch (_that) {
 case _RegionSettingRequest():
 return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName);case _:
@@ -197,7 +197,7 @@ return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  RegionSettingRequestMinJmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)?  $default,) {final _that = this;
 switch (_that) {
 case _RegionSettingRequest() when $default != null:
 return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName);case _:
@@ -217,7 +217,7 @@ class _RegionSettingRequest implements RegionSettingRequest {
 
 @override@JsonKey(name: 'region_id') final  num regionId;
 @override@JsonKey(name: 'is_current_location') final  bool isCurrentLocation;
-@override@JsonKey(name: 'min_jma_intensity') final  RegionSettingRequestMinJmaIntensity minJmaIntensity;
+@override@JsonKey(name: 'min_jma_intensity') final  JmaIntensity minJmaIntensity;
 @override@JsonKey(includeIfNull: false, name: 'region_name') final  String? regionName;
 
 /// Create a copy of RegionSettingRequest
@@ -253,7 +253,7 @@ abstract mixin class _$RegionSettingRequestCopyWith<$Res> implements $RegionSett
   factory _$RegionSettingRequestCopyWith(_RegionSettingRequest value, $Res Function(_RegionSettingRequest) _then) = __$RegionSettingRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') RegionSettingRequestMinJmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName
+@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') JmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName
 });
 
 
@@ -275,7 +275,7 @@ class __$RegionSettingRequestCopyWithImpl<$Res>
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
 as num,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-as RegionSettingRequestMinJmaIntensity,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

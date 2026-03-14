@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// 震源の深さの種別
 @JsonEnum()
 enum DepthType {
   @JsonValue('SHALLOW')
@@ -18,8 +19,14 @@ enum DepthType {
   const DepthType(this.json);
 
   final dynamic json;
-
-  dynamic toJson() => json;
+  dynamic toJson() {
+    final value = json;
+    if (value == null) {
+      throw StateError('Cannot convert enum value with null JSON representation to dynamic. '
+          'This usually happens for \$unknown or @JsonValue(null) entries.');
+    }
+    return value as dynamic;
+  }
 
   @override
   String toString() => json?.toString() ?? super.toString();

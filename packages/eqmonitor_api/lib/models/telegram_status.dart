@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// 情報の運用状態
 @JsonEnum()
 enum TelegramStatus {
   @JsonValue('NORMAL')
@@ -16,8 +17,14 @@ enum TelegramStatus {
   const TelegramStatus(this.json);
 
   final dynamic json;
-
-  dynamic toJson() => json;
+  dynamic toJson() {
+    final value = json;
+    if (value == null) {
+      throw StateError('Cannot convert enum value with null JSON representation to dynamic. '
+          'This usually happens for \$unknown or @JsonValue(null) entries.');
+    }
+    return value as dynamic;
+  }
 
   @override
   String toString() => json?.toString() ?? super.toString();

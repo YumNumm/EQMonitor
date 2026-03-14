@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'region_setting_request_min_jma_intensity.dart';
+import 'jma_intensity.dart';
 
 part 'region_setting_request.freezed.dart';
 part 'region_setting_request.g.dart';
@@ -12,13 +12,15 @@ part 'region_setting_request.g.dart';
 @Freezed()
 abstract class RegionSettingRequest with _$RegionSettingRequest {
   const factory RegionSettingRequest({
-    @JsonKey(name: 'region_id') required num regionId,
-    @JsonKey(name: 'is_current_location') required bool isCurrentLocation,
+    @JsonKey(name: 'region_id')
+    required num regionId,
+    @JsonKey(name: 'is_current_location')
+    required bool isCurrentLocation,
     @JsonKey(name: 'min_jma_intensity')
-    required RegionSettingRequestMinJmaIntensity minJmaIntensity,
-    @JsonKey(includeIfNull: false, name: 'region_name') String? regionName,
+    required JmaIntensity minJmaIntensity,
+    @JsonKey(includeIfNull: false,name: 'region_name')
+    String? regionName,
   }) = _RegionSettingRequest;
-
-  factory RegionSettingRequest.fromJson(Map<String, Object?> json) =>
-      _$RegionSettingRequestFromJson(json);
+  
+  factory RegionSettingRequest.fromJson(Map<String, Object?> json) => _$RegionSettingRequestFromJson(json);
 }
