@@ -3,11 +3,9 @@ import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
-import 'package:eqmonitor_api/export.dart' as eqmonitor_api;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,26 +14,19 @@ import 'package:sheet/route.dart';
 class PrefectureIntensityWidget extends HookConsumerWidget {
   const PrefectureIntensityWidget({required this.item, super.key});
 
-  final eqmonitor_api.Earthquake item;
+  final EarthquakePartial item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final intensity = item.intensity;
-    final jmaParameter = ref.watch(jmaParameterProvider).value;
 
     if (intensity == null) {
       return const SizedBox.shrink();
     }
 
-    // EarthquakeParameterがロードされていればツリー構造に変換
-    final intensityTree = jmaParameter != null
-        ? convertToIntensityTree(
-            intensity: intensity,
-            parameter: jmaParameter.earthquake,
-          )
-        : null;
+    final intensityTree = intensity.intensityTree;
 
     return BorderedContainer(
       elevation: 1,
@@ -43,33 +34,32 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
       child: Column(
         children: [
           const SheetHeader(title: '各地の震度'),
-          if (intensityTree != null)
-            ...intensityTree.entries.map((entry) {
-              final intensity = entry.key;
-              return ListTile(
-                visualDensity: VisualDensity.compact,
-                titleAlignment: ListTileTitleAlignment.titleHeight,
-                leading: IntensityValueIcon(
-                  intensity: intensity,
-                  type: IntensityIconType.filled,
-                  size: 40,
-                ),
-                title: Text(
-                  '震度${intensity.label}',
-                  style: textTheme.titleMedium,
-                ),
-                subtitle: Text(
-                  entry.value.map((e) => e.region.name).join(', '),
-                  style: const TextStyle(fontFamily: FontFamily.notoSansJP),
-                ),
-                onTap: () async => _RegionModalBottomSheet.show(
-                  context: context,
-                  intensity: intensity,
-                  regions: entry.value,
-                ),
-                trailing: const Icon(Icons.chevron_right),
-              );
-            }),
+          ...intensityTree.entries.map((entry) {
+            final intensity = entry.key;
+            return ListTile(
+              visualDensity: VisualDensity.compact,
+              titleAlignment: ListTileTitleAlignment.titleHeight,
+              leading: IntensityValueIcon(
+                intensity: intensity,
+                type: IntensityIconType.filled,
+                size: 40,
+              ),
+              title: Text(
+                '震度${intensity.label}',
+                style: textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                entry.value.map((e) => e.region.name).join(', '),
+                style: const TextStyle(fontFamily: FontFamily.notoSansJP),
+              ),
+              onTap: () async => _RegionModalBottomSheet.show(
+                context: context,
+                intensity: intensity,
+                regions: entry.value,
+              ),
+              trailing: const Icon(Icons.chevron_right),
+            );
+          }),
         ],
       ),
     );

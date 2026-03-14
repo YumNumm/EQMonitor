@@ -18,11 +18,13 @@ final earthquakeHistoryRepositoryProvider =
 final class EarthquakeHistoryRepositoryProvider
     extends
         $FunctionalProvider<
+          AsyncValue<EarthquakeHistoryRepository>,
           EarthquakeHistoryRepository,
-          EarthquakeHistoryRepository,
-          EarthquakeHistoryRepository
+          FutureOr<EarthquakeHistoryRepository>
         >
-    with $Provider<EarthquakeHistoryRepository> {
+    with
+        $FutureModifier<EarthquakeHistoryRepository>,
+        $FutureProvider<EarthquakeHistoryRepository> {
   EarthquakeHistoryRepositoryProvider._()
     : super(
         from: null,
@@ -39,23 +41,15 @@ final class EarthquakeHistoryRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<EarthquakeHistoryRepository> $createElement(
+  $FutureProviderElement<EarthquakeHistoryRepository> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  EarthquakeHistoryRepository create(Ref ref) {
+  FutureOr<EarthquakeHistoryRepository> create(Ref ref) {
     return earthquakeHistoryRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(EarthquakeHistoryRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<EarthquakeHistoryRepository>(value),
-    );
   }
 }
 
 String _$earthquakeHistoryRepositoryHash() =>
-    r'c9b7ff5f15475ddb3ffe29bf95bc86e2049802ae';
+    r'b6ced7229958e8e366e4ddb03c0e8128e8dc6f8a';

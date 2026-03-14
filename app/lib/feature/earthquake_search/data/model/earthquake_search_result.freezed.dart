@@ -166,7 +166,7 @@ return station(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String eventId,  IntensityRegionInfo region,  EarthquakePartial earthquake)?  region,TResult Function( String eventId,  IntensityRegionInfo prefecture,  EarthquakePartial earthquake)?  prefecture,TResult Function( String eventId,  IntensityRegionInfo city,  EarthquakePartial earthquake)?  city,TResult Function( String eventId,  IntensityStationInfo station,  EarthquakePartial earthquake)?  station,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String eventId,  IntensityAreaInfo region,  EarthquakePartial earthquake)?  region,TResult Function( String eventId,  IntensityAreaInfo prefecture,  EarthquakePartial earthquake)?  prefecture,TResult Function( String eventId,  IntensityAreaInfo city,  EarthquakePartial earthquake)?  city,TResult Function( String eventId,  StationSearchInfo station,  EarthquakePartial earthquake)?  station,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case EarthquakeSearchResultItemRegion() when region != null:
 return region(_that.eventId,_that.region,_that.earthquake);case EarthquakeSearchResultItemPrefecture() when prefecture != null:
@@ -190,7 +190,7 @@ return station(_that.eventId,_that.station,_that.earthquake);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String eventId,  IntensityRegionInfo region,  EarthquakePartial earthquake)  region,required TResult Function( String eventId,  IntensityRegionInfo prefecture,  EarthquakePartial earthquake)  prefecture,required TResult Function( String eventId,  IntensityRegionInfo city,  EarthquakePartial earthquake)  city,required TResult Function( String eventId,  IntensityStationInfo station,  EarthquakePartial earthquake)  station,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String eventId,  IntensityAreaInfo region,  EarthquakePartial earthquake)  region,required TResult Function( String eventId,  IntensityAreaInfo prefecture,  EarthquakePartial earthquake)  prefecture,required TResult Function( String eventId,  IntensityAreaInfo city,  EarthquakePartial earthquake)  city,required TResult Function( String eventId,  StationSearchInfo station,  EarthquakePartial earthquake)  station,}) {final _that = this;
 switch (_that) {
 case EarthquakeSearchResultItemRegion():
 return region(_that.eventId,_that.region,_that.earthquake);case EarthquakeSearchResultItemPrefecture():
@@ -210,7 +210,7 @@ return station(_that.eventId,_that.station,_that.earthquake);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String eventId,  IntensityRegionInfo region,  EarthquakePartial earthquake)?  region,TResult? Function( String eventId,  IntensityRegionInfo prefecture,  EarthquakePartial earthquake)?  prefecture,TResult? Function( String eventId,  IntensityRegionInfo city,  EarthquakePartial earthquake)?  city,TResult? Function( String eventId,  IntensityStationInfo station,  EarthquakePartial earthquake)?  station,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String eventId,  IntensityAreaInfo region,  EarthquakePartial earthquake)?  region,TResult? Function( String eventId,  IntensityAreaInfo prefecture,  EarthquakePartial earthquake)?  prefecture,TResult? Function( String eventId,  IntensityAreaInfo city,  EarthquakePartial earthquake)?  city,TResult? Function( String eventId,  StationSearchInfo station,  EarthquakePartial earthquake)?  station,}) {final _that = this;
 switch (_that) {
 case EarthquakeSearchResultItemRegion() when region != null:
 return region(_that.eventId,_that.region,_that.earthquake);case EarthquakeSearchResultItemPrefecture() when prefecture != null:
@@ -232,7 +232,7 @@ class EarthquakeSearchResultItemRegion implements EarthquakeSearchResultItem {
   
 
 @override final  String eventId;
- final  IntensityRegionInfo region;
+ final  IntensityAreaInfo region;
 @override final  EarthquakePartial earthquake;
 
 /// Create a copy of EarthquakeSearchResultItem
@@ -265,11 +265,11 @@ abstract mixin class $EarthquakeSearchResultItemRegionCopyWith<$Res> implements 
   factory $EarthquakeSearchResultItemRegionCopyWith(EarthquakeSearchResultItemRegion value, $Res Function(EarthquakeSearchResultItemRegion) _then) = _$EarthquakeSearchResultItemRegionCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, IntensityRegionInfo region, EarthquakePartial earthquake
+ String eventId, IntensityAreaInfo region, EarthquakePartial earthquake
 });
 
 
-$IntensityRegionInfoCopyWith<$Res> get region;@override $EarthquakePartialCopyWith<$Res> get earthquake;
+$IntensityAreaInfoCopyWith<$Res> get region;@override $EarthquakePartialCopyWith<$Res> get earthquake;
 
 }
 /// @nodoc
@@ -286,7 +286,7 @@ class _$EarthquakeSearchResultItemRegionCopyWithImpl<$Res>
   return _then(EarthquakeSearchResultItemRegion(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+as IntensityAreaInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakePartial,
   ));
 }
@@ -295,9 +295,9 @@ as EarthquakePartial,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityRegionInfoCopyWith<$Res> get region {
+$IntensityAreaInfoCopyWith<$Res> get region {
   
-  return $IntensityRegionInfoCopyWith<$Res>(_self.region, (value) {
+  return $IntensityAreaInfoCopyWith<$Res>(_self.region, (value) {
     return _then(_self.copyWith(region: value));
   });
 }/// Create a copy of EarthquakeSearchResultItem
@@ -320,7 +320,7 @@ class EarthquakeSearchResultItemPrefecture implements EarthquakeSearchResultItem
   
 
 @override final  String eventId;
- final  IntensityRegionInfo prefecture;
+ final  IntensityAreaInfo prefecture;
 @override final  EarthquakePartial earthquake;
 
 /// Create a copy of EarthquakeSearchResultItem
@@ -353,11 +353,11 @@ abstract mixin class $EarthquakeSearchResultItemPrefectureCopyWith<$Res> impleme
   factory $EarthquakeSearchResultItemPrefectureCopyWith(EarthquakeSearchResultItemPrefecture value, $Res Function(EarthquakeSearchResultItemPrefecture) _then) = _$EarthquakeSearchResultItemPrefectureCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, IntensityRegionInfo prefecture, EarthquakePartial earthquake
+ String eventId, IntensityAreaInfo prefecture, EarthquakePartial earthquake
 });
 
 
-$IntensityRegionInfoCopyWith<$Res> get prefecture;@override $EarthquakePartialCopyWith<$Res> get earthquake;
+$IntensityAreaInfoCopyWith<$Res> get prefecture;@override $EarthquakePartialCopyWith<$Res> get earthquake;
 
 }
 /// @nodoc
@@ -374,7 +374,7 @@ class _$EarthquakeSearchResultItemPrefectureCopyWithImpl<$Res>
   return _then(EarthquakeSearchResultItemPrefecture(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+as IntensityAreaInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakePartial,
   ));
 }
@@ -383,9 +383,9 @@ as EarthquakePartial,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityRegionInfoCopyWith<$Res> get prefecture {
+$IntensityAreaInfoCopyWith<$Res> get prefecture {
   
-  return $IntensityRegionInfoCopyWith<$Res>(_self.prefecture, (value) {
+  return $IntensityAreaInfoCopyWith<$Res>(_self.prefecture, (value) {
     return _then(_self.copyWith(prefecture: value));
   });
 }/// Create a copy of EarthquakeSearchResultItem
@@ -408,7 +408,7 @@ class EarthquakeSearchResultItemCity implements EarthquakeSearchResultItem {
   
 
 @override final  String eventId;
- final  IntensityRegionInfo city;
+ final  IntensityAreaInfo city;
 @override final  EarthquakePartial earthquake;
 
 /// Create a copy of EarthquakeSearchResultItem
@@ -441,11 +441,11 @@ abstract mixin class $EarthquakeSearchResultItemCityCopyWith<$Res> implements $E
   factory $EarthquakeSearchResultItemCityCopyWith(EarthquakeSearchResultItemCity value, $Res Function(EarthquakeSearchResultItemCity) _then) = _$EarthquakeSearchResultItemCityCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, IntensityRegionInfo city, EarthquakePartial earthquake
+ String eventId, IntensityAreaInfo city, EarthquakePartial earthquake
 });
 
 
-$IntensityRegionInfoCopyWith<$Res> get city;@override $EarthquakePartialCopyWith<$Res> get earthquake;
+$IntensityAreaInfoCopyWith<$Res> get city;@override $EarthquakePartialCopyWith<$Res> get earthquake;
 
 }
 /// @nodoc
@@ -462,7 +462,7 @@ class _$EarthquakeSearchResultItemCityCopyWithImpl<$Res>
   return _then(EarthquakeSearchResultItemCity(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+as IntensityAreaInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakePartial,
   ));
 }
@@ -471,9 +471,9 @@ as EarthquakePartial,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityRegionInfoCopyWith<$Res> get city {
+$IntensityAreaInfoCopyWith<$Res> get city {
   
-  return $IntensityRegionInfoCopyWith<$Res>(_self.city, (value) {
+  return $IntensityAreaInfoCopyWith<$Res>(_self.city, (value) {
     return _then(_self.copyWith(city: value));
   });
 }/// Create a copy of EarthquakeSearchResultItem
@@ -496,7 +496,7 @@ class EarthquakeSearchResultItemStation implements EarthquakeSearchResultItem {
   
 
 @override final  String eventId;
- final  IntensityStationInfo station;
+ final  StationSearchInfo station;
 @override final  EarthquakePartial earthquake;
 
 /// Create a copy of EarthquakeSearchResultItem
@@ -529,11 +529,11 @@ abstract mixin class $EarthquakeSearchResultItemStationCopyWith<$Res> implements
   factory $EarthquakeSearchResultItemStationCopyWith(EarthquakeSearchResultItemStation value, $Res Function(EarthquakeSearchResultItemStation) _then) = _$EarthquakeSearchResultItemStationCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, IntensityStationInfo station, EarthquakePartial earthquake
+ String eventId, StationSearchInfo station, EarthquakePartial earthquake
 });
 
 
-$IntensityStationInfoCopyWith<$Res> get station;@override $EarthquakePartialCopyWith<$Res> get earthquake;
+$StationSearchInfoCopyWith<$Res> get station;@override $EarthquakePartialCopyWith<$Res> get earthquake;
 
 }
 /// @nodoc
@@ -550,7 +550,7 @@ class _$EarthquakeSearchResultItemStationCopyWithImpl<$Res>
   return _then(EarthquakeSearchResultItemStation(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
-as IntensityStationInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+as StationSearchInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakePartial,
   ));
 }
@@ -559,9 +559,9 @@ as EarthquakePartial,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityStationInfoCopyWith<$Res> get station {
+$StationSearchInfoCopyWith<$Res> get station {
   
-  return $IntensityStationInfoCopyWith<$Res>(_self.station, (value) {
+  return $StationSearchInfoCopyWith<$Res>(_self.station, (value) {
     return _then(_self.copyWith(station: value));
   });
 }/// Create a copy of EarthquakeSearchResultItem

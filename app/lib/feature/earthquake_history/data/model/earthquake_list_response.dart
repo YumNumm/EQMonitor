@@ -1,6 +1,7 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:eqmonitor_api/export.dart' as api;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:jma_parameter_types/earthquake_param.pb.dart';
 
 part 'earthquake_list_response.freezed.dart';
 part 'earthquake_list_response.g.dart';
@@ -18,8 +19,12 @@ abstract class EarthquakeListResponse with _$EarthquakeListResponse {
 }
 
 extension EarthquakeListResponseApiExtension on api.EarthquakeListResponse {
-  EarthquakeListResponse get toEarthquakeListResponse => EarthquakeListResponse(
-    items: items.map((e) => e.toEarthquakePartial).toList(),
+  EarthquakeListResponse toEarthquakeListResponse({
+    required EarthquakeParameter parameter,
+  }) => EarthquakeListResponse(
+    items: items
+        .map((e) => e.toEarthquakePartial(parameter: parameter))
+        .toList(),
     nextToken: nextToken,
     nextPooling: nextPooling,
   );

@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_inten
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor_api/export.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:jma_parameter_types/earthquake_param.pb.dart';
 
 part 'earthquake_partial.freezed.dart';
 part 'earthquake_partial.g.dart';
@@ -30,7 +31,9 @@ abstract class EarthquakePartial with _$EarthquakePartial {
 }
 
 extension EarthquakePartialApiExtension on api.EarthquakePartial {
-  EarthquakePartial get toEarthquakePartial => EarthquakePartial(
+  EarthquakePartial toEarthquakePartial({
+    required EarthquakeParameter parameter,
+  }) => EarthquakePartial(
     eventId: eventId,
     status: status.toTelegramStatus,
     originTime: originTime,
@@ -38,7 +41,23 @@ extension EarthquakePartialApiExtension on api.EarthquakePartial {
     arrivalTime: arrivalTime,
     dataSource: datasource.toEarthquakeDataSource,
     hypocenter: hypocenter?.toEarthquakeHypocenter,
-    intensity: intensity?.toEarthquakeIntensity,
+    intensity: intensity?.toEarthquakeIntensity(parameter: parameter),
+    estimatedIntensityTileUrl: estimatedIntensityTile,
+  );
+}
+
+extension EarthquakeApiExtension on api.Earthquake {
+  EarthquakePartial toEarthquakePartial({
+    required EarthquakeParameter parameter,
+  }) => EarthquakePartial(
+    eventId: eventId,
+    status: status.toTelegramStatus,
+    originTime: originTime,
+    originTimePrecision: originTimePrecision.toOriginTimePrecision,
+    arrivalTime: arrivalTime,
+    dataSource: datasource.toEarthquakeDataSource,
+    hypocenter: hypocenter?.toEarthquakeHypocenter,
+    intensity: intensity?.toEarthquakeIntensity(parameter: parameter),
     estimatedIntensityTileUrl: estimatedIntensityTile,
   );
 }

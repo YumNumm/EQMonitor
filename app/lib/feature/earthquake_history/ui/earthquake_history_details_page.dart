@@ -5,12 +5,12 @@ import 'package:eqmonitor/core/component/intenisty/lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
-import 'package:eqmonitor_api/export.dart' as eqmonitor_api;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,9 +26,9 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final detailsState = ref.watch(
       earthquakeHistoryDetailsProvider(eventId),
     );
-    final details = detailsState.value;
+    final earthquake = detailsState.value;
 
-    if (details == null) {
+    if (earthquake == null) {
       return Scaffold(
         appBar: AppBar(),
         body: switch (detailsState) {
@@ -57,9 +57,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         },
       );
     }
-    final earthquake = details.earthquake;
     final intensity = earthquake.intensity;
-    final maxLgIntensity = intensity?.maxLpgmIntensity?.toJmaLpgmIntensity;
+    final maxLgIntensity = intensity?.maxLpgmIntensity;
 
     final sheetController = SheetController();
     final theme = Theme.of(context);
@@ -150,7 +149,7 @@ class _Sheet extends StatelessWidget {
   const _Sheet({required this.sheetController, required this.item});
 
   final SheetController sheetController;
-  final eqmonitor_api.Earthquake item;
+  final EarthquakePartial item;
 
   @override
   Widget build(BuildContext context) {

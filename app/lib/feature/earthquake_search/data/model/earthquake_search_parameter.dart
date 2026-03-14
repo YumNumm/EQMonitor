@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor_api/export.dart' show TelegramStatus;
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor_api/export.dart' show TelegramStatus;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_search_parameter.freezed.dart';
