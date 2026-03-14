@@ -1,5 +1,4 @@
 terraform {
-  required_version = "1.14.6"
   backend "s3" {
     bucket                      = "eqmonitor-tf-state"
     key                         = "eqmonitor-googlecloud-production.tfstate"
