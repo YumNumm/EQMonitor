@@ -1,5 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_crashlytics.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
@@ -43,8 +43,7 @@ class FcmEewIntensityTopic implements FcmTopic, FcmEewTopic {
   final JmaIntensity intensity;
 
   @override
-  String get topic =>
-      'eew${intensity.type.replaceAll("-", "lower").replaceAll("+", "upper")}';
+  String get topic => 'eew${intensity.topicSuffix}';
 }
 
 class FcmEewAllTopic implements FcmTopic, FcmEewTopic {
@@ -67,12 +66,8 @@ class FcmEarthquakeTopic implements FcmTopic {
   final JmaIntensity? intensity;
 
   @override
-  String get topic {
-    final suffix =
-        intensity?.type.replaceAll('-', 'lower').replaceAll('+', 'upper') ??
-        'all';
-    return 'earthquake_$suffix';
-  }
+  String get topic =>
+      'earthquake_${intensity?.topicSuffix ?? 'all'}';
 }
 
 enum FcmTopics {

@@ -1,5 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -15,7 +15,7 @@ class JmaLgIntensityIcon extends ConsumerWidget {
     this.size = 50,
   });
 
-  final JmaLgIntensity intensity;
+  final JmaLpgmIntensity intensity;
   final IntensityIconType type;
   final double size;
   final String? customText;
@@ -23,7 +23,7 @@ class JmaLgIntensityIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromJmaLgIntensity(intensity);
+    final colorScheme = intensityColorModel.fromJmaLpgmIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
 
     final borderColor = Color.lerp(bg, fg, 0.3)!;
@@ -44,7 +44,7 @@ class JmaLgIntensityIcon extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    intensity.type,
+                    intensity.label,
                     style: TextStyle(
                       color: fg,
                       fontSize: 100,
@@ -92,7 +92,7 @@ class JmaLgIntensityIcon extends ConsumerWidget {
                       ),
                     )
                   : Text(
-                      intensity.type,
+                      intensity.label,
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,

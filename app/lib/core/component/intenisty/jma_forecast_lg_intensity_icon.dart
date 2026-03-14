@@ -1,5 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -16,7 +16,7 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
     this.size = 50,
   });
 
-  final JmaForecastLgIntensity intensity;
+  final JmaLpgmIntensity intensity;
   final IntensityIconType type;
   final double size;
   final String? customText;
@@ -26,20 +26,10 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel =
         (colorModel ?? ref.watch(intensityColorProvider))!;
-    final colorScheme = intensityColorModel.fromJmaForecastLgIntensity(
-      intensity,
-    );
+    final colorScheme = intensityColorModel.fromJmaLpgmIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
-    // 震度の整数部分
-    final intensityMainText = intensity.type
-        .replaceAll('-', '')
-        .replaceAll('+', '');
-    // 震度の弱・強の表記
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
-        ? '強'
-        : '';
+    final intensityMainText = intensity.label;
+    final intensitySubText = '';
 
     return SizedBox(
       height: size,
@@ -67,7 +57,7 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
                       fontFamily: FontFamily.notoSansMono,
                     ),
                   )
-                else if (intensity == JmaForecastLgIntensity.unknown)
+                else if (intensity == JmaLpgmIntensity.unknown)
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
