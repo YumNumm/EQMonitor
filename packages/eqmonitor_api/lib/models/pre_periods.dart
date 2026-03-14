@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'lpgm_intensity.dart';
+import 'jma_lpgm_intensity.dart';
 
 part 'pre_periods.freezed.dart';
 part 'pre_periods.g.dart';
@@ -13,10 +13,10 @@ part 'pre_periods.g.dart';
 abstract class PrePeriods with _$PrePeriods {
   const factory PrePeriods({
     required num band,
-    @JsonKey(name: 'lpgm_intensity') required LpgmIntensity lpgmIntensity,
+    @JsonKey(name: 'lpgm_intensity')
+    required JmaLpgmIntensity lpgmIntensity,
     required num sva,
   }) = _PrePeriods;
-
-  factory PrePeriods.fromJson(Map<String, Object?> json) =>
-      _$PrePeriodsFromJson(json);
+  
+  factory PrePeriods.fromJson(Map<String, Object?> json) => _$PrePeriodsFromJson(json);
 }

@@ -94,20 +94,22 @@ double _solveMonotonicallyDecreasing({
     return upper;
   }
 
+  var lo = lower;
+  var hi = upper;
   for (var i = 0; i < 30; i++) {
-    final mid = 0.5 * (lower + upper);
+    final mid = 0.5 * (lo + hi);
     final fM = func(mid);
     if ((fM - target).abs() < 1e-7) {
       return mid;
     }
     // 単調減少なので、f(mid)>target -> xを大きく
     if (fM > target) {
-      lower = mid;
+      lo = mid;
     } else {
-      upper = mid;
+      hi = mid;
     }
   }
-  return 0.5 * (lower + upper);
+  return 0.5 * (lo + hi);
 }
 
 /// ***************************************************************************

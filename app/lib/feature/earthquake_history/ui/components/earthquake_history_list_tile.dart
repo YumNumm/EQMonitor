@@ -1,9 +1,13 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -42,16 +46,13 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final intensity = item.intensity;
     final maxIntensity = intensity?.maxIntensity;
 
-    // 震源名
-    final hypoName = hypocenter?.value.name;
-    final hypoDetailName = hypocenter?.detailed?.name;
+    final hypoName = hypocenter?.name;
+    final hypoDetailName = hypocenter?.detailedName;
 
-    // 最大震度観測地域
-    final maxIntensityPrefectures = intensity?.prefectures
-        .where((p) => p.maxIntensity == maxIntensity)
-        .map((p) => p.value.name)
+    final maxIntensityPrefectures = intensity
+        ?.intensityTree[intensity.maxIntensity]
+        ?.map((e) => e.region.name)
         .toList();
-
     final title = switch ((
       hypoName,
       hypoDetailName,
@@ -64,24 +65,25 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       (
         _,
         _,
-        final IntensityValue maxInt,
+        final JmaIntensity maxInt,
         final List<String> regionNames,
       )
           when regionNames.length >= 2 =>
-        '最大震度${maxInt.value}を${regionNames.first}などで観測',
+        '最大震度${maxInt.label}を${regionNames.first}などで観測',
       (
         _,
         _,
-        final IntensityValue maxInt,
+        final JmaIntensity maxInt,
         final List<String> regionNames,
       )
           when regionNames.isNotEmpty =>
-        '最大震度${maxInt.value}を${regionNames.first}で観測',
-      (_, _, final IntensityValue maxInt, _) => '最大震度${maxInt.value}を観測',
+        '最大震度${maxInt.label}を${regionNames.first}で観測',
+      (_, _, final JmaIntensity maxInt, _) => '最大震度${maxInt.label}を観測',
       _ => '',
     };
 
     final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
+    final depth = hypocenter?.depth;
     final subTitle =
         switch ((item.originTime, item.arrivalTime)) {
           (final DateTime originTime, _) =>
@@ -90,21 +92,32 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
             '${dateFormatter.format(arrivalTime.toLocal())}頃検知 ',
           _ => '',
         } +
-        _formatDepth(hypocenter?.depth);
+        switch (depth) {
+          EarthquakeDepthOver700km() => '深さ 700km以上',
+          EarthquakeDepthShallow() => '深さ ごく浅い',
+          EarthquakeDepthUnknown() => '',
+          EarthquakeDepthValue(:final value) => '深さ ${value}km',
+          null => '',
+        };
 
     final intensityColorState = ref.watch(intensityColorProvider);
     final intensityColor = maxIntensity != null
-        ? intensityColorState.fromIntensityValue(maxIntensity).background
+        ? intensityColorState.fromJmaIntensity(maxIntensity).background
         : null;
     final maxLpgmIntensity = intensity?.maxLpgmIntensity;
 
-    final trailingText = _formatMagnitude(hypocenter?.magnitude);
+    final magnitude = hypocenter?.magnitude;
+    final trailingText = switch (magnitude) {
+      EarthquakeMagnitudeValue(:final value) => 'M$value',
+      EarthquakeMagnitudeUnknown() => 'M不明',
+      EarthquakeMagnitudeOverM8() => 'M8超',
+      null => '',
+    };
 
     final chips = <Widget>[
-      if (maxLpgmIntensity != null &&
-          maxLpgmIntensity != LpgmIntensityValue.zero)
+      if (maxLpgmIntensity != null && maxLpgmIntensity != JmaLpgmIntensity.zero)
         Chip(
-          label: Text('最大長周期地震動階級 ${maxLpgmIntensity.value}'),
+          label: Text('最大長周期地震動階級 ${maxLpgmIntensity.label}'),
           padding: EdgeInsets.zero,
         ),
     ];
@@ -157,28 +170,5 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       dense: dense,
       contentPadding: contentPadding,
     );
-  }
-
-  String _formatDepth(Depth? depth) {
-    if (depth == null) {
-      return '';
-    }
-    return switch (depth) {
-      DepthShallow() => '深さ ごく浅い',
-      DepthNormal(:final value) => '深さ ${value}km',
-      DepthOver700() => '深さ 700km以上',
-      DepthUnknown() => '',
-    };
-  }
-
-  String _formatMagnitude(Magnitude? magnitude) {
-    if (magnitude == null) {
-      return '';
-    }
-    return switch (magnitude) {
-      MagnitudeNormal(:final value) => 'M${value.toStringAsFixed(1)}',
-      MagnitudeUnknown() => 'M不明',
-      MagnitudeOverM8() => 'M8超',
-    };
   }
 }

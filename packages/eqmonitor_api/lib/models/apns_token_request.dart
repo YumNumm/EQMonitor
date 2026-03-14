@@ -9,8 +9,9 @@ part 'apns_token_request.g.dart';
 
 @Freezed()
 abstract class ApnsTokenRequest with _$ApnsTokenRequest {
-  const factory ApnsTokenRequest({required String token}) = _ApnsTokenRequest;
-
-  factory ApnsTokenRequest.fromJson(Map<String, Object?> json) =>
-      _$ApnsTokenRequestFromJson(json);
+  const factory ApnsTokenRequest({
+    required String token,
+  }) = _ApnsTokenRequest;
+  
+  factory ApnsTokenRequest.fromJson(Map<String, Object?> json) => _$ApnsTokenRequestFromJson(json);
 }

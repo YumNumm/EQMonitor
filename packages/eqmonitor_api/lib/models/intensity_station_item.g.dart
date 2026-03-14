@@ -28,11 +28,11 @@ _IntensityStationItem _$IntensityStationItemFromJson(
       ),
       maxIntensity: $checkedConvert(
         'max_intensity',
-        (v) => $enumDecodeNullable(_$IntensityItemMaxIntensityEnumMap, v),
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
       ),
       maxLpgmIntensity: $checkedConvert(
         'max_lpgm_intensity',
-        (v) => $enumDecodeNullable(_$IntensityItemMaxLpgmIntensityEnumMap, v),
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
     );
     return val;
@@ -54,24 +54,24 @@ Map<String, dynamic> _$IntensityStationItemToJson(
   'max_lpgm_intensity': ?instance.maxLpgmIntensity,
 };
 
-const _$IntensityItemMaxIntensityEnumMap = {
-  IntensityItemMaxIntensity.value0: 0,
-  IntensityItemMaxIntensity.value1: 1,
-  IntensityItemMaxIntensity.value2: 2,
-  IntensityItemMaxIntensity.value3: 3,
-  IntensityItemMaxIntensity.value4: 4,
-  IntensityItemMaxIntensity.value5unknown: '!5-',
-  IntensityItemMaxIntensity.value5minus: '5-',
-  IntensityItemMaxIntensity.value5plus: '5+',
-  IntensityItemMaxIntensity.value6minus: '6-',
-  IntensityItemMaxIntensity.value6plus: '6+',
-  IntensityItemMaxIntensity.value7: 7,
+const _$JmaIntensityEnumMap = {
+  JmaIntensity.value0: 0,
+  JmaIntensity.value1: 1,
+  JmaIntensity.value2: 2,
+  JmaIntensity.value3: 3,
+  JmaIntensity.value4: 4,
+  JmaIntensity.value5unknown: '!5-',
+  JmaIntensity.value5minus: '5-',
+  JmaIntensity.value5plus: '5+',
+  JmaIntensity.value6minus: '6-',
+  JmaIntensity.value6plus: '6+',
+  JmaIntensity.value7: 7,
 };
 
-const _$IntensityItemMaxLpgmIntensityEnumMap = {
-  IntensityItemMaxLpgmIntensity.value0: 0,
-  IntensityItemMaxLpgmIntensity.value1: 1,
-  IntensityItemMaxLpgmIntensity.value2: 2,
-  IntensityItemMaxLpgmIntensity.value3: 3,
-  IntensityItemMaxLpgmIntensity.value4: 4,
+const _$JmaLpgmIntensityEnumMap = {
+  JmaLpgmIntensity.value0: 0,
+  JmaLpgmIntensity.value1: 1,
+  JmaLpgmIntensity.value2: 2,
+  JmaLpgmIntensity.value3: 3,
+  JmaLpgmIntensity.value4: 4,
 };

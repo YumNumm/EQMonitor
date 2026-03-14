@@ -1,19 +1,22 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: earthquake_param.proto
-//
-// @dart = 2.12
+// Generated from earthquake_param.proto.
+
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'earthquake_param.pbenum.dart';
+
+export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'earthquake_param.pbenum.dart';
 
@@ -22,51 +25,44 @@ class EarthquakeParameter extends $pb.GeneratedMessage {
     EarthquakeParameterHeader? header,
     $core.Iterable<EarthquakeParameterRegionItem>? regions,
   }) {
-    final $result = create();
-    if (header != null) {
-      $result.header = header;
-    }
-    if (regions != null) {
-      $result.regions.addAll(regions);
-    }
-    return $result;
+    final result = create();
+    if (header != null) result.header = header;
+    if (regions != null) result.regions.addAll(regions);
+    return result;
   }
-  EarthquakeParameter._() : super();
-  factory EarthquakeParameter.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameter.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  EarthquakeParameter._();
+
+  factory EarthquakeParameter.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EarthquakeParameter.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EarthquakeParameter',
       createEmptyInstance: create)
     ..aOM<EarthquakeParameterHeader>(1, _omitFieldNames ? '' : 'header',
         subBuilder: EarthquakeParameterHeader.create)
-    ..pc<EarthquakeParameterRegionItem>(
-        2, _omitFieldNames ? '' : 'regions', $pb.PbFieldType.PM,
+    ..pPM<EarthquakeParameterRegionItem>(2, _omitFieldNames ? '' : 'regions',
         subBuilder: EarthquakeParameterRegionItem.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameter clone() => EarthquakeParameter()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EarthquakeParameter clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EarthquakeParameter copyWith(void Function(EarthquakeParameter) updates) =>
       super.copyWith((message) => updates(message as EarthquakeParameter))
           as EarthquakeParameter;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameter create() => EarthquakeParameter._();
+  @$core.override
   EarthquakeParameter createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameter> createRepeated() =>
-      $pb.PbList<EarthquakeParameter>();
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameter getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EarthquakeParameter>(create);
@@ -75,19 +71,16 @@ class EarthquakeParameter extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   EarthquakeParameterHeader get header => $_getN(0);
   @$pb.TagNumber(1)
-  set header(EarthquakeParameterHeader v) {
-    setField(1, v);
-  }
-
+  set header(EarthquakeParameterHeader value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasHeader() => $_has(0);
   @$pb.TagNumber(1)
-  void clearHeader() => clearField(1);
+  void clearHeader() => $_clearField(1);
   @$pb.TagNumber(1)
   EarthquakeParameterHeader ensureHeader() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<EarthquakeParameterRegionItem> get regions => $_getList(1);
+  $pb.PbList<EarthquakeParameterRegionItem> get regions => $_getList(1);
 }
 
 class EarthquakeParameterHeader extends $pb.GeneratedMessage {
@@ -95,22 +88,20 @@ class EarthquakeParameterHeader extends $pb.GeneratedMessage {
     $core.String? version,
     $core.String? changeTime,
   }) {
-    final $result = create();
-    if (version != null) {
-      $result.version = version;
-    }
-    if (changeTime != null) {
-      $result.changeTime = changeTime;
-    }
-    return $result;
+    final result = create();
+    if (version != null) result.version = version;
+    if (changeTime != null) result.changeTime = changeTime;
+    return result;
   }
-  EarthquakeParameterHeader._() : super();
-  factory EarthquakeParameterHeader.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameterHeader.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  EarthquakeParameterHeader._();
+
+  factory EarthquakeParameterHeader.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EarthquakeParameterHeader.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EarthquakeParameterHeader',
@@ -119,26 +110,21 @@ class EarthquakeParameterHeader extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'changeTime', protoName: 'changeTime')
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterHeader clone() =>
-      EarthquakeParameterHeader()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EarthquakeParameterHeader clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EarthquakeParameterHeader copyWith(
           void Function(EarthquakeParameterHeader) updates) =>
       super.copyWith((message) => updates(message as EarthquakeParameterHeader))
           as EarthquakeParameterHeader;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterHeader create() => EarthquakeParameterHeader._();
+  @$core.override
   EarthquakeParameterHeader createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameterHeader> createRepeated() =>
-      $pb.PbList<EarthquakeParameterHeader>();
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterHeader getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterHeader>(create);
@@ -147,26 +133,20 @@ class EarthquakeParameterHeader extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get version => $_getSZ(0);
   @$pb.TagNumber(1)
-  set version($core.String v) {
-    $_setString(0, v);
-  }
-
+  set version($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasVersion() => $_has(0);
   @$pb.TagNumber(1)
-  void clearVersion() => clearField(1);
+  void clearVersion() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get changeTime => $_getSZ(1);
   @$pb.TagNumber(2)
-  set changeTime($core.String v) {
-    $_setString(1, v);
-  }
-
+  set changeTime($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasChangeTime() => $_has(1);
   @$pb.TagNumber(2)
-  void clearChangeTime() => clearField(2);
+  void clearChangeTime() => $_clearField(2);
 }
 
 class EarthquakeParameterRegionItem extends $pb.GeneratedMessage {
@@ -176,28 +156,22 @@ class EarthquakeParameterRegionItem extends $pb.GeneratedMessage {
     $core.String? nameKana,
     $core.Iterable<EarthquakeParameterCityItem>? cities,
   }) {
-    final $result = create();
-    if (code != null) {
-      $result.code = code;
-    }
-    if (name != null) {
-      $result.name = name;
-    }
-    if (nameKana != null) {
-      $result.nameKana = nameKana;
-    }
-    if (cities != null) {
-      $result.cities.addAll(cities);
-    }
-    return $result;
+    final result = create();
+    if (code != null) result.code = code;
+    if (name != null) result.name = name;
+    if (nameKana != null) result.nameKana = nameKana;
+    if (cities != null) result.cities.addAll(cities);
+    return result;
   }
-  EarthquakeParameterRegionItem._() : super();
-  factory EarthquakeParameterRegionItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameterRegionItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  EarthquakeParameterRegionItem._();
+
+  factory EarthquakeParameterRegionItem.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EarthquakeParameterRegionItem.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EarthquakeParameterRegionItem',
@@ -205,33 +179,27 @@ class EarthquakeParameterRegionItem extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'nameKana', protoName: 'nameKana')
-    ..pc<EarthquakeParameterCityItem>(
-        4, _omitFieldNames ? '' : 'cities', $pb.PbFieldType.PM,
+    ..pPM<EarthquakeParameterCityItem>(4, _omitFieldNames ? '' : 'cities',
         subBuilder: EarthquakeParameterCityItem.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterRegionItem clone() =>
-      EarthquakeParameterRegionItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EarthquakeParameterRegionItem clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EarthquakeParameterRegionItem copyWith(
           void Function(EarthquakeParameterRegionItem) updates) =>
       super.copyWith(
               (message) => updates(message as EarthquakeParameterRegionItem))
           as EarthquakeParameterRegionItem;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterRegionItem create() =>
       EarthquakeParameterRegionItem._();
+  @$core.override
   EarthquakeParameterRegionItem createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameterRegionItem> createRepeated() =>
-      $pb.PbList<EarthquakeParameterRegionItem>();
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterRegionItem getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterRegionItem>(create);
@@ -240,41 +208,32 @@ class EarthquakeParameterRegionItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set code($core.String v) {
-    $_setString(0, v);
-  }
-
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCode() => clearField(1);
+  void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String v) {
-    $_setString(1, v);
-  }
-
+  set name($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => clearField(2);
+  void clearName() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get nameKana => $_getSZ(2);
   @$pb.TagNumber(3)
-  set nameKana($core.String v) {
-    $_setString(2, v);
-  }
-
+  set nameKana($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
   $core.bool hasNameKana() => $_has(2);
   @$pb.TagNumber(3)
-  void clearNameKana() => clearField(3);
+  void clearNameKana() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<EarthquakeParameterCityItem> get cities => $_getList(3);
+  $pb.PbList<EarthquakeParameterCityItem> get cities => $_getList(3);
 }
 
 class EarthquakeParameterCityItem extends $pb.GeneratedMessage {
@@ -284,28 +243,22 @@ class EarthquakeParameterCityItem extends $pb.GeneratedMessage {
     $core.String? nameKana,
     $core.Iterable<EarthquakeParameterStationItem>? stations,
   }) {
-    final $result = create();
-    if (code != null) {
-      $result.code = code;
-    }
-    if (name != null) {
-      $result.name = name;
-    }
-    if (nameKana != null) {
-      $result.nameKana = nameKana;
-    }
-    if (stations != null) {
-      $result.stations.addAll(stations);
-    }
-    return $result;
+    final result = create();
+    if (code != null) result.code = code;
+    if (name != null) result.name = name;
+    if (nameKana != null) result.nameKana = nameKana;
+    if (stations != null) result.stations.addAll(stations);
+    return result;
   }
-  EarthquakeParameterCityItem._() : super();
-  factory EarthquakeParameterCityItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameterCityItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  EarthquakeParameterCityItem._();
+
+  factory EarthquakeParameterCityItem.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EarthquakeParameterCityItem.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EarthquakeParameterCityItem',
@@ -313,33 +266,27 @@ class EarthquakeParameterCityItem extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'nameKana', protoName: 'nameKana')
-    ..pc<EarthquakeParameterStationItem>(
-        4, _omitFieldNames ? '' : 'stations', $pb.PbFieldType.PM,
+    ..pPM<EarthquakeParameterStationItem>(4, _omitFieldNames ? '' : 'stations',
         subBuilder: EarthquakeParameterStationItem.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterCityItem clone() =>
-      EarthquakeParameterCityItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EarthquakeParameterCityItem clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EarthquakeParameterCityItem copyWith(
           void Function(EarthquakeParameterCityItem) updates) =>
       super.copyWith(
               (message) => updates(message as EarthquakeParameterCityItem))
           as EarthquakeParameterCityItem;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterCityItem create() =>
       EarthquakeParameterCityItem._();
+  @$core.override
   EarthquakeParameterCityItem createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameterCityItem> createRepeated() =>
-      $pb.PbList<EarthquakeParameterCityItem>();
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterCityItem getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterCityItem>(create);
@@ -348,41 +295,32 @@ class EarthquakeParameterCityItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set code($core.String v) {
-    $_setString(0, v);
-  }
-
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCode() => clearField(1);
+  void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String v) {
-    $_setString(1, v);
-  }
-
+  set name($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => clearField(2);
+  void clearName() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get nameKana => $_getSZ(2);
   @$pb.TagNumber(3)
-  set nameKana($core.String v) {
-    $_setString(2, v);
-  }
-
+  set nameKana($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
   $core.bool hasNameKana() => $_has(2);
   @$pb.TagNumber(3)
-  void clearNameKana() => clearField(3);
+  void clearNameKana() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<EarthquakeParameterStationItem> get stations => $_getList(3);
+  $pb.PbList<EarthquakeParameterStationItem> get stations => $_getList(3);
 }
 
 class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
@@ -396,40 +334,26 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
     StationOwner? owner,
     $core.double? arv400,
   }) {
-    final $result = create();
-    if (code != null) {
-      $result.code = code;
-    }
-    if (name != null) {
-      $result.name = name;
-    }
-    if (nameKana != null) {
-      $result.nameKana = nameKana;
-    }
-    if (latitude != null) {
-      $result.latitude = latitude;
-    }
-    if (longitude != null) {
-      $result.longitude = longitude;
-    }
-    if (status != null) {
-      $result.status = status;
-    }
-    if (owner != null) {
-      $result.owner = owner;
-    }
-    if (arv400 != null) {
-      $result.arv400 = arv400;
-    }
-    return $result;
+    final result = create();
+    if (code != null) result.code = code;
+    if (name != null) result.name = name;
+    if (nameKana != null) result.nameKana = nameKana;
+    if (latitude != null) result.latitude = latitude;
+    if (longitude != null) result.longitude = longitude;
+    if (status != null) result.status = status;
+    if (owner != null) result.owner = owner;
+    if (arv400 != null) result.arv400 = arv400;
+    return result;
   }
-  EarthquakeParameterStationItem._() : super();
-  factory EarthquakeParameterStationItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameterStationItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+
+  EarthquakeParameterStationItem._();
+
+  factory EarthquakeParameterStationItem.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EarthquakeParameterStationItem.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EarthquakeParameterStationItem',
@@ -437,42 +361,32 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'nameKana', protoName: 'nameKana')
-    ..a<$core.double>(4, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OD)
-    ..a<$core.double>(5, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OD)
-    ..e<StationStatus>(6, _omitFieldNames ? '' : 'status', $pb.PbFieldType.OE,
-        defaultOrMaker: StationStatus.OPERATIONAL,
-        valueOf: StationStatus.valueOf,
+    ..aD(4, _omitFieldNames ? '' : 'latitude')
+    ..aD(5, _omitFieldNames ? '' : 'longitude')
+    ..aE<StationStatus>(6, _omitFieldNames ? '' : 'status',
         enumValues: StationStatus.values)
-    ..e<StationOwner>(7, _omitFieldNames ? '' : 'owner', $pb.PbFieldType.OE,
-        defaultOrMaker: StationOwner.JMA,
-        valueOf: StationOwner.valueOf,
+    ..aE<StationOwner>(7, _omitFieldNames ? '' : 'owner',
         enumValues: StationOwner.values)
-    ..a<$core.double>(8, _omitFieldNames ? '' : 'arv400', $pb.PbFieldType.OD,
-        protoName: 'arv_400')
+    ..aD(8, _omitFieldNames ? '' : 'arv400', protoName: 'arv_400')
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterStationItem clone() =>
-      EarthquakeParameterStationItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EarthquakeParameterStationItem clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EarthquakeParameterStationItem copyWith(
           void Function(EarthquakeParameterStationItem) updates) =>
       super.copyWith(
               (message) => updates(message as EarthquakeParameterStationItem))
           as EarthquakeParameterStationItem;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterStationItem create() =>
       EarthquakeParameterStationItem._();
+  @$core.override
   EarthquakeParameterStationItem createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameterStationItem> createRepeated() =>
-      $pb.PbList<EarthquakeParameterStationItem>();
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameterStationItem getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterStationItem>(create);
@@ -481,101 +395,78 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set code($core.String v) {
-    $_setString(0, v);
-  }
-
+  set code($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCode() => clearField(1);
+  void clearCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String v) {
-    $_setString(1, v);
-  }
-
+  set name($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => clearField(2);
+  void clearName() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get nameKana => $_getSZ(2);
   @$pb.TagNumber(3)
-  set nameKana($core.String v) {
-    $_setString(2, v);
-  }
-
+  set nameKana($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
   $core.bool hasNameKana() => $_has(2);
   @$pb.TagNumber(3)
-  void clearNameKana() => clearField(3);
+  void clearNameKana() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.double get latitude => $_getN(3);
   @$pb.TagNumber(4)
-  set latitude($core.double v) {
-    $_setDouble(3, v);
-  }
-
+  set latitude($core.double value) => $_setDouble(3, value);
   @$pb.TagNumber(4)
   $core.bool hasLatitude() => $_has(3);
   @$pb.TagNumber(4)
-  void clearLatitude() => clearField(4);
+  void clearLatitude() => $_clearField(4);
 
   @$pb.TagNumber(5)
   $core.double get longitude => $_getN(4);
   @$pb.TagNumber(5)
-  set longitude($core.double v) {
-    $_setDouble(4, v);
-  }
-
+  set longitude($core.double value) => $_setDouble(4, value);
   @$pb.TagNumber(5)
   $core.bool hasLongitude() => $_has(4);
   @$pb.TagNumber(5)
-  void clearLongitude() => clearField(5);
+  void clearLongitude() => $_clearField(5);
 
   @$pb.TagNumber(6)
   StationStatus get status => $_getN(5);
   @$pb.TagNumber(6)
-  set status(StationStatus v) {
-    setField(6, v);
-  }
-
+  set status(StationStatus value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasStatus() => $_has(5);
   @$pb.TagNumber(6)
-  void clearStatus() => clearField(6);
+  void clearStatus() => $_clearField(6);
 
   @$pb.TagNumber(7)
   StationOwner get owner => $_getN(6);
   @$pb.TagNumber(7)
-  set owner(StationOwner v) {
-    setField(7, v);
-  }
-
+  set owner(StationOwner value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasOwner() => $_has(6);
   @$pb.TagNumber(7)
-  void clearOwner() => clearField(7);
+  void clearOwner() => $_clearField(7);
 
   /// 工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
   @$pb.TagNumber(8)
   $core.double get arv400 => $_getN(7);
   @$pb.TagNumber(8)
-  set arv400($core.double v) {
-    $_setDouble(7, v);
-  }
-
+  set arv400($core.double value) => $_setDouble(7, value);
   @$pb.TagNumber(8)
   $core.bool hasArv400() => $_has(7);
   @$pb.TagNumber(8)
-  void clearArv400() => clearField(8);
+  void clearArv400() => $_clearField(8);
 }
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames =
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
     $core.bool.fromEnvironment('protobuf.omit_message_names');

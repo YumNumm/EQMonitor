@@ -1,9 +1,13 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +15,7 @@ import 'package:intl/intl.dart';
 class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
   const EarthquakeHypocenterInformationCard({required this.item, super.key});
 
-  final Earthquake item;
+  final EarthquakePartial item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,7 +24,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
     final hypocenter = item.hypocenter;
 
     final colorScheme = maxIntensity != null
-        ? intensityColorScheme.fromIntensityValue(maxIntensity)
+        ? intensityColorScheme.fromJmaIntensity(maxIntensity)
         : null;
 
     final maxIntensityWidget = maxIntensity != null
@@ -52,7 +56,8 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
                   child: _EarthquakeInformationBody(
                     item: item,
                     hypocenter: hypocenter,
-                    hasIntensityDetails: item.intensity?.cities != null,
+                    hasIntensityDetails:
+                        item.intensity?.intensityTree.isNotEmpty ?? false,
                   ),
                 ),
               ],
@@ -67,7 +72,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
 class _MaxIntensityWidget extends StatelessWidget {
   const _MaxIntensityWidget({required this.intensity});
 
-  final IntensityValue intensity;
+  final JmaIntensity intensity;
 
   @override
   Widget build(BuildContext context) {
@@ -93,14 +98,14 @@ class _EarthquakeInformationBody extends StatelessWidget {
     required this.hasIntensityDetails,
   });
 
-  final Earthquake item;
-  final Hypocenter? hypocenter;
+  final EarthquakePartial item;
+  final EarthquakeHypocenter? hypocenter;
   final bool hasIntensityDetails;
 
   @override
   Widget build(BuildContext context) {
-    final epicenterName = hypocenter?.value.name;
-    final epicenterDetailName = hypocenter?.detailed?.name;
+    final epicenterName = hypocenter?.name;
+    final epicenterDetailName = hypocenter?.detailedName;
 
     final isMagnitudeAndDepthUnknown =
         _isMagnitudeUnknown() && _isDepthUnknown();
@@ -144,12 +149,12 @@ class _EarthquakeInformationBody extends StatelessWidget {
 
   bool _isMagnitudeUnknown() {
     final magnitude = hypocenter?.magnitude;
-    return magnitude == null || magnitude is MagnitudeUnknown;
+    return magnitude == null || magnitude is EarthquakeMagnitudeUnknown;
   }
 
   bool _isDepthUnknown() {
     final depth = hypocenter?.depth;
-    return depth == null || depth is DepthUnknown;
+    return depth == null || depth is EarthquakeDepthUnknown;
   }
 
   String? _getTimeText() {
@@ -227,16 +232,19 @@ class _HypocenterWidget extends StatelessWidget {
 class _MagnitudeWidget extends StatelessWidget {
   const _MagnitudeWidget({required this.magnitude});
 
-  final Magnitude? magnitude;
+  final EarthquakeMagnitude? magnitude;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     final (text, showM) = switch (magnitude) {
-      MagnitudeNormal(:final value) => (value.toStringAsFixed(1), true),
-      MagnitudeUnknown() => ('不明', false),
-      MagnitudeOverM8() => ('8超', true),
+      EarthquakeMagnitudeValue(:final value) => (
+        value.toStringAsFixed(1),
+        true,
+      ),
+      EarthquakeMagnitudeUnknown() => ('不明', false),
+      EarthquakeMagnitudeOverM8() => ('8超', true),
       null => ('調査中', false),
     };
 
@@ -263,17 +271,17 @@ class _MagnitudeWidget extends StatelessWidget {
 class _DepthWidget extends StatelessWidget {
   const _DepthWidget({required this.depth});
 
-  final Depth? depth;
+  final EarthquakeDepth? depth;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     final (text, isSpecial) = switch (depth) {
-      DepthShallow() => ('ごく浅い', true),
-      DepthNormal(:final value) => ('${value}km', false),
-      DepthOver700() => ('700km以上', true),
-      DepthUnknown() || null => ('調査中', true),
+      EarthquakeDepthShallow() => ('ごく浅い', true),
+      EarthquakeDepthValue(:final value) => ('${value}km', false),
+      EarthquakeDepthOver700km() => ('700km以上', true),
+      EarthquakeDepthUnknown() || null => ('調査中', true),
     };
 
     return Row(
