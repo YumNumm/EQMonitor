@@ -3,8 +3,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -54,14 +54,14 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
     final deviceIdController = useTextEditingController();
 
     // States for each category
-    final generalState = useState<AsyncValue<NotificationSettings>?>(null);
+    final generalState = useState<AsyncValue<NotificationSettingsResponse>?>(null);
     final earthquakeState =
-        useState<AsyncValue<EarthquakeNotificationSettings>?>(null);
-    final eewState = useState<AsyncValue<EewNotificationSettings>?>(null);
-    final earthquakeRegionsState = useState<AsyncValue<List<RegionSetting>>?>(
+        useState<AsyncValue<EarthquakeSettingsResponse>?>(null);
+    final eewState = useState<AsyncValue<EewSettingsResponse>?>(null);
+    final earthquakeRegionsState = useState<AsyncValue<List<RegionSettingResponse>>?>(
       null,
     );
-    final eewRegionsState = useState<AsyncValue<List<RegionSetting>>?>(null);
+    final eewRegionsState = useState<AsyncValue<List<RegionSettingResponse>>?>(null);
 
     // Editable values
     final tsunamiEnabled = useState<bool>(true);
@@ -213,23 +213,23 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         generalState.value =
                                             const AsyncValue<
-                                              NotificationSettings
+                                              NotificationSettingsResponse
                                             >.loading();
                                         try {
-                                          final settings = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .getNotificationSettings(
+                                              .getV2DeviceDeviceIdSettingsNotification(
                                                 deviceId:
                                                     deviceIdController.text,
                                               );
                                           generalState.value = AsyncValue.data(
-                                            settings,
+                                            response.data,
                                           );
                                         } catch (e, s) {
                                           generalState.value =
                                               AsyncValue<
-                                                NotificationSettings
+                                                NotificationSettingsResponse
                                               >.error(e, s);
                                         }
                                       },
@@ -242,16 +242,16 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         generalState.value =
                                             const AsyncValue<
-                                              NotificationSettings
+                                              NotificationSettingsResponse
                                             >.loading();
                                         try {
-                                          final settings = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .updateNotificationSettings(
+                                              .patchV2DeviceDeviceIdSettingsNotification(
                                                 deviceId:
                                                     deviceIdController.text,
-                                                request:
+                                                body:
                                                     NotificationSettingsRequest(
                                                       tsunamiEnabled:
                                                           tsunamiEnabled.value,
@@ -260,12 +260,12 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                                     ),
                                               );
                                           generalState.value = AsyncValue.data(
-                                            settings,
+                                            response.data,
                                           );
                                         } catch (e, s) {
                                           generalState.value =
                                               AsyncValue<
-                                                NotificationSettings
+                                                NotificationSettingsResponse
                                               >.error(e, s);
                                         }
                                       },
@@ -330,7 +330,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                         ),
                         ListTile(
                           title: const Text('サウンドモード'),
-                          subtitle: Text(soundMode.value.value),
+                          subtitle: Text(soundMode.value.toString()),
                           trailing: DropdownButton<IntensitySoundMode>(
                             value: soundMode.value,
                             items: const [
@@ -380,22 +380,22 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         earthquakeState.value =
                                             const AsyncValue<
-                                              EarthquakeNotificationSettings
+                                              EarthquakeSettingsResponse
                                             >.loading();
                                         try {
-                                          final settings = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .getEarthquakeSettings(
+                                              .getV2DeviceDeviceIdSettingsEarthquake(
                                                 deviceId:
                                                     deviceIdController.text,
                                               );
                                           earthquakeState.value =
-                                              AsyncValue.data(settings);
+                                              AsyncValue.data(response.data);
                                         } catch (e, s) {
                                           earthquakeState.value =
                                               AsyncValue<
-                                                EarthquakeNotificationSettings
+                                                EarthquakeSettingsResponse
                                               >.error(e, s);
                                         }
                                       },
@@ -408,17 +408,17 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         earthquakeState.value =
                                             const AsyncValue<
-                                              EarthquakeNotificationSettings
+                                              EarthquakeSettingsResponse
                                             >.loading();
                                         try {
-                                          final settings = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .updateEarthquakeSettings(
+                                              .patchV2DeviceDeviceIdSettingsEarthquake(
                                                 deviceId:
                                                     deviceIdController.text,
-                                                request:
-                                                    EarthquakeNotificationSettingsRequest(
+                                                body:
+                                                    EarthquakeSettingsRequest(
                                                       enabled: earthquakeEnabled
                                                           .value,
                                                       sound: SoundSettings(
@@ -433,11 +433,11 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                                     ),
                                               );
                                           earthquakeState.value =
-                                              AsyncValue.data(settings);
+                                              AsyncValue.data(response.data);
                                         } catch (e, s) {
                                           earthquakeState.value =
                                               AsyncValue<
-                                                EarthquakeNotificationSettings
+                                                EarthquakeSettingsResponse
                                               >.error(e, s);
                                         }
                                       },
@@ -462,7 +462,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     const JsonEncoder.withIndent('  ').convert({
                                       'enabled': value.enabled,
                                       'sound': {
-                                        'mode': value.sound.mode.value,
+                                        'mode': value.sound.mode.toString(),
                                         'map': value.sound.map,
                                       },
                                       'hypocenter_update_enabled':
@@ -516,7 +516,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                         ),
                         ListTile(
                           title: const Text('サウンドモード'),
-                          subtitle: Text(eewSoundMode.value.value),
+                          subtitle: Text(eewSoundMode.value.toString()),
                           trailing: DropdownButton<IntensitySoundMode>(
                             value: eewSoundMode.value,
                             items: const [
@@ -558,23 +558,23 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         eewState.value =
                                             const AsyncValue<
-                                              EewNotificationSettings
+                                              EewSettingsResponse
                                             >.loading();
                                         try {
-                                          final settings = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .getEewSettings(
+                                              .getV2DeviceDeviceIdSettingsEew(
                                                 deviceId:
                                                     deviceIdController.text,
                                               );
                                           eewState.value = AsyncValue.data(
-                                            settings,
+                                            response.data,
                                           );
                                         } catch (e, s) {
                                           eewState.value =
                                               AsyncValue<
-                                                EewNotificationSettings
+                                                EewSettingsResponse
                                               >.error(e, s);
                                         }
                                       },
@@ -587,17 +587,17 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         eewState.value =
                                             const AsyncValue<
-                                              EewNotificationSettings
+                                              EewSettingsResponse
                                             >.loading();
                                         try {
-                                          final settings = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .updateEewSettings(
+                                              .patchV2DeviceDeviceIdSettingsEew(
                                                 deviceId:
                                                     deviceIdController.text,
-                                                request:
-                                                    EewNotificationSettingsRequest(
+                                                body:
+                                                    EewSettingsRequest(
                                                       enabled: eewEnabled.value,
                                                       overrideSilentMode:
                                                           overrideSilentMode
@@ -612,12 +612,12 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                                     ),
                                               );
                                           eewState.value = AsyncValue.data(
-                                            settings,
+                                            response.data,
                                           );
                                         } catch (e, s) {
                                           eewState.value =
                                               AsyncValue<
-                                                EewNotificationSettings
+                                                EewSettingsResponse
                                               >.error(e, s);
                                         }
                                       },
@@ -644,7 +644,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                       'override_silent_mode':
                                           value.overrideSilentMode,
                                       'sound': {
-                                        'mode': value.sound.mode.value,
+                                        'mode': value.sound.mode.toString(),
                                         'map': value.sound.map,
                                       },
                                       'start_live_activity':
@@ -693,22 +693,22 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         earthquakeRegionsState.value =
                                             const AsyncValue<
-                                              List<RegionSetting>
+                                              List<RegionSettingResponse>
                                             >.loading();
                                         try {
-                                          final regions = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .getEarthquakeRegions(
+                                              .getV2DeviceDeviceIdSettingsEarthquakeRegions(
                                                 deviceId:
                                                     deviceIdController.text,
                                               );
                                           earthquakeRegionsState.value =
-                                              AsyncValue.data(regions);
+                                              AsyncValue.data(response.data);
                                         } catch (e, s) {
                                           earthquakeRegionsState.value =
                                               AsyncValue<
-                                                List<RegionSetting>
+                                                List<RegionSettingResponse>
                                               >.error(e, s);
                                         }
                                       },
@@ -739,7 +739,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                               'is_current_location':
                                                   e.isCurrentLocation,
                                               'min_jma_intensity':
-                                                  e.minJmaIntensity.value,
+                                                  e.minJmaIntensity.toString(),
                                               'created_at': e.createdAt,
                                               'updated_at': e.updatedAt,
                                             },
@@ -789,22 +789,22 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                     : () async {
                                         eewRegionsState.value =
                                             const AsyncValue<
-                                              List<RegionSetting>
+                                              List<RegionSettingResponse>
                                             >.loading();
                                         try {
-                                          final regions = await ref
-                                              .read(eqApiProvider)
+                                          final response = await ref
+                                              .read(apiClientProvider)
                                               .device
-                                              .getEewRegions(
+                                              .getV2DeviceDeviceIdSettingsEewRegions(
                                                 deviceId:
                                                     deviceIdController.text,
                                               );
                                           eewRegionsState.value =
-                                              AsyncValue.data(regions);
+                                              AsyncValue.data(response.data);
                                         } catch (e, s) {
                                           eewRegionsState.value =
                                               AsyncValue<
-                                                List<RegionSetting>
+                                                List<RegionSettingResponse>
                                               >.error(e, s);
                                         }
                                       },
@@ -835,7 +835,7 @@ class DebugNotificationSettingsPage extends HookConsumerWidget {
                                               'is_current_location':
                                                   e.isCurrentLocation,
                                               'min_jma_intensity':
-                                                  e.minJmaIntensity.value,
+                                                  e.minJmaIntensity.toString(),
                                               'created_at': e.createdAt,
                                               'updated_at': e.updatedAt,
                                             },

@@ -1,5 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
+import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -70,8 +70,9 @@ class _EewCard extends StatelessWidget {
             Text('震源地: ${hypocenter?.value.name ?? "不明"}'),
             Text('深さ: ${hypocenter?.depth ?? "不明"}km'),
             Text('マグニチュード: ${hypocenter?.magnitude ?? "不明"}'),
-            Text(
-              '最大予測震度: ${forecastIntensity?.maxIntensity?.value.value ?? '不明'}',
+            const Text(
+              // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）。暫定
+              '最大予測震度: 不明',
             ),
             if (eew.isWarning ?? false)
               const Chip(

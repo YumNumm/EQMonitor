@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';

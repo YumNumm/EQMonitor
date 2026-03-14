@@ -161,6 +161,47 @@
             "required": true
           }
         ]
+      },
+      "delete": {
+        "operationId": "deleteV2DeviceByDeviceId",
+        "tags": [
+          "Device"
+        ],
+        "description": "デバイスを削除（関連データも全て削除）",
+        "responses": {
+          "204": {
+            "description": "削除成功"
+          },
+          "401": {
+            "description": "認証エラー"
+          },
+          "403": {
+            "description": "他のユーザーのデバイス"
+          },
+          "404": {
+            "description": "デバイスが見つからない"
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
       }
     },
     "/v2/device/{deviceId}/apns": {
@@ -2846,7 +2887,7 @@
           "6+",
           "7"
         ],
-        "description": "JMA震度"
+        "description": "震度"
       },
       "RegionSettingResponse": {
         "type": "object",
@@ -3106,22 +3147,6 @@
           "framework"
         ]
       },
-      "Intensity": {
-        "enum": [
-          "0",
-          "1",
-          "2",
-          "3",
-          "4",
-          "!5-",
-          "5-",
-          "5+",
-          "6-",
-          "6+",
-          "7"
-        ],
-        "description": "震度"
-      },
       "TelegramStatus": {
         "enum": [
           "NORMAL",
@@ -3311,7 +3336,7 @@
         ],
         "description": "地震データのソース"
       },
-      "LpgmIntensity": {
+      "JmaLpgmIntensity": {
         "enum": [
           "0",
           "1",
@@ -3328,10 +3353,10 @@
             "$ref": "#/components/schemas/CodeName"
           },
           "max_intensity": {
-            "$ref": "#/components/schemas/Intensity"
+            "$ref": "#/components/schemas/JmaIntensity"
           },
           "max_lpgm_intensity": {
-            "$ref": "#/components/schemas/LpgmIntensity"
+            "$ref": "#/components/schemas/JmaLpgmIntensity"
           }
         },
         "required": [
@@ -3380,10 +3405,10 @@
             "type": "object",
             "properties": {
               "max_intensity": {
-                "$ref": "#/components/schemas/Intensity"
+                "$ref": "#/components/schemas/JmaIntensity"
               },
               "max_lpgm_intensity": {
-                "$ref": "#/components/schemas/LpgmIntensity"
+                "$ref": "#/components/schemas/JmaLpgmIntensity"
               },
               "prefectures": {
                 "type": "array",
@@ -3473,7 +3498,7 @@
                       "type": "number"
                     },
                     "lpgm_intensity": {
-                      "$ref": "#/components/schemas/LpgmIntensity"
+                      "$ref": "#/components/schemas/JmaLpgmIntensity"
                     },
                     "sva": {
                       "type": "number"
@@ -3494,6 +3519,47 @@
             ]
           }
         ]
+      },
+      "Intensity": {
+        "type": "object",
+        "properties": {
+          "max_intensity": {
+            "$ref": "#/components/schemas/JmaIntensity"
+          },
+          "max_lpgm_intensity": {
+            "$ref": "#/components/schemas/JmaLpgmIntensity"
+          },
+          "prefectures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityItem"
+            }
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityItem"
+            }
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityItem"
+            }
+          },
+          "stations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityStationItem"
+            }
+          }
+        },
+        "required": [
+          "max_intensity",
+          "prefectures",
+          "regions"
+        ],
+        "description": "震度に関する情報"
       },
       "TelegramType": {
         "enum": [
@@ -3730,7 +3796,7 @@
           "intensity": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/Intensity"
+                "$ref": "#/components/schemas/JmaIntensity"
               },
               {
                 "type": "null"
@@ -3740,7 +3806,7 @@
           "lpgm_intensity": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/LpgmIntensity"
+                "$ref": "#/components/schemas/JmaLpgmIntensity"
               },
               {
                 "type": "null"
@@ -3890,7 +3956,7 @@
           "intensity": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/Intensity"
+                "$ref": "#/components/schemas/JmaIntensity"
               },
               {
                 "type": "null"
@@ -3900,7 +3966,7 @@
           "lpgm_intensity": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/LpgmIntensity"
+                "$ref": "#/components/schemas/JmaLpgmIntensity"
               },
               {
                 "type": "null"
@@ -4099,7 +4165,7 @@
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/Intensity"
+            "$ref": "#/components/schemas/JmaIntensity"
           },
           "is_over": {
             "type": "boolean"
@@ -4115,7 +4181,7 @@
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/LpgmIntensity"
+            "$ref": "#/components/schemas/JmaLpgmIntensity"
           },
           "is_over": {
             "type": "boolean"

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +141,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     }
 
     final coords = hypocenter.coordinates;
-    if (coords is! CoordinateLatLng) {
+    if (coords.type != CoordinateType.latLng) {
       await _clearLayers(styleController);
       return;
     }
@@ -155,10 +155,10 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     }
 
     final elapsed = eew.reportTime.difference(originTime).inMilliseconds / 1000;
-    final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
+    final travelTime = travelTimeMap.getTravelTime(depth.toInt(), elapsed);
 
-    final lat = coords.latitude;
-    final lng = coords.longitude;
+    final lat = coords.latitude!.toDouble();
+    final lng = coords.longitude!.toDouble();
 
     final isWarning = eew.isWarningOrFallback;
     final lineColor = isWarning ? '#FF0000' : '#FFA500';

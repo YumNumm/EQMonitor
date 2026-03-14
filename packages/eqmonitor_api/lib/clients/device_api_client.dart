@@ -41,6 +41,12 @@ abstract class DeviceApiClient {
     @Path('deviceId') required String deviceId,
   });
 
+  /// デバイスを削除（関連データも全て削除）
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceDeviceId)
+  Future<HttpResponse<void>> deleteV2DeviceDeviceId({
+    @Path('deviceId') required String deviceId,
+  });
+
   /// APNsトークン一覧を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdApns)
   Future<HttpResponse<List<ApnsTokenResponse>>> getV2DeviceDeviceIdApns({
@@ -225,6 +231,8 @@ abstract class DeviceApiClientUrls {
 	static const putV2DeviceDeviceId = "/v2/device/{deviceId}";
 	/// /v2/device/{deviceId}
 	static const getV2DeviceDeviceId = "/v2/device/{deviceId}";
+	/// /v2/device/{deviceId}
+	static const deleteV2DeviceDeviceId = "/v2/device/{deviceId}";
 	/// /v2/device/{deviceId}/apns
 	static const getV2DeviceDeviceIdApns = "/v2/device/{deviceId}/apns";
 	/// /v2/device/{deviceId}/apns/{type}

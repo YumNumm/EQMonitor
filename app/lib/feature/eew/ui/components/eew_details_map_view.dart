@@ -1,4 +1,4 @@
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_forecast_region_layer.dart';
@@ -69,7 +69,10 @@ class _MapContent extends StatelessWidget {
       children: [
         EewForecastRegionLayer(eew: selectedEew, displayMode: displayMode),
         EewStaticPsWaveLayer(eew: selectedEew),
-        EewHypocenterLayer(eews: selectedEew != null ? [selectedEew] : []),
+        if (selectedEew case final eew?)
+          EewHypocenterLayer(eews: [eew])
+        else
+          const EewHypocenterLayer(eews: []),
       ],
     );
   }

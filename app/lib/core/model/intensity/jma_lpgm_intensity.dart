@@ -10,42 +10,42 @@ enum JmaLpgmIntensity {
   four;
 
   String get label => switch (this) {
-        JmaLpgmIntensity.unknown => '不明',
-        JmaLpgmIntensity.zero => '0',
-        JmaLpgmIntensity.one => '1',
-        JmaLpgmIntensity.two => '2',
-        JmaLpgmIntensity.three => '3',
-        JmaLpgmIntensity.four => '4',
+        .unknown => '不明',
+        .zero => '0',
+        .one => '1',
+        .two => '2',
+        .three => '3',
+        .four => '4',
       };
 
   /// ソート・比較用の順序
   int get orderIndex => switch (this) {
-        JmaLpgmIntensity.unknown => -1,
-        JmaLpgmIntensity.zero => 0,
-        JmaLpgmIntensity.one => 1,
-        JmaLpgmIntensity.two => 2,
-        JmaLpgmIntensity.three => 3,
-        JmaLpgmIntensity.four => 4,
+        .unknown => -1,
+        .zero => 0,
+        .one => 1,
+        .two => 2,
+        .three => 3,
+        .four => 4,
       };
 }
 
-extension ApiLpgmIntensityConverter on api.LpgmIntensity {
-  JmaLpgmIntensity toJmaLpgmIntensity() => switch (this) {
-        api.LpgmIntensity.value0 => JmaLpgmIntensity.zero,
-        api.LpgmIntensity.value1 => JmaLpgmIntensity.one,
-        api.LpgmIntensity.value2 => JmaLpgmIntensity.two,
-        api.LpgmIntensity.value3 => JmaLpgmIntensity.three,
-        api.LpgmIntensity.value4 => JmaLpgmIntensity.four,
+extension ApiLpgmIntensityConverter on api.JmaLpgmIntensity {
+  JmaLpgmIntensity get toJmaLpgmIntensity => switch (this) {
+        .value0 => .zero,
+        .value1 => .one,
+        .value2 => .two,
+        .value3 => .three,
+        .value4 => .four,
       };
 }
 
 extension JmaLpgmIntensityToApi on JmaLpgmIntensity {
-  api.LpgmIntensity? toApiLpgmIntensity() => switch (this) {
-        JmaLpgmIntensity.unknown => null,
-        JmaLpgmIntensity.zero => api.LpgmIntensity.value0,
-        JmaLpgmIntensity.one => api.LpgmIntensity.value1,
-        JmaLpgmIntensity.two => api.LpgmIntensity.value2,
-        JmaLpgmIntensity.three => api.LpgmIntensity.value3,
-        JmaLpgmIntensity.four => api.LpgmIntensity.value4,
+  api.JmaLpgmIntensity? get toApiJmaLpgmIntensity => switch (this) {
+        .unknown => null,
+        .zero => .value0,
+        .one => .value1,
+        .two => .value2,
+        .three => .value3,
+        .four => .value4,
       };
 }

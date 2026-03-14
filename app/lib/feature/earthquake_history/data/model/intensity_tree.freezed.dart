@@ -11,279 +11,19 @@ part of 'intensity_tree.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-/// @nodoc
-mixin _$IntensityTree {
-
- Map<IntensityValue, List<RegionIntensityNode>> get byIntensity;
-/// Create a copy of IntensityTree
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$IntensityTreeCopyWith<IntensityTree> get copyWith => _$IntensityTreeCopyWithImpl<IntensityTree>(this as IntensityTree, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityTree&&const DeepCollectionEquality().equals(other.byIntensity, byIntensity));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(byIntensity));
-
-@override
-String toString() {
-  return 'IntensityTree(byIntensity: $byIntensity)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $IntensityTreeCopyWith<$Res>  {
-  factory $IntensityTreeCopyWith(IntensityTree value, $Res Function(IntensityTree) _then) = _$IntensityTreeCopyWithImpl;
-@useResult
-$Res call({
- Map<IntensityValue, List<RegionIntensityNode>> byIntensity
-});
-
-
-
-
-}
-/// @nodoc
-class _$IntensityTreeCopyWithImpl<$Res>
-    implements $IntensityTreeCopyWith<$Res> {
-  _$IntensityTreeCopyWithImpl(this._self, this._then);
-
-  final IntensityTree _self;
-  final $Res Function(IntensityTree) _then;
-
-/// Create a copy of IntensityTree
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? byIntensity = null,}) {
-  return _then(_self.copyWith(
-byIntensity: null == byIntensity ? _self.byIntensity : byIntensity // ignore: cast_nullable_to_non_nullable
-as Map<IntensityValue, List<RegionIntensityNode>>,
-  ));
-}
-
-}
-
-
-/// Adds pattern-matching-related methods to [IntensityTree].
-extension IntensityTreePatterns on IntensityTree {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IntensityTree value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _IntensityTree() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IntensityTree value)  $default,){
-final _that = this;
-switch (_that) {
-case _IntensityTree():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IntensityTree value)?  $default,){
-final _that = this;
-switch (_that) {
-case _IntensityTree() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<IntensityValue, List<RegionIntensityNode>> byIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _IntensityTree() when $default != null:
-return $default(_that.byIntensity);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<IntensityValue, List<RegionIntensityNode>> byIntensity)  $default,) {final _that = this;
-switch (_that) {
-case _IntensityTree():
-return $default(_that.byIntensity);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<IntensityValue, List<RegionIntensityNode>> byIntensity)?  $default,) {final _that = this;
-switch (_that) {
-case _IntensityTree() when $default != null:
-return $default(_that.byIntensity);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-
-
-class _IntensityTree implements IntensityTree {
-  const _IntensityTree({required final  Map<IntensityValue, List<RegionIntensityNode>> byIntensity}): _byIntensity = byIntensity;
-  
-
- final  Map<IntensityValue, List<RegionIntensityNode>> _byIntensity;
-@override Map<IntensityValue, List<RegionIntensityNode>> get byIntensity {
-  if (_byIntensity is EqualUnmodifiableMapView) return _byIntensity;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_byIntensity);
-}
-
-
-/// Create a copy of IntensityTree
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$IntensityTreeCopyWith<_IntensityTree> get copyWith => __$IntensityTreeCopyWithImpl<_IntensityTree>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityTree&&const DeepCollectionEquality().equals(other._byIntensity, _byIntensity));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_byIntensity));
-
-@override
-String toString() {
-  return 'IntensityTree(byIntensity: $byIntensity)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$IntensityTreeCopyWith<$Res> implements $IntensityTreeCopyWith<$Res> {
-  factory _$IntensityTreeCopyWith(_IntensityTree value, $Res Function(_IntensityTree) _then) = __$IntensityTreeCopyWithImpl;
-@override @useResult
-$Res call({
- Map<IntensityValue, List<RegionIntensityNode>> byIntensity
-});
-
-
-
-
-}
-/// @nodoc
-class __$IntensityTreeCopyWithImpl<$Res>
-    implements _$IntensityTreeCopyWith<$Res> {
-  __$IntensityTreeCopyWithImpl(this._self, this._then);
-
-  final _IntensityTree _self;
-  final $Res Function(_IntensityTree) _then;
-
-/// Create a copy of IntensityTree
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? byIntensity = null,}) {
-  return _then(_IntensityTree(
-byIntensity: null == byIntensity ? _self._byIntensity : byIntensity // ignore: cast_nullable_to_non_nullable
-as Map<IntensityValue, List<RegionIntensityNode>>,
-  ));
-}
-
-
-}
 
 /// @nodoc
 mixin _$RegionIntensityNode {
 
- EarthquakeParameterRegionItem get region; IntensityValue? get maxIntensity; List<CityIntensityNode> get cities;
+@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem get region; JmaIntensity? get maxIntensity; List<CityIntensityNode> get cities;
 /// Create a copy of RegionIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $RegionIntensityNodeCopyWith<RegionIntensityNode> get copyWith => _$RegionIntensityNodeCopyWithImpl<RegionIntensityNode>(this as RegionIntensityNode, _$identity);
 
+  /// Serializes this RegionIntensityNode to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -291,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is RegionIntensityNode&&(identical(other.region, region) || other.region == region)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other.cities, cities));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,region,maxIntensity,const DeepCollectionEquality().hash(cities));
 
@@ -308,7 +48,7 @@ abstract mixin class $RegionIntensityNodeCopyWith<$Res>  {
   factory $RegionIntensityNodeCopyWith(RegionIntensityNode value, $Res Function(RegionIntensityNode) _then) = _$RegionIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
- EarthquakeParameterRegionItem region, IntensityValue? maxIntensity, List<CityIntensityNode> cities
+@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaIntensity? maxIntensity, List<CityIntensityNode> cities
 });
 
 
@@ -329,7 +69,7 @@ class _$RegionIntensityNodeCopyWithImpl<$Res>
   return _then(_self.copyWith(
 region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterRegionItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,cities: null == cities ? _self.cities : cities // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,cities: null == cities ? _self.cities : cities // ignore: cast_nullable_to_non_nullable
 as List<CityIntensityNode>,
   ));
 }
@@ -415,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterRegionItem region,  IntensityValue? maxIntensity,  List<CityIntensityNode> cities)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity,  List<CityIntensityNode> cities)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegionIntensityNode() when $default != null:
 return $default(_that.region,_that.maxIntensity,_that.cities);case _:
@@ -436,7 +176,7 @@ return $default(_that.region,_that.maxIntensity,_that.cities);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterRegionItem region,  IntensityValue? maxIntensity,  List<CityIntensityNode> cities)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity,  List<CityIntensityNode> cities)  $default,) {final _that = this;
 switch (_that) {
 case _RegionIntensityNode():
 return $default(_that.region,_that.maxIntensity,_that.cities);case _:
@@ -456,7 +196,7 @@ return $default(_that.region,_that.maxIntensity,_that.cities);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterRegionItem region,  IntensityValue? maxIntensity,  List<CityIntensityNode> cities)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity,  List<CityIntensityNode> cities)?  $default,) {final _that = this;
 switch (_that) {
 case _RegionIntensityNode() when $default != null:
 return $default(_that.region,_that.maxIntensity,_that.cities);case _:
@@ -468,14 +208,14 @@ return $default(_that.region,_that.maxIntensity,_that.cities);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _RegionIntensityNode implements RegionIntensityNode {
-  const _RegionIntensityNode({required this.region, required this.maxIntensity, required final  List<CityIntensityNode> cities}): _cities = cities;
-  
+  const _RegionIntensityNode({@EarthquakeParameterRegionItemConverter() required this.region, required this.maxIntensity, required final  List<CityIntensityNode> cities}): _cities = cities;
+  factory _RegionIntensityNode.fromJson(Map<String, dynamic> json) => _$RegionIntensityNodeFromJson(json);
 
-@override final  EarthquakeParameterRegionItem region;
-@override final  IntensityValue? maxIntensity;
+@override@EarthquakeParameterRegionItemConverter() final  EarthquakeParameterRegionItem region;
+@override final  JmaIntensity? maxIntensity;
  final  List<CityIntensityNode> _cities;
 @override List<CityIntensityNode> get cities {
   if (_cities is EqualUnmodifiableListView) return _cities;
@@ -490,14 +230,17 @@ class _RegionIntensityNode implements RegionIntensityNode {
 @pragma('vm:prefer-inline')
 _$RegionIntensityNodeCopyWith<_RegionIntensityNode> get copyWith => __$RegionIntensityNodeCopyWithImpl<_RegionIntensityNode>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$RegionIntensityNodeToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegionIntensityNode&&(identical(other.region, region) || other.region == region)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other._cities, _cities));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,region,maxIntensity,const DeepCollectionEquality().hash(_cities));
 
@@ -514,7 +257,7 @@ abstract mixin class _$RegionIntensityNodeCopyWith<$Res> implements $RegionInten
   factory _$RegionIntensityNodeCopyWith(_RegionIntensityNode value, $Res Function(_RegionIntensityNode) _then) = __$RegionIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakeParameterRegionItem region, IntensityValue? maxIntensity, List<CityIntensityNode> cities
+@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaIntensity? maxIntensity, List<CityIntensityNode> cities
 });
 
 
@@ -535,7 +278,7 @@ class __$RegionIntensityNodeCopyWithImpl<$Res>
   return _then(_RegionIntensityNode(
 region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterRegionItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,cities: null == cities ? _self._cities : cities // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,cities: null == cities ? _self._cities : cities // ignore: cast_nullable_to_non_nullable
 as List<CityIntensityNode>,
   ));
 }
@@ -543,16 +286,19 @@ as List<CityIntensityNode>,
 
 }
 
+
 /// @nodoc
 mixin _$CityIntensityNode {
 
- EarthquakeParameterCityItem get city; IntensityValue? get maxIntensity; List<StationIntensityNode> get stations;
+@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem get city; JmaIntensity? get maxIntensity; List<StationIntensityNode> get stations;
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $CityIntensityNodeCopyWith<CityIntensityNode> get copyWith => _$CityIntensityNodeCopyWithImpl<CityIntensityNode>(this as CityIntensityNode, _$identity);
 
+  /// Serializes this CityIntensityNode to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -560,7 +306,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is CityIntensityNode&&(identical(other.city, city) || other.city == city)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other.stations, stations));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,city,maxIntensity,const DeepCollectionEquality().hash(stations));
 
@@ -577,7 +323,7 @@ abstract mixin class $CityIntensityNodeCopyWith<$Res>  {
   factory $CityIntensityNodeCopyWith(CityIntensityNode value, $Res Function(CityIntensityNode) _then) = _$CityIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
- EarthquakeParameterCityItem city, IntensityValue? maxIntensity, List<StationIntensityNode> stations
+@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations
 });
 
 
@@ -598,7 +344,7 @@ class _$CityIntensityNodeCopyWithImpl<$Res>
   return _then(_self.copyWith(
 city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterCityItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
 as List<StationIntensityNode>,
   ));
 }
@@ -684,7 +430,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  IntensityValue? maxIntensity,  List<StationIntensityNode> stations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
 return $default(_that.city,_that.maxIntensity,_that.stations);case _:
@@ -705,7 +451,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  IntensityValue? maxIntensity,  List<StationIntensityNode> stations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations)  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode():
 return $default(_that.city,_that.maxIntensity,_that.stations);case _:
@@ -725,7 +471,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterCityItem city,  IntensityValue? maxIntensity,  List<StationIntensityNode> stations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations)?  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
 return $default(_that.city,_that.maxIntensity,_that.stations);case _:
@@ -737,14 +483,14 @@ return $default(_that.city,_that.maxIntensity,_that.stations);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _CityIntensityNode implements CityIntensityNode {
-  const _CityIntensityNode({required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations}): _stations = stations;
-  
+  const _CityIntensityNode({@EarthquakeParameterCityItemConverter() required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations}): _stations = stations;
+  factory _CityIntensityNode.fromJson(Map<String, dynamic> json) => _$CityIntensityNodeFromJson(json);
 
-@override final  EarthquakeParameterCityItem city;
-@override final  IntensityValue? maxIntensity;
+@override@EarthquakeParameterCityItemConverter() final  EarthquakeParameterCityItem city;
+@override final  JmaIntensity? maxIntensity;
  final  List<StationIntensityNode> _stations;
 @override List<StationIntensityNode> get stations {
   if (_stations is EqualUnmodifiableListView) return _stations;
@@ -759,14 +505,17 @@ class _CityIntensityNode implements CityIntensityNode {
 @pragma('vm:prefer-inline')
 _$CityIntensityNodeCopyWith<_CityIntensityNode> get copyWith => __$CityIntensityNodeCopyWithImpl<_CityIntensityNode>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$CityIntensityNodeToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _CityIntensityNode&&(identical(other.city, city) || other.city == city)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other._stations, _stations));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,city,maxIntensity,const DeepCollectionEquality().hash(_stations));
 
@@ -783,7 +532,7 @@ abstract mixin class _$CityIntensityNodeCopyWith<$Res> implements $CityIntensity
   factory _$CityIntensityNodeCopyWith(_CityIntensityNode value, $Res Function(_CityIntensityNode) _then) = __$CityIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakeParameterCityItem city, IntensityValue? maxIntensity, List<StationIntensityNode> stations
+@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations
 });
 
 
@@ -804,7 +553,7 @@ class __$CityIntensityNodeCopyWithImpl<$Res>
   return _then(_CityIntensityNode(
 city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterCityItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,stations: null == stations ? _self._stations : stations // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,stations: null == stations ? _self._stations : stations // ignore: cast_nullable_to_non_nullable
 as List<StationIntensityNode>,
   ));
 }
@@ -812,16 +561,19 @@ as List<StationIntensityNode>,
 
 }
 
+
 /// @nodoc
 mixin _$StationIntensityNode {
 
- EarthquakeParameterStationItem get station; IntensityStationItem? get intensity;
+@EarthquakeParameterStationItemConverter() EarthquakeParameterStationItem get station; IntensityStation? get intensity;
 /// Create a copy of StationIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $StationIntensityNodeCopyWith<StationIntensityNode> get copyWith => _$StationIntensityNodeCopyWithImpl<StationIntensityNode>(this as StationIntensityNode, _$identity);
 
+  /// Serializes this StationIntensityNode to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -829,7 +581,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is StationIntensityNode&&(identical(other.station, station) || other.station == station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,station,intensity);
 
@@ -846,11 +598,11 @@ abstract mixin class $StationIntensityNodeCopyWith<$Res>  {
   factory $StationIntensityNodeCopyWith(StationIntensityNode value, $Res Function(StationIntensityNode) _then) = _$StationIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
- EarthquakeParameterStationItem station, IntensityStationItem? intensity
+@EarthquakeParameterStationItemConverter() EarthquakeParameterStationItem station, IntensityStation? intensity
 });
 
 
-$IntensityStationItemCopyWith<$Res>? get intensity;
+$IntensityStationCopyWith<$Res>? get intensity;
 
 }
 /// @nodoc
@@ -867,19 +619,19 @@ class _$StationIntensityNodeCopyWithImpl<$Res>
   return _then(_self.copyWith(
 station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterStationItem,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as IntensityStationItem?,
+as IntensityStation?,
   ));
 }
 /// Create a copy of StationIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityStationItemCopyWith<$Res>? get intensity {
+$IntensityStationCopyWith<$Res>? get intensity {
     if (_self.intensity == null) {
     return null;
   }
 
-  return $IntensityStationItemCopyWith<$Res>(_self.intensity!, (value) {
+  return $IntensityStationCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
   });
 }
@@ -964,7 +716,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterStationItem station,  IntensityStationItem? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterStationItemConverter()  EarthquakeParameterStationItem station,  IntensityStation? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StationIntensityNode() when $default != null:
 return $default(_that.station,_that.intensity);case _:
@@ -985,7 +737,7 @@ return $default(_that.station,_that.intensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterStationItem station,  IntensityStationItem? intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterStationItemConverter()  EarthquakeParameterStationItem station,  IntensityStation? intensity)  $default,) {final _that = this;
 switch (_that) {
 case _StationIntensityNode():
 return $default(_that.station,_that.intensity);case _:
@@ -1005,7 +757,7 @@ return $default(_that.station,_that.intensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterStationItem station,  IntensityStationItem? intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterStationItemConverter()  EarthquakeParameterStationItem station,  IntensityStation? intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _StationIntensityNode() when $default != null:
 return $default(_that.station,_that.intensity);case _:
@@ -1017,14 +769,14 @@ return $default(_that.station,_that.intensity);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _StationIntensityNode implements StationIntensityNode {
-  const _StationIntensityNode({required this.station, required this.intensity});
-  
+  const _StationIntensityNode({@EarthquakeParameterStationItemConverter() required this.station, required this.intensity});
+  factory _StationIntensityNode.fromJson(Map<String, dynamic> json) => _$StationIntensityNodeFromJson(json);
 
-@override final  EarthquakeParameterStationItem station;
-@override final  IntensityStationItem? intensity;
+@override@EarthquakeParameterStationItemConverter() final  EarthquakeParameterStationItem station;
+@override final  IntensityStation? intensity;
 
 /// Create a copy of StationIntensityNode
 /// with the given fields replaced by the non-null parameter values.
@@ -1032,14 +784,17 @@ class _StationIntensityNode implements StationIntensityNode {
 @pragma('vm:prefer-inline')
 _$StationIntensityNodeCopyWith<_StationIntensityNode> get copyWith => __$StationIntensityNodeCopyWithImpl<_StationIntensityNode>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$StationIntensityNodeToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _StationIntensityNode&&(identical(other.station, station) || other.station == station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,station,intensity);
 
@@ -1056,11 +811,11 @@ abstract mixin class _$StationIntensityNodeCopyWith<$Res> implements $StationInt
   factory _$StationIntensityNodeCopyWith(_StationIntensityNode value, $Res Function(_StationIntensityNode) _then) = __$StationIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakeParameterStationItem station, IntensityStationItem? intensity
+@EarthquakeParameterStationItemConverter() EarthquakeParameterStationItem station, IntensityStation? intensity
 });
 
 
-@override $IntensityStationItemCopyWith<$Res>? get intensity;
+@override $IntensityStationCopyWith<$Res>? get intensity;
 
 }
 /// @nodoc
@@ -1077,7 +832,7 @@ class __$StationIntensityNodeCopyWithImpl<$Res>
   return _then(_StationIntensityNode(
 station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterStationItem,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as IntensityStationItem?,
+as IntensityStation?,
   ));
 }
 
@@ -1085,12 +840,12 @@ as IntensityStationItem?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityStationItemCopyWith<$Res>? get intensity {
+$IntensityStationCopyWith<$Res>? get intensity {
     if (_self.intensity == null) {
     return null;
   }
 
-  return $IntensityStationItemCopyWith<$Res>(_self.intensity!, (value) {
+  return $IntensityStationCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
   });
 }

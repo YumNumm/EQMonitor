@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'intensity.dart';
+import 'jma_intensity.dart';
 
 part 'eew_intensity_value.freezed.dart';
 part 'eew_intensity_value.g.dart';
@@ -13,7 +13,7 @@ part 'eew_intensity_value.g.dart';
 @Freezed()
 abstract class EewIntensityValue with _$EewIntensityValue {
   const factory EewIntensityValue({
-    required Intensity value,
+    required JmaIntensity value,
     @JsonKey(name: 'is_over')
     required bool isOver,
   }) = _EewIntensityValue;

@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// JMA震度
+/// 震度
 @JsonEnum()
 enum JmaIntensity {
   @JsonValue(0)

@@ -1,7 +1,7 @@
 // ignore_for_file: provider_dependencies
 import 'dart:math' as math;
 
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
@@ -54,15 +54,15 @@ class EstimatedIntensity extends _$EstimatedIntensity {
         return false;
       }
       final coords = e.hypocenter?.coordinates;
-      return coords is CoordinateLatLng;
+      return coords != null && coords.type == CoordinateType.latLng;
     });
     if (targetEews.isEmpty) {
       return [];
     }
 
     for (final eew in targetEews) {
-      final hypocenter = eew.hypocenter;
-      final coords = hypocenter.coordinates as CoordinateLatLng;
+      final hypocenter = eew.hypocenter!;
+      final coords = hypocenter.coordinates;
       final magnitude = hypocenter.magnitude;
       final depth = hypocenter.depth;
       if (magnitude == null || depth == null) {
@@ -71,9 +71,9 @@ class EstimatedIntensity extends _$EstimatedIntensity {
       final result = calculator
           .getEstimatedIntensity(
             points: _calculationPoints!.toList(),
-            jmaMagnitude: magnitude,
-            depth: depth,
-            hypocenter: (lat: coords.latitude, lon: coords.longitude),
+            jmaMagnitude: magnitude.toDouble(),
+            depth: depth.toInt(),
+            hypocenter: (lat: coords.latitude!.toDouble(), lon: coords.longitude!.toDouble()),
           )
           .toList();
       results.add(result);

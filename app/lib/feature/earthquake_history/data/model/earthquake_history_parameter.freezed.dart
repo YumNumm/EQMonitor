@@ -15,9 +15,9 @@ T _$identity<T>(T value) => value;
 mixin _$EarthquakeHistoryParameter {
 
 // 基本フィルター
- double? get magnitudeLte; double? get magnitudeGte; int? get depthLte; int? get depthGte; IntensityValue? get intensityLte; IntensityValue? get intensityGte; List<TelegramStatus>? get statuses;// 震央地名フィルター
+ double? get magnitudeLte; double? get magnitudeGte; int? get depthLte; int? get depthGte; JmaIntensity? get intensityLte; JmaIntensity? get intensityGte; List<TelegramStatus>? get statuses;// 震央地名フィルター
  int? get epicenterCode; String? get epicenterName;// 地域の震度フィルター
- RegionSearchType? get regionSearchType; String? get regionCode; String? get regionName; IntensityValue? get regionIntensityLte; IntensityValue? get regionIntensityGte;
+ RegionSearchType? get regionSearchType; String? get regionCode; String? get regionName; JmaIntensity? get regionIntensityLte; JmaIntensity? get regionIntensityGte;
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $EarthquakeHistoryParameterCopyWith<$Res>  {
   factory $EarthquakeHistoryParameterCopyWith(EarthquakeHistoryParameter value, $Res Function(EarthquakeHistoryParameter) _then) = _$EarthquakeHistoryParameterCopyWithImpl;
 @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, IntensityValue? intensityLte, IntensityValue? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, IntensityValue? regionIntensityLte, IntensityValue? regionIntensityGte
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte
 });
 
 
@@ -72,16 +72,16 @@ as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitud
 as double?,depthLte: freezed == depthLte ? _self.depthLte : depthLte // ignore: cast_nullable_to_non_nullable
 as int?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
 as int?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,statuses: freezed == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,statuses: freezed == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<TelegramStatus>?,epicenterCode: freezed == epicenterCode ? _self.epicenterCode : epicenterCode // ignore: cast_nullable_to_non_nullable
 as int?,epicenterName: freezed == epicenterName ? _self.epicenterName : epicenterName // ignore: cast_nullable_to_non_nullable
 as String?,regionSearchType: freezed == regionSearchType ? _self.regionSearchType : regionSearchType // ignore: cast_nullable_to_non_nullable
 as RegionSearchType?,regionCode: freezed == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
 as String?,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,regionIntensityLte: freezed == regionIntensityLte ? _self.regionIntensityLte : regionIntensityLte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,regionIntensityGte: freezed == regionIntensityGte ? _self.regionIntensityGte : regionIntensityGte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,
+as JmaIntensity?,regionIntensityGte: freezed == regionIntensityGte ? _self.regionIntensityGte : regionIntensityGte // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,
   ));
 }
 
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  IntensityValue? regionIntensityLte,  IntensityValue? regionIntensityGte)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte);case _:
@@ -187,7 +187,7 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  IntensityValue? regionIntensityLte,  IntensityValue? regionIntensityGte)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter():
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte);case _:
@@ -207,7 +207,7 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  IntensityValue? regionIntensityLte,  IntensityValue? regionIntensityGte)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte);case _:
@@ -230,8 +230,8 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
 @override final  double? magnitudeGte;
 @override final  int? depthLte;
 @override final  int? depthGte;
-@override final  IntensityValue? intensityLte;
-@override final  IntensityValue? intensityGte;
+@override final  JmaIntensity? intensityLte;
+@override final  JmaIntensity? intensityGte;
  final  List<TelegramStatus>? _statuses;
 @override List<TelegramStatus>? get statuses {
   final value = _statuses;
@@ -248,8 +248,8 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
 @override final  RegionSearchType? regionSearchType;
 @override final  String? regionCode;
 @override final  String? regionName;
-@override final  IntensityValue? regionIntensityLte;
-@override final  IntensityValue? regionIntensityGte;
+@override final  JmaIntensity? regionIntensityLte;
+@override final  JmaIntensity? regionIntensityGte;
 
 /// Create a copy of EarthquakeHistoryParameter
 /// with the given fields replaced by the non-null parameter values.
@@ -281,7 +281,7 @@ abstract mixin class _$EarthquakeHistoryParameterCopyWith<$Res> implements $Eart
   factory _$EarthquakeHistoryParameterCopyWith(_EarthquakeHistoryParameter value, $Res Function(_EarthquakeHistoryParameter) _then) = __$EarthquakeHistoryParameterCopyWithImpl;
 @override @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, IntensityValue? intensityLte, IntensityValue? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, IntensityValue? regionIntensityLte, IntensityValue? regionIntensityGte
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte
 });
 
 
@@ -305,16 +305,16 @@ as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitud
 as double?,depthLte: freezed == depthLte ? _self.depthLte : depthLte // ignore: cast_nullable_to_non_nullable
 as int?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
 as int?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,statuses: freezed == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,statuses: freezed == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<TelegramStatus>?,epicenterCode: freezed == epicenterCode ? _self.epicenterCode : epicenterCode // ignore: cast_nullable_to_non_nullable
 as int?,epicenterName: freezed == epicenterName ? _self.epicenterName : epicenterName // ignore: cast_nullable_to_non_nullable
 as String?,regionSearchType: freezed == regionSearchType ? _self.regionSearchType : regionSearchType // ignore: cast_nullable_to_non_nullable
 as RegionSearchType?,regionCode: freezed == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
 as String?,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,regionIntensityLte: freezed == regionIntensityLte ? _self.regionIntensityLte : regionIntensityLte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,regionIntensityGte: freezed == regionIntensityGte ? _self.regionIntensityGte : regionIntensityGte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,
+as JmaIntensity?,regionIntensityGte: freezed == regionIntensityGte ? _self.regionIntensityGte : regionIntensityGte // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,
   ));
 }
 

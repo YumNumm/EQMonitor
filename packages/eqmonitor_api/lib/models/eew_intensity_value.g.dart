@@ -13,7 +13,7 @@ _EewIntensityValue _$EewIntensityValueFromJson(Map<String, dynamic> json) =>
       final val = _EewIntensityValue(
         value: $checkedConvert(
           'value',
-          (v) => Intensity.fromJson(v as Map<String, dynamic>),
+          (v) => $enumDecode(_$JmaIntensityEnumMap, v),
         ),
         isOver: $checkedConvert('is_over', (v) => v as bool),
       );
@@ -22,3 +22,17 @@ _EewIntensityValue _$EewIntensityValueFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EewIntensityValueToJson(_EewIntensityValue instance) =>
     <String, dynamic>{'value': instance.value, 'is_over': instance.isOver};
+
+const _$JmaIntensityEnumMap = {
+  JmaIntensity.value0: 0,
+  JmaIntensity.value1: 1,
+  JmaIntensity.value2: 2,
+  JmaIntensity.value3: 3,
+  JmaIntensity.value4: 4,
+  JmaIntensity.value5unknown: '!5-',
+  JmaIntensity.value5minus: '5-',
+  JmaIntensity.value5plus: '5+',
+  JmaIntensity.value6minus: '6-',
+  JmaIntensity.value6plus: '6+',
+  JmaIntensity.value7: 7,
+};

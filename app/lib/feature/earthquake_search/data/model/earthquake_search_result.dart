@@ -1,4 +1,4 @@
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_search_result.freezed.dart';
@@ -40,7 +40,7 @@ extension EarthquakeSearchResultItemEx on EarthquakeSearchResultItem {
   };
 
   /// この地域/観測点での震度
-  IntensityValue? get localIntensity => switch (this) {
+  Intensity? get localIntensity => switch (this) {
     EarthquakeSearchResultItemRegion(:final region) => region.intensity,
     EarthquakeSearchResultItemPrefecture(:final prefecture) =>
       prefecture.intensity,
@@ -49,7 +49,7 @@ extension EarthquakeSearchResultItemEx on EarthquakeSearchResultItem {
   };
 
   /// この地域/観測点での長周期地震動階級
-  LpgmIntensityValue? get localLpgmIntensity => switch (this) {
+  LpgmIntensity? get localLpgmIntensity => switch (this) {
     EarthquakeSearchResultItemRegion(:final region) => region.lpgmIntensity,
     EarthquakeSearchResultItemPrefecture(:final prefecture) =>
       prefecture.lpgmIntensity,

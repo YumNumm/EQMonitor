@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:clock/clock.dart';
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/extension/eew_extension.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -32,7 +33,8 @@ class EewPsWaveLayer extends HookConsumerWidget {
 
     final showEews = eews.where((eew) {
       final coords = eew.hypocenter?.coordinates;
-      return coords is CoordinateLatLng &&
+      return coords != null &&
+          coords.type == CoordinateType.latLng &&
           eew.hypocenter?.depth != null &&
           eew.originTime != null &&
           !eew.isCanceled &&
@@ -185,7 +187,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
         continue;
       }
       final coords = hypocenter.coordinates;
-      if (coords is! CoordinateLatLng) {
+      if (coords.type != CoordinateType.latLng) {
         continue;
       }
       final depth = hypocenter.depth;
@@ -195,11 +197,11 @@ class EewPsWaveLayer extends HookConsumerWidget {
         continue;
       }
 
-      final lat = coords.latitude;
-      final lng = coords.longitude;
+      final lat = coords.latitude!.toDouble();
+      final lng = coords.longitude!.toDouble();
 
       final elapsed = now.difference(originTime).inMilliseconds / 1000;
-      final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
+      final travelTime = travelTimeMap.getTravelTime(depth.toInt(), elapsed);
 
       final isWarning = eew.isWarningOrFallback;
       final lineColor = isWarning ? '#FF0000' : '#FFA500';

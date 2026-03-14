@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewIntensityLpgmValue {
 
- LpgmIntensity get value;@JsonKey(name: 'is_over') bool get isOver;
+ JmaLpgmIntensity get value;@JsonKey(name: 'is_over') bool get isOver;
 /// Create a copy of EewIntensityLpgmValue
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $EewIntensityLpgmValueCopyWith<$Res>  {
   factory $EewIntensityLpgmValueCopyWith(EewIntensityLpgmValue value, $Res Function(EewIntensityLpgmValue) _then) = _$EewIntensityLpgmValueCopyWithImpl;
 @useResult
 $Res call({
- LpgmIntensity value,@JsonKey(name: 'is_over') bool isOver
+ JmaLpgmIntensity value,@JsonKey(name: 'is_over') bool isOver
 });
 
 
@@ -68,7 +68,7 @@ class _$EewIntensityLpgmValueCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? isOver = null,}) {
   return _then(_self.copyWith(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as LpgmIntensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LpgmIntensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaLpgmIntensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewIntensityLpgmValue() when $default != null:
 return $default(_that.value,_that.isOver);case _:
@@ -175,7 +175,7 @@ return $default(_that.value,_that.isOver);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LpgmIntensity value, @JsonKey(name: 'is_over')  bool isOver)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaLpgmIntensity value, @JsonKey(name: 'is_over')  bool isOver)  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityLpgmValue():
 return $default(_that.value,_that.isOver);case _:
@@ -195,7 +195,7 @@ return $default(_that.value,_that.isOver);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LpgmIntensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaLpgmIntensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityLpgmValue() when $default != null:
 return $default(_that.value,_that.isOver);case _:
@@ -213,7 +213,7 @@ class _EewIntensityLpgmValue implements EewIntensityLpgmValue {
   const _EewIntensityLpgmValue({required this.value, @JsonKey(name: 'is_over') required this.isOver});
   factory _EewIntensityLpgmValue.fromJson(Map<String, dynamic> json) => _$EewIntensityLpgmValueFromJson(json);
 
-@override final  LpgmIntensity value;
+@override final  JmaLpgmIntensity value;
 @override@JsonKey(name: 'is_over') final  bool isOver;
 
 /// Create a copy of EewIntensityLpgmValue
@@ -249,7 +249,7 @@ abstract mixin class _$EewIntensityLpgmValueCopyWith<$Res> implements $EewIntens
   factory _$EewIntensityLpgmValueCopyWith(_EewIntensityLpgmValue value, $Res Function(_EewIntensityLpgmValue) _then) = __$EewIntensityLpgmValueCopyWithImpl;
 @override @useResult
 $Res call({
- LpgmIntensity value,@JsonKey(name: 'is_over') bool isOver
+ JmaLpgmIntensity value,@JsonKey(name: 'is_over') bool isOver
 });
 
 
@@ -269,7 +269,7 @@ class __$EewIntensityLpgmValueCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? isOver = null,}) {
   return _then(_EewIntensityLpgmValue(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as LpgmIntensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

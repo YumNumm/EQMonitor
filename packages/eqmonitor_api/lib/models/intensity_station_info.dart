@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'intensity.dart';
-import 'lpgm_intensity.dart';
+import 'jma_intensity.dart';
+import 'jma_lpgm_intensity.dart';
 import 'pre_periods2.dart';
 
 part 'intensity_station_info.freezed.dart';
@@ -17,9 +17,9 @@ abstract class IntensityStationInfo with _$IntensityStationInfo {
     required String code,
     required String name,
     @JsonKey(includeIfNull: true)
-    required Intensity? intensity,
+    required JmaIntensity? intensity,
     @JsonKey(includeIfNull: true,name: 'lpgm_intensity')
-    required LpgmIntensity? lpgmIntensity,
+    required JmaLpgmIntensity? lpgmIntensity,
     @JsonKey(includeIfNull: true)
     required num? sva,
     @JsonKey(includeIfNull: true,name: 'pre_periods')
