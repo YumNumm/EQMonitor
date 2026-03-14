@@ -1,5 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -27,26 +27,13 @@ class JmaIntensityIcon extends ConsumerWidget {
     final intensityColorModel = ref.watch(intensityColorProvider);
     final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
-    // 震度の整数部分
-    final intensityMainText = switch (intensity) {
-      JmaIntensity.fiveUpperNoInput => '5',
-      _ => intensity.type.replaceAll('-', '').replaceAll('+', ''),
-    };
-    // 震度の弱・強の表記
-    final suffix = intensity.type.contains('-')
+    final intensityMainText = intensity.mainText;
+    final suffix = intensity.label.contains('-')
         ? '-'
-        : intensity.type.contains('+')
+        : intensity.label.contains('+')
         ? '+'
         : '';
-    final intensitySubText = switch (intensity) {
-      JmaIntensity.fiveUpperNoInput => '弱以上',
-      _ =>
-        intensity.type.contains('-')
-            ? '弱'
-            : intensity.type.contains('+')
-            ? '強'
-            : '',
-    };
+    final intensitySubText = intensity.suffix;
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
       IntensityIconType.small => SizedBox(
@@ -58,7 +45,7 @@ class JmaIntensityIcon extends ConsumerWidget {
             color: bg,
             border: Border.all(color: borderColor, width: 5),
           ),
-          child: (intensity == JmaIntensity.fiveUpperNoInput)
+          child: (intensity == JmaIntensity.fiveUnknown)
               ? const SizedBox.shrink()
               : Center(
                   child: Padding(
