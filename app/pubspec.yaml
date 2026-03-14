@@ -25,6 +25,8 @@ dependencies:
   dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
+  eqmonitor_api:
+    path: ../packages/eqmonitor_api
   extensions:
     path: ../packages/extensions
   feedback: ^3.1.0
