@@ -1,4 +1,4 @@
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +9,7 @@ class TelegramListTile extends StatelessWidget {
     super.key,
   });
 
-  final Telegram telegram;
+  final Items telegram;
   final VoidCallback? onTap;
 
   @override
@@ -35,7 +35,7 @@ class TelegramListTile extends StatelessWidget {
           const SizedBox(height: 4),
           _InfoRow(
             label: '電文種別',
-            value: telegram.type.value,
+            value: telegram.type.toString(),
           ),
           if (isEew && serialNo != null)
             _InfoRow(

@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'telegram_list_by_event_id_notifier.g.dart';
 
 typedef TelegramListByEventIdState = ({
-  List<Telegram> items,
+  List<Items> items,
   String? nextToken,
 });
 
@@ -19,14 +19,15 @@ class TelegramListByEventId extends _$TelegramListByEventId {
   }
 
   Future<TelegramListByEventIdState> _fetchInitialData() async {
-    final client = ref.read(eqApiProvider);
-    final response = await client.telegram.getListByEventId(
+    final client = ref.read(apiClientProvider);
+    final response = await client.telegram.getV2TelegramEventIdEventId(
       eventId: eventId,
-      limit: 50,
+      limit: '50',
     );
+    final data = response.data;
     return (
-      items: response.items,
-      nextToken: response.nextToken,
+      items: data.items,
+      nextToken: data.nextToken,
     );
   }
 
@@ -47,19 +48,19 @@ class TelegramListByEventId extends _$TelegramListByEventId {
     }
 
     state = await state.guardPlus(() async {
-      final client = ref.read(eqApiProvider);
-      final response = await client.telegram.getListByEventId(
+      final client = ref.read(apiClientProvider);
+      final response = await client.telegram.getV2TelegramEventIdEventId(
         eventId: eventId,
-        cursor: currentState.nextToken,
-        limit: 50,
+        limit: '50',
       );
-      final mergedItems = <Telegram>[
+      final data = response.data;
+      final mergedItems = <Items>[
         ...currentState.items,
-        ...response.items,
+        ...data.items,
       ].sorted((a, b) => b.pressAt.compareTo(a.pressAt));
       return (
         items: mergedItems,
-        nextToken: response.nextToken,
+        nextToken: data.nextToken,
       );
     });
   }

@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,15 +15,14 @@ part 'websocket_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<WebSocket> websocket(Ref ref) async {
-  // チケットを取得
-  final deviceId = await ref.watch(deviceIdProvider.future);
-  final eqApi = ref.watch(eqApiProvider);
-  final response = await eqApi.websocket.getTicket(deviceId: deviceId);
+  final api = ref.watch(apiClientProvider);
+  final response = await api.webSocket.getV2WebsocketTicket();
+  final body = response.data;
   talker.debug(
-    'WebSocket Ticketを取得しました: ${response.ticket.substring(0, 8)}..., '
-    '有効期限: ${response.expiresAt.toIso8601String()}',
+    'WebSocket Ticketを取得しました: ${body.ticket.substring(0, 8)}..., '
+    '有効期限: ${body.expiresAt.toIso8601String()}',
   );
-  final ticket = response.ticket;
+  final ticket = body.ticket;
   final wsApiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
 
   // チケットをクエリパラメータに追加
