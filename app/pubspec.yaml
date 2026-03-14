@@ -10,6 +10,9 @@ environment:
 
 resolution: workspace
 
+dependency_overrides:
+  flutter_inappwebview: 6.2.0-beta.3
+
 dependencies:
   app_settings: ^7.0.0
   cached_network_image: ^3.4.1
