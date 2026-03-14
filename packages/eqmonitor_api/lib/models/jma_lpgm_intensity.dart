@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 /// LPGM震度
 @JsonEnum()
-enum LpgmIntensity {
+enum JmaLpgmIntensity {
   @JsonValue(0)
   value0(0),
   @JsonValue(1)
@@ -18,7 +18,7 @@ enum LpgmIntensity {
   @JsonValue(4)
   value4(4);
 
-  const LpgmIntensity(this.json);
+  const JmaLpgmIntensity(this.json);
 
   final dynamic json;
   dynamic toJson() {

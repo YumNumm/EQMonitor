@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/map_camera_state.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
@@ -60,7 +60,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
   LngLatBounds _calculateBounds(List<EewItemWithRelations> eews) {
     final validEews = eews.where((e) {
       final coords = e.hypocenter?.coordinates;
-      return coords is CoordinateLatLng;
+      return coords != null && coords.type == CoordinateType.latLng;
     }).toList();
 
     if (validEews.isEmpty) {
@@ -72,17 +72,16 @@ class HomeMapCameraState extends _$HomeMapCameraState {
       );
     }
 
-    final firstCoords =
-        validEews.first.hypocenter!.coordinates as CoordinateLatLng;
-    var minLat = firstCoords.latitude;
-    var maxLat = firstCoords.latitude;
-    var minLng = firstCoords.longitude;
-    var maxLng = firstCoords.longitude;
+    final firstCoords = validEews.first.hypocenter!.coordinates;
+    var minLat = firstCoords.latitude!.toDouble();
+    var maxLat = firstCoords.latitude!.toDouble();
+    var minLng = firstCoords.longitude!.toDouble();
+    var maxLng = firstCoords.longitude!.toDouble();
 
     for (final eew in validEews) {
-      final coords = eew.hypocenter!.coordinates as CoordinateLatLng;
-      final lat = coords.latitude;
-      final lng = coords.longitude;
+      final coords = eew.hypocenter!.coordinates;
+      final lat = coords.latitude!.toDouble();
+      final lng = coords.longitude!.toDouble();
 
       if (lat < minLat) {
         minLat = lat;

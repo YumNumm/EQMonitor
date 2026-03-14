@@ -1,17 +1,16 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_lpgm_intensity.dart';
+import 'package:eqmonitor_api/export.dart' as eqmonitor_api;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -58,9 +57,9 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         },
       );
     }
-    final intensity = details.intensity;
-    final maxIntensity = intensity?.maxIntensity;
-    final maxLgIntensity = intensity?.maxLpgmIntensity;
+    final earthquake = details.earthquake;
+    final intensity = earthquake.intensity;
+    final maxLgIntensity = intensity?.maxLpgmIntensity?.toJmaLpgmIntensity;
 
     final sheetController = SheetController();
     final theme = Theme.of(context);
@@ -69,13 +68,10 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          EarthquakeHistoryDetailsMapView(earthquake: details),
-          if (maxIntensity != null)
-            _IntensityIcons(
-              maxIntensity: maxIntensity,
-              maxLgIntensity: maxLgIntensity,
-            ),
-          _Sheet(sheetController: sheetController, item: details),
+          EarthquakeHistoryDetailsMapView(earthquake: earthquake),
+          if (maxLgIntensity != null)
+            _IntensityIcons(maxLgIntensity: maxLgIntensity),
+          _Sheet(sheetController: sheetController, item: earthquake),
           if (Navigator.canPop(context))
             SafeArea(
               child: IconButton.filledTonal(
@@ -101,13 +97,9 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 }
 
 class _IntensityIcons extends ConsumerWidget {
-  const _IntensityIcons({
-    required this.maxIntensity,
-    required this.maxLgIntensity,
-  });
+  const _IntensityIcons({required this.maxLgIntensity});
 
-  final IntensityValue maxIntensity;
-  final LpgmIntensityValue? maxLgIntensity;
+  final JmaLpgmIntensity maxLgIntensity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -116,49 +108,35 @@ class _IntensityIcons extends ConsumerWidget {
     );
     final showingLpgmIntensity = config.showingLpgmIntensity;
 
+    if (!showingLpgmIntensity) {
+      return const SizedBox.shrink();
+    }
+
     return IgnorePointer(
       child: SafeArea(
         child: Align(
           alignment: Alignment.topRight,
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              child: BorderedContainer(
-                key: ValueKey((config, maxIntensity, maxLgIntensity)),
-                margin: const EdgeInsets.all(4),
-                padding: const EdgeInsets.all(4),
-                borderRadius: BorderRadius.circular((25 / 5) + 5),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    if (showingLpgmIntensity && maxLgIntensity != null)
-                      for (final intensity
-                          in [...LpgmIntensityValue.values].where(
-                            (e) =>
-                                e != LpgmIntensityValue.zero &&
-                                e.index <= maxLgIntensity!.index,
-                          ))
-                        LpgmIntensityIcon(
-                          type: IntensityIconType.filled,
-                          intensity: intensity,
-                          size: 25,
-                        )
-                    else
-                      for (final intensity in [...IntensityValue.values].where(
-                        (e) =>
-                            e != IntensityValue.zero &&
-                            e != IntensityValue.fiveLowerNoInput &&
-                            e.index <= maxIntensity.index,
-                      ))
-                        IntensityValueIcon(
-                          type: IntensityIconType.filled,
-                          intensity: intensity,
-                          size: 25,
-                        ),
-                  ],
-                ),
+            child: BorderedContainer(
+              margin: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4),
+              borderRadius: BorderRadius.circular((25 / 5) + 5),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final intensity in JmaLpgmIntensity.values.where(
+                    (e) =>
+                        e != JmaLpgmIntensity.zero &&
+                        e.orderIndex <= maxLgIntensity.orderIndex,
+                  ))
+                    LpgmIntensityIcon(
+                      type: IntensityIconType.filled,
+                      intensity: intensity,
+                      size: 25,
+                    ),
+                ],
               ),
             ),
           ),
@@ -172,7 +150,7 @@ class _Sheet extends StatelessWidget {
   const _Sheet({required this.sheetController, required this.item});
 
   final SheetController sheetController;
-  final Earthquake item;
+  final eqmonitor_api.Earthquake item;
 
   @override
   Widget build(BuildContext context) {
@@ -188,8 +166,9 @@ class _Sheet extends StatelessWidget {
                 children: [
                   EarthquakeHypocenterInformationCard(item: item),
                   PrefectureIntensityWidget(item: item),
-                  if (item.intensity?.maxLpgmIntensity != null)
-                    PrefectureLpgmIntensityWidget(item: item),
+                  // TODO(YumNumm): 長周期地震動階級の表示
+                  // if (item.intensity?.maxLpgmIntensity != null)
+                  //   PrefectureLpgmIntensityWidget(item: item),
                   _TelegramListButton(eventId: item.eventId),
                 ],
               ),

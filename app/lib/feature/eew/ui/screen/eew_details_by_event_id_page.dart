@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
@@ -56,12 +56,13 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             initialCenter:
                 eews
                     .map((eew) => eew.hypocenter?.coordinates)
-                    .whereType<CoordinateLatLng>()
+                    .nonNulls
+                    .where((c) => c.type == CoordinateType.latLng)
                     .firstOrNull
                     ?.let(
                       (c) => Geographic(
-                        lat: c.latitude,
-                        lon: c.longitude,
+                        lat: c.latitude!.toDouble(),
+                        lon: c.longitude!.toDouble(),
                       ),
                     ) ??
                 const Geographic(lat: 35.6895, lon: 139.6917),

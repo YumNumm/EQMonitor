@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'lpgm_intensity.dart';
+import 'jma_lpgm_intensity.dart';
 
 part 'eew_intensity_lpgm_value.freezed.dart';
 part 'eew_intensity_lpgm_value.g.dart';
@@ -13,7 +13,7 @@ part 'eew_intensity_lpgm_value.g.dart';
 @Freezed()
 abstract class EewIntensityLpgmValue with _$EewIntensityLpgmValue {
   const factory EewIntensityLpgmValue({
-    required LpgmIntensity value,
+    required JmaLpgmIntensity value,
     @JsonKey(name: 'is_over')
     required bool isOver,
   }) = _EewIntensityLpgmValue;

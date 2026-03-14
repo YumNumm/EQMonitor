@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityItem {
 
- CodeName get value;@JsonKey(includeIfNull: false, name: 'max_intensity') Intensity? get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') LpgmIntensity? get maxLpgmIntensity;
+ CodeName get value;@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of IntensityItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $IntensityItemCopyWith<$Res>  {
   factory $IntensityItemCopyWith(IntensityItem value, $Res Function(IntensityItem) _then) = _$IntensityItemCopyWithImpl;
 @useResult
 $Res call({
- CodeName value,@JsonKey(includeIfNull: false, name: 'max_intensity') Intensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') LpgmIntensity? maxLpgmIntensity
+ CodeName value,@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
-$CodeNameCopyWith<$Res> get value;$IntensityCopyWith<$Res>? get maxIntensity;
+$CodeNameCopyWith<$Res> get value;
 
 }
 /// @nodoc
@@ -69,8 +69,8 @@ class _$IntensityItemCopyWithImpl<$Res>
   return _then(_self.copyWith(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as CodeName,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as Intensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as LpgmIntensity?,
+as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 /// Create a copy of IntensityItem
@@ -81,18 +81,6 @@ $CodeNameCopyWith<$Res> get value {
   
   return $CodeNameCopyWith<$Res>(_self.value, (value) {
     return _then(_self.copyWith(value: value));
-  });
-}/// Create a copy of IntensityItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityCopyWith<$Res>? get maxIntensity {
-    if (_self.maxIntensity == null) {
-    return null;
-  }
-
-  return $IntensityCopyWith<$Res>(_self.maxIntensity!, (value) {
-    return _then(_self.copyWith(maxIntensity: value));
   });
 }
 }
@@ -176,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  Intensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  LpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityItem() when $default != null:
 return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -197,7 +185,7 @@ return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  Intensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  LpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityItem():
 return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -217,7 +205,7 @@ return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  Intensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  LpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityItem() when $default != null:
 return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -236,8 +224,8 @@ class _IntensityItem implements IntensityItem {
   factory _IntensityItem.fromJson(Map<String, dynamic> json) => _$IntensityItemFromJson(json);
 
 @override final  CodeName value;
-@override@JsonKey(includeIfNull: false, name: 'max_intensity') final  Intensity? maxIntensity;
-@override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  LpgmIntensity? maxLpgmIntensity;
+@override@JsonKey(includeIfNull: false, name: 'max_intensity') final  JmaIntensity? maxIntensity;
+@override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
 
 /// Create a copy of IntensityItem
 /// with the given fields replaced by the non-null parameter values.
@@ -272,11 +260,11 @@ abstract mixin class _$IntensityItemCopyWith<$Res> implements $IntensityItemCopy
   factory _$IntensityItemCopyWith(_IntensityItem value, $Res Function(_IntensityItem) _then) = __$IntensityItemCopyWithImpl;
 @override @useResult
 $Res call({
- CodeName value,@JsonKey(includeIfNull: false, name: 'max_intensity') Intensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') LpgmIntensity? maxLpgmIntensity
+ CodeName value,@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
-@override $CodeNameCopyWith<$Res> get value;@override $IntensityCopyWith<$Res>? get maxIntensity;
+@override $CodeNameCopyWith<$Res> get value;
 
 }
 /// @nodoc
@@ -293,8 +281,8 @@ class __$IntensityItemCopyWithImpl<$Res>
   return _then(_IntensityItem(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as CodeName,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as Intensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as LpgmIntensity?,
+as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 
@@ -306,18 +294,6 @@ $CodeNameCopyWith<$Res> get value {
   
   return $CodeNameCopyWith<$Res>(_self.value, (value) {
     return _then(_self.copyWith(value: value));
-  });
-}/// Create a copy of IntensityItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityCopyWith<$Res>? get maxIntensity {
-    if (_self.maxIntensity == null) {
-    return null;
-  }
-
-  return $IntensityCopyWith<$Res>(_self.maxIntensity!, (value) {
-    return _then(_self.copyWith(maxIntensity: value));
   });
 }
 }

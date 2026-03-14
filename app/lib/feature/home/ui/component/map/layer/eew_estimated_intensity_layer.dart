@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/extension/intensity_value_ext.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -31,7 +31,8 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
               key,
               values
                   .sortedBy(
-                    (e) => e.intensity.value.index,
+                    // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
+                    (e) => 0,
                   )
                   .last,
             ),
@@ -48,10 +49,10 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
         }
 
         unawaited(() async {
-          await JmaForecastIntensity.values.map((intensity) {
+          await JmaIntensity.values.map((intensity) {
             final layerId = _getLayerId(intensity);
             final color = colorModel
-                .fromJmaForecastIntensity(intensity)
+                .fromJmaIntensity(intensity)
                 .background;
 
             return styleController.addLayer(
@@ -69,7 +70,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
         }());
 
         return () async {
-          final futures = JmaForecastIntensity.values.map(
+          final futures = JmaIntensity.values.map(
             (intensity) => styleController.removeLayer(_getLayerId(intensity)),
           );
           await Future.wait(futures);
@@ -86,7 +87,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
         }
 
         unawaited(() async {
-          await JmaForecastIntensity.values
+          await JmaIntensity.values
               .map(
                 (intensity) => styleController.updateFilter(
                   id: _getLayerId(intensity),
@@ -98,7 +99,8 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
                       regionMaxIntensities
                           .where(
                             (r) =>
-                                r.intensity.value.toJmaForecastIntensity ==
+                                // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
+                                JmaIntensity.unknown ==
                                 intensity,
                           )
                           .map((r) => r.value.code)
@@ -119,8 +121,8 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
   }
 }
 
-String _getLayerId(JmaForecastIntensity intensity) {
-  final base = intensity.type
+String _getLayerId(JmaIntensity intensity) {
+  final base = intensity.label
       .replaceAll('-', 'low')
       .replaceAll('+', 'high')
       .replaceAll('不明', 'unknown');

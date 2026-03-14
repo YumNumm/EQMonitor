@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewIntensityValue {
 
- Intensity get value;@JsonKey(name: 'is_over') bool get isOver;
+ JmaIntensity get value;@JsonKey(name: 'is_over') bool get isOver;
 /// Create a copy of EewIntensityValue
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $EewIntensityValueCopyWith<$Res>  {
   factory $EewIntensityValueCopyWith(EewIntensityValue value, $Res Function(EewIntensityValue) _then) = _$EewIntensityValueCopyWithImpl;
 @useResult
 $Res call({
- Intensity value,@JsonKey(name: 'is_over') bool isOver
+ JmaIntensity value,@JsonKey(name: 'is_over') bool isOver
 });
 
 
-$IntensityCopyWith<$Res> get value;
+
 
 }
 /// @nodoc
@@ -68,20 +68,11 @@ class _$EewIntensityValueCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? isOver = null,}) {
   return _then(_self.copyWith(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as Intensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
-/// Create a copy of EewIntensityValue
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityCopyWith<$Res> get value {
-  
-  return $IntensityCopyWith<$Res>(_self.value, (value) {
-    return _then(_self.copyWith(value: value));
-  });
-}
+
 }
 
 
@@ -163,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Intensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaIntensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewIntensityValue() when $default != null:
 return $default(_that.value,_that.isOver);case _:
@@ -184,7 +175,7 @@ return $default(_that.value,_that.isOver);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Intensity value, @JsonKey(name: 'is_over')  bool isOver)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaIntensity value, @JsonKey(name: 'is_over')  bool isOver)  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityValue():
 return $default(_that.value,_that.isOver);case _:
@@ -204,7 +195,7 @@ return $default(_that.value,_that.isOver);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Intensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaIntensity value, @JsonKey(name: 'is_over')  bool isOver)?  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityValue() when $default != null:
 return $default(_that.value,_that.isOver);case _:
@@ -222,7 +213,7 @@ class _EewIntensityValue implements EewIntensityValue {
   const _EewIntensityValue({required this.value, @JsonKey(name: 'is_over') required this.isOver});
   factory _EewIntensityValue.fromJson(Map<String, dynamic> json) => _$EewIntensityValueFromJson(json);
 
-@override final  Intensity value;
+@override final  JmaIntensity value;
 @override@JsonKey(name: 'is_over') final  bool isOver;
 
 /// Create a copy of EewIntensityValue
@@ -258,11 +249,11 @@ abstract mixin class _$EewIntensityValueCopyWith<$Res> implements $EewIntensityV
   factory _$EewIntensityValueCopyWith(_EewIntensityValue value, $Res Function(_EewIntensityValue) _then) = __$EewIntensityValueCopyWithImpl;
 @override @useResult
 $Res call({
- Intensity value,@JsonKey(name: 'is_over') bool isOver
+ JmaIntensity value,@JsonKey(name: 'is_over') bool isOver
 });
 
 
-@override $IntensityCopyWith<$Res> get value;
+
 
 }
 /// @nodoc
@@ -278,21 +269,12 @@ class __$EewIntensityValueCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? isOver = null,}) {
   return _then(_EewIntensityValue(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as Intensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,isOver: null == isOver ? _self.isOver : isOver // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
 
-/// Create a copy of EewIntensityValue
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityCopyWith<$Res> get value {
-  
-  return $IntensityCopyWith<$Res>(_self.value, (value) {
-    return _then(_self.copyWith(value: value));
-  });
-}
+
 }
 
 // dart format on

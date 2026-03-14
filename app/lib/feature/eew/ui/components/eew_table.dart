@@ -1,4 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor_api/export.dart' hide JmaIntensity;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -136,8 +137,8 @@ extension _EewTableColumnEx on _EewTableColumn {
     _EewTableColumn.epicenterLatitude => _EewTableColumnValue(
       value: () {
         final coords = eew.hypocenter?.coordinates;
-        if (coords case CoordinateLatLng(:final latitude)) {
-          return latitude.toString();
+        if (coords != null && coords.type == CoordinateType.latLng) {
+          return coords.latitude!.toString();
         }
         return '';
       }(),
@@ -146,8 +147,8 @@ extension _EewTableColumnEx on _EewTableColumn {
     _EewTableColumn.epicenterLongitude => _EewTableColumnValue(
       value: () {
         final coords = eew.hypocenter?.coordinates;
-        if (coords case CoordinateLatLng(:final longitude)) {
-          return longitude.toString();
+        if (coords != null && coords.type == CoordinateType.latLng) {
+          return coords.longitude!.toString();
         }
         return '';
       }(),
@@ -165,9 +166,8 @@ extension _EewTableColumnEx on _EewTableColumn {
         if (intensity == null) {
           return '';
         }
-        final typeStr = intensity.value.value
-            .replaceAll('-', '弱')
-            .replaceAll('+', '強');
+        // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）。暫定で空文字
+        const typeStr = '?';
         return '震度 $typeStr${intensity.isOver ? '以上' : ''}';
       }(),
       isNumeric: false,
@@ -182,7 +182,7 @@ extension _EewTableColumnEx on _EewTableColumn {
         if (lpgmIntensity == null) {
           return '';
         }
-        return '長周期地震動階級 ${lpgmIntensity.value.value}';
+        return '長周期地震動階級 ${lpgmIntensity.value.toJmaLpgmIntensity.label}';
       }(),
       isNumeric: false,
     ),

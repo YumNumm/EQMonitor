@@ -32,13 +32,6 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByRegion(
           code: param.code,
           limit: limit,
-          magnitudeLte: param.magnitudeLte,
-          magnitudeGte: param.magnitudeGte,
-          depthLte: param.depthLte,
-          depthGte: param.depthGte,
-          intensityLte: param.intensityLte?.value,
-          intensityGte: param.intensityGte?.value,
-          statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
         );
         return (
           items: result.items
@@ -57,13 +50,6 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByPrefecture(
           code: param.code,
           limit: limit,
-          magnitudeLte: param.magnitudeLte,
-          magnitudeGte: param.magnitudeGte,
-          depthLte: param.depthLte,
-          depthGte: param.depthGte,
-          intensityLte: param.intensityLte?.value,
-          intensityGte: param.intensityGte?.value,
-          statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
         );
         return (
           items: result.items
@@ -82,13 +68,6 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByCity(
           code: param.code,
           limit: limit,
-          magnitudeLte: param.magnitudeLte,
-          magnitudeGte: param.magnitudeGte,
-          depthLte: param.depthLte,
-          depthGte: param.depthGte,
-          intensityLte: param.intensityLte?.value,
-          intensityGte: param.intensityGte?.value,
-          statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
         );
         return (
           items: result.items
@@ -107,13 +86,6 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByStation(
           code: param.code,
           limit: limit,
-          magnitudeLte: param.magnitudeLte,
-          magnitudeGte: param.magnitudeGte,
-          depthLte: param.depthLte,
-          depthGte: param.depthGte,
-          intensityLte: param.intensityLte?.value,
-          intensityGte: param.intensityGte?.value,
-          statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
         );
         return (
           items: result.items
@@ -155,15 +127,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         EarthquakeSearchType.region => () async {
           final result = await repository.searchByRegion(
             code: param.code,
-            cursor: currentState.nextToken,
             limit: 50,
-            magnitudeLte: param.magnitudeLte,
-            magnitudeGte: param.magnitudeGte,
-            depthLte: param.depthLte,
-            depthGte: param.depthGte,
-            intensityLte: param.intensityLte?.value,
-            intensityGte: param.intensityGte?.value,
-            statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
           );
           return (
             result.items
@@ -181,15 +145,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         EarthquakeSearchType.prefecture => () async {
           final result = await repository.searchByPrefecture(
             code: param.code,
-            cursor: currentState.nextToken,
             limit: 50,
-            magnitudeLte: param.magnitudeLte,
-            magnitudeGte: param.magnitudeGte,
-            depthLte: param.depthLte,
-            depthGte: param.depthGte,
-            intensityLte: param.intensityLte?.value,
-            intensityGte: param.intensityGte?.value,
-            statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
           );
           return (
             result.items
@@ -207,15 +163,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         EarthquakeSearchType.city => () async {
           final result = await repository.searchByCity(
             code: param.code,
-            cursor: currentState.nextToken,
             limit: 50,
-            magnitudeLte: param.magnitudeLte,
-            magnitudeGte: param.magnitudeGte,
-            depthLte: param.depthLte,
-            depthGte: param.depthGte,
-            intensityLte: param.intensityLte?.value,
-            intensityGte: param.intensityGte?.value,
-            statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
           );
           return (
             result.items
@@ -233,15 +181,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         EarthquakeSearchType.station => () async {
           final result = await repository.searchByStation(
             code: param.code,
-            cursor: currentState.nextToken,
             limit: 50,
-            magnitudeLte: param.magnitudeLte,
-            magnitudeGte: param.magnitudeGte,
-            depthLte: param.depthLte,
-            depthGte: param.depthGte,
-            intensityLte: param.intensityLte?.value,
-            intensityGte: param.intensityGte?.value,
-            statuses: param.statuses?.map((s) => s.name.toUpperCase()).toList(),
           );
           return (
             result.items

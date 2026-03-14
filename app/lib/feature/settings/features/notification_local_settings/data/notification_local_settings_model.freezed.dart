@@ -317,7 +317,7 @@ $EarthquakeSettingsCopyWith<$Res> get earthquake {
 /// @nodoc
 mixin _$EewSettings {
 
- JmaForecastIntensity? get emergencyIntensity; JmaForecastIntensity? get silentIntensity; List<Region> get regions;
+@JmaIntensityJsonConverter() JmaIntensity? get emergencyIntensity;@JmaIntensityJsonConverter() JmaIntensity? get silentIntensity; List<Region> get regions;
 /// Create a copy of EewSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -350,7 +350,7 @@ abstract mixin class $EewSettingsCopyWith<$Res>  {
   factory $EewSettingsCopyWith(EewSettings value, $Res Function(EewSettings) _then) = _$EewSettingsCopyWithImpl;
 @useResult
 $Res call({
- JmaForecastIntensity? emergencyIntensity, JmaForecastIntensity? silentIntensity, List<Region> regions
+@JmaIntensityJsonConverter() JmaIntensity? emergencyIntensity,@JmaIntensityJsonConverter() JmaIntensity? silentIntensity, List<Region> regions
 });
 
 
@@ -370,8 +370,8 @@ class _$EewSettingsCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? emergencyIntensity = freezed,Object? silentIntensity = freezed,Object? regions = null,}) {
   return _then(_self.copyWith(
 emergencyIntensity: freezed == emergencyIntensity ? _self.emergencyIntensity : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<Region>,
   ));
 }
@@ -457,7 +457,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaForecastIntensity? emergencyIntensity,  JmaForecastIntensity? silentIntensity,  List<Region> regions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JmaIntensityJsonConverter()  JmaIntensity? emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity? silentIntensity,  List<Region> regions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewSettings() when $default != null:
 return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);case _:
@@ -478,7 +478,7 @@ return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaForecastIntensity? emergencyIntensity,  JmaForecastIntensity? silentIntensity,  List<Region> regions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JmaIntensityJsonConverter()  JmaIntensity? emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity? silentIntensity,  List<Region> regions)  $default,) {final _that = this;
 switch (_that) {
 case _EewSettings():
 return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);case _:
@@ -498,7 +498,7 @@ return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaForecastIntensity? emergencyIntensity,  JmaForecastIntensity? silentIntensity,  List<Region> regions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JmaIntensityJsonConverter()  JmaIntensity? emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity? silentIntensity,  List<Region> regions)?  $default,) {final _that = this;
 switch (_that) {
 case _EewSettings() when $default != null:
 return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);case _:
@@ -513,11 +513,11 @@ return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);ca
 @JsonSerializable()
 
 class _EewSettings implements EewSettings {
-  const _EewSettings({this.emergencyIntensity = null, this.silentIntensity = null, final  List<Region> regions = const []}): _regions = regions;
+  const _EewSettings({@JmaIntensityJsonConverter() this.emergencyIntensity = null, @JmaIntensityJsonConverter() this.silentIntensity = null, final  List<Region> regions = const []}): _regions = regions;
   factory _EewSettings.fromJson(Map<String, dynamic> json) => _$EewSettingsFromJson(json);
 
-@override@JsonKey() final  JmaForecastIntensity? emergencyIntensity;
-@override@JsonKey() final  JmaForecastIntensity? silentIntensity;
+@override@JsonKey()@JmaIntensityJsonConverter() final  JmaIntensity? emergencyIntensity;
+@override@JsonKey()@JmaIntensityJsonConverter() final  JmaIntensity? silentIntensity;
  final  List<Region> _regions;
 @override@JsonKey() List<Region> get regions {
   if (_regions is EqualUnmodifiableListView) return _regions;
@@ -559,7 +559,7 @@ abstract mixin class _$EewSettingsCopyWith<$Res> implements $EewSettingsCopyWith
   factory _$EewSettingsCopyWith(_EewSettings value, $Res Function(_EewSettings) _then) = __$EewSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- JmaForecastIntensity? emergencyIntensity, JmaForecastIntensity? silentIntensity, List<Region> regions
+@JmaIntensityJsonConverter() JmaIntensity? emergencyIntensity,@JmaIntensityJsonConverter() JmaIntensity? silentIntensity, List<Region> regions
 });
 
 
@@ -579,8 +579,8 @@ class __$EewSettingsCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? emergencyIntensity = freezed,Object? silentIntensity = freezed,Object? regions = null,}) {
   return _then(_EewSettings(
 emergencyIntensity: freezed == emergencyIntensity ? _self.emergencyIntensity : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
 as List<Region>,
   ));
 }
@@ -592,7 +592,7 @@ as List<Region>,
 /// @nodoc
 mixin _$EarthquakeSettings {
 
- JmaForecastIntensity? get emergencyIntensity; JmaForecastIntensity? get silentIntensity; List<Region> get regions;
+@JmaIntensityJsonConverter() JmaIntensity? get emergencyIntensity;@JmaIntensityJsonConverter() JmaIntensity? get silentIntensity; List<Region> get regions;
 /// Create a copy of EarthquakeSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -625,7 +625,7 @@ abstract mixin class $EarthquakeSettingsCopyWith<$Res>  {
   factory $EarthquakeSettingsCopyWith(EarthquakeSettings value, $Res Function(EarthquakeSettings) _then) = _$EarthquakeSettingsCopyWithImpl;
 @useResult
 $Res call({
- JmaForecastIntensity? emergencyIntensity, JmaForecastIntensity? silentIntensity, List<Region> regions
+@JmaIntensityJsonConverter() JmaIntensity? emergencyIntensity,@JmaIntensityJsonConverter() JmaIntensity? silentIntensity, List<Region> regions
 });
 
 
@@ -645,8 +645,8 @@ class _$EarthquakeSettingsCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? emergencyIntensity = freezed,Object? silentIntensity = freezed,Object? regions = null,}) {
   return _then(_self.copyWith(
 emergencyIntensity: freezed == emergencyIntensity ? _self.emergencyIntensity : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<Region>,
   ));
 }
@@ -732,7 +732,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaForecastIntensity? emergencyIntensity,  JmaForecastIntensity? silentIntensity,  List<Region> regions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JmaIntensityJsonConverter()  JmaIntensity? emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity? silentIntensity,  List<Region> regions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeSettings() when $default != null:
 return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);case _:
@@ -753,7 +753,7 @@ return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaForecastIntensity? emergencyIntensity,  JmaForecastIntensity? silentIntensity,  List<Region> regions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JmaIntensityJsonConverter()  JmaIntensity? emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity? silentIntensity,  List<Region> regions)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSettings():
 return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);case _:
@@ -773,7 +773,7 @@ return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaForecastIntensity? emergencyIntensity,  JmaForecastIntensity? silentIntensity,  List<Region> regions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JmaIntensityJsonConverter()  JmaIntensity? emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity? silentIntensity,  List<Region> regions)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSettings() when $default != null:
 return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);case _:
@@ -788,11 +788,11 @@ return $default(_that.emergencyIntensity,_that.silentIntensity,_that.regions);ca
 @JsonSerializable()
 
 class _EarthquakeSettings implements EarthquakeSettings {
-  const _EarthquakeSettings({this.emergencyIntensity = null, this.silentIntensity = null, final  List<Region> regions = const []}): _regions = regions;
+  const _EarthquakeSettings({@JmaIntensityJsonConverter() this.emergencyIntensity = null, @JmaIntensityJsonConverter() this.silentIntensity = null, final  List<Region> regions = const []}): _regions = regions;
   factory _EarthquakeSettings.fromJson(Map<String, dynamic> json) => _$EarthquakeSettingsFromJson(json);
 
-@override@JsonKey() final  JmaForecastIntensity? emergencyIntensity;
-@override@JsonKey() final  JmaForecastIntensity? silentIntensity;
+@override@JsonKey()@JmaIntensityJsonConverter() final  JmaIntensity? emergencyIntensity;
+@override@JsonKey()@JmaIntensityJsonConverter() final  JmaIntensity? silentIntensity;
  final  List<Region> _regions;
 @override@JsonKey() List<Region> get regions {
   if (_regions is EqualUnmodifiableListView) return _regions;
@@ -834,7 +834,7 @@ abstract mixin class _$EarthquakeSettingsCopyWith<$Res> implements $EarthquakeSe
   factory _$EarthquakeSettingsCopyWith(_EarthquakeSettings value, $Res Function(_EarthquakeSettings) _then) = __$EarthquakeSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- JmaForecastIntensity? emergencyIntensity, JmaForecastIntensity? silentIntensity, List<Region> regions
+@JmaIntensityJsonConverter() JmaIntensity? emergencyIntensity,@JmaIntensityJsonConverter() JmaIntensity? silentIntensity, List<Region> regions
 });
 
 
@@ -854,8 +854,8 @@ class __$EarthquakeSettingsCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? emergencyIntensity = freezed,Object? silentIntensity = freezed,Object? regions = null,}) {
   return _then(_EarthquakeSettings(
 emergencyIntensity: freezed == emergencyIntensity ? _self.emergencyIntensity : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity?,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,silentIntensity: freezed == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
 as List<Region>,
   ));
 }
@@ -867,7 +867,7 @@ as List<Region>,
 /// @nodoc
 mixin _$Region {
 
- String get code; String get name; JmaForecastIntensity get emergencyIntensity; JmaForecastIntensity get silentIntensity; bool get isMain;
+ String get code; String get name;@JmaIntensityJsonConverter() JmaIntensity get emergencyIntensity;@JmaIntensityJsonConverter() JmaIntensity get silentIntensity; bool get isMain;
 /// Create a copy of Region
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -900,7 +900,7 @@ abstract mixin class $RegionCopyWith<$Res>  {
   factory $RegionCopyWith(Region value, $Res Function(Region) _then) = _$RegionCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, JmaForecastIntensity emergencyIntensity, JmaForecastIntensity silentIntensity, bool isMain
+ String code, String name,@JmaIntensityJsonConverter() JmaIntensity emergencyIntensity,@JmaIntensityJsonConverter() JmaIntensity silentIntensity, bool isMain
 });
 
 
@@ -922,8 +922,8 @@ class _$RegionCopyWithImpl<$Res>
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,emergencyIntensity: null == emergencyIntensity ? _self.emergencyIntensity : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity,silentIntensity: null == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity,isMain: null == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,silentIntensity: null == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,isMain: null == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -1009,7 +1009,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  JmaForecastIntensity emergencyIntensity,  JmaForecastIntensity silentIntensity,  bool isMain)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name, @JmaIntensityJsonConverter()  JmaIntensity emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity silentIntensity,  bool isMain)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Region() when $default != null:
 return $default(_that.code,_that.name,_that.emergencyIntensity,_that.silentIntensity,_that.isMain);case _:
@@ -1030,7 +1030,7 @@ return $default(_that.code,_that.name,_that.emergencyIntensity,_that.silentInten
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  JmaForecastIntensity emergencyIntensity,  JmaForecastIntensity silentIntensity,  bool isMain)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name, @JmaIntensityJsonConverter()  JmaIntensity emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity silentIntensity,  bool isMain)  $default,) {final _that = this;
 switch (_that) {
 case _Region():
 return $default(_that.code,_that.name,_that.emergencyIntensity,_that.silentIntensity,_that.isMain);case _:
@@ -1050,7 +1050,7 @@ return $default(_that.code,_that.name,_that.emergencyIntensity,_that.silentInten
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  JmaForecastIntensity emergencyIntensity,  JmaForecastIntensity silentIntensity,  bool isMain)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name, @JmaIntensityJsonConverter()  JmaIntensity emergencyIntensity, @JmaIntensityJsonConverter()  JmaIntensity silentIntensity,  bool isMain)?  $default,) {final _that = this;
 switch (_that) {
 case _Region() when $default != null:
 return $default(_that.code,_that.name,_that.emergencyIntensity,_that.silentIntensity,_that.isMain);case _:
@@ -1065,13 +1065,13 @@ return $default(_that.code,_that.name,_that.emergencyIntensity,_that.silentInten
 @JsonSerializable()
 
 class _Region implements Region {
-  const _Region({required this.code, required this.name, required this.emergencyIntensity, required this.silentIntensity, required this.isMain});
+  const _Region({required this.code, required this.name, @JmaIntensityJsonConverter() required this.emergencyIntensity, @JmaIntensityJsonConverter() required this.silentIntensity, required this.isMain});
   factory _Region.fromJson(Map<String, dynamic> json) => _$RegionFromJson(json);
 
 @override final  String code;
 @override final  String name;
-@override final  JmaForecastIntensity emergencyIntensity;
-@override final  JmaForecastIntensity silentIntensity;
+@override@JmaIntensityJsonConverter() final  JmaIntensity emergencyIntensity;
+@override@JmaIntensityJsonConverter() final  JmaIntensity silentIntensity;
 @override final  bool isMain;
 
 /// Create a copy of Region
@@ -1107,7 +1107,7 @@ abstract mixin class _$RegionCopyWith<$Res> implements $RegionCopyWith<$Res> {
   factory _$RegionCopyWith(_Region value, $Res Function(_Region) _then) = __$RegionCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, JmaForecastIntensity emergencyIntensity, JmaForecastIntensity silentIntensity, bool isMain
+ String code, String name,@JmaIntensityJsonConverter() JmaIntensity emergencyIntensity,@JmaIntensityJsonConverter() JmaIntensity silentIntensity, bool isMain
 });
 
 
@@ -1129,8 +1129,8 @@ class __$RegionCopyWithImpl<$Res>
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,emergencyIntensity: null == emergencyIntensity ? _self.emergencyIntensity : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity,silentIntensity: null == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
-as JmaForecastIntensity,isMain: null == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,silentIntensity: null == silentIntensity ? _self.silentIntensity : silentIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,isMain: null == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

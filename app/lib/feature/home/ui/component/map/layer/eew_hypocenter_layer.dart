@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor_api/export.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -28,7 +28,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
     final showEews = eews.where((eew) {
       final coords = eew.hypocenter?.coordinates;
-      return coords is CoordinateLatLng && !eew.isCanceled;
+      return coords != null && coords.type == CoordinateType.latLng && !eew.isCanceled;
     });
     final normalEews = showEews.where((eew) => !eew.isPlum).toList();
     final lowPreciseEews = showEews.where((eew) => eew.isPlum).toList();
@@ -139,7 +139,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
         unawaited(
           () async {
             Map<String, dynamic> convert(EewItemWithRelations eew) {
-              final coords = eew.hypocenter!.coordinates as CoordinateLatLng;
+              final coords = eew.hypocenter!.coordinates;
               return {
                 'type': 'Feature',
                 'geometry': {

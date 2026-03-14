@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,6 +25,9 @@ class EarthquakeNotificationSettingsViewModel
     const FcmEarthquakeTopic(null),
     ...([
       ...JmaIntensity.values,
-    ]..remove(JmaIntensity.fiveUpperNoInput)).map(FcmEarthquakeTopic.new),
+    ]
+      ..remove(JmaIntensity.unknown)
+      ..remove(JmaIntensity.fiveUnknown))
+        .map(FcmEarthquakeTopic.new),
   ];
 }

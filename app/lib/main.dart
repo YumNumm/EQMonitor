@@ -108,7 +108,7 @@ Future<void> main() async {
       kIsWeb
           ? Future<Null>.value()
           : FlutterLocalNotificationsPlugin().initialize(
-              const InitializationSettings(
+              settings: const InitializationSettings(
                 iOS: DarwinInitializationSettings(
                   requestAlertPermission: false,
                   requestSoundPermission: false,

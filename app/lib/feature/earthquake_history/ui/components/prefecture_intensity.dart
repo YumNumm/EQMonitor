@@ -1,12 +1,13 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
+import 'package:eqmonitor_api/export.dart' as eqmonitor_api;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,7 +16,7 @@ import 'package:sheet/route.dart';
 class PrefectureIntensityWidget extends HookConsumerWidget {
   const PrefectureIntensityWidget({required this.item, super.key});
 
-  final Earthquake item;
+  final eqmonitor_api.Earthquake item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,17 +44,18 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
         children: [
           const SheetHeader(title: '各地の震度'),
           if (intensityTree != null)
-            for (final entry in intensityTree.byIntensity.entries) ...[
-              ListTile(
+            ...intensityTree.entries.map((entry) {
+              final intensity = entry.key;
+              return ListTile(
                 visualDensity: VisualDensity.compact,
                 titleAlignment: ListTileTitleAlignment.titleHeight,
                 leading: IntensityValueIcon(
-                  intensity: entry.key,
+                  intensity: intensity,
                   type: IntensityIconType.filled,
                   size: 40,
                 ),
                 title: Text(
-                  '震度${entry.key.value}',
+                  '震度${intensity.label}',
                   style: textTheme.titleMedium,
                 ),
                 subtitle: Text(
@@ -62,12 +64,12 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                 ),
                 onTap: () async => _RegionModalBottomSheet.show(
                   context: context,
-                  intensityValue: entry.key,
+                  intensity: intensity,
                   regions: entry.value,
                 ),
                 trailing: const Icon(Icons.chevron_right),
-              ),
-            ],
+              );
+            }),
         ],
       ),
     );
@@ -76,30 +78,30 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
 
 class _RegionModalBottomSheet extends StatelessWidget {
   const _RegionModalBottomSheet({
-    required this.intensityValue,
+    required this.intensity,
     required this.regions,
   });
 
   static Future<void> show({
     required BuildContext context,
-    required IntensityValue intensityValue,
+    required JmaIntensity intensity,
     required List<RegionIntensityNode> regions,
   }) => Navigator.of(context).push(
     SheetRoute(
       builder: (context) => _RegionModalBottomSheet(
-        intensityValue: intensityValue,
+        intensity: intensity,
         regions: regions,
       ),
     ),
   );
 
-  final IntensityValue intensityValue;
+  final JmaIntensity intensity;
   final List<RegionIntensityNode> regions;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('震度${intensityValue.value}の地域')),
+      appBar: AppBar(title: Text('震度${intensity.label}の地域')),
       body: ListView(
         children: [
           for (final region in regions) _RegionListTile(region: region),
@@ -172,14 +174,15 @@ class _CityListTile extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
+    final maxIntensity = city.maxIntensity;
 
     final cityHeader = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(
         children: [
-          if (city.maxIntensity != null)
+          if (maxIntensity != null)
             IntensityValueIcon(
-              intensity: city.maxIntensity,
+              intensity: maxIntensity,
               type: IntensityIconType.filled,
               size: 24,
             ),
@@ -187,7 +190,9 @@ class _CityListTile extends HookWidget {
           Expanded(
             child: Text(
               city.city.name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           if (city.stations.isNotEmpty)
@@ -228,9 +233,9 @@ class _CityListTile extends HookWidget {
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: Row(
                     children: [
-                      if (station.intensity?.maxIntensity != null)
+                      if (station.intensity?.maxIntensity case final jma?)
                         IntensityValueIcon(
-                          intensity: station.intensity!.maxIntensity,
+                          intensity: jma,
                           type: IntensityIconType.filled,
                           size: 18,
                         ),

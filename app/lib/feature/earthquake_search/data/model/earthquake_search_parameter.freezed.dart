@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeSearchParameter {
 
- EarthquakeSearchType get type; String get code; String get name; double? get magnitudeLte; double? get magnitudeGte; int? get depthLte; int? get depthGte; IntensityValue? get intensityLte; IntensityValue? get intensityGte; List<TelegramStatus>? get statuses;
+ EarthquakeSearchType get type; String get code; String get name; double? get magnitudeLte; double? get magnitudeGte; int? get depthLte; int? get depthGte; JmaIntensity? get intensityLte; JmaIntensity? get intensityGte; List<TelegramStatus>? get statuses;
 /// Create a copy of EarthquakeSearchParameter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $EarthquakeSearchParameterCopyWith<$Res>  {
   factory $EarthquakeSearchParameterCopyWith(EarthquakeSearchParameter value, $Res Function(EarthquakeSearchParameter) _then) = _$EarthquakeSearchParameterCopyWithImpl;
 @useResult
 $Res call({
- EarthquakeSearchType type, String code, String name, double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, IntensityValue? intensityLte, IntensityValue? intensityGte, List<TelegramStatus>? statuses
+ EarthquakeSearchType type, String code, String name, double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses
 });
 
 
@@ -72,8 +72,8 @@ as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitud
 as double?,depthLte: freezed == depthLte ? _self.depthLte : depthLte // ignore: cast_nullable_to_non_nullable
 as int?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
 as int?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,statuses: freezed == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,statuses: freezed == statuses ? _self.statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<TelegramStatus>?,
   ));
 }
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeSearchType type,  String code,  String name,  double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte,  List<TelegramStatus>? statuses)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeSearchType type,  String code,  String name,  double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeSearchParameter() when $default != null:
 return $default(_that.type,_that.code,_that.name,_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses);case _:
@@ -180,7 +180,7 @@ return $default(_that.type,_that.code,_that.name,_that.magnitudeLte,_that.magnit
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeSearchType type,  String code,  String name,  double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte,  List<TelegramStatus>? statuses)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeSearchType type,  String code,  String name,  double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSearchParameter():
 return $default(_that.type,_that.code,_that.name,_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses);case _:
@@ -200,7 +200,7 @@ return $default(_that.type,_that.code,_that.name,_that.magnitudeLte,_that.magnit
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeSearchType type,  String code,  String name,  double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  IntensityValue? intensityLte,  IntensityValue? intensityGte,  List<TelegramStatus>? statuses)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeSearchType type,  String code,  String name,  double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeSearchParameter() when $default != null:
 return $default(_that.type,_that.code,_that.name,_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses);case _:
@@ -225,8 +225,8 @@ class _EarthquakeSearchParameter implements EarthquakeSearchParameter {
 @override final  double? magnitudeGte;
 @override final  int? depthLte;
 @override final  int? depthGte;
-@override final  IntensityValue? intensityLte;
-@override final  IntensityValue? intensityGte;
+@override final  JmaIntensity? intensityLte;
+@override final  JmaIntensity? intensityGte;
  final  List<TelegramStatus>? _statuses;
 @override List<TelegramStatus>? get statuses {
   final value = _statuses;
@@ -267,7 +267,7 @@ abstract mixin class _$EarthquakeSearchParameterCopyWith<$Res> implements $Earth
   factory _$EarthquakeSearchParameterCopyWith(_EarthquakeSearchParameter value, $Res Function(_EarthquakeSearchParameter) _then) = __$EarthquakeSearchParameterCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakeSearchType type, String code, String name, double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, IntensityValue? intensityLte, IntensityValue? intensityGte, List<TelegramStatus>? statuses
+ EarthquakeSearchType type, String code, String name, double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses
 });
 
 
@@ -294,8 +294,8 @@ as double?,magnitudeGte: freezed == magnitudeGte ? _self.magnitudeGte : magnitud
 as double?,depthLte: freezed == depthLte ? _self.depthLte : depthLte // ignore: cast_nullable_to_non_nullable
 as int?,depthGte: freezed == depthGte ? _self.depthGte : depthGte // ignore: cast_nullable_to_non_nullable
 as int?,intensityLte: freezed == intensityLte ? _self.intensityLte : intensityLte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
-as IntensityValue?,statuses: freezed == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,intensityGte: freezed == intensityGte ? _self.intensityGte : intensityGte // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,statuses: freezed == statuses ? _self._statuses : statuses // ignore: cast_nullable_to_non_nullable
 as List<TelegramStatus>?,
   ));
 }

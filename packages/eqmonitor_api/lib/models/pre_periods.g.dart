@@ -14,7 +14,7 @@ _PrePeriods _$PrePeriodsFromJson(Map<String, dynamic> json) =>
         band: $checkedConvert('band', (v) => v as num),
         lpgmIntensity: $checkedConvert(
           'lpgm_intensity',
-          (v) => $enumDecode(_$LpgmIntensityEnumMap, v),
+          (v) => $enumDecode(_$JmaLpgmIntensityEnumMap, v),
         ),
         sva: $checkedConvert('sva', (v) => v as num),
       );
@@ -28,10 +28,10 @@ Map<String, dynamic> _$PrePeriodsToJson(_PrePeriods instance) =>
       'sva': instance.sva,
     };
 
-const _$LpgmIntensityEnumMap = {
-  LpgmIntensity.value0: 0,
-  LpgmIntensity.value1: 1,
-  LpgmIntensity.value2: 2,
-  LpgmIntensity.value3: 3,
-  LpgmIntensity.value4: 4,
+const _$JmaLpgmIntensityEnumMap = {
+  JmaLpgmIntensity.value0: 0,
+  JmaLpgmIntensity.value1: 1,
+  JmaLpgmIntensity.value2: 2,
+  JmaLpgmIntensity.value3: 3,
+  JmaLpgmIntensity.value4: 4,
 };

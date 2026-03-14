@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor_api/export.dart' show TelegramStatus;
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
@@ -42,16 +43,16 @@ abstract class EarthquakeSearchParameter with _$EarthquakeSearchParameter {
     double? magnitudeGte,
     int? depthLte,
     int? depthGte,
-    IntensityValue? intensityLte,
-    IntensityValue? intensityGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
     List<TelegramStatus>? statuses,
   }) = _EarthquakeSearchParameter;
 }
 
 extension EarthquakeSearchParameterEx on EarthquakeSearchParameter {
   EarthquakeSearchParameter updateIntensity(
-    IntensityValue? min,
-    IntensityValue? max,
+    JmaIntensity? min,
+    JmaIntensity? max,
   ) => copyWith(
     intensityGte: IntensityFilterChip.initialMin == min ? null : min,
     intensityLte: IntensityFilterChip.initialMax == max ? null : max,

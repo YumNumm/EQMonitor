@@ -14,7 +14,7 @@ _EewIntensityLpgmValue _$EewIntensityLpgmValueFromJson(
   final val = _EewIntensityLpgmValue(
     value: $checkedConvert(
       'value',
-      (v) => $enumDecode(_$LpgmIntensityEnumMap, v),
+      (v) => $enumDecode(_$JmaLpgmIntensityEnumMap, v),
     ),
     isOver: $checkedConvert('is_over', (v) => v as bool),
   );
@@ -25,10 +25,10 @@ Map<String, dynamic> _$EewIntensityLpgmValueToJson(
   _EewIntensityLpgmValue instance,
 ) => <String, dynamic>{'value': instance.value, 'is_over': instance.isOver};
 
-const _$LpgmIntensityEnumMap = {
-  LpgmIntensity.value0: 0,
-  LpgmIntensity.value1: 1,
-  LpgmIntensity.value2: 2,
-  LpgmIntensity.value3: 3,
-  LpgmIntensity.value4: 4,
+const _$JmaLpgmIntensityEnumMap = {
+  JmaLpgmIntensity.value0: 0,
+  JmaLpgmIntensity.value1: 1,
+  JmaLpgmIntensity.value2: 2,
+  JmaLpgmIntensity.value3: 3,
+  JmaLpgmIntensity.value4: 4,
 };
