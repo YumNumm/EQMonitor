@@ -69,7 +69,7 @@ class _MapContent extends StatelessWidget {
       children: [
         EewForecastRegionLayer(eew: selectedEew, displayMode: displayMode),
         EewStaticPsWaveLayer(eew: selectedEew),
-        EewHypocenterLayer(eews: selectedEew != null ? [selectedEew!] : []),
+        EewHypocenterLayer(eews: selectedEew != null ? [selectedEew] : []),
       ],
     );
   }

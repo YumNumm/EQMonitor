@@ -61,7 +61,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     }
 
     for (final eew in targetEews) {
-      final hypocenter = eew.hypocenter!;
+      final hypocenter = eew.hypocenter;
       final coords = hypocenter.coordinates as CoordinateLatLng;
       final magnitude = hypocenter.magnitude;
       final depth = hypocenter.depth;

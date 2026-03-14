@@ -179,7 +179,7 @@ class _CityListTile extends HookWidget {
         children: [
           if (city.maxIntensity != null)
             IntensityValueIcon(
-              intensity: city.maxIntensity!,
+              intensity: city.maxIntensity,
               type: IntensityIconType.filled,
               size: 24,
             ),
@@ -230,7 +230,7 @@ class _CityListTile extends HookWidget {
                     children: [
                       if (station.intensity?.maxIntensity != null)
                         IntensityValueIcon(
-                          intensity: station.intensity!.maxIntensity!,
+                          intensity: station.intensity!.maxIntensity,
                           type: IntensityIconType.filled,
                           size: 18,
                         ),
