@@ -65,7 +65,6 @@ Future<void> main(List<String> args) => build(
         '../../app/ios/Runner/Frameworks/libLiveActivityUtil.dylib',
         '-module-name',
         'live_activity_util',
-        '-c',
         packageRoot
             .resolve(
               'ios/live_activity_util/Sources/live_activity_util/EQMLiveActivityUtil.swift',
