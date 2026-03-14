@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'device_response_locale.dart';
 import 'device_response_type.dart';
 
 part 'device_response.freezed.dart';
@@ -16,6 +17,7 @@ abstract class DeviceResponse with _$DeviceResponse {
     required DeviceResponseType type,
     @JsonKey(name: 'user_id')
     required String userId,
+    required DeviceResponseLocale locale,
     @JsonKey(name: 'created_at')
     required String createdAt,
     @JsonKey(name: 'updated_at')

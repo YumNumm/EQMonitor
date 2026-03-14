@@ -61,7 +61,7 @@
         "tags": [
           "Device"
         ],
-        "description": "デバイスを作成または更新",
+        "description": "デバイスを作成または更新（認証必須）",
         "responses": {
           "200": {
             "description": "デバイス情報（更新）",
@@ -85,6 +85,9 @@
           },
           "400": {
             "description": "不正なリクエスト"
+          },
+          "401": {
+            "description": "認証エラー"
           },
           "500": {
             "description": "内部サーバエラー",
@@ -127,6 +130,12 @@
           },
           "400": {
             "description": "不正なデバイスID形式"
+          },
+          "401": {
+            "description": "認証エラー"
+          },
+          "403": {
+            "description": "他のユーザーのデバイス"
           },
           "404": {
             "description": "デバイスが見つからない"
@@ -1433,6 +1442,141 @@
         }
       }
     },
+    "/v2/device/{deviceId}/notification/history": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationHistory",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/NotificationHistoryQueryParams"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ],
+        "tags": [
+          "Notification"
+        ],
+        "description": "デバイスの通知履歴を取得",
+        "responses": {
+          "200": {
+            "description": "通知履歴",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationHistoryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "デバイスが見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "サービス利用不可",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/device/{deviceId}/notification/test": {
+      "post": {
+        "operationId": "postV2DeviceByDeviceIdNotificationTest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestNotificationRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notification"
+        ],
+        "description": "テスト通知を送信",
+        "responses": {
+          "201": {
+            "description": "テスト通知を送信",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestNotificationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "デバイスまたはトークンが見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "サービス利用不可",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUnavailableResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/earthquake": {
       "get": {
         "operationId": "getV2Earthquake",
@@ -2164,16 +2308,16 @@
         }
       }
     },
-    "/v2/user": {
-      "post": {
-        "operationId": "postV2User",
+    "/v2/user/me": {
+      "get": {
+        "operationId": "getV2UserMe",
         "tags": [
           "User"
         ],
-        "description": "ユーザーを作成",
+        "description": "自分のユーザー情報を取得",
         "responses": {
-          "201": {
-            "description": "作成されたユーザー情報",
+          "200": {
+            "description": "ユーザー情報",
             "content": {
               "application/json": {
                 "schema": {
@@ -2181,6 +2325,69 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "認証エラー"
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchV2UserMe",
+        "tags": [
+          "User"
+        ],
+        "description": "プロフィールを更新（name, image）",
+        "responses": {
+          "200": {
+            "description": "更新後のユーザー情報",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "不正なリクエスト"
+          },
+          "401": {
+            "description": "認証エラー"
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteV2UserMe",
+        "tags": [
+          "User"
+        ],
+        "description": "アカウントを削除",
+        "responses": {
+          "200": {
+            "description": "削除成功"
+          },
+          "401": {
+            "description": "認証エラー"
           },
           "500": {
             "description": "内部サーバエラー",
@@ -2195,29 +2402,93 @@
         }
       }
     },
-    "/v2/user/{userId}": {
+    "/v2/user/me/devices": {
       "get": {
-        "operationId": "getV2UserByUserId",
+        "operationId": "getV2UserMeDevices",
         "tags": [
           "User"
         ],
-        "description": "ユーザー情報を取得",
+        "description": "自分のデバイス一覧を取得",
         "responses": {
           "200": {
-            "description": "ユーザー情報",
+            "description": "デバイス一覧",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDeviceResponse"
+                  }
                 }
               }
             }
           },
-          "400": {
-            "description": "不正なユーザーID形式"
+          "401": {
+            "description": "認証エラー"
           },
-          "404": {
-            "description": "ユーザーが見つからない"
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/me/sessions": {
+      "get": {
+        "operationId": "getV2UserMeSessions",
+        "tags": [
+          "User"
+        ],
+        "description": "アクティブセッション一覧を取得",
+        "responses": {
+          "200": {
+            "description": "セッション一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー"
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/me/sessions/{token}": {
+      "delete": {
+        "operationId": "deleteV2UserMeSessionsByToken",
+        "tags": [
+          "User"
+        ],
+        "description": "セッションを無効化",
+        "responses": {
+          "200": {
+            "description": "セッション無効化成功"
+          },
+          "401": {
+            "description": "認証エラー"
           },
           "500": {
             "description": "内部サーバエラー",
@@ -2236,7 +2507,7 @@
               "type": "string"
             },
             "in": "path",
-            "name": "userId",
+            "name": "token",
             "required": true
           }
         ]
@@ -2248,7 +2519,7 @@
         "tags": [
           "WebSocket"
         ],
-        "description": "WebSocket接続用のチケットを発行",
+        "description": "WebSocket接続用のチケットを発行（認証必須）",
         "responses": {
           "200": {
             "description": "発行されたチケット",
@@ -2262,6 +2533,9 @@
           },
           "401": {
             "description": "認証エラー"
+          },
+          "403": {
+            "description": "他のユーザーのデバイス"
           },
           "404": {
             "description": "デバイスが見つからない"
@@ -2297,6 +2571,13 @@
           "user_id": {
             "type": "string"
           },
+          "locale": {
+            "enum": [
+              "ja",
+              "en",
+              "zh"
+            ]
+          },
           "created_at": {
             "type": "string"
           },
@@ -2308,6 +2589,7 @@
           "id",
           "type",
           "user_id",
+          "locale",
           "created_at",
           "updated_at"
         ]
@@ -2695,6 +2977,134 @@
           }
         },
         "required": []
+      },
+      "NotificationLogItem": {
+        "type": "object",
+        "properties": {
+          "stream_id": {
+            "type": "string"
+          },
+          "device_id": {
+            "type": "string"
+          },
+          "framework": {
+            "enum": [
+              "FCM",
+              "APNS"
+            ]
+          },
+          "result": {
+            "enum": [
+              "OK",
+              "NG"
+            ]
+          },
+          "error_code": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "stream_id",
+          "device_id",
+          "framework",
+          "result",
+          "created_at"
+        ]
+      },
+      "NotificationHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationLogItem"
+            }
+          },
+          "next_cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "NotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "NOT_FOUND"
+          },
+          "message": {
+            "const": "Not Found"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ServiceUnavailableResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "SERVICE_UNAVAILABLE"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "TestNotificationRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "silent",
+              "normal",
+              "critical"
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "TestNotificationResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "framework": {
+            "enum": [
+              "FCM",
+              "APNS"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "framework"
+        ]
       },
       "Intensity": {
         "enum": [
@@ -3306,21 +3716,6 @@
         },
         "required": [
           "earthquake"
-        ]
-      },
-      "NotFoundResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "NOT_FOUND"
-          },
-          "message": {
-            "const": "Not Found"
-          }
-        },
-        "required": [
-          "code",
-          "message"
         ]
       },
       "IntensityRegionInfo": {
@@ -4294,10 +4689,149 @@
         "properties": {
           "id": {
             "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_anonymous": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "banned": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string"
           }
         },
         "required": [
-          "id"
+          "id",
+          "name",
+          "email",
+          "image",
+          "role",
+          "is_anonymous",
+          "banned",
+          "created_at"
+        ]
+      },
+      "UserDeviceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "IOS",
+              "ANDROID"
+            ]
+          },
+          "locale": {
+            "enum": [
+              "ja",
+              "en",
+              "zh"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "locale",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "SessionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          },
+          "ip_address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "user_agent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "token",
+          "expires_at",
+          "created_at",
+          "updated_at",
+          "ip_address",
+          "user_agent"
         ]
       },
       "WebsocketTicketResponse": {
@@ -4341,6 +4875,16 @@
           "type": "number"
         },
         "required": true
+      },
+      "NotificationHistoryQueryParams": {
+        "in": "query",
+        "name": "limit",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": "20"
+        }
       },
       "EarthquakeQueryParams": {
         "in": "query",

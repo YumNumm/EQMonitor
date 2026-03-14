@@ -5,6 +5,7 @@
 import 'package:dio/dio.dart';
 
 import 'clients/device_api_client.dart';
+import 'clients/notification_api_client.dart';
 import 'clients/earthquake_api_client.dart';
 import 'clients/eew_api_client.dart';
 import 'clients/telegram_api_client.dart';
@@ -27,6 +28,7 @@ class ApiClient {
   static String get version => '2.0.0';
 
   DeviceApiClient? _device;
+  NotificationApiClient? _notification;
   EarthquakeApiClient? _earthquake;
   EewApiClient? _eew;
   TelegramApiClient? _telegram;
@@ -34,6 +36,8 @@ class ApiClient {
   WebSocketApiClient? _webSocket;
 
   DeviceApiClient get device => _device ??= DeviceApiClient(_dio, baseUrl: _baseUrl);
+
+  NotificationApiClient get notification => _notification ??= NotificationApiClient(_dio, baseUrl: _baseUrl);
 
   EarthquakeApiClient get earthquake => _earthquake ??= EarthquakeApiClient(_dio, baseUrl: _baseUrl);
 

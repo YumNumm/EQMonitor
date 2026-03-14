@@ -29,7 +29,7 @@ part 'device_api_client.g.dart';
 abstract class DeviceApiClient {
   factory DeviceApiClient(Dio dio, {String? baseUrl}) = _DeviceApiClient;
 
-  /// デバイスを作成または更新
+  /// デバイスを作成または更新（認証必須）
   @PUT(DeviceApiClientUrls.putV2DeviceDeviceId)
   Future<HttpResponse<DeviceResponse>> putV2DeviceDeviceId({
     @Path('deviceId') required String deviceId,
