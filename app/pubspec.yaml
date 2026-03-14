@@ -82,7 +82,7 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  libserialport_plus: ^0.0.12
+  libserialport_plus: ^0.1.0
   live_activity_util:
     path: ../packages/live_activity_util
   maplibre:
