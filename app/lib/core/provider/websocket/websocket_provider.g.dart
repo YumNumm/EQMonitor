@@ -47,7 +47,7 @@ final class WebsocketProvider
   }
 }
 
-String _$websocketHash() => r'300cd513ac92d70c9940e33c792a14fa5a211ba7';
+String _$websocketHash() => r'47faff894fcc8d2a965a114fd5e647fc4117b1ba';
 
 @ProviderFor(WebsocketStatus)
 final websocketStatusProvider = WebsocketStatusProvider._();
