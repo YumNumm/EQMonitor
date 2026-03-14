@@ -17,7 +17,7 @@ dependencies:
     path: ../core
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
-  libserialport_plus: ^0.0.12
+  libserialport_plus: ^0.1.0
 
 dev_dependencies:
   altive_lints: ^2.1.0

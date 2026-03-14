@@ -7,9 +7,13 @@ class JmaIntensityJsonConverter extends JsonConverter<JmaIntensity?, String?> {
 
   @override
   JmaIntensity? fromJson(String? value) {
-    if (value == null || value.isEmpty) return null;
+    if (value == null || value.isEmpty) {
+      return null;
+    }
     for (final e in JmaIntensity.values) {
-      if (e.name == value) return e;
+      if (e.name == value) {
+        return e;
+      }
     }
     return null;
   }
