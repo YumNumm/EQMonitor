@@ -13,12 +13,11 @@ part 'eew_settings_response.g.dart';
 abstract class EewSettingsResponse with _$EewSettingsResponse {
   const factory EewSettingsResponse({
     required bool enabled,
-    @JsonKey(name: 'override_silent_mode')
-    required bool overrideSilentMode,
+    @JsonKey(name: 'override_silent_mode') required bool overrideSilentMode,
     required SoundSettingsResponse sound,
-    @JsonKey(name: 'start_live_activity')
-    required bool startLiveActivity,
+    @JsonKey(name: 'start_live_activity') required bool startLiveActivity,
   }) = _EewSettingsResponse;
-  
-  factory EewSettingsResponse.fromJson(Map<String, Object?> json) => _$EewSettingsResponseFromJson(json);
+
+  factory EewSettingsResponse.fromJson(Map<String, Object?> json) =>
+      _$EewSettingsResponseFromJson(json);
 }
