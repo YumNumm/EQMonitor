@@ -15,13 +15,12 @@ abstract class IntensityCitySearchResponse with _$IntensityCitySearchResponse {
     required List<IntensityCitySearchItem> items,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_token')
-    String? nextToken,
+    @JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_pooling')
-    String? nextPooling,
+    @JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling,
   }) = _IntensityCitySearchResponse;
-  
-  factory IntensityCitySearchResponse.fromJson(Map<String, Object?> json) => _$IntensityCitySearchResponseFromJson(json);
+
+  factory IntensityCitySearchResponse.fromJson(Map<String, Object?> json) =>
+      _$IntensityCitySearchResponseFromJson(json);
 }

@@ -16,10 +16,10 @@ abstract class TelegramComments with _$TelegramComments {
     required String forecast,
 
     /// The name has been replaced because it contains a keyword. Original name: `var`.
-    @JsonKey(name: 'var')
-    required String varValue,
+    @JsonKey(name: 'var') required String varValue,
     required String uri,
   }) = _TelegramComments;
-  
-  factory TelegramComments.fromJson(Map<String, Object?> json) => _$TelegramCommentsFromJson(json);
+
+  factory TelegramComments.fromJson(Map<String, Object?> json) =>
+      _$TelegramCommentsFromJson(json);
 }
