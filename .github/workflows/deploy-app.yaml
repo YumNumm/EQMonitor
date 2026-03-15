@@ -140,6 +140,15 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
           | xcbeautify --renderer github-actions
 
+      - name: Ad-hoc sign embedded frameworks
+        working-directory: app
+        run: |
+          APP_PATH="build/ios/Runner.xcarchive/Products/Applications/Runner.app"
+          find "$APP_PATH/Frameworks" -name "*.framework" -type d | while read -r framework; do
+            echo "Signing: $framework"
+            codesign --force --sign - "$framework"
+          done
+
       - name: Create IPA
         working-directory: app
         run: |
