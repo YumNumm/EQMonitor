@@ -131,7 +131,7 @@ jobs:
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
-      - name: Create XCArchive (ad-hoc signing)
+      - name: Create XCArchive
         working-directory: app
         run: |
           xcodebuild archive \
@@ -141,9 +141,10 @@ jobs:
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -archivePath build/ios/Runner.xcarchive \
-            CODE_SIGN_IDENTITY="-" \
-            CODE_SIGNING_REQUIRED=NO \
-            AD_HOC_CODE_SIGNING_ALLOWED=YES \
+            -allowProvisioningUpdates \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
+            -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
+            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
           | xcbeautify --renderer github-actions
 
       - name: Create IPA
