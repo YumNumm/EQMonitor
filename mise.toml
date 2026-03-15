@@ -22,6 +22,7 @@ actionlint = "latest"
 pinact = "latest"
 swiftformat = "latest"
 shellcheck = "latest"
+"github:YumNumm/google-play-cli" = "latest"
 
 [settings]
 lockfile = true
