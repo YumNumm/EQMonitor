@@ -12,6 +12,9 @@ on:
       - synchronize
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   actionlint:
     timeout-minutes: 1
