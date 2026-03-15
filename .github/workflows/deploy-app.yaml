@@ -149,6 +149,16 @@ jobs:
             codesign --force --sign - "$framework"
           done
 
+      - name: Embed entitlements
+        working-directory: app
+        run: |
+          codesign \
+            --entitlements ios/Runner/Runner.entitlements \
+            --force \
+            --sign "-" build/ios/Runner.xcarchive/Products/Applications/Runner.app
+
+          codesign --display --entitlements :- build/ios/Runner.xcarchive/Products/Applications/Runner.app
+
       - name: Create IPA
         working-directory: app
         run: |
