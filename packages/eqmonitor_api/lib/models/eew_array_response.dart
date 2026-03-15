@@ -11,9 +11,9 @@ part 'eew_array_response.g.dart';
 
 @Freezed()
 abstract class EewArrayResponse with _$EewArrayResponse {
-  const factory EewArrayResponse({
-    required List<EewItemWithRelations> items,
-  }) = _EewArrayResponse;
-  
-  factory EewArrayResponse.fromJson(Map<String, Object?> json) => _$EewArrayResponseFromJson(json);
+  const factory EewArrayResponse({required List<EewItemWithRelations> items}) =
+      _EewArrayResponse;
+
+  factory EewArrayResponse.fromJson(Map<String, Object?> json) =>
+      _$EewArrayResponseFromJson(json);
 }

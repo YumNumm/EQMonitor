@@ -13,9 +13,9 @@ part 'sound_settings_response.g.dart';
 abstract class SoundSettingsResponse with _$SoundSettingsResponse {
   const factory SoundSettingsResponse({
     required IntensitySoundMode mode,
-    @JsonKey(includeIfNull: true)
-    required Map<String, String>? map,
+    @JsonKey(includeIfNull: true) required Map<String, String>? map,
   }) = _SoundSettingsResponse;
-  
-  factory SoundSettingsResponse.fromJson(Map<String, Object?> json) => _$SoundSettingsResponseFromJson(json);
+
+  factory SoundSettingsResponse.fromJson(Map<String, Object?> json) =>
+      _$SoundSettingsResponseFromJson(json);
 }
