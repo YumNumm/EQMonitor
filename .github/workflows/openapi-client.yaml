@@ -16,6 +16,8 @@ on:
       - "packages/eqmonitor_api/openapi/openapi.json"
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   generate-openapi-client:
     name: Generate OpenAPI Client
