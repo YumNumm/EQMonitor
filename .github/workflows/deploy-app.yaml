@@ -126,7 +126,7 @@ jobs:
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
-      - name: Create XCArchive (without code signing)
+      - name: Create XCArchive (ad-hoc signing)
         working-directory: app
         run: |
           xcodebuild archive \
@@ -136,28 +136,10 @@ jobs:
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -archivePath build/ios/Runner.xcarchive \
+            CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES \
           | xcbeautify --renderer github-actions
-
-      - name: Ad-hoc sign embedded frameworks
-        working-directory: app
-        run: |
-          APP_PATH="build/ios/Runner.xcarchive/Products/Applications/Runner.app"
-          find "$APP_PATH/Frameworks" -name "*.framework" -type d | while read -r framework; do
-            echo "Signing: $framework"
-            codesign --force --sign - "$framework"
-          done
-
-      - name: Embed entitlements
-        working-directory: app
-        run: |
-          codesign \
-            --entitlements ios/Runner/Runner.entitlements \
-            --force \
-            --sign "-" build/ios/Runner.xcarchive/Products/Applications/Runner.app
-
-          codesign --display --entitlements :- build/ios/Runner.xcarchive/Products/Applications/Runner.app
 
       - name: Create IPA
         working-directory: app
