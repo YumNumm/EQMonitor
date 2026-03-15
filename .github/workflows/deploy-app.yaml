@@ -144,34 +144,6 @@ jobs:
             AD_HOC_CODE_SIGNING_ALLOWED=YES \
           | xcbeautify --renderer github-actions
 
-      - name: Populate SwiftSupport in archive
-        working-directory: app
-        run: |
-          ARCHIVE="build/ios/Runner.xcarchive"
-          APP_FRAMEWORKS="$ARCHIVE/Products/Applications/Runner.app/Frameworks"
-          SWIFT_SUPPORT="$ARCHIVE/SwiftSupport/iphoneos"
-          mkdir -p "$SWIFT_SUPPORT"
-
-          TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
-          if [ ! -d "$TOOLCHAIN" ]; then
-            TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.5/iphoneos"
-          fi
-          echo "Toolchain path: $TOOLCHAIN"
-
-          for lib in "$APP_FRAMEWORKS"/libswift*.dylib; do
-            [ -f "$lib" ] || continue
-            LIB_NAME=$(basename "$lib")
-            if [ -f "$TOOLCHAIN/$LIB_NAME" ]; then
-              cp "$TOOLCHAIN/$LIB_NAME" "$SWIFT_SUPPORT/"
-              echo "Copied: $LIB_NAME"
-            else
-              echo "Warning: $LIB_NAME not found in toolchain"
-            fi
-          done
-
-          echo "--- SwiftSupport contents ---"
-          ls -lh "$SWIFT_SUPPORT/" 2>/dev/null || echo "(empty)"
-
       - name: Create IPA
         working-directory: app
         run: |
