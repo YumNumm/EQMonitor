@@ -13,25 +13,18 @@ part 'notification_log_item.g.dart';
 @Freezed()
 abstract class NotificationLogItem with _$NotificationLogItem {
   const factory NotificationLogItem({
-    @JsonKey(name: 'stream_id')
-    required String streamId,
-    @JsonKey(name: 'device_id')
-    required String deviceId,
+    @JsonKey(name: 'stream_id') required String streamId,
+    @JsonKey(name: 'device_id') required String deviceId,
     required NotificationLogItemFramework framework,
     required NotificationLogItemResult result,
-    @JsonKey(name: 'created_at')
-    required String createdAt,
-    @JsonKey(includeIfNull: false,name: 'error_code')
-    String? errorCode,
-    @JsonKey(includeIfNull: false,name: 'error_message')
-    String? errorMessage,
-    @JsonKey(includeIfNull: false,name: 'event_id')
-    String? eventId,
-    @JsonKey(includeIfNull: false)
-    String? title,
-    @JsonKey(includeIfNull: false)
-    String? body,
+    @JsonKey(name: 'created_at') required String createdAt,
+    @JsonKey(includeIfNull: false, name: 'error_code') String? errorCode,
+    @JsonKey(includeIfNull: false, name: 'error_message') String? errorMessage,
+    @JsonKey(includeIfNull: false, name: 'event_id') String? eventId,
+    @JsonKey(includeIfNull: false) String? title,
+    @JsonKey(includeIfNull: false) String? body,
   }) = _NotificationLogItem;
-  
-  factory NotificationLogItem.fromJson(Map<String, Object?> json) => _$NotificationLogItemFromJson(json);
+
+  factory NotificationLogItem.fromJson(Map<String, Object?> json) =>
+      _$NotificationLogItemFromJson(json);
 }

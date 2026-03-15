@@ -15,6 +15,7 @@ abstract class ApnsTokenResponse with _$ApnsTokenResponse {
     required ApnsTokenType type,
     required String token,
   }) = _ApnsTokenResponse;
-  
-  factory ApnsTokenResponse.fromJson(Map<String, Object?> json) => _$ApnsTokenResponseFromJson(json);
+
+  factory ApnsTokenResponse.fromJson(Map<String, Object?> json) =>
+      _$ApnsTokenResponseFromJson(json);
 }

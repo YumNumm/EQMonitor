@@ -13,6 +13,7 @@ abstract class NotFoundResponse with _$NotFoundResponse {
     required dynamic code,
     required dynamic message,
   }) = _NotFoundResponse;
-  
-  factory NotFoundResponse.fromJson(Map<String, Object?> json) => _$NotFoundResponseFromJson(json);
+
+  factory NotFoundResponse.fromJson(Map<String, Object?> json) =>
+      _$NotFoundResponseFromJson(json);
 }

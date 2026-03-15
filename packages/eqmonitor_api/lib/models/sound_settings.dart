@@ -13,9 +13,9 @@ part 'sound_settings.g.dart';
 abstract class SoundSettings with _$SoundSettings {
   const factory SoundSettings({
     required IntensitySoundMode mode,
-    @JsonKey(includeIfNull: false)
-    Map<String, String>? map,
+    @JsonKey(includeIfNull: false) Map<String, String>? map,
   }) = _SoundSettings;
-  
-  factory SoundSettings.fromJson(Map<String, Object?> json) => _$SoundSettingsFromJson(json);
+
+  factory SoundSettings.fromJson(Map<String, Object?> json) =>
+      _$SoundSettingsFromJson(json);
 }
