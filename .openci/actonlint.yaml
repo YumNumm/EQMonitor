@@ -1,0 +1,38 @@
+name: ActionLint
+
+on:
+  push:
+   branches:
+     - '*'
+  pull_request:
+    branches:
+     - '*'
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    timeout-minutes: 1
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.1.1
+        with:
+          install_args: "actionlint"
+
+      - name: Add matcher
+        run: |
+          echo "::add-matcher::.github/problem_matcher/actionlint.json"
+
+      - name: Run actionlint
+        run: |
+          actionlint -color
