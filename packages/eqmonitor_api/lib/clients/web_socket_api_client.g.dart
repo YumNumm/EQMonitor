@@ -22,12 +22,12 @@ class _WebSocketApiClient implements WebSocketApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<InvalidType>> getV2WebsocketTicket() async {
+  Future<HttpResponse<WebsocketTicketResponse>> getV2WebsocketTicket() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<WebsocketTicketResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -37,10 +37,10 @@ class _WebSocketApiClient implements WebSocketApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late WebsocketTicketResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = WebsocketTicketResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

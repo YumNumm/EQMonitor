@@ -1,6 +1,6 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class IntensityValueIcon extends ConsumerWidget {
     this.showSuffix = true,
   });
 
-  final IntensityValue intensity;
+  final JmaIntensity intensity;
   final IntensityIconType type;
   final double size;
   final String? customText;
@@ -25,28 +25,16 @@ class IntensityValueIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromIntensityValue(intensity);
+    final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
 
-    final intensityMainText = switch (intensity) {
-      IntensityValue.fiveLowerNoInput => '5',
-      _ => intensity.value.replaceAll('-', '').replaceAll('+', ''),
-    };
-
-    final suffix = intensity.value.contains('-')
+    final intensityMainText = intensity.mainText;
+    final suffix = intensity.label.contains('-')
         ? '-'
-        : intensity.value.contains('+')
+        : intensity.label.contains('+')
         ? '+'
         : '';
-    final intensitySubText = switch (intensity) {
-      IntensityValue.fiveLowerNoInput => '弱以上',
-      _ =>
-        intensity.value.contains('-')
-            ? '弱'
-            : intensity.value.contains('+')
-            ? '強'
-            : '',
-    };
+    final intensitySubText = intensity.suffix;
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
       IntensityIconType.small => SizedBox(
@@ -58,7 +46,7 @@ class IntensityValueIcon extends ConsumerWidget {
             color: bg,
             border: Border.all(color: borderColor, width: 5),
           ),
-          child: (intensity == IntensityValue.fiveLowerNoInput)
+          child: (intensity == JmaIntensity.fiveUnknown)
               ? const SizedBox.shrink()
               : Center(
                   child: Padding(

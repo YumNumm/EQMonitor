@@ -1,9 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor_api/export.dart' show TelegramStatus;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_parameter.freezed.dart';
@@ -25,8 +26,8 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     double? magnitudeGte,
     int? depthLte,
     int? depthGte,
-    IntensityValue? intensityLte,
-    IntensityValue? intensityGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
     List<TelegramStatus>? statuses,
 
     // 震央地名フィルター
@@ -37,8 +38,8 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     RegionSearchType? regionSearchType,
     String? regionCode,
     String? regionName,
-    IntensityValue? regionIntensityLte,
-    IntensityValue? regionIntensityGte,
+    JmaIntensity? regionIntensityLte,
+    JmaIntensity? regionIntensityGte,
   }) = _EarthquakeHistoryParameter;
 
   const EarthquakeHistoryParameter._();
@@ -56,8 +57,8 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
 
 extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
   EarthquakeHistoryParameter updateIntensity(
-    IntensityValue? min,
-    IntensityValue? max,
+    JmaIntensity? min,
+    JmaIntensity? max,
   ) => copyWith(
     intensityGte: IntensityFilterChip.initialMin == min ? null : min,
     intensityLte: IntensityFilterChip.initialMax == max ? null : max,

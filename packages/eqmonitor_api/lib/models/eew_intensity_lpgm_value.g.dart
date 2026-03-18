@@ -1,0 +1,34 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'eew_intensity_lpgm_value.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_EewIntensityLpgmValue _$EewIntensityLpgmValueFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_EewIntensityLpgmValue', json, ($checkedConvert) {
+  final val = _EewIntensityLpgmValue(
+    value: $checkedConvert(
+      'value',
+      (v) => $enumDecode(_$JmaLpgmIntensityEnumMap, v),
+    ),
+    isOver: $checkedConvert('is_over', (v) => v as bool),
+  );
+  return val;
+}, fieldKeyMap: const {'isOver': 'is_over'});
+
+Map<String, dynamic> _$EewIntensityLpgmValueToJson(
+  _EewIntensityLpgmValue instance,
+) => <String, dynamic>{'value': instance.value, 'is_over': instance.isOver};
+
+const _$JmaLpgmIntensityEnumMap = {
+  JmaLpgmIntensity.value0: 0,
+  JmaLpgmIntensity.value1: 1,
+  JmaLpgmIntensity.value2: 2,
+  JmaLpgmIntensity.value3: 3,
+  JmaLpgmIntensity.value4: 4,
+};

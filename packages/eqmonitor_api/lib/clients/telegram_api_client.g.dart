@@ -22,13 +22,15 @@ class _TelegramApiClient implements TelegramApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<InvalidType>> getV2Telegram({String? limit}) async {
+  Future<HttpResponse<TelegramListResponse>> getV2Telegram({
+    String? limit,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'limit': limit};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<TelegramListResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -38,10 +40,10 @@ class _TelegramApiClient implements TelegramApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late TelegramListResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = TelegramListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -51,8 +53,8 @@ class _TelegramApiClient implements TelegramApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2TelegramTypeType({
-    required Type2 type,
+  Future<HttpResponse<TelegramListResponse>> getV2TelegramTypeType({
+    required TelegramType type,
     String? limit,
   }) async {
     final _extra = <String, dynamic>{};
@@ -60,7 +62,7 @@ class _TelegramApiClient implements TelegramApiClient {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<TelegramListResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -70,10 +72,10 @@ class _TelegramApiClient implements TelegramApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late TelegramListResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = TelegramListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -83,7 +85,7 @@ class _TelegramApiClient implements TelegramApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2TelegramEventIdEventId({
+  Future<HttpResponse<TelegramListResponse>> getV2TelegramEventIdEventId({
     required String eventId,
     String? limit,
   }) async {
@@ -92,7 +94,7 @@ class _TelegramApiClient implements TelegramApiClient {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<TelegramListResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -102,10 +104,10 @@ class _TelegramApiClient implements TelegramApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late TelegramListResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = TelegramListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -115,14 +117,14 @@ class _TelegramApiClient implements TelegramApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2TelegramId({
+  Future<HttpResponse<TelegramDetailResponse>> getV2TelegramId({
     required String id,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<TelegramDetailResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -132,10 +134,10 @@ class _TelegramApiClient implements TelegramApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late TelegramDetailResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = TelegramDetailResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

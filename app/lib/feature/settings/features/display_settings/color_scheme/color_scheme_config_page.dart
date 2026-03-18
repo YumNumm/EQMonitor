@@ -1,5 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ class _IntensityWidgets extends StatelessWidget {
       spacing: 4,
       runSpacing: 4,
       children: [
-        ...JmaForecastIntensity.values.map(
+        ...JmaIntensity.values.map(
           (e) => JmaForecastIntensityWidget(
             intensity: e,
             colorModel: colorModel,

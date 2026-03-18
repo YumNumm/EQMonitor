@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/map_camera_state.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:maplibre/maplibre.dart';
@@ -31,7 +31,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     _controller = controller;
   }
 
-  Future<void> _fitToEews(List<EewItemWithRelations> eews) async {
+  Future<void> _fitToEews(List<EewTelegramItem> eews) async {
     if (_controller == null) {
       return;
     }
@@ -57,10 +57,9 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     state = state.copyWith(isAtHome: true);
   }
 
-  LngLatBounds _calculateBounds(List<EewItemWithRelations> eews) {
+  LngLatBounds _calculateBounds(List<EewTelegramItem> eews) {
     final validEews = eews.where((e) {
-      final coords = e.hypocenter?.coordinates;
-      return coords is CoordinateLatLng;
+      return e.hypocenter?.hasLatLng ?? false;
     }).toList();
 
     if (validEews.isEmpty) {
@@ -72,17 +71,16 @@ class HomeMapCameraState extends _$HomeMapCameraState {
       );
     }
 
-    final firstCoords =
-        validEews.first.hypocenter!.coordinates as CoordinateLatLng;
-    var minLat = firstCoords.latitude;
-    var maxLat = firstCoords.latitude;
-    var minLng = firstCoords.longitude;
-    var maxLng = firstCoords.longitude;
+    final firstHypo = validEews.first.hypocenter!;
+    var minLat = firstHypo.latitude!;
+    var maxLat = firstHypo.latitude!;
+    var minLng = firstHypo.longitude!;
+    var maxLng = firstHypo.longitude!;
 
     for (final eew in validEews) {
-      final coords = eew.hypocenter!.coordinates as CoordinateLatLng;
-      final lat = coords.latitude;
-      final lng = coords.longitude;
+      final hypo = eew.hypocenter!;
+      final lat = hypo.latitude!;
+      final lng = hypo.longitude!;
 
       if (lat < minLat) {
         minLat = lat;

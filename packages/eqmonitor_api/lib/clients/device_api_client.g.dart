@@ -22,14 +22,14 @@ class _DeviceApiClient implements DeviceApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<InvalidType>> putV2DeviceDeviceId({
+  Future<HttpResponse<DeviceResponse>> putV2DeviceDeviceId({
     required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<DeviceResponse>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -39,10 +39,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late DeviceResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = DeviceResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -52,14 +52,14 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2DeviceDeviceId({
+  Future<HttpResponse<DeviceResponse>> getV2DeviceDeviceId({
     required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<DeviceResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -69,10 +69,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late DeviceResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = DeviceResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -82,14 +82,37 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<List<InvalidType>>> getV2DeviceDeviceIdApns({
+  Future<HttpResponse<void>> deleteV2DeviceDeviceId({
     required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<List<InvalidType>>>(
+    final _options = _setStreamType<HttpResponse<void>>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/device/${deviceId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<void>(_options);
+    final httpResponse = HttpResponse(null, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<List<ApnsTokenResponse>>> getV2DeviceDeviceIdApns({
+    required String deviceId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<List<ApnsTokenResponse>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -100,10 +123,13 @@ class _DeviceApiClient implements DeviceApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<InvalidType> _value;
+    late List<ApnsTokenResponse> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => InvalidType.fromJson(i as Map<String, dynamic>))
+          .map(
+            (dynamic i) =>
+                ApnsTokenResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -114,15 +140,15 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2DeviceDeviceIdApnsType({
-    required Type type,
+  Future<HttpResponse<ApnsTokenResponse>> getV2DeviceDeviceIdApnsType({
+    required ApnsTokenType type,
     required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<ApnsTokenResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -132,10 +158,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late ApnsTokenResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = ApnsTokenResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -145,18 +171,17 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> patchV2DeviceDeviceIdApnsType({
-    required Type type,
+  Future<HttpResponse<ApnsTokenResponse>> patchV2DeviceDeviceIdApnsType({
+    required ApnsTokenType type,
     required String deviceId,
-    ApnsTokenRequest? body,
+    required ApnsTokenRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<ApnsTokenResponse>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -166,10 +191,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late ApnsTokenResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = ApnsTokenResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -180,7 +205,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<void>> deleteV2DeviceDeviceIdApnsType({
-    required Type type,
+    required ApnsTokenType type,
     required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
@@ -203,14 +228,14 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2DeviceDeviceIdFcm({
+  Future<HttpResponse<FcmTokenResponse?>> getV2DeviceDeviceIdFcm({
     required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<FcmTokenResponse?>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -220,10 +245,12 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>?>(_options);
+    late FcmTokenResponse? _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = _result.data == null
+          ? null
+          : FcmTokenResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -233,17 +260,16 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> patchV2DeviceDeviceIdFcm({
+  Future<HttpResponse<FcmTokenResponse?>> patchV2DeviceDeviceIdFcm({
     required String deviceId,
-    FcmTokenRequest? body,
+    required FcmTokenRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<FcmTokenResponse?>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -253,10 +279,12 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>?>(_options);
+    late FcmTokenResponse? _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = _result.data == null
+          ? null
+          : FcmTokenResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -289,28 +317,33 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<List<InvalidType>>> getV2DeviceDeviceIdLiveActivity({
-    required String deviceId,
-  }) async {
+  Future<HttpResponse<List<LiveActivityTokenResponse>>>
+  getV2DeviceDeviceIdLiveActivity({required String deviceId}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<List<InvalidType>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/live-activity',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options =
+        _setStreamType<HttpResponse<List<LiveActivityTokenResponse>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/device/${deviceId}/live-activity',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<InvalidType> _value;
+    late List<LiveActivityTokenResponse> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => InvalidType.fromJson(i as Map<String, dynamic>))
+          .map(
+            (dynamic i) =>
+                LiveActivityTokenResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -321,19 +354,18 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>>
+  Future<HttpResponse<LiveActivityTokenResponse>>
   putV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
     required String liveActivityId,
     required String deviceId,
-    LiveActivityTokenRequest? body,
+    required LiveActivityTokenRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<LiveActivityTokenResponse>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -343,10 +375,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late LiveActivityTokenResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = LiveActivityTokenResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -381,14 +413,13 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2DeviceDeviceIdSettingsNotification({
-    required String deviceId,
-  }) async {
+  Future<HttpResponse<NotificationSettingsResponse>>
+  getV2DeviceDeviceIdSettingsNotification({required String deviceId}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<NotificationSettingsResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -398,10 +429,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late NotificationSettingsResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = NotificationSettingsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -411,17 +442,17 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> patchV2DeviceDeviceIdSettingsNotification({
+  Future<HttpResponse<NotificationSettingsResponse>>
+  patchV2DeviceDeviceIdSettingsNotification({
     required String deviceId,
-    NotificationSettingsRequest? body,
+    required NotificationSettingsRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<NotificationSettingsResponse>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -431,10 +462,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late NotificationSettingsResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = NotificationSettingsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -444,14 +475,13 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2DeviceDeviceIdSettingsEarthquake({
-    required String deviceId,
-  }) async {
+  Future<HttpResponse<EarthquakeSettingsResponse>>
+  getV2DeviceDeviceIdSettingsEarthquake({required String deviceId}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<EarthquakeSettingsResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -461,10 +491,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EarthquakeSettingsResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EarthquakeSettingsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -474,17 +504,17 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> patchV2DeviceDeviceIdSettingsEarthquake({
+  Future<HttpResponse<EarthquakeSettingsResponse>>
+  patchV2DeviceDeviceIdSettingsEarthquake({
     required String deviceId,
-    EarthquakeSettingsRequest? body,
+    required EarthquakeSettingsRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<EarthquakeSettingsResponse>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -494,10 +524,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EarthquakeSettingsResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EarthquakeSettingsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -507,7 +537,7 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<List<InvalidType>>>
+  Future<HttpResponse<List<RegionSettingResponse>>>
   getV2DeviceDeviceIdSettingsEarthquakeRegions({
     required String deviceId,
   }) async {
@@ -515,7 +545,7 @@ class _DeviceApiClient implements DeviceApiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<List<InvalidType>>>(
+    final _options = _setStreamType<HttpResponse<List<RegionSettingResponse>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -526,10 +556,13 @@ class _DeviceApiClient implements DeviceApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<InvalidType> _value;
+    late List<RegionSettingResponse> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => InvalidType.fromJson(i as Map<String, dynamic>))
+          .map(
+            (dynamic i) =>
+                RegionSettingResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -540,17 +573,16 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<List<InvalidType>>>
+  Future<HttpResponse<List<RegionSettingResponse>>>
   putV2DeviceDeviceIdSettingsEarthquakeRegions({
     required String deviceId,
-    List<RegionSettingRequest>? body,
+    required List<RegionSettingRequest> body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = body?.map((e) => e.toJson()).toList();
-    final _options = _setStreamType<HttpResponse<List<InvalidType>>>(
+    final _data = body.map((e) => e.toJson()).toList();
+    final _options = _setStreamType<HttpResponse<List<RegionSettingResponse>>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -561,10 +593,13 @@ class _DeviceApiClient implements DeviceApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<InvalidType> _value;
+    late List<RegionSettingResponse> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => InvalidType.fromJson(i as Map<String, dynamic>))
+          .map(
+            (dynamic i) =>
+                RegionSettingResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -575,7 +610,7 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>>
+  Future<HttpResponse<RegionSettingResponse>>
   getV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
     required num regionId,
     required String deviceId,
@@ -584,7 +619,7 @@ class _DeviceApiClient implements DeviceApiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<RegionSettingResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -594,10 +629,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late RegionSettingResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = RegionSettingResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -607,19 +642,18 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>>
+  Future<HttpResponse<RegionSettingResponse>>
   patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
     required num regionId,
     required String deviceId,
-    RegionSettingPatchRequest? body,
+    required RegionSettingPatchRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<RegionSettingResponse>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -629,10 +663,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late RegionSettingResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = RegionSettingResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -667,14 +701,14 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2DeviceDeviceIdSettingsEew({
+  Future<HttpResponse<EewSettingsResponse>> getV2DeviceDeviceIdSettingsEew({
     required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<EewSettingsResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -684,10 +718,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EewSettingsResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EewSettingsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -697,17 +731,16 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> patchV2DeviceDeviceIdSettingsEew({
+  Future<HttpResponse<EewSettingsResponse>> patchV2DeviceDeviceIdSettingsEew({
     required String deviceId,
-    EewSettingsRequest? body,
+    required EewSettingsRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<EewSettingsResponse>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -717,10 +750,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EewSettingsResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EewSettingsResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -730,13 +763,13 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<List<InvalidType>>>
+  Future<HttpResponse<List<RegionSettingResponse>>>
   getV2DeviceDeviceIdSettingsEewRegions({required String deviceId}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<List<InvalidType>>>(
+    final _options = _setStreamType<HttpResponse<List<RegionSettingResponse>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -747,10 +780,13 @@ class _DeviceApiClient implements DeviceApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<InvalidType> _value;
+    late List<RegionSettingResponse> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => InvalidType.fromJson(i as Map<String, dynamic>))
+          .map(
+            (dynamic i) =>
+                RegionSettingResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -761,17 +797,16 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<List<InvalidType>>>
+  Future<HttpResponse<List<RegionSettingResponse>>>
   putV2DeviceDeviceIdSettingsEewRegions({
     required String deviceId,
-    List<RegionSettingRequest>? body,
+    required List<RegionSettingRequest> body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = body?.map((e) => e.toJson()).toList();
-    final _options = _setStreamType<HttpResponse<List<InvalidType>>>(
+    final _data = body.map((e) => e.toJson()).toList();
+    final _options = _setStreamType<HttpResponse<List<RegionSettingResponse>>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -782,10 +817,13 @@ class _DeviceApiClient implements DeviceApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<InvalidType> _value;
+    late List<RegionSettingResponse> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => InvalidType.fromJson(i as Map<String, dynamic>))
+          .map(
+            (dynamic i) =>
+                RegionSettingResponse.fromJson(i as Map<String, dynamic>),
+          )
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -796,7 +834,7 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>>
+  Future<HttpResponse<RegionSettingResponse>>
   getV2DeviceDeviceIdSettingsEewRegionsRegionId({
     required num regionId,
     required String deviceId,
@@ -805,7 +843,7 @@ class _DeviceApiClient implements DeviceApiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<RegionSettingResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -815,10 +853,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late RegionSettingResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = RegionSettingResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -828,19 +866,18 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>>
+  Future<HttpResponse<RegionSettingResponse>>
   patchV2DeviceDeviceIdSettingsEewRegionsRegionId({
     required num regionId,
     required String deviceId,
-    RegionSettingPatchRequest? body,
+    required RegionSettingPatchRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<RegionSettingResponse>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -850,10 +887,10 @@ class _DeviceApiClient implements DeviceApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late RegionSettingResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = RegionSettingResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

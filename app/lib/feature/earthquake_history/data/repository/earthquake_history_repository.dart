@@ -1,181 +1,109 @@
-import 'package:eqapi_client/eqapi_client.dart';
-import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_list_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor_api/export.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-EarthquakeHistoryRepository earthquakeHistoryRepository(Ref ref) =>
-    EarthquakeHistoryRepository(api: ref.watch(eqApiProvider));
+Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(
+  Ref ref,
+) async {
+  final jmaParam = await ref.watch(jmaParameterProvider.future);
+  return EarthquakeHistoryRepository(
+    api: ref.watch(apiClientProvider),
+    earthquakeParameter: jmaParam.earthquake,
+  );
+}
 
 class EarthquakeHistoryRepository {
-  EarthquakeHistoryRepository({required EqApi api}) : _api = api;
+  EarthquakeHistoryRepository({
+    required api.ApiClient api,
+    required this.earthquakeParameter,
+  }) : _api = api;
 
-  final EqApi _api;
+  final api.ApiClient _api;
+  final EarthquakeParameter earthquakeParameter;
 
   Future<EarthquakeListResponse> fetchEarthquakeList({
     int? limit,
-    String? cursor,
-    double? magnitudeLte,
-    double? magnitudeGte,
-    int? depthLte,
-    int? depthGte,
-    String? intensityLte,
-    String? intensityGte,
-    List<String>? statuses,
   }) async {
-    return _api.earthquake.getList(
-      limit: limit,
-      cursor: cursor,
-      magnitudeLte: magnitudeLte,
-      magnitudeGte: magnitudeGte,
-      depthLte: depthLte,
-      depthGte: depthGte,
-      intensityLte: intensityLte,
-      intensityGte: intensityGte,
-      statuses: statuses,
+    final response = await _api.earthquake.getV2Earthquake(
+      limit: limit?.toString(),
+    );
+    return response.data.toEarthquakeListResponse(
+      parameter: earthquakeParameter,
     );
   }
 
-  Future<EarthquakeDetailResponse> fetchEarthquakeDetail({
+  Future<EarthquakePartial> fetchEarthquakeDetail({
     required String eventId,
   }) async {
-    return _api.earthquake.getDetail(eventId: eventId);
-  }
-
-  /// 震度細分区域から地震検索
-  Future<IntensityRegionSearchResponse> searchByRegion({
-    required String code,
-    int? limit,
-    String? cursor,
-    double? magnitudeLte,
-    double? magnitudeGte,
-    int? depthLte,
-    int? depthGte,
-    String? intensityLte,
-    String? intensityGte,
-    List<String>? statuses,
-  }) async {
-    return _api.earthquake.searchByRegion(
-      code: code,
-      limit: limit,
-      cursor: cursor,
-      magnitudeLte: magnitudeLte,
-      magnitudeGte: magnitudeGte,
-      depthLte: depthLte,
-      depthGte: depthGte,
-      intensityLte: intensityLte,
-      intensityGte: intensityGte,
-      statuses: statuses,
+    final response = await _api.earthquake.getV2EarthquakeEventId(
+      eventId: eventId,
+    );
+    return response.data.earthquake.toEarthquakePartial(
+      parameter: earthquakeParameter,
     );
   }
 
-  /// 都道府県から地震検索
-  Future<IntensityPrefectureSearchResponse> searchByPrefecture({
+  Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByRegion({
     required String code,
     int? limit,
-    String? cursor,
-    double? magnitudeLte,
-    double? magnitudeGte,
-    int? depthLte,
-    int? depthGte,
-    String? intensityLte,
-    String? intensityGte,
-    List<String>? statuses,
   }) async {
-    return _api.earthquake.searchByPrefecture(
+    final response = await _api.earthquake.getV2EarthquakeIntensityRegionCode(
       code: code,
-      limit: limit,
-      cursor: cursor,
-      magnitudeLte: magnitudeLte,
-      magnitudeGte: magnitudeGte,
-      depthLte: depthLte,
-      depthGte: depthGte,
-      intensityLte: intensityLte,
-      intensityGte: intensityGte,
-      statuses: statuses,
+      limit: limit?.toString(),
     );
+    return response.data.toAppResponse(parameter: earthquakeParameter);
   }
 
-  /// 市区町村から地震検索
-  Future<IntensityCitySearchResponse> searchByCity({
+  Future<PaginatedSearchResponse<IntensityAreaSearchItem>>
+      searchByPrefecture({
     required String code,
     int? limit,
-    String? cursor,
-    double? magnitudeLte,
-    double? magnitudeGte,
-    int? depthLte,
-    int? depthGte,
-    String? intensityLte,
-    String? intensityGte,
-    List<String>? statuses,
   }) async {
-    return _api.earthquake.searchByCity(
+    final response =
+        await _api.earthquake.getV2EarthquakeIntensityPrefectureCode(
       code: code,
-      limit: limit,
-      cursor: cursor,
-      magnitudeLte: magnitudeLte,
-      magnitudeGte: magnitudeGte,
-      depthLte: depthLte,
-      depthGte: depthGte,
-      intensityLte: intensityLte,
-      intensityGte: intensityGte,
-      statuses: statuses,
+      limit: limit?.toString(),
     );
+    return response.data.toAppResponse(parameter: earthquakeParameter);
   }
 
-  /// 観測点から地震検索
-  Future<IntensityStationSearchResponse> searchByStation({
+  Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByCity({
     required String code,
     int? limit,
-    String? cursor,
-    double? magnitudeLte,
-    double? magnitudeGte,
-    int? depthLte,
-    int? depthGte,
-    String? intensityLte,
-    String? intensityGte,
-    List<String>? statuses,
   }) async {
-    return _api.earthquake.searchByStation(
+    final response = await _api.earthquake.getV2EarthquakeIntensityCityCode(
       code: code,
-      limit: limit,
-      cursor: cursor,
-      magnitudeLte: magnitudeLte,
-      magnitudeGte: magnitudeGte,
-      depthLte: depthLte,
-      depthGte: depthGte,
-      intensityLte: intensityLte,
-      intensityGte: intensityGte,
-      statuses: statuses,
+      limit: limit?.toString(),
     );
+    return response.data.toAppResponse(parameter: earthquakeParameter);
   }
 
-  /// 震源地から地震検索
-  Future<EpicenterSearchResponse> searchByEpicenter({
+  Future<PaginatedSearchResponse<StationSearchItem>> searchByStation({
+    required String code,
+    int? limit,
+  }) async {
+    final response = await _api.earthquake.getV2EarthquakeIntensityStationCode(
+      code: code,
+      limit: limit?.toString(),
+    );
+    return response.data.toAppResponse(parameter: earthquakeParameter);
+  }
+
+  Future<PaginatedSearchResponse<EpicenterSearchItem>> searchByEpicenter({
     required int code,
     int? limit,
-    String? cursor,
-    double? magnitudeLte,
-    double? magnitudeGte,
-    int? depthLte,
-    int? depthGte,
-    String? intensityLte,
-    String? intensityGte,
-    List<String>? statuses,
   }) async {
-    return _api.earthquake.searchByEpicenter(
-      code: code,
-      limit: limit,
-      cursor: cursor,
-      magnitudeLte: magnitudeLte,
-      magnitudeGte: magnitudeGte,
-      depthLte: depthLte,
-      depthGte: depthGte,
-      intensityLte: intensityLte,
-      intensityGte: intensityGte,
-      statuses: statuses,
+    final response = await _api.earthquake.getV2EarthquakeEpicenterCode(
+      code: code.toString(),
+      limit: limit?.toString(),
     );
+    return response.data.toAppResponse(parameter: earthquakeParameter);
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:flutter/material.dart';
@@ -79,10 +79,10 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
     );
 
     // 最大震度（初期値から設定）
-    final intensityMin = useState<IntensityValue>(
+    final intensityMin = useState<JmaIntensity>(
       initialParameter.intensityGte ?? _IntensityRangeSelector.initialMin,
     );
-    final intensityMax = useState<IntensityValue>(
+    final intensityMax = useState<JmaIntensity>(
       initialParameter.intensityLte ?? _IntensityRangeSelector.initialMax,
     );
 
@@ -96,10 +96,10 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
     final selectedRegionType = useState<String>(
       initialParameter.regionSearchType?.name ?? 'prefecture',
     );
-    final regionIntensityMin = useState<IntensityValue>(
+    final regionIntensityMin = useState<JmaIntensity>(
       initialParameter.regionIntensityGte ?? _IntensityRangeSelector.initialMin,
     );
-    final regionIntensityMax = useState<IntensityValue>(
+    final regionIntensityMax = useState<JmaIntensity>(
       initialParameter.regionIntensityLte ?? _IntensityRangeSelector.initialMax,
     );
 
@@ -528,26 +528,26 @@ class _IntensityRangeSelector extends HookWidget {
     required this.onChanged,
   });
 
-  final IntensityValue min;
-  final IntensityValue max;
-  final void Function(IntensityValue, IntensityValue) onChanged;
+  final JmaIntensity min;
+  final JmaIntensity max;
+  final void Function(JmaIntensity, JmaIntensity) onChanged;
 
-  static const IntensityValue initialMin = IntensityValue.one;
-  static const IntensityValue initialMax = IntensityValue.seven;
+  static const JmaIntensity initialMin = JmaIntensity.one;
+  static const JmaIntensity initialMax = JmaIntensity.seven;
 
-  static const List<IntensityValue> _sliderValues = [
-    IntensityValue.one,
-    IntensityValue.two,
-    IntensityValue.three,
-    IntensityValue.four,
-    IntensityValue.fiveLower,
-    IntensityValue.fiveUpper,
-    IntensityValue.sixLower,
-    IntensityValue.sixUpper,
-    IntensityValue.seven,
+  static const List<JmaIntensity> _sliderValues = [
+    JmaIntensity.one,
+    JmaIntensity.two,
+    JmaIntensity.three,
+    JmaIntensity.four,
+    JmaIntensity.fiveLower,
+    JmaIntensity.fiveUpper,
+    JmaIntensity.sixLower,
+    JmaIntensity.sixUpper,
+    JmaIntensity.seven,
   ];
 
-  String _formatRange(IntensityValue min, IntensityValue max) {
+  String _formatRange(JmaIntensity min, JmaIntensity max) {
     final isMinDefault = min == initialMin;
     final isMaxDefault = max == initialMax;
 
@@ -555,24 +555,24 @@ class _IntensityRangeSelector extends HookWidget {
       return 'すべて';
     }
     if (min == max) {
-      return '震度$min';
+      return '震度${min.label}';
     }
     if (isMaxDefault) {
-      return '震度$min以上';
+      return '震度${min.label}以上';
     }
     if (isMinDefault) {
-      return '震度$max以下';
+      return '震度${max.label}以下';
     }
-    return '震度$min 〜 震度$max';
+    return '震度${min.label} 〜 震度${max.label}';
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    int valueToIndex(IntensityValue v) =>
+    int valueToIndex(JmaIntensity v) =>
         _sliderValues.indexOf(v).clamp(0, _sliderValues.length - 1);
-    IntensityValue indexToValue(int i) =>
+    JmaIntensity indexToValue(int i) =>
         _sliderValues[i.clamp(0, _sliderValues.length - 1)];
 
     return Column(
@@ -589,7 +589,7 @@ class _IntensityRangeSelector extends HookWidget {
               indexToValue(state.end.toInt()),
             );
           },
-          labels: RangeLabels('震度$min', '震度$max'),
+          labels: RangeLabels('震度${min.label}', '震度${max.label}'),
           divisions: _sliderValues.length - 1,
         ),
         const SizedBox(height: 8),
@@ -618,10 +618,10 @@ class _RegionIntensitySelector extends StatelessWidget {
   final String? selectedCode;
   final String? selectedName;
   final String selectedType;
-  final IntensityValue intensityMin;
-  final IntensityValue intensityMax;
+  final JmaIntensity intensityMin;
+  final JmaIntensity intensityMax;
   final void Function(String?, String?, String) onRegionChanged;
-  final void Function(IntensityValue, IntensityValue) onIntensityChanged;
+  final void Function(JmaIntensity, JmaIntensity) onIntensityChanged;
 
   @override
   Widget build(BuildContext context) {

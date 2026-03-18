@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'intensity_region_info_intensity.dart';
-import 'intensity_region_info_lpgm_intensity.dart';
+import 'jma_intensity.dart';
+import 'jma_lpgm_intensity.dart';
 
 part 'intensity_region_info.freezed.dart';
 part 'intensity_region_info.g.dart';
@@ -15,10 +15,9 @@ abstract class IntensityRegionInfo with _$IntensityRegionInfo {
   const factory IntensityRegionInfo({
     required String code,
     required String name,
-    @JsonKey(includeIfNull: true)
-    required IntensityRegionInfoIntensity? intensity,
+    @JsonKey(includeIfNull: true) required JmaIntensity? intensity,
     @JsonKey(includeIfNull: true, name: 'lpgm_intensity')
-    required IntensityRegionInfoLpgmIntensity? lpgmIntensity,
+    required JmaLpgmIntensity? lpgmIntensity,
   }) = _IntensityRegionInfo;
 
   factory IntensityRegionInfo.fromJson(Map<String, Object?> json) =>

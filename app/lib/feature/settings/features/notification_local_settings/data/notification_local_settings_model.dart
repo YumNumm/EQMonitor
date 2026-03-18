@@ -1,4 +1,5 @@
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/feature/settings/features/notification_local_settings/data/jma_intensity_json_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_local_settings_model.freezed.dart';
@@ -19,8 +20,10 @@ abstract class NotificationLocalSettingsModel
 @freezed
 abstract class EewSettings with _$EewSettings {
   const factory EewSettings({
-    @Default(null) JmaForecastIntensity? emergencyIntensity,
-    @Default(null) JmaForecastIntensity? silentIntensity,
+    @Default(null)
+    @JmaIntensityJsonConverter()
+    JmaIntensity? emergencyIntensity,
+    @Default(null) @JmaIntensityJsonConverter() JmaIntensity? silentIntensity,
     @Default([]) List<Region> regions,
   }) = _EewSettings;
 
@@ -31,8 +34,10 @@ abstract class EewSettings with _$EewSettings {
 @freezed
 abstract class EarthquakeSettings with _$EarthquakeSettings {
   const factory EarthquakeSettings({
-    @Default(null) JmaForecastIntensity? emergencyIntensity,
-    @Default(null) JmaForecastIntensity? silentIntensity,
+    @Default(null)
+    @JmaIntensityJsonConverter()
+    JmaIntensity? emergencyIntensity,
+    @Default(null) @JmaIntensityJsonConverter() JmaIntensity? silentIntensity,
     @Default([]) List<Region> regions,
   }) = _EarthquakeSettings;
 
@@ -45,8 +50,8 @@ abstract class Region with _$Region {
   const factory Region({
     required String code,
     required String name,
-    required JmaForecastIntensity emergencyIntensity,
-    required JmaForecastIntensity silentIntensity,
+    @JmaIntensityJsonConverter() required JmaIntensity emergencyIntensity,
+    @JmaIntensityJsonConverter() required JmaIntensity silentIntensity,
     required bool isMain,
   }) = _Region;
 

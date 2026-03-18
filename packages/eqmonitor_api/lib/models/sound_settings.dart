@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'sound_settings_mode.dart';
+import 'intensity_sound_mode.dart';
 
 part 'sound_settings.freezed.dart';
 part 'sound_settings.g.dart';
@@ -12,7 +12,7 @@ part 'sound_settings.g.dart';
 @Freezed()
 abstract class SoundSettings with _$SoundSettings {
   const factory SoundSettings({
-    required SoundSettingsMode mode,
+    required IntensitySoundMode mode,
     @JsonKey(includeIfNull: false) Map<String, String>? map,
   }) = _SoundSettings;
 

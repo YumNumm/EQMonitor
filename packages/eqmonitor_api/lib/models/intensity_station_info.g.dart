@@ -19,12 +19,11 @@ _IntensityStationInfo _$IntensityStationInfoFromJson(
       name: $checkedConvert('name', (v) => v as String),
       intensity: $checkedConvert(
         'intensity',
-        (v) => $enumDecodeNullable(_$IntensityStationInfoIntensityEnumMap, v),
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
       ),
       lpgmIntensity: $checkedConvert(
         'lpgm_intensity',
-        (v) =>
-            $enumDecodeNullable(_$IntensityStationInfoLpgmIntensityEnumMap, v),
+        (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
       sva: $checkedConvert('sva', (v) => v as num?),
       prePeriods: $checkedConvert(
@@ -53,24 +52,24 @@ Map<String, dynamic> _$IntensityStationInfoToJson(
   'pre_periods': instance.prePeriods,
 };
 
-const _$IntensityStationInfoIntensityEnumMap = {
-  IntensityStationInfoIntensity.value0: 0,
-  IntensityStationInfoIntensity.value1: 1,
-  IntensityStationInfoIntensity.value2: 2,
-  IntensityStationInfoIntensity.value3: 3,
-  IntensityStationInfoIntensity.value4: 4,
-  IntensityStationInfoIntensity.value5unknown: '!5-',
-  IntensityStationInfoIntensity.value5minus: '5-',
-  IntensityStationInfoIntensity.value5plus: '5+',
-  IntensityStationInfoIntensity.value6minus: '6-',
-  IntensityStationInfoIntensity.value6plus: '6+',
-  IntensityStationInfoIntensity.value7: 7,
+const _$JmaIntensityEnumMap = {
+  JmaIntensity.value0: 0,
+  JmaIntensity.value1: 1,
+  JmaIntensity.value2: 2,
+  JmaIntensity.value3: 3,
+  JmaIntensity.value4: 4,
+  JmaIntensity.value5unknown: '!5-',
+  JmaIntensity.value5minus: '5-',
+  JmaIntensity.value5plus: '5+',
+  JmaIntensity.value6minus: '6-',
+  JmaIntensity.value6plus: '6+',
+  JmaIntensity.value7: 7,
 };
 
-const _$IntensityStationInfoLpgmIntensityEnumMap = {
-  IntensityStationInfoLpgmIntensity.value0: 0,
-  IntensityStationInfoLpgmIntensity.value1: 1,
-  IntensityStationInfoLpgmIntensity.value2: 2,
-  IntensityStationInfoLpgmIntensity.value3: 3,
-  IntensityStationInfoLpgmIntensity.value4: 4,
+const _$JmaLpgmIntensityEnumMap = {
+  JmaLpgmIntensity.value0: 0,
+  JmaLpgmIntensity.value1: 1,
+  JmaLpgmIntensity.value2: 2,
+  JmaLpgmIntensity.value3: 3,
+  JmaLpgmIntensity.value4: 4,
 };

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PrePeriods {
 
- num get band;@JsonKey(name: 'lpgm_intensity') LpgmIntensity get lpgmIntensity; num get sva;
+ num get band;@JsonKey(name: 'lpgm_intensity') JmaLpgmIntensity get lpgmIntensity; num get sva;
 /// Create a copy of PrePeriods
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $PrePeriodsCopyWith<$Res>  {
   factory $PrePeriodsCopyWith(PrePeriods value, $Res Function(PrePeriods) _then) = _$PrePeriodsCopyWithImpl;
 @useResult
 $Res call({
- num band,@JsonKey(name: 'lpgm_intensity') LpgmIntensity lpgmIntensity, num sva
+ num band,@JsonKey(name: 'lpgm_intensity') JmaLpgmIntensity lpgmIntensity, num sva
 });
 
 
@@ -69,7 +69,7 @@ class _$PrePeriodsCopyWithImpl<$Res>
   return _then(_self.copyWith(
 band: null == band ? _self.band : band // ignore: cast_nullable_to_non_nullable
 as num,lpgmIntensity: null == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as LpgmIntensity,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num,
   ));
 }
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num band, @JsonKey(name: 'lpgm_intensity')  LpgmIntensity lpgmIntensity,  num sva)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num band, @JsonKey(name: 'lpgm_intensity')  JmaLpgmIntensity lpgmIntensity,  num sva)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PrePeriods() when $default != null:
 return $default(_that.band,_that.lpgmIntensity,_that.sva);case _:
@@ -176,7 +176,7 @@ return $default(_that.band,_that.lpgmIntensity,_that.sva);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num band, @JsonKey(name: 'lpgm_intensity')  LpgmIntensity lpgmIntensity,  num sva)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num band, @JsonKey(name: 'lpgm_intensity')  JmaLpgmIntensity lpgmIntensity,  num sva)  $default,) {final _that = this;
 switch (_that) {
 case _PrePeriods():
 return $default(_that.band,_that.lpgmIntensity,_that.sva);case _:
@@ -196,7 +196,7 @@ return $default(_that.band,_that.lpgmIntensity,_that.sva);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num band, @JsonKey(name: 'lpgm_intensity')  LpgmIntensity lpgmIntensity,  num sva)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num band, @JsonKey(name: 'lpgm_intensity')  JmaLpgmIntensity lpgmIntensity,  num sva)?  $default,) {final _that = this;
 switch (_that) {
 case _PrePeriods() when $default != null:
 return $default(_that.band,_that.lpgmIntensity,_that.sva);case _:
@@ -215,7 +215,7 @@ class _PrePeriods implements PrePeriods {
   factory _PrePeriods.fromJson(Map<String, dynamic> json) => _$PrePeriodsFromJson(json);
 
 @override final  num band;
-@override@JsonKey(name: 'lpgm_intensity') final  LpgmIntensity lpgmIntensity;
+@override@JsonKey(name: 'lpgm_intensity') final  JmaLpgmIntensity lpgmIntensity;
 @override final  num sva;
 
 /// Create a copy of PrePeriods
@@ -251,7 +251,7 @@ abstract mixin class _$PrePeriodsCopyWith<$Res> implements $PrePeriodsCopyWith<$
   factory _$PrePeriodsCopyWith(_PrePeriods value, $Res Function(_PrePeriods) _then) = __$PrePeriodsCopyWithImpl;
 @override @useResult
 $Res call({
- num band,@JsonKey(name: 'lpgm_intensity') LpgmIntensity lpgmIntensity, num sva
+ num band,@JsonKey(name: 'lpgm_intensity') JmaLpgmIntensity lpgmIntensity, num sva
 });
 
 
@@ -272,7 +272,7 @@ class __$PrePeriodsCopyWithImpl<$Res>
   return _then(_PrePeriods(
 band: null == band ? _self.band : band // ignore: cast_nullable_to_non_nullable
 as num,lpgmIntensity: null == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as LpgmIntensity,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num,
   ));
 }

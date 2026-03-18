@@ -17,7 +17,7 @@ mixin _$IntensityStationItem {
 
  CodeName get value;/// 絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値
  num get sva;/// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
- List<PrePeriods> get prePeriods;@JsonKey(includeIfNull: false, name: 'max_intensity') IntensityItemMaxIntensity? get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') IntensityItemMaxLpgmIntensity? get maxLpgmIntensity;
+ List<PrePeriods> get prePeriods;@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of IntensityStationItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -50,7 +50,7 @@ abstract mixin class $IntensityStationItemCopyWith<$Res>  {
   factory $IntensityStationItemCopyWith(IntensityStationItem value, $Res Function(IntensityStationItem) _then) = _$IntensityStationItemCopyWithImpl;
 @useResult
 $Res call({
- CodeName value, num sva, List<PrePeriods> prePeriods,@JsonKey(includeIfNull: false, name: 'max_intensity') IntensityItemMaxIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') IntensityItemMaxLpgmIntensity? maxLpgmIntensity
+ CodeName value, num sva, List<PrePeriods> prePeriods,@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -73,8 +73,8 @@ value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nulla
 as CodeName,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num,prePeriods: null == prePeriods ? _self.prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods>,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityItemMaxIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityItemMaxLpgmIntensity?,
+as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 /// Create a copy of IntensityStationItem
@@ -168,7 +168,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value,  num sva,  List<PrePeriods> prePeriods, @JsonKey(includeIfNull: false, name: 'max_intensity')  IntensityItemMaxIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  IntensityItemMaxLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value,  num sva,  List<PrePeriods> prePeriods, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityStationItem() when $default != null:
 return $default(_that.value,_that.sva,_that.prePeriods,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -189,7 +189,7 @@ return $default(_that.value,_that.sva,_that.prePeriods,_that.maxIntensity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value,  num sva,  List<PrePeriods> prePeriods, @JsonKey(includeIfNull: false, name: 'max_intensity')  IntensityItemMaxIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  IntensityItemMaxLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value,  num sva,  List<PrePeriods> prePeriods, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationItem():
 return $default(_that.value,_that.sva,_that.prePeriods,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -209,7 +209,7 @@ return $default(_that.value,_that.sva,_that.prePeriods,_that.maxIntensity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value,  num sva,  List<PrePeriods> prePeriods, @JsonKey(includeIfNull: false, name: 'max_intensity')  IntensityItemMaxIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  IntensityItemMaxLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value,  num sva,  List<PrePeriods> prePeriods, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationItem() when $default != null:
 return $default(_that.value,_that.sva,_that.prePeriods,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -239,8 +239,8 @@ class _IntensityStationItem implements IntensityStationItem {
   return EqualUnmodifiableListView(_prePeriods);
 }
 
-@override@JsonKey(includeIfNull: false, name: 'max_intensity') final  IntensityItemMaxIntensity? maxIntensity;
-@override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  IntensityItemMaxLpgmIntensity? maxLpgmIntensity;
+@override@JsonKey(includeIfNull: false, name: 'max_intensity') final  JmaIntensity? maxIntensity;
+@override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
 
 /// Create a copy of IntensityStationItem
 /// with the given fields replaced by the non-null parameter values.
@@ -275,7 +275,7 @@ abstract mixin class _$IntensityStationItemCopyWith<$Res> implements $IntensityS
   factory _$IntensityStationItemCopyWith(_IntensityStationItem value, $Res Function(_IntensityStationItem) _then) = __$IntensityStationItemCopyWithImpl;
 @override @useResult
 $Res call({
- CodeName value, num sva, List<PrePeriods> prePeriods,@JsonKey(includeIfNull: false, name: 'max_intensity') IntensityItemMaxIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') IntensityItemMaxLpgmIntensity? maxLpgmIntensity
+ CodeName value, num sva, List<PrePeriods> prePeriods,@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -298,8 +298,8 @@ value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nulla
 as CodeName,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num,prePeriods: null == prePeriods ? _self._prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods>,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityItemMaxIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as IntensityItemMaxLpgmIntensity?,
+as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 

@@ -7,6 +7,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/apns_token_request.dart';
 import '../models/apns_token_response.dart';
+import '../models/apns_token_type.dart';
 import '../models/device_response.dart';
 import '../models/earthquake_settings_request.dart';
 import '../models/earthquake_settings_response.dart';
@@ -21,7 +22,6 @@ import '../models/notification_settings_response.dart';
 import '../models/region_setting_patch_request.dart';
 import '../models/region_setting_request.dart';
 import '../models/region_setting_response.dart';
-import '../models/type.dart';
 
 part 'device_api_client.g.dart';
 
@@ -29,7 +29,7 @@ part 'device_api_client.g.dart';
 abstract class DeviceApiClient {
   factory DeviceApiClient(Dio dio, {String? baseUrl}) = _DeviceApiClient;
 
-  /// デバイスを作成または更新
+  /// デバイスを作成または更新（認証必須）
   @PUT(DeviceApiClientUrls.putV2DeviceDeviceId)
   Future<HttpResponse<DeviceResponse>> putV2DeviceDeviceId({
     @Path('deviceId') required String deviceId,
@@ -38,6 +38,12 @@ abstract class DeviceApiClient {
   /// デバイス情報を取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceId)
   Future<HttpResponse<DeviceResponse>> getV2DeviceDeviceId({
+    @Path('deviceId') required String deviceId,
+  });
+
+  /// デバイスを削除（関連データも全て削除）
+  @DELETE(DeviceApiClientUrls.deleteV2DeviceDeviceId)
+  Future<HttpResponse<void>> deleteV2DeviceDeviceId({
     @Path('deviceId') required String deviceId,
   });
 
@@ -50,22 +56,22 @@ abstract class DeviceApiClient {
   /// 特定タイプのAPNsトークンを取得
   @GET(DeviceApiClientUrls.getV2DeviceDeviceIdApnsType)
   Future<HttpResponse<ApnsTokenResponse>> getV2DeviceDeviceIdApnsType({
-    @Path('type') required Type type,
+    @Path('type') required ApnsTokenType type,
     @Path('deviceId') required String deviceId,
   });
 
   /// APNsトークンを更新（存在しない場合は作成）
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdApnsType)
   Future<HttpResponse<ApnsTokenResponse>> patchV2DeviceDeviceIdApnsType({
-    @Path('type') required Type type,
+    @Path('type') required ApnsTokenType type,
     @Path('deviceId') required String deviceId,
-    @Body() ApnsTokenRequest? body,
+    @Body() required ApnsTokenRequest body,
   });
 
   /// APNsトークンを削除
   @DELETE(DeviceApiClientUrls.deleteV2DeviceDeviceIdApnsType)
   Future<HttpResponse<void>> deleteV2DeviceDeviceIdApnsType({
-    @Path('type') required Type type,
+    @Path('type') required ApnsTokenType type,
     @Path('deviceId') required String deviceId,
   });
 
@@ -79,7 +85,7 @@ abstract class DeviceApiClient {
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdFcm)
   Future<HttpResponse<FcmTokenResponse?>> patchV2DeviceDeviceIdFcm({
     @Path('deviceId') required String deviceId,
-    @Body() FcmTokenRequest? body,
+    @Body() required FcmTokenRequest body,
   });
 
   /// FCMトークンを削除
@@ -99,7 +105,7 @@ abstract class DeviceApiClient {
   putV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
     @Path('liveActivityId') required String liveActivityId,
     @Path('deviceId') required String deviceId,
-    @Body() LiveActivityTokenRequest? body,
+    @Body() required LiveActivityTokenRequest body,
   });
 
   /// Live Activity updateTokenを削除
@@ -124,7 +130,7 @@ abstract class DeviceApiClient {
   Future<HttpResponse<NotificationSettingsResponse>>
   patchV2DeviceDeviceIdSettingsNotification({
     @Path('deviceId') required String deviceId,
-    @Body() NotificationSettingsRequest? body,
+    @Body() required NotificationSettingsRequest body,
   });
 
   /// 地震通知設定を取得
@@ -139,7 +145,7 @@ abstract class DeviceApiClient {
   Future<HttpResponse<EarthquakeSettingsResponse>>
   patchV2DeviceDeviceIdSettingsEarthquake({
     @Path('deviceId') required String deviceId,
-    @Body() EarthquakeSettingsRequest? body,
+    @Body() required EarthquakeSettingsRequest body,
   });
 
   /// 地震通知リージョン設定一覧を取得
@@ -154,7 +160,7 @@ abstract class DeviceApiClient {
   Future<HttpResponse<List<RegionSettingResponse>>>
   putV2DeviceDeviceIdSettingsEarthquakeRegions({
     @Path('deviceId') required String deviceId,
-    @Body() List<RegionSettingRequest>? body,
+    @Body() required List<RegionSettingRequest> body,
   });
 
   /// 特定のリージョン設定を取得
@@ -173,7 +179,7 @@ abstract class DeviceApiClient {
   patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
     @Path('regionId') required num regionId,
     @Path('deviceId') required String deviceId,
-    @Body() RegionSettingPatchRequest? body,
+    @Body() required RegionSettingPatchRequest body,
   });
 
   /// 特定のリージョン設定を削除
@@ -196,7 +202,7 @@ abstract class DeviceApiClient {
   @PATCH(DeviceApiClientUrls.patchV2DeviceDeviceIdSettingsEew)
   Future<HttpResponse<EewSettingsResponse>> patchV2DeviceDeviceIdSettingsEew({
     @Path('deviceId') required String deviceId,
-    @Body() EewSettingsRequest? body,
+    @Body() required EewSettingsRequest body,
   });
 
   /// EEW通知リージョン設定一覧を取得
@@ -211,7 +217,7 @@ abstract class DeviceApiClient {
   Future<HttpResponse<List<RegionSettingResponse>>>
   putV2DeviceDeviceIdSettingsEewRegions({
     @Path('deviceId') required String deviceId,
-    @Body() List<RegionSettingRequest>? body,
+    @Body() required List<RegionSettingRequest> body,
   });
 
   /// 特定のリージョン設定を取得
@@ -228,7 +234,7 @@ abstract class DeviceApiClient {
   patchV2DeviceDeviceIdSettingsEewRegionsRegionId({
     @Path('regionId') required num regionId,
     @Path('deviceId') required String deviceId,
-    @Body() RegionSettingPatchRequest? body,
+    @Body() required RegionSettingPatchRequest body,
   });
 
   /// 特定のリージョン設定を削除
@@ -245,6 +251,9 @@ abstract class DeviceApiClientUrls {
 
   /// /v2/device/{deviceId}
   static const getV2DeviceDeviceId = "/v2/device/{deviceId}";
+
+  /// /v2/device/{deviceId}
+  static const deleteV2DeviceDeviceId = "/v2/device/{deviceId}";
 
   /// /v2/device/{deviceId}/apns
   static const getV2DeviceDeviceIdApns = "/v2/device/{deviceId}/apns";

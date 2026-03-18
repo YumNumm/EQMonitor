@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
@@ -10,8 +9,6 @@ import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_selection_page.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
-import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
-import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
@@ -141,30 +138,6 @@ class TelegramListByEventIdRoute extends GoRouteData
   Widget build(BuildContext context, GoRouterState state) {
     return TelegramListByEventIdPage(eventId: eventId);
   }
-}
-
-@TypedGoRoute<InformationHistoryRoute>(path: '/information-history')
-class InformationHistoryRoute extends GoRouteData
-    with $InformationHistoryRoute {
-  const InformationHistoryRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const InformationHistoryPage();
-}
-
-@TypedGoRoute<InformationHistoryDetailsRoute>(
-  path: '/information-history-details',
-)
-class InformationHistoryDetailsRoute extends GoRouteData
-    with $InformationHistoryDetailsRoute {
-  const InformationHistoryDetailsRoute({required this.$extra});
-
-  final InformationV3 $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      InformationHistoryDetailsPage(data: $extra);
 }
 
 @TypedGoRoute<HomeRoute>(
