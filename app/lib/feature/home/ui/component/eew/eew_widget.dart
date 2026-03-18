@@ -1,16 +1,17 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/custom_chip.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
-import 'package:eqmonitor/core/extension/eew_extension.dart';
-import 'package:eqmonitor/core/extension/intensity_value_ext.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -39,7 +40,7 @@ class EewWidgets extends ConsumerWidget {
 class EewWidget extends ConsumerWidget {
   const EewWidget({required this.eew, required this.index, super.key});
 
-  final EewItemWithRelations eew;
+  final EewTelegramItem eew;
   final String? index;
 
   @override
@@ -66,11 +67,9 @@ class EewWidget extends ConsumerWidget {
     }
 
     final forecastIntensity = eew.forecastIntensity;
-    final maxIntensityValue = forecastIntensity?.maxIntensity?.value;
-    final maxIntensity =
-        maxIntensityValue?.toJmaForecastIntensity ??
-        JmaForecastIntensity.unknown;
-    final intensityScheme = intensityColorScheme.fromJmaForecastIntensity(
+    // TODO(eqmonitor_api): maxIntensity は codegen バグにより常に unknown
+    const maxIntensity = JmaIntensity.unknown;
+    final intensityScheme = intensityColorScheme.fromJmaIntensity(
       maxIntensity,
     );
     final (_, backgroundColor) = (
@@ -122,10 +121,10 @@ class EewWidget extends ConsumerWidget {
       ],
     );
 
-    final maxIntensityWidget = Column(
+    const maxIntensityWidget = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text(
+        Text(
           '最大震度',
           style: TextStyle(
             fontFamily: FontFamily.notoSansJP,
@@ -152,7 +151,7 @@ class EewWidget extends ConsumerWidget {
         const SizedBox(width: 4),
         Flexible(
           child: Text(
-            hypocenter?.value.name ?? '不明',
+            hypocenter?.name ?? '不明',
             style: textTheme.headlineMedium!.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -305,8 +304,7 @@ class EewWidget extends ConsumerWidget {
           ]
         : null;
 
-    final maxLpgmIntensityValue = forecastIntensity?.maxLpgmIntensity?.value;
-    final maxLpgmIntensity = maxLpgmIntensityValue?.toJmaForecastLgIntensity;
+    final maxLpgmIntensity = forecastIntensity?.maxLpgmIntensity;
     final card = Card(
       elevation: 1,
       color: backgroundColor.withValues(alpha: 0.3),
@@ -336,7 +334,7 @@ class EewWidget extends ConsumerWidget {
               ],
             ),
             if (maxLpgmIntensity != null &&
-                maxLpgmIntensity != JmaForecastLgIntensity.zero) ...[
+                maxLpgmIntensity != JmaLpgmIntensity.zero) ...[
               Row(
                 children: [
                   Column(
@@ -349,7 +347,7 @@ class EewWidget extends ConsumerWidget {
                     child: Column(
                       children: [
                         Text(
-                          '予想最大長周期地震動階級 ${maxLpgmIntensity.type}',
+                          '予想最大長周期地震動階級 ${maxLpgmIntensity.label}',
                           style: textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.bold,
                           ),

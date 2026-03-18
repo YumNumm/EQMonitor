@@ -14,8 +14,6 @@ List<RouteBase> get $appRoutes => [
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
   $telegramListByEventIdRoute,
-  $informationHistoryRoute,
-  $informationHistoryDetailsRoute,
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
@@ -167,63 +165,6 @@ mixin $TelegramListByEventIdRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $informationHistoryRoute => GoRouteData.$route(
-  path: '/information-history',
-  factory: $InformationHistoryRoute._fromState,
-);
-
-mixin $InformationHistoryRoute on GoRouteData {
-  static InformationHistoryRoute _fromState(GoRouterState state) =>
-      const InformationHistoryRoute();
-
-  @override
-  String get location => GoRouteData.$location('/information-history');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $informationHistoryDetailsRoute => GoRouteData.$route(
-  path: '/information-history-details',
-  factory: $InformationHistoryDetailsRoute._fromState,
-);
-
-mixin $InformationHistoryDetailsRoute on GoRouteData {
-  static InformationHistoryDetailsRoute _fromState(GoRouterState state) =>
-      InformationHistoryDetailsRoute($extra: state.extra as InformationV3);
-
-  InformationHistoryDetailsRoute get _self =>
-      this as InformationHistoryDetailsRoute;
-
-  @override
-  String get location => GoRouteData.$location('/information-history-details');
-
-  @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
-
-  @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
-
-  @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $homeRoute => GoRouteData.$route(

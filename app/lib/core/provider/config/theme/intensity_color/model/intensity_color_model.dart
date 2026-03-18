@@ -1,8 +1,8 @@
-// ignore_for_file: invalid_annotation_target
 
 import 'dart:ui';
 
-import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -213,98 +213,29 @@ abstract class TextColorModel with _$TextColorModel {
 }
 
 extension IntensityColorModelExt on IntensityColorModel {
-  TextColorModel fromJmaIntensity(JmaIntensity intensity) {
-    switch (intensity) {
-      case JmaIntensity.one:
-        return one;
-      case JmaIntensity.two:
-        return two;
-      case JmaIntensity.three:
-        return three;
-      case JmaIntensity.four:
-        return four;
-      case JmaIntensity.fiveUpperNoInput:
-      case JmaIntensity.fiveLower:
-        return fiveLower;
-      case JmaIntensity.fiveUpper:
-        return fiveUpper;
-      case JmaIntensity.sixLower:
-        return sixLower;
-      case JmaIntensity.sixUpper:
-        return sixUpper;
-      case JmaIntensity.seven:
-        return seven;
-    }
-  }
-
-  TextColorModel fromJmaLgIntensity(JmaLgIntensity intensity) =>
-      switch (intensity) {
-        JmaLgIntensity.zero => zero,
-        JmaLgIntensity.one => three,
-        JmaLgIntensity.two => four,
-        JmaLgIntensity.three => fiveLower,
-        JmaLgIntensity.four => seven,
+  TextColorModel fromJmaIntensity(JmaIntensity intensity) => switch (intensity) {
+        JmaIntensity.unknown => unknown,
+        JmaIntensity.zero => zero,
+        JmaIntensity.one => one,
+        JmaIntensity.two => two,
+        JmaIntensity.three => three,
+        JmaIntensity.four => four,
+        JmaIntensity.fiveUnknown => fiveLower,
+        JmaIntensity.fiveLower => fiveLower,
+        JmaIntensity.fiveUpper => fiveUpper,
+        JmaIntensity.sixLower => sixLower,
+        JmaIntensity.sixUpper => sixUpper,
+        JmaIntensity.seven => seven,
       };
 
-  TextColorModel fromJmaForecastIntensity(JmaForecastIntensity intensity) {
-    switch (intensity) {
-      case JmaForecastIntensity.zero:
-        return zero;
-      case JmaForecastIntensity.one:
-        return one;
-      case JmaForecastIntensity.two:
-        return two;
-      case JmaForecastIntensity.three:
-        return three;
-      case JmaForecastIntensity.four:
-        return four;
-      case JmaForecastIntensity.fiveLower:
-        return fiveLower;
-      case JmaForecastIntensity.fiveUpper:
-        return fiveUpper;
-      case JmaForecastIntensity.sixLower:
-        return sixLower;
-      case JmaForecastIntensity.sixUpper:
-        return sixUpper;
-      case JmaForecastIntensity.seven:
-        return seven;
-      case JmaForecastIntensity.unknown:
-        return unknown;
-    }
-  }
-
-  TextColorModel fromJmaForecastLgIntensity(JmaForecastLgIntensity intensity) =>
+  TextColorModel fromJmaLpgmIntensity(JmaLpgmIntensity intensity) =>
       switch (intensity) {
-        JmaForecastLgIntensity.zero => zero,
-        JmaForecastLgIntensity.one => three,
-        JmaForecastLgIntensity.two => four,
-        JmaForecastLgIntensity.three => fiveLower,
-        JmaForecastLgIntensity.four => seven,
-        JmaForecastLgIntensity.unknown => unknown,
-      };
-
-  TextColorModel fromIntensityValue(IntensityValue intensity) =>
-      switch (intensity) {
-        IntensityValue.zero => zero,
-        IntensityValue.one => one,
-        IntensityValue.two => two,
-        IntensityValue.three => three,
-        IntensityValue.four => four,
-        IntensityValue.fiveLowerNoInput ||
-        IntensityValue.fiveLower => fiveLower,
-        IntensityValue.fiveUpper => fiveUpper,
-        IntensityValue.sixLower => sixLower,
-        IntensityValue.sixUpper => sixUpper,
-        IntensityValue.seven => seven,
-      };
-
-  TextColorModel fromLpgmIntensityValue(LpgmIntensityValue intensity) =>
-      switch (intensity) {
-        LpgmIntensityValue.zero => zero,
-        LpgmIntensityValue.one => three,
-        LpgmIntensityValue.two => four,
-        LpgmIntensityValue.three => fiveLower,
-        LpgmIntensityValue.four => seven,
+        JmaLpgmIntensity.unknown => unknown,
+        JmaLpgmIntensity.zero => zero,
+        JmaLpgmIntensity.one => three,
+        JmaLpgmIntensity.two => four,
+        JmaLpgmIntensity.three => fiveLower,
+        JmaLpgmIntensity.four => seven,
       };
 }
 

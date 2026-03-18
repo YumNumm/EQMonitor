@@ -5,8 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'code_name.dart';
-import 'intensity_item_max_intensity.dart';
-import 'intensity_item_max_lpgm_intensity.dart';
+import 'jma_intensity.dart';
+import 'jma_lpgm_intensity.dart';
 
 part 'intensity_item.freezed.dart';
 part 'intensity_item.g.dart';
@@ -16,9 +16,9 @@ abstract class IntensityItem with _$IntensityItem {
   const factory IntensityItem({
     required CodeName value,
     @JsonKey(includeIfNull: false, name: 'max_intensity')
-    IntensityItemMaxIntensity? maxIntensity,
+    JmaIntensity? maxIntensity,
     @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')
-    IntensityItemMaxLpgmIntensity? maxLpgmIntensity,
+    JmaLpgmIntensity? maxLpgmIntensity,
   }) = _IntensityItem;
 
   factory IntensityItem.fromJson(Map<String, Object?> json) =>

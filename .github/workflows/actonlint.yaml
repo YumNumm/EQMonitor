@@ -12,6 +12,9 @@ on:
       - synchronize
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   actionlint:
     timeout-minutes: 1
@@ -23,7 +26,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@e79ddf65a11cec7b0e882bedced08d6e976efb2d # v3.1.1
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.1.1
         with:
           install_args: "actionlint"
 

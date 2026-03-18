@@ -4,7 +4,7 @@ experimental_monorepo_root = true
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
 biome = "latest"
-flutter = "3.41.3-stable"
+flutter = "3.41.4-stable"
 java = "17"
 node = "lts"
 "pipx:codemagic-cli-tools" = "latest"
@@ -22,6 +22,7 @@ actionlint = "latest"
 pinact = "latest"
 swiftformat = "latest"
 shellcheck = "latest"
+"github:YumNumm/google-play-cli" = "latest"
 
 [settings]
 lockfile = true

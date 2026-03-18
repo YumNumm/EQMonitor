@@ -17,7 +17,10 @@ final earthquakeHistoryDetailsProvider =
 
 final class EarthquakeHistoryDetailsNotifierProvider
     extends
-        $AsyncNotifierProvider<EarthquakeHistoryDetailsNotifier, Earthquake> {
+        $AsyncNotifierProvider<
+          EarthquakeHistoryDetailsNotifier,
+          EarthquakePartial
+        > {
   EarthquakeHistoryDetailsNotifierProvider._({
     required EarthquakeHistoryDetailsNotifierFamily super.from,
     required String super.argument,
@@ -57,15 +60,15 @@ final class EarthquakeHistoryDetailsNotifierProvider
 }
 
 String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'fb5cd9c4df2fe95e30472f4139832954674aef3e';
+    r'9729a91f5fbebb8bfa963705b73a6734a834d176';
 
 final class EarthquakeHistoryDetailsNotifierFamily extends $Family
     with
         $ClassFamilyOverride<
           EarthquakeHistoryDetailsNotifier,
-          AsyncValue<Earthquake>,
-          Earthquake,
-          FutureOr<Earthquake>,
+          AsyncValue<EarthquakePartial>,
+          EarthquakePartial,
+          FutureOr<EarthquakePartial>,
           String
         > {
   EarthquakeHistoryDetailsNotifierFamily._()
@@ -85,20 +88,21 @@ final class EarthquakeHistoryDetailsNotifierFamily extends $Family
 }
 
 abstract class _$EarthquakeHistoryDetailsNotifier
-    extends $AsyncNotifier<Earthquake> {
+    extends $AsyncNotifier<EarthquakePartial> {
   late final _$args = ref.$arg as String;
   String get eventId => _$args;
 
-  FutureOr<Earthquake> build(String eventId);
+  FutureOr<EarthquakePartial> build(String eventId);
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<Earthquake>, Earthquake>;
+    final ref =
+        this.ref as $Ref<AsyncValue<EarthquakePartial>, EarthquakePartial>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<Earthquake>, Earthquake>,
-              AsyncValue<Earthquake>,
+              AnyNotifier<AsyncValue<EarthquakePartial>, EarthquakePartial>,
+              AsyncValue<EarthquakePartial>,
               Object?,
               Object?
             >;

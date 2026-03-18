@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SoundSettings {
 
- SoundSettingsMode get mode;@JsonKey(includeIfNull: false) Map<String, String>? get map;
+ IntensitySoundMode get mode;@JsonKey(includeIfNull: false) Map<String, String>? get map;
 /// Create a copy of SoundSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $SoundSettingsCopyWith<$Res>  {
   factory $SoundSettingsCopyWith(SoundSettings value, $Res Function(SoundSettings) _then) = _$SoundSettingsCopyWithImpl;
 @useResult
 $Res call({
- SoundSettingsMode mode,@JsonKey(includeIfNull: false) Map<String, String>? map
+ IntensitySoundMode mode,@JsonKey(includeIfNull: false) Map<String, String>? map
 });
 
 
@@ -68,7 +68,7 @@ class _$SoundSettingsCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? mode = null,Object? map = freezed,}) {
   return _then(_self.copyWith(
 mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
-as SoundSettingsMode,map: freezed == map ? _self.map : map // ignore: cast_nullable_to_non_nullable
+as IntensitySoundMode,map: freezed == map ? _self.map : map // ignore: cast_nullable_to_non_nullable
 as Map<String, String>?,
   ));
 }
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SoundSettingsMode mode, @JsonKey(includeIfNull: false)  Map<String, String>? map)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( IntensitySoundMode mode, @JsonKey(includeIfNull: false)  Map<String, String>? map)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SoundSettings() when $default != null:
 return $default(_that.mode,_that.map);case _:
@@ -175,7 +175,7 @@ return $default(_that.mode,_that.map);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SoundSettingsMode mode, @JsonKey(includeIfNull: false)  Map<String, String>? map)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( IntensitySoundMode mode, @JsonKey(includeIfNull: false)  Map<String, String>? map)  $default,) {final _that = this;
 switch (_that) {
 case _SoundSettings():
 return $default(_that.mode,_that.map);case _:
@@ -195,7 +195,7 @@ return $default(_that.mode,_that.map);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SoundSettingsMode mode, @JsonKey(includeIfNull: false)  Map<String, String>? map)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( IntensitySoundMode mode, @JsonKey(includeIfNull: false)  Map<String, String>? map)?  $default,) {final _that = this;
 switch (_that) {
 case _SoundSettings() when $default != null:
 return $default(_that.mode,_that.map);case _:
@@ -213,7 +213,7 @@ class _SoundSettings implements SoundSettings {
   const _SoundSettings({required this.mode, @JsonKey(includeIfNull: false) final  Map<String, String>? map}): _map = map;
   factory _SoundSettings.fromJson(Map<String, dynamic> json) => _$SoundSettingsFromJson(json);
 
-@override final  SoundSettingsMode mode;
+@override final  IntensitySoundMode mode;
  final  Map<String, String>? _map;
 @override@JsonKey(includeIfNull: false) Map<String, String>? get map {
   final value = _map;
@@ -257,7 +257,7 @@ abstract mixin class _$SoundSettingsCopyWith<$Res> implements $SoundSettingsCopy
   factory _$SoundSettingsCopyWith(_SoundSettings value, $Res Function(_SoundSettings) _then) = __$SoundSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- SoundSettingsMode mode,@JsonKey(includeIfNull: false) Map<String, String>? map
+ IntensitySoundMode mode,@JsonKey(includeIfNull: false) Map<String, String>? map
 });
 
 
@@ -277,7 +277,7 @@ class __$SoundSettingsCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? mode = null,Object? map = freezed,}) {
   return _then(_SoundSettings(
 mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
-as SoundSettingsMode,map: freezed == map ? _self._map : map // ignore: cast_nullable_to_non_nullable
+as IntensitySoundMode,map: freezed == map ? _self._map : map // ignore: cast_nullable_to_non_nullable
 as Map<String, String>?,
   ));
 }

@@ -20,11 +20,11 @@ final eewAliveNormalTelegramProvider = EewAliveNormalTelegramProvider._();
 final class EewAliveNormalTelegramProvider
     extends
         $FunctionalProvider<
-          List<EewItemWithRelations>,
-          List<EewItemWithRelations>,
-          List<EewItemWithRelations>
+          List<EewTelegramItem>,
+          List<EewTelegramItem>,
+          List<EewTelegramItem>
         >
-    with $Provider<List<EewItemWithRelations>> {
+    with $Provider<List<EewTelegramItem>> {
   /// イベント終了していないEEWのうち、精度が低いものを除外したもの
   EewAliveNormalTelegramProvider._()
     : super(
@@ -42,26 +42,26 @@ final class EewAliveNormalTelegramProvider
 
   @$internal
   @override
-  $ProviderElement<List<EewItemWithRelations>> $createElement(
+  $ProviderElement<List<EewTelegramItem>> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  List<EewItemWithRelations> create(Ref ref) {
+  List<EewTelegramItem> create(Ref ref) {
     return eewAliveNormalTelegram(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<EewItemWithRelations> value) {
+  Override overrideWithValue(List<EewTelegramItem> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<EewItemWithRelations>>(value),
+      providerOverride: $SyncValueProvider<List<EewTelegramItem>>(value),
     );
   }
 }
 
 String _$eewAliveNormalTelegramHash() =>
-    r'8088c01141cdf06b31457ba474b3f2fff934b0d4';
+    r'b280741e0759e3264220bfd63996a0aa51bc61ba';
 
 /// イベント終了していないEEW
 
@@ -70,7 +70,7 @@ final eewAliveTelegramProvider = EewAliveTelegramProvider._();
 
 /// イベント終了していないEEW
 final class EewAliveTelegramProvider
-    extends $NotifierProvider<EewAliveTelegram, List<EewItemWithRelations>?> {
+    extends $NotifierProvider<EewAliveTelegram, List<EewTelegramItem>?> {
   /// イベント終了していないEEW
   EewAliveTelegramProvider._()
     : super(
@@ -91,35 +91,30 @@ final class EewAliveTelegramProvider
   EewAliveTelegram create() => EewAliveTelegram();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<EewItemWithRelations>? value) {
+  Override overrideWithValue(List<EewTelegramItem>? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<EewItemWithRelations>?>(value),
+      providerOverride: $SyncValueProvider<List<EewTelegramItem>?>(value),
     );
   }
 }
 
-String _$eewAliveTelegramHash() => r'23e35a32dec961208418370a17096629db1b5544';
+String _$eewAliveTelegramHash() => r'7d72c0d999cda7d674197badd1696b8147475718';
 
 /// イベント終了していないEEW
 
-abstract class _$EewAliveTelegram
-    extends $Notifier<List<EewItemWithRelations>?> {
-  List<EewItemWithRelations>? build();
+abstract class _$EewAliveTelegram extends $Notifier<List<EewTelegramItem>?> {
+  List<EewTelegramItem>? build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref
-            as $Ref<List<EewItemWithRelations>?, List<EewItemWithRelations>?>;
+        this.ref as $Ref<List<EewTelegramItem>?, List<EewTelegramItem>?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                List<EewItemWithRelations>?,
-                List<EewItemWithRelations>?
-              >,
-              List<EewItemWithRelations>?,
+              AnyNotifier<List<EewTelegramItem>?, List<EewTelegramItem>?>,
+              List<EewTelegramItem>?,
               Object?,
               Object?
             >;

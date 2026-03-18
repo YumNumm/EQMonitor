@@ -22,13 +22,13 @@ class _EewApiClient implements EewApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<InvalidType>> getV2Eew({String? limit}) async {
+  Future<HttpResponse<EewListResponse>> getV2Eew({String? limit}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'limit': limit};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<EewListResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -38,10 +38,10 @@ class _EewApiClient implements EewApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EewListResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EewListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -51,12 +51,12 @@ class _EewApiClient implements EewApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2EewLatest() async {
+  Future<HttpResponse<EewLatestResponse>> getV2EewLatest() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<EewLatestResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -66,10 +66,10 @@ class _EewApiClient implements EewApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EewLatestResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EewLatestResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -79,14 +79,14 @@ class _EewApiClient implements EewApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2EewEventId({
+  Future<HttpResponse<EewArrayResponse>> getV2EewEventId({
     required String eventId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<EewArrayResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -96,10 +96,10 @@ class _EewApiClient implements EewApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EewArrayResponse _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EewArrayResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -109,7 +109,7 @@ class _EewApiClient implements EewApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2EewEventIdSerialNo({
+  Future<HttpResponse<EewItemWithRelations>> getV2EewEventIdSerialNo({
     required String eventId,
     required String serialNo,
   }) async {
@@ -117,7 +117,7 @@ class _EewApiClient implements EewApiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<EewItemWithRelations>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -127,10 +127,10 @@ class _EewApiClient implements EewApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late EewItemWithRelations _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = EewItemWithRelations.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

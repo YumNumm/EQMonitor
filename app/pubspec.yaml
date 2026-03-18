@@ -10,6 +10,9 @@ environment:
 
 resolution: workspace
 
+dependency_overrides:
+  flutter_inappwebview: 6.2.0-beta.3
+
 dependencies:
   app_settings: ^7.0.0
   cached_network_image: ^3.4.1
@@ -25,6 +28,8 @@ dependencies:
   dynamic_color: ^1.7.0
   earthquake_replay:
     path: ../packages/earthquake_replay
+  eqmonitor_api:
+    path: ../packages/eqmonitor_api
   extensions:
     path: ../packages/extensions
   feedback: ^3.1.0
@@ -77,14 +82,10 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  libserialport_plus: ^0.0.12
+  libserialport_plus: ^0.1.0
   live_activity_util:
     path: ../packages/live_activity_util
-  maplibre:
-    git:
-      url: https://github.com/YumNumm/flutter-maplibre.git
-      ref: ca009f4e8da0801a6dff5e47a27e57c4cb7f9aa1
-      path: maplibre
+  maplibre: ^0.3.3+2
   nied_api_client:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
