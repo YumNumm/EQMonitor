@@ -1,0 +1,12 @@
+name: my-workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    steps:
+      - name: Build
+        run: echo "Hello, OpenCI!"
