@@ -86,7 +86,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.1.1
+        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v3.1.1
         with:
           install_args: "flutter xcbeautify"
 
@@ -212,7 +212,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.1.1
+        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v3.1.1
         with:
           install_args: "xcbeautify"
 
@@ -262,7 +262,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.1.1
+        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v3.1.1
         with:
           install_args: "flutter java uv python pipx:codemagic-cli-tools"
 
@@ -349,7 +349,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.1.1
+        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v3.1.1
         with:
           install_args: "firebase yq"
 
@@ -455,7 +455,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.1.1
+        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v3.1.1
         with:
           install_args: "github:YumNumm/google-play-cli yq"
 

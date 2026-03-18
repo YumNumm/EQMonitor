@@ -30,7 +30,7 @@ jobs:
     steps:
       # https://github.com/actions/create-github-app-token
       - name: Create GitHub App Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: app-token
         with:
           app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
@@ -47,7 +47,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v4.0.0.6.4.0.0
         env:
           # See: https://mise.jdx.dev/getting-started.html#github-api-rate-limiting
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
