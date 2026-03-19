@@ -15,12 +15,11 @@ part 'intensity_item.g.dart';
 abstract class IntensityItem with _$IntensityItem {
   const factory IntensityItem({
     required CodeName value,
-    @JsonKey(includeIfNull: false, name: 'max_intensity')
+    @JsonKey(includeIfNull: false,name: 'max_intensity')
     JmaIntensity? maxIntensity,
-    @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')
+    @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
     JmaLpgmIntensity? maxLpgmIntensity,
   }) = _IntensityItem;
-
-  factory IntensityItem.fromJson(Map<String, Object?> json) =>
-      _$IntensityItemFromJson(json);
+  
+  factory IntensityItem.fromJson(Map<String, Object?> json) => _$IntensityItemFromJson(json);
 }

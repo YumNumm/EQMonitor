@@ -29,9 +29,9 @@ Map<String, dynamic> _$PrePeriodsToJson(_PrePeriods instance) =>
     };
 
 const _$JmaLpgmIntensityEnumMap = {
-  JmaLpgmIntensity.value0: 0,
-  JmaLpgmIntensity.value1: 1,
-  JmaLpgmIntensity.value2: 2,
-  JmaLpgmIntensity.value3: 3,
-  JmaLpgmIntensity.value4: 4,
+  JmaLpgmIntensity.value0: '0',
+  JmaLpgmIntensity.value1: '1',
+  JmaLpgmIntensity.value2: '2',
+  JmaLpgmIntensity.value3: '3',
+  JmaLpgmIntensity.value4: '4',
 };

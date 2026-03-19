@@ -14,7 +14,6 @@ abstract class TestNotificationRequest with _$TestNotificationRequest {
   const factory TestNotificationRequest({
     required TestNotificationRequestType type,
   }) = _TestNotificationRequest;
-
-  factory TestNotificationRequest.fromJson(Map<String, Object?> json) =>
-      _$TestNotificationRequestFromJson(json);
+  
+  factory TestNotificationRequest.fromJson(Map<String, Object?> json) => _$TestNotificationRequestFromJson(json);
 }

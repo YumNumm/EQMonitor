@@ -14,13 +14,13 @@ part 'intensity.g.dart';
 @Freezed()
 abstract class Intensity with _$Intensity {
   const factory Intensity({
-    @JsonKey(name: 'max_intensity') required JmaIntensity maxIntensity,
+    @JsonKey(name: 'max_intensity')
+    required JmaIntensity maxIntensity,
     required List<IntensityItem> prefectures,
     required List<IntensityItem> regions,
-    @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')
+    @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
     JmaLpgmIntensity? maxLpgmIntensity,
   }) = _Intensity;
-
-  factory Intensity.fromJson(Map<String, Object?> json) =>
-      _$IntensityFromJson(json);
+  
+  factory Intensity.fromJson(Map<String, Object?> json) => _$IntensityFromJson(json);
 }

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewTelegramItem {
 
- String get eventId; TelegramStatus get status; TelegramInfoType get infoType; int get serialNo; String? get headline; bool get isCanceled; bool? get isWarning; bool get isLastInfo; DateTime? get originTime; DateTime? get arrivalTime; DateTime get reportTime; bool get isPlum; String? get editorialOffice; EewHypocenterInfo? get hypocenter; EewForecastIntensityInfo? get forecastIntensity; EewWarningInfo? get warning; EewAccuracyInfo? get accuracy;
+ String get eventId; TelegramStatus get status; TelegramInfoType get infoType; int get serialNo; bool get isCanceled; bool get isLastInfo; DateTime get reportTime; bool get isPlum; String? get headline; bool? get isWarning; DateTime? get originTime; DateTime? get arrivalTime; String? get editorialOffice; EewHypocenterInfo? get hypocenter; EewForecastIntensityInfo? get forecastIntensity; EewWarningInfo? get warning; EewAccuracyInfo? get accuracy;
 /// Create a copy of EewTelegramItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $EewTelegramItemCopyWith<EewTelegramItem> get copyWith => _$EewTelegramItemCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewTelegramItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewTelegramItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,eventId,status,infoType,serialNo,headline,isCanceled,isWarning,isLastInfo,originTime,arrivalTime,reportTime,isPlum,editorialOffice,hypocenter,forecastIntensity,warning,accuracy);
+int get hashCode => Object.hash(runtimeType,eventId,status,infoType,serialNo,isCanceled,isLastInfo,reportTime,isPlum,headline,isWarning,originTime,arrivalTime,editorialOffice,hypocenter,forecastIntensity,warning,accuracy);
 
 @override
 String toString() {
-  return 'EewTelegramItem(eventId: $eventId, status: $status, infoType: $infoType, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, reportTime: $reportTime, isPlum: $isPlum, editorialOffice: $editorialOffice, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, warning: $warning, accuracy: $accuracy)';
+  return 'EewTelegramItem(eventId: $eventId, status: $status, infoType: $infoType, serialNo: $serialNo, isCanceled: $isCanceled, isLastInfo: $isLastInfo, reportTime: $reportTime, isPlum: $isPlum, headline: $headline, isWarning: $isWarning, originTime: $originTime, arrivalTime: $arrivalTime, editorialOffice: $editorialOffice, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, warning: $warning, accuracy: $accuracy)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $EewTelegramItemCopyWith<$Res>  {
   factory $EewTelegramItemCopyWith(EewTelegramItem value, $Res Function(EewTelegramItem) _then) = _$EewTelegramItemCopyWithImpl;
 @useResult
 $Res call({
- String eventId, TelegramStatus status, TelegramInfoType infoType, int serialNo, String? headline, bool isCanceled, bool? isWarning, bool isLastInfo, DateTime? originTime, DateTime? arrivalTime, DateTime reportTime, bool isPlum, String? editorialOffice, EewHypocenterInfo? hypocenter, EewForecastIntensityInfo? forecastIntensity, EewWarningInfo? warning, EewAccuracyInfo? accuracy
+ String eventId, TelegramStatus status, TelegramInfoType infoType, int serialNo, bool isCanceled, bool isLastInfo, DateTime reportTime, bool isPlum, String? headline, bool? isWarning, DateTime? originTime, DateTime? arrivalTime, String? editorialOffice, EewHypocenterInfo? hypocenter, EewForecastIntensityInfo? forecastIntensity, EewWarningInfo? warning, EewAccuracyInfo? accuracy
 });
 
 
@@ -62,21 +62,21 @@ class _$EewTelegramItemCopyWithImpl<$Res>
 
 /// Create a copy of EewTelegramItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? headline = freezed,Object? isCanceled = null,Object? isWarning = freezed,Object? isLastInfo = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? reportTime = null,Object? isPlum = null,Object? editorialOffice = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? warning = freezed,Object? accuracy = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? isCanceled = null,Object? isLastInfo = null,Object? reportTime = null,Object? isPlum = null,Object? headline = freezed,Object? isWarning = freezed,Object? originTime = freezed,Object? arrivalTime = freezed,Object? editorialOffice = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? warning = freezed,Object? accuracy = freezed,}) {
   return _then(_self.copyWith(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as TelegramInfoType,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
-as int,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
-as String?,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
-as bool,isWarning: freezed == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
-as bool?,isLastInfo: null == isLastInfo ? _self.isLastInfo : isLastInfo // ignore: cast_nullable_to_non_nullable
-as bool,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,reportTime: null == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
+as int,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
+as bool,isLastInfo: null == isLastInfo ? _self.isLastInfo : isLastInfo // ignore: cast_nullable_to_non_nullable
+as bool,reportTime: null == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
 as DateTime,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullable_to_non_nullable
-as bool,editorialOffice: freezed == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
+as bool,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,isWarning: freezed == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
+as bool?,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,editorialOffice: freezed == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
 as String?,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
 as EewHypocenterInfo?,forecastIntensity: freezed == forecastIntensity ? _self.forecastIntensity : forecastIntensity // ignore: cast_nullable_to_non_nullable
 as EewForecastIntensityInfo?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
@@ -214,10 +214,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  DateTime reportTime,  bool isPlum,  String? editorialOffice,  EewHypocenterInfo? hypocenter,  EewForecastIntensityInfo? forecastIntensity,  EewWarningInfo? warning,  EewAccuracyInfo? accuracy)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  bool isCanceled,  bool isLastInfo,  DateTime reportTime,  bool isPlum,  String? headline,  bool? isWarning,  DateTime? originTime,  DateTime? arrivalTime,  String? editorialOffice,  EewHypocenterInfo? hypocenter,  EewForecastIntensityInfo? forecastIntensity,  EewWarningInfo? warning,  EewAccuracyInfo? accuracy)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewTelegramItem() when $default != null:
-return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.reportTime,_that.isPlum,_that.editorialOffice,_that.hypocenter,_that.forecastIntensity,_that.warning,_that.accuracy);case _:
+return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.isCanceled,_that.isLastInfo,_that.reportTime,_that.isPlum,_that.headline,_that.isWarning,_that.originTime,_that.arrivalTime,_that.editorialOffice,_that.hypocenter,_that.forecastIntensity,_that.warning,_that.accuracy);case _:
   return orElse();
 
 }
@@ -235,10 +235,10 @@ return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.h
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  DateTime reportTime,  bool isPlum,  String? editorialOffice,  EewHypocenterInfo? hypocenter,  EewForecastIntensityInfo? forecastIntensity,  EewWarningInfo? warning,  EewAccuracyInfo? accuracy)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  bool isCanceled,  bool isLastInfo,  DateTime reportTime,  bool isPlum,  String? headline,  bool? isWarning,  DateTime? originTime,  DateTime? arrivalTime,  String? editorialOffice,  EewHypocenterInfo? hypocenter,  EewForecastIntensityInfo? forecastIntensity,  EewWarningInfo? warning,  EewAccuracyInfo? accuracy)  $default,) {final _that = this;
 switch (_that) {
 case _EewTelegramItem():
-return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.reportTime,_that.isPlum,_that.editorialOffice,_that.hypocenter,_that.forecastIntensity,_that.warning,_that.accuracy);case _:
+return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.isCanceled,_that.isLastInfo,_that.reportTime,_that.isPlum,_that.headline,_that.isWarning,_that.originTime,_that.arrivalTime,_that.editorialOffice,_that.hypocenter,_that.forecastIntensity,_that.warning,_that.accuracy);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -255,10 +255,10 @@ return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.h
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  String? headline,  bool isCanceled,  bool? isWarning,  bool isLastInfo,  DateTime? originTime,  DateTime? arrivalTime,  DateTime reportTime,  bool isPlum,  String? editorialOffice,  EewHypocenterInfo? hypocenter,  EewForecastIntensityInfo? forecastIntensity,  EewWarningInfo? warning,  EewAccuracyInfo? accuracy)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  TelegramStatus status,  TelegramInfoType infoType,  int serialNo,  bool isCanceled,  bool isLastInfo,  DateTime reportTime,  bool isPlum,  String? headline,  bool? isWarning,  DateTime? originTime,  DateTime? arrivalTime,  String? editorialOffice,  EewHypocenterInfo? hypocenter,  EewForecastIntensityInfo? forecastIntensity,  EewWarningInfo? warning,  EewAccuracyInfo? accuracy)?  $default,) {final _that = this;
 switch (_that) {
 case _EewTelegramItem() when $default != null:
-return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.headline,_that.isCanceled,_that.isWarning,_that.isLastInfo,_that.originTime,_that.arrivalTime,_that.reportTime,_that.isPlum,_that.editorialOffice,_that.hypocenter,_that.forecastIntensity,_that.warning,_that.accuracy);case _:
+return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.isCanceled,_that.isLastInfo,_that.reportTime,_that.isPlum,_that.headline,_that.isWarning,_that.originTime,_that.arrivalTime,_that.editorialOffice,_that.hypocenter,_that.forecastIntensity,_that.warning,_that.accuracy);case _:
   return null;
 
 }
@@ -270,21 +270,21 @@ return $default(_that.eventId,_that.status,_that.infoType,_that.serialNo,_that.h
 
 
 class _EewTelegramItem extends EewTelegramItem {
-  const _EewTelegramItem({required this.eventId, required this.status, required this.infoType, required this.serialNo, this.headline, required this.isCanceled, this.isWarning, required this.isLastInfo, this.originTime, this.arrivalTime, required this.reportTime, required this.isPlum, this.editorialOffice, this.hypocenter, this.forecastIntensity, this.warning, this.accuracy}): super._();
+  const _EewTelegramItem({required this.eventId, required this.status, required this.infoType, required this.serialNo, required this.isCanceled, required this.isLastInfo, required this.reportTime, required this.isPlum, this.headline, this.isWarning, this.originTime, this.arrivalTime, this.editorialOffice, this.hypocenter, this.forecastIntensity, this.warning, this.accuracy}): super._();
   
 
 @override final  String eventId;
 @override final  TelegramStatus status;
 @override final  TelegramInfoType infoType;
 @override final  int serialNo;
-@override final  String? headline;
 @override final  bool isCanceled;
-@override final  bool? isWarning;
 @override final  bool isLastInfo;
-@override final  DateTime? originTime;
-@override final  DateTime? arrivalTime;
 @override final  DateTime reportTime;
 @override final  bool isPlum;
+@override final  String? headline;
+@override final  bool? isWarning;
+@override final  DateTime? originTime;
+@override final  DateTime? arrivalTime;
 @override final  String? editorialOffice;
 @override final  EewHypocenterInfo? hypocenter;
 @override final  EewForecastIntensityInfo? forecastIntensity;
@@ -301,16 +301,16 @@ _$EewTelegramItemCopyWith<_EewTelegramItem> get copyWith => __$EewTelegramItemCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewTelegramItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewTelegramItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.isLastInfo, isLastInfo) || other.isLastInfo == isLastInfo)&&(identical(other.reportTime, reportTime) || other.reportTime == reportTime)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&(identical(other.hypocenter, hypocenter) || other.hypocenter == hypocenter)&&(identical(other.forecastIntensity, forecastIntensity) || other.forecastIntensity == forecastIntensity)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,eventId,status,infoType,serialNo,headline,isCanceled,isWarning,isLastInfo,originTime,arrivalTime,reportTime,isPlum,editorialOffice,hypocenter,forecastIntensity,warning,accuracy);
+int get hashCode => Object.hash(runtimeType,eventId,status,infoType,serialNo,isCanceled,isLastInfo,reportTime,isPlum,headline,isWarning,originTime,arrivalTime,editorialOffice,hypocenter,forecastIntensity,warning,accuracy);
 
 @override
 String toString() {
-  return 'EewTelegramItem(eventId: $eventId, status: $status, infoType: $infoType, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, reportTime: $reportTime, isPlum: $isPlum, editorialOffice: $editorialOffice, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, warning: $warning, accuracy: $accuracy)';
+  return 'EewTelegramItem(eventId: $eventId, status: $status, infoType: $infoType, serialNo: $serialNo, isCanceled: $isCanceled, isLastInfo: $isLastInfo, reportTime: $reportTime, isPlum: $isPlum, headline: $headline, isWarning: $isWarning, originTime: $originTime, arrivalTime: $arrivalTime, editorialOffice: $editorialOffice, hypocenter: $hypocenter, forecastIntensity: $forecastIntensity, warning: $warning, accuracy: $accuracy)';
 }
 
 
@@ -321,7 +321,7 @@ abstract mixin class _$EewTelegramItemCopyWith<$Res> implements $EewTelegramItem
   factory _$EewTelegramItemCopyWith(_EewTelegramItem value, $Res Function(_EewTelegramItem) _then) = __$EewTelegramItemCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, TelegramStatus status, TelegramInfoType infoType, int serialNo, String? headline, bool isCanceled, bool? isWarning, bool isLastInfo, DateTime? originTime, DateTime? arrivalTime, DateTime reportTime, bool isPlum, String? editorialOffice, EewHypocenterInfo? hypocenter, EewForecastIntensityInfo? forecastIntensity, EewWarningInfo? warning, EewAccuracyInfo? accuracy
+ String eventId, TelegramStatus status, TelegramInfoType infoType, int serialNo, bool isCanceled, bool isLastInfo, DateTime reportTime, bool isPlum, String? headline, bool? isWarning, DateTime? originTime, DateTime? arrivalTime, String? editorialOffice, EewHypocenterInfo? hypocenter, EewForecastIntensityInfo? forecastIntensity, EewWarningInfo? warning, EewAccuracyInfo? accuracy
 });
 
 
@@ -338,21 +338,21 @@ class __$EewTelegramItemCopyWithImpl<$Res>
 
 /// Create a copy of EewTelegramItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? headline = freezed,Object? isCanceled = null,Object? isWarning = freezed,Object? isLastInfo = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? reportTime = null,Object? isPlum = null,Object? editorialOffice = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? warning = freezed,Object? accuracy = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? status = null,Object? infoType = null,Object? serialNo = null,Object? isCanceled = null,Object? isLastInfo = null,Object? reportTime = null,Object? isPlum = null,Object? headline = freezed,Object? isWarning = freezed,Object? originTime = freezed,Object? arrivalTime = freezed,Object? editorialOffice = freezed,Object? hypocenter = freezed,Object? forecastIntensity = freezed,Object? warning = freezed,Object? accuracy = freezed,}) {
   return _then(_EewTelegramItem(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
 as TelegramInfoType,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
-as int,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
-as String?,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
-as bool,isWarning: freezed == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
-as bool?,isLastInfo: null == isLastInfo ? _self.isLastInfo : isLastInfo // ignore: cast_nullable_to_non_nullable
-as bool,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,reportTime: null == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
+as int,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
+as bool,isLastInfo: null == isLastInfo ? _self.isLastInfo : isLastInfo // ignore: cast_nullable_to_non_nullable
+as bool,reportTime: null == reportTime ? _self.reportTime : reportTime // ignore: cast_nullable_to_non_nullable
 as DateTime,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullable_to_non_nullable
-as bool,editorialOffice: freezed == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
+as bool,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,isWarning: freezed == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
+as bool?,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,editorialOffice: freezed == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
 as String?,hypocenter: freezed == hypocenter ? _self.hypocenter : hypocenter // ignore: cast_nullable_to_non_nullable
 as EewHypocenterInfo?,forecastIntensity: freezed == forecastIntensity ? _self.forecastIntensity : forecastIntensity // ignore: cast_nullable_to_non_nullable
 as EewForecastIntensityInfo?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
@@ -415,7 +415,7 @@ $EewAccuracyInfoCopyWith<$Res>? get accuracy {
 /// @nodoc
 mixin _$EewHypocenterInfo {
 
- String get code; String get name; String? get detailedCode; String? get detailedName; double? get latitude; double? get longitude; bool get hasLatLng; String? get coordinateCondition; double? get magnitude; int? get depth;
+ String get code; String get name; bool get hasLatLng; String? get detailedCode; String? get detailedName; double? get latitude; double? get longitude; String? get coordinateCondition; double? get magnitude; int? get depth;
 /// Create a copy of EewHypocenterInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -426,16 +426,16 @@ $EewHypocenterInfoCopyWith<EewHypocenterInfo> get copyWith => _$EewHypocenterInf
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.hasLatLng, hasLatLng) || other.hasLatLng == hasLatLng)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.hasLatLng, hasLatLng) || other.hasLatLng == hasLatLng)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,code,name,detailedCode,detailedName,latitude,longitude,hasLatLng,coordinateCondition,magnitude,depth);
+int get hashCode => Object.hash(runtimeType,code,name,hasLatLng,detailedCode,detailedName,latitude,longitude,coordinateCondition,magnitude,depth);
 
 @override
 String toString() {
-  return 'EewHypocenterInfo(code: $code, name: $name, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, hasLatLng: $hasLatLng, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
+  return 'EewHypocenterInfo(code: $code, name: $name, hasLatLng: $hasLatLng, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
 }
 
 
@@ -446,7 +446,7 @@ abstract mixin class $EewHypocenterInfoCopyWith<$Res>  {
   factory $EewHypocenterInfoCopyWith(EewHypocenterInfo value, $Res Function(EewHypocenterInfo) _then) = _$EewHypocenterInfoCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, String? detailedCode, String? detailedName, double? latitude, double? longitude, bool hasLatLng, String? coordinateCondition, double? magnitude, int? depth
+ String code, String name, bool hasLatLng, String? detailedCode, String? detailedName, double? latitude, double? longitude, String? coordinateCondition, double? magnitude, int? depth
 });
 
 
@@ -463,16 +463,16 @@ class _$EewHypocenterInfoCopyWithImpl<$Res>
 
 /// Create a copy of EewHypocenterInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? hasLatLng = null,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? hasLatLng = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
+as String,hasLatLng: null == hasLatLng ? _self.hasLatLng : hasLatLng // ignore: cast_nullable_to_non_nullable
+as bool,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
 as String?,detailedName: freezed == detailedName ? _self.detailedName : detailedName // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as double?,hasLatLng: null == hasLatLng ? _self.hasLatLng : hasLatLng // ignore: cast_nullable_to_non_nullable
-as bool,coordinateCondition: freezed == coordinateCondition ? _self.coordinateCondition : coordinateCondition // ignore: cast_nullable_to_non_nullable
+as double?,coordinateCondition: freezed == coordinateCondition ? _self.coordinateCondition : coordinateCondition // ignore: cast_nullable_to_non_nullable
 as String?,magnitude: freezed == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as double?,depth: freezed == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
 as int?,
@@ -560,10 +560,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  bool hasLatLng,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  bool hasLatLng,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewHypocenterInfo() when $default != null:
-return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.hasLatLng,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
+return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
   return orElse();
 
 }
@@ -581,10 +581,10 @@ return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  bool hasLatLng,  String? coordinateCondition,  double? magnitude,  int? depth)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  bool hasLatLng,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)  $default,) {final _that = this;
 switch (_that) {
 case _EewHypocenterInfo():
-return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.hasLatLng,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
+return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -601,10 +601,10 @@ return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  bool hasLatLng,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  bool hasLatLng,  String? detailedCode,  String? detailedName,  double? latitude,  double? longitude,  String? coordinateCondition,  double? magnitude,  int? depth)?  $default,) {final _that = this;
 switch (_that) {
 case _EewHypocenterInfo() when $default != null:
-return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.hasLatLng,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
+return $default(_that.code,_that.name,_that.hasLatLng,_that.detailedCode,_that.detailedName,_that.latitude,_that.longitude,_that.coordinateCondition,_that.magnitude,_that.depth);case _:
   return null;
 
 }
@@ -616,16 +616,16 @@ return $default(_that.code,_that.name,_that.detailedCode,_that.detailedName,_tha
 
 
 class _EewHypocenterInfo implements EewHypocenterInfo {
-  const _EewHypocenterInfo({required this.code, required this.name, this.detailedCode, this.detailedName, this.latitude, this.longitude, required this.hasLatLng, this.coordinateCondition, this.magnitude, this.depth});
+  const _EewHypocenterInfo({required this.code, required this.name, required this.hasLatLng, this.detailedCode, this.detailedName, this.latitude, this.longitude, this.coordinateCondition, this.magnitude, this.depth});
   
 
 @override final  String code;
 @override final  String name;
+@override final  bool hasLatLng;
 @override final  String? detailedCode;
 @override final  String? detailedName;
 @override final  double? latitude;
 @override final  double? longitude;
-@override final  bool hasLatLng;
 @override final  String? coordinateCondition;
 @override final  double? magnitude;
 @override final  int? depth;
@@ -640,16 +640,16 @@ _$EewHypocenterInfoCopyWith<_EewHypocenterInfo> get copyWith => __$EewHypocenter
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.hasLatLng, hasLatLng) || other.hasLatLng == hasLatLng)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewHypocenterInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.hasLatLng, hasLatLng) || other.hasLatLng == hasLatLng)&&(identical(other.detailedCode, detailedCode) || other.detailedCode == detailedCode)&&(identical(other.detailedName, detailedName) || other.detailedName == detailedName)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.coordinateCondition, coordinateCondition) || other.coordinateCondition == coordinateCondition)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,code,name,detailedCode,detailedName,latitude,longitude,hasLatLng,coordinateCondition,magnitude,depth);
+int get hashCode => Object.hash(runtimeType,code,name,hasLatLng,detailedCode,detailedName,latitude,longitude,coordinateCondition,magnitude,depth);
 
 @override
 String toString() {
-  return 'EewHypocenterInfo(code: $code, name: $name, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, hasLatLng: $hasLatLng, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
+  return 'EewHypocenterInfo(code: $code, name: $name, hasLatLng: $hasLatLng, detailedCode: $detailedCode, detailedName: $detailedName, latitude: $latitude, longitude: $longitude, coordinateCondition: $coordinateCondition, magnitude: $magnitude, depth: $depth)';
 }
 
 
@@ -660,7 +660,7 @@ abstract mixin class _$EewHypocenterInfoCopyWith<$Res> implements $EewHypocenter
   factory _$EewHypocenterInfoCopyWith(_EewHypocenterInfo value, $Res Function(_EewHypocenterInfo) _then) = __$EewHypocenterInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, String? detailedCode, String? detailedName, double? latitude, double? longitude, bool hasLatLng, String? coordinateCondition, double? magnitude, int? depth
+ String code, String name, bool hasLatLng, String? detailedCode, String? detailedName, double? latitude, double? longitude, String? coordinateCondition, double? magnitude, int? depth
 });
 
 
@@ -677,16 +677,16 @@ class __$EewHypocenterInfoCopyWithImpl<$Res>
 
 /// Create a copy of EewHypocenterInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? hasLatLng = null,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? hasLatLng = null,Object? detailedCode = freezed,Object? detailedName = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? coordinateCondition = freezed,Object? magnitude = freezed,Object? depth = freezed,}) {
   return _then(_EewHypocenterInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
+as String,hasLatLng: null == hasLatLng ? _self.hasLatLng : hasLatLng // ignore: cast_nullable_to_non_nullable
+as bool,detailedCode: freezed == detailedCode ? _self.detailedCode : detailedCode // ignore: cast_nullable_to_non_nullable
 as String?,detailedName: freezed == detailedName ? _self.detailedName : detailedName // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as double?,hasLatLng: null == hasLatLng ? _self.hasLatLng : hasLatLng // ignore: cast_nullable_to_non_nullable
-as bool,coordinateCondition: freezed == coordinateCondition ? _self.coordinateCondition : coordinateCondition // ignore: cast_nullable_to_non_nullable
+as double?,coordinateCondition: freezed == coordinateCondition ? _self.coordinateCondition : coordinateCondition // ignore: cast_nullable_to_non_nullable
 as String?,magnitude: freezed == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as double?,depth: freezed == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
 as int?,

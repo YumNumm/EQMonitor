@@ -11,10 +11,10 @@ part 'pre_periods2.g.dart';
 abstract class PrePeriods2 with _$PrePeriods2 {
   const factory PrePeriods2({
     required num band,
-    @JsonKey(name: 'lpgm_intensity') required String lpgmIntensity,
+    @JsonKey(name: 'lpgm_intensity')
+    required String lpgmIntensity,
     required num sva,
   }) = _PrePeriods2;
-
-  factory PrePeriods2.fromJson(Map<String, Object?> json) =>
-      _$PrePeriods2FromJson(json);
+  
+  factory PrePeriods2.fromJson(Map<String, Object?> json) => _$PrePeriods2FromJson(json);
 }

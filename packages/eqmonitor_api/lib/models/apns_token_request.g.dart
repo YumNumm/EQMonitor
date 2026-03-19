@@ -12,9 +12,21 @@ _ApnsTokenRequest _$ApnsTokenRequestFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_ApnsTokenRequest', json, ($checkedConvert) {
       final val = _ApnsTokenRequest(
         token: $checkedConvert('token', (v) => v as String),
+        environment: $checkedConvert(
+          'environment',
+          (v) => $enumDecodeNullable(_$ApnsEnvironmentEnumMap, v),
+        ),
       );
       return val;
     });
 
 Map<String, dynamic> _$ApnsTokenRequestToJson(_ApnsTokenRequest instance) =>
-    <String, dynamic>{'token': instance.token};
+    <String, dynamic>{
+      'token': instance.token,
+      'environment': ?instance.environment,
+    };
+
+const _$ApnsEnvironmentEnumMap = {
+  ApnsEnvironment.development: 'development',
+  ApnsEnvironment.production: 'production',
+};

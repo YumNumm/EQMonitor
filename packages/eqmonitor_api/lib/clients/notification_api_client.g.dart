@@ -25,7 +25,7 @@ class _NotificationApiClient implements NotificationApiClient {
   Future<HttpResponse<NotificationHistoryResponse>>
   getV2DeviceDeviceIdNotificationHistory({
     required String deviceId,
-    int? limit = 20,
+    int? limit = 100,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'limit': limit};

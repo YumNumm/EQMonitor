@@ -26,9 +26,9 @@ Map<String, dynamic> _$EewIntensityLpgmValueToJson(
 ) => <String, dynamic>{'value': instance.value, 'is_over': instance.isOver};
 
 const _$JmaLpgmIntensityEnumMap = {
-  JmaLpgmIntensity.value0: 0,
-  JmaLpgmIntensity.value1: 1,
-  JmaLpgmIntensity.value2: 2,
-  JmaLpgmIntensity.value3: 3,
-  JmaLpgmIntensity.value4: 4,
+  JmaLpgmIntensity.value0: '0',
+  JmaLpgmIntensity.value1: '1',
+  JmaLpgmIntensity.value2: '2',
+  JmaLpgmIntensity.value3: '3',
+  JmaLpgmIntensity.value4: '4',
 };

@@ -9,6 +9,7 @@ import 'clients/notification_api_client.dart';
 import 'clients/earthquake_api_client.dart';
 import 'clients/eew_api_client.dart';
 import 'clients/telegram_api_client.dart';
+import 'clients/tsunami_api_client.dart';
 import 'clients/user_api_client.dart';
 import 'clients/web_socket_api_client.dart';
 
@@ -32,6 +33,7 @@ class ApiClient {
   EarthquakeApiClient? _earthquake;
   EewApiClient? _eew;
   TelegramApiClient? _telegram;
+  TsunamiApiClient? _tsunami;
   UserApiClient? _user;
   WebSocketApiClient? _webSocket;
 
@@ -44,6 +46,8 @@ class ApiClient {
   EewApiClient get eew => _eew ??= EewApiClient(_dio, baseUrl: _baseUrl);
 
   TelegramApiClient get telegram => _telegram ??= TelegramApiClient(_dio, baseUrl: _baseUrl);
+
+  TsunamiApiClient get tsunami => _tsunami ??= TsunamiApiClient(_dio, baseUrl: _baseUrl);
 
   UserApiClient get user => _user ??= UserApiClient(_dio, baseUrl: _baseUrl);
 

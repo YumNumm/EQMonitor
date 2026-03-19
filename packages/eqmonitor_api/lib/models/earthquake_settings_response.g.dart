@@ -16,13 +16,11 @@ _EarthquakeSettingsResponse _$EarthquakeSettingsResponseFromJson(
   ($checkedConvert) {
     final val = _EarthquakeSettingsResponse(
       enabled: $checkedConvert('enabled', (v) => v as bool),
-      sound: $checkedConvert(
-        'sound',
-        (v) => SoundSettingsResponse.fromJson(v as Map<String, dynamic>),
-      ),
-      hypocenterUpdateEnabled: $checkedConvert(
-        'hypocenter_update_enabled',
-        (v) => v as bool,
+      notificationTiers: $checkedConvert(
+        'notification_tiers',
+        (v) => (v as List<dynamic>)
+            .map((e) => NotificationTiers.fromJson(e as Map<String, dynamic>))
+            .toList(),
       ),
       estimatedIntensityEnabled: $checkedConvert(
         'estimated_intensity_enabled',
@@ -32,7 +30,7 @@ _EarthquakeSettingsResponse _$EarthquakeSettingsResponseFromJson(
     return val;
   },
   fieldKeyMap: const {
-    'hypocenterUpdateEnabled': 'hypocenter_update_enabled',
+    'notificationTiers': 'notification_tiers',
     'estimatedIntensityEnabled': 'estimated_intensity_enabled',
   },
 );
@@ -41,7 +39,6 @@ Map<String, dynamic> _$EarthquakeSettingsResponseToJson(
   _EarthquakeSettingsResponse instance,
 ) => <String, dynamic>{
   'enabled': instance.enabled,
-  'sound': instance.sound,
-  'hypocenter_update_enabled': instance.hypocenterUpdateEnabled,
+  'notification_tiers': instance.notificationTiers,
   'estimated_intensity_enabled': instance.estimatedIntensityEnabled,
 };

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApnsTokenRequest {
 
- String get token;
+ String get token;@JsonKey(includeIfNull: false) ApnsEnvironment? get environment;
 /// Create a copy of ApnsTokenRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ApnsTokenRequestCopyWith<ApnsTokenRequest> get copyWith => _$ApnsTokenRequestCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApnsTokenRequest&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApnsTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.environment, environment) || other.environment == environment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token);
+int get hashCode => Object.hash(runtimeType,token,environment);
 
 @override
 String toString() {
-  return 'ApnsTokenRequest(token: $token)';
+  return 'ApnsTokenRequest(token: $token, environment: $environment)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ApnsTokenRequestCopyWith<$Res>  {
   factory $ApnsTokenRequestCopyWith(ApnsTokenRequest value, $Res Function(ApnsTokenRequest) _then) = _$ApnsTokenRequestCopyWithImpl;
 @useResult
 $Res call({
- String token
+ String token,@JsonKey(includeIfNull: false) ApnsEnvironment? environment
 });
 
 
@@ -65,10 +65,11 @@ class _$ApnsTokenRequestCopyWithImpl<$Res>
 
 /// Create a copy of ApnsTokenRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? environment = freezed,}) {
   return _then(_self.copyWith(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
-as String,
+as String,environment: freezed == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
+as ApnsEnvironment?,
   ));
 }
 
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token, @JsonKey(includeIfNull: false)  ApnsEnvironment? environment)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApnsTokenRequest() when $default != null:
-return $default(_that.token);case _:
+return $default(_that.token,_that.environment);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.token);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token, @JsonKey(includeIfNull: false)  ApnsEnvironment? environment)  $default,) {final _that = this;
 switch (_that) {
 case _ApnsTokenRequest():
-return $default(_that.token);case _:
+return $default(_that.token,_that.environment);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.token);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token, @JsonKey(includeIfNull: false)  ApnsEnvironment? environment)?  $default,) {final _that = this;
 switch (_that) {
 case _ApnsTokenRequest() when $default != null:
-return $default(_that.token);case _:
+return $default(_that.token,_that.environment);case _:
   return null;
 
 }
@@ -209,10 +210,11 @@ return $default(_that.token);case _:
 @JsonSerializable()
 
 class _ApnsTokenRequest implements ApnsTokenRequest {
-  const _ApnsTokenRequest({required this.token});
+  const _ApnsTokenRequest({required this.token, @JsonKey(includeIfNull: false) this.environment});
   factory _ApnsTokenRequest.fromJson(Map<String, dynamic> json) => _$ApnsTokenRequestFromJson(json);
 
 @override final  String token;
+@override@JsonKey(includeIfNull: false) final  ApnsEnvironment? environment;
 
 /// Create a copy of ApnsTokenRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApnsTokenRequest&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApnsTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.environment, environment) || other.environment == environment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token);
+int get hashCode => Object.hash(runtimeType,token,environment);
 
 @override
 String toString() {
-  return 'ApnsTokenRequest(token: $token)';
+  return 'ApnsTokenRequest(token: $token, environment: $environment)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$ApnsTokenRequestCopyWith<$Res> implements $ApnsTokenReque
   factory _$ApnsTokenRequestCopyWith(_ApnsTokenRequest value, $Res Function(_ApnsTokenRequest) _then) = __$ApnsTokenRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String token
+ String token,@JsonKey(includeIfNull: false) ApnsEnvironment? environment
 });
 
 
@@ -264,10 +266,11 @@ class __$ApnsTokenRequestCopyWithImpl<$Res>
 
 /// Create a copy of ApnsTokenRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? environment = freezed,}) {
   return _then(_ApnsTokenRequest(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
-as String,
+as String,environment: freezed == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
+as ApnsEnvironment?,
   ));
 }
 

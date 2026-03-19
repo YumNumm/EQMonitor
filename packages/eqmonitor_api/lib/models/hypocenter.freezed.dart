@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Hypocenter {
 
- CodeName get value; Coordinate get coordinates; Magnitude get magnitude; Depth get depth;@JsonKey(includeIfNull: false) CodeName? get detailed;
+ CodeName get value; Coordinate get coordinates; Magnitude get magnitude; Depth get depth;@JsonKey(includeIfNull: false) CodeName? get detailed;@JsonKey(includeIfNull: false) HypocenterAuxiliary? get auxiliary;
 /// Create a copy of Hypocenter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $HypocenterCopyWith<Hypocenter> get copyWith => _$HypocenterCopyWithImpl<Hypocen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Hypocenter&&(identical(other.value, value) || other.value == value)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.detailed, detailed) || other.detailed == detailed));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Hypocenter&&(identical(other.value, value) || other.value == value)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.detailed, detailed) || other.detailed == detailed)&&(identical(other.auxiliary, auxiliary) || other.auxiliary == auxiliary));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,coordinates,magnitude,depth,detailed);
+int get hashCode => Object.hash(runtimeType,value,coordinates,magnitude,depth,detailed,auxiliary);
 
 @override
 String toString() {
-  return 'Hypocenter(value: $value, coordinates: $coordinates, magnitude: $magnitude, depth: $depth, detailed: $detailed)';
+  return 'Hypocenter(value: $value, coordinates: $coordinates, magnitude: $magnitude, depth: $depth, detailed: $detailed, auxiliary: $auxiliary)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $HypocenterCopyWith<$Res>  {
   factory $HypocenterCopyWith(Hypocenter value, $Res Function(Hypocenter) _then) = _$HypocenterCopyWithImpl;
 @useResult
 $Res call({
- CodeName value, Coordinate coordinates, Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) CodeName? detailed
+ CodeName value, Coordinate coordinates, Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) CodeName? detailed,@JsonKey(includeIfNull: false) HypocenterAuxiliary? auxiliary
 });
 
 
-$CodeNameCopyWith<$Res> get value;$CoordinateCopyWith<$Res> get coordinates;$MagnitudeCopyWith<$Res> get magnitude;$DepthCopyWith<$Res> get depth;$CodeNameCopyWith<$Res>? get detailed;
+$CodeNameCopyWith<$Res> get value;$CoordinateCopyWith<$Res> get coordinates;$MagnitudeCopyWith<$Res> get magnitude;$DepthCopyWith<$Res> get depth;$CodeNameCopyWith<$Res>? get detailed;$HypocenterAuxiliaryCopyWith<$Res>? get auxiliary;
 
 }
 /// @nodoc
@@ -65,14 +65,15 @@ class _$HypocenterCopyWithImpl<$Res>
 
 /// Create a copy of Hypocenter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? coordinates = null,Object? magnitude = null,Object? depth = null,Object? detailed = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? coordinates = null,Object? magnitude = null,Object? depth = null,Object? detailed = freezed,Object? auxiliary = freezed,}) {
   return _then(_self.copyWith(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as CodeName,coordinates: null == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
 as Coordinate,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as Magnitude,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
 as Depth,detailed: freezed == detailed ? _self.detailed : detailed // ignore: cast_nullable_to_non_nullable
-as CodeName?,
+as CodeName?,auxiliary: freezed == auxiliary ? _self.auxiliary : auxiliary // ignore: cast_nullable_to_non_nullable
+as HypocenterAuxiliary?,
   ));
 }
 /// Create a copy of Hypocenter
@@ -122,6 +123,18 @@ $CodeNameCopyWith<$Res>? get detailed {
 
   return $CodeNameCopyWith<$Res>(_self.detailed!, (value) {
     return _then(_self.copyWith(detailed: value));
+  });
+}/// Create a copy of Hypocenter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HypocenterAuxiliaryCopyWith<$Res>? get auxiliary {
+    if (_self.auxiliary == null) {
+    return null;
+  }
+
+  return $HypocenterAuxiliaryCopyWith<$Res>(_self.auxiliary!, (value) {
+    return _then(_self.copyWith(auxiliary: value));
   });
 }
 }
@@ -205,10 +218,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value,  Coordinate coordinates,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value,  Coordinate coordinates,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Hypocenter() when $default != null:
-return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.detailed);case _:
+return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.detailed,_that.auxiliary);case _:
   return orElse();
 
 }
@@ -226,10 +239,10 @@ return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value,  Coordinate coordinates,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value,  Coordinate coordinates,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)  $default,) {final _that = this;
 switch (_that) {
 case _Hypocenter():
-return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.detailed);case _:
+return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.detailed,_that.auxiliary);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -246,10 +259,10 @@ return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value,  Coordinate coordinates,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value,  Coordinate coordinates,  Magnitude magnitude,  Depth depth, @JsonKey(includeIfNull: false)  CodeName? detailed, @JsonKey(includeIfNull: false)  HypocenterAuxiliary? auxiliary)?  $default,) {final _that = this;
 switch (_that) {
 case _Hypocenter() when $default != null:
-return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.detailed);case _:
+return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.detailed,_that.auxiliary);case _:
   return null;
 
 }
@@ -261,7 +274,7 @@ return $default(_that.value,_that.coordinates,_that.magnitude,_that.depth,_that.
 @JsonSerializable()
 
 class _Hypocenter implements Hypocenter {
-  const _Hypocenter({required this.value, required this.coordinates, required this.magnitude, required this.depth, @JsonKey(includeIfNull: false) this.detailed});
+  const _Hypocenter({required this.value, required this.coordinates, required this.magnitude, required this.depth, @JsonKey(includeIfNull: false) this.detailed, @JsonKey(includeIfNull: false) this.auxiliary});
   factory _Hypocenter.fromJson(Map<String, dynamic> json) => _$HypocenterFromJson(json);
 
 @override final  CodeName value;
@@ -269,6 +282,7 @@ class _Hypocenter implements Hypocenter {
 @override final  Magnitude magnitude;
 @override final  Depth depth;
 @override@JsonKey(includeIfNull: false) final  CodeName? detailed;
+@override@JsonKey(includeIfNull: false) final  HypocenterAuxiliary? auxiliary;
 
 /// Create a copy of Hypocenter
 /// with the given fields replaced by the non-null parameter values.
@@ -283,16 +297,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Hypocenter&&(identical(other.value, value) || other.value == value)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.detailed, detailed) || other.detailed == detailed));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Hypocenter&&(identical(other.value, value) || other.value == value)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depth, depth) || other.depth == depth)&&(identical(other.detailed, detailed) || other.detailed == detailed)&&(identical(other.auxiliary, auxiliary) || other.auxiliary == auxiliary));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,coordinates,magnitude,depth,detailed);
+int get hashCode => Object.hash(runtimeType,value,coordinates,magnitude,depth,detailed,auxiliary);
 
 @override
 String toString() {
-  return 'Hypocenter(value: $value, coordinates: $coordinates, magnitude: $magnitude, depth: $depth, detailed: $detailed)';
+  return 'Hypocenter(value: $value, coordinates: $coordinates, magnitude: $magnitude, depth: $depth, detailed: $detailed, auxiliary: $auxiliary)';
 }
 
 
@@ -303,11 +317,11 @@ abstract mixin class _$HypocenterCopyWith<$Res> implements $HypocenterCopyWith<$
   factory _$HypocenterCopyWith(_Hypocenter value, $Res Function(_Hypocenter) _then) = __$HypocenterCopyWithImpl;
 @override @useResult
 $Res call({
- CodeName value, Coordinate coordinates, Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) CodeName? detailed
+ CodeName value, Coordinate coordinates, Magnitude magnitude, Depth depth,@JsonKey(includeIfNull: false) CodeName? detailed,@JsonKey(includeIfNull: false) HypocenterAuxiliary? auxiliary
 });
 
 
-@override $CodeNameCopyWith<$Res> get value;@override $CoordinateCopyWith<$Res> get coordinates;@override $MagnitudeCopyWith<$Res> get magnitude;@override $DepthCopyWith<$Res> get depth;@override $CodeNameCopyWith<$Res>? get detailed;
+@override $CodeNameCopyWith<$Res> get value;@override $CoordinateCopyWith<$Res> get coordinates;@override $MagnitudeCopyWith<$Res> get magnitude;@override $DepthCopyWith<$Res> get depth;@override $CodeNameCopyWith<$Res>? get detailed;@override $HypocenterAuxiliaryCopyWith<$Res>? get auxiliary;
 
 }
 /// @nodoc
@@ -320,14 +334,15 @@ class __$HypocenterCopyWithImpl<$Res>
 
 /// Create a copy of Hypocenter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? coordinates = null,Object? magnitude = null,Object? depth = null,Object? detailed = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? coordinates = null,Object? magnitude = null,Object? depth = null,Object? detailed = freezed,Object? auxiliary = freezed,}) {
   return _then(_Hypocenter(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as CodeName,coordinates: null == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
 as Coordinate,magnitude: null == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as Magnitude,depth: null == depth ? _self.depth : depth // ignore: cast_nullable_to_non_nullable
 as Depth,detailed: freezed == detailed ? _self.detailed : detailed // ignore: cast_nullable_to_non_nullable
-as CodeName?,
+as CodeName?,auxiliary: freezed == auxiliary ? _self.auxiliary : auxiliary // ignore: cast_nullable_to_non_nullable
+as HypocenterAuxiliary?,
   ));
 }
 
@@ -378,6 +393,18 @@ $CodeNameCopyWith<$Res>? get detailed {
 
   return $CodeNameCopyWith<$Res>(_self.detailed!, (value) {
     return _then(_self.copyWith(detailed: value));
+  });
+}/// Create a copy of Hypocenter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HypocenterAuxiliaryCopyWith<$Res>? get auxiliary {
+    if (_self.auxiliary == null) {
+    return null;
+  }
+
+  return $HypocenterAuxiliaryCopyWith<$Res>(_self.auxiliary!, (value) {
+    return _then(_self.copyWith(auxiliary: value));
   });
 }
 }

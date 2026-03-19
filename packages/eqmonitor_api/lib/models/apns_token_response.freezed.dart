@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApnsTokenResponse {
 
- ApnsTokenType get type; String get token;
+ ApnsTokenType get type; String get token; ApnsTokenResponseEnvironment get environment;
 /// Create a copy of ApnsTokenResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ApnsTokenResponseCopyWith<ApnsTokenResponse> get copyWith => _$ApnsTokenRespons
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApnsTokenResponse&&(identical(other.type, type) || other.type == type)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApnsTokenResponse&&(identical(other.type, type) || other.type == type)&&(identical(other.token, token) || other.token == token)&&(identical(other.environment, environment) || other.environment == environment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,token);
+int get hashCode => Object.hash(runtimeType,type,token,environment);
 
 @override
 String toString() {
-  return 'ApnsTokenResponse(type: $type, token: $token)';
+  return 'ApnsTokenResponse(type: $type, token: $token, environment: $environment)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ApnsTokenResponseCopyWith<$Res>  {
   factory $ApnsTokenResponseCopyWith(ApnsTokenResponse value, $Res Function(ApnsTokenResponse) _then) = _$ApnsTokenResponseCopyWithImpl;
 @useResult
 $Res call({
- ApnsTokenType type, String token
+ ApnsTokenType type, String token, ApnsTokenResponseEnvironment environment
 });
 
 
@@ -65,11 +65,12 @@ class _$ApnsTokenResponseCopyWithImpl<$Res>
 
 /// Create a copy of ApnsTokenResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? token = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? token = null,Object? environment = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ApnsTokenType,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
-as String,
+as String,environment: null == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
+as ApnsTokenResponseEnvironment,
   ));
 }
 
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token,  ApnsTokenResponseEnvironment environment)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApnsTokenResponse() when $default != null:
-return $default(_that.type,_that.token);case _:
+return $default(_that.type,_that.token,_that.environment);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.type,_that.token);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token,  ApnsTokenResponseEnvironment environment)  $default,) {final _that = this;
 switch (_that) {
 case _ApnsTokenResponse():
-return $default(_that.type,_that.token);case _:
+return $default(_that.type,_that.token,_that.environment);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.type,_that.token);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ApnsTokenType type,  String token)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ApnsTokenType type,  String token,  ApnsTokenResponseEnvironment environment)?  $default,) {final _that = this;
 switch (_that) {
 case _ApnsTokenResponse() when $default != null:
-return $default(_that.type,_that.token);case _:
+return $default(_that.type,_that.token,_that.environment);case _:
   return null;
 
 }
@@ -210,11 +211,12 @@ return $default(_that.type,_that.token);case _:
 @JsonSerializable()
 
 class _ApnsTokenResponse implements ApnsTokenResponse {
-  const _ApnsTokenResponse({required this.type, required this.token});
+  const _ApnsTokenResponse({required this.type, required this.token, required this.environment});
   factory _ApnsTokenResponse.fromJson(Map<String, dynamic> json) => _$ApnsTokenResponseFromJson(json);
 
 @override final  ApnsTokenType type;
 @override final  String token;
+@override final  ApnsTokenResponseEnvironment environment;
 
 /// Create a copy of ApnsTokenResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApnsTokenResponse&&(identical(other.type, type) || other.type == type)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApnsTokenResponse&&(identical(other.type, type) || other.type == type)&&(identical(other.token, token) || other.token == token)&&(identical(other.environment, environment) || other.environment == environment));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,token);
+int get hashCode => Object.hash(runtimeType,type,token,environment);
 
 @override
 String toString() {
-  return 'ApnsTokenResponse(type: $type, token: $token)';
+  return 'ApnsTokenResponse(type: $type, token: $token, environment: $environment)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$ApnsTokenResponseCopyWith<$Res> implements $ApnsTokenResp
   factory _$ApnsTokenResponseCopyWith(_ApnsTokenResponse value, $Res Function(_ApnsTokenResponse) _then) = __$ApnsTokenResponseCopyWithImpl;
 @override @useResult
 $Res call({
- ApnsTokenType type, String token
+ ApnsTokenType type, String token, ApnsTokenResponseEnvironment environment
 });
 
 
@@ -266,11 +268,12 @@ class __$ApnsTokenResponseCopyWithImpl<$Res>
 
 /// Create a copy of ApnsTokenResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? token = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? token = null,Object? environment = null,}) {
   return _then(_ApnsTokenResponse(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ApnsTokenType,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
-as String,
+as String,environment: null == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
+as ApnsTokenResponseEnvironment,
   ));
 }
 

@@ -13,32 +13,28 @@ part 'notification_api_client.g.dart';
 
 @RestApi()
 abstract class NotificationApiClient {
-  factory NotificationApiClient(Dio dio, {String? baseUrl}) =
-      _NotificationApiClient;
+  factory NotificationApiClient(Dio dio, {String? baseUrl}) = _NotificationApiClient;
 
   /// デバイスの通知履歴を取得
   @GET(NotificationApiClientUrls.getV2DeviceDeviceIdNotificationHistory)
-  Future<HttpResponse<NotificationHistoryResponse>>
-  getV2DeviceDeviceIdNotificationHistory({
+  Future<HttpResponse<NotificationHistoryResponse>> getV2DeviceDeviceIdNotificationHistory({
     @Path('deviceId') required String deviceId,
-    @Query('limit') int? limit = 20,
+    @Query('limit') int? limit = 100,
   });
 
   /// テスト通知を送信
   @POST(NotificationApiClientUrls.postV2DeviceDeviceIdNotificationTest)
-  Future<HttpResponse<TestNotificationResponse>>
-  postV2DeviceDeviceIdNotificationTest({
+  Future<HttpResponse<TestNotificationResponse>> postV2DeviceDeviceIdNotificationTest({
     @Path('deviceId') required String deviceId,
     @Body() required TestNotificationRequest body,
   });
 }
 
-abstract class NotificationApiClientUrls {
-  /// /v2/device/{deviceId}/notification/history
-  static const getV2DeviceDeviceIdNotificationHistory =
-      "/v2/device/{deviceId}/notification/history";
 
-  /// /v2/device/{deviceId}/notification/test
-  static const postV2DeviceDeviceIdNotificationTest =
-      "/v2/device/{deviceId}/notification/test";
+abstract class NotificationApiClientUrls {
+	/// /v2/device/{deviceId}/notification/history
+	static const getV2DeviceDeviceIdNotificationHistory = "/v2/device/{deviceId}/notification/history";
+	/// /v2/device/{deviceId}/notification/test
+	static const postV2DeviceDeviceIdNotificationTest = "/v2/device/{deviceId}/notification/test";
 }
+

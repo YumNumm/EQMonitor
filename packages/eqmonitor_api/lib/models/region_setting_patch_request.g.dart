@@ -43,15 +43,15 @@ Map<String, dynamic> _$RegionSettingPatchRequestToJson(
 };
 
 const _$JmaIntensityEnumMap = {
-  JmaIntensity.value0: 0,
-  JmaIntensity.value1: 1,
-  JmaIntensity.value2: 2,
-  JmaIntensity.value3: 3,
-  JmaIntensity.value4: 4,
+  JmaIntensity.value0: '0',
+  JmaIntensity.value1: '1',
+  JmaIntensity.value2: '2',
+  JmaIntensity.value3: '3',
+  JmaIntensity.value4: '4',
   JmaIntensity.value5unknown: '!5-',
   JmaIntensity.value5minus: '5-',
   JmaIntensity.value5plus: '5+',
   JmaIntensity.value6minus: '6-',
   JmaIntensity.value6plus: '6+',
-  JmaIntensity.value7: 7,
+  JmaIntensity.value7: '7',
 };
