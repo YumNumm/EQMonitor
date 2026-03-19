@@ -15,8 +15,7 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
 
   Future<ThemeMode> _load() async {
     final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final value =
-        await ds.getString(key: SharedPreferencesKey.themeMode);
+    final value = await ds.getString(key: SharedPreferencesKey.themeMode);
     if (value == null) {
       return ThemeMode.system;
     }
@@ -24,6 +23,7 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
         ThemeMode.system;
   }
 
+  @override
   Future<void> update(ThemeMode mode) async {
     state = AsyncValue.data(mode);
     final ds = ref.read(sharedPreferencesDataSourceProvider);

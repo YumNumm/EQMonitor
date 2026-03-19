@@ -11,14 +11,18 @@ class LocationTrackingMode extends _$LocationTrackingMode {
 
   Future<bool> get() async {
     final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final value =
-        await ds.getBool(key: SharedPreferencesKey.locationTrackingMode);
+    final value = await ds.getBool(
+      key: SharedPreferencesKey.locationTrackingMode,
+    );
     return value ?? false;
   }
 
   Future<void> set({required bool value}) async {
     state = AsyncValue.data(value);
     final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setBool(key: SharedPreferencesKey.locationTrackingMode, value: value);
+    await ds.setBool(
+      key: SharedPreferencesKey.locationTrackingMode,
+      value: value,
+    );
   }
 }
