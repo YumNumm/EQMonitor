@@ -17,8 +17,8 @@ AuthTokenStore authTokenStore(Ref ref) {
 auth_api.ApiClient authApiClient(Ref ref) {
   final dio = Dio(
     BaseOptions(
+      // ignore: avoid_redundant_argument_values
       baseUrl: Env.betterAuthUrl,
-      contentType: 'application/json',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     ),
