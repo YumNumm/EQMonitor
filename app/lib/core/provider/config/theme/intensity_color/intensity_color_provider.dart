@@ -1,7 +1,8 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'intensity_color_provider.g.dart';
@@ -9,34 +10,30 @@ part 'intensity_color_provider.g.dart';
 @Riverpod(keepAlive: true)
 class IntensityColor extends _$IntensityColor {
   @override
-  IntensityColorModel build() {
-    final result = load();
-    if (result != null) {
-      return result;
-    }
-    return IntensityColorModel.eqmonitor();
-  }
+  Future<IntensityColorModel> build() async => load();
 
-  static const _key = 'intensity_color';
-
-  Future<void> update(IntensityColorModel model) async {
-    state = model;
-    await ref
-        .read(sharedPreferencesProvider)
-        .setString(_key, jsonEncode(model.toJson()));
-  }
-
-  IntensityColorModel? load() {
-    final value = ref.read(sharedPreferencesProvider).getString(_key);
+  Future<IntensityColorModel> load() async {
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    final value =
+        await ds.getString(key: SharedPreferencesKey.intensityColor);
     if (value == null) {
-      return null;
+      return IntensityColorModel.eqmonitor();
     }
     try {
       return IntensityColorModel.fromJson(
         jsonDecode(value) as Map<String, dynamic>,
       );
     } on Exception catch (_) {
-      return null;
+      return IntensityColorModel.eqmonitor();
     }
+  }
+
+  Future<void> setModel(IntensityColorModel model) async {
+    state = AsyncValue.data(model);
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    await ds.setString(
+      key: SharedPreferencesKey.intensityColor,
+      value: jsonEncode(model.toJson()),
+    );
   }
 }
