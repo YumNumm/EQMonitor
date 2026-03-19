@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
+import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification/data/provider/notification_token_stream.dart';
@@ -28,8 +29,8 @@ class _DebugWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).requireValue;
-
     final notificationToken = ref.watch(notificationTokenStreamProvider).value;
+    final sessionToken = ref.watch(authProvider).value;
 
     return ListTileTheme(
       dense: true,
@@ -100,6 +101,24 @@ class _DebugWidget extends ConsumerWidget {
               ),
             ),
           ),
+          const Divider(),
+          const ListTile(
+            title: Text('認証情報'),
+            leading: Icon(Icons.lock),
+          ),
+          ListTile(
+            title: const Text('セッショントークン'),
+            subtitle: Text(
+              sessionToken ?? 'null',
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            onTap: () async => Clipboard.setData(
+              ClipboardData(text: sessionToken ?? ''),
+            ),
+          ),
+          const Divider(),
           ListTile(
             title: const Text('FCM Token'),
             subtitle: Text(
