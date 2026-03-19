@@ -22,7 +22,7 @@ enum UserDeviceResponseType {
         'This usually happens for \$unknown or @JsonValue(null) entries.',
       );
     }
-    return value as String;
+    return value;
   }
 
   @override
