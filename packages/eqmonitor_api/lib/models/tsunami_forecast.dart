@@ -18,15 +18,14 @@ abstract class TsunamiForecast with _$TsunamiForecast {
     required String code,
     required String name,
     required TsunamiWarningKind kind,
-    @JsonKey(name: 'last_kind')
-    required TsunamiWarningKind lastKind,
-    @JsonKey(includeIfNull: false,name: 'first_height')
+    @JsonKey(name: 'last_kind') required TsunamiWarningKind lastKind,
+    @JsonKey(includeIfNull: false, name: 'first_height')
     TsunamiForecastFirstHeight? firstHeight,
-    @JsonKey(includeIfNull: false,name: 'max_height')
+    @JsonKey(includeIfNull: false, name: 'max_height')
     TsunamiForecastMaxHeight? maxHeight,
-    @JsonKey(includeIfNull: false)
-    List<TsunamiForecastStation>? stations,
+    @JsonKey(includeIfNull: false) List<TsunamiForecastStation>? stations,
   }) = _TsunamiForecast;
-  
-  factory TsunamiForecast.fromJson(Map<String, Object?> json) => _$TsunamiForecastFromJson(json);
+
+  factory TsunamiForecast.fromJson(Map<String, Object?> json) =>
+      _$TsunamiForecastFromJson(json);
 }

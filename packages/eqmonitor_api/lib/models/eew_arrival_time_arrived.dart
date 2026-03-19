@@ -9,9 +9,9 @@ part 'eew_arrival_time_arrived.g.dart';
 
 @Freezed()
 abstract class EewArrivalTimeArrived with _$EewArrivalTimeArrived {
-  const factory EewArrivalTimeArrived({
-    required dynamic type,
-  }) = _EewArrivalTimeArrived;
-  
-  factory EewArrivalTimeArrived.fromJson(Map<String, Object?> json) => _$EewArrivalTimeArrivedFromJson(json);
+  const factory EewArrivalTimeArrived({required dynamic type}) =
+      _EewArrivalTimeArrived;
+
+  factory EewArrivalTimeArrived.fromJson(Map<String, Object?> json) =>
+      _$EewArrivalTimeArrivedFromJson(json);
 }

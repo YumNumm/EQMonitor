@@ -15,9 +15,9 @@ abstract class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
     required num value,
     required bool over,
     required QualitativeHeight qualitative,
-    @JsonKey(name: 'is_important')
-    required bool isImportant,
+    @JsonKey(name: 'is_important') required bool isImportant,
   }) = _TsunamiForecastMaxHeight;
-  
-  factory TsunamiForecastMaxHeight.fromJson(Map<String, Object?> json) => _$TsunamiForecastMaxHeightFromJson(json);
+
+  factory TsunamiForecastMaxHeight.fromJson(Map<String, Object?> json) =>
+      _$TsunamiForecastMaxHeightFromJson(json);
 }

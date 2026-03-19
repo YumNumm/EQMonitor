@@ -10,18 +10,18 @@ part 'tsunami_observation_station_max_height.freezed.dart';
 part 'tsunami_observation_station_max_height.g.dart';
 
 @Freezed()
-abstract class TsunamiObservationStationMaxHeight with _$TsunamiObservationStationMaxHeight {
+abstract class TsunamiObservationStationMaxHeight
+    with _$TsunamiObservationStationMaxHeight {
   const factory TsunamiObservationStationMaxHeight({
-    @JsonKey(name: 'date_time')
-    required DateTime dateTime,
+    @JsonKey(name: 'date_time') required DateTime dateTime,
     required num value,
     required bool over,
-    @JsonKey(name: 'is_rising')
-    required bool isRising,
+    @JsonKey(name: 'is_rising') required bool isRising,
     required ObservationMaxHeightCondition condition,
-    @JsonKey(name: 'is_missing')
-    required bool isMissing,
+    @JsonKey(name: 'is_missing') required bool isMissing,
   }) = _TsunamiObservationStationMaxHeight;
-  
-  factory TsunamiObservationStationMaxHeight.fromJson(Map<String, Object?> json) => _$TsunamiObservationStationMaxHeightFromJson(json);
+
+  factory TsunamiObservationStationMaxHeight.fromJson(
+    Map<String, Object?> json,
+  ) => _$TsunamiObservationStationMaxHeightFromJson(json);
 }

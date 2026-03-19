@@ -10,16 +10,16 @@ part 'tsunami_observation_station_first_height.freezed.dart';
 part 'tsunami_observation_station_first_height.g.dart';
 
 @Freezed()
-abstract class TsunamiObservationStationFirstHeight with _$TsunamiObservationStationFirstHeight {
+abstract class TsunamiObservationStationFirstHeight
+    with _$TsunamiObservationStationFirstHeight {
   const factory TsunamiObservationStationFirstHeight({
-    @JsonKey(name: 'arrival_time')
-    required DateTime arrivalTime,
+    @JsonKey(name: 'arrival_time') required DateTime arrivalTime,
     required WaveInitial initial,
-    @JsonKey(name: 'is_unidentifiable')
-    required bool isUnidentifiable,
-    @JsonKey(name: 'is_missing')
-    required bool isMissing,
+    @JsonKey(name: 'is_unidentifiable') required bool isUnidentifiable,
+    @JsonKey(name: 'is_missing') required bool isMissing,
   }) = _TsunamiObservationStationFirstHeight;
-  
-  factory TsunamiObservationStationFirstHeight.fromJson(Map<String, Object?> json) => _$TsunamiObservationStationFirstHeightFromJson(json);
+
+  factory TsunamiObservationStationFirstHeight.fromJson(
+    Map<String, Object?> json,
+  ) => _$TsunamiObservationStationFirstHeightFromJson(json);
 }

@@ -9,10 +9,9 @@ part 'warning.g.dart';
 
 @Freezed()
 abstract class Warning with _$Warning {
-  const factory Warning({
-    required String text,
-    required List<String> codes,
-  }) = _Warning;
-  
-  factory Warning.fromJson(Map<String, Object?> json) => _$WarningFromJson(json);
+  const factory Warning({required String text, required List<String> codes}) =
+      _Warning;
+
+  factory Warning.fromJson(Map<String, Object?> json) =>
+      _$WarningFromJson(json);
 }
