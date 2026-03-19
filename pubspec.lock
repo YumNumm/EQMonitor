@@ -105,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.13.0"
+  better_auth_client:
+    dependency: transitive
+    description:
+      name: better_auth_client
+      sha256: c680f4132f3d03240ca546327f33409146bbfc663b60ce8c5f5300574192bedc
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.12.1"
   boolean_selector:
     dependency: transitive
     description:
