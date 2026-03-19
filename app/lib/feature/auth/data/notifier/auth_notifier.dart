@@ -17,6 +17,12 @@ class AuthNotifier extends _$AuthNotifier {
   /// 既存のセッションが無い場合に Better Auth `/sign-in/anonymous` を実行する。
   static final signInAnonymously = Mutation<void>();
 
+  /// Google Sign-in を行う [Mutation]。
+  static final signInWithGoogle = Mutation<void>();
+
+  /// サインアウトを行う [Mutation]。
+  static final signOut = Mutation<void>();
+
   @override
   Future<String?> build() async {
     final dataSource = await ref.watch(
@@ -34,5 +40,13 @@ class AuthNotifier extends _$AuthNotifier {
       value: token,
     );
     state = AsyncData(token);
+  }
+
+  Future<void> clearToken() async {
+    final dataSource = await ref.read(
+      securePreferencesDataSourceProvider.future,
+    );
+    await dataSource.remove(key: SecureStorageKey.sessionToken);
+    state = const AsyncData(null);
   }
 }
