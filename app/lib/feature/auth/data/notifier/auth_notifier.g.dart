@@ -47,7 +47,7 @@ final class AuthNotifierProvider
   AuthNotifier create() => AuthNotifier();
 }
 
-String _$authNotifierHash() => r'8764c5339affcb476873408917b5c1e50aecff79';
+String _$authNotifierHash() => r'be63cc7b4a7e6d491109f8c3ecf23a767164cd42';
 
 /// 認証状態(セッショントークン)を管理する Notifier。
 ///
