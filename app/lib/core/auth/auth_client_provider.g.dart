@@ -11,49 +11,90 @@ part of 'auth_client_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(authClient)
-final authClientProvider = AuthClientProvider._();
+@ProviderFor(authTokenStore)
+final authTokenStoreProvider = AuthTokenStoreProvider._();
 
-final class AuthClientProvider
-    extends
-        $FunctionalProvider<
-          BetterAuthClient<User>,
-          BetterAuthClient<User>,
-          BetterAuthClient<User>
-        >
-    with $Provider<BetterAuthClient<User>> {
-  AuthClientProvider._()
+final class AuthTokenStoreProvider
+    extends $FunctionalProvider<AuthTokenStore, AuthTokenStore, AuthTokenStore>
+    with $Provider<AuthTokenStore> {
+  AuthTokenStoreProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'authClientProvider',
+        name: r'authTokenStoreProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$authClientHash();
+  String debugGetCreateSourceHash() => _$authTokenStoreHash();
 
   @$internal
   @override
-  $ProviderElement<BetterAuthClient<User>> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<AuthTokenStore> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  BetterAuthClient<User> create(Ref ref) {
-    return authClient(ref);
+  AuthTokenStore create(Ref ref) {
+    return authTokenStore(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BetterAuthClient<User> value) {
+  Override overrideWithValue(AuthTokenStore value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<BetterAuthClient<User>>(value),
+      providerOverride: $SyncValueProvider<AuthTokenStore>(value),
     );
   }
 }
 
-String _$authClientHash() => r'0c25dd8c6daa1bdcdc08ccd7717dd470bf68c4f0';
+String _$authTokenStoreHash() => r'6f411afa2574f45a75c232075512a269d2aa442d';
+
+@ProviderFor(authApiClient)
+final authApiClientProvider = AuthApiClientProvider._();
+
+final class AuthApiClientProvider
+    extends
+        $FunctionalProvider<
+          auth_api.ApiClient,
+          auth_api.ApiClient,
+          auth_api.ApiClient
+        >
+    with $Provider<auth_api.ApiClient> {
+  AuthApiClientProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authApiClientProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authApiClientHash();
+
+  @$internal
+  @override
+  $ProviderElement<auth_api.ApiClient> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  auth_api.ApiClient create(Ref ref) {
+    return authApiClient(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(auth_api.ApiClient value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<auth_api.ApiClient>(value),
+    );
+  }
+}
+
+String _$authApiClientHash() => r'9636aa64f977ade8ec5047ef3e94920ad975bb4f';
