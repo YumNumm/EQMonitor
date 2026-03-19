@@ -12,9 +12,9 @@ abstract class BadRequestResponse with _$BadRequestResponse {
   const factory BadRequestResponse({
     required dynamic code,
     required dynamic message,
-    @JsonKey(includeIfNull: false)
-    String? reason,
+    @JsonKey(includeIfNull: false) String? reason,
   }) = _BadRequestResponse;
-  
-  factory BadRequestResponse.fromJson(Map<String, Object?> json) => _$BadRequestResponseFromJson(json);
+
+  factory BadRequestResponse.fromJson(Map<String, Object?> json) =>
+      _$BadRequestResponseFromJson(json);
 }

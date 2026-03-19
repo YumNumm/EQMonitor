@@ -21,9 +21,9 @@ abstract class TsunamiTelegramBody with _$TsunamiTelegramBody {
     required List<TsunamiEstimation> estimations,
     required List<TsunamiEarthquake> earthquakes,
     required TsunamiComments comments,
-    @JsonKey(includeIfNull: false)
-    String? text,
+    @JsonKey(includeIfNull: false) String? text,
   }) = _TsunamiTelegramBody;
-  
-  factory TsunamiTelegramBody.fromJson(Map<String, Object?> json) => _$TsunamiTelegramBodyFromJson(json);
+
+  factory TsunamiTelegramBody.fromJson(Map<String, Object?> json) =>
+      _$TsunamiTelegramBodyFromJson(json);
 }

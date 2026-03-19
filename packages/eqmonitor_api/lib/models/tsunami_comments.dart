@@ -15,6 +15,7 @@ abstract class TsunamiComments with _$TsunamiComments {
     required String free,
     required Warning warning,
   }) = _TsunamiComments;
-  
-  factory TsunamiComments.fromJson(Map<String, Object?> json) => _$TsunamiCommentsFromJson(json);
+
+  factory TsunamiComments.fromJson(Map<String, Object?> json) =>
+      _$TsunamiCommentsFromJson(json);
 }

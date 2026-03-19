@@ -13,6 +13,7 @@ abstract class EewArrivalTimeTime with _$EewArrivalTimeTime {
     required dynamic type,
     required DateTime value,
   }) = _EewArrivalTimeTime;
-  
-  factory EewArrivalTimeTime.fromJson(Map<String, Object?> json) => _$EewArrivalTimeTimeFromJson(json);
+
+  factory EewArrivalTimeTime.fromJson(Map<String, Object?> json) =>
+      _$EewArrivalTimeTimeFromJson(json);
 }

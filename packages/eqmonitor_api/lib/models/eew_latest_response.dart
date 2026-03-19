@@ -11,9 +11,9 @@ part 'eew_latest_response.g.dart';
 
 @Freezed()
 abstract class EewLatestResponse with _$EewLatestResponse {
-  const factory EewLatestResponse({
-    required List<EewItemWithRelations> items,
-  }) = _EewLatestResponse;
-  
-  factory EewLatestResponse.fromJson(Map<String, Object?> json) => _$EewLatestResponseFromJson(json);
+  const factory EewLatestResponse({required List<EewItemWithRelations> items}) =
+      _EewLatestResponse;
+
+  factory EewLatestResponse.fromJson(Map<String, Object?> json) =>
+      _$EewLatestResponseFromJson(json);
 }

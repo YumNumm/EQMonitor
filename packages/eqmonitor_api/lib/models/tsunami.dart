@@ -13,10 +13,10 @@ part 'tsunami.g.dart';
 abstract class Tsunami with _$Tsunami {
   const factory Tsunami({
     required String id,
-    @JsonKey(name: 'event_ids')
-    required List<String> eventIds,
+    @JsonKey(name: 'event_ids') required List<String> eventIds,
     required List<TsunamiTelegramItem> telegrams,
   }) = _Tsunami;
-  
-  factory Tsunami.fromJson(Map<String, Object?> json) => _$TsunamiFromJson(json);
+
+  factory Tsunami.fromJson(Map<String, Object?> json) =>
+      _$TsunamiFromJson(json);
 }
