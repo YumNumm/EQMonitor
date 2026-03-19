@@ -58,7 +58,7 @@ final class KyoshinMonitorWebApiClientProvider
 }
 
 String _$kyoshinMonitorWebApiClientHash() =>
-    r'4f673d0a5f24a42bc33a60241f0feb43509313ba';
+    r'ae3c1bcfce39de4f9d92956c35ac13611c655db9';
 
 @ProviderFor(lpgmKyoshinMonitorWebApiClient)
 final lpgmKyoshinMonitorWebApiClientProvider =

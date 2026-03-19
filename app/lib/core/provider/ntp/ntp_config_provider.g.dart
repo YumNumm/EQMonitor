@@ -35,7 +35,7 @@ final class NtpConfigProvider
   NtpConfig create() => NtpConfig();
 }
 
-String _$ntpConfigHash() => r'459c8b150322a62b39d1013b395e17beab64d1e0';
+String _$ntpConfigHash() => r'318b34a1b75ab9486f42227cdab4bec91163bd80';
 
 abstract class _$NtpConfig extends $AsyncNotifier<NtpConfigModel> {
   FutureOr<NtpConfigModel> build();

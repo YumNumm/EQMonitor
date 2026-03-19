@@ -1,62 +1,53 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/auth/auth_client_provider.dart';
-import 'package:eqmonitor/core/auth/auth_notifier.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
+import 'package:eqmonitor/feature/auth/data/provider/auth_api_client_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 /// アプリ起動時に認証状態を確認し、
 /// 未ログインであれば匿名認証を行うスプラッシュ画面。
-class SplashPage extends ConsumerStatefulWidget {
+class SplashPage extends HookConsumerWidget {
   const SplashPage({super.key});
 
   @override
-  ConsumerState<SplashPage> createState() => _SplashPageState();
-}
-
-class _SplashPageState extends ConsumerState<SplashPage> {
-  @override
-  void initState() {
-    super.initState();
-    unawaited(_checkAuth());
-  }
-
-  Future<void> _checkAuth() async {
-    final token = await ref.read(authProvider.future);
-    if (!mounted) {
-      return;
-    }
-
-    if (token != null) {
-      // 既にセッションがある → ホームへ遷移
-      const HomeRoute().go(context);
-      return;
-    }
-
-    // セッションが無い → 匿名認証を実行
-    _signInAnonymously();
-  }
-
-  void _signInAnonymously() {
-    unawaited(
-      AuthNotifier.signInAnonymously.run(ref, (tsx) async {
-        final apiClient = tsx.get(authApiClientProvider);
-        final tokenStore = tsx.get(authTokenStoreProvider);
-
-        final response = await apiClient.anonymous.postSignInAnonymous();
-        final session = response.data.session;
-        await tokenStore.saveToken(session.token);
-      }),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final mutationState = ref.watch(AuthNotifier.signInAnonymously);
 
-    // 匿名認証が成功したらホームへ遷移
+    void signInAnonymously() {
+      unawaited(
+        AuthNotifier.signInAnonymously.run(ref, (tsx) async {
+          final apiClient = tsx.get(authApiClientProvider);
+          final notifier = tsx.get(authProvider.notifier);
+          final response = await apiClient.anonymous.postSignInAnonymous();
+          await notifier.saveToken(response.data.session.token);
+        }),
+      );
+    }
+
+    useEffect(
+      () {
+        Future<void> checkAuth() async {
+          final token = await ref.read(authProvider.future);
+          if (!context.mounted) {
+            return;
+          }
+          if (token != null) {
+            const HomeRoute().go(context);
+            return;
+          }
+          signInAnonymously();
+        }
+
+        unawaited(checkAuth());
+        return null;
+      },
+      [],
+    );
+
     ref.listen(AuthNotifier.signInAnonymously, (prev, next) {
       if (next is MutationSuccess) {
         const HomeRoute().go(context);
@@ -68,35 +59,47 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         child: switch (mutationState) {
           MutationIdle() ||
           MutationPending() ||
-          MutationSuccess() =>
-            const CircularProgressIndicator.adaptive(),
-          MutationError(:final error) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    '認証に失敗しました',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    error.toString(),
-                    style: Theme.of(context).textTheme.bodySmall,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton.icon(
-                    onPressed: _signInAnonymously,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('再試行'),
-                  ),
-                ],
-              ),
-            ),
+          MutationSuccess() => const CircularProgressIndicator.adaptive(),
+          MutationError(:final error) => _AuthErrorView(
+            error: error,
+            onRetry: signInAnonymously,
+          ),
         },
+      ),
+    );
+  }
+}
+
+class _AuthErrorView extends StatelessWidget {
+  const _AuthErrorView({required this.error, required this.onRetry});
+
+  final Object error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline, size: 48, color: Colors.red),
+          const SizedBox(height: 16),
+          Text('認証に失敗しました', style: textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Text(
+            error.toString(),
+            style: textTheme.bodySmall,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          FilledButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: const Text('再試行'),
+          ),
+        ],
       ),
     );
   }

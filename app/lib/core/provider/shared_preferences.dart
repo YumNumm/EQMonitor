@@ -21,6 +21,7 @@ class SharedPreferencesAsync {
       _prefs.setDouble(key, value);
 
   bool? getBool(String key) => _prefs.getBool(key);
+  // ignore: avoid_positional_boolean_parameters
   Future<void> setBool(String key, bool value) => _prefs.setBool(key, value);
 
   Future<void> remove(String key) => _prefs.remove(key);
@@ -28,7 +29,6 @@ class SharedPreferencesAsync {
 }
 
 @Riverpod(keepAlive: true)
-SharedPreferencesAsync sharedPreferences(Ref ref) =>
-    throw UnimplementedError(
-      'sharedPreferencesProvider must be overridden in main',
-    );
+SharedPreferencesAsync sharedPreferences(Ref ref) => throw UnimplementedError(
+  'sharedPreferencesProvider must be overridden in main',
+);

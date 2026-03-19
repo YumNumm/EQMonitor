@@ -42,7 +42,7 @@ final class NtpProvider extends $NotifierProvider<Ntp, NtpStateModel> {
   }
 }
 
-String _$ntpHash() => r'f1cf77031c9013023256e11988e32e4019102541';
+String _$ntpHash() => r'a1a7bc977b5acc5a68f99efa734f4035afc7695a';
 
 abstract class _$Ntp extends $Notifier<NtpStateModel> {
   NtpStateModel build();
