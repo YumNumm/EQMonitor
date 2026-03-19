@@ -14,7 +14,7 @@ part of 'debug_provider.dart';
 @ProviderFor(Debug)
 final debugProvider = DebugProvider._();
 
-final class DebugProvider extends $NotifierProvider<Debug, bool> {
+final class DebugProvider extends $AsyncNotifierProvider<Debug, bool> {
   DebugProvider._()
     : super(
         from: null,
@@ -32,29 +32,21 @@ final class DebugProvider extends $NotifierProvider<Debug, bool> {
   @$internal
   @override
   Debug create() => Debug();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
-String _$debugHash() => r'85e7e71c874d4d76bf46d2d03c11826c40319162';
+String _$debugHash() => r'704137228970140848a40cb0e0bfe6b3673fe99a';
 
-abstract class _$Debug extends $Notifier<bool> {
-  bool build();
+abstract class _$Debug extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;
