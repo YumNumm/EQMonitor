@@ -15,7 +15,7 @@ part of 'ntp_config_provider.dart';
 final ntpConfigProvider = NtpConfigProvider._();
 
 final class NtpConfigProvider
-    extends $NotifierProvider<NtpConfig, NtpConfigModel> {
+    extends $AsyncNotifierProvider<NtpConfig, NtpConfigModel> {
   NtpConfigProvider._()
     : super(
         from: null,
@@ -33,29 +33,21 @@ final class NtpConfigProvider
   @$internal
   @override
   NtpConfig create() => NtpConfig();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(NtpConfigModel value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<NtpConfigModel>(value),
-    );
-  }
 }
 
-String _$ntpConfigHash() => r'ea839c3c8aa2d5b12e392bacb05eb123541d753b';
+String _$ntpConfigHash() => r'459c8b150322a62b39d1013b395e17beab64d1e0';
 
-abstract class _$NtpConfig extends $Notifier<NtpConfigModel> {
-  NtpConfigModel build();
+abstract class _$NtpConfig extends $AsyncNotifier<NtpConfigModel> {
+  FutureOr<NtpConfigModel> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<NtpConfigModel, NtpConfigModel>;
+    final ref = this.ref as $Ref<AsyncValue<NtpConfigModel>, NtpConfigModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<NtpConfigModel, NtpConfigModel>,
-              NtpConfigModel,
+              AnyNotifier<AsyncValue<NtpConfigModel>, NtpConfigModel>,
+              AsyncValue<NtpConfigModel>,
               Object?,
               Object?
             >;

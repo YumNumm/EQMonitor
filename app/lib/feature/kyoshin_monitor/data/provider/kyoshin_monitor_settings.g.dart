@@ -16,7 +16,10 @@ final kyoshinMonitorSettingsProvider = KyoshinMonitorSettingsProvider._();
 
 final class KyoshinMonitorSettingsProvider
     extends
-        $NotifierProvider<KyoshinMonitorSettings, KyoshinMonitorSettingsModel> {
+        $AsyncNotifierProvider<
+          KyoshinMonitorSettings,
+          KyoshinMonitorSettingsModel
+        > {
   KyoshinMonitorSettingsProvider._()
     : super(
         from: null,
@@ -34,36 +37,31 @@ final class KyoshinMonitorSettingsProvider
   @$internal
   @override
   KyoshinMonitorSettings create() => KyoshinMonitorSettings();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(KyoshinMonitorSettingsModel value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<KyoshinMonitorSettingsModel>(value),
-    );
-  }
 }
 
 String _$kyoshinMonitorSettingsHash() =>
-    r'6e7b5c58da4f50177bda98f59deec91e8292a9db';
+    r'7e7a781294986f7ca6c8a3090562bef970b8d8dc';
 
 abstract class _$KyoshinMonitorSettings
-    extends $Notifier<KyoshinMonitorSettingsModel> {
-  KyoshinMonitorSettingsModel build();
+    extends $AsyncNotifier<KyoshinMonitorSettingsModel> {
+  FutureOr<KyoshinMonitorSettingsModel> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
-            as $Ref<KyoshinMonitorSettingsModel, KyoshinMonitorSettingsModel>;
+            as $Ref<
+              AsyncValue<KyoshinMonitorSettingsModel>,
+              KyoshinMonitorSettingsModel
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                KyoshinMonitorSettingsModel,
+                AsyncValue<KyoshinMonitorSettingsModel>,
                 KyoshinMonitorSettingsModel
               >,
-              KyoshinMonitorSettingsModel,
+              AsyncValue<KyoshinMonitorSettingsModel>,
               Object?,
               Object?
             >;

@@ -1,4 +1,5 @@
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,25 +8,17 @@ part 'debug_provider.g.dart';
 @riverpod
 class Debug extends _$Debug {
   @override
-  bool build() {
-    final savedState = _getIsEnabled();
-    if (savedState == null) {
-      return kDebugMode;
-    }
-    return savedState;
-  }
+  Future<bool> build() async => _getIsEnabled();
 
-  static const _key = 'debug';
-
-  bool? _getIsEnabled() {
-    final prefs = ref.read(sharedPreferencesProvider);
-    return prefs.getBool(_key);
+  Future<bool> _getIsEnabled() async {
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    final value = await ds.getBool(key: SharedPreferencesKey.debug);
+    return value ?? kDebugMode;
   }
 
   Future<void> save({required bool isEnabled}) async {
-    state = isEnabled;
-
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setBool(_key, isEnabled);
+    state = AsyncValue.data(isEnabled);
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    await ds.setBool(key: SharedPreferencesKey.debug, value: isEnabled);
   }
 }

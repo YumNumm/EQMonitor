@@ -15,7 +15,7 @@ part of 'telegram_url_provider.dart';
 final telegramUrlProvider = TelegramUrlProvider._();
 
 final class TelegramUrlProvider
-    extends $NotifierProvider<TelegramUrl, TelegramUrlModel> {
+    extends $AsyncNotifierProvider<TelegramUrl, TelegramUrlModel> {
   TelegramUrlProvider._()
     : super(
         from: null,
@@ -33,29 +33,22 @@ final class TelegramUrlProvider
   @$internal
   @override
   TelegramUrl create() => TelegramUrl();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(TelegramUrlModel value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<TelegramUrlModel>(value),
-    );
-  }
 }
 
-String _$telegramUrlHash() => r'5204d0f0332e2b25e011b31dc421f81ad92aee0a';
+String _$telegramUrlHash() => r'9c877595dea7e226275c0a9f6eb5cecef183a6be';
 
-abstract class _$TelegramUrl extends $Notifier<TelegramUrlModel> {
-  TelegramUrlModel build();
+abstract class _$TelegramUrl extends $AsyncNotifier<TelegramUrlModel> {
+  FutureOr<TelegramUrlModel> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<TelegramUrlModel, TelegramUrlModel>;
+    final ref =
+        this.ref as $Ref<AsyncValue<TelegramUrlModel>, TelegramUrlModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<TelegramUrlModel, TelegramUrlModel>,
-              TelegramUrlModel,
+              AnyNotifier<AsyncValue<TelegramUrlModel>, TelegramUrlModel>,
+              AsyncValue<TelegramUrlModel>,
               Object?,
               Object?
             >;
