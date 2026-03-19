@@ -1,0 +1,69 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, unused_import, invalid_annotation_target, unnecessary_import
+
+// Clients
+export 'clients/auth_api_client.dart';
+export 'clients/anonymous_api_client.dart';
+// Data classes
+export 'models/user.dart';
+export 'models/session.dart';
+export 'models/post_sign_in_social_response.dart';
+export 'models/name.dart';
+export 'models/id_token.dart';
+export 'models/sign_in_social_request_body.dart';
+export 'models/get_get_session_response.dart';
+export 'models/post_get_session_response.dart';
+export 'models/post_sign_out_response.dart';
+export 'models/user2.dart';
+export 'models/post_sign_up_email_response.dart';
+export 'models/sign_up_email_request_body.dart';
+export 'models/post_sign_in_email_response.dart';
+export 'models/sign_in_email_request_body.dart';
+export 'models/post_reset_password_response.dart';
+export 'models/reset_password_request_body.dart';
+export 'models/post_verify_password_response.dart';
+export 'models/verify_password_request_body.dart';
+export 'models/get_verify_email_response.dart';
+export 'models/post_send_verification_email_response.dart';
+export 'models/send_verification_email_request_body.dart';
+export 'models/post_change_email_response.dart';
+export 'models/change_email_request_body.dart';
+export 'models/user3.dart';
+export 'models/post_change_password_response.dart';
+export 'models/change_password_request_body.dart';
+export 'models/post_update_session_response.dart';
+export 'models/post_update_user_response.dart';
+export 'models/update_user_request_body.dart';
+export 'models/post_delete_user_response.dart';
+export 'models/delete_user_request_body.dart';
+export 'models/post_request_password_reset_response.dart';
+export 'models/request_password_reset_request_body.dart';
+export 'models/get_reset_password_token_response.dart';
+export 'models/post_revoke_session_response.dart';
+export 'models/revoke_session_request_body.dart';
+export 'models/post_revoke_sessions_response.dart';
+export 'models/post_revoke_other_sessions_response.dart';
+export 'models/post_link_social_response.dart';
+export 'models/id_token2.dart';
+export 'models/link_social_request_body.dart';
+export 'models/get_list_accounts_response.dart';
+export 'models/get_delete_user_callback_response.dart';
+export 'models/post_unlink_account_response.dart';
+export 'models/unlink_account_request_body.dart';
+export 'models/post_refresh_token_response.dart';
+export 'models/refresh_token_request_body.dart';
+export 'models/post_get_access_token_response.dart';
+export 'models/get_access_token_request_body.dart';
+export 'models/user4.dart';
+export 'models/get_account_info_response.dart';
+export 'models/get_ok_response.dart';
+export 'models/post_sign_in_anonymous_response.dart';
+export 'models/post_delete_anonymous_user_response.dart';
+export 'models/redirect.dart';
+export 'models/message.dart';
+export 'models/message2.dart';
+export 'models/message3.dart';
+// Root client
+export 'api_client.dart';
+

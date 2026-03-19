@@ -10,6 +10,7 @@ class Env {
   static const apiAuthorization = String.fromEnvironment(
     'API_AUTHORIZATION',
   );
+  static const betterAuthUrl = String.fromEnvironment('BETTER_AUTH_URL');
 }
 
 enum Flavor { dev, prod }

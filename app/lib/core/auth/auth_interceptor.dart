@@ -1,11 +1,12 @@
-import 'package:better_auth_client/better_auth_client.dart';
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/auth/secure_storage_token_store.dart';
 
-/// Better Auth のセッショントークンを `Authorization: Bearer` ヘッダに付与する。
+/// [AuthTokenStore] からセッショントークンを読み取り
+/// `Authorization: Bearer` ヘッダに付与する。
 class BearerAuthInterceptor extends Interceptor {
   BearerAuthInterceptor(this._tokenStore);
 
-  final TokenStore _tokenStore;
+  final AuthTokenStore _tokenStore;
 
   @override
   Future<void> onRequest(
@@ -13,7 +14,7 @@ class BearerAuthInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final token = await _tokenStore.getToken();
-    if (token.isNotEmpty) {
+    if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
     handler.next(options);
