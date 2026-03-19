@@ -30,6 +30,7 @@ import 'package:eqmonitor/feature/settings/children/config/earthquake_history/ea
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
+import 'package:eqmonitor/feature/splash/ui/splash_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
@@ -47,7 +48,7 @@ part 'router.g.dart';
 GoRouter goRouter(Ref ref) => GoRouter(
   routes: $appRoutes,
   navigatorKey: App.navigatorKey,
-  initialLocation: const HomeRoute().location,
+  initialLocation: const SplashRoute().location,
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
@@ -59,6 +60,15 @@ class GoRouterRedirectException implements Exception {
   GoRouterRedirectException(this.message);
 
   final String message;
+}
+
+@TypedGoRoute<SplashRoute>(path: '/splash')
+class SplashRoute extends GoRouteData with $SplashRoute {
+  const SplashRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SplashPage();
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')

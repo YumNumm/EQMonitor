@@ -15,6 +15,8 @@ dependency_overrides:
 
 dependencies:
   app_settings: ^7.0.0
+  better_auth_api_client:
+    path: ../../packages/better_auth_api_client
   cached_network_image: ^3.4.1
   clock: ^1.1.2
   collection: ^1.19.1
@@ -93,6 +95,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   purchases_flutter: ^9.1.0
+  riverpod: ^3.2.1
   riverpod_annotation: ^4.0.0
   screenshot: 3.0.0
   share_plus: ^12.0.0
