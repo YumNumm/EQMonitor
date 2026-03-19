@@ -1,15 +1,39 @@
+import 'dart:io';
+
+import 'package:better_auth_api_client/models/id_token.dart' as auth;
+import 'package:better_auth_api_client/models/sign_in_social_request_body.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
+import 'package:eqmonitor/feature/auth/data/provider/auth_api_client_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification/data/provider/notification_token_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'debug_page.g.dart';
+
+/// GoogleSignIn を初期化するプロバイダー（一度だけ実行される）
+@riverpod
+Future<void> googleSignInInit(Ref ref) async {
+  if (Platform.isIOS || Platform.isMacOS) {
+    await GoogleSignIn.instance.initialize(
+      clientId: Env.googleIosClientId,
+    );
+  } else {
+    await GoogleSignIn.instance.initialize(
+      serverClientId: Env.googleAndroidClientId,
+    );
+  }
+}
 
 class DebugPage extends ConsumerWidget {
   const DebugPage({super.key});
@@ -118,6 +142,8 @@ class _DebugWidget extends ConsumerWidget {
               ClipboardData(text: sessionToken ?? ''),
             ),
           ),
+          _GoogleSignInTile(),
+          _SignOutTile(),
           const Divider(),
           ListTile(
             title: const Text('FCM Token'),
@@ -161,6 +187,90 @@ class _DebugWidget extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _GoogleSignInTile extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(AuthNotifier.signInWithGoogle);
+    final isPending = state is MutationPending;
+
+    return ListTile(
+      title: const Text('Google Sign-in'),
+      leading: const Icon(Icons.login),
+      trailing: isPending
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+            )
+          : null,
+      subtitle: switch (state) {
+        MutationError(:final error) => Text(
+            error.toString(),
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+        MutationSuccess() => const Text('サインイン成功'),
+        _ => null,
+      },
+      onTap: isPending
+          ? null
+          : () => AuthNotifier.signInWithGoogle.run(ref, (tsx) async {
+                await tsx.get(googleSignInInitProvider.future);
+                final account = await GoogleSignIn.instance.authenticate();
+                final idToken = account.authentication.idToken;
+                if (idToken == null) {
+                  throw Exception('Google idToken が取得できませんでした');
+                }
+                final apiClient = tsx.get(authApiClientProvider);
+                final notifier = tsx.get(authProvider.notifier);
+                final response = await apiClient.auth.postSignInSocial(
+                  body: SignInSocialRequestBody(
+                    provider: 'google',
+                    idToken: auth.IdToken(token: idToken),
+                  ),
+                );
+                await notifier.saveToken(response.data.token);
+              }),
+    );
+  }
+}
+
+class _SignOutTile extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(AuthNotifier.signOut);
+    final isPending = state is MutationPending;
+
+    return ListTile(
+      title: const Text('サインアウト'),
+      leading: const Icon(Icons.logout),
+      trailing: isPending
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+            )
+          : null,
+      subtitle: switch (state) {
+        MutationError(:final error) => Text(
+            error.toString(),
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+        MutationSuccess() => const Text('サインアウト完了'),
+        _ => null,
+      },
+      onTap: isPending
+          ? null
+          : () => AuthNotifier.signOut.run(ref, (tsx) async {
+                final apiClient = tsx.get(authApiClientProvider);
+                final notifier = tsx.get(authProvider.notifier);
+                await apiClient.auth.postSignOut(body: null);
+                await GoogleSignIn.instance.signOut();
+                await notifier.clearToken();
+              }),
     );
   }
 }
