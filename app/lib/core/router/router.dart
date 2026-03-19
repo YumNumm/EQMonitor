@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/earthquake_replay_page.dart';
@@ -205,6 +206,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
+        TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
@@ -376,6 +378,16 @@ class PlaygroundRoute extends GoRouteData with $PlaygroundRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const PlaygroundPage();
+  }
+}
+
+class DebugDeviceSettingsRoute extends GoRouteData
+    with $DebugDeviceSettingsRoute {
+  const DebugDeviceSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugDeviceSettingsPage();
   }
 }
 
