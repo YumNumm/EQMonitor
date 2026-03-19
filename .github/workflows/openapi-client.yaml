@@ -72,6 +72,10 @@ jobs:
         working-directory: packages/eqmonitor_api
         run: dart format lib/
 
+      - name: Fix generated code
+        working-directory: packages/eqmonitor_api
+        run: dart fix --apply lib/
+
       - name: Check if there are changes
         working-directory: packages/eqmonitor_api
         run: |
