@@ -48,6 +48,8 @@ class SplashPage extends HookConsumerWidget {
       [],
     );
 
+    void skipAuth() => const HomeRoute().go(context);
+
     ref.listen(AuthNotifier.signInAnonymously, (prev, next) {
       if (next is MutationSuccess) {
         const HomeRoute().go(context);
@@ -63,6 +65,7 @@ class SplashPage extends HookConsumerWidget {
           MutationError(:final error) => _AuthErrorView(
             error: error,
             onRetry: signInAnonymously,
+            onSkip: skipAuth,
           ),
         },
       ),
@@ -71,10 +74,15 @@ class SplashPage extends HookConsumerWidget {
 }
 
 class _AuthErrorView extends StatelessWidget {
-  const _AuthErrorView({required this.error, required this.onRetry});
+  const _AuthErrorView({
+    required this.error,
+    required this.onRetry,
+    required this.onSkip,
+  });
 
   final Object error;
   final VoidCallback onRetry;
+  final VoidCallback onSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +106,11 @@ class _AuthErrorView extends StatelessWidget {
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),
             label: const Text('再試行'),
+          ),
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: onSkip,
+            child: const Text('スキップ'),
           ),
         ],
       ),
