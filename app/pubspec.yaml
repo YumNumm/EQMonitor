@@ -95,6 +95,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   purchases_flutter: ^9.1.0
+  riverpod: ^3.2.1
   riverpod_annotation: ^4.0.0
   screenshot: 3.0.0
   share_plus: ^12.0.0

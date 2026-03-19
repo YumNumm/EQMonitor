@@ -9,6 +9,7 @@ part of 'router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
+  $splashRoute,
   $earthquakeHistoryRoute,
   $earthquakeSearchSelectionRoute,
   $earthquakeSearchResultRoute,
@@ -18,6 +19,29 @@ List<RouteBase> get $appRoutes => [
   $talkerRoute,
   $settingsRoute,
 ];
+
+RouteBase get $splashRoute =>
+    GoRouteData.$route(path: '/splash', factory: $SplashRoute._fromState);
+
+mixin $SplashRoute on GoRouteData {
+  static SplashRoute _fromState(GoRouterState state) => const SplashRoute();
+
+  @override
+  String get location => GoRouteData.$location('/splash');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',
@@ -916,4 +940,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'8a62453a9e9e24d88c219ecf204af1cc7658b177';
+String _$goRouterHash() => r'3888af6622fff60a0b0e8a0dc2c86bfa0efc4f30';
