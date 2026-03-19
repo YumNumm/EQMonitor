@@ -27,21 +27,21 @@ class NtpConfig extends _$NtpConfig {
   }
 
   Future<void> changeLookUpAddress(String url) async {
-    final current = state.valueOrNull ?? const NtpConfigModel();
+    final current = state.value ?? const NtpConfigModel();
     state = AsyncValue.data(current.copyWith(lookUpAddress: url));
-    await _save(state.valueOrNull!);
+    await _save(state.value!);
   }
 
   Future<void> changeTimeout(Duration timeout) async {
-    final current = state.valueOrNull ?? const NtpConfigModel();
+    final current = state.value ?? const NtpConfigModel();
     state = AsyncValue.data(current.copyWith(timeout: timeout));
-    await _save(state.valueOrNull!);
+    await _save(state.value!);
   }
 
   Future<void> changeInterval(Duration interval) async {
-    final current = state.valueOrNull ?? const NtpConfigModel();
+    final current = state.value ?? const NtpConfigModel();
     state = AsyncValue.data(current.copyWith(interval: interval));
-    await _save(state.valueOrNull!);
+    await _save(state.value!);
   }
 
   Future<void> _save(NtpConfigModel config) async {

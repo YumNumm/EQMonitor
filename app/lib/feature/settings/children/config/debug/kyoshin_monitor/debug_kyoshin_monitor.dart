@@ -164,7 +164,7 @@ class _Body extends ConsumerWidget {
               Text(
                 const JsonEncoder.withIndent(
                   '  ',
-                ).convert(ref.watch(kyoshinMonitorSettingsProvider).toJson()),
+                ).convert(ref.watch(kyoshinMonitorSettingsProvider).requireValue.toJson()),
                 style: bodyTextStyle,
               ),
             ],

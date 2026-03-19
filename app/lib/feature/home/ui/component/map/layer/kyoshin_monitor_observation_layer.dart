@@ -21,7 +21,7 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
     final styleController = controller.style;
     final points = ref.watch(kyoshinMonitorPointsProvider);
     final useKmoni = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni),
     );
 
     final eventProvider = MapLibreEventProvider.of(context);

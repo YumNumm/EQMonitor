@@ -103,7 +103,7 @@ class _IntensityIcons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigProvider.select((value) => value.requireValue.detail),
     );
     final showingLpgmIntensity = config.showingLpgmIntensity;
 

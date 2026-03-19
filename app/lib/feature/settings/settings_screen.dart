@@ -21,7 +21,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDebugEnabled = ref.watch(debugProvider);
+    final isDebugEnabled = ref.watch(debugProvider).requireValue;
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 

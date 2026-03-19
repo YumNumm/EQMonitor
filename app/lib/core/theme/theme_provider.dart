@@ -23,8 +23,7 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
         ThemeMode.system;
   }
 
-  @override
-  Future<void> update(ThemeMode mode) async {
+  Future<void> setThemeMode(ThemeMode mode) async {
     state = AsyncValue.data(mode);
     final ds = ref.read(sharedPreferencesDataSourceProvider);
     await ds.setString(key: SharedPreferencesKey.themeMode, value: mode.name);
