@@ -9,22 +9,20 @@ part 'eew_intensity_item_arrival_time_union.freezed.dart';
 part 'eew_intensity_item_arrival_time_union.g.dart';
 
 @Freezed()
-sealed class EewIntensityItemArrivalTimeUnion
-    with _$EewIntensityItemArrivalTimeUnion {
+sealed class EewIntensityItemArrivalTimeUnion with _$EewIntensityItemArrivalTimeUnion {
   @JsonSerializable()
   const factory EewIntensityItemArrivalTimeUnion.eewArrivalTimeTime({
     required dynamic type,
     required DateTime value,
   }) = EewIntensityItemArrivalTimeUnionEewArrivalTimeTime;
-
+  
   @JsonSerializable()
   const factory EewIntensityItemArrivalTimeUnion.eewArrivalTimeArrived({
     required dynamic type,
   }) = EewIntensityItemArrivalTimeUnionEewArrivalTimeArrived;
+  
 
-  factory EewIntensityItemArrivalTimeUnion.fromJson(
-    Map<String, Object?> json,
-  ) =>
+  factory EewIntensityItemArrivalTimeUnion.fromJson(Map<String, Object?> json) =>
       // TODO: No discriminator in OpenAPI spec - you must implement this manually.
       //
       // Inspect the JSON and return the matching variant. Each variant has a fromJson:
@@ -38,4 +36,5 @@ sealed class EewIntensityItemArrivalTimeUnion
       // IMPORTANT: Keep the => arrow syntax. Converting to a { } body will cause
       // freezed to skip generating toJson/fromJson for this class.
       throw UnimplementedError();
+
 }

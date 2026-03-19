@@ -13,9 +13,9 @@ part 'notification_history_response.g.dart';
 abstract class NotificationHistoryResponse with _$NotificationHistoryResponse {
   const factory NotificationHistoryResponse({
     required List<NotificationLogItem> items,
-    @JsonKey(includeIfNull: false, name: 'next_cursor') String? nextCursor,
+    @JsonKey(includeIfNull: false,name: 'next_cursor')
+    String? nextCursor,
   }) = _NotificationHistoryResponse;
-
-  factory NotificationHistoryResponse.fromJson(Map<String, Object?> json) =>
-      _$NotificationHistoryResponseFromJson(json);
+  
+  factory NotificationHistoryResponse.fromJson(Map<String, Object?> json) => _$NotificationHistoryResponseFromJson(json);
 }

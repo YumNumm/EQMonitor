@@ -92,12 +92,6 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const EarthquakeReplayRoute().push(context),
           ),
           ListTile(
-            title: const Text('Notification Settings'),
-            leading: const Icon(Icons.notifications),
-            onTap: () async =>
-                const DebugNotificationSettingsRoute().push(context),
-          ),
-          ListTile(
             title: const Text('震源アイコン生成'),
             leading: const Icon(Icons.place),
             onTap: () async => Navigator.of(context).push(

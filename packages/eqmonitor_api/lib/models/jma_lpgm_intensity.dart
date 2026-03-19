@@ -7,29 +7,27 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 /// LPGM震度
 @JsonEnum()
 enum JmaLpgmIntensity {
-  @JsonValue(0)
-  value0(0),
-  @JsonValue(1)
-  value1(1),
-  @JsonValue(2)
-  value2(2),
-  @JsonValue(3)
-  value3(3),
-  @JsonValue(4)
-  value4(4);
+  @JsonValue('0')
+  value0('0'),
+  @JsonValue('1')
+  value1('1'),
+  @JsonValue('2')
+  value2('2'),
+  @JsonValue('3')
+  value3('3'),
+  @JsonValue('4')
+  value4('4');
 
   const JmaLpgmIntensity(this.json);
 
-  final dynamic json;
-  dynamic toJson() {
+  final String? json;
+  String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError(
-        'Cannot convert enum value with null JSON representation to dynamic. '
-        'This usually happens for \$unknown or @JsonValue(null) entries.',
-      );
+      throw StateError('Cannot convert enum value with null JSON representation to String. '
+          'This usually happens for \$unknown or @JsonValue(null) entries.');
     }
-    return value as dynamic;
+    return value;
   }
 
   @override

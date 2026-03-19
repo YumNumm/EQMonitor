@@ -16,14 +16,27 @@ _ApnsTokenResponse _$ApnsTokenResponseFromJson(Map<String, dynamic> json) =>
           (v) => $enumDecode(_$ApnsTokenTypeEnumMap, v),
         ),
         token: $checkedConvert('token', (v) => v as String),
+        environment: $checkedConvert(
+          'environment',
+          (v) => $enumDecode(_$ApnsTokenResponseEnvironmentEnumMap, v),
+        ),
       );
       return val;
     });
 
 Map<String, dynamic> _$ApnsTokenResponseToJson(_ApnsTokenResponse instance) =>
-    <String, dynamic>{'type': instance.type, 'token': instance.token};
+    <String, dynamic>{
+      'type': instance.type,
+      'token': instance.token,
+      'environment': instance.environment,
+    };
 
 const _$ApnsTokenTypeEnumMap = {
   ApnsTokenType.notification: 'NOTIFICATION',
   ApnsTokenType.liveActivityStart: 'LIVE_ACTIVITY_START',
+};
+
+const _$ApnsTokenResponseEnvironmentEnumMap = {
+  ApnsTokenResponseEnvironment.development: 'development',
+  ApnsTokenResponseEnvironment.production: 'production',
 };

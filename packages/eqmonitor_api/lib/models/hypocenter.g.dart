@@ -32,6 +32,12 @@ _Hypocenter _$HypocenterFromJson(Map<String, dynamic> json) =>
           (v) =>
               v == null ? null : CodeName.fromJson(v as Map<String, dynamic>),
         ),
+        auxiliary: $checkedConvert(
+          'auxiliary',
+          (v) => v == null
+              ? null
+              : HypocenterAuxiliary.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
@@ -43,4 +49,5 @@ Map<String, dynamic> _$HypocenterToJson(_Hypocenter instance) =>
       'magnitude': instance.magnitude,
       'depth': instance.depth,
       'detailed': ?instance.detailed,
+      'auxiliary': ?instance.auxiliary,
     };

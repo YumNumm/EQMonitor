@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'sound_settings.dart';
+import 'notification_tiers2.dart';
 
 part 'earthquake_settings_request.freezed.dart';
 part 'earthquake_settings_request.g.dart';
@@ -13,13 +13,11 @@ part 'earthquake_settings_request.g.dart';
 abstract class EarthquakeSettingsRequest with _$EarthquakeSettingsRequest {
   const factory EarthquakeSettingsRequest({
     required bool enabled,
-    required SoundSettings sound,
-    @JsonKey(name: 'hypocenter_update_enabled')
-    required bool hypocenterUpdateEnabled,
+    @JsonKey(name: 'notification_tiers')
+    required List<NotificationTiers2> notificationTiers,
     @JsonKey(name: 'estimated_intensity_enabled')
     required bool estimatedIntensityEnabled,
   }) = _EarthquakeSettingsRequest;
-
-  factory EarthquakeSettingsRequest.fromJson(Map<String, Object?> json) =>
-      _$EarthquakeSettingsRequestFromJson(json);
+  
+  factory EarthquakeSettingsRequest.fromJson(Map<String, Object?> json) => _$EarthquakeSettingsRequestFromJson(json);
 }

@@ -1483,6 +1483,158 @@
         }
       }
     },
+    "/v2/device/{deviceId}/settings/shake-detection": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdSettingsShakeDetection",
+        "tags": [
+          "Device"
+        ],
+        "description": "揺れ検知通知設定一覧を取得",
+        "responses": {
+          "200": {
+            "description": "揺れ検知通知設定一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShakeDetectionSettingResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "デバイスが見つからない"
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      },
+      "put": {
+        "operationId": "putV2DeviceByDeviceIdSettingsShakeDetection",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShakeDetectionSettingRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ],
+        "description": "揺れ検知通知設定を一括更新（全件上書き）",
+        "responses": {
+          "200": {
+            "description": "更新後の揺れ検知通知設定一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShakeDetectionSettingResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "デバイスが見つからない"
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/device/{deviceId}/settings/shake-detection/sub-regions": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdSettingsShakeDetectionSubRegions",
+        "tags": [
+          "Device"
+        ],
+        "description": "揺れ検知サブ地域マスター一覧を取得",
+        "responses": {
+          "200": {
+            "description": "サブ地域一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShakeDetectionSubRegionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/device/{deviceId}/notification/history": {
       "get": {
         "operationId": "getV2DeviceByDeviceIdNotificationHistory",
@@ -1510,6 +1662,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotificationHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
               }
             }
@@ -1571,6 +1733,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TestNotificationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
               }
             }
@@ -2349,6 +2521,195 @@
         }
       }
     },
+    "/v2/tsunami": {
+      "get": {
+        "operationId": "getV2Tsunami",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TsunamiQueryParams"
+          }
+        ],
+        "tags": [
+          "Tsunami"
+        ],
+        "description": "津波情報一覧",
+        "responses": {
+          "200": {
+            "description": "津波情報一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TsunamiListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/tsunami/by-event-id/{eventId}": {
+      "get": {
+        "operationId": "getV2TsunamiByEventIdByEventId",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TsunamiEventIdParam"
+          }
+        ],
+        "tags": [
+          "Tsunami"
+        ],
+        "description": "DMDATA eventIdから津波情報を取得",
+        "responses": {
+          "200": {
+            "description": "津波情報詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TsunamiDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "津波情報が見つかりません",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/tsunami/active": {
+      "get": {
+        "operationId": "getV2TsunamiActive",
+        "tags": [
+          "Tsunami"
+        ],
+        "description": "現在有効な津波情報一覧（VTSE41 の revoke_at が未経過）",
+        "responses": {
+          "200": {
+            "description": "有効な津波情報一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TsunamiListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/tsunami/{tsunamiId}": {
+      "get": {
+        "operationId": "getV2TsunamiByTsunamiId",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TsunamiIdParam"
+          }
+        ],
+        "tags": [
+          "Tsunami"
+        ],
+        "description": "津波情報詳細",
+        "responses": {
+          "200": {
+            "description": "津波情報詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TsunamiDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "津波情報が見つかりません",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/user/me": {
       "get": {
         "operationId": "getV2UserMe",
@@ -2607,7 +2968,8 @@
             "enum": [
               "IOS",
               "ANDROID"
-            ]
+            ],
+            "type": "string"
           },
           "user_id": {
             "type": "string"
@@ -2617,7 +2979,8 @@
               "ja",
               "en",
               "zh"
-            ]
+            ],
+            "type": "string"
           },
           "created_at": {
             "type": "string"
@@ -2658,6 +3021,7 @@
           "NOTIFICATION",
           "LIVE_ACTIVITY_START"
         ],
+        "type": "string",
         "description": "APNsトークンタイプ"
       },
       "ApnsTokenResponse": {
@@ -2668,18 +3032,37 @@
           },
           "token": {
             "type": "string"
+          },
+          "environment": {
+            "enum": [
+              "development",
+              "production"
+            ],
+            "type": "string"
           }
         },
         "required": [
           "type",
-          "token"
+          "token",
+          "environment"
         ]
+      },
+      "ApnsEnvironment": {
+        "enum": [
+          "development",
+          "production"
+        ],
+        "type": "string",
+        "description": "APNs環境"
       },
       "ApnsTokenRequest": {
         "type": "object",
         "properties": {
           "token": {
             "type": "string"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/ApnsEnvironment"
           }
         },
         "required": [
@@ -2713,6 +3096,7 @@
           "shake_detection",
           "eew"
         ],
+        "type": "string",
         "description": "Live Activity開始トリガー"
       },
       "LiveActivityTokenResponse": {
@@ -2776,53 +3160,53 @@
         },
         "required": []
       },
-      "IntensitySoundMode": {
-        "enum": [
-          "max_intensity",
-          "location_intensity",
-          "registered_max"
-        ],
-        "description": "通知音モード"
-      },
-      "SoundSettingsResponse": {
-        "type": "object",
-        "properties": {
-          "mode": {
-            "$ref": "#/components/schemas/IntensitySoundMode"
-          },
-          "map": {
-            "anyOf": [
-              {
-                "type": "object",
-                "propertyNames": {
-                  "type": "string"
-                },
-                "additionalProperties": {
-                  "type": "string"
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "required": [
-          "mode",
-          "map"
-        ]
-      },
       "EarthquakeSettingsResponse": {
         "type": "object",
         "properties": {
           "enabled": {
             "type": "boolean"
           },
-          "sound": {
-            "$ref": "#/components/schemas/SoundSettingsResponse"
-          },
-          "hypocenter_update_enabled": {
-            "type": "boolean"
+          "notification_tiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "min_jma_intensity": {
+                  "enum": [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "!5-",
+                    "5-",
+                    "5+",
+                    "6-",
+                    "6+",
+                    "7"
+                  ],
+                  "type": "string"
+                },
+                "sound": {
+                  "type": "string"
+                },
+                "interruption_level": {
+                  "enum": [
+                    "passive",
+                    "active",
+                    "time_sensitive",
+                    "critical"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "min_jma_intensity",
+                "sound",
+                "interruption_level"
+              ]
+            },
+            "minItems": 1
           },
           "estimated_intensity_enabled": {
             "type": "boolean"
@@ -2830,29 +3214,8 @@
         },
         "required": [
           "enabled",
-          "sound",
-          "hypocenter_update_enabled",
+          "notification_tiers",
           "estimated_intensity_enabled"
-        ]
-      },
-      "SoundSettings": {
-        "type": "object",
-        "properties": {
-          "mode": {
-            "$ref": "#/components/schemas/IntensitySoundMode"
-          },
-          "map": {
-            "type": "object",
-            "propertyNames": {
-              "type": "string"
-            },
-            "additionalProperties": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "mode"
         ]
       },
       "EarthquakeSettingsRequest": {
@@ -2861,11 +3224,47 @@
           "enabled": {
             "type": "boolean"
           },
-          "sound": {
-            "$ref": "#/components/schemas/SoundSettings"
-          },
-          "hypocenter_update_enabled": {
-            "type": "boolean"
+          "notification_tiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "min_jma_intensity": {
+                  "enum": [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "!5-",
+                    "5-",
+                    "5+",
+                    "6-",
+                    "6+",
+                    "7"
+                  ],
+                  "type": "string"
+                },
+                "sound": {
+                  "type": "string"
+                },
+                "interruption_level": {
+                  "enum": [
+                    "passive",
+                    "active",
+                    "time_sensitive",
+                    "critical"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "min_jma_intensity",
+                "sound",
+                "interruption_level"
+              ]
+            },
+            "minItems": 1
           },
           "estimated_intensity_enabled": {
             "type": "boolean"
@@ -2887,6 +3286,7 @@
           "6+",
           "7"
         ],
+        "type": "string",
         "description": "震度"
       },
       "RegionSettingResponse": {
@@ -2984,11 +3384,47 @@
           "enabled": {
             "type": "boolean"
           },
-          "override_silent_mode": {
-            "type": "boolean"
-          },
-          "sound": {
-            "$ref": "#/components/schemas/SoundSettingsResponse"
+          "notification_tiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "min_jma_intensity": {
+                  "enum": [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "!5-",
+                    "5-",
+                    "5+",
+                    "6-",
+                    "6+",
+                    "7"
+                  ],
+                  "type": "string"
+                },
+                "sound": {
+                  "type": "string"
+                },
+                "interruption_level": {
+                  "enum": [
+                    "passive",
+                    "active",
+                    "time_sensitive",
+                    "critical"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "min_jma_intensity",
+                "sound",
+                "interruption_level"
+              ]
+            },
+            "minItems": 1
           },
           "start_live_activity": {
             "type": "boolean"
@@ -2996,8 +3432,7 @@
         },
         "required": [
           "enabled",
-          "override_silent_mode",
-          "sound",
+          "notification_tiers",
           "start_live_activity"
         ]
       },
@@ -3007,17 +3442,147 @@
           "enabled": {
             "type": "boolean"
           },
-          "override_silent_mode": {
-            "type": "boolean"
-          },
-          "sound": {
-            "$ref": "#/components/schemas/SoundSettings"
+          "notification_tiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "min_jma_intensity": {
+                  "enum": [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "!5-",
+                    "5-",
+                    "5+",
+                    "6-",
+                    "6+",
+                    "7"
+                  ],
+                  "type": "string"
+                },
+                "sound": {
+                  "type": "string"
+                },
+                "interruption_level": {
+                  "enum": [
+                    "passive",
+                    "active",
+                    "time_sensitive",
+                    "critical"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "min_jma_intensity",
+                "sound",
+                "interruption_level"
+              ]
+            },
+            "minItems": 1
           },
           "start_live_activity": {
             "type": "boolean"
           }
         },
         "required": []
+      },
+      "ShakeDetectionLevel": {
+        "enum": [
+          "Weaker",
+          "Weak",
+          "Medium",
+          "Strong",
+          "Stronger"
+        ],
+        "type": "string",
+        "description": "揺れ検知レベル"
+      },
+      "ShakeDetectionSettingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "sub_region_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "min_level": {
+            "$ref": "#/components/schemas/ShakeDetectionLevel"
+          },
+          "is_current_location": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "sub_region_id",
+          "min_level",
+          "is_current_location",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "ShakeDetectionSettingRequest": {
+        "type": "object",
+        "properties": {
+          "sub_region_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "min_level": {
+            "$ref": "#/components/schemas/ShakeDetectionLevel"
+          },
+          "is_current_location": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "sub_region_id",
+          "min_level",
+          "is_current_location"
+        ]
+      },
+      "ShakeDetectionSubRegionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name"
+        ]
       },
       "NotificationLogItem": {
         "type": "object",
@@ -3032,13 +3597,15 @@
             "enum": [
               "FCM",
               "APNS"
-            ]
+            ],
+            "type": "string"
           },
           "result": {
             "enum": [
               "OK",
               "NG"
-            ]
+            ],
+            "type": "string"
           },
           "error_code": {
             "type": "string"
@@ -3056,6 +3623,21 @@
             "type": "string"
           },
           "body": {
+            "type": "string"
+          },
+          "android_priority": {
+            "type": "string"
+          },
+          "android_notification_priority": {
+            "type": "string"
+          },
+          "channel_id": {
+            "type": "string"
+          },
+          "apns_priority": {
+            "type": "string"
+          },
+          "interruption_level": {
             "type": "string"
           }
         },
@@ -3082,6 +3664,21 @@
         },
         "required": [
           "items"
+        ]
+      },
+      "UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "UNAUTHORIZED"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
         ]
       },
       "NotFoundResponse": {
@@ -3122,7 +3719,8 @@
               "silent",
               "normal",
               "critical"
-            ]
+            ],
+            "type": "string"
           }
         },
         "required": [
@@ -3139,7 +3737,8 @@
             "enum": [
               "FCM",
               "APNS"
-            ]
+            ],
+            "type": "string"
           }
         },
         "required": [
@@ -3153,6 +3752,7 @@
           "TRAINING",
           "TEST"
         ],
+        "type": "string",
         "description": "情報の運用状態"
       },
       "EarthquakeSortBy": {
@@ -3164,6 +3764,7 @@
           "depth",
           "origin_time"
         ],
+        "type": "string",
         "description": "地震情報のソートキー"
       },
       "SortOrder": {
@@ -3171,6 +3772,7 @@
           "asc",
           "desc"
         ],
+        "type": "string",
         "description": "ソート順"
       },
       "OriginTimePrecision": {
@@ -3182,6 +3784,7 @@
           "DAY",
           "MONTH"
         ],
+        "type": "string",
         "description": "発生時刻の精度"
       },
       "CodeName": {
@@ -3205,6 +3808,7 @@
           "LAT_LNG",
           "UNKNOWN"
         ],
+        "type": "string",
         "description": "震源座標の種別"
       },
       "Coordinate": {
@@ -3250,7 +3854,8 @@
               "NORMAL",
               "UNKNOWN",
               "OVER_M8"
-            ]
+            ],
+            "type": "string"
           },
           "value": {
             "type": "number",
@@ -3278,6 +3883,7 @@
           "OVER_700",
           "UNKNOWN"
         ],
+        "type": "string",
         "description": "震源の深さの種別"
       },
       "Depth": {
@@ -3302,6 +3908,30 @@
           }
         ]
       },
+      "HypocenterAuxiliary": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "distance_km": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "direction",
+          "distance_km"
+        ],
+        "description": "震源の補助情報（方角・距離等、津波電文で使用）"
+      },
       "Hypocenter": {
         "type": "object",
         "properties": {
@@ -3319,6 +3949,9 @@
           },
           "depth": {
             "$ref": "#/components/schemas/Depth"
+          },
+          "auxiliary": {
+            "$ref": "#/components/schemas/HypocenterAuxiliary"
           }
         },
         "required": [
@@ -3334,6 +3967,7 @@
           "JMA_INTENSITY_DATABASE",
           "JMA_DISASTER_INFORMATION_XML"
         ],
+        "type": "string",
         "description": "地震データのソース"
       },
       "JmaLpgmIntensity": {
@@ -3344,6 +3978,7 @@
           "3",
           "4"
         ],
+        "type": "string",
         "description": "LPGM震度"
       },
       "IntensityItem": {
@@ -3583,6 +4218,7 @@
           "VYSE60",
           "SHINDO_DB"
         ],
+        "type": "string",
         "description": "情報名称(Control/Title部)"
       },
       "Telegram": {
@@ -3612,7 +4248,8 @@
               "CORRECTION",
               "DELAY",
               "CANCELLATION"
-            ]
+            ],
+            "type": "string"
           },
           "editorial_office": {
             "type": "string"
@@ -4373,7 +5010,8 @@
               "CORRECTION",
               "DELAY",
               "CANCELLATION"
-            ]
+            ],
+            "type": "string"
           },
           "serial_no": {
             "type": "number"
@@ -4571,7 +5209,8 @@
                     "CORRECTION",
                     "DELAY",
                     "CANCELLATION"
-                  ]
+                  ],
+                  "type": "string"
                 },
                 "editorial_office": {
                   "type": "string"
@@ -4665,7 +5304,8 @@
               "CORRECTION",
               "DELAY",
               "CANCELLATION"
-            ]
+            ],
+            "type": "string"
           },
           "editorial_office": {
             "type": "string"
@@ -4750,6 +5390,564 @@
           "comments"
         ]
       },
+      "TsunamiTelegramHeader": {
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "serial_no": {
+            "type": "number"
+          },
+          "type": {
+            "enum": [
+              "VTSE41",
+              "VTSE51",
+              "VTSE52"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "NORMAL",
+              "TRAINING",
+              "TEST"
+            ],
+            "type": "string"
+          },
+          "info_type": {
+            "enum": [
+              "PUBLICATION",
+              "CORRECTION",
+              "DELAY",
+              "CANCELLATION"
+            ],
+            "type": "string"
+          },
+          "editorial_office": {
+            "type": "string"
+          },
+          "publishing_office": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "press_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "report_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "target_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revoke_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "headline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "info_kind": {
+            "type": "string"
+          },
+          "info_kind_version": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "hash",
+          "event_id",
+          "type",
+          "title",
+          "status",
+          "info_type",
+          "editorial_office",
+          "publishing_office",
+          "press_at",
+          "report_at",
+          "info_kind",
+          "info_kind_version",
+          "created_at"
+        ]
+      },
+      "TsunamiWarningKind": {
+        "enum": [
+          "MAJOR_WARNING",
+          "WARNING",
+          "ADVISORY",
+          "FORECAST",
+          "NONE"
+        ],
+        "type": "string"
+      },
+      "FirstHeightCondition": {
+        "enum": [
+          "ARRIVING",
+          "FIRST_WAVE_CONFIRMED",
+          "IMMINENT"
+        ],
+        "type": "string"
+      },
+      "TsunamiForecastFirstHeight": {
+        "type": "object",
+        "properties": {
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "condition": {
+            "$ref": "#/components/schemas/FirstHeightCondition"
+          }
+        },
+        "required": []
+      },
+      "QualitativeHeight": {
+        "enum": [
+          "ENORMOUS",
+          "HIGH"
+        ],
+        "type": "string"
+      },
+      "TsunamiForecastMaxHeight": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          },
+          "over": {
+            "type": "boolean"
+          },
+          "qualitative": {
+            "$ref": "#/components/schemas/QualitativeHeight"
+          },
+          "is_important": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      },
+      "TsunamiForecastStation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "high_tide_date_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiForecastFirstHeight"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "high_tide_date_time"
+        ]
+      },
+      "TsunamiForecast": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TsunamiWarningKind"
+          },
+          "last_kind": {
+            "$ref": "#/components/schemas/TsunamiWarningKind"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiForecastFirstHeight"
+          },
+          "max_height": {
+            "$ref": "#/components/schemas/TsunamiForecastMaxHeight"
+          },
+          "stations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiForecastStation"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "kind",
+          "last_kind"
+        ]
+      },
+      "WaveInitial": {
+        "enum": [
+          "PUSH",
+          "PULL"
+        ],
+        "type": "string"
+      },
+      "TsunamiObservationStationFirstHeight": {
+        "type": "object",
+        "properties": {
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "initial": {
+            "$ref": "#/components/schemas/WaveInitial"
+          },
+          "is_unidentifiable": {
+            "type": "boolean"
+          },
+          "is_missing": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      },
+      "ObservationMaxHeightCondition": {
+        "enum": [
+          "MINOR",
+          "OBSERVING",
+          "IMPORTANT"
+        ],
+        "type": "string"
+      },
+      "TsunamiObservationStationMaxHeight": {
+        "type": "object",
+        "properties": {
+          "date_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "value": {
+            "type": "number"
+          },
+          "over": {
+            "type": "boolean"
+          },
+          "is_rising": {
+            "type": "boolean"
+          },
+          "condition": {
+            "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+          },
+          "is_missing": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      },
+      "TsunamiObservationStation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sensor": {
+            "type": "string"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiObservationStationFirstHeight"
+          },
+          "max_height": {
+            "$ref": "#/components/schemas/TsunamiObservationStationMaxHeight"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "first_height"
+        ]
+      },
+      "TsunamiObservation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiObservationStation"
+            }
+          }
+        },
+        "required": [
+          "stations"
+        ]
+      },
+      "TsunamiEstimationFirstHeight": {
+        "type": "object",
+        "properties": {
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_already_arrived": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "is_already_arrived"
+        ]
+      },
+      "TsunamiEstimationMaxHeight": {
+        "type": "object",
+        "properties": {
+          "date_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "value": {
+            "type": "number"
+          },
+          "over": {
+            "type": "boolean"
+          },
+          "qualitative": {
+            "$ref": "#/components/schemas/QualitativeHeight"
+          },
+          "is_observing": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      },
+      "TsunamiEstimation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiEstimationFirstHeight"
+          },
+          "max_height": {
+            "$ref": "#/components/schemas/TsunamiEstimationMaxHeight"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "first_height",
+          "max_height"
+        ]
+      },
+      "TsunamiEarthquake": {
+        "type": "object",
+        "properties": {
+          "origin_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "hypocenter": {
+            "$ref": "#/components/schemas/Hypocenter"
+          }
+        },
+        "required": [
+          "origin_time",
+          "hypocenter"
+        ]
+      },
+      "TsunamiComments": {
+        "type": "object",
+        "properties": {
+          "free": {
+            "type": "string"
+          },
+          "warning": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "codes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "text",
+              "codes"
+            ]
+          }
+        },
+        "required": []
+      },
+      "TsunamiTelegramBody": {
+        "type": "object",
+        "properties": {
+          "forecasts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiForecast"
+            }
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiObservation"
+            }
+          },
+          "estimations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiEstimation"
+            }
+          },
+          "earthquakes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiEarthquake"
+            }
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "comments": {
+            "$ref": "#/components/schemas/TsunamiComments"
+          }
+        },
+        "required": []
+      },
+      "TsunamiTelegramItem": {
+        "type": "object",
+        "properties": {
+          "telegram": {
+            "$ref": "#/components/schemas/TsunamiTelegramHeader"
+          },
+          "body": {
+            "$ref": "#/components/schemas/TsunamiTelegramBody"
+          }
+        },
+        "required": [
+          "telegram",
+          "body"
+        ]
+      },
+      "Tsunami": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "telegrams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiTelegramItem"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "event_ids",
+          "telegrams"
+        ]
+      },
+      "TsunamiListResponse": {
+        "type": "object",
+        "properties": {
+          "next_token": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "next_pooling": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tsunami"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "TsunamiDetailResponse": {
+        "type": "object",
+        "properties": {
+          "tsunami": {
+            "$ref": "#/components/schemas/Tsunami"
+          }
+        },
+        "required": [
+          "tsunami"
+        ]
+      },
       "UserResponse": {
         "type": "object",
         "properties": {
@@ -4827,14 +6025,16 @@
             "enum": [
               "IOS",
               "ANDROID"
-            ]
+            ],
+            "type": "string"
           },
           "locale": {
             "enum": [
               "ja",
               "en",
               "zh"
-            ]
+            ],
+            "type": "string"
           },
           "created_at": {
             "type": "string"
@@ -4948,8 +6148,8 @@
         "schema": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 100,
-          "default": "20"
+          "maximum": 1000,
+          "default": "100"
         }
       },
       "EarthquakeQueryParams": {
@@ -5068,6 +6268,32 @@
       "TelegramIdParam": {
         "in": "path",
         "name": "id",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "required": true
+      },
+      "TsunamiQueryParams": {
+        "in": "query",
+        "name": "limit",
+        "schema": {
+          "type": "string"
+        },
+        "description": "1~100 の整数(string)"
+      },
+      "TsunamiEventIdParam": {
+        "in": "path",
+        "name": "eventId",
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required": true
+      },
+      "TsunamiIdParam": {
+        "in": "path",
+        "name": "tsunamiId",
         "schema": {
           "type": "string",
           "format": "uuid"

@@ -4,28 +4,25 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// 通知音モード
 @JsonEnum()
-enum IntensitySoundMode {
-  @JsonValue('max_intensity')
-  maxIntensity('max_intensity'),
-  @JsonValue('location_intensity')
-  locationIntensity('location_intensity'),
-  @JsonValue('registered_max')
-  registeredMax('registered_max');
+enum ApnsTokenResponseEnvironment {
+  @JsonValue('development')
+  development('development'),
+  @JsonValue('production')
+  production('production');
 
-  const IntensitySoundMode(this.json);
+  const ApnsTokenResponseEnvironment(this.json);
 
-  final dynamic json;
-  dynamic toJson() {
+  final String? json;
+  String toJson() {
     final value = json;
     if (value == null) {
       throw StateError(
-        'Cannot convert enum value with null JSON representation to dynamic. '
+        'Cannot convert enum value with null JSON representation to String. '
         'This usually happens for \$unknown or @JsonValue(null) entries.',
       );
     }
-    return value as dynamic;
+    return value;
   }
 
   @override

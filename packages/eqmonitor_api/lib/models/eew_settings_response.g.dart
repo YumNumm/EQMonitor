@@ -15,13 +15,13 @@ _EewSettingsResponse _$EewSettingsResponseFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _EewSettingsResponse(
           enabled: $checkedConvert('enabled', (v) => v as bool),
-          overrideSilentMode: $checkedConvert(
-            'override_silent_mode',
-            (v) => v as bool,
-          ),
-          sound: $checkedConvert(
-            'sound',
-            (v) => SoundSettingsResponse.fromJson(v as Map<String, dynamic>),
+          notificationTiers: $checkedConvert(
+            'notification_tiers',
+            (v) => (v as List<dynamic>)
+                .map(
+                  (e) => NotificationTiers3.fromJson(e as Map<String, dynamic>),
+                )
+                .toList(),
           ),
           startLiveActivity: $checkedConvert(
             'start_live_activity',
@@ -31,7 +31,7 @@ _EewSettingsResponse _$EewSettingsResponseFromJson(Map<String, dynamic> json) =>
         return val;
       },
       fieldKeyMap: const {
-        'overrideSilentMode': 'override_silent_mode',
+        'notificationTiers': 'notification_tiers',
         'startLiveActivity': 'start_live_activity',
       },
     );
@@ -40,7 +40,6 @@ Map<String, dynamic> _$EewSettingsResponseToJson(
   _EewSettingsResponse instance,
 ) => <String, dynamic>{
   'enabled': instance.enabled,
-  'override_silent_mode': instance.overrideSilentMode,
-  'sound': instance.sound,
+  'notification_tiers': instance.notificationTiers,
   'start_live_activity': instance.startLiveActivity,
 };

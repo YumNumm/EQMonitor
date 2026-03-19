@@ -15,7 +15,6 @@ abstract class TestNotificationResponse with _$TestNotificationResponse {
     required String message,
     required TestNotificationResponseFramework framework,
   }) = _TestNotificationResponse;
-
-  factory TestNotificationResponse.fromJson(Map<String, Object?> json) =>
-      _$TestNotificationResponseFromJson(json);
+  
+  factory TestNotificationResponse.fromJson(Map<String, Object?> json) => _$TestNotificationResponseFromJson(json);
 }

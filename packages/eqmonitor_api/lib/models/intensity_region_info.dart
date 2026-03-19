@@ -15,11 +15,11 @@ abstract class IntensityRegionInfo with _$IntensityRegionInfo {
   const factory IntensityRegionInfo({
     required String code,
     required String name,
-    @JsonKey(includeIfNull: true) required JmaIntensity? intensity,
-    @JsonKey(includeIfNull: true, name: 'lpgm_intensity')
+    @JsonKey(includeIfNull: true)
+    required JmaIntensity? intensity,
+    @JsonKey(includeIfNull: true,name: 'lpgm_intensity')
     required JmaLpgmIntensity? lpgmIntensity,
   }) = _IntensityRegionInfo;
-
-  factory IntensityRegionInfo.fromJson(Map<String, Object?> json) =>
-      _$IntensityRegionInfoFromJson(json);
+  
+  factory IntensityRegionInfo.fromJson(Map<String, Object?> json) => _$IntensityRegionInfoFromJson(json);
 }
