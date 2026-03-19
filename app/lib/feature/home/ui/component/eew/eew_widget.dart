@@ -48,7 +48,9 @@ class EewWidget extends ConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorTheme = theme.colorScheme;
-    final intensityColorScheme = ref.watch(intensityColorProvider);
+    final intensityColorScheme =
+        ref.watch(intensityColorProvider).asData?.value ??
+        IntensityColorModel.eqmonitor();
 
     if (eew.isCanceled) {
       return BorderedContainer(
