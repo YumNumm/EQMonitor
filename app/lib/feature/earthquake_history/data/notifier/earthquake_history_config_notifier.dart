@@ -45,22 +45,22 @@ class EarthquakeHistoryConfigNotifier
   }
 
   Future<void> updateListConfig(EarthquakeHistoryListConfig config) async {
-    final current = state.valueOrNull ?? _defaultEarthquakeHistoryConfig;
+    final current = state.value ?? _defaultEarthquakeHistoryConfig;
     state = AsyncValue.data(current.copyWith(list: config));
-    await _save(state.valueOrNull!);
+    await _save(state.value!);
   }
 
   Future<void> updateDetailConfig(EarthquakeHistoryDetailConfig config) async {
-    final current = state.valueOrNull ?? _defaultEarthquakeHistoryConfig;
+    final current = state.value ?? _defaultEarthquakeHistoryConfig;
     state = AsyncValue.data(current.copyWith(detail: config));
-    await _save(state.valueOrNull!);
+    await _save(state.value!);
   }
 
   Future<void> updateIntensityIcon({required bool value}) async {
-    final current = state.valueOrNull ?? _defaultEarthquakeHistoryConfig;
+    final current = state.value ?? _defaultEarthquakeHistoryConfig;
     state = AsyncValue.data(current.copyWith(
       detail: current.detail.copyWith(showIntensityIcon: value),
     ));
-    await _save(state.valueOrNull!);
+    await _save(state.value!);
   }
 }

@@ -14,7 +14,7 @@ part 'ntp_provider.g.dart';
 class Ntp extends _$Ntp {
   @override
   NtpStateModel build() {
-    final config = ref.watch(ntpConfigProvider);
+    final config = ref.watch(ntpConfigProvider).requireValue;
     final interval = config.interval;
 
     final timer = Timer.periodic(interval, (_) async {
@@ -26,7 +26,7 @@ class Ntp extends _$Ntp {
   }
 
   Future<void> sync() async {
-    final config = ref.read(ntpConfigProvider);
+    final config = ref.read(ntpConfigProvider).requireValue;
     final int offset;
     if (kIsWeb) {
       offset = await NTP.getNtpOffset(

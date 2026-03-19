@@ -32,7 +32,7 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
     final backgroundColor = colorScheme.surfaceContainerLow;
 
     final isEnabled = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni),
     );
 
     return Scaffold(
@@ -98,12 +98,14 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                     child: _RealtimeDataTypeSelector(
                       value: ref
                           .watch(kyoshinMonitorSettingsProvider)
+                          .requireValue
                           .realtimeDataType,
                       onChanged: (value) async => ref
                           .read(kyoshinMonitorSettingsProvider.notifier)
                           .save(
                             ref
                                 .read(kyoshinMonitorSettingsProvider)
+                                .requireValue
                                 .copyWith(realtimeDataType: value),
                           ),
                     ),
@@ -113,12 +115,14 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                     child: _RealtimeLayerSelector(
                       value: ref
                           .watch(kyoshinMonitorSettingsProvider)
+                          .requireValue
                           .realtimeLayer,
                       onChanged: (value) async => ref
                           .read(kyoshinMonitorSettingsProvider.notifier)
                           .save(
                             ref
                                 .read(kyoshinMonitorSettingsProvider)
+                                .requireValue
                                 .copyWith(realtimeLayer: value),
                           ),
                     ),
@@ -130,12 +134,14 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                     child: _MarkerTypeSelector(
                       value: ref
                           .watch(kyoshinMonitorSettingsProvider)
+                          .requireValue
                           .kmoniMarkerType,
                       onChanged: (value) async => ref
                           .read(kyoshinMonitorSettingsProvider.notifier)
                           .save(
                             ref
                                 .read(kyoshinMonitorSettingsProvider)
+                                .requireValue
                                 .copyWith(kmoniMarkerType: value),
                           ),
                     ),
@@ -153,12 +159,14 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                           ),
                           value: ref
                               .watch(kyoshinMonitorSettingsProvider)
+                              .requireValue
                               .showScale,
                           onChanged: (value) async => ref
                               .read(kyoshinMonitorSettingsProvider.notifier)
                               .save(
                                 ref
                                     .read(kyoshinMonitorSettingsProvider)
+                                    .requireValue
                                     .copyWith(showScale: value),
                               ),
                         ),
@@ -180,7 +188,7 @@ class _KyoshinMonitorSwitchListTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEnabled = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni),
     );
 
     return Padding(
@@ -195,6 +203,7 @@ class _KyoshinMonitorSwitchListTile extends ConsumerWidget {
               .save(
                 ref
                     .read(kyoshinMonitorSettingsProvider)
+                    .requireValue
                     .copyWith(useKmoni: value),
               ),
         ),

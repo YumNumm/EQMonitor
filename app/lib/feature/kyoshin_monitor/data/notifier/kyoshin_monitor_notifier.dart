@@ -19,7 +19,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     // タイマーストリームを監視
     ref.listen(kyoshinMonitorTimerStreamProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
-        if (ref.read(kyoshinMonitorSettingsProvider).useKmoni) {
+        if (ref.read(kyoshinMonitorSettingsProvider).requireValue.useKmoni) {
           await _fetchAndAnalyzeImage(value);
         }
       }
@@ -33,9 +33,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       if (previous == null) {
         return;
       }
-      if (previous.realtimeDataType != next.realtimeDataType ||
-          previous.realtimeLayer != next.realtimeLayer ||
-          previous.useKmoni != next.useKmoni) {
+      if (previous.requireValue.realtimeDataType != next.requireValue.realtimeDataType ||
+          previous.requireValue.realtimeLayer != next.requireValue.realtimeLayer ||
+          previous.requireValue.useKmoni != next.requireValue.useKmoni) {
         onSettingsChanged();
       }
     });
@@ -48,6 +48,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     // interval + 5秒遅れている場合は遅延として扱う
     final imageFetchInterval = ref
         .read(kyoshinMonitorSettingsProvider)
+        .requireValue
         .api
         .imageFetchInterval;
     final delay = imageFetchInterval + const Duration(seconds: 5);
@@ -66,9 +67,11 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       // 画像を取得
       final realtimeDataType = ref
           .read(kyoshinMonitorSettingsProvider)
+          .requireValue
           .realtimeDataType;
       final realtimeLayer = ref
           .read(kyoshinMonitorSettingsProvider)
+          .requireValue
           .realtimeLayer;
       final image = await dataSource.getRealtimeImageData(
         type: realtimeDataType,
