@@ -149,6 +149,21 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
           | xcbeautify --renderer github-actions
 
+      # 埋め込みフレームワークとアプリを ad-hoc 署名。export 時に Distribution 証明書で上書きされる。
+      - name: Embed entitlements and ad-hoc sign
+        working-directory: app
+        run: |
+          ARCHIVE_APP="build/ios/Runner.xcarchive/Products/Applications/Runner.app"
+          # 埋め込み .framework を先に ad-hoc 署名（ネストは深い方から）
+          find "$ARCHIVE_APP" -name "*.framework" -type d | while read fw; do
+            codesign --force --sign "-" "$fw"
+          done
+          # メインアプリに entitlements を埋めて ad-hoc 署名
+          codesign \
+            --entitlements ios/Runner/Runner.entitlements \
+            --force \
+            --sign "-" "$ARCHIVE_APP"
+
       # エクスポート時に App Store Connect API Key で Cloud-managed 署名（証明書はクラウドで管理）
       - name: Create IPA
         working-directory: app
