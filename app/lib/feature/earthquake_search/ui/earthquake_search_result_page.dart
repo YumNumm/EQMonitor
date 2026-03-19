@@ -271,15 +271,18 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
     };
 
     final maxIntensity = earthquake.intensity?.maxIntensity;
-    final maxIntensityText =
-        maxIntensity != null ? '最大震度 ${maxIntensity.label}' : null;
+    final maxIntensityText = maxIntensity != null
+        ? '最大震度 ${maxIntensity.label}'
+        : null;
 
     final subTitle = [
       dateText,
       maxIntensityText,
     ].where((e) => e != null && e.isNotEmpty).join('\n');
 
-    final intensityColorState = ref.watch(intensityColorProvider);
+    final intensityColorState =
+        ref.watch(intensityColorProvider).asData?.value ??
+        IntensityColorModel.eqmonitor();
     final intensityColor = localIntensity != null
         ? intensityColorState.fromJmaIntensity(localIntensity).background
         : null;
@@ -325,8 +328,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       return '';
     }
     return switch (magnitude) {
-      EarthquakeMagnitudeValue(:final value) =>
-        'M${value.toStringAsFixed(1)}',
+      EarthquakeMagnitudeValue(:final value) => 'M${value.toStringAsFixed(1)}',
       EarthquakeMagnitudeUnknown() => 'M不明',
       EarthquakeMagnitudeOverM8() => 'M8超',
     };
