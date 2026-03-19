@@ -12,7 +12,7 @@ KyoshinMonitorWebApiClient kyoshinMonitorWebApiClient(Ref ref) =>
       ref.watch(kyoshinMonitorDioProvider),
       baseUrl: ref
           .watch(
-            kyoshinMonitorSettingsProvider.select((v) => v.api.endpoint),
+            kyoshinMonitorSettingsProvider.select((v) => v.requireValue.api.endpoint),
           )
           .url,
     );

@@ -14,7 +14,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final realtimeDataType = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.realtimeDataType),
+      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.realtimeDataType),
     );
     final type = switch (realtimeDataType) {
       RealtimeDataType.shindo => KyoshinMonitorScaleType.intensity,

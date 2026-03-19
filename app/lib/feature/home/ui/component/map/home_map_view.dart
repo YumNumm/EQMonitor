@@ -102,10 +102,10 @@ class _MapHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final useKmoni = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni),
     );
     final showScale = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.showScale),
+      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.showScale),
     );
 
     final kyoshinMonitorColumn = Column(

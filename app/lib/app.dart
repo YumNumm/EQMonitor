@@ -19,7 +19,7 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeModeProvider);
+    final theme = ref.watch(themeModeProvider).requireValue;
     final routerConfig = ref.watch(goRouterProvider);
 
     final app = BetterFeedback(

@@ -27,7 +27,7 @@ class _DebugWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDebugEnabled = ref.watch(debugProvider);
+    final isDebugEnabled = ref.watch(debugProvider).requireValue;
 
     final notificationToken = ref.watch(notificationTokenStreamProvider).value;
 
@@ -55,14 +55,14 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('REST APIエンドポイント'),
             leading: const Icon(Icons.http),
-            subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
+            subtitle: Text(ref.watch(telegramUrlProvider).requireValue.restApiUrl),
             onTap: () async =>
                 const HttpApiEndpointSelectorRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('WebSocketエンドポイント'),
             leading: const Icon(Icons.http),
-            subtitle: Text(ref.watch(telegramUrlProvider).wsApiUrl),
+            subtitle: Text(ref.watch(telegramUrlProvider).requireValue.wsApiUrl),
             onTap: () async =>
                 const WebsocketEndpointSelectorRoute().push<void>(context),
           ),
