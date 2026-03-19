@@ -15,7 +15,8 @@ dependency_overrides:
 
 dependencies:
   app_settings: ^7.0.0
-  better_auth_client: ^0.12.1
+  better_auth_api_client:
+    path: ../../packages/better_auth_api_client
   cached_network_image: ^3.4.1
   clock: ^1.1.2
   collection: ^1.19.1

@@ -30,7 +30,7 @@ Dio dio(Ref ref) {
     ),
   );
   dio.interceptors.add(
-    BearerAuthInterceptor(ref.watch(authClientProvider).tokenStore),
+    BearerAuthInterceptor(ref.watch(authTokenStoreProvider)),
   );
   dio.interceptors.add(
     TalkerDioLogger(
