@@ -1,0 +1,21 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          field_rename: snake
+          checked: true
+      source_gen:combining_builder:
+        options:
+          ignore_for_file:
+            - type=lint
+            - type=warning
+            - duplicate_ignore
+            - unused_element_parameter
+global_options:
+  freezed:
+    runs_before:
+      - json_serializable
+  json_serializable:
+    runs_before:
+      - retrofit_generator
