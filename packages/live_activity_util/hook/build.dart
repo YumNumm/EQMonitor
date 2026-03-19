@@ -49,21 +49,36 @@ Future<void> main(List<String> args) => build(
     final iosSdkPath = (sdkPathResult.stdout as String).trim();
     logger.info('iOS SDK path: $iosSdkPath');
 
-    // Compile Swift to generate Objective-C header
+    // Compile Swift to generate Objective-C header and dylib
+    const frameworkName = 'LiveActivityUtil';
+    final frameworkDir = Directory.fromUri(
+      packageRoot.resolve(
+        '../../app/ios/Runner/Frameworks/$frameworkName.framework/',
+      ),
+    );
+    if (!frameworkDir.existsSync()) {
+      frameworkDir.createSync(recursive: true);
+    }
+
+    final dylibTempPath = buildDirectory.resolve('lib$frameworkName.dylib');
+
     final swiftcResult = await Process.run(
       'swiftc',
       [
         '-sdk',
         iosSdkPath,
-        '-target', 'arm64-apple-ios16.0',
+        '-target',
+        'arm64-apple-ios16.0',
         '-emit-objc-header',
         '-emit-objc-header-path',
         generatedHeaderPath.toFilePath(),
         '-emit-library',
-        '-Xlinker', '-install_name',
-        '-Xlinker', '@rpath/libLiveActivityUtil.dylib',
+        '-Xlinker',
+        '-install_name',
+        '-Xlinker',
+        '@rpath/$frameworkName.framework/$frameworkName',
         '-o',
-        '../../app/ios/Runner/Frameworks/libLiveActivityUtil.dylib',
+        dylibTempPath.toFilePath(),
         '-module-name',
         'live_activity_util',
         packageRoot
@@ -82,6 +97,52 @@ Future<void> main(List<String> args) => build(
     logger.info(
       'Generated Objective-C header: ${generatedHeaderPath.toFilePath()}',
     );
+
+    // Strip .dylib extension using lipo (required for App Store submission)
+    final frameworkBinaryPath = '${frameworkDir.path}/$frameworkName';
+    final lipoResult = await Process.run(
+      'lipo',
+      [
+        '-create',
+        dylibTempPath.toFilePath(),
+        '-output',
+        frameworkBinaryPath,
+      ],
+    );
+    if (lipoResult.exitCode != 0) {
+      logger.error('lipo failed: ${lipoResult.stderr}');
+      throw Exception('Failed to create framework binary with lipo');
+    }
+    logger.info('Created framework binary: $frameworkBinaryPath');
+
+    // Create Info.plist for the framework
+    final infoPlistPath = '${frameworkDir.path}/Info.plist';
+    File(infoPlistPath).writeAsStringSync('''
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleExecutable</key>
+  <string>$frameworkName</string>
+  <key>CFBundleIdentifier</key>
+  <string>net.yumnumm.live-activity-util</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleName</key>
+  <string>$frameworkName</string>
+  <key>CFBundlePackageType</key>
+  <string>FMWK</string>
+  <key>CFBundleVersion</key>
+  <string>1.0</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0</string>
+  <key>MinimumOSVersion</key>
+  <string>16.0</string>
+</dict>
+</plist>
+''');
 
     // * Part 2: Generate Dart bindings using ffigen
     final ffiOutputDartFile = libDir.uri.resolve('live_activity_util.dart');
