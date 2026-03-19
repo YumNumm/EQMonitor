@@ -13,47 +13,52 @@ class ColorSchemeConfigPage extends ConsumerWidget {
     final state = ref.watch(intensityColorProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('震度配色設定')),
-      body: SingleChildScrollView(
-        child: RadioGroup(
-          onChanged: (value) async =>
-              ref.read(intensityColorProvider.notifier).update(value!),
-          groupValue: state,
-          child: Column(
-            children: [
-              RadioListTile.adaptive(
-                value: IntensityColorModel.eqmonitor(),
-                title: const Text('EQMonitor'),
-                subtitle: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: _IntensityWidgets(
-                    colorModel: IntensityColorModel.eqmonitor(),
+      body: state.when(
+        data: (groupValue) => SingleChildScrollView(
+          child: RadioGroup(
+            onChanged: (value) async =>
+                ref.read(intensityColorProvider.notifier).setModel(value!),
+            groupValue: groupValue,
+            child: Column(
+              children: [
+                RadioListTile.adaptive(
+                  value: IntensityColorModel.eqmonitor(),
+                  title: const Text('EQMonitor'),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: _IntensityWidgets(
+                      colorModel: IntensityColorModel.eqmonitor(),
+                    ),
                   ),
                 ),
-              ),
-              RadioListTile.adaptive(
-                value: IntensityColorModel.jma(),
-                title: const Text('気象庁配色'),
-                subtitle: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: _IntensityWidgets(
-                    colorModel: IntensityColorModel.jma(),
+                RadioListTile.adaptive(
+                  value: IntensityColorModel.jma(),
+                  title: const Text('気象庁配色'),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: _IntensityWidgets(
+                      colorModel: IntensityColorModel.jma(),
+                    ),
                   ),
                 ),
-              ),
-              RadioListTile.adaptive(
-                value: IntensityColorModel.earthQuickly(),
-                title: const Text('EarthQuickly'),
-                subtitle: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: _IntensityWidgets(
-                    colorModel: IntensityColorModel.earthQuickly(),
+                RadioListTile.adaptive(
+                  value: IntensityColorModel.earthQuickly(),
+                  title: const Text('EarthQuickly'),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: _IntensityWidgets(
+                      colorModel: IntensityColorModel.earthQuickly(),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: kFloatingActionButtonMargin * 4),
-            ],
+                const SizedBox(height: kFloatingActionButtonMargin * 4),
+              ],
+            ),
           ),
         ),
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
+        error: (error, _) => Center(child: Text('$error')),
       ),
     );
   }
