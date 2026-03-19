@@ -13,6 +13,9 @@ auth_api.ApiClient authApiClient(Ref ref) {
       baseUrl: Env.betterAuthUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
+      followRedirects: true,
+      maxRedirects: 5,
+      validateStatus: (status) => status != null && status < 400,
     ),
   );
   return auth_api.ApiClient(dio);
