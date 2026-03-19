@@ -34,7 +34,7 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.list),
+      earthquakeHistoryConfigProvider.select((value) => value.requireValue.list),
     );
     return Column(
       children: [
@@ -57,7 +57,7 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigProvider.select((value) => value.requireValue.detail),
     );
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -153,7 +153,7 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showingLpgmIntensity = ref.watch(
       earthquakeHistoryConfigProvider.select(
-        (value) => value.detail.showingLpgmIntensity,
+        (value) => value.requireValue.detail.showingLpgmIntensity,
       ),
     );
     final theme = Theme.of(context);
@@ -210,6 +210,7 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
                     .updateDetailConfig(
                       ref
                           .watch(earthquakeHistoryConfigProvider)
+                          .requireValue
                           .detail
                           .copyWith(
                             showingLpgmIntensity: value == _IntensityMode.lpgm,
@@ -239,7 +240,7 @@ class __IntensityFillModeSegmentedControlState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigProvider.select((value) => value.requireValue.detail),
     );
     final showCitySelector = widget.showCitySelector;
     const choices = IntensityFillMode.values;
@@ -347,7 +348,7 @@ class _IntensityStationIconModeSegmentedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.detail),
+      earthquakeHistoryConfigProvider.select((value) => value.requireValue.detail),
     );
     final isShowingLpgmIntensity = state.showingLpgmIntensity;
     return SwitchListTile.adaptive(

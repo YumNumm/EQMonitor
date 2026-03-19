@@ -23,7 +23,7 @@ Dio dio(Ref ref) {
         'user-agent':
             '${package.packageName}/${package.version}+${package.buildNumber}',
       },
-      baseUrl: ref.watch(telegramUrlProvider).restApiUrl,
+      baseUrl: ref.watch(telegramUrlProvider).requireValue.restApiUrl,
       contentType: ContentType.json.value,
       connectTimeout: const Duration(milliseconds: 5000),
       sendTimeout: const Duration(milliseconds: 5000),

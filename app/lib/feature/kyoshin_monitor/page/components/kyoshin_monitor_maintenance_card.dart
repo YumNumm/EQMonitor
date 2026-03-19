@@ -12,7 +12,7 @@ class KyoshinMonitorMaintenanceCardnceCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(kyoshinMonitorSettingsProvider.select((v) => v.useKmoni))) {
+    if (!ref.watch(kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni))) {
       return const SizedBox.shrink();
     }
     final state = ref.watch(kyoshinMonitorMaintenanceProvider);
