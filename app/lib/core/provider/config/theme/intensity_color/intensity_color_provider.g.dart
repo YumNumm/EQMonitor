@@ -15,7 +15,7 @@ part of 'intensity_color_provider.dart';
 final intensityColorProvider = IntensityColorProvider._();
 
 final class IntensityColorProvider
-    extends $NotifierProvider<IntensityColor, IntensityColorModel> {
+    extends $AsyncNotifierProvider<IntensityColor, IntensityColorModel> {
   IntensityColorProvider._()
     : super(
         from: null,
@@ -33,29 +33,22 @@ final class IntensityColorProvider
   @$internal
   @override
   IntensityColor create() => IntensityColor();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(IntensityColorModel value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<IntensityColorModel>(value),
-    );
-  }
 }
 
-String _$intensityColorHash() => r'9c5f1148d0001d84e37f1a0bb14d65cdaee14795';
+String _$intensityColorHash() => r'dd69cb67db6e7c90548cd6135372abce766b7d7f';
 
-abstract class _$IntensityColor extends $Notifier<IntensityColorModel> {
-  IntensityColorModel build();
+abstract class _$IntensityColor extends $AsyncNotifier<IntensityColorModel> {
+  FutureOr<IntensityColorModel> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<IntensityColorModel, IntensityColorModel>;
+    final ref =
+        this.ref as $Ref<AsyncValue<IntensityColorModel>, IntensityColorModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<IntensityColorModel, IntensityColorModel>,
-              IntensityColorModel,
+              AnyNotifier<AsyncValue<IntensityColorModel>, IntensityColorModel>,
+              AsyncValue<IntensityColorModel>,
               Object?,
               Object?
             >;

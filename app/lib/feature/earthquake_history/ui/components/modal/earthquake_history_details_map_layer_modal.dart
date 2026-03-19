@@ -76,47 +76,51 @@ class _LocationSettingCards extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final config = ref.watch(homeConfigurationProvider);
+    final configAsync = ref.watch(homeConfigurationProvider);
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '現在位置マーカー',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+    return configAsync.when(
+      data: (config) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '現在位置マーカー',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: _LocationCard(
-                  title: '非表示',
-                  icon: Icons.location_off_outlined,
-                  isSelected: !config.showLocation,
-                  onTap: () => lightHapticFunction(
-                    () => ref
-                        .read(homeConfigurationProvider.notifier)
-                        .save(config.copyWith(showLocation: false)),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: _LocationCard(
+                    title: '非表示',
+                    icon: Icons.location_off_outlined,
+                    isSelected: !config.showLocation,
+                    onTap: () => lightHapticFunction(
+                      () => ref
+                          .read(homeConfigurationProvider.notifier)
+                          .save(config.copyWith(showLocation: false)),
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: _LocationCard(
-                  title: '表示',
-                  icon: Icons.location_on_outlined,
-                  isSelected: config.showLocation,
-                  subtitle: 'NOT IMPLEMENTED',
-                  onTap: () => throw UnimplementedError(),
+                Expanded(
+                  child: _LocationCard(
+                    title: '表示',
+                    icon: Icons.location_on_outlined,
+                    isSelected: config.showLocation,
+                    subtitle: 'NOT IMPLEMENTED',
+                    onTap: () => throw UnimplementedError(),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
+      loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+      error: (error, _) => Center(child: Text('$error')),
     );
   }
 }
