@@ -16,11 +16,10 @@ abstract class UserDeviceResponse with _$UserDeviceResponse {
     required String id,
     required UserDeviceResponseType type,
     required UserDeviceResponseLocale locale,
-    @JsonKey(name: 'created_at')
-    required String createdAt,
-    @JsonKey(name: 'updated_at')
-    required String updatedAt,
+    @JsonKey(name: 'created_at') required String createdAt,
+    @JsonKey(name: 'updated_at') required String updatedAt,
   }) = _UserDeviceResponse;
-  
-  factory UserDeviceResponse.fromJson(Map<String, Object?> json) => _$UserDeviceResponseFromJson(json);
+
+  factory UserDeviceResponse.fromJson(Map<String, Object?> json) =>
+      _$UserDeviceResponseFromJson(json);
 }

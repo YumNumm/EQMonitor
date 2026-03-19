@@ -16,6 +16,7 @@ abstract class TsunamiTelegramItem with _$TsunamiTelegramItem {
     required TsunamiTelegramHeader telegram,
     required TsunamiTelegramBody body,
   }) = _TsunamiTelegramItem;
-  
-  factory TsunamiTelegramItem.fromJson(Map<String, Object?> json) => _$TsunamiTelegramItemFromJson(json);
+
+  factory TsunamiTelegramItem.fromJson(Map<String, Object?> json) =>
+      _$TsunamiTelegramItemFromJson(json);
 }
