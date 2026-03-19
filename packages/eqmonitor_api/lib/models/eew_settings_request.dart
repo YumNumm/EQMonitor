@@ -15,9 +15,9 @@ abstract class EewSettingsRequest with _$EewSettingsRequest {
     required bool enabled,
     @JsonKey(name: 'notification_tiers')
     required List<NotificationTiers4> notificationTiers,
-    @JsonKey(name: 'start_live_activity')
-    required bool startLiveActivity,
+    @JsonKey(name: 'start_live_activity') required bool startLiveActivity,
   }) = _EewSettingsRequest;
-  
-  factory EewSettingsRequest.fromJson(Map<String, Object?> json) => _$EewSettingsRequestFromJson(json);
+
+  factory EewSettingsRequest.fromJson(Map<String, Object?> json) =>
+      _$EewSettingsRequestFromJson(json);
 }
