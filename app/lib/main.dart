@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
+    as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
@@ -15,8 +17,6 @@ import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
-    as data_prefs;
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';

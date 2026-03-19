@@ -74,7 +74,7 @@ dependencies:
     path: ../packages/jma_map
   jma_parameter_types:
     path: ../packages/jma_parameter_types
-  json_annotation: ^4.9.0
+  json_annotation: ^4.11.0
   kyoshin_monitor_api:
     path: ../packages/kyoshin_monitor_api
   kyoshin_monitor_image_parser:

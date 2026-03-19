@@ -35,7 +35,7 @@ final class IntensityColorProvider
   IntensityColor create() => IntensityColor();
 }
 
-String _$intensityColorHash() => r'dd69cb67db6e7c90548cd6135372abce766b7d7f';
+String _$intensityColorHash() => r'9c75c8ceb246c0929f3e94366ec8f8c69f2fcabe';
 
 abstract class _$IntensityColor extends $AsyncNotifier<IntensityColorModel> {
   FutureOr<IntensityColorModel> build();

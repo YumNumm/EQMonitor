@@ -40,7 +40,7 @@ final class KyoshinMonitorTimerNotifierProvider
 }
 
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'3ea60c4fc259d3acb3613b1527588bd19fc5a104';
+    r'15a6f10fde0710c666d8cac6e9a4e92f8e326dbc';
 
 abstract class _$KyoshinMonitorTimerNotifier
     extends $StreamNotifier<KyoshinMonitorTimerState> {
@@ -103,4 +103,4 @@ final class _KyoshinMonitorDelayAdujustTimingProvider
 }
 
 String _$_kyoshinMonitorDelayAdujustTimingHash() =>
-    r'22076cb0817ae86324e077e4b874977f1d4fb9f1';
+    r'd6364f511c56e39f4925ed48fae37f96b07f0f27';
