@@ -66,7 +66,7 @@ class PushNotificationRepository {
         final response =
             await _api.notification.postV2DeviceDeviceIdNotificationTest(
           deviceId: deviceId,
-          body: kind.toApiRequest(),
+          body: kind.toApiRequest,
         );
         return response.data.toTestNotificationDeliveryResult;
       });
