@@ -16,8 +16,9 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
   Future<HomeConfigurationModel> load() async {
     try {
       final ds = ref.read(sharedPreferencesDataSourceProvider);
-      final jsonString =
-          await ds.getString(key: SharedPreferencesKey.homeConfiguration);
+      final jsonString = await ds.getString(
+        key: SharedPreferencesKey.homeConfiguration,
+      );
       if (jsonString == null) {
         return const HomeConfigurationModel();
       }

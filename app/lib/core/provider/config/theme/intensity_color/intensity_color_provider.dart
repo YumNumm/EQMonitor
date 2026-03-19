@@ -14,8 +14,7 @@ class IntensityColor extends _$IntensityColor {
 
   Future<IntensityColorModel> load() async {
     final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final value =
-        await ds.getString(key: SharedPreferencesKey.intensityColor);
+    final value = await ds.getString(key: SharedPreferencesKey.intensityColor);
     if (value == null) {
       return IntensityColorModel.eqmonitor();
     }

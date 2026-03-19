@@ -39,8 +39,7 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
 
   Future<MapConfiguration?> _load() async {
     final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final json =
-        await ds.getString(key: SharedPreferencesKey.mapConfiguration);
+    final json = await ds.getString(key: SharedPreferencesKey.mapConfiguration);
     if (json == null) {
       return null;
     }
