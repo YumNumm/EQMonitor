@@ -498,9 +498,9 @@ jobs:
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
-          # 最大1000文字
-          head -c 1000 changelog.tmp > changelog.txt
-          if [ "$(wc -c < changelog.tmp)" -gt 1000 ]; then
+          # Google Play のリリースノートは言語あたり最大500文字
+          head -c 500 changelog.tmp > changelog.txt
+          if [ "$(wc -c < changelog.tmp)" -gt 500 ]; then
             echo '...' >> changelog.txt
           fi
 
