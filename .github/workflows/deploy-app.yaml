@@ -28,7 +28,7 @@ env:
 
 jobs:
   define-matrix:
-    name:  Define Matrix
+    name: Define Matrix
     runs-on: ubuntu-slim
     timeout-minutes: 1
     outputs:
@@ -131,6 +131,9 @@ jobs:
           echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d \
             > "$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
 
+      # Cloud-managed certificates: アーカイブ時は署名しない。
+      # 証明書・プロビジョニングプロファイルはエクスポート時に API Key 経由で自動管理される。
+      # 参考: https://zenn.dev/welchi/articles/flutter-ios-ci-cd-xcode-cloud
       - name: Create XCArchive
         working-directory: app
         run: |
@@ -141,15 +144,16 @@ jobs:
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -archivePath build/ios/Runner.xcarchive \
-            -allowProvisioningUpdates \
-            -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
-            -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
-            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
           | xcbeautify --renderer github-actions
 
+      # エクスポート時に App Store Connect API Key で Cloud-managed 署名（証明書はクラウドで管理）
       - name: Create IPA
         working-directory: app
         run: |
+          KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
           xcodebuild -exportArchive \
             -archivePath build/ios/Runner.xcarchive \
             -exportOptionsPlist ios/ExportOptions.plist \
@@ -157,7 +161,7 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID "$APP_STORE_CONNECT_API_ISSUER_ID" \
             -authenticationKeyID "$APP_STORE_CONNECT_API_KEY_ID" \
-            -authenticationKeyPath "$HOME/.private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8" \
+            -authenticationKeyPath "$KEY_PATH" \
           | xcbeautify --renderer github-actions
           echo "--------------------------------"
           ls -lah .
