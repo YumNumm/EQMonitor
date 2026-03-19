@@ -125,6 +125,14 @@ class _DebugWidget extends ConsumerWidget {
               ),
             ),
           ),
+          ListTile(
+            title: const Text('デバイス・通知'),
+            subtitle: const Text('登録・トークン同期・設定・テスト通知・履歴'),
+            leading: const Icon(Icons.phonelink_setup),
+            onTap: () async => const DebugDeviceSettingsRoute().push<void>(
+              context,
+            ),
+          ),
           const Divider(),
           const ListTile(
             title: Text('認証情報'),
@@ -267,7 +275,7 @@ class _SignOutTile extends ConsumerWidget {
           : () => AuthNotifier.signOut.run(ref, (tsx) async {
                 final apiClient = tsx.get(authApiClientProvider);
                 final notifier = tsx.get(authProvider.notifier);
-                await apiClient.auth.postSignOut(body: null);
+                await apiClient.auth.postSignOut();
                 await GoogleSignIn.instance.signOut();
                 await notifier.clearToken();
               }),
