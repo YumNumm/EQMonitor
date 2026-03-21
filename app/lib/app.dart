@@ -19,7 +19,7 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeModeProvider).requireValue;
+    final theme = ref.watch(themeModeProvider);
     final routerConfig = ref.watch(goRouterProvider);
 
     final app = BetterFeedback(
@@ -62,7 +62,7 @@ class App extends HookConsumerWidget {
           }
           return MaterialApp.router(
             title: 'EQMonitor',
-            themeMode: theme,
+            themeMode: theme.value,
             routerConfig: routerConfig,
             theme: buildTheme(
               colorScheme: lightColorScheme,

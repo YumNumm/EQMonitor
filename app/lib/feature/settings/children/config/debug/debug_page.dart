@@ -1,14 +1,11 @@
 import 'dart:io';
 
-import 'package:better_auth_api_client/models/id_token.dart' as auth;
-import 'package:better_auth_api_client/models/sign_in_social_request_body.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
-import 'package:eqmonitor/feature/auth/data/provider/auth_api_client_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification/data/provider/notification_token_stream.dart';
@@ -202,7 +199,7 @@ class _DebugWidget extends ConsumerWidget {
 class _GoogleSignInTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(AuthNotifier.signInWithGoogle);
+    final state = ref.watch(AuthNotifier.signInWithGoogleMutation);
     final isPending = state is MutationPending;
 
     return ListTile(
@@ -225,22 +222,16 @@ class _GoogleSignInTile extends ConsumerWidget {
       },
       onTap: isPending
           ? null
-          : () => AuthNotifier.signInWithGoogle.run(ref, (tsx) async {
+          : () => AuthNotifier.signInWithGoogleMutation.run(ref, (tsx) async {
                 await tsx.get(googleSignInInitProvider.future);
                 final account = await GoogleSignIn.instance.authenticate();
                 final idToken = account.authentication.idToken;
                 if (idToken == null) {
                   throw Exception('Google idToken が取得できませんでした');
                 }
-                final apiClient = tsx.get(authApiClientProvider);
-                final notifier = tsx.get(authProvider.notifier);
-                final response = await apiClient.auth.postSignInSocial(
-                  body: SignInSocialRequestBody(
-                    provider: 'google',
-                    idToken: auth.IdToken(token: idToken),
-                  ),
-                );
-                await notifier.saveToken(response.data.token);
+                await tsx
+                    .get(authProvider.notifier)
+                    .signInWithGoogle(idToken: idToken);
               }),
     );
   }
@@ -249,7 +240,7 @@ class _GoogleSignInTile extends ConsumerWidget {
 class _SignOutTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(AuthNotifier.signOut);
+    final state = ref.watch(AuthNotifier.signOutMutation);
     final isPending = state is MutationPending;
 
     return ListTile(
@@ -272,12 +263,9 @@ class _SignOutTile extends ConsumerWidget {
       },
       onTap: isPending
           ? null
-          : () => AuthNotifier.signOut.run(ref, (tsx) async {
-                final apiClient = tsx.get(authApiClientProvider);
-                final notifier = tsx.get(authProvider.notifier);
-                await apiClient.auth.postSignOut();
+          : () => AuthNotifier.signOutMutation.run(ref, (tsx) async {
+                await tsx.get(authProvider.notifier).signOut();
                 await GoogleSignIn.instance.signOut();
-                await notifier.clearToken();
               }),
     );
   }

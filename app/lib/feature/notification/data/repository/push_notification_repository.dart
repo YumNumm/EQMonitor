@@ -18,56 +18,51 @@ class PushNotificationRepository {
   final api.ApiClient _api;
 
   Future<Result<GeneralNotificationSettings, Exception>>
-      getNotificationSettings(String deviceId) =>
-          Result.capture(() async {
-            final response =
-                await _api.device.getV2DeviceDeviceIdSettingsNotification(
-              deviceId: deviceId,
-            );
-            return response.data.toGeneralNotificationSettings;
-          });
+  getNotificationSettings(String deviceId) => Result.capture(() async {
+    final response = await _api.device.getV2DeviceDeviceIdSettingsNotification(
+      deviceId: deviceId,
+    );
+    return response.data.toGeneralNotificationSettings;
+  });
 
   Future<Result<GeneralNotificationSettings, Exception>>
-      patchNotificationSettings({
+  patchNotificationSettings({
     required String deviceId,
     required GeneralNotificationSettings settings,
-  }) =>
-          Result.capture(() async {
-            final response =
-                await _api.device.patchV2DeviceDeviceIdSettingsNotification(
-              deviceId: deviceId,
-              body: api.NotificationSettingsRequest(
-                tsunamiEnabled: settings.tsunamiEnabled,
-                trainingEnabled: settings.trainingEnabled,
-              ),
-            );
-            return response.data.toGeneralNotificationSettings;
-          });
+  }) => Result.capture(() async {
+    final response = await _api.device
+        .patchV2DeviceDeviceIdSettingsNotification(
+          deviceId: deviceId,
+          body: api.NotificationSettingsRequest(
+            tsunamiEnabled: settings.tsunamiEnabled,
+            trainingEnabled: settings.trainingEnabled,
+          ),
+        );
+    return response.data.toGeneralNotificationSettings;
+  });
 
   Future<Result<PushNotificationHistory, Exception>> getNotificationHistory({
     required String deviceId,
     int? limit,
-  }) =>
-      Result.capture(() async {
-        final response =
-            await _api.notification.getV2DeviceDeviceIdNotificationHistory(
+  }) => Result.capture(() async {
+    final response = await _api.notification
+        .getV2DeviceDeviceIdNotificationHistory(
           deviceId: deviceId,
           limit: limit,
         );
-        return response.data.toPushNotificationHistory;
-      });
+    return response.data.toPushNotificationHistory;
+  });
 
   Future<Result<TestNotificationDeliveryResult, Exception>>
-      sendTestNotification({
+  sendTestNotification({
     required String deviceId,
     required TestNotificationKind kind,
-  }) =>
-      Result.capture(() async {
-        final response =
-            await _api.notification.postV2DeviceDeviceIdNotificationTest(
+  }) => Result.capture(() async {
+    final response = await _api.notification
+        .postV2DeviceDeviceIdNotificationTest(
           deviceId: deviceId,
           body: kind.toApiRequest,
         );
-        return response.data.toTestNotificationDeliveryResult;
-      });
+    return response.data.toTestNotificationDeliveryResult;
+  });
 }

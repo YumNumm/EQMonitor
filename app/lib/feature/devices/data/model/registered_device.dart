@@ -28,25 +28,25 @@ enum RegisteredDeviceLocale {
 
 extension RegisteredDevicePlatformDisplay on RegisteredDevicePlatform {
   String get displayLabel => switch (this) {
-        RegisteredDevicePlatform.ios => 'iOS',
-        RegisteredDevicePlatform.android => 'Android',
-      };
+    .ios => 'iOS',
+    .android => 'Android',
+  };
 }
 
 extension RegisteredDeviceApiExtension on api.DeviceResponse {
   RegisteredDevice get toRegisteredDevice => RegisteredDevice(
-        id: id,
-        platform: switch (type) {
-          api.DeviceResponseType.ios => RegisteredDevicePlatform.ios,
-          api.DeviceResponseType.android => RegisteredDevicePlatform.android,
-        },
-        userId: userId,
-        locale: switch (locale) {
-          api.DeviceResponseLocale.ja => RegisteredDeviceLocale.ja,
-          api.DeviceResponseLocale.en => RegisteredDeviceLocale.en,
-          api.DeviceResponseLocale.zh => RegisteredDeviceLocale.zh,
-        },
-        createdAtIso: createdAt,
-        updatedAtIso: updatedAt,
-      );
+    id: id,
+    platform: switch (type) {
+      .ios => .ios,
+      .android => .android,
+    },
+    userId: userId,
+    locale: switch (locale) {
+      .ja => .ja,
+      .en => .en,
+      .zh => .zh,
+    },
+    createdAtIso: createdAt,
+    updatedAtIso: updatedAt,
+  );
 }
