@@ -69,8 +69,8 @@ class EewWidget extends ConsumerWidget {
     }
 
     final forecastIntensity = eew.forecastIntensity;
-    // TODO(eqmonitor_api): maxIntensity は codegen バグにより常に unknown
-    const maxIntensity = JmaIntensity.unknown;
+    final maxIntensity =
+        forecastIntensity?.maxIntensity ?? JmaIntensity.unknown;
     final intensityScheme = intensityColorScheme.fromJmaIntensity(
       maxIntensity,
     );
@@ -123,10 +123,10 @@ class EewWidget extends ConsumerWidget {
       ],
     );
 
-    const maxIntensityWidget = Column(
+    final maxIntensityWidget = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
+        const Text(
           '最大震度',
           style: TextStyle(
             fontFamily: FontFamily.notoSansJP,
@@ -194,7 +194,7 @@ class EewWidget extends ConsumerWidget {
             TextSpan(
               children: [
                 TextSpan(
-                  text: magnitude.toString().split('.').first,
+                  text: magnitude.toStringAsFixed(1).split('.').first,
                   style: textTheme.displaySmall!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontFamily: FontFamily.notoSansMono,
@@ -208,7 +208,7 @@ class EewWidget extends ConsumerWidget {
                   ),
                 ),
                 TextSpan(
-                  text: magnitude.toString().split('.').last.substring(0, 2),
+                  text: magnitude.toStringAsFixed(1).split('.').last,
                   style: textTheme.displaySmall!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontFamily: FontFamily.notoSansMono,
