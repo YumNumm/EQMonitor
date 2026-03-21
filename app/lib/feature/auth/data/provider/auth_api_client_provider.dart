@@ -17,42 +17,8 @@ auth_api.ApiClient authApiClient(Ref ref) {
       baseUrl: Env.betterAuthUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
-      // POSTリクエストの307/308リダイレクトはDioが正しく処理できないため、
-      // インターセプターで手動処理する
-      followRedirects: false,
-    ),
-  );
-  // 307/308リダイレクトをPOSTでも正しく処理するインターセプター
-  dio.interceptors.add(
-    InterceptorsWrapper(
-      onError: (error, handler) {
-        final response = error.response;
-        if (response != null &&
-            (response.statusCode == 307 || response.statusCode == 308)) {
-          final redirectUrl = response.headers.value('location');
-          if (redirectUrl != null) {
-            final options = error.requestOptions;
-            options.path = redirectUrl;
-            dio.fetch<dynamic>(options).then(
-              handler.resolve,
-              onError: (Object e) {
-                if (e is DioException) {
-                  handler.reject(e);
-                } else {
-                  handler.reject(
-                    DioException(
-                      requestOptions: options,
-                      error: e,
-                    ),
-                  );
-                }
-              },
-            );
-            return;
-          }
-        }
-        handler.next(error);
-      },
+      followRedirects: true,
+      maxRedirects: 5,
     ),
   );
   dio.interceptors.add(

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
-import 'package:eqmonitor/feature/auth/data/provider/auth_api_client_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,16 +14,16 @@ class SplashPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mutationState = ref.watch(AuthNotifier.signInAnonymously);
+    final mutationState = ref.watch(AuthNotifier.signInAnonymouslyMutation);
 
     void signInAnonymously() {
       unawaited(
-        AuthNotifier.signInAnonymously.run(ref, (tsx) async {
-          final apiClient = tsx.get(authApiClientProvider);
-          final notifier = tsx.get(authProvider.notifier);
-          final response = await apiClient.anonymous.postSignInAnonymous();
-          await notifier.saveToken(response.data.session.token);
-        }),
+        AuthNotifier.signInAnonymouslyMutation.run(
+          ref,
+          (tsx) async {
+            await tsx.get(authProvider.notifier).signInAnonymously();
+          },
+        ),
       );
     }
 
@@ -50,7 +49,7 @@ class SplashPage extends HookConsumerWidget {
 
     void skipAuth() => const HomeRoute().go(context);
 
-    ref.listen(AuthNotifier.signInAnonymously, (prev, next) {
+    ref.listen(AuthNotifier.signInAnonymouslyMutation, (prev, next) {
       if (next is MutationSuccess) {
         const HomeRoute().go(context);
       }

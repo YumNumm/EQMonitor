@@ -13,7 +13,8 @@ part of 'auth_notifier.dart';
 /// 認証状態(セッショントークン)を管理する Notifier。
 ///
 /// [build] ではセキュアストレージからトークンを読み込む。
-/// 副作用(匿名認証)は [signInAnonymously] Mutation で実行する。
+/// 副作用は [signInAnonymously] / [signInWithGoogle] / [signOut]
+/// Mutation で実行する。
 
 @ProviderFor(AuthNotifier)
 final authProvider = AuthNotifierProvider._();
@@ -21,13 +22,15 @@ final authProvider = AuthNotifierProvider._();
 /// 認証状態(セッショントークン)を管理する Notifier。
 ///
 /// [build] ではセキュアストレージからトークンを読み込む。
-/// 副作用(匿名認証)は [signInAnonymously] Mutation で実行する。
+/// 副作用は [signInAnonymously] / [signInWithGoogle] / [signOut]
+/// Mutation で実行する。
 final class AuthNotifierProvider
     extends $AsyncNotifierProvider<AuthNotifier, String?> {
   /// 認証状態(セッショントークン)を管理する Notifier。
   ///
   /// [build] ではセキュアストレージからトークンを読み込む。
-  /// 副作用(匿名認証)は [signInAnonymously] Mutation で実行する。
+  /// 副作用は [signInAnonymously] / [signInWithGoogle] / [signOut]
+  /// Mutation で実行する。
   AuthNotifierProvider._()
     : super(
         from: null,
@@ -47,12 +50,13 @@ final class AuthNotifierProvider
   AuthNotifier create() => AuthNotifier();
 }
 
-String _$authNotifierHash() => r'be63cc7b4a7e6d491109f8c3ecf23a767164cd42';
+String _$authNotifierHash() => r'3af7f687a91b6126ebac4bf4b60d5b54084496e8';
 
 /// 認証状態(セッショントークン)を管理する Notifier。
 ///
 /// [build] ではセキュアストレージからトークンを読み込む。
-/// 副作用(匿名認証)は [signInAnonymously] Mutation で実行する。
+/// 副作用は [signInAnonymously] / [signInWithGoogle] / [signOut]
+/// Mutation で実行する。
 
 abstract class _$AuthNotifier extends $AsyncNotifier<String?> {
   FutureOr<String?> build();

@@ -1,5 +1,4 @@
-import 'package:eqmonitor/core/data/preferences/secure/secure_preferences_data_source.dart';
-import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
+import 'package:eqmonitor/feature/auth/data/repository/auth_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,45 +7,35 @@ part 'auth_notifier.g.dart';
 /// 認証状態(セッショントークン)を管理する Notifier。
 ///
 /// [build] ではセキュアストレージからトークンを読み込む。
-/// 副作用(匿名認証)は [signInAnonymously] Mutation で実行する。
+/// 副作用は [signInAnonymouslyMutation] / [signInWithGoogleMutation] /
+/// [signOutMutation] Mutation で実行する。
 @Riverpod(keepAlive: true)
 class AuthNotifier extends _$AuthNotifier {
-  /// 匿名サインインを行う [Mutation]。
-  ///
-  /// スプラッシュ画面から呼び出し、
-  /// 既存のセッションが無い場合に Better Auth `/sign-in/anonymous` を実行する。
-  static final signInAnonymously = Mutation<void>();
-
-  /// Google Sign-in を行う [Mutation]。
-  static final signInWithGoogle = Mutation<void>();
-
-  /// サインアウトを行う [Mutation]。
-  static final signOut = Mutation<void>();
+  static final signInAnonymouslyMutation = Mutation<void>();
+  static final signInWithGoogleMutation = Mutation<void>();
+  static final signOutMutation = Mutation<void>();
 
   @override
   Future<String?> build() async {
-    final dataSource = await ref.watch(
-      securePreferencesDataSourceProvider.future,
-    );
-    return dataSource.getString(key: SecureStorageKey.sessionToken);
+    final repo = await ref.watch(authRepositoryProvider.future);
+    return repo.loadToken();
   }
 
-  Future<void> saveToken(String token) async {
-    final dataSource = await ref.read(
-      securePreferencesDataSourceProvider.future,
-    );
-    await dataSource.setString(
-      key: SecureStorageKey.sessionToken,
-      value: token,
-    );
+  Future<void> signInAnonymously() async {
+    final repo = await ref.read(authRepositoryProvider.future);
+    final token = await repo.signInAnonymously();
     state = AsyncData(token);
   }
 
-  Future<void> clearToken() async {
-    final dataSource = await ref.read(
-      securePreferencesDataSourceProvider.future,
-    );
-    await dataSource.remove(key: SecureStorageKey.sessionToken);
+  Future<void> signInWithGoogle({required String idToken}) async {
+    final repo = await ref.read(authRepositoryProvider.future);
+    final token = await repo.signInWithGoogle(idToken: idToken);
+    state = AsyncData(token);
+  }
+
+  Future<void> signOut() async {
+    final repo = await ref.read(authRepositoryProvider.future);
+    await repo.signOut();
     state = const AsyncData(null);
   }
 }
