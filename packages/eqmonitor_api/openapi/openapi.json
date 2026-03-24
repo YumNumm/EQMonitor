@@ -4148,10 +4148,7 @@
                 "description": "1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル"
               }
             },
-            "required": [
-              "sva",
-              "prePeriods"
-            ]
+            "required": []
           }
         ]
       },
