@@ -16,7 +16,10 @@ final homeConfigurationProvider = HomeConfigurationNotifierProvider._();
 
 final class HomeConfigurationNotifierProvider
     extends
-        $NotifierProvider<HomeConfigurationNotifier, HomeConfigurationModel> {
+        $AsyncNotifierProvider<
+          HomeConfigurationNotifier,
+          HomeConfigurationModel
+        > {
   HomeConfigurationNotifierProvider._()
     : super(
         from: null,
@@ -34,32 +37,28 @@ final class HomeConfigurationNotifierProvider
   @$internal
   @override
   HomeConfigurationNotifier create() => HomeConfigurationNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(HomeConfigurationModel value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<HomeConfigurationModel>(value),
-    );
-  }
 }
 
 String _$homeConfigurationNotifierHash() =>
-    r'd304e781e1d01913d5f9b3c16c3e8fb27541f88b';
+    r'77e3a236ddeb34fba40751b6bc6ceea83f99270b';
 
 abstract class _$HomeConfigurationNotifier
-    extends $Notifier<HomeConfigurationModel> {
-  HomeConfigurationModel build();
+    extends $AsyncNotifier<HomeConfigurationModel> {
+  FutureOr<HomeConfigurationModel> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<HomeConfigurationModel, HomeConfigurationModel>;
+        this.ref
+            as $Ref<AsyncValue<HomeConfigurationModel>, HomeConfigurationModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<HomeConfigurationModel, HomeConfigurationModel>,
-              HomeConfigurationModel,
+              AnyNotifier<
+                AsyncValue<HomeConfigurationModel>,
+                HomeConfigurationModel
+              >,
+              AsyncValue<HomeConfigurationModel>,
               Object?,
               Object?
             >;

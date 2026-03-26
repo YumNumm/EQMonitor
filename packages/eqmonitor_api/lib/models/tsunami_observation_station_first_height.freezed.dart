@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiObservationStationFirstHeight {
 
-@JsonKey(name: 'arrival_time') DateTime get arrivalTime; WaveInitial get initial;@JsonKey(name: 'is_unidentifiable') bool get isUnidentifiable;@JsonKey(name: 'is_missing') bool get isMissing;
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;@JsonKey(includeIfNull: false) WaveInitial? get initial;@JsonKey(includeIfNull: false, name: 'is_unidentifiable') bool? get isUnidentifiable;@JsonKey(includeIfNull: false, name: 'is_missing') bool? get isMissing;
 /// Create a copy of TsunamiObservationStationFirstHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiObservationStationFirstHeightCopyWith<$Res>  {
   factory $TsunamiObservationStationFirstHeightCopyWith(TsunamiObservationStationFirstHeight value, $Res Function(TsunamiObservationStationFirstHeight) _then) = _$TsunamiObservationStationFirstHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'arrival_time') DateTime arrivalTime, WaveInitial initial,@JsonKey(name: 'is_unidentifiable') bool isUnidentifiable,@JsonKey(name: 'is_missing') bool isMissing
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) WaveInitial? initial,@JsonKey(includeIfNull: false, name: 'is_unidentifiable') bool? isUnidentifiable,@JsonKey(includeIfNull: false, name: 'is_missing') bool? isMissing
 });
 
 
@@ -65,13 +65,13 @@ class _$TsunamiObservationStationFirstHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiObservationStationFirstHeight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? arrivalTime = null,Object? initial = null,Object? isUnidentifiable = null,Object? isMissing = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? arrivalTime = freezed,Object? initial = freezed,Object? isUnidentifiable = freezed,Object? isMissing = freezed,}) {
   return _then(_self.copyWith(
-arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime,initial: null == initial ? _self.initial : initial // ignore: cast_nullable_to_non_nullable
-as WaveInitial,isUnidentifiable: null == isUnidentifiable ? _self.isUnidentifiable : isUnidentifiable // ignore: cast_nullable_to_non_nullable
-as bool,isMissing: null == isMissing ? _self.isMissing : isMissing // ignore: cast_nullable_to_non_nullable
-as bool,
+arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,initial: freezed == initial ? _self.initial : initial // ignore: cast_nullable_to_non_nullable
+as WaveInitial?,isUnidentifiable: freezed == isUnidentifiable ? _self.isUnidentifiable : isUnidentifiable // ignore: cast_nullable_to_non_nullable
+as bool?,isMissing: freezed == isMissing ? _self.isMissing : isMissing // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'arrival_time')  DateTime arrivalTime,  WaveInitial initial, @JsonKey(name: 'is_unidentifiable')  bool isUnidentifiable, @JsonKey(name: 'is_missing')  bool isMissing)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  WaveInitial? initial, @JsonKey(includeIfNull: false, name: 'is_unidentifiable')  bool? isUnidentifiable, @JsonKey(includeIfNull: false, name: 'is_missing')  bool? isMissing)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiObservationStationFirstHeight() when $default != null:
 return $default(_that.arrivalTime,_that.initial,_that.isUnidentifiable,_that.isMissing);case _:
@@ -177,7 +177,7 @@ return $default(_that.arrivalTime,_that.initial,_that.isUnidentifiable,_that.isM
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'arrival_time')  DateTime arrivalTime,  WaveInitial initial, @JsonKey(name: 'is_unidentifiable')  bool isUnidentifiable, @JsonKey(name: 'is_missing')  bool isMissing)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  WaveInitial? initial, @JsonKey(includeIfNull: false, name: 'is_unidentifiable')  bool? isUnidentifiable, @JsonKey(includeIfNull: false, name: 'is_missing')  bool? isMissing)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiObservationStationFirstHeight():
 return $default(_that.arrivalTime,_that.initial,_that.isUnidentifiable,_that.isMissing);case _:
@@ -197,7 +197,7 @@ return $default(_that.arrivalTime,_that.initial,_that.isUnidentifiable,_that.isM
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'arrival_time')  DateTime arrivalTime,  WaveInitial initial, @JsonKey(name: 'is_unidentifiable')  bool isUnidentifiable, @JsonKey(name: 'is_missing')  bool isMissing)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  WaveInitial? initial, @JsonKey(includeIfNull: false, name: 'is_unidentifiable')  bool? isUnidentifiable, @JsonKey(includeIfNull: false, name: 'is_missing')  bool? isMissing)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiObservationStationFirstHeight() when $default != null:
 return $default(_that.arrivalTime,_that.initial,_that.isUnidentifiable,_that.isMissing);case _:
@@ -212,13 +212,13 @@ return $default(_that.arrivalTime,_that.initial,_that.isUnidentifiable,_that.isM
 @JsonSerializable()
 
 class _TsunamiObservationStationFirstHeight implements TsunamiObservationStationFirstHeight {
-  const _TsunamiObservationStationFirstHeight({@JsonKey(name: 'arrival_time') required this.arrivalTime, required this.initial, @JsonKey(name: 'is_unidentifiable') required this.isUnidentifiable, @JsonKey(name: 'is_missing') required this.isMissing});
+  const _TsunamiObservationStationFirstHeight({@JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime, @JsonKey(includeIfNull: false) this.initial, @JsonKey(includeIfNull: false, name: 'is_unidentifiable') this.isUnidentifiable, @JsonKey(includeIfNull: false, name: 'is_missing') this.isMissing});
   factory _TsunamiObservationStationFirstHeight.fromJson(Map<String, dynamic> json) => _$TsunamiObservationStationFirstHeightFromJson(json);
 
-@override@JsonKey(name: 'arrival_time') final  DateTime arrivalTime;
-@override final  WaveInitial initial;
-@override@JsonKey(name: 'is_unidentifiable') final  bool isUnidentifiable;
-@override@JsonKey(name: 'is_missing') final  bool isMissing;
+@override@JsonKey(includeIfNull: false, name: 'arrival_time') final  DateTime? arrivalTime;
+@override@JsonKey(includeIfNull: false) final  WaveInitial? initial;
+@override@JsonKey(includeIfNull: false, name: 'is_unidentifiable') final  bool? isUnidentifiable;
+@override@JsonKey(includeIfNull: false, name: 'is_missing') final  bool? isMissing;
 
 /// Create a copy of TsunamiObservationStationFirstHeight
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$TsunamiObservationStationFirstHeightCopyWith<$Res> implem
   factory _$TsunamiObservationStationFirstHeightCopyWith(_TsunamiObservationStationFirstHeight value, $Res Function(_TsunamiObservationStationFirstHeight) _then) = __$TsunamiObservationStationFirstHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'arrival_time') DateTime arrivalTime, WaveInitial initial,@JsonKey(name: 'is_unidentifiable') bool isUnidentifiable,@JsonKey(name: 'is_missing') bool isMissing
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) WaveInitial? initial,@JsonKey(includeIfNull: false, name: 'is_unidentifiable') bool? isUnidentifiable,@JsonKey(includeIfNull: false, name: 'is_missing') bool? isMissing
 });
 
 
@@ -270,13 +270,13 @@ class __$TsunamiObservationStationFirstHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiObservationStationFirstHeight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? arrivalTime = null,Object? initial = null,Object? isUnidentifiable = null,Object? isMissing = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? arrivalTime = freezed,Object? initial = freezed,Object? isUnidentifiable = freezed,Object? isMissing = freezed,}) {
   return _then(_TsunamiObservationStationFirstHeight(
-arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime,initial: null == initial ? _self.initial : initial // ignore: cast_nullable_to_non_nullable
-as WaveInitial,isUnidentifiable: null == isUnidentifiable ? _self.isUnidentifiable : isUnidentifiable // ignore: cast_nullable_to_non_nullable
-as bool,isMissing: null == isMissing ? _self.isMissing : isMissing // ignore: cast_nullable_to_non_nullable
-as bool,
+arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,initial: freezed == initial ? _self.initial : initial // ignore: cast_nullable_to_non_nullable
+as WaveInitial?,isUnidentifiable: freezed == isUnidentifiable ? _self.isUnidentifiable : isUnidentifiable // ignore: cast_nullable_to_non_nullable
+as bool?,isMissing: freezed == isMissing ? _self.isMissing : isMissing // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

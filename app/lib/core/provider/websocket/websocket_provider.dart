@@ -23,7 +23,7 @@ Future<WebSocket> websocket(Ref ref) async {
     '有効期限: ${body.expiresAt.toIso8601String()}',
   );
   final ticket = body.ticket;
-  final wsApiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
+  final wsApiUrl = ref.watch(telegramUrlProvider.select((v) => v.requireValue.wsApiUrl));
 
   // チケットをクエリパラメータに追加
   final uri = Uri.parse(wsApiUrl).replace(

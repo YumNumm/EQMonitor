@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewSettingsRequest {
 
- bool get enabled;@JsonKey(name: 'notification_tiers') List<NotificationTiers4> get notificationTiers;@JsonKey(name: 'start_live_activity') bool get startLiveActivity;
+@JsonKey(includeIfNull: false) bool? get enabled;@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers4>? get notificationTiers;@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? get startLiveActivity;
 /// Create a copy of EewSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $EewSettingsRequestCopyWith<$Res>  {
   factory $EewSettingsRequestCopyWith(EewSettingsRequest value, $Res Function(EewSettingsRequest) _then) = _$EewSettingsRequestCopyWithImpl;
 @useResult
 $Res call({
- bool enabled,@JsonKey(name: 'notification_tiers') List<NotificationTiers4> notificationTiers,@JsonKey(name: 'start_live_activity') bool startLiveActivity
+@JsonKey(includeIfNull: false) bool? enabled,@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers4>? notificationTiers,@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? startLiveActivity
 });
 
 
@@ -65,12 +65,12 @@ class _$EewSettingsRequestCopyWithImpl<$Res>
 
 /// Create a copy of EewSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? notificationTiers = null,Object? startLiveActivity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = freezed,Object? notificationTiers = freezed,Object? startLiveActivity = freezed,}) {
   return _then(_self.copyWith(
-enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
-as bool,notificationTiers: null == notificationTiers ? _self.notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
-as List<NotificationTiers4>,startLiveActivity: null == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
-as bool,
+enabled: freezed == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool?,notificationTiers: freezed == notificationTiers ? _self.notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
+as List<NotificationTiers4>?,startLiveActivity: freezed == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTiers4> notificationTiers, @JsonKey(name: 'start_live_activity')  bool startLiveActivity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTiers4>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewSettingsRequest() when $default != null:
 return $default(_that.enabled,_that.notificationTiers,_that.startLiveActivity);case _:
@@ -176,7 +176,7 @@ return $default(_that.enabled,_that.notificationTiers,_that.startLiveActivity);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTiers4> notificationTiers, @JsonKey(name: 'start_live_activity')  bool startLiveActivity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTiers4>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)  $default,) {final _that = this;
 switch (_that) {
 case _EewSettingsRequest():
 return $default(_that.enabled,_that.notificationTiers,_that.startLiveActivity);case _:
@@ -196,7 +196,7 @@ return $default(_that.enabled,_that.notificationTiers,_that.startLiveActivity);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled, @JsonKey(name: 'notification_tiers')  List<NotificationTiers4> notificationTiers, @JsonKey(name: 'start_live_activity')  bool startLiveActivity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  bool? enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers')  List<NotificationTiers4>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity')  bool? startLiveActivity)?  $default,) {final _that = this;
 switch (_that) {
 case _EewSettingsRequest() when $default != null:
 return $default(_that.enabled,_that.notificationTiers,_that.startLiveActivity);case _:
@@ -211,18 +211,20 @@ return $default(_that.enabled,_that.notificationTiers,_that.startLiveActivity);c
 @JsonSerializable()
 
 class _EewSettingsRequest implements EewSettingsRequest {
-  const _EewSettingsRequest({required this.enabled, @JsonKey(name: 'notification_tiers') required final  List<NotificationTiers4> notificationTiers, @JsonKey(name: 'start_live_activity') required this.startLiveActivity}): _notificationTiers = notificationTiers;
+  const _EewSettingsRequest({@JsonKey(includeIfNull: false) this.enabled, @JsonKey(includeIfNull: false, name: 'notification_tiers') final  List<NotificationTiers4>? notificationTiers, @JsonKey(includeIfNull: false, name: 'start_live_activity') this.startLiveActivity}): _notificationTiers = notificationTiers;
   factory _EewSettingsRequest.fromJson(Map<String, dynamic> json) => _$EewSettingsRequestFromJson(json);
 
-@override final  bool enabled;
- final  List<NotificationTiers4> _notificationTiers;
-@override@JsonKey(name: 'notification_tiers') List<NotificationTiers4> get notificationTiers {
+@override@JsonKey(includeIfNull: false) final  bool? enabled;
+ final  List<NotificationTiers4>? _notificationTiers;
+@override@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers4>? get notificationTiers {
+  final value = _notificationTiers;
+  if (value == null) return null;
   if (_notificationTiers is EqualUnmodifiableListView) return _notificationTiers;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_notificationTiers);
+  return EqualUnmodifiableListView(value);
 }
 
-@override@JsonKey(name: 'start_live_activity') final  bool startLiveActivity;
+@override@JsonKey(includeIfNull: false, name: 'start_live_activity') final  bool? startLiveActivity;
 
 /// Create a copy of EewSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -257,7 +259,7 @@ abstract mixin class _$EewSettingsRequestCopyWith<$Res> implements $EewSettingsR
   factory _$EewSettingsRequestCopyWith(_EewSettingsRequest value, $Res Function(_EewSettingsRequest) _then) = __$EewSettingsRequestCopyWithImpl;
 @override @useResult
 $Res call({
- bool enabled,@JsonKey(name: 'notification_tiers') List<NotificationTiers4> notificationTiers,@JsonKey(name: 'start_live_activity') bool startLiveActivity
+@JsonKey(includeIfNull: false) bool? enabled,@JsonKey(includeIfNull: false, name: 'notification_tiers') List<NotificationTiers4>? notificationTiers,@JsonKey(includeIfNull: false, name: 'start_live_activity') bool? startLiveActivity
 });
 
 
@@ -274,12 +276,12 @@ class __$EewSettingsRequestCopyWithImpl<$Res>
 
 /// Create a copy of EewSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? notificationTiers = null,Object? startLiveActivity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = freezed,Object? notificationTiers = freezed,Object? startLiveActivity = freezed,}) {
   return _then(_EewSettingsRequest(
-enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
-as bool,notificationTiers: null == notificationTiers ? _self._notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
-as List<NotificationTiers4>,startLiveActivity: null == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
-as bool,
+enabled: freezed == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool?,notificationTiers: freezed == notificationTiers ? _self._notificationTiers : notificationTiers // ignore: cast_nullable_to_non_nullable
+as List<NotificationTiers4>?,startLiveActivity: freezed == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

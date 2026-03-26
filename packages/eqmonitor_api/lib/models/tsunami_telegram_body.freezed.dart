@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiTelegramBody {
 
- List<TsunamiForecast> get forecasts; List<TsunamiObservation> get observations; List<TsunamiEstimation> get estimations; List<TsunamiEarthquake> get earthquakes; TsunamiComments get comments;@JsonKey(includeIfNull: false) String? get text;
+@JsonKey(includeIfNull: false) List<TsunamiForecast>? get forecasts;@JsonKey(includeIfNull: false) List<TsunamiObservation>? get observations;@JsonKey(includeIfNull: false) List<TsunamiEstimation>? get estimations;@JsonKey(includeIfNull: false) List<TsunamiEarthquake>? get earthquakes;@JsonKey(includeIfNull: false) String? get text;@JsonKey(includeIfNull: false) TsunamiComments? get comments;
 /// Create a copy of TsunamiTelegramBody
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TsunamiTelegramBodyCopyWith<TsunamiTelegramBody> get copyWith => _$TsunamiTeleg
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiTelegramBody&&const DeepCollectionEquality().equals(other.forecasts, forecasts)&&const DeepCollectionEquality().equals(other.observations, observations)&&const DeepCollectionEquality().equals(other.estimations, estimations)&&const DeepCollectionEquality().equals(other.earthquakes, earthquakes)&&(identical(other.comments, comments) || other.comments == comments)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiTelegramBody&&const DeepCollectionEquality().equals(other.forecasts, forecasts)&&const DeepCollectionEquality().equals(other.observations, observations)&&const DeepCollectionEquality().equals(other.estimations, estimations)&&const DeepCollectionEquality().equals(other.earthquakes, earthquakes)&&(identical(other.text, text) || other.text == text)&&(identical(other.comments, comments) || other.comments == comments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(forecasts),const DeepCollectionEquality().hash(observations),const DeepCollectionEquality().hash(estimations),const DeepCollectionEquality().hash(earthquakes),comments,text);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(forecasts),const DeepCollectionEquality().hash(observations),const DeepCollectionEquality().hash(estimations),const DeepCollectionEquality().hash(earthquakes),text,comments);
 
 @override
 String toString() {
-  return 'TsunamiTelegramBody(forecasts: $forecasts, observations: $observations, estimations: $estimations, earthquakes: $earthquakes, comments: $comments, text: $text)';
+  return 'TsunamiTelegramBody(forecasts: $forecasts, observations: $observations, estimations: $estimations, earthquakes: $earthquakes, text: $text, comments: $comments)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $TsunamiTelegramBodyCopyWith<$Res>  {
   factory $TsunamiTelegramBodyCopyWith(TsunamiTelegramBody value, $Res Function(TsunamiTelegramBody) _then) = _$TsunamiTelegramBodyCopyWithImpl;
 @useResult
 $Res call({
- List<TsunamiForecast> forecasts, List<TsunamiObservation> observations, List<TsunamiEstimation> estimations, List<TsunamiEarthquake> earthquakes, TsunamiComments comments,@JsonKey(includeIfNull: false) String? text
+@JsonKey(includeIfNull: false) List<TsunamiForecast>? forecasts,@JsonKey(includeIfNull: false) List<TsunamiObservation>? observations,@JsonKey(includeIfNull: false) List<TsunamiEstimation>? estimations,@JsonKey(includeIfNull: false) List<TsunamiEarthquake>? earthquakes,@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) TsunamiComments? comments
 });
 
 
-$TsunamiCommentsCopyWith<$Res> get comments;
+$TsunamiCommentsCopyWith<$Res>? get comments;
 
 }
 /// @nodoc
@@ -65,24 +65,27 @@ class _$TsunamiTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? forecasts = null,Object? observations = null,Object? estimations = null,Object? earthquakes = null,Object? comments = null,Object? text = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? forecasts = freezed,Object? observations = freezed,Object? estimations = freezed,Object? earthquakes = freezed,Object? text = freezed,Object? comments = freezed,}) {
   return _then(_self.copyWith(
-forecasts: null == forecasts ? _self.forecasts : forecasts // ignore: cast_nullable_to_non_nullable
-as List<TsunamiForecast>,observations: null == observations ? _self.observations : observations // ignore: cast_nullable_to_non_nullable
-as List<TsunamiObservation>,estimations: null == estimations ? _self.estimations : estimations // ignore: cast_nullable_to_non_nullable
-as List<TsunamiEstimation>,earthquakes: null == earthquakes ? _self.earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
-as List<TsunamiEarthquake>,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
-as TsunamiComments,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
-as String?,
+forecasts: freezed == forecasts ? _self.forecasts : forecasts // ignore: cast_nullable_to_non_nullable
+as List<TsunamiForecast>?,observations: freezed == observations ? _self.observations : observations // ignore: cast_nullable_to_non_nullable
+as List<TsunamiObservation>?,estimations: freezed == estimations ? _self.estimations : estimations // ignore: cast_nullable_to_non_nullable
+as List<TsunamiEstimation>?,earthquakes: freezed == earthquakes ? _self.earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<TsunamiEarthquake>?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
+as TsunamiComments?,
   ));
 }
 /// Create a copy of TsunamiTelegramBody
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiCommentsCopyWith<$Res> get comments {
-  
-  return $TsunamiCommentsCopyWith<$Res>(_self.comments, (value) {
+$TsunamiCommentsCopyWith<$Res>? get comments {
+    if (_self.comments == null) {
+    return null;
+  }
+
+  return $TsunamiCommentsCopyWith<$Res>(_self.comments!, (value) {
     return _then(_self.copyWith(comments: value));
   });
 }
@@ -167,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TsunamiForecast> forecasts,  List<TsunamiObservation> observations,  List<TsunamiEstimation> estimations,  List<TsunamiEarthquake> earthquakes,  TsunamiComments comments, @JsonKey(includeIfNull: false)  String? text)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  List<TsunamiForecast>? forecasts, @JsonKey(includeIfNull: false)  List<TsunamiObservation>? observations, @JsonKey(includeIfNull: false)  List<TsunamiEstimation>? estimations, @JsonKey(includeIfNull: false)  List<TsunamiEarthquake>? earthquakes, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  TsunamiComments? comments)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramBody() when $default != null:
-return $default(_that.forecasts,_that.observations,_that.estimations,_that.earthquakes,_that.comments,_that.text);case _:
+return $default(_that.forecasts,_that.observations,_that.estimations,_that.earthquakes,_that.text,_that.comments);case _:
   return orElse();
 
 }
@@ -188,10 +191,10 @@ return $default(_that.forecasts,_that.observations,_that.estimations,_that.earth
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TsunamiForecast> forecasts,  List<TsunamiObservation> observations,  List<TsunamiEstimation> estimations,  List<TsunamiEarthquake> earthquakes,  TsunamiComments comments, @JsonKey(includeIfNull: false)  String? text)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  List<TsunamiForecast>? forecasts, @JsonKey(includeIfNull: false)  List<TsunamiObservation>? observations, @JsonKey(includeIfNull: false)  List<TsunamiEstimation>? estimations, @JsonKey(includeIfNull: false)  List<TsunamiEarthquake>? earthquakes, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  TsunamiComments? comments)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramBody():
-return $default(_that.forecasts,_that.observations,_that.estimations,_that.earthquakes,_that.comments,_that.text);case _:
+return $default(_that.forecasts,_that.observations,_that.estimations,_that.earthquakes,_that.text,_that.comments);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +211,10 @@ return $default(_that.forecasts,_that.observations,_that.estimations,_that.earth
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TsunamiForecast> forecasts,  List<TsunamiObservation> observations,  List<TsunamiEstimation> estimations,  List<TsunamiEarthquake> earthquakes,  TsunamiComments comments, @JsonKey(includeIfNull: false)  String? text)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  List<TsunamiForecast>? forecasts, @JsonKey(includeIfNull: false)  List<TsunamiObservation>? observations, @JsonKey(includeIfNull: false)  List<TsunamiEstimation>? estimations, @JsonKey(includeIfNull: false)  List<TsunamiEarthquake>? earthquakes, @JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  TsunamiComments? comments)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiTelegramBody() when $default != null:
-return $default(_that.forecasts,_that.observations,_that.estimations,_that.earthquakes,_that.comments,_that.text);case _:
+return $default(_that.forecasts,_that.observations,_that.estimations,_that.earthquakes,_that.text,_that.comments);case _:
   return null;
 
 }
@@ -223,39 +226,47 @@ return $default(_that.forecasts,_that.observations,_that.estimations,_that.earth
 @JsonSerializable()
 
 class _TsunamiTelegramBody implements TsunamiTelegramBody {
-  const _TsunamiTelegramBody({required final  List<TsunamiForecast> forecasts, required final  List<TsunamiObservation> observations, required final  List<TsunamiEstimation> estimations, required final  List<TsunamiEarthquake> earthquakes, required this.comments, @JsonKey(includeIfNull: false) this.text}): _forecasts = forecasts,_observations = observations,_estimations = estimations,_earthquakes = earthquakes;
+  const _TsunamiTelegramBody({@JsonKey(includeIfNull: false) final  List<TsunamiForecast>? forecasts, @JsonKey(includeIfNull: false) final  List<TsunamiObservation>? observations, @JsonKey(includeIfNull: false) final  List<TsunamiEstimation>? estimations, @JsonKey(includeIfNull: false) final  List<TsunamiEarthquake>? earthquakes, @JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.comments}): _forecasts = forecasts,_observations = observations,_estimations = estimations,_earthquakes = earthquakes;
   factory _TsunamiTelegramBody.fromJson(Map<String, dynamic> json) => _$TsunamiTelegramBodyFromJson(json);
 
- final  List<TsunamiForecast> _forecasts;
-@override List<TsunamiForecast> get forecasts {
+ final  List<TsunamiForecast>? _forecasts;
+@override@JsonKey(includeIfNull: false) List<TsunamiForecast>? get forecasts {
+  final value = _forecasts;
+  if (value == null) return null;
   if (_forecasts is EqualUnmodifiableListView) return _forecasts;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_forecasts);
+  return EqualUnmodifiableListView(value);
 }
 
- final  List<TsunamiObservation> _observations;
-@override List<TsunamiObservation> get observations {
+ final  List<TsunamiObservation>? _observations;
+@override@JsonKey(includeIfNull: false) List<TsunamiObservation>? get observations {
+  final value = _observations;
+  if (value == null) return null;
   if (_observations is EqualUnmodifiableListView) return _observations;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_observations);
+  return EqualUnmodifiableListView(value);
 }
 
- final  List<TsunamiEstimation> _estimations;
-@override List<TsunamiEstimation> get estimations {
+ final  List<TsunamiEstimation>? _estimations;
+@override@JsonKey(includeIfNull: false) List<TsunamiEstimation>? get estimations {
+  final value = _estimations;
+  if (value == null) return null;
   if (_estimations is EqualUnmodifiableListView) return _estimations;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_estimations);
+  return EqualUnmodifiableListView(value);
 }
 
- final  List<TsunamiEarthquake> _earthquakes;
-@override List<TsunamiEarthquake> get earthquakes {
+ final  List<TsunamiEarthquake>? _earthquakes;
+@override@JsonKey(includeIfNull: false) List<TsunamiEarthquake>? get earthquakes {
+  final value = _earthquakes;
+  if (value == null) return null;
   if (_earthquakes is EqualUnmodifiableListView) return _earthquakes;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_earthquakes);
+  return EqualUnmodifiableListView(value);
 }
 
-@override final  TsunamiComments comments;
 @override@JsonKey(includeIfNull: false) final  String? text;
+@override@JsonKey(includeIfNull: false) final  TsunamiComments? comments;
 
 /// Create a copy of TsunamiTelegramBody
 /// with the given fields replaced by the non-null parameter values.
@@ -270,16 +281,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiTelegramBody&&const DeepCollectionEquality().equals(other._forecasts, _forecasts)&&const DeepCollectionEquality().equals(other._observations, _observations)&&const DeepCollectionEquality().equals(other._estimations, _estimations)&&const DeepCollectionEquality().equals(other._earthquakes, _earthquakes)&&(identical(other.comments, comments) || other.comments == comments)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiTelegramBody&&const DeepCollectionEquality().equals(other._forecasts, _forecasts)&&const DeepCollectionEquality().equals(other._observations, _observations)&&const DeepCollectionEquality().equals(other._estimations, _estimations)&&const DeepCollectionEquality().equals(other._earthquakes, _earthquakes)&&(identical(other.text, text) || other.text == text)&&(identical(other.comments, comments) || other.comments == comments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_forecasts),const DeepCollectionEquality().hash(_observations),const DeepCollectionEquality().hash(_estimations),const DeepCollectionEquality().hash(_earthquakes),comments,text);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_forecasts),const DeepCollectionEquality().hash(_observations),const DeepCollectionEquality().hash(_estimations),const DeepCollectionEquality().hash(_earthquakes),text,comments);
 
 @override
 String toString() {
-  return 'TsunamiTelegramBody(forecasts: $forecasts, observations: $observations, estimations: $estimations, earthquakes: $earthquakes, comments: $comments, text: $text)';
+  return 'TsunamiTelegramBody(forecasts: $forecasts, observations: $observations, estimations: $estimations, earthquakes: $earthquakes, text: $text, comments: $comments)';
 }
 
 
@@ -290,11 +301,11 @@ abstract mixin class _$TsunamiTelegramBodyCopyWith<$Res> implements $TsunamiTele
   factory _$TsunamiTelegramBodyCopyWith(_TsunamiTelegramBody value, $Res Function(_TsunamiTelegramBody) _then) = __$TsunamiTelegramBodyCopyWithImpl;
 @override @useResult
 $Res call({
- List<TsunamiForecast> forecasts, List<TsunamiObservation> observations, List<TsunamiEstimation> estimations, List<TsunamiEarthquake> earthquakes, TsunamiComments comments,@JsonKey(includeIfNull: false) String? text
+@JsonKey(includeIfNull: false) List<TsunamiForecast>? forecasts,@JsonKey(includeIfNull: false) List<TsunamiObservation>? observations,@JsonKey(includeIfNull: false) List<TsunamiEstimation>? estimations,@JsonKey(includeIfNull: false) List<TsunamiEarthquake>? earthquakes,@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) TsunamiComments? comments
 });
 
 
-@override $TsunamiCommentsCopyWith<$Res> get comments;
+@override $TsunamiCommentsCopyWith<$Res>? get comments;
 
 }
 /// @nodoc
@@ -307,15 +318,15 @@ class __$TsunamiTelegramBodyCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiTelegramBody
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? forecasts = null,Object? observations = null,Object? estimations = null,Object? earthquakes = null,Object? comments = null,Object? text = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? forecasts = freezed,Object? observations = freezed,Object? estimations = freezed,Object? earthquakes = freezed,Object? text = freezed,Object? comments = freezed,}) {
   return _then(_TsunamiTelegramBody(
-forecasts: null == forecasts ? _self._forecasts : forecasts // ignore: cast_nullable_to_non_nullable
-as List<TsunamiForecast>,observations: null == observations ? _self._observations : observations // ignore: cast_nullable_to_non_nullable
-as List<TsunamiObservation>,estimations: null == estimations ? _self._estimations : estimations // ignore: cast_nullable_to_non_nullable
-as List<TsunamiEstimation>,earthquakes: null == earthquakes ? _self._earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
-as List<TsunamiEarthquake>,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
-as TsunamiComments,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
-as String?,
+forecasts: freezed == forecasts ? _self._forecasts : forecasts // ignore: cast_nullable_to_non_nullable
+as List<TsunamiForecast>?,observations: freezed == observations ? _self._observations : observations // ignore: cast_nullable_to_non_nullable
+as List<TsunamiObservation>?,estimations: freezed == estimations ? _self._estimations : estimations // ignore: cast_nullable_to_non_nullable
+as List<TsunamiEstimation>?,earthquakes: freezed == earthquakes ? _self._earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<TsunamiEarthquake>?,text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String?,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
+as TsunamiComments?,
   ));
 }
 
@@ -323,9 +334,12 @@ as String?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiCommentsCopyWith<$Res> get comments {
-  
-  return $TsunamiCommentsCopyWith<$Res>(_self.comments, (value) {
+$TsunamiCommentsCopyWith<$Res>? get comments {
+    if (_self.comments == null) {
+    return null;
+  }
+
+  return $TsunamiCommentsCopyWith<$Res>(_self.comments!, (value) {
     return _then(_self.copyWith(comments: value));
   });
 }

@@ -14,18 +14,18 @@ _EewSettingsRequest _$EewSettingsRequestFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _EewSettingsRequest(
-          enabled: $checkedConvert('enabled', (v) => v as bool),
+          enabled: $checkedConvert('enabled', (v) => v as bool?),
           notificationTiers: $checkedConvert(
             'notification_tiers',
-            (v) => (v as List<dynamic>)
-                .map(
+            (v) => (v as List<dynamic>?)
+                ?.map(
                   (e) => NotificationTiers4.fromJson(e as Map<String, dynamic>),
                 )
                 .toList(),
           ),
           startLiveActivity: $checkedConvert(
             'start_live_activity',
-            (v) => v as bool,
+            (v) => v as bool?,
           ),
         );
         return val;
@@ -38,7 +38,7 @@ _EewSettingsRequest _$EewSettingsRequestFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EewSettingsRequestToJson(_EewSettingsRequest instance) =>
     <String, dynamic>{
-      'enabled': instance.enabled,
-      'notification_tiers': instance.notificationTiers,
-      'start_live_activity': instance.startLiveActivity,
+      'enabled': ?instance.enabled,
+      'notification_tiers': ?instance.notificationTiers,
+      'start_live_activity': ?instance.startLiveActivity,
     };

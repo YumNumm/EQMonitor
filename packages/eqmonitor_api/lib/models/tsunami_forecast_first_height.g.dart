@@ -17,11 +17,11 @@ _TsunamiForecastFirstHeight _$TsunamiForecastFirstHeightFromJson(
     final val = _TsunamiForecastFirstHeight(
       arrivalTime: $checkedConvert(
         'arrival_time',
-        (v) => DateTime.parse(v as String),
+        (v) => v == null ? null : DateTime.parse(v as String),
       ),
       condition: $checkedConvert(
         'condition',
-        (v) => $enumDecode(_$FirstHeightConditionEnumMap, v),
+        (v) => $enumDecodeNullable(_$FirstHeightConditionEnumMap, v),
       ),
     );
     return val;
@@ -32,8 +32,8 @@ _TsunamiForecastFirstHeight _$TsunamiForecastFirstHeightFromJson(
 Map<String, dynamic> _$TsunamiForecastFirstHeightToJson(
   _TsunamiForecastFirstHeight instance,
 ) => <String, dynamic>{
-  'arrival_time': instance.arrivalTime.toIso8601String(),
-  'condition': instance.condition,
+  'arrival_time': ?instance.arrivalTime?.toIso8601String(),
+  'condition': ?instance.condition,
 };
 
 const _$FirstHeightConditionEnumMap = {

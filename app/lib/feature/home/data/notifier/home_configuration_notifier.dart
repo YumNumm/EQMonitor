@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,34 +11,31 @@ part 'home_configuration_notifier.g.dart';
 @riverpod
 class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
   @override
-  HomeConfigurationModel build() {
-    final saved = load();
-    if (saved != null) {
-      return saved;
-    }
-    return const HomeConfigurationModel();
-  }
+  Future<HomeConfigurationModel> build() async => load();
 
-  static const _key = 'home_configuration';
-
-  HomeConfigurationModel? load() {
+  Future<HomeConfigurationModel> load() async {
     try {
-      final jsonString = ref.read(sharedPreferencesProvider).getString(_key);
+      final ds = ref.read(sharedPreferencesDataSourceProvider);
+      final jsonString = await ds.getString(
+        key: SharedPreferencesKey.homeConfiguration,
+      );
       if (jsonString == null) {
-        return null;
+        return const HomeConfigurationModel();
       }
       final json = jsonDecode(jsonString) as Map<String, dynamic>;
       return HomeConfigurationModel.fromJson(json);
     } on Exception catch (e) {
       log('load home configuration failed: $e');
-      return null;
+      return const HomeConfigurationModel();
     }
   }
 
   Future<void> save(HomeConfigurationModel configuration) async {
-    state = configuration;
-    await ref
-        .read(sharedPreferencesProvider)
-        .setString(_key, jsonEncode(configuration.toJson()));
+    state = AsyncValue.data(configuration);
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    await ds.setString(
+      key: SharedPreferencesKey.homeConfiguration,
+      value: jsonEncode(configuration.toJson()),
+    );
   }
 }
