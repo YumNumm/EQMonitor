@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiListResponse {
 
- List<Tsunami> get items;/// カーソル情報（base64エンコード）
+ List<TsunamiListItem> get items;/// カーソル情報（base64エンコード）
 @JsonKey(includeIfNull: false, name: 'next_token') String? get nextToken;/// カーソル情報（base64エンコード）
 @JsonKey(includeIfNull: false, name: 'next_pooling') String? get nextPooling;
 /// Create a copy of TsunamiListResponse
@@ -50,7 +50,7 @@ abstract mixin class $TsunamiListResponseCopyWith<$Res>  {
   factory $TsunamiListResponseCopyWith(TsunamiListResponse value, $Res Function(TsunamiListResponse) _then) = _$TsunamiListResponseCopyWithImpl;
 @useResult
 $Res call({
- List<Tsunami> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
+ List<TsunamiListItem> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
 });
 
 
@@ -70,7 +70,7 @@ class _$TsunamiListResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? nextToken = freezed,Object? nextPooling = freezed,}) {
   return _then(_self.copyWith(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<Tsunami>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
+as List<TsunamiListItem>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,nextPooling: freezed == nextPooling ? _self.nextPooling : nextPooling // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Tsunami> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TsunamiListItem> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiListResponse() when $default != null:
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -178,7 +178,7 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Tsunami> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TsunamiListItem> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiListResponse():
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -198,7 +198,7 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Tsunami> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TsunamiListItem> items, @JsonKey(includeIfNull: false, name: 'next_token')  String? nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling')  String? nextPooling)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiListResponse() when $default != null:
 return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
@@ -213,11 +213,11 @@ return $default(_that.items,_that.nextToken,_that.nextPooling);case _:
 @JsonSerializable()
 
 class _TsunamiListResponse implements TsunamiListResponse {
-  const _TsunamiListResponse({required final  List<Tsunami> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
+  const _TsunamiListResponse({required final  List<TsunamiListItem> items, @JsonKey(includeIfNull: false, name: 'next_token') this.nextToken, @JsonKey(includeIfNull: false, name: 'next_pooling') this.nextPooling}): _items = items;
   factory _TsunamiListResponse.fromJson(Map<String, dynamic> json) => _$TsunamiListResponseFromJson(json);
 
- final  List<Tsunami> _items;
-@override List<Tsunami> get items {
+ final  List<TsunamiListItem> _items;
+@override List<TsunamiListItem> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
@@ -261,7 +261,7 @@ abstract mixin class _$TsunamiListResponseCopyWith<$Res> implements $TsunamiList
   factory _$TsunamiListResponseCopyWith(_TsunamiListResponse value, $Res Function(_TsunamiListResponse) _then) = __$TsunamiListResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<Tsunami> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
+ List<TsunamiListItem> items,@JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,@JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling
 });
 
 
@@ -281,7 +281,7 @@ class __$TsunamiListResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? nextToken = freezed,Object? nextPooling = freezed,}) {
   return _then(_TsunamiListResponse(
 items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<Tsunami>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
+as List<TsunamiListItem>,nextToken: freezed == nextToken ? _self.nextToken : nextToken // ignore: cast_nullable_to_non_nullable
 as String?,nextPooling: freezed == nextPooling ? _self.nextPooling : nextPooling // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

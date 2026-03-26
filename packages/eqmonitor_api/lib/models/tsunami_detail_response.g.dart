@@ -14,7 +14,7 @@ _TsunamiDetailResponse _$TsunamiDetailResponseFromJson(
   final val = _TsunamiDetailResponse(
     tsunami: $checkedConvert(
       'tsunami',
-      (v) => Tsunami.fromJson(v as Map<String, dynamic>),
+      (v) => TsunamiDetail.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;

@@ -5704,6 +5704,47 @@
           "comments"
         ]
       },
+      "TsunamiListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "event_ids"
+        ]
+      },
+      "TsunamiListResponse": {
+        "type": "object",
+        "properties": {
+          "next_token": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "next_pooling": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiListItem"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "TsunamiTelegramHeader": {
         "type": "object",
         "properties": {
@@ -5806,457 +5847,18 @@
           "created_at"
         ]
       },
-      "TsunamiWarningKind": {
-        "enum": [
-          "MAJOR_WARNING",
-          "WARNING",
-          "ADVISORY",
-          "FORECAST",
-          "NONE"
-        ],
-        "type": "string"
-      },
-      "FirstHeightCondition": {
-        "enum": [
-          "ARRIVING",
-          "FIRST_WAVE_CONFIRMED",
-          "IMMINENT"
-        ],
-        "type": "string"
-      },
-      "TsunamiForecastFirstHeight": {
-        "type": "object",
-        "properties": {
-          "arrival_time": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "condition": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/FirstHeightCondition"
-              }
-            ],
-            "nullable": true
-          }
-        },
-        "required": []
-      },
-      "QualitativeHeight": {
-        "enum": [
-          "ENORMOUS",
-          "HIGH"
-        ],
-        "type": "string"
-      },
-      "TsunamiForecastMaxHeight": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "number",
-            "nullable": true
-          },
-          "over": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "qualitative": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/QualitativeHeight"
-              }
-            ],
-            "nullable": true
-          },
-          "is_important": {
-            "type": "boolean",
-            "nullable": true
-          }
-        },
-        "required": []
-      },
-      "TsunamiForecastStation": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "high_tide_date_time": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "first_height": {
-            "$ref": "#/components/schemas/TsunamiForecastFirstHeight"
-          }
-        },
-        "required": [
-          "code",
-          "name",
-          "high_tide_date_time"
-        ]
-      },
-      "TsunamiForecast": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "kind": {
-            "$ref": "#/components/schemas/TsunamiWarningKind"
-          },
-          "last_kind": {
-            "$ref": "#/components/schemas/TsunamiWarningKind"
-          },
-          "first_height": {
-            "$ref": "#/components/schemas/TsunamiForecastFirstHeight"
-          },
-          "max_height": {
-            "$ref": "#/components/schemas/TsunamiForecastMaxHeight"
-          },
-          "stations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TsunamiForecastStation"
-            }
-          }
-        },
-        "required": [
-          "code",
-          "name",
-          "kind",
-          "last_kind"
-        ]
-      },
-      "WaveInitial": {
-        "enum": [
-          "PUSH",
-          "PULL"
-        ],
-        "type": "string"
-      },
-      "TsunamiObservationStationFirstHeight": {
-        "type": "object",
-        "properties": {
-          "arrival_time": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "initial": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/WaveInitial"
-              }
-            ],
-            "nullable": true
-          },
-          "is_unidentifiable": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "is_missing": {
-            "type": "boolean",
-            "nullable": true
-          }
-        },
-        "required": []
-      },
-      "ObservationMaxHeightCondition": {
-        "enum": [
-          "MINOR",
-          "OBSERVING",
-          "IMPORTANT"
-        ],
-        "type": "string"
-      },
-      "TsunamiObservationStationMaxHeight": {
-        "type": "object",
-        "properties": {
-          "date_time": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "value": {
-            "type": "number",
-            "nullable": true
-          },
-          "over": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "is_rising": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "condition": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ObservationMaxHeightCondition"
-              }
-            ],
-            "nullable": true
-          },
-          "is_missing": {
-            "type": "boolean",
-            "nullable": true
-          }
-        },
-        "required": []
-      },
-      "TsunamiObservationStation": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "sensor": {
-            "type": "string"
-          },
-          "first_height": {
-            "$ref": "#/components/schemas/TsunamiObservationStationFirstHeight"
-          },
-          "max_height": {
-            "$ref": "#/components/schemas/TsunamiObservationStationMaxHeight"
-          }
-        },
-        "required": [
-          "code",
-          "name",
-          "first_height"
-        ]
-      },
-      "TsunamiObservation": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "stations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TsunamiObservationStation"
-            }
-          }
-        },
-        "required": [
-          "stations"
-        ]
-      },
-      "TsunamiEstimationFirstHeight": {
-        "type": "object",
-        "properties": {
-          "arrival_time": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "is_already_arrived": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "is_already_arrived"
-        ]
-      },
-      "TsunamiEstimationMaxHeight": {
-        "type": "object",
-        "properties": {
-          "date_time": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "value": {
-            "type": "number",
-            "nullable": true
-          },
-          "over": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "qualitative": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/QualitativeHeight"
-              }
-            ],
-            "nullable": true
-          },
-          "is_observing": {
-            "type": "boolean",
-            "nullable": true
-          }
-        },
-        "required": []
-      },
-      "TsunamiEstimation": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "first_height": {
-            "$ref": "#/components/schemas/TsunamiEstimationFirstHeight"
-          },
-          "max_height": {
-            "$ref": "#/components/schemas/TsunamiEstimationMaxHeight"
-          }
-        },
-        "required": [
-          "code",
-          "name",
-          "first_height",
-          "max_height"
-        ]
-      },
-      "TsunamiEarthquake": {
-        "type": "object",
-        "properties": {
-          "origin_time": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "arrival_time": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "hypocenter": {
-            "$ref": "#/components/schemas/Hypocenter"
-          }
-        },
-        "required": [
-          "origin_time",
-          "hypocenter"
-        ]
-      },
-      "TsunamiComments": {
-        "type": "object",
-        "properties": {
-          "free": {
-            "type": "string",
-            "nullable": true
-          },
-          "warning": {
-            "type": "object",
-            "properties": {
-              "text": {
-                "type": "string"
-              },
-              "codes": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            },
-            "required": [
-              "text",
-              "codes"
-            ],
-            "nullable": true
-          }
-        },
-        "required": []
-      },
-      "TsunamiTelegramBody": {
-        "type": "object",
-        "properties": {
-          "forecasts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TsunamiForecast"
-            },
-            "nullable": true
-          },
-          "observations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TsunamiObservation"
-            },
-            "nullable": true
-          },
-          "estimations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TsunamiEstimation"
-            },
-            "nullable": true
-          },
-          "earthquakes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TsunamiEarthquake"
-            },
-            "nullable": true
-          },
-          "text": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "nullable": true
-          },
-          "comments": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TsunamiComments"
-              }
-            ],
-            "nullable": true
-          }
-        },
-        "required": []
-      },
-      "TsunamiTelegramItem": {
+      "TsunamiTelegramHeaderOnlyItem": {
         "type": "object",
         "properties": {
           "telegram": {
             "$ref": "#/components/schemas/TsunamiTelegramHeader"
-          },
-          "body": {
-            "$ref": "#/components/schemas/TsunamiTelegramBody"
           }
         },
         "required": [
-          "telegram",
-          "body"
+          "telegram"
         ]
       },
-      "Tsunami": {
+      "TsunamiDetail": {
         "type": "object",
         "properties": {
           "id": {
@@ -6272,7 +5874,7 @@
           "telegrams": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TsunamiTelegramItem"
+              "$ref": "#/components/schemas/TsunamiTelegramHeaderOnlyItem"
             }
           }
         },
@@ -6282,33 +5884,11 @@
           "telegrams"
         ]
       },
-      "TsunamiListResponse": {
-        "type": "object",
-        "properties": {
-          "next_token": {
-            "type": "string",
-            "description": "カーソル情報（base64エンコード）"
-          },
-          "next_pooling": {
-            "type": "string",
-            "description": "カーソル情報（base64エンコード）"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tsunami"
-            }
-          }
-        },
-        "required": [
-          "items"
-        ]
-      },
       "TsunamiDetailResponse": {
         "type": "object",
         "properties": {
           "tsunami": {
-            "$ref": "#/components/schemas/Tsunami"
+            "$ref": "#/components/schemas/TsunamiDetail"
           }
         },
         "required": [

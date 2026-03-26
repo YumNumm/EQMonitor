@@ -13,11 +13,11 @@ part 'epicenter_search_item.g.dart';
 @Freezed()
 abstract class EpicenterSearchItem with _$EpicenterSearchItem {
   const factory EpicenterSearchItem({
-    @JsonKey(name: 'event_id') required String eventId,
+    @JsonKey(name: 'event_id')
+    required String eventId,
     required EpicenterInfo epicenter,
     required EarthquakePartial earthquake,
   }) = _EpicenterSearchItem;
-
-  factory EpicenterSearchItem.fromJson(Map<String, Object?> json) =>
-      _$EpicenterSearchItemFromJson(json);
+  
+  factory EpicenterSearchItem.fromJson(Map<String, Object?> json) => _$EpicenterSearchItemFromJson(json);
 }

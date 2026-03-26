@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiDetailResponse {
 
- Tsunami get tsunami;
+ TsunamiDetail get tsunami;
 /// Create a copy of TsunamiDetailResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $TsunamiDetailResponseCopyWith<$Res>  {
   factory $TsunamiDetailResponseCopyWith(TsunamiDetailResponse value, $Res Function(TsunamiDetailResponse) _then) = _$TsunamiDetailResponseCopyWithImpl;
 @useResult
 $Res call({
- Tsunami tsunami
+ TsunamiDetail tsunami
 });
 
 
-$TsunamiCopyWith<$Res> get tsunami;
+$TsunamiDetailCopyWith<$Res> get tsunami;
 
 }
 /// @nodoc
@@ -68,16 +68,16 @@ class _$TsunamiDetailResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? tsunami = null,}) {
   return _then(_self.copyWith(
 tsunami: null == tsunami ? _self.tsunami : tsunami // ignore: cast_nullable_to_non_nullable
-as Tsunami,
+as TsunamiDetail,
   ));
 }
 /// Create a copy of TsunamiDetailResponse
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiCopyWith<$Res> get tsunami {
+$TsunamiDetailCopyWith<$Res> get tsunami {
   
-  return $TsunamiCopyWith<$Res>(_self.tsunami, (value) {
+  return $TsunamiDetailCopyWith<$Res>(_self.tsunami, (value) {
     return _then(_self.copyWith(tsunami: value));
   });
 }
@@ -162,7 +162,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Tsunami tsunami)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TsunamiDetail tsunami)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiDetailResponse() when $default != null:
 return $default(_that.tsunami);case _:
@@ -183,7 +183,7 @@ return $default(_that.tsunami);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Tsunami tsunami)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TsunamiDetail tsunami)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiDetailResponse():
 return $default(_that.tsunami);case _:
@@ -203,7 +203,7 @@ return $default(_that.tsunami);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Tsunami tsunami)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TsunamiDetail tsunami)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiDetailResponse() when $default != null:
 return $default(_that.tsunami);case _:
@@ -221,7 +221,7 @@ class _TsunamiDetailResponse implements TsunamiDetailResponse {
   const _TsunamiDetailResponse({required this.tsunami});
   factory _TsunamiDetailResponse.fromJson(Map<String, dynamic> json) => _$TsunamiDetailResponseFromJson(json);
 
-@override final  Tsunami tsunami;
+@override final  TsunamiDetail tsunami;
 
 /// Create a copy of TsunamiDetailResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -256,11 +256,11 @@ abstract mixin class _$TsunamiDetailResponseCopyWith<$Res> implements $TsunamiDe
   factory _$TsunamiDetailResponseCopyWith(_TsunamiDetailResponse value, $Res Function(_TsunamiDetailResponse) _then) = __$TsunamiDetailResponseCopyWithImpl;
 @override @useResult
 $Res call({
- Tsunami tsunami
+ TsunamiDetail tsunami
 });
 
 
-@override $TsunamiCopyWith<$Res> get tsunami;
+@override $TsunamiDetailCopyWith<$Res> get tsunami;
 
 }
 /// @nodoc
@@ -276,7 +276,7 @@ class __$TsunamiDetailResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? tsunami = null,}) {
   return _then(_TsunamiDetailResponse(
 tsunami: null == tsunami ? _self.tsunami : tsunami // ignore: cast_nullable_to_non_nullable
-as Tsunami,
+as TsunamiDetail,
   ));
 }
 
@@ -284,9 +284,9 @@ as Tsunami,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$TsunamiCopyWith<$Res> get tsunami {
+$TsunamiDetailCopyWith<$Res> get tsunami {
   
-  return $TsunamiCopyWith<$Res>(_self.tsunami, (value) {
+  return $TsunamiDetailCopyWith<$Res>(_self.tsunami, (value) {
     return _then(_self.copyWith(tsunami: value));
   });
 }

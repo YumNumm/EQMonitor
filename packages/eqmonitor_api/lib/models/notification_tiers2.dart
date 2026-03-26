@@ -19,7 +19,6 @@ abstract class NotificationTiers2 with _$NotificationTiers2 {
     @JsonKey(name: 'interruption_level')
     required InterruptionLevel interruptionLevel,
   }) = _NotificationTiers2;
-
-  factory NotificationTiers2.fromJson(Map<String, Object?> json) =>
-      _$NotificationTiers2FromJson(json);
+  
+  factory NotificationTiers2.fromJson(Map<String, Object?> json) => _$NotificationTiers2FromJson(json);
 }

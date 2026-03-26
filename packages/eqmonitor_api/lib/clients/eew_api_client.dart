@@ -39,16 +39,15 @@ abstract class EewApiClient {
   });
 }
 
+
 abstract class EewApiClientUrls {
-  /// /v2/eew
-  static const getV2Eew = "/v2/eew";
-
-  /// /v2/eew/latest
-  static const getV2EewLatest = "/v2/eew/latest";
-
-  /// /v2/eew/{eventId}
-  static const getV2EewEventId = "/v2/eew/{eventId}";
-
-  /// /v2/eew/{eventId}/{serialNo}
-  static const getV2EewEventIdSerialNo = "/v2/eew/{eventId}/{serialNo}";
+	/// /v2/eew
+	static const getV2Eew = "/v2/eew";
+	/// /v2/eew/latest
+	static const getV2EewLatest = "/v2/eew/latest";
+	/// /v2/eew/{eventId}
+	static const getV2EewEventId = "/v2/eew/{eventId}";
+	/// /v2/eew/{eventId}/{serialNo}
+	static const getV2EewEventIdSerialNo = "/v2/eew/{eventId}/{serialNo}";
 }
+
