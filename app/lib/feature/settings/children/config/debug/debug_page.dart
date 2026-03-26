@@ -231,15 +231,15 @@ class _AppCheckSection extends ConsumerWidget {
           subtitle: switch (tokenAsync) {
             AsyncLoading() => const Text('取得中...'),
             AsyncError(:final error) => Text(
-                'エラー: $error',
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
+              'エラー: $error',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
             AsyncData(:final value) => Text(
-                value ?? 'null',
-                style: const TextStyle(fontFamily: FontFamily.notoSansMono),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              value ?? 'null',
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           },
           onTap: () async {
             final token = tokenAsync.value;
@@ -258,8 +258,8 @@ class _AppCheckSection extends ConsumerWidget {
           leading: const Icon(Icons.vpn_key),
           onTap: () async {
             try {
-              final token =
-                  await FirebaseAppCheck.instance.getLimitedUseToken();
+              final token = await FirebaseAppCheck.instance
+                  .getLimitedUseToken();
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Token: ${token ?? "null"}')),
@@ -280,7 +280,9 @@ class _AppCheckSection extends ConsumerWidget {
 
   String _resolveProviderType() {
     if (Platform.isAndroid) {
-      return kDebugMode ? 'AndroidDebugProvider' : 'AndroidPlayIntegrityProvider';
+      return kDebugMode
+          ? 'AndroidDebugProvider'
+          : 'AndroidPlayIntegrityProvider';
     }
     if (Platform.isIOS || Platform.isMacOS) {
       return kDebugMode ? 'AppleDebugProvider' : 'AppleAppAttestProvider';
