@@ -7,11 +7,15 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/earthquake_detail_response.dart';
 import '../models/earthquake_list_response.dart';
+import '../models/earthquake_sort_by.dart';
 import '../models/epicenter_search_response.dart';
 import '../models/intensity_city_search_response.dart';
 import '../models/intensity_prefecture_search_response.dart';
 import '../models/intensity_region_search_response.dart';
 import '../models/intensity_station_search_response.dart';
+import '../models/jma_intensity.dart';
+import '../models/sort_order.dart';
+import '../models/telegram_status.dart';
 
 part 'earthquake_api_client.g.dart';
 
@@ -22,9 +26,35 @@ abstract class EarthquakeApiClient {
   /// 地震情報一覧.
   ///
   /// [limit] - 1~100 の整数(string).
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
+  ///
+  /// [magnitudeLte] - 0~20 の実数(string).
+  ///
+  /// [magnitudeGte] - 0~20 の実数(string).
+  ///
+  /// [depthLte] - 0~2000 の実数(string).
+  ///
+  /// [depthGte] - 0~2000 の実数(string).
+  ///
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  ///
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2Earthquake)
   Future<HttpResponse<EarthquakeListResponse>> getV2Earthquake({
+    @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
+    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') String? magnitudeLte,
+    @Query('magnitudeGte') String? magnitudeGte,
+    @Query('depthLte') String? depthLte,
+    @Query('depthGte') String? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('originTimeGte') DateTime? originTimeGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
   });
 
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEventId)
@@ -32,39 +62,169 @@ abstract class EarthquakeApiClient {
     @Path('eventId') required String eventId,
   });
 
-  /// [limit] - 1~100 の整数(string)
+  /// [limit] - 1~100 の整数(string).
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
+  ///
+  /// [magnitudeLte] - 0~20 の実数(string).
+  ///
+  /// [magnitudeGte] - 0~20 の実数(string).
+  ///
+  /// [depthLte] - 0~2000 の実数(string).
+  ///
+  /// [depthGte] - 0~2000 の実数(string).
+  ///
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  ///
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityRegionCode)
   Future<HttpResponse<IntensityRegionSearchResponse>> getV2EarthquakeIntensityRegionCode({
     @Path('code') required String code,
+    @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
+    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') String? magnitudeLte,
+    @Query('magnitudeGte') String? magnitudeGte,
+    @Query('depthLte') String? depthLte,
+    @Query('depthGte') String? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('originTimeGte') DateTime? originTimeGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
   });
 
-  /// [limit] - 1~100 の整数(string)
+  /// [limit] - 1~100 の整数(string).
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
+  ///
+  /// [magnitudeLte] - 0~20 の実数(string).
+  ///
+  /// [magnitudeGte] - 0~20 の実数(string).
+  ///
+  /// [depthLte] - 0~2000 の実数(string).
+  ///
+  /// [depthGte] - 0~2000 の実数(string).
+  ///
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  ///
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureCode)
   Future<HttpResponse<IntensityPrefectureSearchResponse>> getV2EarthquakeIntensityPrefectureCode({
     @Path('code') required String code,
+    @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
+    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') String? magnitudeLte,
+    @Query('magnitudeGte') String? magnitudeGte,
+    @Query('depthLte') String? depthLte,
+    @Query('depthGte') String? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('originTimeGte') DateTime? originTimeGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
   });
 
-  /// [limit] - 1~100 の整数(string)
+  /// [limit] - 1~100 の整数(string).
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
+  ///
+  /// [magnitudeLte] - 0~20 の実数(string).
+  ///
+  /// [magnitudeGte] - 0~20 の実数(string).
+  ///
+  /// [depthLte] - 0~2000 の実数(string).
+  ///
+  /// [depthGte] - 0~2000 の実数(string).
+  ///
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  ///
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityCityCode)
   Future<HttpResponse<IntensityCitySearchResponse>> getV2EarthquakeIntensityCityCode({
     @Path('code') required String code,
+    @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
+    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') String? magnitudeLte,
+    @Query('magnitudeGte') String? magnitudeGte,
+    @Query('depthLte') String? depthLte,
+    @Query('depthGte') String? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('originTimeGte') DateTime? originTimeGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
   });
 
-  /// [limit] - 1~100 の整数(string)
+  /// [limit] - 1~100 の整数(string).
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
+  ///
+  /// [magnitudeLte] - 0~20 の実数(string).
+  ///
+  /// [magnitudeGte] - 0~20 の実数(string).
+  ///
+  /// [depthLte] - 0~2000 の実数(string).
+  ///
+  /// [depthGte] - 0~2000 の実数(string).
+  ///
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  ///
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityStationCode)
   Future<HttpResponse<IntensityStationSearchResponse>> getV2EarthquakeIntensityStationCode({
     @Path('code') required String code,
+    @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
+    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') String? magnitudeLte,
+    @Query('magnitudeGte') String? magnitudeGte,
+    @Query('depthLte') String? depthLte,
+    @Query('depthGte') String? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('originTimeGte') DateTime? originTimeGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
   });
 
-  /// [limit] - 1~100 の整数(string)
+  /// [limit] - 1~100 の整数(string).
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
+  ///
+  /// [magnitudeLte] - 0~20 の実数(string).
+  ///
+  /// [magnitudeGte] - 0~20 の実数(string).
+  ///
+  /// [depthLte] - 0~2000 の実数(string).
+  ///
+  /// [depthGte] - 0~2000 の実数(string).
+  ///
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  ///
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEpicenterCode)
   Future<HttpResponse<EpicenterSearchResponse>> getV2EarthquakeEpicenterCode({
     @Path('code') required String code,
+    @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
+    @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') String? magnitudeLte,
+    @Query('magnitudeGte') String? magnitudeGte,
+    @Query('depthLte') String? depthLte,
+    @Query('depthGte') String? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('originTimeGte') DateTime? originTimeGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
   });
 }
 

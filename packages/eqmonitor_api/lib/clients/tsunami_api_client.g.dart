@@ -23,10 +23,24 @@ class _TsunamiApiClient implements TsunamiApiClient {
 
   @override
   Future<HttpResponse<TsunamiListResponse>> getV2Tsunami({
+    List<TelegramStatus>? statuses = const [.normal],
+    SortOrder? sortOrder = SortOrder.desc,
     String? limit,
+    String? cursor,
+    IsCanceled? isCanceled,
+    DateTime? createdAtGte,
+    DateTime? createdAtLte,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'sortOrder': sortOrder?.toJson(),
+      r'limit': limit,
+      r'cursor': cursor,
+      r'isCanceled': isCanceled?.toJson(),
+      r'createdAtGte': createdAtGte?.toIso8601String(),
+      r'createdAtLte': createdAtLte?.toIso8601String(),
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

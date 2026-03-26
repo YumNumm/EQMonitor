@@ -23,10 +23,36 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
 
   @override
   Future<HttpResponse<EarthquakeListResponse>> getV2Earthquake({
+    List<TelegramStatus>? statuses = const [.normal],
+    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    SortOrder? sortOrder = SortOrder.desc,
     String? limit,
+    String? cursor,
+    String? magnitudeLte,
+    String? magnitudeGte,
+    String? depthLte,
+    String? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'sortBy': sortBy?.toJson(),
+      r'sortOrder': sortOrder?.toJson(),
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte?.toJson(),
+      r'intensityGte': intensityGte?.toJson(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -86,10 +112,36 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityRegionSearchResponse>>
   getV2EarthquakeIntensityRegionCode({
     required String code,
+    List<TelegramStatus>? statuses = const [.normal],
+    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    SortOrder? sortOrder = SortOrder.desc,
     String? limit,
+    String? cursor,
+    String? magnitudeLte,
+    String? magnitudeGte,
+    String? depthLte,
+    String? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'sortBy': sortBy?.toJson(),
+      r'sortOrder': sortOrder?.toJson(),
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte?.toJson(),
+      r'intensityGte': intensityGte?.toJson(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -122,10 +174,36 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityPrefectureSearchResponse>>
   getV2EarthquakeIntensityPrefectureCode({
     required String code,
+    List<TelegramStatus>? statuses = const [.normal],
+    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    SortOrder? sortOrder = SortOrder.desc,
     String? limit,
+    String? cursor,
+    String? magnitudeLte,
+    String? magnitudeGte,
+    String? depthLte,
+    String? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'sortBy': sortBy?.toJson(),
+      r'sortOrder': sortOrder?.toJson(),
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte?.toJson(),
+      r'intensityGte': intensityGte?.toJson(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -158,10 +236,36 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityCitySearchResponse>>
   getV2EarthquakeIntensityCityCode({
     required String code,
+    List<TelegramStatus>? statuses = const [.normal],
+    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    SortOrder? sortOrder = SortOrder.desc,
     String? limit,
+    String? cursor,
+    String? magnitudeLte,
+    String? magnitudeGte,
+    String? depthLte,
+    String? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'sortBy': sortBy?.toJson(),
+      r'sortOrder': sortOrder?.toJson(),
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte?.toJson(),
+      r'intensityGte': intensityGte?.toJson(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -191,10 +295,36 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityStationSearchResponse>>
   getV2EarthquakeIntensityStationCode({
     required String code,
+    List<TelegramStatus>? statuses = const [.normal],
+    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    SortOrder? sortOrder = SortOrder.desc,
     String? limit,
+    String? cursor,
+    String? magnitudeLte,
+    String? magnitudeGte,
+    String? depthLte,
+    String? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'sortBy': sortBy?.toJson(),
+      r'sortOrder': sortOrder?.toJson(),
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte?.toJson(),
+      r'intensityGte': intensityGte?.toJson(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -226,10 +356,36 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   @override
   Future<HttpResponse<EpicenterSearchResponse>> getV2EarthquakeEpicenterCode({
     required String code,
+    List<TelegramStatus>? statuses = const [.normal],
+    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
+    SortOrder? sortOrder = SortOrder.desc,
     String? limit,
+    String? cursor,
+    String? magnitudeLte,
+    String? magnitudeGte,
+    String? depthLte,
+    String? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'sortBy': sortBy?.toJson(),
+      r'sortOrder': sortOrder?.toJson(),
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte?.toJson(),
+      r'intensityGte': intensityGte?.toJson(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

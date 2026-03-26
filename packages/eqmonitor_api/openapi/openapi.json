@@ -1640,7 +1640,21 @@
         "operationId": "getV2DeviceByDeviceIdNotificationHistory",
         "parameters": [
           {
-            "$ref": "#/components/parameters/NotificationHistoryQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": "100"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "schema": {
@@ -1915,7 +1929,114 @@
         "operationId": "getV2Earthquake",
         "parameters": [
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2019,7 +2140,114 @@
             "$ref": "#/components/parameters/IntensityRegionCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2067,7 +2295,114 @@
             "$ref": "#/components/parameters/IntensityPrefectureCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2115,7 +2450,114 @@
             "$ref": "#/components/parameters/IntensityCityCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2163,7 +2605,114 @@
             "$ref": "#/components/parameters/IntensityStationCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2211,7 +2760,114 @@
             "$ref": "#/components/parameters/EpicenterCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2256,7 +2912,92 @@
         "operationId": "getV2Eew",
         "parameters": [
           {
-            "$ref": "#/components/parameters/EewQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "isWarning",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "tags": [
@@ -2450,7 +3191,34 @@
         "operationId": "getV2Telegram",
         "parameters": [
           {
-            "$ref": "#/components/parameters/TelegramQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
           }
         ],
         "tags": [
@@ -2498,7 +3266,34 @@
             "$ref": "#/components/parameters/TelegramTypeParam"
           },
           {
-            "$ref": "#/components/parameters/TelegramQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
           }
         ],
         "tags": [
@@ -2546,7 +3341,34 @@
             "$ref": "#/components/parameters/TelegramEventIdParam"
           },
           {
-            "$ref": "#/components/parameters/TelegramQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
           }
         ],
         "tags": [
@@ -2646,7 +3468,72 @@
         "operationId": "getV2Tsunami",
         "parameters": [
           {
-            "$ref": "#/components/parameters/TsunamiQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "isCanceled",
+            "schema": {
+              "enum": [
+                "true",
+                "false"
+              ],
+              "type": "string"
+            },
+            "description": "取消済みフィルタ"
+          },
+          {
+            "in": "query",
+            "name": "createdAtGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "createdAtLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TelegramStatus"
+              },
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -6089,24 +6976,6 @@
         },
         "required": true
       },
-      "NotificationHistoryQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 1000,
-          "default": "100"
-        }
-      },
-      "EarthquakeQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
-      },
       "EarthquakeEventIdParam": {
         "in": "path",
         "name": "eventId",
@@ -6161,14 +7030,6 @@
         },
         "required": true
       },
-      "EewQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
-      },
       "EewEventIdParam": {
         "in": "path",
         "name": "eventId",
@@ -6186,14 +7047,6 @@
           "pattern": "^\\d{14}$"
         },
         "required": true
-      },
-      "TelegramQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
       },
       "TelegramTypeParam": {
         "in": "path",
@@ -6220,14 +7073,6 @@
           "format": "uuid"
         },
         "required": true
-      },
-      "TsunamiQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
       },
       "TsunamiEventIdParam": {
         "in": "path",

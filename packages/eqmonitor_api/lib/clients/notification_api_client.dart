@@ -21,6 +21,7 @@ abstract class NotificationApiClient {
   @GET(NotificationApiClientUrls.getV2DeviceDeviceIdNotificationHistory)
   Future<HttpResponse<NotificationHistoryResponse>> getV2DeviceDeviceIdNotificationHistory({
     @Path('deviceId') required String deviceId,
+    @Query('cursor') String? cursor,
     @Query('limit') int? limit = 100,
   });
 
