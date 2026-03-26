@@ -18,7 +18,6 @@ abstract class EarthquakeSettingsResponse with _$EarthquakeSettingsResponse {
     @JsonKey(name: 'estimated_intensity_enabled')
     required bool estimatedIntensityEnabled,
   }) = _EarthquakeSettingsResponse;
-
-  factory EarthquakeSettingsResponse.fromJson(Map<String, Object?> json) =>
-      _$EarthquakeSettingsResponseFromJson(json);
+  
+  factory EarthquakeSettingsResponse.fromJson(Map<String, Object?> json) => _$EarthquakeSettingsResponseFromJson(json);
 }

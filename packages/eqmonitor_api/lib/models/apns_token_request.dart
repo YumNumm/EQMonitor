@@ -13,9 +13,9 @@ part 'apns_token_request.g.dart';
 abstract class ApnsTokenRequest with _$ApnsTokenRequest {
   const factory ApnsTokenRequest({
     required String token,
-    @JsonKey(includeIfNull: false) ApnsEnvironment? environment,
+    @JsonKey(includeIfNull: false)
+    ApnsEnvironment? environment,
   }) = _ApnsTokenRequest;
-
-  factory ApnsTokenRequest.fromJson(Map<String, Object?> json) =>
-      _$ApnsTokenRequestFromJson(json);
+  
+  factory ApnsTokenRequest.fromJson(Map<String, Object?> json) => _$ApnsTokenRequestFromJson(json);
 }

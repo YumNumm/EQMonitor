@@ -17,7 +17,7 @@ _TsunamiListResponse _$TsunamiListResponseFromJson(Map<String, dynamic> json) =>
           items: $checkedConvert(
             'items',
             (v) => (v as List<dynamic>)
-                .map((e) => Tsunami.fromJson(e as Map<String, dynamic>))
+                .map((e) => TsunamiListItem.fromJson(e as Map<String, dynamic>))
                 .toList(),
           ),
           nextToken: $checkedConvert('next_token', (v) => v as String?),

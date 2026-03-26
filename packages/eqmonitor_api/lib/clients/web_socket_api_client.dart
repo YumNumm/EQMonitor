@@ -18,7 +18,9 @@ abstract class WebSocketApiClient {
   Future<HttpResponse<WebsocketTicketResponse>> getV2WebsocketTicket();
 }
 
+
 abstract class WebSocketApiClientUrls {
-  /// /v2/websocket/ticket
-  static const getV2WebsocketTicket = "/v2/websocket/ticket";
+	/// /v2/websocket/ticket
+	static const getV2WebsocketTicket = "/v2/websocket/ticket";
 }
+

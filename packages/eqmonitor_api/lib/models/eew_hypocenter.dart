@@ -16,13 +16,15 @@ abstract class EewHypocenter with _$EewHypocenter {
   const factory EewHypocenter({
     required CodeName value,
     required Coordinate coordinates,
-    @JsonKey(includeIfNull: true) required num? magnitude,
+    @JsonKey(includeIfNull: true)
+    required num? magnitude,
 
     /// 震源の深さ `0`: `ごく浅い`, `700`: `700km以上`, `null`: `不明`
-    @JsonKey(includeIfNull: true) required num? depth,
-    @JsonKey(includeIfNull: false) CodeName? detailed,
+    @JsonKey(includeIfNull: true)
+    required num? depth,
+    @JsonKey(includeIfNull: false)
+    CodeName? detailed,
   }) = _EewHypocenter;
-
-  factory EewHypocenter.fromJson(Map<String, Object?> json) =>
-      _$EewHypocenterFromJson(json);
+  
+  factory EewHypocenter.fromJson(Map<String, Object?> json) => _$EewHypocenterFromJson(json);
 }
