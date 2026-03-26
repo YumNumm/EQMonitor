@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_c
 import 'package:eqmonitor_api/models/code_name.dart';
 import 'package:eqmonitor_api/models/intensity.dart';
 import 'package:eqmonitor_api/models/intensity_item.dart';
+import 'package:eqmonitor_api/models/intensity_station_item.dart';
 import 'package:eqmonitor_api/models/jma_intensity.dart' as api;
 import 'package:eqmonitor_api/models/jma_lpgm_intensity.dart' as api;
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
@@ -11,12 +12,16 @@ import 'package:test/test.dart';
 
 EarthquakeParameter _buildParameter({
   required List<
-          ({
-            String code,
-            String name,
-            List<({String code, String name})> cities,
-          })>
-      regions,
+      ({
+        String code,
+        String name,
+        List<
+            ({
+              String code,
+              String name,
+              List<({String code, String name})> stations,
+            })> cities,
+      })> regions,
 }) {
   return EarthquakeParameter(
     regions: regions.map(
@@ -27,6 +32,9 @@ EarthquakeParameter _buildParameter({
           (c) => EarthquakeParameterCityItem(
             code: c.code,
             name: c.name,
+            stations: c.stations.map(
+              (s) => EarthquakeParameterStationItem(code: s.code, name: s.name),
+            ),
           ),
         ),
       ),
@@ -39,14 +47,15 @@ Intensity _buildIntensity({
   required List<({String code, String name, api.JmaIntensity? maxIntensity})>
       prefectures,
   required List<
-          ({
-            String code,
-            String name,
-            api.JmaIntensity? maxIntensity,
-            api.JmaLpgmIntensity? maxLpgmIntensity,
-          })>
-      regions,
+      ({
+        String code,
+        String name,
+        api.JmaIntensity? maxIntensity,
+        api.JmaLpgmIntensity? maxLpgmIntensity,
+      })> regions,
   api.JmaLpgmIntensity? maxLpgmIntensity,
+  List<IntensityItem>? cities,
+  List<IntensityStationItem>? stations,
 }) {
   return Intensity(
     maxIntensity: maxIntensity,
@@ -68,6 +77,23 @@ Intensity _buildIntensity({
           ),
         )
         .toList(),
+    cities: cities,
+    stations: stations,
+  );
+}
+
+IntensityStationItem _station({
+  required String code,
+  required String name,
+  api.JmaIntensity? maxIntensity,
+  api.JmaLpgmIntensity? maxLpgm,
+}) {
+  return IntensityStationItem(
+    value: CodeName(code: code, name: name),
+    sva: 0,
+    prePeriods: const [],
+    maxIntensity: maxIntensity,
+    maxLpgmIntensity: maxLpgm,
   );
 }
 
@@ -113,7 +139,7 @@ void main() {
           (
             code: '040000',
             name: '宮城県',
-            cities: [(code: '0420100', name: '宮城県北部')],
+            cities: [(code: '0420100', name: '宮城県北部', stations: const [])],
           ),
         ],
       );
@@ -166,8 +192,8 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部'),
-              (code: '0420200', name: '宮城県南部'),
+              (code: '0420100', name: '宮城県北部', stations: const []),
+              (code: '0420200', name: '宮城県南部', stations: const []),
             ],
           ),
         ],
@@ -231,12 +257,12 @@ void main() {
           (
             code: '040000',
             name: '宮城県',
-            cities: [(code: '0420100', name: '宮城県北部')],
+            cities: [(code: '0420100', name: '宮城県北部', stations: const [])],
           ),
           (
             code: '070000',
             name: '福島県',
-            cities: [(code: '0720100', name: '中通り')],
+            cities: [(code: '0720100', name: '中通り', stations: const [])],
           ),
         ],
       );
@@ -292,9 +318,9 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部'),
-              (code: '0420200', name: '宮城県南部'),
-              (code: '0420300', name: '宮城県中部'),
+              (code: '0420100', name: '宮城県北部', stations: const []),
+              (code: '0420200', name: '宮城県南部', stations: const []),
+              (code: '0420300', name: '宮城県中部', stations: const []),
             ],
           ),
         ],
@@ -338,8 +364,8 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部'),
-              (code: '9999999', name: '存在しない地域'),
+              (code: '0420100', name: '宮城県北部', stations: const []),
+              (code: '9999999', name: '存在しない地域', stations: const []),
             ],
           ),
         ],
@@ -385,8 +411,8 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部'),
-              (code: '0420200', name: '宮城県南部'),
+              (code: '0420100', name: '宮城県北部', stations: const []),
+              (code: '0420200', name: '宮城県南部', stations: const []),
             ],
           ),
         ],
@@ -402,7 +428,7 @@ void main() {
       expect(result[JmaIntensity.four]![0].cities[0].city.name, '宮城県南部');
     });
 
-    test('stationノードは空リストになる', () {
+    test('regionsのみの場合はstationノードは空リスト', () {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value3,
         prefectures: [
@@ -426,7 +452,7 @@ void main() {
           (
             code: '130000',
             name: '東京都',
-            cities: [(code: '1310000', name: '東京都23区')],
+            cities: [(code: '1310000', name: '東京都23区', stations: const [])],
           ),
         ],
       );
@@ -437,6 +463,75 @@ void main() {
       );
 
       expect(result[JmaIntensity.three]![0].cities[0].stations, isEmpty);
+    });
+
+    test('citiesフィールドがある場合は市区町村・観測点ツリーを優先する', () {
+      final intensity = _buildIntensity(
+        maxIntensity: api.JmaIntensity.value3,
+        prefectures: [
+          (
+            code: '130000',
+            name: '東京都',
+            maxIntensity: api.JmaIntensity.value3,
+          ),
+        ],
+        regions: [
+          (
+            code: '1310000',
+            name: '東京都23区_ regions側',
+            maxIntensity: api.JmaIntensity.value3,
+            maxLpgmIntensity: null,
+          ),
+        ],
+        cities: [
+          IntensityItem(
+            value: CodeName(code: '1310000', name: '東京都23区'),
+            maxIntensity: api.JmaIntensity.value3,
+            maxLpgmIntensity: api.JmaLpgmIntensity.value2,
+          ),
+        ],
+        stations: [
+          _station(
+            code: '13100000001',
+            name: 'テスト観測点',
+            maxIntensity: api.JmaIntensity.value3,
+            maxLpgm: api.JmaLpgmIntensity.value2,
+          ),
+        ],
+      );
+      final parameter = _buildParameter(
+        regions: [
+          (
+            code: '130000',
+            name: '東京都',
+            cities: [
+              (
+                code: '1310000',
+                name: '東京都23区',
+                stations: [
+                  (code: '13100000001', name: 'テスト観測点'),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final result = convertToIntensityTree(
+        intensity: intensity,
+        parameter: parameter,
+      );
+
+      final cityNode = result[JmaIntensity.three]![0].cities[0];
+      expect(cityNode.city.name, '東京都23区');
+      expect(cityNode.maxLpgmIntensity, JmaLpgmIntensity.two);
+      expect(cityNode.stations.length, 1);
+      expect(cityNode.stations[0].station.name, 'テスト観測点');
+      expect(cityNode.stations[0].intensity?.maxIntensity, JmaIntensity.three);
+      expect(
+        cityNode.stations[0].intensity?.maxLpgmIntensity,
+        JmaLpgmIntensity.two,
+      );
     });
   });
 
@@ -489,8 +584,8 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部'),
-              (code: '0420200', name: '宮城県南部'),
+              (code: '0420100', name: '宮城県北部', stations: const []),
+              (code: '0420200', name: '宮城県南部', stations: const []),
             ],
           ),
         ],
@@ -548,8 +643,8 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部'),
-              (code: '0420200', name: '宮城県南部'),
+              (code: '0420100', name: '宮城県北部', stations: const []),
+              (code: '0420200', name: '宮城県南部', stations: const []),
             ],
           ),
         ],
@@ -611,14 +706,14 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部'),
-              (code: '0420200', name: '宮城県南部'),
+              (code: '0420100', name: '宮城県北部', stations: const []),
+              (code: '0420200', name: '宮城県南部', stations: const []),
             ],
           ),
           (
             code: '070000',
             name: '福島県',
-            cities: [(code: '0720100', name: '中通り')],
+            cities: [(code: '0720100', name: '中通り', stations: const [])],
           ),
         ],
       );
