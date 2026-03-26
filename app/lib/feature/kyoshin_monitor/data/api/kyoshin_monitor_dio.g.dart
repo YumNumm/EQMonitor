@@ -49,4 +49,4 @@ final class KyoshinMonitorDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$kyoshinMonitorDioHash() => r'ae8ea88e1a74bd51d5a2216c1b22cadd68b07bb9';
+String _$kyoshinMonitorDioHash() => r'ba66bfea7adca60964a691bb2ecd5e72452d33d0';
