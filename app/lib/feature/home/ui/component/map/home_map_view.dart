@@ -30,8 +30,12 @@ class HomeMapView extends HookConsumerWidget {
       AsyncData(:final value) when value.styleString != null => _MapContent(
         styleString: value.styleString!,
       ),
-      AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      AsyncError(:final error) => Center(
+        child: ErrorCard(error: error),
+      ),
+      _ => const Center(
+        child: CircularProgressIndicator.adaptive(),
+      ),
     };
   }
 }

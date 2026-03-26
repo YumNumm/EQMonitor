@@ -26,7 +26,7 @@ enum InterruptionLevel {
         'This usually happens for \$unknown or @JsonValue(null) entries.',
       );
     }
-    return value;
+    return value as String;
   }
 
   @override

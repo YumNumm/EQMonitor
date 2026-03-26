@@ -1709,6 +1709,126 @@
         }
       }
     },
+    "/v2/device/{deviceId}/notification/dispatches": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationDispatches",
+        "tags": [
+          "Notification"
+        ],
+        "description": "配信サマリー一覧（admin）",
+        "responses": {
+          "200": {
+            "description": "配信サマリー一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DispatchSummaryListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/device/{deviceId}/notification/dispatches/{correlationKey}": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationDispatchesByCorrelationKey",
+        "tags": [
+          "Notification"
+        ],
+        "description": "配信サマリー詳細（admin）",
+        "responses": {
+          "200": {
+            "description": "配信サマリー詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DispatchSummaryDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "correlationKey",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/device/{deviceId}/notification/test": {
       "post": {
         "operationId": "postV2DeviceByDeviceIdNotificationTest",
@@ -3152,10 +3272,12 @@
         "type": "object",
         "properties": {
           "tsunami_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "training_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3222,7 +3344,8 @@
         "type": "object",
         "properties": {
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "notification_tiers": {
             "type": "array",
@@ -3264,10 +3387,12 @@
                 "interruption_level"
               ]
             },
-            "minItems": 1
+            "minItems": 1,
+            "nullable": true
           },
           "estimated_intensity_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3367,13 +3492,20 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "nullable": true
           },
           "is_current_location": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "min_jma_intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JmaIntensity"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -3440,7 +3572,8 @@
         "type": "object",
         "properties": {
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "notification_tiers": {
             "type": "array",
@@ -3482,10 +3615,12 @@
                 "interruption_level"
               ]
             },
-            "minItems": 1
+            "minItems": 1,
+            "nullable": true
           },
           "start_live_activity": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3709,6 +3844,214 @@
         "required": [
           "code",
           "message"
+        ]
+      },
+      "DispatchSummaryListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "correlationKey": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                },
+                "eventId": {
+                  "type": "string"
+                },
+                "serialNo": {
+                  "type": "number"
+                },
+                "jmaReportTime": {
+                  "type": "string"
+                },
+                "headline": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "targetDevices": {
+                  "type": "number"
+                },
+                "enqueuedFcm": {
+                  "type": "number"
+                },
+                "enqueuedApns": {
+                  "type": "number"
+                },
+                "enqueuedBroadcast": {
+                  "type": "number"
+                },
+                "successFcm": {
+                  "type": "number"
+                },
+                "failedFcm": {
+                  "type": "number"
+                },
+                "successApns": {
+                  "type": "number"
+                },
+                "failedApns": {
+                  "type": "number"
+                },
+                "resolverDelayMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "correlationKey",
+                "eventType",
+                "eventId",
+                "serialNo",
+                "jmaReportTime",
+                "targetDevices",
+                "enqueuedFcm",
+                "enqueuedApns",
+                "enqueuedBroadcast",
+                "successFcm",
+                "failedFcm",
+                "successApns",
+                "failedApns",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ForbiddenResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "FORBIDDEN"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "DispatchSummaryDetailResponse": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "object",
+            "properties": {
+              "correlationKey": {
+                "type": "string"
+              },
+              "eventType": {
+                "type": "string"
+              },
+              "eventId": {
+                "type": "string"
+              },
+              "serialNo": {
+                "type": "number"
+              },
+              "jmaReportTime": {
+                "type": "string"
+              },
+              "headline": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "targetDevices": {
+                "type": "number"
+              },
+              "enqueuedFcm": {
+                "type": "number"
+              },
+              "enqueuedApns": {
+                "type": "number"
+              },
+              "enqueuedBroadcast": {
+                "type": "number"
+              },
+              "successFcm": {
+                "type": "number"
+              },
+              "failedFcm": {
+                "type": "number"
+              },
+              "successApns": {
+                "type": "number"
+              },
+              "failedApns": {
+                "type": "number"
+              },
+              "resolverDelayMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "correlationKey",
+              "eventType",
+              "eventId",
+              "serialNo",
+              "jmaReportTime",
+              "targetDevices",
+              "enqueuedFcm",
+              "enqueuedApns",
+              "enqueuedBroadcast",
+              "successFcm",
+              "failedFcm",
+              "successApns",
+              "failedApns",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "item"
         ]
       },
       "TestNotificationRequest": {
@@ -4148,10 +4491,7 @@
                 "description": "1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル"
               }
             },
-            "required": [
-              "sva",
-              "prePeriods"
-            ]
+            "required": []
           }
         ]
       },
@@ -4315,22 +4655,29 @@
         "type": "object",
         "properties": {
           "text": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "free": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "warning": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "forecast": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
-          "var": {
-            "type": "string"
+          "additional": {
+            "type": "string",
+            "description": "固定付加文, var",
+            "nullable": true
           },
           "uri": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "required": []
@@ -4830,33 +5177,6 @@
         ],
         "description": "予想長周期地震動階級の値"
       },
-      "EewArrivalTimeTime": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "const": "TIME"
-          },
-          "value": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "type",
-          "value"
-        ]
-      },
-      "EewArrivalTimeArrived": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "const": "ARRIVED"
-          }
-        },
-        "required": [
-          "type"
-        ]
-      },
       "EewIntensityItem": {
         "type": "object",
         "properties": {
@@ -4876,22 +5196,16 @@
             "$ref": "#/components/schemas/EewIntensityLpgmValue"
           },
           "arrival_time": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/EewArrivalTimeTime"
-              },
-              {
-                "$ref": "#/components/schemas/EewArrivalTimeArrived"
-              }
-            ]
+            "type": "string",
+            "format": "date-time",
+            "description": "到達予想時刻。undefinedの場合は、すでに到達済みと推定されます。"
           }
         },
         "required": [
           "value",
           "is_plum",
           "is_warning",
-          "intensity",
-          "arrival_time"
+          "intensity"
         ]
       },
       "EewIntensity": {
@@ -5515,10 +5829,16 @@
         "properties": {
           "arrival_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "condition": {
-            "$ref": "#/components/schemas/FirstHeightCondition"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FirstHeightCondition"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -5534,16 +5854,24 @@
         "type": "object",
         "properties": {
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "qualitative": {
-            "$ref": "#/components/schemas/QualitativeHeight"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
           },
           "is_important": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5618,16 +5946,24 @@
         "properties": {
           "arrival_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "initial": {
-            "$ref": "#/components/schemas/WaveInitial"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaveInitial"
+              }
+            ],
+            "nullable": true
           },
           "is_unidentifiable": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "is_missing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5645,22 +5981,32 @@
         "properties": {
           "date_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "is_rising": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "condition": {
-            "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+              }
+            ],
+            "nullable": true
           },
           "is_missing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5744,19 +6090,28 @@
         "properties": {
           "date_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "qualitative": {
-            "$ref": "#/components/schemas/QualitativeHeight"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
           },
           "is_observing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5808,7 +6163,8 @@
         "type": "object",
         "properties": {
           "free": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "warning": {
             "type": "object",
@@ -5826,7 +6182,8 @@
             "required": [
               "text",
               "codes"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -5838,25 +6195,29 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiForecast"
-            }
+            },
+            "nullable": true
           },
           "observations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiObservation"
-            }
+            },
+            "nullable": true
           },
           "estimations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiEstimation"
-            }
+            },
+            "nullable": true
           },
           "earthquakes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiEarthquake"
-            }
+            },
+            "nullable": true
           },
           "text": {
             "anyOf": [
@@ -5866,10 +6227,16 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "nullable": true
           },
           "comments": {
-            "$ref": "#/components/schemas/TsunamiComments"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TsunamiComments"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []

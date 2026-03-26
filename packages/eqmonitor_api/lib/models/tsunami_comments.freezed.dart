@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiComments {
 
- String get free; Warning get warning;
+@JsonKey(includeIfNull: false) String? get free;@JsonKey(includeIfNull: false) Warning? get warning;
 /// Create a copy of TsunamiComments
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $TsunamiCommentsCopyWith<$Res>  {
   factory $TsunamiCommentsCopyWith(TsunamiComments value, $Res Function(TsunamiComments) _then) = _$TsunamiCommentsCopyWithImpl;
 @useResult
 $Res call({
- String free, Warning warning
+@JsonKey(includeIfNull: false) String? free,@JsonKey(includeIfNull: false) Warning? warning
 });
 
 
-$WarningCopyWith<$Res> get warning;
+$WarningCopyWith<$Res>? get warning;
 
 }
 /// @nodoc
@@ -65,20 +65,23 @@ class _$TsunamiCommentsCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiComments
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? free = null,Object? warning = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? free = freezed,Object? warning = freezed,}) {
   return _then(_self.copyWith(
-free: null == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
-as String,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
-as Warning,
+free: freezed == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
+as String?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as Warning?,
   ));
 }
 /// Create a copy of TsunamiComments
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$WarningCopyWith<$Res> get warning {
-  
-  return $WarningCopyWith<$Res>(_self.warning, (value) {
+$WarningCopyWith<$Res>? get warning {
+    if (_self.warning == null) {
+    return null;
+  }
+
+  return $WarningCopyWith<$Res>(_self.warning!, (value) {
     return _then(_self.copyWith(warning: value));
   });
 }
@@ -163,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String free,  Warning warning)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? free, @JsonKey(includeIfNull: false)  Warning? warning)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiComments() when $default != null:
 return $default(_that.free,_that.warning);case _:
@@ -184,7 +187,7 @@ return $default(_that.free,_that.warning);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String free,  Warning warning)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? free, @JsonKey(includeIfNull: false)  Warning? warning)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiComments():
 return $default(_that.free,_that.warning);case _:
@@ -204,7 +207,7 @@ return $default(_that.free,_that.warning);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String free,  Warning warning)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  String? free, @JsonKey(includeIfNull: false)  Warning? warning)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiComments() when $default != null:
 return $default(_that.free,_that.warning);case _:
@@ -219,11 +222,11 @@ return $default(_that.free,_that.warning);case _:
 @JsonSerializable()
 
 class _TsunamiComments implements TsunamiComments {
-  const _TsunamiComments({required this.free, required this.warning});
+  const _TsunamiComments({@JsonKey(includeIfNull: false) this.free, @JsonKey(includeIfNull: false) this.warning});
   factory _TsunamiComments.fromJson(Map<String, dynamic> json) => _$TsunamiCommentsFromJson(json);
 
-@override final  String free;
-@override final  Warning warning;
+@override@JsonKey(includeIfNull: false) final  String? free;
+@override@JsonKey(includeIfNull: false) final  Warning? warning;
 
 /// Create a copy of TsunamiComments
 /// with the given fields replaced by the non-null parameter values.
@@ -258,11 +261,11 @@ abstract mixin class _$TsunamiCommentsCopyWith<$Res> implements $TsunamiComments
   factory _$TsunamiCommentsCopyWith(_TsunamiComments value, $Res Function(_TsunamiComments) _then) = __$TsunamiCommentsCopyWithImpl;
 @override @useResult
 $Res call({
- String free, Warning warning
+@JsonKey(includeIfNull: false) String? free,@JsonKey(includeIfNull: false) Warning? warning
 });
 
 
-@override $WarningCopyWith<$Res> get warning;
+@override $WarningCopyWith<$Res>? get warning;
 
 }
 /// @nodoc
@@ -275,11 +278,11 @@ class __$TsunamiCommentsCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiComments
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? free = null,Object? warning = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? free = freezed,Object? warning = freezed,}) {
   return _then(_TsunamiComments(
-free: null == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
-as String,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
-as Warning,
+free: freezed == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
+as String?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as Warning?,
   ));
 }
 
@@ -287,9 +290,12 @@ as Warning,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$WarningCopyWith<$Res> get warning {
-  
-  return $WarningCopyWith<$Res>(_self.warning, (value) {
+$WarningCopyWith<$Res>? get warning {
+    if (_self.warning == null) {
+    return null;
+  }
+
+  return $WarningCopyWith<$Res>(_self.warning!, (value) {
     return _then(_self.copyWith(warning: value));
   });
 }
