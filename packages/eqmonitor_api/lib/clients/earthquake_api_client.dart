@@ -21,7 +21,8 @@ part 'earthquake_api_client.g.dart';
 
 @RestApi()
 abstract class EarthquakeApiClient {
-  factory EarthquakeApiClient(Dio dio, {String? baseUrl}) = _EarthquakeApiClient;
+  factory EarthquakeApiClient(Dio dio, {String? baseUrl}) =
+      _EarthquakeApiClient;
 
   /// 地震情報一覧.
   ///
@@ -78,7 +79,8 @@ abstract class EarthquakeApiClient {
   ///
   /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityRegionCode)
-  Future<HttpResponse<IntensityRegionSearchResponse>> getV2EarthquakeIntensityRegionCode({
+  Future<HttpResponse<IntensityRegionSearchResponse>>
+  getV2EarthquakeIntensityRegionCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
@@ -111,7 +113,8 @@ abstract class EarthquakeApiClient {
   ///
   /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureCode)
-  Future<HttpResponse<IntensityPrefectureSearchResponse>> getV2EarthquakeIntensityPrefectureCode({
+  Future<HttpResponse<IntensityPrefectureSearchResponse>>
+  getV2EarthquakeIntensityPrefectureCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
@@ -144,7 +147,8 @@ abstract class EarthquakeApiClient {
   ///
   /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityCityCode)
-  Future<HttpResponse<IntensityCitySearchResponse>> getV2EarthquakeIntensityCityCode({
+  Future<HttpResponse<IntensityCitySearchResponse>>
+  getV2EarthquakeIntensityCityCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
@@ -177,7 +181,8 @@ abstract class EarthquakeApiClient {
   ///
   /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityStationCode)
-  Future<HttpResponse<IntensityStationSearchResponse>> getV2EarthquakeIntensityStationCode({
+  Future<HttpResponse<IntensityStationSearchResponse>>
+  getV2EarthquakeIntensityStationCode({
     @Path('code') required String code,
     @Query('statuses') List<TelegramStatus>? statuses = const [.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
@@ -228,21 +233,29 @@ abstract class EarthquakeApiClient {
   });
 }
 
-
 abstract class EarthquakeApiClientUrls {
-	/// /v2/earthquake
-	static const getV2Earthquake = "/v2/earthquake";
-	/// /v2/earthquake/{eventId}
-	static const getV2EarthquakeEventId = "/v2/earthquake/{eventId}";
-	/// /v2/earthquake/intensity/region/{code}
-	static const getV2EarthquakeIntensityRegionCode = "/v2/earthquake/intensity/region/{code}";
-	/// /v2/earthquake/intensity/prefecture/{code}
-	static const getV2EarthquakeIntensityPrefectureCode = "/v2/earthquake/intensity/prefecture/{code}";
-	/// /v2/earthquake/intensity/city/{code}
-	static const getV2EarthquakeIntensityCityCode = "/v2/earthquake/intensity/city/{code}";
-	/// /v2/earthquake/intensity/station/{code}
-	static const getV2EarthquakeIntensityStationCode = "/v2/earthquake/intensity/station/{code}";
-	/// /v2/earthquake/epicenter/{code}
-	static const getV2EarthquakeEpicenterCode = "/v2/earthquake/epicenter/{code}";
-}
+  /// /v2/earthquake
+  static const getV2Earthquake = "/v2/earthquake";
 
+  /// /v2/earthquake/{eventId}
+  static const getV2EarthquakeEventId = "/v2/earthquake/{eventId}";
+
+  /// /v2/earthquake/intensity/region/{code}
+  static const getV2EarthquakeIntensityRegionCode =
+      "/v2/earthquake/intensity/region/{code}";
+
+  /// /v2/earthquake/intensity/prefecture/{code}
+  static const getV2EarthquakeIntensityPrefectureCode =
+      "/v2/earthquake/intensity/prefecture/{code}";
+
+  /// /v2/earthquake/intensity/city/{code}
+  static const getV2EarthquakeIntensityCityCode =
+      "/v2/earthquake/intensity/city/{code}";
+
+  /// /v2/earthquake/intensity/station/{code}
+  static const getV2EarthquakeIntensityStationCode =
+      "/v2/earthquake/intensity/station/{code}";
+
+  /// /v2/earthquake/epicenter/{code}
+  static const getV2EarthquakeEpicenterCode = "/v2/earthquake/epicenter/{code}";
+}

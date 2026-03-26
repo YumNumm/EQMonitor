@@ -13,17 +13,14 @@ abstract class UserResponse with _$UserResponse {
     required String id,
     required String name,
     required String email,
-    @JsonKey(includeIfNull: true)
-    required String? image,
-    @JsonKey(includeIfNull: true)
-    required String? role,
-    @JsonKey(includeIfNull: true,name: 'is_anonymous')
+    @JsonKey(includeIfNull: true) required String? image,
+    @JsonKey(includeIfNull: true) required String? role,
+    @JsonKey(includeIfNull: true, name: 'is_anonymous')
     required bool? isAnonymous,
-    @JsonKey(includeIfNull: true)
-    required bool? banned,
-    @JsonKey(name: 'created_at')
-    required String createdAt,
+    @JsonKey(includeIfNull: true) required bool? banned,
+    @JsonKey(name: 'created_at') required String createdAt,
   }) = _UserResponse;
-  
-  factory UserResponse.fromJson(Map<String, Object?> json) => _$UserResponseFromJson(json);
+
+  factory UserResponse.fromJson(Map<String, Object?> json) =>
+      _$UserResponseFromJson(json);
 }

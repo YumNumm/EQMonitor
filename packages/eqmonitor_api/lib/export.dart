@@ -142,4 +142,3 @@ export 'models/user_device_response_type.dart';
 export 'models/user_device_response_locale.dart';
 // Root client
 export 'api_client.dart';
-

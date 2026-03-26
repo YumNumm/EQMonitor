@@ -10,10 +10,12 @@ part 'tsunami_telegram_header_only_item.freezed.dart';
 part 'tsunami_telegram_header_only_item.g.dart';
 
 @Freezed()
-abstract class TsunamiTelegramHeaderOnlyItem with _$TsunamiTelegramHeaderOnlyItem {
+abstract class TsunamiTelegramHeaderOnlyItem
+    with _$TsunamiTelegramHeaderOnlyItem {
   const factory TsunamiTelegramHeaderOnlyItem({
     required TsunamiTelegramHeader telegram,
   }) = _TsunamiTelegramHeaderOnlyItem;
-  
-  factory TsunamiTelegramHeaderOnlyItem.fromJson(Map<String, Object?> json) => _$TsunamiTelegramHeaderOnlyItemFromJson(json);
+
+  factory TsunamiTelegramHeaderOnlyItem.fromJson(Map<String, Object?> json) =>
+      _$TsunamiTelegramHeaderOnlyItemFromJson(json);
 }
