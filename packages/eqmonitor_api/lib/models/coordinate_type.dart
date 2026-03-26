@@ -21,7 +21,7 @@ enum CoordinateType {
       throw StateError('Cannot convert enum value with null JSON representation to String. '
           'This usually happens for \$unknown or @JsonValue(null) entries.');
     }
-    return value;
+    return value as String;
   }
 
   @override

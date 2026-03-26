@@ -12,9 +12,10 @@ part 'tsunami_forecast_first_height.g.dart';
 @Freezed()
 abstract class TsunamiForecastFirstHeight with _$TsunamiForecastFirstHeight {
   const factory TsunamiForecastFirstHeight({
-    @JsonKey(name: 'arrival_time')
-    required DateTime arrivalTime,
-    required FirstHeightCondition condition,
+    @JsonKey(includeIfNull: false,name: 'arrival_time')
+    DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false)
+    FirstHeightCondition? condition,
   }) = _TsunamiForecastFirstHeight;
   
   factory TsunamiForecastFirstHeight.fromJson(Map<String, Object?> json) => _$TsunamiForecastFirstHeightFromJson(json);
