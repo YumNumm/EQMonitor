@@ -33,20 +33,6 @@ _Intensity _$IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
         'max_lpgm_intensity',
         (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
-      cities: $checkedConvert(
-        'cities',
-        (v) => (v as List<dynamic>?)
-            ?.map((e) => IntensityItem.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-      stations: $checkedConvert(
-        'stations',
-        (v) => (v as List<dynamic>?)
-            ?.map(
-              (e) => IntensityStationItem.fromJson(e as Map<String, dynamic>),
-            )
-            .toList(),
-      ),
     );
     return val;
   },
@@ -62,8 +48,6 @@ Map<String, dynamic> _$IntensityToJson(_Intensity instance) =>
       'prefectures': instance.prefectures,
       'regions': instance.regions,
       'max_lpgm_intensity': ?instance.maxLpgmIntensity,
-      'cities': ?instance.cities,
-      'stations': ?instance.stations,
     };
 
 const _$JmaIntensityEnumMap = {
