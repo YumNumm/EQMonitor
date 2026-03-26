@@ -3152,10 +3152,12 @@
         "type": "object",
         "properties": {
           "tsunami_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "training_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3222,7 +3224,8 @@
         "type": "object",
         "properties": {
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "notification_tiers": {
             "type": "array",
@@ -3264,10 +3267,12 @@
                 "interruption_level"
               ]
             },
-            "minItems": 1
+            "minItems": 1,
+            "nullable": true
           },
           "estimated_intensity_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3367,13 +3372,20 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "nullable": true
           },
           "is_current_location": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "min_jma_intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JmaIntensity"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -3440,7 +3452,8 @@
         "type": "object",
         "properties": {
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "notification_tiers": {
             "type": "array",
@@ -3482,10 +3495,12 @@
                 "interruption_level"
               ]
             },
-            "minItems": 1
+            "minItems": 1,
+            "nullable": true
           },
           "start_live_activity": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -4312,22 +4327,29 @@
         "type": "object",
         "properties": {
           "text": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "free": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "warning": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "forecast": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
-          "var": {
-            "type": "string"
+          "additional": {
+            "type": "string",
+            "description": "固定付加文, var",
+            "nullable": true
           },
           "uri": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "required": []
@@ -5512,10 +5534,16 @@
         "properties": {
           "arrival_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "condition": {
-            "$ref": "#/components/schemas/FirstHeightCondition"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FirstHeightCondition"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -5531,16 +5559,24 @@
         "type": "object",
         "properties": {
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "qualitative": {
-            "$ref": "#/components/schemas/QualitativeHeight"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
           },
           "is_important": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5615,16 +5651,24 @@
         "properties": {
           "arrival_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "initial": {
-            "$ref": "#/components/schemas/WaveInitial"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaveInitial"
+              }
+            ],
+            "nullable": true
           },
           "is_unidentifiable": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "is_missing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5642,22 +5686,32 @@
         "properties": {
           "date_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "is_rising": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "condition": {
-            "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+              }
+            ],
+            "nullable": true
           },
           "is_missing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5741,19 +5795,28 @@
         "properties": {
           "date_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "qualitative": {
-            "$ref": "#/components/schemas/QualitativeHeight"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
           },
           "is_observing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5805,7 +5868,8 @@
         "type": "object",
         "properties": {
           "free": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "warning": {
             "type": "object",
@@ -5823,7 +5887,8 @@
             "required": [
               "text",
               "codes"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -5835,25 +5900,29 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiForecast"
-            }
+            },
+            "nullable": true
           },
           "observations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiObservation"
-            }
+            },
+            "nullable": true
           },
           "estimations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiEstimation"
-            }
+            },
+            "nullable": true
           },
           "earthquakes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiEarthquake"
-            }
+            },
+            "nullable": true
           },
           "text": {
             "anyOf": [
@@ -5863,10 +5932,16 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "nullable": true
           },
           "comments": {
-            "$ref": "#/components/schemas/TsunamiComments"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TsunamiComments"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
