@@ -66,11 +66,11 @@ class EarthquakeHistoryRepository {
     required String code,
     int? limit,
   }) async {
-    final response =
-        await _api.earthquake.getV2EarthquakeIntensityPrefectureCode(
-      code: code,
-      limit: limit?.toString(),
-    );
+    final response = await _api.earthquake
+        .getV2EarthquakeIntensityPrefectureCode(
+          code: code,
+          limit: limit?.toString(),
+        );
     return response.data.toAppResponse(parameter: earthquakeParameter);
   }
 
