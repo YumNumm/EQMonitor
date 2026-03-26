@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 part 'kyoshin_monitor_dio.g.dart';
 
@@ -21,4 +23,28 @@ Dio kyoshinMonitorDio(Ref ref) => Dio(
           'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
     },
   ),
+)..interceptors.add(
+InterceptorsWrapper(
+  onError: (error, handler) {
+    talker.log(
+      'Error: ${error.response?.statusCode} ${error.response?.requestOptions.uri}',
+      pen: AnsiPen()..red(),
+    );
+    return handler.next(error);
+  },
+  onRequest: (options, handler) {
+    talker.log(
+      'Request: ${options.method} ${options.uri}',
+      pen: AnsiPen()..yellow(),
+    );
+    return handler.next(options);
+  },
+  onResponse: (response, handler) {
+    talker.log(
+      'Response: ${response.statusCode} ${response.requestOptions.uri}',
+      pen: AnsiPen()..green(),
+    );
+    return handler.next(response);
+  },
+)
 );
