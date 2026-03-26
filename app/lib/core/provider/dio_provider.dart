@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/chuck_provider.dart';
+import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -35,6 +36,7 @@ Dio dio(Ref ref) {
       () => ref.read(authProvider).value,
     ),
   );
+  dio.interceptors.add(AppCheckInterceptor());
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(
