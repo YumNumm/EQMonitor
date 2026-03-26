@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
@@ -29,6 +30,7 @@ abstract class CityIntensityNode with _$CityIntensityNode {
     @EarthquakeParameterCityItemConverter()
     required EarthquakeParameterCityItem city,
     required JmaIntensity? maxIntensity,
+    @JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,
     required List<StationIntensityNode> stations,
   }) = _CityIntensityNode;
 
