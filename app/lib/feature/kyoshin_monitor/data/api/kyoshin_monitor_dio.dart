@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_dio.g.dart';
@@ -28,6 +27,5 @@ Dio kyoshinMonitorDio(Ref ref) {
       },
     ),
   );
-  dio.interceptors.add(ref.watch(chuckProvider).dioInterceptor);
   return dio;
 }

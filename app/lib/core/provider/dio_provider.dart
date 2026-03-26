@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -49,6 +48,5 @@ Dio dio(Ref ref) {
       talker: talker,
     ),
   );
-  dio.interceptors.add(ref.watch(chuckProvider).dioInterceptor);
   return dio;
 }

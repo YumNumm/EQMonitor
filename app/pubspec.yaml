@@ -18,7 +18,6 @@ dependencies:
   better_auth_api_client:
     path: ../packages/better_auth_api_client
   cached_network_image: ^3.4.1
-  chuck_interceptor: ^2.4.1
   clock: ^1.1.2
   collection: ^1.19.1
   core:

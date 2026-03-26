@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nied_dio_provider.g.dart';
@@ -17,6 +16,5 @@ Dio niedDio(Ref ref) {
       contentType: ContentType.html.value,
     ),
   );
-  dio.interceptors.add(ref.watch(chuckProvider).dioInterceptor);
   return dio;
 }
