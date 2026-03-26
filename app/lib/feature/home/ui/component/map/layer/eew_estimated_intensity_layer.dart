@@ -18,9 +18,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final colorModel =
-        ref.watch(intensityColorProvider).asData?.value ??
-        IntensityColorModel.eqmonitor();
+    final colorModel = ref.watch(intensityColorProvider);
 
     final isInitialized = useRef(false);
 

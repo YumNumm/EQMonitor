@@ -9,6 +9,7 @@ import '../models/eew_array_response.dart';
 import '../models/eew_item_with_relations.dart';
 import '../models/eew_latest_response.dart';
 import '../models/eew_list_response.dart';
+import '../models/jma_intensity.dart';
 
 part 'eew_api_client.g.dart';
 
@@ -19,9 +20,33 @@ abstract class EewApiClient {
   /// 最終報の緊急地震速報一覧を取得.
   ///
   /// [limit] - 1~100 の整数(string).
+  ///
+  /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
+  ///
+  /// [magnitudeLte] - 0~20 の実数(string).
+  ///
+  /// [magnitudeGte] - 0~20 の実数(string).
+  ///
+  /// [depthLte] - 0~2000 の実数(string).
+  ///
+  /// [depthGte] - 0~2000 の実数(string).
+  ///
+  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  ///
+  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EewApiClientUrls.getV2Eew)
   Future<HttpResponse<EewListResponse>> getV2Eew({
     @Query('limit') String? limit,
+    @Query('cursor') String? cursor,
+    @Query('magnitudeLte') String? magnitudeLte,
+    @Query('magnitudeGte') String? magnitudeGte,
+    @Query('depthLte') String? depthLte,
+    @Query('depthGte') String? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('originTimeGte') DateTime? originTimeGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
+    @Query('isWarning') String? isWarning,
   });
 
   @GET(EewApiClientUrls.getV2EewLatest)

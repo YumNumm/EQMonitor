@@ -280,9 +280,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       maxIntensityText,
     ].where((e) => e != null && e.isNotEmpty).join('\n');
 
-    final intensityColorState =
-        ref.watch(intensityColorProvider).asData?.value ??
-        IntensityColorModel.eqmonitor();
+    final intensityColorState = ref.watch(intensityColorProvider);
     final intensityColor = localIntensity != null
         ? intensityColorState.fromJmaIntensity(localIntensity).background
         : null;

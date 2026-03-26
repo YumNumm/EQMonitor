@@ -22,9 +22,33 @@ class _EewApiClient implements EewApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<EewListResponse>> getV2Eew({String? limit}) async {
+  Future<HttpResponse<EewListResponse>> getV2Eew({
+    String? limit,
+    String? cursor,
+    String? magnitudeLte,
+    String? magnitudeGte,
+    String? depthLte,
+    String? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
+    String? isWarning,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'limit': limit,
+      r'cursor': cursor,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte?.toJson(),
+      r'intensityGte': intensityGte?.toJson(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'isWarning': isWarning,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

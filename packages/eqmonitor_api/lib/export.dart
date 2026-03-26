@@ -120,6 +120,7 @@ export 'models/pre_periods.dart';
 export 'models/telegrams.dart';
 export 'models/pre_periods2.dart';
 export 'models/items2.dart';
+export 'models/is_canceled.dart';
 export 'models/device_response_type.dart';
 export 'models/device_response_locale.dart';
 export 'models/apns_token_response_environment.dart';

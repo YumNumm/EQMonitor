@@ -25,10 +25,14 @@ class _NotificationApiClient implements NotificationApiClient {
   Future<HttpResponse<NotificationHistoryResponse>>
   getV2DeviceDeviceIdNotificationHistory({
     required String deviceId,
+    String? cursor,
     int? limit = 100,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'cursor': cursor,
+      r'limit': limit,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

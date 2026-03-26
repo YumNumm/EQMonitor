@@ -23,10 +23,16 @@ class _TelegramApiClient implements TelegramApiClient {
 
   @override
   Future<HttpResponse<TelegramListResponse>> getV2Telegram({
+    List<TelegramStatus>? statuses = const [.normal],
     String? limit,
+    String? cursor,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'limit': limit,
+      r'cursor': cursor,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -55,10 +61,16 @@ class _TelegramApiClient implements TelegramApiClient {
   @override
   Future<HttpResponse<TelegramListResponse>> getV2TelegramTypeType({
     required TelegramType type,
+    List<TelegramStatus>? statuses = const [.normal],
     String? limit,
+    String? cursor,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'limit': limit,
+      r'cursor': cursor,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
@@ -87,10 +99,16 @@ class _TelegramApiClient implements TelegramApiClient {
   @override
   Future<HttpResponse<TelegramListResponse>> getV2TelegramEventIdEventId({
     required String eventId,
+    List<TelegramStatus>? statuses = const [.normal],
     String? limit,
+    String? cursor,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'statuses': statuses,
+      r'limit': limit,
+      r'cursor': cursor,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

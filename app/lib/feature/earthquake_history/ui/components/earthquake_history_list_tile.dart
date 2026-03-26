@@ -101,8 +101,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         };
 
     final intensityColorState =
-        ref.watch(intensityColorProvider).asData?.value ??
-        IntensityColorModel.eqmonitor();
+        ref.watch(intensityColorProvider);
     final intensityColor = maxIntensity != null
         ? intensityColorState.fromJmaIntensity(maxIntensity).background
         : null;
