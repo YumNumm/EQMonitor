@@ -6,5 +6,5 @@ part 'chuck_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Chuck chuck(Ref ref) {
-  return Chuck(navigatorKey: App.navigatorKey, showNotification: true);
+  return Chuck(navigatorKey: App.navigatorKey);
 }
