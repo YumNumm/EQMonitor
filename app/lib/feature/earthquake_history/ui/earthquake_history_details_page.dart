@@ -165,9 +165,6 @@ class _Sheet extends StatelessWidget {
                 children: [
                   EarthquakeHypocenterInformationCard(item: item),
                   PrefectureIntensityWidget(item: item),
-                  // TODO(YumNumm): 長周期地震動階級の表示
-                  // if (item.intensity?.maxLpgmIntensity != null)
-                  //   PrefectureLpgmIntensityWidget(item: item),
                   _TelegramListButton(eventId: item.eventId),
                 ],
               ),
