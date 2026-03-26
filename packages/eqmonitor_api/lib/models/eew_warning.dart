@@ -16,6 +16,7 @@ abstract class EewWarning with _$EewWarning {
     required List<EewWarningZoneItem> prefectures,
     required List<EewWarningZoneItem> regions,
   }) = _EewWarning;
-  
-  factory EewWarning.fromJson(Map<String, Object?> json) => _$EewWarningFromJson(json);
+
+  factory EewWarning.fromJson(Map<String, Object?> json) =>
+      _$EewWarningFromJson(json);
 }

@@ -9,10 +9,9 @@ part 'epicenter_info.g.dart';
 
 @Freezed()
 abstract class EpicenterInfo with _$EpicenterInfo {
-  const factory EpicenterInfo({
-    required num code,
-    required String name,
-  }) = _EpicenterInfo;
-  
-  factory EpicenterInfo.fromJson(Map<String, Object?> json) => _$EpicenterInfoFromJson(json);
+  const factory EpicenterInfo({required num code, required String name}) =
+      _EpicenterInfo;
+
+  factory EpicenterInfo.fromJson(Map<String, Object?> json) =>
+      _$EpicenterInfoFromJson(json);
 }

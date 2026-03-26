@@ -13,11 +13,11 @@ part 'intensity_region_search_item.g.dart';
 @Freezed()
 abstract class IntensityRegionSearchItem with _$IntensityRegionSearchItem {
   const factory IntensityRegionSearchItem({
-    @JsonKey(name: 'event_id')
-    required String eventId,
+    @JsonKey(name: 'event_id') required String eventId,
     required IntensityRegionInfo region,
     required EarthquakePartial earthquake,
   }) = _IntensityRegionSearchItem;
-  
-  factory IntensityRegionSearchItem.fromJson(Map<String, Object?> json) => _$IntensityRegionSearchItemFromJson(json);
+
+  factory IntensityRegionSearchItem.fromJson(Map<String, Object?> json) =>
+      _$IntensityRegionSearchItemFromJson(json);
 }

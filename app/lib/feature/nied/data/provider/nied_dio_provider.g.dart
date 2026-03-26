@@ -49,4 +49,4 @@ final class NiedDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$niedDioHash() => r'160f4cf8093bd208f840271a93fb186db1922310';
+String _$niedDioHash() => r'33d9cf59b20bc45cdbb42618661c238cf838c33b';

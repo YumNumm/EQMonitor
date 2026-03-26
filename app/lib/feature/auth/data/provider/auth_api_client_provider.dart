@@ -1,5 +1,6 @@
 import 'package:better_auth_api_client/export.dart' as auth_api;
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,5 +34,6 @@ auth_api.ApiClient authApiClient(Ref ref) {
       talker: talker,
     ),
   );
+  dio.interceptors.add(ref.watch(chuckProvider).dioInterceptor);
   return auth_api.ApiClient(dio);
 }

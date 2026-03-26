@@ -15,13 +15,12 @@ abstract class EewListResponse with _$EewListResponse {
     required List<EewItemWithRelations> items,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_token')
-    String? nextToken,
+    @JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_pooling')
-    String? nextPooling,
+    @JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling,
   }) = _EewListResponse;
-  
-  factory EewListResponse.fromJson(Map<String, Object?> json) => _$EewListResponseFromJson(json);
+
+  factory EewListResponse.fromJson(Map<String, Object?> json) =>
+      _$EewListResponseFromJson(json);
 }
