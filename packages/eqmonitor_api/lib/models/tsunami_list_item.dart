@@ -11,9 +11,9 @@ part 'tsunami_list_item.g.dart';
 abstract class TsunamiListItem with _$TsunamiListItem {
   const factory TsunamiListItem({
     required String id,
-    @JsonKey(name: 'event_ids')
-    required List<String> eventIds,
+    @JsonKey(name: 'event_ids') required List<String> eventIds,
   }) = _TsunamiListItem;
-  
-  factory TsunamiListItem.fromJson(Map<String, Object?> json) => _$TsunamiListItemFromJson(json);
+
+  factory TsunamiListItem.fromJson(Map<String, Object?> json) =>
+      _$TsunamiListItemFromJson(json);
 }

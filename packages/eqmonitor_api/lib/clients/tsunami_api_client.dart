@@ -56,15 +56,17 @@ abstract class TsunamiApiClient {
   });
 }
 
-
 abstract class TsunamiApiClientUrls {
-	/// /v2/tsunami
-	static const getV2Tsunami = "/v2/tsunami";
-	/// /v2/tsunami/by-event-id/{eventId}
-	static const getV2TsunamiByEventIdEventId = "/v2/tsunami/by-event-id/{eventId}";
-	/// /v2/tsunami/active
-	static const getV2TsunamiActive = "/v2/tsunami/active";
-	/// /v2/tsunami/{tsunamiId}
-	static const getV2TsunamiTsunamiId = "/v2/tsunami/{tsunamiId}";
-}
+  /// /v2/tsunami
+  static const getV2Tsunami = "/v2/tsunami";
 
+  /// /v2/tsunami/by-event-id/{eventId}
+  static const getV2TsunamiByEventIdEventId =
+      "/v2/tsunami/by-event-id/{eventId}";
+
+  /// /v2/tsunami/active
+  static const getV2TsunamiActive = "/v2/tsunami/active";
+
+  /// /v2/tsunami/{tsunamiId}
+  static const getV2TsunamiTsunamiId = "/v2/tsunami/{tsunamiId}";
+}
