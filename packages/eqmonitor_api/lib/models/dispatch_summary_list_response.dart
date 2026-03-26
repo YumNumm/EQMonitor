@@ -11,9 +11,9 @@ part 'dispatch_summary_list_response.g.dart';
 
 @Freezed()
 abstract class DispatchSummaryListResponse with _$DispatchSummaryListResponse {
-  const factory DispatchSummaryListResponse({
-    required List<Items> items,
-  }) = _DispatchSummaryListResponse;
-  
-  factory DispatchSummaryListResponse.fromJson(Map<String, Object?> json) => _$DispatchSummaryListResponseFromJson(json);
+  const factory DispatchSummaryListResponse({required List<Items> items}) =
+      _DispatchSummaryListResponse;
+
+  factory DispatchSummaryListResponse.fromJson(Map<String, Object?> json) =>
+      _$DispatchSummaryListResponseFromJson(json);
 }
