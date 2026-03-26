@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +15,9 @@ void main() {
     final preferences = await SharedPreferences.getInstance();
     final container = ProviderContainer(
       overrides: [
-        sharedPreferencesProvider.overrideWithValue(preferences),
+        app_prefs.sharedPreferencesProvider.overrideWithValue(
+          app_prefs.SharedPreferencesAsync(preferences),
+        ),
       ],
     );
     addTearDown(container.dispose);
