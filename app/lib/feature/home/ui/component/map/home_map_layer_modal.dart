@@ -80,7 +80,7 @@ class _KyoshinMonitorIsEnabledTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final setting = ref.watch(kyoshinMonitorSettingsProvider);
+    final setting = ref.watch(kyoshinMonitorSettingsProvider).requireValue;
 
     final subtitle = setting.useKmoni
         ? '強震モニタのリアルタイムデータを表示します \n'

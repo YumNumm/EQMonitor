@@ -10,21 +10,16 @@ part 'telegram_comments.g.dart';
 @Freezed()
 abstract class TelegramComments with _$TelegramComments {
   const factory TelegramComments({
-    @JsonKey(includeIfNull: false)
-    String? text,
-    @JsonKey(includeIfNull: false)
-    String? free,
-    @JsonKey(includeIfNull: false)
-    String? warning,
-    @JsonKey(includeIfNull: false)
-    String? forecast,
+    required String text,
+    required String free,
+    required String warning,
+    required String forecast,
 
-    /// 固定付加文, var
-    @JsonKey(includeIfNull: false)
-    String? additional,
-    @JsonKey(includeIfNull: false)
-    String? uri,
+    /// The name has been replaced because it contains a keyword. Original name: `var`.
+    @JsonKey(name: 'var') required String varValue,
+    required String uri,
   }) = _TelegramComments;
-  
-  factory TelegramComments.fromJson(Map<String, Object?> json) => _$TelegramCommentsFromJson(json);
+
+  factory TelegramComments.fromJson(Map<String, Object?> json) =>
+      _$TelegramCommentsFromJson(json);
 }

@@ -4,32 +4,35 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'telegram_type.dart';
+import 'telegram_status.dart';
+import 'info_type.dart';
+
 part 'items.freezed.dart';
 part 'items.g.dart';
 
 @Freezed()
 abstract class Items with _$Items {
   const factory Items({
-    required String correlationKey,
-    required String eventType,
-    required String eventId,
-    required num serialNo,
-    required String jmaReportTime,
-    required num targetDevices,
-    required num enqueuedFcm,
-    required num enqueuedApns,
-    required num enqueuedBroadcast,
-    required num successFcm,
-    required num failedFcm,
-    required num successApns,
-    required num failedApns,
-    required String createdAt,
-    required String updatedAt,
-    @JsonKey(includeIfNull: false)
-    String? headline,
-    @JsonKey(includeIfNull: false)
-    num? resolverDelayMs,
+    required String id,
+    @JsonKey(name: 'event_id') required String eventId,
+    required TelegramType type,
+    required String title,
+    required TelegramStatus status,
+    @JsonKey(name: 'info_type') required InfoType infoType,
+    @JsonKey(name: 'editorial_office') required String editorialOffice,
+    @JsonKey(name: 'publishing_office') required List<String> publishingOffice,
+    @JsonKey(name: 'press_at') required DateTime pressAt,
+    @JsonKey(name: 'report_at') required DateTime reportAt,
+    @JsonKey(name: 'info_kind') required String infoKind,
+    @JsonKey(name: 'info_kind_version') required String infoKindVersion,
+    required String hash,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,
+    @JsonKey(includeIfNull: false, name: 'target_at') DateTime? targetAt,
+    @JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? revokeAt,
+    @JsonKey(includeIfNull: false) String? headline,
   }) = _Items;
-  
+
   factory Items.fromJson(Map<String, Object?> json) => _$ItemsFromJson(json);
 }

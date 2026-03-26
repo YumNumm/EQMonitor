@@ -12,13 +12,11 @@ part 'region_setting_patch_request.g.dart';
 @Freezed()
 abstract class RegionSettingPatchRequest with _$RegionSettingPatchRequest {
   const factory RegionSettingPatchRequest({
-    @JsonKey(includeIfNull: false,name: 'region_name')
-    String? regionName,
-    @JsonKey(includeIfNull: false,name: 'is_current_location')
-    bool? isCurrentLocation,
-    @JsonKey(includeIfNull: false,name: 'min_jma_intensity')
-    JmaIntensity? minJmaIntensity,
+    @JsonKey(name: 'is_current_location') required bool isCurrentLocation,
+    @JsonKey(name: 'min_jma_intensity') required JmaIntensity minJmaIntensity,
+    @JsonKey(includeIfNull: false, name: 'region_name') String? regionName,
   }) = _RegionSettingPatchRequest;
-  
-  factory RegionSettingPatchRequest.fromJson(Map<String, Object?> json) => _$RegionSettingPatchRequestFromJson(json);
+
+  factory RegionSettingPatchRequest.fromJson(Map<String, Object?> json) =>
+      _$RegionSettingPatchRequestFromJson(json);
 }

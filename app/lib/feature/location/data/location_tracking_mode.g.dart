@@ -15,7 +15,7 @@ part of 'location_tracking_mode.dart';
 final locationTrackingModeProvider = LocationTrackingModeProvider._();
 
 final class LocationTrackingModeProvider
-    extends $NotifierProvider<LocationTrackingMode, bool> {
+    extends $AsyncNotifierProvider<LocationTrackingMode, bool> {
   LocationTrackingModeProvider._()
     : super(
         from: null,
@@ -33,30 +33,22 @@ final class LocationTrackingModeProvider
   @$internal
   @override
   LocationTrackingMode create() => LocationTrackingMode();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
 }
 
 String _$locationTrackingModeHash() =>
-    r'8ad1dc68a71bc2c4324e184080a68ee6be3aacae';
+    r'aee3c9e2549037a3ba2c6566c3286539709d0f06';
 
-abstract class _$LocationTrackingMode extends $Notifier<bool> {
-  bool build();
+abstract class _$LocationTrackingMode extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

@@ -1,4 +1,5 @@
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'location_tracking_mode.g.dart';
@@ -6,16 +7,22 @@ part 'location_tracking_mode.g.dart';
 @riverpod
 class LocationTrackingMode extends _$LocationTrackingMode {
   @override
-  bool build() => get();
+  Future<bool> build() async => get();
 
-  static const _key = 'location_tracking_mode';
-
-  Future<void> set({required bool value}) async {
-    state = value;
-    await ref.read(sharedPreferencesProvider).setBool(_key, value);
+  Future<bool> get() async {
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    final value = await ds.getBool(
+      key: SharedPreferencesKey.locationTrackingMode,
+    );
+    return value ?? false;
   }
 
-  bool get() {
-    return ref.read(sharedPreferencesProvider).getBool(_key) ?? false;
+  Future<void> set({required bool value}) async {
+    state = AsyncValue.data(value);
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    await ds.setBool(
+      key: SharedPreferencesKey.locationTrackingMode,
+      value: value,
+    );
   }
 }
