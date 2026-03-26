@@ -17,11 +17,11 @@ abstract class TsunamiObservationStation with _$TsunamiObservationStation {
     required String name,
     @JsonKey(name: 'first_height')
     required TsunamiObservationStationFirstHeight firstHeight,
-    @JsonKey(includeIfNull: false)
-    String? sensor,
-    @JsonKey(includeIfNull: false,name: 'max_height')
+    @JsonKey(includeIfNull: false) String? sensor,
+    @JsonKey(includeIfNull: false, name: 'max_height')
     TsunamiObservationStationMaxHeight? maxHeight,
   }) = _TsunamiObservationStation;
-  
-  factory TsunamiObservationStation.fromJson(Map<String, Object?> json) => _$TsunamiObservationStationFromJson(json);
+
+  factory TsunamiObservationStation.fromJson(Map<String, Object?> json) =>
+      _$TsunamiObservationStationFromJson(json);
 }

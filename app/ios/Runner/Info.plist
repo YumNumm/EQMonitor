@@ -24,6 +24,8 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>GIDClientID</key>
+	<string>179553945248-t7tu1idt4r6hlbbegau7817r283c5mhr.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -32,6 +34,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>deeplink.eqmonitor.app</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.179553945248-t7tu1idt4r6hlbbegau7817r283c5mhr</string>
 			</array>
 		</dict>
 	</array>

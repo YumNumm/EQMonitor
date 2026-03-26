@@ -17,9 +17,9 @@ abstract class TsunamiEstimation with _$TsunamiEstimation {
     required String name,
     @JsonKey(name: 'first_height')
     required TsunamiEstimationFirstHeight firstHeight,
-    @JsonKey(name: 'max_height')
-    required TsunamiEstimationMaxHeight maxHeight,
+    @JsonKey(name: 'max_height') required TsunamiEstimationMaxHeight maxHeight,
   }) = _TsunamiEstimation;
-  
-  factory TsunamiEstimation.fromJson(Map<String, Object?> json) => _$TsunamiEstimationFromJson(json);
+
+  factory TsunamiEstimation.fromJson(Map<String, Object?> json) =>
+      _$TsunamiEstimationFromJson(json);
 }

@@ -18,26 +18,22 @@ part 'earthquake.g.dart';
 abstract class Earthquake with _$Earthquake {
   const factory Earthquake({
     /// yyyyMMddHHmmss形式のイベントID
-    @JsonKey(name: 'event_id')
-    required String eventId,
+    @JsonKey(name: 'event_id') required String eventId,
     required TelegramStatus status,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
     required EarthquakeDatasource datasource,
     required List<Telegrams> telegrams,
-    @JsonKey(includeIfNull: false,name: 'origin_time')
-    DateTime? originTime,
-    @JsonKey(includeIfNull: false,name: 'arrival_time')
-    DateTime? arrivalTime,
-    @JsonKey(includeIfNull: false)
-    Hypocenter? hypocenter,
-    @JsonKey(includeIfNull: false)
-    Intensity? intensity,
+    @JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,
+    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false) Hypocenter? hypocenter,
+    @JsonKey(includeIfNull: false) Intensity? intensity,
 
     /// 推計震度PMTilesのフルURL
-    @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile')
+    @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')
     String? estimatedIntensityTile,
   }) = _Earthquake;
-  
-  factory Earthquake.fromJson(Map<String, Object?> json) => _$EarthquakeFromJson(json);
+
+  factory Earthquake.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeFromJson(json);
 }

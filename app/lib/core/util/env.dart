@@ -7,10 +7,11 @@ class Env {
   );
   static const restApiUrl = String.fromEnvironment('REST_API_URL');
   static const wsApiUrl = String.fromEnvironment('WS_API_URL');
-  static const apiAuthorization = String.fromEnvironment(
-    'API_AUTHORIZATION',
-  );
   static const betterAuthUrl = String.fromEnvironment('BETTER_AUTH_URL');
+  static const googleIosClientId =
+      String.fromEnvironment('GOOGLE_IOS_CLIENT_ID');
+  static const googleAndroidClientId =
+      String.fromEnvironment('GOOGLE_ANDROID_CLIENT_ID');
 }
 
 enum Flavor { dev, prod }

@@ -38,7 +38,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     // Resync timer
     var isResyncing = false;
     final interval = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.api.imageFetchInterval),
+      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.api.imageFetchInterval),
     );
     ref.listen(
       periodicTimerProvider(
@@ -125,7 +125,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 Stream<void> _kyoshinMonitorDelayAdujustTiming(Ref ref) {
   final streamController = StreamController<void>();
   final delayAdjustInterval = ref.watch(
-    kyoshinMonitorSettingsProvider.select((v) => v.api.delayAdjustInterval),
+    kyoshinMonitorSettingsProvider.select((v) => v.requireValue.api.delayAdjustInterval),
   );
   ref.listen(periodicTimerProvider(delayAdjustInterval), (previous, next) {
     streamController.add(null);

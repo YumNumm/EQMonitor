@@ -16,7 +16,7 @@ dependency_overrides:
 dependencies:
   app_settings: ^7.0.0
   better_auth_api_client:
-    path: ../../packages/better_auth_api_client
+    path: ../packages/better_auth_api_client
   cached_network_image: ^3.4.1
   clock: ^1.1.2
   collection: ^1.19.1
@@ -67,6 +67,7 @@ dependencies:
   go_router: ^17.0.0
   google_api_availability: ^5.0.1
   google_fonts: ^8.0.2
+  google_sign_in: ^7.2.0
   hooks_riverpod: ^3.0.3
   image: ^4.4.0
   in_app_review: ^2.0.10
@@ -77,7 +78,7 @@ dependencies:
     path: ../packages/jma_map
   jma_parameter_types:
     path: ../packages/jma_parameter_types
-  json_annotation: ^4.9.0
+  json_annotation: ^4.11.0
   kyoshin_monitor_api:
     path: ../packages/kyoshin_monitor_api
   kyoshin_monitor_image_parser:
@@ -98,6 +99,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   purchases_flutter: ^9.1.0
+  riverpod: ^3.2.1
   riverpod_annotation: ^4.0.0
   screenshot: 3.0.0
   share_plus: ^12.0.0
