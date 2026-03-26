@@ -12,11 +12,12 @@ part 'earthquake_settings_request.g.dart';
 @Freezed()
 abstract class EarthquakeSettingsRequest with _$EarthquakeSettingsRequest {
   const factory EarthquakeSettingsRequest({
-    required bool enabled,
-    @JsonKey(name: 'notification_tiers')
-    required List<NotificationTiers2> notificationTiers,
-    @JsonKey(name: 'estimated_intensity_enabled')
-    required bool estimatedIntensityEnabled,
+    @JsonKey(includeIfNull: false)
+    bool? enabled,
+    @JsonKey(includeIfNull: false,name: 'notification_tiers')
+    List<NotificationTiers2>? notificationTiers,
+    @JsonKey(includeIfNull: false,name: 'estimated_intensity_enabled')
+    bool? estimatedIntensityEnabled,
   }) = _EarthquakeSettingsRequest;
 
   factory EarthquakeSettingsRequest.fromJson(Map<String, Object?> json) =>

@@ -11,22 +11,22 @@ part of 'telegram_comments.dart';
 _TelegramComments _$TelegramCommentsFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_TelegramComments', json, ($checkedConvert) {
       final val = _TelegramComments(
-        text: $checkedConvert('text', (v) => v as String),
-        free: $checkedConvert('free', (v) => v as String),
-        warning: $checkedConvert('warning', (v) => v as String),
-        forecast: $checkedConvert('forecast', (v) => v as String),
-        varValue: $checkedConvert('var', (v) => v as String),
-        uri: $checkedConvert('uri', (v) => v as String),
+        text: $checkedConvert('text', (v) => v as String?),
+        free: $checkedConvert('free', (v) => v as String?),
+        warning: $checkedConvert('warning', (v) => v as String?),
+        forecast: $checkedConvert('forecast', (v) => v as String?),
+        additional: $checkedConvert('additional', (v) => v as String?),
+        uri: $checkedConvert('uri', (v) => v as String?),
       );
       return val;
-    }, fieldKeyMap: const {'varValue': 'var'});
+    });
 
 Map<String, dynamic> _$TelegramCommentsToJson(_TelegramComments instance) =>
     <String, dynamic>{
-      'text': instance.text,
-      'free': instance.free,
-      'warning': instance.warning,
-      'forecast': instance.forecast,
-      'var': instance.varValue,
-      'uri': instance.uri,
+      'text': ?instance.text,
+      'free': ?instance.free,
+      'warning': ?instance.warning,
+      'forecast': ?instance.forecast,
+      'additional': ?instance.additional,
+      'uri': ?instance.uri,
     };

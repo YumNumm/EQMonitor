@@ -15,31 +15,31 @@ _RegionSettingPatchRequest _$RegionSettingPatchRequestFromJson(
   json,
   ($checkedConvert) {
     final val = _RegionSettingPatchRequest(
+      regionName: $checkedConvert('region_name', (v) => v as String?),
       isCurrentLocation: $checkedConvert(
         'is_current_location',
-        (v) => v as bool,
+        (v) => v as bool?,
       ),
       minJmaIntensity: $checkedConvert(
         'min_jma_intensity',
-        (v) => $enumDecode(_$JmaIntensityEnumMap, v),
+        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
       ),
-      regionName: $checkedConvert('region_name', (v) => v as String?),
     );
     return val;
   },
   fieldKeyMap: const {
+    'regionName': 'region_name',
     'isCurrentLocation': 'is_current_location',
     'minJmaIntensity': 'min_jma_intensity',
-    'regionName': 'region_name',
   },
 );
 
 Map<String, dynamic> _$RegionSettingPatchRequestToJson(
   _RegionSettingPatchRequest instance,
 ) => <String, dynamic>{
-  'is_current_location': instance.isCurrentLocation,
-  'min_jma_intensity': instance.minJmaIntensity,
   'region_name': ?instance.regionName,
+  'is_current_location': ?instance.isCurrentLocation,
+  'min_jma_intensity': ?instance.minJmaIntensity,
 };
 
 const _$JmaIntensityEnumMap = {

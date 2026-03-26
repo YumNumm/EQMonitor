@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiEstimationMaxHeight {
 
-@JsonKey(name: 'date_time') DateTime get dateTime; num get value; bool get over; QualitativeHeight get qualitative;@JsonKey(name: 'is_observing') bool get isObserving;
+@JsonKey(includeIfNull: false, name: 'date_time') DateTime? get dateTime;@JsonKey(includeIfNull: false) num? get value;@JsonKey(includeIfNull: false) bool? get over;@JsonKey(includeIfNull: false) QualitativeHeight? get qualitative;@JsonKey(includeIfNull: false, name: 'is_observing') bool? get isObserving;
 /// Create a copy of TsunamiEstimationMaxHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiEstimationMaxHeightCopyWith<$Res>  {
   factory $TsunamiEstimationMaxHeightCopyWith(TsunamiEstimationMaxHeight value, $Res Function(TsunamiEstimationMaxHeight) _then) = _$TsunamiEstimationMaxHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'date_time') DateTime dateTime, num value, bool over, QualitativeHeight qualitative,@JsonKey(name: 'is_observing') bool isObserving
+@JsonKey(includeIfNull: false, name: 'date_time') DateTime? dateTime,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false) bool? over,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_observing') bool? isObserving
 });
 
 
@@ -65,14 +65,14 @@ class _$TsunamiEstimationMaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiEstimationMaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? dateTime = null,Object? value = null,Object? over = null,Object? qualitative = null,Object? isObserving = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? dateTime = freezed,Object? value = freezed,Object? over = freezed,Object? qualitative = freezed,Object? isObserving = freezed,}) {
   return _then(_self.copyWith(
-dateTime: null == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
-as DateTime,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as num,over: null == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
-as bool,qualitative: null == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
-as QualitativeHeight,isObserving: null == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
-as bool,
+dateTime: freezed == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as num?,over: freezed == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
+as bool?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as QualitativeHeight?,isObserving: freezed == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'date_time')  DateTime dateTime,  num value,  bool over,  QualitativeHeight qualitative, @JsonKey(name: 'is_observing')  bool isObserving)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'date_time')  DateTime? dateTime, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  bool? over, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_observing')  bool? isObserving)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiEstimationMaxHeight() when $default != null:
 return $default(_that.dateTime,_that.value,_that.over,_that.qualitative,_that.isObserving);case _:
@@ -178,7 +178,7 @@ return $default(_that.dateTime,_that.value,_that.over,_that.qualitative,_that.is
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'date_time')  DateTime dateTime,  num value,  bool over,  QualitativeHeight qualitative, @JsonKey(name: 'is_observing')  bool isObserving)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'date_time')  DateTime? dateTime, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  bool? over, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_observing')  bool? isObserving)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiEstimationMaxHeight():
 return $default(_that.dateTime,_that.value,_that.over,_that.qualitative,_that.isObserving);case _:
@@ -198,7 +198,7 @@ return $default(_that.dateTime,_that.value,_that.over,_that.qualitative,_that.is
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'date_time')  DateTime dateTime,  num value,  bool over,  QualitativeHeight qualitative, @JsonKey(name: 'is_observing')  bool isObserving)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'date_time')  DateTime? dateTime, @JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  bool? over, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_observing')  bool? isObserving)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiEstimationMaxHeight() when $default != null:
 return $default(_that.dateTime,_that.value,_that.over,_that.qualitative,_that.isObserving);case _:
@@ -213,14 +213,14 @@ return $default(_that.dateTime,_that.value,_that.over,_that.qualitative,_that.is
 @JsonSerializable()
 
 class _TsunamiEstimationMaxHeight implements TsunamiEstimationMaxHeight {
-  const _TsunamiEstimationMaxHeight({@JsonKey(name: 'date_time') required this.dateTime, required this.value, required this.over, required this.qualitative, @JsonKey(name: 'is_observing') required this.isObserving});
+  const _TsunamiEstimationMaxHeight({@JsonKey(includeIfNull: false, name: 'date_time') this.dateTime, @JsonKey(includeIfNull: false) this.value, @JsonKey(includeIfNull: false) this.over, @JsonKey(includeIfNull: false) this.qualitative, @JsonKey(includeIfNull: false, name: 'is_observing') this.isObserving});
   factory _TsunamiEstimationMaxHeight.fromJson(Map<String, dynamic> json) => _$TsunamiEstimationMaxHeightFromJson(json);
 
-@override@JsonKey(name: 'date_time') final  DateTime dateTime;
-@override final  num value;
-@override final  bool over;
-@override final  QualitativeHeight qualitative;
-@override@JsonKey(name: 'is_observing') final  bool isObserving;
+@override@JsonKey(includeIfNull: false, name: 'date_time') final  DateTime? dateTime;
+@override@JsonKey(includeIfNull: false) final  num? value;
+@override@JsonKey(includeIfNull: false) final  bool? over;
+@override@JsonKey(includeIfNull: false) final  QualitativeHeight? qualitative;
+@override@JsonKey(includeIfNull: false, name: 'is_observing') final  bool? isObserving;
 
 /// Create a copy of TsunamiEstimationMaxHeight
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$TsunamiEstimationMaxHeightCopyWith<$Res> implements $Tsun
   factory _$TsunamiEstimationMaxHeightCopyWith(_TsunamiEstimationMaxHeight value, $Res Function(_TsunamiEstimationMaxHeight) _then) = __$TsunamiEstimationMaxHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'date_time') DateTime dateTime, num value, bool over, QualitativeHeight qualitative,@JsonKey(name: 'is_observing') bool isObserving
+@JsonKey(includeIfNull: false, name: 'date_time') DateTime? dateTime,@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false) bool? over,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_observing') bool? isObserving
 });
 
 
@@ -272,14 +272,14 @@ class __$TsunamiEstimationMaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiEstimationMaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? dateTime = null,Object? value = null,Object? over = null,Object? qualitative = null,Object? isObserving = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? dateTime = freezed,Object? value = freezed,Object? over = freezed,Object? qualitative = freezed,Object? isObserving = freezed,}) {
   return _then(_TsunamiEstimationMaxHeight(
-dateTime: null == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
-as DateTime,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as num,over: null == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
-as bool,qualitative: null == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
-as QualitativeHeight,isObserving: null == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
-as bool,
+dateTime: freezed == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as num?,over: freezed == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
+as bool?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as QualitativeHeight?,isObserving: freezed == isObserving ? _self.isObserving : isObserving // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

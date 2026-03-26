@@ -17,15 +17,15 @@ _TsunamiEstimationMaxHeight _$TsunamiEstimationMaxHeightFromJson(
     final val = _TsunamiEstimationMaxHeight(
       dateTime: $checkedConvert(
         'date_time',
-        (v) => DateTime.parse(v as String),
+        (v) => v == null ? null : DateTime.parse(v as String),
       ),
-      value: $checkedConvert('value', (v) => v as num),
-      over: $checkedConvert('over', (v) => v as bool),
+      value: $checkedConvert('value', (v) => v as num?),
+      over: $checkedConvert('over', (v) => v as bool?),
       qualitative: $checkedConvert(
         'qualitative',
-        (v) => $enumDecode(_$QualitativeHeightEnumMap, v),
+        (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
       ),
-      isObserving: $checkedConvert('is_observing', (v) => v as bool),
+      isObserving: $checkedConvert('is_observing', (v) => v as bool?),
     );
     return val;
   },
@@ -35,11 +35,11 @@ _TsunamiEstimationMaxHeight _$TsunamiEstimationMaxHeightFromJson(
 Map<String, dynamic> _$TsunamiEstimationMaxHeightToJson(
   _TsunamiEstimationMaxHeight instance,
 ) => <String, dynamic>{
-  'date_time': instance.dateTime.toIso8601String(),
-  'value': instance.value,
-  'over': instance.over,
-  'qualitative': instance.qualitative,
-  'is_observing': instance.isObserving,
+  'date_time': ?instance.dateTime?.toIso8601String(),
+  'value': ?instance.value,
+  'over': ?instance.over,
+  'qualitative': ?instance.qualitative,
+  'is_observing': ?instance.isObserving,
 };
 
 const _$QualitativeHeightEnumMap = {

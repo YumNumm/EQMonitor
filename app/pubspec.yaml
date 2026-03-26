@@ -43,7 +43,10 @@ dependencies:
   firebase_messaging: ^16.0.0
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.1.0
+  flutter_colorpicker:
+    git:
+      url: https://github.com/mchome/flutter_colorpicker.git
+      ref: e9b124896076991fa077f62bdbab3df1a26149d7
   flutter_email_sender: ^8.0.0
   flutter_hooks: ^0.21.2
   flutter_html: ^3.0.0

@@ -144,7 +144,7 @@ class _SliverListBody extends HookConsumerWidget {
                 onReload: onRefresh,
               ),
               AsyncData(:final value) =>
-                value.hasNext
+                !value.hasNext
                     ? const EarthquakeHistoryAllFetched()
                     : const SizedBox.shrink(),
               _ => const SizedBox.shrink(),

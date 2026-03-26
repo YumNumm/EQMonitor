@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiForecastMaxHeight {
 
- num get value; bool get over; QualitativeHeight get qualitative;@JsonKey(name: 'is_important') bool get isImportant;
+@JsonKey(includeIfNull: false) num? get value;@JsonKey(includeIfNull: false) bool? get over;@JsonKey(includeIfNull: false) QualitativeHeight? get qualitative;@JsonKey(includeIfNull: false, name: 'is_important') bool? get isImportant;
 /// Create a copy of TsunamiForecastMaxHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiForecastMaxHeightCopyWith<$Res>  {
   factory $TsunamiForecastMaxHeightCopyWith(TsunamiForecastMaxHeight value, $Res Function(TsunamiForecastMaxHeight) _then) = _$TsunamiForecastMaxHeightCopyWithImpl;
 @useResult
 $Res call({
- num value, bool over, QualitativeHeight qualitative,@JsonKey(name: 'is_important') bool isImportant
+@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false) bool? over,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_important') bool? isImportant
 });
 
 
@@ -65,13 +65,13 @@ class _$TsunamiForecastMaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiForecastMaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? over = null,Object? qualitative = null,Object? isImportant = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? value = freezed,Object? over = freezed,Object? qualitative = freezed,Object? isImportant = freezed,}) {
   return _then(_self.copyWith(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as num,over: null == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
-as bool,qualitative: null == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
-as QualitativeHeight,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
-as bool,
+value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as num?,over: freezed == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
+as bool?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as QualitativeHeight?,isImportant: freezed == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num value,  bool over,  QualitativeHeight qualitative, @JsonKey(name: 'is_important')  bool isImportant)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  bool? over, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  bool? isImportant)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiForecastMaxHeight() when $default != null:
 return $default(_that.value,_that.over,_that.qualitative,_that.isImportant);case _:
@@ -177,7 +177,7 @@ return $default(_that.value,_that.over,_that.qualitative,_that.isImportant);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num value,  bool over,  QualitativeHeight qualitative, @JsonKey(name: 'is_important')  bool isImportant)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  bool? over, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  bool? isImportant)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiForecastMaxHeight():
 return $default(_that.value,_that.over,_that.qualitative,_that.isImportant);case _:
@@ -197,7 +197,7 @@ return $default(_that.value,_that.over,_that.qualitative,_that.isImportant);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num value,  bool over,  QualitativeHeight qualitative, @JsonKey(name: 'is_important')  bool isImportant)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  num? value, @JsonKey(includeIfNull: false)  bool? over, @JsonKey(includeIfNull: false)  QualitativeHeight? qualitative, @JsonKey(includeIfNull: false, name: 'is_important')  bool? isImportant)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiForecastMaxHeight() when $default != null:
 return $default(_that.value,_that.over,_that.qualitative,_that.isImportant);case _:
@@ -212,13 +212,13 @@ return $default(_that.value,_that.over,_that.qualitative,_that.isImportant);case
 @JsonSerializable()
 
 class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
-  const _TsunamiForecastMaxHeight({required this.value, required this.over, required this.qualitative, @JsonKey(name: 'is_important') required this.isImportant});
+  const _TsunamiForecastMaxHeight({@JsonKey(includeIfNull: false) this.value, @JsonKey(includeIfNull: false) this.over, @JsonKey(includeIfNull: false) this.qualitative, @JsonKey(includeIfNull: false, name: 'is_important') this.isImportant});
   factory _TsunamiForecastMaxHeight.fromJson(Map<String, dynamic> json) => _$TsunamiForecastMaxHeightFromJson(json);
 
-@override final  num value;
-@override final  bool over;
-@override final  QualitativeHeight qualitative;
-@override@JsonKey(name: 'is_important') final  bool isImportant;
+@override@JsonKey(includeIfNull: false) final  num? value;
+@override@JsonKey(includeIfNull: false) final  bool? over;
+@override@JsonKey(includeIfNull: false) final  QualitativeHeight? qualitative;
+@override@JsonKey(includeIfNull: false, name: 'is_important') final  bool? isImportant;
 
 /// Create a copy of TsunamiForecastMaxHeight
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$TsunamiForecastMaxHeightCopyWith<$Res> implements $Tsunam
   factory _$TsunamiForecastMaxHeightCopyWith(_TsunamiForecastMaxHeight value, $Res Function(_TsunamiForecastMaxHeight) _then) = __$TsunamiForecastMaxHeightCopyWithImpl;
 @override @useResult
 $Res call({
- num value, bool over, QualitativeHeight qualitative,@JsonKey(name: 'is_important') bool isImportant
+@JsonKey(includeIfNull: false) num? value,@JsonKey(includeIfNull: false) bool? over,@JsonKey(includeIfNull: false) QualitativeHeight? qualitative,@JsonKey(includeIfNull: false, name: 'is_important') bool? isImportant
 });
 
 
@@ -270,13 +270,13 @@ class __$TsunamiForecastMaxHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiForecastMaxHeight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? over = null,Object? qualitative = null,Object? isImportant = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? value = freezed,Object? over = freezed,Object? qualitative = freezed,Object? isImportant = freezed,}) {
   return _then(_TsunamiForecastMaxHeight(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as num,over: null == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
-as bool,qualitative: null == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
-as QualitativeHeight,isImportant: null == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
-as bool,
+value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as num?,over: freezed == over ? _self.over : over // ignore: cast_nullable_to_non_nullable
+as bool?,qualitative: freezed == qualitative ? _self.qualitative : qualitative // ignore: cast_nullable_to_non_nullable
+as QualitativeHeight?,isImportant: freezed == isImportant ? _self.isImportant : isImportant // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

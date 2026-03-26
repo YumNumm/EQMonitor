@@ -15,8 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TelegramComments {
 
- String get text; String get free; String get warning; String get forecast;/// The name has been replaced because it contains a keyword. Original name: `var`.
-@JsonKey(name: 'var') String get varValue; String get uri;
+@JsonKey(includeIfNull: false) String? get text;@JsonKey(includeIfNull: false) String? get free;@JsonKey(includeIfNull: false) String? get warning;@JsonKey(includeIfNull: false) String? get forecast;/// 固定付加文, var
+@JsonKey(includeIfNull: false) String? get additional;@JsonKey(includeIfNull: false) String? get uri;
 /// Create a copy of TelegramComments
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $TelegramCommentsCopyWith<TelegramComments> get copyWith => _$TelegramCommentsCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramComments&&(identical(other.text, text) || other.text == text)&&(identical(other.free, free) || other.free == free)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.forecast, forecast) || other.forecast == forecast)&&(identical(other.varValue, varValue) || other.varValue == varValue)&&(identical(other.uri, uri) || other.uri == uri));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramComments&&(identical(other.text, text) || other.text == text)&&(identical(other.free, free) || other.free == free)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.forecast, forecast) || other.forecast == forecast)&&(identical(other.additional, additional) || other.additional == additional)&&(identical(other.uri, uri) || other.uri == uri));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,text,free,warning,forecast,varValue,uri);
+int get hashCode => Object.hash(runtimeType,text,free,warning,forecast,additional,uri);
 
 @override
 String toString() {
-  return 'TelegramComments(text: $text, free: $free, warning: $warning, forecast: $forecast, varValue: $varValue, uri: $uri)';
+  return 'TelegramComments(text: $text, free: $free, warning: $warning, forecast: $forecast, additional: $additional, uri: $uri)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $TelegramCommentsCopyWith<$Res>  {
   factory $TelegramCommentsCopyWith(TelegramComments value, $Res Function(TelegramComments) _then) = _$TelegramCommentsCopyWithImpl;
 @useResult
 $Res call({
- String text, String free, String warning, String forecast,@JsonKey(name: 'var') String varValue, String uri
+@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) String? free,@JsonKey(includeIfNull: false) String? warning,@JsonKey(includeIfNull: false) String? forecast,@JsonKey(includeIfNull: false) String? additional,@JsonKey(includeIfNull: false) String? uri
 });
 
 
@@ -66,15 +66,15 @@ class _$TelegramCommentsCopyWithImpl<$Res>
 
 /// Create a copy of TelegramComments
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? text = null,Object? free = null,Object? warning = null,Object? forecast = null,Object? varValue = null,Object? uri = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? text = freezed,Object? free = freezed,Object? warning = freezed,Object? forecast = freezed,Object? additional = freezed,Object? uri = freezed,}) {
   return _then(_self.copyWith(
-text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
-as String,free: null == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
-as String,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
-as String,forecast: null == forecast ? _self.forecast : forecast // ignore: cast_nullable_to_non_nullable
-as String,varValue: null == varValue ? _self.varValue : varValue // ignore: cast_nullable_to_non_nullable
-as String,uri: null == uri ? _self.uri : uri // ignore: cast_nullable_to_non_nullable
-as String,
+text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String?,free: freezed == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
+as String?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as String?,forecast: freezed == forecast ? _self.forecast : forecast // ignore: cast_nullable_to_non_nullable
+as String?,additional: freezed == additional ? _self.additional : additional // ignore: cast_nullable_to_non_nullable
+as String?,uri: freezed == uri ? _self.uri : uri // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -159,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String text,  String free,  String warning,  String forecast, @JsonKey(name: 'var')  String varValue,  String uri)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  String? free, @JsonKey(includeIfNull: false)  String? warning, @JsonKey(includeIfNull: false)  String? forecast, @JsonKey(includeIfNull: false)  String? additional, @JsonKey(includeIfNull: false)  String? uri)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TelegramComments() when $default != null:
-return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.varValue,_that.uri);case _:
+return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.additional,_that.uri);case _:
   return orElse();
 
 }
@@ -180,10 +180,10 @@ return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.varValu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String text,  String free,  String warning,  String forecast, @JsonKey(name: 'var')  String varValue,  String uri)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  String? free, @JsonKey(includeIfNull: false)  String? warning, @JsonKey(includeIfNull: false)  String? forecast, @JsonKey(includeIfNull: false)  String? additional, @JsonKey(includeIfNull: false)  String? uri)  $default,) {final _that = this;
 switch (_that) {
 case _TelegramComments():
-return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.varValue,_that.uri);case _:
+return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.additional,_that.uri);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +200,10 @@ return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.varValu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String text,  String free,  String warning,  String forecast, @JsonKey(name: 'var')  String varValue,  String uri)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  String? text, @JsonKey(includeIfNull: false)  String? free, @JsonKey(includeIfNull: false)  String? warning, @JsonKey(includeIfNull: false)  String? forecast, @JsonKey(includeIfNull: false)  String? additional, @JsonKey(includeIfNull: false)  String? uri)?  $default,) {final _that = this;
 switch (_that) {
 case _TelegramComments() when $default != null:
-return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.varValue,_that.uri);case _:
+return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.additional,_that.uri);case _:
   return null;
 
 }
@@ -215,16 +215,16 @@ return $default(_that.text,_that.free,_that.warning,_that.forecast,_that.varValu
 @JsonSerializable()
 
 class _TelegramComments implements TelegramComments {
-  const _TelegramComments({required this.text, required this.free, required this.warning, required this.forecast, @JsonKey(name: 'var') required this.varValue, required this.uri});
+  const _TelegramComments({@JsonKey(includeIfNull: false) this.text, @JsonKey(includeIfNull: false) this.free, @JsonKey(includeIfNull: false) this.warning, @JsonKey(includeIfNull: false) this.forecast, @JsonKey(includeIfNull: false) this.additional, @JsonKey(includeIfNull: false) this.uri});
   factory _TelegramComments.fromJson(Map<String, dynamic> json) => _$TelegramCommentsFromJson(json);
 
-@override final  String text;
-@override final  String free;
-@override final  String warning;
-@override final  String forecast;
-/// The name has been replaced because it contains a keyword. Original name: `var`.
-@override@JsonKey(name: 'var') final  String varValue;
-@override final  String uri;
+@override@JsonKey(includeIfNull: false) final  String? text;
+@override@JsonKey(includeIfNull: false) final  String? free;
+@override@JsonKey(includeIfNull: false) final  String? warning;
+@override@JsonKey(includeIfNull: false) final  String? forecast;
+/// 固定付加文, var
+@override@JsonKey(includeIfNull: false) final  String? additional;
+@override@JsonKey(includeIfNull: false) final  String? uri;
 
 /// Create a copy of TelegramComments
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TelegramComments&&(identical(other.text, text) || other.text == text)&&(identical(other.free, free) || other.free == free)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.forecast, forecast) || other.forecast == forecast)&&(identical(other.varValue, varValue) || other.varValue == varValue)&&(identical(other.uri, uri) || other.uri == uri));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TelegramComments&&(identical(other.text, text) || other.text == text)&&(identical(other.free, free) || other.free == free)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.forecast, forecast) || other.forecast == forecast)&&(identical(other.additional, additional) || other.additional == additional)&&(identical(other.uri, uri) || other.uri == uri));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,text,free,warning,forecast,varValue,uri);
+int get hashCode => Object.hash(runtimeType,text,free,warning,forecast,additional,uri);
 
 @override
 String toString() {
-  return 'TelegramComments(text: $text, free: $free, warning: $warning, forecast: $forecast, varValue: $varValue, uri: $uri)';
+  return 'TelegramComments(text: $text, free: $free, warning: $warning, forecast: $forecast, additional: $additional, uri: $uri)';
 }
 
 
@@ -259,7 +259,7 @@ abstract mixin class _$TelegramCommentsCopyWith<$Res> implements $TelegramCommen
   factory _$TelegramCommentsCopyWith(_TelegramComments value, $Res Function(_TelegramComments) _then) = __$TelegramCommentsCopyWithImpl;
 @override @useResult
 $Res call({
- String text, String free, String warning, String forecast,@JsonKey(name: 'var') String varValue, String uri
+@JsonKey(includeIfNull: false) String? text,@JsonKey(includeIfNull: false) String? free,@JsonKey(includeIfNull: false) String? warning,@JsonKey(includeIfNull: false) String? forecast,@JsonKey(includeIfNull: false) String? additional,@JsonKey(includeIfNull: false) String? uri
 });
 
 
@@ -276,15 +276,15 @@ class __$TelegramCommentsCopyWithImpl<$Res>
 
 /// Create a copy of TelegramComments
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? text = null,Object? free = null,Object? warning = null,Object? forecast = null,Object? varValue = null,Object? uri = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? text = freezed,Object? free = freezed,Object? warning = freezed,Object? forecast = freezed,Object? additional = freezed,Object? uri = freezed,}) {
   return _then(_TelegramComments(
-text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
-as String,free: null == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
-as String,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
-as String,forecast: null == forecast ? _self.forecast : forecast // ignore: cast_nullable_to_non_nullable
-as String,varValue: null == varValue ? _self.varValue : varValue // ignore: cast_nullable_to_non_nullable
-as String,uri: null == uri ? _self.uri : uri // ignore: cast_nullable_to_non_nullable
-as String,
+text: freezed == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String?,free: freezed == free ? _self.free : free // ignore: cast_nullable_to_non_nullable
+as String?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as String?,forecast: freezed == forecast ? _self.forecast : forecast // ignore: cast_nullable_to_non_nullable
+as String?,additional: freezed == additional ? _self.additional : additional // ignore: cast_nullable_to_non_nullable
+as String?,uri: freezed == uri ? _self.uri : uri // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

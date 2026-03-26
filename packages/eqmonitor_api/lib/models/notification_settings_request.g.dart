@@ -15,8 +15,8 @@ _NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
   json,
   ($checkedConvert) {
     final val = _NotificationSettingsRequest(
-      tsunamiEnabled: $checkedConvert('tsunami_enabled', (v) => v as bool),
-      trainingEnabled: $checkedConvert('training_enabled', (v) => v as bool),
+      tsunamiEnabled: $checkedConvert('tsunami_enabled', (v) => v as bool?),
+      trainingEnabled: $checkedConvert('training_enabled', (v) => v as bool?),
     );
     return val;
   },
@@ -29,6 +29,6 @@ _NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
 Map<String, dynamic> _$NotificationSettingsRequestToJson(
   _NotificationSettingsRequest instance,
 ) => <String, dynamic>{
-  'tsunami_enabled': instance.tsunamiEnabled,
-  'training_enabled': instance.trainingEnabled,
+  'tsunami_enabled': ?instance.tsunamiEnabled,
+  'training_enabled': ?instance.trainingEnabled,
 };

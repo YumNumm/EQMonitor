@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiForecastFirstHeight {
 
-@JsonKey(name: 'arrival_time') DateTime get arrivalTime; FirstHeightCondition get condition;
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;@JsonKey(includeIfNull: false) FirstHeightCondition? get condition;
 /// Create a copy of TsunamiForecastFirstHeight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiForecastFirstHeightCopyWith<$Res>  {
   factory $TsunamiForecastFirstHeightCopyWith(TsunamiForecastFirstHeight value, $Res Function(TsunamiForecastFirstHeight) _then) = _$TsunamiForecastFirstHeightCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'arrival_time') DateTime arrivalTime, FirstHeightCondition condition
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) FirstHeightCondition? condition
 });
 
 
@@ -65,11 +65,11 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiForecastFirstHeight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? arrivalTime = null,Object? condition = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? arrivalTime = freezed,Object? condition = freezed,}) {
   return _then(_self.copyWith(
-arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime,condition: null == condition ? _self.condition : condition // ignore: cast_nullable_to_non_nullable
-as FirstHeightCondition,
+arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,condition: freezed == condition ? _self.condition : condition // ignore: cast_nullable_to_non_nullable
+as FirstHeightCondition?,
   ));
 }
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'arrival_time')  DateTime arrivalTime,  FirstHeightCondition condition)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  FirstHeightCondition? condition)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiForecastFirstHeight() when $default != null:
 return $default(_that.arrivalTime,_that.condition);case _:
@@ -175,7 +175,7 @@ return $default(_that.arrivalTime,_that.condition);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'arrival_time')  DateTime arrivalTime,  FirstHeightCondition condition)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  FirstHeightCondition? condition)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiForecastFirstHeight():
 return $default(_that.arrivalTime,_that.condition);case _:
@@ -195,7 +195,7 @@ return $default(_that.arrivalTime,_that.condition);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'arrival_time')  DateTime arrivalTime,  FirstHeightCondition condition)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  FirstHeightCondition? condition)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiForecastFirstHeight() when $default != null:
 return $default(_that.arrivalTime,_that.condition);case _:
@@ -210,11 +210,11 @@ return $default(_that.arrivalTime,_that.condition);case _:
 @JsonSerializable()
 
 class _TsunamiForecastFirstHeight implements TsunamiForecastFirstHeight {
-  const _TsunamiForecastFirstHeight({@JsonKey(name: 'arrival_time') required this.arrivalTime, required this.condition});
+  const _TsunamiForecastFirstHeight({@JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime, @JsonKey(includeIfNull: false) this.condition});
   factory _TsunamiForecastFirstHeight.fromJson(Map<String, dynamic> json) => _$TsunamiForecastFirstHeightFromJson(json);
 
-@override@JsonKey(name: 'arrival_time') final  DateTime arrivalTime;
-@override final  FirstHeightCondition condition;
+@override@JsonKey(includeIfNull: false, name: 'arrival_time') final  DateTime? arrivalTime;
+@override@JsonKey(includeIfNull: false) final  FirstHeightCondition? condition;
 
 /// Create a copy of TsunamiForecastFirstHeight
 /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +249,7 @@ abstract mixin class _$TsunamiForecastFirstHeightCopyWith<$Res> implements $Tsun
   factory _$TsunamiForecastFirstHeightCopyWith(_TsunamiForecastFirstHeight value, $Res Function(_TsunamiForecastFirstHeight) _then) = __$TsunamiForecastFirstHeightCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'arrival_time') DateTime arrivalTime, FirstHeightCondition condition
+@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) FirstHeightCondition? condition
 });
 
 
@@ -266,11 +266,11 @@ class __$TsunamiForecastFirstHeightCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiForecastFirstHeight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? arrivalTime = null,Object? condition = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? arrivalTime = freezed,Object? condition = freezed,}) {
   return _then(_TsunamiForecastFirstHeight(
-arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime,condition: null == condition ? _self.condition : condition // ignore: cast_nullable_to_non_nullable
-as FirstHeightCondition,
+arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,condition: freezed == condition ? _self.condition : condition // ignore: cast_nullable_to_non_nullable
+as FirstHeightCondition?,
   ));
 }
 

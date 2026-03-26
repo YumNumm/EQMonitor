@@ -15,13 +15,13 @@ _TsunamiForecastMaxHeight _$TsunamiForecastMaxHeightFromJson(
   json,
   ($checkedConvert) {
     final val = _TsunamiForecastMaxHeight(
-      value: $checkedConvert('value', (v) => v as num),
-      over: $checkedConvert('over', (v) => v as bool),
+      value: $checkedConvert('value', (v) => v as num?),
+      over: $checkedConvert('over', (v) => v as bool?),
       qualitative: $checkedConvert(
         'qualitative',
-        (v) => $enumDecode(_$QualitativeHeightEnumMap, v),
+        (v) => $enumDecodeNullable(_$QualitativeHeightEnumMap, v),
       ),
-      isImportant: $checkedConvert('is_important', (v) => v as bool),
+      isImportant: $checkedConvert('is_important', (v) => v as bool?),
     );
     return val;
   },
@@ -31,10 +31,10 @@ _TsunamiForecastMaxHeight _$TsunamiForecastMaxHeightFromJson(
 Map<String, dynamic> _$TsunamiForecastMaxHeightToJson(
   _TsunamiForecastMaxHeight instance,
 ) => <String, dynamic>{
-  'value': instance.value,
-  'over': instance.over,
-  'qualitative': instance.qualitative,
-  'is_important': instance.isImportant,
+  'value': ?instance.value,
+  'over': ?instance.over,
+  'qualitative': ?instance.qualitative,
+  'is_important': ?instance.isImportant,
 };
 
 const _$QualitativeHeightEnumMap = {
