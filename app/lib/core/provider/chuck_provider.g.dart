@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'kyoshin_monitor_dio.dart';
+part of 'chuck_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,42 +11,42 @@ part of 'kyoshin_monitor_dio.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(kyoshinMonitorDio)
-final kyoshinMonitorDioProvider = KyoshinMonitorDioProvider._();
+@ProviderFor(chuck)
+final chuckProvider = ChuckProvider._();
 
-final class KyoshinMonitorDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
-    with $Provider<Dio> {
-  KyoshinMonitorDioProvider._()
+final class ChuckProvider extends $FunctionalProvider<Chuck, Chuck, Chuck>
+    with $Provider<Chuck> {
+  ChuckProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'kyoshinMonitorDioProvider',
+        name: r'chuckProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$kyoshinMonitorDioHash();
+  String debugGetCreateSourceHash() => _$chuckHash();
 
   @$internal
   @override
-  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<Chuck> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  Dio create(Ref ref) {
-    return kyoshinMonitorDio(ref);
+  Chuck create(Ref ref) {
+    return chuck(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Dio value) {
+  Override overrideWithValue(Chuck value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Dio>(value),
+      providerOverride: $SyncValueProvider<Chuck>(value),
     );
   }
 }
 
-String _$kyoshinMonitorDioHash() => r'cac5258ff19006fc7b22964c2a12cb88e6713041';
+String _$chuckHash() => r'8f65c840cd2747b8e97eef9d02275f752fd9478d';
