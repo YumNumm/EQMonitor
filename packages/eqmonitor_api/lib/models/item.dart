@@ -4,12 +4,12 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'items.freezed.dart';
-part 'items.g.dart';
+part 'item.freezed.dart';
+part 'item.g.dart';
 
 @Freezed()
-abstract class Items with _$Items {
-  const factory Items({
+abstract class Item with _$Item {
+  const factory Item({
     required String correlationKey,
     required String eventType,
     required String eventId,
@@ -29,7 +29,7 @@ abstract class Items with _$Items {
     String? headline,
     @JsonKey(includeIfNull: false)
     num? resolverDelayMs,
-  }) = _Items;
+  }) = _Item;
   
-  factory Items.fromJson(Map<String, Object?> json) => _$ItemsFromJson(json);
+  factory Item.fromJson(Map<String, Object?> json) => _$ItemFromJson(json);
 }
