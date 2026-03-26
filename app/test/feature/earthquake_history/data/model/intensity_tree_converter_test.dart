@@ -12,16 +12,20 @@ import 'package:test/test.dart';
 
 EarthquakeParameter _buildParameter({
   required List<
-      ({
-        String code,
-        String name,
-        List<
-            ({
-              String code,
-              String name,
-              List<({String code, String name})> stations,
-            })> cities,
-      })> regions,
+    ({
+      String code,
+      String name,
+      List<
+        ({
+          String code,
+          String name,
+          List<({String code, String name})> stations,
+        })
+      >
+      cities,
+    })
+  >
+  regions,
 }) {
   return EarthquakeParameter(
     regions: regions.map(
@@ -45,14 +49,16 @@ EarthquakeParameter _buildParameter({
 Intensity _buildIntensity({
   required api.JmaIntensity maxIntensity,
   required List<({String code, String name, api.JmaIntensity? maxIntensity})>
-      prefectures,
+  prefectures,
   required List<
-      ({
-        String code,
-        String name,
-        api.JmaIntensity? maxIntensity,
-        api.JmaLpgmIntensity? maxLpgmIntensity,
-      })> regions,
+    ({
+      String code,
+      String name,
+      api.JmaIntensity? maxIntensity,
+      api.JmaLpgmIntensity? maxLpgmIntensity,
+    })
+  >
+  regions,
   api.JmaLpgmIntensity? maxLpgmIntensity,
   List<IntensityItem>? cities,
   List<IntensityStationItem>? stations,
@@ -275,8 +281,9 @@ void main() {
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 2);
 
-      final regionNames =
-          result[JmaIntensity.four]!.map((r) => r.region.name).toList();
+      final regionNames = result[JmaIntensity.four]!
+          .map((r) => r.region.name)
+          .toList();
       expect(regionNames, contains('宮城県'));
       expect(regionNames, contains('福島県'));
     });
@@ -484,7 +491,7 @@ void main() {
           ),
         ],
         cities: [
-          IntensityItem(
+          const IntensityItem(
             value: CodeName(code: '1310000', name: '東京都23区'),
             maxIntensity: api.JmaIntensity.value3,
             maxLpgmIntensity: api.JmaLpgmIntensity.value2,

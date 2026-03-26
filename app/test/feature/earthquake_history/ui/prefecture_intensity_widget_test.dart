@@ -47,7 +47,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  EarthquakePartial _itemWithIntensity(EarthquakeIntensity intensity) {
+  EarthquakePartial itemWithIntensity(EarthquakeIntensity intensity) {
     return EarthquakePartial(
       eventId: '20260101120000',
       status: TelegramStatus.normal,
@@ -62,7 +62,7 @@ void main() {
   }
 
   testWidgets('各地の震度セクションに震度タイルと都道府県数が出る', (tester) async {
-    final item = _itemWithIntensity(
+    final item = itemWithIntensity(
       EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
         maxLpgmIntensity: null,
@@ -102,7 +102,7 @@ void main() {
   });
 
   testWidgets('震度行タップでモーダルに都道府県名が出る', (tester) async {
-    final item = _itemWithIntensity(
+    final item = itemWithIntensity(
       EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
         maxLpgmIntensity: null,
@@ -122,7 +122,6 @@ void main() {
                     name: '宮城県北部',
                   ),
                   maxIntensity: JmaIntensity.four,
-                  maxLpgmIntensity: null,
                   stations: const [],
                 ),
               ],
@@ -143,7 +142,7 @@ void main() {
   });
 
   testWidgets('intensityがnullのときウィジェットは表示しない', (tester) async {
-    final item = EarthquakePartial(
+    const item = EarthquakePartial(
       eventId: '20260101120000',
       status: TelegramStatus.normal,
       originTime: null,
