@@ -83,14 +83,18 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('REST APIエンドポイント'),
             leading: const Icon(Icons.http),
-            subtitle: Text(ref.watch(telegramUrlProvider).requireValue.restApiUrl),
+            subtitle: Text(
+              ref.watch(telegramUrlProvider).requireValue.restApiUrl,
+            ),
             onTap: () async =>
                 const HttpApiEndpointSelectorRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('WebSocketエンドポイント'),
             leading: const Icon(Icons.http),
-            subtitle: Text(ref.watch(telegramUrlProvider).requireValue.wsApiUrl),
+            subtitle: Text(
+              ref.watch(telegramUrlProvider).requireValue.wsApiUrl,
+            ),
             onTap: () async =>
                 const WebsocketEndpointSelectorRoute().push<void>(context),
           ),
@@ -220,25 +224,25 @@ class _GoogleSignInTile extends ConsumerWidget {
           : null,
       subtitle: switch (state) {
         MutationError(:final error) => Text(
-            error.toString(),
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
+          error.toString(),
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
         MutationSuccess() => const Text('サインイン成功'),
         _ => null,
       },
       onTap: isPending
           ? null
           : () => AuthNotifier.signInWithGoogleMutation.run(ref, (tsx) async {
-                await tsx.get(googleSignInInitProvider.future);
-                final account = await GoogleSignIn.instance.authenticate();
-                final idToken = account.authentication.idToken;
-                if (idToken == null) {
-                  throw Exception('Google idToken が取得できませんでした');
-                }
-                await tsx
-                    .get(authProvider.notifier)
-                    .signInWithGoogle(idToken: idToken);
-              }),
+              await tsx.get(googleSignInInitProvider.future);
+              final account = await GoogleSignIn.instance.authenticate();
+              final idToken = account.authentication.idToken;
+              if (idToken == null) {
+                throw Exception('Google idToken が取得できませんでした');
+              }
+              await tsx
+                  .get(authProvider.notifier)
+                  .signInWithGoogle(idToken: idToken);
+            }),
     );
   }
 }
@@ -261,18 +265,18 @@ class _SignOutTile extends ConsumerWidget {
           : null,
       subtitle: switch (state) {
         MutationError(:final error) => Text(
-            error.toString(),
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
+          error.toString(),
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
         MutationSuccess() => const Text('サインアウト完了'),
         _ => null,
       },
       onTap: isPending
           ? null
           : () => AuthNotifier.signOutMutation.run(ref, (tsx) async {
-                await tsx.get(authProvider.notifier).signOut();
-                await GoogleSignIn.instance.signOut();
-              }),
+              await tsx.get(authProvider.notifier).signOut();
+              await GoogleSignIn.instance.signOut();
+            }),
     );
   }
 }
