@@ -6,9 +6,12 @@ import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provi
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification/data/provider/notification_token_stream.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -194,9 +197,95 @@ class _DebugWidget extends ConsumerWidget {
               style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
           ),
+          const Divider(),
+          const _AppCheckSection(),
         ],
       ),
     );
+  }
+}
+
+class _AppCheckSection extends ConsumerWidget {
+  const _AppCheckSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tokenAsync = ref.watch(appCheckTokenProvider);
+    final providerType = _resolveProviderType();
+
+    return Column(
+      children: [
+        const ListTile(
+          title: Text('Firebase App Check'),
+          leading: Icon(Icons.verified_user),
+        ),
+        ListTile(
+          title: const Text('Provider'),
+          subtitle: Text(
+            providerType,
+            style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+          ),
+        ),
+        ListTile(
+          title: const Text('Token'),
+          subtitle: switch (tokenAsync) {
+            AsyncLoading() => const Text('取得中...'),
+            AsyncError(:final error) => Text(
+                'エラー: $error',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            AsyncData(:final value) => Text(
+                value ?? 'null',
+                style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+          },
+          onTap: () async {
+            final token = tokenAsync.value;
+            if (token != null) {
+              await Clipboard.setData(ClipboardData(text: token));
+            }
+          },
+          trailing: IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => ref.invalidate(appCheckTokenProvider),
+          ),
+        ),
+        ListTile(
+          title: const Text('Limited Use Token 取得'),
+          subtitle: const Text('Replay Protection用の使い捨てトークンを取得'),
+          leading: const Icon(Icons.vpn_key),
+          onTap: () async {
+            try {
+              final token =
+                  await FirebaseAppCheck.instance.getLimitedUseToken();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Token: ${token ?? "null"}')),
+                );
+              }
+            } on Exception catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('エラー: $e')),
+                );
+              }
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  String _resolveProviderType() {
+    if (Platform.isAndroid) {
+      return kDebugMode ? 'AndroidDebugProvider' : 'AndroidPlayIntegrityProvider';
+    }
+    if (Platform.isIOS || Platform.isMacOS) {
+      return kDebugMode ? 'AppleDebugProvider' : 'AppleAppAttestProvider';
+    }
+    return 'Unknown';
   }
 }
 
