@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'items.dart';
+import 'items2.dart';
 
 part 'telegram_list_response.freezed.dart';
 part 'telegram_list_response.g.dart';
@@ -12,7 +12,7 @@ part 'telegram_list_response.g.dart';
 @Freezed()
 abstract class TelegramListResponse with _$TelegramListResponse {
   const factory TelegramListResponse({
-    required List<Items> items,
+    required List<Items2> items,
 
     /// カーソル情報（base64エンコード）
     @JsonKey(includeIfNull: false,name: 'next_token')

@@ -2,17 +2,17 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'items.dart';
+part of 'item.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Items _$ItemsFromJson(Map<String, dynamic> json) => $checkedCreate(
-  '_Items',
+_Item _$ItemFromJson(Map<String, dynamic> json) => $checkedCreate(
+  '_Item',
   json,
   ($checkedConvert) {
-    final val = _Items(
+    final val = _Item(
       correlationKey: $checkedConvert('correlation_key', (v) => v as String),
       eventType: $checkedConvert('event_type', (v) => v as String),
       eventId: $checkedConvert('event_id', (v) => v as String),
@@ -53,7 +53,7 @@ _Items _$ItemsFromJson(Map<String, dynamic> json) => $checkedCreate(
   },
 );
 
-Map<String, dynamic> _$ItemsToJson(_Items instance) => <String, dynamic>{
+Map<String, dynamic> _$ItemToJson(_Item instance) => <String, dynamic>{
   'correlation_key': instance.correlationKey,
   'event_type': instance.eventType,
   'event_id': instance.eventId,

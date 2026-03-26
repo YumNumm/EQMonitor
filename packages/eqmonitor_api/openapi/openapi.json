@@ -1709,6 +1709,126 @@
         }
       }
     },
+    "/v2/device/{deviceId}/notification/dispatches": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationDispatches",
+        "tags": [
+          "Notification"
+        ],
+        "description": "配信サマリー一覧（admin）",
+        "responses": {
+          "200": {
+            "description": "配信サマリー一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DispatchSummaryListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/device/{deviceId}/notification/dispatches/{correlationKey}": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationDispatchesByCorrelationKey",
+        "tags": [
+          "Notification"
+        ],
+        "description": "配信サマリー詳細（admin）",
+        "responses": {
+          "200": {
+            "description": "配信サマリー詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DispatchSummaryDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "correlationKey",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/device/{deviceId}/notification/test": {
       "post": {
         "operationId": "postV2DeviceByDeviceIdNotificationTest",
@@ -3726,6 +3846,214 @@
           "message"
         ]
       },
+      "DispatchSummaryListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "correlationKey": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                },
+                "eventId": {
+                  "type": "string"
+                },
+                "serialNo": {
+                  "type": "number"
+                },
+                "jmaReportTime": {
+                  "type": "string"
+                },
+                "headline": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "targetDevices": {
+                  "type": "number"
+                },
+                "enqueuedFcm": {
+                  "type": "number"
+                },
+                "enqueuedApns": {
+                  "type": "number"
+                },
+                "enqueuedBroadcast": {
+                  "type": "number"
+                },
+                "successFcm": {
+                  "type": "number"
+                },
+                "failedFcm": {
+                  "type": "number"
+                },
+                "successApns": {
+                  "type": "number"
+                },
+                "failedApns": {
+                  "type": "number"
+                },
+                "resolverDelayMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "correlationKey",
+                "eventType",
+                "eventId",
+                "serialNo",
+                "jmaReportTime",
+                "targetDevices",
+                "enqueuedFcm",
+                "enqueuedApns",
+                "enqueuedBroadcast",
+                "successFcm",
+                "failedFcm",
+                "successApns",
+                "failedApns",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ForbiddenResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "FORBIDDEN"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "DispatchSummaryDetailResponse": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "object",
+            "properties": {
+              "correlationKey": {
+                "type": "string"
+              },
+              "eventType": {
+                "type": "string"
+              },
+              "eventId": {
+                "type": "string"
+              },
+              "serialNo": {
+                "type": "number"
+              },
+              "jmaReportTime": {
+                "type": "string"
+              },
+              "headline": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "targetDevices": {
+                "type": "number"
+              },
+              "enqueuedFcm": {
+                "type": "number"
+              },
+              "enqueuedApns": {
+                "type": "number"
+              },
+              "enqueuedBroadcast": {
+                "type": "number"
+              },
+              "successFcm": {
+                "type": "number"
+              },
+              "failedFcm": {
+                "type": "number"
+              },
+              "successApns": {
+                "type": "number"
+              },
+              "failedApns": {
+                "type": "number"
+              },
+              "resolverDelayMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "correlationKey",
+              "eventType",
+              "eventId",
+              "serialNo",
+              "jmaReportTime",
+              "targetDevices",
+              "enqueuedFcm",
+              "enqueuedApns",
+              "enqueuedBroadcast",
+              "successFcm",
+              "failedFcm",
+              "successApns",
+              "failedApns",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "item"
+        ]
+      },
       "TestNotificationRequest": {
         "type": "object",
         "properties": {
@@ -4849,33 +5177,6 @@
         ],
         "description": "予想長周期地震動階級の値"
       },
-      "EewArrivalTimeTime": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "const": "TIME"
-          },
-          "value": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "type",
-          "value"
-        ]
-      },
-      "EewArrivalTimeArrived": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "const": "ARRIVED"
-          }
-        },
-        "required": [
-          "type"
-        ]
-      },
       "EewIntensityItem": {
         "type": "object",
         "properties": {
@@ -4895,22 +5196,16 @@
             "$ref": "#/components/schemas/EewIntensityLpgmValue"
           },
           "arrival_time": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/EewArrivalTimeTime"
-              },
-              {
-                "$ref": "#/components/schemas/EewArrivalTimeArrived"
-              }
-            ]
+            "type": "string",
+            "format": "date-time",
+            "description": "到達予想時刻。undefinedの場合は、すでに到達済みと推定されます。"
           }
         },
         "required": [
           "value",
           "is_plum",
           "is_warning",
-          "intensity",
-          "arrival_time"
+          "intensity"
         ]
       },
       "EewIntensity": {
