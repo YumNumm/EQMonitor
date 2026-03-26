@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/chuck_provider.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -73,6 +74,11 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('ログ'),
             leading: const Icon(Icons.list),
             onTap: () async => const TalkerRoute().push<void>(context),
+          ),
+          ListTile(
+            title: const Text('HTTP Inspector (Chuck)'),
+            leading: const Icon(Icons.network_check),
+            onTap: () => ref.read(chuckProvider).showInspector(),
           ),
           ListTile(
             title: const Text('REST APIエンドポイント'),
