@@ -13,10 +13,11 @@ part 'tsunami_observation_station_first_height.g.dart';
 abstract class TsunamiObservationStationFirstHeight
     with _$TsunamiObservationStationFirstHeight {
   const factory TsunamiObservationStationFirstHeight({
-    @JsonKey(name: 'arrival_time') required DateTime arrivalTime,
-    required WaveInitial initial,
-    @JsonKey(name: 'is_unidentifiable') required bool isUnidentifiable,
-    @JsonKey(name: 'is_missing') required bool isMissing,
+    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false) WaveInitial? initial,
+    @JsonKey(includeIfNull: false, name: 'is_unidentifiable')
+    bool? isUnidentifiable,
+    @JsonKey(includeIfNull: false, name: 'is_missing') bool? isMissing,
   }) = _TsunamiObservationStationFirstHeight;
 
   factory TsunamiObservationStationFirstHeight.fromJson(
