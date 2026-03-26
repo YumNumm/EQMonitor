@@ -15,16 +15,16 @@ _EarthquakeSettingsRequest _$EarthquakeSettingsRequestFromJson(
   json,
   ($checkedConvert) {
     final val = _EarthquakeSettingsRequest(
-      enabled: $checkedConvert('enabled', (v) => v as bool),
+      enabled: $checkedConvert('enabled', (v) => v as bool?),
       notificationTiers: $checkedConvert(
         'notification_tiers',
-        (v) => (v as List<dynamic>)
-            .map((e) => NotificationTiers2.fromJson(e as Map<String, dynamic>))
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => NotificationTiers2.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
       estimatedIntensityEnabled: $checkedConvert(
         'estimated_intensity_enabled',
-        (v) => v as bool,
+        (v) => v as bool?,
       ),
     );
     return val;
@@ -38,7 +38,7 @@ _EarthquakeSettingsRequest _$EarthquakeSettingsRequestFromJson(
 Map<String, dynamic> _$EarthquakeSettingsRequestToJson(
   _EarthquakeSettingsRequest instance,
 ) => <String, dynamic>{
-  'enabled': instance.enabled,
-  'notification_tiers': instance.notificationTiers,
-  'estimated_intensity_enabled': instance.estimatedIntensityEnabled,
+  'enabled': ?instance.enabled,
+  'notification_tiers': ?instance.notificationTiers,
+  'estimated_intensity_enabled': ?instance.estimatedIntensityEnabled,
 };

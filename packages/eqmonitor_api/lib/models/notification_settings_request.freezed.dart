@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationSettingsRequest {
 
-@JsonKey(name: 'tsunami_enabled') bool get tsunamiEnabled;@JsonKey(name: 'training_enabled') bool get trainingEnabled;
+@JsonKey(includeIfNull: false, name: 'tsunami_enabled') bool? get tsunamiEnabled;@JsonKey(includeIfNull: false, name: 'training_enabled') bool? get trainingEnabled;
 /// Create a copy of NotificationSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $NotificationSettingsRequestCopyWith<$Res>  {
   factory $NotificationSettingsRequestCopyWith(NotificationSettingsRequest value, $Res Function(NotificationSettingsRequest) _then) = _$NotificationSettingsRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'tsunami_enabled') bool tsunamiEnabled,@JsonKey(name: 'training_enabled') bool trainingEnabled
+@JsonKey(includeIfNull: false, name: 'tsunami_enabled') bool? tsunamiEnabled,@JsonKey(includeIfNull: false, name: 'training_enabled') bool? trainingEnabled
 });
 
 
@@ -65,11 +65,11 @@ class _$NotificationSettingsRequestCopyWithImpl<$Res>
 
 /// Create a copy of NotificationSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? tsunamiEnabled = freezed,Object? trainingEnabled = freezed,}) {
   return _then(_self.copyWith(
-tsunamiEnabled: null == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
-as bool,trainingEnabled: null == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+tsunamiEnabled: freezed == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
+as bool?,trainingEnabled: freezed == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'tsunami_enabled')  bool? tsunamiEnabled, @JsonKey(includeIfNull: false, name: 'training_enabled')  bool? trainingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationSettingsRequest() when $default != null:
 return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
@@ -175,7 +175,7 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false, name: 'tsunami_enabled')  bool? tsunamiEnabled, @JsonKey(includeIfNull: false, name: 'training_enabled')  bool? trainingEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationSettingsRequest():
 return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
@@ -195,7 +195,7 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'tsunami_enabled')  bool tsunamiEnabled, @JsonKey(name: 'training_enabled')  bool trainingEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false, name: 'tsunami_enabled')  bool? tsunamiEnabled, @JsonKey(includeIfNull: false, name: 'training_enabled')  bool? trainingEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationSettingsRequest() when $default != null:
 return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
@@ -210,11 +210,11 @@ return $default(_that.tsunamiEnabled,_that.trainingEnabled);case _:
 @JsonSerializable()
 
 class _NotificationSettingsRequest implements NotificationSettingsRequest {
-  const _NotificationSettingsRequest({@JsonKey(name: 'tsunami_enabled') required this.tsunamiEnabled, @JsonKey(name: 'training_enabled') required this.trainingEnabled});
+  const _NotificationSettingsRequest({@JsonKey(includeIfNull: false, name: 'tsunami_enabled') this.tsunamiEnabled, @JsonKey(includeIfNull: false, name: 'training_enabled') this.trainingEnabled});
   factory _NotificationSettingsRequest.fromJson(Map<String, dynamic> json) => _$NotificationSettingsRequestFromJson(json);
 
-@override@JsonKey(name: 'tsunami_enabled') final  bool tsunamiEnabled;
-@override@JsonKey(name: 'training_enabled') final  bool trainingEnabled;
+@override@JsonKey(includeIfNull: false, name: 'tsunami_enabled') final  bool? tsunamiEnabled;
+@override@JsonKey(includeIfNull: false, name: 'training_enabled') final  bool? trainingEnabled;
 
 /// Create a copy of NotificationSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +249,7 @@ abstract mixin class _$NotificationSettingsRequestCopyWith<$Res> implements $Not
   factory _$NotificationSettingsRequestCopyWith(_NotificationSettingsRequest value, $Res Function(_NotificationSettingsRequest) _then) = __$NotificationSettingsRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'tsunami_enabled') bool tsunamiEnabled,@JsonKey(name: 'training_enabled') bool trainingEnabled
+@JsonKey(includeIfNull: false, name: 'tsunami_enabled') bool? tsunamiEnabled,@JsonKey(includeIfNull: false, name: 'training_enabled') bool? trainingEnabled
 });
 
 
@@ -266,11 +266,11 @@ class __$NotificationSettingsRequestCopyWithImpl<$Res>
 
 /// Create a copy of NotificationSettingsRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? tsunamiEnabled = null,Object? trainingEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? tsunamiEnabled = freezed,Object? trainingEnabled = freezed,}) {
   return _then(_NotificationSettingsRequest(
-tsunamiEnabled: null == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
-as bool,trainingEnabled: null == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+tsunamiEnabled: freezed == tsunamiEnabled ? _self.tsunamiEnabled : tsunamiEnabled // ignore: cast_nullable_to_non_nullable
+as bool?,trainingEnabled: freezed == trainingEnabled ? _self.trainingEnabled : trainingEnabled // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

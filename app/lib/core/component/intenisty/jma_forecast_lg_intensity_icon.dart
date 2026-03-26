@@ -25,7 +25,9 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel =
-        (colorModel ?? ref.watch(intensityColorProvider))!;
+        colorModel ??
+        ref.watch(intensityColorProvider).asData?.value ??
+        IntensityColorModel.eqmonitor();
     final colorScheme = intensityColorModel.fromJmaLpgmIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     final intensityMainText = intensity.label;

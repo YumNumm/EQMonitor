@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -212,8 +211,61 @@ abstract class TextColorModel with _$TextColorModel {
   );
 }
 
+enum IntensityColorTarget {
+  unknown('不明'),
+  zero('0'),
+  one('1'),
+  two('2'),
+  three('3'),
+  four('4'),
+  fiveLower('5弱'),
+  fiveUpper('5強'),
+  sixLower('6弱'),
+  sixUpper('6強'),
+  seven('7')
+  ;
+
+  const IntensityColorTarget(this.label);
+  final String label;
+}
+
 extension IntensityColorModelExt on IntensityColorModel {
-  TextColorModel fromJmaIntensity(JmaIntensity intensity) => switch (intensity) {
+  TextColorModel fromTarget(IntensityColorTarget target) => switch (target) {
+    IntensityColorTarget.unknown => unknown,
+    IntensityColorTarget.zero => zero,
+    IntensityColorTarget.one => one,
+    IntensityColorTarget.two => two,
+    IntensityColorTarget.three => three,
+    IntensityColorTarget.four => four,
+    IntensityColorTarget.fiveLower => fiveLower,
+    IntensityColorTarget.fiveUpper => fiveUpper,
+    IntensityColorTarget.sixLower => sixLower,
+    IntensityColorTarget.sixUpper => sixUpper,
+    IntensityColorTarget.seven => seven,
+  };
+
+  IntensityColorModel copyWithTargetBackground(
+    IntensityColorTarget target,
+    Color background,
+  ) {
+    final color = TextColorModel.fromBackground(background);
+    return switch (target) {
+      IntensityColorTarget.unknown => copyWith(unknown: color),
+      IntensityColorTarget.zero => copyWith(zero: color),
+      IntensityColorTarget.one => copyWith(one: color),
+      IntensityColorTarget.two => copyWith(two: color),
+      IntensityColorTarget.three => copyWith(three: color),
+      IntensityColorTarget.four => copyWith(four: color),
+      IntensityColorTarget.fiveLower => copyWith(fiveLower: color),
+      IntensityColorTarget.fiveUpper => copyWith(fiveUpper: color),
+      IntensityColorTarget.sixLower => copyWith(sixLower: color),
+      IntensityColorTarget.sixUpper => copyWith(sixUpper: color),
+      IntensityColorTarget.seven => copyWith(seven: color),
+    };
+  }
+
+  TextColorModel fromJmaIntensity(JmaIntensity intensity) =>
+      switch (intensity) {
         JmaIntensity.unknown => unknown,
         JmaIntensity.zero => zero,
         JmaIntensity.one => one,
@@ -239,12 +291,25 @@ extension IntensityColorModelExt on IntensityColorModel {
       };
 }
 
-Color colorFromJson(String color) => Color(int.parse(color, radix: 16));
+Color colorFromJson(String color) {
+  final parsed = int.parse(color, radix: 16);
+  if (color.length <= 6) {
+    return Color(0xFF000000 | parsed);
+  }
+  final alpha = (parsed >> 24) & 0xFF;
+  if (alpha == 0) {
+    // Backward compatibility for previously persisted RGB-only 8-digit values.
+    return Color(0xFF000000 | (parsed & 0x00FFFFFF));
+  }
+  return Color(parsed);
+}
+
 String colorToJson(Color color) {
   final sRgb = color.withValues(colorSpace: ColorSpace.sRGB);
+  final a = (sRgb.a * 255).toInt();
   final r = (sRgb.r * 255).toInt();
   final g = (sRgb.g * 255).toInt();
   final b = (sRgb.b * 255).toInt();
-  final hex = r << 16 | g << 8 | b;
+  final hex = a << 24 | r << 16 | g << 8 | b;
   return hex.toRadixString(16).padLeft(8, '0');
 }

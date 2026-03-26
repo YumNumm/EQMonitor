@@ -1,7 +1,8 @@
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,29 +11,23 @@ part 'theme_provider.g.dart';
 @Riverpod(keepAlive: true)
 class ThemeModeNotifier extends _$ThemeModeNotifier {
   @override
-  ThemeMode build() {
-    final result = _load();
-    if (result != null) {
-      return result;
-    }
-    return ThemeMode.system;
-  }
+  Future<ThemeMode> build() async => _load();
 
-  Future<void> update(ThemeMode mode) async {
-    state = mode;
-    await ref.read(sharedPreferencesProvider).setString(_prefsKey, mode.name);
-  }
-
-  ThemeMode? _load() {
-    final prefs = ref.read(sharedPreferencesProvider);
-    final value = prefs.getString(_prefsKey);
+  Future<ThemeMode> _load() async {
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    final value = await ds.getString(key: SharedPreferencesKey.themeMode);
     if (value == null) {
-      return null;
+      return ThemeMode.system;
     }
-    return ThemeMode.values.firstWhereOrNull((e) => e.name == value);
+    return ThemeMode.values.firstWhereOrNull((e) => e.name == value) ??
+        ThemeMode.system;
   }
 
-  static const _prefsKey = 'theme_mode';
+  Future<void> setThemeMode(ThemeMode mode) async {
+    state = AsyncValue.data(mode);
+    final ds = ref.read(sharedPreferencesDataSourceProvider);
+    await ds.setString(key: SharedPreferencesKey.themeMode, value: mode.name);
+  }
 }
 
 @Riverpod(keepAlive: true)

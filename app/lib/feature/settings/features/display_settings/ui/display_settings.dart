@@ -50,7 +50,7 @@ class _ThemeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(themeModeProvider);
+    final state = ref.watch(themeModeProvider).requireValue;
 
     final brightness = MediaQuery.platformBrightnessOf(context);
 
@@ -60,7 +60,7 @@ class _ThemeSelector extends ConsumerWidget {
           : Brightness.dark;
       return Expanded(
         child: GestureDetector(
-          onTap: () async => ref.read(themeModeProvider.notifier).update(mode),
+          onTap: () async => ref.read(themeModeProvider.notifier).setThemeMode(mode),
           child: Column(
             children: [
               SizedBox(
@@ -93,7 +93,7 @@ class _ThemeSelector extends ConsumerWidget {
                 groupValue: state,
                 // ignore: deprecated_member_use
                 onChanged: (value) async =>
-                    ref.read(themeModeProvider.notifier).update(mode),
+                    ref.read(themeModeProvider.notifier).setThemeMode(mode),
               ),
             ],
           ),
@@ -136,7 +136,7 @@ class _ThemeSelector extends ConsumerWidget {
             value: state == ThemeMode.system,
             onChanged: (value) async => ref
                 .read(themeModeProvider.notifier)
-                .update(
+                .setThemeMode(
                   value
                       ? ThemeMode.system
                       : PlatformDispatcher.instance.platformBrightness ==

@@ -21,11 +21,10 @@ abstract class Hypocenter with _$Hypocenter {
     required Coordinate coordinates,
     required Magnitude magnitude,
     required Depth depth,
-    @JsonKey(includeIfNull: false)
-    CodeName? detailed,
-    @JsonKey(includeIfNull: false)
-    HypocenterAuxiliary? auxiliary,
+    @JsonKey(includeIfNull: false) CodeName? detailed,
+    @JsonKey(includeIfNull: false) HypocenterAuxiliary? auxiliary,
   }) = _Hypocenter;
-  
-  factory Hypocenter.fromJson(Map<String, Object?> json) => _$HypocenterFromJson(json);
+
+  factory Hypocenter.fromJson(Map<String, Object?> json) =>
+      _$HypocenterFromJson(json);
 }

@@ -30,9 +30,11 @@ class EarthquakeHistoryRepository {
 
   Future<EarthquakeListResponse> fetchEarthquakeList({
     int? limit,
+    String? cursor,
   }) async {
     final response = await _api.earthquake.getV2Earthquake(
       limit: limit?.toString(),
+      cursor: cursor,
     );
     return response.data.toEarthquakeListResponse(
       parameter: earthquakeParameter,
@@ -53,23 +55,26 @@ class EarthquakeHistoryRepository {
   Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByRegion({
     required String code,
     int? limit,
+    String? cursor,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityRegionCode(
       code: code,
       limit: limit?.toString(),
+      cursor: cursor,
     );
     return response.data.toAppResponse(parameter: earthquakeParameter);
   }
 
-  Future<PaginatedSearchResponse<IntensityAreaSearchItem>>
-      searchByPrefecture({
+  Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByPrefecture({
     required String code,
     int? limit,
+    String? cursor,
   }) async {
     final response = await _api.earthquake
         .getV2EarthquakeIntensityPrefectureCode(
           code: code,
           limit: limit?.toString(),
+          cursor: cursor,
         );
     return response.data.toAppResponse(parameter: earthquakeParameter);
   }
@@ -77,10 +82,12 @@ class EarthquakeHistoryRepository {
   Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByCity({
     required String code,
     int? limit,
+    String? cursor,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityCityCode(
       code: code,
       limit: limit?.toString(),
+      cursor: cursor,
     );
     return response.data.toAppResponse(parameter: earthquakeParameter);
   }
@@ -88,10 +95,12 @@ class EarthquakeHistoryRepository {
   Future<PaginatedSearchResponse<StationSearchItem>> searchByStation({
     required String code,
     int? limit,
+    String? cursor,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityStationCode(
       code: code,
       limit: limit?.toString(),
+      cursor: cursor,
     );
     return response.data.toAppResponse(parameter: earthquakeParameter);
   }
@@ -99,10 +108,12 @@ class EarthquakeHistoryRepository {
   Future<PaginatedSearchResponse<EpicenterSearchItem>> searchByEpicenter({
     required int code,
     int? limit,
+    String? cursor,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeEpicenterCode(
       code: code.toString(),
       limit: limit?.toString(),
+      cursor: cursor,
     );
     return response.data.toAppResponse(parameter: earthquakeParameter);
   }

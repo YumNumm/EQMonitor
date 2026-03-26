@@ -24,7 +24,9 @@ class IntensityValueIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
+    final intensityColorModel =
+        ref.watch(intensityColorProvider).asData?.value ??
+        IntensityColorModel.eqmonitor();
     final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
 

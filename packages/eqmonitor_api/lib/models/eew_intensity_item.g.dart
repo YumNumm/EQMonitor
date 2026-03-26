@@ -24,17 +24,15 @@ _EewIntensityItem _$EewIntensityItemFromJson(Map<String, dynamic> json) =>
             'intensity',
             (v) => EewIntensityValue.fromJson(v as Map<String, dynamic>),
           ),
-          arrivalTime: $checkedConvert(
-            'arrival_time',
-            (v) => EewIntensityItemArrivalTimeUnion.fromJson(
-              v as Map<String, dynamic>,
-            ),
-          ),
           lpgmIntensity: $checkedConvert(
             'lpgm_intensity',
             (v) => v == null
                 ? null
                 : EewIntensityLpgmValue.fromJson(v as Map<String, dynamic>),
+          ),
+          arrivalTime: $checkedConvert(
+            'arrival_time',
+            (v) => v == null ? null : DateTime.parse(v as String),
           ),
         );
         return val;
@@ -42,8 +40,8 @@ _EewIntensityItem _$EewIntensityItemFromJson(Map<String, dynamic> json) =>
       fieldKeyMap: const {
         'isPlum': 'is_plum',
         'isWarning': 'is_warning',
-        'arrivalTime': 'arrival_time',
         'lpgmIntensity': 'lpgm_intensity',
+        'arrivalTime': 'arrival_time',
       },
     );
 
@@ -53,6 +51,6 @@ Map<String, dynamic> _$EewIntensityItemToJson(_EewIntensityItem instance) =>
       'is_plum': instance.isPlum,
       'is_warning': instance.isWarning,
       'intensity': instance.intensity,
-      'arrival_time': instance.arrivalTime,
       'lpgm_intensity': ?instance.lpgmIntensity,
+      'arrival_time': ?instance.arrivalTime?.toIso8601String(),
     };

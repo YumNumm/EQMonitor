@@ -50,7 +50,6 @@ abstract class EewHypocenterInfo with _$EewHypocenterInfo {
 abstract class EewForecastIntensityInfo with _$EewForecastIntensityInfo {
   const factory EewForecastIntensityInfo({
     required List<EewForecastRegionInfo> regions,
-    // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
     JmaIntensity? maxIntensity,
     @Default(false) bool maxIntensityIsOver,
     JmaLpgmIntensity? maxLpgmIntensity,
@@ -65,7 +64,6 @@ abstract class EewForecastRegionInfo with _$EewForecastRegionInfo {
     required String name,
     required bool isPlum,
     required bool isWarning,
-    // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
     required JmaIntensity intensity,
     required bool intensityIsOver,
     JmaLpgmIntensity? lpgmIntensity,
@@ -148,8 +146,7 @@ extension on api.EewIntensity {
   EewForecastIntensityInfo _toEewForecastIntensityInfo() =>
       EewForecastIntensityInfo(
         regions: regions.map((r) => r._toEewForecastRegionInfo()).toList(),
-        // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
-        maxIntensity: JmaIntensity.unknown,
+        maxIntensity: maxIntensity?.value.toJmaIntensity,
         maxIntensityIsOver: maxIntensity?.isOver ?? false,
         maxLpgmIntensity:
             maxLpgmIntensity?.value.toJmaLpgmIntensity,
@@ -163,8 +160,7 @@ extension on api.EewIntensityItem {
     name: value.name,
     isPlum: isPlum,
     isWarning: isWarning,
-    // TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
-    intensity: JmaIntensity.unknown,
+    intensity: intensity.value.toJmaIntensity,
     intensityIsOver: intensity.isOver,
     lpgmIntensity: lpgmIntensity?.value.toJmaLpgmIntensity,
     lpgmIntensityIsOver: lpgmIntensity?.isOver ?? false,

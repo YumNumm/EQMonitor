@@ -9,9 +9,8 @@ part 'fcm_token_request.g.dart';
 
 @Freezed()
 abstract class FcmTokenRequest with _$FcmTokenRequest {
-  const factory FcmTokenRequest({
-    required String token,
-  }) = _FcmTokenRequest;
-  
-  factory FcmTokenRequest.fromJson(Map<String, Object?> json) => _$FcmTokenRequestFromJson(json);
+  const factory FcmTokenRequest({required String token}) = _FcmTokenRequest;
+
+  factory FcmTokenRequest.fromJson(Map<String, Object?> json) =>
+      _$FcmTokenRequestFromJson(json);
 }

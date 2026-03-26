@@ -30,17 +30,23 @@ class EewPsWaveLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
-    final showEews = eews.where((eew) {
-      final hypo = eew.hypocenter;
-      return hypo != null &&
-          hypo.hasLatLng &&
-          hypo.depth != null &&
-          eew.originTime != null &&
-          !eew.isCanceled &&
-          !eew.isPlum;
-    });
+    final showEews = useMemoized(
+      () => eews.where((eew) {
+        final hypo = eew.hypocenter;
+        return hypo != null &&
+            hypo.hasLatLng &&
+            hypo.depth != null &&
+            eew.originTime != null &&
+            !eew.isCanceled &&
+            !eew.isPlum;
+      }).toList(),
+      [eews],
+    );
 
     final isInitialized = useRef(false);
+    final latestPWaveGeoJson = useRef<String?>(null);
+    final latestSWaveGeoJson = useRef<String?>(null);
+    final wasEewActive = useRef(false);
 
     // レイヤーの初期化
     useEffect(
@@ -128,10 +134,27 @@ class EewPsWaveLayer extends HookConsumerWidget {
         if (styleController == null) {
           return null;
         }
-        unawaited(animationController.repeat());
+        if (showEews.isNotEmpty) {
+          unawaited(animationController.repeat());
+          wasEewActive.value = true;
+        } else {
+          animationController.stop();
+          if (wasEewActive.value && isInitialized.value) {
+            unawaited(
+              _updateGeoJsonIfChanged(
+                styleController,
+                pWaveGeojson: _emptyGeoJson,
+                sWaveGeojson: _emptyGeoJson,
+                latestPWaveGeoJson: latestPWaveGeoJson,
+                latestSWaveGeoJson: latestSWaveGeoJson,
+              ),
+            );
+          }
+          wasEewActive.value = false;
+        }
         return null;
       },
-      [styleController],
+      [styleController, showEews],
     );
 
     useEffect(
@@ -144,22 +167,19 @@ class EewPsWaveLayer extends HookConsumerWidget {
           final now = clock.now();
 
           final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(
-            showEews.toList(),
+            showEews,
             now,
             travelTimeMap,
           );
 
           unawaited(
-            (
-              styleController.updateGeoJsonSource(
-                id: sourceId.pWave,
-                data: pWaveGeojson,
-              ),
-              styleController.updateGeoJsonSource(
-                id: sourceId.sWave,
-                data: sWaveGeojson,
-              ),
-            ).wait,
+            _updateGeoJsonIfChanged(
+              styleController,
+              pWaveGeojson: pWaveGeojson,
+              sWaveGeojson: sWaveGeojson,
+              latestPWaveGeoJson: latestPWaveGeoJson,
+              latestSWaveGeoJson: latestSWaveGeoJson,
+            ),
           );
         }
 
@@ -270,5 +290,53 @@ class EewPsWaveLayer extends HookConsumerWidget {
     coordinates.add(coordinates.first);
 
     return coordinates;
+  }
+}
+
+const _emptyGeoJson = '{"type":"FeatureCollection","features":[]}';
+
+Future<void> _updateGeoJsonIfChanged(
+  StyleController styleController, {
+  required String pWaveGeojson,
+  required String sWaveGeojson,
+  required ObjectRef<String?> latestPWaveGeoJson,
+  required ObjectRef<String?> latestSWaveGeoJson,
+}) async {
+  final shouldUpdatePWave = latestPWaveGeoJson.value != pWaveGeojson;
+  final shouldUpdateSWave = latestSWaveGeoJson.value != sWaveGeojson;
+  if (!shouldUpdatePWave && !shouldUpdateSWave) {
+    return;
+  }
+
+  if (shouldUpdatePWave && shouldUpdateSWave) {
+    await (
+      styleController.updateGeoJsonSource(
+        id: EewPsWaveLayer.sourceId.pWave,
+        data: pWaveGeojson,
+      ),
+      styleController.updateGeoJsonSource(
+        id: EewPsWaveLayer.sourceId.sWave,
+        data: sWaveGeojson,
+      ),
+    ).wait;
+    latestPWaveGeoJson.value = pWaveGeojson;
+    latestSWaveGeoJson.value = sWaveGeojson;
+    return;
+  }
+
+  if (shouldUpdatePWave) {
+    await styleController.updateGeoJsonSource(
+      id: EewPsWaveLayer.sourceId.pWave,
+      data: pWaveGeojson,
+    );
+    latestPWaveGeoJson.value = pWaveGeojson;
+  }
+
+  if (shouldUpdateSWave) {
+    await styleController.updateGeoJsonSource(
+      id: EewPsWaveLayer.sourceId.sWave,
+      data: sWaveGeojson,
+    );
+    latestSWaveGeoJson.value = sWaveGeojson;
   }
 }

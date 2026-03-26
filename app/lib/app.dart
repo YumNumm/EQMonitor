@@ -62,7 +62,7 @@ class App extends HookConsumerWidget {
           }
           return MaterialApp.router(
             title: 'EQMonitor',
-            themeMode: theme,
+            themeMode: theme.value,
             routerConfig: routerConfig,
             theme: buildTheme(
               colorScheme: lightColorScheme,

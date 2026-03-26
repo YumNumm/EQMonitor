@@ -11,14 +11,14 @@ part of 'tsunami_comments.dart';
 _TsunamiComments _$TsunamiCommentsFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_TsunamiComments', json, ($checkedConvert) {
       final val = _TsunamiComments(
-        free: $checkedConvert('free', (v) => v as String),
+        free: $checkedConvert('free', (v) => v as String?),
         warning: $checkedConvert(
           'warning',
-          (v) => Warning.fromJson(v as Map<String, dynamic>),
+          (v) => v == null ? null : Warning.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;
     });
 
 Map<String, dynamic> _$TsunamiCommentsToJson(_TsunamiComments instance) =>
-    <String, dynamic>{'free': instance.free, 'warning': instance.warning};
+    <String, dynamic>{'free': ?instance.free, 'warning': ?instance.warning};

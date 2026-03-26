@@ -17,16 +17,17 @@ _$TsunamiObservationStationMaxHeightFromJson(Map<String, dynamic> json) =>
         final val = _TsunamiObservationStationMaxHeight(
           dateTime: $checkedConvert(
             'date_time',
-            (v) => DateTime.parse(v as String),
+            (v) => v == null ? null : DateTime.parse(v as String),
           ),
-          value: $checkedConvert('value', (v) => v as num),
-          over: $checkedConvert('over', (v) => v as bool),
-          isRising: $checkedConvert('is_rising', (v) => v as bool),
+          value: $checkedConvert('value', (v) => v as num?),
+          over: $checkedConvert('over', (v) => v as bool?),
+          isRising: $checkedConvert('is_rising', (v) => v as bool?),
           condition: $checkedConvert(
             'condition',
-            (v) => $enumDecode(_$ObservationMaxHeightConditionEnumMap, v),
+            (v) =>
+                $enumDecodeNullable(_$ObservationMaxHeightConditionEnumMap, v),
           ),
-          isMissing: $checkedConvert('is_missing', (v) => v as bool),
+          isMissing: $checkedConvert('is_missing', (v) => v as bool?),
         );
         return val;
       },
@@ -40,12 +41,12 @@ _$TsunamiObservationStationMaxHeightFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$TsunamiObservationStationMaxHeightToJson(
   _TsunamiObservationStationMaxHeight instance,
 ) => <String, dynamic>{
-  'date_time': instance.dateTime.toIso8601String(),
-  'value': instance.value,
-  'over': instance.over,
-  'is_rising': instance.isRising,
-  'condition': instance.condition,
-  'is_missing': instance.isMissing,
+  'date_time': ?instance.dateTime?.toIso8601String(),
+  'value': ?instance.value,
+  'over': ?instance.over,
+  'is_rising': ?instance.isRising,
+  'condition': ?instance.condition,
+  'is_missing': ?instance.isMissing,
 };
 
 const _$ObservationMaxHeightConditionEnumMap = {

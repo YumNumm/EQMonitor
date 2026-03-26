@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
+    as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
@@ -31,7 +33,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart'
+    hide SharedPreferencesAsync;
 import 'package:talker_flutter/talker_flutter.dart';
 
 Future<void> main() async {
@@ -139,7 +142,12 @@ Future<void> main() async {
 
   final container = ProviderContainer(
     overrides: [
-      sharedPreferencesProvider.overrideWithValue(results.$1.$1),
+      data_prefs.sharedPreferencesProvider.overrideWithValue(
+        AsyncValue.data(results.$1.$1),
+      ),
+      sharedPreferencesProvider.overrideWithValue(
+        SharedPreferencesAsync(results.$1.$1),
+      ),
       packageInfoProvider.overrideWithValue(results.$1.$2),
       if (results.$1.$3 != null)
         androidDeviceInfoProvider.overrideWithValue(results.$1.$3!),
