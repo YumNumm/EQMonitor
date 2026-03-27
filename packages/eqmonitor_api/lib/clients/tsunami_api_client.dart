@@ -29,7 +29,7 @@ abstract class TsunamiApiClient {
   /// [createdAtLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(TsunamiApiClientUrls.getV2Tsunami)
   Future<HttpResponse<TsunamiListResponse>> getV2Tsunami({
-    @Query('statuses') dynamic statuses = [NORMAL],
+    @Query('statuses') dynamic statuses = const ['NORMAL'],
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,

@@ -23,7 +23,7 @@ class _TsunamiApiClient implements TsunamiApiClient {
 
   @override
   Future<HttpResponse<TsunamiListResponse>> getV2Tsunami({
-    dynamic statuses = [NORMAL],
+    dynamic statuses = const ['NORMAL'],
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
     String? cursor,
