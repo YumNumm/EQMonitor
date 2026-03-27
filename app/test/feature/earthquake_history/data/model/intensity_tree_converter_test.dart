@@ -60,8 +60,6 @@ Intensity _buildIntensity({
   >
   regions,
   api.JmaLpgmIntensity? maxLpgmIntensity,
-  List<IntensityItem>? cities,
-  List<IntensityStationItem>? stations,
 }) {
   return Intensity(
     maxIntensity: maxIntensity,
@@ -83,8 +81,6 @@ Intensity _buildIntensity({
           ),
         )
         .toList(),
-    cities: cities,
-    stations: stations,
   );
 }
 
@@ -490,22 +486,22 @@ void main() {
             maxLpgmIntensity: null,
           ),
         ],
-        cities: [
-          const IntensityItem(
-            value: CodeName(code: '1310000', name: '東京都23区'),
-            maxIntensity: api.JmaIntensity.value3,
-            maxLpgmIntensity: api.JmaLpgmIntensity.value2,
-          ),
-        ],
-        stations: [
-          _station(
-            code: '13100000001',
-            name: 'テスト観測点',
-            maxIntensity: api.JmaIntensity.value3,
-            maxLpgm: api.JmaLpgmIntensity.value2,
-          ),
-        ],
       );
+      final cities = [
+        const IntensityItem(
+          value: CodeName(code: '1310000', name: '東京都23区'),
+          maxIntensity: api.JmaIntensity.value3,
+          maxLpgmIntensity: api.JmaLpgmIntensity.value2,
+        ),
+      ];
+      final stations = [
+        _station(
+          code: '13100000001',
+          name: 'テスト観測点',
+          maxIntensity: api.JmaIntensity.value3,
+          maxLpgm: api.JmaLpgmIntensity.value2,
+        ),
+      ];
       final parameter = _buildParameter(
         regions: [
           (
@@ -527,6 +523,8 @@ void main() {
       final result = convertToIntensityTree(
         intensity: intensity,
         parameter: parameter,
+        cities: cities,
+        stations: stations,
       );
 
       final cityNode = result[JmaIntensity.three]![0].cities[0];

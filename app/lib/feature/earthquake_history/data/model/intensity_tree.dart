@@ -30,8 +30,8 @@ abstract class CityIntensityNode with _$CityIntensityNode {
     @EarthquakeParameterCityItemConverter()
     required EarthquakeParameterCityItem city,
     required JmaIntensity? maxIntensity,
-    @JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,
     required List<StationIntensityNode> stations,
+    @JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,
   }) = _CityIntensityNode;
 
   factory CityIntensityNode.fromJson(Map<String, dynamic> json) =>
