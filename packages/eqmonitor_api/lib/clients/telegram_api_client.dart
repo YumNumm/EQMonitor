@@ -20,7 +20,7 @@ abstract class TelegramApiClient {
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
   @GET(TelegramApiClientUrls.getV2Telegram)
   Future<HttpResponse<TelegramListResponse>> getV2Telegram({
-    @Query('statuses') dynamic statuses = [NORMAL],
+    @Query('statuses') dynamic statuses = const ['NORMAL'],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });
@@ -31,7 +31,7 @@ abstract class TelegramApiClient {
   @GET(TelegramApiClientUrls.getV2TelegramTypeType)
   Future<HttpResponse<TelegramListResponse>> getV2TelegramTypeType({
     @Path('type') required TelegramType type,
-    @Query('statuses') dynamic statuses = [NORMAL],
+    @Query('statuses') dynamic statuses = const ['NORMAL'],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });
@@ -42,7 +42,7 @@ abstract class TelegramApiClient {
   @GET(TelegramApiClientUrls.getV2TelegramEventIdEventId)
   Future<HttpResponse<TelegramListResponse>> getV2TelegramEventIdEventId({
     @Path('eventId') required String eventId,
-    @Query('statuses') dynamic statuses = [NORMAL],
+    @Query('statuses') dynamic statuses = const ['NORMAL'],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });

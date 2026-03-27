@@ -23,7 +23,7 @@ class _TelegramApiClient implements TelegramApiClient {
 
   @override
   Future<HttpResponse<TelegramListResponse>> getV2Telegram({
-    dynamic statuses = [NORMAL],
+    dynamic statuses = const ['NORMAL'],
     String? limit,
     String? cursor,
   }) async {
@@ -61,7 +61,7 @@ class _TelegramApiClient implements TelegramApiClient {
   @override
   Future<HttpResponse<TelegramListResponse>> getV2TelegramTypeType({
     required TelegramType type,
-    dynamic statuses = [NORMAL],
+    dynamic statuses = const ['NORMAL'],
     String? limit,
     String? cursor,
   }) async {
@@ -99,7 +99,7 @@ class _TelegramApiClient implements TelegramApiClient {
   @override
   Future<HttpResponse<TelegramListResponse>> getV2TelegramEventIdEventId({
     required String eventId,
-    dynamic statuses = [NORMAL],
+    dynamic statuses = const ['NORMAL'],
     String? limit,
     String? cursor,
   }) async {
