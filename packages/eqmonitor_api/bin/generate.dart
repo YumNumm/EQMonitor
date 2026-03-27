@@ -134,7 +134,7 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
   for (final file in dartFiles) {
     final original = file.readAsStringSync();
     var patched = original.replaceAll(r'$unknown', r'\$unknown');
-    patched = patched.replaceAll('const [NORMAL]', 'const [.normal]');
+    patched = patched.replaceAll('[NORMAL]', "const ['NORMAL']");
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  Patched: ${file.path}');
