@@ -13,7 +13,6 @@ abstract class ForbiddenResponse with _$ForbiddenResponse {
     required dynamic code,
     required String message,
   }) = _ForbiddenResponse;
-
-  factory ForbiddenResponse.fromJson(Map<String, Object?> json) =>
-      _$ForbiddenResponseFromJson(json);
+  
+  factory ForbiddenResponse.fromJson(Map<String, Object?> json) => _$ForbiddenResponseFromJson(json);
 }

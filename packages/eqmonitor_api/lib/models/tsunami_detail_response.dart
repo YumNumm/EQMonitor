@@ -11,9 +11,9 @@ part 'tsunami_detail_response.g.dart';
 
 @Freezed()
 abstract class TsunamiDetailResponse with _$TsunamiDetailResponse {
-  const factory TsunamiDetailResponse({required TsunamiDetail tsunami}) =
-      _TsunamiDetailResponse;
-
-  factory TsunamiDetailResponse.fromJson(Map<String, Object?> json) =>
-      _$TsunamiDetailResponseFromJson(json);
+  const factory TsunamiDetailResponse({
+    required TsunamiDetail tsunami,
+  }) = _TsunamiDetailResponse;
+  
+  factory TsunamiDetailResponse.fromJson(Map<String, Object?> json) => _$TsunamiDetailResponseFromJson(json);
 }

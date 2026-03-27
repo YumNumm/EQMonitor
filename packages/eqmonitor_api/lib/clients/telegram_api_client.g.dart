@@ -23,13 +23,13 @@ class _TelegramApiClient implements TelegramApiClient {
 
   @override
   Future<HttpResponse<TelegramListResponse>> getV2Telegram({
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     String? limit,
     String? cursor,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'limit': limit,
       r'cursor': cursor,
     };
@@ -61,13 +61,13 @@ class _TelegramApiClient implements TelegramApiClient {
   @override
   Future<HttpResponse<TelegramListResponse>> getV2TelegramTypeType({
     required TelegramType type,
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     String? limit,
     String? cursor,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'limit': limit,
       r'cursor': cursor,
     };
@@ -99,13 +99,13 @@ class _TelegramApiClient implements TelegramApiClient {
   @override
   Future<HttpResponse<TelegramListResponse>> getV2TelegramEventIdEventId({
     required String eventId,
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     String? limit,
     String? cursor,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'limit': limit,
       r'cursor': cursor,
     };

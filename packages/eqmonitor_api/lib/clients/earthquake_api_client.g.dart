@@ -23,7 +23,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
 
   @override
   Future<HttpResponse<EarthquakeListResponse>> getV2Earthquake({
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
@@ -39,7 +39,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -112,7 +112,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityRegionSearchResponse>>
   getV2EarthquakeIntensityRegionCode({
     required String code,
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
@@ -128,7 +128,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -174,7 +174,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityPrefectureSearchResponse>>
   getV2EarthquakeIntensityPrefectureCode({
     required String code,
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
@@ -190,7 +190,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -236,7 +236,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityCitySearchResponse>>
   getV2EarthquakeIntensityCityCode({
     required String code,
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
@@ -252,7 +252,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -295,7 +295,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<IntensityStationSearchResponse>>
   getV2EarthquakeIntensityStationCode({
     required String code,
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
@@ -311,7 +311,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
@@ -356,7 +356,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   @override
   Future<HttpResponse<EpicenterSearchResponse>> getV2EarthquakeEpicenterCode({
     required String code,
-    List<TelegramStatus>? statuses = const [.normal],
+    dynamic statuses = [NORMAL],
     EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
@@ -372,7 +372,7 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
+      r'statuses': statuses.toJson(),
       r'sortBy': sortBy?.toJson(),
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,

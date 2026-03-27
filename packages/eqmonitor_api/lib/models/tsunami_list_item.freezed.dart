@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiListItem {
 
- String get id;@JsonKey(name: 'event_ids') List<String> get eventIds;
+ String get id;@JsonKey(name: 'event_ids') List<String> get eventIds;@JsonKey(name: 'is_canceled') bool get isCanceled;@JsonKey(name: 'forecast_region_count') num get forecastRegionCount;@JsonKey(name: 'telegram_count') num get telegramCount;@JsonKey(name: 'telegram_types') List<TsunamiListItemTelegramTypes> get telegramTypes;@JsonKey(includeIfNull: false) String? get headline;@JsonKey(includeIfNull: false, name: 'latest_created_at') String? get latestCreatedAt;@JsonKey(includeIfNull: false, name: 'latest_press_at') String? get latestPressAt;@JsonKey(includeIfNull: false) TsunamiListItemStatus? get status;@JsonKey(includeIfNull: false, name: 'max_forecast_grade') TsunamiWarningKind? get maxForecastGrade;@JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name') String? get earthquakeHypocenterName;@JsonKey(includeIfNull: false, name: 'earthquake_origin_time') String? get earthquakeOriginTime;@JsonKey(includeIfNull: false, name: 'earthquake_magnitude') num? get earthquakeMagnitude;
 /// Create a copy of TsunamiListItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TsunamiListItemCopyWith<TsunamiListItem> get copyWith => _$TsunamiListItemCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiListItem&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.eventIds, eventIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TsunamiListItem&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.eventIds, eventIds)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.forecastRegionCount, forecastRegionCount) || other.forecastRegionCount == forecastRegionCount)&&(identical(other.telegramCount, telegramCount) || other.telegramCount == telegramCount)&&const DeepCollectionEquality().equals(other.telegramTypes, telegramTypes)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.latestCreatedAt, latestCreatedAt) || other.latestCreatedAt == latestCreatedAt)&&(identical(other.latestPressAt, latestPressAt) || other.latestPressAt == latestPressAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.maxForecastGrade, maxForecastGrade) || other.maxForecastGrade == maxForecastGrade)&&(identical(other.earthquakeHypocenterName, earthquakeHypocenterName) || other.earthquakeHypocenterName == earthquakeHypocenterName)&&(identical(other.earthquakeOriginTime, earthquakeOriginTime) || other.earthquakeOriginTime == earthquakeOriginTime)&&(identical(other.earthquakeMagnitude, earthquakeMagnitude) || other.earthquakeMagnitude == earthquakeMagnitude));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(eventIds));
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(eventIds),isCanceled,forecastRegionCount,telegramCount,const DeepCollectionEquality().hash(telegramTypes),headline,latestCreatedAt,latestPressAt,status,maxForecastGrade,earthquakeHypocenterName,earthquakeOriginTime,earthquakeMagnitude);
 
 @override
 String toString() {
-  return 'TsunamiListItem(id: $id, eventIds: $eventIds)';
+  return 'TsunamiListItem(id: $id, eventIds: $eventIds, isCanceled: $isCanceled, forecastRegionCount: $forecastRegionCount, telegramCount: $telegramCount, telegramTypes: $telegramTypes, headline: $headline, latestCreatedAt: $latestCreatedAt, latestPressAt: $latestPressAt, status: $status, maxForecastGrade: $maxForecastGrade, earthquakeHypocenterName: $earthquakeHypocenterName, earthquakeOriginTime: $earthquakeOriginTime, earthquakeMagnitude: $earthquakeMagnitude)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiListItemCopyWith<$Res>  {
   factory $TsunamiListItemCopyWith(TsunamiListItem value, $Res Function(TsunamiListItem) _then) = _$TsunamiListItemCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'event_ids') List<String> eventIds
+ String id,@JsonKey(name: 'event_ids') List<String> eventIds,@JsonKey(name: 'is_canceled') bool isCanceled,@JsonKey(name: 'forecast_region_count') num forecastRegionCount,@JsonKey(name: 'telegram_count') num telegramCount,@JsonKey(name: 'telegram_types') List<TsunamiListItemTelegramTypes> telegramTypes,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false, name: 'latest_created_at') String? latestCreatedAt,@JsonKey(includeIfNull: false, name: 'latest_press_at') String? latestPressAt,@JsonKey(includeIfNull: false) TsunamiListItemStatus? status,@JsonKey(includeIfNull: false, name: 'max_forecast_grade') TsunamiWarningKind? maxForecastGrade,@JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name') String? earthquakeHypocenterName,@JsonKey(includeIfNull: false, name: 'earthquake_origin_time') String? earthquakeOriginTime,@JsonKey(includeIfNull: false, name: 'earthquake_magnitude') num? earthquakeMagnitude
 });
 
 
@@ -65,11 +65,23 @@ class _$TsunamiListItemCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiListItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventIds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventIds = null,Object? isCanceled = null,Object? forecastRegionCount = null,Object? telegramCount = null,Object? telegramTypes = null,Object? headline = freezed,Object? latestCreatedAt = freezed,Object? latestPressAt = freezed,Object? status = freezed,Object? maxForecastGrade = freezed,Object? earthquakeHypocenterName = freezed,Object? earthquakeOriginTime = freezed,Object? earthquakeMagnitude = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventIds: null == eventIds ? _self.eventIds : eventIds // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
+as bool,forecastRegionCount: null == forecastRegionCount ? _self.forecastRegionCount : forecastRegionCount // ignore: cast_nullable_to_non_nullable
+as num,telegramCount: null == telegramCount ? _self.telegramCount : telegramCount // ignore: cast_nullable_to_non_nullable
+as num,telegramTypes: null == telegramTypes ? _self.telegramTypes : telegramTypes // ignore: cast_nullable_to_non_nullable
+as List<TsunamiListItemTelegramTypes>,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,latestCreatedAt: freezed == latestCreatedAt ? _self.latestCreatedAt : latestCreatedAt // ignore: cast_nullable_to_non_nullable
+as String?,latestPressAt: freezed == latestPressAt ? _self.latestPressAt : latestPressAt // ignore: cast_nullable_to_non_nullable
+as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as TsunamiListItemStatus?,maxForecastGrade: freezed == maxForecastGrade ? _self.maxForecastGrade : maxForecastGrade // ignore: cast_nullable_to_non_nullable
+as TsunamiWarningKind?,earthquakeHypocenterName: freezed == earthquakeHypocenterName ? _self.earthquakeHypocenterName : earthquakeHypocenterName // ignore: cast_nullable_to_non_nullable
+as String?,earthquakeOriginTime: freezed == earthquakeOriginTime ? _self.earthquakeOriginTime : earthquakeOriginTime // ignore: cast_nullable_to_non_nullable
+as String?,earthquakeMagnitude: freezed == earthquakeMagnitude ? _self.earthquakeMagnitude : earthquakeMagnitude // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 
@@ -154,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'forecast_region_count')  num forecastRegionCount, @JsonKey(name: 'telegram_count')  num telegramCount, @JsonKey(name: 'telegram_types')  List<TsunamiListItemTelegramTypes> telegramTypes, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false, name: 'latest_created_at')  String? latestCreatedAt, @JsonKey(includeIfNull: false, name: 'latest_press_at')  String? latestPressAt, @JsonKey(includeIfNull: false)  TsunamiListItemStatus? status, @JsonKey(includeIfNull: false, name: 'max_forecast_grade')  TsunamiWarningKind? maxForecastGrade, @JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name')  String? earthquakeHypocenterName, @JsonKey(includeIfNull: false, name: 'earthquake_origin_time')  String? earthquakeOriginTime, @JsonKey(includeIfNull: false, name: 'earthquake_magnitude')  num? earthquakeMagnitude)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiListItem() when $default != null:
-return $default(_that.id,_that.eventIds);case _:
+return $default(_that.id,_that.eventIds,_that.isCanceled,_that.forecastRegionCount,_that.telegramCount,_that.telegramTypes,_that.headline,_that.latestCreatedAt,_that.latestPressAt,_that.status,_that.maxForecastGrade,_that.earthquakeHypocenterName,_that.earthquakeOriginTime,_that.earthquakeMagnitude);case _:
   return orElse();
 
 }
@@ -175,10 +187,10 @@ return $default(_that.id,_that.eventIds);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'forecast_region_count')  num forecastRegionCount, @JsonKey(name: 'telegram_count')  num telegramCount, @JsonKey(name: 'telegram_types')  List<TsunamiListItemTelegramTypes> telegramTypes, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false, name: 'latest_created_at')  String? latestCreatedAt, @JsonKey(includeIfNull: false, name: 'latest_press_at')  String? latestPressAt, @JsonKey(includeIfNull: false)  TsunamiListItemStatus? status, @JsonKey(includeIfNull: false, name: 'max_forecast_grade')  TsunamiWarningKind? maxForecastGrade, @JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name')  String? earthquakeHypocenterName, @JsonKey(includeIfNull: false, name: 'earthquake_origin_time')  String? earthquakeOriginTime, @JsonKey(includeIfNull: false, name: 'earthquake_magnitude')  num? earthquakeMagnitude)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiListItem():
-return $default(_that.id,_that.eventIds);case _:
+return $default(_that.id,_that.eventIds,_that.isCanceled,_that.forecastRegionCount,_that.telegramCount,_that.telegramTypes,_that.headline,_that.latestCreatedAt,_that.latestPressAt,_that.status,_that.maxForecastGrade,_that.earthquakeHypocenterName,_that.earthquakeOriginTime,_that.earthquakeMagnitude);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +207,10 @@ return $default(_that.id,_that.eventIds);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds, @JsonKey(name: 'is_canceled')  bool isCanceled, @JsonKey(name: 'forecast_region_count')  num forecastRegionCount, @JsonKey(name: 'telegram_count')  num telegramCount, @JsonKey(name: 'telegram_types')  List<TsunamiListItemTelegramTypes> telegramTypes, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false, name: 'latest_created_at')  String? latestCreatedAt, @JsonKey(includeIfNull: false, name: 'latest_press_at')  String? latestPressAt, @JsonKey(includeIfNull: false)  TsunamiListItemStatus? status, @JsonKey(includeIfNull: false, name: 'max_forecast_grade')  TsunamiWarningKind? maxForecastGrade, @JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name')  String? earthquakeHypocenterName, @JsonKey(includeIfNull: false, name: 'earthquake_origin_time')  String? earthquakeOriginTime, @JsonKey(includeIfNull: false, name: 'earthquake_magnitude')  num? earthquakeMagnitude)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiListItem() when $default != null:
-return $default(_that.id,_that.eventIds);case _:
+return $default(_that.id,_that.eventIds,_that.isCanceled,_that.forecastRegionCount,_that.telegramCount,_that.telegramTypes,_that.headline,_that.latestCreatedAt,_that.latestPressAt,_that.status,_that.maxForecastGrade,_that.earthquakeHypocenterName,_that.earthquakeOriginTime,_that.earthquakeMagnitude);case _:
   return null;
 
 }
@@ -210,7 +222,7 @@ return $default(_that.id,_that.eventIds);case _:
 @JsonSerializable()
 
 class _TsunamiListItem implements TsunamiListItem {
-  const _TsunamiListItem({required this.id, @JsonKey(name: 'event_ids') required final  List<String> eventIds}): _eventIds = eventIds;
+  const _TsunamiListItem({required this.id, @JsonKey(name: 'event_ids') required final  List<String> eventIds, @JsonKey(name: 'is_canceled') required this.isCanceled, @JsonKey(name: 'forecast_region_count') required this.forecastRegionCount, @JsonKey(name: 'telegram_count') required this.telegramCount, @JsonKey(name: 'telegram_types') required final  List<TsunamiListItemTelegramTypes> telegramTypes, @JsonKey(includeIfNull: false) this.headline, @JsonKey(includeIfNull: false, name: 'latest_created_at') this.latestCreatedAt, @JsonKey(includeIfNull: false, name: 'latest_press_at') this.latestPressAt, @JsonKey(includeIfNull: false) this.status, @JsonKey(includeIfNull: false, name: 'max_forecast_grade') this.maxForecastGrade, @JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name') this.earthquakeHypocenterName, @JsonKey(includeIfNull: false, name: 'earthquake_origin_time') this.earthquakeOriginTime, @JsonKey(includeIfNull: false, name: 'earthquake_magnitude') this.earthquakeMagnitude}): _eventIds = eventIds,_telegramTypes = telegramTypes;
   factory _TsunamiListItem.fromJson(Map<String, dynamic> json) => _$TsunamiListItemFromJson(json);
 
 @override final  String id;
@@ -221,6 +233,24 @@ class _TsunamiListItem implements TsunamiListItem {
   return EqualUnmodifiableListView(_eventIds);
 }
 
+@override@JsonKey(name: 'is_canceled') final  bool isCanceled;
+@override@JsonKey(name: 'forecast_region_count') final  num forecastRegionCount;
+@override@JsonKey(name: 'telegram_count') final  num telegramCount;
+ final  List<TsunamiListItemTelegramTypes> _telegramTypes;
+@override@JsonKey(name: 'telegram_types') List<TsunamiListItemTelegramTypes> get telegramTypes {
+  if (_telegramTypes is EqualUnmodifiableListView) return _telegramTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_telegramTypes);
+}
+
+@override@JsonKey(includeIfNull: false) final  String? headline;
+@override@JsonKey(includeIfNull: false, name: 'latest_created_at') final  String? latestCreatedAt;
+@override@JsonKey(includeIfNull: false, name: 'latest_press_at') final  String? latestPressAt;
+@override@JsonKey(includeIfNull: false) final  TsunamiListItemStatus? status;
+@override@JsonKey(includeIfNull: false, name: 'max_forecast_grade') final  TsunamiWarningKind? maxForecastGrade;
+@override@JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name') final  String? earthquakeHypocenterName;
+@override@JsonKey(includeIfNull: false, name: 'earthquake_origin_time') final  String? earthquakeOriginTime;
+@override@JsonKey(includeIfNull: false, name: 'earthquake_magnitude') final  num? earthquakeMagnitude;
 
 /// Create a copy of TsunamiListItem
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +265,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiListItem&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._eventIds, _eventIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TsunamiListItem&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._eventIds, _eventIds)&&(identical(other.isCanceled, isCanceled) || other.isCanceled == isCanceled)&&(identical(other.forecastRegionCount, forecastRegionCount) || other.forecastRegionCount == forecastRegionCount)&&(identical(other.telegramCount, telegramCount) || other.telegramCount == telegramCount)&&const DeepCollectionEquality().equals(other._telegramTypes, _telegramTypes)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.latestCreatedAt, latestCreatedAt) || other.latestCreatedAt == latestCreatedAt)&&(identical(other.latestPressAt, latestPressAt) || other.latestPressAt == latestPressAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.maxForecastGrade, maxForecastGrade) || other.maxForecastGrade == maxForecastGrade)&&(identical(other.earthquakeHypocenterName, earthquakeHypocenterName) || other.earthquakeHypocenterName == earthquakeHypocenterName)&&(identical(other.earthquakeOriginTime, earthquakeOriginTime) || other.earthquakeOriginTime == earthquakeOriginTime)&&(identical(other.earthquakeMagnitude, earthquakeMagnitude) || other.earthquakeMagnitude == earthquakeMagnitude));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_eventIds));
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_eventIds),isCanceled,forecastRegionCount,telegramCount,const DeepCollectionEquality().hash(_telegramTypes),headline,latestCreatedAt,latestPressAt,status,maxForecastGrade,earthquakeHypocenterName,earthquakeOriginTime,earthquakeMagnitude);
 
 @override
 String toString() {
-  return 'TsunamiListItem(id: $id, eventIds: $eventIds)';
+  return 'TsunamiListItem(id: $id, eventIds: $eventIds, isCanceled: $isCanceled, forecastRegionCount: $forecastRegionCount, telegramCount: $telegramCount, telegramTypes: $telegramTypes, headline: $headline, latestCreatedAt: $latestCreatedAt, latestPressAt: $latestPressAt, status: $status, maxForecastGrade: $maxForecastGrade, earthquakeHypocenterName: $earthquakeHypocenterName, earthquakeOriginTime: $earthquakeOriginTime, earthquakeMagnitude: $earthquakeMagnitude)';
 }
 
 
@@ -255,7 +285,7 @@ abstract mixin class _$TsunamiListItemCopyWith<$Res> implements $TsunamiListItem
   factory _$TsunamiListItemCopyWith(_TsunamiListItem value, $Res Function(_TsunamiListItem) _then) = __$TsunamiListItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'event_ids') List<String> eventIds
+ String id,@JsonKey(name: 'event_ids') List<String> eventIds,@JsonKey(name: 'is_canceled') bool isCanceled,@JsonKey(name: 'forecast_region_count') num forecastRegionCount,@JsonKey(name: 'telegram_count') num telegramCount,@JsonKey(name: 'telegram_types') List<TsunamiListItemTelegramTypes> telegramTypes,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false, name: 'latest_created_at') String? latestCreatedAt,@JsonKey(includeIfNull: false, name: 'latest_press_at') String? latestPressAt,@JsonKey(includeIfNull: false) TsunamiListItemStatus? status,@JsonKey(includeIfNull: false, name: 'max_forecast_grade') TsunamiWarningKind? maxForecastGrade,@JsonKey(includeIfNull: false, name: 'earthquake_hypocenter_name') String? earthquakeHypocenterName,@JsonKey(includeIfNull: false, name: 'earthquake_origin_time') String? earthquakeOriginTime,@JsonKey(includeIfNull: false, name: 'earthquake_magnitude') num? earthquakeMagnitude
 });
 
 
@@ -272,11 +302,23 @@ class __$TsunamiListItemCopyWithImpl<$Res>
 
 /// Create a copy of TsunamiListItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventIds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventIds = null,Object? isCanceled = null,Object? forecastRegionCount = null,Object? telegramCount = null,Object? telegramTypes = null,Object? headline = freezed,Object? latestCreatedAt = freezed,Object? latestPressAt = freezed,Object? status = freezed,Object? maxForecastGrade = freezed,Object? earthquakeHypocenterName = freezed,Object? earthquakeOriginTime = freezed,Object? earthquakeMagnitude = freezed,}) {
   return _then(_TsunamiListItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventIds: null == eventIds ? _self._eventIds : eventIds // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,isCanceled: null == isCanceled ? _self.isCanceled : isCanceled // ignore: cast_nullable_to_non_nullable
+as bool,forecastRegionCount: null == forecastRegionCount ? _self.forecastRegionCount : forecastRegionCount // ignore: cast_nullable_to_non_nullable
+as num,telegramCount: null == telegramCount ? _self.telegramCount : telegramCount // ignore: cast_nullable_to_non_nullable
+as num,telegramTypes: null == telegramTypes ? _self._telegramTypes : telegramTypes // ignore: cast_nullable_to_non_nullable
+as List<TsunamiListItemTelegramTypes>,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,latestCreatedAt: freezed == latestCreatedAt ? _self.latestCreatedAt : latestCreatedAt // ignore: cast_nullable_to_non_nullable
+as String?,latestPressAt: freezed == latestPressAt ? _self.latestPressAt : latestPressAt // ignore: cast_nullable_to_non_nullable
+as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as TsunamiListItemStatus?,maxForecastGrade: freezed == maxForecastGrade ? _self.maxForecastGrade : maxForecastGrade // ignore: cast_nullable_to_non_nullable
+as TsunamiWarningKind?,earthquakeHypocenterName: freezed == earthquakeHypocenterName ? _self.earthquakeHypocenterName : earthquakeHypocenterName // ignore: cast_nullable_to_non_nullable
+as String?,earthquakeOriginTime: freezed == earthquakeOriginTime ? _self.earthquakeOriginTime : earthquakeOriginTime // ignore: cast_nullable_to_non_nullable
+as String?,earthquakeMagnitude: freezed == earthquakeMagnitude ? _self.earthquakeMagnitude : earthquakeMagnitude // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 

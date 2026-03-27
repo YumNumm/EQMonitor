@@ -11,9 +11,9 @@ part 'websocket_ticket_response.g.dart';
 abstract class WebsocketTicketResponse with _$WebsocketTicketResponse {
   const factory WebsocketTicketResponse({
     required String ticket,
-    @JsonKey(name: 'expires_at') required DateTime expiresAt,
+    @JsonKey(name: 'expires_at')
+    required DateTime expiresAt,
   }) = _WebsocketTicketResponse;
-
-  factory WebsocketTicketResponse.fromJson(Map<String, Object?> json) =>
-      _$WebsocketTicketResponseFromJson(json);
+  
+  factory WebsocketTicketResponse.fromJson(Map<String, Object?> json) => _$WebsocketTicketResponseFromJson(json);
 }

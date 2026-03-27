@@ -20,9 +20,7 @@ _TsunamiDetail _$TsunamiDetailFromJson(Map<String, dynamic> json) =>
           'telegrams',
           (v) => (v as List<dynamic>)
               .map(
-                (e) => TsunamiTelegramHeaderOnlyItem.fromJson(
-                  e as Map<String, dynamic>,
-                ),
+                (e) => TsunamiTelegramItem.fromJson(e as Map<String, dynamic>),
               )
               .toList(),
         ),

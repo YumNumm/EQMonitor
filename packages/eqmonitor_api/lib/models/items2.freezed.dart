@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Items2 {
 
- String get id;@JsonKey(name: 'event_id') String get eventId; TelegramType get type; String get title; TelegramStatus get status;@JsonKey(name: 'info_type') InfoType get infoType;@JsonKey(name: 'editorial_office') String get editorialOffice;@JsonKey(name: 'publishing_office') List<String> get publishingOffice;@JsonKey(name: 'press_at') DateTime get pressAt;@JsonKey(name: 'report_at') DateTime get reportAt;@JsonKey(name: 'info_kind') String get infoKind;@JsonKey(name: 'info_kind_version') String get infoKindVersion; String get hash;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(includeIfNull: false, name: 'serial_no') num? get serialNo;@JsonKey(includeIfNull: false, name: 'target_at') DateTime? get targetAt;@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? get revokeAt;@JsonKey(includeIfNull: false) String? get headline;
+ String get correlationKey; String get eventType; String get eventId; num get serialNo; String get jmaReportTime; num get targetDevices; num get enqueuedFcm; num get enqueuedApns; num get enqueuedBroadcast; num get successFcm; num get failedFcm; num get successApns; num get failedApns; String get createdAt; String get updatedAt;@JsonKey(includeIfNull: false) String? get headline;@JsonKey(includeIfNull: false) num? get resolverDelayMs;
 /// Create a copy of Items2
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $Items2CopyWith<Items2> get copyWith => _$Items2CopyWithImpl<Items2>(this as Ite
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Items2&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&const DeepCollectionEquality().equals(other.publishingOffice, publishingOffice)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind)&&(identical(other.infoKindVersion, infoKindVersion) || other.infoKindVersion == infoKindVersion)&&(identical(other.hash, hash) || other.hash == hash)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.targetAt, targetAt) || other.targetAt == targetAt)&&(identical(other.revokeAt, revokeAt) || other.revokeAt == revokeAt)&&(identical(other.headline, headline) || other.headline == headline));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Items2&&(identical(other.correlationKey, correlationKey) || other.correlationKey == correlationKey)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.jmaReportTime, jmaReportTime) || other.jmaReportTime == jmaReportTime)&&(identical(other.targetDevices, targetDevices) || other.targetDevices == targetDevices)&&(identical(other.enqueuedFcm, enqueuedFcm) || other.enqueuedFcm == enqueuedFcm)&&(identical(other.enqueuedApns, enqueuedApns) || other.enqueuedApns == enqueuedApns)&&(identical(other.enqueuedBroadcast, enqueuedBroadcast) || other.enqueuedBroadcast == enqueuedBroadcast)&&(identical(other.successFcm, successFcm) || other.successFcm == successFcm)&&(identical(other.failedFcm, failedFcm) || other.failedFcm == failedFcm)&&(identical(other.successApns, successApns) || other.successApns == successApns)&&(identical(other.failedApns, failedApns) || other.failedApns == failedApns)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.resolverDelayMs, resolverDelayMs) || other.resolverDelayMs == resolverDelayMs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,eventId,type,title,status,infoType,editorialOffice,const DeepCollectionEquality().hash(publishingOffice),pressAt,reportAt,infoKind,infoKindVersion,hash,createdAt,serialNo,targetAt,revokeAt,headline);
+int get hashCode => Object.hash(runtimeType,correlationKey,eventType,eventId,serialNo,jmaReportTime,targetDevices,enqueuedFcm,enqueuedApns,enqueuedBroadcast,successFcm,failedFcm,successApns,failedApns,createdAt,updatedAt,headline,resolverDelayMs);
 
 @override
 String toString() {
-  return 'Items2(id: $id, eventId: $eventId, type: $type, title: $title, status: $status, infoType: $infoType, editorialOffice: $editorialOffice, publishingOffice: $publishingOffice, pressAt: $pressAt, reportAt: $reportAt, infoKind: $infoKind, infoKindVersion: $infoKindVersion, hash: $hash, createdAt: $createdAt, serialNo: $serialNo, targetAt: $targetAt, revokeAt: $revokeAt, headline: $headline)';
+  return 'Items2(correlationKey: $correlationKey, eventType: $eventType, eventId: $eventId, serialNo: $serialNo, jmaReportTime: $jmaReportTime, targetDevices: $targetDevices, enqueuedFcm: $enqueuedFcm, enqueuedApns: $enqueuedApns, enqueuedBroadcast: $enqueuedBroadcast, successFcm: $successFcm, failedFcm: $failedFcm, successApns: $successApns, failedApns: $failedApns, createdAt: $createdAt, updatedAt: $updatedAt, headline: $headline, resolverDelayMs: $resolverDelayMs)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $Items2CopyWith<$Res>  {
   factory $Items2CopyWith(Items2 value, $Res Function(Items2) _then) = _$Items2CopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'press_at') DateTime pressAt,@JsonKey(name: 'report_at') DateTime reportAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'target_at') DateTime? targetAt,@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? revokeAt,@JsonKey(includeIfNull: false) String? headline
+ String correlationKey, String eventType, String eventId, num serialNo, String jmaReportTime, num targetDevices, num enqueuedFcm, num enqueuedApns, num enqueuedBroadcast, num successFcm, num failedFcm, num successApns, num failedApns, String createdAt, String updatedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) num? resolverDelayMs
 });
 
 
@@ -65,27 +65,26 @@ class _$Items2CopyWithImpl<$Res>
 
 /// Create a copy of Items2
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventId = null,Object? type = null,Object? title = null,Object? status = null,Object? infoType = null,Object? editorialOffice = null,Object? publishingOffice = null,Object? pressAt = null,Object? reportAt = null,Object? infoKind = null,Object? infoKindVersion = null,Object? hash = null,Object? createdAt = null,Object? serialNo = freezed,Object? targetAt = freezed,Object? revokeAt = freezed,Object? headline = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? correlationKey = null,Object? eventType = null,Object? eventId = null,Object? serialNo = null,Object? jmaReportTime = null,Object? targetDevices = null,Object? enqueuedFcm = null,Object? enqueuedApns = null,Object? enqueuedBroadcast = null,Object? successFcm = null,Object? failedFcm = null,Object? successApns = null,Object? failedApns = null,Object? createdAt = null,Object? updatedAt = null,Object? headline = freezed,Object? resolverDelayMs = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+correlationKey: null == correlationKey ? _self.correlationKey : correlationKey // ignore: cast_nullable_to_non_nullable
+as String,eventType: null == eventType ? _self.eventType : eventType // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as TelegramType,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as TelegramStatus,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
-as InfoType,editorialOffice: null == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
-as String,publishingOffice: null == publishingOffice ? _self.publishingOffice : publishingOffice // ignore: cast_nullable_to_non_nullable
-as List<String>,pressAt: null == pressAt ? _self.pressAt : pressAt // ignore: cast_nullable_to_non_nullable
-as DateTime,reportAt: null == reportAt ? _self.reportAt : reportAt // ignore: cast_nullable_to_non_nullable
-as DateTime,infoKind: null == infoKind ? _self.infoKind : infoKind // ignore: cast_nullable_to_non_nullable
-as String,infoKindVersion: null == infoKindVersion ? _self.infoKindVersion : infoKindVersion // ignore: cast_nullable_to_non_nullable
-as String,hash: null == hash ? _self.hash : hash // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
-as num?,targetAt: freezed == targetAt ? _self.targetAt : targetAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,revokeAt: freezed == revokeAt ? _self.revokeAt : revokeAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as num,jmaReportTime: null == jmaReportTime ? _self.jmaReportTime : jmaReportTime // ignore: cast_nullable_to_non_nullable
+as String,targetDevices: null == targetDevices ? _self.targetDevices : targetDevices // ignore: cast_nullable_to_non_nullable
+as num,enqueuedFcm: null == enqueuedFcm ? _self.enqueuedFcm : enqueuedFcm // ignore: cast_nullable_to_non_nullable
+as num,enqueuedApns: null == enqueuedApns ? _self.enqueuedApns : enqueuedApns // ignore: cast_nullable_to_non_nullable
+as num,enqueuedBroadcast: null == enqueuedBroadcast ? _self.enqueuedBroadcast : enqueuedBroadcast // ignore: cast_nullable_to_non_nullable
+as num,successFcm: null == successFcm ? _self.successFcm : successFcm // ignore: cast_nullable_to_non_nullable
+as num,failedFcm: null == failedFcm ? _self.failedFcm : failedFcm // ignore: cast_nullable_to_non_nullable
+as num,successApns: null == successApns ? _self.successApns : successApns // ignore: cast_nullable_to_non_nullable
+as num,failedApns: null == failedApns ? _self.failedApns : failedApns // ignore: cast_nullable_to_non_nullable
+as num,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,resolverDelayMs: freezed == resolverDelayMs ? _self.resolverDelayMs : resolverDelayMs // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 
@@ -170,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String correlationKey,  String eventType,  String eventId,  num serialNo,  String jmaReportTime,  num targetDevices,  num enqueuedFcm,  num enqueuedApns,  num enqueuedBroadcast,  num successFcm,  num failedFcm,  num successApns,  num failedApns,  String createdAt,  String updatedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  num? resolverDelayMs)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Items2() when $default != null:
-return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressAt,_that.reportAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.serialNo,_that.targetAt,_that.revokeAt,_that.headline);case _:
+return $default(_that.correlationKey,_that.eventType,_that.eventId,_that.serialNo,_that.jmaReportTime,_that.targetDevices,_that.enqueuedFcm,_that.enqueuedApns,_that.enqueuedBroadcast,_that.successFcm,_that.failedFcm,_that.successApns,_that.failedApns,_that.createdAt,_that.updatedAt,_that.headline,_that.resolverDelayMs);case _:
   return orElse();
 
 }
@@ -191,10 +190,10 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String correlationKey,  String eventType,  String eventId,  num serialNo,  String jmaReportTime,  num targetDevices,  num enqueuedFcm,  num enqueuedApns,  num enqueuedBroadcast,  num successFcm,  num failedFcm,  num successApns,  num failedApns,  String createdAt,  String updatedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  num? resolverDelayMs)  $default,) {final _that = this;
 switch (_that) {
 case _Items2():
-return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressAt,_that.reportAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.serialNo,_that.targetAt,_that.revokeAt,_that.headline);case _:
+return $default(_that.correlationKey,_that.eventType,_that.eventId,_that.serialNo,_that.jmaReportTime,_that.targetDevices,_that.enqueuedFcm,_that.enqueuedApns,_that.enqueuedBroadcast,_that.successFcm,_that.failedFcm,_that.successApns,_that.failedApns,_that.createdAt,_that.updatedAt,_that.headline,_that.resolverDelayMs);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +210,10 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String correlationKey,  String eventType,  String eventId,  num serialNo,  String jmaReportTime,  num targetDevices,  num enqueuedFcm,  num enqueuedApns,  num enqueuedBroadcast,  num successFcm,  num failedFcm,  num successApns,  num failedApns,  String createdAt,  String updatedAt, @JsonKey(includeIfNull: false)  String? headline, @JsonKey(includeIfNull: false)  num? resolverDelayMs)?  $default,) {final _that = this;
 switch (_that) {
 case _Items2() when $default != null:
-return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressAt,_that.reportAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.serialNo,_that.targetAt,_that.revokeAt,_that.headline);case _:
+return $default(_that.correlationKey,_that.eventType,_that.eventId,_that.serialNo,_that.jmaReportTime,_that.targetDevices,_that.enqueuedFcm,_that.enqueuedApns,_that.enqueuedBroadcast,_that.successFcm,_that.failedFcm,_that.successApns,_that.failedApns,_that.createdAt,_that.updatedAt,_that.headline,_that.resolverDelayMs);case _:
   return null;
 
 }
@@ -226,33 +225,26 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 @JsonSerializable()
 
 class _Items2 implements Items2 {
-  const _Items2({required this.id, @JsonKey(name: 'event_id') required this.eventId, required this.type, required this.title, required this.status, @JsonKey(name: 'info_type') required this.infoType, @JsonKey(name: 'editorial_office') required this.editorialOffice, @JsonKey(name: 'publishing_office') required final  List<String> publishingOffice, @JsonKey(name: 'press_at') required this.pressAt, @JsonKey(name: 'report_at') required this.reportAt, @JsonKey(name: 'info_kind') required this.infoKind, @JsonKey(name: 'info_kind_version') required this.infoKindVersion, required this.hash, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(includeIfNull: false, name: 'serial_no') this.serialNo, @JsonKey(includeIfNull: false, name: 'target_at') this.targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at') this.revokeAt, @JsonKey(includeIfNull: false) this.headline}): _publishingOffice = publishingOffice;
+  const _Items2({required this.correlationKey, required this.eventType, required this.eventId, required this.serialNo, required this.jmaReportTime, required this.targetDevices, required this.enqueuedFcm, required this.enqueuedApns, required this.enqueuedBroadcast, required this.successFcm, required this.failedFcm, required this.successApns, required this.failedApns, required this.createdAt, required this.updatedAt, @JsonKey(includeIfNull: false) this.headline, @JsonKey(includeIfNull: false) this.resolverDelayMs});
   factory _Items2.fromJson(Map<String, dynamic> json) => _$Items2FromJson(json);
 
-@override final  String id;
-@override@JsonKey(name: 'event_id') final  String eventId;
-@override final  TelegramType type;
-@override final  String title;
-@override final  TelegramStatus status;
-@override@JsonKey(name: 'info_type') final  InfoType infoType;
-@override@JsonKey(name: 'editorial_office') final  String editorialOffice;
- final  List<String> _publishingOffice;
-@override@JsonKey(name: 'publishing_office') List<String> get publishingOffice {
-  if (_publishingOffice is EqualUnmodifiableListView) return _publishingOffice;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_publishingOffice);
-}
-
-@override@JsonKey(name: 'press_at') final  DateTime pressAt;
-@override@JsonKey(name: 'report_at') final  DateTime reportAt;
-@override@JsonKey(name: 'info_kind') final  String infoKind;
-@override@JsonKey(name: 'info_kind_version') final  String infoKindVersion;
-@override final  String hash;
-@override@JsonKey(name: 'created_at') final  DateTime createdAt;
-@override@JsonKey(includeIfNull: false, name: 'serial_no') final  num? serialNo;
-@override@JsonKey(includeIfNull: false, name: 'target_at') final  DateTime? targetAt;
-@override@JsonKey(includeIfNull: false, name: 'revoke_at') final  DateTime? revokeAt;
+@override final  String correlationKey;
+@override final  String eventType;
+@override final  String eventId;
+@override final  num serialNo;
+@override final  String jmaReportTime;
+@override final  num targetDevices;
+@override final  num enqueuedFcm;
+@override final  num enqueuedApns;
+@override final  num enqueuedBroadcast;
+@override final  num successFcm;
+@override final  num failedFcm;
+@override final  num successApns;
+@override final  num failedApns;
+@override final  String createdAt;
+@override final  String updatedAt;
 @override@JsonKey(includeIfNull: false) final  String? headline;
+@override@JsonKey(includeIfNull: false) final  num? resolverDelayMs;
 
 /// Create a copy of Items2
 /// with the given fields replaced by the non-null parameter values.
@@ -267,16 +259,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Items2&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&const DeepCollectionEquality().equals(other._publishingOffice, _publishingOffice)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind)&&(identical(other.infoKindVersion, infoKindVersion) || other.infoKindVersion == infoKindVersion)&&(identical(other.hash, hash) || other.hash == hash)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.targetAt, targetAt) || other.targetAt == targetAt)&&(identical(other.revokeAt, revokeAt) || other.revokeAt == revokeAt)&&(identical(other.headline, headline) || other.headline == headline));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Items2&&(identical(other.correlationKey, correlationKey) || other.correlationKey == correlationKey)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.jmaReportTime, jmaReportTime) || other.jmaReportTime == jmaReportTime)&&(identical(other.targetDevices, targetDevices) || other.targetDevices == targetDevices)&&(identical(other.enqueuedFcm, enqueuedFcm) || other.enqueuedFcm == enqueuedFcm)&&(identical(other.enqueuedApns, enqueuedApns) || other.enqueuedApns == enqueuedApns)&&(identical(other.enqueuedBroadcast, enqueuedBroadcast) || other.enqueuedBroadcast == enqueuedBroadcast)&&(identical(other.successFcm, successFcm) || other.successFcm == successFcm)&&(identical(other.failedFcm, failedFcm) || other.failedFcm == failedFcm)&&(identical(other.successApns, successApns) || other.successApns == successApns)&&(identical(other.failedApns, failedApns) || other.failedApns == failedApns)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.resolverDelayMs, resolverDelayMs) || other.resolverDelayMs == resolverDelayMs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,eventId,type,title,status,infoType,editorialOffice,const DeepCollectionEquality().hash(_publishingOffice),pressAt,reportAt,infoKind,infoKindVersion,hash,createdAt,serialNo,targetAt,revokeAt,headline);
+int get hashCode => Object.hash(runtimeType,correlationKey,eventType,eventId,serialNo,jmaReportTime,targetDevices,enqueuedFcm,enqueuedApns,enqueuedBroadcast,successFcm,failedFcm,successApns,failedApns,createdAt,updatedAt,headline,resolverDelayMs);
 
 @override
 String toString() {
-  return 'Items2(id: $id, eventId: $eventId, type: $type, title: $title, status: $status, infoType: $infoType, editorialOffice: $editorialOffice, publishingOffice: $publishingOffice, pressAt: $pressAt, reportAt: $reportAt, infoKind: $infoKind, infoKindVersion: $infoKindVersion, hash: $hash, createdAt: $createdAt, serialNo: $serialNo, targetAt: $targetAt, revokeAt: $revokeAt, headline: $headline)';
+  return 'Items2(correlationKey: $correlationKey, eventType: $eventType, eventId: $eventId, serialNo: $serialNo, jmaReportTime: $jmaReportTime, targetDevices: $targetDevices, enqueuedFcm: $enqueuedFcm, enqueuedApns: $enqueuedApns, enqueuedBroadcast: $enqueuedBroadcast, successFcm: $successFcm, failedFcm: $failedFcm, successApns: $successApns, failedApns: $failedApns, createdAt: $createdAt, updatedAt: $updatedAt, headline: $headline, resolverDelayMs: $resolverDelayMs)';
 }
 
 
@@ -287,7 +279,7 @@ abstract mixin class _$Items2CopyWith<$Res> implements $Items2CopyWith<$Res> {
   factory _$Items2CopyWith(_Items2 value, $Res Function(_Items2) _then) = __$Items2CopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'press_at') DateTime pressAt,@JsonKey(name: 'report_at') DateTime reportAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'target_at') DateTime? targetAt,@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? revokeAt,@JsonKey(includeIfNull: false) String? headline
+ String correlationKey, String eventType, String eventId, num serialNo, String jmaReportTime, num targetDevices, num enqueuedFcm, num enqueuedApns, num enqueuedBroadcast, num successFcm, num failedFcm, num successApns, num failedApns, String createdAt, String updatedAt,@JsonKey(includeIfNull: false) String? headline,@JsonKey(includeIfNull: false) num? resolverDelayMs
 });
 
 
@@ -304,27 +296,26 @@ class __$Items2CopyWithImpl<$Res>
 
 /// Create a copy of Items2
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventId = null,Object? type = null,Object? title = null,Object? status = null,Object? infoType = null,Object? editorialOffice = null,Object? publishingOffice = null,Object? pressAt = null,Object? reportAt = null,Object? infoKind = null,Object? infoKindVersion = null,Object? hash = null,Object? createdAt = null,Object? serialNo = freezed,Object? targetAt = freezed,Object? revokeAt = freezed,Object? headline = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? correlationKey = null,Object? eventType = null,Object? eventId = null,Object? serialNo = null,Object? jmaReportTime = null,Object? targetDevices = null,Object? enqueuedFcm = null,Object? enqueuedApns = null,Object? enqueuedBroadcast = null,Object? successFcm = null,Object? failedFcm = null,Object? successApns = null,Object? failedApns = null,Object? createdAt = null,Object? updatedAt = null,Object? headline = freezed,Object? resolverDelayMs = freezed,}) {
   return _then(_Items2(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+correlationKey: null == correlationKey ? _self.correlationKey : correlationKey // ignore: cast_nullable_to_non_nullable
+as String,eventType: null == eventType ? _self.eventType : eventType // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as TelegramType,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as TelegramStatus,infoType: null == infoType ? _self.infoType : infoType // ignore: cast_nullable_to_non_nullable
-as InfoType,editorialOffice: null == editorialOffice ? _self.editorialOffice : editorialOffice // ignore: cast_nullable_to_non_nullable
-as String,publishingOffice: null == publishingOffice ? _self._publishingOffice : publishingOffice // ignore: cast_nullable_to_non_nullable
-as List<String>,pressAt: null == pressAt ? _self.pressAt : pressAt // ignore: cast_nullable_to_non_nullable
-as DateTime,reportAt: null == reportAt ? _self.reportAt : reportAt // ignore: cast_nullable_to_non_nullable
-as DateTime,infoKind: null == infoKind ? _self.infoKind : infoKind // ignore: cast_nullable_to_non_nullable
-as String,infoKindVersion: null == infoKindVersion ? _self.infoKindVersion : infoKindVersion // ignore: cast_nullable_to_non_nullable
-as String,hash: null == hash ? _self.hash : hash // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
-as num?,targetAt: freezed == targetAt ? _self.targetAt : targetAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,revokeAt: freezed == revokeAt ? _self.revokeAt : revokeAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,serialNo: null == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as num,jmaReportTime: null == jmaReportTime ? _self.jmaReportTime : jmaReportTime // ignore: cast_nullable_to_non_nullable
+as String,targetDevices: null == targetDevices ? _self.targetDevices : targetDevices // ignore: cast_nullable_to_non_nullable
+as num,enqueuedFcm: null == enqueuedFcm ? _self.enqueuedFcm : enqueuedFcm // ignore: cast_nullable_to_non_nullable
+as num,enqueuedApns: null == enqueuedApns ? _self.enqueuedApns : enqueuedApns // ignore: cast_nullable_to_non_nullable
+as num,enqueuedBroadcast: null == enqueuedBroadcast ? _self.enqueuedBroadcast : enqueuedBroadcast // ignore: cast_nullable_to_non_nullable
+as num,successFcm: null == successFcm ? _self.successFcm : successFcm // ignore: cast_nullable_to_non_nullable
+as num,failedFcm: null == failedFcm ? _self.failedFcm : failedFcm // ignore: cast_nullable_to_non_nullable
+as num,successApns: null == successApns ? _self.successApns : successApns // ignore: cast_nullable_to_non_nullable
+as num,failedApns: null == failedApns ? _self.failedApns : failedApns // ignore: cast_nullable_to_non_nullable
+as num,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
+as String?,resolverDelayMs: freezed == resolverDelayMs ? _self.resolverDelayMs : resolverDelayMs // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 

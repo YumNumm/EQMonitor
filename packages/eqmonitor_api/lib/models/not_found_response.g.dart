@@ -12,7 +12,7 @@ _NotFoundResponse _$NotFoundResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_NotFoundResponse', json, ($checkedConvert) {
       final val = _NotFoundResponse(
         code: $checkedConvert('code', (v) => v),
-        message: $checkedConvert('message', (v) => v),
+        message: $checkedConvert('message', (v) => v as String),
       );
       return val;
     });
