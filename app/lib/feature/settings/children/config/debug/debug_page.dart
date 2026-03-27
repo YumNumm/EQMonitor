@@ -262,7 +262,7 @@ class _AppCheckSection extends ConsumerWidget {
                   .getLimitedUseToken();
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Token: ${token ?? "null"}')),
+                  SnackBar(content: Text('Token: $token')),
                 );
               }
             } on Exception catch (e) {

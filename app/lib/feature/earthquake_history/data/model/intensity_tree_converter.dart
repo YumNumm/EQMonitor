@@ -64,10 +64,16 @@ Map<String, List<api.IntensityStationItem>> _stationsByCityPrefix(
 Map<JmaIntensity, List<RegionIntensityNode>> convertToIntensityTree({
   required api.Intensity intensity,
   required EarthquakeParameter parameter,
+  List<api.IntensityItem>? cities,
+  List<api.IntensityStationItem>? stations,
 }) {
-  final apiCities = intensity.cities;
-  if (apiCities != null && apiCities.isNotEmpty) {
-    return _intensityTreeFromCities(intensity, parameter, apiCities);
+  if (cities != null && cities.isNotEmpty) {
+    return _intensityTreeFromCities(
+      intensity,
+      parameter,
+      cities,
+      stations: stations,
+    );
   }
   return _intensityTreeFromRegions(intensity, parameter);
 }
@@ -75,11 +81,12 @@ Map<JmaIntensity, List<RegionIntensityNode>> convertToIntensityTree({
 Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromCities(
   api.Intensity intensity,
   EarthquakeParameter parameter,
-  List<api.IntensityItem> apiCities,
-) {
+  List<api.IntensityItem> apiCities, {
+  List<api.IntensityStationItem>? stations,
+}) {
   final cityParam = _cityParamMap(parameter);
   final stationParam = _stationParamMap(parameter);
-  final stationsList = intensity.stations ?? const <api.IntensityStationItem>[];
+  final stationsList = stations ?? const <api.IntensityStationItem>[];
   final byPrefix = _stationsByCityPrefix(stationsList);
 
   final grouped = <JmaIntensity, Map<String, List<CityIntensityNode>>>{};
@@ -229,10 +236,16 @@ Map<JmaIntensity, List<RegionIntensityNode>> _finalizeIntensityTree(
 Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> convertToLpgmIntensityTree({
   required api.Intensity intensity,
   required EarthquakeParameter parameter,
+  List<api.IntensityItem>? cities,
+  List<api.IntensityStationItem>? stations,
 }) {
-  final apiCities = intensity.cities;
-  if (apiCities != null && apiCities.isNotEmpty) {
-    return _lpgmTreeFromCities(intensity, parameter, apiCities);
+  if (cities != null && cities.isNotEmpty) {
+    return _lpgmTreeFromCities(
+      intensity,
+      parameter,
+      cities,
+      stations: stations,
+    );
   }
   return _lpgmTreeFromRegions(intensity, parameter);
 }
@@ -240,11 +253,12 @@ Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> convertToLpgmIntensityTree(
 Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> _lpgmTreeFromCities(
   api.Intensity intensity,
   EarthquakeParameter parameter,
-  List<api.IntensityItem> apiCities,
-) {
+  List<api.IntensityItem> apiCities, {
+  List<api.IntensityStationItem>? stations,
+}) {
   final cityParam = _cityParamMap(parameter);
   final stationParam = _stationParamMap(parameter);
-  final stationsList = intensity.stations ?? const <api.IntensityStationItem>[];
+  final stationsList = stations ?? const <api.IntensityStationItem>[];
   final byPrefix = _stationsByCityPrefix(stationsList);
 
   final grouped =
