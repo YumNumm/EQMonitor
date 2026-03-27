@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'tsunami_telegram_header_only_item.dart';
+import 'tsunami_telegram_item.dart';
 
 part 'tsunami_detail.freezed.dart';
 part 'tsunami_detail.g.dart';
@@ -13,10 +13,10 @@ part 'tsunami_detail.g.dart';
 abstract class TsunamiDetail with _$TsunamiDetail {
   const factory TsunamiDetail({
     required String id,
-    @JsonKey(name: 'event_ids') required List<String> eventIds,
-    required List<TsunamiTelegramHeaderOnlyItem> telegrams,
+    @JsonKey(name: 'event_ids')
+    required List<String> eventIds,
+    required List<TsunamiTelegramItem> telegrams,
   }) = _TsunamiDetail;
-
-  factory TsunamiDetail.fromJson(Map<String, Object?> json) =>
-      _$TsunamiDetailFromJson(json);
+  
+  factory TsunamiDetail.fromJson(Map<String, Object?> json) => _$TsunamiDetailFromJson(json);
 }

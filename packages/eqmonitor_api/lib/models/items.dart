@@ -25,9 +25,11 @@ abstract class Items with _$Items {
     required num failedApns,
     required String createdAt,
     required String updatedAt,
-    @JsonKey(includeIfNull: false) String? headline,
-    @JsonKey(includeIfNull: false) num? resolverDelayMs,
+    @JsonKey(includeIfNull: false)
+    String? headline,
+    @JsonKey(includeIfNull: false)
+    num? resolverDelayMs,
   }) = _Items;
-
+  
   factory Items.fromJson(Map<String, Object?> json) => _$ItemsFromJson(json);
 }

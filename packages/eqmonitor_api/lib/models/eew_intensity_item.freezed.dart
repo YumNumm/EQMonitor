@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewIntensityItem {
 
- CodeName get value;@JsonKey(name: 'is_plum') bool get isPlum;@JsonKey(name: 'is_warning') bool get isWarning; EewIntensityValue get intensity;@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? get lpgmIntensity;/// 到達予想時刻。undefinedの場合は、すでに到達済みと推定されます。
-@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;
+ CodeName get value;@JsonKey(name: 'is_plum') bool get isPlum;@JsonKey(name: 'is_warning') bool get isWarning; EewIntensityValue get intensity;@JsonKey(name: 'arrival_time') EewIntensityItemArrivalTimeUnion get arrivalTime;@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? get lpgmIntensity;
 /// Create a copy of EewIntensityItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +28,16 @@ $EewIntensityItemCopyWith<EewIntensityItem> get copyWith => _$EewIntensityItemCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewIntensityItem&&(identical(other.value, value) || other.value == value)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewIntensityItem&&(identical(other.value, value) || other.value == value)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,isPlum,isWarning,intensity,lpgmIntensity,arrivalTime);
+int get hashCode => Object.hash(runtimeType,value,isPlum,isWarning,intensity,arrivalTime,lpgmIntensity);
 
 @override
 String toString() {
-  return 'EewIntensityItem(value: $value, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, lpgmIntensity: $lpgmIntensity, arrivalTime: $arrivalTime)';
+  return 'EewIntensityItem(value: $value, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, arrivalTime: $arrivalTime, lpgmIntensity: $lpgmIntensity)';
 }
 
 
@@ -49,11 +48,11 @@ abstract mixin class $EewIntensityItemCopyWith<$Res>  {
   factory $EewIntensityItemCopyWith(EewIntensityItem value, $Res Function(EewIntensityItem) _then) = _$EewIntensityItemCopyWithImpl;
 @useResult
 $Res call({
- CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime
+ CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(name: 'arrival_time') EewIntensityItemArrivalTimeUnion arrivalTime,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity
 });
 
 
-$CodeNameCopyWith<$Res> get value;$EewIntensityValueCopyWith<$Res> get intensity;$EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
+$CodeNameCopyWith<$Res> get value;$EewIntensityValueCopyWith<$Res> get intensity;$EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime;$EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
 
 }
 /// @nodoc
@@ -66,15 +65,15 @@ class _$EewIntensityItemCopyWithImpl<$Res>
 
 /// Create a copy of EewIntensityItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? lpgmIntensity = freezed,Object? arrivalTime = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? arrivalTime = null,Object? lpgmIntensity = freezed,}) {
   return _then(_self.copyWith(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as CodeName,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullable_to_non_nullable
 as bool,isWarning: null == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
 as bool,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as EewIntensityValue,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as EewIntensityLpgmValue?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as EewIntensityValue,arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as EewIntensityItemArrivalTimeUnion,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as EewIntensityLpgmValue?,
   ));
 }
 /// Create a copy of EewIntensityItem
@@ -94,6 +93,15 @@ $EewIntensityValueCopyWith<$Res> get intensity {
   
   return $EewIntensityValueCopyWith<$Res>(_self.intensity, (value) {
     return _then(_self.copyWith(intensity: value));
+  });
+}/// Create a copy of EewIntensityItem
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime {
+  
+  return $EewIntensityItemArrivalTimeUnionCopyWith<$Res>(_self.arrivalTime, (value) {
+    return _then(_self.copyWith(arrivalTime: value));
   });
 }/// Create a copy of EewIntensityItem
 /// with the given fields replaced by the non-null parameter values.
@@ -189,10 +197,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityItemArrivalTimeUnion arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewIntensityItem() when $default != null:
-return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.lpgmIntensity,_that.arrivalTime);case _:
+return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.arrivalTime,_that.lpgmIntensity);case _:
   return orElse();
 
 }
@@ -210,10 +218,10 @@ return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityItemArrivalTimeUnion arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityItem():
-return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.lpgmIntensity,_that.arrivalTime);case _:
+return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.arrivalTime,_that.lpgmIntensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -230,10 +238,10 @@ return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityItemArrivalTimeUnion arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityItem() when $default != null:
-return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.lpgmIntensity,_that.arrivalTime);case _:
+return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.arrivalTime,_that.lpgmIntensity);case _:
   return null;
 
 }
@@ -245,16 +253,15 @@ return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.l
 @JsonSerializable()
 
 class _EewIntensityItem implements EewIntensityItem {
-  const _EewIntensityItem({required this.value, @JsonKey(name: 'is_plum') required this.isPlum, @JsonKey(name: 'is_warning') required this.isWarning, required this.intensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity') this.lpgmIntensity, @JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime});
+  const _EewIntensityItem({required this.value, @JsonKey(name: 'is_plum') required this.isPlum, @JsonKey(name: 'is_warning') required this.isWarning, required this.intensity, @JsonKey(name: 'arrival_time') required this.arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity') this.lpgmIntensity});
   factory _EewIntensityItem.fromJson(Map<String, dynamic> json) => _$EewIntensityItemFromJson(json);
 
 @override final  CodeName value;
 @override@JsonKey(name: 'is_plum') final  bool isPlum;
 @override@JsonKey(name: 'is_warning') final  bool isWarning;
 @override final  EewIntensityValue intensity;
+@override@JsonKey(name: 'arrival_time') final  EewIntensityItemArrivalTimeUnion arrivalTime;
 @override@JsonKey(includeIfNull: false, name: 'lpgm_intensity') final  EewIntensityLpgmValue? lpgmIntensity;
-/// 到達予想時刻。undefinedの場合は、すでに到達済みと推定されます。
-@override@JsonKey(includeIfNull: false, name: 'arrival_time') final  DateTime? arrivalTime;
 
 /// Create a copy of EewIntensityItem
 /// with the given fields replaced by the non-null parameter values.
@@ -269,16 +276,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewIntensityItem&&(identical(other.value, value) || other.value == value)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewIntensityItem&&(identical(other.value, value) || other.value == value)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,isPlum,isWarning,intensity,lpgmIntensity,arrivalTime);
+int get hashCode => Object.hash(runtimeType,value,isPlum,isWarning,intensity,arrivalTime,lpgmIntensity);
 
 @override
 String toString() {
-  return 'EewIntensityItem(value: $value, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, lpgmIntensity: $lpgmIntensity, arrivalTime: $arrivalTime)';
+  return 'EewIntensityItem(value: $value, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, arrivalTime: $arrivalTime, lpgmIntensity: $lpgmIntensity)';
 }
 
 
@@ -289,11 +296,11 @@ abstract mixin class _$EewIntensityItemCopyWith<$Res> implements $EewIntensityIt
   factory _$EewIntensityItemCopyWith(_EewIntensityItem value, $Res Function(_EewIntensityItem) _then) = __$EewIntensityItemCopyWithImpl;
 @override @useResult
 $Res call({
- CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime
+ CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(name: 'arrival_time') EewIntensityItemArrivalTimeUnion arrivalTime,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity
 });
 
 
-@override $CodeNameCopyWith<$Res> get value;@override $EewIntensityValueCopyWith<$Res> get intensity;@override $EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
+@override $CodeNameCopyWith<$Res> get value;@override $EewIntensityValueCopyWith<$Res> get intensity;@override $EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime;@override $EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
 
 }
 /// @nodoc
@@ -306,15 +313,15 @@ class __$EewIntensityItemCopyWithImpl<$Res>
 
 /// Create a copy of EewIntensityItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? lpgmIntensity = freezed,Object? arrivalTime = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? arrivalTime = null,Object? lpgmIntensity = freezed,}) {
   return _then(_EewIntensityItem(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as CodeName,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullable_to_non_nullable
 as bool,isWarning: null == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
 as bool,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as EewIntensityValue,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-as EewIntensityLpgmValue?,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as EewIntensityValue,arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as EewIntensityItemArrivalTimeUnion,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as EewIntensityLpgmValue?,
   ));
 }
 
@@ -335,6 +342,15 @@ $EewIntensityValueCopyWith<$Res> get intensity {
   
   return $EewIntensityValueCopyWith<$Res>(_self.intensity, (value) {
     return _then(_self.copyWith(intensity: value));
+  });
+}/// Create a copy of EewIntensityItem
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime {
+  
+  return $EewIntensityItemArrivalTimeUnionCopyWith<$Res>(_self.arrivalTime, (value) {
+    return _then(_self.copyWith(arrivalTime: value));
   });
 }/// Create a copy of EewIntensityItem
 /// with the given fields replaced by the non-null parameter values.

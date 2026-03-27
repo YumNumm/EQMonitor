@@ -16,8 +16,9 @@ abstract class Depth with _$Depth {
     required DepthType type,
 
     /// typeがNORMALのときのみ出現する
-    @JsonKey(includeIfNull: false) num? value,
+    @JsonKey(includeIfNull: false)
+    num? value,
   }) = _Depth;
-
+  
   factory Depth.fromJson(Map<String, Object?> json) => _$DepthFromJson(json);
 }

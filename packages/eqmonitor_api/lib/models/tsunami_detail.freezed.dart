@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TsunamiDetail {
 
- String get id;@JsonKey(name: 'event_ids') List<String> get eventIds; List<TsunamiTelegramHeaderOnlyItem> get telegrams;
+ String get id;@JsonKey(name: 'event_ids') List<String> get eventIds; List<TsunamiTelegramItem> get telegrams;
 /// Create a copy of TsunamiDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TsunamiDetailCopyWith<$Res>  {
   factory $TsunamiDetailCopyWith(TsunamiDetail value, $Res Function(TsunamiDetail) _then) = _$TsunamiDetailCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'event_ids') List<String> eventIds, List<TsunamiTelegramHeaderOnlyItem> telegrams
+ String id,@JsonKey(name: 'event_ids') List<String> eventIds, List<TsunamiTelegramItem> telegrams
 });
 
 
@@ -70,7 +70,7 @@ class _$TsunamiDetailCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventIds: null == eventIds ? _self.eventIds : eventIds // ignore: cast_nullable_to_non_nullable
 as List<String>,telegrams: null == telegrams ? _self.telegrams : telegrams // ignore: cast_nullable_to_non_nullable
-as List<TsunamiTelegramHeaderOnlyItem>,
+as List<TsunamiTelegramItem>,
   ));
 }
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds,  List<TsunamiTelegramHeaderOnlyItem> telegrams)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds,  List<TsunamiTelegramItem> telegrams)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TsunamiDetail() when $default != null:
 return $default(_that.id,_that.eventIds,_that.telegrams);case _:
@@ -176,7 +176,7 @@ return $default(_that.id,_that.eventIds,_that.telegrams);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds,  List<TsunamiTelegramHeaderOnlyItem> telegrams)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds,  List<TsunamiTelegramItem> telegrams)  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiDetail():
 return $default(_that.id,_that.eventIds,_that.telegrams);case _:
@@ -196,7 +196,7 @@ return $default(_that.id,_that.eventIds,_that.telegrams);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds,  List<TsunamiTelegramHeaderOnlyItem> telegrams)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_ids')  List<String> eventIds,  List<TsunamiTelegramItem> telegrams)?  $default,) {final _that = this;
 switch (_that) {
 case _TsunamiDetail() when $default != null:
 return $default(_that.id,_that.eventIds,_that.telegrams);case _:
@@ -211,7 +211,7 @@ return $default(_that.id,_that.eventIds,_that.telegrams);case _:
 @JsonSerializable()
 
 class _TsunamiDetail implements TsunamiDetail {
-  const _TsunamiDetail({required this.id, @JsonKey(name: 'event_ids') required final  List<String> eventIds, required final  List<TsunamiTelegramHeaderOnlyItem> telegrams}): _eventIds = eventIds,_telegrams = telegrams;
+  const _TsunamiDetail({required this.id, @JsonKey(name: 'event_ids') required final  List<String> eventIds, required final  List<TsunamiTelegramItem> telegrams}): _eventIds = eventIds,_telegrams = telegrams;
   factory _TsunamiDetail.fromJson(Map<String, dynamic> json) => _$TsunamiDetailFromJson(json);
 
 @override final  String id;
@@ -222,8 +222,8 @@ class _TsunamiDetail implements TsunamiDetail {
   return EqualUnmodifiableListView(_eventIds);
 }
 
- final  List<TsunamiTelegramHeaderOnlyItem> _telegrams;
-@override List<TsunamiTelegramHeaderOnlyItem> get telegrams {
+ final  List<TsunamiTelegramItem> _telegrams;
+@override List<TsunamiTelegramItem> get telegrams {
   if (_telegrams is EqualUnmodifiableListView) return _telegrams;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_telegrams);
@@ -263,7 +263,7 @@ abstract mixin class _$TsunamiDetailCopyWith<$Res> implements $TsunamiDetailCopy
   factory _$TsunamiDetailCopyWith(_TsunamiDetail value, $Res Function(_TsunamiDetail) _then) = __$TsunamiDetailCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'event_ids') List<String> eventIds, List<TsunamiTelegramHeaderOnlyItem> telegrams
+ String id,@JsonKey(name: 'event_ids') List<String> eventIds, List<TsunamiTelegramItem> telegrams
 });
 
 
@@ -285,7 +285,7 @@ class __$TsunamiDetailCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventIds: null == eventIds ? _self._eventIds : eventIds // ignore: cast_nullable_to_non_nullable
 as List<String>,telegrams: null == telegrams ? _self._telegrams : telegrams // ignore: cast_nullable_to_non_nullable
-as List<TsunamiTelegramHeaderOnlyItem>,
+as List<TsunamiTelegramItem>,
   ));
 }
 

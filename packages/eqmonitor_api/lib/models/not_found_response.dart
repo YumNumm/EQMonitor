@@ -11,9 +11,8 @@ part 'not_found_response.g.dart';
 abstract class NotFoundResponse with _$NotFoundResponse {
   const factory NotFoundResponse({
     required dynamic code,
-    required dynamic message,
+    required String message,
   }) = _NotFoundResponse;
-
-  factory NotFoundResponse.fromJson(Map<String, Object?> json) =>
-      _$NotFoundResponseFromJson(json);
+  
+  factory NotFoundResponse.fromJson(Map<String, Object?> json) => _$NotFoundResponseFromJson(json);
 }

@@ -55,6 +55,108 @@
     }
   ],
   "paths": {
+    "/v2/admin/dispatches": {
+      "get": {
+        "operationId": "getV2AdminDispatches",
+        "tags": [
+          "Admin"
+        ],
+        "description": "配信サマリー一覧",
+        "responses": {
+          "200": {
+            "description": "配信サマリー一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDispatchSummaryListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/admin/dispatches/{correlationKey}": {
+      "get": {
+        "operationId": "getV2AdminDispatchesByCorrelationKey",
+        "tags": [
+          "Admin"
+        ],
+        "description": "配信サマリー詳細",
+        "responses": {
+          "200": {
+            "description": "配信サマリー詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDispatchSummaryDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "correlationKey",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/device/{deviceId}": {
       "put": {
         "operationId": "putV2DeviceByDeviceId",
@@ -2013,10 +2115,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -2224,10 +2333,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -2379,10 +2495,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -2534,10 +2657,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -2689,10 +2819,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -2844,10 +2981,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -3211,10 +3355,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -3286,10 +3437,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -3361,10 +3519,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -3518,10 +3683,17 @@
             "in": "query",
             "name": "statuses",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/TelegramStatus"
-              },
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
               "default": [
                 "NORMAL"
               ]
@@ -3965,6 +4137,244 @@
   },
   "components": {
     "schemas": {
+      "AdminDispatchSummaryListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "correlationKey": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                },
+                "eventId": {
+                  "type": "string"
+                },
+                "serialNo": {
+                  "type": "number"
+                },
+                "jmaReportTime": {
+                  "type": "string"
+                },
+                "headline": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "targetDevices": {
+                  "type": "number"
+                },
+                "enqueuedFcm": {
+                  "type": "number"
+                },
+                "enqueuedApns": {
+                  "type": "number"
+                },
+                "enqueuedBroadcast": {
+                  "type": "number"
+                },
+                "successFcm": {
+                  "type": "number"
+                },
+                "failedFcm": {
+                  "type": "number"
+                },
+                "successApns": {
+                  "type": "number"
+                },
+                "failedApns": {
+                  "type": "number"
+                },
+                "resolverDelayMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "correlationKey",
+                "eventType",
+                "eventId",
+                "serialNo",
+                "jmaReportTime",
+                "targetDevices",
+                "enqueuedFcm",
+                "enqueuedApns",
+                "enqueuedBroadcast",
+                "successFcm",
+                "failedFcm",
+                "successApns",
+                "failedApns",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "UNAUTHORIZED"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ForbiddenResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "FORBIDDEN"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "AdminDispatchSummaryDetailResponse": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "object",
+            "properties": {
+              "correlationKey": {
+                "type": "string"
+              },
+              "eventType": {
+                "type": "string"
+              },
+              "eventId": {
+                "type": "string"
+              },
+              "serialNo": {
+                "type": "number"
+              },
+              "jmaReportTime": {
+                "type": "string"
+              },
+              "headline": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "targetDevices": {
+                "type": "number"
+              },
+              "enqueuedFcm": {
+                "type": "number"
+              },
+              "enqueuedApns": {
+                "type": "number"
+              },
+              "enqueuedBroadcast": {
+                "type": "number"
+              },
+              "successFcm": {
+                "type": "number"
+              },
+              "failedFcm": {
+                "type": "number"
+              },
+              "successApns": {
+                "type": "number"
+              },
+              "failedApns": {
+                "type": "number"
+              },
+              "resolverDelayMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "correlationKey",
+              "eventType",
+              "eventId",
+              "serialNo",
+              "jmaReportTime",
+              "targetDevices",
+              "enqueuedFcm",
+              "enqueuedApns",
+              "enqueuedBroadcast",
+              "successFcm",
+              "failedFcm",
+              "successApns",
+              "failedApns",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "item"
+        ]
+      },
+      "NotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "NOT_FOUND"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
       "DeviceResponse": {
         "type": "object",
         "properties": {
@@ -4688,36 +5098,6 @@
           "items"
         ]
       },
-      "UnauthorizedResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "UNAUTHORIZED"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ]
-      },
-      "NotFoundResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "NOT_FOUND"
-          },
-          "message": {
-            "const": "Not Found"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ]
-      },
       "ServiceUnavailableResponse": {
         "type": "object",
         "properties": {
@@ -4829,21 +5209,6 @@
         },
         "required": [
           "items"
-        ]
-      },
-      "ForbiddenResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "FORBIDDEN"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
         ]
       },
       "DispatchSummaryDetailResponse": {
@@ -6064,6 +6429,33 @@
         ],
         "description": "予想長周期地震動階級の値"
       },
+      "EewIntensityRegionArrivalTimeTime": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "TIME"
+          },
+          "value": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "type",
+          "value"
+        ]
+      },
+      "EewIntensityRegionArrivalTimeArrived": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "ARRIVED"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
       "EewIntensityItem": {
         "type": "object",
         "properties": {
@@ -6083,16 +6475,22 @@
             "$ref": "#/components/schemas/EewIntensityLpgmValue"
           },
           "arrival_time": {
-            "type": "string",
-            "format": "date-time",
-            "description": "到達予想時刻。undefinedの場合は、すでに到達済みと推定されます。"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeTime"
+              },
+              {
+                "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeArrived"
+              }
+            ]
           }
         },
         "required": [
           "value",
           "is_plum",
           "is_warning",
-          "intensity"
+          "intensity",
+          "arrival_time"
         ]
       },
       "EewIntensity": {
@@ -6591,6 +6989,16 @@
           "comments"
         ]
       },
+      "TsunamiWarningKind": {
+        "enum": [
+          "MAJOR_WARNING",
+          "WARNING",
+          "ADVISORY",
+          "FORECAST",
+          "NONE"
+        ],
+        "type": "string"
+      },
       "TsunamiListItem": {
         "type": "object",
         "properties": {
@@ -6603,11 +7011,106 @@
             "items": {
               "type": "string"
             }
+          },
+          "headline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest_created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest_press_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_canceled": {
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "NORMAL",
+              "TRAINING",
+              "TEST"
+            ],
+            "type": "string"
+          },
+          "max_forecast_grade": {
+            "$ref": "#/components/schemas/TsunamiWarningKind"
+          },
+          "forecast_region_count": {
+            "type": "number"
+          },
+          "telegram_count": {
+            "type": "number"
+          },
+          "telegram_types": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "VTSE41",
+                "VTSE51",
+                "VTSE52"
+              ],
+              "type": "string"
+            }
+          },
+          "earthquake_hypocenter_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "earthquake_origin_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "earthquake_magnitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
           "id",
-          "event_ids"
+          "event_ids",
+          "is_canceled",
+          "forecast_region_count",
+          "telegram_count",
+          "telegram_types"
         ]
       },
       "TsunamiListResponse": {
@@ -6734,15 +7237,444 @@
           "created_at"
         ]
       },
-      "TsunamiTelegramHeaderOnlyItem": {
+      "FirstHeightCondition": {
+        "enum": [
+          "ARRIVING",
+          "FIRST_WAVE_CONFIRMED",
+          "IMMINENT"
+        ],
+        "type": "string"
+      },
+      "TsunamiForecastFirstHeight": {
+        "type": "object",
+        "properties": {
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "condition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FirstHeightCondition"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "QualitativeHeight": {
+        "enum": [
+          "ENORMOUS",
+          "HIGH"
+        ],
+        "type": "string"
+      },
+      "TsunamiForecastMaxHeight": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "nullable": true
+          },
+          "over": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "qualitative": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
+          },
+          "is_important": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "TsunamiForecastStation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "high_tide_date_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiForecastFirstHeight"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "high_tide_date_time"
+        ]
+      },
+      "TsunamiForecast": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TsunamiWarningKind"
+          },
+          "last_kind": {
+            "$ref": "#/components/schemas/TsunamiWarningKind"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiForecastFirstHeight"
+          },
+          "max_height": {
+            "$ref": "#/components/schemas/TsunamiForecastMaxHeight"
+          },
+          "stations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiForecastStation"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "kind",
+          "last_kind"
+        ]
+      },
+      "WaveInitial": {
+        "enum": [
+          "PUSH",
+          "PULL"
+        ],
+        "type": "string"
+      },
+      "TsunamiObservationStationFirstHeight": {
+        "type": "object",
+        "properties": {
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "initial": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaveInitial"
+              }
+            ],
+            "nullable": true
+          },
+          "is_unidentifiable": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "is_missing": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "ObservationMaxHeightCondition": {
+        "enum": [
+          "MINOR",
+          "OBSERVING",
+          "IMPORTANT"
+        ],
+        "type": "string"
+      },
+      "TsunamiObservationStationMaxHeight": {
+        "type": "object",
+        "properties": {
+          "date_time": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "value": {
+            "type": "number",
+            "nullable": true
+          },
+          "over": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "is_rising": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "condition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+              }
+            ],
+            "nullable": true
+          },
+          "is_missing": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "TsunamiObservationStation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sensor": {
+            "type": "string"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiObservationStationFirstHeight"
+          },
+          "max_height": {
+            "$ref": "#/components/schemas/TsunamiObservationStationMaxHeight"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "first_height"
+        ]
+      },
+      "TsunamiObservation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiObservationStation"
+            }
+          }
+        },
+        "required": [
+          "stations"
+        ]
+      },
+      "TsunamiEstimationFirstHeight": {
+        "type": "object",
+        "properties": {
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_already_arrived": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "is_already_arrived"
+        ]
+      },
+      "TsunamiEstimationMaxHeight": {
+        "type": "object",
+        "properties": {
+          "date_time": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "value": {
+            "type": "number",
+            "nullable": true
+          },
+          "over": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "qualitative": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
+          },
+          "is_observing": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "TsunamiEstimation": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "first_height": {
+            "$ref": "#/components/schemas/TsunamiEstimationFirstHeight"
+          },
+          "max_height": {
+            "$ref": "#/components/schemas/TsunamiEstimationMaxHeight"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "first_height",
+          "max_height"
+        ]
+      },
+      "TsunamiEarthquake": {
+        "type": "object",
+        "properties": {
+          "origin_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "arrival_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "hypocenter": {
+            "$ref": "#/components/schemas/Hypocenter"
+          }
+        },
+        "required": [
+          "origin_time",
+          "hypocenter"
+        ]
+      },
+      "TsunamiComments": {
+        "type": "object",
+        "properties": {
+          "free": {
+            "type": "string",
+            "nullable": true
+          },
+          "warning": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "codes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "text",
+              "codes"
+            ],
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "TsunamiTelegramBody": {
+        "type": "object",
+        "properties": {
+          "forecasts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiForecast"
+            },
+            "nullable": true
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiObservation"
+            },
+            "nullable": true
+          },
+          "estimations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiEstimation"
+            },
+            "nullable": true
+          },
+          "earthquakes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiEarthquake"
+            },
+            "nullable": true
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "nullable": true
+          },
+          "comments": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TsunamiComments"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "TsunamiTelegramItem": {
         "type": "object",
         "properties": {
           "telegram": {
             "$ref": "#/components/schemas/TsunamiTelegramHeader"
+          },
+          "body": {
+            "$ref": "#/components/schemas/TsunamiTelegramBody"
           }
         },
         "required": [
-          "telegram"
+          "telegram",
+          "body"
         ]
       },
       "TsunamiDetail": {
@@ -6761,7 +7693,7 @@
           "telegrams": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TsunamiTelegramHeaderOnlyItem"
+              "$ref": "#/components/schemas/TsunamiTelegramItem"
             }
           }
         },
