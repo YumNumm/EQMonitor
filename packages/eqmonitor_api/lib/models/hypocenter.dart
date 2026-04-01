@@ -13,9 +13,9 @@ abstract class Hypocenter with _$Hypocenter {
     required num latitude,
     required num longitude,
     required num depth,
-    @JsonKey(includeIfNull: false)
-    String? name,
+    @JsonKey(includeIfNull: false) String? name,
   }) = _Hypocenter;
-  
-  factory Hypocenter.fromJson(Map<String, Object?> json) => _$HypocenterFromJson(json);
+
+  factory Hypocenter.fromJson(Map<String, Object?> json) =>
+      _$HypocenterFromJson(json);
 }

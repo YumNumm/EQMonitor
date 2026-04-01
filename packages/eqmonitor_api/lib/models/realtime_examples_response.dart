@@ -9,9 +9,9 @@ part 'realtime_examples_response.g.dart';
 
 @Freezed()
 abstract class RealtimeExamplesResponse with _$RealtimeExamplesResponse {
-  const factory RealtimeExamplesResponse({
-    required List<dynamic> examples,
-  }) = _RealtimeExamplesResponse;
-  
-  factory RealtimeExamplesResponse.fromJson(Map<String, Object?> json) => _$RealtimeExamplesResponseFromJson(json);
+  const factory RealtimeExamplesResponse({required List<dynamic> examples}) =
+      _RealtimeExamplesResponse;
+
+  factory RealtimeExamplesResponse.fromJson(Map<String, Object?> json) =>
+      _$RealtimeExamplesResponseFromJson(json);
 }

@@ -9,10 +9,9 @@ part 'bottom_right.g.dart';
 
 @Freezed()
 abstract class BottomRight with _$BottomRight {
-  const factory BottomRight({
-    required num latitude,
-    required num longitude,
-  }) = _BottomRight;
-  
-  factory BottomRight.fromJson(Map<String, Object?> json) => _$BottomRightFromJson(json);
+  const factory BottomRight({required num latitude, required num longitude}) =
+      _BottomRight;
+
+  factory BottomRight.fromJson(Map<String, Object?> json) =>
+      _$BottomRightFromJson(json);
 }

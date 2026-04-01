@@ -10,10 +10,12 @@ part 'admin_dispatch_summary_detail_response.freezed.dart';
 part 'admin_dispatch_summary_detail_response.g.dart';
 
 @Freezed()
-abstract class AdminDispatchSummaryDetailResponse with _$AdminDispatchSummaryDetailResponse {
-  const factory AdminDispatchSummaryDetailResponse({
-    required Item item,
-  }) = _AdminDispatchSummaryDetailResponse;
-  
-  factory AdminDispatchSummaryDetailResponse.fromJson(Map<String, Object?> json) => _$AdminDispatchSummaryDetailResponseFromJson(json);
+abstract class AdminDispatchSummaryDetailResponse
+    with _$AdminDispatchSummaryDetailResponse {
+  const factory AdminDispatchSummaryDetailResponse({required Item item}) =
+      _AdminDispatchSummaryDetailResponse;
+
+  factory AdminDispatchSummaryDetailResponse.fromJson(
+    Map<String, Object?> json,
+  ) => _$AdminDispatchSummaryDetailResponseFromJson(json);
 }

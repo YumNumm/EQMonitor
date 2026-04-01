@@ -16,6 +16,6 @@ abstract class Region with _$Region {
     required TopLeft topLeft,
     required BottomRight bottomRight,
   }) = _Region;
-  
+
   factory Region.fromJson(Map<String, Object?> json) => _$RegionFromJson(json);
 }

@@ -7,8 +7,9 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/telegram_detail_response.dart';
 import '../models/telegram_list_response.dart';
-import '../models/telegram_status.dart';
 import '../models/telegram_type.dart';
+
+import '../models/telegram_status.dart';
 
 part 'telegram_api_client.g.dart';
 
@@ -21,7 +22,8 @@ abstract class TelegramApiClient {
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
   @GET(TelegramApiClientUrls.getV2Telegram)
   Future<HttpResponse<TelegramListResponse>> getV2Telegram({
-    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
+    @Query('statuses')
+    List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });
@@ -32,7 +34,8 @@ abstract class TelegramApiClient {
   @GET(TelegramApiClientUrls.getV2TelegramTypeType)
   Future<HttpResponse<TelegramListResponse>> getV2TelegramTypeType({
     @Path('type') required TelegramType type,
-    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
+    @Query('statuses')
+    List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });
@@ -43,7 +46,8 @@ abstract class TelegramApiClient {
   @GET(TelegramApiClientUrls.getV2TelegramEventIdEventId)
   Future<HttpResponse<TelegramListResponse>> getV2TelegramEventIdEventId({
     @Path('eventId') required String eventId,
-    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
+    @Query('statuses')
+    List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });
@@ -54,15 +58,16 @@ abstract class TelegramApiClient {
   });
 }
 
-
 abstract class TelegramApiClientUrls {
-	/// /v2/telegram
-	static const getV2Telegram = "/v2/telegram";
-	/// /v2/telegram/type/{type}
-	static const getV2TelegramTypeType = "/v2/telegram/type/{type}";
-	/// /v2/telegram/eventId/{eventId}
-	static const getV2TelegramEventIdEventId = "/v2/telegram/eventId/{eventId}";
-	/// /v2/telegram/{id}
-	static const getV2TelegramId = "/v2/telegram/{id}";
-}
+  /// /v2/telegram
+  static const getV2Telegram = "/v2/telegram";
 
+  /// /v2/telegram/type/{type}
+  static const getV2TelegramTypeType = "/v2/telegram/type/{type}";
+
+  /// /v2/telegram/eventId/{eventId}
+  static const getV2TelegramEventIdEventId = "/v2/telegram/eventId/{eventId}";
+
+  /// /v2/telegram/{id}
+  static const getV2TelegramId = "/v2/telegram/{id}";
+}

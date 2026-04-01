@@ -24,6 +24,6 @@ abstract class Shakes with _$Shakes {
     required Region region,
     required List<Points> points,
   }) = _Shakes;
-  
+
   factory Shakes.fromJson(Map<String, Object?> json) => _$ShakesFromJson(json);
 }

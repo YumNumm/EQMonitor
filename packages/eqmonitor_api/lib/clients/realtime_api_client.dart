@@ -27,13 +27,13 @@ abstract class RealtimeApiClient {
   Future<HttpResponse<RealtimeExamplesResponse>> getV2RealtimeExamples();
 }
 
-
 abstract class RealtimeApiClientUrls {
-	/// /v2/realtime/state
-	static const getV2RealtimeState = "/v2/realtime/state";
-	/// /v2/realtime/stream
-	static const getV2RealtimeStream = "/v2/realtime/stream";
-	/// /v2/realtime/examples
-	static const getV2RealtimeExamples = "/v2/realtime/examples";
-}
+  /// /v2/realtime/state
+  static const getV2RealtimeState = "/v2/realtime/state";
 
+  /// /v2/realtime/stream
+  static const getV2RealtimeStream = "/v2/realtime/stream";
+
+  /// /v2/realtime/examples
+  static const getV2RealtimeExamples = "/v2/realtime/examples";
+}

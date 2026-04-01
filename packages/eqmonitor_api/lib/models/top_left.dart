@@ -9,10 +9,9 @@ part 'top_left.g.dart';
 
 @Freezed()
 abstract class TopLeft with _$TopLeft {
-  const factory TopLeft({
-    required num latitude,
-    required num longitude,
-  }) = _TopLeft;
-  
-  factory TopLeft.fromJson(Map<String, Object?> json) => _$TopLeftFromJson(json);
+  const factory TopLeft({required num latitude, required num longitude}) =
+      _TopLeft;
+
+  factory TopLeft.fromJson(Map<String, Object?> json) =>
+      _$TopLeftFromJson(json);
 }
