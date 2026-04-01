@@ -30,7 +30,7 @@ final class CustomProviderObserver extends ProviderObserver {
   ) => switch (context.provider.name) {
     'timeTickerProvider' ||
     'eewAliveTelegramProvider' ||
-    'kyoshinMonitorPointsProvider' => null,
+    'kyoshinMonitorObservationGeoJsonProvider' => null,
     _
         when context.provider.name?.contains('LayerControllerProvider') ??
             false =>
@@ -50,7 +50,7 @@ final class CustomProviderObserver extends ProviderObserver {
     'kyoshinMonitorTimerStreamProvider' ||
     'kyoshinMonitorTimerProvider' ||
     'kyoshinMonitorProvider' ||
-    'kyoshinMonitorPointsProvider' => null,
+    'kyoshinMonitorObservationGeoJsonProvider' => null,
     _
         when context.provider.name?.contains('LayerControllerProvider') ??
             false =>

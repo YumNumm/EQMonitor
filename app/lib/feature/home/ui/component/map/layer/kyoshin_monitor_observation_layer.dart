@@ -19,7 +19,9 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = MapController.of(context);
     final styleController = controller.style;
-    final points = ref.watch(kyoshinMonitorPointsProvider);
+    final observationGeoJson = ref.watch(
+      kyoshinMonitorObservationGeoJsonProvider,
+    );
     final useKmoni = ref.watch(
       kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni),
     );
@@ -58,11 +60,11 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(_updatePoints(styleController, points));
+        unawaited(_updatePoints(styleController, observationGeoJson));
 
         return null;
       },
-      [styleController, points, useKmoni],
+      [styleController, observationGeoJson, useKmoni],
     );
 
     return const SizedBox.shrink();
@@ -111,32 +113,9 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
 
   Future<void> _updatePoints(
     StyleController style,
-    List<Feature<Point>> points,
+    String geoJson,
   ) async {
-    final features = points
-        .map((p) {
-          final coords = p.geometry?.position;
-          if (coords == null) {
-            return null;
-          }
-          return {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'Point',
-              'coordinates': [coords.x, coords.y],
-            },
-            'properties': p.properties,
-          };
-        })
-        .whereType<Map<String, dynamic>>()
-        .toList();
-
-    final geojson = jsonEncode({
-      'type': 'FeatureCollection',
-      'features': features,
-    });
-
-    await style.updateGeoJsonSource(id: _sourceId, data: geojson);
+    await style.updateGeoJsonSource(id: _sourceId, data: geoJson);
   }
 
   Future<void> _cleanupLayer(StyleController style) async {
