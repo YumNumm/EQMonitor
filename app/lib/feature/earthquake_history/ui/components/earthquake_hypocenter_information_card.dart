@@ -7,7 +7,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
   const EarthquakeHypocenterInformationCard({required this.item, super.key});
 
-  final EarthquakePartial item;
+  final Earthquake item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,7 +57,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
                     item: item,
                     hypocenter: hypocenter,
                     hasIntensityDetails:
-                        item.intensity?.intensityTree.isNotEmpty ?? false,
+                        item.intensity?.regions.isNotEmpty ?? false,
                   ),
                 ),
               ],
@@ -98,7 +98,7 @@ class _EarthquakeInformationBody extends StatelessWidget {
     required this.hasIntensityDetails,
   });
 
-  final EarthquakePartial item;
+  final Earthquake item;
   final EarthquakeHypocenter? hypocenter;
   final bool hasIntensityDetails;
 
