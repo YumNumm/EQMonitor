@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,10 +60,25 @@ void main() {
   testWidgets('クリップボードへエクスポートで完了メッセージを表示', (tester) async {
     await pumpPage(tester);
 
+    final messenger = TestDefaultBinaryMessengerBinding.instance;
+    messenger.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (MethodCall call) async {
+        if (call.method == 'Clipboard.setData') {
+          return null;
+        }
+        return null;
+      },
+    );
+    addTearDown(() {
+      messenger.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null);
+    });
+
     final exportButton = find.text('クリップボードへエクスポート');
     await tester.ensureVisible(exportButton);
     await tester.tap(exportButton);
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
 
     expect(find.text('JSONをクリップボードにコピーしました'), findsOneWidget);
   });
