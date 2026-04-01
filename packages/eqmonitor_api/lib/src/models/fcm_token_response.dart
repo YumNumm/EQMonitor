@@ -12,6 +12,7 @@ abstract class FcmTokenResponse with _$FcmTokenResponse {
   const factory FcmTokenResponse({
     required String token,
   }) = _FcmTokenResponse;
-  
-  factory FcmTokenResponse.fromJson(Map<String, Object?> json) => _$FcmTokenResponseFromJson(json);
+
+  factory FcmTokenResponse.fromJson(Map<String, Object?> json) =>
+      _$FcmTokenResponseFromJson(json);
 }

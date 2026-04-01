@@ -15,6 +15,7 @@ abstract class RegionPayload with _$RegionPayload {
     required LocationPayload topLeft,
     required LocationPayload bottomRight,
   }) = _RegionPayload;
-  
-  factory RegionPayload.fromJson(Map<String, Object?> json) => _$RegionPayloadFromJson(json);
+
+  factory RegionPayload.fromJson(Map<String, Object?> json) =>
+      _$RegionPayloadFromJson(json);
 }

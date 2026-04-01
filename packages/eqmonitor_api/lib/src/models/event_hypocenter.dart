@@ -13,9 +13,9 @@ abstract class EventHypocenter with _$EventHypocenter {
     required num latitude,
     required num longitude,
     required num depth,
-    @JsonKey(includeIfNull: false)
-    String? name,
+    @JsonKey(includeIfNull: false) String? name,
   }) = _EventHypocenter;
-  
-  factory EventHypocenter.fromJson(Map<String, Object?> json) => _$EventHypocenterFromJson(json);
+
+  factory EventHypocenter.fromJson(Map<String, Object?> json) =>
+      _$EventHypocenterFromJson(json);
 }

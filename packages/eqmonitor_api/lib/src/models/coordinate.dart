@@ -16,17 +16,15 @@ abstract class Coordinate with _$Coordinate {
     required CoordinateType type,
 
     /// 緯度(typeがLAT_LNGのときのみ出現する)
-    @JsonKey(includeIfNull: false)
-    num? latitude,
+    @JsonKey(includeIfNull: false) num? latitude,
 
     /// 経度(typeがLAT_LNGのときのみ出現する)
-    @JsonKey(includeIfNull: false)
-    num? longitude,
+    @JsonKey(includeIfNull: false) num? longitude,
 
     /// 不明の場合のみ出現する
-    @JsonKey(includeIfNull: false)
-    String? condition,
+    @JsonKey(includeIfNull: false) String? condition,
   }) = _Coordinate;
-  
-  factory Coordinate.fromJson(Map<String, Object?> json) => _$CoordinateFromJson(json);
+
+  factory Coordinate.fromJson(Map<String, Object?> json) =>
+      _$CoordinateFromJson(json);
 }

@@ -22,11 +22,12 @@ abstract class IntensityStationItem with _$IntensityStationItem {
 
     /// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
     required List<PrePeriods> prePeriods,
-    @JsonKey(includeIfNull: false,name: 'max_intensity')
+    @JsonKey(includeIfNull: false, name: 'max_intensity')
     JmaIntensity? maxIntensity,
-    @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
+    @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')
     JmaLpgmIntensity? maxLpgmIntensity,
   }) = _IntensityStationItem;
-  
-  factory IntensityStationItem.fromJson(Map<String, Object?> json) => _$IntensityStationItemFromJson(json);
+
+  factory IntensityStationItem.fromJson(Map<String, Object?> json) =>
+      _$IntensityStationItemFromJson(json);
 }

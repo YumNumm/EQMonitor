@@ -55,15 +55,16 @@ abstract class TelegramApiClient {
   });
 }
 
-
 abstract class TelegramApiClientUrls {
-	/// /v2/telegram
-	static const getV2Telegram = "/v2/telegram";
-	/// /v2/telegram/type/{type}
-	static const getV2TelegramTypeType = "/v2/telegram/type/{type}";
-	/// /v2/telegram/eventId/{eventId}
-	static const getV2TelegramEventIdEventId = "/v2/telegram/eventId/{eventId}";
-	/// /v2/telegram/{id}
-	static const getV2TelegramId = "/v2/telegram/{id}";
-}
+  /// /v2/telegram
+  static const getV2Telegram = "/v2/telegram";
 
+  /// /v2/telegram/type/{type}
+  static const getV2TelegramTypeType = "/v2/telegram/type/{type}";
+
+  /// /v2/telegram/eventId/{eventId}
+  static const getV2TelegramEventIdEventId = "/v2/telegram/eventId/{eventId}";
+
+  /// /v2/telegram/{id}
+  static const getV2TelegramId = "/v2/telegram/{id}";
+}

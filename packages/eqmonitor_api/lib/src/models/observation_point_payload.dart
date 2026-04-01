@@ -17,10 +17,10 @@ abstract class ObservationPointPayload with _$ObservationPointPayload {
     required String region,
     required String type,
     required LocationPayload location,
-    @JsonKey(includeIfNull: true)
-    required num? intensity,
+    @JsonKey(includeIfNull: true) required num? intensity,
     required num intensityDiff,
   }) = _ObservationPointPayload;
-  
-  factory ObservationPointPayload.fromJson(Map<String, Object?> json) => _$ObservationPointPayloadFromJson(json);
+
+  factory ObservationPointPayload.fromJson(Map<String, Object?> json) =>
+      _$ObservationPointPayloadFromJson(json);
 }

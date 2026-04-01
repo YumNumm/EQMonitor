@@ -20,30 +20,26 @@ part 'earthquake.g.dart';
 @Freezed()
 abstract class Earthquake with _$Earthquake {
   const factory Earthquake({
-    @JsonKey(name: 'event_id')
-    required EventId eventId,
+    @JsonKey(name: 'event_id') required EventId eventId,
     required TelegramStatus status,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
     required EarthquakeDatasource datasource,
     required List<Telegrams> telegrams,
-    @JsonKey(includeIfNull: false,name: 'origin_time')
-    DateTime? originTime,
-    @JsonKey(includeIfNull: false,name: 'arrival_time')
-    DateTime? arrivalTime,
-    @JsonKey(includeIfNull: false)
-    Hypocenter? hypocenter,
-    @JsonKey(includeIfNull: false)
-    Intensity? intensity,
+    @JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,
+    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false) Hypocenter? hypocenter,
+    @JsonKey(includeIfNull: false) Intensity? intensity,
 
     /// 推計震度PMTilesのフルURL
-    @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile')
+    @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')
     String? estimatedIntensityTile,
-    @JsonKey(includeIfNull: false,name: 'intensity_map_image')
+    @JsonKey(includeIfNull: false, name: 'intensity_map_image')
     IntensityMapImageUrl? intensityMapImage,
-    @JsonKey(includeIfNull: false,name: 'intensity_map_images')
+    @JsonKey(includeIfNull: false, name: 'intensity_map_images')
     List<IntensityMapImageGroup>? intensityMapImages,
   }) = _Earthquake;
-  
-  factory Earthquake.fromJson(Map<String, Object?> json) => _$EarthquakeFromJson(json);
+
+  factory Earthquake.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeFromJson(json);
 }

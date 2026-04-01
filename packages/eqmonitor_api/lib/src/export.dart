@@ -184,4 +184,3 @@ export 'models/min_jma_intensity.dart';
 export 'models/interruption_level.dart';
 // Root client
 export 'api_client.dart';
-

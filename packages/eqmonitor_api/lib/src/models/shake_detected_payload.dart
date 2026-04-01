@@ -24,6 +24,7 @@ abstract class ShakeDetectedPayload with _$ShakeDetectedPayload {
     required RegionPayload region,
     required List<ObservationPointPayload> points,
   }) = _ShakeDetectedPayload;
-  
-  factory ShakeDetectedPayload.fromJson(Map<String, Object?> json) => _$ShakeDetectedPayloadFromJson(json);
+
+  factory ShakeDetectedPayload.fromJson(Map<String, Object?> json) =>
+      _$ShakeDetectedPayloadFromJson(json);
 }

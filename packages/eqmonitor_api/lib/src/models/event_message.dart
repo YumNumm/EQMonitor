@@ -20,39 +20,24 @@ abstract class EventMessage with _$EventMessage {
     required num serialNo,
     required List<Regions> regions,
     required String reportTime,
-    @JsonKey(includeIfNull: false)
-    String? maxIntensity,
-    @JsonKey(includeIfNull: false)
-    String? headline,
-    @JsonKey(includeIfNull: false)
-    String? originTime,
-    @JsonKey(includeIfNull: false)
-    String? arrivalTime,
-    @JsonKey(includeIfNull: false)
-    EventHypocenter? hypocenter,
-    @JsonKey(includeIfNull: false)
-    num? magnitude,
-    @JsonKey(includeIfNull: false)
-    bool? isWarning,
-    @JsonKey(includeIfNull: false)
-    bool? isLastInfo,
-    @JsonKey(includeIfNull: false)
-    bool? isCancel,
-    @JsonKey(includeIfNull: false)
-    String? hypocenterReduceName,
-    @JsonKey(includeIfNull: false)
-    bool? hasWarningZones,
-    @JsonKey(includeIfNull: false)
-    bool? isPlum,
-    @JsonKey(includeIfNull: false)
-    bool? isLevel,
-    @JsonKey(includeIfNull: false)
-    bool? isOnePoint,
-    @JsonKey(includeIfNull: false)
-    String? comment,
-    @JsonKey(includeIfNull: false)
-    List<Prefectures>? prefectures,
+    @JsonKey(includeIfNull: false) String? maxIntensity,
+    @JsonKey(includeIfNull: false) String? headline,
+    @JsonKey(includeIfNull: false) String? originTime,
+    @JsonKey(includeIfNull: false) String? arrivalTime,
+    @JsonKey(includeIfNull: false) EventHypocenter? hypocenter,
+    @JsonKey(includeIfNull: false) num? magnitude,
+    @JsonKey(includeIfNull: false) bool? isWarning,
+    @JsonKey(includeIfNull: false) bool? isLastInfo,
+    @JsonKey(includeIfNull: false) bool? isCancel,
+    @JsonKey(includeIfNull: false) String? hypocenterReduceName,
+    @JsonKey(includeIfNull: false) bool? hasWarningZones,
+    @JsonKey(includeIfNull: false) bool? isPlum,
+    @JsonKey(includeIfNull: false) bool? isLevel,
+    @JsonKey(includeIfNull: false) bool? isOnePoint,
+    @JsonKey(includeIfNull: false) String? comment,
+    @JsonKey(includeIfNull: false) List<Prefectures>? prefectures,
   }) = _EventMessage;
-  
-  factory EventMessage.fromJson(Map<String, Object?> json) => _$EventMessageFromJson(json);
+
+  factory EventMessage.fromJson(Map<String, Object?> json) =>
+      _$EventMessageFromJson(json);
 }

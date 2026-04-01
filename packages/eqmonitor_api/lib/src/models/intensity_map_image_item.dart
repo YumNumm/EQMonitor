@@ -18,32 +18,26 @@ abstract class IntensityMapImageItem with _$IntensityMapImageItem {
     required AppLocale language,
 
     /// 画像URL
-    @JsonKey(name: 'image_url')
-    required String imageUrl,
+    @JsonKey(name: 'image_url') required String imageUrl,
 
     /// 画像ファイルサイズ(bytes)
-    @JsonKey(name: 'file_size')
-    required num fileSize,
+    @JsonKey(name: 'file_size') required num fileSize,
     required Size size,
 
     /// 生成インスタンス名
-    @JsonKey(name: 'generator_instance')
-    required String generatorInstance,
+    @JsonKey(name: 'generator_instance') required String generatorInstance,
 
     /// レンダリング時間(ms)
-    @JsonKey(name: 'render_duration_ms')
-    required num renderDurationMs,
+    @JsonKey(name: 'render_duration_ms') required num renderDurationMs,
 
     /// アップロード時間(ms)
-    @JsonKey(name: 'upload_duration_ms')
-    required num uploadDurationMs,
+    @JsonKey(name: 'upload_duration_ms') required num uploadDurationMs,
 
     /// 総処理時間(ms)
-    @JsonKey(name: 'total_duration_ms')
-    required num totalDurationMs,
-    @JsonKey(name: 'generated_at')
-    required DateTime generatedAt,
+    @JsonKey(name: 'total_duration_ms') required num totalDurationMs,
+    @JsonKey(name: 'generated_at') required DateTime generatedAt,
   }) = _IntensityMapImageItem;
-  
-  factory IntensityMapImageItem.fromJson(Map<String, Object?> json) => _$IntensityMapImageItemFromJson(json);
+
+  factory IntensityMapImageItem.fromJson(Map<String, Object?> json) =>
+      _$IntensityMapImageItemFromJson(json);
 }

@@ -13,12 +13,11 @@ part 'intensity_map_image_group.g.dart';
 abstract class IntensityMapImageGroup with _$IntensityMapImageGroup {
   const factory IntensityMapImageGroup({
     /// 電文ID
-    @JsonKey(name: 'telegram_id')
-    required String telegramId,
-    @JsonKey(name: 'created_at')
-    required DateTime createdAt,
+    @JsonKey(name: 'telegram_id') required String telegramId,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
     required List<IntensityMapImageItem> images,
   }) = _IntensityMapImageGroup;
-  
-  factory IntensityMapImageGroup.fromJson(Map<String, Object?> json) => _$IntensityMapImageGroupFromJson(json);
+
+  factory IntensityMapImageGroup.fromJson(Map<String, Object?> json) =>
+      _$IntensityMapImageGroupFromJson(json);
 }

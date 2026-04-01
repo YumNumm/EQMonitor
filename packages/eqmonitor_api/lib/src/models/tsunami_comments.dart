@@ -12,11 +12,10 @@ part 'tsunami_comments.g.dart';
 @Freezed()
 abstract class TsunamiComments with _$TsunamiComments {
   const factory TsunamiComments({
-    @JsonKey(includeIfNull: false)
-    String? free,
-    @JsonKey(includeIfNull: false)
-    Warning? warning,
+    @JsonKey(includeIfNull: false) String? free,
+    @JsonKey(includeIfNull: false) Warning? warning,
   }) = _TsunamiComments;
-  
-  factory TsunamiComments.fromJson(Map<String, Object?> json) => _$TsunamiCommentsFromJson(json);
+
+  factory TsunamiComments.fromJson(Map<String, Object?> json) =>
+      _$TsunamiCommentsFromJson(json);
 }

@@ -12,7 +12,8 @@ enum MagnitudeType {
   @JsonValue('UNKNOWN')
   unknown('UNKNOWN'),
   @JsonValue('OVER_M8')
-  overM8('OVER_M8');
+  overM8('OVER_M8')
+  ;
 
   const MagnitudeType(this.json);
 
@@ -20,8 +21,10 @@ enum MagnitudeType {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

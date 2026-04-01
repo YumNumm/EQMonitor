@@ -22,6 +22,7 @@ abstract class RealtimeState with _$RealtimeState {
     required List<EarthquakePartial> earthquakes,
     required List<TsunamiListItem> tsunamis,
   }) = _RealtimeState;
-  
-  factory RealtimeState.fromJson(Map<String, Object?> json) => _$RealtimeStateFromJson(json);
+
+  factory RealtimeState.fromJson(Map<String, Object?> json) =>
+      _$RealtimeStateFromJson(json);
 }

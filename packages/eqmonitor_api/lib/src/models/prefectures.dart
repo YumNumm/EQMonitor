@@ -14,6 +14,7 @@ abstract class Prefectures with _$Prefectures {
     required String name,
     required String intensity,
   }) = _Prefectures;
-  
-  factory Prefectures.fromJson(Map<String, Object?> json) => _$PrefecturesFromJson(json);
+
+  factory Prefectures.fromJson(Map<String, Object?> json) =>
+      _$PrefecturesFromJson(json);
 }
