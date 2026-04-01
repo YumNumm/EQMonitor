@@ -1,0 +1,44 @@
+name: Terraform Validate
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        description: "Target directory relative to terraform/"
+        required: false
+        type: string
+        default: "googlecloud/environments/development"
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-validate:
+    name: Terraform Validate
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          install_args: "opentofu"
+          working_directory: terraform
+
+      - name: Check format
+        working-directory: terraform
+        run: tofu fmt -check -diff -recursive
+
+      - name: Initialize
+        working-directory: terraform/${{ inputs.target }}
+        run: tofu init -backend=false
+
+      - name: Validate
+        working-directory: terraform/${{ inputs.target }}
+        run: tofu validate

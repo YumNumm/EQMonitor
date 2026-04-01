@@ -1,0 +1,48 @@
+name: Detect changes
+
+on:
+  workflow_call:
+    outputs:
+      flutter:
+        value: ${{ jobs.changes.outputs.flutter }}
+      typescript:
+        value: ${{ jobs.changes.outputs.typescript }}
+      terraform:
+        value: ${{ jobs.changes.outputs.terraform }}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      flutter: ${{ steps.filter.outputs.flutter }}
+      typescript: ${{ steps.filter.outputs.typescript }}
+      terraform: ${{ steps.filter.outputs.terraform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # https://github.com/dorny/paths-filter
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        id: filter
+        with:
+          base: ${{ github.event.merge_group.base_sha || '' }}
+          filters: |
+            flutter:
+              - 'app/**'
+              - 'packages/**'
+              - 'pubspec.lock'
+              - 'mise.lock'
+              - '.github/workflows/flutter.yaml'
+              - '.github/workflows/wc-check-dart-*.yaml'
+            terraform:
+              - 'terraform/**'
+              - '.github/workflows/terraform.yaml'
+              - '.github/workflows/wc-check-terraform-*.yaml'
