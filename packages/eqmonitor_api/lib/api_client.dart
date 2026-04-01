@@ -12,7 +12,7 @@ import 'clients/eew_api_client.dart';
 import 'clients/telegram_api_client.dart';
 import 'clients/tsunami_api_client.dart';
 import 'clients/user_api_client.dart';
-import 'clients/web_socket_api_client.dart';
+import 'clients/realtime_api_client.dart';
 
 /// EQMonitor Backend API `v2.0.0`.
 ///
@@ -37,7 +37,7 @@ class ApiClient {
   TelegramApiClient? _telegram;
   TsunamiApiClient? _tsunami;
   UserApiClient? _user;
-  WebSocketApiClient? _webSocket;
+  RealtimeApiClient? _realtime;
 
   AdminApiClient get admin => _admin ??= AdminApiClient(_dio, baseUrl: _baseUrl);
 
@@ -55,5 +55,5 @@ class ApiClient {
 
   UserApiClient get user => _user ??= UserApiClient(_dio, baseUrl: _baseUrl);
 
-  WebSocketApiClient get webSocket => _webSocket ??= WebSocketApiClient(_dio, baseUrl: _baseUrl);
+  RealtimeApiClient get realtime => _realtime ??= RealtimeApiClient(_dio, baseUrl: _baseUrl);
 }

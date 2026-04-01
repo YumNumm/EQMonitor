@@ -11,43 +11,18 @@ part of 'hypocenter.dart';
 _Hypocenter _$HypocenterFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_Hypocenter', json, ($checkedConvert) {
       final val = _Hypocenter(
-        value: $checkedConvert(
-          'value',
-          (v) => CodeName.fromJson(v as Map<String, dynamic>),
-        ),
-        coordinates: $checkedConvert(
-          'coordinates',
-          (v) => Coordinate.fromJson(v as Map<String, dynamic>),
-        ),
-        magnitude: $checkedConvert(
-          'magnitude',
-          (v) => Magnitude.fromJson(v as Map<String, dynamic>),
-        ),
-        depth: $checkedConvert(
-          'depth',
-          (v) => Depth.fromJson(v as Map<String, dynamic>),
-        ),
-        detailed: $checkedConvert(
-          'detailed',
-          (v) =>
-              v == null ? null : CodeName.fromJson(v as Map<String, dynamic>),
-        ),
-        auxiliary: $checkedConvert(
-          'auxiliary',
-          (v) => v == null
-              ? null
-              : HypocenterAuxiliary.fromJson(v as Map<String, dynamic>),
-        ),
+        latitude: $checkedConvert('latitude', (v) => v as num),
+        longitude: $checkedConvert('longitude', (v) => v as num),
+        depth: $checkedConvert('depth', (v) => v as num),
+        name: $checkedConvert('name', (v) => v as String?),
       );
       return val;
     });
 
 Map<String, dynamic> _$HypocenterToJson(_Hypocenter instance) =>
     <String, dynamic>{
-      'value': instance.value,
-      'coordinates': instance.coordinates,
-      'magnitude': instance.magnitude,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'depth': instance.depth,
-      'detailed': ?instance.detailed,
-      'auxiliary': ?instance.auxiliary,
+      'name': ?instance.name,
     };

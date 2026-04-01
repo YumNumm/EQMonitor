@@ -18,8 +18,8 @@
       "description": "ユーザー"
     },
     {
-      "name": "WebSocket",
-      "description": "WebSocket"
+      "name": "Realtime",
+      "description": "リアルタイム（SSE）"
     },
     {
       "name": "Device",
@@ -152,6 +152,217 @@
             },
             "in": "path",
             "name": "correlationKey",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/admin/replay-files": {
+      "get": {
+        "operationId": "getV2AdminReplayFiles",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ],
+        "description": "リプレイファイル一覧",
+        "responses": {
+          "200": {
+            "description": "リプレイファイル一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminReplayFileListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "不正なリクエスト",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayForbiddenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/admin/replay-files/{id}": {
+      "get": {
+        "operationId": "getV2AdminReplayFilesById",
+        "tags": [
+          "Admin"
+        ],
+        "description": "リプレイファイル詳細（トリガー情報含む）",
+        "responses": {
+          "200": {
+            "description": "リプレイファイル詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminReplayFileDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/admin/replay-files/{id}/download-url": {
+      "get": {
+        "operationId": "getV2AdminReplayFilesByIdDownloadUrl",
+        "tags": [
+          "Admin"
+        ],
+        "description": "署名付きダウンロード URL 発行",
+        "responses": {
+          "200": {
+            "description": "署名付き URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminReplayFileDownloadUrlResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "署名付き URL 生成失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "オブジェクトストレージ（S3）未設定",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayDownloadServiceUnavailable"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
             "required": true
           }
         ]
@@ -4094,35 +4305,29 @@
         ]
       }
     },
-    "/v2/websocket/ticket": {
+    "/v2/realtime/state": {
       "get": {
-        "operationId": "getV2WebsocketTicket",
+        "operationId": "getV2RealtimeState",
         "tags": [
-          "WebSocket"
+          "Realtime"
         ],
-        "description": "WebSocket接続用のチケットを発行（認証必須）",
+        "description": "リアルタイム状態のスナップショット（揺れ検知・EEW は Redis、地震・津波は常に DB から取得）",
         "responses": {
           "200": {
-            "description": "発行されたチケット",
+            "description": "スナップショット",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebsocketTicketResponse"
+                  "$ref": "#/components/schemas/RealtimeState"
                 }
               }
             }
           },
           "401": {
-            "description": "認証エラー"
-          },
-          "403": {
-            "description": "他のユーザーのデバイス"
-          },
-          "404": {
-            "description": "デバイスが見つからない"
+            "description": "Unauthorized"
           },
           "500": {
-            "description": "内部サーバエラー",
+            "description": "内部エラー",
             "content": {
               "application/json": {
                 "schema": {
@@ -4130,6 +4335,53 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Redis 未設定"
+          }
+        }
+      }
+    },
+    "/v2/realtime/stream": {
+      "get": {
+        "operationId": "getV2RealtimeStream",
+        "tags": [
+          "Realtime"
+        ],
+        "description": "単一 SSE（旧 WebSocket 相当の discriminated union JSON を event: realtime で配信）",
+        "responses": {
+          "200": {
+            "description": "text/event-stream"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "503": {
+            "description": "Redis 未設定"
+          }
+        }
+      }
+    },
+    "/v2/realtime/examples": {
+      "get": {
+        "operationId": "getV2RealtimeExamples",
+        "tags": [
+          "Realtime"
+        ],
+        "description": "SSE data: と同一形のサンプル JSON（OpenAPI / クライアント codegen 用）",
+        "responses": {
+          "200": {
+            "description": "サンプル配列",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealtimeExamplesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -4375,6 +4627,257 @@
           "message"
         ]
       },
+      "AdminReplayFileListResponse": {
+        "type": "object",
+        "properties": {
+          "next_token": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "next_pooling": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "startTime": {
+                  "type": "string"
+                },
+                "endTime": {
+                  "type": "string"
+                },
+                "objectKey": {
+                  "type": "string"
+                },
+                "fileSizeBytes": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "downloadUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "startTime",
+                "endTime",
+                "objectKey",
+                "fileSizeBytes",
+                "createdAt",
+                "downloadUrl"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "BadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "BAD_REQUEST"
+          },
+          "message": {
+            "const": "Bad Request"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ReplayForbiddenResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "FORBIDDEN"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "AdminReplayFileDetailResponse": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "startTime": {
+                    "type": "string"
+                  },
+                  "endTime": {
+                    "type": "string"
+                  },
+                  "objectKey": {
+                    "type": "string"
+                  },
+                  "fileSizeBytes": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "downloadUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "startTime",
+                  "endTime",
+                  "objectKey",
+                  "fileSizeBytes",
+                  "createdAt",
+                  "downloadUrl"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "triggers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "replayFileId": {
+                          "type": "string"
+                        },
+                        "triggerType": {
+                          "anyOf": [
+                            {
+                              "const": "shake_detection"
+                            },
+                            {
+                              "const": "earthquake"
+                            }
+                          ]
+                        },
+                        "eventId": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "replayFileId",
+                        "triggerType",
+                        "eventId",
+                        "createdAt"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "triggers"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "item"
+        ]
+      },
+      "AdminReplayFileDownloadUrlResponse": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "InternalServerErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "INTERNAL_SERVER_ERROR"
+          },
+          "message": {
+            "const": "Internal Server Error"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ReplayDownloadServiceUnavailable": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "SERVICE_UNAVAILABLE"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
       "DeviceResponse": {
         "type": "object",
         "properties": {
@@ -4413,24 +4916,6 @@
           "locale",
           "created_at",
           "updated_at"
-        ]
-      },
-      "InternalServerErrorResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "INTERNAL_SERVER_ERROR"
-          },
-          "message": {
-            "const": "Internal Server Error"
-          },
-          "reason": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
         ]
       },
       "ApnsTokenType": {
@@ -5687,24 +6172,6 @@
         },
         "required": [
           "items"
-        ]
-      },
-      "BadRequestResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "BAD_REQUEST"
-          },
-          "message": {
-            "const": "Bad Request"
-          },
-          "reason": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
         ]
       },
       "IntensityStationItem": {
@@ -7866,20 +8333,334 @@
           "user_agent"
         ]
       },
-      "WebsocketTicketResponse": {
+      "RealtimeState": {
         "type": "object",
         "properties": {
-          "ticket": {
-            "type": "string"
+          "revision": {
+            "type": "number"
           },
-          "expires_at": {
+          "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "shakes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "shake_detected"
+                },
+                "eventId": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "level": {
+                  "enum": [
+                    "Weaker",
+                    "Weak",
+                    "Medium",
+                    "Strong",
+                    "Stronger"
+                  ],
+                  "type": "string"
+                },
+                "changeReasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "isReplay": {
+                  "type": "boolean"
+                },
+                "pointCount": {
+                  "type": "number"
+                },
+                "region": {
+                  "type": "object",
+                  "properties": {
+                    "topLeft": {
+                      "type": "object",
+                      "properties": {
+                        "latitude": {
+                          "type": "number"
+                        },
+                        "longitude": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "latitude",
+                        "longitude"
+                      ]
+                    },
+                    "bottomRight": {
+                      "type": "object",
+                      "properties": {
+                        "latitude": {
+                          "type": "number"
+                        },
+                        "longitude": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "latitude",
+                        "longitude"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "topLeft",
+                    "bottomRight"
+                  ]
+                },
+                "points": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "location": {
+                        "type": "object",
+                        "properties": {
+                          "latitude": {
+                            "type": "number"
+                          },
+                          "longitude": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "latitude",
+                          "longitude"
+                        ]
+                      },
+                      "intensity": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "intensityDiff": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "name",
+                      "region",
+                      "type",
+                      "location",
+                      "intensity",
+                      "intensityDiff"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "type",
+                "eventId",
+                "createdAt",
+                "level",
+                "changeReasons",
+                "isReplay",
+                "pointCount",
+                "region",
+                "points"
+              ]
+            }
+          },
+          "eews": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "eventId": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "EEW",
+                    "EARTHQUAKE",
+                    "ESTIMATED_INTENSITY"
+                  ],
+                  "type": "string"
+                },
+                "serialNo": {
+                  "type": "number"
+                },
+                "regions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "intensity": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "name",
+                      "intensity"
+                    ]
+                  }
+                },
+                "maxIntensity": {
+                  "type": "string"
+                },
+                "headline": {
+                  "type": "string"
+                },
+                "reportTime": {
+                  "type": "string"
+                },
+                "originTime": {
+                  "type": "string"
+                },
+                "arrivalTime": {
+                  "type": "string"
+                },
+                "hypocenter": {
+                  "type": "object",
+                  "properties": {
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "longitude": {
+                      "type": "number"
+                    },
+                    "depth": {
+                      "type": "number"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "latitude",
+                    "longitude",
+                    "depth"
+                  ]
+                },
+                "magnitude": {
+                  "type": "number"
+                },
+                "isWarning": {
+                  "type": "boolean"
+                },
+                "isLastInfo": {
+                  "type": "boolean"
+                },
+                "isCancel": {
+                  "type": "boolean"
+                },
+                "hypocenterReduceName": {
+                  "type": "string"
+                },
+                "hasWarningZones": {
+                  "type": "boolean"
+                },
+                "isPlum": {
+                  "type": "boolean"
+                },
+                "isLevel": {
+                  "type": "boolean"
+                },
+                "isOnePoint": {
+                  "type": "boolean"
+                },
+                "comment": {
+                  "type": "string"
+                },
+                "prefectures": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "intensity": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "name",
+                      "intensity"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "eventId",
+                "type",
+                "serialNo",
+                "regions",
+                "reportTime"
+              ]
+            }
+          },
+          "earthquakes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EarthquakePartial"
+            }
+          },
+          "tsunamis": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiListItem"
+            }
           }
         },
         "required": [
-          "ticket",
-          "expires_at"
+          "revision",
+          "updatedAt",
+          "shakes",
+          "eews",
+          "earthquakes",
+          "tsunamis"
+        ]
+      },
+      "RealtimeExamplesResponse": {
+        "type": "object",
+        "properties": {
+          "examples": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "examples"
         ]
       }
     },

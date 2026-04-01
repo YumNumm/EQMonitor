@@ -10,25 +10,15 @@ part 'items2.g.dart';
 @Freezed()
 abstract class Items2 with _$Items2 {
   const factory Items2({
-    required String correlationKey,
-    required String eventType,
-    required String eventId,
-    required num serialNo,
-    required String jmaReportTime,
-    required num targetDevices,
-    required num enqueuedFcm,
-    required num enqueuedApns,
-    required num enqueuedBroadcast,
-    required num successFcm,
-    required num failedFcm,
-    required num successApns,
-    required num failedApns,
+    required String id,
+    required String startTime,
+    required String endTime,
+    required String objectKey,
+    @JsonKey(includeIfNull: true)
+    required num? fileSizeBytes,
     required String createdAt,
-    required String updatedAt,
-    @JsonKey(includeIfNull: false)
-    String? headline,
-    @JsonKey(includeIfNull: false)
-    num? resolverDelayMs,
+    @JsonKey(includeIfNull: true)
+    required String? downloadUrl,
   }) = _Items2;
   
   factory Items2.fromJson(Map<String, Object?> json) => _$Items2FromJson(json);
