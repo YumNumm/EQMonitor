@@ -1,0 +1,199 @@
+name: Claude PR Review
+
+# このワークフローは、PRが作成または更新されたときにClaude Sonnet 4.5による自動レビューを実行します
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: read
+
+jobs:
+  review:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # 過去のClaudeレビューを折りたたむ（著者ベースで判定、最新以外を折りたたみ）
+      - name: Minimize previous Claude reviews
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          REVIEW_NODE_IDS=$(gh api "/repos/$REPO/pulls/$PR_NUMBER/reviews" \
+            --jq '[.[] | select(.user.login == "github-actions[bot]" and .state != "DISMISSED")] | sort_by(.submitted_at) | .[:-1] | .[].node_id')
+
+          if [ -n "$REVIEW_NODE_IDS" ]; then
+            SUCCESS_COUNT=0
+            FAILED_COUNT=0
+            while read -r NODE_ID; do
+              if gh api graphql -f query="
+                mutation {
+                  minimizeComment(input: {
+                    subjectId: \"$NODE_ID\"
+                    classifier: OUTDATED
+                  }) {
+                    minimizedComment { isMinimized }
+                  }
+                }
+              " > /dev/null 2>&1; then
+                SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+              else
+                FAILED_COUNT=$((FAILED_COUNT + 1))
+              fi
+            done <<< "$REVIEW_NODE_IDS"
+            echo "Minimized $SUCCESS_COUNT previous reviews (failed: $FAILED_COUNT)"
+          else
+            echo "No previous reviews to minimize"
+          fi
+
+      # https://github.com/anthropics/claude-code-action
+      - name: Claude Code Review
+        uses: anthropics/claude-code-action@26ec041249acb0a944c0a47b6c0c13f05dbc5b44 # v1.0.70
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          plugin_marketplaces: |
+            https://github.com/anthropics/claude-plugins-official.git
+            https://github.com/anthropics/claude-code.git
+            https://github.com/anthropics/skills.git
+          plugins: |
+            security-guidance@claude-plugins-official
+            code-simplifier@claude-plugins-official
+            typescript-lsp@claude-plugins-official
+            code-review@claude-code-plugins
+            pr-review-toolkit@claude-code-plugins
+          claude_args: |
+            --append-system-prompt "# プロジェクト概要
+
+            Honda バイクオーナーアプリ PoC。モノレポ構成:
+            - flutter/ — ネイティブAndroidアプリ (Flutter + Riverpod)
+            - typescript/webview/ — WebView内Webコンテンツ (TanStack Start = SSR React on Nitro)
+            - typescript/bff/ — BFF REST API (Hono)。Flutter・WebView両方から呼び出し
+
+            WebViewはhono/client RPCでBFFの型を共有（エンドツーエンド型安全）。
+
+            # レビュー観点
+
+            ## 共通ガイドライン
+            - レビューは必ず日本語で行う
+            - バグや潜在的な問題: nullチェック漏れ、配列境界、非同期エラーハンドリング
+            - パフォーマンス: 不要な処理やメモリリーク、重い計算の最適化
+            - セキュリティ: XSS脆弱性、CSRF対策、機密情報の露出
+            - 保守性: コードの可読性、適切な命名
+            - テスタビリティ: テストしやすい設計、依存性の注入
+            - 早期リターンで条件分岐をフラットに
+            - 適切な関数分割（過度な分割は避ける）
+            - エラーハンドリングの明示的な実装
+
+            ## TypeScript固有ガイドライン
+            - ホワイトボックステスト: 実装の内部構造を理解した上でテストを書く。ブラックボックスだけに頼らない
+            - コロケーション: 関連コードは近くに配置。hooks/ や utils/ に安易に分離しない
+            - React: 関数コンポーネント使用、useMemo/useCallback適切に使用、useEffect依存配列の漏れに注意
+            - TypeScript: any型禁止、型アサーション(as)の乱用禁止、型ガード活用
+            - 禁止: any型の無闇な使用、必要以上の as cast の使用、hooks/utils/への無計画な分離、ブラックボックステストのみ
+
+            ## Flutter固有ガイドライン
+            - StatelessWidget優先、StatefulWidgetは状態管理が必要な場合のみ
+            - buildメソッドは小さく保つ、constコンストラクタを積極的に使用
+            - ウィジェットとロジックのコロケーション
+            - プレゼンテーションとビジネスロジックの分離
+
+            # レビュー行動原則
+            - 建設的なフィードバック: 問題を指摘する際は必ず改善案も提示
+            - 無理に問題を見つけない: 問題がなければ「問題なし」で良い
+            - なぜ問題かを説明: 指摘には理由と影響を含める
+            - 具体的な修正提案: コード変更を提案する場合はsuggestionブロックを使用"
+            --allowedTools "Read,Glob,Grep,WebFetch,WebSearch"
+            --allowedTools "Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git status:*),Bash(git grep:*)"
+            --allowedTools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*)"
+            --allowedTools "Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"
+            --allowedTools "Bash(gh api:*),mcp__github__*"
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR_NUMBER: ${{ github.event.pull_request.number }}
+
+            あなたはこのリポジトリの熟練レビュアーです。以下のステップを順番に実行してPRをレビューしてください。
+
+            # ステップ1: コンテキスト収集
+
+            1a. PRの基本情報を取得:
+            - `mcp__github__pull_request_read` (method: "get") でPRのタイトル、本文、ベースブランチを取得
+            - `Bash(git log)` でPRのコミットメッセージを確認
+            - PR本文内の `#123` 形式のリンクIssueを `mcp__github__issue_read` で確認
+
+            1b. 既存コメントの重複マップを構築:
+            - `mcp__github__pull_request_read` (method: "get_review_comments") で全レビュースレッドを取得
+              - 全著者対象（human、copilot[bot]、github-actions[bot]）
+              - cursor-based pagination (perPage + after) で全件取得
+              - **isResolved、isOutdated、isCollapsed メタデータを取得**
+            - `mcp__github__pull_request_read` (method: "get_comments") でissueコメントも取得
+            - 内部マップ構築: {file}:{line} → { content, comment_id, author, is_resolved }
+            - **is_resolved=true → 対処済みまたは意図的に却下。同じ指摘の再投稿は禁止**
+
+            # ステップ2: PR差分の分析
+
+            2a. 差分取得（3段階フォールバック）:
+            - まず `mcp__github__pull_request_read` (method: "get_diff")
+            - トークン制限エラー時 → `Bash(gh pr diff $PR_NUMBER)`
+            - それでも大きい場合 → get_files でファイル一覧 → 重要ファイルのみ個別 git diff
+
+            2b. 変更ファイルの全コンテキストを `Read` で確認（インポート、シグネチャ、周辺コード）
+
+            2c. system promptのガイドラインに基づきレビュー分析
+
+            # ステップ3: Pending Review作成
+
+            - `mcp__github__pull_request_review_write` (method: "create") — eventパラメータ省略でpending
+            - 失敗時（既存pending review）→ delete_pending → リトライ
+
+            # ステップ4: インラインコメント追加
+
+            各指摘について:
+
+            4a. 重複チェック（ステップ1bのマップ参照）:
+            - is_resolved=true → **スキップ**（再指摘禁止）
+            - is_resolved=false + 同じ内容 → **スキップ**
+            - is_resolved=false + 異なる観点 → `mcp__github__add_reply_to_pull_request_comment` で返信
+            - 既存コメントなし → `mcp__github__add_comment_to_pending_review` で新規追加
+
+            4b. コメント形式:
+            - コード修正提案 → ```suggestion ブロック（GitHub "Commit suggestion"ボタン表示）
+            - 行単位の非コード指摘 → テキストインラインコメント
+            - **禁止**: 称賛・説明のみのインラインコメント（サマリーに記載）
+            - subjectType: "LINE", side: "RIGHT", path/line正確に指定
+
+            # ステップ5: レビュー送信
+
+            - `mcp__github__pull_request_review_write` (method: "submit_pending", event: "COMMENT")
+            - **APPROVE / REQUEST_CHANGES は絶対に使用しない**
+            - サマリー形式:
+
+            ## 変更概要
+            [PRの目的と変更内容を1-3文 — "誰も書かないPR説明"]
+
+            ## 主な指摘（あれば）
+            - [インライン指摘のサマリー]
+
+            ## 備考（あれば）
+            - [テスト、アーキテクチャ的懸念など]
+
+            # 制約事項（厳守）
+            - 日本語でレビュー
+            - `gh pr review` は使用しない（MCP pending review flowのみ）
+            - APPROVE / REQUEST_CHANGES 禁止
+            - 称賛のみのインラインコメント禁止
+            - resolved済みの再指摘禁止
+            - copilot[bot]の既存指摘との重複禁止

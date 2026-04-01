@@ -1,0 +1,263 @@
+name: Terraform
+
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
+      - ".github/workflows/terraform.yaml"
+      - ".github/workflows/wc-check-terraform-*.yaml"
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: terraform-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER: projects/765224095222/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-identity-provider
+  GOOGLE_CLOUD_SERVICE_ACCOUNT: actions-honda-mc-writer@apcfwwf-hondamotorcyclecxpl.iam.gserviceaccount.com
+
+jobs:
+  changes:
+    uses: ./.github/workflows/wc-changes.yaml
+
+  define-matrix:
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    outputs:
+      targets: ${{ steps.define-matrix.outputs.targets }}
+    steps:
+      - name: Define matrix
+        id: define-matrix
+        run: |
+          dirs="googlecloud/environments/development"
+
+          targets=$(echo "$dirs" | jq -R . | jq -sc .)
+          echo "targets=${targets}" >> "$GITHUB_OUTPUT"
+
+  validate:
+    name: Terraform Validate (${{ matrix.target }})
+    needs:
+      - changes
+      - define-matrix
+    if: needs.changes.outputs.terraform == 'true'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          install_args: "opentofu"
+          working_directory: terraform
+
+      - name: Check format
+        working-directory: terraform
+        run: tofu fmt -check -diff -recursive
+
+      - name: Initialize
+        working-directory: terraform/${{ matrix.target }}
+        run: tofu init -backend=false
+
+      - name: Validate
+        working-directory: terraform/${{ matrix.target }}
+        run: tofu validate
+
+  plan:
+    name: Terraform Plan (${{ matrix.target }})
+    needs:
+      - changes
+      - validate
+      - define-matrix
+    if: >-
+      needs.changes.outputs.terraform == 'true' &&
+      github.event_name != 'push'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    strategy:
+      matrix:
+        target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
+    defaults:
+      run:
+        working-directory: terraform/${{ matrix.target }}
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Extract SOPS Age Key File
+        working-directory: terraform
+        run: echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml.example to mise.local.toml
+        working-directory: terraform
+        run: cp mise.local.toml.example mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          install_args: "opentofu aqua:suzuki-shunsuke/tfcmt"
+          working_directory: terraform
+
+      - name: Set environment variables
+        working-directory: terraform
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      # https://github.com/google-github-actions/auth
+      - name: Authenticate to Google Cloud Platform
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
+
+      - name: Initialize
+        run: tofu init
+
+      - name: Plan
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tfcmt plan -patch -- tofu plan -input=false
+
+  apply:
+    name: Terraform Apply (${{ matrix.target }})
+    needs:
+      - changes
+      - validate
+      - define-matrix
+    if: >-
+      needs.changes.outputs.terraform == 'true' &&
+      github.event_name == 'push'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+    strategy:
+      matrix:
+        target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
+    defaults:
+      run:
+        working-directory: terraform/${{ matrix.target }}
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Extract SOPS Age Key File
+        working-directory: terraform
+        run: echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+
+      - name: Copy mise.local.toml.example to mise.local.toml
+        working-directory: terraform
+        run: cp mise.local.toml.example mise.local.toml
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          install_args: "opentofu aqua:suzuki-shunsuke/tfcmt"
+          working_directory: terraform
+
+      - name: Set environment variables
+        working-directory: terraform
+        run: |
+          for line in $(mise env --redacted --dotenv); do
+            echo "$line" >> "$GITHUB_ENV"
+            mask_value="${line#*=}"
+            echo "::add-mask::${mask_value}"
+          done
+
+      # https://github.com/google-github-actions/auth
+      - name: Authenticate to Google Cloud Platform
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
+
+      - name: Initialize
+        run: tofu init
+
+      - name: Apply
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tfcmt apply -- tofu apply -auto-approve -input=false
+
+      # https://github.com/actions/upload-artifact
+      - name: Upload Terraform state as an artifact
+        if: "!cancelled()"
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: terraform-state.tfstate
+          path: terraform/${{ matrix.target }}/terraform.tfstate
+          if-no-files-found: error
+
+      - name: Check for changes
+        if: "!cancelled()"
+        continue-on-error: true
+        id: check_changes
+        run: git diff --exit-code
+
+      # https://github.com/peter-evans/create-pull-request
+      - name: Create or update pull request
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        if: steps.check_changes.outcome == 'failure'
+        id: cpr
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
+          delete-branch: true
+          add-paths: "terraform/${{ matrix.target }}/terraform.tfstate"
+          commit-message: "[Terraform] Update terraform state"
+          committer: "GitHub Actions <noreply@github.com>"
+          base: main
+          branch: chore/update-terraform-state
+          title: "[Terraform] Update Terraform state"
+          body: "Terraform state updated after apply.\nTriggered by: ${{ github.actor }}"
+          labels: "terraform"
+
+
+  status-check:
+    name: Terraform Status Check
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    needs:
+      - validate
+      - plan
+      - apply
+    permissions: {}
+    if: always()
+    steps:
+      - name: Check job results
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1

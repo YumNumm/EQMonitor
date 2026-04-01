@@ -1,0 +1,63 @@
+name: Dart Test
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  flutter-test:
+    name: Flutter Test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Fetch base for diff tests
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin "${{ github.base_ref }}" --depth=1
+          elif [ "${{ github.event_name }}" = "merge_group" ]; then
+            git fetch origin "${{ github.event.merge_group.base_sha }}" --depth=1
+          fi
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          install_args: "flutter"
+
+      - name: Resolve dependencies
+        run: dart pub get --enforce-lockfile
+
+      - name: Install melos
+        run: |
+          echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+          dart pub global activate melos
+
+      - name: Run tests
+        id: flutter-test
+        run: |
+          melos exec \
+            --dir-exists=test \
+            --concurrency=4 \
+            -- flutter test --dart-define=CI=true --file-reporter="json:test_report.log"
+
+      # https://github.com/dorny/test-reporter
+      - name: Report test
+        if: always()
+        uses: dorny/test-reporter@3d76b34a4535afbd0600d347b09a6ee5deb3ed7f # v2.6.0
+        with:
+          name: "Flutter Test"
+          path: "(app|packages/**)/test_report.log"
+          reporter: "flutter-json"
+          fail-on-error: "true"

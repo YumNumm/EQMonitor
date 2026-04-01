@@ -1,4 +1,4 @@
-name: Terraform Plan
+name: Terraform Plan (Google Cloud)
 
 on:
   pull_request:
@@ -11,120 +11,68 @@ on:
 
 permissions:
   contents: read
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: terraform-gcp-prod-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER: projects/179553945248/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-identity-provider
+  GOOGLE_CLOUD_SERVICE_ACCOUNT: actions-eqmonitor-writer@eqmonitor-main.iam.gserviceaccount.com
 
 jobs:
-  define-matrix:
-    runs-on: ubuntu-slim
-    timeout-minutes: 1
-    outputs:
-      targets: ${{ steps.define-matrix.outputs.targets }}
-    steps:
-      - name: Define matrix
-        id: define-matrix
-        run: |
-          dirs="googlecloud/environments/production"
+  changes:
+    uses: ./.github/workflows/wc-changes.yaml
 
-          # JSONの配列に変換し、outputsに設定
-          targets=$(echo "$dirs" | jq -R . | jq -sc .)
-          echo "targets=${targets}" >> "$GITHUB_OUTPUT"
-
-  lint:
-    name: Terraform Lint (${{ matrix.target }})
-    needs:
-      - define-matrix
-    runs-on: ubuntu-24.04-arm
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
-    steps:
-      # https://github.com/actions/checkout
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Extract SOPS Age Key File
-        run: |
-          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
-
-      - name: Copy mise.local.toml
-        run: |
-          cp mise.local.toml.example mise.local.toml
-
-      # https://github.com/jdx/mise-action
-      - name: Install Mise dependencies
-        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v3.1.1
-        with:
-          install_args: "terraform tflint aqua:suzuki-shunsuke/tfcmt"
-
-      - name: Set environment variables
-        run: |
-          for line in $(mise env --redacted --dotenv); do
-            echo "$line" >> "$GITHUB_ENV"
-            mask_value="${line#*=}"
-            echo "::add-mask::${mask_value}"
-          done
-
-      - name: Extract backend.tfbackend
-        working-directory: terraform
-        run: |
-          echo "$TERRAFORM_BACKEND_CONFIGURATION" | base64 -d  \
-            > backend.tfbackend
-
-      - name: Check directory is not empty
-        working-directory: terraform/${{ matrix.target }}
-        run: |
-          if [ -z "$(ls -A)" ]; then
-            echo "Directory is empty! Please add a Terraform file to the directory."
-            exit 1
-          fi
-
-      - name: Terraform init
-        working-directory: terraform/${{ matrix.target }}
-        run: terraform init -backend-config=backend.tfbackend
-
-      - name: Terraform fmt
-        working-directory: terraform/${{ matrix.target }}
-        run: terraform fmt -check -diff
-
-      - name: tflint
-        working-directory: terraform/${{ matrix.target }}
-        run: tflint
+  validate:
+    needs: changes
+    if: needs.changes.outputs.terraform == 'true'
+    uses: ./.github/workflows/wc-check-terraform-validate.yaml
+    secrets: inherit
+    with:
+      target: googlecloud/environments/production
 
   plan:
-    name: Terraform Plan (${{ matrix.target }})
+    name: Terraform Plan (googlecloud/environments/production)
     needs:
-      - lint
-      - define-matrix
+      - changes
+      - validate
+    if: needs.changes.outputs.terraform == 'true'
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     permissions:
       contents: read
       id-token: write
       pull-requests: write
-      issues: write
-    strategy:
-      matrix:
-        target: ${{ fromJson(needs.define-matrix.outputs.targets) }}
+    defaults:
+      run:
+        working-directory: terraform/googlecloud/environments/production
     steps:
       # https://github.com/actions/checkout
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Extract SOPS Age Key File
-        run: |
-          echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
+        working-directory: terraform
+        run: echo "${{ secrets.AGE_KEY }}" > .config/age/age.txt
 
-      - name: Copy mise.local.toml
-        run: |
-          cp mise.local.toml.example mise.local.toml
+      - name: Copy mise.local.toml.example to mise.local.toml
+        working-directory: terraform
+        run: cp mise.local.toml.example mise.local.toml
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v3.1.1
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          install_args: "terraform tflint aqua:suzuki-shunsuke/tfcmt"
+          install_args: "opentofu aqua:suzuki-shunsuke/tfcmt"
+          working_directory: terraform
 
       - name: Set environment variables
+        working-directory: terraform
         run: |
           for line in $(mise env --redacted --dotenv); do
             echo "$line" >> "$GITHUB_ENV"
@@ -132,55 +80,35 @@ jobs:
             echo "::add-mask::${mask_value}"
           done
 
-      - name: Change directory
-        working-directory: terraform/${{ matrix.target }}
-        run: |
-          echo "Changed directory to terraform/${{ matrix.target }}"
-
-      - name: Extract backend.tfbackend
-        working-directory: terraform
-        run: |
-          echo "$TERRAFORM_BACKEND_CONFIGURATION" | base64 -d  \
-            > backend.tfbackend
-
-      - name: Check directory is not empty
-        working-directory: terraform/${{ matrix.target }}
-        run: |
-          if [ -z "$(ls -A)" ]; then
-            echo "Directory is empty! Please add a Terraform file to the directory."
-            exit 1
-          fi
-
-      - name: Terraform init
-        working-directory: terraform/${{ matrix.target }}
-        id: init
-        run: terraform init -backend-config=backend.tfbackend
-
-      - name: Terraform fmt
-        working-directory: terraform/${{ matrix.target }}
-        id: fmt
-        run: terraform fmt -check -diff
-
-      - name: Terraform validate
-        working-directory: terraform/${{ matrix.target }}
-        id: validate
-        run: terraform validate
-
       # https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud Platform
-        id: auth
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         with:
-          workload_identity_provider: "projects/179553945248/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-identity-provider"
-          service_account: "actions-eqmonitor-writer@eqmonitor-main.iam.gserviceaccount.com"
+          workload_identity_provider: ${{ env.GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_CLOUD_SERVICE_ACCOUNT }}
 
-      - name: Terraform plan
-        working-directory: terraform/${{ matrix.target }}
-        id: plan
+      - name: Initialize
+        run: tofu init
+
+      - name: Plan
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           tfcmt plan \
             -patch \
-            -var "target:${{ matrix.target }}" \
-          -- terraform plan -input=false
+            -var "target:googlecloud/environments/production" \
+          -- tofu plan -input=false
+
+  status-check:
+    name: Terraform Plan Status Check
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    needs:
+      - validate
+      - plan
+    permissions: {}
+    if: always()
+    steps:
+      - name: Check job results
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
