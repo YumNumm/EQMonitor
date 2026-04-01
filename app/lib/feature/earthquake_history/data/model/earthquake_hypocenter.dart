@@ -24,18 +24,31 @@ abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
 }
 
 extension EarthquakeHypocenterApiExtension on api.Hypocenter {
-  EarthquakeHypocenter get toEarthquakeHypocenter => EarthquakeHypocenter(
-    code: '',
-    name: name ?? '',
-    coordinates: Coordinate.latLng(
-      latitude: latitude.toDouble(),
-      longitude: longitude.toDouble(),
-    ),
-    magnitude: const EarthquakeMagnitude.unknown(),
-    depth: depth.toInt() == 0
+  EarthquakeHypocenter get toEarthquakeHypocenter {
+    final lat = latitude;
+    final lon = longitude;
+    final coordinates = lat != null && lon != null
+        ? Coordinate.latLng(
+            latitude: lat.toDouble(),
+            longitude: lon.toDouble(),
+          )
+        : const Coordinate.unknown();
+
+    final d = depth;
+    final depthModel = d == null
+        ? const EarthquakeDepth.unknown()
+        : d.toInt() == 0
         ? const EarthquakeDepth.shallow()
-        : EarthquakeDepth.value(value: depth.toInt()),
-    detailedCode: null,
-    detailedName: null,
-  );
+        : EarthquakeDepth.value(value: d.toInt());
+
+    return EarthquakeHypocenter(
+      code: '',
+      name: name ?? '',
+      coordinates: coordinates,
+      magnitude: const EarthquakeMagnitude.unknown(),
+      depth: depthModel,
+      detailedCode: null,
+      detailedName: null,
+    );
+  }
 }

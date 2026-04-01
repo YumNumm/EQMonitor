@@ -9,6 +9,7 @@ import '../models/is_canceled.dart';
 import '../models/sort_order.dart';
 import '../models/tsunami_detail_response.dart';
 import '../models/tsunami_list_response.dart';
+
 import '../models/telegram_status.dart';
 
 part 'tsunami_api_client.g.dart';

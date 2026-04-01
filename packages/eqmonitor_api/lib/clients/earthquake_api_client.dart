@@ -9,12 +9,15 @@ import '../models/earthquake_detail_response.dart';
 import '../models/earthquake_list_response.dart';
 import '../models/earthquake_sort_by.dart';
 import '../models/epicenter_search_response.dart';
+import '../models/get_v2_earthquake_event_id_intensity_map_response.dart';
 import '../models/intensity_city_search_response.dart';
 import '../models/intensity_prefecture_search_response.dart';
 import '../models/intensity_region_search_response.dart';
 import '../models/intensity_station_search_response.dart';
 import '../models/jma_intensity.dart';
+import '../models/locale.dart';
 import '../models/sort_order.dart';
+
 import '../models/telegram_status.dart';
 
 part 'earthquake_api_client.g.dart';
@@ -60,6 +63,13 @@ abstract class EarthquakeApiClient {
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEventId)
   Future<HttpResponse<EarthquakeDetailResponse>> getV2EarthquakeEventId({
     @Path('eventId') required String eventId,
+  });
+
+  /// 地震イベントの震度分布図（最新）
+  @GET(EarthquakeApiClientUrls.getV2EarthquakeEventIdIntensityMap)
+  Future<HttpResponse<GetV2EarthquakeEventIdIntensityMapResponse>> getV2EarthquakeEventIdIntensityMap({
+    @Path('eventId') required String eventId,
+    @Query('locale') Locale? locale = Locale.ja,
   });
 
   /// [limit] - 1~100 の整数(string).
@@ -234,6 +244,8 @@ abstract class EarthquakeApiClientUrls {
 	static const getV2Earthquake = "/v2/earthquake";
 	/// /v2/earthquake/{eventId}
 	static const getV2EarthquakeEventId = "/v2/earthquake/{eventId}";
+	/// /v2/earthquake/{eventId}/intensity-map
+	static const getV2EarthquakeEventIdIntensityMap = "/v2/earthquake/{eventId}/intensity-map";
 	/// /v2/earthquake/intensity/region/{code}
 	static const getV2EarthquakeIntensityRegionCode = "/v2/earthquake/intensity/region/{code}";
 	/// /v2/earthquake/intensity/prefecture/{code}

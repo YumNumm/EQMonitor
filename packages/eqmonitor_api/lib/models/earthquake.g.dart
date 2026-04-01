@@ -53,6 +53,18 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
         'estimated_intensity_tile',
         (v) => v as String?,
       ),
+      intensityMapImage: $checkedConvert(
+        'intensity_map_image',
+        (v) => v as String?,
+      ),
+      intensityMapImages: $checkedConvert(
+        'intensity_map_images',
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) => IntensityMapImageGroup.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
+      ),
     );
     return val;
   },
@@ -62,6 +74,8 @@ _Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) => $checkedCreate(
     'originTime': 'origin_time',
     'arrivalTime': 'arrival_time',
     'estimatedIntensityTile': 'estimated_intensity_tile',
+    'intensityMapImage': 'intensity_map_image',
+    'intensityMapImages': 'intensity_map_images',
   },
 );
 
@@ -77,6 +91,8 @@ Map<String, dynamic> _$EarthquakeToJson(_Earthquake instance) =>
       'hypocenter': ?instance.hypocenter,
       'intensity': ?instance.intensity,
       'estimated_intensity_tile': ?instance.estimatedIntensityTile,
+      'intensity_map_image': ?instance.intensityMapImage,
+      'intensity_map_images': ?instance.intensityMapImages,
     };
 
 const _$TelegramStatusEnumMap = {

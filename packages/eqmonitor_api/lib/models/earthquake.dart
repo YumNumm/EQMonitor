@@ -7,6 +7,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'earthquake_datasource.dart';
 import 'hypocenter.dart';
 import 'intensity.dart';
+import 'intensity_map_image_group.dart';
+import 'intensity_map_image_url.dart';
 import 'origin_time_precision.dart';
 import 'telegram_status.dart';
 import 'telegrams.dart';
@@ -37,6 +39,10 @@ abstract class Earthquake with _$Earthquake {
     /// 推計震度PMTilesのフルURL
     @JsonKey(includeIfNull: false,name: 'estimated_intensity_tile')
     String? estimatedIntensityTile,
+    @JsonKey(includeIfNull: false,name: 'intensity_map_image')
+    IntensityMapImageUrl? intensityMapImage,
+    @JsonKey(includeIfNull: false,name: 'intensity_map_images')
+    List<IntensityMapImageGroup>? intensityMapImages,
   }) = _Earthquake;
   
   factory Earthquake.fromJson(Map<String, Object?> json) => _$EarthquakeFromJson(json);
