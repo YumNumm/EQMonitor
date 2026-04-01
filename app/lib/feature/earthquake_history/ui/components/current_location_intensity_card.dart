@@ -2,7 +2,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -15,7 +15,7 @@ import 'package:lat_lng/lat_lng.dart';
 class CurrentLocationIntensityCard extends HookConsumerWidget {
   const CurrentLocationIntensityCard({required this.item, super.key});
 
-  final EarthquakePartial item;
+  final Earthquake item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   const EarthquakeHistoryDetailsMapView({required this.earthquake, super.key});
 
-  final EarthquakePartial earthquake;
+  final Earthquake earthquake;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -2,12 +2,12 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart' as app_prefs;
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,7 +19,7 @@ void main() {
 
   Future<void> pumpWidget(
     WidgetTester tester, {
-    required EarthquakePartial item,
+    required Earthquake item,
   }) async {
     SharedPreferences.setMockInitialValues({});
     final preferences = await SharedPreferences.getInstance();
@@ -38,7 +38,7 @@ void main() {
         child: MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
-              child: PrefectureIntensityWidget(item: item),
+              child: RegionIntensityWidget(item: item),
             ),
           ),
         ),
@@ -47,8 +47,8 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  EarthquakePartial itemWithIntensity(EarthquakeIntensity intensity) {
-    return EarthquakePartial(
+  Earthquake itemWithIntensity(EarthquakeIntensity intensity) {
+    return Earthquake(
       eventId: '20260101120000',
       status: TelegramStatus.normal,
       originTime: null,
@@ -61,7 +61,13 @@ void main() {
     );
   }
 
-  testWidgets('各地の震度セクションに震度タイルと都道府県数が出る', (tester) async {
+  final miyagiRegion = EarthquakeParameterRegionItem(
+    code: '040000',
+    name: '宮城県',
+    cities: [],
+  );
+
+  testWidgets('各地の震度セクションに震度タイルと地域名が出る', (tester) async {
     final item = itemWithIntensity(
       EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
@@ -69,12 +75,10 @@ void main() {
         intensityTree: {
           JmaIntensity.four: [
             RegionIntensityNode(
-              region: EarthquakeParameterRegionItem(
-                code: '040000',
-                name: '宮城県',
-                cities: [],
+              region: IntensityRegion(
+                region: miyagiRegion,
+                maxIntensity: JmaIntensity.four,
               ),
-              maxIntensity: JmaIntensity.four,
               cities: [
                 CityIntensityNode(
                   city: EarthquakeParameterCityItem(
@@ -89,7 +93,14 @@ void main() {
             ),
           ],
         },
+        regions: [
+          IntensityRegion(
+            region: miyagiRegion,
+            maxIntensity: JmaIntensity.four,
+          ),
+        ],
         lpgmIntensityTree: const {},
+        lpgmRegions: const [],
       ),
     );
 
@@ -97,11 +108,10 @@ void main() {
 
     expect(find.text('各地の震度'), findsOneWidget);
     expect(find.textContaining('震度4'), findsWidgets);
-    expect(find.textContaining('都道府県 1'), findsOneWidget);
     expect(find.textContaining('宮城県'), findsOneWidget);
   });
 
-  testWidgets('震度行タップでモーダルに都道府県名が出る', (tester) async {
+  testWidgets('震度行タップでモーダルに地域名が出る', (tester) async {
     final item = itemWithIntensity(
       EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
@@ -109,12 +119,10 @@ void main() {
         intensityTree: {
           JmaIntensity.four: [
             RegionIntensityNode(
-              region: EarthquakeParameterRegionItem(
-                code: '040000',
-                name: '宮城県',
-                cities: [],
+              region: IntensityRegion(
+                region: miyagiRegion,
+                maxIntensity: JmaIntensity.four,
               ),
-              maxIntensity: JmaIntensity.four,
               cities: [
                 CityIntensityNode(
                   city: EarthquakeParameterCityItem(
@@ -128,7 +136,14 @@ void main() {
             ),
           ],
         },
+        regions: [
+          IntensityRegion(
+            region: miyagiRegion,
+            maxIntensity: JmaIntensity.four,
+          ),
+        ],
         lpgmIntensityTree: const {},
+        lpgmRegions: const [],
       ),
     );
 
@@ -142,7 +157,7 @@ void main() {
   });
 
   testWidgets('intensityがnullのときウィジェットは表示しない', (tester) async {
-    const item = EarthquakePartial(
+    const item = Earthquake(
       eventId: '20260101120000',
       status: TelegramStatus.normal,
       originTime: null,
