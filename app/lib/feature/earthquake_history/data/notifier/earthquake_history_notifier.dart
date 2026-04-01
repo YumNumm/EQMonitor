@@ -11,7 +11,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:web_socket_client/web_socket_client.dart';
 
 part 'earthquake_history_notifier.g.dart';
 
@@ -174,9 +173,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       log('state is not AsyncData<EarthquakeHistoryNotifierState>');
       return;
     }
-    final webSocketState = ref.read(websocketStatusProvider);
-    if (webSocketState is Connected || webSocketState is Reconnected) {
-      log('WebSocket is ${webSocketState.runtimeType}');
+    final sseState = ref.read(sseConnectionStatusProvider);
+    if (sseState == SseConnectionState.connected) {
+      log('SSE is connected');
       return;
     }
     if (parameter != const EarthquakeHistoryParameter()) {
