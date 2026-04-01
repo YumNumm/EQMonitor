@@ -55,6 +55,8 @@ api.Intensity _buildIntensity({
   >
   regions,
   api.JmaLpgmIntensity? maxLpgmIntensity,
+  List<api.IntensityItem>? cities,
+  List<api.IntensityStationItem>? stations,
 }) {
   return api.Intensity(
     maxIntensity: maxIntensity,
@@ -76,6 +78,8 @@ api.Intensity _buildIntensity({
           ),
         )
         .toList(),
+    cities: cities,
+    stations: stations,
   );
 }
 
@@ -532,6 +536,100 @@ void main() {
         cityNode.stations[0].intensity?.maxLpgmIntensity,
         JmaLpgmIntensity.two,
       );
+    });
+
+    test('regionsが空でIntensity.citiesのみの場合もツリーが構築される', () {
+      final cities = [
+        const api.IntensityItem(
+          value: api.CodeName(code: '1310000', name: '東京都23区'),
+          maxIntensity: api.JmaIntensity.value3,
+        ),
+      ];
+      final intensity = _buildIntensity(
+        maxIntensity: api.JmaIntensity.value3,
+        prefectures: [
+          (
+            code: '130000',
+            name: '東京都',
+            maxIntensity: api.JmaIntensity.value3,
+          ),
+        ],
+        regions: [],
+        cities: cities,
+      );
+      final parameter = _buildParameter(
+        regions: [
+          (
+            code: '130000',
+            name: '東京都',
+            cities: [
+              (
+                code: '1310000',
+                name: '東京都23区',
+                stations: const [],
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final result = convertToIntensityTree(
+        intensity: intensity,
+        parameter: parameter,
+      );
+
+      expect(result.keys.toList(), [JmaIntensity.three]);
+      expect(result[JmaIntensity.three]![0].cities[0].city.name, '東京都23区');
+    });
+
+    test('regions・citiesが空でprefecturesのみの場合は都道府県ノードのみ', () {
+      final intensity = _buildIntensity(
+        maxIntensity: api.JmaIntensity.value4,
+        prefectures: [
+          (
+            code: '040000',
+            name: '宮城県',
+            maxIntensity: api.JmaIntensity.value4,
+          ),
+        ],
+        regions: [],
+      );
+      final parameter = _buildParameter(
+        regions: [
+          (
+            code: '040000',
+            name: '宮城県',
+            cities: [
+              (code: '0420100', name: '宮城県北部', stations: const []),
+            ],
+          ),
+        ],
+      );
+
+      final result = convertToIntensityTree(
+        intensity: intensity,
+        parameter: parameter,
+      );
+
+      expect(result.keys.toList(), [JmaIntensity.four]);
+      expect(result[JmaIntensity.four]![0].region.name, '宮城県');
+      expect(result[JmaIntensity.four]![0].cities, isEmpty);
+    });
+
+    test('max_intensityのみで子要素がすべて空の場合は空のMap', () {
+      final intensity = _buildIntensity(
+        maxIntensity: api.JmaIntensity.value4,
+        prefectures: [],
+        regions: [],
+      );
+      final parameter = _buildParameter(regions: []);
+
+      final result = convertToIntensityTree(
+        intensity: intensity,
+        parameter: parameter,
+      );
+
+      expect(result, isEmpty);
     });
   });
 

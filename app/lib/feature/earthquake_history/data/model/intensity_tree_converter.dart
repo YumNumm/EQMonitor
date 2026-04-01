@@ -67,15 +67,20 @@ Map<JmaIntensity, List<RegionIntensityNode>> convertToIntensityTree({
   List<api.IntensityItem>? cities,
   List<api.IntensityStationItem>? stations,
 }) {
-  if (cities != null && cities.isNotEmpty) {
+  final citiesList = cities ?? intensity.cities;
+  final stationsList = stations ?? intensity.stations;
+  if (citiesList != null && citiesList.isNotEmpty) {
     return _intensityTreeFromCities(
       intensity,
       parameter,
-      cities,
-      stations: stations,
+      citiesList,
+      stations: stationsList,
     );
   }
-  return _intensityTreeFromRegions(intensity, parameter);
+  if (intensity.regions.isNotEmpty) {
+    return _intensityTreeFromRegions(intensity, parameter);
+  }
+  return _intensityTreeFromPrefecturesOnly(intensity, parameter);
 }
 
 Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromCities(
@@ -147,6 +152,44 @@ Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromCities(
   }
 
   return _finalizeIntensityTree(grouped, parameter);
+}
+
+Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromPrefecturesOnly(
+  api.Intensity intensity,
+  EarthquakeParameter parameter,
+) {
+  final paramRegionMap = {for (final r in parameter.regions) r.code: r};
+  final grouped = <JmaIntensity, List<RegionIntensityNode>>{};
+
+  for (final pref in intensity.prefectures) {
+    final regionItem = paramRegionMap[pref.value.code];
+    if (regionItem == null) {
+      continue;
+    }
+    final jma = pref.maxIntensity?.toJmaIntensity;
+    if (jma == null) {
+      continue;
+    }
+
+    grouped
+        .putIfAbsent(jma, () => [])
+        .add(
+          RegionIntensityNode(
+            region: regionItem,
+            maxIntensity: jma,
+            cities: const [],
+          ),
+        );
+  }
+
+  for (final entry in grouped.entries) {
+    entry.value.sort((a, b) => a.region.name.compareTo(b.region.name));
+  }
+
+  return Map.fromEntries(
+    grouped.entries.toList()
+      ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex)),
+  );
 }
 
 Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromRegions(
@@ -243,15 +286,20 @@ convertToLpgmIntensityTree({
   List<api.IntensityItem>? cities,
   List<api.IntensityStationItem>? stations,
 }) {
-  if (cities != null && cities.isNotEmpty) {
+  final citiesList = cities ?? intensity.cities;
+  final stationsList = stations ?? intensity.stations;
+  if (citiesList != null && citiesList.isNotEmpty) {
     return _lpgmTreeFromCities(
       intensity,
       parameter,
-      cities,
-      stations: stations,
+      citiesList,
+      stations: stationsList,
     );
   }
-  return _lpgmTreeFromRegions(intensity, parameter);
+  if (intensity.regions.isNotEmpty) {
+    return _lpgmTreeFromRegions(intensity, parameter);
+  }
+  return _lpgmTreeFromPrefecturesOnly(intensity, parameter);
 }
 
 Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> _lpgmTreeFromCities(
@@ -321,6 +369,45 @@ Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> _lpgmTreeFromCities(
   }
 
   return _finalizeLpgmTree(grouped, parameter);
+}
+
+Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>
+_lpgmTreeFromPrefecturesOnly(
+  api.Intensity intensity,
+  EarthquakeParameter parameter,
+) {
+  final paramRegionMap = {for (final r in parameter.regions) r.code: r};
+  final grouped = <JmaLpgmIntensity, List<RegionLpgmIntensityNode>>{};
+
+  for (final pref in intensity.prefectures) {
+    final regionItem = paramRegionMap[pref.value.code];
+    if (regionItem == null) {
+      continue;
+    }
+    final lpgm = pref.maxLpgmIntensity?.toJmaLpgmIntensity;
+    if (lpgm == null) {
+      continue;
+    }
+
+    grouped
+        .putIfAbsent(lpgm, () => [])
+        .add(
+          RegionLpgmIntensityNode(
+            region: regionItem,
+            maxLpgmIntensity: lpgm,
+            cities: const [],
+          ),
+        );
+  }
+
+  for (final entry in grouped.entries) {
+    entry.value.sort((a, b) => a.region.name.compareTo(b.region.name));
+  }
+
+  return Map.fromEntries(
+    grouped.entries.toList()
+      ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex)),
+  );
 }
 
 Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> _lpgmTreeFromRegions(

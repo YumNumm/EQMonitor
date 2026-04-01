@@ -33,10 +33,14 @@ extension EarthquakeIntensityApiExtension on api.Intensity {
     intensityTree: convertToIntensityTree(
       intensity: this,
       parameter: parameter,
+      cities: cities,
+      stations: stations,
     ),
     lpgmIntensityTree: convertToLpgmIntensityTree(
       intensity: this,
       parameter: parameter,
+      cities: cities,
+      stations: stations,
     ),
   );
 }
