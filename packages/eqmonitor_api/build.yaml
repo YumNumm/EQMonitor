@@ -4,7 +4,6 @@ targets:
       # https://github.com/google/json_serializable.dart/tree/master/json_serializable#build-configuration
       json_serializable:
         options:
-          field_rename: snake
           # json のデシリアライズ時に発生する Exception を CheckedFromJsonException にまとめる
           checked: true
       # https://github.com/dart-lang/source_gen#ignore_for_file

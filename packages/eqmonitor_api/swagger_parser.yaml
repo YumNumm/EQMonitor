@@ -72,7 +72,7 @@ swagger_parser:
   enums_to_json: true
 
   # Optional. Set 'true' to set enum prefix from parent component.
-  enums_parent_prefix: true
+  enums_parent_prefix: false
 
   # Optional (dart only). Set 'true' to maintain backwards compatibility
   # when adding new values on the backend.
@@ -144,7 +144,7 @@ swagger_parser:
   # When not set (null) or empty, no fallback union is generated.
   # Examples: "unknown"
   # Default: "" (no fallbackUnion parameter)
-  # fallback_union: ""
+  fallback_union: "unknown"
 
   # Optional (dart_mappable only). Set false to generate sealed classes for union types.
   # Set true to generate when/maybeWhen convenience methods for legacy support of deprecated union features from versions prior to 3.31.
