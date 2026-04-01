@@ -34,10 +34,10 @@ extension EarthquakeHypocenterApiExtension on api.Hypocenter {
       ),
       .unknown => const Coordinate.unknown(),
     },
-    magnitude: const EarthquakeMagnitude.unknown(),
+    magnitude: magnitude.toEarthquakeMagnitude,
     depth: switch (depth.type) {
       .shallow => const EarthquakeDepth.shallow(),
-      .normal => EarthquakeDepth.value(value: depth.value?.toInt() ?? 0),
+      .normal => EarthquakeDepth.value(value: depth.value!.toInt()),
       .over700 => const EarthquakeDepth.over700km(),
       .unknown => const EarthquakeDepth.unknown(),
     },
