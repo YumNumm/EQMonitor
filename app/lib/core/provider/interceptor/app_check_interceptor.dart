@@ -10,8 +10,8 @@ class AppCheckInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final isDeviceUpsert = options.method == 'PUT' &&
-        _deviceUpsertPattern.hasMatch(options.path);
+    final isDeviceUpsert =
+        options.method == 'PUT' && _deviceUpsertPattern.hasMatch(options.path);
     final String? appCheckToken;
 
     if (isDeviceUpsert) {
