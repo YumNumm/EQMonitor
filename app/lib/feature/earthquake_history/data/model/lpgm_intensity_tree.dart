@@ -21,6 +21,18 @@ abstract class RegionLpgmIntensityNode with _$RegionLpgmIntensityNode {
       _$RegionLpgmIntensityNodeFromJson(json);
 }
 
+@freezed
+abstract class LpgmIntensityRegion with _$LpgmIntensityRegion {
+  const factory LpgmIntensityRegion({
+    @EarthquakeParameterRegionItemConverter()
+    required EarthquakeParameterRegionItem region,
+    required JmaLpgmIntensity? maxLpgmIntensity,
+  }) = _LpgmIntensityRegion;
+
+  factory LpgmIntensityRegion.fromJson(Map<String, dynamic> json) =>
+      _$LpgmIntensityRegionFromJson(json);
+}
+
 /// 市区町村単位の長周期地震動階級ノード
 @freezed
 abstract class CityLpgmIntensityNode with _$CityLpgmIntensityNode {

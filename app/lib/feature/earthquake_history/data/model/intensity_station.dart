@@ -11,8 +11,8 @@ abstract class IntensityStation with _$IntensityStation {
   const factory IntensityStation({
     required String code,
     required String name,
-    required double sva,
-    required List<PrePeriod> prePeriods,
+    required double? sva,
+    required List<PrePeriod>? prePeriods,
     required JmaIntensity? maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
   }) = _IntensityStation;
@@ -37,8 +37,8 @@ extension IntensityStationApiExtension on api.IntensityStationItem {
   IntensityStation get toIntensityStation => IntensityStation(
     code: value.code,
     name: value.name,
-    sva: sva.toDouble(),
-    prePeriods: prePeriods.map((e) => e.toPrePeriod).toList(),
+    sva: sva?.toDouble(),
+    prePeriods: prePeriods?.map((e) => e.toPrePeriod).toList(),
     maxIntensity: maxIntensity?.toJmaIntensity,
     maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,
   );

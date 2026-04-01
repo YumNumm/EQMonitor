@@ -45,7 +45,9 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
             'intensity',
             (v) => v == null
                 ? null
-                : EarthquakeIntensity.fromJson(v as Map<String, dynamic>),
+                : EarthquakeIntensityPartial.fromJson(
+                    v as Map<String, dynamic>,
+                  ),
           ),
           estimatedIntensityTileUrl: $checkedConvert(
             'estimated_intensity_tile_url',

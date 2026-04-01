@@ -288,6 +288,272 @@ as List<CityLpgmIntensityNode>,
 
 
 /// @nodoc
+mixin _$LpgmIntensityRegion {
+
+@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem get region; JmaLpgmIntensity? get maxLpgmIntensity;
+/// Create a copy of LpgmIntensityRegion
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LpgmIntensityRegionCopyWith<LpgmIntensityRegion> get copyWith => _$LpgmIntensityRegionCopyWithImpl<LpgmIntensityRegion>(this as LpgmIntensityRegion, _$identity);
+
+  /// Serializes this LpgmIntensityRegion to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LpgmIntensityRegion&&(identical(other.region, region) || other.region == region)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,region,maxLpgmIntensity);
+
+@override
+String toString() {
+  return 'LpgmIntensityRegion(region: $region, maxLpgmIntensity: $maxLpgmIntensity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LpgmIntensityRegionCopyWith<$Res>  {
+  factory $LpgmIntensityRegionCopyWith(LpgmIntensityRegion value, $Res Function(LpgmIntensityRegion) _then) = _$LpgmIntensityRegionCopyWithImpl;
+@useResult
+$Res call({
+@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaLpgmIntensity? maxLpgmIntensity
+});
+
+
+
+
+}
+/// @nodoc
+class _$LpgmIntensityRegionCopyWithImpl<$Res>
+    implements $LpgmIntensityRegionCopyWith<$Res> {
+  _$LpgmIntensityRegionCopyWithImpl(this._self, this._then);
+
+  final LpgmIntensityRegion _self;
+  final $Res Function(LpgmIntensityRegion) _then;
+
+/// Create a copy of LpgmIntensityRegion
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? region = null,Object? maxLpgmIntensity = freezed,}) {
+  return _then(_self.copyWith(
+region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
+as EarthquakeParameterRegionItem,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LpgmIntensityRegion].
+extension LpgmIntensityRegionPatterns on LpgmIntensityRegion {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LpgmIntensityRegion value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LpgmIntensityRegion() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LpgmIntensityRegion value)  $default,){
+final _that = this;
+switch (_that) {
+case _LpgmIntensityRegion():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LpgmIntensityRegion value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LpgmIntensityRegion() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LpgmIntensityRegion() when $default != null:
+return $default(_that.region,_that.maxLpgmIntensity);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+switch (_that) {
+case _LpgmIntensityRegion():
+return $default(_that.region,_that.maxLpgmIntensity);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+switch (_that) {
+case _LpgmIntensityRegion() when $default != null:
+return $default(_that.region,_that.maxLpgmIntensity);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _LpgmIntensityRegion implements LpgmIntensityRegion {
+  const _LpgmIntensityRegion({@EarthquakeParameterRegionItemConverter() required this.region, required this.maxLpgmIntensity});
+  factory _LpgmIntensityRegion.fromJson(Map<String, dynamic> json) => _$LpgmIntensityRegionFromJson(json);
+
+@override@EarthquakeParameterRegionItemConverter() final  EarthquakeParameterRegionItem region;
+@override final  JmaLpgmIntensity? maxLpgmIntensity;
+
+/// Create a copy of LpgmIntensityRegion
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LpgmIntensityRegionCopyWith<_LpgmIntensityRegion> get copyWith => __$LpgmIntensityRegionCopyWithImpl<_LpgmIntensityRegion>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LpgmIntensityRegionToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LpgmIntensityRegion&&(identical(other.region, region) || other.region == region)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,region,maxLpgmIntensity);
+
+@override
+String toString() {
+  return 'LpgmIntensityRegion(region: $region, maxLpgmIntensity: $maxLpgmIntensity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LpgmIntensityRegionCopyWith<$Res> implements $LpgmIntensityRegionCopyWith<$Res> {
+  factory _$LpgmIntensityRegionCopyWith(_LpgmIntensityRegion value, $Res Function(_LpgmIntensityRegion) _then) = __$LpgmIntensityRegionCopyWithImpl;
+@override @useResult
+$Res call({
+@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaLpgmIntensity? maxLpgmIntensity
+});
+
+
+
+
+}
+/// @nodoc
+class __$LpgmIntensityRegionCopyWithImpl<$Res>
+    implements _$LpgmIntensityRegionCopyWith<$Res> {
+  __$LpgmIntensityRegionCopyWithImpl(this._self, this._then);
+
+  final _LpgmIntensityRegion _self;
+  final $Res Function(_LpgmIntensityRegion) _then;
+
+/// Create a copy of LpgmIntensityRegion
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? region = null,Object? maxLpgmIntensity = freezed,}) {
+  return _then(_LpgmIntensityRegion(
+region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
+as EarthquakeParameterRegionItem,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$CityLpgmIntensityNode {
 
 @EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem get city; JmaLpgmIntensity? get maxLpgmIntensity; List<StationLpgmIntensityNode> get stations;

@@ -58,6 +58,37 @@ const _$JmaLpgmIntensityEnumMap = {
   JmaLpgmIntensity.four: 'four',
 };
 
+_LpgmIntensityRegion _$LpgmIntensityRegionFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_LpgmIntensityRegion',
+      json,
+      ($checkedConvert) {
+        final val = _LpgmIntensityRegion(
+          region: $checkedConvert(
+            'region',
+            (v) => const EarthquakeParameterRegionItemConverter().fromJson(
+              v as Map<String, dynamic>,
+            ),
+          ),
+          maxLpgmIntensity: $checkedConvert(
+            'max_lpgm_intensity',
+            (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'},
+    );
+
+Map<String, dynamic> _$LpgmIntensityRegionToJson(
+  _LpgmIntensityRegion instance,
+) => <String, dynamic>{
+  'region': const EarthquakeParameterRegionItemConverter().toJson(
+    instance.region,
+  ),
+  'max_lpgm_intensity': _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensity],
+};
+
 _CityLpgmIntensityNode _$CityLpgmIntensityNodeFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
