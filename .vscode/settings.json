@@ -24,7 +24,4 @@
 		"./.vscode/*.json": "jsonc"
 	},
 	"editor.formatOnSave": true,
-	"[typescript][javascript][json][jsonc]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	}
 }
