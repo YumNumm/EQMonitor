@@ -28,6 +28,9 @@ Dio dio(Ref ref) {
       contentType: ContentType.json.value,
       connectTimeout: const Duration(milliseconds: 5000),
       sendTimeout: const Duration(milliseconds: 5000),
+      // バックエンドは query の配列を `key[]=a&key[]=b` 形式で受け取る。
+      // `multi` の単一要素は `key=a` となりスカラー扱いで 400 になる。
+      listFormat: ListFormat.multiCompatible,
     ),
   );
   dio.interceptors.add(
