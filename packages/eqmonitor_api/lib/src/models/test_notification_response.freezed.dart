@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TestNotificationResponse {
 
- String get message; NotificationPushFramework get framework;
+ String get message; Framework get framework;
 /// Create a copy of TestNotificationResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TestNotificationResponseCopyWith<$Res>  {
   factory $TestNotificationResponseCopyWith(TestNotificationResponse value, $Res Function(TestNotificationResponse) _then) = _$TestNotificationResponseCopyWithImpl;
 @useResult
 $Res call({
- String message, NotificationPushFramework framework
+ String message, Framework framework
 });
 
 
@@ -69,7 +69,7 @@ class _$TestNotificationResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,framework: null == framework ? _self.framework : framework // ignore: cast_nullable_to_non_nullable
-as NotificationPushFramework,
+as Framework,
   ));
 }
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String message,  NotificationPushFramework framework)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String message,  Framework framework)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TestNotificationResponse() when $default != null:
 return $default(_that.message,_that.framework);case _:
@@ -175,7 +175,7 @@ return $default(_that.message,_that.framework);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String message,  NotificationPushFramework framework)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String message,  Framework framework)  $default,) {final _that = this;
 switch (_that) {
 case _TestNotificationResponse():
 return $default(_that.message,_that.framework);case _:
@@ -195,7 +195,7 @@ return $default(_that.message,_that.framework);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String message,  NotificationPushFramework framework)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String message,  Framework framework)?  $default,) {final _that = this;
 switch (_that) {
 case _TestNotificationResponse() when $default != null:
 return $default(_that.message,_that.framework);case _:
@@ -214,7 +214,7 @@ class _TestNotificationResponse implements TestNotificationResponse {
   factory _TestNotificationResponse.fromJson(Map<String, dynamic> json) => _$TestNotificationResponseFromJson(json);
 
 @override final  String message;
-@override final  NotificationPushFramework framework;
+@override final  Framework framework;
 
 /// Create a copy of TestNotificationResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +249,7 @@ abstract mixin class _$TestNotificationResponseCopyWith<$Res> implements $TestNo
   factory _$TestNotificationResponseCopyWith(_TestNotificationResponse value, $Res Function(_TestNotificationResponse) _then) = __$TestNotificationResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String message, NotificationPushFramework framework
+ String message, Framework framework
 });
 
 
@@ -270,7 +270,7 @@ class __$TestNotificationResponseCopyWithImpl<$Res>
   return _then(_TestNotificationResponse(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,framework: null == framework ? _self.framework : framework // ignore: cast_nullable_to_non_nullable
-as NotificationPushFramework,
+as Framework,
   ));
 }
 

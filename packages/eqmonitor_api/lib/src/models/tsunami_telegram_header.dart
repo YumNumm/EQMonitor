@@ -4,9 +4,9 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'telegram_info_type.dart';
-import 'telegram_status.dart';
-import 'telegram_type.dart';
+import 'info_type.dart';
+import 'status.dart';
+import 'type4.dart';
 
 part 'tsunami_telegram_header.freezed.dart';
 part 'tsunami_telegram_header.g.dart';
@@ -17,11 +17,11 @@ abstract class TsunamiTelegramHeader with _$TsunamiTelegramHeader {
     required String hash,
     @JsonKey(name: 'event_id')
     required String eventId,
-    required TelegramType type,
+    required Type4 type,
     required String title,
-    required TelegramStatus status,
+    required Status status,
     @JsonKey(name: 'info_type')
-    required TelegramInfoType infoType,
+    required InfoType infoType,
     @JsonKey(name: 'editorial_office')
     required String editorialOffice,
     @JsonKey(name: 'publishing_office')

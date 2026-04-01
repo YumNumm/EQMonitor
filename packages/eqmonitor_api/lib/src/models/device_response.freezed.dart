@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceResponse {
 
- String get id; DevicePlatform get type;@JsonKey(name: 'user_id') String get userId; AppLocale get locale;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
+ String get id; Type get type;@JsonKey(name: 'user_id') String get userId; Locale get locale;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
 /// Create a copy of DeviceResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DeviceResponseCopyWith<$Res>  {
   factory $DeviceResponseCopyWith(DeviceResponse value, $Res Function(DeviceResponse) _then) = _$DeviceResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, DevicePlatform type,@JsonKey(name: 'user_id') String userId, AppLocale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+ String id, Type type,@JsonKey(name: 'user_id') String userId, Locale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 
@@ -69,9 +69,9 @@ class _$DeviceResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as DevicePlatform,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as Type,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as AppLocale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as Locale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DevicePlatform type, @JsonKey(name: 'user_id')  String userId,  AppLocale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  Type type, @JsonKey(name: 'user_id')  String userId,  Locale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceResponse() when $default != null:
 return $default(_that.id,_that.type,_that.userId,_that.locale,_that.createdAt,_that.updatedAt);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.type,_that.userId,_that.locale,_that.createdAt,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DevicePlatform type, @JsonKey(name: 'user_id')  String userId,  AppLocale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  Type type, @JsonKey(name: 'user_id')  String userId,  Locale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceResponse():
 return $default(_that.id,_that.type,_that.userId,_that.locale,_that.createdAt,_that.updatedAt);case _:
@@ -199,7 +199,7 @@ return $default(_that.id,_that.type,_that.userId,_that.locale,_that.createdAt,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DevicePlatform type, @JsonKey(name: 'user_id')  String userId,  AppLocale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  Type type, @JsonKey(name: 'user_id')  String userId,  Locale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceResponse() when $default != null:
 return $default(_that.id,_that.type,_that.userId,_that.locale,_that.createdAt,_that.updatedAt);case _:
@@ -218,9 +218,9 @@ class _DeviceResponse implements DeviceResponse {
   factory _DeviceResponse.fromJson(Map<String, dynamic> json) => _$DeviceResponseFromJson(json);
 
 @override final  String id;
-@override final  DevicePlatform type;
+@override final  Type type;
 @override@JsonKey(name: 'user_id') final  String userId;
-@override final  AppLocale locale;
+@override final  Locale locale;
 @override@JsonKey(name: 'created_at') final  String createdAt;
 @override@JsonKey(name: 'updated_at') final  String updatedAt;
 
@@ -257,7 +257,7 @@ abstract mixin class _$DeviceResponseCopyWith<$Res> implements $DeviceResponseCo
   factory _$DeviceResponseCopyWith(_DeviceResponse value, $Res Function(_DeviceResponse) _then) = __$DeviceResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, DevicePlatform type,@JsonKey(name: 'user_id') String userId, AppLocale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+ String id, Type type,@JsonKey(name: 'user_id') String userId, Locale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 
@@ -278,9 +278,9 @@ class __$DeviceResponseCopyWithImpl<$Res>
   return _then(_DeviceResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as DevicePlatform,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as Type,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as AppLocale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as Locale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));

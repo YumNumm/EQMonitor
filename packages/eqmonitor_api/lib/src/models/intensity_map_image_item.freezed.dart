@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$IntensityMapImageItem {
 
 /// 画像レコードID
- String get id; AppLocale get language;/// 画像URL
+ String get id;/// 画像の言語
+ Language get language;/// 画像URL
 @JsonKey(name: 'image_url') String get imageUrl;/// 画像ファイルサイズ(bytes)
 @JsonKey(name: 'file_size') num get fileSize; Size get size;/// 生成インスタンス名
 @JsonKey(name: 'generator_instance') String get generatorInstance;/// レンダリング時間(ms)
@@ -55,7 +56,7 @@ abstract mixin class $IntensityMapImageItemCopyWith<$Res>  {
   factory $IntensityMapImageItemCopyWith(IntensityMapImageItem value, $Res Function(IntensityMapImageItem) _then) = _$IntensityMapImageItemCopyWithImpl;
 @useResult
 $Res call({
- String id, AppLocale language,@JsonKey(name: 'image_url') String imageUrl,@JsonKey(name: 'file_size') num fileSize, Size size,@JsonKey(name: 'generator_instance') String generatorInstance,@JsonKey(name: 'render_duration_ms') num renderDurationMs,@JsonKey(name: 'upload_duration_ms') num uploadDurationMs,@JsonKey(name: 'total_duration_ms') num totalDurationMs,@JsonKey(name: 'generated_at') DateTime generatedAt
+ String id, Language language,@JsonKey(name: 'image_url') String imageUrl,@JsonKey(name: 'file_size') num fileSize, Size size,@JsonKey(name: 'generator_instance') String generatorInstance,@JsonKey(name: 'render_duration_ms') num renderDurationMs,@JsonKey(name: 'upload_duration_ms') num uploadDurationMs,@JsonKey(name: 'total_duration_ms') num totalDurationMs,@JsonKey(name: 'generated_at') DateTime generatedAt
 });
 
 
@@ -76,7 +77,7 @@ class _$IntensityMapImageItemCopyWithImpl<$Res>
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
-as AppLocale,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as Language,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
 as num,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as Size,generatorInstance: null == generatorInstance ? _self.generatorInstance : generatorInstance // ignore: cast_nullable_to_non_nullable
@@ -178,7 +179,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  AppLocale language, @JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'file_size')  num fileSize,  Size size, @JsonKey(name: 'generator_instance')  String generatorInstance, @JsonKey(name: 'render_duration_ms')  num renderDurationMs, @JsonKey(name: 'upload_duration_ms')  num uploadDurationMs, @JsonKey(name: 'total_duration_ms')  num totalDurationMs, @JsonKey(name: 'generated_at')  DateTime generatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  Language language, @JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'file_size')  num fileSize,  Size size, @JsonKey(name: 'generator_instance')  String generatorInstance, @JsonKey(name: 'render_duration_ms')  num renderDurationMs, @JsonKey(name: 'upload_duration_ms')  num uploadDurationMs, @JsonKey(name: 'total_duration_ms')  num totalDurationMs, @JsonKey(name: 'generated_at')  DateTime generatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityMapImageItem() when $default != null:
 return $default(_that.id,_that.language,_that.imageUrl,_that.fileSize,_that.size,_that.generatorInstance,_that.renderDurationMs,_that.uploadDurationMs,_that.totalDurationMs,_that.generatedAt);case _:
@@ -199,7 +200,7 @@ return $default(_that.id,_that.language,_that.imageUrl,_that.fileSize,_that.size
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  AppLocale language, @JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'file_size')  num fileSize,  Size size, @JsonKey(name: 'generator_instance')  String generatorInstance, @JsonKey(name: 'render_duration_ms')  num renderDurationMs, @JsonKey(name: 'upload_duration_ms')  num uploadDurationMs, @JsonKey(name: 'total_duration_ms')  num totalDurationMs, @JsonKey(name: 'generated_at')  DateTime generatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  Language language, @JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'file_size')  num fileSize,  Size size, @JsonKey(name: 'generator_instance')  String generatorInstance, @JsonKey(name: 'render_duration_ms')  num renderDurationMs, @JsonKey(name: 'upload_duration_ms')  num uploadDurationMs, @JsonKey(name: 'total_duration_ms')  num totalDurationMs, @JsonKey(name: 'generated_at')  DateTime generatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityMapImageItem():
 return $default(_that.id,_that.language,_that.imageUrl,_that.fileSize,_that.size,_that.generatorInstance,_that.renderDurationMs,_that.uploadDurationMs,_that.totalDurationMs,_that.generatedAt);case _:
@@ -219,7 +220,7 @@ return $default(_that.id,_that.language,_that.imageUrl,_that.fileSize,_that.size
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  AppLocale language, @JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'file_size')  num fileSize,  Size size, @JsonKey(name: 'generator_instance')  String generatorInstance, @JsonKey(name: 'render_duration_ms')  num renderDurationMs, @JsonKey(name: 'upload_duration_ms')  num uploadDurationMs, @JsonKey(name: 'total_duration_ms')  num totalDurationMs, @JsonKey(name: 'generated_at')  DateTime generatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  Language language, @JsonKey(name: 'image_url')  String imageUrl, @JsonKey(name: 'file_size')  num fileSize,  Size size, @JsonKey(name: 'generator_instance')  String generatorInstance, @JsonKey(name: 'render_duration_ms')  num renderDurationMs, @JsonKey(name: 'upload_duration_ms')  num uploadDurationMs, @JsonKey(name: 'total_duration_ms')  num totalDurationMs, @JsonKey(name: 'generated_at')  DateTime generatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityMapImageItem() when $default != null:
 return $default(_that.id,_that.language,_that.imageUrl,_that.fileSize,_that.size,_that.generatorInstance,_that.renderDurationMs,_that.uploadDurationMs,_that.totalDurationMs,_that.generatedAt);case _:
@@ -239,7 +240,8 @@ class _IntensityMapImageItem implements IntensityMapImageItem {
 
 /// 画像レコードID
 @override final  String id;
-@override final  AppLocale language;
+/// 画像の言語
+@override final  Language language;
 /// 画像URL
 @override@JsonKey(name: 'image_url') final  String imageUrl;
 /// 画像ファイルサイズ(bytes)
@@ -288,7 +290,7 @@ abstract mixin class _$IntensityMapImageItemCopyWith<$Res> implements $Intensity
   factory _$IntensityMapImageItemCopyWith(_IntensityMapImageItem value, $Res Function(_IntensityMapImageItem) _then) = __$IntensityMapImageItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, AppLocale language,@JsonKey(name: 'image_url') String imageUrl,@JsonKey(name: 'file_size') num fileSize, Size size,@JsonKey(name: 'generator_instance') String generatorInstance,@JsonKey(name: 'render_duration_ms') num renderDurationMs,@JsonKey(name: 'upload_duration_ms') num uploadDurationMs,@JsonKey(name: 'total_duration_ms') num totalDurationMs,@JsonKey(name: 'generated_at') DateTime generatedAt
+ String id, Language language,@JsonKey(name: 'image_url') String imageUrl,@JsonKey(name: 'file_size') num fileSize, Size size,@JsonKey(name: 'generator_instance') String generatorInstance,@JsonKey(name: 'render_duration_ms') num renderDurationMs,@JsonKey(name: 'upload_duration_ms') num uploadDurationMs,@JsonKey(name: 'total_duration_ms') num totalDurationMs,@JsonKey(name: 'generated_at') DateTime generatedAt
 });
 
 
@@ -309,7 +311,7 @@ class __$IntensityMapImageItemCopyWithImpl<$Res>
   return _then(_IntensityMapImageItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
-as AppLocale,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as Language,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
 as num,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as Size,generatorInstance: null == generatorInstance ? _self.generatorInstance : generatorInstance // ignore: cast_nullable_to_non_nullable

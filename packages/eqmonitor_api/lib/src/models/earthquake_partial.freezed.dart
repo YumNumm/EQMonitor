@@ -15,8 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakePartial {
 
-@JsonKey(name: 'event_id') EventId get eventId; TelegramStatus get status;@JsonKey(name: 'origin_time_precision') OriginTimePrecision get originTimePrecision; EarthquakeDatasource get datasource;@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? get originTime;@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;@JsonKey(includeIfNull: false) Hypocenter? get hypocenter;/// 推計震度PMTilesのフルURL
-@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? get estimatedIntensityTile;@JsonKey(includeIfNull: false, name: 'intensity_map_image') IntensityMapImageUrl? get intensityMapImage;@JsonKey(includeIfNull: false, name: 'intensity_map_images') List<IntensityMapImageGroup>? get intensityMapImages;@JsonKey(includeIfNull: false) Intensity? get intensity;
+/// yyyyMMddHHmmss形式のイベントID
+@JsonKey(name: 'event_id') String get eventId; TelegramStatus get status;@JsonKey(name: 'origin_time_precision') OriginTimePrecision get originTimePrecision; EarthquakeDatasource get datasource;@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? get originTime;@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? get arrivalTime;@JsonKey(includeIfNull: false) Hypocenter? get hypocenter;/// 推計震度PMTilesのフルURL
+@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? get estimatedIntensityTile;@JsonKey(includeIfNull: false, name: 'intensity_map_image') IntensityMapImageUrl? get intensityMapImage;@JsonKey(includeIfNull: false, name: 'intensity_map_images') List<IntensityMapImageGroup>? get intensityMapImages;@JsonKey(includeIfNull: false) IntensityPartial? get intensity;
 /// Create a copy of EarthquakePartial
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,11 +50,11 @@ abstract mixin class $EarthquakePartialCopyWith<$Res>  {
   factory $EarthquakePartialCopyWith(EarthquakePartial value, $Res Function(EarthquakePartial) _then) = _$EarthquakePartialCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'event_id') EventId eventId, TelegramStatus status,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, EarthquakeDatasource datasource,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false, name: 'intensity_map_image') IntensityMapImageUrl? intensityMapImage,@JsonKey(includeIfNull: false, name: 'intensity_map_images') List<IntensityMapImageGroup>? intensityMapImages,@JsonKey(includeIfNull: false) Intensity? intensity
+@JsonKey(name: 'event_id') String eventId, TelegramStatus status,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, EarthquakeDatasource datasource,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false, name: 'intensity_map_image') IntensityMapImageUrl? intensityMapImage,@JsonKey(includeIfNull: false, name: 'intensity_map_images') List<IntensityMapImageGroup>? intensityMapImages,@JsonKey(includeIfNull: false) IntensityPartial? intensity
 });
 
 
-$HypocenterCopyWith<$Res>? get hypocenter;$IntensityCopyWith<$Res>? get intensity;
+$HypocenterCopyWith<$Res>? get hypocenter;$IntensityPartialCopyWith<$Res>? get intensity;
 
 }
 /// @nodoc
@@ -69,7 +70,7 @@ class _$EarthquakePartialCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? status = null,Object? originTimePrecision = null,Object? datasource = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? estimatedIntensityTile = freezed,Object? intensityMapImage = freezed,Object? intensityMapImages = freezed,Object? intensity = freezed,}) {
   return _then(_self.copyWith(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as EventId,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus,originTimePrecision: null == originTimePrecision ? _self.originTimePrecision : originTimePrecision // ignore: cast_nullable_to_non_nullable
 as OriginTimePrecision,datasource: null == datasource ? _self.datasource : datasource // ignore: cast_nullable_to_non_nullable
 as EarthquakeDatasource,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
@@ -79,7 +80,7 @@ as Hypocenter?,estimatedIntensityTile: freezed == estimatedIntensityTile ? _self
 as String?,intensityMapImage: freezed == intensityMapImage ? _self.intensityMapImage : intensityMapImage // ignore: cast_nullable_to_non_nullable
 as IntensityMapImageUrl?,intensityMapImages: freezed == intensityMapImages ? _self.intensityMapImages : intensityMapImages // ignore: cast_nullable_to_non_nullable
 as List<IntensityMapImageGroup>?,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as Intensity?,
+as IntensityPartial?,
   ));
 }
 /// Create a copy of EarthquakePartial
@@ -98,12 +99,12 @@ $HypocenterCopyWith<$Res>? get hypocenter {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityCopyWith<$Res>? get intensity {
+$IntensityPartialCopyWith<$Res>? get intensity {
     if (_self.intensity == null) {
     return null;
   }
 
-  return $IntensityCopyWith<$Res>(_self.intensity!, (value) {
+  return $IntensityPartialCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
   });
 }
@@ -188,7 +189,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  EventId eventId,  TelegramStatus status, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  EarthquakeDatasource datasource, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'intensity_map_image')  IntensityMapImageUrl? intensityMapImage, @JsonKey(includeIfNull: false, name: 'intensity_map_images')  List<IntensityMapImageGroup>? intensityMapImages, @JsonKey(includeIfNull: false)  Intensity? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  EarthquakeDatasource datasource, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'intensity_map_image')  IntensityMapImageUrl? intensityMapImage, @JsonKey(includeIfNull: false, name: 'intensity_map_images')  List<IntensityMapImageGroup>? intensityMapImages, @JsonKey(includeIfNull: false)  IntensityPartial? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakePartial() when $default != null:
 return $default(_that.eventId,_that.status,_that.originTimePrecision,_that.datasource,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.estimatedIntensityTile,_that.intensityMapImage,_that.intensityMapImages,_that.intensity);case _:
@@ -209,7 +210,7 @@ return $default(_that.eventId,_that.status,_that.originTimePrecision,_that.datas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  EventId eventId,  TelegramStatus status, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  EarthquakeDatasource datasource, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'intensity_map_image')  IntensityMapImageUrl? intensityMapImage, @JsonKey(includeIfNull: false, name: 'intensity_map_images')  List<IntensityMapImageGroup>? intensityMapImages, @JsonKey(includeIfNull: false)  Intensity? intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  EarthquakeDatasource datasource, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'intensity_map_image')  IntensityMapImageUrl? intensityMapImage, @JsonKey(includeIfNull: false, name: 'intensity_map_images')  List<IntensityMapImageGroup>? intensityMapImages, @JsonKey(includeIfNull: false)  IntensityPartial? intensity)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakePartial():
 return $default(_that.eventId,_that.status,_that.originTimePrecision,_that.datasource,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.estimatedIntensityTile,_that.intensityMapImage,_that.intensityMapImages,_that.intensity);case _:
@@ -229,7 +230,7 @@ return $default(_that.eventId,_that.status,_that.originTimePrecision,_that.datas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'event_id')  EventId eventId,  TelegramStatus status, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  EarthquakeDatasource datasource, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'intensity_map_image')  IntensityMapImageUrl? intensityMapImage, @JsonKey(includeIfNull: false, name: 'intensity_map_images')  List<IntensityMapImageGroup>? intensityMapImages, @JsonKey(includeIfNull: false)  Intensity? intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'event_id')  String eventId,  TelegramStatus status, @JsonKey(name: 'origin_time_precision')  OriginTimePrecision originTimePrecision,  EarthquakeDatasource datasource, @JsonKey(includeIfNull: false, name: 'origin_time')  DateTime? originTime, @JsonKey(includeIfNull: false, name: 'arrival_time')  DateTime? arrivalTime, @JsonKey(includeIfNull: false)  Hypocenter? hypocenter, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile')  String? estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'intensity_map_image')  IntensityMapImageUrl? intensityMapImage, @JsonKey(includeIfNull: false, name: 'intensity_map_images')  List<IntensityMapImageGroup>? intensityMapImages, @JsonKey(includeIfNull: false)  IntensityPartial? intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakePartial() when $default != null:
 return $default(_that.eventId,_that.status,_that.originTimePrecision,_that.datasource,_that.originTime,_that.arrivalTime,_that.hypocenter,_that.estimatedIntensityTile,_that.intensityMapImage,_that.intensityMapImages,_that.intensity);case _:
@@ -247,7 +248,8 @@ class _EarthquakePartial implements EarthquakePartial {
   const _EarthquakePartial({@JsonKey(name: 'event_id') required this.eventId, required this.status, @JsonKey(name: 'origin_time_precision') required this.originTimePrecision, required this.datasource, @JsonKey(includeIfNull: false, name: 'origin_time') this.originTime, @JsonKey(includeIfNull: false, name: 'arrival_time') this.arrivalTime, @JsonKey(includeIfNull: false) this.hypocenter, @JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') this.estimatedIntensityTile, @JsonKey(includeIfNull: false, name: 'intensity_map_image') this.intensityMapImage, @JsonKey(includeIfNull: false, name: 'intensity_map_images') final  List<IntensityMapImageGroup>? intensityMapImages, @JsonKey(includeIfNull: false) this.intensity}): _intensityMapImages = intensityMapImages;
   factory _EarthquakePartial.fromJson(Map<String, dynamic> json) => _$EarthquakePartialFromJson(json);
 
-@override@JsonKey(name: 'event_id') final  EventId eventId;
+/// yyyyMMddHHmmss形式のイベントID
+@override@JsonKey(name: 'event_id') final  String eventId;
 @override final  TelegramStatus status;
 @override@JsonKey(name: 'origin_time_precision') final  OriginTimePrecision originTimePrecision;
 @override final  EarthquakeDatasource datasource;
@@ -266,7 +268,7 @@ class _EarthquakePartial implements EarthquakePartial {
   return EqualUnmodifiableListView(value);
 }
 
-@override@JsonKey(includeIfNull: false) final  Intensity? intensity;
+@override@JsonKey(includeIfNull: false) final  IntensityPartial? intensity;
 
 /// Create a copy of EarthquakePartial
 /// with the given fields replaced by the non-null parameter values.
@@ -301,11 +303,11 @@ abstract mixin class _$EarthquakePartialCopyWith<$Res> implements $EarthquakePar
   factory _$EarthquakePartialCopyWith(_EarthquakePartial value, $Res Function(_EarthquakePartial) _then) = __$EarthquakePartialCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'event_id') EventId eventId, TelegramStatus status,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, EarthquakeDatasource datasource,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false, name: 'intensity_map_image') IntensityMapImageUrl? intensityMapImage,@JsonKey(includeIfNull: false, name: 'intensity_map_images') List<IntensityMapImageGroup>? intensityMapImages,@JsonKey(includeIfNull: false) Intensity? intensity
+@JsonKey(name: 'event_id') String eventId, TelegramStatus status,@JsonKey(name: 'origin_time_precision') OriginTimePrecision originTimePrecision, EarthquakeDatasource datasource,@JsonKey(includeIfNull: false, name: 'origin_time') DateTime? originTime,@JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,@JsonKey(includeIfNull: false) Hypocenter? hypocenter,@JsonKey(includeIfNull: false, name: 'estimated_intensity_tile') String? estimatedIntensityTile,@JsonKey(includeIfNull: false, name: 'intensity_map_image') IntensityMapImageUrl? intensityMapImage,@JsonKey(includeIfNull: false, name: 'intensity_map_images') List<IntensityMapImageGroup>? intensityMapImages,@JsonKey(includeIfNull: false) IntensityPartial? intensity
 });
 
 
-@override $HypocenterCopyWith<$Res>? get hypocenter;@override $IntensityCopyWith<$Res>? get intensity;
+@override $HypocenterCopyWith<$Res>? get hypocenter;@override $IntensityPartialCopyWith<$Res>? get intensity;
 
 }
 /// @nodoc
@@ -321,7 +323,7 @@ class __$EarthquakePartialCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? status = null,Object? originTimePrecision = null,Object? datasource = null,Object? originTime = freezed,Object? arrivalTime = freezed,Object? hypocenter = freezed,Object? estimatedIntensityTile = freezed,Object? intensityMapImage = freezed,Object? intensityMapImages = freezed,Object? intensity = freezed,}) {
   return _then(_EarthquakePartial(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as EventId,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TelegramStatus,originTimePrecision: null == originTimePrecision ? _self.originTimePrecision : originTimePrecision // ignore: cast_nullable_to_non_nullable
 as OriginTimePrecision,datasource: null == datasource ? _self.datasource : datasource // ignore: cast_nullable_to_non_nullable
 as EarthquakeDatasource,originTime: freezed == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
@@ -331,7 +333,7 @@ as Hypocenter?,estimatedIntensityTile: freezed == estimatedIntensityTile ? _self
 as String?,intensityMapImage: freezed == intensityMapImage ? _self.intensityMapImage : intensityMapImage // ignore: cast_nullable_to_non_nullable
 as IntensityMapImageUrl?,intensityMapImages: freezed == intensityMapImages ? _self._intensityMapImages : intensityMapImages // ignore: cast_nullable_to_non_nullable
 as List<IntensityMapImageGroup>?,intensity: freezed == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as Intensity?,
+as IntensityPartial?,
   ));
 }
 
@@ -351,12 +353,12 @@ $HypocenterCopyWith<$Res>? get hypocenter {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$IntensityCopyWith<$Res>? get intensity {
+$IntensityPartialCopyWith<$Res>? get intensity {
     if (_self.intensity == null) {
     return null;
   }
 
-  return $IntensityCopyWith<$Res>(_self.intensity!, (value) {
+  return $IntensityPartialCopyWith<$Res>(_self.intensity!, (value) {
     return _then(_self.copyWith(intensity: value));
   });
 }

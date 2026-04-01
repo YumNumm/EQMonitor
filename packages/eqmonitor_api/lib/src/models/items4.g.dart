@@ -26,7 +26,7 @@ _Items4 _$Items4FromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       infoType: $checkedConvert(
         'info_type',
-        (v) => $enumDecode(_$TelegramInfoTypeEnumMap, v),
+        (v) => $enumDecode(_$InfoTypeEnumMap, v),
       ),
       editorialOffice: $checkedConvert('editorial_office', (v) => v as String),
       publishingOffice: $checkedConvert(
@@ -123,9 +123,9 @@ const _$TelegramStatusEnumMap = {
   TelegramStatus.test: 'TEST',
 };
 
-const _$TelegramInfoTypeEnumMap = {
-  TelegramInfoType.publication: 'PUBLICATION',
-  TelegramInfoType.correction: 'CORRECTION',
-  TelegramInfoType.delay: 'DELAY',
-  TelegramInfoType.cancellation: 'CANCELLATION',
+const _$InfoTypeEnumMap = {
+  InfoType.publication: 'PUBLICATION',
+  InfoType.correction: 'CORRECTION',
+  InfoType.delay: 'DELAY',
+  InfoType.cancellation: 'CANCELLATION',
 };

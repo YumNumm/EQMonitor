@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationLogItem {
 
-@JsonKey(name: 'stream_id') String get streamId;@JsonKey(name: 'device_id') String get deviceId; NotificationPushFramework get framework; NotificationDeliveryResult get result;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(includeIfNull: false, name: 'error_code') String? get errorCode;@JsonKey(includeIfNull: false, name: 'error_message') String? get errorMessage;@JsonKey(includeIfNull: false, name: 'event_id') String? get eventId;@JsonKey(includeIfNull: false) String? get title;@JsonKey(includeIfNull: false) String? get body;@JsonKey(includeIfNull: false, name: 'android_priority') String? get androidPriority;@JsonKey(includeIfNull: false, name: 'android_notification_priority') String? get androidNotificationPriority;@JsonKey(includeIfNull: false, name: 'channel_id') String? get channelId;@JsonKey(includeIfNull: false, name: 'apns_priority') String? get apnsPriority;@JsonKey(includeIfNull: false, name: 'interruption_level') String? get interruptionLevel;
+@JsonKey(name: 'stream_id') String get streamId;@JsonKey(name: 'device_id') String get deviceId; Framework get framework; Result get result;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(includeIfNull: false, name: 'error_code') String? get errorCode;@JsonKey(includeIfNull: false, name: 'error_message') String? get errorMessage;@JsonKey(includeIfNull: false, name: 'event_id') String? get eventId;@JsonKey(includeIfNull: false) String? get title;@JsonKey(includeIfNull: false) String? get body;@JsonKey(includeIfNull: false, name: 'android_priority') String? get androidPriority;@JsonKey(includeIfNull: false, name: 'android_notification_priority') String? get androidNotificationPriority;@JsonKey(includeIfNull: false, name: 'channel_id') String? get channelId;@JsonKey(includeIfNull: false, name: 'apns_priority') String? get apnsPriority;@JsonKey(includeIfNull: false, name: 'interruption_level') String? get interruptionLevel;
 /// Create a copy of NotificationLogItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $NotificationLogItemCopyWith<$Res>  {
   factory $NotificationLogItemCopyWith(NotificationLogItem value, $Res Function(NotificationLogItem) _then) = _$NotificationLogItemCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'stream_id') String streamId,@JsonKey(name: 'device_id') String deviceId, NotificationPushFramework framework, NotificationDeliveryResult result,@JsonKey(name: 'created_at') String createdAt,@JsonKey(includeIfNull: false, name: 'error_code') String? errorCode,@JsonKey(includeIfNull: false, name: 'error_message') String? errorMessage,@JsonKey(includeIfNull: false, name: 'event_id') String? eventId,@JsonKey(includeIfNull: false) String? title,@JsonKey(includeIfNull: false) String? body,@JsonKey(includeIfNull: false, name: 'android_priority') String? androidPriority,@JsonKey(includeIfNull: false, name: 'android_notification_priority') String? androidNotificationPriority,@JsonKey(includeIfNull: false, name: 'channel_id') String? channelId,@JsonKey(includeIfNull: false, name: 'apns_priority') String? apnsPriority,@JsonKey(includeIfNull: false, name: 'interruption_level') String? interruptionLevel
+@JsonKey(name: 'stream_id') String streamId,@JsonKey(name: 'device_id') String deviceId, Framework framework, Result result,@JsonKey(name: 'created_at') String createdAt,@JsonKey(includeIfNull: false, name: 'error_code') String? errorCode,@JsonKey(includeIfNull: false, name: 'error_message') String? errorMessage,@JsonKey(includeIfNull: false, name: 'event_id') String? eventId,@JsonKey(includeIfNull: false) String? title,@JsonKey(includeIfNull: false) String? body,@JsonKey(includeIfNull: false, name: 'android_priority') String? androidPriority,@JsonKey(includeIfNull: false, name: 'android_notification_priority') String? androidNotificationPriority,@JsonKey(includeIfNull: false, name: 'channel_id') String? channelId,@JsonKey(includeIfNull: false, name: 'apns_priority') String? apnsPriority,@JsonKey(includeIfNull: false, name: 'interruption_level') String? interruptionLevel
 });
 
 
@@ -70,8 +70,8 @@ class _$NotificationLogItemCopyWithImpl<$Res>
 streamId: null == streamId ? _self.streamId : streamId // ignore: cast_nullable_to_non_nullable
 as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,framework: null == framework ? _self.framework : framework // ignore: cast_nullable_to_non_nullable
-as NotificationPushFramework,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
-as NotificationDeliveryResult,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as Framework,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
+as Result,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
@@ -167,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'stream_id')  String streamId, @JsonKey(name: 'device_id')  String deviceId,  NotificationPushFramework framework,  NotificationDeliveryResult result, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(includeIfNull: false, name: 'error_code')  String? errorCode, @JsonKey(includeIfNull: false, name: 'error_message')  String? errorMessage, @JsonKey(includeIfNull: false, name: 'event_id')  String? eventId, @JsonKey(includeIfNull: false)  String? title, @JsonKey(includeIfNull: false)  String? body, @JsonKey(includeIfNull: false, name: 'android_priority')  String? androidPriority, @JsonKey(includeIfNull: false, name: 'android_notification_priority')  String? androidNotificationPriority, @JsonKey(includeIfNull: false, name: 'channel_id')  String? channelId, @JsonKey(includeIfNull: false, name: 'apns_priority')  String? apnsPriority, @JsonKey(includeIfNull: false, name: 'interruption_level')  String? interruptionLevel)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'stream_id')  String streamId, @JsonKey(name: 'device_id')  String deviceId,  Framework framework,  Result result, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(includeIfNull: false, name: 'error_code')  String? errorCode, @JsonKey(includeIfNull: false, name: 'error_message')  String? errorMessage, @JsonKey(includeIfNull: false, name: 'event_id')  String? eventId, @JsonKey(includeIfNull: false)  String? title, @JsonKey(includeIfNull: false)  String? body, @JsonKey(includeIfNull: false, name: 'android_priority')  String? androidPriority, @JsonKey(includeIfNull: false, name: 'android_notification_priority')  String? androidNotificationPriority, @JsonKey(includeIfNull: false, name: 'channel_id')  String? channelId, @JsonKey(includeIfNull: false, name: 'apns_priority')  String? apnsPriority, @JsonKey(includeIfNull: false, name: 'interruption_level')  String? interruptionLevel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationLogItem() when $default != null:
 return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAt,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel);case _:
@@ -188,7 +188,7 @@ return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'stream_id')  String streamId, @JsonKey(name: 'device_id')  String deviceId,  NotificationPushFramework framework,  NotificationDeliveryResult result, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(includeIfNull: false, name: 'error_code')  String? errorCode, @JsonKey(includeIfNull: false, name: 'error_message')  String? errorMessage, @JsonKey(includeIfNull: false, name: 'event_id')  String? eventId, @JsonKey(includeIfNull: false)  String? title, @JsonKey(includeIfNull: false)  String? body, @JsonKey(includeIfNull: false, name: 'android_priority')  String? androidPriority, @JsonKey(includeIfNull: false, name: 'android_notification_priority')  String? androidNotificationPriority, @JsonKey(includeIfNull: false, name: 'channel_id')  String? channelId, @JsonKey(includeIfNull: false, name: 'apns_priority')  String? apnsPriority, @JsonKey(includeIfNull: false, name: 'interruption_level')  String? interruptionLevel)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'stream_id')  String streamId, @JsonKey(name: 'device_id')  String deviceId,  Framework framework,  Result result, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(includeIfNull: false, name: 'error_code')  String? errorCode, @JsonKey(includeIfNull: false, name: 'error_message')  String? errorMessage, @JsonKey(includeIfNull: false, name: 'event_id')  String? eventId, @JsonKey(includeIfNull: false)  String? title, @JsonKey(includeIfNull: false)  String? body, @JsonKey(includeIfNull: false, name: 'android_priority')  String? androidPriority, @JsonKey(includeIfNull: false, name: 'android_notification_priority')  String? androidNotificationPriority, @JsonKey(includeIfNull: false, name: 'channel_id')  String? channelId, @JsonKey(includeIfNull: false, name: 'apns_priority')  String? apnsPriority, @JsonKey(includeIfNull: false, name: 'interruption_level')  String? interruptionLevel)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationLogItem():
 return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAt,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel);case _:
@@ -208,7 +208,7 @@ return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'stream_id')  String streamId, @JsonKey(name: 'device_id')  String deviceId,  NotificationPushFramework framework,  NotificationDeliveryResult result, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(includeIfNull: false, name: 'error_code')  String? errorCode, @JsonKey(includeIfNull: false, name: 'error_message')  String? errorMessage, @JsonKey(includeIfNull: false, name: 'event_id')  String? eventId, @JsonKey(includeIfNull: false)  String? title, @JsonKey(includeIfNull: false)  String? body, @JsonKey(includeIfNull: false, name: 'android_priority')  String? androidPriority, @JsonKey(includeIfNull: false, name: 'android_notification_priority')  String? androidNotificationPriority, @JsonKey(includeIfNull: false, name: 'channel_id')  String? channelId, @JsonKey(includeIfNull: false, name: 'apns_priority')  String? apnsPriority, @JsonKey(includeIfNull: false, name: 'interruption_level')  String? interruptionLevel)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'stream_id')  String streamId, @JsonKey(name: 'device_id')  String deviceId,  Framework framework,  Result result, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(includeIfNull: false, name: 'error_code')  String? errorCode, @JsonKey(includeIfNull: false, name: 'error_message')  String? errorMessage, @JsonKey(includeIfNull: false, name: 'event_id')  String? eventId, @JsonKey(includeIfNull: false)  String? title, @JsonKey(includeIfNull: false)  String? body, @JsonKey(includeIfNull: false, name: 'android_priority')  String? androidPriority, @JsonKey(includeIfNull: false, name: 'android_notification_priority')  String? androidNotificationPriority, @JsonKey(includeIfNull: false, name: 'channel_id')  String? channelId, @JsonKey(includeIfNull: false, name: 'apns_priority')  String? apnsPriority, @JsonKey(includeIfNull: false, name: 'interruption_level')  String? interruptionLevel)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationLogItem() when $default != null:
 return $default(_that.streamId,_that.deviceId,_that.framework,_that.result,_that.createdAt,_that.errorCode,_that.errorMessage,_that.eventId,_that.title,_that.body,_that.androidPriority,_that.androidNotificationPriority,_that.channelId,_that.apnsPriority,_that.interruptionLevel);case _:
@@ -228,8 +228,8 @@ class _NotificationLogItem implements NotificationLogItem {
 
 @override@JsonKey(name: 'stream_id') final  String streamId;
 @override@JsonKey(name: 'device_id') final  String deviceId;
-@override final  NotificationPushFramework framework;
-@override final  NotificationDeliveryResult result;
+@override final  Framework framework;
+@override final  Result result;
 @override@JsonKey(name: 'created_at') final  String createdAt;
 @override@JsonKey(includeIfNull: false, name: 'error_code') final  String? errorCode;
 @override@JsonKey(includeIfNull: false, name: 'error_message') final  String? errorMessage;
@@ -275,7 +275,7 @@ abstract mixin class _$NotificationLogItemCopyWith<$Res> implements $Notificatio
   factory _$NotificationLogItemCopyWith(_NotificationLogItem value, $Res Function(_NotificationLogItem) _then) = __$NotificationLogItemCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'stream_id') String streamId,@JsonKey(name: 'device_id') String deviceId, NotificationPushFramework framework, NotificationDeliveryResult result,@JsonKey(name: 'created_at') String createdAt,@JsonKey(includeIfNull: false, name: 'error_code') String? errorCode,@JsonKey(includeIfNull: false, name: 'error_message') String? errorMessage,@JsonKey(includeIfNull: false, name: 'event_id') String? eventId,@JsonKey(includeIfNull: false) String? title,@JsonKey(includeIfNull: false) String? body,@JsonKey(includeIfNull: false, name: 'android_priority') String? androidPriority,@JsonKey(includeIfNull: false, name: 'android_notification_priority') String? androidNotificationPriority,@JsonKey(includeIfNull: false, name: 'channel_id') String? channelId,@JsonKey(includeIfNull: false, name: 'apns_priority') String? apnsPriority,@JsonKey(includeIfNull: false, name: 'interruption_level') String? interruptionLevel
+@JsonKey(name: 'stream_id') String streamId,@JsonKey(name: 'device_id') String deviceId, Framework framework, Result result,@JsonKey(name: 'created_at') String createdAt,@JsonKey(includeIfNull: false, name: 'error_code') String? errorCode,@JsonKey(includeIfNull: false, name: 'error_message') String? errorMessage,@JsonKey(includeIfNull: false, name: 'event_id') String? eventId,@JsonKey(includeIfNull: false) String? title,@JsonKey(includeIfNull: false) String? body,@JsonKey(includeIfNull: false, name: 'android_priority') String? androidPriority,@JsonKey(includeIfNull: false, name: 'android_notification_priority') String? androidNotificationPriority,@JsonKey(includeIfNull: false, name: 'channel_id') String? channelId,@JsonKey(includeIfNull: false, name: 'apns_priority') String? apnsPriority,@JsonKey(includeIfNull: false, name: 'interruption_level') String? interruptionLevel
 });
 
 
@@ -297,8 +297,8 @@ class __$NotificationLogItemCopyWithImpl<$Res>
 streamId: null == streamId ? _self.streamId : streamId // ignore: cast_nullable_to_non_nullable
 as String,deviceId: null == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
 as String,framework: null == framework ? _self.framework : framework // ignore: cast_nullable_to_non_nullable
-as NotificationPushFramework,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
-as NotificationDeliveryResult,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as Framework,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
+as Result,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable

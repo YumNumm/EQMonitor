@@ -26,7 +26,7 @@ _EewItemWithRelations _$EewItemWithRelationsFromJson(
       ),
       infoType: $checkedConvert(
         'info_type',
-        (v) => $enumDecode(_$TelegramInfoTypeEnumMap, v),
+        (v) => $enumDecode(_$InfoTypeEnumMap, v),
       ),
       serialNo: $checkedConvert('serial_no', (v) => v as num),
       headline: $checkedConvert('headline', (v) => v as String?),
@@ -138,9 +138,9 @@ const _$TelegramStatusEnumMap = {
   TelegramStatus.test: 'TEST',
 };
 
-const _$TelegramInfoTypeEnumMap = {
-  TelegramInfoType.publication: 'PUBLICATION',
-  TelegramInfoType.correction: 'CORRECTION',
-  TelegramInfoType.delay: 'DELAY',
-  TelegramInfoType.cancellation: 'CANCELLATION',
+const _$InfoTypeEnumMap = {
+  InfoType.publication: 'PUBLICATION',
+  InfoType.correction: 'CORRECTION',
+  InfoType.delay: 'DELAY',
+  InfoType.cancellation: 'CANCELLATION',
 };

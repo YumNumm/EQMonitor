@@ -18,7 +18,7 @@ _IntensityMapImageItem _$IntensityMapImageItemFromJson(
       id: $checkedConvert('id', (v) => v as String),
       language: $checkedConvert(
         'language',
-        (v) => $enumDecode(_$AppLocaleEnumMap, v),
+        (v) => $enumDecode(_$LanguageEnumMap, v),
       ),
       imageUrl: $checkedConvert('image_url', (v) => v as String),
       fileSize: $checkedConvert('file_size', (v) => v as num),
@@ -66,8 +66,8 @@ Map<String, dynamic> _$IntensityMapImageItemToJson(
   'generated_at': instance.generatedAt.toIso8601String(),
 };
 
-const _$AppLocaleEnumMap = {
-  AppLocale.ja: 'ja',
-  AppLocale.en: 'en',
-  AppLocale.zh: 'zh',
+const _$LanguageEnumMap = {
+  Language.ja: 'ja',
+  Language.en: 'en',
+  Language.zh: 'zh',
 };

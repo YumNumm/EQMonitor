@@ -15,6 +15,7 @@ import '../models/intensity_prefecture_search_response.dart';
 import '../models/intensity_region_search_response.dart';
 import '../models/intensity_station_search_response.dart';
 import '../models/jma_intensity.dart';
+import '../models/locale.dart';
 import '../models/sort_order.dart';
 
 import '../models/telegram_status.dart';
@@ -64,13 +65,11 @@ abstract class EarthquakeApiClient {
     @Path('eventId') required String eventId,
   });
 
-  /// 地震イベントの震度分布図（最新）。言語は Accept-Language（ja/en/zh）で指定。.
-  ///
-  /// [acceptLanguage] - 優先言語（RFC 7231）。先頭の言語タグの主要サブタグを ja / en / zh にマップ。省略時は ja。.
+  /// 地震イベントの震度分布図（最新）
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEventIdIntensityMap)
   Future<HttpResponse<GetV2EarthquakeEventIdIntensityMapResponse>> getV2EarthquakeEventIdIntensityMap({
     @Path('eventId') required String eventId,
-    @Header('Accept-Language') String? acceptLanguage,
+    @Query('locale') Locale? locale = Locale.ja,
   });
 
   /// [limit] - 1~100 の整数(string).

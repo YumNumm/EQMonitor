@@ -5,7 +5,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'earthquake_datasource.dart';
-import 'event_id.dart';
 import 'hypocenter.dart';
 import 'intensity.dart';
 import 'intensity_map_image_group.dart';
@@ -20,8 +19,9 @@ part 'earthquake.g.dart';
 @Freezed()
 abstract class Earthquake with _$Earthquake {
   const factory Earthquake({
+    /// yyyyMMddHHmmss形式のイベントID
     @JsonKey(name: 'event_id')
-    required EventId eventId,
+    required String eventId,
     required TelegramStatus status,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,

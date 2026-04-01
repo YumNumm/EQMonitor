@@ -27,7 +27,7 @@ class _TsunamiApiClient implements TsunamiApiClient {
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
     String? cursor,
-    BooleanStringQuery? isCanceled,
+    IsCanceled? isCanceled,
     DateTime? createdAtGte,
     DateTime? createdAtLte,
   }) async {

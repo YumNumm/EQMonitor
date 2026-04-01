@@ -5,8 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'earthquake_partial.dart';
-import 'event_message.dart';
-import 'shake_detected_payload.dart';
+import 'eews.dart';
+import 'shakes.dart';
 import 'tsunami_list_item.dart';
 
 part 'realtime_state.freezed.dart';
@@ -17,8 +17,8 @@ abstract class RealtimeState with _$RealtimeState {
   const factory RealtimeState({
     required num revision,
     required DateTime updatedAt,
-    required List<ShakeDetectedPayload> shakes,
-    required List<EventMessage> eews,
+    required List<Shakes> shakes,
+    required List<Eews> eews,
     required List<EarthquakePartial> earthquakes,
     required List<TsunamiListItem> tsunamis,
   }) = _RealtimeState;

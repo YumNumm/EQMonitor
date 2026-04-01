@@ -10,46 +10,36 @@ part of 'admin_replay_file_detail_response_item.dart';
 
 _AdminReplayFileDetailResponseItem _$AdminReplayFileDetailResponseItemFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  '_AdminReplayFileDetailResponseItem',
-  json,
-  ($checkedConvert) {
-    final val = _AdminReplayFileDetailResponseItem(
-      id: $checkedConvert('id', (v) => v as String),
-      startTime: $checkedConvert('start_time', (v) => v as String),
-      endTime: $checkedConvert('end_time', (v) => v as String),
-      objectKey: $checkedConvert('object_key', (v) => v as String),
-      fileSizeBytes: $checkedConvert('file_size_bytes', (v) => v as num?),
-      createdAt: $checkedConvert('created_at', (v) => v as String),
-      downloadUrl: $checkedConvert('download_url', (v) => v as String?),
-      triggers: $checkedConvert(
-        'triggers',
-        (v) => (v as List<dynamic>)
-            .map((e) => Triggers.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-    );
-    return val;
-  },
-  fieldKeyMap: const {
-    'startTime': 'start_time',
-    'endTime': 'end_time',
-    'objectKey': 'object_key',
-    'fileSizeBytes': 'file_size_bytes',
-    'createdAt': 'created_at',
-    'downloadUrl': 'download_url',
-  },
-);
+) => $checkedCreate('_AdminReplayFileDetailResponseItem', json, (
+  $checkedConvert,
+) {
+  final val = _AdminReplayFileDetailResponseItem(
+    id: $checkedConvert('id', (v) => v as String),
+    startTime: $checkedConvert('startTime', (v) => v as String),
+    endTime: $checkedConvert('endTime', (v) => v as String),
+    objectKey: $checkedConvert('objectKey', (v) => v as String),
+    fileSizeBytes: $checkedConvert('fileSizeBytes', (v) => v as num?),
+    createdAt: $checkedConvert('createdAt', (v) => v as String),
+    downloadUrl: $checkedConvert('downloadUrl', (v) => v as String?),
+    triggers: $checkedConvert(
+      'triggers',
+      (v) => (v as List<dynamic>)
+          .map((e) => Triggers.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$AdminReplayFileDetailResponseItemToJson(
   _AdminReplayFileDetailResponseItem instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'start_time': instance.startTime,
-  'end_time': instance.endTime,
-  'object_key': instance.objectKey,
-  'file_size_bytes': instance.fileSizeBytes,
-  'created_at': instance.createdAt,
-  'download_url': instance.downloadUrl,
+  'startTime': instance.startTime,
+  'endTime': instance.endTime,
+  'objectKey': instance.objectKey,
+  'fileSizeBytes': instance.fileSizeBytes,
+  'createdAt': instance.createdAt,
+  'downloadUrl': instance.downloadUrl,
   'triggers': instance.triggers,
 };

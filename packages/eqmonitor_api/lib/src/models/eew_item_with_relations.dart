@@ -8,8 +8,7 @@ import 'eew_accuracy.dart';
 import 'eew_hypocenter.dart';
 import 'eew_intensity.dart';
 import 'eew_warning.dart';
-import 'event_id.dart';
-import 'telegram_info_type.dart';
+import 'info_type.dart';
 import 'telegram_status.dart';
 import 'telegram_type.dart';
 
@@ -19,12 +18,13 @@ part 'eew_item_with_relations.g.dart';
 @Freezed()
 abstract class EewItemWithRelations with _$EewItemWithRelations {
   const factory EewItemWithRelations({
+    /// yyyyMMddHHmmss形式のイベントID
     @JsonKey(name: 'event_id')
-    required EventId eventId,
+    required String eventId,
     required TelegramType type,
     required TelegramStatus status,
     @JsonKey(name: 'info_type')
-    required TelegramInfoType infoType,
+    required InfoType infoType,
     @JsonKey(name: 'serial_no')
     required num serialNo,
     @JsonKey(includeIfNull: true)

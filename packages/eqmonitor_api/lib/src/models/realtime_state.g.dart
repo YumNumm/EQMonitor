@@ -13,21 +13,19 @@ _RealtimeState _$RealtimeStateFromJson(Map<String, dynamic> json) =>
       final val = _RealtimeState(
         revision: $checkedConvert('revision', (v) => v as num),
         updatedAt: $checkedConvert(
-          'updated_at',
+          'updatedAt',
           (v) => DateTime.parse(v as String),
         ),
         shakes: $checkedConvert(
           'shakes',
           (v) => (v as List<dynamic>)
-              .map(
-                (e) => ShakeDetectedPayload.fromJson(e as Map<String, dynamic>),
-              )
+              .map((e) => Shakes.fromJson(e as Map<String, dynamic>))
               .toList(),
         ),
         eews: $checkedConvert(
           'eews',
           (v) => (v as List<dynamic>)
-              .map((e) => EventMessage.fromJson(e as Map<String, dynamic>))
+              .map((e) => Eews.fromJson(e as Map<String, dynamic>))
               .toList(),
         ),
         earthquakes: $checkedConvert(
@@ -44,12 +42,12 @@ _RealtimeState _$RealtimeStateFromJson(Map<String, dynamic> json) =>
         ),
       );
       return val;
-    }, fieldKeyMap: const {'updatedAt': 'updated_at'});
+    });
 
 Map<String, dynamic> _$RealtimeStateToJson(_RealtimeState instance) =>
     <String, dynamic>{
       'revision': instance.revision,
-      'updated_at': instance.updatedAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'shakes': instance.shakes,
       'eews': instance.eews,
       'earthquakes': instance.earthquakes,
