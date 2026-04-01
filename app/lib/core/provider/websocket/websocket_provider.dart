@@ -3,108 +3,137 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:web_socket_client/web_socket_client.dart';
 
 part 'websocket_provider.g.dart';
 
+enum SseConnectionState {
+  connecting,
+  connected,
+  disconnected,
+}
+
 @Riverpod(keepAlive: true)
-Future<WebSocket> websocket(Ref ref) async {
-  final api = ref.watch(apiClientProvider);
-  final response = await api.webSocket.getV2WebsocketTicket();
-  final body = response.data;
-  talker.debug(
-    'WebSocket Ticketを取得しました: ${body.ticket.substring(0, 8)}..., '
-    '有効期限: ${body.expiresAt.toIso8601String()}',
-  );
-  final ticket = body.ticket;
-  final wsApiUrl = ref.watch(telegramUrlProvider.select((v) => v.requireValue.wsApiUrl));
+class SseConnection extends _$SseConnection {
+  CancelToken? _cancelToken;
+  Timer? _reconnectTimer;
 
-  // チケットをクエリパラメータに追加
-  final uri = Uri.parse(wsApiUrl).replace(
-    queryParameters: {'ticket': ticket},
-  );
+  @override
+  Stream<Map<String, dynamic>> build() async* {
+    final controller = StreamController<Map<String, dynamic>>();
 
-  final backoff = BinaryExponentialBackoff(
-    initial: const Duration(milliseconds: 100),
-    maximumStep: 10,
-  );
-  final socket = WebSocket(
-    uri,
-    pingInterval: const Duration(seconds: 5),
-    backoff: backoff,
-  );
-  ref
-    ..onDispose(() {
-      socket.close(1000, 'Connection closed');
-    })
-    ..listen(appLifecycleProvider, (_, next) {
-      // backgroundになったら接続を閉じる
+    ref.onDispose(() {
+      _cancelToken?.cancel('disposed');
+      _reconnectTimer?.cancel();
+      unawaited(controller.close());
+    });
+
+    ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.paused) {
-        socket.close(1000, 'Connection closed');
-        log('WebSocket connection closed');
+        _cancelToken?.cancel('paused');
+        log('SSE connection cancelled (paused)');
       }
       if (next == AppLifecycleState.resumed) {
         ref.invalidateSelf();
       }
     });
 
-  log('WebSocket connection created with ticket');
-  return socket;
-}
+    await _connect(controller);
 
-@Riverpod(keepAlive: true)
-class WebsocketStatus extends _$WebsocketStatus {
-  @override
-  Stream<ConnectionState> build() async* {
-    final socket = await ref.watch(websocketProvider.future);
-    final streamController = StreamController<ConnectionState>();
-    final subscription = socket.connection.listen(streamController.add);
-    ref.onDispose(() async {
-      await streamController.close();
-      await subscription.cancel();
-    });
-    yield* streamController.stream;
+    yield* controller.stream;
   }
-}
 
-@Riverpod(keepAlive: true)
-class WebsocketMessages extends _$WebsocketMessages {
-  late StreamController<Map<String, dynamic>> _controller;
-
-  @override
-  Stream<Map<String, dynamic>> build() async* {
-    final socketAsync = ref.watch(websocketProvider);
-    _controller = StreamController<Map<String, dynamic>>();
-    ref.onDispose(() {
-      unawaited(_controller.close());
-    });
-
-    await socketAsync.when(
-      data: (socket) async {
-        socket.messages.listen((message) {
-          talker.log('WebSocket message: $message');
-          final decoded = jsonDecode(message.toString());
-          if (decoded is Map<String, dynamic>) {
-            _controller.add(decoded);
-          }
-        });
-      },
-      loading: () async {
-        talker.warning('WebSocket is loading...');
-      },
-      error: (error, stack) async {
-        talker.error('Failed to setup WebSocket listener: $error', stack);
-      },
+  Future<void> _connect(StreamController<Map<String, dynamic>> controller) async {
+    final restApiUrl = ref.read(
+      telegramUrlProvider.select((v) => v.requireValue.restApiUrl),
+    );
+    final uri = Uri.parse(restApiUrl).replace(
+      path: '/v2/realtime/stream',
     );
 
-    yield* _controller.stream;
+    _cancelToken = CancelToken();
+    try {
+      final dio = Dio();
+      final response = await dio.getUri<ResponseBody>(
+        uri,
+        options: Options(
+          responseType: ResponseType.stream,
+          headers: {
+            'Accept': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+          },
+        ),
+        cancelToken: _cancelToken,
+      );
+
+      final stream = response.data?.stream;
+      if (stream == null) {
+        talker.error('SSE: response stream is null');
+        return;
+      }
+
+      talker.debug('SSE connection established');
+
+      final buffer = StringBuffer();
+      await for (final chunk in stream) {
+        if (controller.isClosed) {
+          break;
+        }
+        buffer.write(utf8.decode(chunk));
+        final lines = buffer.toString().split('\n');
+        buffer.clear();
+        if (lines.last.isNotEmpty) {
+          buffer.write(lines.removeLast());
+        } else {
+          lines.removeLast();
+        }
+
+        for (final line in lines) {
+          if (line.startsWith('data:')) {
+            final data = line.substring(5).trim();
+            if (data.isEmpty) {
+              continue;
+            }
+            try {
+              final decoded = jsonDecode(data);
+              if (decoded is Map<String, dynamic>) {
+                talker.log('SSE message: $data');
+                controller.add(decoded);
+              }
+            } on FormatException catch (e) {
+              talker.warning('SSE: invalid JSON: $e');
+            }
+          }
+        }
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.cancel) {
+        talker.debug('SSE connection cancelled');
+        return;
+      }
+      talker.error('SSE connection error: $e');
+    }
   }
 
-  void emit(Map<String, dynamic> data) => _controller.add(data);
+  void emit(Map<String, dynamic> data) {
+    // no-op: SSEはサーバーからの一方向通信
+  }
+}
+
+@Riverpod(keepAlive: true)
+class SseConnectionStatus extends _$SseConnectionStatus {
+  @override
+  SseConnectionState build() {
+    final asyncValue = ref.watch(sseConnectionProvider);
+    return switch (asyncValue) {
+      AsyncLoading() => SseConnectionState.connecting,
+      AsyncData() => SseConnectionState.connected,
+      AsyncError() => SseConnectionState.disconnected,
+    };
+  }
 }

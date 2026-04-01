@@ -2,20 +2,23 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'eew_telegram_item.freezed.dart';
 
 @Freezed()
 abstract class EewTelegramItem with _$EewTelegramItem {
-
   const factory EewTelegramItem({
     required String eventId,
     required TelegramStatus status,
     required TelegramInfoType infoType,
     required int serialNo,
-    required bool isCanceled, required bool isLastInfo, required DateTime reportTime, required bool isPlum, String? headline,
+    required bool isCanceled,
+    required bool isLastInfo,
+    required DateTime reportTime,
+    required bool isPlum,
+    String? headline,
     bool? isWarning,
     DateTime? originTime,
     DateTime? arrivalTime,
@@ -36,7 +39,8 @@ abstract class EewHypocenterInfo with _$EewHypocenterInfo {
   const factory EewHypocenterInfo({
     required String code,
     required String name,
-    required bool hasLatLng, String? detailedCode,
+    required bool hasLatLng,
+    String? detailedCode,
     String? detailedName,
     double? latitude,
     double? longitude,
@@ -148,8 +152,7 @@ extension on api.EewIntensity {
         regions: regions.map((r) => r._toEewForecastRegionInfo()).toList(),
         maxIntensity: maxIntensity?.value.toJmaIntensity,
         maxIntensityIsOver: maxIntensity?.isOver ?? false,
-        maxLpgmIntensity:
-            maxLpgmIntensity?.value.toJmaLpgmIntensity,
+        maxLpgmIntensity: maxLpgmIntensity?.value.toJmaLpgmIntensity,
         maxLpgmIntensityIsOver: maxLpgmIntensity?.isOver ?? false,
       );
 }

@@ -57,29 +57,42 @@ const _$JmaIntensityEnumMap = {
 };
 
 _CityIntensityNode _$CityIntensityNodeFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('_CityIntensityNode', json, ($checkedConvert) {
-      final val = _CityIntensityNode(
-        city: $checkedConvert(
-          'city',
-          (v) => const EarthquakeParameterCityItemConverter().fromJson(
-            v as Map<String, dynamic>,
+    $checkedCreate(
+      '_CityIntensityNode',
+      json,
+      ($checkedConvert) {
+        final val = _CityIntensityNode(
+          city: $checkedConvert(
+            'city',
+            (v) => const EarthquakeParameterCityItemConverter().fromJson(
+              v as Map<String, dynamic>,
+            ),
           ),
-        ),
-        maxIntensity: $checkedConvert(
-          'max_intensity',
-          (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
-        ),
-        stations: $checkedConvert(
-          'stations',
-          (v) => (v as List<dynamic>)
-              .map(
-                (e) => StationIntensityNode.fromJson(e as Map<String, dynamic>),
-              )
-              .toList(),
-        ),
-      );
-      return val;
-    }, fieldKeyMap: const {'maxIntensity': 'max_intensity'});
+          maxIntensity: $checkedConvert(
+            'max_intensity',
+            (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+          ),
+          stations: $checkedConvert(
+            'stations',
+            (v) => (v as List<dynamic>)
+                .map(
+                  (e) =>
+                      StationIntensityNode.fromJson(e as Map<String, dynamic>),
+                )
+                .toList(),
+          ),
+          maxLpgmIntensity: $checkedConvert(
+            'max_lpgm_intensity',
+            (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'maxIntensity': 'max_intensity',
+        'maxLpgmIntensity': 'max_lpgm_intensity',
+      },
+    );
 
 Map<String, dynamic> _$CityIntensityNodeToJson(
   _CityIntensityNode instance,
@@ -87,6 +100,16 @@ Map<String, dynamic> _$CityIntensityNodeToJson(
   'city': const EarthquakeParameterCityItemConverter().toJson(instance.city),
   'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
   'stations': instance.stations,
+  'max_lpgm_intensity': _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensity],
+};
+
+const _$JmaLpgmIntensityEnumMap = {
+  JmaLpgmIntensity.unknown: 'unknown',
+  JmaLpgmIntensity.zero: 'zero',
+  JmaLpgmIntensity.one: 'one',
+  JmaLpgmIntensity.two: 'two',
+  JmaLpgmIntensity.three: 'three',
+  JmaLpgmIntensity.four: 'four',
 };
 
 _StationIntensityNode _$StationIntensityNodeFromJson(

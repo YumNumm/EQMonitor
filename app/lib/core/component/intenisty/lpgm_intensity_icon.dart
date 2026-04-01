@@ -22,9 +22,7 @@ class LpgmIntensityIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel =
-        ref.watch(intensityColorProvider).asData?.value ??
-        IntensityColorModel.eqmonitor();
+    final intensityColorModel = ref.watch(intensityColorProvider);
     final colorScheme = intensityColorModel.fromJmaLpgmIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
 

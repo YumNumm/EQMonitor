@@ -5,9 +5,9 @@ void main(List<String> args) async {
 
   final packageDir = Directory.current;
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
-  final libDir = Directory('${packageDir.path}/lib');
+  final libDir = Directory('${packageDir.path}/lib/src');
 
-  await _step('lib/ を削除', () async {
+  await _step('lib/src/ を削除', () async {
     if (libDir.existsSync()) {
       libDir.deleteSync(recursive: true);
     }
@@ -46,7 +46,7 @@ void main(List<String> args) async {
   ///   - `{N}-` (value{N})    → value{N}minus
   ///   - `{N}+` (value{N})    → value{N}plus
   await _step('震度 enum メンバー名をパッチ', () async {
-    final modelsDir = Directory('${packageDir.path}/lib/models');
+    final modelsDir = Directory('${packageDir.path}/lib/src/models');
 
     if (!modelsDir.existsSync()) return;
 
@@ -88,6 +88,10 @@ void main(List<String> args) async {
 
   await _step(r'$unknown 文字列補間パッチ', () async {
     await _patchGeneratedFiles(libDir);
+  });
+
+  await _step('statuses クエリパラメータの型パッチ', () async {
+    _patchStatusesQueryInApiClients(libDir);
   });
 
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
@@ -133,10 +137,69 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
 
   for (final file in dartFiles) {
     final original = file.readAsStringSync();
-    final patched = original.replaceAll(r'$unknown', r'\$unknown');
+    var patched = original.replaceAll(r'$unknown', r'\$unknown');
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  Patched: ${file.path}');
+    }
+  }
+}
+
+const _telegramStatusImport = "import '../models/telegram_status.dart';";
+
+/// [statuses] クエリの扱い。
+///
+/// バックエンドが出力する OpenAPI では `anyOf`（配列 or 単一 enum）と
+/// `default: ["NORMAL"]` の組み合わせになりやすく、swagger_parser が
+/// `dynamic` + `const ['NORMAL']`（実質 `List<String>`）を生成することがある。
+/// Retrofit 生成コードはそれに対し `statuses.toJson()` を呼び、実行時に
+/// NoSuchMethodError になる。
+///
+/// OpenAPI 本体はリポジトリで手修正しない（バックエンド生成物のため）。
+/// ここでクライアント宣言だけを [List<TelegramStatus>] に正規化する。
+void _patchStatusesQueryInApiClients(Directory libDir) {
+  final clientsDir = Directory('${libDir.path}/clients');
+  if (!clientsDir.existsSync()) {
+    return;
+  }
+
+  for (final entity in clientsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) {
+      continue;
+    }
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    const needle = "@Query('statuses') ";
+    if (!content.contains(needle)) {
+      continue;
+    }
+
+    content = content.replaceAll(
+      "@Query('statuses') dynamic statuses = const ['NORMAL']",
+      "@Query('statuses') List<TelegramStatus> statuses = const [.normal]",
+    );
+    content = content.replaceAll(
+      "@Query('statuses') dynamic statuses = [NORMAL]",
+      "@Query('statuses') List<TelegramStatus> statuses = const [.normal]",
+    );
+    content = content.replaceAll(
+      "@Query('statuses') List<TelegramStatus>? statuses = const ['NORMAL']",
+      "@Query('statuses') List<TelegramStatus> statuses = const [.normal]",
+    );
+
+    if (content.contains('List<TelegramStatus>') &&
+        !content.contains('telegram_status.dart')) {
+      content = content.replaceFirst(
+        '\n\npart \'',
+        '\n\n$_telegramStatusImport\n\npart \'',
+      );
+    }
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched statuses query: ${entity.path}');
     }
   }
 }

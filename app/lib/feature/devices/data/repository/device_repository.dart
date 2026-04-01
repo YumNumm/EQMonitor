@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/settings/features/notification/data/model/notification_token.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,13 +30,12 @@ class DeviceRepository {
 
   Future<Result<RegisteredDevice, Exception>> registerDevice(
     String deviceId,
-  ) =>
-      Result.capture(() async {
-        final response = await _api.device.putV2DeviceDeviceId(
-          deviceId: deviceId,
-        );
-        return response.data.toRegisteredDevice;
-      });
+  ) => Result.capture(() async {
+    final response = await _api.device.putV2DeviceDeviceId(
+      deviceId: deviceId,
+    );
+    return response.data.toRegisteredDevice;
+  });
 
   Future<Result<RegisteredDevice, Exception>> fetchOrRegister(
     String deviceId,

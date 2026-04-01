@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'push_notification_repository.g.dart';

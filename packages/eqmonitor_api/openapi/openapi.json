@@ -18,8 +18,8 @@
       "description": "ユーザー"
     },
     {
-      "name": "WebSocket",
-      "description": "WebSocket"
+      "name": "Realtime",
+      "description": "リアルタイム（SSE）"
     },
     {
       "name": "Device",
@@ -55,6 +55,319 @@
     }
   ],
   "paths": {
+    "/v2/admin/dispatches": {
+      "get": {
+        "operationId": "getV2AdminDispatches",
+        "tags": [
+          "Admin"
+        ],
+        "description": "配信サマリー一覧",
+        "responses": {
+          "200": {
+            "description": "配信サマリー一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDispatchSummaryListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/admin/dispatches/{correlationKey}": {
+      "get": {
+        "operationId": "getV2AdminDispatchesByCorrelationKey",
+        "tags": [
+          "Admin"
+        ],
+        "description": "配信サマリー詳細",
+        "responses": {
+          "200": {
+            "description": "配信サマリー詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDispatchSummaryDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "correlationKey",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/admin/replay-files": {
+      "get": {
+        "operationId": "getV2AdminReplayFiles",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          }
+        ],
+        "tags": [
+          "Admin"
+        ],
+        "description": "リプレイファイル一覧",
+        "responses": {
+          "200": {
+            "description": "リプレイファイル一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminReplayFileListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "不正なリクエスト",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayForbiddenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/admin/replay-files/{id}": {
+      "get": {
+        "operationId": "getV2AdminReplayFilesById",
+        "tags": [
+          "Admin"
+        ],
+        "description": "リプレイファイル詳細（トリガー情報含む）",
+        "responses": {
+          "200": {
+            "description": "リプレイファイル詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminReplayFileDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/admin/replay-files/{id}/download-url": {
+      "get": {
+        "operationId": "getV2AdminReplayFilesByIdDownloadUrl",
+        "tags": [
+          "Admin"
+        ],
+        "description": "署名付きダウンロード URL 発行",
+        "responses": {
+          "200": {
+            "description": "署名付き URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminReplayFileDownloadUrlResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "署名付き URL 生成失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "オブジェクトストレージ（S3）未設定",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayDownloadServiceUnavailable"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/device/{deviceId}": {
       "put": {
         "operationId": "putV2DeviceByDeviceId",
@@ -1640,7 +1953,21 @@
         "operationId": "getV2DeviceByDeviceIdNotificationHistory",
         "parameters": [
           {
-            "$ref": "#/components/parameters/NotificationHistoryQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": "100"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "schema": {
@@ -1707,6 +2034,126 @@
             }
           }
         }
+      }
+    },
+    "/v2/device/{deviceId}/notification/dispatches": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationDispatches",
+        "tags": [
+          "Notification"
+        ],
+        "description": "配信サマリー一覧（admin）",
+        "responses": {
+          "200": {
+            "description": "配信サマリー一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DispatchSummaryListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v2/device/{deviceId}/notification/dispatches/{correlationKey}": {
+      "get": {
+        "operationId": "getV2DeviceByDeviceIdNotificationDispatchesByCorrelationKey",
+        "tags": [
+          "Notification"
+        ],
+        "description": "配信サマリー詳細（admin）",
+        "responses": {
+          "200": {
+            "description": "配信サマリー詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DispatchSummaryDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "未検出",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "correlationKey",
+            "required": true
+          }
+        ]
       }
     },
     "/v2/device/{deviceId}/notification/test": {
@@ -1795,7 +2242,121 @@
         "operationId": "getV2Earthquake",
         "parameters": [
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -1891,6 +2452,78 @@
         }
       }
     },
+    "/v2/earthquake/{eventId}/intensity-map": {
+      "get": {
+        "operationId": "getV2EarthquakeByEventIdIntensityMap",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EarthquakeIntensityMapEventIdParam"
+          },
+          {
+            "name": "Accept-Language",
+            "in": "header",
+            "required": false,
+            "description": "優先言語（RFC 7231）。先頭の言語タグの主要サブタグを ja / en / zh にマップ。省略時は ja。",
+            "schema": {
+              "type": "string",
+              "example": "en-US,en;q=0.9,ja;q=0.8"
+            }
+          }
+        ],
+        "tags": [
+          "Earthquake"
+        ],
+        "description": "地震イベントの震度分布図（最新）。言語は Accept-Language（ja/en/zh）で指定。",
+        "responses": {
+          "200": {
+            "description": "震度分布図URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "object_key": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "object_key"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "地震情報が見つかりません",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/earthquake/intensity/region/{code}": {
       "get": {
         "operationId": "getV2EarthquakeIntensityRegionByCode",
@@ -1899,7 +2532,121 @@
             "$ref": "#/components/parameters/IntensityRegionCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -1947,7 +2694,121 @@
             "$ref": "#/components/parameters/IntensityPrefectureCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -1995,7 +2856,121 @@
             "$ref": "#/components/parameters/IntensityCityCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2043,7 +3018,121 @@
             "$ref": "#/components/parameters/IntensityStationCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2091,7 +3180,121 @@
             "$ref": "#/components/parameters/EpicenterCodeParam"
           },
           {
-            "$ref": "#/components/parameters/EarthquakeQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "$ref": "#/components/schemas/EarthquakeSortBy",
+              "default": "event_id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2136,7 +3339,92 @@
         "operationId": "getV2Eew",
         "parameters": [
           {
-            "$ref": "#/components/parameters/EewQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "magnitudeGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~20 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthLte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "depthGte",
+            "schema": {
+              "type": "string"
+            },
+            "description": "0~2000 の実数(string)"
+          },
+          {
+            "in": "query",
+            "name": "intensityLte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "intensityGte",
+            "schema": {
+              "$ref": "#/components/schemas/JmaIntensity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "originTimeGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "originTimeLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "isWarning",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "tags": [
@@ -2330,7 +3618,41 @@
         "operationId": "getV2Telegram",
         "parameters": [
           {
-            "$ref": "#/components/parameters/TelegramQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
           }
         ],
         "tags": [
@@ -2378,7 +3700,41 @@
             "$ref": "#/components/parameters/TelegramTypeParam"
           },
           {
-            "$ref": "#/components/parameters/TelegramQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
           }
         ],
         "tags": [
@@ -2426,7 +3782,41 @@
             "$ref": "#/components/parameters/TelegramEventIdParam"
           },
           {
-            "$ref": "#/components/parameters/TelegramQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
           }
         ],
         "tags": [
@@ -2526,7 +3916,74 @@
         "operationId": "getV2Tsunami",
         "parameters": [
           {
-            "$ref": "#/components/parameters/TsunamiQueryParams"
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "1~100 の整数(string)"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "string",
+              "contentEncoding": "base64"
+            },
+            "description": "カーソル情報, {type}:{id} を base64 エンコードしたもの"
+          },
+          {
+            "in": "query",
+            "name": "isCanceled",
+            "schema": {
+              "$ref": "#/components/schemas/BooleanStringQuery"
+            }
+          },
+          {
+            "in": "query",
+            "name": "createdAtGte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "createdAtLte",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z)"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelegramStatus"
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TelegramStatus"
+                }
+              ],
+              "default": [
+                "NORMAL"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "$ref": "#/components/schemas/SortOrder",
+              "default": "desc"
+            }
           }
         ],
         "tags": [
@@ -2915,35 +4372,29 @@
         ]
       }
     },
-    "/v2/websocket/ticket": {
+    "/v2/realtime/state": {
       "get": {
-        "operationId": "getV2WebsocketTicket",
+        "operationId": "getV2RealtimeState",
         "tags": [
-          "WebSocket"
+          "Realtime"
         ],
-        "description": "WebSocket接続用のチケットを発行（認証必須）",
+        "description": "リアルタイム状態のスナップショット（揺れ検知・EEW は Redis、地震・津波は常に DB から取得）",
         "responses": {
           "200": {
-            "description": "発行されたチケット",
+            "description": "スナップショット",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebsocketTicketResponse"
+                  "$ref": "#/components/schemas/RealtimeState"
                 }
               }
             }
           },
           "401": {
-            "description": "認証エラー"
-          },
-          "403": {
-            "description": "他のユーザーのデバイス"
-          },
-          "404": {
-            "description": "デバイスが見つからない"
+            "description": "Unauthorized"
           },
           "500": {
-            "description": "内部サーバエラー",
+            "description": "内部エラー",
             "content": {
               "application/json": {
                 "schema": {
@@ -2951,6 +4402,53 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Redis 未設定"
+          }
+        }
+      }
+    },
+    "/v2/realtime/stream": {
+      "get": {
+        "operationId": "getV2RealtimeStream",
+        "tags": [
+          "Realtime"
+        ],
+        "description": "単一 SSE（旧 WebSocket 相当の discriminated union JSON を event: realtime で配信）",
+        "responses": {
+          "200": {
+            "description": "text/event-stream"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "503": {
+            "description": "Redis 未設定"
+          }
+        }
+      }
+    },
+    "/v2/realtime/examples": {
+      "get": {
+        "operationId": "getV2RealtimeExamples",
+        "tags": [
+          "Realtime"
+        ],
+        "description": "SSE data: と同一形のサンプル JSON（OpenAPI / クライアント codegen 用）",
+        "responses": {
+          "200": {
+            "description": "サンプル配列",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealtimeExamplesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -2958,44 +4456,460 @@
   },
   "components": {
     "schemas": {
-      "DeviceResponse": {
+      "AdminDispatchSummaryListResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "correlationKey": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                },
+                "eventId": {
+                  "type": "string"
+                },
+                "serialNo": {
+                  "type": "number"
+                },
+                "jmaReportTime": {
+                  "type": "string"
+                },
+                "headline": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "targetDevices": {
+                  "type": "number"
+                },
+                "enqueuedFcm": {
+                  "type": "number"
+                },
+                "enqueuedApns": {
+                  "type": "number"
+                },
+                "enqueuedBroadcast": {
+                  "type": "number"
+                },
+                "successFcm": {
+                  "type": "number"
+                },
+                "failedFcm": {
+                  "type": "number"
+                },
+                "successApns": {
+                  "type": "number"
+                },
+                "failedApns": {
+                  "type": "number"
+                },
+                "resolverDelayMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "correlationKey",
+                "eventType",
+                "eventId",
+                "serialNo",
+                "jmaReportTime",
+                "targetDevices",
+                "enqueuedFcm",
+                "enqueuedApns",
+                "enqueuedBroadcast",
+                "successFcm",
+                "failedFcm",
+                "successApns",
+                "failedApns",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "UNAUTHORIZED"
           },
-          "type": {
-            "enum": [
-              "IOS",
-              "ANDROID"
-            ],
-            "type": "string"
-          },
-          "user_id": {
-            "type": "string"
-          },
-          "locale": {
-            "enum": [
-              "ja",
-              "en",
-              "zh"
-            ],
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string"
-          },
-          "updated_at": {
+          "message": {
             "type": "string"
           }
         },
         "required": [
-          "id",
-          "type",
-          "user_id",
-          "locale",
-          "created_at",
-          "updated_at"
+          "code",
+          "message"
+        ]
+      },
+      "ForbiddenResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "FORBIDDEN"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "AdminDispatchSummaryDetailResponse": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "object",
+            "properties": {
+              "correlationKey": {
+                "type": "string"
+              },
+              "eventType": {
+                "type": "string"
+              },
+              "eventId": {
+                "type": "string"
+              },
+              "serialNo": {
+                "type": "number"
+              },
+              "jmaReportTime": {
+                "type": "string"
+              },
+              "headline": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "targetDevices": {
+                "type": "number"
+              },
+              "enqueuedFcm": {
+                "type": "number"
+              },
+              "enqueuedApns": {
+                "type": "number"
+              },
+              "enqueuedBroadcast": {
+                "type": "number"
+              },
+              "successFcm": {
+                "type": "number"
+              },
+              "failedFcm": {
+                "type": "number"
+              },
+              "successApns": {
+                "type": "number"
+              },
+              "failedApns": {
+                "type": "number"
+              },
+              "resolverDelayMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "correlationKey",
+              "eventType",
+              "eventId",
+              "serialNo",
+              "jmaReportTime",
+              "targetDevices",
+              "enqueuedFcm",
+              "enqueuedApns",
+              "enqueuedBroadcast",
+              "successFcm",
+              "failedFcm",
+              "successApns",
+              "failedApns",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "item"
+        ]
+      },
+      "NotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "NOT_FOUND"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "AdminReplayFileListResponse": {
+        "type": "object",
+        "properties": {
+          "next_token": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "next_pooling": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "startTime": {
+                  "type": "string"
+                },
+                "endTime": {
+                  "type": "string"
+                },
+                "objectKey": {
+                  "type": "string"
+                },
+                "fileSizeBytes": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "downloadUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "startTime",
+                "endTime",
+                "objectKey",
+                "fileSizeBytes",
+                "createdAt",
+                "downloadUrl"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "BadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "BAD_REQUEST"
+          },
+          "message": {
+            "const": "Bad Request"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ReplayForbiddenResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "FORBIDDEN"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "AdminReplayFileDetailResponse": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "startTime": {
+                    "type": "string"
+                  },
+                  "endTime": {
+                    "type": "string"
+                  },
+                  "objectKey": {
+                    "type": "string"
+                  },
+                  "fileSizeBytes": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "downloadUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "startTime",
+                  "endTime",
+                  "objectKey",
+                  "fileSizeBytes",
+                  "createdAt",
+                  "downloadUrl"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "triggers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "replayFileId": {
+                          "type": "string"
+                        },
+                        "triggerType": {
+                          "anyOf": [
+                            {
+                              "const": "shake_detection"
+                            },
+                            {
+                              "const": "earthquake"
+                            }
+                          ]
+                        },
+                        "eventId": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "replayFileId",
+                        "triggerType",
+                        "eventId",
+                        "createdAt"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "triggers"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "item"
+        ]
+      },
+      "AdminReplayFileDownloadUrlResponse": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
         ]
       },
       "InternalServerErrorResponse": {
@@ -3016,6 +4930,69 @@
           "message"
         ]
       },
+      "ReplayDownloadServiceUnavailable": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "SERVICE_UNAVAILABLE"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "DevicePlatform": {
+        "enum": [
+          "IOS",
+          "ANDROID"
+        ],
+        "type": "string",
+        "description": "デバイスOS"
+      },
+      "AppLocale": {
+        "enum": [
+          "ja",
+          "en",
+          "zh"
+        ],
+        "type": "string",
+        "description": "言語コード"
+      },
+      "DeviceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/DevicePlatform"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/AppLocale"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "user_id",
+          "locale",
+          "created_at",
+          "updated_at"
+        ]
+      },
       "ApnsTokenType": {
         "enum": [
           "NOTIFICATION",
@@ -3023,6 +5000,14 @@
         ],
         "type": "string",
         "description": "APNsトークンタイプ"
+      },
+      "ApnsEnvironment": {
+        "enum": [
+          "development",
+          "production"
+        ],
+        "type": "string",
+        "description": "APNs環境"
       },
       "ApnsTokenResponse": {
         "type": "object",
@@ -3034,11 +5019,7 @@
             "type": "string"
           },
           "environment": {
-            "enum": [
-              "development",
-              "production"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/ApnsEnvironment"
           }
         },
         "required": [
@@ -3046,14 +5027,6 @@
           "token",
           "environment"
         ]
-      },
-      "ApnsEnvironment": {
-        "enum": [
-          "development",
-          "production"
-        ],
-        "type": "string",
-        "description": "APNs環境"
       },
       "ApnsTokenRequest": {
         "type": "object",
@@ -3152,10 +5125,12 @@
         "type": "object",
         "properties": {
           "tsunami_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "training_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3222,7 +5197,8 @@
         "type": "object",
         "properties": {
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "notification_tiers": {
             "type": "array",
@@ -3264,10 +5240,12 @@
                 "interruption_level"
               ]
             },
-            "minItems": 1
+            "minItems": 1,
+            "nullable": true
           },
           "estimated_intensity_enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3367,13 +5345,20 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "nullable": true
           },
           "is_current_location": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "min_jma_intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JmaIntensity"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -3440,7 +5425,8 @@
         "type": "object",
         "properties": {
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "notification_tiers": {
             "type": "array",
@@ -3482,10 +5468,12 @@
                 "interruption_level"
               ]
             },
-            "minItems": 1
+            "minItems": 1,
+            "nullable": true
           },
           "start_live_activity": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -3498,8 +5486,7 @@
           "Strong",
           "Stronger"
         ],
-        "type": "string",
-        "description": "揺れ検知レベル"
+        "type": "string"
       },
       "ShakeDetectionSettingResponse": {
         "type": "object",
@@ -3584,6 +5571,22 @@
           "name"
         ]
       },
+      "NotificationPushFramework": {
+        "enum": [
+          "FCM",
+          "APNS"
+        ],
+        "type": "string",
+        "description": "プッシュ通知フレームワーク"
+      },
+      "NotificationDeliveryResult": {
+        "enum": [
+          "OK",
+          "NG"
+        ],
+        "type": "string",
+        "description": "通知送信結果"
+      },
       "NotificationLogItem": {
         "type": "object",
         "properties": {
@@ -3594,18 +5597,10 @@
             "type": "string"
           },
           "framework": {
-            "enum": [
-              "FCM",
-              "APNS"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/NotificationPushFramework"
           },
           "result": {
-            "enum": [
-              "OK",
-              "NG"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/NotificationDeliveryResult"
           },
           "error_code": {
             "type": "string"
@@ -3666,36 +5661,6 @@
           "items"
         ]
       },
-      "UnauthorizedResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "UNAUTHORIZED"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ]
-      },
-      "NotFoundResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "NOT_FOUND"
-          },
-          "message": {
-            "const": "Not Found"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ]
-      },
       "ServiceUnavailableResponse": {
         "type": "object",
         "properties": {
@@ -3711,16 +5676,213 @@
           "message"
         ]
       },
+      "DispatchSummaryListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "correlationKey": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                },
+                "eventId": {
+                  "type": "string"
+                },
+                "serialNo": {
+                  "type": "number"
+                },
+                "jmaReportTime": {
+                  "type": "string"
+                },
+                "headline": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "targetDevices": {
+                  "type": "number"
+                },
+                "enqueuedFcm": {
+                  "type": "number"
+                },
+                "enqueuedApns": {
+                  "type": "number"
+                },
+                "enqueuedBroadcast": {
+                  "type": "number"
+                },
+                "successFcm": {
+                  "type": "number"
+                },
+                "failedFcm": {
+                  "type": "number"
+                },
+                "successApns": {
+                  "type": "number"
+                },
+                "failedApns": {
+                  "type": "number"
+                },
+                "resolverDelayMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "correlationKey",
+                "eventType",
+                "eventId",
+                "serialNo",
+                "jmaReportTime",
+                "targetDevices",
+                "enqueuedFcm",
+                "enqueuedApns",
+                "enqueuedBroadcast",
+                "successFcm",
+                "failedFcm",
+                "successApns",
+                "failedApns",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "DispatchSummaryDetailResponse": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "object",
+            "properties": {
+              "correlationKey": {
+                "type": "string"
+              },
+              "eventType": {
+                "type": "string"
+              },
+              "eventId": {
+                "type": "string"
+              },
+              "serialNo": {
+                "type": "number"
+              },
+              "jmaReportTime": {
+                "type": "string"
+              },
+              "headline": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "targetDevices": {
+                "type": "number"
+              },
+              "enqueuedFcm": {
+                "type": "number"
+              },
+              "enqueuedApns": {
+                "type": "number"
+              },
+              "enqueuedBroadcast": {
+                "type": "number"
+              },
+              "successFcm": {
+                "type": "number"
+              },
+              "failedFcm": {
+                "type": "number"
+              },
+              "successApns": {
+                "type": "number"
+              },
+              "failedApns": {
+                "type": "number"
+              },
+              "resolverDelayMs": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "correlationKey",
+              "eventType",
+              "eventId",
+              "serialNo",
+              "jmaReportTime",
+              "targetDevices",
+              "enqueuedFcm",
+              "enqueuedApns",
+              "enqueuedBroadcast",
+              "successFcm",
+              "failedFcm",
+              "successApns",
+              "failedApns",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "required": [
+          "item"
+        ]
+      },
+      "TestNotificationType": {
+        "enum": [
+          "silent",
+          "normal",
+          "critical"
+        ],
+        "type": "string",
+        "description": "テスト通知の種類"
+      },
       "TestNotificationRequest": {
         "type": "object",
         "properties": {
           "type": {
-            "enum": [
-              "silent",
-              "normal",
-              "critical"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TestNotificationType"
           }
         },
         "required": [
@@ -3734,11 +5896,7 @@
             "type": "string"
           },
           "framework": {
-            "enum": [
-              "FCM",
-              "APNS"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/NotificationPushFramework"
           }
         },
         "required": [
@@ -3774,6 +5932,13 @@
         ],
         "type": "string",
         "description": "ソート順"
+      },
+      "EventId": {
+        "type": "string",
+        "description": "yyyyMMddHHmmss形式のイベントID",
+        "examples": [
+          "20251212191438"
+        ]
       },
       "OriginTimePrecision": {
         "enum": [
@@ -3846,16 +6011,20 @@
         ],
         "description": "震源座標"
       },
+      "MagnitudeType": {
+        "enum": [
+          "NORMAL",
+          "UNKNOWN",
+          "OVER_M8"
+        ],
+        "type": "string",
+        "description": "マグニチュード値の種別"
+      },
       "Magnitude": {
         "type": "object",
         "properties": {
           "type": {
-            "enum": [
-              "NORMAL",
-              "UNKNOWN",
-              "OVER_M8"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/MagnitudeType"
           },
           "value": {
             "type": "number",
@@ -3962,6 +6131,104 @@
         ],
         "description": "震源に関する情報"
       },
+      "IntensityMapImageUrl": {
+        "type": "string",
+        "format": "uri"
+      },
+      "IntensityMapImageItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "画像レコードID"
+          },
+          "language": {
+            "$ref": "#/components/schemas/AppLocale"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "画像URL"
+          },
+          "file_size": {
+            "type": "number",
+            "description": "画像ファイルサイズ(bytes)"
+          },
+          "size": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number",
+                "description": "画像幅(px)"
+              },
+              "y": {
+                "type": "number",
+                "description": "画像高さ(px)"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ]
+          },
+          "generator_instance": {
+            "type": "string",
+            "description": "生成インスタンス名"
+          },
+          "render_duration_ms": {
+            "type": "number",
+            "description": "レンダリング時間(ms)"
+          },
+          "upload_duration_ms": {
+            "type": "number",
+            "description": "アップロード時間(ms)"
+          },
+          "total_duration_ms": {
+            "type": "number",
+            "description": "総処理時間(ms)"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "language",
+          "image_url",
+          "file_size",
+          "size",
+          "generator_instance",
+          "render_duration_ms",
+          "upload_duration_ms",
+          "total_duration_ms",
+          "generated_at"
+        ]
+      },
+      "IntensityMapImageGroup": {
+        "type": "object",
+        "properties": {
+          "telegram_id": {
+            "type": "string",
+            "description": "電文ID"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageItem"
+            }
+          }
+        },
+        "required": [
+          "telegram_id",
+          "created_at",
+          "images"
+        ]
+      },
       "EarthquakeDatasource": {
         "enum": [
           "JMA_INTENSITY_DATABASE",
@@ -4002,11 +6269,7 @@
         "type": "object",
         "properties": {
           "event_id": {
-            "type": "string",
-            "description": "yyyyMMddHHmmss形式のイベントID",
-            "examples": [
-              "20251212191438"
-            ]
+            "$ref": "#/components/schemas/EventId"
           },
           "status": {
             "$ref": "#/components/schemas/TelegramStatus"
@@ -4032,6 +6295,15 @@
             "examples": [
               "https://tiles.eqmonitor.app/ixac41/20240101072008.pmtiles"
             ]
+          },
+          "intensity_map_image": {
+            "$ref": "#/components/schemas/IntensityMapImageUrl"
+          },
+          "intensity_map_images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageGroup"
+            }
           },
           "datasource": {
             "$ref": "#/components/schemas/EarthquakeDatasource"
@@ -4094,24 +6366,6 @@
           "items"
         ]
       },
-      "BadRequestResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "const": "BAD_REQUEST"
-          },
-          "message": {
-            "const": "Bad Request"
-          },
-          "reason": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message"
-        ]
-      },
       "IntensityStationItem": {
         "allOf": [
           {
@@ -4148,10 +6402,7 @@
                 "description": "1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル"
               }
             },
-            "required": [
-              "sva",
-              "prePeriods"
-            ]
+            "required": []
           }
         ]
       },
@@ -4221,6 +6472,16 @@
         "type": "string",
         "description": "情報名称(Control/Title部)"
       },
+      "TelegramInfoType": {
+        "enum": [
+          "PUBLICATION",
+          "CORRECTION",
+          "DELAY",
+          "CANCELLATION"
+        ],
+        "type": "string",
+        "description": "情報の種類"
+      },
       "Telegram": {
         "type": "object",
         "properties": {
@@ -4243,13 +6504,7 @@
             "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "editorial_office": {
             "type": "string"
@@ -4315,22 +6570,29 @@
         "type": "object",
         "properties": {
           "text": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "free": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "warning": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "forecast": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
-          "var": {
-            "type": "string"
+          "additional": {
+            "type": "string",
+            "description": "固定付加文, var",
+            "nullable": true
           },
           "uri": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "required": []
@@ -4339,11 +6601,7 @@
         "type": "object",
         "properties": {
           "event_id": {
-            "type": "string",
-            "description": "yyyyMMddHHmmss形式のイベントID",
-            "examples": [
-              "20251212191438"
-            ]
+            "$ref": "#/components/schemas/EventId"
           },
           "status": {
             "$ref": "#/components/schemas/TelegramStatus"
@@ -4372,6 +6630,15 @@
             "examples": [
               "https://tiles.eqmonitor.app/ixac41/20240101072008.pmtiles"
             ]
+          },
+          "intensity_map_image": {
+            "$ref": "#/components/schemas/IntensityMapImageUrl"
+          },
+          "intensity_map_images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageGroup"
+            }
           },
           "datasource": {
             "$ref": "#/components/schemas/EarthquakeDatasource"
@@ -4830,7 +7097,7 @@
         ],
         "description": "予想長周期地震動階級の値"
       },
-      "EewArrivalTimeTime": {
+      "EewIntensityRegionArrivalTimeTime": {
         "type": "object",
         "properties": {
           "type": {
@@ -4846,7 +7113,7 @@
           "value"
         ]
       },
-      "EewArrivalTimeArrived": {
+      "EewIntensityRegionArrivalTimeArrived": {
         "type": "object",
         "properties": {
           "type": {
@@ -4878,10 +7145,10 @@
           "arrival_time": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/EewArrivalTimeTime"
+                "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeTime"
               },
               {
-                "$ref": "#/components/schemas/EewArrivalTimeArrived"
+                "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeArrived"
               }
             ]
           }
@@ -4995,8 +7262,7 @@
         "type": "object",
         "properties": {
           "event_id": {
-            "type": "string",
-            "description": "yyyyMMddHHmmss形式のイベントID"
+            "$ref": "#/components/schemas/EventId"
           },
           "type": {
             "$ref": "#/components/schemas/TelegramType"
@@ -5005,13 +7271,7 @@
             "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "serial_no": {
             "type": "number"
@@ -5204,13 +7464,7 @@
                   "$ref": "#/components/schemas/TelegramStatus"
                 },
                 "info_type": {
-                  "enum": [
-                    "PUBLICATION",
-                    "CORRECTION",
-                    "DELAY",
-                    "CANCELLATION"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/TelegramInfoType"
                 },
                 "editorial_office": {
                   "type": "string"
@@ -5299,13 +7553,7 @@
             "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "editorial_office": {
             "type": "string"
@@ -5390,6 +7638,150 @@
           "comments"
         ]
       },
+      "BooleanStringQuery": {
+        "enum": [
+          "true",
+          "false"
+        ],
+        "type": "string",
+        "description": "クエリ用の真偽値文字列"
+      },
+      "TsunamiWarningKind": {
+        "enum": [
+          "MAJOR_WARNING",
+          "WARNING",
+          "ADVISORY",
+          "FORECAST",
+          "NONE"
+        ],
+        "type": "string"
+      },
+      "TsunamiListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "headline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest_created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest_press_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_canceled": {
+            "type": "boolean"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TelegramStatus"
+          },
+          "max_forecast_grade": {
+            "$ref": "#/components/schemas/TsunamiWarningKind"
+          },
+          "forecast_region_count": {
+            "type": "number"
+          },
+          "telegram_count": {
+            "type": "number"
+          },
+          "telegram_types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TelegramType"
+            }
+          },
+          "earthquake_hypocenter_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "earthquake_origin_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "earthquake_magnitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "event_ids",
+          "is_canceled",
+          "forecast_region_count",
+          "telegram_count",
+          "telegram_types"
+        ]
+      },
+      "TsunamiListResponse": {
+        "type": "object",
+        "properties": {
+          "next_token": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "next_pooling": {
+            "type": "string",
+            "description": "カーソル情報（base64エンコード）"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiListItem"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "TsunamiTelegramHeader": {
         "type": "object",
         "properties": {
@@ -5403,32 +7795,16 @@
             "type": "number"
           },
           "type": {
-            "enum": [
-              "VTSE41",
-              "VTSE51",
-              "VTSE52"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramType"
           },
           "title": {
             "type": "string"
           },
           "status": {
-            "enum": [
-              "NORMAL",
-              "TRAINING",
-              "TEST"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "editorial_office": {
             "type": "string"
@@ -5492,16 +7868,6 @@
           "created_at"
         ]
       },
-      "TsunamiWarningKind": {
-        "enum": [
-          "MAJOR_WARNING",
-          "WARNING",
-          "ADVISORY",
-          "FORECAST",
-          "NONE"
-        ],
-        "type": "string"
-      },
       "FirstHeightCondition": {
         "enum": [
           "ARRIVING",
@@ -5515,10 +7881,16 @@
         "properties": {
           "arrival_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "condition": {
-            "$ref": "#/components/schemas/FirstHeightCondition"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FirstHeightCondition"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -5534,16 +7906,24 @@
         "type": "object",
         "properties": {
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "qualitative": {
-            "$ref": "#/components/schemas/QualitativeHeight"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
           },
           "is_important": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5618,16 +7998,24 @@
         "properties": {
           "arrival_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "initial": {
-            "$ref": "#/components/schemas/WaveInitial"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaveInitial"
+              }
+            ],
+            "nullable": true
           },
           "is_unidentifiable": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "is_missing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5645,22 +8033,32 @@
         "properties": {
           "date_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "is_rising": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "condition": {
-            "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ObservationMaxHeightCondition"
+              }
+            ],
+            "nullable": true
           },
           "is_missing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5744,19 +8142,28 @@
         "properties": {
           "date_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "over": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "qualitative": {
-            "$ref": "#/components/schemas/QualitativeHeight"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QualitativeHeight"
+              }
+            ],
+            "nullable": true
           },
           "is_observing": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": []
@@ -5808,7 +8215,8 @@
         "type": "object",
         "properties": {
           "free": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "warning": {
             "type": "object",
@@ -5826,7 +8234,8 @@
             "required": [
               "text",
               "codes"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -5838,25 +8247,29 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiForecast"
-            }
+            },
+            "nullable": true
           },
           "observations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiObservation"
-            }
+            },
+            "nullable": true
           },
           "estimations": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiEstimation"
-            }
+            },
+            "nullable": true
           },
           "earthquakes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TsunamiEarthquake"
-            }
+            },
+            "nullable": true
           },
           "text": {
             "anyOf": [
@@ -5866,10 +8279,16 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "nullable": true
           },
           "comments": {
-            "$ref": "#/components/schemas/TsunamiComments"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TsunamiComments"
+              }
+            ],
+            "nullable": true
           }
         },
         "required": []
@@ -5889,7 +8308,7 @@
           "body"
         ]
       },
-      "Tsunami": {
+      "TsunamiDetail": {
         "type": "object",
         "properties": {
           "id": {
@@ -5915,33 +8334,11 @@
           "telegrams"
         ]
       },
-      "TsunamiListResponse": {
-        "type": "object",
-        "properties": {
-          "next_token": {
-            "type": "string",
-            "description": "カーソル情報（base64エンコード）"
-          },
-          "next_pooling": {
-            "type": "string",
-            "description": "カーソル情報（base64エンコード）"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tsunami"
-            }
-          }
-        },
-        "required": [
-          "items"
-        ]
-      },
       "TsunamiDetailResponse": {
         "type": "object",
         "properties": {
           "tsunami": {
-            "$ref": "#/components/schemas/Tsunami"
+            "$ref": "#/components/schemas/TsunamiDetail"
           }
         },
         "required": [
@@ -6022,19 +8419,10 @@
             "type": "string"
           },
           "type": {
-            "enum": [
-              "IOS",
-              "ANDROID"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/DevicePlatform"
           },
           "locale": {
-            "enum": [
-              "ja",
-              "en",
-              "zh"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/AppLocale"
           },
           "created_at": {
             "type": "string"
@@ -6100,20 +8488,324 @@
           "user_agent"
         ]
       },
-      "WebsocketTicketResponse": {
+      "LocationPayload": {
         "type": "object",
         "properties": {
-          "ticket": {
-            "type": "string"
+          "latitude": {
+            "type": "number"
           },
-          "expires_at": {
-            "type": "string",
-            "format": "date-time"
+          "longitude": {
+            "type": "number"
           }
         },
         "required": [
-          "ticket",
-          "expires_at"
+          "latitude",
+          "longitude"
+        ]
+      },
+      "RegionPayload": {
+        "type": "object",
+        "properties": {
+          "topLeft": {
+            "$ref": "#/components/schemas/LocationPayload"
+          },
+          "bottomRight": {
+            "$ref": "#/components/schemas/LocationPayload"
+          }
+        },
+        "required": [
+          "topLeft",
+          "bottomRight"
+        ]
+      },
+      "ObservationPointPayload": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationPayload"
+          },
+          "intensity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "intensityDiff": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "region",
+          "type",
+          "location",
+          "intensity",
+          "intensityDiff"
+        ]
+      },
+      "ShakeDetectedPayload": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "shake_detected"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "level": {
+            "$ref": "#/components/schemas/ShakeDetectionLevel"
+          },
+          "changeReasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isReplay": {
+            "type": "boolean"
+          },
+          "pointCount": {
+            "type": "number"
+          },
+          "region": {
+            "$ref": "#/components/schemas/RegionPayload"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObservationPointPayload"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "eventId",
+          "createdAt",
+          "level",
+          "changeReasons",
+          "isReplay",
+          "pointCount",
+          "region",
+          "points"
+        ]
+      },
+      "EventType": {
+        "enum": [
+          "EEW",
+          "EARTHQUAKE",
+          "ESTIMATED_INTENSITY"
+        ],
+        "type": "string"
+      },
+      "EventHypocenter": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "depth": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude",
+          "depth"
+        ]
+      },
+      "EventMessage": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "serialNo": {
+            "type": "number"
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "intensity": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "name",
+                "intensity"
+              ]
+            }
+          },
+          "maxIntensity": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "reportTime": {
+            "type": "string"
+          },
+          "originTime": {
+            "type": "string"
+          },
+          "arrivalTime": {
+            "type": "string"
+          },
+          "hypocenter": {
+            "$ref": "#/components/schemas/EventHypocenter"
+          },
+          "magnitude": {
+            "type": "number"
+          },
+          "isWarning": {
+            "type": "boolean"
+          },
+          "isLastInfo": {
+            "type": "boolean"
+          },
+          "isCancel": {
+            "type": "boolean"
+          },
+          "hypocenterReduceName": {
+            "type": "string"
+          },
+          "hasWarningZones": {
+            "type": "boolean"
+          },
+          "isPlum": {
+            "type": "boolean"
+          },
+          "isLevel": {
+            "type": "boolean"
+          },
+          "isOnePoint": {
+            "type": "boolean"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "prefectures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "intensity": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "name",
+                "intensity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "eventId",
+          "type",
+          "serialNo",
+          "regions",
+          "reportTime"
+        ]
+      },
+      "RealtimeState": {
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "shakes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShakeDetectedPayload"
+            }
+          },
+          "eews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventMessage"
+            }
+          },
+          "earthquakes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EarthquakePartial"
+            }
+          },
+          "tsunamis": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TsunamiListItem"
+            }
+          }
+        },
+        "required": [
+          "revision",
+          "updatedAt",
+          "shakes",
+          "eews",
+          "earthquakes",
+          "tsunamis"
+        ]
+      },
+      "RealtimeExamplesResponse": {
+        "type": "object",
+        "properties": {
+          "examples": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "examples"
         ]
       }
     },
@@ -6142,25 +8834,16 @@
         },
         "required": true
       },
-      "NotificationHistoryQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 1000,
-          "default": "100"
-        }
-      },
-      "EarthquakeQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
-      },
       "EarthquakeEventIdParam": {
+        "in": "path",
+        "name": "eventId",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{14}$"
+        },
+        "required": true
+      },
+      "EarthquakeIntensityMapEventIdParam": {
         "in": "path",
         "name": "eventId",
         "schema": {
@@ -6214,14 +8897,6 @@
         },
         "required": true
       },
-      "EewQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
-      },
       "EewEventIdParam": {
         "in": "path",
         "name": "eventId",
@@ -6239,14 +8914,6 @@
           "pattern": "^\\d{14}$"
         },
         "required": true
-      },
-      "TelegramQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
       },
       "TelegramTypeParam": {
         "in": "path",
@@ -6273,14 +8940,6 @@
           "format": "uuid"
         },
         "required": true
-      },
-      "TsunamiQueryParams": {
-        "in": "query",
-        "name": "limit",
-        "schema": {
-          "type": "string"
-        },
-        "description": "1~100 の整数(string)"
       },
       "TsunamiEventIdParam": {
         "in": "path",

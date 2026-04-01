@@ -19,9 +19,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorScheme =
-        ref.watch(intensityColorProvider).asData?.value ??
-        IntensityColorModel.eqmonitor();
+    final intensityColorScheme = ref.watch(intensityColorProvider);
     final maxIntensity = item.intensity?.maxIntensity;
     final hypocenter = item.hypocenter;
 

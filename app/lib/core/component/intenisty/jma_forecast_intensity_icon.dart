@@ -24,10 +24,9 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel =
-        colorModel ??
-        ref.watch(intensityColorProvider).asData?.value ??
-        IntensityColorModel.eqmonitor();
+    // ignore: omit_local_variable_types
+    final IntensityColorModel intensityColorModel =
+        colorModel ?? ref.watch(intensityColorProvider);
     final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     final intensityMainText = intensity.mainText;
@@ -119,9 +118,7 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel =
-        ref.watch(intensityColorProvider).asData?.value ??
-        IntensityColorModel.eqmonitor();
+    final intensityColorModel = ref.watch(intensityColorProvider);
     final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     final intensityMainText = intensity.mainText;
