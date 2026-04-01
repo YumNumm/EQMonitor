@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeState {
 
- num get revision; DateTime get updatedAt; List<ShakeDetectedPayload> get shakes; List<EventMessage> get eews; List<EarthquakePartial> get earthquakes; List<TsunamiListItem> get tsunamis;
+ num get revision; DateTime get updatedAt; List<Shakes> get shakes; List<Eews> get eews; List<EarthquakePartial> get earthquakes; List<TsunamiListItem> get tsunamis;
 /// Create a copy of RealtimeState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeStateCopyWith<$Res>  {
   factory $RealtimeStateCopyWith(RealtimeState value, $Res Function(RealtimeState) _then) = _$RealtimeStateCopyWithImpl;
 @useResult
 $Res call({
- num revision, DateTime updatedAt, List<ShakeDetectedPayload> shakes, List<EventMessage> eews, List<EarthquakePartial> earthquakes, List<TsunamiListItem> tsunamis
+ num revision, DateTime updatedAt, List<Shakes> shakes, List<Eews> eews, List<EarthquakePartial> earthquakes, List<TsunamiListItem> tsunamis
 });
 
 
@@ -70,8 +70,8 @@ class _$RealtimeStateCopyWithImpl<$Res>
 revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
 as num,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,shakes: null == shakes ? _self.shakes : shakes // ignore: cast_nullable_to_non_nullable
-as List<ShakeDetectedPayload>,eews: null == eews ? _self.eews : eews // ignore: cast_nullable_to_non_nullable
-as List<EventMessage>,earthquakes: null == earthquakes ? _self.earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<Shakes>,eews: null == eews ? _self.eews : eews // ignore: cast_nullable_to_non_nullable
+as List<Eews>,earthquakes: null == earthquakes ? _self.earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
 as List<EarthquakePartial>,tsunamis: null == tsunamis ? _self.tsunamis : tsunamis // ignore: cast_nullable_to_non_nullable
 as List<TsunamiListItem>,
   ));
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num revision,  DateTime updatedAt,  List<ShakeDetectedPayload> shakes,  List<EventMessage> eews,  List<EarthquakePartial> earthquakes,  List<TsunamiListItem> tsunamis)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num revision,  DateTime updatedAt,  List<Shakes> shakes,  List<Eews> eews,  List<EarthquakePartial> earthquakes,  List<TsunamiListItem> tsunamis)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeState() when $default != null:
 return $default(_that.revision,_that.updatedAt,_that.shakes,_that.eews,_that.earthquakes,_that.tsunamis);case _:
@@ -179,7 +179,7 @@ return $default(_that.revision,_that.updatedAt,_that.shakes,_that.eews,_that.ear
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num revision,  DateTime updatedAt,  List<ShakeDetectedPayload> shakes,  List<EventMessage> eews,  List<EarthquakePartial> earthquakes,  List<TsunamiListItem> tsunamis)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num revision,  DateTime updatedAt,  List<Shakes> shakes,  List<Eews> eews,  List<EarthquakePartial> earthquakes,  List<TsunamiListItem> tsunamis)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeState():
 return $default(_that.revision,_that.updatedAt,_that.shakes,_that.eews,_that.earthquakes,_that.tsunamis);case _:
@@ -199,7 +199,7 @@ return $default(_that.revision,_that.updatedAt,_that.shakes,_that.eews,_that.ear
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num revision,  DateTime updatedAt,  List<ShakeDetectedPayload> shakes,  List<EventMessage> eews,  List<EarthquakePartial> earthquakes,  List<TsunamiListItem> tsunamis)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num revision,  DateTime updatedAt,  List<Shakes> shakes,  List<Eews> eews,  List<EarthquakePartial> earthquakes,  List<TsunamiListItem> tsunamis)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeState() when $default != null:
 return $default(_that.revision,_that.updatedAt,_that.shakes,_that.eews,_that.earthquakes,_that.tsunamis);case _:
@@ -214,20 +214,20 @@ return $default(_that.revision,_that.updatedAt,_that.shakes,_that.eews,_that.ear
 @JsonSerializable()
 
 class _RealtimeState implements RealtimeState {
-  const _RealtimeState({required this.revision, required this.updatedAt, required final  List<ShakeDetectedPayload> shakes, required final  List<EventMessage> eews, required final  List<EarthquakePartial> earthquakes, required final  List<TsunamiListItem> tsunamis}): _shakes = shakes,_eews = eews,_earthquakes = earthquakes,_tsunamis = tsunamis;
+  const _RealtimeState({required this.revision, required this.updatedAt, required final  List<Shakes> shakes, required final  List<Eews> eews, required final  List<EarthquakePartial> earthquakes, required final  List<TsunamiListItem> tsunamis}): _shakes = shakes,_eews = eews,_earthquakes = earthquakes,_tsunamis = tsunamis;
   factory _RealtimeState.fromJson(Map<String, dynamic> json) => _$RealtimeStateFromJson(json);
 
 @override final  num revision;
 @override final  DateTime updatedAt;
- final  List<ShakeDetectedPayload> _shakes;
-@override List<ShakeDetectedPayload> get shakes {
+ final  List<Shakes> _shakes;
+@override List<Shakes> get shakes {
   if (_shakes is EqualUnmodifiableListView) return _shakes;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_shakes);
 }
 
- final  List<EventMessage> _eews;
-@override List<EventMessage> get eews {
+ final  List<Eews> _eews;
+@override List<Eews> get eews {
   if (_eews is EqualUnmodifiableListView) return _eews;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eews);
@@ -281,7 +281,7 @@ abstract mixin class _$RealtimeStateCopyWith<$Res> implements $RealtimeStateCopy
   factory _$RealtimeStateCopyWith(_RealtimeState value, $Res Function(_RealtimeState) _then) = __$RealtimeStateCopyWithImpl;
 @override @useResult
 $Res call({
- num revision, DateTime updatedAt, List<ShakeDetectedPayload> shakes, List<EventMessage> eews, List<EarthquakePartial> earthquakes, List<TsunamiListItem> tsunamis
+ num revision, DateTime updatedAt, List<Shakes> shakes, List<Eews> eews, List<EarthquakePartial> earthquakes, List<TsunamiListItem> tsunamis
 });
 
 
@@ -303,8 +303,8 @@ class __$RealtimeStateCopyWithImpl<$Res>
 revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
 as num,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,shakes: null == shakes ? _self._shakes : shakes // ignore: cast_nullable_to_non_nullable
-as List<ShakeDetectedPayload>,eews: null == eews ? _self._eews : eews // ignore: cast_nullable_to_non_nullable
-as List<EventMessage>,earthquakes: null == earthquakes ? _self._earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<Shakes>,eews: null == eews ? _self._eews : eews // ignore: cast_nullable_to_non_nullable
+as List<Eews>,earthquakes: null == earthquakes ? _self._earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
 as List<EarthquakePartial>,tsunamis: null == tsunamis ? _self._tsunamis : tsunamis // ignore: cast_nullable_to_non_nullable
 as List<TsunamiListItem>,
   ));

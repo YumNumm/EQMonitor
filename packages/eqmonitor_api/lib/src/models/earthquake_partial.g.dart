@@ -59,7 +59,9 @@ _EarthquakePartial _$EarthquakePartialFromJson(
       ),
       intensity: $checkedConvert(
         'intensity',
-        (v) => v == null ? null : Intensity.fromJson(v as Map<String, dynamic>),
+        (v) => v == null
+            ? null
+            : IntensityPartial.fromJson(v as Map<String, dynamic>),
       ),
     );
     return val;

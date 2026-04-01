@@ -17,18 +17,12 @@ _TsunamiTelegramHeader _$TsunamiTelegramHeaderFromJson(
     final val = _TsunamiTelegramHeader(
       hash: $checkedConvert('hash', (v) => v as String),
       eventId: $checkedConvert('event_id', (v) => v as String),
-      type: $checkedConvert(
-        'type',
-        (v) => $enumDecode(_$TelegramTypeEnumMap, v),
-      ),
+      type: $checkedConvert('type', (v) => $enumDecode(_$Type4EnumMap, v)),
       title: $checkedConvert('title', (v) => v as String),
-      status: $checkedConvert(
-        'status',
-        (v) => $enumDecode(_$TelegramStatusEnumMap, v),
-      ),
+      status: $checkedConvert('status', (v) => $enumDecode(_$StatusEnumMap, v)),
       infoType: $checkedConvert(
         'info_type',
-        (v) => $enumDecode(_$TelegramInfoTypeEnumMap, v),
+        (v) => $enumDecode(_$InfoTypeEnumMap, v),
       ),
       editorialOffice: $checkedConvert('editorial_office', (v) => v as String),
       publishingOffice: $checkedConvert(
@@ -97,37 +91,21 @@ Map<String, dynamic> _$TsunamiTelegramHeaderToJson(
   'headline': ?instance.headline,
 };
 
-const _$TelegramTypeEnumMap = {
-  TelegramType.vzse40: 'VZSE40',
-  TelegramType.vxse42: 'VXSE42',
-  TelegramType.vxse43: 'VXSE43',
-  TelegramType.vxse44: 'VXSE44',
-  TelegramType.vxse45: 'VXSE45',
-  TelegramType.vxse47: 'VXSE47',
-  TelegramType.vtse41: 'VTSE41',
-  TelegramType.vtse51: 'VTSE51',
-  TelegramType.vtse52: 'VTSE52',
-  TelegramType.vxse51: 'VXSE51',
-  TelegramType.vxse52: 'VXSE52',
-  TelegramType.vxse53: 'VXSE53',
-  TelegramType.vxse56: 'VXSE56',
-  TelegramType.vxse60: 'VXSE60',
-  TelegramType.vxse61: 'VXSE61',
-  TelegramType.vxse62: 'VXSE62',
-  TelegramType.nankai: 'NANKAI',
-  TelegramType.vyse60: 'VYSE60',
-  TelegramType.shindoDb: 'SHINDO_DB',
+const _$Type4EnumMap = {
+  Type4.vtse41: 'VTSE41',
+  Type4.vtse51: 'VTSE51',
+  Type4.vtse52: 'VTSE52',
 };
 
-const _$TelegramStatusEnumMap = {
-  TelegramStatus.normal: 'NORMAL',
-  TelegramStatus.training: 'TRAINING',
-  TelegramStatus.test: 'TEST',
+const _$StatusEnumMap = {
+  Status.normal: 'NORMAL',
+  Status.training: 'TRAINING',
+  Status.test: 'TEST',
 };
 
-const _$TelegramInfoTypeEnumMap = {
-  TelegramInfoType.publication: 'PUBLICATION',
-  TelegramInfoType.correction: 'CORRECTION',
-  TelegramInfoType.delay: 'DELAY',
-  TelegramInfoType.cancellation: 'CANCELLATION',
+const _$InfoTypeEnumMap = {
+  InfoType.publication: 'PUBLICATION',
+  InfoType.correction: 'CORRECTION',
+  InfoType.delay: 'DELAY',
+  InfoType.cancellation: 'CANCELLATION',
 };

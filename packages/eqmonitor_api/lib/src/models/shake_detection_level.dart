@@ -4,6 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+/// 揺れ検知レベル
 @JsonEnum()
 enum ShakeDetectionLevel {
   @JsonValue('Weaker')

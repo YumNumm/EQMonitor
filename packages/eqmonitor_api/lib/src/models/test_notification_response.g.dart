@@ -15,7 +15,7 @@ _TestNotificationResponse _$TestNotificationResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     framework: $checkedConvert(
       'framework',
-      (v) => $enumDecode(_$NotificationPushFrameworkEnumMap, v),
+      (v) => $enumDecode(_$FrameworkEnumMap, v),
     ),
   );
   return val;
@@ -28,7 +28,4 @@ Map<String, dynamic> _$TestNotificationResponseToJson(
   'framework': instance.framework,
 };
 
-const _$NotificationPushFrameworkEnumMap = {
-  NotificationPushFramework.fcm: 'FCM',
-  NotificationPushFramework.apns: 'APNS',
-};
+const _$FrameworkEnumMap = {Framework.fcm: 'FCM', Framework.apns: 'APNS'};

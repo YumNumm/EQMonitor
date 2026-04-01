@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'notification_push_framework.dart';
+import 'framework.dart';
 
 part 'test_notification_response.freezed.dart';
 part 'test_notification_response.g.dart';
@@ -13,7 +13,7 @@ part 'test_notification_response.g.dart';
 abstract class TestNotificationResponse with _$TestNotificationResponse {
   const factory TestNotificationResponse({
     required String message,
-    required NotificationPushFramework framework,
+    required Framework framework,
   }) = _TestNotificationResponse;
   
   factory TestNotificationResponse.fromJson(Map<String, Object?> json) => _$TestNotificationResponseFromJson(json);

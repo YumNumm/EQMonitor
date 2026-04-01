@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApnsTokenResponse {
 
- ApnsTokenType get type; String get token; ApnsEnvironment get environment;
+ ApnsTokenType get type; String get token; Environment get environment;
 /// Create a copy of ApnsTokenResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ApnsTokenResponseCopyWith<$Res>  {
   factory $ApnsTokenResponseCopyWith(ApnsTokenResponse value, $Res Function(ApnsTokenResponse) _then) = _$ApnsTokenResponseCopyWithImpl;
 @useResult
 $Res call({
- ApnsTokenType type, String token, ApnsEnvironment environment
+ ApnsTokenType type, String token, Environment environment
 });
 
 
@@ -70,7 +70,7 @@ class _$ApnsTokenResponseCopyWithImpl<$Res>
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ApnsTokenType,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,environment: null == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
-as ApnsEnvironment,
+as Environment,
   ));
 }
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token,  ApnsEnvironment environment)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token,  Environment environment)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApnsTokenResponse() when $default != null:
 return $default(_that.type,_that.token,_that.environment);case _:
@@ -176,7 +176,7 @@ return $default(_that.type,_that.token,_that.environment);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token,  ApnsEnvironment environment)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ApnsTokenType type,  String token,  Environment environment)  $default,) {final _that = this;
 switch (_that) {
 case _ApnsTokenResponse():
 return $default(_that.type,_that.token,_that.environment);case _:
@@ -196,7 +196,7 @@ return $default(_that.type,_that.token,_that.environment);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ApnsTokenType type,  String token,  ApnsEnvironment environment)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ApnsTokenType type,  String token,  Environment environment)?  $default,) {final _that = this;
 switch (_that) {
 case _ApnsTokenResponse() when $default != null:
 return $default(_that.type,_that.token,_that.environment);case _:
@@ -216,7 +216,7 @@ class _ApnsTokenResponse implements ApnsTokenResponse {
 
 @override final  ApnsTokenType type;
 @override final  String token;
-@override final  ApnsEnvironment environment;
+@override final  Environment environment;
 
 /// Create a copy of ApnsTokenResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -251,7 +251,7 @@ abstract mixin class _$ApnsTokenResponseCopyWith<$Res> implements $ApnsTokenResp
   factory _$ApnsTokenResponseCopyWith(_ApnsTokenResponse value, $Res Function(_ApnsTokenResponse) _then) = __$ApnsTokenResponseCopyWithImpl;
 @override @useResult
 $Res call({
- ApnsTokenType type, String token, ApnsEnvironment environment
+ ApnsTokenType type, String token, Environment environment
 });
 
 
@@ -273,7 +273,7 @@ class __$ApnsTokenResponseCopyWithImpl<$Res>
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ApnsTokenType,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,environment: null == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
-as ApnsEnvironment,
+as Environment,
   ));
 }
 

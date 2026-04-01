@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'notification_delivery_result.dart';
-import 'notification_push_framework.dart';
+import 'framework.dart';
+import 'result.dart';
 
 part 'notification_log_item.freezed.dart';
 part 'notification_log_item.g.dart';
@@ -17,8 +17,8 @@ abstract class NotificationLogItem with _$NotificationLogItem {
     required String streamId,
     @JsonKey(name: 'device_id')
     required String deviceId,
-    required NotificationPushFramework framework,
-    required NotificationDeliveryResult result,
+    required Framework framework,
+    required Result result,
     @JsonKey(name: 'created_at')
     required String createdAt,
     @JsonKey(includeIfNull: false,name: 'error_code')

@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'app_locale.dart';
+import 'language.dart';
 import 'size.dart';
 
 part 'intensity_map_image_item.freezed.dart';
@@ -15,7 +15,9 @@ abstract class IntensityMapImageItem with _$IntensityMapImageItem {
   const factory IntensityMapImageItem({
     /// 画像レコードID
     required String id,
-    required AppLocale language,
+
+    /// 画像の言語
+    required Language language,
 
     /// 画像URL
     @JsonKey(name: 'image_url')

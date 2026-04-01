@@ -5,7 +5,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../models/boolean_string_query.dart';
+import '../models/is_canceled.dart';
 import '../models/sort_order.dart';
 import '../models/tsunami_detail_response.dart';
 import '../models/tsunami_list_response.dart';
@@ -24,6 +24,8 @@ abstract class TsunamiApiClient {
   ///
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
   ///
+  /// [isCanceled] - 取消済みフィルタ.
+  ///
   /// [createdAtGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
   /// [createdAtLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
@@ -33,7 +35,7 @@ abstract class TsunamiApiClient {
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
-    @Query('isCanceled') BooleanStringQuery? isCanceled,
+    @Query('isCanceled') IsCanceled? isCanceled,
     @Query('createdAtGte') DateTime? createdAtGte,
     @Query('createdAtLte') DateTime? createdAtLte,
   });

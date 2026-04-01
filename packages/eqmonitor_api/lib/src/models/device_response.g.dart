@@ -15,14 +15,11 @@ _DeviceResponse _$DeviceResponseFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _DeviceResponse(
           id: $checkedConvert('id', (v) => v as String),
-          type: $checkedConvert(
-            'type',
-            (v) => $enumDecode(_$DevicePlatformEnumMap, v),
-          ),
+          type: $checkedConvert('type', (v) => $enumDecode(_$TypeEnumMap, v)),
           userId: $checkedConvert('user_id', (v) => v as String),
           locale: $checkedConvert(
             'locale',
-            (v) => $enumDecode(_$AppLocaleEnumMap, v),
+            (v) => $enumDecode(_$LocaleEnumMap, v),
           ),
           createdAt: $checkedConvert('created_at', (v) => v as String),
           updatedAt: $checkedConvert('updated_at', (v) => v as String),
@@ -46,13 +43,6 @@ Map<String, dynamic> _$DeviceResponseToJson(_DeviceResponse instance) =>
       'updated_at': instance.updatedAt,
     };
 
-const _$DevicePlatformEnumMap = {
-  DevicePlatform.ios: 'IOS',
-  DevicePlatform.android: 'ANDROID',
-};
+const _$TypeEnumMap = {Type.ios: 'IOS', Type.android: 'ANDROID'};
 
-const _$AppLocaleEnumMap = {
-  AppLocale.ja: 'ja',
-  AppLocale.en: 'en',
-  AppLocale.zh: 'zh',
-};
+const _$LocaleEnumMap = {Locale.ja: 'ja', Locale.en: 'en', Locale.zh: 'zh'};

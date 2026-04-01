@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'telegram_info_type.dart';
+import 'info_type.dart';
 import 'telegram_status.dart';
 import 'telegram_type.dart';
 
@@ -21,7 +21,7 @@ abstract class Telegram with _$Telegram {
     required String title,
     required TelegramStatus status,
     @JsonKey(name: 'info_type')
-    required TelegramInfoType infoType,
+    required InfoType infoType,
     @JsonKey(name: 'editorial_office')
     required String editorialOffice,
     @JsonKey(name: 'publishing_office')

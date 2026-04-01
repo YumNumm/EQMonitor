@@ -112,13 +112,12 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
   Future<HttpResponse<GetV2EarthquakeEventIdIntensityMapResponse>>
   getV2EarthquakeEventIdIntensityMap({
     required String eventId,
-    String? acceptLanguage,
+    Locale? locale = Locale.ja,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'locale': locale?.toJson()};
     queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{r'Accept-Language': acceptLanguage};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options =
         _setStreamType<

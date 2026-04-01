@@ -5,11 +5,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'earthquake_datasource.dart';
-import 'event_id.dart';
 import 'hypocenter.dart';
-import 'intensity.dart';
 import 'intensity_map_image_group.dart';
 import 'intensity_map_image_url.dart';
+import 'intensity_partial.dart';
 import 'origin_time_precision.dart';
 import 'telegram_status.dart';
 
@@ -19,8 +18,9 @@ part 'earthquake_partial.g.dart';
 @Freezed()
 abstract class EarthquakePartial with _$EarthquakePartial {
   const factory EarthquakePartial({
+    /// yyyyMMddHHmmss形式のイベントID
     @JsonKey(name: 'event_id')
-    required EventId eventId,
+    required String eventId,
     required TelegramStatus status,
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
@@ -40,7 +40,7 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     @JsonKey(includeIfNull: false,name: 'intensity_map_images')
     List<IntensityMapImageGroup>? intensityMapImages,
     @JsonKey(includeIfNull: false)
-    Intensity? intensity,
+    IntensityPartial? intensity,
   }) = _EarthquakePartial;
   
   factory EarthquakePartial.fromJson(Map<String, Object?> json) => _$EarthquakePartialFromJson(json);
