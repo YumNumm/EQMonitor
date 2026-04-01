@@ -7,8 +7,9 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/telegram_detail_response.dart';
 import '../models/telegram_list_response.dart';
-import '../models/telegram_status.dart';
 import '../models/telegram_type.dart';
+
+import '../models/telegram_status.dart';
 
 part 'telegram_api_client.g.dart';
 

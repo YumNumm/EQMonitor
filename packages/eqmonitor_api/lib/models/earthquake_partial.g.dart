@@ -45,6 +45,18 @@ _EarthquakePartial _$EarthquakePartialFromJson(
         'estimated_intensity_tile',
         (v) => v as String?,
       ),
+      intensityMapImage: $checkedConvert(
+        'intensity_map_image',
+        (v) => v as String?,
+      ),
+      intensityMapImages: $checkedConvert(
+        'intensity_map_images',
+        (v) => (v as List<dynamic>?)
+            ?.map(
+              (e) => IntensityMapImageGroup.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
+      ),
       intensity: $checkedConvert(
         'intensity',
         (v) => v == null ? null : Intensity.fromJson(v as Map<String, dynamic>),
@@ -58,6 +70,8 @@ _EarthquakePartial _$EarthquakePartialFromJson(
     'originTime': 'origin_time',
     'arrivalTime': 'arrival_time',
     'estimatedIntensityTile': 'estimated_intensity_tile',
+    'intensityMapImage': 'intensity_map_image',
+    'intensityMapImages': 'intensity_map_images',
   },
 );
 
@@ -71,6 +85,8 @@ Map<String, dynamic> _$EarthquakePartialToJson(_EarthquakePartial instance) =>
       'arrival_time': ?instance.arrivalTime?.toIso8601String(),
       'hypocenter': ?instance.hypocenter,
       'estimated_intensity_tile': ?instance.estimatedIntensityTile,
+      'intensity_map_image': ?instance.intensityMapImage,
+      'intensity_map_images': ?instance.intensityMapImages,
       'intensity': ?instance.intensity,
     };
 
