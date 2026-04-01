@@ -7,6 +7,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/telegram_detail_response.dart';
 import '../models/telegram_list_response.dart';
+import '../models/telegram_status.dart';
 import '../models/telegram_type.dart';
 
 part 'telegram_api_client.g.dart';
@@ -20,7 +21,7 @@ abstract class TelegramApiClient {
   /// [cursor] - カーソル情報, {type}:{id} を base64 エンコードしたもの.
   @GET(TelegramApiClientUrls.getV2Telegram)
   Future<HttpResponse<TelegramListResponse>> getV2Telegram({
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });
@@ -31,7 +32,7 @@ abstract class TelegramApiClient {
   @GET(TelegramApiClientUrls.getV2TelegramTypeType)
   Future<HttpResponse<TelegramListResponse>> getV2TelegramTypeType({
     @Path('type') required TelegramType type,
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });
@@ -42,7 +43,7 @@ abstract class TelegramApiClient {
   @GET(TelegramApiClientUrls.getV2TelegramEventIdEventId)
   Future<HttpResponse<TelegramListResponse>> getV2TelegramEventIdEventId({
     @Path('eventId') required String eventId,
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
   });

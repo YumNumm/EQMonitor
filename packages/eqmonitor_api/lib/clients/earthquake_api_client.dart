@@ -15,6 +15,7 @@ import '../models/intensity_region_search_response.dart';
 import '../models/intensity_station_search_response.dart';
 import '../models/jma_intensity.dart';
 import '../models/sort_order.dart';
+import '../models/telegram_status.dart';
 
 part 'earthquake_api_client.g.dart';
 
@@ -41,7 +42,7 @@ abstract class EarthquakeApiClient {
   /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   @GET(EarthquakeApiClientUrls.getV2Earthquake)
   Future<HttpResponse<EarthquakeListResponse>> getV2Earthquake({
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
@@ -79,7 +80,7 @@ abstract class EarthquakeApiClient {
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityRegionCode)
   Future<HttpResponse<IntensityRegionSearchResponse>> getV2EarthquakeIntensityRegionCode({
     @Path('code') required String code,
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
@@ -112,7 +113,7 @@ abstract class EarthquakeApiClient {
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityPrefectureCode)
   Future<HttpResponse<IntensityPrefectureSearchResponse>> getV2EarthquakeIntensityPrefectureCode({
     @Path('code') required String code,
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
@@ -145,7 +146,7 @@ abstract class EarthquakeApiClient {
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityCityCode)
   Future<HttpResponse<IntensityCitySearchResponse>> getV2EarthquakeIntensityCityCode({
     @Path('code') required String code,
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
@@ -178,7 +179,7 @@ abstract class EarthquakeApiClient {
   @GET(EarthquakeApiClientUrls.getV2EarthquakeIntensityStationCode)
   Future<HttpResponse<IntensityStationSearchResponse>> getV2EarthquakeIntensityStationCode({
     @Path('code') required String code,
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,
@@ -211,7 +212,7 @@ abstract class EarthquakeApiClient {
   @GET(EarthquakeApiClientUrls.getV2EarthquakeEpicenterCode)
   Future<HttpResponse<EpicenterSearchResponse>> getV2EarthquakeEpicenterCode({
     @Path('code') required String code,
-    @Query('statuses') dynamic statuses = const ['NORMAL'],
+    @Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal],
     @Query('sortBy') EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
     @Query('sortOrder') SortOrder? sortOrder = SortOrder.desc,
     @Query('limit') String? limit,

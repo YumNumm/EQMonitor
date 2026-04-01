@@ -23,7 +23,7 @@ class _TsunamiApiClient implements TsunamiApiClient {
 
   @override
   Future<HttpResponse<TsunamiListResponse>> getV2Tsunami({
-    dynamic statuses = const ['NORMAL'],
+    List<TelegramStatus> statuses = const [TelegramStatus.normal],
     SortOrder? sortOrder = SortOrder.desc,
     String? limit,
     String? cursor,
@@ -33,7 +33,7 @@ class _TsunamiApiClient implements TsunamiApiClient {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'statuses': statuses.toJson(),
+      r'statuses': statuses,
       r'sortOrder': sortOrder?.toJson(),
       r'limit': limit,
       r'cursor': cursor,
