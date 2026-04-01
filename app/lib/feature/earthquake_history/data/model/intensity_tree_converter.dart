@@ -71,32 +71,35 @@ Map<JmaIntensity, List<RegionIntensityNode>> convertToIntensityTree({
   final stationsList = stations ?? intensity.stations;
   if (citiesList != null && citiesList.isNotEmpty) {
     return _intensityTreeFromCities(
-      intensity,
-      parameter,
-      citiesList,
-      stations: stationsList,
+      cities: citiesList,
+      parameter: parameter,
+      stations: stationsList ?? const [],
     );
   }
   if (intensity.regions.isNotEmpty) {
-    return _intensityTreeFromRegions(intensity, parameter);
+    return _intensityTreeFromRegions(
+      regions: intensity.regions,
+      parameter: parameter,
+    );
   }
-  return _intensityTreeFromPrefecturesOnly(intensity, parameter);
+  return _intensityTreeFromPrefecturesOnly(
+    prefectures: intensity.prefectures,
+    parameter: parameter,
+  );
 }
 
-Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromCities(
-  api.Intensity intensity,
-  EarthquakeParameter parameter,
-  List<api.IntensityItem> apiCities, {
-  List<api.IntensityStationItem>? stations,
+Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromCities({
+  required List<api.IntensityItem> cities,
+  required EarthquakeParameter parameter,
+  required List<api.IntensityStationItem> stations,
 }) {
   final cityParam = _cityParamMap(parameter);
   final stationParam = _stationParamMap(parameter);
-  final stationsList = stations ?? const <api.IntensityStationItem>[];
-  final byPrefix = _stationsByCityPrefix(stationsList);
+  final byPrefix = _stationsByCityPrefix(stations);
 
   final grouped = <JmaIntensity, Map<String, List<CityIntensityNode>>>{};
 
-  for (final apiCity in apiCities) {
+  for (final apiCity in cities) {
     final jma = apiCity.maxIntensity?.toJmaIntensity;
     if (jma == null) {
       continue;
@@ -154,14 +157,13 @@ Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromCities(
   return _finalizeIntensityTree(grouped, parameter);
 }
 
-Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromPrefecturesOnly(
-  api.Intensity intensity,
-  EarthquakeParameter parameter,
-) {
+Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromPrefecturesOnly({
+  required List<api.IntensityItem> prefectures,
+  required EarthquakeParameter parameter,
+}) {
   final paramRegionMap = {for (final r in parameter.regions) r.code: r};
   final grouped = <JmaIntensity, List<RegionIntensityNode>>{};
-
-  for (final pref in intensity.prefectures) {
+  for (final pref in prefectures) {
     final regionItem = paramRegionMap[pref.value.code];
     if (regionItem == null) {
       continue;
@@ -175,15 +177,21 @@ Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromPrefecturesOnly(
         .putIfAbsent(jma, () => [])
         .add(
           RegionIntensityNode(
-            region: regionItem,
-            maxIntensity: jma,
+            region: IntensityRegion(
+              region: regionItem,
+              maxIntensity: jma,
+            ),
             cities: const [],
           ),
         );
   }
 
   for (final entry in grouped.entries) {
-    entry.value.sort((a, b) => a.region.name.compareTo(b.region.name));
+    entry.value.sort(
+      (a, b) => a.region.region.name.compareTo(
+        b.region.region.name,
+      ),
+    );
   }
 
   return Map.fromEntries(
@@ -192,13 +200,11 @@ Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromPrefecturesOnly(
   );
 }
 
-Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromRegions(
-  api.Intensity intensity,
-  EarthquakeParameter parameter,
-) {
-  final regionIntensityMap = {
-    for (final r in intensity.regions) r.value.code: r,
-  };
+Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromRegions({
+  required List<api.IntensityItem> regions,
+  required EarthquakeParameter parameter,
+}) {
+  final regionIntensityMap = {for (final r in regions) r.value.code: r};
 
   final grouped = <JmaIntensity, Map<String, List<CityIntensityNode>>>{};
 
@@ -261,14 +267,20 @@ Map<JmaIntensity, List<RegionIntensityNode>> _finalizeIntensityTree(
 
       regionNodes.add(
         RegionIntensityNode(
-          region: regionItem,
-          maxIntensity: intensityKey,
+          region: IntensityRegion(
+            region: regionItem,
+            maxIntensity: intensityKey,
+          ),
           cities: cities,
         ),
       );
     }
 
-    regionNodes.sort((a, b) => a.region.name.compareTo(b.region.name));
+    regionNodes.sort(
+      (a, b) => a.region.region.name.compareTo(
+        b.region.region.name,
+      ),
+    );
 
     result[intensityKey] = regionNodes;
   }

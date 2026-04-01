@@ -16,8 +16,10 @@ abstract class EarthquakeIntensity with _$EarthquakeIntensity {
     required JmaIntensity maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
     required Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
+    required List<IntensityRegion> regions,
     required Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>
     lpgmIntensityTree,
+    required List<LpgmIntensityRegion> lpgmRegions,
   }) = _EarthquakeIntensity;
 
   factory EarthquakeIntensity.fromJson(Map<String, dynamic> json) =>
@@ -27,20 +29,43 @@ abstract class EarthquakeIntensity with _$EarthquakeIntensity {
 extension EarthquakeIntensityApiExtension on api.Intensity {
   EarthquakeIntensity toEarthquakeIntensity({
     required EarthquakeParameter parameter,
-  }) => EarthquakeIntensity(
-    maxIntensity: maxIntensity.toJmaIntensity,
-    maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,
-    intensityTree: convertToIntensityTree(
-      intensity: this,
-      parameter: parameter,
-      cities: cities,
-      stations: stations,
-    ),
-    lpgmIntensityTree: convertToLpgmIntensityTree(
-      intensity: this,
-      parameter: parameter,
-      cities: cities,
-      stations: stations,
-    ),
-  );
+  }) {
+    final paramRegionMap = {for (final r in parameter.regions) r.code: r};
+    return EarthquakeIntensity(
+      maxIntensity: maxIntensity.toJmaIntensity,
+      maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,
+      intensityTree: convertToIntensityTree(
+        intensity: this,
+        parameter: parameter,
+        cities: cities,
+        stations: stations,
+      ),
+      regions: regions.map((e) {
+        final paramRegion = paramRegionMap[e.value.code];
+        if (paramRegion == null) {
+          return null;
+        }
+        return IntensityRegion(
+          region: paramRegion,
+          maxIntensity: e.maxIntensity?.toJmaIntensity,
+        );
+      }).whereType<IntensityRegion>().toList(),
+      lpgmIntensityTree: convertToLpgmIntensityTree(
+        intensity: this,
+        parameter: parameter,
+        cities: cities,
+        stations: stations,
+      ),
+      lpgmRegions: regions.map((e) {
+        final paramRegion = paramRegionMap[e.value.code];
+        if (paramRegion == null) {
+          return null;
+        }
+        return LpgmIntensityRegion(
+          region: paramRegion,
+          maxLpgmIntensity: e.maxLpgmIntensity?.toJmaLpgmIntensity,
+        );
+      }).whereType<LpgmIntensityRegion>().toList(),
+    );
+  }
 }

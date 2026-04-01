@@ -13,14 +13,24 @@ part 'intensity_tree.g.dart';
 @freezed
 abstract class RegionIntensityNode with _$RegionIntensityNode {
   const factory RegionIntensityNode({
-    @EarthquakeParameterRegionItemConverter()
-    required EarthquakeParameterRegionItem region,
-    required JmaIntensity? maxIntensity,
+    required IntensityRegion region,
     required List<CityIntensityNode> cities,
   }) = _RegionIntensityNode;
 
   factory RegionIntensityNode.fromJson(Map<String, dynamic> json) =>
       _$RegionIntensityNodeFromJson(json);
+}
+
+@freezed
+abstract class IntensityRegion with _$IntensityRegion {
+  const factory IntensityRegion({
+    @EarthquakeParameterRegionItemConverter()
+    required EarthquakeParameterRegionItem region,
+    required JmaIntensity? maxIntensity,
+  }) = _IntensityRegion;
+
+  factory IntensityRegion.fromJson(Map<String, dynamic> json) =>
+      _$IntensityRegionFromJson(json);
 }
 
 /// 市区町村単位の震度ノード

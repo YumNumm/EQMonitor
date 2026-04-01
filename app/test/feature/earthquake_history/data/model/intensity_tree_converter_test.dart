@@ -152,8 +152,8 @@ void main() {
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 1);
-      expect(result[JmaIntensity.four]![0].region.name, '宮城県');
-      expect(result[JmaIntensity.four]![0].maxIntensity, JmaIntensity.four);
+      expect(result[JmaIntensity.four]![0].region.region.name, '宮城県');
+      expect(result[JmaIntensity.four]![0].region.maxIntensity, JmaIntensity.four);
       expect(result[JmaIntensity.four]![0].cities.length, 1);
       expect(result[JmaIntensity.four]![0].cities[0].city.name, '宮城県北部');
       expect(
@@ -211,14 +211,14 @@ void main() {
       // 震度5強グループ: 宮城県 -> 宮城県北部
       final group5Plus = result[JmaIntensity.fiveUpper]!;
       expect(group5Plus.length, 1);
-      expect(group5Plus[0].region.name, '宮城県');
+      expect(group5Plus[0].region.region.name, '宮城県');
       expect(group5Plus[0].cities.length, 1);
       expect(group5Plus[0].cities[0].city.name, '宮城県北部');
 
       // 震度4グループ: 宮城県 -> 宮城県南部
       final group4 = result[JmaIntensity.four]!;
       expect(group4.length, 1);
-      expect(group4[0].region.name, '宮城県');
+      expect(group4[0].region.region.name, '宮城県');
       expect(group4[0].cities.length, 1);
       expect(group4[0].cities[0].city.name, '宮城県南部');
     });
@@ -277,7 +277,7 @@ void main() {
       expect(result[JmaIntensity.four]!.length, 2);
 
       final regionNames = result[JmaIntensity.four]!
-          .map((r) => r.region.name)
+          .map((r) => r.region.region.name)
           .toList();
       expect(regionNames, contains('宮城県'));
       expect(regionNames, contains('福島県'));
@@ -612,7 +612,7 @@ void main() {
       );
 
       expect(result.keys.toList(), [JmaIntensity.four]);
-      expect(result[JmaIntensity.four]![0].region.name, '宮城県');
+      expect(result[JmaIntensity.four]![0].region.region.name, '宮城県');
       expect(result[JmaIntensity.four]![0].cities, isEmpty);
     });
 

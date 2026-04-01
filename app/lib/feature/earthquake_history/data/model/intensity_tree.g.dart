@@ -13,13 +13,7 @@ _RegionIntensityNode _$RegionIntensityNodeFromJson(Map<String, dynamic> json) =>
       final val = _RegionIntensityNode(
         region: $checkedConvert(
           'region',
-          (v) => const EarthquakeParameterRegionItemConverter().fromJson(
-            v as Map<String, dynamic>,
-          ),
-        ),
-        maxIntensity: $checkedConvert(
-          'max_intensity',
-          (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+          (v) => IntensityRegion.fromJson(v as Map<String, dynamic>),
         ),
         cities: $checkedConvert(
           'cities',
@@ -29,17 +23,36 @@ _RegionIntensityNode _$RegionIntensityNodeFromJson(Map<String, dynamic> json) =>
         ),
       );
       return val;
-    }, fieldKeyMap: const {'maxIntensity': 'max_intensity'});
+    });
 
 Map<String, dynamic> _$RegionIntensityNodeToJson(
   _RegionIntensityNode instance,
-) => <String, dynamic>{
-  'region': const EarthquakeParameterRegionItemConverter().toJson(
-    instance.region,
-  ),
-  'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
-  'cities': instance.cities,
-};
+) => <String, dynamic>{'region': instance.region, 'cities': instance.cities};
+
+_IntensityRegion _$IntensityRegionFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_IntensityRegion', json, ($checkedConvert) {
+      final val = _IntensityRegion(
+        region: $checkedConvert(
+          'region',
+          (v) => const EarthquakeParameterRegionItemConverter().fromJson(
+            v as Map<String, dynamic>,
+          ),
+        ),
+        maxIntensity: $checkedConvert(
+          'max_intensity',
+          (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'maxIntensity': 'max_intensity'});
+
+Map<String, dynamic> _$IntensityRegionToJson(_IntensityRegion instance) =>
+    <String, dynamic>{
+      'region': const EarthquakeParameterRegionItemConverter().toJson(
+        instance.region,
+      ),
+      'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
+    };
 
 const _$JmaIntensityEnumMap = {
   JmaIntensity.unknown: 'unknown',

@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_i
 import 'package:eqmonitor/feature/earthquake_history/data/model/station_search_info.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
+import 'package:jma_parameter_types/earthquake_param.pb.dart' show EarthquakeParameter;
 
 part 'earthquake_search_response.freezed.dart';
 part 'earthquake_search_response.g.dart';
@@ -76,9 +76,7 @@ extension IntensityRegionSearchResponseToApp
           (e) => IntensityAreaSearchItem(
             eventId: e.eventId,
             area: e.region.toIntensityAreaInfo,
-            earthquake: e.earthquake.toEarthquakePartial(
-              parameter: parameter,
-            ),
+            earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
         .toList(),
@@ -96,9 +94,7 @@ extension IntensityPrefectureSearchResponseToApp
           (e) => IntensityAreaSearchItem(
             eventId: e.eventId,
             area: e.prefecture.toIntensityAreaInfo,
-            earthquake: e.earthquake.toEarthquakePartial(
-              parameter: parameter,
-            ),
+            earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
         .toList(),
@@ -115,9 +111,7 @@ extension IntensityCitySearchResponseToApp on api.IntensityCitySearchResponse {
           (e) => IntensityAreaSearchItem(
             eventId: e.eventId,
             area: e.city.toIntensityAreaInfo,
-            earthquake: e.earthquake.toEarthquakePartial(
-              parameter: parameter,
-            ),
+            earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
         .toList(),
@@ -135,9 +129,7 @@ extension IntensityStationSearchResponseToApp
           (e) => StationSearchItem(
             eventId: e.eventId,
             station: e.station.toStationSearchInfo,
-            earthquake: e.earthquake.toEarthquakePartial(
-              parameter: parameter,
-            ),
+            earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
         .toList(),
@@ -154,9 +146,7 @@ extension EpicenterSearchResponseToApp on api.EpicenterSearchResponse {
           (e) => EpicenterSearchItem(
             eventId: e.eventId,
             epicenter: e.epicenter.toEpicenterSearchInfo,
-            earthquake: e.earthquake.toEarthquakePartial(
-              parameter: parameter,
-            ),
+            earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
         .toList(),

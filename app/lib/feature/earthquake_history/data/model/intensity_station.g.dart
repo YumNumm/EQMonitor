@@ -16,11 +16,11 @@ _IntensityStation _$IntensityStationFromJson(Map<String, dynamic> json) =>
         final val = _IntensityStation(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
-          sva: $checkedConvert('sva', (v) => (v as num).toDouble()),
+          sva: $checkedConvert('sva', (v) => (v as num?)?.toDouble()),
           prePeriods: $checkedConvert(
             'pre_periods',
-            (v) => (v as List<dynamic>)
-                .map((e) => PrePeriod.fromJson(e as Map<String, dynamic>))
+            (v) => (v as List<dynamic>?)
+                ?.map((e) => PrePeriod.fromJson(e as Map<String, dynamic>))
                 .toList(),
           ),
           maxIntensity: $checkedConvert(

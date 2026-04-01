@@ -2,19 +2,19 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'earthquake_intensity.dart';
+part of 'earthquake_intensity_partial.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_EarthquakeIntensity _$EarthquakeIntensityFromJson(
+_EarthquakeIntensityPartial _$EarthquakeIntensityPartialFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  '_EarthquakeIntensity',
+  '_EarthquakeIntensityPartial',
   json,
   ($checkedConvert) {
-    final val = _EarthquakeIntensity(
+    final val = _EarthquakeIntensityPartial(
       maxIntensity: $checkedConvert(
         'max_intensity',
         (v) => $enumDecode(_$JmaIntensityEnumMap, v),
@@ -23,45 +23,10 @@ _EarthquakeIntensity _$EarthquakeIntensityFromJson(
         'max_lpgm_intensity',
         (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
-      intensityTree: $checkedConvert(
-        'intensity_tree',
-        (v) => (v as Map<String, dynamic>).map(
-          (k, e) => MapEntry(
-            $enumDecode(_$JmaIntensityEnumMap, k),
-            (e as List<dynamic>)
-                .map(
-                  (e) =>
-                      RegionIntensityNode.fromJson(e as Map<String, dynamic>),
-                )
-                .toList(),
-          ),
-        ),
-      ),
       regions: $checkedConvert(
         'regions',
         (v) => (v as List<dynamic>)
             .map((e) => IntensityRegion.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-      lpgmIntensityTree: $checkedConvert(
-        'lpgm_intensity_tree',
-        (v) => (v as Map<String, dynamic>).map(
-          (k, e) => MapEntry(
-            $enumDecode(_$JmaLpgmIntensityEnumMap, k),
-            (e as List<dynamic>)
-                .map(
-                  (e) => RegionLpgmIntensityNode.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-      ),
-      lpgmRegions: $checkedConvert(
-        'lpgm_regions',
-        (v) => (v as List<dynamic>)
-            .map((e) => LpgmIntensityRegion.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
     );
@@ -70,25 +35,15 @@ _EarthquakeIntensity _$EarthquakeIntensityFromJson(
   fieldKeyMap: const {
     'maxIntensity': 'max_intensity',
     'maxLpgmIntensity': 'max_lpgm_intensity',
-    'intensityTree': 'intensity_tree',
-    'lpgmIntensityTree': 'lpgm_intensity_tree',
-    'lpgmRegions': 'lpgm_regions',
   },
 );
 
-Map<String, dynamic> _$EarthquakeIntensityToJson(
-  _EarthquakeIntensity instance,
+Map<String, dynamic> _$EarthquakeIntensityPartialToJson(
+  _EarthquakeIntensityPartial instance,
 ) => <String, dynamic>{
   'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
   'max_lpgm_intensity': _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensity],
-  'intensity_tree': instance.intensityTree.map(
-    (k, e) => MapEntry(_$JmaIntensityEnumMap[k]!, e),
-  ),
   'regions': instance.regions,
-  'lpgm_intensity_tree': instance.lpgmIntensityTree.map(
-    (k, e) => MapEntry(_$JmaLpgmIntensityEnumMap[k]!, e),
-  ),
-  'lpgm_regions': instance.lpgmRegions,
 };
 
 const _$JmaIntensityEnumMap = {

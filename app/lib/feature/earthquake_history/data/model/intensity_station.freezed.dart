@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityStation {
 
- String get code; String get name; double get sva; List<PrePeriod> get prePeriods; JmaIntensity? get maxIntensity; JmaLpgmIntensity? get maxLpgmIntensity;
+ String get code; String get name; double? get sva; List<PrePeriod>? get prePeriods; JmaIntensity? get maxIntensity; JmaLpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of IntensityStation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $IntensityStationCopyWith<$Res>  {
   factory $IntensityStationCopyWith(IntensityStation value, $Res Function(IntensityStation) _then) = _$IntensityStationCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, double sva, List<PrePeriod> prePeriods, JmaIntensity? maxIntensity, JmaLpgmIntensity? maxLpgmIntensity
+ String code, String name, double? sva, List<PrePeriod>? prePeriods, JmaIntensity? maxIntensity, JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -65,13 +65,13 @@ class _$IntensityStationCopyWithImpl<$Res>
 
 /// Create a copy of IntensityStation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? sva = null,Object? prePeriods = null,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? sva = freezed,Object? prePeriods = freezed,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
-as double,prePeriods: null == prePeriods ? _self.prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
-as List<PrePeriod>,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
+as String,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+as double?,prePeriods: freezed == prePeriods ? _self.prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
+as List<PrePeriod>?,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,
   ));
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  double sva,  List<PrePeriod> prePeriods,  JmaIntensity? maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  double? sva,  List<PrePeriod>? prePeriods,  JmaIntensity? maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityStation() when $default != null:
 return $default(_that.code,_that.name,_that.sva,_that.prePeriods,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -179,7 +179,7 @@ return $default(_that.code,_that.name,_that.sva,_that.prePeriods,_that.maxIntens
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  double sva,  List<PrePeriod> prePeriods,  JmaIntensity? maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  double? sva,  List<PrePeriod>? prePeriods,  JmaIntensity? maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStation():
 return $default(_that.code,_that.name,_that.sva,_that.prePeriods,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -199,7 +199,7 @@ return $default(_that.code,_that.name,_that.sva,_that.prePeriods,_that.maxIntens
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  double sva,  List<PrePeriod> prePeriods,  JmaIntensity? maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  double? sva,  List<PrePeriod>? prePeriods,  JmaIntensity? maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStation() when $default != null:
 return $default(_that.code,_that.name,_that.sva,_that.prePeriods,_that.maxIntensity,_that.maxLpgmIntensity);case _:
@@ -214,17 +214,19 @@ return $default(_that.code,_that.name,_that.sva,_that.prePeriods,_that.maxIntens
 @JsonSerializable()
 
 class _IntensityStation implements IntensityStation {
-  const _IntensityStation({required this.code, required this.name, required this.sva, required final  List<PrePeriod> prePeriods, required this.maxIntensity, required this.maxLpgmIntensity}): _prePeriods = prePeriods;
+  const _IntensityStation({required this.code, required this.name, required this.sva, required final  List<PrePeriod>? prePeriods, required this.maxIntensity, required this.maxLpgmIntensity}): _prePeriods = prePeriods;
   factory _IntensityStation.fromJson(Map<String, dynamic> json) => _$IntensityStationFromJson(json);
 
 @override final  String code;
 @override final  String name;
-@override final  double sva;
- final  List<PrePeriod> _prePeriods;
-@override List<PrePeriod> get prePeriods {
+@override final  double? sva;
+ final  List<PrePeriod>? _prePeriods;
+@override List<PrePeriod>? get prePeriods {
+  final value = _prePeriods;
+  if (value == null) return null;
   if (_prePeriods is EqualUnmodifiableListView) return _prePeriods;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_prePeriods);
+  return EqualUnmodifiableListView(value);
 }
 
 @override final  JmaIntensity? maxIntensity;
@@ -263,7 +265,7 @@ abstract mixin class _$IntensityStationCopyWith<$Res> implements $IntensityStati
   factory _$IntensityStationCopyWith(_IntensityStation value, $Res Function(_IntensityStation) _then) = __$IntensityStationCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, double sva, List<PrePeriod> prePeriods, JmaIntensity? maxIntensity, JmaLpgmIntensity? maxLpgmIntensity
+ String code, String name, double? sva, List<PrePeriod>? prePeriods, JmaIntensity? maxIntensity, JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -280,13 +282,13 @@ class __$IntensityStationCopyWithImpl<$Res>
 
 /// Create a copy of IntensityStation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? sva = null,Object? prePeriods = null,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? sva = freezed,Object? prePeriods = freezed,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,}) {
   return _then(_IntensityStation(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,sva: null == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
-as double,prePeriods: null == prePeriods ? _self._prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
-as List<PrePeriod>,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
+as String,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+as double?,prePeriods: freezed == prePeriods ? _self._prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
+as List<PrePeriod>?,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,
   ));

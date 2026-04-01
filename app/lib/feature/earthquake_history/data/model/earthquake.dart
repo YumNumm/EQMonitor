@@ -1,18 +1,18 @@
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
 
-part 'earthquake_partial.freezed.dart';
-part 'earthquake_partial.g.dart';
+part 'earthquake.freezed.dart';
+part 'earthquake.g.dart';
 
 @freezed
-abstract class EarthquakePartial with _$EarthquakePartial {
-  const factory EarthquakePartial({
+abstract class Earthquake with _$Earthquake {
+  const factory Earthquake({
     required String eventId,
     required TelegramStatus status,
     required DateTime? originTime,
@@ -20,20 +20,20 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     required DateTime? arrivalTime,
     required EarthquakeDataSource dataSource,
     required EarthquakeHypocenter? hypocenter,
-    required EarthquakeIntensityPartial? intensity,
+    required EarthquakeIntensity? intensity,
 
     /// 推計震度PMTilesのフルURL
     required String? estimatedIntensityTileUrl,
-  }) = _EarthquakePartial;
+  }) = _Earthquake;
 
-  factory EarthquakePartial.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakePartialFromJson(json);
+  factory Earthquake.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeFromJson(json);
 }
 
-extension EarthquakePartialApiExtension on api.EarthquakePartial {
-  EarthquakePartial toEarthquakePartial({
+extension EarthquakeApiExtension on api.Earthquake {
+  Earthquake toEarthquake({
     required EarthquakeParameter parameter,
-  }) => EarthquakePartial(
+  }) => Earthquake(
     eventId: eventId,
     status: status.toTelegramStatus,
     originTime: originTime,
@@ -42,6 +42,8 @@ extension EarthquakePartialApiExtension on api.EarthquakePartial {
     dataSource: datasource.toEarthquakeDataSource,
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
-    intensity: intensity?.toEarthquakeIntensityPartial(parameter: parameter),
+    intensity: intensity?.toEarthquakeIntensity(
+      parameter: parameter,
+    ),
   );
 }
