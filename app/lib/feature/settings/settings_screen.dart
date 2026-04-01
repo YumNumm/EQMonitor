@@ -1,20 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
-import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
-import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -59,12 +50,6 @@ class SettingsScreen extends ConsumerWidget {
                 const EarthquakeHistoryConfigRoute().push(context),
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
-          ListTile(
-            title: const Text('フィードバック'),
-            subtitle: const Text('ご意見・ご要望などもこちらからお願いします'),
-            leading: const Icon(Icons.feedback),
-            onTap: () async => _onInquiryTap(context, ref),
-          ),
           ListTile(
             title: const Text('このアプリケーションについて'),
             subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
@@ -145,42 +130,4 @@ class _AppVersionInformation extends HookConsumerWidget {
       ),
     );
   }
-}
-
-Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
-  BetterFeedback.of(context).show((feedback) async {
-    final packageInfo = ref.read(packageInfoProvider);
-
-    final base =
-        '--------------------------\n'
-        'EQMonitor v${packageInfo.version}+${packageInfo.buildNumber}\n'
-        '--------------------------';
-    // draft an email and send to developer
-    final screenshotFilePath = await writeImageToStorage(feedback.screenshot);
-    final extra = CustomFeedback.fromJson(feedback.extra!);
-
-    final email = Email(
-      body: '${feedback.text}\n\n$base\n\n${jsonEncode(extra.toJson())}',
-      subject: 'EQMonitor Feedback',
-      recipients: ['feedback@eqmonitor.app'],
-      attachmentPaths: [if (extra.isScreenshotAttached) screenshotFilePath],
-    );
-    try {
-      await FlutterEmailSender.send(email);
-    } on PlatformException catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('エラーが発生しました: ${e.message}')));
-      }
-    }
-  });
-}
-
-Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
-  final output = await getTemporaryDirectory();
-  final screenshotFilePath = '${output.path}/feedback.png';
-  final screenshotFile = File(screenshotFilePath);
-  await screenshotFile.writeAsBytes(feedbackScreenshot);
-  return screenshotFilePath;
 }
