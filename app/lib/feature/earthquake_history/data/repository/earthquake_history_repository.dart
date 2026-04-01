@@ -2,8 +2,8 @@ import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_list_response.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -39,18 +39,16 @@ class EarthquakeHistoryRepository {
       limit: limit?.toString(),
       cursor: cursor,
     );
-    return response.data.toEarthquakeListResponse(
-      parameter: earthquakeParameter,
-    );
+    return response.data.toEarthquakeListResponse(parameter: earthquakeParameter);
   }
 
-  Future<EarthquakePartial> fetchEarthquakeDetail({
+  Future<Earthquake> fetchEarthquakeDetail({
     required String eventId,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeEventId(
       eventId: eventId,
     );
-    return response.data.earthquake.toEarthquakePartial(
+    return response.data.earthquake.toEarthquake(
       parameter: earthquakeParameter,
     );
   }
@@ -186,8 +184,9 @@ class EarthquakeHistoryRepository {
   ) {
     for (final entry in intensityTree.entries) {
       for (final regionNode in entry.value) {
-        if (regionNode.region.code == areaCode && regionNode.cities.isEmpty) {
-          return regionNode.maxIntensity ?? entry.key;
+        if (regionNode.region.region.code == areaCode &&
+            regionNode.cities.isEmpty) {
+          return regionNode.region.maxIntensity ?? entry.key;
         }
       }
     }
