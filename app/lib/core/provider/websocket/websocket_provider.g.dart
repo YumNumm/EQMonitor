@@ -35,7 +35,7 @@ final class SseConnectionProvider
   SseConnection create() => SseConnection();
 }
 
-String _$sseConnectionHash() => r'b3327095591ced5256de3b170d90a1c9e3e44fdb';
+String _$sseConnectionHash() => r'aba65fb1c1ed10e557c57c0001abb7844e4e1a98';
 
 abstract class _$SseConnection extends $StreamNotifier<Map<String, dynamic>> {
   Stream<Map<String, dynamic>> build();
