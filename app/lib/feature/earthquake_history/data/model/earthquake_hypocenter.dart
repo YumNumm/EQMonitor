@@ -27,20 +27,9 @@ extension EarthquakeHypocenterApiExtension on api.Hypocenter {
   EarthquakeHypocenter get toEarthquakeHypocenter => EarthquakeHypocenter(
     code: value.code,
     name: value.name,
-    coordinates: switch (coordinates.type) {
-      .latLng => Coordinate.latLng(
-        latitude: coordinates.latitude!.toDouble(),
-        longitude: coordinates.longitude!.toDouble(),
-      ),
-      .unknown => const Coordinate.unknown(),
-    },
+    coordinates: coordinates.toCoordinate,
     magnitude: magnitude.toEarthquakeMagnitude,
-    depth: switch (depth.type) {
-      .shallow => const EarthquakeDepth.shallow(),
-      .normal => EarthquakeDepth.value(value: depth.value!.toInt()),
-      .over700 => const EarthquakeDepth.over700km(),
-      .unknown => const EarthquakeDepth.unknown(),
-    },
+    depth: depth.toEarthquakeDepth,
     detailedCode: detailed?.code,
     detailedName: detailed?.name,
   );
