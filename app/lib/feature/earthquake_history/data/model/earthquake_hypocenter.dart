@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_hypocenter.freezed.dart';
@@ -24,31 +24,24 @@ abstract class EarthquakeHypocenter with _$EarthquakeHypocenter {
 }
 
 extension EarthquakeHypocenterApiExtension on api.Hypocenter {
-  EarthquakeHypocenter get toEarthquakeHypocenter {
-    final lat = latitude;
-    final lon = longitude;
-    final coordinates = lat != null && lon != null
-        ? Coordinate.latLng(
-            latitude: lat.toDouble(),
-            longitude: lon.toDouble(),
-          )
-        : const Coordinate.unknown();
-
-    final d = depth;
-    final depthModel = d == null
-        ? const EarthquakeDepth.unknown()
-        : d.toInt() == 0
-        ? const EarthquakeDepth.shallow()
-        : EarthquakeDepth.value(value: d.toInt());
-
-    return EarthquakeHypocenter(
-      code: '',
-      name: name ?? '',
-      coordinates: coordinates,
-      magnitude: const EarthquakeMagnitude.unknown(),
-      depth: depthModel,
-      detailedCode: null,
-      detailedName: null,
-    );
-  }
+  EarthquakeHypocenter get toEarthquakeHypocenter => EarthquakeHypocenter(
+    code: value.code,
+    name: value.name,
+    coordinates: switch (coordinates.type) {
+      .latLng => Coordinate.latLng(
+        latitude: coordinates.latitude!.toDouble(),
+        longitude: coordinates.longitude!.toDouble(),
+      ),
+      .unknown => const Coordinate.unknown(),
+    },
+    magnitude: const EarthquakeMagnitude.unknown(),
+    depth: switch (depth.type) {
+      .shallow => const EarthquakeDepth.shallow(),
+      .normal => EarthquakeDepth.value(value: depth.value?.toInt() ?? 0),
+      .over700 => const EarthquakeDepth.over700km(),
+      .unknown => const EarthquakeDepth.unknown(),
+    },
+    detailedCode: detailed?.code,
+    detailedName: detailed?.name,
+  );
 }

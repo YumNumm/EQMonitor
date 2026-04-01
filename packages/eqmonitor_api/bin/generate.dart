@@ -5,9 +5,9 @@ void main(List<String> args) async {
 
   final packageDir = Directory.current;
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
-  final libDir = Directory('${packageDir.path}/lib');
+  final libDir = Directory('${packageDir.path}/lib/src');
 
-  await _step('lib/ を削除', () async {
+  await _step('lib/src/ を削除', () async {
     if (libDir.existsSync()) {
       libDir.deleteSync(recursive: true);
     }
@@ -46,7 +46,7 @@ void main(List<String> args) async {
   ///   - `{N}-` (value{N})    → value{N}minus
   ///   - `{N}+` (value{N})    → value{N}plus
   await _step('震度 enum メンバー名をパッチ', () async {
-    final modelsDir = Directory('${packageDir.path}/lib/models');
+    final modelsDir = Directory('${packageDir.path}/lib/src/models');
 
     if (!modelsDir.existsSync()) return;
 
@@ -178,15 +178,15 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
 
     content = content.replaceAll(
       "@Query('statuses') dynamic statuses = const ['NORMAL']",
-      "@Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal]",
+      "@Query('statuses') List<TelegramStatus> statuses = const [.normal]",
     );
     content = content.replaceAll(
       "@Query('statuses') dynamic statuses = [NORMAL]",
-      "@Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal]",
+      "@Query('statuses') List<TelegramStatus> statuses = const [.normal]",
     );
     content = content.replaceAll(
       "@Query('statuses') List<TelegramStatus>? statuses = const ['NORMAL']",
-      "@Query('statuses') List<TelegramStatus> statuses = const [TelegramStatus.normal]",
+      "@Query('statuses') List<TelegramStatus> statuses = const [.normal]",
     );
 
     if (content.contains('List<TelegramStatus>') &&

@@ -2460,23 +2460,20 @@
             "$ref": "#/components/parameters/EarthquakeIntensityMapEventIdParam"
           },
           {
-            "in": "query",
-            "name": "locale",
+            "name": "Accept-Language",
+            "in": "header",
+            "required": false,
+            "description": "優先言語（RFC 7231）。先頭の言語タグの主要サブタグを ja / en / zh にマップ。省略時は ja。",
             "schema": {
-              "enum": [
-                "ja",
-                "en",
-                "zh"
-              ],
               "type": "string",
-              "default": "ja"
+              "example": "en-US,en;q=0.9,ja;q=0.8"
             }
           }
         ],
         "tags": [
           "Earthquake"
         ],
-        "description": "地震イベントの震度分布図（最新）",
+        "description": "地震イベントの震度分布図（最新）。言語は Accept-Language（ja/en/zh）で指定。",
         "responses": {
           "200": {
             "description": "震度分布図URL",
@@ -3939,13 +3936,8 @@
             "in": "query",
             "name": "isCanceled",
             "schema": {
-              "enum": [
-                "true",
-                "false"
-              ],
-              "type": "string"
-            },
-            "description": "取消済みフィルタ"
+              "$ref": "#/components/schemas/BooleanStringQuery"
+            }
           },
           {
             "in": "query",
@@ -4953,6 +4945,23 @@
           "message"
         ]
       },
+      "DevicePlatform": {
+        "enum": [
+          "IOS",
+          "ANDROID"
+        ],
+        "type": "string",
+        "description": "デバイスOS"
+      },
+      "AppLocale": {
+        "enum": [
+          "ja",
+          "en",
+          "zh"
+        ],
+        "type": "string",
+        "description": "言語コード"
+      },
       "DeviceResponse": {
         "type": "object",
         "properties": {
@@ -4960,22 +4969,13 @@
             "type": "string"
           },
           "type": {
-            "enum": [
-              "IOS",
-              "ANDROID"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/DevicePlatform"
           },
           "user_id": {
             "type": "string"
           },
           "locale": {
-            "enum": [
-              "ja",
-              "en",
-              "zh"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/AppLocale"
           },
           "created_at": {
             "type": "string"
@@ -5001,6 +5001,14 @@
         "type": "string",
         "description": "APNsトークンタイプ"
       },
+      "ApnsEnvironment": {
+        "enum": [
+          "development",
+          "production"
+        ],
+        "type": "string",
+        "description": "APNs環境"
+      },
       "ApnsTokenResponse": {
         "type": "object",
         "properties": {
@@ -5011,11 +5019,7 @@
             "type": "string"
           },
           "environment": {
-            "enum": [
-              "development",
-              "production"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/ApnsEnvironment"
           }
         },
         "required": [
@@ -5023,14 +5027,6 @@
           "token",
           "environment"
         ]
-      },
-      "ApnsEnvironment": {
-        "enum": [
-          "development",
-          "production"
-        ],
-        "type": "string",
-        "description": "APNs環境"
       },
       "ApnsTokenRequest": {
         "type": "object",
@@ -5490,8 +5486,7 @@
           "Strong",
           "Stronger"
         ],
-        "type": "string",
-        "description": "揺れ検知レベル"
+        "type": "string"
       },
       "ShakeDetectionSettingResponse": {
         "type": "object",
@@ -5576,6 +5571,22 @@
           "name"
         ]
       },
+      "NotificationPushFramework": {
+        "enum": [
+          "FCM",
+          "APNS"
+        ],
+        "type": "string",
+        "description": "プッシュ通知フレームワーク"
+      },
+      "NotificationDeliveryResult": {
+        "enum": [
+          "OK",
+          "NG"
+        ],
+        "type": "string",
+        "description": "通知送信結果"
+      },
       "NotificationLogItem": {
         "type": "object",
         "properties": {
@@ -5586,18 +5597,10 @@
             "type": "string"
           },
           "framework": {
-            "enum": [
-              "FCM",
-              "APNS"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/NotificationPushFramework"
           },
           "result": {
-            "enum": [
-              "OK",
-              "NG"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/NotificationDeliveryResult"
           },
           "error_code": {
             "type": "string"
@@ -5866,16 +5869,20 @@
           "item"
         ]
       },
+      "TestNotificationType": {
+        "enum": [
+          "silent",
+          "normal",
+          "critical"
+        ],
+        "type": "string",
+        "description": "テスト通知の種類"
+      },
       "TestNotificationRequest": {
         "type": "object",
         "properties": {
           "type": {
-            "enum": [
-              "silent",
-              "normal",
-              "critical"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TestNotificationType"
           }
         },
         "required": [
@@ -5889,11 +5896,7 @@
             "type": "string"
           },
           "framework": {
-            "enum": [
-              "FCM",
-              "APNS"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/NotificationPushFramework"
           }
         },
         "required": [
@@ -5929,6 +5932,13 @@
         ],
         "type": "string",
         "description": "ソート順"
+      },
+      "EventId": {
+        "type": "string",
+        "description": "yyyyMMddHHmmss形式のイベントID",
+        "examples": [
+          "20251212191438"
+        ]
       },
       "OriginTimePrecision": {
         "enum": [
@@ -6001,16 +6011,20 @@
         ],
         "description": "震源座標"
       },
+      "MagnitudeType": {
+        "enum": [
+          "NORMAL",
+          "UNKNOWN",
+          "OVER_M8"
+        ],
+        "type": "string",
+        "description": "マグニチュード値の種別"
+      },
       "Magnitude": {
         "type": "object",
         "properties": {
           "type": {
-            "enum": [
-              "NORMAL",
-              "UNKNOWN",
-              "OVER_M8"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/MagnitudeType"
           },
           "value": {
             "type": "number",
@@ -6129,13 +6143,7 @@
             "description": "画像レコードID"
           },
           "language": {
-            "enum": [
-              "ja",
-              "en",
-              "zh"
-            ],
-            "type": "string",
-            "description": "画像の言語"
+            "$ref": "#/components/schemas/AppLocale"
           },
           "image_url": {
             "type": "string",
@@ -6261,11 +6269,7 @@
         "type": "object",
         "properties": {
           "event_id": {
-            "type": "string",
-            "description": "yyyyMMddHHmmss形式のイベントID",
-            "examples": [
-              "20251212191438"
-            ]
+            "$ref": "#/components/schemas/EventId"
           },
           "status": {
             "$ref": "#/components/schemas/TelegramStatus"
@@ -6468,6 +6472,16 @@
         "type": "string",
         "description": "情報名称(Control/Title部)"
       },
+      "TelegramInfoType": {
+        "enum": [
+          "PUBLICATION",
+          "CORRECTION",
+          "DELAY",
+          "CANCELLATION"
+        ],
+        "type": "string",
+        "description": "情報の種類"
+      },
       "Telegram": {
         "type": "object",
         "properties": {
@@ -6490,13 +6504,7 @@
             "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "editorial_office": {
             "type": "string"
@@ -6593,11 +6601,7 @@
         "type": "object",
         "properties": {
           "event_id": {
-            "type": "string",
-            "description": "yyyyMMddHHmmss形式のイベントID",
-            "examples": [
-              "20251212191438"
-            ]
+            "$ref": "#/components/schemas/EventId"
           },
           "status": {
             "$ref": "#/components/schemas/TelegramStatus"
@@ -7258,8 +7262,7 @@
         "type": "object",
         "properties": {
           "event_id": {
-            "type": "string",
-            "description": "yyyyMMddHHmmss形式のイベントID"
+            "$ref": "#/components/schemas/EventId"
           },
           "type": {
             "$ref": "#/components/schemas/TelegramType"
@@ -7268,13 +7271,7 @@
             "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "serial_no": {
             "type": "number"
@@ -7467,13 +7464,7 @@
                   "$ref": "#/components/schemas/TelegramStatus"
                 },
                 "info_type": {
-                  "enum": [
-                    "PUBLICATION",
-                    "CORRECTION",
-                    "DELAY",
-                    "CANCELLATION"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/TelegramInfoType"
                 },
                 "editorial_office": {
                   "type": "string"
@@ -7562,13 +7553,7 @@
             "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "editorial_office": {
             "type": "string"
@@ -7653,6 +7638,14 @@
           "comments"
         ]
       },
+      "BooleanStringQuery": {
+        "enum": [
+          "true",
+          "false"
+        ],
+        "type": "string",
+        "description": "クエリ用の真偽値文字列"
+      },
       "TsunamiWarningKind": {
         "enum": [
           "MAJOR_WARNING",
@@ -7710,12 +7703,7 @@
             "type": "boolean"
           },
           "status": {
-            "enum": [
-              "NORMAL",
-              "TRAINING",
-              "TEST"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramStatus"
           },
           "max_forecast_grade": {
             "$ref": "#/components/schemas/TsunamiWarningKind"
@@ -7729,12 +7717,7 @@
           "telegram_types": {
             "type": "array",
             "items": {
-              "enum": [
-                "VTSE41",
-                "VTSE51",
-                "VTSE52"
-              ],
-              "type": "string"
+              "$ref": "#/components/schemas/TelegramType"
             }
           },
           "earthquake_hypocenter_name": {
@@ -7812,32 +7795,16 @@
             "type": "number"
           },
           "type": {
-            "enum": [
-              "VTSE41",
-              "VTSE51",
-              "VTSE52"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramType"
           },
           "title": {
             "type": "string"
           },
           "status": {
-            "enum": [
-              "NORMAL",
-              "TRAINING",
-              "TEST"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramStatus"
           },
           "info_type": {
-            "enum": [
-              "PUBLICATION",
-              "CORRECTION",
-              "DELAY",
-              "CANCELLATION"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/TelegramInfoType"
           },
           "editorial_office": {
             "type": "string"
@@ -8452,19 +8419,10 @@
             "type": "string"
           },
           "type": {
-            "enum": [
-              "IOS",
-              "ANDROID"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/DevicePlatform"
           },
           "locale": {
-            "enum": [
-              "ja",
-              "en",
-              "zh"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/AppLocale"
           },
           "created_at": {
             "type": "string"
@@ -8530,6 +8488,270 @@
           "user_agent"
         ]
       },
+      "LocationPayload": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
+      },
+      "RegionPayload": {
+        "type": "object",
+        "properties": {
+          "topLeft": {
+            "$ref": "#/components/schemas/LocationPayload"
+          },
+          "bottomRight": {
+            "$ref": "#/components/schemas/LocationPayload"
+          }
+        },
+        "required": [
+          "topLeft",
+          "bottomRight"
+        ]
+      },
+      "ObservationPointPayload": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationPayload"
+          },
+          "intensity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "intensityDiff": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "region",
+          "type",
+          "location",
+          "intensity",
+          "intensityDiff"
+        ]
+      },
+      "ShakeDetectedPayload": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "shake_detected"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "level": {
+            "$ref": "#/components/schemas/ShakeDetectionLevel"
+          },
+          "changeReasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isReplay": {
+            "type": "boolean"
+          },
+          "pointCount": {
+            "type": "number"
+          },
+          "region": {
+            "$ref": "#/components/schemas/RegionPayload"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObservationPointPayload"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "eventId",
+          "createdAt",
+          "level",
+          "changeReasons",
+          "isReplay",
+          "pointCount",
+          "region",
+          "points"
+        ]
+      },
+      "EventType": {
+        "enum": [
+          "EEW",
+          "EARTHQUAKE",
+          "ESTIMATED_INTENSITY"
+        ],
+        "type": "string"
+      },
+      "EventHypocenter": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "depth": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude",
+          "depth"
+        ]
+      },
+      "EventMessage": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "serialNo": {
+            "type": "number"
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "intensity": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "name",
+                "intensity"
+              ]
+            }
+          },
+          "maxIntensity": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "reportTime": {
+            "type": "string"
+          },
+          "originTime": {
+            "type": "string"
+          },
+          "arrivalTime": {
+            "type": "string"
+          },
+          "hypocenter": {
+            "$ref": "#/components/schemas/EventHypocenter"
+          },
+          "magnitude": {
+            "type": "number"
+          },
+          "isWarning": {
+            "type": "boolean"
+          },
+          "isLastInfo": {
+            "type": "boolean"
+          },
+          "isCancel": {
+            "type": "boolean"
+          },
+          "hypocenterReduceName": {
+            "type": "string"
+          },
+          "hasWarningZones": {
+            "type": "boolean"
+          },
+          "isPlum": {
+            "type": "boolean"
+          },
+          "isLevel": {
+            "type": "boolean"
+          },
+          "isOnePoint": {
+            "type": "boolean"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "prefectures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "intensity": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "name",
+                "intensity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "eventId",
+          "type",
+          "serialNo",
+          "regions",
+          "reportTime"
+        ]
+      },
       "RealtimeState": {
         "type": "object",
         "properties": {
@@ -8543,287 +8765,13 @@
           "shakes": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "type": {
-                  "const": "shake_detected"
-                },
-                "eventId": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "type": "string"
-                },
-                "level": {
-                  "enum": [
-                    "Weaker",
-                    "Weak",
-                    "Medium",
-                    "Strong",
-                    "Stronger"
-                  ],
-                  "type": "string"
-                },
-                "changeReasons": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "isReplay": {
-                  "type": "boolean"
-                },
-                "pointCount": {
-                  "type": "number"
-                },
-                "region": {
-                  "type": "object",
-                  "properties": {
-                    "topLeft": {
-                      "type": "object",
-                      "properties": {
-                        "latitude": {
-                          "type": "number"
-                        },
-                        "longitude": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "latitude",
-                        "longitude"
-                      ]
-                    },
-                    "bottomRight": {
-                      "type": "object",
-                      "properties": {
-                        "latitude": {
-                          "type": "number"
-                        },
-                        "longitude": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "latitude",
-                        "longitude"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "topLeft",
-                    "bottomRight"
-                  ]
-                },
-                "points": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "code": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "region": {
-                        "type": "string"
-                      },
-                      "type": {
-                        "type": "string"
-                      },
-                      "location": {
-                        "type": "object",
-                        "properties": {
-                          "latitude": {
-                            "type": "number"
-                          },
-                          "longitude": {
-                            "type": "number"
-                          }
-                        },
-                        "required": [
-                          "latitude",
-                          "longitude"
-                        ]
-                      },
-                      "intensity": {
-                        "anyOf": [
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "intensityDiff": {
-                        "type": "number"
-                      }
-                    },
-                    "required": [
-                      "code",
-                      "name",
-                      "region",
-                      "type",
-                      "location",
-                      "intensity",
-                      "intensityDiff"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "type",
-                "eventId",
-                "createdAt",
-                "level",
-                "changeReasons",
-                "isReplay",
-                "pointCount",
-                "region",
-                "points"
-              ]
+              "$ref": "#/components/schemas/ShakeDetectedPayload"
             }
           },
           "eews": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "eventId": {
-                  "type": "string"
-                },
-                "type": {
-                  "enum": [
-                    "EEW",
-                    "EARTHQUAKE",
-                    "ESTIMATED_INTENSITY"
-                  ],
-                  "type": "string"
-                },
-                "serialNo": {
-                  "type": "number"
-                },
-                "regions": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "code": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "intensity": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "code",
-                      "name",
-                      "intensity"
-                    ]
-                  }
-                },
-                "maxIntensity": {
-                  "type": "string"
-                },
-                "headline": {
-                  "type": "string"
-                },
-                "reportTime": {
-                  "type": "string"
-                },
-                "originTime": {
-                  "type": "string"
-                },
-                "arrivalTime": {
-                  "type": "string"
-                },
-                "hypocenter": {
-                  "type": "object",
-                  "properties": {
-                    "latitude": {
-                      "type": "number"
-                    },
-                    "longitude": {
-                      "type": "number"
-                    },
-                    "depth": {
-                      "type": "number"
-                    },
-                    "name": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "latitude",
-                    "longitude",
-                    "depth"
-                  ]
-                },
-                "magnitude": {
-                  "type": "number"
-                },
-                "isWarning": {
-                  "type": "boolean"
-                },
-                "isLastInfo": {
-                  "type": "boolean"
-                },
-                "isCancel": {
-                  "type": "boolean"
-                },
-                "hypocenterReduceName": {
-                  "type": "string"
-                },
-                "hasWarningZones": {
-                  "type": "boolean"
-                },
-                "isPlum": {
-                  "type": "boolean"
-                },
-                "isLevel": {
-                  "type": "boolean"
-                },
-                "isOnePoint": {
-                  "type": "boolean"
-                },
-                "comment": {
-                  "type": "string"
-                },
-                "prefectures": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "code": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "intensity": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "code",
-                      "name",
-                      "intensity"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "eventId",
-                "type",
-                "serialNo",
-                "regions",
-                "reportTime"
-              ]
+              "$ref": "#/components/schemas/EventMessage"
             }
           },
           "earthquakes": {

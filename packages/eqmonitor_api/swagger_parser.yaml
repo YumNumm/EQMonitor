@@ -8,7 +8,7 @@ swagger_parser:
   # schema_url: https://petstore.swagger.io/v2/swagger.json
 
   # Required. Sets output directory for generated files (Clients and DTOs).
-  output_directory: lib
+  output_directory: lib/src
 
   # Optional. Set API name for folder and export file
   # If not specified, the file name is used.
