@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:eqmonitor/core/util/env.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,7 +9,7 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const defaultUrl = Env.restApiUrl;
+    final defaultUrl = ref.watch(environmentProvider).restApiUrl;
     final developUrl = defaultUrl.replaceAll('api.', 'dev.api.');
     final state = ref.watch(telegramUrlProvider.select((v) => v.requireValue.restApiUrl));
     return Scaffold(
@@ -23,8 +23,8 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
               groupValue: state,
               child: Column(
                 children: [
-                  const RadioListTile<String>.adaptive(
-                    title: Text('[HTTP API] Default'),
+                  RadioListTile<String>.adaptive(
+                    title: const Text('[HTTP API] Default'),
                     subtitle: Text(defaultUrl),
                     value: defaultUrl,
                   ),

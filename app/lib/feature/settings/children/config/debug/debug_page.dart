@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
@@ -24,13 +24,14 @@ part 'debug_page.g.dart';
 /// GoogleSignIn を初期化するプロバイダー（一度だけ実行される）
 @riverpod
 Future<void> googleSignInInit(Ref ref) async {
+  final env = ref.watch(environmentProvider);
   if (Platform.isIOS || Platform.isMacOS) {
     await GoogleSignIn.instance.initialize(
-      clientId: Env.googleIosClientId,
+      clientId: env.googleIosClientId,
     );
   } else {
     await GoogleSignIn.instance.initialize(
-      serverClientId: Env.googleAndroidClientId,
+      serverClientId: env.googleAndroidClientId,
     );
   }
 }
@@ -55,6 +56,7 @@ class _DebugWidget extends ConsumerWidget {
     final isDebugEnabled = ref.watch(debugProvider).requireValue;
     final notificationToken = ref.watch(notificationTokenStreamProvider).value;
     final sessionToken = ref.watch(authProvider).value;
+    final flavorName = ref.watch(environmentProvider).flavor.name;
 
     return ListTileTheme(
       dense: true,
@@ -70,7 +72,7 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('Flavor'),
             leading: const Icon(Icons.flag),
-            subtitle: Text(Env.flavor.name),
+            subtitle: Text(flavorName),
           ),
           ListTile(
             title: const Text('ログ'),

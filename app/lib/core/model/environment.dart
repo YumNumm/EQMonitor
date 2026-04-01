@@ -5,23 +5,40 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'environment.freezed.dart';
 part 'environment.g.dart';
 
+@JsonEnum()
+enum Flavor { dev, prod }
+
 @freezed
 abstract class Environment with _$Environment {
   const factory Environment({
     required String restApiUrl,
-    required appIdSuffix,
+    required String appIdSuffix,
     required String appName,
     required String commitInformation,
+    required Flavor flavor,
+    required String wsApiUrl,
+    required String betterAuthUrl,
+    required String googleIosClientId,
+    required String googleAndroidClientId,
   }) = _Environment;
   const Environment._();
 
   factory Environment.fromJson(Map<String, dynamic> json) =>
       _$EnvironmentFromJson(json);
 
-  factory Environment.fromEnvironment() => const Environment(
-    restApiUrl: String.fromEnvironment('REST_API_URL'),
-    appIdSuffix: String.fromEnvironment('APP_ID_SUFFIX'),
-    appName: String.fromEnvironment('APP_NAME'),
-    commitInformation: String.fromEnvironment('COMMIT_INFORMATION'),
+  factory Environment.fromEnvironment() => Environment(
+    restApiUrl: const String.fromEnvironment('REST_API_URL'),
+    appIdSuffix: const String.fromEnvironment('APP_ID_SUFFIX'),
+    appName: const String.fromEnvironment('APP_NAME'),
+    commitInformation: const String.fromEnvironment('COMMIT_INFORMATION'),
+    flavor: Flavor.values.byName(
+      const String.fromEnvironment('FLAVOR'),
+    ),
+    wsApiUrl: const String.fromEnvironment('WS_API_URL'),
+    betterAuthUrl: const String.fromEnvironment('BETTER_AUTH_URL'),
+    googleIosClientId: const String.fromEnvironment('GOOGLE_IOS_CLIENT_ID'),
+    googleAndroidClientId: const String.fromEnvironment(
+      'GOOGLE_ANDROID_CLIENT_ID',
+    ),
   );
 }

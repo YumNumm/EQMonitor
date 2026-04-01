@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'auth_api_client_provider.dart';
+part of 'environment.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,49 +11,49 @@ part of 'auth_api_client_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(authApiClient)
-final authApiClientProvider = AuthApiClientProvider._();
+@ProviderFor(environment)
+final environmentProvider = EnvironmentProvider._();
 
-final class AuthApiClientProvider
+final class EnvironmentProvider
     extends
         $FunctionalProvider<
-          auth_api.ApiClient,
-          auth_api.ApiClient,
-          auth_api.ApiClient
+          model.Environment,
+          model.Environment,
+          model.Environment
         >
-    with $Provider<auth_api.ApiClient> {
-  AuthApiClientProvider._()
+    with $Provider<model.Environment> {
+  EnvironmentProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'authApiClientProvider',
+        name: r'environmentProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$authApiClientHash();
+  String debugGetCreateSourceHash() => _$environmentHash();
 
   @$internal
   @override
-  $ProviderElement<auth_api.ApiClient> $createElement(
+  $ProviderElement<model.Environment> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  auth_api.ApiClient create(Ref ref) {
-    return authApiClient(ref);
+  model.Environment create(Ref ref) {
+    return environment(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(auth_api.ApiClient value) {
+  Override overrideWithValue(model.Environment value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<auth_api.ApiClient>(value),
+      providerOverride: $SyncValueProvider<model.Environment>(value),
     );
   }
 }
 
-String _$authApiClientHash() => r'399f0f05f9fdfeffd41d566f09380bac1da5557c';
+String _$environmentHash() => r'2f61055d207fb8e2c2793ecb753d4b0c03c9d973';

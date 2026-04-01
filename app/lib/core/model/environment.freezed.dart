@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Environment {
 
- String get restApiUrl; dynamic get appIdSuffix; String get appName; String get commitInformation;
+ String get restApiUrl; String get appIdSuffix; String get appName; String get commitInformation; Flavor get flavor; String get wsApiUrl; String get betterAuthUrl; String get googleIosClientId; String get googleAndroidClientId;
 /// Create a copy of Environment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EnvironmentCopyWith<Environment> get copyWith => _$EnvironmentCopyWithImpl<Envi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Environment&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&const DeepCollectionEquality().equals(other.appIdSuffix, appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Environment&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.betterAuthUrl, betterAuthUrl) || other.betterAuthUrl == betterAuthUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,const DeepCollectionEquality().hash(appIdSuffix),appName,commitInformation);
+int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,betterAuthUrl,googleIosClientId,googleAndroidClientId);
 
 @override
 String toString() {
-  return 'Environment(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation)';
+  return 'Environment(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, betterAuthUrl: $betterAuthUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $EnvironmentCopyWith<$Res>  {
   factory $EnvironmentCopyWith(Environment value, $Res Function(Environment) _then) = _$EnvironmentCopyWithImpl;
 @useResult
 $Res call({
- String restApiUrl, dynamic appIdSuffix, String appName, String commitInformation
+ String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String betterAuthUrl, String googleIosClientId, String googleAndroidClientId
 });
 
 
@@ -65,12 +65,17 @@ class _$EnvironmentCopyWithImpl<$Res>
 
 /// Create a copy of Environment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? appIdSuffix = freezed,Object? appName = null,Object? commitInformation = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? betterAuthUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,}) {
   return _then(_self.copyWith(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
-as String,appIdSuffix: freezed == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
-as dynamic,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
+as String,appIdSuffix: null == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
+as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
 as String,commitInformation: null == commitInformation ? _self.commitInformation : commitInformation // ignore: cast_nullable_to_non_nullable
+as String,flavor: null == flavor ? _self.flavor : flavor // ignore: cast_nullable_to_non_nullable
+as Flavor,wsApiUrl: null == wsApiUrl ? _self.wsApiUrl : wsApiUrl // ignore: cast_nullable_to_non_nullable
+as String,betterAuthUrl: null == betterAuthUrl ? _self.betterAuthUrl : betterAuthUrl // ignore: cast_nullable_to_non_nullable
+as String,googleIosClientId: null == googleIosClientId ? _self.googleIosClientId : googleIosClientId // ignore: cast_nullable_to_non_nullable
+as String,googleAndroidClientId: null == googleAndroidClientId ? _self.googleAndroidClientId : googleAndroidClientId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -156,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  dynamic appIdSuffix,  String appName,  String commitInformation)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String betterAuthUrl,  String googleIosClientId,  String googleAndroidClientId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Environment() when $default != null:
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.betterAuthUrl,_that.googleIosClientId,_that.googleAndroidClientId);case _:
   return orElse();
 
 }
@@ -177,10 +182,10 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  dynamic appIdSuffix,  String appName,  String commitInformation)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String betterAuthUrl,  String googleIosClientId,  String googleAndroidClientId)  $default,) {final _that = this;
 switch (_that) {
 case _Environment():
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.betterAuthUrl,_that.googleIosClientId,_that.googleAndroidClientId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +202,10 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  dynamic appIdSuffix,  String appName,  String commitInformation)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String betterAuthUrl,  String googleIosClientId,  String googleAndroidClientId)?  $default,) {final _that = this;
 switch (_that) {
 case _Environment() when $default != null:
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.betterAuthUrl,_that.googleIosClientId,_that.googleAndroidClientId);case _:
   return null;
 
 }
@@ -212,13 +217,18 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 @JsonSerializable()
 
 class _Environment extends Environment {
-  const _Environment({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation}): super._();
+  const _Environment({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation, required this.flavor, required this.wsApiUrl, required this.betterAuthUrl, required this.googleIosClientId, required this.googleAndroidClientId}): super._();
   factory _Environment.fromJson(Map<String, dynamic> json) => _$EnvironmentFromJson(json);
 
 @override final  String restApiUrl;
-@override final  dynamic appIdSuffix;
+@override final  String appIdSuffix;
 @override final  String appName;
 @override final  String commitInformation;
+@override final  Flavor flavor;
+@override final  String wsApiUrl;
+@override final  String betterAuthUrl;
+@override final  String googleIosClientId;
+@override final  String googleAndroidClientId;
 
 /// Create a copy of Environment
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Environment&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&const DeepCollectionEquality().equals(other.appIdSuffix, appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Environment&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.betterAuthUrl, betterAuthUrl) || other.betterAuthUrl == betterAuthUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,const DeepCollectionEquality().hash(appIdSuffix),appName,commitInformation);
+int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,betterAuthUrl,googleIosClientId,googleAndroidClientId);
 
 @override
 String toString() {
-  return 'Environment(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation)';
+  return 'Environment(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, betterAuthUrl: $betterAuthUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId)';
 }
 
 
@@ -253,7 +263,7 @@ abstract mixin class _$EnvironmentCopyWith<$Res> implements $EnvironmentCopyWith
   factory _$EnvironmentCopyWith(_Environment value, $Res Function(_Environment) _then) = __$EnvironmentCopyWithImpl;
 @override @useResult
 $Res call({
- String restApiUrl, dynamic appIdSuffix, String appName, String commitInformation
+ String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String betterAuthUrl, String googleIosClientId, String googleAndroidClientId
 });
 
 
@@ -270,12 +280,17 @@ class __$EnvironmentCopyWithImpl<$Res>
 
 /// Create a copy of Environment
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? appIdSuffix = freezed,Object? appName = null,Object? commitInformation = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? betterAuthUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,}) {
   return _then(_Environment(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
-as String,appIdSuffix: freezed == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
-as dynamic,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
+as String,appIdSuffix: null == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
+as String,appName: null == appName ? _self.appName : appName // ignore: cast_nullable_to_non_nullable
 as String,commitInformation: null == commitInformation ? _self.commitInformation : commitInformation // ignore: cast_nullable_to_non_nullable
+as String,flavor: null == flavor ? _self.flavor : flavor // ignore: cast_nullable_to_non_nullable
+as Flavor,wsApiUrl: null == wsApiUrl ? _self.wsApiUrl : wsApiUrl // ignore: cast_nullable_to_non_nullable
+as String,betterAuthUrl: null == betterAuthUrl ? _self.betterAuthUrl : betterAuthUrl // ignore: cast_nullable_to_non_nullable
+as String,googleIosClientId: null == googleIosClientId ? _self.googleIosClientId : googleIosClientId // ignore: cast_nullable_to_non_nullable
+as String,googleAndroidClientId: null == googleAndroidClientId ? _self.googleAndroidClientId : googleAndroidClientId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
