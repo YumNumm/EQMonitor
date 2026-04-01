@@ -2452,6 +2452,81 @@
         }
       }
     },
+    "/v2/earthquake/{eventId}/intensity-map": {
+      "get": {
+        "operationId": "getV2EarthquakeByEventIdIntensityMap",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EarthquakeIntensityMapEventIdParam"
+          },
+          {
+            "in": "query",
+            "name": "locale",
+            "schema": {
+              "enum": [
+                "ja",
+                "en",
+                "zh"
+              ],
+              "type": "string",
+              "default": "ja"
+            }
+          }
+        ],
+        "tags": [
+          "Earthquake"
+        ],
+        "description": "地震イベントの震度分布図（最新）",
+        "responses": {
+          "200": {
+            "description": "震度分布図URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "object_key": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "object_key"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "地震情報が見つかりません",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/earthquake/intensity/region/{code}": {
       "get": {
         "operationId": "getV2EarthquakeIntensityRegionByCode",
@@ -6042,6 +6117,110 @@
         ],
         "description": "震源に関する情報"
       },
+      "IntensityMapImageUrl": {
+        "type": "string",
+        "format": "uri"
+      },
+      "IntensityMapImageItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "画像レコードID"
+          },
+          "language": {
+            "enum": [
+              "ja",
+              "en",
+              "zh"
+            ],
+            "type": "string",
+            "description": "画像の言語"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "画像URL"
+          },
+          "file_size": {
+            "type": "number",
+            "description": "画像ファイルサイズ(bytes)"
+          },
+          "size": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number",
+                "description": "画像幅(px)"
+              },
+              "y": {
+                "type": "number",
+                "description": "画像高さ(px)"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ]
+          },
+          "generator_instance": {
+            "type": "string",
+            "description": "生成インスタンス名"
+          },
+          "render_duration_ms": {
+            "type": "number",
+            "description": "レンダリング時間(ms)"
+          },
+          "upload_duration_ms": {
+            "type": "number",
+            "description": "アップロード時間(ms)"
+          },
+          "total_duration_ms": {
+            "type": "number",
+            "description": "総処理時間(ms)"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "language",
+          "image_url",
+          "file_size",
+          "size",
+          "generator_instance",
+          "render_duration_ms",
+          "upload_duration_ms",
+          "total_duration_ms",
+          "generated_at"
+        ]
+      },
+      "IntensityMapImageGroup": {
+        "type": "object",
+        "properties": {
+          "telegram_id": {
+            "type": "string",
+            "description": "電文ID"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageItem"
+            }
+          }
+        },
+        "required": [
+          "telegram_id",
+          "created_at",
+          "images"
+        ]
+      },
       "EarthquakeDatasource": {
         "enum": [
           "JMA_INTENSITY_DATABASE",
@@ -6112,6 +6291,15 @@
             "examples": [
               "https://tiles.eqmonitor.app/ixac41/20240101072008.pmtiles"
             ]
+          },
+          "intensity_map_image": {
+            "$ref": "#/components/schemas/IntensityMapImageUrl"
+          },
+          "intensity_map_images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageGroup"
+            }
           },
           "datasource": {
             "$ref": "#/components/schemas/EarthquakeDatasource"
@@ -6438,6 +6626,15 @@
             "examples": [
               "https://tiles.eqmonitor.app/ixac41/20240101072008.pmtiles"
             ]
+          },
+          "intensity_map_image": {
+            "$ref": "#/components/schemas/IntensityMapImageUrl"
+          },
+          "intensity_map_images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageGroup"
+            }
           },
           "datasource": {
             "$ref": "#/components/schemas/EarthquakeDatasource"
@@ -8690,6 +8887,15 @@
         "required": true
       },
       "EarthquakeEventIdParam": {
+        "in": "path",
+        "name": "eventId",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{14}$"
+        },
+        "required": true
+      },
+      "EarthquakeIntensityMapEventIdParam": {
         "in": "path",
         "name": "eventId",
         "schema": {
