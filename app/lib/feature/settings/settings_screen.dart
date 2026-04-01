@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eqmonitor/core/gen/assets.gen.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -115,6 +116,8 @@ class _AppVersionInformation extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final packageInfo = ref.watch(packageInfoProvider);
+    final commitRaw = ref.watch(environmentProvider).commitInformation;
+    final commitLabel = commitRaw.isEmpty ? 'local-development' : commitRaw;
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -125,7 +128,20 @@ class _AppVersionInformation extends HookConsumerWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
-        child: Text(text, style: textTheme.bodyMedium),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(text, style: textTheme.bodyMedium),
+            const SizedBox(height: 4),
+            Text(
+              commitLabel,
+              style: textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
