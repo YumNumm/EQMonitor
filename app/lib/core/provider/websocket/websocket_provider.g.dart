@@ -11,116 +11,33 @@ part of 'websocket_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(websocket)
-final websocketProvider = WebsocketProvider._();
+@ProviderFor(SseConnection)
+final sseConnectionProvider = SseConnectionProvider._();
 
-final class WebsocketProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<WebSocket>,
-          WebSocket,
-          FutureOr<WebSocket>
-        >
-    with $FutureModifier<WebSocket>, $FutureProvider<WebSocket> {
-  WebsocketProvider._()
+final class SseConnectionProvider
+    extends $StreamNotifierProvider<SseConnection, Map<String, dynamic>> {
+  SseConnectionProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'websocketProvider',
+        name: r'sseConnectionProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$websocketHash();
+  String debugGetCreateSourceHash() => _$sseConnectionHash();
 
   @$internal
   @override
-  $FutureProviderElement<WebSocket> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<WebSocket> create(Ref ref) {
-    return websocket(ref);
-  }
+  SseConnection create() => SseConnection();
 }
 
-String _$websocketHash() => r'97e7ad28c260d3554168e1d377375494f0208c37';
+String _$sseConnectionHash() => r'b3327095591ced5256de3b170d90a1c9e3e44fdb';
 
-@ProviderFor(WebsocketStatus)
-final websocketStatusProvider = WebsocketStatusProvider._();
-
-final class WebsocketStatusProvider
-    extends $StreamNotifierProvider<WebsocketStatus, ConnectionState> {
-  WebsocketStatusProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'websocketStatusProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$websocketStatusHash();
-
-  @$internal
-  @override
-  WebsocketStatus create() => WebsocketStatus();
-}
-
-String _$websocketStatusHash() => r'67b0bba038065e4ef01b347c94e498ea8c01db6e';
-
-abstract class _$WebsocketStatus extends $StreamNotifier<ConnectionState> {
-  Stream<ConnectionState> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<ConnectionState>, ConnectionState>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<ConnectionState>, ConnectionState>,
-              AsyncValue<ConnectionState>,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, build);
-  }
-}
-
-@ProviderFor(WebsocketMessages)
-final websocketMessagesProvider = WebsocketMessagesProvider._();
-
-final class WebsocketMessagesProvider
-    extends $StreamNotifierProvider<WebsocketMessages, Map<String, dynamic>> {
-  WebsocketMessagesProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'websocketMessagesProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$websocketMessagesHash();
-
-  @$internal
-  @override
-  WebsocketMessages create() => WebsocketMessages();
-}
-
-String _$websocketMessagesHash() => r'49e5055d213c85bbf8cea7dbed4725d26524fc52';
-
-abstract class _$WebsocketMessages
-    extends $StreamNotifier<Map<String, dynamic>> {
+abstract class _$SseConnection extends $StreamNotifier<Map<String, dynamic>> {
   Stream<Map<String, dynamic>> build();
   @$mustCallSuper
   @override
@@ -136,6 +53,59 @@ abstract class _$WebsocketMessages
                 Map<String, dynamic>
               >,
               AsyncValue<Map<String, dynamic>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(SseConnectionStatus)
+final sseConnectionStatusProvider = SseConnectionStatusProvider._();
+
+final class SseConnectionStatusProvider
+    extends $NotifierProvider<SseConnectionStatus, SseConnectionState> {
+  SseConnectionStatusProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sseConnectionStatusProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sseConnectionStatusHash();
+
+  @$internal
+  @override
+  SseConnectionStatus create() => SseConnectionStatus();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SseConnectionState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SseConnectionState>(value),
+    );
+  }
+}
+
+String _$sseConnectionStatusHash() =>
+    r'8a101020be906071cf4634947b62d2ba0f205d39';
+
+abstract class _$SseConnectionStatus extends $Notifier<SseConnectionState> {
+  SseConnectionState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<SseConnectionState, SseConnectionState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<SseConnectionState, SseConnectionState>,
+              SseConnectionState,
               Object?,
               Object?
             >;
