@@ -13,7 +13,6 @@ void main() {
 
       final multi = Transformer.urlEncodeQueryMap(
         params,
-        ListFormat.multi,
       );
       expect(multi, 'statuses=NORMAL&limit=50');
 
