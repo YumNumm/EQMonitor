@@ -1,4 +1,4 @@
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_depth.freezed.dart';

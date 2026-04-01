@@ -699,8 +699,7 @@ as int?,
 /// @nodoc
 mixin _$EewForecastIntensityInfo {
 
- List<EewForecastRegionInfo> get regions;// TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
- JmaIntensity? get maxIntensity; bool get maxIntensityIsOver; JmaLpgmIntensity? get maxLpgmIntensity; bool get maxLpgmIntensityIsOver;
+ List<EewForecastRegionInfo> get regions; JmaIntensity? get maxIntensity; bool get maxIntensityIsOver; JmaLpgmIntensity? get maxLpgmIntensity; bool get maxLpgmIntensityIsOver;
 /// Create a copy of EewForecastIntensityInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -906,7 +905,6 @@ class _EewForecastIntensityInfo implements EewForecastIntensityInfo {
   return EqualUnmodifiableListView(_regions);
 }
 
-// TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
 @override final  JmaIntensity? maxIntensity;
 @override@JsonKey() final  bool maxIntensityIsOver;
 @override final  JmaLpgmIntensity? maxLpgmIntensity;
@@ -976,8 +974,7 @@ as bool,
 /// @nodoc
 mixin _$EewForecastRegionInfo {
 
- String get code; String get name; bool get isPlum; bool get isWarning;// TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
- JmaIntensity get intensity; bool get intensityIsOver; JmaLpgmIntensity? get lpgmIntensity; bool get lpgmIntensityIsOver;
+ String get code; String get name; bool get isPlum; bool get isWarning; JmaIntensity get intensity; bool get intensityIsOver; JmaLpgmIntensity? get lpgmIntensity; bool get lpgmIntensityIsOver;
 /// Create a copy of EewForecastRegionInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1183,7 +1180,6 @@ class _EewForecastRegionInfo implements EewForecastRegionInfo {
 @override final  String name;
 @override final  bool isPlum;
 @override final  bool isWarning;
-// TODO(eqmonitor_api): EewIntensityValue.value は Intensity 型（codegen バグ）
 @override final  JmaIntensity intensity;
 @override final  bool intensityIsOver;
 @override final  JmaLpgmIntensity? lpgmIntensity;

@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/prefecture_intensity.dart';
@@ -103,7 +104,9 @@ class _IntensityIcons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.requireValue.detail),
+      earthquakeHistoryConfigProvider.select(
+        (value) => value.requireValue.detail,
+      ),
     );
     final showingLpgmIntensity = config.showingLpgmIntensity;
 
@@ -164,10 +167,8 @@ class _Sheet extends StatelessWidget {
               child: Column(
                 children: [
                   EarthquakeHypocenterInformationCard(item: item),
+                  CurrentLocationIntensityCard(item: item),
                   PrefectureIntensityWidget(item: item),
-                  // TODO(YumNumm): 長周期地震動階級の表示
-                  // if (item.intensity?.maxLpgmIntensity != null)
-                  //   PrefectureLpgmIntensityWidget(item: item),
                   _TelegramListButton(eventId: item.eventId),
                 ],
               ),

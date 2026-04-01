@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
 

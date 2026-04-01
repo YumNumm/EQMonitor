@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor_api/export.dart' show TelegramStatus;
+import 'package:eqmonitor_api/eqmonitor_api.dart' show TelegramStatus;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_parameter.freezed.dart';

@@ -11,7 +11,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:web_socket_client/web_socket_client.dart';
 
 part 'earthquake_history_notifier.g.dart';
 
@@ -61,17 +60,16 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     required int limit,
     required String? cursor,
   }) async {
-    final repository =
-        await ref.read(earthquakeHistoryRepositoryProvider.future);
-    if (cursor != null) {
-      return (items: <EarthquakePartial>[], nextToken: null);
-    }
+    final repository = await ref.read(
+      earthquakeHistoryRepositoryProvider.future,
+    );
 
     // 震央地検索の場合
     if (param.hasEpicenterFilter && param.epicenterCode != null) {
       final result = await repository.searchByEpicenter(
         code: param.epicenterCode!,
         limit: limit,
+        cursor: cursor,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -86,6 +84,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       final result = await repository.searchByPrefecture(
         code: param.regionCode!,
         limit: limit,
+        cursor: cursor,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -100,6 +99,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       final result = await repository.searchByCity(
         code: param.regionCode!,
         limit: limit,
+        cursor: cursor,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -108,7 +108,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
 
     // 通常の地震一覧取得
-    final result = await repository.fetchEarthquakeList(limit: limit);
+    final result = await repository.fetchEarthquakeList(
+      limit: limit,
+      cursor: cursor,
+    );
     return (
       items: result.items,
       nextToken: result.nextToken,
@@ -158,8 +161,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (parameter != const EarthquakeHistoryParameter()) {
       return;
     }
-    final repository =
-        await ref.read(earthquakeHistoryRepositoryProvider.future);
+    final repository = await ref.read(
+      earthquakeHistoryRepositoryProvider.future,
+    );
     final result = await repository.fetchEarthquakeList(limit: 10);
     _upsertItems(result.items);
   }
@@ -169,9 +173,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       log('state is not AsyncData<EarthquakeHistoryNotifierState>');
       return;
     }
-    final webSocketState = ref.read(websocketStatusProvider);
-    if (webSocketState is Connected || webSocketState is Reconnected) {
-      log('WebSocket is ${webSocketState.runtimeType}');
+    final sseState = ref.read(sseConnectionStatusProvider);
+    if (sseState == SseConnectionState.connected) {
+      log('SSE is connected');
       return;
     }
     if (parameter != const EarthquakeHistoryParameter()) {
@@ -184,8 +188,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
     log('refreshIfWebsocketNotConnected');
 
-    final repository =
-        await ref.read(earthquakeHistoryRepositoryProvider.future);
+    final repository = await ref.read(
+      earthquakeHistoryRepositoryProvider.future,
+    );
     final result = await repository.fetchEarthquakeList(limit: 10);
     _upsertItems(result.items);
   }

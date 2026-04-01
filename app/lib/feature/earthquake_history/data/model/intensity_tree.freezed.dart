@@ -290,7 +290,7 @@ as List<CityIntensityNode>,
 /// @nodoc
 mixin _$CityIntensityNode {
 
-@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem get city; JmaIntensity? get maxIntensity; List<StationIntensityNode> get stations;
+@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem get city; JmaIntensity? get maxIntensity; List<StationIntensityNode> get stations;@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +303,16 @@ $CityIntensityNodeCopyWith<CityIntensityNode> get copyWith => _$CityIntensityNod
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CityIntensityNode&&(identical(other.city, city) || other.city == city)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other.stations, stations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CityIntensityNode&&(identical(other.city, city) || other.city == city)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other.stations, stations)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,city,maxIntensity,const DeepCollectionEquality().hash(stations));
+int get hashCode => Object.hash(runtimeType,city,maxIntensity,const DeepCollectionEquality().hash(stations),maxLpgmIntensity);
 
 @override
 String toString() {
-  return 'CityIntensityNode(city: $city, maxIntensity: $maxIntensity, stations: $stations)';
+  return 'CityIntensityNode(city: $city, maxIntensity: $maxIntensity, stations: $stations, maxLpgmIntensity: $maxLpgmIntensity)';
 }
 
 
@@ -323,7 +323,7 @@ abstract mixin class $CityIntensityNodeCopyWith<$Res>  {
   factory $CityIntensityNodeCopyWith(CityIntensityNode value, $Res Function(CityIntensityNode) _then) = _$CityIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
-@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations
+@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -340,12 +340,13 @@ class _$CityIntensityNodeCopyWithImpl<$Res>
 
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? city = null,Object? maxIntensity = freezed,Object? stations = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? city = null,Object? maxIntensity = freezed,Object? stations = null,Object? maxLpgmIntensity = freezed,}) {
   return _then(_self.copyWith(
 city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterCityItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,stations: null == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
-as List<StationIntensityNode>,
+as List<StationIntensityNode>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 
@@ -430,10 +431,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
-return $default(_that.city,_that.maxIntensity,_that.stations);case _:
+return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
   return orElse();
 
 }
@@ -451,10 +452,10 @@ return $default(_that.city,_that.maxIntensity,_that.stations);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode():
-return $default(_that.city,_that.maxIntensity,_that.stations);case _:
+return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -471,10 +472,10 @@ return $default(_that.city,_that.maxIntensity,_that.stations);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
-return $default(_that.city,_that.maxIntensity,_that.stations);case _:
+return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
   return null;
 
 }
@@ -486,7 +487,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations);case _:
 @JsonSerializable()
 
 class _CityIntensityNode implements CityIntensityNode {
-  const _CityIntensityNode({@EarthquakeParameterCityItemConverter() required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations}): _stations = stations;
+  const _CityIntensityNode({@EarthquakeParameterCityItemConverter() required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _stations = stations;
   factory _CityIntensityNode.fromJson(Map<String, dynamic> json) => _$CityIntensityNodeFromJson(json);
 
 @override@EarthquakeParameterCityItemConverter() final  EarthquakeParameterCityItem city;
@@ -498,6 +499,7 @@ class _CityIntensityNode implements CityIntensityNode {
   return EqualUnmodifiableListView(_stations);
 }
 
+@override@JsonKey(name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
 
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
@@ -512,16 +514,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CityIntensityNode&&(identical(other.city, city) || other.city == city)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other._stations, _stations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CityIntensityNode&&(identical(other.city, city) || other.city == city)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other._stations, _stations)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,city,maxIntensity,const DeepCollectionEquality().hash(_stations));
+int get hashCode => Object.hash(runtimeType,city,maxIntensity,const DeepCollectionEquality().hash(_stations),maxLpgmIntensity);
 
 @override
 String toString() {
-  return 'CityIntensityNode(city: $city, maxIntensity: $maxIntensity, stations: $stations)';
+  return 'CityIntensityNode(city: $city, maxIntensity: $maxIntensity, stations: $stations, maxLpgmIntensity: $maxLpgmIntensity)';
 }
 
 
@@ -532,7 +534,7 @@ abstract mixin class _$CityIntensityNodeCopyWith<$Res> implements $CityIntensity
   factory _$CityIntensityNodeCopyWith(_CityIntensityNode value, $Res Function(_CityIntensityNode) _then) = __$CityIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
-@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations
+@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -549,12 +551,13 @@ class __$CityIntensityNodeCopyWithImpl<$Res>
 
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? city = null,Object? maxIntensity = freezed,Object? stations = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? city = null,Object? maxIntensity = freezed,Object? stations = null,Object? maxLpgmIntensity = freezed,}) {
   return _then(_CityIntensityNode(
 city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterCityItem,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,stations: null == stations ? _self._stations : stations // ignore: cast_nullable_to_non_nullable
-as List<StationIntensityNode>,
+as List<StationIntensityNode>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
   ));
 }
 

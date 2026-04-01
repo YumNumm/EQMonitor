@@ -34,17 +34,19 @@ dependencies:
     path: ../packages/eqmonitor_api
   extensions:
     path: ../packages/extensions
-  feedback: ^3.1.0
   file_picker: ^10.1.9
   firebase_analytics: ^12.0.0
+  firebase_app_check: ^0.4.2
   firebase_app_installations: ^0.4.0
   firebase_core: ^4.0.0
   firebase_crashlytics: ^5.0.0
   firebase_messaging: ^16.0.0
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.1.0
-  flutter_email_sender: ^8.0.0
+  flutter_colorpicker:
+    git:
+      url: https://github.com/mchome/flutter_colorpicker.git
+      ref: e9b124896076991fa077f62bdbab3df1a26149d7
   flutter_hooks: ^0.21.2
   flutter_html: ^3.0.0
   flutter_local_notifications: ^21.0.0-dev.2

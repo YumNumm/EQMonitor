@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity_station.freezed.dart';

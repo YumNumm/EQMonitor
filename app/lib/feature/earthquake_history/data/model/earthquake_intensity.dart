@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
 
@@ -33,10 +33,14 @@ extension EarthquakeIntensityApiExtension on api.Intensity {
     intensityTree: convertToIntensityTree(
       intensity: this,
       parameter: parameter,
+      cities: cities,
+      stations: stations,
     ),
     lpgmIntensityTree: convertToLpgmIntensityTree(
       intensity: this,
       parameter: parameter,
+      cities: cities,
+      stations: stations,
     ),
   );
 }

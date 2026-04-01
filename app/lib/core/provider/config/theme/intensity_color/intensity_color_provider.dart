@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
-import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'intensity_color_provider.g.dart';
@@ -10,29 +10,63 @@ part 'intensity_color_provider.g.dart';
 @Riverpod(keepAlive: true)
 class IntensityColor extends _$IntensityColor {
   @override
-  Future<IntensityColorModel> build() async => load();
+  IntensityColorModel build() {
+    final result = load();
+    if (result != null) {
+      return result;
+    }
+    return IntensityColorModel.eqmonitor();
+  }
 
-  Future<IntensityColorModel> load() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final value = await ds.getString(key: SharedPreferencesKey.intensityColor);
+  static const _key = 'intensity_color';
+
+  Future<void> update(IntensityColorModel model) async {
+    state = model;
+    await ref
+        .read(sharedPreferencesProvider)
+        .setString(_key, jsonEncode(model.toJson()));
+  }
+
+  String exportAsJsonString() => jsonEncode(state.toJson());
+
+  Future<Result<void, IntensityColorImportException>> importFromJsonString(
+    String rawJson,
+  ) async {
+    try {
+      final decoded = jsonDecode(rawJson);
+      if (decoded is! Map<String, dynamic>) {
+        return const Failure(
+          IntensityColorImportException('JSONの形式が不正です'),
+        );
+      }
+      final model = IntensityColorModel.fromJson(decoded);
+      await update(model);
+      return const Success(null);
+    } on FormatException catch (_) {
+      return const Failure(IntensityColorImportException('JSONの解析に失敗しました'));
+    } on Exception catch (_) {
+      return const Failure(
+        IntensityColorImportException('震度配色JSONの内容が不正です'),
+      );
+    }
+  }
+
+  IntensityColorModel? load() {
+    final value = ref.read(sharedPreferencesProvider).getString(_key);
     if (value == null) {
-      return IntensityColorModel.eqmonitor();
+      return null;
     }
     try {
       return IntensityColorModel.fromJson(
         jsonDecode(value) as Map<String, dynamic>,
       );
     } on Exception catch (_) {
-      return IntensityColorModel.eqmonitor();
+      return null;
     }
   }
+}
 
-  Future<void> setModel(IntensityColorModel model) async {
-    state = AsyncValue.data(model);
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setString(
-      key: SharedPreferencesKey.intensityColor,
-      value: jsonEncode(model.toJson()),
-    );
-  }
+final class IntensityColorImportException implements Exception {
+  const IntensityColorImportException(this.message);
+  final String message;
 }
