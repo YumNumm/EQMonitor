@@ -204,7 +204,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       # https://github.com/maxim-lobanov/setup-xcode
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
@@ -233,7 +233,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v3.1.1
         with:
-          install_args: "xcbeautify"
+          install_args: "xcbeautify yq"
 
       - name: Set environment variables
         run: |
@@ -242,6 +242,26 @@ jobs:
             mask_value="${line#*=}"
             echo "::add-mask::${mask_value}"
           done
+
+      - name: Output release version
+        run: |
+          VERSION=$(yq .version app/pubspec.yaml -r)
+          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
+          echo "[$VERSION - $REF_NAME]" > changelog.tmp
+
+      - name: Output git log
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
+          git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
+
+          # Android Firebase デプロイと同様（最大2000文字）
+          head -c 2000 changelog.tmp > changelog.txt
+          if [ "$(wc -c < changelog.tmp)" -gt 2000 ]; then
+            echo '...' >> changelog.txt
+          fi
+
+          mkdir -p build/beta-app-store-text
+          cp changelog.txt build/beta-app-store-text/ja-JP.txt
 
       - name: Extract App Store Connect API Key
         run: |
@@ -253,10 +273,29 @@ jobs:
         run: |
           xcrun altool \
             --upload-app \
-            -f build/eqmonitor.ipa \
+            -f build/EQMonitor.ipa \
             --type ios \
             --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
             --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
+
+      - name: Upload Beta App Store text (TestFlight)
+        env:
+          APP_APPLE_ID_FROM_SECRET: ${{ secrets.APP_STORE_CONNECT_APP_APPLE_ID }}
+        run: |
+          VERSION=$(yq .version app/pubspec.yaml -r)
+          APPLE_ID="${APP_APPLE_ID_FROM_SECRET:-$APP_STORE_CONNECT_APP_APPLE_ID}"
+          if [ -z "$APPLE_ID" ]; then
+            echo "App Store Connect のアプリ Apple ID（数値）を設定してください: GitHub Environment の Secret APP_STORE_CONNECT_APP_APPLE_ID、または mise 環境の APP_STORE_CONNECT_APP_APPLE_ID。" >&2
+            exit 1
+          fi
+          xcrun altool \
+            --beta-app-store-text build/beta-app-store-text \
+            --upload \
+            --apple-id "$APPLE_ID" \
+            --bundle-short-version-string "$VERSION" \
+            -t ios \
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID"
 
   build-android:
     name: Build Android
