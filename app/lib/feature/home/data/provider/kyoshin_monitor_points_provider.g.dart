@@ -11,50 +11,45 @@ part of 'kyoshin_monitor_points_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(kyoshinMonitorPoints)
-final kyoshinMonitorPointsProvider = KyoshinMonitorPointsProvider._();
+@ProviderFor(kyoshinMonitorObservationGeoJson)
+final kyoshinMonitorObservationGeoJsonProvider =
+    KyoshinMonitorObservationGeoJsonProvider._();
 
-final class KyoshinMonitorPointsProvider
-    extends
-        $FunctionalProvider<
-          List<Feature<Point>>,
-          List<Feature<Point>>,
-          List<Feature<Point>>
-        >
-    with $Provider<List<Feature<Point>>> {
-  KyoshinMonitorPointsProvider._()
+final class KyoshinMonitorObservationGeoJsonProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  KyoshinMonitorObservationGeoJsonProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'kyoshinMonitorPointsProvider',
+        name: r'kyoshinMonitorObservationGeoJsonProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$kyoshinMonitorPointsHash();
+  String debugGetCreateSourceHash() => _$kyoshinMonitorObservationGeoJsonHash();
 
   @$internal
   @override
-  $ProviderElement<List<Feature<Point>>> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  List<Feature<Point>> create(Ref ref) {
-    return kyoshinMonitorPoints(ref);
+  String create(Ref ref) {
+    return kyoshinMonitorObservationGeoJson(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Feature<Point>> value) {
+  Override overrideWithValue(String value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Feature<Point>>>(value),
+      providerOverride: $SyncValueProvider<String>(value),
     );
   }
 }
 
-String _$kyoshinMonitorPointsHash() =>
-    r'54556d428791f259ac74a87cc925bb7c5479dbe6';
+String _$kyoshinMonitorObservationGeoJsonHash() =>
+    r'9bbb89a19ab3081240c78d9d1672305ab4dff458';

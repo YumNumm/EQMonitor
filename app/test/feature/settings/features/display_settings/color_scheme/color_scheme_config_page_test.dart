@@ -63,7 +63,7 @@ void main() {
     final messenger = TestDefaultBinaryMessengerBinding.instance;
     messenger.defaultBinaryMessenger.setMockMethodCallHandler(
       SystemChannels.platform,
-      (MethodCall call) async {
+      (call) async {
         if (call.method == 'Clipboard.setData') {
           return null;
         }
