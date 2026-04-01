@@ -1,4 +1,4 @@
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 
 /// アプリ側の JMA 震度（観測・予想共通）
 enum JmaIntensity {

@@ -1,12 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
-import 'package:eqmonitor_api/models/code_name.dart';
-import 'package:eqmonitor_api/models/intensity.dart';
-import 'package:eqmonitor_api/models/intensity_item.dart';
-import 'package:eqmonitor_api/models/intensity_station_item.dart';
-import 'package:eqmonitor_api/models/jma_intensity.dart' as api;
-import 'package:eqmonitor_api/models/jma_lpgm_intensity.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
 import 'package:test/test.dart';
 
@@ -46,7 +41,7 @@ EarthquakeParameter _buildParameter({
   );
 }
 
-Intensity _buildIntensity({
+api.Intensity _buildIntensity({
   required api.JmaIntensity maxIntensity,
   required List<({String code, String name, api.JmaIntensity? maxIntensity})>
   prefectures,
@@ -61,21 +56,21 @@ Intensity _buildIntensity({
   regions,
   api.JmaLpgmIntensity? maxLpgmIntensity,
 }) {
-  return Intensity(
+  return api.Intensity(
     maxIntensity: maxIntensity,
     maxLpgmIntensity: maxLpgmIntensity,
     prefectures: prefectures
         .map(
-          (p) => IntensityItem(
-            value: CodeName(code: p.code, name: p.name),
+          (p) => api.IntensityItem(
+            value: api.CodeName(code: p.code, name: p.name),
             maxIntensity: p.maxIntensity,
           ),
         )
         .toList(),
     regions: regions
         .map(
-          (r) => IntensityItem(
-            value: CodeName(code: r.code, name: r.name),
+          (r) => api.IntensityItem(
+            value: api.CodeName(code: r.code, name: r.name),
             maxIntensity: r.maxIntensity,
             maxLpgmIntensity: r.maxLpgmIntensity,
           ),
@@ -84,14 +79,14 @@ Intensity _buildIntensity({
   );
 }
 
-IntensityStationItem _station({
+api.IntensityStationItem _station({
   required String code,
   required String name,
   api.JmaIntensity? maxIntensity,
   api.JmaLpgmIntensity? maxLpgm,
 }) {
-  return IntensityStationItem(
-    value: CodeName(code: code, name: name),
+  return api.IntensityStationItem(
+    value: api.CodeName(code: code, name: name),
     sva: 0,
     prePeriods: const [],
     maxIntensity: maxIntensity,
@@ -488,8 +483,8 @@ void main() {
         ],
       );
       final cities = [
-        const IntensityItem(
-          value: CodeName(code: '1310000', name: '東京都23区'),
+        const api.IntensityItem(
+          value: api.CodeName(code: '1310000', name: '東京都23区'),
           maxIntensity: api.JmaIntensity.value3,
           maxLpgmIntensity: api.JmaLpgmIntensity.value2,
         ),

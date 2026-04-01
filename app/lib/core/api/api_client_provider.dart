@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/provider/dio_provider.dart';
-import 'package:eqmonitor_api/export.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'api_client_provider.g.dart';

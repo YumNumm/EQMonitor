@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
-import 'package:eqmonitor_api/export.dart' as api;
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
 
 Map<String, EarthquakeParameterCityItem> _cityParamMap(
@@ -123,7 +123,10 @@ Map<JmaIntensity, List<RegionIntensityNode>> _intensityTreeFromCities(
         continue;
       }
       stationNodes.add(
-        StationIntensityNode(station: paramSt, intensity: st.toIntensityStation),
+        StationIntensityNode(
+          station: paramSt,
+          intensity: st.toIntensityStation,
+        ),
       );
     }
     stationNodes.sort((a, b) => a.station.name.compareTo(b.station.name));
@@ -233,7 +236,8 @@ Map<JmaIntensity, List<RegionIntensityNode>> _finalizeIntensityTree(
   );
 }
 
-Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> convertToLpgmIntensityTree({
+Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>
+convertToLpgmIntensityTree({
   required api.Intensity intensity,
   required EarthquakeParameter parameter,
   List<api.IntensityItem>? cities,
@@ -296,7 +300,10 @@ Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> _lpgmTreeFromCities(
         continue;
       }
       stationNodes.add(
-        StationLpgmIntensityNode(station: paramSt, intensity: st.toIntensityStation),
+        StationLpgmIntensityNode(
+          station: paramSt,
+          intensity: st.toIntensityStation,
+        ),
       );
     }
     stationNodes.sort((a, b) => a.station.name.compareTo(b.station.name));
