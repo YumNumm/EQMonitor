@@ -1,4 +1,4 @@
-min_version = "2025.11.11"
+min_version = "2026.04.01"
 experimental_monorepo_root = true
 
 [tools]
