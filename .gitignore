@@ -179,3 +179,4 @@ secret/
 /devtools_options.yaml
 **/node_modules
 /mise.local*
+/asdf-dart.*
