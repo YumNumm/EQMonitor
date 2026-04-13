@@ -50,7 +50,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact aab
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           path: app/build/app/outputs/bundle/release/app-release.aab
           name: release-aab
@@ -126,7 +126,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby
-        uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1.299.0
+        uses: ruby/setup-ruby@4c56a21280b36d862b5fc31348f463d60bdc55d5 # v1.301.0
         with:
           bundler-cache: true
           working-directory: app/ios
@@ -180,7 +180,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact ipa
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           path: app/ios/Runner.ipa
           name: release-ios

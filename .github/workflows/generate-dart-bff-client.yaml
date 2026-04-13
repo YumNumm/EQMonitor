@@ -42,7 +42,7 @@ jobs:
       # https://github.com/actions/upload-artifact
       - name: Upload OpenAPI JSON as artifact
         id: upload-openapi-json
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: openapi.json
           path: typescript/bff/openapi.json
@@ -123,7 +123,7 @@ jobs:
 
       # https://github.com/peter-evans/create-pull-request
       - name: Create PR for regenerate Dart BFF client
-        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         if: steps.check_changes.outputs.has_changes == 'true'
         id: cpr
         with:
