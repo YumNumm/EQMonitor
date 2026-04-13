@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -21,7 +22,6 @@ enum SseConnectionState {
 @Riverpod(keepAlive: true)
 class SseConnection extends _$SseConnection {
   CancelToken? _cancelToken;
-  Timer? _reconnectTimer;
 
   @override
   Stream<Map<String, dynamic>> build() async* {
@@ -29,7 +29,6 @@ class SseConnection extends _$SseConnection {
 
     ref.onDispose(() {
       _cancelToken?.cancel('disposed');
-      _reconnectTimer?.cancel();
       unawaited(controller.close());
     });
 
@@ -58,7 +57,7 @@ class SseConnection extends _$SseConnection {
 
     _cancelToken = CancelToken();
     try {
-      final dio = Dio();
+      final dio = ref.read(dioProvider);
       final response = await dio.getUri<ResponseBody>(
         uri,
         options: Options(
@@ -74,6 +73,9 @@ class SseConnection extends _$SseConnection {
       final stream = response.data?.stream;
       if (stream == null) {
         talker.error('SSE: response stream is null');
+        controller.addError(
+          StateError('SSE: response stream is null'),
+        );
         return;
       }
 
@@ -117,6 +119,10 @@ class SseConnection extends _$SseConnection {
         return;
       }
       talker.error('SSE connection error: $e');
+      controller.addError(e);
+    } catch (e, stackTrace) {
+      talker.error('Unexpected SSE connection error: $e', stackTrace);
+      controller.addError(e, stackTrace);
     }
   }
 
