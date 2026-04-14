@@ -23,7 +23,7 @@ local linters = new Mapping<String, Step> {
     }
     ["zizmor"] {
         glob = workflowGlobs
-        check = "mise exec -- zizmor --min-severity high {{files}}"
+        check = "mise exec -- zizmor {{files}}"
     }
     ["pinact"] {
         glob = workflowGlobs
