@@ -30,6 +30,8 @@ jobs:
   define-matrix:
     name: Define Matrix
     runs-on: ubuntu-slim
+    permissions:
+      contents: read
     timeout-minutes: 1
     outputs:
       deploy-ios: ${{ steps.define-environment-matrix.outputs.deploy-ios }}
@@ -65,6 +67,8 @@ jobs:
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-ios }}
     runs-on: macos-26
+    permissions:
+      contents: read
     timeout-minutes: 30
     concurrency:
       group: ${{ github.workflow }}-android
@@ -195,6 +199,8 @@ jobs:
     name: Deploy iOS
     needs: build-ios
     runs-on: macos-26
+    permissions:
+      contents: read
     environment:
       name: EQMonitor-iOS
     concurrency:
