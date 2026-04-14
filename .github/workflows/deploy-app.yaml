@@ -131,7 +131,7 @@ jobs:
             --no-pub \
             --build-number=${{ github.run_number }} \
             --dart-define-from-file=../environment/.env.prod \
-            --dart-define COMMIT_INFORMATION=$COMMIT_INFORMATION
+            --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION"
 
       - name: Extract App Store Connect API Key
         run: |
