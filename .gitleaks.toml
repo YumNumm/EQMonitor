@@ -1,0 +1,14 @@
+# Gitleaks — https://github.com/gitleaks/gitleaks
+# デフォルトルールはバイナリ同梱の config を継承し、クライアント用 Firebase 生成物のみ除外する。
+
+title = "EQMonitor Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Firebase / Google Services のクライアント設定（リポジトリに含める想定の公開キー等）"
+paths = [
+  '''(^|/)firebase_options\.dart$''',
+  '''(^|/)google-services\.json$''',
+]
