@@ -2,6 +2,9 @@ name: Terraform Validate
 
 on:
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
     inputs:
       target:
         description: "Target directory relative to terraform/"

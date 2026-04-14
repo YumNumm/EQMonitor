@@ -27,7 +27,8 @@ jobs:
       contents: read
       checks: write
     uses: ./.github/workflows/wc-check-dart-analyze.yaml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   flutter-test:
     needs: changes
@@ -36,7 +37,8 @@ jobs:
       contents: read
       checks: write
     uses: ./.github/workflows/wc-check-dart-test.yaml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   status-check:
     name: Flutter Status Check
