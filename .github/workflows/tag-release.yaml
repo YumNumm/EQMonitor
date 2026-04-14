@@ -15,6 +15,9 @@ concurrency:
 jobs:
   build-android:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: write
     timeout-minutes: 45
     env:
       TZ: Asia/Tokyo
@@ -59,6 +62,9 @@ jobs:
   deploy-android:
     runs-on: ubuntu-24.04-arm
     needs: build-android
+    permissions:
+      contents: read
+      actions: read
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
@@ -93,6 +99,9 @@ jobs:
 
   build-ios:
     runs-on: macos-26
+    permissions:
+      contents: read
+      actions: write
     timeout-minutes: 60
     env:
       TZ: Asia/Tokyo
@@ -190,6 +199,9 @@ jobs:
   deploy-ios:
     runs-on: macos-26
     needs: build-ios
+    permissions:
+      contents: read
+      actions: read
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
