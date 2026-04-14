@@ -11,8 +11,6 @@ on:
 
 permissions:
   contents: read
-  id-token: write
-  pull-requests: write
 
 concurrency:
   group: terraform-gcp-prod-${{ github.ref }}
@@ -24,11 +22,16 @@ env:
 
 jobs:
   changes:
+    permissions:
+      contents: read
+      pull-requests: read
     uses: ./.github/workflows/wc-changes.yaml
 
   validate:
     needs: changes
     if: needs.changes.outputs.terraform == 'true'
+    permissions:
+      contents: read
     uses: ./.github/workflows/wc-check-terraform-validate.yaml
     secrets: inherit
     with:
