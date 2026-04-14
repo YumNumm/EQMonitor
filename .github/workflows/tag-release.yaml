@@ -128,7 +128,8 @@ jobs:
         # https://github.com/ruby/setup-ruby
         uses: ruby/setup-ruby@4c56a21280b36d862b5fc31348f463d60bdc55d5 # v1.301.0
         with:
-          bundler-cache: true
+          # リリース成果物を生成するワークフローではキャッシュ汚染リスクを避けるため無効化（zizmor cache-poisoning）
+          bundler-cache: false
           working-directory: app/ios
 
       - name: Install brew dependencies
