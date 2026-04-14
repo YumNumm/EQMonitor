@@ -3,6 +3,8 @@ amends "package://github.com/jdx/hk/releases/download/v1.42.0/hk@1.42.0#/Config.
 // Staged paths for hk util helpers (see https://hk.jdx.dev/cli/util.html )
 local utilFileGlobs = List("**/*")
 
+local workflowGlobs = List(".github/workflows/**/*.yml", ".github/workflows/**/*.yaml")
+
 local linters = new Mapping<String, Step> {
     ["util-check-merge-conflict"] {
         glob = utilFileGlobs
@@ -18,6 +20,19 @@ local linters = new Mapping<String, Step> {
     }
     ["gitleaks"] {
         check = "mise exec -- gitleaks git --staged --baseline-path .gitleaks.baseline.json"
+    }
+    ["zizmor"] {
+        glob = workflowGlobs
+        check = "mise exec -- zizmor --min-severity high {{files}}"
+    }
+    ["pinact"] {
+        glob = workflowGlobs
+        check = "mise exec -- pinact run --check {{files}}"
+    }
+    ["shellcheck"] {
+        glob = List("**/*.sh", "**/*.bash")
+        exclude = List("packages/jma_parameter_converter_internal/updater.sh")
+        check = "mise exec -- shellcheck -S error {{files}}"
     }
 }
 
