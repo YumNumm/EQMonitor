@@ -1,0 +1,14 @@
+title = "EQMonitor gitleaks"
+
+# Default rules: https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Firebase / Google Services client config (keys are bound to app IDs)"
+paths = [
+  '''(?i)(^|/)firebase_options\.dart$''',
+  '''(?i)(^|/)google-services\.json$''',
+  '''(^|/)\.gitleaks\.baseline\.json$''',
+  '''(^|/)gitleaks-baseline\.json$''',
+]
