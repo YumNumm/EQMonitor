@@ -21,11 +21,14 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Fetch base for diff tests
+        env:
+          PR_BASE_REF: ${{ github.base_ref }}
+          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git fetch origin "${{ github.base_ref }}" --depth=1
+            git fetch origin "$PR_BASE_REF" --depth=1
           elif [ "${{ github.event_name }}" = "merge_group" ]; then
-            git fetch origin "${{ github.event.merge_group.base_sha }}" --depth=1
+            git fetch origin "$MERGE_GROUP_BASE_SHA" --depth=1
           fi
 
       # https://github.com/jdx/mise-action

@@ -1,8 +1,6 @@
 # zizmor discovers this from .github/workflows/ (see https://docs.zizmor.sh/configuration/)
 # 既存ワークフロー向けの暫定無効化。段階的にルールを戻す。
 rules:
-  template-injection:
-    disable: true
   cache-poisoning:
     disable: true
   excessive-permissions:
