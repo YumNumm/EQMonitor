@@ -33,7 +33,8 @@ jobs:
     permissions:
       contents: read
     uses: ./.github/workflows/wc-check-terraform-validate.yaml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       target: googlecloud/environments/production
 
