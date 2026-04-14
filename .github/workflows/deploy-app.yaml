@@ -251,8 +251,6 @@ jobs:
           echo "[$VERSION - $REF_NAME]" > changelog.tmp
 
       - name: Output git log
-        env:
-          APP_APPLE_ID_FROM_SECRET: ${{ secrets.APP_STORE_CONNECT_APP_APPLE_ID }}
         run: |
           APPLE_ID="${APP_APPLE_ID_FROM_SECRET:-$APP_STORE_CONNECT_APP_APPLE_ID}"
           if [ -z "$APPLE_ID" ]; then
