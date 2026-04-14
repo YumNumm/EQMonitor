@@ -37,12 +37,15 @@ jobs:
           private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
           owner: YumNumm
           repositories: EQMonitor
+          permission-contents: write
+          permission-pull-requests: write
 
       # https://github.com/actions/checkout
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 1
+          persist-credentials: false
           token: ${{ steps.app-token.outputs.token }}
 
       # https://github.com/jdx/mise-action
