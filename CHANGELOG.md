@@ -1,5 +1,7 @@
 # Changelog
 
+## [v3.0.0](https://github.com/YumNumm/EQMonitor/compare/v2.6.0...v3.0.0) - 2026-04-14
+
 ## [v2.6.1](https://github.com/YumNumm/EQMonitor/compare/v2.6.0...v2.6.1) - 2024-08-12
 - Fix/ios cd by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/764
 - build(deps): bump the dependencies group with 3 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/765
