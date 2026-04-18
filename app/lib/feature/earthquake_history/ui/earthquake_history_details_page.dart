@@ -68,7 +68,10 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          EarthquakeHistoryDetailsMapView(earthquake: earthquake),
+          EarthquakeHistoryDetailsMapView(
+            earthquake: earthquake,
+            eventId: eventId,
+          ),
           if (maxLgIntensity != null)
             _IntensityIcons(maxLgIntensity: maxLgIntensity),
           _Sheet(sheetController: sheetController, item: earthquake),
@@ -168,7 +171,7 @@ class _Sheet extends StatelessWidget {
                 children: [
                   EarthquakeHypocenterInformationCard(item: item),
                   CurrentLocationIntensityCard(item: item),
-                  RegionIntensityWidget(item: item),
+                  RegionIntensityWidget(item: item, eventId: eventId),
                   _TelegramListButton(eventId: item.eventId),
                 ],
               ),
