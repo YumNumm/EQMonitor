@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
@@ -63,7 +62,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     state = const AsyncLoading<KyoshinMonitorState>();
     state = await AsyncValue.guard(() async {
       final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
-      final analyzer = await ref.read(kyoshinMonitorAnalyzerIsolateProvider.future);
+      final analyzer = await ref.read(
+        kyoshinMonitorAnalyzerIsolateProvider.future,
+      );
       // 画像を取得
       final realtimeDataType = ref
           .read(kyoshinMonitorSettingsProvider)
@@ -93,23 +94,10 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
       workerSw.stop();
 
-      talker.logCustom(
-        KyoshinMonitorLog(
-          '[perf] fetch=${fetchSw.elapsedMilliseconds}ms '
-          'workerAnalyze=${workerSw.elapsedMilliseconds}ms '
-          'parseMicros=${workerResult.parseMicros} '
-          'geoBuildMicros=${workerResult.geoJsonBuildMicros} '
-          'total=${stopwatch.elapsedMilliseconds}ms '
-          'features=${workerResult.featureCount} imageBytes=${image.length}',
-        ),
-      );
-
       return KyoshinMonitorState(
         lastUpdatedAt: DateTime.now(),
         lastImageFetchTargetTime: targetTime,
-        status: isDelayed
-            ? KyoshinMonitorStatus.delayed
-            : KyoshinMonitorStatus.realtime,
+        status: isDelayed ? .delayed : .realtime,
         currentRealtimeDataType: realtimeDataType,
         currentRealtimeLayer: realtimeLayer,
         geoJson: workerResult.geoJson,

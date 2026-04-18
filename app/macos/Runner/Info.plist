@@ -20,14 +20,26 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>QRコードを読み取るためにカメラを利用します</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>$(PRODUCT_COPYRIGHT)</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
+	<key>NSLocationUsageDescription</key>
+	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>現在地に即した地震情報を表示するために、位置情報を利用します</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>アプリ内で画像を保存するために写真ライブラリへのアクセスが必要です</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

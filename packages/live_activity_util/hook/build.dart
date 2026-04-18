@@ -36,7 +36,7 @@ Future<void> main(List<String> args) => build(
       libDir.createSync(recursive: true);
     }
 
-    // * Part 1: Compile Swift to generate Objective-C header
+    // * Part 1: Compile Swift → デバイス用 .framework + シミュレータ用 .framework を作り、XCFramework にまとめる
     final generatedHeaderPath = buildDirectory.resolve(
       'lib/LiveActivityUtil.h',
     );
@@ -49,20 +49,42 @@ Future<void> main(List<String> args) => build(
     final iosSdkPath = (sdkPathResult.stdout as String).trim();
     logger.info('iOS SDK path: $iosSdkPath');
 
-    // Compile Swift to generate Objective-C header and dylib
+    final simSdkResult = await Process.run('xcrun', [
+      '--sdk',
+      'iphonesimulator',
+      '--show-sdk-path',
+    ]);
+    if (simSdkResult.exitCode != 0) {
+      logger.error('iphonesimulator SDK not found: ${simSdkResult.stderr}');
+      throw Exception('Failed to resolve iOS Simulator SDK');
+    }
+    final iosSimSdkPath = (simSdkResult.stdout as String).trim();
+    logger.info('iOS Simulator SDK path: $iosSimSdkPath');
+
     const frameworkName = 'LiveActivityUtil';
-    final frameworkDir = Directory.fromUri(
-      packageRoot.resolve(
-        '../../app/ios/Runner/Frameworks/$frameworkName.framework/',
-      ),
+    final swiftSourcePath = packageRoot
+        .resolve(
+          'ios/live_activity_util/Sources/live_activity_util/EQMLiveActivityUtil.swift',
+        )
+        .toFilePath();
+
+    final frameworksOutDir = Directory.fromUri(
+      packageRoot.resolve('../../app/ios/Runner/Frameworks/'),
     );
-    if (!frameworkDir.existsSync()) {
-      frameworkDir.createSync(recursive: true);
+    if (!frameworksOutDir.existsSync()) {
+      frameworksOutDir.createSync(recursive: true);
+    }
+    final oldPlainFw = Directory('${frameworksOutDir.path}/$frameworkName.framework');
+    final oldXc = Directory('${frameworksOutDir.path}/$frameworkName.xcframework');
+    if (oldPlainFw.existsSync()) {
+      oldPlainFw.deleteSync(recursive: true);
+    }
+    if (oldXc.existsSync()) {
+      oldXc.deleteSync(recursive: true);
     }
 
-    final dylibTempPath = buildDirectory.resolve('lib$frameworkName.dylib');
-
-    final swiftcResult = await Process.run(
+    final dylibDevicePath = buildDirectory.resolve('lib${frameworkName}_device.dylib');
+    final swiftcDevice = await Process.run(
       'swiftc',
       [
         '-sdk',
@@ -78,46 +100,103 @@ Future<void> main(List<String> args) => build(
         '-Xlinker',
         '@rpath/$frameworkName.framework/$frameworkName',
         '-o',
-        dylibTempPath.toFilePath(),
+        dylibDevicePath.toFilePath(),
         '-module-name',
         'live_activity_util',
-        packageRoot
-            .resolve(
-              'ios/live_activity_util/Sources/live_activity_util/EQMLiveActivityUtil.swift',
-            )
-            .toFilePath(),
+        swiftSourcePath,
       ],
       workingDirectory: packageRoot.toFilePath(),
     );
 
-    if (swiftcResult.exitCode != 0) {
-      logger.error('swiftc failed: ${swiftcResult.stderr}');
+    if (swiftcDevice.exitCode != 0) {
+      logger.error('swiftc (iphoneos) failed: ${swiftcDevice.stderr}');
       throw Exception('Failed to generate Objective-C header from Swift');
     }
     logger.info(
       'Generated Objective-C header: ${generatedHeaderPath.toFilePath()}',
     );
 
-    // Strip .dylib extension using lipo (required for App Store submission)
-    final frameworkBinaryPath = '${frameworkDir.path}/$frameworkName';
-    final lipoResult = await Process.run(
-      'lipo',
+    final dylibSimArmPath = buildDirectory.resolve('lib${frameworkName}_sim_arm64.dylib');
+    final swiftcSimArm = await Process.run(
+      'swiftc',
       [
-        '-create',
-        dylibTempPath.toFilePath(),
-        '-output',
-        frameworkBinaryPath,
+        '-sdk',
+        iosSimSdkPath,
+        '-target',
+        'arm64-apple-ios16.0-simulator',
+        '-emit-library',
+        '-Xlinker',
+        '-install_name',
+        '-Xlinker',
+        '@rpath/$frameworkName.framework/$frameworkName',
+        '-o',
+        dylibSimArmPath.toFilePath(),
+        '-module-name',
+        'live_activity_util',
+        swiftSourcePath,
       ],
+      workingDirectory: packageRoot.toFilePath(),
     );
-    if (lipoResult.exitCode != 0) {
-      logger.error('lipo failed: ${lipoResult.stderr}');
-      throw Exception('Failed to create framework binary with lipo');
-    }
-    logger.info('Created framework binary: $frameworkBinaryPath');
 
-    // Create Info.plist for the framework
-    final infoPlistPath = '${frameworkDir.path}/Info.plist';
-    File(infoPlistPath).writeAsStringSync('''
+    final dylibSimX86Path = buildDirectory.resolve('lib${frameworkName}_sim_x86.dylib');
+    final swiftcSimX86 = await Process.run(
+      'swiftc',
+      [
+        '-sdk',
+        iosSimSdkPath,
+        '-target',
+        'x86_64-apple-ios16.0-simulator',
+        '-emit-library',
+        '-Xlinker',
+        '-install_name',
+        '-Xlinker',
+        '@rpath/$frameworkName.framework/$frameworkName',
+        '-o',
+        dylibSimX86Path.toFilePath(),
+        '-module-name',
+        'live_activity_util',
+        swiftSourcePath,
+      ],
+      workingDirectory: packageRoot.toFilePath(),
+    );
+
+    late final Uri dylibSimFinalPath;
+    if (swiftcSimArm.exitCode == 0 && swiftcSimX86.exitCode == 0) {
+      dylibSimFinalPath = buildDirectory.resolve('lib${frameworkName}_sim_universal.dylib');
+      final lipoSim = await Process.run('lipo', [
+        '-create',
+        dylibSimArmPath.toFilePath(),
+        dylibSimX86Path.toFilePath(),
+        '-output',
+        dylibSimFinalPath.toFilePath(),
+      ]);
+      if (lipoSim.exitCode != 0) {
+        logger.error('lipo (simulator) failed: ${lipoSim.stderr}');
+        throw Exception('Failed to lipo simulator dylibs');
+      }
+    } else if (swiftcSimArm.exitCode == 0) {
+      logger.info('Using arm64-only iOS Simulator dylib (x86_64 swiftc unavailable)');
+      dylibSimFinalPath = dylibSimArmPath;
+    } else if (swiftcSimX86.exitCode == 0) {
+      logger.info('Using x86_64-only iOS Simulator dylib (arm64 swiftc unavailable)');
+      dylibSimFinalPath = dylibSimX86Path;
+    } else {
+      logger.error(
+        'swiftc (simulator) failed. arm64: ${swiftcSimArm.stderr} x86: ${swiftcSimX86.stderr}',
+      );
+      throw Exception('Failed to compile Swift for iOS Simulator');
+    }
+
+    final deviceFwDir = Directory.fromUri(
+      buildDirectory.resolve('xc_tmp/device/$frameworkName.framework/'),
+    );
+    final simFwDir = Directory.fromUri(
+      buildDirectory.resolve('xc_tmp/sim/$frameworkName.framework/'),
+    );
+    deviceFwDir.createSync(recursive: true);
+    simFwDir.createSync(recursive: true);
+
+    const infoPlistContents = '''
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -125,13 +204,13 @@ Future<void> main(List<String> args) => build(
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleExecutable</key>
-  <string>$frameworkName</string>
+  <string>LiveActivityUtil</string>
   <key>CFBundleIdentifier</key>
   <string>net.yumnumm.live-activity-util</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleName</key>
-  <string>$frameworkName</string>
+  <string>LiveActivityUtil</string>
   <key>CFBundlePackageType</key>
   <string>FMWK</string>
   <key>CFBundleVersion</key>
@@ -142,7 +221,29 @@ Future<void> main(List<String> args) => build(
   <string>16.0</string>
 </dict>
 </plist>
-''');
+''';
+
+    await File(dylibDevicePath.toFilePath()).copy('${deviceFwDir.path}/$frameworkName');
+    File('${deviceFwDir.path}/Info.plist').writeAsStringSync(infoPlistContents);
+
+    await File(dylibSimFinalPath.toFilePath()).copy('${simFwDir.path}/$frameworkName');
+    File('${simFwDir.path}/Info.plist').writeAsStringSync(infoPlistContents);
+
+    final xcframeworkOut = Directory('${frameworksOutDir.path}/$frameworkName.xcframework');
+    final createXc = await Process.run('xcodebuild', [
+      '-create-xcframework',
+      '-framework',
+      deviceFwDir.path,
+      '-framework',
+      simFwDir.path,
+      '-output',
+      xcframeworkOut.path,
+    ]);
+    if (createXc.exitCode != 0) {
+      logger.error('xcodebuild -create-xcframework failed: ${createXc.stderr}');
+      throw Exception('Failed to create LiveActivityUtil.xcframework');
+    }
+    logger.info('Created ${xcframeworkOut.path}');
 
     // * Part 2: Generate Dart bindings using ffigen
     final ffiOutputDartFile = libDir.uri.resolve('live_activity_util.dart');

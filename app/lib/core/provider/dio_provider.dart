@@ -27,8 +27,8 @@ Future<Dio> dio(Ref ref) async {
       },
       baseUrl: telegramUrl.restApiUrl,
       contentType: ContentType.json.value,
-      connectTimeout: const Duration(milliseconds: 5000),
-      sendTimeout: const Duration(milliseconds: 5000),
+      connectTimeout: const Duration(milliseconds: 10000),
+      sendTimeout: const Duration(milliseconds: 10000),
       // バックエンドは query の配列を `key[]=a&key[]=b` 形式で受け取る。
       // `multi` の単一要素は `key=a` となりスカラー扱いで 400 になる。
       listFormat: ListFormat.multiCompatible,
@@ -39,7 +39,9 @@ Future<Dio> dio(Ref ref) async {
       () => ref.read(authProvider).value,
     ),
   );
-  dio.interceptors.add(AppCheckInterceptor());
+  dio.interceptors.add(
+    AppCheckInterceptor(),
+  );
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(

@@ -1,35 +1,22 @@
 PODS:
-  - flutter_inappwebview_macos (0.0.1):
-    - FlutterMacOS
-    - OrderedSet (~> 6.0.3)
   - FlutterMacOS (1.0.0)
   - libserialport_plus (0.0.1):
     - FlutterMacOS
-  - OrderedSet (6.0.3)
 
 DEPENDENCIES:
-  - flutter_inappwebview_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - libserialport_plus (from `Flutter/ephemeral/.symlinks/plugins/libserialport_plus/macos`)
 
-SPEC REPOS:
-  trunk:
-    - OrderedSet
-
 EXTERNAL SOURCES:
-  flutter_inappwebview_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview_macos/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   libserialport_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/libserialport_plus/macos
 
 SPEC CHECKSUMS:
-  flutter_inappwebview_macos: c2d68649f9f8f1831bfcd98d73fd6256366d9d1d
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   libserialport_plus: 8c65a00a7613289a7839f8407d78cf822b32d45a
-  OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
 
-PODFILE CHECKSUM: 1b29b575031b812e1e7a7cf698aec84e8b2cab1e
+PODFILE CHECKSUM: e62bca045a971dff7fd1120c0fdc80e706ca6e5a
 
 COCOAPODS: 1.16.2

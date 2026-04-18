@@ -18,13 +18,11 @@ final jmaMapAreaForecastLocalEewInsideProvider =
 final class JmaMapAreaForecastLocalEewInsideProvider
     extends
         $FunctionalProvider<
-          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
-          JmaMap_JmaMapData_JmaMapDataItem?,
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+          AsyncValue<MapDataItem?>,
+          MapDataItem?,
+          FutureOr<MapDataItem?>
         >
-    with
-        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
-        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+    with $FutureModifier<MapDataItem?>, $FutureProvider<MapDataItem?> {
   JmaMapAreaForecastLocalEewInsideProvider._({
     required JmaMapAreaForecastLocalEewInsideFamily super.from,
     required LatLng super.argument,
@@ -48,12 +46,12 @@ final class JmaMapAreaForecastLocalEewInsideProvider
 
   @$internal
   @override
-  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+  $FutureProviderElement<MapDataItem?> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+  FutureOr<MapDataItem?> create(Ref ref) {
     final argument = this.argument as LatLng;
     return jmaMapAreaForecastLocalEewInside(ref, argument);
   }
@@ -71,14 +69,10 @@ final class JmaMapAreaForecastLocalEewInsideProvider
 }
 
 String _$jmaMapAreaForecastLocalEewInsideHash() =>
-    r'4ff30976ac501077239e83117dfe6f126a0fa15c';
+    r'9bf666016adef2c0e090a98caa459f6c60e3c7bb';
 
 final class JmaMapAreaForecastLocalEewInsideFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
-          LatLng
-        > {
+    with $FunctionalFamilyOverride<FutureOr<MapDataItem?>, LatLng> {
   JmaMapAreaForecastLocalEewInsideFamily._()
     : super(
         retry: null,
@@ -102,13 +96,11 @@ final jmaMapAreaForecastLocalEInsideProvider =
 final class JmaMapAreaForecastLocalEInsideProvider
     extends
         $FunctionalProvider<
-          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
-          JmaMap_JmaMapData_JmaMapDataItem?,
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+          AsyncValue<MapDataItem?>,
+          MapDataItem?,
+          FutureOr<MapDataItem?>
         >
-    with
-        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
-        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+    with $FutureModifier<MapDataItem?>, $FutureProvider<MapDataItem?> {
   JmaMapAreaForecastLocalEInsideProvider._({
     required JmaMapAreaForecastLocalEInsideFamily super.from,
     required LatLng super.argument,
@@ -132,12 +124,12 @@ final class JmaMapAreaForecastLocalEInsideProvider
 
   @$internal
   @override
-  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+  $FutureProviderElement<MapDataItem?> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+  FutureOr<MapDataItem?> create(Ref ref) {
     final argument = this.argument as LatLng;
     return jmaMapAreaForecastLocalEInside(ref, argument);
   }
@@ -155,14 +147,10 @@ final class JmaMapAreaForecastLocalEInsideProvider
 }
 
 String _$jmaMapAreaForecastLocalEInsideHash() =>
-    r'9ff489ff43f7e78222aabaa9482e5a0edf7fa555';
+    r'd01be131ed3ddb31de2929f40c5a46f6c925c4a7';
 
 final class JmaMapAreaForecastLocalEInsideFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
-          LatLng
-        > {
+    with $FunctionalFamilyOverride<FutureOr<MapDataItem?>, LatLng> {
   JmaMapAreaForecastLocalEInsideFamily._()
     : super(
         retry: null,
@@ -186,13 +174,11 @@ final jmaMapAreaInformationCityInsideProvider =
 final class JmaMapAreaInformationCityInsideProvider
     extends
         $FunctionalProvider<
-          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
-          JmaMap_JmaMapData_JmaMapDataItem?,
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+          AsyncValue<MapDataItem?>,
+          MapDataItem?,
+          FutureOr<MapDataItem?>
         >
-    with
-        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
-        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+    with $FutureModifier<MapDataItem?>, $FutureProvider<MapDataItem?> {
   JmaMapAreaInformationCityInsideProvider._({
     required JmaMapAreaInformationCityInsideFamily super.from,
     required LatLng super.argument,
@@ -216,12 +202,12 @@ final class JmaMapAreaInformationCityInsideProvider
 
   @$internal
   @override
-  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+  $FutureProviderElement<MapDataItem?> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+  FutureOr<MapDataItem?> create(Ref ref) {
     final argument = this.argument as LatLng;
     return jmaMapAreaInformationCityInside(ref, argument);
   }
@@ -239,14 +225,10 @@ final class JmaMapAreaInformationCityInsideProvider
 }
 
 String _$jmaMapAreaInformationCityInsideHash() =>
-    r'93f5886776de857c7a024a68eab16e6a8accf9a0';
+    r'4f42b0902b023acd7294c45921937cd87ae82fde';
 
 final class JmaMapAreaInformationCityInsideFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
-          LatLng
-        > {
+    with $FunctionalFamilyOverride<FutureOr<MapDataItem?>, LatLng> {
   JmaMapAreaInformationCityInsideFamily._()
     : super(
         retry: null,
@@ -269,13 +251,11 @@ final jmaMapAreaTsunamiNearestProvider = JmaMapAreaTsunamiNearestFamily._();
 final class JmaMapAreaTsunamiNearestProvider
     extends
         $FunctionalProvider<
-          AsyncValue<JmaMap_JmaMapData_JmaMapDataItem?>,
-          JmaMap_JmaMapData_JmaMapDataItem?,
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>
+          AsyncValue<MapDataItem?>,
+          MapDataItem?,
+          FutureOr<MapDataItem?>
         >
-    with
-        $FutureModifier<JmaMap_JmaMapData_JmaMapDataItem?>,
-        $FutureProvider<JmaMap_JmaMapData_JmaMapDataItem?> {
+    with $FutureModifier<MapDataItem?>, $FutureProvider<MapDataItem?> {
   JmaMapAreaTsunamiNearestProvider._({
     required JmaMapAreaTsunamiNearestFamily super.from,
     required LatLng super.argument,
@@ -299,12 +279,12 @@ final class JmaMapAreaTsunamiNearestProvider
 
   @$internal
   @override
-  $FutureProviderElement<JmaMap_JmaMapData_JmaMapDataItem?> $createElement(
+  $FutureProviderElement<MapDataItem?> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<JmaMap_JmaMapData_JmaMapDataItem?> create(Ref ref) {
+  FutureOr<MapDataItem?> create(Ref ref) {
     final argument = this.argument as LatLng;
     return jmaMapAreaTsunamiNearest(ref, argument);
   }
@@ -322,14 +302,10 @@ final class JmaMapAreaTsunamiNearestProvider
 }
 
 String _$jmaMapAreaTsunamiNearestHash() =>
-    r'1280074c335c521685a91e4152131e2209c5ef30';
+    r'05467566bd59a2a0b7f9c71679881599b6ed76a0';
 
 final class JmaMapAreaTsunamiNearestFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
-          FutureOr<JmaMap_JmaMapData_JmaMapDataItem?>,
-          LatLng
-        > {
+    with $FunctionalFamilyOverride<FutureOr<MapDataItem?>, LatLng> {
   JmaMapAreaTsunamiNearestFamily._()
     : super(
         retry: null,

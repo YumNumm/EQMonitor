@@ -3,12 +3,12 @@ import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
-import 'package:eqmonitor/feature/home/ui/component/eew/eew_widget.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// デバッグ用。ホーム画面と同じ [EewWidget] の見た目を、パラメータ操作で検証する。
+/// デバッグ用。ホーム画面と同じ [EewCard] の見た目を、パラメータ操作で検証する。
 class DebugEewCardPage extends HookConsumerWidget {
   const DebugEewCardPage({super.key});
 
@@ -410,7 +410,7 @@ class DebugEewCardPage extends HookConsumerWidget {
             child: Text('プレビュー', style: Theme.of(context).textTheme.titleSmall),
           ),
           const SizedBox(height: 8),
-          EewWidget(
+          EewCard(
             eew: eew,
             index: showStackIndex.value
                 ? (stackIndexLabel.text.trim().isEmpty
@@ -437,7 +437,7 @@ class DebugEewCardPage extends HookConsumerWidget {
             ),
           ),
           ..._kSampleEews.asMap().entries.map(
-            (e) => EewWidget(
+            (e) => EewCard(
               eew: e.value,
               index: '${e.key + 1}',
             ),

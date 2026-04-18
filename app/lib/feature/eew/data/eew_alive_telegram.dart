@@ -70,7 +70,7 @@ class EewAliveChecker {
     final happenedDiff = now.toUtc().difference(happenedTime).inSeconds;
     final depth = eew.hypocenter?.depth;
 
-    final isWarning = eew.isWarningOrFallback;
+    final isWarning = eew.isWarning ?? false;
     final magnitude = eew.hypocenter?.magnitude;
     if ((magnitude != null && magnitude >= 6.0) || isWarning) {
       return happenedDiff > 360;

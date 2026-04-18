@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:upgrader/upgrader.dart';
 
 class App extends HookConsumerWidget {
   const App({super.key});
@@ -72,13 +71,9 @@ class App extends HookConsumerWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [Locale('ja', 'JP'), Locale('en', 'US')],
-          builder: (context, child) {
-            return UpgradeAlert(
-              navigatorKey: routerConfig.routerDelegate.navigatorKey,
-              child: child,
-            );
-          },
+          supportedLocales: const [
+            Locale('ja', 'JP'),
+          ],
         );
       },
     );

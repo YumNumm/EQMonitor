@@ -2,11 +2,11 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_earthquake_nearest_obs
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jma_map/jma_map.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class DebugJmaMapPage extends HookConsumerWidget {
@@ -26,7 +26,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
     final selectedMapType = useState(JmaMapType.areaForecastLocalEew);
 
     // 検索結果
-    final searchResult = useState<JmaMap_JmaMapData_JmaMapDataItem?>(null);
+    final searchResult = useState<MapDataItem?>(null);
     final observationPointResult = useState<EarthquakeParameterStationItem?>(
       null,
     );
@@ -61,7 +61,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
           observationPointResult.value = point?.$1;
           distance.value = point?.$2;
         } else {
-          JmaMap_JmaMapData_JmaMapDataItem? result;
+          MapDataItem? result;
 
           switch (selectedMapType.value) {
             case JmaMapType.areaForecastLocalEew:
@@ -305,26 +305,33 @@ class DebugJmaMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildResultInfo(JmaMap_JmaMapData_JmaMapDataItem item) {
+  Widget _buildResultInfo(MapDataItem item) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (item.hasProperty()) ...[
-          if (item.property.hasCode()) _buildInfoRow('コード', item.property.code),
-          if (item.property.hasName()) _buildInfoRow('名前', item.property.name),
-          if (item.property.hasNameKana())
-            _buildInfoRow('名前（カナ）', item.property.nameKana),
+        if (item.property != null) ...[
+          if (item.property!.code.isNotEmpty)
+            _buildInfoRow('コード', item.property!.code),
+          if (item.property!.name.isNotEmpty)
+            _buildInfoRow('名前', item.property!.name),
+          if (item.property!.nameKana.isNotEmpty)
+            _buildInfoRow('名前（カナ）', item.property!.nameKana),
         ],
-        if (item.hasPolylabel()) ...[
-          _buildInfoRow('緯度', item.polylabel.lat.toString()),
-          _buildInfoRow('経度', item.polylabel.lng.toString()),
+        if (item.polylabel != null) ...[
+          _buildInfoRow('緯度', item.polylabel!.lat.toString()),
+          _buildInfoRow('経度', item.polylabel!.lng.toString()),
         ],
-        if (item.hasBounds()) ...[
-          _buildInfoRow('南西緯度', item.bounds.southWest.lat.toString()),
-          _buildInfoRow('南西経度', item.bounds.southWest.lng.toString()),
-          _buildInfoRow('北東緯度', item.bounds.northEast.lat.toString()),
-          _buildInfoRow('北東経度', item.bounds.northEast.lng.toString()),
+        if (item.bounds != null) ...[
+          _buildInfoRow('南西緯度', item.bounds!.southWest.lat.toString()),
+          _buildInfoRow('南西経度', item.bounds!.southWest.lng.toString()),
+          _buildInfoRow('北東緯度', item.bounds!.northEast.lat.toString()),
+          _buildInfoRow('北東経度', item.bounds!.northEast.lng.toString()),
         ],
+        if (item.distanceToCoastlineKm != null)
+          _buildInfoRow(
+            '海岸線までの距離',
+            '${item.distanceToCoastlineKm!.toStringAsFixed(1)} km',
+          ),
       ],
     );
   }

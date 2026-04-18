@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_notifier.g.dart';
@@ -118,17 +119,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     );
   }
 
-  Future<void> refresh() async {
-    ref.invalidate(earthquakeHistoryDetailsProvider);
-    state = const AsyncLoading();
-    state = await AsyncValue.guard<EarthquakeHistoryNotifierState>(
-      () => _fetchInitialData(
-        param: parameter,
-        limit: 50,
-      ),
-    );
-  }
-
+  static final fetchNextDataMutation = Mutation<void>();
   Future<void> fetchNextData() async {
     // 読み込み中の場合は何もしない
     if (state.isRefreshing || state.isReloading) {

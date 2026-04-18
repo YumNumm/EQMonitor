@@ -37,7 +37,7 @@ final class KyoshinMonitorNotifierProvider
 }
 
 String _$kyoshinMonitorNotifierHash() =>
-    r'1cd69604c0ef0493e3fc7d9449156e932fe53bdf';
+    r'c9b7c359ca5684421c199cc92580f2c5e531246b';
 
 abstract class _$KyoshinMonitorNotifier
     extends $AsyncNotifier<KyoshinMonitorState> {

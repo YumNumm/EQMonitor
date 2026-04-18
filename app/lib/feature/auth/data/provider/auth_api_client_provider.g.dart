@@ -56,4 +56,4 @@ final class AuthApiClientProvider
   }
 }
 
-String _$authApiClientHash() => r'399f0f05f9fdfeffd41d566f09380bac1da5557c';
+String _$authApiClientHash() => r'fbd78dfdcd5c1521c84d5d6535ad5afdf83f3ee4';

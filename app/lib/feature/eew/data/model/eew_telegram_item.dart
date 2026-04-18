@@ -29,9 +29,6 @@ abstract class EewTelegramItem with _$EewTelegramItem {
     EewAccuracyInfo? accuracy,
   }) = _EewTelegramItem;
   const EewTelegramItem._();
-
-  bool get isWarningOrFallback =>
-      isWarning ?? headline?.contains('強い揺れ') ?? false;
 }
 
 @Freezed()

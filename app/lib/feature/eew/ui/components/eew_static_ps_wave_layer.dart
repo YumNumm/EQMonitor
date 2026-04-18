@@ -153,7 +153,7 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
     final lat = hypocenter.latitude!;
     final lng = hypocenter.longitude!;
 
-    final isWarning = eew.isWarningOrFallback;
+    final isWarning = eew.isWarning ?? false;
     final lineColor = isWarning ? '#FF0000' : '#FFA500';
     final fillColor = isWarning ? '#FF0000' : '#FFA500';
 

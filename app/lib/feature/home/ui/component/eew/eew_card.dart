@@ -1,18 +1,12 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
-import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
-import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
-import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -21,30 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
-import 'package:latlong2/latlong.dart' as latlong2;
 
-class EewWidgets extends ConsumerWidget {
-  const EewWidgets({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(eewAliveTelegramProvider) ?? [];
-
-    return Column(
-      children: state.reversed
-          .mapIndexed(
-            (index, element) => EewWidget(
-              eew: element,
-              index: (state.length > 1) ? '${index + 1}' : null,
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
-class EewWidget extends ConsumerWidget {
-  const EewWidget({required this.eew, required this.index, super.key});
+class EewCard extends ConsumerWidget {
+  const EewCard({required this.eew, required this.index, super.key});
 
   final EewTelegramItem eew;
   final String? index;
@@ -57,38 +30,17 @@ class EewWidget extends ConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorTheme = theme.colorScheme;
-    final intensityColorScheme = ref.watch(intensityColorProvider);
     ref.watch(timeTickerProvider());
-
-    if (eew.isCanceled) {
-      return BorderedContainer(
-        elevation: 1,
-        margin:
-            const EdgeInsets.symmetric(horizontal: 12) +
-            const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(eew.headline ?? '先ほどの緊急地震速報は取り消されました'),
-          ),
-        ),
-      );
-    }
 
     final forecastIntensity = eew.forecastIntensity;
     final maxIntensity =
         forecastIntensity?.maxIntensity ?? JmaIntensity.unknown;
-    final intensityScheme = intensityColorScheme.fromJmaIntensity(
-      maxIntensity,
-    );
-    final (_, backgroundColor) = (
-      intensityScheme.foreground,
-      intensityScheme.background,
-    );
-
-    final isWarning = eew.isWarningOrFallback;
-    final headerBg = isWarning ? _warningHeaderColor : _forecastHeaderColor;
+    final isWarning = eew.isWarning ?? false;
+    final headerBackgroundColor = eew.isCanceled
+        ? colorTheme.surfaceContainerLowest
+        : isWarning
+        ? _warningHeaderColor
+        : _forecastHeaderColor;
 
     final happenedTime = eew.originTime ?? eew.arrivalTime;
     if (happenedTime == null) {
@@ -96,7 +48,6 @@ class EewWidget extends ConsumerWidget {
     }
 
     final positionAsync = ref.watch(locationStreamProvider);
-    final travelTimeAsync = ref.watch(travelTimeProvider);
     final position = positionAsync.value;
     final regionItem = position != null
         ? ref
@@ -108,29 +59,9 @@ class EewWidget extends ConsumerWidget {
               .value
         : null;
 
-    final regionCode = regionItem?.property.code;
+    final regionCode = regionItem?.property?.code;
     final localForecastIntensity = _localForecastIntensity(eew, regionCode);
-    final regionDisplayName = regionItem?.property.name;
-
-    DateTime? mainMotionArrivalUtc;
-    if (position != null &&
-        travelTimeAsync.table.isNotEmpty &&
-        eew.originTime != null &&
-        eew.hypocenter?.hasLatLng == true &&
-        eew.hypocenter?.depth != null) {
-      final hypo = eew.hypocenter!;
-      final tables = TravelTimeTables(table: travelTimeAsync.table);
-      mainMotionArrivalUtc = _estimateMainMotionArrivalUtc(
-        originTimeUtc: eew.originTime!.toUtc(),
-        depth: hypo.depth!,
-        hypoLat: hypo.latitude!,
-        hypoLng: hypo.longitude!,
-        userLat: position.latitude,
-        userLng: position.longitude,
-        tables: tables,
-        nowUtc: DateTime.now().toUtc(),
-      );
-    }
+    final regionDisplayName = regionItem?.property?.name;
 
     final typeSerialLabel = _eewTypeLabelWithSerial(eew, isWarning);
     final headlineHalf = eew.headline?.toString().toHalfWidth;
@@ -264,6 +195,7 @@ class EewWidget extends ConsumerWidget {
     }
 
     final maxLpgmIntensity = forecastIntensity?.maxLpgmIntensity;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final card = Card(
       elevation: 1,
@@ -276,7 +208,7 @@ class EewWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
           color: Color.lerp(
-            backgroundColor,
+            colorScheme.surface,
             colorTheme.outline.withValues(alpha: 0.5),
             0.65,
           )!,
@@ -326,18 +258,13 @@ class EewWidget extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    if (mainMotionArrivalUtc != null)
-                      _MainMotionCountdown(
-                        arrivalUtc: mainMotionArrivalUtc,
-                        nowUtc: DateTime.now().toUtc(),
-                      ),
                   ],
                 ),
               ),
             ],
           ).decorated(
             decoration: BoxDecoration(
-              color: headerBg,
+              color: headerBackgroundColor,
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),
@@ -569,109 +496,6 @@ Widget _depthRow(BuildContext context, int? depth) {
       ],
     ],
   );
-}
-
-DateTime? _estimateMainMotionArrivalUtc({
-  required DateTime originTimeUtc,
-  required int depth,
-  required double hypoLat,
-  required double hypoLng,
-  required double userLat,
-  required double userLng,
-  required TravelTimeTables tables,
-  required DateTime nowUtc,
-}) {
-  const distance = latlong2.Distance();
-  final distKm = distance.as(
-    latlong2.LengthUnit.Kilometer,
-    latlong2.LatLng(hypoLat, hypoLng),
-    latlong2.LatLng(userLat, userLng),
-  );
-  if (distKm <= 0) {
-    return null;
-  }
-
-  double? sAt(double t) => tables.getValue(depth, t).sDistance;
-
-  final elapsed = nowUtc.difference(originTimeUtc).inMilliseconds / 1000.0;
-  if (elapsed < 0) {
-    return null;
-  }
-
-  final current = sAt(elapsed);
-  if (current != null && current >= distKm) {
-    return null;
-  }
-
-  var lo = elapsed;
-  var hi = 2000.0;
-  final hiStart = sAt(hi);
-  if (hiStart == null || hiStart < distKm) {
-    return null;
-  }
-
-  for (var i = 0; i < 56; i++) {
-    final mid = (lo + hi) / 2;
-    final sd = sAt(mid);
-    if (sd == null) {
-      hi = mid;
-      continue;
-    }
-    if (sd >= distKm) {
-      hi = mid;
-    } else {
-      lo = mid;
-    }
-  }
-
-  return originTimeUtc.add(Duration(milliseconds: (hi * 1000).round()));
-}
-
-class _MainMotionCountdown extends StatelessWidget {
-  const _MainMotionCountdown({
-    required this.arrivalUtc,
-    required this.nowUtc,
-  });
-
-  final DateTime arrivalUtc;
-  final DateTime nowUtc;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!arrivalUtc.isAfter(nowUtc)) {
-      return const SizedBox.shrink();
-    }
-    final diff = arrivalUtc.difference(nowUtc);
-    final totalSec = diff.inSeconds;
-    final m = totalSec ~/ 60;
-    final s = totalSec % 60;
-    final text =
-        '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          '主要動到達まで',
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            color: Colors.white.withValues(alpha: 0.7),
-          ),
-        ),
-        Text(
-          text,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w900,
-            fontFamily: FontFamily.notoSansMono,
-            color: Colors.white,
-            letterSpacing: -0.5,
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 class _EewStripePattern extends StatelessWidget {

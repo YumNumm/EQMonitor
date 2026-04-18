@@ -218,7 +218,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
       final elapsed = now.difference(originTime).inMilliseconds / 1000;
       final travelTime = travelTimeMap.getTravelTime(depth, elapsed);
 
-      final isWarning = eew.isWarningOrFallback;
+      final isWarning = eew.isWarning ?? false;
       final lineColor = isWarning ? '#FF0000' : '#FFA500';
       final fillColor = isWarning ? '#FF0000' : '#FFA500';
 

@@ -41,7 +41,7 @@ final class SseConnectionProvider
   SseConnection create() => SseConnection();
 }
 
-String _$sseConnectionHash() => r'93b05c0c45f1630b9411b5fa088be4048679b8cb';
+String _$sseConnectionHash() => r'fb2bfe50d79d958f94bedff847f10a443960c695';
 
 /// eqmonitor-backend `GET /v2/realtime/stream`（`api/api/src/features/realtime/routes/realtime.ts`）:
 /// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。

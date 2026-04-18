@@ -15,7 +15,9 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
   final streamController = StreamController<DateTime>();
 
   final interval = ref.watch(
-    kyoshinMonitorSettingsProvider.select((v) => v.requireValue.api.imageFetchInterval),
+    kyoshinMonitorSettingsProvider.select(
+      (v) => v.requireValue.api.imageFetchInterval,
+    ),
   );
 
   ref

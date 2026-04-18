@@ -59,4 +59,4 @@ final class HomeEarthquakeHistoryParameterProvider
 }
 
 String _$homeEarthquakeHistoryParameterHash() =>
-    r'19f59f205e6809c23fa4e1a4c474561b38f63131';
+    r'49fa0f7b04983ef860e75cdd5391e938b4726872';

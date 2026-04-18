@@ -1,0 +1,31 @@
+import 'dart:typed_data';
+
+import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'jma_map_isolate_message.freezed.dart';
+
+@freezed
+abstract class JmaMapCalculateMessage with _$JmaMapCalculateMessage {
+  const factory JmaMapCalculateMessage({
+    required int id,
+    required Uint8List mapDataBytes,
+    required double lat,
+    required double lng,
+  }) = _JmaMapCalculateMessage;
+}
+
+@freezed
+abstract class JmaMapShutdownMessage with _$JmaMapShutdownMessage {
+  const factory JmaMapShutdownMessage() = _JmaMapShutdownMessage;
+}
+
+@freezed
+abstract class JmaMapResponseMessage with _$JmaMapResponseMessage {
+  const factory JmaMapResponseMessage({
+    required int id,
+    MapDataItem? result,
+    String? errorMessage,
+    String? errorStack,
+  }) = _JmaMapResponseMessage;
+}

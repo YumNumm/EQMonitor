@@ -53,7 +53,7 @@ class _DebugWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDebugEnabled = ref.watch(debugProvider).requireValue;
+    final isDebugEnabled = ref.watch(debugProvider).value ?? false;
     final notificationToken = ref.watch(notificationTokenStreamProvider).value;
     final sessionToken = ref.watch(authProvider).value;
     final flavorName = ref.watch(environmentProvider).flavor.name;

@@ -26,6 +26,16 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
     sliderTheme: const SliderThemeData(year2023: false),
     // ignore: deprecated_member_use
     progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
+    dropdownMenuTheme: DropdownMenuThemeData(
+      menuStyle: MenuStyle(
+        padding: WidgetStateProperty.all(EdgeInsets.zero),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    ),
   );
 }
 

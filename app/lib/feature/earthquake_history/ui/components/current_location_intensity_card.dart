@@ -45,8 +45,8 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
         );
         return repository.resolveCurrentLocationIntensity(
           intensityTree: eqIntensity.intensityTree,
-          cityAreaCode: cityItem?.property.code,
-          regionAreaCode: regionItem?.property.code,
+          cityAreaCode: cityItem?.property?.code,
+          regionAreaCode: regionItem?.property?.code,
         );
       }();
     }, [latLng?.lat, latLng?.lon, item.eventId]);

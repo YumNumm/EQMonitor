@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/data/provider/kyoshin_monitor_points_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/material.dart';
@@ -57,12 +56,6 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
               ),
             );
             sw.stop();
-            talker.logCustom(
-              KyoshinMonitorLog(
-                '[perf] updateGeoJsonSource=${sw.elapsedMilliseconds}ms '
-                'bytes=${next.length}',
-              ),
-            );
           },
         );
         return null;
