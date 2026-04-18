@@ -374,7 +374,7 @@
         "tags": [
           "Device"
         ],
-        "description": "デバイスを作成または更新（認証必須）",
+        "description": "デバイスを作成または更新（Better Auth または Firebase App Check 必須）",
         "responses": {
           "200": {
             "description": "デバイス情報（更新）",
@@ -441,14 +441,8 @@
               }
             }
           },
-          "400": {
-            "description": "不正なデバイスID形式"
-          },
           "401": {
             "description": "認証エラー"
-          },
-          "403": {
-            "description": "他のユーザーのデバイス"
           },
           "404": {
             "description": "デバイスが見つからない"
@@ -487,9 +481,6 @@
           },
           "401": {
             "description": "認証エラー"
-          },
-          "403": {
-            "description": "他のユーザーのデバイス"
           },
           "404": {
             "description": "デバイスが見つからない"
@@ -4975,7 +4966,14 @@
             "type": "string"
           },
           "user_id": {
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "locale": {
             "enum": [
@@ -7225,11 +7223,18 @@
         ],
         "description": "予想長周期地震動階級の値"
       },
+      "EewIntensityRegionArrivalTimeType": {
+        "enum": [
+          "TIME",
+          "ARRIVED"
+        ],
+        "type": "string"
+      },
       "EewIntensityRegionArrivalTimeTime": {
         "type": "object",
         "properties": {
           "type": {
-            "const": "TIME"
+            "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeType"
           },
           "value": {
             "type": "string",
@@ -7239,17 +7244,6 @@
         "required": [
           "type",
           "value"
-        ]
-      },
-      "EewIntensityRegionArrivalTimeArrived": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "const": "ARRIVED"
-          }
-        },
-        "required": [
-          "type"
         ]
       },
       "EewIntensityItem": {
@@ -7276,14 +7270,7 @@
             ]
           },
           "arrival_time": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeTime"
-              },
-              {
-                "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeArrived"
-              }
-            ]
+            "$ref": "#/components/schemas/EewIntensityRegionArrivalTimeTime"
           }
         },
         "required": [

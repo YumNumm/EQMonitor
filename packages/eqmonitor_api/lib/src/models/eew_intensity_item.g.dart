@@ -26,7 +26,7 @@ _EewIntensityItem _$EewIntensityItemFromJson(Map<String, dynamic> json) =>
           ),
           arrivalTime: $checkedConvert(
             'arrival_time',
-            (v) => EewIntensityItemArrivalTimeUnion.fromJson(
+            (v) => EewIntensityRegionArrivalTimeTime.fromJson(
               v as Map<String, dynamic>,
             ),
           ),

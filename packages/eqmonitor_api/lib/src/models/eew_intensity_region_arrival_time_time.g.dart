@@ -14,7 +14,10 @@ _EewIntensityRegionArrivalTimeTime _$EewIntensityRegionArrivalTimeTimeFromJson(
   $checkedConvert,
 ) {
   final val = _EewIntensityRegionArrivalTimeTime(
-    type: $checkedConvert('type', (v) => v),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$EewIntensityRegionArrivalTimeTypeEnumMap, v),
+    ),
     value: $checkedConvert('value', (v) => DateTime.parse(v as String)),
   );
   return val;
@@ -25,4 +28,9 @@ Map<String, dynamic> _$EewIntensityRegionArrivalTimeTimeToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'value': instance.value.toIso8601String(),
+};
+
+const _$EewIntensityRegionArrivalTimeTypeEnumMap = {
+  EewIntensityRegionArrivalTimeType.time: 'TIME',
+  EewIntensityRegionArrivalTimeType.arrived: 'ARRIVED',
 };

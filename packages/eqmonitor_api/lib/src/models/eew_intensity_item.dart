@@ -5,8 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'code_name.dart';
-import 'eew_intensity_item_arrival_time_union.dart';
 import 'eew_intensity_lpgm_value.dart';
+import 'eew_intensity_region_arrival_time_time.dart';
 import 'eew_intensity_value.dart';
 
 part 'eew_intensity_item.freezed.dart';
@@ -22,7 +22,7 @@ abstract class EewIntensityItem with _$EewIntensityItem {
     required bool isWarning,
     required EewIntensityValue intensity,
     @JsonKey(name: 'arrival_time')
-    required EewIntensityItemArrivalTimeUnion arrivalTime,
+    required EewIntensityRegionArrivalTimeTime arrivalTime,
     @JsonKey(includeIfNull: false,name: 'lpgm_intensity')
     EewIntensityLpgmValue? lpgmIntensity,
   }) = _EewIntensityItem;

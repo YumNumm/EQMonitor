@@ -102,7 +102,11 @@ class EarthquakeHistoryDataSource
     String? cursor,
   ) async {
     try {
-      final limit = _parameter == const EarthquakeHistoryParameter() ? 10 : 50;
+      final limit = cursor != null
+          ? 100
+          : _parameter == const EarthquakeHistoryParameter()
+          ? 10
+          : 50;
 
       if (_parameter.hasEpicenterFilter && _parameter.epicenterCode != null) {
         final result = await _repository.searchByEpicenter(
@@ -160,7 +164,7 @@ class EarthquakeHistoryDataSource
           appendKey: result.nextToken,
         ),
       );
-    }on Exception catch (e, st) {
+    } on Exception catch (e, st) {
       return Failure(error: e, stackTrace: st);
     }
   }

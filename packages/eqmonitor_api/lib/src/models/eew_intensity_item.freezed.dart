@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewIntensityItem {
 
- CodeName get value;@JsonKey(name: 'is_plum') bool get isPlum;@JsonKey(name: 'is_warning') bool get isWarning; EewIntensityValue get intensity;@JsonKey(name: 'arrival_time') EewIntensityItemArrivalTimeUnion get arrivalTime;@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? get lpgmIntensity;
+ CodeName get value;@JsonKey(name: 'is_plum') bool get isPlum;@JsonKey(name: 'is_warning') bool get isWarning; EewIntensityValue get intensity;@JsonKey(name: 'arrival_time') EewIntensityRegionArrivalTimeTime get arrivalTime;@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? get lpgmIntensity;
 /// Create a copy of EewIntensityItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $EewIntensityItemCopyWith<$Res>  {
   factory $EewIntensityItemCopyWith(EewIntensityItem value, $Res Function(EewIntensityItem) _then) = _$EewIntensityItemCopyWithImpl;
 @useResult
 $Res call({
- CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(name: 'arrival_time') EewIntensityItemArrivalTimeUnion arrivalTime,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity
+ CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(name: 'arrival_time') EewIntensityRegionArrivalTimeTime arrivalTime,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity
 });
 
 
-$CodeNameCopyWith<$Res> get value;$EewIntensityValueCopyWith<$Res> get intensity;$EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime;$EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
+$CodeNameCopyWith<$Res> get value;$EewIntensityValueCopyWith<$Res> get intensity;$EewIntensityRegionArrivalTimeTimeCopyWith<$Res> get arrivalTime;$EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
 
 }
 /// @nodoc
@@ -72,7 +72,7 @@ as CodeName,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nulla
 as bool,isWarning: null == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
 as bool,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as EewIntensityValue,arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as EewIntensityItemArrivalTimeUnion,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as EewIntensityRegionArrivalTimeTime,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as EewIntensityLpgmValue?,
   ));
 }
@@ -98,9 +98,9 @@ $EewIntensityValueCopyWith<$Res> get intensity {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime {
+$EewIntensityRegionArrivalTimeTimeCopyWith<$Res> get arrivalTime {
   
-  return $EewIntensityItemArrivalTimeUnionCopyWith<$Res>(_self.arrivalTime, (value) {
+  return $EewIntensityRegionArrivalTimeTimeCopyWith<$Res>(_self.arrivalTime, (value) {
     return _then(_self.copyWith(arrivalTime: value));
   });
 }/// Create a copy of EewIntensityItem
@@ -197,7 +197,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityItemArrivalTimeUnion arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityRegionArrivalTimeTime arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewIntensityItem() when $default != null:
 return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.arrivalTime,_that.lpgmIntensity);case _:
@@ -218,7 +218,7 @@ return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.a
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityItemArrivalTimeUnion arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityRegionArrivalTimeTime arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityItem():
 return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.arrivalTime,_that.lpgmIntensity);case _:
@@ -238,7 +238,7 @@ return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.a
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityItemArrivalTimeUnion arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(name: 'is_plum')  bool isPlum, @JsonKey(name: 'is_warning')  bool isWarning,  EewIntensityValue intensity, @JsonKey(name: 'arrival_time')  EewIntensityRegionArrivalTimeTime arrivalTime, @JsonKey(includeIfNull: false, name: 'lpgm_intensity')  EewIntensityLpgmValue? lpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityItem() when $default != null:
 return $default(_that.value,_that.isPlum,_that.isWarning,_that.intensity,_that.arrivalTime,_that.lpgmIntensity);case _:
@@ -260,7 +260,7 @@ class _EewIntensityItem implements EewIntensityItem {
 @override@JsonKey(name: 'is_plum') final  bool isPlum;
 @override@JsonKey(name: 'is_warning') final  bool isWarning;
 @override final  EewIntensityValue intensity;
-@override@JsonKey(name: 'arrival_time') final  EewIntensityItemArrivalTimeUnion arrivalTime;
+@override@JsonKey(name: 'arrival_time') final  EewIntensityRegionArrivalTimeTime arrivalTime;
 @override@JsonKey(includeIfNull: false, name: 'lpgm_intensity') final  EewIntensityLpgmValue? lpgmIntensity;
 
 /// Create a copy of EewIntensityItem
@@ -296,11 +296,11 @@ abstract mixin class _$EewIntensityItemCopyWith<$Res> implements $EewIntensityIt
   factory _$EewIntensityItemCopyWith(_EewIntensityItem value, $Res Function(_EewIntensityItem) _then) = __$EewIntensityItemCopyWithImpl;
 @override @useResult
 $Res call({
- CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(name: 'arrival_time') EewIntensityItemArrivalTimeUnion arrivalTime,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity
+ CodeName value,@JsonKey(name: 'is_plum') bool isPlum,@JsonKey(name: 'is_warning') bool isWarning, EewIntensityValue intensity,@JsonKey(name: 'arrival_time') EewIntensityRegionArrivalTimeTime arrivalTime,@JsonKey(includeIfNull: false, name: 'lpgm_intensity') EewIntensityLpgmValue? lpgmIntensity
 });
 
 
-@override $CodeNameCopyWith<$Res> get value;@override $EewIntensityValueCopyWith<$Res> get intensity;@override $EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime;@override $EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
+@override $CodeNameCopyWith<$Res> get value;@override $EewIntensityValueCopyWith<$Res> get intensity;@override $EewIntensityRegionArrivalTimeTimeCopyWith<$Res> get arrivalTime;@override $EewIntensityLpgmValueCopyWith<$Res>? get lpgmIntensity;
 
 }
 /// @nodoc
@@ -320,7 +320,7 @@ as CodeName,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nulla
 as bool,isWarning: null == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
 as bool,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as EewIntensityValue,arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
-as EewIntensityItemArrivalTimeUnion,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as EewIntensityRegionArrivalTimeTime,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as EewIntensityLpgmValue?,
   ));
 }
@@ -347,9 +347,9 @@ $EewIntensityValueCopyWith<$Res> get intensity {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EewIntensityItemArrivalTimeUnionCopyWith<$Res> get arrivalTime {
+$EewIntensityRegionArrivalTimeTimeCopyWith<$Res> get arrivalTime {
   
-  return $EewIntensityItemArrivalTimeUnionCopyWith<$Res>(_self.arrivalTime, (value) {
+  return $EewIntensityRegionArrivalTimeTimeCopyWith<$Res>(_self.arrivalTime, (value) {
     return _then(_self.copyWith(arrivalTime: value));
   });
 }/// Create a copy of EewIntensityItem

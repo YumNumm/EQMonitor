@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegisteredDevice {
 
- String get id; RegisteredDevicePlatform get platform; String get userId; RegisteredDeviceLocale get locale; String get createdAtIso; String get updatedAtIso;
+ String get id; RegisteredDevicePlatform get platform; String? get userId; RegisteredDeviceLocale get locale; String get createdAtIso; String get updatedAtIso;
 /// Create a copy of RegisteredDevice
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $RegisteredDeviceCopyWith<$Res>  {
   factory $RegisteredDeviceCopyWith(RegisteredDevice value, $Res Function(RegisteredDevice) _then) = _$RegisteredDeviceCopyWithImpl;
 @useResult
 $Res call({
- String id, RegisteredDevicePlatform platform, String userId, RegisteredDeviceLocale locale, String createdAtIso, String updatedAtIso
+ String id, RegisteredDevicePlatform platform, String? userId, RegisteredDeviceLocale locale, String createdAtIso, String updatedAtIso
 });
 
 
@@ -62,12 +62,12 @@ class _$RegisteredDeviceCopyWithImpl<$Res>
 
 /// Create a copy of RegisteredDevice
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? platform = null,Object? userId = null,Object? locale = null,Object? createdAtIso = null,Object? updatedAtIso = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? platform = null,Object? userId = freezed,Object? locale = null,Object? createdAtIso = null,Object? updatedAtIso = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
-as RegisteredDevicePlatform,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as RegisteredDevicePlatform,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as RegisteredDeviceLocale,createdAtIso: null == createdAtIso ? _self.createdAtIso : createdAtIso // ignore: cast_nullable_to_non_nullable
 as String,updatedAtIso: null == updatedAtIso ? _self.updatedAtIso : updatedAtIso // ignore: cast_nullable_to_non_nullable
 as String,
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  RegisteredDevicePlatform platform,  String userId,  RegisteredDeviceLocale locale,  String createdAtIso,  String updatedAtIso)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  RegisteredDevicePlatform platform,  String? userId,  RegisteredDeviceLocale locale,  String createdAtIso,  String updatedAtIso)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegisteredDevice() when $default != null:
 return $default(_that.id,_that.platform,_that.userId,_that.locale,_that.createdAtIso,_that.updatedAtIso);case _:
@@ -176,7 +176,7 @@ return $default(_that.id,_that.platform,_that.userId,_that.locale,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  RegisteredDevicePlatform platform,  String userId,  RegisteredDeviceLocale locale,  String createdAtIso,  String updatedAtIso)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  RegisteredDevicePlatform platform,  String? userId,  RegisteredDeviceLocale locale,  String createdAtIso,  String updatedAtIso)  $default,) {final _that = this;
 switch (_that) {
 case _RegisteredDevice():
 return $default(_that.id,_that.platform,_that.userId,_that.locale,_that.createdAtIso,_that.updatedAtIso);case _:
@@ -196,7 +196,7 @@ return $default(_that.id,_that.platform,_that.userId,_that.locale,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  RegisteredDevicePlatform platform,  String userId,  RegisteredDeviceLocale locale,  String createdAtIso,  String updatedAtIso)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  RegisteredDevicePlatform platform,  String? userId,  RegisteredDeviceLocale locale,  String createdAtIso,  String updatedAtIso)?  $default,) {final _that = this;
 switch (_that) {
 case _RegisteredDevice() when $default != null:
 return $default(_that.id,_that.platform,_that.userId,_that.locale,_that.createdAtIso,_that.updatedAtIso);case _:
@@ -216,7 +216,7 @@ class _RegisteredDevice implements RegisteredDevice {
 
 @override final  String id;
 @override final  RegisteredDevicePlatform platform;
-@override final  String userId;
+@override final  String? userId;
 @override final  RegisteredDeviceLocale locale;
 @override final  String createdAtIso;
 @override final  String updatedAtIso;
@@ -251,7 +251,7 @@ abstract mixin class _$RegisteredDeviceCopyWith<$Res> implements $RegisteredDevi
   factory _$RegisteredDeviceCopyWith(_RegisteredDevice value, $Res Function(_RegisteredDevice) _then) = __$RegisteredDeviceCopyWithImpl;
 @override @useResult
 $Res call({
- String id, RegisteredDevicePlatform platform, String userId, RegisteredDeviceLocale locale, String createdAtIso, String updatedAtIso
+ String id, RegisteredDevicePlatform platform, String? userId, RegisteredDeviceLocale locale, String createdAtIso, String updatedAtIso
 });
 
 
@@ -268,12 +268,12 @@ class __$RegisteredDeviceCopyWithImpl<$Res>
 
 /// Create a copy of RegisteredDevice
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? platform = null,Object? userId = null,Object? locale = null,Object? createdAtIso = null,Object? updatedAtIso = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? platform = null,Object? userId = freezed,Object? locale = null,Object? createdAtIso = null,Object? updatedAtIso = null,}) {
   return _then(_RegisteredDevice(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
-as RegisteredDevicePlatform,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as RegisteredDevicePlatform,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as RegisteredDeviceLocale,createdAtIso: null == createdAtIso ? _self.createdAtIso : createdAtIso // ignore: cast_nullable_to_non_nullable
 as String,updatedAtIso: null == updatedAtIso ? _self.updatedAtIso : updatedAtIso // ignore: cast_nullable_to_non_nullable
 as String,

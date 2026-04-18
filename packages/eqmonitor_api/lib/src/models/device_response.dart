@@ -15,8 +15,8 @@ abstract class DeviceResponse with _$DeviceResponse {
   const factory DeviceResponse({
     required String id,
     required Type type,
-    @JsonKey(name: 'user_id')
-    required String userId,
+    @JsonKey(includeIfNull: true,name: 'user_id')
+    required String? userId,
     required Locale locale,
     @JsonKey(name: 'created_at')
     required String createdAt,

@@ -16,7 +16,7 @@ _DeviceResponse _$DeviceResponseFromJson(Map<String, dynamic> json) =>
         final val = _DeviceResponse(
           id: $checkedConvert('id', (v) => v as String),
           type: $checkedConvert('type', (v) => $enumDecode(_$TypeEnumMap, v)),
-          userId: $checkedConvert('user_id', (v) => v as String),
+          userId: $checkedConvert('user_id', (v) => v as String?),
           locale: $checkedConvert(
             'locale',
             (v) => $enumDecode(_$LocaleEnumMap, v),

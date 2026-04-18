@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewIntensityRegionArrivalTimeTime {
 
- dynamic get type; DateTime get value;
+ EewIntensityRegionArrivalTimeType get type; DateTime get value;
 /// Create a copy of EewIntensityRegionArrivalTimeTime
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $EewIntensityRegionArrivalTimeTimeCopyWith<EewIntensityRegionArrivalTimeTime> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewIntensityRegionArrivalTimeTime&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.value, value) || other.value == value));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewIntensityRegionArrivalTimeTime&&(identical(other.type, type) || other.type == type)&&(identical(other.value, value) || other.value == value));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),value);
+int get hashCode => Object.hash(runtimeType,type,value);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $EewIntensityRegionArrivalTimeTimeCopyWith<$Res>  {
   factory $EewIntensityRegionArrivalTimeTimeCopyWith(EewIntensityRegionArrivalTimeTime value, $Res Function(EewIntensityRegionArrivalTimeTime) _then) = _$EewIntensityRegionArrivalTimeTimeCopyWithImpl;
 @useResult
 $Res call({
- dynamic type, DateTime value
+ EewIntensityRegionArrivalTimeType type, DateTime value
 });
 
 
@@ -65,10 +65,10 @@ class _$EewIntensityRegionArrivalTimeTimeCopyWithImpl<$Res>
 
 /// Create a copy of EewIntensityRegionArrivalTimeTime
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,Object? value = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? value = null,}) {
   return _then(_self.copyWith(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as EewIntensityRegionArrivalTimeType,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic type,  DateTime value)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EewIntensityRegionArrivalTimeType type,  DateTime value)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewIntensityRegionArrivalTimeTime() when $default != null:
 return $default(_that.type,_that.value);case _:
@@ -175,7 +175,7 @@ return $default(_that.type,_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic type,  DateTime value)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EewIntensityRegionArrivalTimeType type,  DateTime value)  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityRegionArrivalTimeTime():
 return $default(_that.type,_that.value);case _:
@@ -195,7 +195,7 @@ return $default(_that.type,_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic type,  DateTime value)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EewIntensityRegionArrivalTimeType type,  DateTime value)?  $default,) {final _that = this;
 switch (_that) {
 case _EewIntensityRegionArrivalTimeTime() when $default != null:
 return $default(_that.type,_that.value);case _:
@@ -213,7 +213,7 @@ class _EewIntensityRegionArrivalTimeTime implements EewIntensityRegionArrivalTim
   const _EewIntensityRegionArrivalTimeTime({required this.type, required this.value});
   factory _EewIntensityRegionArrivalTimeTime.fromJson(Map<String, dynamic> json) => _$EewIntensityRegionArrivalTimeTimeFromJson(json);
 
-@override final  dynamic type;
+@override final  EewIntensityRegionArrivalTimeType type;
 @override final  DateTime value;
 
 /// Create a copy of EewIntensityRegionArrivalTimeTime
@@ -229,12 +229,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewIntensityRegionArrivalTimeTime&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.value, value) || other.value == value));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewIntensityRegionArrivalTimeTime&&(identical(other.type, type) || other.type == type)&&(identical(other.value, value) || other.value == value));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),value);
+int get hashCode => Object.hash(runtimeType,type,value);
 
 @override
 String toString() {
@@ -249,7 +249,7 @@ abstract mixin class _$EewIntensityRegionArrivalTimeTimeCopyWith<$Res> implement
   factory _$EewIntensityRegionArrivalTimeTimeCopyWith(_EewIntensityRegionArrivalTimeTime value, $Res Function(_EewIntensityRegionArrivalTimeTime) _then) = __$EewIntensityRegionArrivalTimeTimeCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic type, DateTime value
+ EewIntensityRegionArrivalTimeType type, DateTime value
 });
 
 
@@ -266,10 +266,10 @@ class __$EewIntensityRegionArrivalTimeTimeCopyWithImpl<$Res>
 
 /// Create a copy of EewIntensityRegionArrivalTimeTime
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? value = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? value = null,}) {
   return _then(_EewIntensityRegionArrivalTimeTime(
-type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as EewIntensityRegionArrivalTimeType,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

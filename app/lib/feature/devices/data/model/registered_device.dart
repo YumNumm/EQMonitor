@@ -8,7 +8,7 @@ abstract class RegisteredDevice with _$RegisteredDevice {
   const factory RegisteredDevice({
     required String id,
     required RegisteredDevicePlatform platform,
-    required String userId,
+    required String? userId,
     required RegisteredDeviceLocale locale,
     required String createdAtIso,
     required String updatedAtIso,
