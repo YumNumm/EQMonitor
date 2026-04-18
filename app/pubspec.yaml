@@ -34,7 +34,7 @@ dependencies:
     path: ../packages/eqmonitor_api
   extensions:
     path: ../packages/extensions
-  file_picker: ^10.1.9
+  file_picker: ^11.0.2
   firebase_analytics: ^12.0.0
   firebase_app_check: ^0.4.2
   firebase_app_installations: ^0.4.0
@@ -90,14 +90,14 @@ dependencies:
   libserialport_plus: ^0.1.0
   live_activity_util:
     path: ../packages/live_activity_util
-  maplibre: ^0.3.3+2
+  maplibre: ^0.3.5
   nied_api_client:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
   objective_c: ^9.2.2
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
-  purchases_flutter: ^9.1.0
+  purchases_flutter: ^10.0.1
   riverpod: ^3.2.1
   riverpod_annotation: ^4.0.0
   screenshot: 3.0.0
@@ -113,7 +113,7 @@ dependencies:
   talker_dio_logger: ^5.0.0
   talker_flutter: ^5.0.0
   timezone: ^0.11.0
-  upgrader: ^12.1.0
+  upgrader: ^13.0.0
   url_launcher: ^6.3.1
   uuid: ^4.5.1
   version: ^3.0.2

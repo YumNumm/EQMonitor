@@ -445,10 +445,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: "57d9a1dd5063f85fa3107fb42d1faffda52fdc948cefd5fe5ea85267a5fc7343"
+      sha256: f13a03000d942e476bc1ff0a736d2e9de711d2f89a95cd4c1d88f861c3348387
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.10"
+    version: "11.0.2"
   firebase_analytics:
     dependency: transitive
     description:
@@ -1714,10 +1714,10 @@ packages:
     dependency: transitive
     description:
       name: purchases_flutter
-      sha256: "7608be2dc1f48cf34f15cc5830af256b89d2d7966d5da63788a87a7a8925ff87"
+      sha256: "40723bd949d58a005e3e3eeb0739d3ad664ad478e3e29697692e0d657f103c6e"
       url: "https://pub.dev"
     source: hosted
-    version: "9.16.1"
+    version: "10.0.1"
   quiver:
     dependency: transitive
     description:
@@ -2160,10 +2160,10 @@ packages:
     dependency: transitive
     description:
       name: upgrader
-      sha256: "3fae4eb861c7e8567f91412d9ca4a287e024e58d6f79f98da79e3f6d78da74ba"
+      sha256: abc25eb28c7df3815ce35f1cd2ac9e50d159c85d80dd3eaf7b2b5bfadc59fc05
       url: "https://pub.dev"
     source: hosted
-    version: "12.5.0"
+    version: "13.0.0"
   url_launcher:
     dependency: transitive
     description:
@@ -2280,10 +2280,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "45caa6c5917fa127b5dbcfbd1fa60b14e583afdc08bfc96dda38886ca252eb60"
+      sha256: "046d3928e16fa4dc46e8350415661755ab759d9fc97fc21b5ab295f71e4f0499"
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.2"
+    version: "15.1.0"
   watcher:
     dependency: transitive
     description:
