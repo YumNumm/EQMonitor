@@ -52,7 +52,7 @@ final class EewsByEventIdProvider
   }
 }
 
-String _$eewsByEventIdHash() => r'abc6b17f4fec14136c0714750488e466370d7f26';
+String _$eewsByEventIdHash() => r'1732512c289d300ffda3541f6acb1367d8429b67';
 
 final class EewsByEventIdFamily extends $Family
     with
