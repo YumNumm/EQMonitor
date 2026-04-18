@@ -5,13 +5,13 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:maplibre/maplibre.dart';
 
 /// 地震履歴詳細マップの初期表示位置（震源が取れない場合のフォールバック）
-const Geographic kEarthquakeHistoryMapDefaultCenter = Geographic(
+const kEarthquakeHistoryMapDefaultCenter = Geographic(
   lon: 138,
   lat: 36.5,
 );
 
 const double kEarthquakeHistoryMapDefaultZoom = 5;
-const double kEarthquakeHistoryMapHypocenterZoom = 6.5;
+const kEarthquakeHistoryMapHypocenterZoom = 6.5;
 const double kEarthquakeHistoryMapFocusZoom = 8;
 
 /// 震源があればその位置、なければ日本付近の既定位置
@@ -21,8 +21,10 @@ Geographic initialGeographicForEarthquake(Earthquake earthquake) {
     return kEarthquakeHistoryMapDefaultCenter;
   }
   return switch (hyp.coordinates) {
-    CoordinateLatLng(latitude: final lat, longitude: final lng) =>
-      Geographic(lon: lng, lat: lat),
+    CoordinateLatLng(latitude: final lat, longitude: final lng) => Geographic(
+      lon: lng,
+      lat: lat,
+    ),
     _ => kEarthquakeHistoryMapDefaultCenter,
   };
 }
@@ -62,7 +64,10 @@ Geographic? geographicForEarthquakeIntensityFocus(
               final station = stationNode.station;
               if (station.code == focus.code) {
                 if (station.hasLatitude() && station.hasLongitude()) {
-                  return Geographic(lon: station.longitude, lat: station.latitude);
+                  return Geographic(
+                    lon: station.longitude,
+                    lat: station.latitude,
+                  );
                 }
                 return null;
               }

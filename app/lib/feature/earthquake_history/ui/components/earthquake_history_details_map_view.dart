@@ -60,18 +60,22 @@ class _MapContent extends HookConsumerWidget {
     final tileUrl = earthquake.estimatedIntensityTileUrl;
 
     return MapLibreEventProvider(
-      child: MapLibreMap(
-        options: mapOptions,
-        onEvent: (event) => MapLibreEventProvider.of(context).emit(event),
-        children: [
-          if (tileUrl != null)
-            EarthquakeHistoryDetailsEstimatedIntensityLayer(tileUrl: tileUrl),
-          EarthquakeHistoryHypocenterLayer(earthquake: earthquake),
-          EarthquakeHistoryDetailsMapCameraController(
-            eventId: eventId,
-            earthquake: earthquake,
-          ),
-        ],
+      child: Builder(
+        builder: (context) {
+          return MapLibreMap(
+            options: mapOptions,
+            onEvent: (event) => MapLibreEventProvider.of(context).emit(event),
+            children: [
+              if (tileUrl != null)
+                EarthquakeHistoryDetailsEstimatedIntensityLayer(tileUrl: tileUrl),
+              EarthquakeHistoryHypocenterLayer(earthquake: earthquake),
+              EarthquakeHistoryDetailsMapCameraController(
+                eventId: eventId,
+                earthquake: earthquake,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

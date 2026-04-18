@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
@@ -145,9 +147,9 @@ class _RegionModalBottomSheet extends StatelessWidget {
   static Future<void> show({
     required BuildContext context,
     required WidgetRef ref,
-    String? eventId,
     required JmaIntensity intensity,
     required List<RegionIntensityNode> regions,
+    String? eventId,
   }) => Navigator.of(context).push(
     SheetRoute(
       builder: (context) => _RegionModalBottomSheet(
@@ -378,10 +380,12 @@ class _RegionModalBottomSheet extends StatelessWidget {
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
       onPressed: () {
-        ref.read(earthquakeHistoryMapFocusProvider(eventId!).notifier).select(
+        ref
+            .read(earthquakeHistoryMapFocusProvider(eventId!).notifier)
+            .select(
               focus,
             );
-        Navigator.of(context).maybePop();
+        unawaited(Navigator.of(context).maybePop());
       },
     );
   }

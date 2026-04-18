@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
-
-import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 
 /// 地震履歴詳細の推計震度（PMTiles ラスタ）レイヤー
 class EarthquakeHistoryDetailsEstimatedIntensityLayer
@@ -35,8 +34,6 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
             RasterSource(
               id: _sourceId,
               tiles: [tileUrl],
-              tileSize: 512,
-              minZoom: 0,
               maxZoom: 14,
             ),
           );

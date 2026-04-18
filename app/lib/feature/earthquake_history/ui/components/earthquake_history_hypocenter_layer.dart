@@ -47,7 +47,7 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
           );
 
           await styleController.addLayer(
-            SymbolStyleLayer(
+            const SymbolStyleLayer(
               id: _layerId,
               sourceId: _sourceId,
               layout: {

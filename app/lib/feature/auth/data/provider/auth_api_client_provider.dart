@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:better_auth_api_client/export.dart' as auth_api;
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -14,11 +16,13 @@ auth_api.ApiClient authApiClient(Ref ref) {
   final env = ref.watch(environmentProvider);
   final dio = Dio(
     BaseOptions(
-      baseUrl: env.restApiUrl,
+      baseUrl: '${env.restApiUrl}/api/auth',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       followRedirects: true,
       maxRedirects: 5,
+      contentType: ContentType.json.value,
+      listFormat: ListFormat.multiCompatible,
     ),
   );
   dio.interceptors.add(

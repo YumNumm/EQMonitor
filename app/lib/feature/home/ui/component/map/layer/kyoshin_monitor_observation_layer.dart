@@ -21,7 +21,7 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
     final controller = MapController.of(context);
     final styleController = controller.style;
     final useKmoni = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni),
+      kyoshinMonitorSettingsProvider.select((v) => v.value?.useKmoni ?? false),
     );
 
     useEffect(

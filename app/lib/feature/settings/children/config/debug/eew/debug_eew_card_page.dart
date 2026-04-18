@@ -12,8 +12,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class DebugEewCardPage extends HookConsumerWidget {
   const DebugEewCardPage({super.key});
 
-  static const TextStyle _paramLabelStyle = TextStyle(fontSize: 11);
-  static const TextStyle _paramValueStyle = TextStyle(fontSize: 11);
+  static const _paramLabelStyle = TextStyle(fontSize: 11);
+  static const _paramValueStyle = TextStyle(fontSize: 11);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,13 +60,13 @@ class DebugEewCardPage extends HookConsumerWidget {
         code: '001',
         name: hypocenterName.text.isEmpty ? '不明' : hypocenterName.text,
         hasLatLng: true,
-        latitude: 38.0,
-        longitude: 142.0,
+        latitude: 38,
+        longitude: 142,
         magnitude: mag,
         depth: dep,
       );
 
-      JmaLpgmIntensity? lpgm = maxLpgm.value;
+      var lpgm = maxLpgm.value;
       if (!showLpgmSection.value) {
         lpgm = null;
       } else if (lpgm == null || lpgm == JmaLpgmIntensity.zero) {
@@ -168,14 +168,14 @@ class DebugEewCardPage extends HookConsumerWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.remove, size: 18),
-                        onPressed: () => serialNo.value =
-                            (serialNo.value - 1).clamp(1, 999),
+                        onPressed: () =>
+                            serialNo.value = (serialNo.value - 1).clamp(1, 999),
                       ),
                       Text('${serialNo.value}', style: _paramValueStyle),
                       IconButton(
                         icon: const Icon(Icons.add, size: 18),
-                        onPressed: () => serialNo.value =
-                            (serialNo.value + 1).clamp(1, 999),
+                        onPressed: () =>
+                            serialNo.value = (serialNo.value + 1).clamp(1, 999),
                       ),
                     ],
                   ),
@@ -275,7 +275,6 @@ class DebugEewCardPage extends HookConsumerWidget {
                       Expanded(
                         child: Slider(
                           value: magnitude.value ?? 7.2,
-                          min: 0,
                           max: 9.5,
                           divisions: 95,
                           label: magnitude.value?.toStringAsFixed(1) ?? 'null',
@@ -283,8 +282,8 @@ class DebugEewCardPage extends HookConsumerWidget {
                         ),
                       ),
                       TextButton(
-                        onPressed: () =>
-                            magnitude.value = magnitude.value == null ? 7.2 : null,
+                        onPressed: () => magnitude.value =
+                            magnitude.value == null ? 7.2 : null,
                         child: Text(
                           magnitude.value == null ? '設定' : '不明(null)',
                           style: _paramValueStyle,
@@ -300,7 +299,6 @@ class DebugEewCardPage extends HookConsumerWidget {
                       Expanded(
                         child: Slider(
                           value: (depth.value ?? 24).toDouble(),
-                          min: 0,
                           max: 700,
                           divisions: 70,
                           label: '${depth.value ?? "null"} km',
@@ -366,7 +364,6 @@ class DebugEewCardPage extends HookConsumerWidget {
                       style: _paramValueStyle,
                       items: [
                         const DropdownMenuItem<JmaLpgmIntensity?>(
-                          value: null,
                           child: Text('null', style: _paramValueStyle),
                         ),
                         ...JmaLpgmIntensity.values.map(
@@ -424,7 +421,10 @@ class DebugEewCardPage extends HookConsumerWidget {
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text('サンプル一覧', style: Theme.of(context).textTheme.titleSmall),
+            child: Text(
+              'サンプル一覧',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
           ),
           const SizedBox(height: 4),
           Padding(
@@ -449,7 +449,7 @@ class DebugEewCardPage extends HookConsumerWidget {
 }
 
 /// 検証用の固定サンプル（実データではない）
-final List<EewTelegramItem> _kSampleEews = [
+final _kSampleEews = <EewTelegramItem>[
   EewTelegramItem(
     eventId: 'sample-1',
     status: TelegramStatus.normal,
@@ -457,7 +457,7 @@ final List<EewTelegramItem> _kSampleEews = [
     serialNo: 1,
     isCanceled: false,
     isLastInfo: false,
-    reportTime: DateTime.utc(2024, 1, 1, 12, 0),
+    reportTime: DateTime.utc(2024, 1, 1, 12),
     isPlum: false,
     isWarning: false,
     originTime: DateTime.utc(2024, 1, 1, 11, 59, 50),
@@ -507,14 +507,11 @@ final List<EewTelegramItem> _kSampleEews = [
     reportTime: DateTime.utc(2024, 1, 1, 12, 1),
     isPlum: true,
     isWarning: false,
-    originTime: null,
     arrivalTime: DateTime.utc(2024, 1, 1, 12, 0, 30),
     hypocenter: const EewHypocenterInfo(
       code: 's3',
       name: '青森県東方沖',
       hasLatLng: true,
-      magnitude: null,
-      depth: null,
     ),
     forecastIntensity: const EewForecastIntensityInfo(
       regions: [],
@@ -537,7 +534,7 @@ final List<EewTelegramItem> _kSampleEews = [
       code: 's4',
       name: '取消テスト',
       hasLatLng: true,
-      magnitude: 3.0,
+      magnitude: 3,
       depth: 10,
     ),
   ),
@@ -548,7 +545,7 @@ final List<EewTelegramItem> _kSampleEews = [
     serialNo: 1,
     isCanceled: false,
     isLastInfo: false,
-    reportTime: DateTime.utc(2024, 1, 2, 10, 0),
+    reportTime: DateTime.utc(2024, 1, 2, 10),
     isPlum: false,
     isWarning: false,
     originTime: DateTime.utc(2024, 1, 2, 9, 59, 50),
@@ -571,7 +568,7 @@ final List<EewTelegramItem> _kSampleEews = [
     serialNo: 1,
     isCanceled: false,
     isLastInfo: false,
-    reportTime: DateTime.utc(2024, 1, 1, 9, 0),
+    reportTime: DateTime.utc(2024, 1, 1, 9),
     isPlum: false,
     isWarning: false,
     originTime: DateTime.utc(2024, 1, 1, 8, 59, 40),
@@ -579,7 +576,7 @@ final List<EewTelegramItem> _kSampleEews = [
       code: 's5',
       name: '訓練',
       hasLatLng: true,
-      magnitude: 6.0,
+      magnitude: 6,
       depth: 20,
     ),
     forecastIntensity: const EewForecastIntensityInfo(

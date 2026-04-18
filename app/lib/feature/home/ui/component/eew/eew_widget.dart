@@ -58,7 +58,7 @@ class EewWidget extends ConsumerWidget {
     final textTheme = theme.textTheme;
     final colorTheme = theme.colorScheme;
     final intensityColorScheme = ref.watch(intensityColorProvider);
-    ref.watch(timeTickerProvider(const Duration(seconds: 1)));
+    ref.watch(timeTickerProvider());
 
     if (eew.isCanceled) {
       return BorderedContainer(
@@ -100,12 +100,12 @@ class EewWidget extends ConsumerWidget {
     final position = positionAsync.value;
     final regionItem = position != null
         ? ref
-            .watch(
-              jmaMapAreaForecastLocalEewInsideProvider(
-                lat_lng.LatLng(position.latitude, position.longitude),
-              ),
-            )
-            .value
+              .watch(
+                jmaMapAreaForecastLocalEewInsideProvider(
+                  lat_lng.LatLng(position.latitude, position.longitude),
+                ),
+              )
+              .value
         : null;
 
     final regionCode = regionItem?.property.code;
@@ -140,8 +140,7 @@ class EewWidget extends ConsumerWidget {
 
     final hypocenter = eew.hypocenter;
     final hypoLabel = eew.isPlum ? '検知観測点' : '震源地';
-    final timeLabel =
-        (eew.originTime == null || eew.isPlum) ? '地震検知' : '地震発生';
+    final timeLabel = (eew.originTime == null || eew.isPlum) ? '地震検知' : '地震発生';
     final localHappened = happenedTime.toLocal();
 
     final maxIntensityWidget = Column(
@@ -155,7 +154,7 @@ class EewWidget extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 2),
-        JmaForecastIntensityWidget(size: 50, intensity: maxIntensity),
+        JmaForecastIntensityWidget(intensity: maxIntensity),
       ],
     );
 
@@ -258,7 +257,6 @@ class EewWidget extends ConsumerWidget {
           ),
           const SizedBox(height: 2),
           JmaForecastIntensityWidget(
-            size: 50,
             intensity: localForecastIntensity,
           ),
         ],
@@ -295,9 +293,11 @@ class EewWidget extends ConsumerWidget {
                 child: _EewStripePattern(isWarning: isWarning),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Column(
@@ -335,15 +335,14 @@ class EewWidget extends ConsumerWidget {
                 ),
               ),
             ],
-          )
-              .decorated(
-                decoration: BoxDecoration(
-                  color: headerBg,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                ),
+          ).decorated(
+            decoration: BoxDecoration(
+              color: headerBg,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
               ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
             child: Column(
@@ -467,9 +466,9 @@ Widget _eewSecondaryLabel(BuildContext context, String text) {
   return Text(
     text,
     style: Theme.of(context).textTheme.labelSmall!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: color,
-        ),
+      fontWeight: FontWeight.bold,
+      color: color,
+    ),
   );
 }
 
@@ -710,8 +709,7 @@ class _StripePainter extends CustomPainter {
         ..lineTo(x + h + stripeWidth, 0)
         ..lineTo(x + h, 0)
         ..close();
-      final colorIndex =
-          ((x + h) / stripeWidth).floor().abs() % colors.length;
+      final colorIndex = ((x + h) / stripeWidth).floor().abs() % colors.length;
       final paint = Paint()..color = colors[colorIndex];
       canvas.drawPath(path, paint);
       x += stripeWidth;
