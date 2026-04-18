@@ -10,17 +10,17 @@ part of 'sse_connection_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+/// eqmonitor-backend `GET /v2/realtime/stream`（`api/api/src/features/realtime/routes/realtime.ts`）:
 /// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
 
 @ProviderFor(SseConnection)
 final sseConnectionProvider = SseConnectionProvider._();
 
-/// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+/// eqmonitor-backend `GET /v2/realtime/stream`（`api/api/src/features/realtime/routes/realtime.ts`）:
 /// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
 final class SseConnectionProvider
     extends $StreamNotifierProvider<SseConnection, Map<String, dynamic>> {
-  /// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+  /// eqmonitor-backend `GET /v2/realtime/stream`（`api/api/src/features/realtime/routes/realtime.ts`）:
   /// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
   SseConnectionProvider._()
     : super(
@@ -43,7 +43,7 @@ final class SseConnectionProvider
 
 String _$sseConnectionHash() => r'93b05c0c45f1630b9411b5fa088be4048679b8cb';
 
-/// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+/// eqmonitor-backend `GET /v2/realtime/stream`（`api/api/src/features/realtime/routes/realtime.ts`）:
 /// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
 
 abstract class _$SseConnection extends $StreamNotifier<Map<String, dynamic>> {
