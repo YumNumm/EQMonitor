@@ -574,11 +574,17 @@ jobs:
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
-          # Google Play のリリースノートは言語あたり最大500文字
-          head -c 500 changelog.tmp > changelog.txt
-          if [ "$(wc -c < changelog.tmp)" -gt 500 ]; then
-            echo '...' >> changelog.txt
-          fi
+          # Google Play API は言語ごとに最大500文字（Unicode）。バイト単位の head では超過し得るため文字数で切る
+          python3 << 'PY'
+          from pathlib import Path
+
+          text = Path("changelog.tmp").read_text(encoding="utf-8")
+          max_len = 500
+          if len(text) > max_len:
+              text = text[: max_len - 3] + "..."
+          Path("changelog.txt").write_text(text, encoding="utf-8")
+          print(f"release notes length (chars): {len(text)}")
+          PY
 
       - name: Generate release notes JSON
         run: |
