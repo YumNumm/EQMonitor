@@ -297,6 +297,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugKyoshinMonitorRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'eew-card',
+          factory: $DebugEewCardRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'jma-map',
           factory: $DebugJmaMapRoute._fromState,
         ),
@@ -658,6 +662,27 @@ mixin $DebugKyoshinMonitorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugEewCardRoute on GoRouteData {
+  static DebugEewCardRoute _fromState(GoRouterState state) =>
+      const DebugEewCardRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/eew-card');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugJmaMapRoute on GoRouteData {
   static DebugJmaMapRoute _fromState(GoRouterState state) =>
       const DebugJmaMapRoute();
@@ -934,4 +959,5 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'3888af6622fff60a0b0e8a0dc2c86bfa0efc4f30';
+String _$goRouterHash() =>
+    r'8388be299f4f8d3a624b48ffc2e456d4d592f3e6';

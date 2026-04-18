@@ -101,6 +101,15 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const DebugKyoshinMonitorRoute().push(context),
           ),
           ListTile(
+            title: const Text('EEW Card'),
+            subtitle: Text(
+              'ホームと同じカードの見た目をパラメータ検証',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.flash_on),
+            onTap: () async => const DebugEewCardRoute().push(context),
+          ),
+          ListTile(
             title: const Text('JmaMap'),
             leading: const Icon(Icons.map),
             onTap: () async => const DebugJmaMapRoute().push(context),

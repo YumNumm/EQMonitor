@@ -22,6 +22,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/privacy_pol
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
@@ -190,6 +191,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
           path: 'api-endpoint-selector',
         ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
+        TypedGoRoute<DebugEewCardRoute>(path: 'eew-card'),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<DebugSseRoute>(path: 'sse'),
@@ -328,6 +330,15 @@ class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const KyoshinMonitorAboutObservationNetworkPage();
+  }
+}
+
+class DebugEewCardRoute extends GoRouteData with $DebugEewCardRoute {
+  const DebugEewCardRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugEewCardPage();
   }
 }
 
