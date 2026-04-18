@@ -17,10 +17,10 @@ abstract class Environment with _$Environment {
     required String commitInformation,
     required Flavor flavor,
     required String wsApiUrl,
-    required String betterAuthUrl,
     required String googleIosClientId,
     required String googleAndroidClientId,
   }) = _Environment;
+  
   const Environment._();
 
   factory Environment.fromJson(Map<String, dynamic> json) =>
@@ -35,7 +35,6 @@ abstract class Environment with _$Environment {
       const String.fromEnvironment('FLAVOR'),
     ),
     wsApiUrl: const String.fromEnvironment('WS_API_URL'),
-    betterAuthUrl: const String.fromEnvironment('BETTER_AUTH_URL'),
     googleIosClientId: const String.fromEnvironment('GOOGLE_IOS_CLIENT_ID'),
     googleAndroidClientId: const String.fromEnvironment(
       'GOOGLE_ANDROID_CLIENT_ID',

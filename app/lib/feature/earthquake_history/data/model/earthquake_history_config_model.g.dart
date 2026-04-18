@@ -39,15 +39,43 @@ _EarthquakeHistoryListConfig _$EarthquakeHistoryListConfigFromJson(
         'is_fill_background',
         (v) => v as bool? ?? true,
       ),
+      designatedRegionSearchType: $checkedConvert(
+        'designated_region_search_type',
+        (v) => $enumDecodeNullable(_$RegionSearchTypeEnumMap, v),
+      ),
+      designatedRegionCode: $checkedConvert(
+        'designated_region_code',
+        (v) => v as String?,
+      ),
+      designatedRegionName: $checkedConvert(
+        'designated_region_name',
+        (v) => v as String?,
+      ),
     );
     return val;
   },
-  fieldKeyMap: const {'isFillBackground': 'is_fill_background'},
+  fieldKeyMap: const {
+    'isFillBackground': 'is_fill_background',
+    'designatedRegionSearchType': 'designated_region_search_type',
+    'designatedRegionCode': 'designated_region_code',
+    'designatedRegionName': 'designated_region_name',
+  },
 );
 
 Map<String, dynamic> _$EarthquakeHistoryListConfigToJson(
   _EarthquakeHistoryListConfig instance,
-) => <String, dynamic>{'is_fill_background': instance.isFillBackground};
+) => <String, dynamic>{
+  'is_fill_background': instance.isFillBackground,
+  'designated_region_search_type':
+      _$RegionSearchTypeEnumMap[instance.designatedRegionSearchType],
+  'designated_region_code': instance.designatedRegionCode,
+  'designated_region_name': instance.designatedRegionName,
+};
+
+const _$RegionSearchTypeEnumMap = {
+  RegionSearchType.prefecture: 'prefecture',
+  RegionSearchType.city: 'city',
+};
 
 _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
   Map<String, dynamic> json,

@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$HomeConfigurationModel {
 
 /// 位置情報を表示するかどうか
- bool get showLocation;
+ bool get showLocation;/// ホーム地震履歴の表示スコープ
+ HomeEarthquakeHistoryScope get earthquakeHistoryScope;
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +30,16 @@ $HomeConfigurationModelCopyWith<HomeConfigurationModel> get copyWith => _$HomeCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeConfigurationModel&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeConfigurationModel&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation)&&(identical(other.earthquakeHistoryScope, earthquakeHistoryScope) || other.earthquakeHistoryScope == earthquakeHistoryScope));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,showLocation);
+int get hashCode => Object.hash(runtimeType,showLocation,earthquakeHistoryScope);
 
 @override
 String toString() {
-  return 'HomeConfigurationModel(showLocation: $showLocation)';
+  return 'HomeConfigurationModel(showLocation: $showLocation, earthquakeHistoryScope: $earthquakeHistoryScope)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $HomeConfigurationModelCopyWith<$Res>  {
   factory $HomeConfigurationModelCopyWith(HomeConfigurationModel value, $Res Function(HomeConfigurationModel) _then) = _$HomeConfigurationModelCopyWithImpl;
 @useResult
 $Res call({
- bool showLocation
+ bool showLocation, HomeEarthquakeHistoryScope earthquakeHistoryScope
 });
 
 
@@ -66,10 +67,11 @@ class _$HomeConfigurationModelCopyWithImpl<$Res>
 
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? showLocation = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? showLocation = null,Object? earthquakeHistoryScope = null,}) {
   return _then(_self.copyWith(
 showLocation: null == showLocation ? _self.showLocation : showLocation // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,earthquakeHistoryScope: null == earthquakeHistoryScope ? _self.earthquakeHistoryScope : earthquakeHistoryScope // ignore: cast_nullable_to_non_nullable
+as HomeEarthquakeHistoryScope,
   ));
 }
 
@@ -154,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLocation)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel() when $default != null:
-return $default(_that.showLocation);case _:
+return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
   return orElse();
 
 }
@@ -175,10 +177,10 @@ return $default(_that.showLocation);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLocation)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope)  $default,) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel():
-return $default(_that.showLocation);case _:
+return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +197,10 @@ return $default(_that.showLocation);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLocation)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel() when $default != null:
-return $default(_that.showLocation);case _:
+return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
   return null;
 
 }
@@ -210,11 +212,13 @@ return $default(_that.showLocation);case _:
 @JsonSerializable()
 
 class _HomeConfigurationModel implements HomeConfigurationModel {
-  const _HomeConfigurationModel({this.showLocation = false});
+  const _HomeConfigurationModel({this.showLocation = false, this.earthquakeHistoryScope = HomeEarthquakeHistoryScope.nationwide});
   factory _HomeConfigurationModel.fromJson(Map<String, dynamic> json) => _$HomeConfigurationModelFromJson(json);
 
 /// 位置情報を表示するかどうか
 @override@JsonKey() final  bool showLocation;
+/// ホーム地震履歴の表示スコープ
+@override@JsonKey() final  HomeEarthquakeHistoryScope earthquakeHistoryScope;
 
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeConfigurationModel&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeConfigurationModel&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation)&&(identical(other.earthquakeHistoryScope, earthquakeHistoryScope) || other.earthquakeHistoryScope == earthquakeHistoryScope));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,showLocation);
+int get hashCode => Object.hash(runtimeType,showLocation,earthquakeHistoryScope);
 
 @override
 String toString() {
-  return 'HomeConfigurationModel(showLocation: $showLocation)';
+  return 'HomeConfigurationModel(showLocation: $showLocation, earthquakeHistoryScope: $earthquakeHistoryScope)';
 }
 
 
@@ -249,7 +253,7 @@ abstract mixin class _$HomeConfigurationModelCopyWith<$Res> implements $HomeConf
   factory _$HomeConfigurationModelCopyWith(_HomeConfigurationModel value, $Res Function(_HomeConfigurationModel) _then) = __$HomeConfigurationModelCopyWithImpl;
 @override @useResult
 $Res call({
- bool showLocation
+ bool showLocation, HomeEarthquakeHistoryScope earthquakeHistoryScope
 });
 
 
@@ -266,10 +270,11 @@ class __$HomeConfigurationModelCopyWithImpl<$Res>
 
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? showLocation = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? showLocation = null,Object? earthquakeHistoryScope = null,}) {
   return _then(_HomeConfigurationModel(
 showLocation: null == showLocation ? _self.showLocation : showLocation // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,earthquakeHistoryScope: null == earthquakeHistoryScope ? _self.earthquakeHistoryScope : earthquakeHistoryScope // ignore: cast_nullable_to_non_nullable
+as HomeEarthquakeHistoryScope,
   ));
 }
 

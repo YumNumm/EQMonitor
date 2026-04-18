@@ -318,7 +318,8 @@ $EarthquakeHistoryDetailConfigCopyWith<$Res> get detail {
 mixin _$EarthquakeHistoryListConfig {
 
 /// 背景塗りつぶしの有無
- bool get isFillBackground;
+ bool get isFillBackground;/// ホーム「指定地域」用。将来の地域選択UIから設定
+ RegionSearchType? get designatedRegionSearchType; String? get designatedRegionCode; String? get designatedRegionName;
 /// Create a copy of EarthquakeHistoryListConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -331,16 +332,16 @@ $EarthquakeHistoryListConfigCopyWith<EarthquakeHistoryListConfig> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryListConfig&&(identical(other.isFillBackground, isFillBackground) || other.isFillBackground == isFillBackground));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryListConfig&&(identical(other.isFillBackground, isFillBackground) || other.isFillBackground == isFillBackground)&&(identical(other.designatedRegionSearchType, designatedRegionSearchType) || other.designatedRegionSearchType == designatedRegionSearchType)&&(identical(other.designatedRegionCode, designatedRegionCode) || other.designatedRegionCode == designatedRegionCode)&&(identical(other.designatedRegionName, designatedRegionName) || other.designatedRegionName == designatedRegionName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isFillBackground);
+int get hashCode => Object.hash(runtimeType,isFillBackground,designatedRegionSearchType,designatedRegionCode,designatedRegionName);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryListConfig(isFillBackground: $isFillBackground)';
+  return 'EarthquakeHistoryListConfig(isFillBackground: $isFillBackground, designatedRegionSearchType: $designatedRegionSearchType, designatedRegionCode: $designatedRegionCode, designatedRegionName: $designatedRegionName)';
 }
 
 
@@ -351,7 +352,7 @@ abstract mixin class $EarthquakeHistoryListConfigCopyWith<$Res>  {
   factory $EarthquakeHistoryListConfigCopyWith(EarthquakeHistoryListConfig value, $Res Function(EarthquakeHistoryListConfig) _then) = _$EarthquakeHistoryListConfigCopyWithImpl;
 @useResult
 $Res call({
- bool isFillBackground
+ bool isFillBackground, RegionSearchType? designatedRegionSearchType, String? designatedRegionCode, String? designatedRegionName
 });
 
 
@@ -368,10 +369,13 @@ class _$EarthquakeHistoryListConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryListConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isFillBackground = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isFillBackground = null,Object? designatedRegionSearchType = freezed,Object? designatedRegionCode = freezed,Object? designatedRegionName = freezed,}) {
   return _then(_self.copyWith(
 isFillBackground: null == isFillBackground ? _self.isFillBackground : isFillBackground // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,designatedRegionSearchType: freezed == designatedRegionSearchType ? _self.designatedRegionSearchType : designatedRegionSearchType // ignore: cast_nullable_to_non_nullable
+as RegionSearchType?,designatedRegionCode: freezed == designatedRegionCode ? _self.designatedRegionCode : designatedRegionCode // ignore: cast_nullable_to_non_nullable
+as String?,designatedRegionName: freezed == designatedRegionName ? _self.designatedRegionName : designatedRegionName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -456,10 +460,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isFillBackground)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isFillBackground,  RegionSearchType? designatedRegionSearchType,  String? designatedRegionCode,  String? designatedRegionName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryListConfig() when $default != null:
-return $default(_that.isFillBackground);case _:
+return $default(_that.isFillBackground,_that.designatedRegionSearchType,_that.designatedRegionCode,_that.designatedRegionName);case _:
   return orElse();
 
 }
@@ -477,10 +481,10 @@ return $default(_that.isFillBackground);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isFillBackground)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isFillBackground,  RegionSearchType? designatedRegionSearchType,  String? designatedRegionCode,  String? designatedRegionName)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryListConfig():
-return $default(_that.isFillBackground);case _:
+return $default(_that.isFillBackground,_that.designatedRegionSearchType,_that.designatedRegionCode,_that.designatedRegionName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -497,10 +501,10 @@ return $default(_that.isFillBackground);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isFillBackground)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isFillBackground,  RegionSearchType? designatedRegionSearchType,  String? designatedRegionCode,  String? designatedRegionName)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryListConfig() when $default != null:
-return $default(_that.isFillBackground);case _:
+return $default(_that.isFillBackground,_that.designatedRegionSearchType,_that.designatedRegionCode,_that.designatedRegionName);case _:
   return null;
 
 }
@@ -512,11 +516,15 @@ return $default(_that.isFillBackground);case _:
 @JsonSerializable()
 
 class _EarthquakeHistoryListConfig implements EarthquakeHistoryListConfig {
-  const _EarthquakeHistoryListConfig({this.isFillBackground = true});
+  const _EarthquakeHistoryListConfig({this.isFillBackground = true, this.designatedRegionSearchType, this.designatedRegionCode, this.designatedRegionName});
   factory _EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryListConfigFromJson(json);
 
 /// 背景塗りつぶしの有無
 @override@JsonKey() final  bool isFillBackground;
+/// ホーム「指定地域」用。将来の地域選択UIから設定
+@override final  RegionSearchType? designatedRegionSearchType;
+@override final  String? designatedRegionCode;
+@override final  String? designatedRegionName;
 
 /// Create a copy of EarthquakeHistoryListConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -531,16 +539,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryListConfig&&(identical(other.isFillBackground, isFillBackground) || other.isFillBackground == isFillBackground));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryListConfig&&(identical(other.isFillBackground, isFillBackground) || other.isFillBackground == isFillBackground)&&(identical(other.designatedRegionSearchType, designatedRegionSearchType) || other.designatedRegionSearchType == designatedRegionSearchType)&&(identical(other.designatedRegionCode, designatedRegionCode) || other.designatedRegionCode == designatedRegionCode)&&(identical(other.designatedRegionName, designatedRegionName) || other.designatedRegionName == designatedRegionName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isFillBackground);
+int get hashCode => Object.hash(runtimeType,isFillBackground,designatedRegionSearchType,designatedRegionCode,designatedRegionName);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryListConfig(isFillBackground: $isFillBackground)';
+  return 'EarthquakeHistoryListConfig(isFillBackground: $isFillBackground, designatedRegionSearchType: $designatedRegionSearchType, designatedRegionCode: $designatedRegionCode, designatedRegionName: $designatedRegionName)';
 }
 
 
@@ -551,7 +559,7 @@ abstract mixin class _$EarthquakeHistoryListConfigCopyWith<$Res> implements $Ear
   factory _$EarthquakeHistoryListConfigCopyWith(_EarthquakeHistoryListConfig value, $Res Function(_EarthquakeHistoryListConfig) _then) = __$EarthquakeHistoryListConfigCopyWithImpl;
 @override @useResult
 $Res call({
- bool isFillBackground
+ bool isFillBackground, RegionSearchType? designatedRegionSearchType, String? designatedRegionCode, String? designatedRegionName
 });
 
 
@@ -568,10 +576,13 @@ class __$EarthquakeHistoryListConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryListConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isFillBackground = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isFillBackground = null,Object? designatedRegionSearchType = freezed,Object? designatedRegionCode = freezed,Object? designatedRegionName = freezed,}) {
   return _then(_EarthquakeHistoryListConfig(
 isFillBackground: null == isFillBackground ? _self.isFillBackground : isFillBackground // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,designatedRegionSearchType: freezed == designatedRegionSearchType ? _self.designatedRegionSearchType : designatedRegionSearchType // ignore: cast_nullable_to_non_nullable
+as RegionSearchType?,designatedRegionCode: freezed == designatedRegionCode ? _self.designatedRegionCode : designatedRegionCode // ignore: cast_nullable_to_non_nullable
+as String?,designatedRegionName: freezed == designatedRegionName ? _self.designatedRegionName : designatedRegionName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

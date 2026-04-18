@@ -11,7 +11,6 @@ part of 'router.dart';
 List<RouteBase> get $appRoutes => [
   $splashRoute,
   $earthquakeHistoryRoute,
-  $earthquakeSearchSelectionRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
   $telegramListByEventIdRoute,
@@ -54,32 +53,6 @@ mixin $EarthquakeHistoryRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/earthquake-history');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $earthquakeSearchSelectionRoute => GoRouteData.$route(
-  path: '/earthquake-search',
-  factory: $EarthquakeSearchSelectionRoute._fromState,
-);
-
-mixin $EarthquakeSearchSelectionRoute on GoRouteData {
-  static EarthquakeSearchSelectionRoute _fromState(GoRouterState state) =>
-      const EarthquakeSearchSelectionRoute();
-
-  @override
-  String get location => GoRouteData.$location('/earthquake-search');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -331,6 +304,7 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'playground',
           factory: $PlaygroundRoute._fromState,
         ),
+        GoRouteData.$route(path: 'sse', factory: $DebugSseRoute._fromState),
         GoRouteData.$route(
           path: 'device-settings',
           factory: $DebugDeviceSettingsRoute._fromState,
@@ -711,6 +685,26 @@ mixin $PlaygroundRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/playground');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugSseRoute on GoRouteData {
+  static DebugSseRoute _fromState(GoRouterState state) => const DebugSseRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/sse');
 
   @override
   void go(BuildContext context) => context.go(location);

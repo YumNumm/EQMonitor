@@ -22,7 +22,6 @@ _Environment _$EnvironmentFromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       flavor: $checkedConvert('flavor', (v) => $enumDecode(_$FlavorEnumMap, v)),
       wsApiUrl: $checkedConvert('ws_api_url', (v) => v as String),
-      betterAuthUrl: $checkedConvert('better_auth_url', (v) => v as String),
       googleIosClientId: $checkedConvert(
         'google_ios_client_id',
         (v) => v as String,
@@ -40,7 +39,6 @@ _Environment _$EnvironmentFromJson(Map<String, dynamic> json) => $checkedCreate(
     'appName': 'app_name',
     'commitInformation': 'commit_information',
     'wsApiUrl': 'ws_api_url',
-    'betterAuthUrl': 'better_auth_url',
     'googleIosClientId': 'google_ios_client_id',
     'googleAndroidClientId': 'google_android_client_id',
   },
@@ -54,7 +52,6 @@ Map<String, dynamic> _$EnvironmentToJson(_Environment instance) =>
       'commit_information': instance.commitInformation,
       'flavor': _$FlavorEnumMap[instance.flavor]!,
       'ws_api_url': instance.wsApiUrl,
-      'better_auth_url': instance.betterAuthUrl,
       'google_ios_client_id': instance.googleIosClientId,
       'google_android_client_id': instance.googleAndroidClientId,
     };

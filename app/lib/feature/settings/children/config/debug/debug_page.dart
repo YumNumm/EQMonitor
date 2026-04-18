@@ -90,6 +90,12 @@ class _DebugWidget extends ConsumerWidget {
                 const HttpApiEndpointSelectorRoute().push<void>(context),
           ),
           ListTile(
+            title: const Text('SSE'),
+            leading: const Icon(Icons.stream),
+            subtitle: const Text('/v2/realtime/stream の受信ログ'),
+            onTap: () async => const DebugSseRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('KyoshinMonitor'),
             leading: const Icon(Icons.list),
             onTap: () async => const DebugKyoshinMonitorRoute().push(context),

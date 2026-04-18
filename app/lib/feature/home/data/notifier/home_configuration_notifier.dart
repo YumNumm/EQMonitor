@@ -38,4 +38,11 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
       value: jsonEncode(configuration.toJson()),
     );
   }
+
+  Future<void> setEarthquakeHistoryScope(
+    HomeEarthquakeHistoryScope scope,
+  ) async {
+    final current = await future;
+    await save(current.copyWith(earthquakeHistoryScope: scope));
+  }
 }

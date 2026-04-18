@@ -1,0 +1,57 @@
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
+import 'package:lat_lng/lat_lng.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'home_earthquake_history_parameter_provider.g.dart';
+
+/// ホーム地震履歴カード用の検索パラメータ。
+/// 現在地・指定地域が未設定のときは `null`。
+@riverpod
+Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
+  Ref ref,
+) async {
+  final home = await ref.watch(homeConfigurationProvider.future);
+  switch (home.earthquakeHistoryScope) {
+    case HomeEarthquakeHistoryScope.nationwide:
+      return const EarthquakeHistoryParameter();
+    case HomeEarthquakeHistoryScope.currentLocation:
+      final posAsync = ref.watch(locationStreamProvider);
+      final pos = switch (posAsync) {
+        AsyncData(:final value) => value,
+        _ => null,
+      };
+      if (pos == null) {
+        return null;
+      }
+      final latLng = LatLng(pos.latitude, pos.longitude);
+      final city = await ref.watch(
+        jmaMapAreaInformationCityInsideProvider(latLng).future,
+      );
+      if (city == null) {
+        return null;
+      }
+      return EarthquakeHistoryParameter(
+        regionSearchType: RegionSearchType.city,
+        regionCode: city.property.code,
+        regionName: city.property.hasName() ? city.property.name : null,
+      );
+    case HomeEarthquakeHistoryScope.designatedRegion:
+      final cfg = await ref.watch(earthquakeHistoryConfigProvider.future);
+      final list = cfg.list;
+      final t = list.designatedRegionSearchType;
+      final c = list.designatedRegionCode;
+      if (t == null || c == null) {
+        return null;
+      }
+      return EarthquakeHistoryParameter(
+        regionSearchType: t,
+        regionCode: c,
+        regionName: list.designatedRegionName,
+      );
+  }
+}

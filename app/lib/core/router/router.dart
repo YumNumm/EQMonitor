@@ -8,7 +8,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.
 import 'package:eqmonitor/feature/earthquake_replay/ui/earthquake_replay_page.dart';
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
-import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_selection_page.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
@@ -26,6 +25,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/sse/debug_sse_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
@@ -78,16 +78,6 @@ class EarthquakeHistoryRoute extends GoRouteData with $EarthquakeHistoryRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeHistoryPage();
-}
-
-@TypedGoRoute<EarthquakeSearchSelectionRoute>(path: '/earthquake-search')
-class EarthquakeSearchSelectionRoute extends GoRouteData
-    with $EarthquakeSearchSelectionRoute {
-  const EarthquakeSearchSelectionRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeSearchSelectionPage();
 }
 
 @TypedGoRoute<EarthquakeSearchResultRoute>(
@@ -202,6 +192,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
+        TypedGoRoute<DebugSseRoute>(path: 'sse'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
         TypedGoRoute<NiedRoute>(
@@ -365,6 +356,15 @@ class PlaygroundRoute extends GoRouteData with $PlaygroundRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const PlaygroundPage();
+  }
+}
+
+class DebugSseRoute extends GoRouteData with $DebugSseRoute {
+  const DebugSseRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugSsePage();
   }
 }
 

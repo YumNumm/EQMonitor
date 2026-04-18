@@ -46,7 +46,9 @@ class SseConnection extends _$SseConnection {
     yield* controller.stream;
   }
 
-  Future<void> _connect(StreamController<Map<String, dynamic>> controller) async {
+  Future<void> _connect(
+    StreamController<Map<String, dynamic>> controller,
+  ) async {
     _cancelToken = CancelToken();
     try {
       final dio = await ref.read(dioProvider.future);
@@ -139,10 +141,6 @@ class SseConnection extends _$SseConnection {
     } on FormatException catch (e) {
       talker.warning('SSE: invalid JSON: $e');
     }
-  }
-
-  void emit(Map<String, dynamic> data) {
-    // SSE はサーバーからの一方向通信
   }
 }
 

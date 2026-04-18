@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_config_model.freezed.dart';
@@ -19,6 +20,11 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
   const factory EarthquakeHistoryListConfig({
     /// 背景塗りつぶしの有無
     @Default(true) bool isFillBackground,
+
+    /// ホーム「指定地域」用。将来の地域選択UIから設定
+    RegionSearchType? designatedRegionSearchType,
+    String? designatedRegionCode,
+    String? designatedRegionName,
   }) = _EarthquakeHistoryListConfig;
 
   factory EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) =>

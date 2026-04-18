@@ -14,7 +14,7 @@ auth_api.ApiClient authApiClient(Ref ref) {
   final env = ref.watch(environmentProvider);
   final dio = Dio(
     BaseOptions(
-      baseUrl: env.betterAuthUrl,
+      baseUrl: env.restApiUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       followRedirects: true,
