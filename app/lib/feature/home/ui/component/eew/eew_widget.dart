@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -15,7 +16,6 @@ import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -97,15 +97,15 @@ class EewWidget extends ConsumerWidget {
 
     final positionAsync = ref.watch(locationStreamProvider);
     final travelTimeAsync = ref.watch(travelTimeProvider);
-    final position = positionAsync.valueOrNull;
+    final position = positionAsync.value;
     final regionItem = position != null
         ? ref
             .watch(
               jmaMapAreaForecastLocalEewInsideProvider(
-                lat_lng.LatLng(lat: position.latitude, lon: position.longitude),
+                lat_lng.LatLng(position.latitude, position.longitude),
               ),
             )
-            .valueOrNull
+            .value
         : null;
 
     final regionCode = regionItem?.property.code;

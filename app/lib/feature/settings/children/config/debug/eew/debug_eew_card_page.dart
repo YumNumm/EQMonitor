@@ -254,7 +254,7 @@ class DebugEewCardPage extends HookConsumerWidget {
                         d.day,
                         t.hour,
                         t.minute,
-                        t.second,
+                        base.second,
                       );
                     },
                     child: Text(
