@@ -178,7 +178,7 @@ class _DeviceSettingsSliverList extends ConsumerWidget {
               ),
               _KeyValueRow(
                 label: 'ユーザー',
-                value: snapshot.device.userId,
+                value: snapshot.device.userId ?? '未登録',
               ),
               _KeyValueRow(
                 label: '種別',
