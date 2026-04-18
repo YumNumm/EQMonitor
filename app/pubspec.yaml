@@ -23,6 +23,7 @@ dependencies:
   core:
     path: ../packages/core
   crypto: ^3.0.6
+  cue: ^0.1.4
   dart_azarashi:
     path: ../packages/dart_azarashi
   device_info_plus: ^12.1.0
