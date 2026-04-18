@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_parser_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
-import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_notifier.g.dart';
@@ -65,13 +63,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     state = const AsyncLoading<KyoshinMonitorState>();
     state = await AsyncValue.guard(() async {
       final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
-      final imageParser = ref.read(kyoshinMonitorImageParserProvider);
-      final points = await ref.read(
-        kyoshinMonitorObservationPointsProvider.future,
-      );
-      final observationPoints = await ref.read(
-        kyoshinObservationPointsProvider.future,
-      );
+      final analyzer = await ref.read(kyoshinMonitorAnalyzerIsolateProvider.future);
       // 画像を取得
       final realtimeDataType = ref
           .read(kyoshinMonitorSettingsProvider)
@@ -94,43 +86,21 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       );
       fetchSw.stop();
 
-      // 画像を解析
-      final parseSw = Stopwatch()..start();
-      final result = await Timeline.timeSync(
-        'kmoni.parseGif',
-        () async => imageParser.parseGif(
-          gifImage: image,
-          points: points,
-        ),
+      final workerSw = Stopwatch()..start();
+      final workerResult = await Timeline.timeSync(
+        'kmoni.workerAnalyze',
+        () async => analyzer.analyze(Uint8List.fromList(image)),
       );
-      parseSw.stop();
-
-      final mapSw = Stopwatch()..start();
-      final results = Timeline.timeSync('kmoni.mapResults', () {
-        return result
-            .mapIndexed((index, element) {
-              final point = observationPoints.points[index];
-              return switch (element) {
-                KyoshinMonitorImageParseObservationSuccess() =>
-                  KyoshinMonitorImageParseObservationPoint(
-                    point: point,
-                    observation: element.point,
-                  ),
-                KyoshinMonitorImageParseObservationFailure() => null,
-              };
-            })
-            .nonNulls
-            .toList();
-      });
-      mapSw.stop();
+      workerSw.stop();
 
       talker.logCustom(
         KyoshinMonitorLog(
           '[perf] fetch=${fetchSw.elapsedMilliseconds}ms '
-          'parseGif=${parseSw.elapsedMilliseconds}ms '
-          'map=${mapSw.elapsedMilliseconds}ms '
+          'workerAnalyze=${workerSw.elapsedMilliseconds}ms '
+          'parseMicros=${workerResult.parseMicros} '
+          'geoBuildMicros=${workerResult.geoJsonBuildMicros} '
           'total=${stopwatch.elapsedMilliseconds}ms '
-          'points=${results.length} imageBytes=${image.length}',
+          'features=${workerResult.featureCount} imageBytes=${image.length}',
         ),
       );
 
@@ -142,7 +112,8 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
             : KyoshinMonitorStatus.realtime,
         currentRealtimeDataType: realtimeDataType,
         currentRealtimeLayer: realtimeLayer,
-        analyzedPoints: results,
+        geoJson: workerResult.geoJson,
+        analyzedPointsCount: workerResult.featureCount,
         lastImageFetchDuration: stopwatch.elapsed,
         currentImageRaw: image,
       );

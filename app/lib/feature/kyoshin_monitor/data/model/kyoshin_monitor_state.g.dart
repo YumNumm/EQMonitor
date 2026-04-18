@@ -41,15 +41,10 @@ _KyoshinMonitorState _$KyoshinMonitorStateFromJson(Map<String, dynamic> json) =>
             (v) =>
                 v == null ? null : Duration(microseconds: (v as num).toInt()),
           ),
-          analyzedPoints: $checkedConvert(
-            'analyzed_points',
-            (v) => (v as List<dynamic>?)
-                ?.map(
-                  (e) => KyoshinMonitorImageParseObservationPoint.fromJson(
-                    e as Map<String, dynamic>,
-                  ),
-                )
-                .toList(),
+          geoJson: $checkedConvert('geo_json', (v) => v as String?),
+          analyzedPointsCount: $checkedConvert(
+            'analyzed_points_count',
+            (v) => (v as num?)?.toInt(),
           ),
           currentImageRaw: $checkedConvert(
             'current_image_raw',
@@ -65,7 +60,8 @@ _KyoshinMonitorState _$KyoshinMonitorStateFromJson(Map<String, dynamic> json) =>
         'lastUpdatedAt': 'last_updated_at',
         'lastImageFetchTargetTime': 'last_image_fetch_target_time',
         'lastImageFetchDuration': 'last_image_fetch_duration',
-        'analyzedPoints': 'analyzed_points',
+        'geoJson': 'geo_json',
+        'analyzedPointsCount': 'analyzed_points_count',
         'currentImageRaw': 'current_image_raw',
       },
     );
@@ -82,7 +78,8 @@ Map<String, dynamic> _$KyoshinMonitorStateToJson(
   'last_image_fetch_target_time': instance.lastImageFetchTargetTime
       ?.toIso8601String(),
   'last_image_fetch_duration': instance.lastImageFetchDuration?.inMicroseconds,
-  'analyzed_points': instance.analyzedPoints,
+  'geo_json': instance.geoJson,
+  'analyzed_points_count': instance.analyzedPointsCount,
   'current_image_raw': instance.currentImageRaw,
 };
 
@@ -118,31 +115,4 @@ const _$KyoshinMonitorStatusEnumMap = {
   KyoshinMonitorStatus.playback: 'playback',
   KyoshinMonitorStatus.stopped: 'stopped',
   KyoshinMonitorStatus.initializing: 'initializing',
-};
-
-_KyoshinMonitorImageParseObservationPoint
-_$KyoshinMonitorImageParseObservationPointFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('_KyoshinMonitorImageParseObservationPoint', json, (
-      $checkedConvert,
-    ) {
-      final val = _KyoshinMonitorImageParseObservationPoint(
-        point: $checkedConvert(
-          'point',
-          (v) => _kyoshinObservationPointFromJson(v as Map<String, dynamic>),
-        ),
-        observation: $checkedConvert(
-          'observation',
-          (v) => KyoshinMonitorObservationAnalyzedPoint.fromJson(
-            v as Map<String, dynamic>,
-          ),
-        ),
-      );
-      return val;
-    });
-
-Map<String, dynamic> _$KyoshinMonitorImageParseObservationPointToJson(
-  _KyoshinMonitorImageParseObservationPoint instance,
-) => <String, dynamic>{
-  'point': _kyoshinObservationPointToJson(instance.point),
-  'observation': instance.observation,
 };

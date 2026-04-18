@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$KyoshinMonitorState {
 
- RealtimeDataType? get currentRealtimeDataType; RealtimeLayer? get currentRealtimeLayer; KyoshinMonitorStatus get status; DateTime? get lastUpdatedAt; DateTime? get lastImageFetchTargetTime; Duration? get lastImageFetchDuration; List<KyoshinMonitorImageParseObservationPoint>? get analyzedPoints; List<int>? get currentImageRaw;
+ RealtimeDataType? get currentRealtimeDataType; RealtimeLayer? get currentRealtimeLayer; KyoshinMonitorStatus get status; DateTime? get lastUpdatedAt; DateTime? get lastImageFetchTargetTime; Duration? get lastImageFetchDuration;/// Worker Isolate で生成した GeoJSON 文字列（観測点レイヤー用）
+ String? get geoJson;/// [geoJson] に含まれる観測点 Feature 数
+ int? get analyzedPointsCount; List<int>? get currentImageRaw;
 /// Create a copy of KyoshinMonitorState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +30,16 @@ $KyoshinMonitorStateCopyWith<KyoshinMonitorState> get copyWith => _$KyoshinMonit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorState&&(identical(other.currentRealtimeDataType, currentRealtimeDataType) || other.currentRealtimeDataType == currentRealtimeDataType)&&(identical(other.currentRealtimeLayer, currentRealtimeLayer) || other.currentRealtimeLayer == currentRealtimeLayer)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastUpdatedAt, lastUpdatedAt) || other.lastUpdatedAt == lastUpdatedAt)&&(identical(other.lastImageFetchTargetTime, lastImageFetchTargetTime) || other.lastImageFetchTargetTime == lastImageFetchTargetTime)&&(identical(other.lastImageFetchDuration, lastImageFetchDuration) || other.lastImageFetchDuration == lastImageFetchDuration)&&const DeepCollectionEquality().equals(other.analyzedPoints, analyzedPoints)&&const DeepCollectionEquality().equals(other.currentImageRaw, currentImageRaw));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorState&&(identical(other.currentRealtimeDataType, currentRealtimeDataType) || other.currentRealtimeDataType == currentRealtimeDataType)&&(identical(other.currentRealtimeLayer, currentRealtimeLayer) || other.currentRealtimeLayer == currentRealtimeLayer)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastUpdatedAt, lastUpdatedAt) || other.lastUpdatedAt == lastUpdatedAt)&&(identical(other.lastImageFetchTargetTime, lastImageFetchTargetTime) || other.lastImageFetchTargetTime == lastImageFetchTargetTime)&&(identical(other.lastImageFetchDuration, lastImageFetchDuration) || other.lastImageFetchDuration == lastImageFetchDuration)&&(identical(other.geoJson, geoJson) || other.geoJson == geoJson)&&(identical(other.analyzedPointsCount, analyzedPointsCount) || other.analyzedPointsCount == analyzedPointsCount)&&const DeepCollectionEquality().equals(other.currentImageRaw, currentImageRaw));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,currentRealtimeDataType,currentRealtimeLayer,status,lastUpdatedAt,lastImageFetchTargetTime,lastImageFetchDuration,const DeepCollectionEquality().hash(analyzedPoints),const DeepCollectionEquality().hash(currentImageRaw));
+int get hashCode => Object.hash(runtimeType,currentRealtimeDataType,currentRealtimeLayer,status,lastUpdatedAt,lastImageFetchTargetTime,lastImageFetchDuration,geoJson,analyzedPointsCount,const DeepCollectionEquality().hash(currentImageRaw));
 
 @override
 String toString() {
-  return 'KyoshinMonitorState(currentRealtimeDataType: $currentRealtimeDataType, currentRealtimeLayer: $currentRealtimeLayer, status: $status, lastUpdatedAt: $lastUpdatedAt, lastImageFetchTargetTime: $lastImageFetchTargetTime, lastImageFetchDuration: $lastImageFetchDuration, analyzedPoints: $analyzedPoints, currentImageRaw: $currentImageRaw)';
+  return 'KyoshinMonitorState(currentRealtimeDataType: $currentRealtimeDataType, currentRealtimeLayer: $currentRealtimeLayer, status: $status, lastUpdatedAt: $lastUpdatedAt, lastImageFetchTargetTime: $lastImageFetchTargetTime, lastImageFetchDuration: $lastImageFetchDuration, geoJson: $geoJson, analyzedPointsCount: $analyzedPointsCount, currentImageRaw: $currentImageRaw)';
 }
 
 
@@ -48,7 +50,7 @@ abstract mixin class $KyoshinMonitorStateCopyWith<$Res>  {
   factory $KyoshinMonitorStateCopyWith(KyoshinMonitorState value, $Res Function(KyoshinMonitorState) _then) = _$KyoshinMonitorStateCopyWithImpl;
 @useResult
 $Res call({
- RealtimeDataType? currentRealtimeDataType, RealtimeLayer? currentRealtimeLayer, KyoshinMonitorStatus status, DateTime? lastUpdatedAt, DateTime? lastImageFetchTargetTime, Duration? lastImageFetchDuration, List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints, List<int>? currentImageRaw
+ RealtimeDataType? currentRealtimeDataType, RealtimeLayer? currentRealtimeLayer, KyoshinMonitorStatus status, DateTime? lastUpdatedAt, DateTime? lastImageFetchTargetTime, Duration? lastImageFetchDuration, String? geoJson, int? analyzedPointsCount, List<int>? currentImageRaw
 });
 
 
@@ -65,7 +67,7 @@ class _$KyoshinMonitorStateCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? currentRealtimeDataType = freezed,Object? currentRealtimeLayer = freezed,Object? status = null,Object? lastUpdatedAt = freezed,Object? lastImageFetchTargetTime = freezed,Object? lastImageFetchDuration = freezed,Object? analyzedPoints = freezed,Object? currentImageRaw = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currentRealtimeDataType = freezed,Object? currentRealtimeLayer = freezed,Object? status = null,Object? lastUpdatedAt = freezed,Object? lastImageFetchTargetTime = freezed,Object? lastImageFetchDuration = freezed,Object? geoJson = freezed,Object? analyzedPointsCount = freezed,Object? currentImageRaw = freezed,}) {
   return _then(_self.copyWith(
 currentRealtimeDataType: freezed == currentRealtimeDataType ? _self.currentRealtimeDataType : currentRealtimeDataType // ignore: cast_nullable_to_non_nullable
 as RealtimeDataType?,currentRealtimeLayer: freezed == currentRealtimeLayer ? _self.currentRealtimeLayer : currentRealtimeLayer // ignore: cast_nullable_to_non_nullable
@@ -73,8 +75,9 @@ as RealtimeLayer?,status: null == status ? _self.status : status // ignore: cast
 as KyoshinMonitorStatus,lastUpdatedAt: freezed == lastUpdatedAt ? _self.lastUpdatedAt : lastUpdatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,lastImageFetchTargetTime: freezed == lastImageFetchTargetTime ? _self.lastImageFetchTargetTime : lastImageFetchTargetTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,lastImageFetchDuration: freezed == lastImageFetchDuration ? _self.lastImageFetchDuration : lastImageFetchDuration // ignore: cast_nullable_to_non_nullable
-as Duration?,analyzedPoints: freezed == analyzedPoints ? _self.analyzedPoints : analyzedPoints // ignore: cast_nullable_to_non_nullable
-as List<KyoshinMonitorImageParseObservationPoint>?,currentImageRaw: freezed == currentImageRaw ? _self.currentImageRaw : currentImageRaw // ignore: cast_nullable_to_non_nullable
+as Duration?,geoJson: freezed == geoJson ? _self.geoJson : geoJson // ignore: cast_nullable_to_non_nullable
+as String?,analyzedPointsCount: freezed == analyzedPointsCount ? _self.analyzedPointsCount : analyzedPointsCount // ignore: cast_nullable_to_non_nullable
+as int?,currentImageRaw: freezed == currentImageRaw ? _self.currentImageRaw : currentImageRaw // ignore: cast_nullable_to_non_nullable
 as List<int>?,
   ));
 }
@@ -160,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeDataType? currentRealtimeDataType,  RealtimeLayer? currentRealtimeLayer,  KyoshinMonitorStatus status,  DateTime? lastUpdatedAt,  DateTime? lastImageFetchTargetTime,  Duration? lastImageFetchDuration,  List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,  List<int>? currentImageRaw)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RealtimeDataType? currentRealtimeDataType,  RealtimeLayer? currentRealtimeLayer,  KyoshinMonitorStatus status,  DateTime? lastUpdatedAt,  DateTime? lastImageFetchTargetTime,  Duration? lastImageFetchDuration,  String? geoJson,  int? analyzedPointsCount,  List<int>? currentImageRaw)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorState() when $default != null:
-return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.status,_that.lastUpdatedAt,_that.lastImageFetchTargetTime,_that.lastImageFetchDuration,_that.analyzedPoints,_that.currentImageRaw);case _:
+return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.status,_that.lastUpdatedAt,_that.lastImageFetchTargetTime,_that.lastImageFetchDuration,_that.geoJson,_that.analyzedPointsCount,_that.currentImageRaw);case _:
   return orElse();
 
 }
@@ -181,10 +184,10 @@ return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeDataType? currentRealtimeDataType,  RealtimeLayer? currentRealtimeLayer,  KyoshinMonitorStatus status,  DateTime? lastUpdatedAt,  DateTime? lastImageFetchTargetTime,  Duration? lastImageFetchDuration,  List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,  List<int>? currentImageRaw)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RealtimeDataType? currentRealtimeDataType,  RealtimeLayer? currentRealtimeLayer,  KyoshinMonitorStatus status,  DateTime? lastUpdatedAt,  DateTime? lastImageFetchTargetTime,  Duration? lastImageFetchDuration,  String? geoJson,  int? analyzedPointsCount,  List<int>? currentImageRaw)  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorState():
-return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.status,_that.lastUpdatedAt,_that.lastImageFetchTargetTime,_that.lastImageFetchDuration,_that.analyzedPoints,_that.currentImageRaw);case _:
+return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.status,_that.lastUpdatedAt,_that.lastImageFetchTargetTime,_that.lastImageFetchDuration,_that.geoJson,_that.analyzedPointsCount,_that.currentImageRaw);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +204,10 @@ return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeDataType? currentRealtimeDataType,  RealtimeLayer? currentRealtimeLayer,  KyoshinMonitorStatus status,  DateTime? lastUpdatedAt,  DateTime? lastImageFetchTargetTime,  Duration? lastImageFetchDuration,  List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,  List<int>? currentImageRaw)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RealtimeDataType? currentRealtimeDataType,  RealtimeLayer? currentRealtimeLayer,  KyoshinMonitorStatus status,  DateTime? lastUpdatedAt,  DateTime? lastImageFetchTargetTime,  Duration? lastImageFetchDuration,  String? geoJson,  int? analyzedPointsCount,  List<int>? currentImageRaw)?  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorState() when $default != null:
-return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.status,_that.lastUpdatedAt,_that.lastImageFetchTargetTime,_that.lastImageFetchDuration,_that.analyzedPoints,_that.currentImageRaw);case _:
+return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.status,_that.lastUpdatedAt,_that.lastImageFetchTargetTime,_that.lastImageFetchDuration,_that.geoJson,_that.analyzedPointsCount,_that.currentImageRaw);case _:
   return null;
 
 }
@@ -216,7 +219,7 @@ return $default(_that.currentRealtimeDataType,_that.currentRealtimeLayer,_that.s
 @JsonSerializable()
 
 class _KyoshinMonitorState implements KyoshinMonitorState {
-  const _KyoshinMonitorState({this.currentRealtimeDataType, this.currentRealtimeLayer, this.status = KyoshinMonitorStatus.initializing, this.lastUpdatedAt, this.lastImageFetchTargetTime, this.lastImageFetchDuration, final  List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints, final  List<int>? currentImageRaw}): _analyzedPoints = analyzedPoints,_currentImageRaw = currentImageRaw;
+  const _KyoshinMonitorState({this.currentRealtimeDataType, this.currentRealtimeLayer, this.status = KyoshinMonitorStatus.initializing, this.lastUpdatedAt, this.lastImageFetchTargetTime, this.lastImageFetchDuration, this.geoJson, this.analyzedPointsCount, final  List<int>? currentImageRaw}): _currentImageRaw = currentImageRaw;
   factory _KyoshinMonitorState.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorStateFromJson(json);
 
 @override final  RealtimeDataType? currentRealtimeDataType;
@@ -225,15 +228,10 @@ class _KyoshinMonitorState implements KyoshinMonitorState {
 @override final  DateTime? lastUpdatedAt;
 @override final  DateTime? lastImageFetchTargetTime;
 @override final  Duration? lastImageFetchDuration;
- final  List<KyoshinMonitorImageParseObservationPoint>? _analyzedPoints;
-@override List<KyoshinMonitorImageParseObservationPoint>? get analyzedPoints {
-  final value = _analyzedPoints;
-  if (value == null) return null;
-  if (_analyzedPoints is EqualUnmodifiableListView) return _analyzedPoints;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
+/// Worker Isolate で生成した GeoJSON 文字列（観測点レイヤー用）
+@override final  String? geoJson;
+/// [geoJson] に含まれる観測点 Feature 数
+@override final  int? analyzedPointsCount;
  final  List<int>? _currentImageRaw;
 @override List<int>? get currentImageRaw {
   final value = _currentImageRaw;
@@ -257,16 +255,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorState&&(identical(other.currentRealtimeDataType, currentRealtimeDataType) || other.currentRealtimeDataType == currentRealtimeDataType)&&(identical(other.currentRealtimeLayer, currentRealtimeLayer) || other.currentRealtimeLayer == currentRealtimeLayer)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastUpdatedAt, lastUpdatedAt) || other.lastUpdatedAt == lastUpdatedAt)&&(identical(other.lastImageFetchTargetTime, lastImageFetchTargetTime) || other.lastImageFetchTargetTime == lastImageFetchTargetTime)&&(identical(other.lastImageFetchDuration, lastImageFetchDuration) || other.lastImageFetchDuration == lastImageFetchDuration)&&const DeepCollectionEquality().equals(other._analyzedPoints, _analyzedPoints)&&const DeepCollectionEquality().equals(other._currentImageRaw, _currentImageRaw));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorState&&(identical(other.currentRealtimeDataType, currentRealtimeDataType) || other.currentRealtimeDataType == currentRealtimeDataType)&&(identical(other.currentRealtimeLayer, currentRealtimeLayer) || other.currentRealtimeLayer == currentRealtimeLayer)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastUpdatedAt, lastUpdatedAt) || other.lastUpdatedAt == lastUpdatedAt)&&(identical(other.lastImageFetchTargetTime, lastImageFetchTargetTime) || other.lastImageFetchTargetTime == lastImageFetchTargetTime)&&(identical(other.lastImageFetchDuration, lastImageFetchDuration) || other.lastImageFetchDuration == lastImageFetchDuration)&&(identical(other.geoJson, geoJson) || other.geoJson == geoJson)&&(identical(other.analyzedPointsCount, analyzedPointsCount) || other.analyzedPointsCount == analyzedPointsCount)&&const DeepCollectionEquality().equals(other._currentImageRaw, _currentImageRaw));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,currentRealtimeDataType,currentRealtimeLayer,status,lastUpdatedAt,lastImageFetchTargetTime,lastImageFetchDuration,const DeepCollectionEquality().hash(_analyzedPoints),const DeepCollectionEquality().hash(_currentImageRaw));
+int get hashCode => Object.hash(runtimeType,currentRealtimeDataType,currentRealtimeLayer,status,lastUpdatedAt,lastImageFetchTargetTime,lastImageFetchDuration,geoJson,analyzedPointsCount,const DeepCollectionEquality().hash(_currentImageRaw));
 
 @override
 String toString() {
-  return 'KyoshinMonitorState(currentRealtimeDataType: $currentRealtimeDataType, currentRealtimeLayer: $currentRealtimeLayer, status: $status, lastUpdatedAt: $lastUpdatedAt, lastImageFetchTargetTime: $lastImageFetchTargetTime, lastImageFetchDuration: $lastImageFetchDuration, analyzedPoints: $analyzedPoints, currentImageRaw: $currentImageRaw)';
+  return 'KyoshinMonitorState(currentRealtimeDataType: $currentRealtimeDataType, currentRealtimeLayer: $currentRealtimeLayer, status: $status, lastUpdatedAt: $lastUpdatedAt, lastImageFetchTargetTime: $lastImageFetchTargetTime, lastImageFetchDuration: $lastImageFetchDuration, geoJson: $geoJson, analyzedPointsCount: $analyzedPointsCount, currentImageRaw: $currentImageRaw)';
 }
 
 
@@ -277,7 +275,7 @@ abstract mixin class _$KyoshinMonitorStateCopyWith<$Res> implements $KyoshinMoni
   factory _$KyoshinMonitorStateCopyWith(_KyoshinMonitorState value, $Res Function(_KyoshinMonitorState) _then) = __$KyoshinMonitorStateCopyWithImpl;
 @override @useResult
 $Res call({
- RealtimeDataType? currentRealtimeDataType, RealtimeLayer? currentRealtimeLayer, KyoshinMonitorStatus status, DateTime? lastUpdatedAt, DateTime? lastImageFetchTargetTime, Duration? lastImageFetchDuration, List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints, List<int>? currentImageRaw
+ RealtimeDataType? currentRealtimeDataType, RealtimeLayer? currentRealtimeLayer, KyoshinMonitorStatus status, DateTime? lastUpdatedAt, DateTime? lastImageFetchTargetTime, Duration? lastImageFetchDuration, String? geoJson, int? analyzedPointsCount, List<int>? currentImageRaw
 });
 
 
@@ -294,7 +292,7 @@ class __$KyoshinMonitorStateCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? currentRealtimeDataType = freezed,Object? currentRealtimeLayer = freezed,Object? status = null,Object? lastUpdatedAt = freezed,Object? lastImageFetchTargetTime = freezed,Object? lastImageFetchDuration = freezed,Object? analyzedPoints = freezed,Object? currentImageRaw = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currentRealtimeDataType = freezed,Object? currentRealtimeLayer = freezed,Object? status = null,Object? lastUpdatedAt = freezed,Object? lastImageFetchTargetTime = freezed,Object? lastImageFetchDuration = freezed,Object? geoJson = freezed,Object? analyzedPointsCount = freezed,Object? currentImageRaw = freezed,}) {
   return _then(_KyoshinMonitorState(
 currentRealtimeDataType: freezed == currentRealtimeDataType ? _self.currentRealtimeDataType : currentRealtimeDataType // ignore: cast_nullable_to_non_nullable
 as RealtimeDataType?,currentRealtimeLayer: freezed == currentRealtimeLayer ? _self.currentRealtimeLayer : currentRealtimeLayer // ignore: cast_nullable_to_non_nullable
@@ -302,297 +300,14 @@ as RealtimeLayer?,status: null == status ? _self.status : status // ignore: cast
 as KyoshinMonitorStatus,lastUpdatedAt: freezed == lastUpdatedAt ? _self.lastUpdatedAt : lastUpdatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,lastImageFetchTargetTime: freezed == lastImageFetchTargetTime ? _self.lastImageFetchTargetTime : lastImageFetchTargetTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,lastImageFetchDuration: freezed == lastImageFetchDuration ? _self.lastImageFetchDuration : lastImageFetchDuration // ignore: cast_nullable_to_non_nullable
-as Duration?,analyzedPoints: freezed == analyzedPoints ? _self._analyzedPoints : analyzedPoints // ignore: cast_nullable_to_non_nullable
-as List<KyoshinMonitorImageParseObservationPoint>?,currentImageRaw: freezed == currentImageRaw ? _self._currentImageRaw : currentImageRaw // ignore: cast_nullable_to_non_nullable
+as Duration?,geoJson: freezed == geoJson ? _self.geoJson : geoJson // ignore: cast_nullable_to_non_nullable
+as String?,analyzedPointsCount: freezed == analyzedPointsCount ? _self.analyzedPointsCount : analyzedPointsCount // ignore: cast_nullable_to_non_nullable
+as int?,currentImageRaw: freezed == currentImageRaw ? _self._currentImageRaw : currentImageRaw // ignore: cast_nullable_to_non_nullable
 as List<int>?,
   ));
 }
 
 
-}
-
-
-/// @nodoc
-mixin _$KyoshinMonitorImageParseObservationPoint {
-
-@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson) KyoshinObservationPoint get point; KyoshinMonitorObservationAnalyzedPoint get observation;
-/// Create a copy of KyoshinMonitorImageParseObservationPoint
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$KyoshinMonitorImageParseObservationPointCopyWith<KyoshinMonitorImageParseObservationPoint> get copyWith => _$KyoshinMonitorImageParseObservationPointCopyWithImpl<KyoshinMonitorImageParseObservationPoint>(this as KyoshinMonitorImageParseObservationPoint, _$identity);
-
-  /// Serializes this KyoshinMonitorImageParseObservationPoint to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorImageParseObservationPoint&&(identical(other.point, point) || other.point == point)&&(identical(other.observation, observation) || other.observation == observation));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,point,observation);
-
-@override
-String toString() {
-  return 'KyoshinMonitorImageParseObservationPoint(point: $point, observation: $observation)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $KyoshinMonitorImageParseObservationPointCopyWith<$Res>  {
-  factory $KyoshinMonitorImageParseObservationPointCopyWith(KyoshinMonitorImageParseObservationPoint value, $Res Function(KyoshinMonitorImageParseObservationPoint) _then) = _$KyoshinMonitorImageParseObservationPointCopyWithImpl;
-@useResult
-$Res call({
-@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson) KyoshinObservationPoint point, KyoshinMonitorObservationAnalyzedPoint observation
-});
-
-
-$KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> get observation;
-
-}
-/// @nodoc
-class _$KyoshinMonitorImageParseObservationPointCopyWithImpl<$Res>
-    implements $KyoshinMonitorImageParseObservationPointCopyWith<$Res> {
-  _$KyoshinMonitorImageParseObservationPointCopyWithImpl(this._self, this._then);
-
-  final KyoshinMonitorImageParseObservationPoint _self;
-  final $Res Function(KyoshinMonitorImageParseObservationPoint) _then;
-
-/// Create a copy of KyoshinMonitorImageParseObservationPoint
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? point = null,Object? observation = null,}) {
-  return _then(_self.copyWith(
-point: null == point ? _self.point : point // ignore: cast_nullable_to_non_nullable
-as KyoshinObservationPoint,observation: null == observation ? _self.observation : observation // ignore: cast_nullable_to_non_nullable
-as KyoshinMonitorObservationAnalyzedPoint,
-  ));
-}
-/// Create a copy of KyoshinMonitorImageParseObservationPoint
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> get observation {
-  
-  return $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res>(_self.observation, (value) {
-    return _then(_self.copyWith(observation: value));
-  });
-}
-}
-
-
-/// Adds pattern-matching-related methods to [KyoshinMonitorImageParseObservationPoint].
-extension KyoshinMonitorImageParseObservationPointPatterns on KyoshinMonitorImageParseObservationPoint {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _KyoshinMonitorImageParseObservationPoint value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _KyoshinMonitorImageParseObservationPoint() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _KyoshinMonitorImageParseObservationPoint value)  $default,){
-final _that = this;
-switch (_that) {
-case _KyoshinMonitorImageParseObservationPoint():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _KyoshinMonitorImageParseObservationPoint value)?  $default,){
-final _that = this;
-switch (_that) {
-case _KyoshinMonitorImageParseObservationPoint() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson)  KyoshinObservationPoint point,  KyoshinMonitorObservationAnalyzedPoint observation)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _KyoshinMonitorImageParseObservationPoint() when $default != null:
-return $default(_that.point,_that.observation);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson)  KyoshinObservationPoint point,  KyoshinMonitorObservationAnalyzedPoint observation)  $default,) {final _that = this;
-switch (_that) {
-case _KyoshinMonitorImageParseObservationPoint():
-return $default(_that.point,_that.observation);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson)  KyoshinObservationPoint point,  KyoshinMonitorObservationAnalyzedPoint observation)?  $default,) {final _that = this;
-switch (_that) {
-case _KyoshinMonitorImageParseObservationPoint() when $default != null:
-return $default(_that.point,_that.observation);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _KyoshinMonitorImageParseObservationPoint implements KyoshinMonitorImageParseObservationPoint {
-  const _KyoshinMonitorImageParseObservationPoint({@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson) required this.point, required this.observation});
-  factory _KyoshinMonitorImageParseObservationPoint.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorImageParseObservationPointFromJson(json);
-
-@override@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson) final  KyoshinObservationPoint point;
-@override final  KyoshinMonitorObservationAnalyzedPoint observation;
-
-/// Create a copy of KyoshinMonitorImageParseObservationPoint
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$KyoshinMonitorImageParseObservationPointCopyWith<_KyoshinMonitorImageParseObservationPoint> get copyWith => __$KyoshinMonitorImageParseObservationPointCopyWithImpl<_KyoshinMonitorImageParseObservationPoint>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$KyoshinMonitorImageParseObservationPointToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorImageParseObservationPoint&&(identical(other.point, point) || other.point == point)&&(identical(other.observation, observation) || other.observation == observation));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,point,observation);
-
-@override
-String toString() {
-  return 'KyoshinMonitorImageParseObservationPoint(point: $point, observation: $observation)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$KyoshinMonitorImageParseObservationPointCopyWith<$Res> implements $KyoshinMonitorImageParseObservationPointCopyWith<$Res> {
-  factory _$KyoshinMonitorImageParseObservationPointCopyWith(_KyoshinMonitorImageParseObservationPoint value, $Res Function(_KyoshinMonitorImageParseObservationPoint) _then) = __$KyoshinMonitorImageParseObservationPointCopyWithImpl;
-@override @useResult
-$Res call({
-@JsonKey(fromJson: _kyoshinObservationPointFromJson, toJson: _kyoshinObservationPointToJson) KyoshinObservationPoint point, KyoshinMonitorObservationAnalyzedPoint observation
-});
-
-
-@override $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> get observation;
-
-}
-/// @nodoc
-class __$KyoshinMonitorImageParseObservationPointCopyWithImpl<$Res>
-    implements _$KyoshinMonitorImageParseObservationPointCopyWith<$Res> {
-  __$KyoshinMonitorImageParseObservationPointCopyWithImpl(this._self, this._then);
-
-  final _KyoshinMonitorImageParseObservationPoint _self;
-  final $Res Function(_KyoshinMonitorImageParseObservationPoint) _then;
-
-/// Create a copy of KyoshinMonitorImageParseObservationPoint
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? point = null,Object? observation = null,}) {
-  return _then(_KyoshinMonitorImageParseObservationPoint(
-point: null == point ? _self.point : point // ignore: cast_nullable_to_non_nullable
-as KyoshinObservationPoint,observation: null == observation ? _self.observation : observation // ignore: cast_nullable_to_non_nullable
-as KyoshinMonitorObservationAnalyzedPoint,
-  ));
-}
-
-/// Create a copy of KyoshinMonitorImageParseObservationPoint
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> get observation {
-  
-  return $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res>(_self.observation, (value) {
-    return _then(_self.copyWith(observation: value));
-  });
-}
 }
 
 // dart format on
