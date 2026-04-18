@@ -1,0 +1,33 @@
+---
+description: 新しい知見をルール・ドキュメントとして残すガイドライン
+alwaysApply: true
+---
+
+# 知見の記録ルール
+
+作業中に判明した重要な知見・運用上の注意点・プラットフォーム固有の情報は、会話が終わる前に `docs/knowledge/{YYYYMMDD}_<topic>.md` にルールとして残す。
+
+## ルール作成のトリガー
+
+以下の場合は必ずルールを作成する：
+
+- Flutter / Dart・リリース周りの運用フロー（例: `dart-define` の渡し方、ストア提出・審査手順、CI でのビルド・署名）
+- プラットフォーム固有の制約・注意点（例: iOS のバックグラウンド・権限、Android の通知チャネル）
+- ハマった問題と解決策（例: `build_runner` とパッケージバージョンの不一致、CocoaPods / Gradle の衝突）
+- ユーザーが「今後も考慮すべき」と指摘した内容
+
+## フォーマット
+
+- `alwaysApply: true`: 常に参照すべきプロジェクト全体の規約
+- `globs: app/lib/**/*.dart,packages/*/lib/**/*.dart`: 特定ファイルを編集するときだけ参照（例。モノレポのパスに合わせる）
+- 内容は簡潔に・具体的なコマンド例を含める（500行以内）
+
+## git 管理
+
+ルール作成後は必ずコミット・プッシュする：
+
+```bash
+git add .cursor/rules/<name>.mdc
+git commit -m "docs: <topic> のルールを追加"
+git push
+```

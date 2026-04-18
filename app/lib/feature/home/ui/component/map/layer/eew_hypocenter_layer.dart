@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/gen/assets.gen.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -151,22 +152,26 @@ class EewHypocenterLayer extends HookConsumerWidget {
               };
             }
 
-            await (
-              styleController.updateGeoJsonSource(
-                id: sourceId.normal,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': normalEews.map(convert).toList(),
-                }),
-              ),
-              styleController.updateGeoJsonSource(
-                id: sourceId.lowPrecise,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': lowPreciseEews.map(convert).toList(),
-                }),
-              ),
-            ).wait;
+            try {
+              await (
+                styleController.updateGeoJsonSource(
+                  id: sourceId.normal,
+                  data: jsonEncode({
+                    'type': 'FeatureCollection',
+                    'features': normalEews.map(convert).toList(),
+                  }),
+                ),
+                styleController.updateGeoJsonSource(
+                  id: sourceId.lowPrecise,
+                  data: jsonEncode({
+                    'type': 'FeatureCollection',
+                    'features': lowPreciseEews.map(convert).toList(),
+                  }),
+                ),
+              ).wait;
+            } on Exception catch (e) {
+              talker.log(e);
+            }
           }(),
         );
 
