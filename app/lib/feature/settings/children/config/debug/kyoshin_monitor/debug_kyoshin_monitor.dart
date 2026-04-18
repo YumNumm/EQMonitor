@@ -110,8 +110,13 @@ class _Body extends ConsumerWidget {
                     const JsonEncoder.withIndent(
                       '  ',
                     ).convert({
-                      ...value.toJson(),
-                      'analyzed_points': value.analyzedPoints?.length,
+                      ...() {
+                        final j = Map<String, dynamic>.from(value.toJson())
+                          ..remove('geo_json');
+                        return j;
+                      }(),
+                      'geo_json_bytes': value.geoJson?.length,
+                      'analyzed_points_count': value.analyzedPointsCount,
                       'last_image_fetch_duration': switch (value
                           .lastImageFetchDuration
                           ?.inMicroseconds) {
