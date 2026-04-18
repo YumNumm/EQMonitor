@@ -2,11 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:earthquake_replay/earthquake_replay.dart';
-import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_parser_provider.dart';
-import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replay_notifier.g.dart';
@@ -181,12 +178,14 @@ class ReplayNotifier extends _$ReplayNotifier {
 
     // KyoshinMonitorImageReplayDataの場合のみ解析
     if (currentData is KyoshinMonitorImageReplayData) {
-      final points = await _parseKyoshinImage(currentData);
-      state = state!.copyWith(currentPoints: points);
+      final geoJson = await _parseKyoshinImage(currentData);
+      state = state!.copyWith(kyoshinMonitorGeoJson: geoJson);
+    } else {
+      state = state!.copyWith(kyoshinMonitorGeoJson: null);
     }
   }
 
-  Future<List<KyoshinMonitorImageParseObservationPoint>?> _parseKyoshinImage(
+  Future<String?> _parseKyoshinImage(
     KyoshinMonitorImageReplayData data,
   ) async {
     // 震度(shindo)画像を優先して取得
@@ -195,32 +194,10 @@ class ReplayNotifier extends _$ReplayNotifier {
       return null;
     }
 
-    final imageParser = ref.read(kyoshinMonitorImageParserProvider);
-    final points = await ref.read(
-      kyoshinMonitorObservationPointsProvider.future,
+    final analyzer = await ref.read(
+      kyoshinMonitorAnalyzerIsolateProvider.future,
     );
-    final observationPoints = await ref.read(
-      kyoshinObservationPointsProvider.future,
-    );
-
-    final result = await imageParser.parseGif(
-      gifImage: imageData,
-      points: points,
-    );
-
-    final results = <KyoshinMonitorImageParseObservationPoint>[];
-    for (var i = 0; i < result.length; i++) {
-      final element = result[i];
-      if (element is KyoshinMonitorImageParseObservationSuccess) {
-        results.add(
-          KyoshinMonitorImageParseObservationPoint(
-            point: observationPoints.points[i],
-            observation: element.point,
-          ),
-        );
-      }
-    }
-
-    return results;
+    final result = await analyzer.analyze(Uint8List.fromList(imageData));
+    return result.geoJson;
   }
 }

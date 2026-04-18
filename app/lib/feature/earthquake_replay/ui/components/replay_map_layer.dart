@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,8 +16,9 @@ class ReplayMapLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final replayState = ref.watch(replayProvider);
-    final points = replayState?.currentPoints ?? [];
+    final geoJson = ref.watch(
+      replayProvider.select((s) => s?.kyoshinMonitorGeoJson),
+    );
 
     useEffect(
       () {
@@ -39,11 +39,11 @@ class ReplayMapLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(_updatePoints(styleController, points));
+        unawaited(_updateGeoJson(styleController, geoJson));
 
         return null;
       },
-      [styleController, points],
+      [styleController, geoJson],
     );
 
     return const SizedBox.shrink();
@@ -90,38 +90,13 @@ class ReplayMapLayer extends HookConsumerWidget {
     );
   }
 
-  Future<void> _updatePoints(
-    StyleController style,
-    List<KyoshinMonitorImageParseObservationPoint> points,
-  ) async {
-    final features = points.map((p) {
-      final observation = p.observation;
-      final point = p.point;
-
-      final colorHex =
-          '#${observation.r.toRadixString(16).padLeft(2, '0')}${observation.g.toRadixString(16).padLeft(2, '0')}${observation.b.toRadixString(16).padLeft(2, '0')}'
-              .toUpperCase();
-
-      return {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [point.location.longitude, point.location.latitude],
-        },
-        'properties': {
-          'color': colorHex,
-          'intensity': observation.scaleToIntensity,
-          'name': point.name,
-        },
-      };
-    }).toList();
-
-    final geojson = jsonEncode({
-      'type': 'FeatureCollection',
-      'features': features,
-    });
-
-    await style.updateGeoJsonSource(id: _sourceId, data: geojson);
+  Future<void> _updateGeoJson(StyleController style, String? geoJson) async {
+    final data = geoJson ??
+        jsonEncode({
+          'type': 'FeatureCollection',
+          'features': <Map<String, dynamic>>[],
+        });
+    await style.updateGeoJsonSource(id: _sourceId, data: data);
   }
 
   Future<void> _cleanupLayer(StyleController style) async {

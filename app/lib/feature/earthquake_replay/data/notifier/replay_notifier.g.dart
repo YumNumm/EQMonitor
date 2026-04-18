@@ -43,7 +43,7 @@ final class ReplayNotifierProvider
   }
 }
 
-String _$replayNotifierHash() => r'35d65263fccb9b1ccbbe67788524f457f9743ef7';
+String _$replayNotifierHash() => r'd1261eacf321da78b8f4601f426c0f3afa53fe99';
 
 abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
   ReplayState? build();

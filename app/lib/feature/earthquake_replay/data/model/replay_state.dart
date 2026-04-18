@@ -1,5 +1,4 @@
 import 'package:earthquake_replay/earthquake_replay.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'replay_state.freezed.dart';
@@ -13,7 +12,8 @@ abstract class ReplayState with _$ReplayState {
     required bool isPlaying,
     required double playbackSpeed,
     @Default(false) bool showDataOverlay,
-    List<KyoshinMonitorImageParseObservationPoint>? currentPoints,
+    /// Worker Isolate で生成した強震モニタ観測点 GeoJSON
+    String? kyoshinMonitorGeoJson,
   }) = _ReplayState;
 
   const ReplayState._();
