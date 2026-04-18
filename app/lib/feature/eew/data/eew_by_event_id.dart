@@ -19,7 +19,7 @@ class EewsByEventId extends _$EewsByEventId {
         log('EewsByEventId Provider is not AsyncData state so ignore.');
         return;
       }
-      if (next case AsyncData(value: final value)) {
+      if (next case AsyncData(:final value)) {
         final eews = value.where((e) => e.eventId == eventId).toList();
         final currentEews = state.value ?? <EewTelegramItem>[];
         for (final eew in eews) {
@@ -30,8 +30,6 @@ class EewsByEventId extends _$EewsByEventId {
       }
     });
 
-    return response.data.items
-        .map((e) => e.toEewTelegramItem())
-        .toList();
+    return response.data.items.map((e) => e.toEewTelegramItem()).toList();
   }
 }

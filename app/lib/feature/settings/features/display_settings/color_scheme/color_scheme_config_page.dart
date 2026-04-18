@@ -146,7 +146,7 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                       ),
                       FilledButton.tonal(
                         onPressed: () async {
-                          final path = await FilePicker.platform.saveFile(
+                          final path = await FilePicker.saveFile(
                             dialogTitle: '震度配色JSONを保存',
                             fileName: 'intensity_color.json',
                             type: FileType.custom,
@@ -185,7 +185,7 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                       ),
                       FilledButton.tonal(
                         onPressed: () async {
-                          final result = await FilePicker.platform.pickFiles(
+                          final result = await FilePicker.pickFiles(
                             type: FileType.custom,
                             allowedExtensions: const ['json'],
                             withData: true,

@@ -64,7 +64,7 @@ class EarthquakeReplayPage extends HookConsumerWidget {
     isLoading.value = true;
 
     try {
-      final result = await FilePicker.platform.pickFiles(withData: true);
+      final result = await FilePicker.pickFiles(withData: true);
 
       if (result == null || result.files.isEmpty) {
         isLoading.value = false;
