@@ -6,19 +6,27 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_map_focus.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_focus_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/route.dart';
 
-class RegionIntensityWidget extends StatelessWidget {
-  const RegionIntensityWidget({required this.item, super.key});
+class RegionIntensityWidget extends ConsumerWidget {
+  const RegionIntensityWidget({
+    required this.item,
+    this.eventId,
+    super.key,
+  });
 
   final Earthquake item;
+  final String? eventId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final intensity = item.intensity;
@@ -69,6 +77,8 @@ class RegionIntensityWidget extends StatelessWidget {
                 ),
                 onTap: () async => _RegionModalBottomSheet.show(
                   context: context,
+                  ref: ref,
+                  eventId: eventId,
                   intensity: jmaIntensity,
                   regions: entry.value,
                 ),
@@ -126,23 +136,31 @@ List<TreeSliverNode<_RegionIntensityTreeContent>> _buildRegionDetailTree(
 
 class _RegionModalBottomSheet extends StatelessWidget {
   const _RegionModalBottomSheet({
+    required this.ref,
+    required this.eventId,
     required this.intensity,
     required this.regions,
   });
 
   static Future<void> show({
     required BuildContext context,
+    required WidgetRef ref,
+    String? eventId,
     required JmaIntensity intensity,
     required List<RegionIntensityNode> regions,
   }) => Navigator.of(context).push(
     SheetRoute(
       builder: (context) => _RegionModalBottomSheet(
+        ref: ref,
+        eventId: eventId,
         intensity: intensity,
         regions: regions,
       ),
     ),
   );
 
+  final WidgetRef ref;
+  final String? eventId;
   final JmaIntensity intensity;
   final List<RegionIntensityNode> regions;
 
@@ -164,6 +182,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
             treeNodeBuilder: (context, node, toggleAnimationStyle) =>
                 _regionDetailTreeNodeBuilder(
                   context,
+                  ref,
                   colorScheme,
                   node,
                   toggleAnimationStyle,
@@ -184,6 +203,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
 
   Widget _regionDetailTreeNodeBuilder(
     BuildContext context,
+    WidgetRef ref,
     ColorScheme colorScheme,
     TreeSliverNode<Object?> node,
     AnimationStyle toggleAnimationStyle,
@@ -201,6 +221,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
         child: switch (content) {
           final _TreeRegion c => _regionRow(
             context,
+            ref,
             node,
             duration,
             curve,
@@ -208,6 +229,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
           ),
           final _TreeCity c => _cityRow(
             context,
+            ref,
             node,
             duration,
             curve,
@@ -215,6 +237,8 @@ class _RegionModalBottomSheet extends StatelessWidget {
             c.node,
           ),
           final _TreeStation c => _stationRow(
+            context,
+            ref,
             colorScheme,
             c.node,
           ),
@@ -225,6 +249,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
 
   Widget _regionRow(
     BuildContext context,
+    WidgetRef ref,
     TreeSliverNode<Object?> node,
     Duration duration,
     Curve curve,
@@ -247,6 +272,15 @@ class _RegionModalBottomSheet extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
+        if (eventId != null)
+          _mapFocusButton(
+            context,
+            ref,
+            EarthquakeIntensityMapFocus(
+              kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
+              code: region.region.region.code,
+            ),
+          ),
         if (node.children.isNotEmpty)
           _expandIcon(context, node, duration, curve),
       ],
@@ -255,6 +289,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
 
   Widget _cityRow(
     BuildContext context,
+    WidgetRef ref,
     TreeSliverNode<Object?> node,
     Duration duration,
     Curve curve,
@@ -279,6 +314,15 @@ class _RegionModalBottomSheet extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
+        if (eventId != null)
+          _mapFocusButton(
+            context,
+            ref,
+            EarthquakeIntensityMapFocus(
+              kind: EarthquakeIntensityMapFocusKind.city,
+              code: city.city.code,
+            ),
+          ),
         if (node.children.isNotEmpty)
           _expandIcon(context, node, duration, curve),
       ],
@@ -286,6 +330,8 @@ class _RegionModalBottomSheet extends StatelessWidget {
   }
 
   Widget _stationRow(
+    BuildContext context,
+    WidgetRef ref,
     ColorScheme colorScheme,
     StationIntensityNode station,
   ) {
@@ -307,7 +353,36 @@ class _RegionModalBottomSheet extends StatelessWidget {
             ),
           ),
         ),
+        if (eventId != null)
+          _mapFocusButton(
+            context,
+            ref,
+            EarthquakeIntensityMapFocus(
+              kind: EarthquakeIntensityMapFocusKind.station,
+              code: station.station.code,
+            ),
+          ),
       ],
+    );
+  }
+
+  Widget _mapFocusButton(
+    BuildContext context,
+    WidgetRef ref,
+    EarthquakeIntensityMapFocus focus,
+  ) {
+    return IconButton(
+      tooltip: '地図で表示',
+      icon: const Icon(Icons.map_outlined, size: 20),
+      visualDensity: VisualDensity.compact,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      onPressed: () {
+        ref.read(earthquakeHistoryMapFocusProvider(eventId!).notifier).select(
+              focus,
+            );
+        Navigator.of(context).maybePop();
+      },
     );
   }
 
