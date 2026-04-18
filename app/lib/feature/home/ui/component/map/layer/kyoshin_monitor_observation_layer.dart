@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/data/provider/kyoshin_monitor_points_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/material.dart';
@@ -46,9 +48,20 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
         ref.listenManual(
           kyoshinMonitorObservationGeoJsonProvider,
           (_, next) async {
-            await styleController.updateGeoJsonSource(
-              id: _sourceId,
-              data: next,
+            final sw = Stopwatch()..start();
+            await Timeline.timeSync(
+              'kmoni.updateGeoJsonSource',
+              () async => styleController.updateGeoJsonSource(
+                id: _sourceId,
+                data: next,
+              ),
+            );
+            sw.stop();
+            talker.logCustom(
+              KyoshinMonitorLog(
+                '[perf] updateGeoJsonSource=${sw.elapsedMilliseconds}ms '
+                'bytes=${next.length}',
+              ),
             );
           },
         );

@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_parser_provider.dart';
@@ -79,32 +81,59 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
           .read(kyoshinMonitorSettingsProvider)
           .requireValue
           .realtimeLayer;
-      final image = await dataSource.getRealtimeImageData(
-        type: realtimeDataType,
-        layer: realtimeLayer,
-        dateTime: targetTime,
+
+      final fetchSw = Stopwatch()..start();
+      final image = await Timeline.timeSync(
+        'kmoni.fetchImage',
+        () async => dataSource.getRealtimeImageData(
+          type: realtimeDataType,
+          layer: realtimeLayer,
+          dateTime: targetTime,
+        ),
+        flow: Flow.begin(),
       );
+      fetchSw.stop();
 
       // 画像を解析
-      final result = await imageParser.parseGif(
-        gifImage: image,
-        points: points,
+      final parseSw = Stopwatch()..start();
+      final result = await Timeline.timeSync(
+        'kmoni.parseGif',
+        () async => imageParser.parseGif(
+          gifImage: image,
+          points: points,
+        ),
+      );
+      parseSw.stop();
+
+      final mapSw = Stopwatch()..start();
+      final results = Timeline.timeSync('kmoni.mapResults', () {
+        return result
+            .mapIndexed((index, element) {
+              final point = observationPoints.points[index];
+              return switch (element) {
+                KyoshinMonitorImageParseObservationSuccess() =>
+                  KyoshinMonitorImageParseObservationPoint(
+                    point: point,
+                    observation: element.point,
+                  ),
+                KyoshinMonitorImageParseObservationFailure() => null,
+              };
+            })
+            .nonNulls
+            .toList();
+      });
+      mapSw.stop();
+
+      talker.logCustom(
+        KyoshinMonitorLog(
+          '[perf] fetch=${fetchSw.elapsedMilliseconds}ms '
+          'parseGif=${parseSw.elapsedMilliseconds}ms '
+          'map=${mapSw.elapsedMilliseconds}ms '
+          'total=${stopwatch.elapsedMilliseconds}ms '
+          'points=${results.length} imageBytes=${image.length}',
+        ),
       );
 
-      final results = result
-          .mapIndexed((index, element) {
-            final point = observationPoints.points[index];
-            return switch (element) {
-              KyoshinMonitorImageParseObservationSuccess() =>
-                KyoshinMonitorImageParseObservationPoint(
-                  point: point,
-                  observation: element.point,
-                ),
-              KyoshinMonitorImageParseObservationFailure() => null,
-            };
-          })
-          .nonNulls
-          .toList();
       return KyoshinMonitorState(
         lastUpdatedAt: DateTime.now(),
         lastImageFetchTargetTime: targetTime,
