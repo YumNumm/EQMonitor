@@ -11,7 +11,7 @@ part 'eew_by_event_id.g.dart';
 class EewsByEventId extends _$EewsByEventId {
   @override
   Future<List<EewTelegramItem>> build(String eventId) async {
-    final client = ref.watch(apiClientProvider);
+    final client = await ref.watch(apiClientProvider.future);
     final response = await client.eew.getV2EewEventId(eventId: eventId);
 
     ref.listen(eewProvider, (_, next) {

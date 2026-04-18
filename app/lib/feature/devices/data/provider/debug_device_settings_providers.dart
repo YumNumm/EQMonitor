@@ -27,10 +27,12 @@ Future<DebugDeviceSessionSnapshot?> debugDeviceSession(Ref ref) async {
 
   ref.watch(notificationTokenStreamProvider);
   final deviceId = await ref.watch(deviceIdProvider.future);
-  final deviceRepo = ref.watch(deviceRepositoryProvider);
-  final notifRepo = ref.watch(pushNotificationRepositoryProvider);
+  final deviceRepository = await ref.watch(deviceRepositoryProvider.future);
+  final notificationRepository = await ref.watch(
+    pushNotificationRepositoryProvider.future,
+  );
 
-  final deviceResult = await deviceRepo.fetchOrRegister(deviceId);
+  final deviceResult = await deviceRepository.fetchOrRegister(deviceId);
   final device = switch (deviceResult) {
     Success(:final value) => value,
     Failure(:final exception) => throw exception,
@@ -40,7 +42,7 @@ Future<DebugDeviceSessionSnapshot?> debugDeviceSession(Ref ref) async {
   final notificationToken =
       tokenAsync.value ?? const NotificationToken();
 
-  final syncResult = await deviceRepo.syncPushTokens(
+  final syncResult = await deviceRepository.syncPushTokens(
     deviceId: deviceId,
     token: notificationToken,
   );
@@ -51,7 +53,7 @@ Future<DebugDeviceSessionSnapshot?> debugDeviceSession(Ref ref) async {
       break;
   }
 
-  final settingsResult = await notifRepo.getNotificationSettings(deviceId);
+  final settingsResult = await notificationRepository.getNotificationSettings(deviceId);
   final notificationSettings = switch (settingsResult) {
     Success(:final value) => value,
     Failure(:final exception) => throw exception,
@@ -72,8 +74,8 @@ Future<List<PushNotificationLogEntry>> debugNotificationHistory(
   if (session == null) {
     return [];
   }
-  final repo = ref.watch(pushNotificationRepositoryProvider);
-  final result = await repo.getNotificationHistory(
+  final notificationRepository = await ref.watch(pushNotificationRepositoryProvider.future);
+  final result = await notificationRepository.getNotificationHistory(
     deviceId: session.deviceId,
     limit: 50,
   );

@@ -92,4 +92,4 @@ final class ClosestKmoniObservationPointStreamProvider
 }
 
 String _$closestKmoniObservationPointStreamHash() =>
-    r'0094c2c47c008397a4f460398410ce01c5f4847a';
+    r'bea3ab9a902376f5f0b2a0d2f3b41317f6e8f17f';

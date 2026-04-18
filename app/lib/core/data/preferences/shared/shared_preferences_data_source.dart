@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'shared_preferences_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
-SharedPreferencesDataSource sharedPreferencesDataSource(Ref ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).requireValue;
+Future<SharedPreferencesDataSource> sharedPreferencesDataSource(Ref ref) async {
+  final prefs = await ref.watch(sharedPreferencesProvider.future);
   return SharedPreferencesDataSource(sharedPreferences: prefs);
 }
 

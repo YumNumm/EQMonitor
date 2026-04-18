@@ -32,7 +32,9 @@ Stream<Position> locationStream(Ref ref) async* {
 Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
   Ref ref,
 ) async* {
-  final kmoniObservationPoints = ref.watch(kyoshinObservationPointsProvider);
+  final kmoniObservationPoints = await ref.watch(
+    kyoshinObservationPointsProvider.future,
+  );
 
   final currentPosition = ref.watch(locationStreamProvider);
   if (currentPosition case AsyncData(:final value)) {

@@ -22,9 +22,12 @@ class TelegramUrl extends _$TelegramUrl {
   }
 
   Future<TelegramUrlModel> _load() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final jsonString =
-        await ds.getString(key: SharedPreferencesKey.telegramUrl);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final jsonString = await sharedPreferences.getString(
+      key: SharedPreferencesKey.telegramUrl,
+    );
     if (jsonString == null) {
       return _defaultTelegramUrl();
     }
@@ -39,8 +42,10 @@ class TelegramUrl extends _$TelegramUrl {
   }
 
   Future<void> _save(TelegramUrlModel value) async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setString(
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await sharedPreferences.setString(
       key: SharedPreferencesKey.telegramUrl,
       value: jsonEncode(value.toJson()),
     );

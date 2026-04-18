@@ -15,8 +15,13 @@ part of 'api_client_provider.dart';
 final apiClientProvider = ApiClientProvider._();
 
 final class ApiClientProvider
-    extends $FunctionalProvider<ApiClient, ApiClient, ApiClient>
-    with $Provider<ApiClient> {
+    extends
+        $FunctionalProvider<
+          AsyncValue<ApiClient>,
+          ApiClient,
+          FutureOr<ApiClient>
+        >
+    with $FutureModifier<ApiClient>, $FutureProvider<ApiClient> {
   ApiClientProvider._()
     : super(
         from: null,
@@ -33,21 +38,13 @@ final class ApiClientProvider
 
   @$internal
   @override
-  $ProviderElement<ApiClient> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<ApiClient> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  ApiClient create(Ref ref) {
+  FutureOr<ApiClient> create(Ref ref) {
     return apiClient(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ApiClient value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ApiClient>(value),
-    );
   }
 }
 
-String _$apiClientHash() => r'2a1040e31187aef75e48d5852085928db86ed765';
+String _$apiClientHash() => r'ecd01609c81a57c74fe9eb7411c0ec483b675024';

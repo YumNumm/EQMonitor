@@ -15,8 +15,9 @@ import 'package:talker_flutter/talker_flutter.dart';
 part 'dio_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Dio dio(Ref ref) {
+Future<Dio> dio(Ref ref) async {
   final package = ref.watch(packageInfoProvider);
+  final telegramUrl = await ref.watch(telegramUrlProvider.future);
 
   final dio = Dio(
     BaseOptions(
@@ -24,7 +25,7 @@ Dio dio(Ref ref) {
         'user-agent':
             '${package.packageName}/${package.version}+${package.buildNumber}',
       },
-      baseUrl: ref.watch(telegramUrlProvider).requireValue.restApiUrl,
+      baseUrl: telegramUrl.restApiUrl,
       contentType: ContentType.json.value,
       connectTimeout: const Duration(milliseconds: 5000),
       sendTimeout: const Duration(milliseconds: 5000),

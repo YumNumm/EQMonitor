@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'api_client_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-ApiClient apiClient(Ref ref) {
-  final dio = ref.watch(dioProvider);
+Future<ApiClient> apiClient(Ref ref) async {
+  final dio = await ref.watch(dioProvider.future);
   return ApiClient(dio);
 }

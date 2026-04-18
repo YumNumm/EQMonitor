@@ -14,7 +14,7 @@ part of 'ntp_provider.dart';
 @ProviderFor(Ntp)
 final ntpProvider = NtpProvider._();
 
-final class NtpProvider extends $NotifierProvider<Ntp, NtpStateModel> {
+final class NtpProvider extends $AsyncNotifierProvider<Ntp, NtpState> {
   NtpProvider._()
     : super(
         from: null,
@@ -32,29 +32,21 @@ final class NtpProvider extends $NotifierProvider<Ntp, NtpStateModel> {
   @$internal
   @override
   Ntp create() => Ntp();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(NtpStateModel value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<NtpStateModel>(value),
-    );
-  }
 }
 
-String _$ntpHash() => r'a1a7bc977b5acc5a68f99efa734f4035afc7695a';
+String _$ntpHash() => r'5351551415c443624d1246af63d1eec096cf996c';
 
-abstract class _$Ntp extends $Notifier<NtpStateModel> {
-  NtpStateModel build();
+abstract class _$Ntp extends $AsyncNotifier<NtpState> {
+  FutureOr<NtpState> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<NtpStateModel, NtpStateModel>;
+    final ref = this.ref as $Ref<AsyncValue<NtpState>, NtpState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<NtpStateModel, NtpStateModel>,
-              NtpStateModel,
+              AnyNotifier<AsyncValue<NtpState>, NtpState>,
+              AsyncValue<NtpState>,
               Object?,
               Object?
             >;

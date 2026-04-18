@@ -13,8 +13,12 @@ class NtpConfig extends _$NtpConfig {
   Future<NtpConfigModel> build() async => _load();
 
   Future<NtpConfigModel> _load() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final json = await ds.getString(key: SharedPreferencesKey.ntpConfig);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final json = await sharedPreferences.getString(
+      key: SharedPreferencesKey.ntpConfig,
+    );
     if (json == null) {
       return const NtpConfigModel();
     }
@@ -45,8 +49,10 @@ class NtpConfig extends _$NtpConfig {
   }
 
   Future<void> _save(NtpConfigModel config) async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setString(
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await sharedPreferences.setString(
       key: SharedPreferencesKey.ntpConfig,
       value: jsonEncode(config.toJson()),
     );

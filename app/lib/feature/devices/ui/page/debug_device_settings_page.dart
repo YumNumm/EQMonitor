@@ -236,8 +236,8 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       }
       isBusy.value = true;
       final messenger = ScaffoldMessenger.of(context);
-      final repo = ref.read(pushNotificationRepositoryProvider);
-      final result = await repo.patchNotificationSettings(
+      final notificationRepository = await ref.read(pushNotificationRepositoryProvider.future);
+      final result = await notificationRepository.patchNotificationSettings(
         deviceId: snapshot.deviceId,
         settings: GeneralNotificationSettings(
           tsunamiEnabled: tsunami.value,
@@ -330,8 +330,8 @@ class _TestNotificationSection extends HookConsumerWidget {
       }
       pendingKind.value = kind;
       final messenger = ScaffoldMessenger.of(context);
-      final repo = ref.read(pushNotificationRepositoryProvider);
-      final result = await repo.sendTestNotification(
+      final notificationRepository = await ref.read(pushNotificationRepositoryProvider.future);
+      final result = await notificationRepository.sendTestNotification(
         deviceId: deviceId,
         kind: kind,
       );

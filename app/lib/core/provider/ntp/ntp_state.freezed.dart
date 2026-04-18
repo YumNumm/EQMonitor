@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'ntp_state_model.dart';
+part of 'ntp_state.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -11,24 +11,31 @@ part of 'ntp_state_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+NtpState _$NtpStateFromJson(
+  Map<String, dynamic> json
+) {
+    return _NtpStateModel.fromJson(
+      json
+    );
+}
 
 /// @nodoc
-mixin _$NtpStateModel {
+mixin _$NtpState {
 
  int? get offset; DateTime? get updatedAt;
-/// Create a copy of NtpStateModel
+/// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$NtpStateModelCopyWith<NtpStateModel> get copyWith => _$NtpStateModelCopyWithImpl<NtpStateModel>(this as NtpStateModel, _$identity);
+$NtpStateCopyWith<NtpState> get copyWith => _$NtpStateCopyWithImpl<NtpState>(this as NtpState, _$identity);
 
-  /// Serializes this NtpStateModel to a JSON map.
+  /// Serializes this NtpState to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NtpStateModel&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NtpState&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,15 +44,15 @@ int get hashCode => Object.hash(runtimeType,offset,updatedAt);
 
 @override
 String toString() {
-  return 'NtpStateModel(offset: $offset, updatedAt: $updatedAt)';
+  return 'NtpState(offset: $offset, updatedAt: $updatedAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $NtpStateModelCopyWith<$Res>  {
-  factory $NtpStateModelCopyWith(NtpStateModel value, $Res Function(NtpStateModel) _then) = _$NtpStateModelCopyWithImpl;
+abstract mixin class $NtpStateCopyWith<$Res>  {
+  factory $NtpStateCopyWith(NtpState value, $Res Function(NtpState) _then) = _$NtpStateCopyWithImpl;
 @useResult
 $Res call({
  int? offset, DateTime? updatedAt
@@ -56,14 +63,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$NtpStateModelCopyWithImpl<$Res>
-    implements $NtpStateModelCopyWith<$Res> {
-  _$NtpStateModelCopyWithImpl(this._self, this._then);
+class _$NtpStateCopyWithImpl<$Res>
+    implements $NtpStateCopyWith<$Res> {
+  _$NtpStateCopyWithImpl(this._self, this._then);
 
-  final NtpStateModel _self;
-  final $Res Function(NtpStateModel) _then;
+  final NtpState _self;
+  final $Res Function(NtpState) _then;
 
-/// Create a copy of NtpStateModel
+/// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? offset = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
@@ -76,8 +83,8 @@ as DateTime?,
 }
 
 
-/// Adds pattern-matching-related methods to [NtpStateModel].
-extension NtpStateModelPatterns on NtpStateModel {
+/// Adds pattern-matching-related methods to [NtpState].
+extension NtpStatePatterns on NtpState {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -209,14 +216,14 @@ return $default(_that.offset,_that.updatedAt);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _NtpStateModel implements NtpStateModel {
+class _NtpStateModel implements NtpState {
   const _NtpStateModel({this.offset, this.updatedAt});
   factory _NtpStateModel.fromJson(Map<String, dynamic> json) => _$NtpStateModelFromJson(json);
 
 @override final  int? offset;
 @override final  DateTime? updatedAt;
 
-/// Create a copy of NtpStateModel
+/// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -238,14 +245,14 @@ int get hashCode => Object.hash(runtimeType,offset,updatedAt);
 
 @override
 String toString() {
-  return 'NtpStateModel(offset: $offset, updatedAt: $updatedAt)';
+  return 'NtpState(offset: $offset, updatedAt: $updatedAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$NtpStateModelCopyWith<$Res> implements $NtpStateModelCopyWith<$Res> {
+abstract mixin class _$NtpStateModelCopyWith<$Res> implements $NtpStateCopyWith<$Res> {
   factory _$NtpStateModelCopyWith(_NtpStateModel value, $Res Function(_NtpStateModel) _then) = __$NtpStateModelCopyWithImpl;
 @override @useResult
 $Res call({
@@ -264,7 +271,7 @@ class __$NtpStateModelCopyWithImpl<$Res>
   final _NtpStateModel _self;
   final $Res Function(_NtpStateModel) _then;
 
-/// Create a copy of NtpStateModel
+/// Create a copy of NtpState
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? offset = freezed,Object? updatedAt = freezed,}) {
   return _then(_NtpStateModel(

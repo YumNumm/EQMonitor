@@ -9,8 +9,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'push_notification_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-PushNotificationRepository pushNotificationRepository(Ref ref) =>
-    PushNotificationRepository(ref.watch(apiClientProvider));
+Future<PushNotificationRepository> pushNotificationRepository(Ref ref) async =>
+    PushNotificationRepository(await ref.watch(apiClientProvider.future));
 
 class PushNotificationRepository {
   PushNotificationRepository(this._api);

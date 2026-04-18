@@ -14,8 +14,9 @@ part of 'dio_provider.dart';
 @ProviderFor(dio)
 final dioProvider = DioProvider._();
 
-final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
-    with $Provider<Dio> {
+final class DioProvider
+    extends $FunctionalProvider<AsyncValue<Dio>, Dio, FutureOr<Dio>>
+    with $FutureModifier<Dio>, $FutureProvider<Dio> {
   DioProvider._()
     : super(
         from: null,
@@ -32,21 +33,13 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
 
   @$internal
   @override
-  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  Dio create(Ref ref) {
+  FutureOr<Dio> create(Ref ref) {
     return dio(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Dio value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Dio>(value),
-    );
   }
 }
 
-String _$dioHash() => r'4b44bfc4c8e3771e3335c243f7082bf3d7c2a8f2';
+String _$dioHash() => r'14a349a1440f01647e51b8c427990d75b765a64c';

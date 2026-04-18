@@ -11,14 +11,23 @@ class Debug extends _$Debug {
   Future<bool> build() async => _getIsEnabled();
 
   Future<bool> _getIsEnabled() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final value = await ds.getBool(key: SharedPreferencesKey.debug);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final value = await sharedPreferences.getBool(
+      key: SharedPreferencesKey.debug,
+    );
     return value ?? kDebugMode;
   }
 
   Future<void> save({required bool isEnabled}) async {
     state = AsyncValue.data(isEnabled);
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setBool(key: SharedPreferencesKey.debug, value: isEnabled);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await sharedPreferences.setBool(
+      key: SharedPreferencesKey.debug,
+      value: isEnabled,
+    );
   }
 }

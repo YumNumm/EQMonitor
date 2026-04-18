@@ -18,11 +18,13 @@ final kyoshinMonitorObservationPointsProvider =
 final class KyoshinMonitorObservationPointsProvider
     extends
         $FunctionalProvider<
+          AsyncValue<List<KyoshinMonitorObservationPoint>>,
           List<KyoshinMonitorObservationPoint>,
-          List<KyoshinMonitorObservationPoint>,
-          List<KyoshinMonitorObservationPoint>
+          FutureOr<List<KyoshinMonitorObservationPoint>>
         >
-    with $Provider<List<KyoshinMonitorObservationPoint>> {
+    with
+        $FutureModifier<List<KyoshinMonitorObservationPoint>>,
+        $FutureProvider<List<KyoshinMonitorObservationPoint>> {
   KyoshinMonitorObservationPointsProvider._()
     : super(
         from: null,
@@ -39,27 +41,18 @@ final class KyoshinMonitorObservationPointsProvider
 
   @$internal
   @override
-  $ProviderElement<List<KyoshinMonitorObservationPoint>> $createElement(
+  $FutureProviderElement<List<KyoshinMonitorObservationPoint>> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  List<KyoshinMonitorObservationPoint> create(Ref ref) {
+  FutureOr<List<KyoshinMonitorObservationPoint>> create(Ref ref) {
     return kyoshinMonitorObservationPoints(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<KyoshinMonitorObservationPoint> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride:
-          $SyncValueProvider<List<KyoshinMonitorObservationPoint>>(value),
-    );
   }
 }
 
 String _$kyoshinMonitorObservationPointsHash() =>
-    r'40cd77fd1f9eb6228c3a3c0884124ab2ee05b870';
+    r'09f6b7870b09a46f87a8b1a6a149398270f6db90';
 
 @ProviderFor(kyoshinMonitorInternalObservationPointsConverted)
 final kyoshinMonitorInternalObservationPointsConvertedProvider =
@@ -111,11 +104,13 @@ final kyoshinObservationPointsProvider = KyoshinObservationPointsProvider._();
 final class KyoshinObservationPointsProvider
     extends
         $FunctionalProvider<
+          AsyncValue<KyoshinObservationPoints>,
           KyoshinObservationPoints,
-          KyoshinObservationPoints,
-          KyoshinObservationPoints
+          FutureOr<KyoshinObservationPoints>
         >
-    with $Provider<KyoshinObservationPoints> {
+    with
+        $FutureModifier<KyoshinObservationPoints>,
+        $FutureProvider<KyoshinObservationPoints> {
   KyoshinObservationPointsProvider._()
     : super(
         from: null,
@@ -132,26 +127,18 @@ final class KyoshinObservationPointsProvider
 
   @$internal
   @override
-  $ProviderElement<KyoshinObservationPoints> $createElement(
+  $FutureProviderElement<KyoshinObservationPoints> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  KyoshinObservationPoints create(Ref ref) {
+  FutureOr<KyoshinObservationPoints> create(Ref ref) {
     return kyoshinObservationPoints(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(KyoshinObservationPoints value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<KyoshinObservationPoints>(value),
-    );
   }
 }
 
 String _$kyoshinObservationPointsHash() =>
-    r'5ed1439d3d32d21fb6e339c80b5f4070edbafc10';
+    r'ccb29276efba88c4c037ca87ee1293582f7168be';
 
 @ProviderFor(kyoshinMonitorInternalObservationPoints)
 final kyoshinMonitorInternalObservationPointsProvider =

@@ -14,8 +14,12 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
   Future<ThemeMode> build() async => _load();
 
   Future<ThemeMode> _load() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final value = await ds.getString(key: SharedPreferencesKey.themeMode);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final value = await sharedPreferences.getString(
+      key: SharedPreferencesKey.themeMode,
+    );
     if (value == null) {
       return ThemeMode.system;
     }
@@ -25,8 +29,13 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
 
   Future<void> setThemeMode(ThemeMode mode) async {
     state = AsyncValue.data(mode);
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setString(key: SharedPreferencesKey.themeMode, value: mode.name);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await sharedPreferences.setString(
+      key: SharedPreferencesKey.themeMode,
+      value: mode.name,
+    );
   }
 }
 

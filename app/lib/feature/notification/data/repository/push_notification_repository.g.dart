@@ -18,11 +18,13 @@ final pushNotificationRepositoryProvider =
 final class PushNotificationRepositoryProvider
     extends
         $FunctionalProvider<
+          AsyncValue<PushNotificationRepository>,
           PushNotificationRepository,
-          PushNotificationRepository,
-          PushNotificationRepository
+          FutureOr<PushNotificationRepository>
         >
-    with $Provider<PushNotificationRepository> {
+    with
+        $FutureModifier<PushNotificationRepository>,
+        $FutureProvider<PushNotificationRepository> {
   PushNotificationRepositoryProvider._()
     : super(
         from: null,
@@ -39,23 +41,15 @@ final class PushNotificationRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<PushNotificationRepository> $createElement(
+  $FutureProviderElement<PushNotificationRepository> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  PushNotificationRepository create(Ref ref) {
+  FutureOr<PushNotificationRepository> create(Ref ref) {
     return pushNotificationRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(PushNotificationRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<PushNotificationRepository>(value),
-    );
   }
 }
 
 String _$pushNotificationRepositoryHash() =>
-    r'5efdd26888ce50cf9d38c56972f38196ad82860a';
+    r'a7d7237834f60f8e2518ce39e8e46b68f4142624';

@@ -17,7 +17,7 @@ Future<EarthquakeHistoryRepository> earthquakeHistoryRepository(
 ) async {
   final jmaParam = await ref.watch(jmaParameterProvider.future);
   return EarthquakeHistoryRepository(
-    api: ref.watch(apiClientProvider),
+    api: await ref.watch(apiClientProvider.future),
     earthquakeParameter: jmaParam.earthquake,
   );
 }

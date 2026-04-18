@@ -19,7 +19,7 @@ class TelegramListByEventId extends _$TelegramListByEventId {
   }
 
   Future<TelegramListByEventIdState> _fetchInitialData() async {
-    final client = ref.read(apiClientProvider);
+    final client = await ref.read(apiClientProvider.future);
     final response = await client.telegram.getV2TelegramEventIdEventId(
       eventId: eventId,
       limit: '50',
@@ -48,7 +48,7 @@ class TelegramListByEventId extends _$TelegramListByEventId {
     }
 
     state = await state.guardPlus(() async {
-      final client = ref.read(apiClientProvider);
+      final client = await ref.read(apiClientProvider.future);
       final response = await client.telegram.getV2TelegramEventIdEventId(
         eventId: eventId,
         limit: '50',

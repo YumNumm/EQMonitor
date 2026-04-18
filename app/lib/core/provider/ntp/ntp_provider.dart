@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_config_model.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_config_provider.dart';
-import 'package:eqmonitor/core/provider/ntp/ntp_state_model.dart';
+import 'package:eqmonitor/core/provider/ntp/ntp_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ntp/ntp.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,8 +13,8 @@ part 'ntp_provider.g.dart';
 @Riverpod(keepAlive: true)
 class Ntp extends _$Ntp {
   @override
-  NtpStateModel build() {
-    final config = ref.watch(ntpConfigProvider).requireValue;
+  Future<NtpState> build() async {
+    final config = await ref.watch(ntpConfigProvider.future);
     final interval = config.interval;
 
     final timer = Timer.periodic(interval, (_) async {
@@ -22,7 +22,7 @@ class Ntp extends _$Ntp {
     });
     ref.onDispose(timer.cancel);
 
-    return const NtpStateModel();
+    return const NtpState();
   }
 
   Future<void> sync() async {
@@ -43,13 +43,20 @@ class Ntp extends _$Ntp {
       );
     }
 
-    state = state.copyWith(offset: offset, updatedAt: DateTime.now());
+    final previous = await future;
+
+    state = AsyncData(
+      previous.copyWith(
+        offset: offset,
+        updatedAt: DateTime.now(),
+      ),
+    );
 
     talker.logCustom(NtpLog('NTP Time Sync: offset ${offset}ms'));
   }
 
   DateTime? now() {
-    final offset = state.offset;
+    final offset = state.value?.offset;
     if (offset == null) {
       return null;
     }

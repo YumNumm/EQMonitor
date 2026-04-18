@@ -10,8 +10,10 @@ class LocationTrackingMode extends _$LocationTrackingMode {
   Future<bool> build() async => get();
 
   Future<bool> get() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final value = await ds.getBool(
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final value = await sharedPreferences.getBool(
       key: SharedPreferencesKey.locationTrackingMode,
     );
     return value ?? false;
@@ -19,8 +21,10 @@ class LocationTrackingMode extends _$LocationTrackingMode {
 
   Future<void> set({required bool value}) async {
     state = AsyncValue.data(value);
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setBool(
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await sharedPreferences.setBool(
       key: SharedPreferencesKey.locationTrackingMode,
       value: value,
     );

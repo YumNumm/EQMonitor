@@ -196,8 +196,12 @@ class ReplayNotifier extends _$ReplayNotifier {
     }
 
     final imageParser = ref.read(kyoshinMonitorImageParserProvider);
-    final points = ref.read(kyoshinMonitorObservationPointsProvider);
-    final observationPoints = ref.read(kyoshinObservationPointsProvider);
+    final points = await ref.read(
+      kyoshinMonitorObservationPointsProvider.future,
+    );
+    final observationPoints = await ref.read(
+      kyoshinObservationPointsProvider.future,
+    );
 
     final result = await imageParser.parseGif(
       gifImage: imageData,

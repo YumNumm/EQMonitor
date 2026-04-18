@@ -33,8 +33,10 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       if (previous == null) {
         return;
       }
-      if (previous.requireValue.realtimeDataType != next.requireValue.realtimeDataType ||
-          previous.requireValue.realtimeLayer != next.requireValue.realtimeLayer ||
+      if (previous.requireValue.realtimeDataType !=
+              next.requireValue.realtimeDataType ||
+          previous.requireValue.realtimeLayer !=
+              next.requireValue.realtimeLayer ||
           previous.requireValue.useKmoni != next.requireValue.useKmoni) {
         onSettingsChanged();
       }
@@ -62,8 +64,12 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     state = await AsyncValue.guard(() async {
       final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
       final imageParser = ref.read(kyoshinMonitorImageParserProvider);
-      final points = ref.read(kyoshinMonitorObservationPointsProvider);
-      final observationPoints = ref.read(kyoshinObservationPointsProvider);
+      final points = await ref.read(
+        kyoshinMonitorObservationPointsProvider.future,
+      );
+      final observationPoints = await ref.read(
+        kyoshinObservationPointsProvider.future,
+      );
       // 画像を取得
       final realtimeDataType = ref
           .read(kyoshinMonitorSettingsProvider)

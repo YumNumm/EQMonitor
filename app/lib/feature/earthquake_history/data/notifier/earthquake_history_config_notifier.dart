@@ -19,8 +19,8 @@ class EarthquakeHistoryConfigNotifier
   Future<EarthquakeHistoryConfig> build() async => _load();
 
   Future<EarthquakeHistoryConfig> _load() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final jsonString = await ds.getString(
+    final sharedPreferences = await ref.read(sharedPreferencesDataSourceProvider.future);
+    final jsonString = await sharedPreferences.getString(
       key: SharedPreferencesKey.earthquakeHistoryConfig,
     );
     if (jsonString == null) {
@@ -37,8 +37,8 @@ class EarthquakeHistoryConfigNotifier
   }
 
   Future<void> _save(EarthquakeHistoryConfig value) async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setString(
+    final sharedPreferences = await ref.read(sharedPreferencesDataSourceProvider.future);
+    await sharedPreferences.setString(
       key: SharedPreferencesKey.earthquakeHistoryConfig,
       value: jsonEncode(value.toJson()),
     );

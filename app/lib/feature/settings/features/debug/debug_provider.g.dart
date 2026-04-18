@@ -34,7 +34,7 @@ final class DebugProvider extends $AsyncNotifierProvider<Debug, bool> {
   Debug create() => Debug();
 }
 
-String _$debugHash() => r'704137228970140848a40cb0e0bfe6b3673fe99a';
+String _$debugHash() => r'c8eadc498f625d3cafc83659b5604c55bbf96ab7';
 
 abstract class _$Debug extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

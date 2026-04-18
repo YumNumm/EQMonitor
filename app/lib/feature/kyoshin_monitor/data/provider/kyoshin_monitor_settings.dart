@@ -13,8 +13,12 @@ class KyoshinMonitorSettings extends _$KyoshinMonitorSettings {
   Future<KyoshinMonitorSettingsModel> build() async => _load();
 
   Future<KyoshinMonitorSettingsModel> _load() async {
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    final json = await ds.getString(key: SharedPreferencesKey.kmoniSettings);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    final json = await sharedPreferences.getString(
+      key: SharedPreferencesKey.kmoniSettings,
+    );
     if (json == null) {
       return const KyoshinMonitorSettingsModel();
     }
@@ -30,8 +34,10 @@ class KyoshinMonitorSettings extends _$KyoshinMonitorSettings {
 
   Future<void> save(KyoshinMonitorSettingsModel model) async {
     state = AsyncValue.data(model);
-    final ds = ref.read(sharedPreferencesDataSourceProvider);
-    await ds.setString(
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
+    await sharedPreferences.setString(
       key: SharedPreferencesKey.kmoniSettings,
       value: jsonEncode(model.toJson()),
     );

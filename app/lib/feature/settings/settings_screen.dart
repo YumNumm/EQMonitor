@@ -13,7 +13,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDebugEnabled = ref.watch(debugProvider).requireValue;
+    final isDebugEnabled = ref.watch(debugProvider).value;
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -73,7 +73,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ),
-          if (isDebugEnabled) ...[
+          if (isDebugEnabled ?? false) ...[
             Center(
               child: Text(
                 'Debug Mode',

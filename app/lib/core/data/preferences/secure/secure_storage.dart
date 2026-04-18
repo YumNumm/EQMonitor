@@ -14,15 +14,21 @@ Future<FlutterSecureStorage> secureStorage(Ref ref) async {
     ),
   );
 
-  final sharedDs = ref.read(sharedPreferencesDataSourceProvider);
+  final sharedPreferences = await ref.read(
+    sharedPreferencesDataSourceProvider.future,
+  );
   const secureStorageInitializedKey =
       SharedPreferencesKey.secureStorageInitialized;
-  final hasInitialized =
-      await sharedDs.getBool(key: secureStorageInitializedKey);
+  final hasInitialized = await sharedPreferences.getBool(
+    key: secureStorageInitializedKey,
+  );
 
   if (hasInitialized == null) {
     await storage.deleteAll();
-    await sharedDs.setBool(key: secureStorageInitializedKey, value: true);
+    await sharedPreferences.setBool(
+      key: secureStorageInitializedKey,
+      value: true,
+    );
   }
   return storage;
 }

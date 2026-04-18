@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:eqmonitor/feature/home/data/provider/kyoshin_monitor_points_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,14 +18,9 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = MapController.of(context);
     final styleController = controller.style;
-    final observationGeoJson = ref.watch(
-      kyoshinMonitorObservationGeoJsonProvider,
-    );
     final useKmoni = ref.watch(
       kyoshinMonitorSettingsProvider.select((v) => v.requireValue.useKmoni),
     );
-
-    final eventProvider = MapLibreEventProvider.of(context);
 
     useEffect(
       () {
@@ -36,19 +30,8 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
 
         unawaited(_initializeLayer(styleController));
 
-        final stream = eventProvider.eventStream.listen((
-          event,
-        ) {
-          // if (event is MapEventClick) {
-          //   talker.debug('click: ${event.screenPoint}');
-          //   final features = controller.queryLayers(event.screenPoint);
-          //   talker.debug('features: $features');
-          // }
-        });
-
         return () {
           unawaited(_cleanupLayer(styleController));
-          unawaited(stream.cancel());
         };
       },
       [styleController, useKmoni],
@@ -60,11 +43,18 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(_updatePoints(styleController, observationGeoJson));
-
+        ref.listenManual(
+          kyoshinMonitorObservationGeoJsonProvider,
+          (_, next) async {
+            await styleController.updateGeoJsonSource(
+              id: _sourceId,
+              data: next,
+            );
+          },
+        );
         return null;
       },
-      [styleController, observationGeoJson, useKmoni],
+      [styleController, useKmoni],
     );
 
     return const SizedBox.shrink();
@@ -109,13 +99,6 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
         },
       ),
     );
-  }
-
-  Future<void> _updatePoints(
-    StyleController style,
-    String geoJson,
-  ) async {
-    await style.updateGeoJsonSource(id: _sourceId, data: geoJson);
   }
 
   Future<void> _cleanupLayer(StyleController style) async {

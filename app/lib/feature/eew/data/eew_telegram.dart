@@ -62,7 +62,7 @@ class Eew extends _$Eew {
 
 @Riverpod(keepAlive: true)
 Future<List<EewTelegramItem>> _eewRest(Ref ref) async {
-  final api = ref.watch(apiClientProvider);
+  final api = await ref.watch(apiClientProvider.future);
   final response = await api.eew.getV2EewLatest();
   return response.data.items
       .map((e) => e.toEewTelegramItem())

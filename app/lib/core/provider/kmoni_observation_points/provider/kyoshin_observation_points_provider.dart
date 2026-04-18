@@ -7,10 +7,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_observation_points_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-List<KyoshinMonitorObservationPoint> kyoshinMonitorObservationPoints(Ref ref) =>
-    ref
-        .watch(kyoshinMonitorInternalObservationPointsConvertedProvider)
-        .requireValue;
+Future<List<KyoshinMonitorObservationPoint>> kyoshinMonitorObservationPoints(
+  Ref ref,
+) async =>
+    ref.watch(kyoshinMonitorInternalObservationPointsConvertedProvider.future);
 
 @Riverpod(keepAlive: true)
 Future<List<KyoshinMonitorObservationPoint>>
@@ -32,8 +32,8 @@ kyoshinMonitorInternalObservationPointsConverted(Ref ref) async {
 }
 
 @Riverpod(keepAlive: true)
-KyoshinObservationPoints kyoshinObservationPoints(Ref ref) =>
-    ref.watch(kyoshinMonitorInternalObservationPointsProvider).requireValue;
+Future<KyoshinObservationPoints> kyoshinObservationPoints(Ref ref) async =>
+    ref.watch(kyoshinMonitorInternalObservationPointsProvider.future);
 
 @Riverpod(keepAlive: true)
 Future<KyoshinObservationPoints> kyoshinMonitorInternalObservationPoints(

@@ -8,14 +8,31 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_monitor_points_provider.g.dart';
 
 @riverpod
+List<KyoshinMonitorImageParseObservationPoint>
+_kyoshinMonitorObservationPointsStream(Ref ref) {
+  ref.listen(
+    kyoshinMonitorProvider.select(
+      (v) => v.value?.lastImageFetchTargetTime,
+    ),
+    (prev, next) {
+      print('prev: $prev, next: $next');
+      ref.invalidateSelf();
+    },
+  );
+  return ref.read(
+        kyoshinMonitorProvider.select((v) => v.value?.analyzedPoints),
+      ) ??
+      [];
+}
+
+@riverpod
 String kyoshinMonitorObservationGeoJson(Ref ref) {
   final analyzedPoints = ref.watch(
-    kyoshinMonitorProvider.select((v) => v.value?.analyzedPoints),
+    _kyoshinMonitorObservationPointsStreamProvider,
   );
-  final points = analyzedPoints ?? <KyoshinMonitorImageParseObservationPoint>[];
 
   final features = <Map<String, dynamic>>[];
-  for (final p in points) {
+  for (final p in analyzedPoints) {
     final observation = p.observation;
     final point = p.point;
     final loc = point.location;
@@ -36,8 +53,9 @@ String kyoshinMonitorObservationGeoJson(Ref ref) {
     });
   }
 
-  return jsonEncode({
+  final json = jsonEncode({
     'type': 'FeatureCollection',
     'features': features,
   });
+  return json;
 }

@@ -12,8 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'device_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-DeviceRepository deviceRepository(Ref ref) =>
-    DeviceRepository(ref.watch(apiClientProvider));
+Future<DeviceRepository> deviceRepository(Ref ref) async =>
+    DeviceRepository(await ref.watch(apiClientProvider.future));
 
 class DeviceRepository {
   DeviceRepository(this._api);
