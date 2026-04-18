@@ -14,6 +14,7 @@ abstract class TsunamiDetailResponse with _$TsunamiDetailResponse {
   const factory TsunamiDetailResponse({
     required TsunamiDetail tsunami,
   }) = _TsunamiDetailResponse;
-  
-  factory TsunamiDetailResponse.fromJson(Map<String, Object?> json) => _$TsunamiDetailResponseFromJson(json);
+
+  factory TsunamiDetailResponse.fromJson(Map<String, Object?> json) =>
+      _$TsunamiDetailResponseFromJson(json);
 }

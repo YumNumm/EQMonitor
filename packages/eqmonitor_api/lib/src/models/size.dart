@@ -16,6 +16,6 @@ abstract class Size with _$Size {
     /// 画像高さ(px)
     required num y,
   }) = _Size;
-  
+
   factory Size.fromJson(Map<String, Object?> json) => _$SizeFromJson(json);
 }

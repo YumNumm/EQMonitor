@@ -44,7 +44,8 @@ enum TelegramType {
   @JsonValue('VYSE60')
   vyse60('VYSE60'),
   @JsonValue('SHINDO_DB')
-  shindoDb('SHINDO_DB');
+  shindoDb('SHINDO_DB')
+  ;
 
   const TelegramType(this.json);
 
@@ -52,8 +53,10 @@ enum TelegramType {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

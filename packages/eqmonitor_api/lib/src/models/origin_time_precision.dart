@@ -18,7 +18,8 @@ enum OriginTimePrecision {
   @JsonValue('DAY')
   day('DAY'),
   @JsonValue('MONTH')
-  month('MONTH');
+  month('MONTH')
+  ;
 
   const OriginTimePrecision(this.json);
 
@@ -26,8 +27,10 @@ enum OriginTimePrecision {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

@@ -14,6 +14,7 @@ abstract class EarthquakeDetailResponse with _$EarthquakeDetailResponse {
   const factory EarthquakeDetailResponse({
     required Earthquake earthquake,
   }) = _EarthquakeDetailResponse;
-  
-  factory EarthquakeDetailResponse.fromJson(Map<String, Object?> json) => _$EarthquakeDetailResponseFromJson(json);
+
+  factory EarthquakeDetailResponse.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeDetailResponseFromJson(json);
 }

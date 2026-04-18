@@ -12,15 +12,12 @@ part 'tsunami_forecast_max_height.g.dart';
 @Freezed()
 abstract class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
   const factory TsunamiForecastMaxHeight({
-    @JsonKey(includeIfNull: false)
-    num? value,
-    @JsonKey(includeIfNull: false)
-    bool? over,
-    @JsonKey(includeIfNull: false)
-    QualitativeHeight? qualitative,
-    @JsonKey(includeIfNull: false,name: 'is_important')
-    bool? isImportant,
+    @JsonKey(includeIfNull: false) num? value,
+    @JsonKey(includeIfNull: false) bool? over,
+    @JsonKey(includeIfNull: false) QualitativeHeight? qualitative,
+    @JsonKey(includeIfNull: false, name: 'is_important') bool? isImportant,
   }) = _TsunamiForecastMaxHeight;
-  
-  factory TsunamiForecastMaxHeight.fromJson(Map<String, Object?> json) => _$TsunamiForecastMaxHeightFromJson(json);
+
+  factory TsunamiForecastMaxHeight.fromJson(Map<String, Object?> json) =>
+      _$TsunamiForecastMaxHeightFromJson(json);
 }

@@ -14,7 +14,8 @@ enum DepthType {
   @JsonValue('OVER_700')
   over700('OVER_700'),
   @JsonValue('UNKNOWN')
-  unknown('UNKNOWN');
+  unknown('UNKNOWN')
+  ;
 
   const DepthType(this.json);
 
@@ -22,8 +23,10 @@ enum DepthType {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

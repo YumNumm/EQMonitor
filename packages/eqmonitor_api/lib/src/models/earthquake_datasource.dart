@@ -10,7 +10,8 @@ enum EarthquakeDatasource {
   @JsonValue('JMA_INTENSITY_DATABASE')
   jmaIntensityDatabase('JMA_INTENSITY_DATABASE'),
   @JsonValue('JMA_DISASTER_INFORMATION_XML')
-  jmaDisasterInformationXml('JMA_DISASTER_INFORMATION_XML');
+  jmaDisasterInformationXml('JMA_DISASTER_INFORMATION_XML')
+  ;
 
   const EarthquakeDatasource(this.json);
 
@@ -18,8 +19,10 @@ enum EarthquakeDatasource {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

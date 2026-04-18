@@ -14,11 +14,11 @@ abstract class TsunamiForecastStation with _$TsunamiForecastStation {
   const factory TsunamiForecastStation({
     required String code,
     required String name,
-    @JsonKey(name: 'high_tide_date_time')
-    required DateTime highTideDateTime,
-    @JsonKey(includeIfNull: false,name: 'first_height')
+    @JsonKey(name: 'high_tide_date_time') required DateTime highTideDateTime,
+    @JsonKey(includeIfNull: false, name: 'first_height')
     TsunamiForecastFirstHeight? firstHeight,
   }) = _TsunamiForecastStation;
-  
-  factory TsunamiForecastStation.fromJson(Map<String, Object?> json) => _$TsunamiForecastStationFromJson(json);
+
+  factory TsunamiForecastStation.fromJson(Map<String, Object?> json) =>
+      _$TsunamiForecastStationFromJson(json);
 }

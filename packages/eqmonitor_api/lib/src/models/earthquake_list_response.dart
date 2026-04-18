@@ -15,13 +15,12 @@ abstract class EarthquakeListResponse with _$EarthquakeListResponse {
     required List<EarthquakePartial> items,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_token')
-    String? nextToken,
+    @JsonKey(includeIfNull: false, name: 'next_token') String? nextToken,
 
     /// カーソル情報（base64エンコード）
-    @JsonKey(includeIfNull: false,name: 'next_pooling')
-    String? nextPooling,
+    @JsonKey(includeIfNull: false, name: 'next_pooling') String? nextPooling,
   }) = _EarthquakeListResponse;
-  
-  factory EarthquakeListResponse.fromJson(Map<String, Object?> json) => _$EarthquakeListResponseFromJson(json);
+
+  factory EarthquakeListResponse.fromJson(Map<String, Object?> json) =>
+      _$EarthquakeListResponseFromJson(json);
 }

@@ -8,10 +8,13 @@ part 'eew_intensity_region_arrival_time_arrived.freezed.dart';
 part 'eew_intensity_region_arrival_time_arrived.g.dart';
 
 @Freezed()
-abstract class EewIntensityRegionArrivalTimeArrived with _$EewIntensityRegionArrivalTimeArrived {
+abstract class EewIntensityRegionArrivalTimeArrived
+    with _$EewIntensityRegionArrivalTimeArrived {
   const factory EewIntensityRegionArrivalTimeArrived({
     required dynamic type,
   }) = _EewIntensityRegionArrivalTimeArrived;
-  
-  factory EewIntensityRegionArrivalTimeArrived.fromJson(Map<String, Object?> json) => _$EewIntensityRegionArrivalTimeArrivedFromJson(json);
+
+  factory EewIntensityRegionArrivalTimeArrived.fromJson(
+    Map<String, Object?> json,
+  ) => _$EewIntensityRegionArrivalTimeArrivedFromJson(json);
 }

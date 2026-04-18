@@ -13,6 +13,7 @@ abstract class EpicenterInfo with _$EpicenterInfo {
     required num code,
     required String name,
   }) = _EpicenterInfo;
-  
-  factory EpicenterInfo.fromJson(Map<String, Object?> json) => _$EpicenterInfoFromJson(json);
+
+  factory EpicenterInfo.fromJson(Map<String, Object?> json) =>
+      _$EpicenterInfoFromJson(json);
 }

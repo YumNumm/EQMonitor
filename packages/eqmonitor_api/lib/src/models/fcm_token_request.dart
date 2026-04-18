@@ -12,6 +12,7 @@ abstract class FcmTokenRequest with _$FcmTokenRequest {
   const factory FcmTokenRequest({
     required String token,
   }) = _FcmTokenRequest;
-  
-  factory FcmTokenRequest.fromJson(Map<String, Object?> json) => _$FcmTokenRequestFromJson(json);
+
+  factory FcmTokenRequest.fromJson(Map<String, Object?> json) =>
+      _$FcmTokenRequestFromJson(json);
 }

@@ -14,6 +14,7 @@ abstract class DispatchSummaryListResponse with _$DispatchSummaryListResponse {
   const factory DispatchSummaryListResponse({
     required List<Items3> items,
   }) = _DispatchSummaryListResponse;
-  
-  factory DispatchSummaryListResponse.fromJson(Map<String, Object?> json) => _$DispatchSummaryListResponseFromJson(json);
+
+  factory DispatchSummaryListResponse.fromJson(Map<String, Object?> json) =>
+      _$DispatchSummaryListResponseFromJson(json);
 }

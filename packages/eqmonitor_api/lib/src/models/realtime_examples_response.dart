@@ -12,6 +12,7 @@ abstract class RealtimeExamplesResponse with _$RealtimeExamplesResponse {
   const factory RealtimeExamplesResponse({
     required List<dynamic> examples,
   }) = _RealtimeExamplesResponse;
-  
-  factory RealtimeExamplesResponse.fromJson(Map<String, Object?> json) => _$RealtimeExamplesResponseFromJson(json);
+
+  factory RealtimeExamplesResponse.fromJson(Map<String, Object?> json) =>
+      _$RealtimeExamplesResponseFromJson(json);
 }

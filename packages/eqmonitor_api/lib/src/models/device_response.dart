@@ -15,14 +15,12 @@ abstract class DeviceResponse with _$DeviceResponse {
   const factory DeviceResponse({
     required String id,
     required Type type,
-    @JsonKey(name: 'user_id')
-    required String userId,
+    @JsonKey(name: 'user_id') required String userId,
     required Locale locale,
-    @JsonKey(name: 'created_at')
-    required String createdAt,
-    @JsonKey(name: 'updated_at')
-    required String updatedAt,
+    @JsonKey(name: 'created_at') required String createdAt,
+    @JsonKey(name: 'updated_at') required String updatedAt,
   }) = _DeviceResponse;
-  
-  factory DeviceResponse.fromJson(Map<String, Object?> json) => _$DeviceResponseFromJson(json);
+
+  factory DeviceResponse.fromJson(Map<String, Object?> json) =>
+      _$DeviceResponseFromJson(json);
 }

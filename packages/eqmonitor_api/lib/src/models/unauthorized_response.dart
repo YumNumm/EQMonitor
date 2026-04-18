@@ -13,6 +13,7 @@ abstract class UnauthorizedResponse with _$UnauthorizedResponse {
     required dynamic code,
     required String message,
   }) = _UnauthorizedResponse;
-  
-  factory UnauthorizedResponse.fromJson(Map<String, Object?> json) => _$UnauthorizedResponseFromJson(json);
+
+  factory UnauthorizedResponse.fromJson(Map<String, Object?> json) =>
+      _$UnauthorizedResponseFromJson(json);
 }

@@ -11,7 +11,8 @@ enum Type4 {
   @JsonValue('VTSE51')
   vtse51('VTSE51'),
   @JsonValue('VTSE52')
-  vtse52('VTSE52');
+  vtse52('VTSE52')
+  ;
 
   const Type4(this.json);
 
@@ -19,8 +20,10 @@ enum Type4 {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

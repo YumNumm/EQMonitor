@@ -13,6 +13,7 @@ abstract class Location with _$Location {
     required num latitude,
     required num longitude,
   }) = _Location;
-  
-  factory Location.fromJson(Map<String, Object?> json) => _$LocationFromJson(json);
+
+  factory Location.fromJson(Map<String, Object?> json) =>
+      _$LocationFromJson(json);
 }

@@ -14,6 +14,7 @@ abstract class Regions with _$Regions {
     required String name,
     required String intensity,
   }) = _Regions;
-  
-  factory Regions.fromJson(Map<String, Object?> json) => _$RegionsFromJson(json);
+
+  factory Regions.fromJson(Map<String, Object?> json) =>
+      _$RegionsFromJson(json);
 }
