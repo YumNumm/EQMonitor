@@ -140,6 +140,54 @@ final class KyoshinObservationPointsProvider
 String _$kyoshinObservationPointsHash() =>
     r'ccb29276efba88c4c037ca87ee1293582f7168be';
 
+/// protobuf の観測点を GeoJSON 生成用の純 Dart 型へ変換（Worker Isolate 境界用）。
+
+@ProviderFor(kyoshinNamedObservationPoints)
+final kyoshinNamedObservationPointsProvider =
+    KyoshinNamedObservationPointsProvider._();
+
+/// protobuf の観測点を GeoJSON 生成用の純 Dart 型へ変換（Worker Isolate 境界用）。
+
+final class KyoshinNamedObservationPointsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<NamedObservationPoint>>,
+          List<NamedObservationPoint>,
+          FutureOr<List<NamedObservationPoint>>
+        >
+    with
+        $FutureModifier<List<NamedObservationPoint>>,
+        $FutureProvider<List<NamedObservationPoint>> {
+  /// protobuf の観測点を GeoJSON 生成用の純 Dart 型へ変換（Worker Isolate 境界用）。
+  KyoshinNamedObservationPointsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kyoshinNamedObservationPointsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kyoshinNamedObservationPointsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<NamedObservationPoint>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<NamedObservationPoint>> create(Ref ref) {
+    return kyoshinNamedObservationPoints(ref);
+  }
+}
+
+String _$kyoshinNamedObservationPointsHash() =>
+    r'ab93210f4f6b510040c0e145deb1b3dd476e5ef4';
+
 @ProviderFor(kyoshinMonitorInternalObservationPoints)
 final kyoshinMonitorInternalObservationPointsProvider =
     KyoshinMonitorInternalObservationPointsProvider._();

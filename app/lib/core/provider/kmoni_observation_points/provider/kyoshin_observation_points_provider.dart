@@ -35,6 +35,24 @@ kyoshinMonitorInternalObservationPointsConverted(Ref ref) async {
 Future<KyoshinObservationPoints> kyoshinObservationPoints(Ref ref) async =>
     ref.watch(kyoshinMonitorInternalObservationPointsProvider.future);
 
+/// protobuf の観測点を GeoJSON 生成用の純 Dart 型へ変換（Worker Isolate 境界用）。
+@Riverpod(keepAlive: true)
+Future<List<NamedObservationPoint>> kyoshinNamedObservationPoints(Ref ref) async {
+  final protobuf = await ref.watch(kyoshinObservationPointsProvider.future);
+  return protobuf.points
+      .map(
+        (p) => NamedObservationPoint(
+          code: p.code,
+          name: p.name,
+          latitude: p.location.latitude,
+          longitude: p.location.longitude,
+          x: p.point.x,
+          y: p.point.y,
+        ),
+      )
+      .toList();
+}
+
 @Riverpod(keepAlive: true)
 Future<KyoshinObservationPoints> kyoshinMonitorInternalObservationPoints(
   Ref ref,
