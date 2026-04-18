@@ -1,4 +1,3 @@
-import 'dart:isolate';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -57,11 +56,6 @@ class KyoshinMonitorImageParser {
     }
     return parse(image: image, points: points);
   }
-
-  Future<List<KyoshinMonitorImageParseObservationResult>> parseGifInIsolate(
-    List<int> gifImage,
-    List<KyoshinMonitorObservationPoint> points,
-  ) => Isolate.run(() => parseGif(gifImage: gifImage, points: points));
 
   @visibleForTesting
   double? hsvToPosition(HsvColor hsv) => _hsvToPosition(hsv);

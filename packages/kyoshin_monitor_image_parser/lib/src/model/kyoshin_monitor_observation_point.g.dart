@@ -52,3 +52,28 @@ Map<String, dynamic> _$KyoshinMonitorObservationAnalyzedPointToJson(
   'g': instance.g,
   'b': instance.b,
 };
+
+_NamedObservationPoint _$NamedObservationPointFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_NamedObservationPoint', json, ($checkedConvert) {
+  final val = _NamedObservationPoint(
+    code: $checkedConvert('code', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String),
+    latitude: $checkedConvert('latitude', (v) => (v as num).toDouble()),
+    longitude: $checkedConvert('longitude', (v) => (v as num).toDouble()),
+    x: $checkedConvert('x', (v) => (v as num).toInt()),
+    y: $checkedConvert('y', (v) => (v as num).toInt()),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$NamedObservationPointToJson(
+  _NamedObservationPoint instance,
+) => <String, dynamic>{
+  'code': instance.code,
+  'name': instance.name,
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
+  'x': instance.x,
+  'y': instance.y,
+};

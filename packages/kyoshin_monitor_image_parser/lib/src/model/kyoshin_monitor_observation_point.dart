@@ -40,3 +40,20 @@ abstract class KyoshinMonitorObservationAnalyzedPoint
   double get scaleToPgv => math.pow(10, 5 * scale - 3).toDouble();
   double get scaleToPgd => math.pow(10, 5 * scale - 4).toDouble();
 }
+
+/// 観測点の表示名・座標を含む。GIF 解析入力用の [KyoshinMonitorObservationPoint] と
+/// インデックスで対応する。
+@freezed
+abstract class NamedObservationPoint with _$NamedObservationPoint {
+  const factory NamedObservationPoint({
+    required String code,
+    required String name,
+    required double latitude,
+    required double longitude,
+    required int x,
+    required int y,
+  }) = _NamedObservationPoint;
+
+  factory NamedObservationPoint.fromJson(Map<String, dynamic> json) =>
+      _$NamedObservationPointFromJson(json);
+}

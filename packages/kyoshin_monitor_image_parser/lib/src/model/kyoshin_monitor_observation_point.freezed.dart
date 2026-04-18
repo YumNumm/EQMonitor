@@ -573,4 +573,282 @@ $KyoshinMonitorObservationPointCopyWith<$Res> get point {
 }
 }
 
+
+/// @nodoc
+mixin _$NamedObservationPoint {
+
+ String get code; String get name; double get latitude; double get longitude; int get x; int get y;
+/// Create a copy of NamedObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$NamedObservationPointCopyWith<NamedObservationPoint> get copyWith => _$NamedObservationPointCopyWithImpl<NamedObservationPoint>(this as NamedObservationPoint, _$identity);
+
+  /// Serializes this NamedObservationPoint to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NamedObservationPoint&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.x, x) || other.x == x)&&(identical(other.y, y) || other.y == y));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,latitude,longitude,x,y);
+
+@override
+String toString() {
+  return 'NamedObservationPoint(code: $code, name: $name, latitude: $latitude, longitude: $longitude, x: $x, y: $y)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $NamedObservationPointCopyWith<$Res>  {
+  factory $NamedObservationPointCopyWith(NamedObservationPoint value, $Res Function(NamedObservationPoint) _then) = _$NamedObservationPointCopyWithImpl;
+@useResult
+$Res call({
+ String code, String name, double latitude, double longitude, int x, int y
+});
+
+
+
+
+}
+/// @nodoc
+class _$NamedObservationPointCopyWithImpl<$Res>
+    implements $NamedObservationPointCopyWith<$Res> {
+  _$NamedObservationPointCopyWithImpl(this._self, this._then);
+
+  final NamedObservationPoint _self;
+  final $Res Function(NamedObservationPoint) _then;
+
+/// Create a copy of NamedObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? latitude = null,Object? longitude = null,Object? x = null,Object? y = null,}) {
+  return _then(_self.copyWith(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,x: null == x ? _self.x : x // ignore: cast_nullable_to_non_nullable
+as int,y: null == y ? _self.y : y // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [NamedObservationPoint].
+extension NamedObservationPointPatterns on NamedObservationPoint {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NamedObservationPoint value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _NamedObservationPoint() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NamedObservationPoint value)  $default,){
+final _that = this;
+switch (_that) {
+case _NamedObservationPoint():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NamedObservationPoint value)?  $default,){
+final _that = this;
+switch (_that) {
+case _NamedObservationPoint() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  double latitude,  double longitude,  int x,  int y)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _NamedObservationPoint() when $default != null:
+return $default(_that.code,_that.name,_that.latitude,_that.longitude,_that.x,_that.y);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  double latitude,  double longitude,  int x,  int y)  $default,) {final _that = this;
+switch (_that) {
+case _NamedObservationPoint():
+return $default(_that.code,_that.name,_that.latitude,_that.longitude,_that.x,_that.y);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  double latitude,  double longitude,  int x,  int y)?  $default,) {final _that = this;
+switch (_that) {
+case _NamedObservationPoint() when $default != null:
+return $default(_that.code,_that.name,_that.latitude,_that.longitude,_that.x,_that.y);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _NamedObservationPoint implements NamedObservationPoint {
+  const _NamedObservationPoint({required this.code, required this.name, required this.latitude, required this.longitude, required this.x, required this.y});
+  factory _NamedObservationPoint.fromJson(Map<String, dynamic> json) => _$NamedObservationPointFromJson(json);
+
+@override final  String code;
+@override final  String name;
+@override final  double latitude;
+@override final  double longitude;
+@override final  int x;
+@override final  int y;
+
+/// Create a copy of NamedObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$NamedObservationPointCopyWith<_NamedObservationPoint> get copyWith => __$NamedObservationPointCopyWithImpl<_NamedObservationPoint>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$NamedObservationPointToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NamedObservationPoint&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.x, x) || other.x == x)&&(identical(other.y, y) || other.y == y));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,name,latitude,longitude,x,y);
+
+@override
+String toString() {
+  return 'NamedObservationPoint(code: $code, name: $name, latitude: $latitude, longitude: $longitude, x: $x, y: $y)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$NamedObservationPointCopyWith<$Res> implements $NamedObservationPointCopyWith<$Res> {
+  factory _$NamedObservationPointCopyWith(_NamedObservationPoint value, $Res Function(_NamedObservationPoint) _then) = __$NamedObservationPointCopyWithImpl;
+@override @useResult
+$Res call({
+ String code, String name, double latitude, double longitude, int x, int y
+});
+
+
+
+
+}
+/// @nodoc
+class __$NamedObservationPointCopyWithImpl<$Res>
+    implements _$NamedObservationPointCopyWith<$Res> {
+  __$NamedObservationPointCopyWithImpl(this._self, this._then);
+
+  final _NamedObservationPoint _self;
+  final $Res Function(_NamedObservationPoint) _then;
+
+/// Create a copy of NamedObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? latitude = null,Object? longitude = null,Object? x = null,Object? y = null,}) {
+  return _then(_NamedObservationPoint(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,x: null == x ? _self.x : x // ignore: cast_nullable_to_non_nullable
+as int,y: null == y ? _self.y : y // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 // dart format on
