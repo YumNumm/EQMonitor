@@ -320,10 +320,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $HttpApiEndpointSelectorRoute._fromState,
         ),
         GoRouteData.$route(
-          path: 'websocket-api-endpoint-selector',
-          factory: $WebsocketEndpointSelectorRoute._fromState,
-        ),
-        GoRouteData.$route(
           path: 'kyoshin-monitor',
           factory: $DebugKyoshinMonitorRoute._fromState,
         ),
@@ -651,28 +647,6 @@ mixin $HttpApiEndpointSelectorRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/api-endpoint-selector');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $WebsocketEndpointSelectorRoute on GoRouteData {
-  static WebsocketEndpointSelectorRoute _fromState(GoRouterState state) =>
-      const WebsocketEndpointSelectorRoute();
-
-  @override
-  String get location =>
-      GoRouteData.$location('/settings/debug/websocket-api-endpoint-selector');
 
   @override
   void go(BuildContext context) => context.go(location);

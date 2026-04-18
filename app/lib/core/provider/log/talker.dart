@@ -7,11 +7,11 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 late final Talker talker;
 
-class TelegramWebSocketLog extends TalkerLog {
-  TelegramWebSocketLog(super.message);
+class RealtimeSseLog extends TalkerLog {
+  RealtimeSseLog(super.message);
 
   @override
-  String get title => 'TelegramWebSocket';
+  String get title => 'RealtimeSse';
 
   @override
   final pen = AnsiPen()..green();
@@ -86,7 +86,7 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
 
   @override
   void onLog(TalkerData log) {
-    if (log.title == TelegramWebSocketLog('').title) {
+    if (log.title == RealtimeSseLog('').title) {
       return;
     }
     unawaited(FirebaseCrashlytics.instance.log(log.message.toString()));

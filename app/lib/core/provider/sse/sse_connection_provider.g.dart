@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'websocket_provider.dart';
+part of 'sse_connection_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -10,12 +10,18 @@ part of 'websocket_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+/// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
 
 @ProviderFor(SseConnection)
 final sseConnectionProvider = SseConnectionProvider._();
 
+/// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+/// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
 final class SseConnectionProvider
     extends $StreamNotifierProvider<SseConnection, Map<String, dynamic>> {
+  /// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+  /// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
   SseConnectionProvider._()
     : super(
         from: null,
@@ -35,7 +41,10 @@ final class SseConnectionProvider
   SseConnection create() => SseConnection();
 }
 
-String _$sseConnectionHash() => r'aba65fb1c1ed10e557c57c0001abb7844e4e1a98';
+String _$sseConnectionHash() => r'93b05c0c45f1630b9411b5fa088be4048679b8cb';
+
+/// eqmonitor-backend [GET /v2/realtime/stream](https://github.com/YumNumm/eqmonitor-backend/blob/develop/api/api/src/features/realtime/routes/realtime.ts):
+/// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
 
 abstract class _$SseConnection extends $StreamNotifier<Map<String, dynamic>> {
   Stream<Map<String, dynamic>> build();

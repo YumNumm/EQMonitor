@@ -22,7 +22,6 @@ import 'package:eqmonitor/feature/settings/children/application_info/license_pag
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
@@ -200,9 +199,6 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<HttpApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
         ),
-        TypedGoRoute<WebsocketEndpointSelectorRoute>(
-          path: 'websocket-api-endpoint-selector',
-        ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
@@ -259,15 +255,6 @@ class HttpApiEndpointSelectorRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const HttpApiEndpointSelectorPage();
-}
-
-class WebsocketEndpointSelectorRoute extends GoRouteData
-    with $WebsocketEndpointSelectorRoute {
-  const WebsocketEndpointSelectorRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const WebSocketApiEndpointSelectorPage();
 }
 
 class EarthquakeHistoryConfigRoute extends GoRouteData

@@ -56,10 +56,4 @@ class TelegramUrl extends _$TelegramUrl {
     state = AsyncValue.data(current.copyWith(restApiUrl: url));
     await _save(state.value!);
   }
-
-  Future<void> updateWebSocketUrl(String url) async {
-    final current = state.value ?? _defaultTelegramUrl();
-    state = AsyncValue.data(current.copyWith(wsApiUrl: url));
-    await _save(state.value!);
-  }
 }

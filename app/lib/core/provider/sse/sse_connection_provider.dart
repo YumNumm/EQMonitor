@@ -5,12 +5,11 @@ import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
-import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'websocket_provider.g.dart';
+part 'sse_connection_provider.g.dart';
 
 enum SseConnectionState {
   connecting,
@@ -18,10 +17,11 @@ enum SseConnectionState {
   disconnected,
 }
 
+/// eqmonitor-backend `GET /v2/realtime/stream`（`api/api/src/features/realtime/routes/realtime.ts`）:
+/// `text/event-stream` で `event: snapshot` / `event: realtime` と `data: <JSON>`、25秒ごとの `: ping`。
 @Riverpod(keepAlive: true)
 class SseConnection extends _$SseConnection {
   CancelToken? _cancelToken;
-  Timer? _reconnectTimer;
 
   @override
   Stream<Map<String, dynamic>> build() async* {
@@ -29,7 +29,6 @@ class SseConnection extends _$SseConnection {
 
     ref.onDispose(() {
       _cancelToken?.cancel('disposed');
-      _reconnectTimer?.cancel();
       unawaited(controller.close());
     });
 
@@ -43,24 +42,16 @@ class SseConnection extends _$SseConnection {
       }
     });
 
-    await _connect(controller);
-
+    unawaited(_connect(controller));
     yield* controller.stream;
   }
 
   Future<void> _connect(StreamController<Map<String, dynamic>> controller) async {
-    final restApiUrl = ref.read(
-      telegramUrlProvider.select((v) => v.requireValue.restApiUrl),
-    );
-    final uri = Uri.parse(restApiUrl).replace(
-      path: '/v2/realtime/stream',
-    );
-
     _cancelToken = CancelToken();
     try {
-      final dio = Dio();
-      final response = await dio.getUri<ResponseBody>(
-        uri,
+      final dio = await ref.read(dioProvider.future);
+      final response = await dio.get<ResponseBody>(
+        '/v2/realtime/stream',
         options: Options(
           responseType: ResponseType.stream,
           headers: {
@@ -85,30 +76,18 @@ class SseConnection extends _$SseConnection {
           break;
         }
         buffer.write(utf8.decode(chunk));
-        final lines = buffer.toString().split('\n');
+        var content = buffer.toString();
         buffer.clear();
-        if (lines.last.isNotEmpty) {
-          buffer.write(lines.removeLast());
-        } else {
-          lines.removeLast();
-        }
 
-        for (final line in lines) {
-          if (line.startsWith('data:')) {
-            final data = line.substring(5).trim();
-            if (data.isEmpty) {
-              continue;
-            }
-            try {
-              final decoded = jsonDecode(data);
-              if (decoded is Map<String, dynamic>) {
-                talker.log('SSE message: $data');
-                controller.add(decoded);
-              }
-            } on FormatException catch (e) {
-              talker.warning('SSE: invalid JSON: $e');
-            }
+        while (true) {
+          final sep = content.indexOf('\n\n');
+          if (sep == -1) {
+            buffer.write(content);
+            break;
           }
+          final frame = content.substring(0, sep);
+          content = content.substring(sep + 2);
+          _dispatchSseFrame(frame, controller);
         }
       }
     } on DioException catch (e) {
@@ -117,11 +96,53 @@ class SseConnection extends _$SseConnection {
         return;
       }
       talker.error('SSE connection error: $e');
+    } finally {
+      if (!controller.isClosed) {
+        unawaited(controller.close());
+      }
+    }
+  }
+
+  void _dispatchSseFrame(
+    String frame,
+    StreamController<Map<String, dynamic>> controller,
+  ) {
+    final normalized = frame.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
+    if (normalized.isEmpty) {
+      return;
+    }
+    final lines = normalized.split('\n');
+    String? event;
+    final dataLines = <String>[];
+    for (final line in lines) {
+      if (line.isEmpty || line.startsWith(':')) {
+        continue;
+      }
+      if (line.startsWith('event:')) {
+        event = line.substring(6).trim();
+        continue;
+      }
+      if (line.startsWith('data:')) {
+        dataLines.add(line.substring(5).trimLeft());
+      }
+    }
+    if (dataLines.isEmpty) {
+      return;
+    }
+    final raw = dataLines.join('\n');
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map<String, dynamic>) {
+        talker.log('SSE message ($event): $raw');
+        controller.add(decoded);
+      }
+    } on FormatException catch (e) {
+      talker.warning('SSE: invalid JSON: $e');
     }
   }
 
   void emit(Map<String, dynamic> data) {
-    // no-op: SSEはサーバーからの一方向通信
+    // SSE はサーバーからの一方向通信
   }
 }
 

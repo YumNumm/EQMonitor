@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
+import 'package:eqmonitor/core/provider/sse/sse_connection_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
@@ -29,7 +29,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (parameter == const EarthquakeHistoryParameter()) {
       final refetchTimer = Timer.periodic(
         const Duration(minutes: 5),
-        (_) => _refreshIfWebsocketNotConnected(),
+        (_) => _refreshIfSseNotConnected(),
       );
       ref
         ..onDispose(refetchTimer.cancel)
@@ -168,7 +168,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     _upsertItems(result.items);
   }
 
-  Future<void> _refreshIfWebsocketNotConnected() async {
+  Future<void> _refreshIfSseNotConnected() async {
     if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
       log('state is not AsyncData<EarthquakeHistoryNotifierState>');
       return;
@@ -186,7 +186,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       log('app is not resumed');
       return;
     }
-    log('refreshIfWebsocketNotConnected');
+    log('refreshIfSseNotConnected');
 
     final repository = await ref.read(
       earthquakeHistoryRepositoryProvider.future,
