@@ -36,7 +36,7 @@ final class LocationTrackingModeProvider
 }
 
 String _$locationTrackingModeHash() =>
-    r'90a91706bc15e3989dab1d917cde63681c3e5b18';
+    r'157077dad8a8c86b38fb01f05c51c3bac277a537';
 
 abstract class _$LocationTrackingMode extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

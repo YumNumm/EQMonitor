@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/home/data/model/home_map_bounds.dart';
 import 'package:eqmonitor/feature/home/data/model/map_camera_state.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -36,6 +38,11 @@ class HomeMapCameraState extends _$HomeMapCameraState {
       return;
     }
 
+    final home = await ref.read(homeConfigurationProvider.future);
+    if (!home.eew.autoZoom) {
+      return;
+    }
+
     final bounds = _calculateBounds(eews);
     await _controller?.fitBounds(bounds: bounds);
     state = state.copyWith(isAtHome: false);
@@ -46,14 +53,10 @@ class HomeMapCameraState extends _$HomeMapCameraState {
       return;
     }
 
-    await _controller?.fitBounds(
-      bounds: const LngLatBounds(
-        longitudeWest: JapanBounds.minLng,
-        longitudeEast: JapanBounds.maxLng,
-        latitudeSouth: JapanBounds.minLat,
-        latitudeNorth: JapanBounds.maxLat,
-      ),
-    );
+    final home = await ref.read(homeConfigurationProvider.future);
+    final bounds = lngLatBoundsForHomeMapSettings(home.map);
+
+    await _controller?.fitBounds(bounds: bounds);
     state = state.copyWith(isAtHome: true);
   }
 

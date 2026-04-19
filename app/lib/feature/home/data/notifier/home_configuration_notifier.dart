@@ -15,7 +15,9 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
 
   Future<HomeConfigurationModel> load() async {
     try {
-      final sharedPreferences = await ref.read(sharedPreferencesDataSourceProvider.future);
+      final sharedPreferences = await ref.read(
+        sharedPreferencesDataSourceProvider.future,
+      );
       final jsonString = await sharedPreferences.getString(
         key: SharedPreferencesKey.homeConfiguration,
       );
@@ -32,7 +34,9 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
 
   Future<void> save(HomeConfigurationModel configuration) async {
     state = AsyncValue.data(configuration);
-    final sharedPreferences = await ref.read(sharedPreferencesDataSourceProvider.future);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
     await sharedPreferences.setString(
       key: SharedPreferencesKey.homeConfiguration,
       value: jsonEncode(configuration.toJson()),
@@ -43,6 +47,32 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
     HomeEarthquakeHistoryScope scope,
   ) async {
     final current = await future;
-    await save(current.copyWith(earthquakeHistoryScope: scope));
+    await save(
+      current.copyWith(
+        common: current.common.copyWith(earthquakeHistoryScope: scope),
+      ),
+    );
+  }
+
+  Future<void> updateEew(HomeEewSettings eew) async {
+    final current = await future;
+    await save(current.copyWith(eew: eew));
+  }
+
+  Future<void> updateKyoshinMonitor(
+    HomeKyoshinMonitorSettings kyoshinMonitor,
+  ) async {
+    final current = await future;
+    await save(current.copyWith(kyoshinMonitor: kyoshinMonitor));
+  }
+
+  Future<void> updateMap(HomeMapSettings map) async {
+    final current = await future;
+    await save(current.copyWith(map: map));
+  }
+
+  Future<void> updateCommon(HomeCommonSettings common) async {
+    final current = await future;
+    await save(current.copyWith(common: common));
   }
 }

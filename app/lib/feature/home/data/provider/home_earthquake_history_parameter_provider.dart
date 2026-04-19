@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -16,10 +17,10 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
   Ref ref,
 ) async {
   final home = await ref.watch(homeConfigurationProvider.future);
-  switch (home.earthquakeHistoryScope) {
-    case .nationwide:
+  switch (home.common.earthquakeHistoryScope) {
+    case HomeEarthquakeHistoryScope.nationwide:
       return const EarthquakeHistoryParameter();
-    case .currentLocation:
+    case HomeEarthquakeHistoryScope.currentLocation:
       final position = ref.watch(locationStreamProvider.select((v) => v.value));
       if (position == null) {
         return null;
@@ -38,7 +39,7 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
             ? city.property!.name
             : null,
       );
-    case .designatedRegion:
+    case HomeEarthquakeHistoryScope.designatedRegion:
       final cfg = await ref.watch(earthquakeHistoryConfigProvider.future);
       final list = cfg.list;
       final t = list.designatedRegionSearchType;

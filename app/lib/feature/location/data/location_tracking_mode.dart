@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'location_tracking_mode.g.dart';
@@ -28,5 +29,14 @@ class LocationTrackingMode extends _$LocationTrackingMode {
       key: SharedPreferencesKey.locationTrackingMode,
       value: value,
     );
+  }
+
+  /// 位置情報の権限をリクエストする（拒否済みの場合は再ダイアログは出ない）。
+  Future<LocationPermission> requestPermission() async {
+    var p = await Geolocator.checkPermission();
+    if (p == LocationPermission.denied) {
+      p = await Geolocator.requestPermission();
+    }
+    return p;
   }
 }
