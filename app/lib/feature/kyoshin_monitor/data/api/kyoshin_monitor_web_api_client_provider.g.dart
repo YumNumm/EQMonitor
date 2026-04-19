@@ -1,0 +1,112 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'kyoshin_monitor_web_api_client_provider.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(kyoshinMonitorWebApiClient)
+final kyoshinMonitorWebApiClientProvider =
+    KyoshinMonitorWebApiClientProvider._();
+
+final class KyoshinMonitorWebApiClientProvider
+    extends
+        $FunctionalProvider<
+          KyoshinMonitorWebApiClient,
+          KyoshinMonitorWebApiClient,
+          KyoshinMonitorWebApiClient
+        >
+    with $Provider<KyoshinMonitorWebApiClient> {
+  KyoshinMonitorWebApiClientProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kyoshinMonitorWebApiClientProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kyoshinMonitorWebApiClientHash();
+
+  @$internal
+  @override
+  $ProviderElement<KyoshinMonitorWebApiClient> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  KyoshinMonitorWebApiClient create(Ref ref) {
+    return kyoshinMonitorWebApiClient(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KyoshinMonitorWebApiClient value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KyoshinMonitorWebApiClient>(value),
+    );
+  }
+}
+
+String _$kyoshinMonitorWebApiClientHash() =>
+    r'ae3c1bcfce39de4f9d92956c35ac13611c655db9';
+
+@ProviderFor(lpgmKyoshinMonitorWebApiClient)
+final lpgmKyoshinMonitorWebApiClientProvider =
+    LpgmKyoshinMonitorWebApiClientProvider._();
+
+final class LpgmKyoshinMonitorWebApiClientProvider
+    extends
+        $FunctionalProvider<
+          LpgmKyoshinMonitorWebApiClient,
+          LpgmKyoshinMonitorWebApiClient,
+          LpgmKyoshinMonitorWebApiClient
+        >
+    with $Provider<LpgmKyoshinMonitorWebApiClient> {
+  LpgmKyoshinMonitorWebApiClientProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'lpgmKyoshinMonitorWebApiClientProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$lpgmKyoshinMonitorWebApiClientHash();
+
+  @$internal
+  @override
+  $ProviderElement<LpgmKyoshinMonitorWebApiClient> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  LpgmKyoshinMonitorWebApiClient create(Ref ref) {
+    return lpgmKyoshinMonitorWebApiClient(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LpgmKyoshinMonitorWebApiClient value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LpgmKyoshinMonitorWebApiClient>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$lpgmKyoshinMonitorWebApiClientHash() =>
+    r'c26fd74259f37a16bb14dcf7705ab4bd62b09cab';

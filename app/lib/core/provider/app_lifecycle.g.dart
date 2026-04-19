@@ -1,0 +1,69 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'app_lifecycle.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
+
+@ProviderFor(AppLifecycle)
+final appLifecycleProvider = AppLifecycleProvider._();
+
+/// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
+final class AppLifecycleProvider
+    extends $NotifierProvider<AppLifecycle, AppLifecycleState> {
+  /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
+  AppLifecycleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appLifecycleProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appLifecycleHash();
+
+  @$internal
+  @override
+  AppLifecycle create() => AppLifecycle();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppLifecycleState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppLifecycleState>(value),
+    );
+  }
+}
+
+String _$appLifecycleHash() => r'9e357a2c4983fa88f3ed65162de86ce5813fb838';
+
+/// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
+
+abstract class _$AppLifecycle extends $Notifier<AppLifecycleState> {
+  AppLifecycleState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AppLifecycleState, AppLifecycleState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AppLifecycleState, AppLifecycleState>,
+              AppLifecycleState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

@@ -1,0 +1,54 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'kyoshin_monitor_maintenance_provider.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(kyoshinMonitorMaintenance)
+final kyoshinMonitorMaintenanceProvider = KyoshinMonitorMaintenanceProvider._();
+
+final class KyoshinMonitorMaintenanceProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<kmoni_api.MaintenanceMessage>,
+          kmoni_api.MaintenanceMessage,
+          FutureOr<kmoni_api.MaintenanceMessage>
+        >
+    with
+        $FutureModifier<kmoni_api.MaintenanceMessage>,
+        $FutureProvider<kmoni_api.MaintenanceMessage> {
+  KyoshinMonitorMaintenanceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kyoshinMonitorMaintenanceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kyoshinMonitorMaintenanceHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<kmoni_api.MaintenanceMessage> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<kmoni_api.MaintenanceMessage> create(Ref ref) {
+    return kyoshinMonitorMaintenance(ref);
+  }
+}
+
+String _$kyoshinMonitorMaintenanceHash() =>
+    r'53cc188e79c961b1c1e80d0b8017dc16c9847536';

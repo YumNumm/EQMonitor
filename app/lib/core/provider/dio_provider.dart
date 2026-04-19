@@ -20,8 +20,8 @@ Future<Dio> dio(Ref ref) async {
   final dio = Dio(
     BaseOptions(
       headers: {
-        'user-agent':
-            '${package.packageName}/${package.version}+${package.buildNumber}',
+        'x-eqmonitor-version': '${package.version}+${package.buildNumber}',
+        'x-eqmonitor-platform': Platform.isAndroid ? 'android' : 'ios',
       },
       baseUrl: telegramUrl.restApiUrl,
       contentType: ContentType.json.value,

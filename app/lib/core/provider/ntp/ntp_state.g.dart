@@ -1,0 +1,27 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
+
+part of 'ntp_state.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_NtpStateModel _$NtpStateModelFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_NtpStateModel', json, ($checkedConvert) {
+      final val = _NtpStateModel(
+        offset: $checkedConvert('offset', (v) => (v as num?)?.toInt()),
+        updatedAt: $checkedConvert(
+          'updated_at',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'updatedAt': 'updated_at'});
+
+Map<String, dynamic> _$NtpStateModelToJson(_NtpStateModel instance) =>
+    <String, dynamic>{
+      'offset': instance.offset,
+      'updated_at': instance.updatedAt?.toIso8601String(),
+    };
