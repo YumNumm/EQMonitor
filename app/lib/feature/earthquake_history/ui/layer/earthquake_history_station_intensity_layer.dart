@@ -93,6 +93,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                     'text-offset': [0, 1.2],
                     'text-anchor': 'top',
                     'text-allow-overlap': false,
+                    'icon-allow-overlap': true,
+                    'icon-ignore-placement': true,
+                    'text-ignore-placement': true,
                   },
                   paint: {
                     'text-color': '#ffffff',
@@ -196,7 +199,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final features = <Map<String, dynamic>>[];
     for (final entry in intensity.intensityTree.entries) {
       final jmaIntensity = entry.key;
-      final color = colorModel.fromJmaIntensity(jmaIntensity).background.toHexStringRGB();
+      final color = colorModel
+          .fromJmaIntensity(jmaIntensity)
+          .background
+          .toHexStringRGB();
       final isFocused = maxIntensity != null && jmaIntensity == maxIntensity;
 
       for (final region in entry.value) {
@@ -238,7 +244,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     final features = <Map<String, dynamic>>[];
     for (final entry in intensity.lpgmIntensityTree.entries) {
       final lpgmIntensity = entry.key;
-      final color = colorModel.fromJmaLpgmIntensity(lpgmIntensity).background.toHexStringRGB();
+      final color = colorModel
+          .fromJmaLpgmIntensity(lpgmIntensity)
+          .background
+          .toHexStringRGB();
 
       for (final region in entry.value) {
         for (final city in region.cities) {

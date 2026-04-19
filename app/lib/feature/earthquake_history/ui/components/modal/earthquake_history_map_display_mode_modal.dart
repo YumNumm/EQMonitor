@@ -177,10 +177,8 @@ class _DisplayModeModalBody extends ConsumerWidget {
                     RadioListTile<HypocenterDisplayMode>.adaptive(
                       title: Text(switch (m) {
                         HypocenterDisplayMode.zoomFade => 'ズームインで表示',
-                        HypocenterDisplayMode.alwaysOpaque =>
-                          '常に不透明（観測点の上）',
-                        HypocenterDisplayMode.belowStations =>
-                          '常に不透明（観測点の下）',
+                        HypocenterDisplayMode.alwaysOpaque => '常に不透明（観測点の上）',
+                        HypocenterDisplayMode.belowStations => '常に不透明（観測点の下）',
                       }),
                       value: m,
                     ),
