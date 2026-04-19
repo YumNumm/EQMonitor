@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
-import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
@@ -19,12 +18,7 @@ typedef DebugDeviceSessionSnapshot = ({
 });
 
 @riverpod
-Future<DebugDeviceSessionSnapshot?> debugDeviceSession(Ref ref) async {
-  final authToken = ref.watch(authProvider).value;
-  if (authToken == null) {
-    return null;
-  }
-
+Future<DebugDeviceSessionSnapshot> debugDeviceSession(Ref ref) async {
   ref.watch(notificationTokenStreamProvider);
   final deviceId = await ref.watch(deviceIdProvider.future);
   final deviceRepository = await ref.watch(deviceRepositoryProvider.future);
@@ -71,9 +65,6 @@ Future<List<PushNotificationLogEntry>> debugNotificationHistory(
   Ref ref,
 ) async {
   final session = await ref.watch(debugDeviceSessionProvider.future);
-  if (session == null) {
-    return [];
-  }
   final notificationRepository = await ref.watch(pushNotificationRepositoryProvider.future);
   final result = await notificationRepository.getNotificationHistory(
     deviceId: session.deviceId,

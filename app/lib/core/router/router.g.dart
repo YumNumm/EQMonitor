@@ -9,7 +9,6 @@ part of 'router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-  $splashRoute,
   $earthquakeHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
@@ -18,29 +17,6 @@ List<RouteBase> get $appRoutes => [
   $talkerRoute,
   $settingsRoute,
 ];
-
-RouteBase get $splashRoute =>
-    GoRouteData.$route(path: '/splash', factory: $SplashRoute._fromState);
-
-mixin $SplashRoute on GoRouteData {
-  static SplashRoute _fromState(GoRouterState state) => const SplashRoute();
-
-  @override
-  String get location => GoRouteData.$location('/splash');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',
@@ -309,6 +285,14 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $PlaygroundRoute._fromState,
         ),
         GoRouteData.$route(path: 'sse', factory: $DebugSseRoute._fromState),
+        GoRouteData.$route(
+          path: 'notification-delivery-log',
+          factory: $DebugNotificationDeliveryLogRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'device-admin',
+          factory: $DebugDeviceAdminRoute._fromState,
+        ),
         GoRouteData.$route(
           path: 'device-settings',
           factory: $DebugDeviceSettingsRoute._fromState,
@@ -745,6 +729,49 @@ mixin $DebugSseRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugNotificationDeliveryLogRoute on GoRouteData {
+  static DebugNotificationDeliveryLogRoute _fromState(GoRouterState state) =>
+      const DebugNotificationDeliveryLogRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/notification-delivery-log');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugDeviceAdminRoute on GoRouteData {
+  static DebugDeviceAdminRoute _fromState(GoRouterState state) =>
+      const DebugDeviceAdminRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/device-admin');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugDeviceSettingsRoute on GoRouteData {
   static DebugDeviceSettingsRoute _fromState(GoRouterState state) =>
       const DebugDeviceSettingsRoute();
@@ -959,4 +986,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'3888af6622fff60a0b0e8a0dc2c86bfa0efc4f30';
+String _$goRouterHash() => r'8a62453a9e9e24d88c219ecf204af1cc7658b177';
