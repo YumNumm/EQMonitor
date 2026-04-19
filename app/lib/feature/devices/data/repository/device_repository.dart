@@ -37,6 +37,11 @@ class DeviceRepository {
     return response.data.toRegisteredDevice;
   });
 
+  Future<Result<void, Exception>> deleteDevice(String deviceId) =>
+      Result.capture(() async {
+        await _api.device.deleteV2DeviceDeviceId(deviceId: deviceId);
+      });
+
   Future<Result<RegisteredDevice, Exception>> fetchOrRegister(
     String deviceId,
   ) async {

@@ -22,6 +22,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/privacy_pol
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_device_admin_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
@@ -32,7 +33,6 @@ import 'package:eqmonitor/feature/settings/children/config/earthquake_history/ea
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
-import 'package:eqmonitor/feature/splash/ui/splash_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
@@ -50,7 +50,7 @@ part 'router.g.dart';
 GoRouter goRouter(Ref ref) => GoRouter(
   routes: $appRoutes,
   navigatorKey: App.navigatorKey,
-  initialLocation: const SplashRoute().location,
+  initialLocation: const HomeRoute().location,
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
@@ -62,15 +62,6 @@ class GoRouterRedirectException implements Exception {
   GoRouterRedirectException(this.message);
 
   final String message;
-}
-
-@TypedGoRoute<SplashRoute>(path: '/splash')
-class SplashRoute extends GoRouteData with $SplashRoute {
-  const SplashRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SplashPage();
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
@@ -199,6 +190,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugNotificationDeliveryLogRoute>(
           path: 'notification-delivery-log',
         ),
+        TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
         TypedGoRoute<NiedRoute>(
@@ -390,6 +382,15 @@ class DebugNotificationDeliveryLogRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugNotificationDeliveryLogPage();
+  }
+}
+
+class DebugDeviceAdminRoute extends GoRouteData with $DebugDeviceAdminRoute {
+  const DebugDeviceAdminRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugDeviceAdminPage();
   }
 }
 
