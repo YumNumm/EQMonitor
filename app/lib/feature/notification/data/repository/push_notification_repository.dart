@@ -44,11 +44,13 @@ class PushNotificationRepository {
   Future<Result<PushNotificationHistory, Exception>> getNotificationHistory({
     required String deviceId,
     int? limit,
+    String? cursor,
   }) => Result.capture(() async {
     final response = await _api.notification
         .getV2DeviceDeviceIdNotificationHistory(
           deviceId: deviceId,
           limit: limit,
+          cursor: cursor,
         );
     return response.data.toPushNotificationHistory;
   });

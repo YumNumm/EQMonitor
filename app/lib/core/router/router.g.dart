@@ -310,6 +310,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         ),
         GoRouteData.$route(path: 'sse', factory: $DebugSseRoute._fromState),
         GoRouteData.$route(
+          path: 'notification-delivery-log',
+          factory: $DebugNotificationDeliveryLogRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'device-settings',
           factory: $DebugDeviceSettingsRoute._fromState,
         ),
@@ -730,6 +734,28 @@ mixin $DebugSseRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/sse');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugNotificationDeliveryLogRoute on GoRouteData {
+  static DebugNotificationDeliveryLogRoute _fromState(GoRouterState state) =>
+      const DebugNotificationDeliveryLogRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/notification-delivery-log');
 
   @override
   void go(BuildContext context) => context.go(location);

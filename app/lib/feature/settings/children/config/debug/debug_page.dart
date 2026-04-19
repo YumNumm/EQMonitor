@@ -146,6 +146,13 @@ class _DebugWidget extends ConsumerWidget {
               context,
             ),
           ),
+          ListTile(
+            title: const Text('通知配信ログ'),
+            subtitle: const Text('GET /v2/device/{id}/notification/history'),
+            leading: const Icon(Icons.history),
+            onTap: () async =>
+                const DebugNotificationDeliveryLogRoute().push<void>(context),
+          ),
           const Divider(),
           const ListTile(
             title: Text('認証情報'),
