@@ -42,11 +42,12 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
     final colorModel = ref.watch(intensityColorProvider);
     final jmaMapAsync = ref.watch(jmaMapProvider);
 
+    if (styleController == null) {
+      return const SizedBox.shrink();
+    }
+
     useEffect(
       () {
-        if (styleController == null) {
-          return null;
-        }
         final jmaMap = jmaMapAsync.value;
         if (jmaMap == null) {
           return null;
@@ -66,7 +67,6 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
               jmaMap,
               colorModel,
             );
-
             // 一次細分化地域アイコン (zoom < 9)
             await styleController.addSource(
               GeoJsonSource(id: _regionSourceId, data: regionGeoJson),
@@ -261,9 +261,13 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
     if (showingLpgmIntensity) {
       for (final region in intensity.lpgmRegions) {
         final lpgm = region.maxLpgmIntensity;
-        if (lpgm == null) continue;
+        if (lpgm == null) {
+          continue;
+        }
         final polylabel = codeToPolylabel[region.region.code];
-        if (polylabel == null) continue;
+        if (polylabel == null) {
+          continue;
+        }
         features.add({
           'type': 'Feature',
           'geometry': {
@@ -277,9 +281,13 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
       for (final entry in intensity.intensityTree.entries) {
         for (final region in entry.value) {
           final maxIntensity = region.region.maxIntensity;
-          if (maxIntensity == null) continue;
+          if (maxIntensity == null) {
+            continue;
+          }
           final polylabel = codeToPolylabel[region.region.region.code];
-          if (polylabel == null) continue;
+          if (polylabel == null) {
+            continue;
+          }
           features.add({
             'type': 'Feature',
             'geometry': {
@@ -316,9 +324,13 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
         for (final region in entry.value) {
           for (final city in region.cities) {
             final lpgm = city.maxLpgmIntensity;
-            if (lpgm == null) continue;
+            if (lpgm == null) {
+              continue;
+            }
             final polylabel = codeToPolylabel[city.city.code];
-            if (polylabel == null) continue;
+            if (polylabel == null) {
+              continue;
+            }
             features.add({
               'type': 'Feature',
               'geometry': {
@@ -335,9 +347,13 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
         for (final region in entry.value) {
           for (final city in region.cities) {
             final maxIntensity = city.maxIntensity;
-            if (maxIntensity == null) continue;
+            if (maxIntensity == null) {
+              continue;
+            }
             final polylabel = codeToPolylabel[city.city.code];
-            if (polylabel == null) continue;
+            if (polylabel == null) {
+              continue;
+            }
             features.add({
               'type': 'Feature',
               'geometry': {

@@ -34,7 +34,9 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.requireValue.list),
+      earthquakeHistoryConfigProvider.select(
+        (value) => value.requireValue.list,
+      ),
     );
     return Column(
       children: [
@@ -57,7 +59,9 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.requireValue.detail),
+      earthquakeHistoryConfigProvider.select(
+        (value) => value.requireValue.detail,
+      ),
     );
     final sheetBar = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -229,7 +233,9 @@ class __IntensityFillModeSegmentedControlState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(
-      earthquakeHistoryConfigProvider.select((value) => value.requireValue.detail),
+      earthquakeHistoryConfigProvider.select(
+        (value) => value.requireValue.detail,
+      ),
     );
     const choices = IntensityFillMode.values;
 

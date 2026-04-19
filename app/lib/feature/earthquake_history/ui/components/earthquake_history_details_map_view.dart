@@ -1,15 +1,33 @@
+import 'dart:async';
+import 'dart:math' as math;
+
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
+import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/coordinate.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_camera_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/modal/earthquake_history_map_display_mode_modal.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_details_estimated_intensity_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_layer.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_region_intensity_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_intensity_icon_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
 
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
@@ -32,12 +50,8 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
         earthquake: earthquake,
         eventId: eventId,
       ),
-      AsyncError(:final error) => Center(
-        child: ErrorCard(error: error),
-      ),
-      _ => const Center(
-        child: CircularProgressIndicator.adaptive(),
-      ),
+      AsyncError(:final error) => Center(child: ErrorCard(error: error)),
+      _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
   }
 }
@@ -53,8 +67,26 @@ class _MapContent extends HookConsumerWidget {
   final Earthquake earthquake;
   final String eventId;
 
+  static const _stationLayerId = 'eq-history-station-intensity-circle';
+  static const _regionFillLayerId = 'eq-history-fill-region';
+  static const _cityFillLayerId = 'eq-history-fill-city';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final config =
+        ref.watch(
+          earthquakeHistoryConfigProvider.select((v) => v.value?.detail),
+        ) ??
+        const EarthquakeHistoryDetailConfig();
+    final jmaMapAsync = ref.watch(jmaMapProvider);
+
+    final tileUrl = earthquake.estimatedIntensityTileUrl;
+
+    // エフェメラル override 状態: 画面を開いたとき tileUrl があり、且つ設定で有効なら true
+    final isOverriding = useState(
+      tileUrl != null && config.useEstimatedIntensityWhenAvailable,
+    );
+
     final center = initialGeographicForEarthquake(earthquake);
     final zoom = initialZoomForEarthquake(earthquake);
     final mapOptions = MapOptions(
@@ -63,37 +95,364 @@ class _MapContent extends HookConsumerWidget {
       initStyle: styleString,
     );
 
-    final tileUrl = earthquake.estimatedIntensityTileUrl;
+    // 有効な表示モードを決定（override 中は強制 stationOnly）
+    final effectiveMode = (tileUrl != null && isOverriding.value)
+        ? IntensityFillMode.stationOnly
+        : config.intensityFillMode;
+
+    final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
+      earthquake: earthquake,
+      displayMode: config.hypocenterDisplayMode,
+    );
+    final stationLayer = EarthquakeHistoryStationIntensityLayer(
+      intensity: earthquake.intensity,
+      stationDisplayMode: config.stationDisplayMode,
+      maxIntensity: earthquake.intensity?.maxIntensity,
+      showLabel: config.showStationLabel,
+      showingLpgmIntensity: config.showingLpgmIntensity,
+    );
+
+    void openModal(BuildContext ctx) {
+      unawaited(
+        showEarthquakeHistoryMapDisplayModeModal(
+          ctx,
+          hasLpgmIntensity: earthquake.intensity?.maxLpgmIntensity != null,
+          isOverriding: isOverriding.value,
+          onDisableOverride: () => isOverriding.value = false,
+        ),
+      );
+    }
 
     return MapLibreEventProvider(
       child: Builder(
         builder: (context) {
-          return MapLibreMap(
-            options: mapOptions,
-            onEvent: (event) => MapLibreEventProvider.of(context).emit(event),
+          return Stack(
             children: [
-              // 区域塗りつぶし（最背面）
-              EarthquakeHistoryRegionIntensityLayer(
-                intensity: earthquake.intensity,
+              MapLibreMap(
+                options: mapOptions,
+                onEvent: (event) {
+                  MapLibreEventProvider.of(context).emit(event);
+                  if (event is MapEventClick) {
+                    _handleTap(
+                      context: context,
+                      event: event,
+                      config: config,
+                      effectiveMode: effectiveMode,
+                      jmaMap: jmaMapAsync.value,
+                    );
+                  }
+                },
+                children: [
+                  // 塗りつぶし系（最背面）
+                  if (effectiveMode != IntensityFillMode.stationOnly)
+                    EarthquakeHistoryFillLayer(
+                      intensity: earthquake.intensity,
+                      showingLpgmIntensity: config.showingLpgmIntensity,
+                    ),
+                  if (effectiveMode == IntensityFillMode.fillWithIcon)
+                    EarthquakeHistoryIntensityIconLayer(
+                      intensity: earthquake.intensity,
+                      showingLpgmIntensity: config.showingLpgmIntensity,
+                    ),
+                  // 推計震度ラスタ
+                  if (tileUrl != null && isOverriding.value)
+                    EarthquakeHistoryDetailsEstimatedIntensityLayer(
+                      tileUrl: tileUrl,
+                    ),
+                  // 震央誤差矩形
+                  if (config.showHypocenterError)
+                    EarthquakeHistoryHypocenterErrorLayer(
+                      earthquake: earthquake,
+                    ),
+                  // 観測点・震央（z 順を HypocenterDisplayMode で制御）
+                  if (config.hypocenterDisplayMode ==
+                      HypocenterDisplayMode.belowStations)
+                    hypocenterLayer,
+                  stationLayer,
+                  if (config.hypocenterDisplayMode !=
+                      HypocenterDisplayMode.belowStations)
+                    hypocenterLayer,
+                  EarthquakeHistoryDetailsMapCameraController(
+                    eventId: eventId,
+                    earthquake: earthquake,
+                  ),
+                ],
               ),
-              // 推計震度ラスタ（区域塗りつぶしの上）
-              if (tileUrl != null)
-                EarthquakeHistoryDetailsEstimatedIntensityLayer(
-                  tileUrl: tileUrl,
+
+              // 推計震度表示中バナー（右上）
+              if (tileUrl != null && isOverriding.value)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: SafeArea(
+                    child: FilledButton.tonal(
+                      onPressed: () => openModal(context),
+                      child: const Text('推計震度データ表示中'),
+                    ),
+                  ),
                 ),
-              // 観測点
-              EarthquakeHistoryStationIntensityLayer(
-                intensity: earthquake.intensity,
+
+              // コントローラカード（右上）
+              Positioned(
+                top: tileUrl != null && isOverriding.value ? 56 : 8,
+                right: 8,
+                child: SafeArea(
+                  child: _MapControllerCard(
+                    onLayersTap: () => openModal(context),
+                    onFitBoundsTap: () => _fitBounds(context),
+                  ),
+                ),
               ),
-              // 震源マーク（最前面）
-              EarthquakeHistoryHypocenterLayer(earthquake: earthquake),
-              EarthquakeHistoryDetailsMapCameraController(
-                eventId: eventId,
-                earthquake: earthquake,
-              ),
+
+              // 震度凡例（右下）
+              if (config.showLegend)
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: SafeArea(
+                    child: EarthquakeHistoryMapLegend(
+                      intensity: earthquake.intensity,
+                      showingLpgmIntensity: config.showingLpgmIntensity,
+                    ),
+                  ),
+                ),
             ],
           );
         },
+      ),
+    );
+  }
+
+  void _handleTap({
+    required BuildContext context,
+    required MapEventClick event,
+    required EarthquakeHistoryDetailConfig config,
+    required IntensityFillMode effectiveMode,
+    required Map<JmaMapType, JmaMap_JmaMapData>? jmaMap,
+  }) {
+    final controller = MapController.maybeOf(context);
+    if (controller == null) {
+      return;
+    }
+
+    final hits = controller.queryLayers(event.screenPoint);
+    if (hits.isEmpty) {
+      return;
+    }
+
+    final hitIds = hits.map((h) => h.layerId).toSet();
+
+    // 観測点タップ
+    if (hitIds.contains(_stationLayerId)) {
+      final stationNode = _findNearestStation(event.point);
+      if (stationNode == null) {
+        return;
+      }
+      unawaited(
+        showStationPopup(
+          context,
+          stationName: stationNode.station.name,
+          intensity: stationNode.intensity?.maxIntensity,
+          lpgmIntensity: stationNode.intensity?.maxLpgmIntensity,
+        ),
+      );
+      return;
+    }
+
+    // 塗りつぶしレイヤータップ
+    if (jmaMap == null) {
+      return;
+    }
+    final isCity = hitIds.contains(_cityFillLayerId);
+    final isRegion = hitIds.contains(_regionFillLayerId);
+    if (!isCity && !isRegion) {
+      return;
+    }
+
+    final mapData = isCity
+        ? jmaMap.areaInformationCity
+        : jmaMap.areaForecastLocalE;
+    final latLng = JmaMap_LatLng(
+      lat: event.point.lat,
+      lng: event.point.lon,
+    );
+    final result = JmaMapUtility().findNearestItem(latLng, mapData);
+    final item = result.item;
+    if (item == null) {
+      return;
+    }
+
+    final code = item.property.code;
+    final name = item.property.name;
+
+    if (isCity) {
+      final cityNode = _findCityByCode(code);
+      unawaited(
+        showAreaPopup(
+          context,
+          areaName: name,
+          maxIntensity: cityNode?.maxIntensity,
+        ),
+      );
+    } else {
+      final region = earthquake.intensity?.regions.firstWhereOrNull(
+        (r) => r.region.code == code,
+      );
+      unawaited(
+        showAreaPopup(
+          context,
+          areaName: name,
+          maxIntensity: region?.maxIntensity,
+        ),
+      );
+    }
+  }
+
+  StationIntensityNode? _findNearestStation(Geographic point) {
+    final intensity = earthquake.intensity;
+    if (intensity == null) {
+      return null;
+    }
+
+    StationIntensityNode? nearest;
+    var minDist = double.infinity;
+
+    for (final entry in intensity.intensityTree.entries) {
+      for (final region in entry.value) {
+        for (final city in region.cities) {
+          for (final stationNode in city.stations) {
+            final station = stationNode.station;
+            if (!station.hasLatitude() || !station.hasLongitude()) {
+              continue;
+            }
+            final dist =
+                math.pow(station.latitude - point.lat, 2) +
+                math.pow(station.longitude - point.lon, 2);
+            if (dist < minDist) {
+              minDist = dist.toDouble();
+              nearest = stationNode;
+            }
+          }
+        }
+      }
+    }
+
+    return nearest;
+  }
+
+  CityIntensityNode? _findCityByCode(String code) {
+    final intensity = earthquake.intensity;
+    if (intensity == null) {
+      return null;
+    }
+    for (final entry in intensity.intensityTree.entries) {
+      for (final region in entry.value) {
+        for (final city in region.cities) {
+          if (city.city.code == code) {
+            return city;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  void _fitBounds(BuildContext context) {
+    final controller = MapController.maybeOf(context);
+    if (controller == null) {
+      return;
+    }
+
+    final intensity = earthquake.intensity;
+    final points = <Geographic>[];
+
+    if (intensity != null) {
+      for (final entry in intensity.intensityTree.entries) {
+        for (final region in entry.value) {
+          for (final city in region.cities) {
+            for (final stationNode in city.stations) {
+              final s = stationNode.station;
+              if (!s.hasLatitude() || !s.hasLongitude()) {
+                continue;
+              }
+              points.add(Geographic(lon: s.longitude, lat: s.latitude));
+            }
+          }
+        }
+      }
+    }
+
+    final coords = earthquake.hypocenter?.coordinates;
+    if (coords is CoordinateLatLng) {
+      points.add(Geographic(lon: coords.longitude, lat: coords.latitude));
+    }
+
+    if (points.isEmpty) {
+      return;
+    }
+
+    unawaited(
+      controller.fitBounds(
+        bounds: LngLatBounds.fromPoints(points),
+        padding: const EdgeInsets.all(48),
+        webMaxZoom: 10,
+      ),
+    );
+  }
+}
+
+/// 地図右上のコントローラカード（レイヤー設定 + Fit to Bounds）
+class _MapControllerCard extends StatelessWidget {
+  const _MapControllerCard({
+    required this.onLayersTap,
+    required this.onFitBoundsTap,
+  });
+
+  final VoidCallback onLayersTap;
+  final VoidCallback onFitBoundsTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    const divider = Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4),
+      child: Divider(height: 0),
+    );
+
+    void haptic() => unawaited(HapticFeedback.lightImpact());
+
+    return Card(
+      color: colorScheme.surfaceContainerHighest,
+      clipBehavior: Clip.hardEdge,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: IntrinsicWidth(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: () {
+                haptic();
+                onLayersTap();
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.layers_rounded),
+              ),
+            ),
+            divider,
+            InkWell(
+              onTap: () {
+                haptic();
+                onFitBoundsTap();
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.zoom_out_map_rounded),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,20 +22,17 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
+    if (styleController == null) {
+      return const SizedBox.shrink();
+    }
+
     useEffect(
       () {
-        if (styleController == null) {
-          return null;
-        }
-
         unawaited(() async {
           await styleController.addSource(
             VectorSource(
               id: _sourceId,
-              tiles: [
-                tileUrl,
-              ],
-              maxZoom: 14,
+              url: tileUrl,
             ),
           );
 
@@ -44,15 +40,15 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
             const FillStyleLayer(
               id: _layerId,
               sourceId: _sourceId,
+              sourceLayerId: 'seismic_intensity',
               paint: {
-                'fill-opacity': 0.75,
+                'fill-opacity': 1.0,
                 'fill-color': [
                   'get',
                   'fill',
                 ],
               },
             ),
-            belowLayerId: BaseLayer.countriesFill.name,
           );
         }());
 
