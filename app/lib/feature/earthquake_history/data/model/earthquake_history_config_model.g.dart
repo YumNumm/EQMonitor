@@ -87,13 +87,38 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
       intensityFillMode: $checkedConvert(
         'intensity_fill_mode',
         (v) =>
-            $enumDecodeNullable(_$IntensityFillModeEnumMap, v) ??
-            IntensityFillMode.fillCity,
+            $enumDecodeNullable(
+              _$IntensityFillModeEnumMap,
+              v,
+              unknownValue: IntensityFillMode.stationOnly,
+            ) ??
+            IntensityFillMode.stationOnly,
       ),
-      showIntensityIcon: $checkedConvert(
-        'show_intensity_icon',
+      stationDisplayMode: $checkedConvert(
+        'station_display_mode',
+        (v) =>
+            $enumDecodeNullable(_$StationDisplayModeEnumMap, v) ??
+            StationDisplayMode.maxFocused,
+      ),
+      hypocenterDisplayMode: $checkedConvert(
+        'hypocenter_display_mode',
+        (v) =>
+            $enumDecodeNullable(_$HypocenterDisplayModeEnumMap, v) ??
+            HypocenterDisplayMode.zoomFade,
+      ),
+      showHypocenterError: $checkedConvert(
+        'show_hypocenter_error',
+        (v) => v as bool? ?? false,
+      ),
+      showStationLabel: $checkedConvert(
+        'show_station_label',
+        (v) => v as bool? ?? false,
+      ),
+      useEstimatedIntensityWhenAvailable: $checkedConvert(
+        'use_estimated_intensity_when_available',
         (v) => v as bool? ?? true,
       ),
+      showLegend: $checkedConvert('show_legend', (v) => v as bool? ?? true),
       showingLpgmIntensity: $checkedConvert(
         'showing_lpgm_intensity',
         (v) => v as bool? ?? false,
@@ -103,7 +128,13 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
   },
   fieldKeyMap: const {
     'intensityFillMode': 'intensity_fill_mode',
-    'showIntensityIcon': 'show_intensity_icon',
+    'stationDisplayMode': 'station_display_mode',
+    'hypocenterDisplayMode': 'hypocenter_display_mode',
+    'showHypocenterError': 'show_hypocenter_error',
+    'showStationLabel': 'show_station_label',
+    'useEstimatedIntensityWhenAvailable':
+        'use_estimated_intensity_when_available',
+    'showLegend': 'show_legend',
     'showingLpgmIntensity': 'showing_lpgm_intensity',
   },
 );
@@ -113,12 +144,35 @@ Map<String, dynamic> _$EarthquakeHistoryDetailConfigToJson(
 ) => <String, dynamic>{
   'intensity_fill_mode':
       _$IntensityFillModeEnumMap[instance.intensityFillMode]!,
-  'show_intensity_icon': instance.showIntensityIcon,
+  'station_display_mode':
+      _$StationDisplayModeEnumMap[instance.stationDisplayMode]!,
+  'hypocenter_display_mode':
+      _$HypocenterDisplayModeEnumMap[instance.hypocenterDisplayMode]!,
+  'show_hypocenter_error': instance.showHypocenterError,
+  'show_station_label': instance.showStationLabel,
+  'use_estimated_intensity_when_available':
+      instance.useEstimatedIntensityWhenAvailable,
+  'show_legend': instance.showLegend,
   'showing_lpgm_intensity': instance.showingLpgmIntensity,
 };
 
 const _$IntensityFillModeEnumMap = {
+  IntensityFillMode.stationOnly: 'stationOnly',
+  IntensityFillMode.fill: 'fill',
+  IntensityFillMode.fillWithIcon: 'fillWithIcon',
   IntensityFillMode.fillCity: 'fillCity',
   IntensityFillMode.fillRegion: 'fillRegion',
   IntensityFillMode.none: 'none',
+};
+
+const _$StationDisplayModeEnumMap = {
+  StationDisplayMode.maxFocused: 'maxFocused',
+  StationDisplayMode.normal: 'normal',
+  StationDisplayMode.allMinimized: 'allMinimized',
+};
+
+const _$HypocenterDisplayModeEnumMap = {
+  HypocenterDisplayMode.zoomFade: 'zoomFade',
+  HypocenterDisplayMode.alwaysOpaque: 'alwaysOpaque',
+  HypocenterDisplayMode.belowStations: 'belowStations',
 };

@@ -56,11 +56,4 @@ class EarthquakeHistoryConfigNotifier
     await _save(state.value!);
   }
 
-  Future<void> updateIntensityIcon({required bool value}) async {
-    final current = state.value ?? _defaultEarthquakeHistoryConfig;
-    state = AsyncValue.data(current.copyWith(
-      detail: current.detail.copyWith(showIntensityIcon: value),
-    ));
-    await _save(state.value!);
-  }
 }

@@ -114,7 +114,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         for (final city in region.cities) {
           for (final stationNode in city.stations) {
             final station = stationNode.station;
-            if (!station.hasLatitude() || !station.hasLongitude()) continue;
+            if (!station.hasLatitude() || !station.hasLongitude()) {
+              continue;
+            }
 
             features.add({
               'type': 'Feature',

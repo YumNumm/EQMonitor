@@ -593,9 +593,14 @@ as String?,
 /// @nodoc
 mixin _$EarthquakeHistoryDetailConfig {
 
-/// 震度の表示方法
- IntensityFillMode get intensityFillMode;/// 震度観測点のアイコン表示
- bool get showIntensityIcon;/// 長周期地震動階級を表示しているか
+/// 地図の震度表示モード（旧値は unknownEnumValue で stationOnly に migration）
+@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly) IntensityFillMode get intensityFillMode;/// 観測点の表示方法
+ StationDisplayMode get stationDisplayMode;/// 震央マーカーの表示方法
+ HypocenterDisplayMode get hypocenterDisplayMode;/// 震央誤差矩形を表示するか
+ bool get showHypocenterError;/// 観測点名ラベルを表示するか
+ bool get showStationLabel;/// 推計震度データがある場合に自動で推計震度モードにするか（永続化）
+ bool get useEstimatedIntensityWhenAvailable;/// 震度凡例を表示するか
+ bool get showLegend;/// 長周期地震動階級を表示しているか
  bool get showingLpgmIntensity;
 /// Create a copy of EarthquakeHistoryDetailConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -609,16 +614,16 @@ $EarthquakeHistoryDetailConfigCopyWith<EarthquakeHistoryDetailConfig> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailConfig&&(identical(other.intensityFillMode, intensityFillMode) || other.intensityFillMode == intensityFillMode)&&(identical(other.showIntensityIcon, showIntensityIcon) || other.showIntensityIcon == showIntensityIcon)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryDetailConfig&&(identical(other.intensityFillMode, intensityFillMode) || other.intensityFillMode == intensityFillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,intensityFillMode,showIntensityIcon,showingLpgmIntensity);
+int get hashCode => Object.hash(runtimeType,intensityFillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryDetailConfig(intensityFillMode: $intensityFillMode, showIntensityIcon: $showIntensityIcon, showingLpgmIntensity: $showingLpgmIntensity)';
+  return 'EarthquakeHistoryDetailConfig(intensityFillMode: $intensityFillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity)';
 }
 
 
@@ -629,7 +634,7 @@ abstract mixin class $EarthquakeHistoryDetailConfigCopyWith<$Res>  {
   factory $EarthquakeHistoryDetailConfigCopyWith(EarthquakeHistoryDetailConfig value, $Res Function(EarthquakeHistoryDetailConfig) _then) = _$EarthquakeHistoryDetailConfigCopyWithImpl;
 @useResult
 $Res call({
- IntensityFillMode intensityFillMode, bool showIntensityIcon, bool showingLpgmIntensity
+@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly) IntensityFillMode intensityFillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity
 });
 
 
@@ -646,10 +651,15 @@ class _$EarthquakeHistoryDetailConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryDetailConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? intensityFillMode = null,Object? showIntensityIcon = null,Object? showingLpgmIntensity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? intensityFillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,}) {
   return _then(_self.copyWith(
 intensityFillMode: null == intensityFillMode ? _self.intensityFillMode : intensityFillMode // ignore: cast_nullable_to_non_nullable
-as IntensityFillMode,showIntensityIcon: null == showIntensityIcon ? _self.showIntensityIcon : showIntensityIcon // ignore: cast_nullable_to_non_nullable
+as IntensityFillMode,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
+as StationDisplayMode,hypocenterDisplayMode: null == hypocenterDisplayMode ? _self.hypocenterDisplayMode : hypocenterDisplayMode // ignore: cast_nullable_to_non_nullable
+as HypocenterDisplayMode,showHypocenterError: null == showHypocenterError ? _self.showHypocenterError : showHypocenterError // ignore: cast_nullable_to_non_nullable
+as bool,showStationLabel: null == showStationLabel ? _self.showStationLabel : showStationLabel // ignore: cast_nullable_to_non_nullable
+as bool,useEstimatedIntensityWhenAvailable: null == useEstimatedIntensityWhenAvailable ? _self.useEstimatedIntensityWhenAvailable : useEstimatedIntensityWhenAvailable // ignore: cast_nullable_to_non_nullable
+as bool,showLegend: null == showLegend ? _self.showLegend : showLegend // ignore: cast_nullable_to_non_nullable
 as bool,showingLpgmIntensity: null == showingLpgmIntensity ? _self.showingLpgmIntensity : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -736,10 +746,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( IntensityFillMode intensityFillMode,  bool showIntensityIcon,  bool showingLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly)  IntensityFillMode intensityFillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that.intensityFillMode,_that.showIntensityIcon,_that.showingLpgmIntensity);case _:
+return $default(_that.intensityFillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity);case _:
   return orElse();
 
 }
@@ -757,10 +767,10 @@ return $default(_that.intensityFillMode,_that.showIntensityIcon,_that.showingLpg
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( IntensityFillMode intensityFillMode,  bool showIntensityIcon,  bool showingLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly)  IntensityFillMode intensityFillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailConfig():
-return $default(_that.intensityFillMode,_that.showIntensityIcon,_that.showingLpgmIntensity);case _:
+return $default(_that.intensityFillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -777,10 +787,10 @@ return $default(_that.intensityFillMode,_that.showIntensityIcon,_that.showingLpg
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( IntensityFillMode intensityFillMode,  bool showIntensityIcon,  bool showingLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly)  IntensityFillMode intensityFillMode,  StationDisplayMode stationDisplayMode,  HypocenterDisplayMode hypocenterDisplayMode,  bool showHypocenterError,  bool showStationLabel,  bool useEstimatedIntensityWhenAvailable,  bool showLegend,  bool showingLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryDetailConfig() when $default != null:
-return $default(_that.intensityFillMode,_that.showIntensityIcon,_that.showingLpgmIntensity);case _:
+return $default(_that.intensityFillMode,_that.stationDisplayMode,_that.hypocenterDisplayMode,_that.showHypocenterError,_that.showStationLabel,_that.useEstimatedIntensityWhenAvailable,_that.showLegend,_that.showingLpgmIntensity);case _:
   return null;
 
 }
@@ -792,13 +802,23 @@ return $default(_that.intensityFillMode,_that.showIntensityIcon,_that.showingLpg
 @JsonSerializable()
 
 class _EarthquakeHistoryDetailConfig implements EarthquakeHistoryDetailConfig {
-  const _EarthquakeHistoryDetailConfig({this.intensityFillMode = IntensityFillMode.fillCity, this.showIntensityIcon = true, this.showingLpgmIntensity = false});
+  const _EarthquakeHistoryDetailConfig({@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly) this.intensityFillMode = IntensityFillMode.stationOnly, this.stationDisplayMode = StationDisplayMode.maxFocused, this.hypocenterDisplayMode = HypocenterDisplayMode.zoomFade, this.showHypocenterError = false, this.showStationLabel = false, this.useEstimatedIntensityWhenAvailable = true, this.showLegend = true, this.showingLpgmIntensity = false});
   factory _EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryDetailConfigFromJson(json);
 
-/// 震度の表示方法
-@override@JsonKey() final  IntensityFillMode intensityFillMode;
-/// 震度観測点のアイコン表示
-@override@JsonKey() final  bool showIntensityIcon;
+/// 地図の震度表示モード（旧値は unknownEnumValue で stationOnly に migration）
+@override@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly) final  IntensityFillMode intensityFillMode;
+/// 観測点の表示方法
+@override@JsonKey() final  StationDisplayMode stationDisplayMode;
+/// 震央マーカーの表示方法
+@override@JsonKey() final  HypocenterDisplayMode hypocenterDisplayMode;
+/// 震央誤差矩形を表示するか
+@override@JsonKey() final  bool showHypocenterError;
+/// 観測点名ラベルを表示するか
+@override@JsonKey() final  bool showStationLabel;
+/// 推計震度データがある場合に自動で推計震度モードにするか（永続化）
+@override@JsonKey() final  bool useEstimatedIntensityWhenAvailable;
+/// 震度凡例を表示するか
+@override@JsonKey() final  bool showLegend;
 /// 長周期地震動階級を表示しているか
 @override@JsonKey() final  bool showingLpgmIntensity;
 
@@ -815,16 +835,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailConfig&&(identical(other.intensityFillMode, intensityFillMode) || other.intensityFillMode == intensityFillMode)&&(identical(other.showIntensityIcon, showIntensityIcon) || other.showIntensityIcon == showIntensityIcon)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryDetailConfig&&(identical(other.intensityFillMode, intensityFillMode) || other.intensityFillMode == intensityFillMode)&&(identical(other.stationDisplayMode, stationDisplayMode) || other.stationDisplayMode == stationDisplayMode)&&(identical(other.hypocenterDisplayMode, hypocenterDisplayMode) || other.hypocenterDisplayMode == hypocenterDisplayMode)&&(identical(other.showHypocenterError, showHypocenterError) || other.showHypocenterError == showHypocenterError)&&(identical(other.showStationLabel, showStationLabel) || other.showStationLabel == showStationLabel)&&(identical(other.useEstimatedIntensityWhenAvailable, useEstimatedIntensityWhenAvailable) || other.useEstimatedIntensityWhenAvailable == useEstimatedIntensityWhenAvailable)&&(identical(other.showLegend, showLegend) || other.showLegend == showLegend)&&(identical(other.showingLpgmIntensity, showingLpgmIntensity) || other.showingLpgmIntensity == showingLpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,intensityFillMode,showIntensityIcon,showingLpgmIntensity);
+int get hashCode => Object.hash(runtimeType,intensityFillMode,stationDisplayMode,hypocenterDisplayMode,showHypocenterError,showStationLabel,useEstimatedIntensityWhenAvailable,showLegend,showingLpgmIntensity);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryDetailConfig(intensityFillMode: $intensityFillMode, showIntensityIcon: $showIntensityIcon, showingLpgmIntensity: $showingLpgmIntensity)';
+  return 'EarthquakeHistoryDetailConfig(intensityFillMode: $intensityFillMode, stationDisplayMode: $stationDisplayMode, hypocenterDisplayMode: $hypocenterDisplayMode, showHypocenterError: $showHypocenterError, showStationLabel: $showStationLabel, useEstimatedIntensityWhenAvailable: $useEstimatedIntensityWhenAvailable, showLegend: $showLegend, showingLpgmIntensity: $showingLpgmIntensity)';
 }
 
 
@@ -835,7 +855,7 @@ abstract mixin class _$EarthquakeHistoryDetailConfigCopyWith<$Res> implements $E
   factory _$EarthquakeHistoryDetailConfigCopyWith(_EarthquakeHistoryDetailConfig value, $Res Function(_EarthquakeHistoryDetailConfig) _then) = __$EarthquakeHistoryDetailConfigCopyWithImpl;
 @override @useResult
 $Res call({
- IntensityFillMode intensityFillMode, bool showIntensityIcon, bool showingLpgmIntensity
+@JsonKey(unknownEnumValue: IntensityFillMode.stationOnly) IntensityFillMode intensityFillMode, StationDisplayMode stationDisplayMode, HypocenterDisplayMode hypocenterDisplayMode, bool showHypocenterError, bool showStationLabel, bool useEstimatedIntensityWhenAvailable, bool showLegend, bool showingLpgmIntensity
 });
 
 
@@ -852,10 +872,15 @@ class __$EarthquakeHistoryDetailConfigCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryDetailConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? intensityFillMode = null,Object? showIntensityIcon = null,Object? showingLpgmIntensity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? intensityFillMode = null,Object? stationDisplayMode = null,Object? hypocenterDisplayMode = null,Object? showHypocenterError = null,Object? showStationLabel = null,Object? useEstimatedIntensityWhenAvailable = null,Object? showLegend = null,Object? showingLpgmIntensity = null,}) {
   return _then(_EarthquakeHistoryDetailConfig(
 intensityFillMode: null == intensityFillMode ? _self.intensityFillMode : intensityFillMode // ignore: cast_nullable_to_non_nullable
-as IntensityFillMode,showIntensityIcon: null == showIntensityIcon ? _self.showIntensityIcon : showIntensityIcon // ignore: cast_nullable_to_non_nullable
+as IntensityFillMode,stationDisplayMode: null == stationDisplayMode ? _self.stationDisplayMode : stationDisplayMode // ignore: cast_nullable_to_non_nullable
+as StationDisplayMode,hypocenterDisplayMode: null == hypocenterDisplayMode ? _self.hypocenterDisplayMode : hypocenterDisplayMode // ignore: cast_nullable_to_non_nullable
+as HypocenterDisplayMode,showHypocenterError: null == showHypocenterError ? _self.showHypocenterError : showHypocenterError // ignore: cast_nullable_to_non_nullable
+as bool,showStationLabel: null == showStationLabel ? _self.showStationLabel : showStationLabel // ignore: cast_nullable_to_non_nullable
+as bool,useEstimatedIntensityWhenAvailable: null == useEstimatedIntensityWhenAvailable ? _self.useEstimatedIntensityWhenAvailable : useEstimatedIntensityWhenAvailable // ignore: cast_nullable_to_non_nullable
+as bool,showLegend: null == showLegend ? _self.showLegend : showLegend // ignore: cast_nullable_to_non_nullable
 as bool,showingLpgmIntensity: null == showingLpgmIntensity ? _self.showingLpgmIntensity : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
