@@ -1,12 +1,16 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/map_camera_state_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_controller_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
@@ -14,12 +18,11 @@ import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
-import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-class HomeMapView extends HookConsumerWidget {
+class HomeMapView extends ConsumerWidget {
   const HomeMapView({super.key});
 
   @override
@@ -40,23 +43,38 @@ class HomeMapView extends HookConsumerWidget {
   }
 }
 
-class _MapContent extends HookConsumerWidget {
+class _MapContent extends ConsumerWidget {
   const _MapContent({required this.styleString});
 
   final String styleString;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initialOptions = calculateJapanViewMapOptions(
+    final homeAsync = ref.watch(homeConfigurationProvider);
+    final mapSettings = homeAsync.value?.map ?? const HomeMapSettings();
+
+    final mapOptions = homeMapOptionsFromSettings(
       context: context,
       styleString: styleString,
+      map: mapSettings,
+    );
+
+    final mapKey = Object.hash(
+      mapSettings.maxZoom,
+      mapSettings.lockBearing,
+      mapSettings.defaultBounds,
+      mapSettings.customBounds?.longitudeWest,
+      mapSettings.customBounds?.longitudeEast,
+      mapSettings.customBounds?.latitudeSouth,
+      mapSettings.customBounds?.latitudeNorth,
     );
 
     return MapLibreEventProvider(
       child: Builder(
         builder: (context) {
           final mapWidget = MapLibreMap(
-            options: initialOptions,
+            key: ValueKey(mapKey),
+            options: mapOptions,
             onMapCreated: (controller) {
               ref
                   .read(homeMapCameraStateProvider.notifier)
@@ -67,15 +85,26 @@ class _MapContent extends HookConsumerWidget {
             children: [
               Consumer(
                 builder: (context, ref, _) {
-                  final regions = ref
-                      .watch(eewAliveTelegramProvider)
-                      ?.map((eew) => eew.forecastIntensity?.regions)
+                  final fillMode = ref.watch(
+                    homeConfigurationProvider.select(
+                      (a) => a.value?.eew.fillMode ?? HomeEewFillMode.intensity,
+                    ),
+                  );
+                  final eews = ref.watch(eewAliveTelegramProvider) ?? [];
+                  final regions = eews
+                      .map((eew) => eew.forecastIntensity?.regions)
                       .nonNulls
                       .flattened
                       .toList();
-                  return EewEstimatedIntensityLayer(
-                    eewRegions: regions ?? [],
-                  );
+                  return switch (fillMode) {
+                    HomeEewFillMode.intensity => EewEstimatedIntensityLayer(
+                      eewRegions: regions,
+                    ),
+                    HomeEewFillMode.warning => EewWarningRegionsLayer(
+                      eews: eews,
+                    ),
+                    HomeEewFillMode.none => const SizedBox.shrink(),
+                  };
                 },
               ),
               const KyoshinMonitorObservationLayer(),

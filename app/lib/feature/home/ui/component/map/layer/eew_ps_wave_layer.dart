@@ -4,13 +4,15 @@ import 'dart:convert';
 import 'package:clock/clock.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre/maplibre.dart';
 
-class EewPsWaveLayer extends HookConsumerWidget {
+class EewPsWaveLayer extends ConsumerWidget {
   const EewPsWaveLayer({required this.eews, super.key});
 
   final List<EewTelegramItem> eews;
@@ -28,7 +30,32 @@ class EewPsWaveLayer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final showCircles = ref.watch(
+      homeConfigurationProvider.select(
+        (a) => a.value?.eew.showPSWaveCircle ?? true,
+      ),
+    );
+    if (!showCircles) {
+      return const SizedBox.shrink();
+    }
+    return _EewPsWaveLayerBody(eews: eews);
+  }
+}
+
+class _EewPsWaveLayerBody extends HookConsumerWidget {
+  const _EewPsWaveLayerBody({required this.eews});
+
+  final List<EewTelegramItem> eews;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
+
+    final animationRate = ref.watch(
+      homeConfigurationProvider.select(
+        (a) => a.value?.eew.animationRate ?? HomeEewAnimationRate.unlimited,
+      ),
+    );
 
     final showEews = useMemoized(
       () => eews.where((eew) {
@@ -48,7 +75,6 @@ class EewPsWaveLayer extends HookConsumerWidget {
     final latestSWaveGeoJson = useRef<String?>(null);
     final wasEewActive = useRef(false);
 
-    // レイヤーの初期化
     useEffect(
       () {
         if (styleController == null) {
@@ -59,7 +85,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
           await (
             styleController.addSource(
               GeoJsonSource(
-                id: sourceId.pWave,
+                id: EewPsWaveLayer.sourceId.pWave,
                 data: jsonEncode({
                   'type': 'FeatureCollection',
                   'features': <Map<String, dynamic>>[],
@@ -68,7 +94,7 @@ class EewPsWaveLayer extends HookConsumerWidget {
             ),
             styleController.addSource(
               GeoJsonSource(
-                id: sourceId.sWave,
+                id: EewPsWaveLayer.sourceId.sWave,
                 data: jsonEncode({
                   'type': 'FeatureCollection',
                   'features': <Map<String, dynamic>>[],
@@ -80,8 +106,8 @@ class EewPsWaveLayer extends HookConsumerWidget {
           await (
             styleController.addLayer(
               LineStyleLayer(
-                id: layerId.pWaveLine,
-                sourceId: sourceId.pWave,
+                id: EewPsWaveLayer.layerId.pWaveLine,
+                sourceId: EewPsWaveLayer.sourceId.pWave,
                 paint: const {
                   'line-color': '#0000FF',
                   'line-width': 1,
@@ -90,8 +116,8 @@ class EewPsWaveLayer extends HookConsumerWidget {
             ),
             styleController.addLayer(
               LineStyleLayer(
-                id: layerId.sWaveLine,
-                sourceId: sourceId.sWave,
+                id: EewPsWaveLayer.layerId.sWaveLine,
+                sourceId: EewPsWaveLayer.sourceId.sWave,
                 paint: const {
                   'line-color': ['get', 'lineColor'],
                   'line-width': 2,
@@ -100,8 +126,8 @@ class EewPsWaveLayer extends HookConsumerWidget {
             ),
             styleController.addLayer(
               FillStyleLayer(
-                id: layerId.sWaveFill,
-                sourceId: sourceId.sWave,
+                id: EewPsWaveLayer.layerId.sWaveFill,
+                sourceId: EewPsWaveLayer.sourceId.sWave,
                 paint: const {
                   'fill-color': ['get', 'fillColor'],
                   'fill-opacity': 0.2,
@@ -114,17 +140,16 @@ class EewPsWaveLayer extends HookConsumerWidget {
         }());
 
         return () async {
-          await styleController.removeLayer(layerId.pWaveLine);
-          await styleController.removeLayer(layerId.sWaveLine);
-          await styleController.removeLayer(layerId.sWaveFill);
-          await styleController.removeSource(sourceId.pWave);
-          await styleController.removeSource(sourceId.sWave);
+          await styleController.removeLayer(EewPsWaveLayer.layerId.pWaveLine);
+          await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveLine);
+          await styleController.removeLayer(EewPsWaveLayer.layerId.sWaveFill);
+          await styleController.removeSource(EewPsWaveLayer.sourceId.pWave);
+          await styleController.removeSource(EewPsWaveLayer.sourceId.sWave);
         };
       },
       [styleController],
     );
 
-    // Tickerで毎フレームGeoJSONを更新
     final animationController = useAnimationController(
       duration: const Duration(days: 365),
     );
@@ -135,7 +160,11 @@ class EewPsWaveLayer extends HookConsumerWidget {
           return null;
         }
         if (showEews.isNotEmpty) {
-          unawaited(animationController.repeat());
+          if (animationRate == HomeEewAnimationRate.unlimited) {
+            unawaited(animationController.repeat());
+          } else {
+            animationController.stop();
+          }
           wasEewActive.value = true;
         } else {
           animationController.stop();
@@ -154,13 +183,17 @@ class EewPsWaveLayer extends HookConsumerWidget {
         }
         return null;
       },
-      [styleController, showEews],
+      [styleController, showEews, animationRate, animationController],
     );
 
     useEffect(
       () {
+        if (styleController == null) {
+          return null;
+        }
+
         void listener() {
-          if (!isInitialized.value || styleController == null) {
+          if (!isInitialized.value) {
             return;
           }
           final travelTimeMap = ref.read(travelTimeDepthMapProvider);
@@ -183,10 +216,20 @@ class EewPsWaveLayer extends HookConsumerWidget {
           );
         }
 
-        animationController.addListener(listener);
-        return () => animationController.removeListener(listener);
+        Timer? timer;
+        if (animationRate == HomeEewAnimationRate.oneHz) {
+          listener();
+          timer = Timer.periodic(const Duration(seconds: 1), (_) => listener());
+        } else {
+          animationController.addListener(listener);
+        }
+
+        return () {
+          timer?.cancel();
+          animationController.removeListener(listener);
+        };
       },
-      [styleController, showEews],
+      [styleController, showEews, animationRate, animationController],
     );
 
     return const SizedBox.shrink();
