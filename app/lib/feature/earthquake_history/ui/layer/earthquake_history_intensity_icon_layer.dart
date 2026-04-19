@@ -17,7 +17,7 @@ import 'package:maplibre/maplibre.dart';
 
 /// 地震履歴詳細の震度アイコンレイヤー
 ///
-/// [jma_map] の polylabel 座標に角丸四角の震度アイコンを表示する。
+/// `jma_map` の polylabel 座標に角丸四角の震度アイコンを表示する。
 /// [showingLpgmIntensity] が true の場合は長周期地震動階級アイコンを表示する。
 class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
   const EarthquakeHistoryIntensityIconLayer({
@@ -56,18 +56,26 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
           try {
             await _registerIcons(styleController, colorModel);
 
-            final regionGeoJson = _buildRegionGeoJson(intensity, jmaMap, colorModel);
-            final cityGeoJson = _buildCityGeoJson(intensity, jmaMap, colorModel);
+            final regionGeoJson = _buildRegionGeoJson(
+              intensity,
+              jmaMap,
+              colorModel,
+            );
+            final cityGeoJson = _buildCityGeoJson(
+              intensity,
+              jmaMap,
+              colorModel,
+            );
 
             // 一次細分化地域アイコン (zoom < 9)
             await styleController.addSource(
               GeoJsonSource(id: _regionSourceId, data: regionGeoJson),
             );
             await styleController.addLayer(
-              SymbolStyleLayer(
+              const SymbolStyleLayer(
                 id: _regionLayerId,
                 sourceId: _regionSourceId,
-                layout: const {
+                layout: {
                   'icon-image': ['get', 'icon'],
                   'icon-allow-overlap': false,
                   'icon-size': [
@@ -99,10 +107,10 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
               GeoJsonSource(id: _citySourceId, data: cityGeoJson),
             );
             await styleController.addLayer(
-              SymbolStyleLayer(
+              const SymbolStyleLayer(
                 id: _cityLayerId,
                 sourceId: _citySourceId,
-                layout: const {
+                layout: {
                   'icon-image': ['get', 'icon'],
                   'icon-allow-overlap': false,
                   'icon-size': [
@@ -144,7 +152,13 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
           }
         };
       },
-      [styleController, intensity, colorModel, jmaMapAsync, showingLpgmIntensity],
+      [
+        styleController,
+        intensity,
+        colorModel,
+        jmaMapAsync,
+        showingLpgmIntensity,
+      ],
     );
 
     return const SizedBox.shrink();
@@ -208,15 +222,16 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
       paint,
     );
 
-    final paragraphBuilder = ui.ParagraphBuilder(
-      ui.ParagraphStyle(
-        textAlign: TextAlign.center,
-        fontSize: size * 0.65,
-        fontWeight: FontWeight.bold,
-      ),
-    )
-      ..pushStyle(ui.TextStyle(color: textColor))
-      ..addText(text);
+    final paragraphBuilder =
+        ui.ParagraphBuilder(
+            ui.ParagraphStyle(
+              textAlign: TextAlign.center,
+              fontSize: size * 0.65,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+          ..pushStyle(ui.TextStyle(color: textColor))
+          ..addText(text);
 
     final paragraph = paragraphBuilder.build()
       ..layout(ui.ParagraphConstraints(width: size));

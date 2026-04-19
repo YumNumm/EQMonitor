@@ -77,11 +77,6 @@ enum IntensityFillMode {
 
   /// 塗りつぶし + 震度アイコン
   fillWithIcon,
-
-  // 後方互換性のために維持（@JsonKey(unknownEnumValue: stationOnly) で上書きされる）
-  fillCity,
-  fillRegion,
-  none,
 }
 
 /// 観測点の表示方法

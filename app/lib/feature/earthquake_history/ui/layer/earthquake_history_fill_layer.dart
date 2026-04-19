@@ -76,7 +76,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
             );
 
             await styleController.addLayer(
-              LineStyleLayer(
+              const LineStyleLayer(
                 id: _regionLineId,
                 sourceId: 'japan',
                 sourceLayerId: 'areaForecastLocalE',
@@ -118,7 +118,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
             );
 
             await styleController.addLayer(
-              LineStyleLayer(
+              const LineStyleLayer(
                 id: _cityLineId,
                 sourceId: 'japan',
                 sourceLayerId: 'areaInformationCity',
@@ -169,7 +169,9 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
     ];
     for (final region in intensity?.regions ?? <IntensityRegion>[]) {
       final maxIntensity = region.maxIntensity;
-      if (maxIntensity == null) continue;
+      if (maxIntensity == null) {
+        continue;
+      }
       args
         ..add(region.region.code)
         ..add(colorModel.fromJmaIntensity(maxIntensity).background.toHexStringRGB());
@@ -192,7 +194,9 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       for (final region in entry.value) {
         for (final city in region.cities) {
           final maxIntensity = city.maxIntensity;
-          if (maxIntensity == null) continue;
+          if (maxIntensity == null) {
+            continue;
+          }
           args
             ..add(city.city.code)
             ..add(color);
@@ -213,7 +217,9 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
     ];
     for (final region in intensity?.lpgmRegions ?? <LpgmIntensityRegion>[]) {
       final maxIntensity = region.maxLpgmIntensity;
-      if (maxIntensity == null) continue;
+      if (maxIntensity == null) {
+        continue;
+      }
       args
         ..add(region.region.code)
         ..add(colorModel.fromJmaLpgmIntensity(maxIntensity).background.toHexStringRGB());
@@ -239,7 +245,9 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
       for (final region in entry.value) {
         for (final city in region.cities) {
           final maxIntensity = city.maxLpgmIntensity;
-          if (maxIntensity == null) continue;
+          if (maxIntensity == null) {
+            continue;
+          }
           args
             ..add(city.city.code)
             ..add(color);

@@ -160,9 +160,6 @@ const _$IntensityFillModeEnumMap = {
   IntensityFillMode.stationOnly: 'stationOnly',
   IntensityFillMode.fill: 'fill',
   IntensityFillMode.fillWithIcon: 'fillWithIcon',
-  IntensityFillMode.fillCity: 'fillCity',
-  IntensityFillMode.fillRegion: 'fillRegion',
-  IntensityFillMode.none: 'none',
 };
 
 const _$StationDisplayModeEnumMap = {

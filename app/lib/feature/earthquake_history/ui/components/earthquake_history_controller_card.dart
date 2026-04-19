@@ -66,7 +66,6 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
                         hapticFeedback();
                         await showEarthquakeHistoryDetailConfigDialog(
                           context,
-                          showCitySelector: false,
                           hasLpgmIntensity: false,
                         );
                       },
