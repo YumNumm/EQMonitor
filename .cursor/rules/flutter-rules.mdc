@@ -160,8 +160,104 @@ extension EarthquakeModelConverter on api.EarthquakeResponse {
 
 ## コードスタイル
 
+- 2つ以上の引数を持つ関数・クラスは原則として名前付き引数を使用する
+
+```dart
+// ❌ 悪い例
+void doSomething(String name, int age) { ... }
+
+// ✅ 良い例
+void doSomething({required String name, required int age}) { ... }
+```
+
 - 不用意に static method にしない（必要な箇所のみ）
 - 関数は簡潔に保つ（目安: 20 行以内）
+- 内部で非同期処理を `unawaited` するくらいなら、関数自体を `async` にして `await` すること
+
+```dart
+// ❌ 悪い例
+void doSomething() {
+  unawaited(someAsyncOperation());
+}
+
+// ✅ 良い例
+Future<void> doSomething() async {
+  await someAsyncOperation();
+}
+```
+
 - コメントはコード上明らかな部分には不要。複雑な処理や実装意図が読み取りにくい箇所にのみ書く
 - 重い処理（JSON パース等）には `compute()` で Isolate を活用する
 - enum等でdartのdot shorthandを利用できる場合は利用する
+
+## プライベート関数の禁止と代替設計
+
+クラス内でのプライベートメソッドは、テスト可能性を損なうため原則禁止する。
+用途に応じて以下のルールに従って代替実装を選ぶこと。
+
+### ロジック系プライベートメソッド（例: `_buildRegionGeoJson`, `_buildCityGeoJson`）
+
+- **禁止**: クラス内にプライベートメソッドとしてロジックを定義する
+- **正解**: 処理を行う専用クラスを別ファイルに切り出し、Riverpod で DI する
+
+```dart
+// ❌ 悪い例: Widget や Notifier 内にプライベートメソッドでロジックを隠蔽
+String _buildRegionGeoJson({required List<Region> regions}) { ... }
+
+// ✅ 良い例: 別クラスに切り出して Riverpod で注入
+// data/repository/region_geojson_builder.dart
+@riverpod
+RegionGeoJsonBuilder regionGeoJsonBuilder(Ref ref) => RegionGeoJsonBuilder();
+
+class RegionGeoJsonBuilder {
+  String build({required List<Region> regions}) { ... }
+}
+```
+
+### イベントハンドラ系プライベートメソッド（例: `_handleTap`）
+
+- **禁止**: Widget 内に `_handleXxx` のようなプライベートメソッドを定義する
+- **正解**: `XxxAction` クラスとして別ファイルに切り出し、Riverpod で DI する
+
+```dart
+// ❌ 悪い例: Widget 内にプライベートメソッド
+void _handleTap(LatLng point) { ... }
+
+// ❌ 悪い例: コンストラクタに ref を渡す
+class EarthquakeHistoryMapAction {
+  EarthquakeHistoryMapAction(this._ref);
+  final Ref _ref;
+  void handleTap(LatLng point) { ... }
+}
+
+// ✅ 良い例: ref / context はコンストラクタではなく各メソッドの引数で受け取る
+// ui/action/earthquake_history_map_action.dart
+@riverpod
+EarthquakeHistoryMapAction earthquakeHistoryMapAction(Ref ref) =>
+    EarthquakeHistoryMapAction();
+
+class EarthquakeHistoryMapAction {
+  void handleTap(WidgetRef ref, BuildContext context, LatLng point) { ... }
+}
+```
+
+- `ref` / `context` を Action クラスのコンストラクタに渡すことを禁止する
+- Action クラスのメソッドに限り、`WidgetRef ref` / `BuildContext context` を引数として渡すことを許可する
+- **Action 以外のクラス・関数**に `ref` や `context` を渡すことを絶対に禁止する（`data/flow/` の flow 関数は除く）
+
+### Widget 分割で解消できる場合
+
+- Widget が肥大化してプライベートメソッドが必要になっているなら、まず **Widget を private class に分割** することを優先する
+
+### switch 式 / 単純な変換のための関数
+
+- **一箇所のみで使う場合**: 関数に切り出さず **変数・定数として直接定義** する
+- **build メソッド内の switch 式**: 関数を作らずインラインで記述する
+
+```dart
+// ❌ 悪い例
+String _getLabel(DisplayMode mode) => switch (mode) { ... };
+
+// ✅ 良い例
+final label = switch (mode) { ... };
+```
