@@ -22,7 +22,6 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
-    final isInitialized = useRef(false);
 
     useEffect(
       () {
@@ -36,12 +35,26 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
             asset: Assets.images.map.normalHypocenter.path,
           );
 
+          final hyp = earthquake.hypocenter;
+          final coords = hyp?.coordinates;
+          final features = <Map<String, dynamic>>[
+            if (coords is CoordinateLatLng)
+              {
+                'type': 'Feature',
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': [coords.longitude, coords.latitude],
+                },
+                'properties': <String, dynamic>{},
+              },
+          ];
+
           await styleController.addSource(
             GeoJsonSource(
               id: _sourceId,
               data: jsonEncode({
                 'type': 'FeatureCollection',
-                'features': <Map<String, dynamic>>[],
+                'features': features,
               }),
             ),
           );
@@ -59,88 +72,27 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
                   ['linear'],
                   ['zoom'],
                   3,
-                  0.3,
+                  0.15,
                   20,
-                  2,
+                  1.0,
                 ],
               },
             ),
           );
-          isInitialized.value = true;
         }());
 
         return () async {
-          await styleController.removeLayer(_layerId);
-          await styleController.removeSource(_sourceId);
+          try {
+            await styleController.removeLayer(_layerId);
+            await styleController.removeSource(_sourceId);
+          } on Exception catch (e) {
+            talker.log(e);
+          }
         };
-      },
-      [styleController],
-    );
-
-    useEffect(
-      () {
-        if (styleController == null || !isInitialized.value) {
-          return null;
-        }
-
-        unawaited(
-          () async {
-            final hyp = earthquake.hypocenter;
-            if (hyp == null) {
-              await _clear(styleController);
-              return;
-            }
-            final coords = hyp.coordinates;
-            if (coords is! CoordinateLatLng) {
-              await _clear(styleController);
-              return;
-            }
-
-            try {
-              await styleController.updateGeoJsonSource(
-                id: _sourceId,
-                data: jsonEncode({
-                  'type': 'FeatureCollection',
-                  'features': [
-                    {
-                      'type': 'Feature',
-                      'geometry': {
-                        'type': 'Point',
-                        'coordinates': [
-                          coords.longitude,
-                          coords.latitude,
-                        ],
-                      },
-                      'properties': <String, dynamic>{},
-                    },
-                  ],
-                }),
-              );
-            } on Exception catch (e) {
-              talker.log(e);
-            }
-          }(),
-        );
-
-        return null;
       },
       [styleController, earthquake],
     );
 
     return const SizedBox.shrink();
-  }
-
-  Future<void> _clear(StyleController styleController) async {
-    try {
-      await styleController.updateGeoJsonSource(
-        id: _sourceId,
-        data: jsonEncode({
-          'type': 'FeatureCollection',
-          'features': <Map<String, dynamic>>[],
-        }),
-      );
-    } on Exception catch (e) {
-      talker.log(e);
-    }
   }
 }

@@ -31,19 +31,25 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
 
         unawaited(() async {
           await styleController.addSource(
-            RasterSource(
+            VectorSource(
               id: _sourceId,
-              tiles: [tileUrl],
+              tiles: [
+                tileUrl,
+              ],
               maxZoom: 14,
             ),
           );
 
           await styleController.addLayer(
-            const RasterStyleLayer(
+            const FillStyleLayer(
               id: _layerId,
               sourceId: _sourceId,
               paint: {
-                'raster-opacity': 0.75,
+                'fill-opacity': 0.75,
+                'fill-color': [
+                  'get',
+                  'fill',
+                ],
               },
             ),
             belowLayerId: BaseLayer.countriesFill.name,
@@ -55,7 +61,7 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
           await styleController.removeSource(_sourceId);
         };
       },
-      [styleController],
+      [styleController, tileUrl],
     );
 
     return const SizedBox.shrink();

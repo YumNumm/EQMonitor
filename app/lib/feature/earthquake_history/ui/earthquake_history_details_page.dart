@@ -77,20 +77,26 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
           _Sheet(sheetController: sheetController, item: earthquake),
           if (Navigator.canPop(context))
             SafeArea(
-              child: IconButton.filledTonal(
-                style: ButtonStyle(
-                  shape: WidgetStatePropertyAll(
-                    RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: colorScheme.primary.withValues(alpha: 0.2),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                ),
+                child: IconButton.filledTonal(
+                  style: ButtonStyle(
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: colorScheme.primary.withValues(alpha: 0.2),
+                        ),
+                        borderRadius: BorderRadius.circular(128),
                       ),
-                      borderRadius: BorderRadius.circular(128),
                     ),
                   ),
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => context.pop(),
+                  color: colorScheme.primary,
+                  padding: const EdgeInsets.all(12),
                 ),
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.pop(),
-                color: colorScheme.primary,
               ),
             ),
         ],
