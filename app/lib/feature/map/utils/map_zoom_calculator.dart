@@ -133,3 +133,22 @@ double calculateZoomLevel({
   // 経度方向と緯度方向の両方が画面に収まるように、小さい方のズームレベルを採用
   return math.min(zoomX, zoomY);
 }
+
+/// [calculateZoomLevel] の公開ラッパー（UI から利用）
+double zoomLevelForBounds({
+  required double minLat,
+  required double maxLat,
+  required double minLng,
+  required double maxLng,
+  required double screenWidth,
+  required double screenHeight,
+}) {
+  return calculateZoomLevel(
+    minLat: minLat,
+    maxLat: maxLat,
+    minLng: minLng,
+    maxLng: maxLng,
+    screenWidth: screenWidth,
+    screenHeight: screenHeight,
+  );
+}

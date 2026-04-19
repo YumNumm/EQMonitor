@@ -8,6 +8,185 @@ part of 'home_configuration_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_HomeEewSettings _$HomeEewSettingsFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_HomeEewSettings',
+      json,
+      ($checkedConvert) {
+        final val = _HomeEewSettings(
+          fillMode: $checkedConvert(
+            'fill_mode',
+            (v) =>
+                $enumDecodeNullable(_$HomeEewFillModeEnumMap, v) ??
+                HomeEewFillMode.intensity,
+          ),
+          animationRate: $checkedConvert(
+            'animation_rate',
+            (v) =>
+                $enumDecodeNullable(_$HomeEewAnimationRateEnumMap, v) ??
+                HomeEewAnimationRate.unlimited,
+          ),
+          autoZoom: $checkedConvert('auto_zoom', (v) => v as bool? ?? true),
+          showPSWaveCircle: $checkedConvert(
+            'show_p_s_wave_circle',
+            (v) => v as bool? ?? true,
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'fillMode': 'fill_mode',
+        'animationRate': 'animation_rate',
+        'autoZoom': 'auto_zoom',
+        'showPSWaveCircle': 'show_p_s_wave_circle',
+      },
+    );
+
+Map<String, dynamic> _$HomeEewSettingsToJson(_HomeEewSettings instance) =>
+    <String, dynamic>{
+      'fill_mode': _$HomeEewFillModeEnumMap[instance.fillMode]!,
+      'animation_rate': _$HomeEewAnimationRateEnumMap[instance.animationRate]!,
+      'auto_zoom': instance.autoZoom,
+      'show_p_s_wave_circle': instance.showPSWaveCircle,
+    };
+
+const _$HomeEewFillModeEnumMap = {
+  HomeEewFillMode.intensity: 'intensity',
+  HomeEewFillMode.warning: 'warning',
+  HomeEewFillMode.none: 'none',
+};
+
+const _$HomeEewAnimationRateEnumMap = {
+  HomeEewAnimationRate.unlimited: 'unlimited',
+  HomeEewAnimationRate.oneHz: 'oneHz',
+};
+
+_HomeKyoshinMonitorSettings _$HomeKyoshinMonitorSettingsFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_HomeKyoshinMonitorSettings',
+  json,
+  ($checkedConvert) {
+    final val = _HomeKyoshinMonitorSettings(
+      minRealtimeShindo: $checkedConvert(
+        'min_realtime_shindo',
+        (v) => (v as num?)?.toDouble() ?? null,
+      ),
+      markerSize: $checkedConvert(
+        'marker_size',
+        (v) =>
+            $enumDecodeNullable(_$HomeKmoniMarkerSizeEnumMap, v) ??
+            HomeKmoniMarkerSize.medium,
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'minRealtimeShindo': 'min_realtime_shindo',
+    'markerSize': 'marker_size',
+  },
+);
+
+Map<String, dynamic> _$HomeKyoshinMonitorSettingsToJson(
+  _HomeKyoshinMonitorSettings instance,
+) => <String, dynamic>{
+  'min_realtime_shindo': instance.minRealtimeShindo,
+  'marker_size': _$HomeKmoniMarkerSizeEnumMap[instance.markerSize]!,
+};
+
+const _$HomeKmoniMarkerSizeEnumMap = {
+  HomeKmoniMarkerSize.small: 'small',
+  HomeKmoniMarkerSize.medium: 'medium',
+  HomeKmoniMarkerSize.large: 'large',
+};
+
+_HomeMapSettings _$HomeMapSettingsFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_HomeMapSettings',
+      json,
+      ($checkedConvert) {
+        final val = _HomeMapSettings(
+          maxZoom: $checkedConvert(
+            'max_zoom',
+            (v) => (v as num?)?.toDouble() ?? null,
+          ),
+          defaultBounds: $checkedConvert(
+            'default_bounds',
+            (v) =>
+                $enumDecodeNullable(_$HomeMapDefaultBoundsEnumMap, v) ??
+                HomeMapDefaultBounds.mainIsland,
+          ),
+          customBounds: $checkedConvert(
+            'custom_bounds',
+            (v) => v == null ? null : _nullableCustomBoundsFromJson(v),
+          ),
+          lockBearing: $checkedConvert(
+            'lock_bearing',
+            (v) => v as bool? ?? false,
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'maxZoom': 'max_zoom',
+        'defaultBounds': 'default_bounds',
+        'customBounds': 'custom_bounds',
+        'lockBearing': 'lock_bearing',
+      },
+    );
+
+Map<String, dynamic> _$HomeMapSettingsToJson(_HomeMapSettings instance) =>
+    <String, dynamic>{
+      'max_zoom': instance.maxZoom,
+      'default_bounds': _$HomeMapDefaultBoundsEnumMap[instance.defaultBounds]!,
+      'custom_bounds': _nullableCustomBoundsToJson(instance.customBounds),
+      'lock_bearing': instance.lockBearing,
+    };
+
+const _$HomeMapDefaultBoundsEnumMap = {
+  HomeMapDefaultBounds.mainIsland: 'mainIsland',
+  HomeMapDefaultBounds.all: 'all',
+  HomeMapDefaultBounds.custom: 'custom',
+};
+
+_HomeCommonSettings _$HomeCommonSettingsFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      '_HomeCommonSettings',
+      json,
+      ($checkedConvert) {
+        final val = _HomeCommonSettings(
+          showLocation: $checkedConvert(
+            'show_location',
+            (v) => v as bool? ?? false,
+          ),
+          earthquakeHistoryScope: $checkedConvert(
+            'earthquake_history_scope',
+            (v) =>
+                $enumDecodeNullable(_$HomeEarthquakeHistoryScopeEnumMap, v) ??
+                HomeEarthquakeHistoryScope.nationwide,
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'showLocation': 'show_location',
+        'earthquakeHistoryScope': 'earthquake_history_scope',
+      },
+    );
+
+Map<String, dynamic> _$HomeCommonSettingsToJson(_HomeCommonSettings instance) =>
+    <String, dynamic>{
+      'show_location': instance.showLocation,
+      'earthquake_history_scope':
+          _$HomeEarthquakeHistoryScopeEnumMap[instance.earthquakeHistoryScope]!,
+    };
+
+const _$HomeEarthquakeHistoryScopeEnumMap = {
+  HomeEarthquakeHistoryScope.nationwide: 'nationwide',
+  HomeEarthquakeHistoryScope.currentLocation: 'currentLocation',
+  HomeEarthquakeHistoryScope.designatedRegion: 'designatedRegion',
+};
+
 _HomeConfigurationModel _$HomeConfigurationModelFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
@@ -15,35 +194,41 @@ _HomeConfigurationModel _$HomeConfigurationModelFromJson(
   json,
   ($checkedConvert) {
     final val = _HomeConfigurationModel(
-      showLocation: $checkedConvert(
-        'show_location',
-        (v) => v as bool? ?? false,
+      eew: $checkedConvert(
+        'eew',
+        (v) => v == null
+            ? const HomeEewSettings()
+            : HomeEewSettings.fromJson(v as Map<String, dynamic>),
       ),
-      earthquakeHistoryScope: $checkedConvert(
-        'earthquake_history_scope',
-        (v) =>
-            $enumDecodeNullable(_$HomeEarthquakeHistoryScopeEnumMap, v) ??
-            HomeEarthquakeHistoryScope.nationwide,
+      kyoshinMonitor: $checkedConvert(
+        'kyoshin_monitor',
+        (v) => v == null
+            ? const HomeKyoshinMonitorSettings()
+            : HomeKyoshinMonitorSettings.fromJson(v as Map<String, dynamic>),
+      ),
+      map: $checkedConvert(
+        'map',
+        (v) => v == null
+            ? const HomeMapSettings()
+            : HomeMapSettings.fromJson(v as Map<String, dynamic>),
+      ),
+      common: $checkedConvert(
+        'common',
+        (v) => v == null
+            ? const HomeCommonSettings()
+            : HomeCommonSettings.fromJson(v as Map<String, dynamic>),
       ),
     );
     return val;
   },
-  fieldKeyMap: const {
-    'showLocation': 'show_location',
-    'earthquakeHistoryScope': 'earthquake_history_scope',
-  },
+  fieldKeyMap: const {'kyoshinMonitor': 'kyoshin_monitor'},
 );
 
 Map<String, dynamic> _$HomeConfigurationModelToJson(
   _HomeConfigurationModel instance,
 ) => <String, dynamic>{
-  'show_location': instance.showLocation,
-  'earthquake_history_scope':
-      _$HomeEarthquakeHistoryScopeEnumMap[instance.earthquakeHistoryScope]!,
-};
-
-const _$HomeEarthquakeHistoryScopeEnumMap = {
-  HomeEarthquakeHistoryScope.nationwide: 'nationwide',
-  HomeEarthquakeHistoryScope.currentLocation: 'currentLocation',
-  HomeEarthquakeHistoryScope.designatedRegion: 'designatedRegion',
+  'eew': instance.eew.toJson(),
+  'kyoshin_monitor': instance.kyoshinMonitor.toJson(),
+  'map': instance.map.toJson(),
+  'common': instance.common.toJson(),
 };
