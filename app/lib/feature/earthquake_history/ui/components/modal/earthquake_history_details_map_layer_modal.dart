@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
@@ -97,11 +98,17 @@ class _LocationSettingCards extends ConsumerWidget {
                   child: _LocationCard(
                     title: '非表示',
                     icon: Icons.location_off_outlined,
-                    isSelected: !config.showLocation,
+                    isSelected: !config.common.showLocation,
                     onTap: () => lightHapticFunction(
                       () => ref
                           .read(homeConfigurationProvider.notifier)
-                          .save(config.copyWith(showLocation: false)),
+                          .save(
+                            config.copyWith(
+                              common: config.common.copyWith(
+                                showLocation: false,
+                              ),
+                            ),
+                          ),
                     ),
                   ),
                 ),
@@ -109,9 +116,29 @@ class _LocationSettingCards extends ConsumerWidget {
                   child: _LocationCard(
                     title: '表示',
                     icon: Icons.location_on_outlined,
-                    isSelected: config.showLocation,
-                    subtitle: 'NOT IMPLEMENTED',
-                    onTap: () => throw UnimplementedError(),
+                    isSelected: config.common.showLocation,
+                    onTap: () => lightHapticFunction(() async {
+                      var p = await Geolocator.checkPermission();
+                      if (p == LocationPermission.denied) {
+                        p = await Geolocator.requestPermission();
+                      } else if (p == LocationPermission.deniedForever) {
+                        await Geolocator.openAppSettings();
+                        return;
+                      }
+                      if (p == LocationPermission.denied ||
+                          p == LocationPermission.deniedForever) {
+                        return;
+                      }
+                      await ref
+                          .read(homeConfigurationProvider.notifier)
+                          .save(
+                            config.copyWith(
+                              common: config.common.copyWith(
+                                showLocation: true,
+                              ),
+                            ),
+                          );
+                    }),
                   ),
                 ),
               ],
@@ -131,14 +158,12 @@ class _LocationCard extends StatelessWidget {
     required this.icon,
     required this.isSelected,
     required this.onTap,
-    this.subtitle,
   });
 
   final String title;
   final IconData icon;
   final bool isSelected;
   final VoidCallback onTap;
-  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -179,16 +204,6 @@ class _LocationCard extends StatelessWidget {
                   ),
                 ],
               ),
-              if (subtitle != null) ...[
-                const SizedBox(height: 4),
-                Text(
-                  subtitle!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.error,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
             ],
           ),
         ),

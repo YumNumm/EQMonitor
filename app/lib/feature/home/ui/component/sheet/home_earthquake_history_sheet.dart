@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_earthquake_history_parameter_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_earthquake_list.dart';
@@ -30,7 +31,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             HomeScopeSelector(
-              scope: home.earthquakeHistoryScope,
+              scope: home.common.earthquakeHistoryScope,
               onScopeChanged: (scope) async => ref
                   .read(homeConfigurationProvider.notifier)
                   .setEarthquakeHistoryScope(scope),
@@ -39,7 +40,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
               data: (param) {
                 if (param == null) {
                   return HomeScopeUnavailableBody(
-                    scope: home.earthquakeHistoryScope,
+                    scope: home.common.earthquakeHistoryScope,
                     onRetry: () => ref.invalidate(
                       homeEarthquakeHistoryParameterProvider,
                     ),
@@ -67,7 +68,8 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                     ),
                   ),
                 };
-                if (home.earthquakeHistoryScope == .currentLocation) {
+                if (home.common.earthquakeHistoryScope ==
+                    HomeEarthquakeHistoryScope.currentLocation) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
