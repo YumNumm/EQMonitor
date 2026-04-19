@@ -9,7 +9,9 @@ double halfPrecision(double value) {
   // 浮動小数点の誤差を避けるため十分な精度で文字列化し、末尾の 0 を除去
   final str = value.toStringAsFixed(10).replaceAll(RegExp(r'0+$'), '');
   final dotIndex = str.indexOf('.');
-  if (dotIndex == -1) return 0.5;
+  if (dotIndex == -1) {
+    return 0.5;
+  }
   final decimalPlaces = str.length - dotIndex - 1;
   return 0.5 * pow(10.0, -decimalPlaces);
 }

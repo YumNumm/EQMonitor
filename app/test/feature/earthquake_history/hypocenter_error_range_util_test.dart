@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_int_literals
+
 import 'package:eqmonitor/core/util/map/hypocenter_error_range_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
