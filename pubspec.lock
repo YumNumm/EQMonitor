@@ -1283,8 +1283,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre"
-      ref: "1d32edcc4ea158b7bc1e43afa88e5086cd11f958"
-      resolved-ref: "1d32edcc4ea158b7bc1e43afa88e5086cd11f958"
+      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1292,8 +1292,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_android"
-      ref: "1d32edcc4ea158b7bc1e43afa88e5086cd11f958"
-      resolved-ref: "1d32edcc4ea158b7bc1e43afa88e5086cd11f958"
+      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
@@ -1301,26 +1301,37 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/maplibre_ios"
-      ref: "1d32edcc4ea158b7bc1e43afa88e5086cd11f958"
-      resolved-ref: "1d32edcc4ea158b7bc1e43afa88e5086cd11f958"
+      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
       url: "https://github.com/YumNumm/flutter-maplibre.git"
     source: git
     version: "0.3.5"
   maplibre_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: maplibre_platform_interface
-      sha256: "4951696a38c79e0739854fd4129dbe768ffb2056b1268f1a1459c9696d255bc2"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/maplibre_platform_interface"
+      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      url: "https://github.com/YumNumm/flutter-maplibre.git"
+    source: git
     version: "0.3.5"
   maplibre_web:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: maplibre_web
-      sha256: b8fc47882dfa5f443a3492f28d8c9ae578f937de34b286cd490d1738cfb3b8b7
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/maplibre_web"
+      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      url: "https://github.com/YumNumm/flutter-maplibre.git"
+    source: git
+    version: "0.3.5"
+  maplibre_webview:
+    dependency: "direct overridden"
+    description:
+      path: "packages/maplibre_webview"
+      ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      resolved-ref: "3df3a6d7861b993d6905b40dae4d80261321f04d"
+      url: "https://github.com/YumNumm/flutter-maplibre.git"
+    source: git
     version: "0.3.5"
   maps_toolkit:
     dependency: transitive
