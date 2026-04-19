@@ -125,6 +125,13 @@ class _DebugWidget extends ConsumerWidget {
             ),
           ),
           ListTile(
+            title: const Text('通知配信ログ'),
+            subtitle: const Text('GET /v2/device/{id}/notification/history'),
+            leading: const Icon(Icons.history),
+            onTap: () async =>
+                const DebugNotificationDeliveryLogRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('デバイス管理'),
             subtitle: const Text('登録・再登録・削除・通知条件の設定'),
             leading: const Icon(Icons.manage_accounts_outlined),

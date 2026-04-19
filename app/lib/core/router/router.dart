@@ -26,6 +26,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_de
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/sse/debug_sse_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
@@ -186,6 +187,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<DebugSseRoute>(path: 'sse'),
+        TypedGoRoute<DebugNotificationDeliveryLogRoute>(
+          path: 'notification-delivery-log',
+        ),
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
@@ -368,6 +372,16 @@ class DebugSseRoute extends GoRouteData with $DebugSseRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugSsePage();
+  }
+}
+
+class DebugNotificationDeliveryLogRoute extends GoRouteData
+    with $DebugNotificationDeliveryLogRoute {
+  const DebugNotificationDeliveryLogRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugNotificationDeliveryLogPage();
   }
 }
 
