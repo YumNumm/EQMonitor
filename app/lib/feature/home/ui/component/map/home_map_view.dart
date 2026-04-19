@@ -62,7 +62,8 @@ class _MapContent extends HookConsumerWidget {
                   .read(homeMapCameraStateProvider.notifier)
                   .setController(controller);
             },
-            onEvent: (event) => MapLibreEventProvider.of(context).emit(event),
+            onEvent: (event) =>
+                MapLibreEventProvider.maybeOf(context)?.emit(event),
             children: [
               Consumer(
                 builder: (context, ref, _) {

@@ -35,7 +35,11 @@ class MapLibreEventProviderState extends State<MapLibreEventProvider> {
     super.dispose();
   }
 
-  void emit(MapEvent event) => _eventStreamController.add(event);
+  void emit(MapEvent event) {
+    if (!_eventStreamController.isClosed) {
+      _eventStreamController.add(event);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
