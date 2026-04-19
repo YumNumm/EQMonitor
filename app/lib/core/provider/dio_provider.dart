@@ -5,8 +5,6 @@ import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:eqmonitor/feature/auth/data/interceptor/bearer_auth_interceptor.dart';
-import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
@@ -32,11 +30,6 @@ Future<Dio> dio(Ref ref) async {
       // バックエンドは query の配列を `key[]=a&key[]=b` 形式で受け取る。
       // `multi` の単一要素は `key=a` となりスカラー扱いで 400 になる。
       listFormat: ListFormat.multiCompatible,
-    ),
-  );
-  dio.interceptors.add(
-    BearerAuthInterceptor(
-      () => ref.read(authProvider).value,
     ),
   );
   dio.interceptors.add(

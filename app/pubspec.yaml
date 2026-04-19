@@ -29,8 +29,6 @@ dependency_overrides:
       path: packages/maplibre_ios
 dependencies:
   app_settings: ^7.0.0
-  better_auth_api_client:
-    path: ../packages/better_auth_api_client
   cached_network_image: ^3.4.1
   clock: ^1.1.2
   collection: ^1.19.1
@@ -84,7 +82,6 @@ dependencies:
   go_router: ^17.0.0
   google_api_availability: ^5.0.1
   google_fonts: ^8.0.2
-  google_sign_in: ^7.2.0
   hooks_riverpod: ^3.0.3
   image: ^4.4.0
   in_app_review: ^2.0.10

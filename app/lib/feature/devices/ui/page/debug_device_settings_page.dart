@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/foundation/result.dart';
-import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/debug_device_settings_providers.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
@@ -36,14 +35,10 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             switch (sessionAsync) {
-              AsyncData(:final value) => value == null
-                  ? const SliverFillRemaining(
-                      child: _UnauthenticatedMessage(),
-                    )
-                  : _DeviceSettingsSliverList(
-                      snapshot: value,
-                      historyAsync: historyAsync,
-                    ),
+              AsyncData(:final value) => _DeviceSettingsSliverList(
+                  snapshot: value,
+                  historyAsync: historyAsync,
+                ),
               AsyncError(:final error, :final stackTrace) => SliverFillRemaining(
                   child: _LoadErrorBody(
                     message: error.toString(),
@@ -55,40 +50,6 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                   child: Center(child: CircularProgressIndicator.adaptive()),
                 ),
             },
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _UnauthenticatedMessage extends StatelessWidget {
-  const _UnauthenticatedMessage();
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.lock_outline, size: 48, color: scheme.primary),
-            const SizedBox(height: 16),
-            Text(
-              'デバイス登録と通知設定にはログインが必要です',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'デバッグページの Google サインインから認証してください',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: scheme.onSurfaceVariant,
-                  ),
-            ),
           ],
         ),
       ),
@@ -325,9 +286,6 @@ class _TestNotificationSection extends HookConsumerWidget {
     final pendingKind = useState<TestNotificationKind?>(null);
 
     Future<void> send(TestNotificationKind kind) async {
-      if (ref.read(authProvider).value == null) {
-        return;
-      }
       pendingKind.value = kind;
       final messenger = ScaffoldMessenger.of(context);
       final notificationRepository = await ref.read(pushNotificationRepositoryProvider.future);

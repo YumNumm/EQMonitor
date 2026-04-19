@@ -17,13 +17,13 @@ final debugDeviceSessionProvider = DebugDeviceSessionProvider._();
 final class DebugDeviceSessionProvider
     extends
         $FunctionalProvider<
-          AsyncValue<DebugDeviceSessionSnapshot?>,
-          DebugDeviceSessionSnapshot?,
-          FutureOr<DebugDeviceSessionSnapshot?>
+          AsyncValue<DebugDeviceSessionSnapshot>,
+          DebugDeviceSessionSnapshot,
+          FutureOr<DebugDeviceSessionSnapshot>
         >
     with
-        $FutureModifier<DebugDeviceSessionSnapshot?>,
-        $FutureProvider<DebugDeviceSessionSnapshot?> {
+        $FutureModifier<DebugDeviceSessionSnapshot>,
+        $FutureProvider<DebugDeviceSessionSnapshot> {
   DebugDeviceSessionProvider._()
     : super(
         from: null,
@@ -40,18 +40,18 @@ final class DebugDeviceSessionProvider
 
   @$internal
   @override
-  $FutureProviderElement<DebugDeviceSessionSnapshot?> $createElement(
+  $FutureProviderElement<DebugDeviceSessionSnapshot> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<DebugDeviceSessionSnapshot?> create(Ref ref) {
+  FutureOr<DebugDeviceSessionSnapshot> create(Ref ref) {
     return debugDeviceSession(ref);
   }
 }
 
 String _$debugDeviceSessionHash() =>
-    r'359e4b60724b15e8993fcb83ea1b14f8f8696155';
+    r'0c9400e292f082b4c991b889d2f9e6b5bdf384a4';
 
 @ProviderFor(debugNotificationHistory)
 final debugNotificationHistoryProvider = DebugNotificationHistoryProvider._();
@@ -93,4 +93,4 @@ final class DebugNotificationHistoryProvider
 }
 
 String _$debugNotificationHistoryHash() =>
-    r'ad8ff68c3aa78b361d0c097645ed433bb340c868';
+    r'e572b43fd6193eedee7f0e518a3180ebb4ca7dcb';
