@@ -1,5 +1,4 @@
 enum SecureStorageKey {
-  sessionToken('SESSION_TOKEN'),
   userId('user_id'),
   ;
 

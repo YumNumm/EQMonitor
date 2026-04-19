@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/auth/data/notifier/auth_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -14,27 +13,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'debug_page.g.dart';
-
-/// GoogleSignIn を初期化するプロバイダー（一度だけ実行される）
-@riverpod
-Future<void> googleSignInInit(Ref ref) async {
-  final env = ref.watch(environmentProvider);
-  if (Platform.isIOS || Platform.isMacOS) {
-    await GoogleSignIn.instance.initialize(
-      clientId: env.googleIosClientId,
-    );
-  } else {
-    await GoogleSignIn.instance.initialize(
-      serverClientId: env.googleAndroidClientId,
-    );
-  }
-}
 
 class DebugPage extends ConsumerWidget {
   const DebugPage({super.key});
@@ -55,7 +34,6 @@ class _DebugWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value ?? false;
     final notificationToken = ref.watch(notificationTokenStreamProvider).value;
-    final sessionToken = ref.watch(authProvider).value;
     final flavorName = ref.watch(environmentProvider).flavor.name;
 
     return ListTileTheme(
@@ -146,25 +124,14 @@ class _DebugWidget extends ConsumerWidget {
               context,
             ),
           ),
-          const Divider(),
-          const ListTile(
-            title: Text('認証情報'),
-            leading: Icon(Icons.lock),
-          ),
           ListTile(
-            title: const Text('セッショントークン'),
-            subtitle: Text(
-              sessionToken ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () async => Clipboard.setData(
-              ClipboardData(text: sessionToken ?? ''),
+            title: const Text('デバイス管理'),
+            subtitle: const Text('登録・再登録・削除・通知条件の設定'),
+            leading: const Icon(Icons.manage_accounts_outlined),
+            onTap: () async => const DebugDeviceAdminRoute().push<void>(
+              context,
             ),
           ),
-          _GoogleSignInTile(),
-          _SignOutTile(),
           const Divider(),
           ListTile(
             title: const Text('FCM Token'),
@@ -297,80 +264,5 @@ class _AppCheckSection extends ConsumerWidget {
       return kDebugMode ? 'AppleDebugProvider' : 'AppleAppAttestProvider';
     }
     return 'Unknown';
-  }
-}
-
-class _GoogleSignInTile extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(AuthNotifier.signInWithGoogleMutation);
-    final isPending = state is MutationPending;
-
-    return ListTile(
-      title: const Text('Google Sign-in'),
-      leading: const Icon(Icons.login),
-      trailing: isPending
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-            )
-          : null,
-      subtitle: switch (state) {
-        MutationError(:final error) => Text(
-          error.toString(),
-          style: TextStyle(color: Theme.of(context).colorScheme.error),
-        ),
-        MutationSuccess() => const Text('サインイン成功'),
-        _ => null,
-      },
-      onTap: isPending
-          ? null
-          : () => AuthNotifier.signInWithGoogleMutation.run(ref, (tsx) async {
-              await tsx.get(googleSignInInitProvider.future);
-              final account = await GoogleSignIn.instance.authenticate();
-              final idToken = account.authentication.idToken;
-              if (idToken == null) {
-                throw Exception('Google idToken が取得できませんでした');
-              }
-              await tsx
-                  .get(authProvider.notifier)
-                  .signInWithGoogle(idToken: idToken);
-            }),
-    );
-  }
-}
-
-class _SignOutTile extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(AuthNotifier.signOutMutation);
-    final isPending = state is MutationPending;
-
-    return ListTile(
-      title: const Text('サインアウト'),
-      leading: const Icon(Icons.logout),
-      trailing: isPending
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-            )
-          : null,
-      subtitle: switch (state) {
-        MutationError(:final error) => Text(
-          error.toString(),
-          style: TextStyle(color: Theme.of(context).colorScheme.error),
-        ),
-        MutationSuccess() => const Text('サインアウト完了'),
-        _ => null,
-      },
-      onTap: isPending
-          ? null
-          : () => AuthNotifier.signOutMutation.run(ref, (tsx) async {
-              await tsx.get(authProvider.notifier).signOut();
-              await GoogleSignIn.instance.signOut();
-            }),
-    );
   }
 }
