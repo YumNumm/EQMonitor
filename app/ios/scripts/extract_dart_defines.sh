@@ -3,8 +3,8 @@
 # See: https://github.com/yumemi-inc/flutter-mobile-project-template/blob/6ecefcaeb994ed2ec6bd61341d9e59988167c940/apps/app/ios/scripts/extract_dart_defines.sh
 
 # Dart defineを書き出すファイルパスを指定します。
-# ここでは `Environment.xcconfig` というファイル名で作成することにします。
-OUTPUT_FILE="${SRCROOT}/Flutter/Environment.xcconfig"
+# `Environment.xcconfig` はデフォルト値とこの生成物をマージするラッパーです。
+OUTPUT_FILE="${SRCROOT}/Flutter/Environment.generated.xcconfig"
 # Dart defineの中身を変更した時に古いプロパティが残らないように、初めにファイルを空にしています。
 : > $OUTPUT_FILE
 
