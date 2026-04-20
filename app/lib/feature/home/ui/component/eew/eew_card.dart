@@ -6,7 +6,6 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
-import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -503,7 +502,7 @@ class _BackgroundIndexText extends StatelessWidget {
           style: TextStyle(
             fontSize: 100,
             fontWeight: FontWeight.bold,
-            fontFamily: monoFont,
+            fontFamily: FontFamily.notoSansMono,
             color: textTheme.bodyMedium!.color!.withValues(alpha: 0.3),
           ),
         ),

@@ -67,6 +67,27 @@ class App extends HookConsumerWidget {
             colorScheme: darkColorScheme,
             customColors: darkCustomColors,
           ),
+          cupertinoLightTheme: buildCupertinoTheme(
+            colorScheme: lightColorScheme,
+            customColors: lightCustomColors,
+          ),
+          cupertinoDarkTheme: buildCupertinoTheme(
+            colorScheme: darkColorScheme,
+            customColors: darkCustomColors,
+          ),
+          builder: (context, child) {
+            if (PlatformInfo.isIOS) {
+              return Theme(
+                data: buildTheme(
+                  colorScheme: lightColorScheme,
+                  customColors: lightCustomColors,
+                ),
+                child: child!,
+              );
+            }
+            return child!;
+          },
+
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

@@ -84,4 +84,24 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
   );
 }
 
-const String monoFont = codeFontFamily;
+CupertinoThemeData buildCupertinoTheme({
+  ColorScheme? colorScheme,
+  CustomColors? customColors,
+}) {
+  final resolvedColorScheme =
+      colorScheme ??
+      const ColorScheme.light().copyWith(
+        primary: const Color(0xFF2F6FE4),
+      );
+  final designSystem = resolvedColorScheme.brightness == Brightness.dark
+      ? DesignSystemThemeExtension.dark()
+      : DesignSystemThemeExtension.light();
+
+  return CupertinoThemeData(
+    brightness: resolvedColorScheme.brightness,
+    applyThemeToAll: true,
+    primaryColor: resolvedColorScheme.primary,
+    scaffoldBackgroundColor: designSystem.color.surfaceDefault,
+    barBackgroundColor: designSystem.color.surfaceDefault,
+  );
+}
