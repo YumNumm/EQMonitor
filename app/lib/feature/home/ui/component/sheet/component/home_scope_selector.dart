@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +20,19 @@ class HomeScopeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final shape = designSystem.shape;
+    final spacing = designSystem.spacing;
+    final typography = designSystem.typography;
+
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.fromLTRB(
+        spacing.lg,
+        spacing.lg,
+        spacing.lg,
+        spacing.md,
+      ),
       child: DropdownMenuFormField(
         initialSelection: scope,
         dropdownMenuEntries: [
@@ -34,21 +46,39 @@ class HomeScopeSelector extends StatelessWidget {
         },
         menuStyle: MenuStyle(
           padding: WidgetStateProperty.all(EdgeInsets.zero),
+          backgroundColor: WidgetStatePropertyAll(color.surfaceRaised),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(shape.md),
+              side: BorderSide(color: color.outlineSoft),
             ),
           ),
         ),
         decorationBuilder: (context, controller) => InputDecoration(
+          filled: true,
+          fillColor: color.surfaceRaised,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(shape.md),
+            borderSide: BorderSide(color: color.outlineSoft),
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 4,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(shape.md),
+            borderSide: BorderSide(color: color.outlineSoft),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(shape.md),
+            borderSide: BorderSide(color: color.outlineStrong),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: spacing.md,
+            vertical: spacing.sm,
           ),
           visualDensity: VisualDensity.compact,
+          hintStyle: typography.bodyMedium.copyWith(
+            color: designSystem.textColor.tertiary,
+          ),
         ),
+        textStyle: typography.bodyLarge,
       ),
     );
   }

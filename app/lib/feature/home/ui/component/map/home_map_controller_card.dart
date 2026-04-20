@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,30 +17,35 @@ class HomeMapControllerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
 
-    const divider = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4),
-      child: Divider(height: 0),
+    final divider = Padding(
+      padding: EdgeInsets.symmetric(horizontal: spacing.xs),
+      child: Divider(height: 0, color: color.outlineSoft),
     );
 
     void hapticFeedback() => unawaited(HapticFeedback.lightImpact());
 
     return Card(
-      color: colorScheme.surfaceContainerHighest,
+      color: color.surfaceCard.withValues(alpha: 0.92),
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(shape.md),
+        side: BorderSide(color: color.outlineSoft),
+      ),
       child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children:
               [
                     InkWell(
-                      child: const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.layers_rounded),
+                      child: Padding(
+                        padding: EdgeInsets.all(spacing.sm),
+                        child: const Icon(Icons.layers_rounded),
                       ),
                       onTap: () async {
                         hapticFeedback();
@@ -47,9 +53,9 @@ class HomeMapControllerCard extends StatelessWidget {
                       },
                     ),
                     InkWell(
-                      child: const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.home_rounded),
+                      child: Padding(
+                        padding: EdgeInsets.all(spacing.sm),
+                        child: const Icon(Icons.home_rounded),
                       ),
                       onTap: () {
                         hapticFeedback();

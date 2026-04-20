@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -10,26 +11,54 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_s
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeEarthquakeHistorySheet extends HookConsumerWidget {
   const HomeEarthquakeHistorySheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
+    final typography = designSystem.typography;
     final homeAsync = ref.watch(homeConfigurationProvider);
     final paramAsync = ref.watch(homeEarthquakeHistoryParameterProvider);
 
     return homeAsync.when(
       data: (home) => Card.outlined(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        color: colorScheme.surfaceContainer,
+        margin: EdgeInsets.zero,
+        color: color.surfaceCard,
         clipBehavior: Clip.antiAlias,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(shape.card),
+          side: BorderSide(color: color.outlineSoft),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                spacing.lg,
+                spacing.lg,
+                spacing.lg,
+                spacing.sm,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('最近の地震', style: typography.titleLarge),
+                  SizedBox(height: spacing.xs),
+                  Text(
+                    '表示範囲を切り替えながら、直近の地震情報を素早く確認できます。',
+                    style: typography.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
             HomeScopeSelector(
               scope: home.common.earthquakeHistoryScope,
               onScopeChanged: (scope) async => ref
@@ -61,12 +90,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                     },
                     padding: const EdgeInsets.all(8),
                   ),
-                  _ => const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: CircularProgressIndicator.adaptive(),
-                    ),
-                  ),
+                  _ => const _HomeEarthquakeHistorySheetSkeleton(),
                 };
                 if (home.common.earthquakeHistoryScope ==
                     HomeEarthquakeHistoryScope.currentLocation) {
@@ -80,12 +104,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                 }
                 return listSection;
               },
-              loading: () => const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator.adaptive(),
-                ),
-              ),
+              loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
               error: (error, _) => ErrorCard(
                 error: error,
                 margin: EdgeInsets.zero,
@@ -95,7 +114,12 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.fromLTRB(
+                spacing.lg,
+                spacing.xs,
+                spacing.lg,
+                spacing.md,
+              ),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -109,13 +133,66 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
         ),
       ),
       loading: () => Card.outlined(
-        color: colorScheme.surfaceContainer,
-        child: const Padding(
-          padding: EdgeInsets.all(24),
-          child: Center(child: CircularProgressIndicator.adaptive()),
+        margin: EdgeInsets.zero,
+        color: color.surfaceCard,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(shape.card),
+          side: BorderSide(color: color.outlineSoft),
         ),
+        child: const _HomeEarthquakeHistorySheetSkeleton(),
       ),
       error: (e, _) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _HomeEarthquakeHistorySheetSkeleton extends StatelessWidget {
+  const _HomeEarthquakeHistorySheetSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
+    final color = designSystem.color;
+
+    return Padding(
+      padding: EdgeInsets.all(spacing.lg),
+      child: Skeletonizer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 18,
+              width: 120,
+              decoration: BoxDecoration(
+                color: color.surfaceRaised,
+                borderRadius: BorderRadius.circular(shape.sm),
+              ),
+            ),
+            SizedBox(height: spacing.sm),
+            Container(
+              height: 44,
+              decoration: BoxDecoration(
+                color: color.surfaceRaised,
+                borderRadius: BorderRadius.circular(shape.md),
+              ),
+            ),
+            SizedBox(height: spacing.lg),
+            for (final index in List.generate(3, (index) => index)) ...[
+              const ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(radius: 16),
+                title: Text('2026/04/21 12:34'),
+                subtitle: Text('最大震度4 / M5.2 / 東京都'),
+                trailing: Icon(Icons.chevron_right_rounded),
+              ),
+              if (index != 2) SizedBox(height: spacing.sm),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

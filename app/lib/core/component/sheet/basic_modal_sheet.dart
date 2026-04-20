@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
@@ -14,8 +15,11 @@ class BasicModalSheet extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final shape = designSystem.shape;
+    final spacing = designSystem.spacing;
+    final textColor = designSystem.textColor;
 
     return SafeArea(
       bottom: false,
@@ -27,28 +31,28 @@ class BasicModalSheet extends HookWidget {
           );
           final isLandscape = size.width > size.height;
           final sheet = Sheet(
-            backgroundColor: colorScheme.surface,
+            backgroundColor: color.surfaceDefault,
             shape: RoundedRectangleBorder(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(shape.sheet),
               ),
-              side: BorderSide(color: colorScheme.outlineVariant, width: 0),
+              side: BorderSide(color: color.outlineSoft),
             ),
             initialExtent: size.height * 0.2,
             physics: const SnapSheetPhysics(stops: [0.1, 0.2, 0.5, 0.8, 1]),
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(
-                    top: 8,
-                    bottom: 4,
+                  margin: EdgeInsets.only(
+                    top: spacing.sm,
+                    bottom: spacing.xs,
                   ),
                   width: 36,
                   height: 4,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: theme.colorScheme.onSurface,
+                    borderRadius: BorderRadius.circular(shape.pill),
+                    color: textColor.tertiary.withValues(alpha: 0.48),
                   ),
                 ),
                 child,

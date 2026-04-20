@@ -321,7 +321,8 @@ class _SettingSwitchTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool value;
-  final FutureOr<void> Function(bool) onChanged;
+  // ignore: avoid_positional_boolean_parameters
+  final Future<void> Function(bool next) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -366,7 +367,7 @@ class _SettingNavigationTile extends StatelessWidget {
 
   final String title;
   final String subtitle;
-  final FutureOr<void> Function() onTap;
+  final Future<void> Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -406,7 +407,8 @@ class _SettingSegmentedField<T> extends StatelessWidget {
   final String subtitle;
   final List<ButtonSegment<T>> segments;
   final Set<T> selected;
-  final FutureOr<void> Function(Set<T>) onSelectionChanged;
+  // ignore: unsafe_variance
+  final Future<void> Function(Set<T> next) onSelectionChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -454,7 +456,7 @@ class _SettingActionTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final String actionLabel;
-  final FutureOr<void> Function() onPressed;
+  final Future<void> Function() onPressed;
 
   @override
   Widget build(BuildContext context) {

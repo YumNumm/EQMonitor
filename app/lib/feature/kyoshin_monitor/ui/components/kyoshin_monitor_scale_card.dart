@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,9 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final realtimeDataType = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.realtimeDataType),
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.requireValue.realtimeDataType,
+      ),
     );
     final type = switch (realtimeDataType) {
       RealtimeDataType.shindo => KyoshinMonitorScaleType.intensity,
@@ -29,38 +31,48 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
       RealtimeDataType.pgd => KyoshinMonitorScaleType.pgd,
       _ => throw ArgumentError('Invalid realtimeDataType: $realtimeDataType)'),
     };
-    final theme = Theme.of(context);
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            type.unit == ''
-                ? type.title
-                : '${type.title.toUpperCase()} [${type.unit}]',
-            style: theme.textTheme.bodySmall!.copyWith(
-              fontFamily: FontFamily.notoSansMono,
-              textBaseline: TextBaseline.alphabetic,
-              fontWeight: FontWeight.bold,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: designSystem.spacing.sm,
+          vertical: designSystem.spacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: color.surfaceCard.withValues(alpha: 0.92),
+          borderRadius: BorderRadius.circular(designSystem.shape.md),
+          border: Border.all(color: color.outlineSoft),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              type.unit == ''
+                  ? type.title
+                  : '${type.title.toUpperCase()} [${type.unit}]',
+              style: designSystem.typography.monoSmall.copyWith(
+                textBaseline: TextBaseline.alphabetic,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          KyoshinMonitorScale(
-            type: type,
-            width: 15,
-            height: 150,
-            gradientDirection: KyoshinMonitorScaleGradientDirection.reverse,
-            orientation: KyoshinMonitorScaleOrientation.vertical,
-            textColor: theme.colorScheme.onSurface,
-            tickInterval: 3,
-            textStyle: theme.textTheme.bodySmall!.copyWith(
-              fontFamily: FontFamily.notoSansMono,
-              textBaseline: TextBaseline.alphabetic,
-              fontSize: 10,
+            SizedBox(height: designSystem.spacing.sm),
+            KyoshinMonitorScale(
+              type: type,
+              width: 15,
+              height: 150,
+              gradientDirection: KyoshinMonitorScaleGradientDirection.reverse,
+              orientation: KyoshinMonitorScaleOrientation.vertical,
+              textColor: designSystem.textColor.primary,
+              tickInterval: 3,
+              textStyle: designSystem.typography.monoSmall.copyWith(
+                textBaseline: TextBaseline.alphabetic,
+                fontSize: 10,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

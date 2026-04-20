@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_station_icon_preloader.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -29,6 +30,10 @@ class HomeMapView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final spacing = designSystem.spacing;
+    final typography = designSystem.typography;
 
     return switch (mapConfiguration) {
       AsyncData(:final value) when value.styleString != null => _MapContent(
@@ -37,8 +42,26 @@ class HomeMapView extends ConsumerWidget {
       AsyncError(:final error) => Center(
         child: ErrorCard(error: error),
       ),
-      _ => const Center(
-        child: CircularProgressIndicator.adaptive(),
+      _ => Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.xl,
+            vertical: spacing.lg,
+          ),
+          decoration: BoxDecoration(
+            color: color.surfaceCard.withValues(alpha: 0.92),
+            borderRadius: BorderRadius.circular(designSystem.shape.card),
+            border: Border.all(color: color.outlineSoft),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator.adaptive(),
+              SizedBox(height: spacing.md),
+              Text('地図を準備しています', style: typography.bodyMedium),
+            ],
+          ),
+        ),
       ),
     };
   }
@@ -172,17 +195,20 @@ class _MapHeader extends ConsumerWidget {
           ref.read(homeMapCameraStateProvider.notifier).returnToHome(),
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: useKmoni ? kyoshinMonitorColumn : const SizedBox.shrink(),
-        ),
-        const Column(),
-        controllerCard,
-      ],
+    return Padding(
+      padding: EdgeInsets.all(context.designSystem.spacing.sm),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: useKmoni ? kyoshinMonitorColumn : const SizedBox.shrink(),
+          ),
+          const Column(),
+          controllerCard,
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
 
 class EarthquakeHistoryNotFound extends StatelessWidget {
@@ -5,16 +6,23 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final designSystem = context.designSystem;
+
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(designSystem.spacing.lg),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 48),
+            Icon(
+              Icons.search_off_rounded,
+              size: 48,
+              color: designSystem.textColor.secondary,
+            ),
+            SizedBox(height: designSystem.spacing.sm),
             Text(
               '条件を満たす地震情報は見つかりませんでした',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: designSystem.typography.titleSmall,
               textAlign: TextAlign.center,
             ),
           ],
@@ -29,17 +37,24 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    final designSystem = context.designSystem;
+
+    return SafeArea(
       child: Padding(
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(designSystem.spacing.lg),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.search, size: 48),
+              Icon(
+                Icons.search_rounded,
+                size: 48,
+                color: designSystem.textColor.secondary,
+              ),
+              SizedBox(height: designSystem.spacing.sm),
               Text(
                 '全件取得済みです',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: designSystem.typography.titleSmall,
                 textAlign: TextAlign.center,
               ),
             ],

@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
@@ -25,24 +25,29 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
         ) ??
         KyoshinMonitorStatus.stopped;
 
-    final theme = Theme.of(context);
+    final designSystem = context.designSystem;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final dateTextStyle = theme.textTheme.bodyMedium!.copyWith(
+    final dateTextStyle = designSystem.typography.monoMedium.copyWith(
       letterSpacing: -0.5,
-      fontFamily: FontFamily.notoSansMono,
-      fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
     return Card.outlined(
-      color: theme.colorScheme.surfaceContainerHighest,
+      color: designSystem.color.surfaceCard.withValues(alpha: 0.92),
       elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(designSystem.shape.md),
+        side: BorderSide(color: designSystem.color.outlineSoft),
+      ),
       child: Tooltip(
         message: '強震モニタ',
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(designSystem.shape.md),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: EdgeInsets.symmetric(
+              horizontal: designSystem.spacing.sm,
+              vertical: designSystem.spacing.xs,
+            ),
             child: DefaultTextStyle(
               style: dateTextStyle,
               child: Row(

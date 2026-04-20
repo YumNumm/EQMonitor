@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
@@ -13,8 +14,11 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(
-      body: Stack(
+    final color = context.designSystem.color;
+
+    return Scaffold(
+      backgroundColor: color.backgroundDefault,
+      body: const Stack(
         children: [
           HomeMapView(),
           BasicModalSheet(
@@ -32,33 +36,82 @@ class _SheetBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final spacing = designSystem.spacing;
+    final typography = designSystem.typography;
+
+    final eewCards = Column(
+      children: state.reversed
+          .mapIndexed(
+            (index, element) => Padding(
+              padding: EdgeInsets.only(bottom: spacing.md),
+              child: EewCard(
+                eew: element,
+                index: (state.length > 1) ? '${index + 1}' : null,
+              ),
+            ),
+          )
+          .toList(),
+    );
+
+    final actionsCard = Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      color: color.surfaceCard,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(designSystem.shape.card),
+        side: BorderSide(color: color.outlineSoft),
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: Text('設定', style: typography.titleSmall),
+            subtitle: Text('表示設定や地図の動作を調整します', style: typography.bodySmall),
+            onTap: () async => const SettingsRoute().push<void>(context),
+          ),
+          Divider(height: 1, indent: spacing.xl, endIndent: spacing.xl),
+          ListTile(
+            leading: const Icon(Icons.bug_report_outlined),
+            title: Text('デバッグページ', style: typography.titleSmall),
+            subtitle: Text('開発者向けの確認画面を開きます', style: typography.bodySmall),
+            onTap: () async => const DebugRoute().push<void>(context),
+          ),
+        ],
+      ),
+    );
 
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Column(
-              children: state.reversed
-                  .mapIndexed(
-                    (index, element) => EewCard(
-                      eew: element,
-                      index: (state.length > 1) ? '${index + 1}' : null,
-                    ),
-                  )
-                  .toList(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                spacing.lg,
+                spacing.sm,
+                spacing.lg,
+                spacing.xxl,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('ホーム', style: typography.headlineSmall),
+                  SizedBox(height: spacing.xs),
+                  SizedBox(height: spacing.xl),
+                  if (state.isNotEmpty) eewCards,
+                  const HomeEarthquakeHistorySheet(),
+                  SizedBox(height: spacing.lg),
+                  actionsCard,
+                ],
+              ),
             ),
-            const HomeEarthquakeHistorySheet(),
-            ListTile(
-              title: const Text('設定'),
-              leading: const Icon(Icons.settings),
-              onTap: () async => const SettingsRoute().push<void>(context),
-            ),
-            ListTile(
-              title: const Text('デバッグページ'),
-              leading: const Icon(Icons.bug_report),
-              onTap: () async => const DebugRoute().push<void>(context),
-            ),
+            if (state.isEmpty)
+              SizedBox(
+                height: spacing.sm,
+              ),
           ],
         ),
       ),
