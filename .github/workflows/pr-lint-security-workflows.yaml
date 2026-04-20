@@ -45,7 +45,7 @@ jobs:
         continue-on-error: true
         run: |
           set -euo pipefail
-          mise exec -- gitleaks detect \
+          gitleaks detect \
             --source . \
             --baseline-path .gitleaks.baseline.json \
             --report-format sarif \
@@ -84,7 +84,7 @@ jobs:
       - name: Run ghalint
         run: |
           set -euo pipefail
-          mise exec -- ghalint run 2>&1 | tee ghalint.log
+          ghalint run 2>&1 | tee ghalint.log
         env:
           GHALINT_LOG_COLOR: never
 
@@ -147,9 +147,9 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            mise exec -- pinact run --check --review --pr "${{ github.event.pull_request.number }}"
+            pinact run --check --review --pr "${{ github.event.pull_request.number }}"
           else
-            mise exec -- pinact run --check
+            pinact run --check
           fi
 
   zizmor:
@@ -173,4 +173,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mise exec -- zizmor --format github --min-severity low --config .github/zizmor.yml .github/workflows
+          zizmor --format github --min-severity low --config .github/zizmor.yml .github/workflows

@@ -2,9 +2,6 @@ name: Dart Test
 
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
 
 permissions:
   contents: read
@@ -39,8 +36,6 @@ jobs:
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
         uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           install_args: "flutter"
 
