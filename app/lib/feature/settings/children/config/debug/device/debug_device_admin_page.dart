@@ -1,5 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -91,16 +92,17 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
         Expanded(
           child: switch (snapshot.connectionState) {
             ConnectionState.waiting => const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            ConnectionState.done => snapshot.hasError
-                ? _ErrorBody(message: snapshot.error.toString())
-                : _Body(
-                    deviceId: deviceId,
-                    device: snapshot.data!.device,
-                    settings: snapshot.data!.settings,
-                    onReload: reload,
-                  ),
+              child: CircularProgressIndicator.adaptive(),
+            ),
+            ConnectionState.done =>
+              snapshot.hasError
+                  ? _ErrorBody(message: snapshot.error.toString())
+                  : _Body(
+                      deviceId: deviceId,
+                      device: snapshot.data!.device,
+                      settings: snapshot.data!.settings,
+                      onReload: reload,
+                    ),
             _ => const SizedBox.shrink(),
           },
         ),
@@ -176,8 +178,7 @@ class _Body extends HookConsumerWidget {
       await AdaptiveAlertDialog.show(
         context: context,
         title: 'デバイスを削除',
-        message:
-            'この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？',
+        message: 'この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？',
         actions: [
           AlertAction(
             title: 'キャンセル',
@@ -286,8 +287,8 @@ class _Body extends HookConsumerWidget {
           Text(
             '未登録（またはこの端末 ID のレコードがありません）',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           )
         else ...[
           _InfoRow(label: 'デバイス ID', value: device!.id),
@@ -303,8 +304,8 @@ class _Body extends HookConsumerWidget {
         Text(
           'デバイスレコードの更新は API 上 PUT（登録と同じエンドポイント）です。',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 12),
         Wrap(
@@ -340,7 +341,7 @@ class _Body extends HookConsumerWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('津波情報の通知'),
-          trailing: AdaptiveSwitch(
+          trailing: AppSwitch(
             value: tsunami.value,
             onChanged: device == null || isBusy.value
                 ? null
@@ -357,7 +358,7 @@ class _Body extends HookConsumerWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('訓練報・試験報の通知'),
-          trailing: AdaptiveSwitch(
+          trailing: AppSwitch(
             value: training.value,
             onChanged: device == null || isBusy.value
                 ? null
@@ -410,8 +411,8 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           Expanded(

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
@@ -44,7 +45,7 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('デバッグモード'),
             subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
-            trailing: AdaptiveSwitch(
+            trailing: AppSwitch(
               value: isDebugEnabled,
               onChanged: (value) async =>
                   ref.read(debugProvider.notifier).save(isEnabled: value),

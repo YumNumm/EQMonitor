@@ -1,5 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
@@ -61,7 +62,8 @@ class _ThemeSelector extends ConsumerWidget {
           : Brightness.dark;
       return Expanded(
         child: GestureDetector(
-          onTap: () async => ref.read(themeModeProvider.notifier).setThemeMode(mode),
+          onTap: () async =>
+              ref.read(themeModeProvider.notifier).setThemeMode(mode),
           child: Column(
             children: [
               SizedBox(
@@ -134,7 +136,7 @@ class _ThemeSelector extends ConsumerWidget {
           ListTile(
             visualDensity: VisualDensity.compact,
             title: const Text('システム設定に従う'),
-            trailing: AdaptiveSwitch(
+            trailing: AppSwitch(
               value: state == ThemeMode.system,
               onChanged: (value) async => ref
                   .read(themeModeProvider.notifier)

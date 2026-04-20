@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -43,11 +44,12 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
       children: [
         ListTile(
           title: const Text('最大震度ごとの背景塗りつぶし'),
-          trailing: AdaptiveSwitch(
+          trailing: AppSwitch(
             value: state.isFillBackground,
             onChanged: (value) async {
-              final full =
-                  ref.read(earthquakeHistoryConfigProvider).requireValue;
+              final full = ref
+                  .read(earthquakeHistoryConfigProvider)
+                  .requireValue;
               await ref
                   .read(earthquakeHistoryConfigProvider.notifier)
                   .save(
@@ -328,7 +330,7 @@ class _ShowIntensityIconToggle extends ConsumerWidget {
       title: Text(
         showingLpgmIntensity ? '観測点に長周期地震動階級アイコンを表示' : '観測点に震度アイコンを表示',
       ),
-      trailing: AdaptiveSwitch(
+      trailing: AppSwitch(
         value: state.showIntensityIcon,
         onChanged: (v) async {
           final full = ref.read(earthquakeHistoryConfigProvider).requireValue;

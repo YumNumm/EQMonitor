@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:flutter/material.dart';
@@ -114,45 +115,45 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                   ),
                   // その他のトグル
                   const _SectionHeader(title: 'その他'),
-                  SwitchListTile.adaptive(
-                    title: const Text('震央の誤差矩形を表示'),
+                  AppSwitchListTile(
+                    title: '震央の誤差矩形を表示',
                     value: value.detail.showHypocenterError,
                     onChanged: (v) async => notifier.save(
                       value.copyWith.detail(showHypocenterError: v),
                     ),
                   ),
-                  SwitchListTile.adaptive(
-                    title: const Text('観測点名を表示'),
+                  AppSwitchListTile(
+                    title: '観測点名を表示',
                     value: value.detail.showStationLabel,
                     onChanged: (v) async => notifier.save(
                       value.copyWith.detail(showStationLabel: v),
                     ),
                   ),
-                  SwitchListTile.adaptive(
-                    title: const Text('観測点に震度アイコンを表示'),
+                  AppSwitchListTile(
+                    title: '観測点に震度アイコンを表示',
                     value: value.detail.showIntensityIcon,
                     onChanged: (v) async => notifier.save(
                       value.copyWith.detail(showIntensityIcon: v),
                     ),
                   ),
-                  SwitchListTile.adaptive(
-                    title: const Text('震度凡例を表示'),
+                  AppSwitchListTile(
+                    title: '震度凡例を表示',
                     value: value.detail.showLegend,
                     onChanged: (v) async => notifier.save(
                       value.copyWith.detail(showLegend: v),
                     ),
                   ),
                   if (hasLpgmIntensity)
-                    SwitchListTile.adaptive(
-                      title: const Text('長周期地震動階級モード'),
+                    AppSwitchListTile(
+                      title: '長周期地震動階級モード',
                       value: value.detail.showingLpgmIntensity,
                       onChanged: (v) async => notifier.save(
                         value.copyWith.detail(showingLpgmIntensity: v),
                       ),
                     ),
                   if (isOverriding)
-                    SwitchListTile.adaptive(
-                      title: const Text('推計震度データがある場合に自動で推計震度表示'),
+                    AppSwitchListTile(
+                      title: '推計震度データがある場合に自動で推計震度表示',
                       value: value.detail.useEstimatedIntensityWhenAvailable,
                       onChanged: (v) async {
                         await notifier.save(

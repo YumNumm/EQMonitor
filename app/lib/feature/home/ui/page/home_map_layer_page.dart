@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -349,7 +350,7 @@ class _SettingSwitchTile extends StatelessWidget {
         style: typography.titleSmall.copyWith(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(subtitle, style: typography.bodySmall),
-      trailing: Switch.adaptive(
+      trailing: AppSwitch(
         value: value,
         onChanged: (next) {
           unawaited(
@@ -953,7 +954,7 @@ class _KyoshinMinShindoTile extends ConsumerWidget {
                 ),
               ),
               SizedBox(width: context.designSystem.spacing.md),
-              Switch.adaptive(
+              AppSwitch(
                 value: isEnabled,
                 onChanged: (next) async {
                   await ref
@@ -1104,7 +1105,7 @@ class _MapMaxZoomTile extends ConsumerWidget {
                 ),
               ),
               SizedBox(width: context.designSystem.spacing.md),
-              Switch.adaptive(
+              AppSwitch(
                 value: isEnabled,
                 onChanged: (next) async {
                   await ref

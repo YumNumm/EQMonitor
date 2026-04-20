@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/component/widget/app_list_tile.dart';
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
@@ -150,13 +151,12 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                     title: 'その他の設定',
                     child: Column(
                       children: [
-                        SwitchListTile.adaptive(
+                        AppSwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('スケールを表示'),
-                          subtitle: const Text(
-                            'リアルタイムデータの点の色が、どの値を示すかのスケールを表示します\n'
-                            '地図画面左上の時刻表示をタップすることで、切り替えることもできます',
-                          ),
+                          title: 'スケールを表示',
+                          subtitle:
+                              'リアルタイムデータの点の色が、どの値を示すかのスケールを表示します\n'
+                              '地図画面左上の時刻表示をタップすることで、切り替えることもできます',
                           value: ref
                               .watch(kyoshinMonitorSettingsProvider)
                               .requireValue

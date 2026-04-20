@@ -1,4 +1,5 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
@@ -656,7 +657,7 @@ class _BoolRow extends StatelessWidget {
       dense: true,
       contentPadding: EdgeInsets.zero,
       title: Text(label, style: DebugEewCardPage._paramLabelStyle),
-      trailing: AdaptiveSwitch(
+      trailing: AppSwitch(
         value: value,
         onChanged: onChanged,
       ),

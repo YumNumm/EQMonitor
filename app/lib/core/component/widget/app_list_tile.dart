@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:flutter/material.dart';
 
 class AppListTile extends StatelessWidget {
@@ -62,17 +63,14 @@ class AppListTile extends StatelessWidget {
     );
 
     return switch (type) {
-      _AppListTileType.switchListTile => SwitchListTile.adaptive(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      _AppListTileType.switchListTile => AppSwitchListTile(
         shape: shape,
         tileColor: backgroundColor,
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(subtitle),
+        title: title,
+        subtitle: subtitle,
         value: value!,
         onChanged: onChanged,
+        trailing: trailing,
       ),
       _AppListTileType.listTile => ListTile(
         onTap: onTap,
