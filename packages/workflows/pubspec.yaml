@@ -1,0 +1,16 @@
+name: workflows
+description: Durable client-side workflow runner with step-level idempotency and persistence.
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.10.0
+
+resolution: workspace
+
+dev_dependencies:
+  altive_lints: ^2.1.0
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  test: ^1.29.0
