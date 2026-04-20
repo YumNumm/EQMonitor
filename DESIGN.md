@@ -244,6 +244,15 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - タイトルは `titleSmall`、補助文は `bodySmall` を基本とする。
 - 行全体をタップ可能にしつつ、スイッチやナビゲーションアイコンも明確に見せる。
 - 1 行に情報を詰め込みすぎない。2 行説明は許容する。
+- ブール設定のトグル行は、統一見た目の `AppSwitchListTile`（末尾に `AppSwitch`）を標準とする。必要に応じて `ListTile` + `AppSwitch` の組み合わせでもよい。
+
+## Toggles (AppSwitch)
+
+- 実装の参照先: `app/lib/core/component/widget/app_switch.dart`。
+- アプリ内の ON/OFF は、ブランドに沿ったピル型トラックと円形サム（ON はチェック、OFF はクローズアイコン）を `AppSwitch` で表現する。
+- モーションは [`cue`](https://pub.dev/packages/cue) を用い、ON/OFF の切り替えやサム移動はスムーズ／スナップ系のプリセットで宣言的に定義する。
+- **押下中**はサムをわずかに拡大し、タッチ位置がスイッチ上にあることが分かるフィードバックを付ける（`Listener` で押下を追跡し、`Cue.onToggle` + `Act.scale` で表現する）。
+- Material の `Switch` / `Switch.adaptive` を設定画面で直接使うのは新規では避け、上記コンポーネントに寄せる。
 
 ## Accordion sections
 
@@ -274,7 +283,8 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - 一時的な通知は `SnackBar` を直接使わず、原則として `AdaptiveSnackBar` を利用する。
 - 長押しメニューや文脈依存アクションは `AdaptiveContextMenu` を優先する。
 - 日付選択は `AdaptiveDatePicker`、時刻選択は `AdaptiveTimePicker` を標準とする。
-- チェックボックス、スライダー、ラジオ、セグメント、スイッチなど、プラットフォーム差が体験に影響しやすい入力部品は `AdaptiveCheckbox`, `AdaptiveSlider`, `AdaptiveRadio`, `AdaptiveSegmentedControl`, `AdaptiveSwitch` を優先する。
+- チェックボックス、スライダー、ラジオ、セグメントなど、プラットフォーム差が体験に影響しやすい入力部品は `AdaptiveCheckbox`, `AdaptiveSlider`, `AdaptiveRadio`, `AdaptiveSegmentedControl` を優先する。
+- **スイッチ**は上記「Toggles (AppSwitch)」に従い、通常は `AppSwitch` を使う。OS 標準のトグル見た目を最優先したい特殊ケースのみ `AdaptiveSwitch` を検討する。
 - テキスト入力は `TextField` / `CupertinoTextField` / `TextFormField` を直接使い分けるのではなく、原則として `AdaptiveTextField` と `AdaptiveTextFormField` を利用する。
 - フォームのグルーピングには `AdaptiveFormSection` を使い、iOS では `CupertinoFormSection` らしいまとまり、Android では Material 的なカードグループとして見せる。
 - 例外的に純正 Material / Cupertino ウィジェットを直接使う場合は、`adaptive_platform_ui` で満たせない要件があるときに限る。
@@ -312,7 +322,10 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 
 - 地図上の補助シートや設定シートは、地図を邪魔しすぎない短い情報単位で構成する。
 - 数値、時刻、座標、状態コードは `Google Sans Code` を優先する。
-- 地図レイヤー設定はセクション化し、関連するトグルやセグメントをカード単位で束ねる。
+- **地図レイヤー設定**は、ボトムシートのモーダルに閉じ込めず、`go_router` 経由の**専用フルページ**（例: ホーム配下のマップレイヤールート）として開く。戻る操作は AppBar の戻るで足りる想定とする。
+- ページ先頭には、地図のレイヤー構造を抽象的に示す**ヒーロービジュアル**（イラストやレイヤー風グラフィック）を置いてよい。動きは控えめで、情報を奪わない。
+- 強震モニタに関する詳細設定（表示種別、マーカー、フィルタなど）は、レイヤー設定と同じページ内のセクションとしてまとめ、別モーダルに分断しない。
+- 地図レイヤー周りの設定はセクション化し、関連するトグルやセグメントをカード単位で束ねる。トグルは `AppSwitch` を用いる。
 
 # Motion
 
@@ -323,6 +336,7 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - 標準カーブは `easeOutCubic` または Material 3 に近い減速系カーブを使う。
 - 状態変化は派手な演出ではなく、位置、サイズ、透明度、回転の最小限で伝える。
 - 緊急情報を扱う画面では、注意を奪う不要なアニメーションを入れない。
+- カスタムトグル（`AppSwitch`）では [`cue`](https://pub.dev/packages/cue) のモーション（例: `.smooth()` / `.snappy()`）で値の変化とサムの押下スケールを分け、操作感を一定に保つ。
 
 # Flutter mobile notes
 
@@ -333,9 +347,6 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - 設定行、カード、シートは `ListTile`, `Card`, `BottomSheet`, `SegmentedButton` をベースにしてもよいが、余白と shape はこのドキュメントに合わせて調整する。
 - 読み込み中 UI は [`skeletonizer`](https://pub.dev/packages/skeletonizer) を標準採用とし、`Skeletonizer`, `Skeletonizer.sliver`, annotation 群を用いて既存レイアウトから skeleton を生成する。
 - Skeleton 用の fake data が必要なケースでは、本番レイアウトを崩さない最小限のダミーデータを用意し、`NetworkImage` などは `Skeleton.replace` や条件分岐で安全に扱う。
-- プラットフォーム適応が必要な UI 部品は [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) を標準採用とする。特に `AdaptiveAlertDialog`, `AdaptiveCheckbox`, `AdaptiveSlider`, `AdaptiveSegmentedControl`, `AdaptiveRadio`, `AdaptiveSnackBar`, `AdaptiveContextMenu`, `AdaptiveDatePicker`, `AdaptiveTimePicker`, `AdaptiveTextField`, `AdaptiveTextFormField`, `AdaptiveFormSection` を優先する。
-- `AlertDialog`, `CupertinoAlertDialog`, `SnackBar`, `showDatePicker`, `showTimePicker`, `TextField`, `TextFormField`, `CupertinoTextField` を新規実装で直接使うのは原則避け、adaptive なラッパーを優先する。
-- `adaptive_platform_ui` を使う画面では、日付・時刻・ボタン文言のローカライズが崩れないよう localization delegates を正しく設定する。
 
 # Do's and Don'ts
 
