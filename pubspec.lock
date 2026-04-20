@@ -21,8 +21,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "."
-      ref: "61f5fcc308ed33e7e99354b6176d0075d245931b"
-      resolved-ref: "61f5fcc308ed33e7e99354b6176d0075d245931b"
+      ref: "6d1339f8c2deb6f25cc1a5e0bc6a980c843e8d02"
+      resolved-ref: "6d1339f8c2deb6f25cc1a5e0bc6a980c843e8d02"
       url: "https://github.com/YumNumm/adaptive_platform_ui.git"
     source: git
     version: "0.1.104"
