@@ -40,25 +40,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                spacing.lg,
-                spacing.lg,
-                spacing.lg,
-                spacing.sm,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('最近の地震', style: typography.titleLarge),
-                  SizedBox(height: spacing.xs),
-                  Text(
-                    '表示範囲を切り替えながら、直近の地震情報を素早く確認できます。',
-                    style: typography.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
             HomeScopeSelector(
               scope: home.common.earthquakeHistoryScope,
               onScopeChanged: (scope) async => ref

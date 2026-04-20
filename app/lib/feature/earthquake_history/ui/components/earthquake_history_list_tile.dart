@@ -100,8 +100,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           null => '',
         };
 
-    final intensityColorState =
-        ref.watch(intensityColorProvider);
+    final intensityColorState = ref.watch(intensityColorProvider);
     final intensityColor = maxIntensity != null
         ? intensityColorState.fromJmaIntensity(maxIntensity).background
         : null;
@@ -131,7 +130,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       onTap: onTap,
       title: Text(
         title,
-        style: theme.textTheme.titleMedium!.copyWith(
+        style: theme.textTheme.titleSmall!.copyWith(
           fontWeight: FontWeight.bold,
           color: titleTextColor,
         ),

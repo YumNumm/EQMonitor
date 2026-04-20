@@ -98,9 +98,7 @@ class _SheetBody extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('ホーム', style: typography.headlineSmall),
                   SizedBox(height: spacing.xs),
-                  SizedBox(height: spacing.xl),
                   if (state.isNotEmpty) eewCards,
                   const HomeEarthquakeHistorySheet(),
                   SizedBox(height: spacing.lg),
