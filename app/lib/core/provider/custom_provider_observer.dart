@@ -52,7 +52,8 @@ final class CustomProviderObserver extends ProviderObserver {
     'kyoshinMonitorTimerProvider' ||
     'kyoshinMonitorProvider' ||
     'kyoshinMonitorObservationGeoJsonProvider' ||
-    'eewProvider' => null,
+    'eewProvider' ||
+    'homeKyoshinMonitorObservationGeoJsonProvider' => null,
     _
         when context.provider.name?.contains('LayerControllerProvider') ??
             false =>

@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_station_icon_preloader.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -123,7 +124,13 @@ class _MapContent extends ConsumerWidget {
             ],
           );
 
-          return SizedBox.expand(child: mapWidget);
+          return Stack(
+            children: [
+              SizedBox.expand(child: mapWidget),
+              // アプリ起動時に観測点震度アイコンを事前レンダリングする
+              const EarthquakeHistoryStationIconPreloader(),
+            ],
+          );
         },
       ),
     );
