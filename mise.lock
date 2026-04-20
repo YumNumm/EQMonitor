@@ -135,6 +135,27 @@ url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-564.0.0
 version = "1.5.5"
 backend = "aqua:suzuki-shunsuke/ghalint"
 
+[tools.ghalint."platforms.linux-arm64"]
+provenance = "slsa"
+
+[tools.ghalint."platforms.linux-arm64-musl"]
+provenance = "slsa"
+
+[tools.ghalint."platforms.linux-x64"]
+provenance = "slsa"
+
+[tools.ghalint."platforms.linux-x64-musl"]
+provenance = "slsa"
+
+[tools.ghalint."platforms.macos-arm64"]
+provenance = "slsa"
+
+[tools.ghalint."platforms.macos-x64"]
+provenance = "slsa"
+
+[tools.ghalint."platforms.windows-x64"]
+provenance = "slsa"
+
 [[tools."github:YumNumm/google-play-cli"]]
 version = "1.0.1"
 backend = "github:YumNumm/google-play-cli"
@@ -459,6 +480,7 @@ provenance = "github-attestations"
 [tools.uv."platforms.macos-arm64"]
 checksum = "sha256:4b69a4e366ec38cd5f305707de95e12951181c448679a00dce2a78868dfc9f5b"
 url = "https://github.com/astral-sh/uv/releases/download/0.11.6/uv-aarch64-apple-darwin.tar.gz"
+provenance = "github-attestations"
 
 [tools.uv."platforms.macos-x64"]
 checksum = "sha256:8e0ed5035eaa28c7c8cd2a46b5b9a05bfff1ef01dbdc090a010eb8fdf193a457"
@@ -525,3 +547,24 @@ url = "https://github.com/mikefarah/yq/releases/download/v4.52.5/yq_windows_amd6
 [[tools.zizmor]]
 version = "1.24.1"
 backend = "aqua:zizmorcore/zizmor"
+
+[tools.zizmor."platforms.linux-arm64"]
+provenance = "github-attestations"
+
+[tools.zizmor."platforms.linux-arm64-musl"]
+provenance = "github-attestations"
+
+[tools.zizmor."platforms.linux-x64"]
+provenance = "github-attestations"
+
+[tools.zizmor."platforms.linux-x64-musl"]
+provenance = "github-attestations"
+
+[tools.zizmor."platforms.macos-arm64"]
+provenance = "github-attestations"
+
+[tools.zizmor."platforms.macos-x64"]
+provenance = "github-attestations"
+
+[tools.zizmor."platforms.windows-x64"]
+provenance = "github-attestations"
