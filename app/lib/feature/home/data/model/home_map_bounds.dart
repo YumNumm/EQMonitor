@@ -20,25 +20,25 @@ class JapanMainIslandBounds {
 /// [HomeMapSettings.defaultBounds] に対応する [LngLatBounds]。
 LngLatBounds lngLatBoundsForHomeMapSettings(HomeMapSettings settings) {
   switch (settings.defaultBounds) {
-    case HomeMapDefaultBounds.mainIsland:
+    case .mainIsland:
       return JapanMainIslandBounds.lngLatBounds;
-    case HomeMapDefaultBounds.all:
+    case .all:
       return const LngLatBounds(
         longitudeWest: JapanBounds.minLng,
         longitudeEast: JapanBounds.maxLng,
         latitudeSouth: JapanBounds.minLat,
         latitudeNorth: JapanBounds.maxLat,
       );
-    case HomeMapDefaultBounds.custom:
+    case .custom:
       final c = settings.customBounds;
       if (c == null) {
         return JapanMainIslandBounds.lngLatBounds;
       }
       return LngLatBounds(
-        longitudeWest: c.longitudeWest,
-        longitudeEast: c.longitudeEast,
-        latitudeSouth: c.latitudeSouth,
-        latitudeNorth: c.latitudeNorth,
+        longitudeWest: c.southWest.lon,
+        longitudeEast: c.northEast.lon,
+        latitudeSouth: c.southWest.lat,
+        latitudeNorth: c.northEast.lat,
       );
   }
 }

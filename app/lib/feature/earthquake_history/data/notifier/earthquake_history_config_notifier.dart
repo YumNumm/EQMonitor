@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,14 +13,14 @@ const _defaultEarthquakeHistoryConfig = EarthquakeHistoryConfig(
   detail: EarthquakeHistoryDetailConfig(),
 );
 
-@riverpod
+@Riverpod(keepAlive: true)
 class EarthquakeHistoryConfigNotifier
     extends _$EarthquakeHistoryConfigNotifier {
   @override
-  Future<EarthquakeHistoryConfig> build() async => _load();
-
-  Future<EarthquakeHistoryConfig> _load() async {
-    final sharedPreferences = await ref.read(sharedPreferencesDataSourceProvider.future);
+  Future<EarthquakeHistoryConfig> build() async {
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
     final jsonString = await sharedPreferences.getString(
       key: SharedPreferencesKey.earthquakeHistoryConfig,
     );
@@ -31,29 +32,24 @@ class EarthquakeHistoryConfigNotifier
         jsonDecode(jsonString) as Map<String, dynamic>,
       );
       // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
+    } catch (exception, stackTrace) {
+      talker.error(
+        'load earthquake history config failed: $exception',
+        exception,
+        stackTrace,
+      );
       return _defaultEarthquakeHistoryConfig;
     }
   }
 
-  Future<void> _save(EarthquakeHistoryConfig value) async {
-    final sharedPreferences = await ref.read(sharedPreferencesDataSourceProvider.future);
+  Future<void> save(EarthquakeHistoryConfig value) async {
+    state = AsyncValue.data(value);
+    final sharedPreferences = await ref.read(
+      sharedPreferencesDataSourceProvider.future,
+    );
     await sharedPreferences.setString(
       key: SharedPreferencesKey.earthquakeHistoryConfig,
       value: jsonEncode(value.toJson()),
     );
   }
-
-  Future<void> updateListConfig(EarthquakeHistoryListConfig config) async {
-    final current = state.value ?? _defaultEarthquakeHistoryConfig;
-    state = AsyncValue.data(current.copyWith(list: config));
-    await _save(state.value!);
-  }
-
-  Future<void> updateDetailConfig(EarthquakeHistoryDetailConfig config) async {
-    final current = state.value ?? _defaultEarthquakeHistoryConfig;
-    state = AsyncValue.data(current.copyWith(detail: config));
-    await _save(state.value!);
-  }
-
 }

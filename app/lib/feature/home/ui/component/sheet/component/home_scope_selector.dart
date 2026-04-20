@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 String scopeShortLabel(HomeEarthquakeHistoryScope scope) => switch (scope) {
   .nationwide => '全国',
   .currentLocation => '現在地',
-  .designatedRegion => '指定地域',
+  .custom => '指定地域',
 };
 
 class HomeScopeSelector extends StatelessWidget {

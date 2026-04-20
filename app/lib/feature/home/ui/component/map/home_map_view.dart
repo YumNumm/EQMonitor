@@ -64,10 +64,7 @@ class _MapContent extends ConsumerWidget {
       mapSettings.maxZoom,
       mapSettings.lockBearing,
       mapSettings.defaultBounds,
-      mapSettings.customBounds?.longitudeWest,
-      mapSettings.customBounds?.longitudeEast,
-      mapSettings.customBounds?.latitudeSouth,
-      mapSettings.customBounds?.latitudeNorth,
+      mapSettings.customBounds,
     );
 
     return MapLibreEventProvider(
@@ -171,9 +168,8 @@ class _MapHeader extends ConsumerWidget {
 
     final controllerCard = HomeMapControllerCard(
       onLayerButtonTap: () async => HomeMapLayerModal.show(context),
-      onLocationButtonTap: () async {
-        await ref.read(homeMapCameraStateProvider.notifier).returnToHome();
-      },
+      onLocationButtonTap: () =>
+          ref.read(homeMapCameraStateProvider.notifier).returnToHome(),
     );
 
     return Row(

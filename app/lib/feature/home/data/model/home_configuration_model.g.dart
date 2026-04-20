@@ -118,7 +118,11 @@ _HomeMapSettings _$HomeMapSettingsFromJson(Map<String, dynamic> json) =>
           ),
           customBounds: $checkedConvert(
             'custom_bounds',
-            (v) => v == null ? null : _nullableCustomBoundsFromJson(v),
+            (v) =>
+                _$JsonConverterFromJson<Map<String, dynamic>, LatLngBoundary>(
+                  v,
+                  const LatLngBoundaryJsonConverter().fromJson,
+                ),
           ),
           lockBearing: $checkedConvert(
             'lock_bearing',
@@ -135,19 +139,33 @@ _HomeMapSettings _$HomeMapSettingsFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$HomeMapSettingsToJson(_HomeMapSettings instance) =>
-    <String, dynamic>{
-      'max_zoom': instance.maxZoom,
-      'default_bounds': _$HomeMapDefaultBoundsEnumMap[instance.defaultBounds]!,
-      'custom_bounds': _nullableCustomBoundsToJson(instance.customBounds),
-      'lock_bearing': instance.lockBearing,
-    };
+Map<String, dynamic> _$HomeMapSettingsToJson(
+  _HomeMapSettings instance,
+) => <String, dynamic>{
+  'max_zoom': instance.maxZoom,
+  'default_bounds': _$HomeMapDefaultBoundsEnumMap[instance.defaultBounds]!,
+  'custom_bounds': _$JsonConverterToJson<Map<String, dynamic>, LatLngBoundary>(
+    instance.customBounds,
+    const LatLngBoundaryJsonConverter().toJson,
+  ),
+  'lock_bearing': instance.lockBearing,
+};
 
 const _$HomeMapDefaultBoundsEnumMap = {
   HomeMapDefaultBounds.mainIsland: 'mainIsland',
   HomeMapDefaultBounds.all: 'all',
   HomeMapDefaultBounds.custom: 'custom',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) => json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) => value == null ? null : toJson(value);
 
 _HomeCommonSettings _$HomeCommonSettingsFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
@@ -165,6 +183,14 @@ _HomeCommonSettings _$HomeCommonSettingsFromJson(Map<String, dynamic> json) =>
                 $enumDecodeNullable(_$HomeEarthquakeHistoryScopeEnumMap, v) ??
                 HomeEarthquakeHistoryScope.nationwide,
           ),
+          parameter: $checkedConvert(
+            'parameter',
+            (v) => v == null
+                ? null
+                : EarthquakeHistoryParameter.fromJson(
+                    v as Map<String, dynamic>,
+                  ),
+          ),
         );
         return val;
       },
@@ -179,12 +205,13 @@ Map<String, dynamic> _$HomeCommonSettingsToJson(_HomeCommonSettings instance) =>
       'show_location': instance.showLocation,
       'earthquake_history_scope':
           _$HomeEarthquakeHistoryScopeEnumMap[instance.earthquakeHistoryScope]!,
+      'parameter': instance.parameter?.toJson(),
     };
 
 const _$HomeEarthquakeHistoryScopeEnumMap = {
   HomeEarthquakeHistoryScope.nationwide: 'nationwide',
   HomeEarthquakeHistoryScope.currentLocation: 'currentLocation',
-  HomeEarthquakeHistoryScope.designatedRegion: 'designatedRegion',
+  HomeEarthquakeHistoryScope.custom: 'custom',
 };
 
 _HomeConfigurationModel _$HomeConfigurationModelFromJson(

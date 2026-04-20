@@ -8,6 +8,7 @@ import 'package:eqmonitor_api/eqmonitor_api.dart' show TelegramStatus;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_parameter.freezed.dart';
+part 'earthquake_history_parameter.g.dart';
 
 /// 地域検索タイプ
 enum RegionSearchType {
@@ -44,15 +45,8 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
 
   const EarthquakeHistoryParameter._();
 
-  /// 震央地名でのフィルタリングが有効かどうか
-  bool get hasEpicenterFilter => epicenterCode != null;
-
-  /// 地域の震度でのフィルタリングが有効かどうか
-  bool get hasRegionFilter => regionCode != null;
-
-  /// 特殊なエンドポイントが必要かどうか
-  /// （震央地名または地域の震度フィルターが有効な場合）
-  bool get requiresSpecialEndpoint => hasEpicenterFilter || hasRegionFilter;
+  factory EarthquakeHistoryParameter.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeHistoryParameterFromJson(json);
 }
 
 extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {

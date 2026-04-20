@@ -43,9 +43,14 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
         SwitchListTile.adaptive(
           title: const Text('最大震度ごとの背景塗りつぶし'),
           value: state.isFillBackground,
-          onChanged: (value) async => ref
-              .read(earthquakeHistoryConfigProvider.notifier)
-              .updateListConfig(state.copyWith(isFillBackground: value)),
+          onChanged: (value) async {
+            final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
+            await ref
+                .read(earthquakeHistoryConfigProvider.notifier)
+                .save(
+                  full.copyWith.list(isFillBackground: value),
+                );
+          },
         ),
       ],
     );
@@ -107,10 +112,13 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
               },
             );
             if (result != null) {
+              final full = ref
+                  .read(earthquakeHistoryConfigProvider)
+                  .requireValue;
               await ref
                   .read(earthquakeHistoryConfigProvider.notifier)
-                  .updateDetailConfig(
-                    state.copyWith(intensityFillMode: result),
+                  .save(
+                    full.copyWith.detail(intensityFillMode: result),
                   );
             }
           },
@@ -203,17 +211,18 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
                 selected: showingLpgmIntensity
                     ? _IntensityMode.lpgm
                     : _IntensityMode.intensity,
-                onSelected: (value) async => ref
-                    .read(earthquakeHistoryConfigProvider.notifier)
-                    .updateDetailConfig(
-                      ref
-                          .watch(earthquakeHistoryConfigProvider)
-                          .requireValue
-                          .detail
-                          .copyWith(
-                            showingLpgmIntensity: value == _IntensityMode.lpgm,
-                          ),
-                    ),
+                onSelected: (value) async {
+                  final full = ref
+                      .read(earthquakeHistoryConfigProvider)
+                      .requireValue;
+                  await ref
+                      .read(earthquakeHistoryConfigProvider.notifier)
+                      .save(
+                        full.copyWith.detail(
+                          showingLpgmIntensity: value == _IntensityMode.lpgm,
+                        ),
+                      );
+                },
               ),
             ),
           ],
@@ -251,20 +260,26 @@ class __IntensityFillModeSegmentedControlState
         },
         onValueChanged: (value) async {
           if (value != null) {
+            final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
             await ref
                 .read(earthquakeHistoryConfigProvider.notifier)
-                .updateDetailConfig(state.copyWith(intensityFillMode: value));
+                .save(
+                  full.copyWith.detail(intensityFillMode: value),
+                );
           }
         },
       );
     } else {
       return SegmentedButton(
         selected: {state.intensityFillMode},
-        onSelectionChanged: (p0) async => ref
-            .read(earthquakeHistoryConfigProvider.notifier)
-            .updateDetailConfig(
-              state.copyWith(intensityFillMode: p0.first),
-            ),
+        onSelectionChanged: (p0) async {
+          final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
+          await ref
+              .read(earthquakeHistoryConfigProvider.notifier)
+              .save(
+                full.copyWith.detail(intensityFillMode: p0.first),
+              );
+        },
         segments: [
           for (final mode in choices)
             ButtonSegment(label: Text(mode.displayName), value: mode),
@@ -300,9 +315,14 @@ class _ShowIntensityIconToggle extends ConsumerWidget {
         showingLpgmIntensity ? '観測点に長周期地震動階級アイコンを表示' : '観測点に震度アイコンを表示',
       ),
       value: state.showIntensityIcon,
-      onChanged: (v) async => ref
-          .read(earthquakeHistoryConfigProvider.notifier)
-          .updateDetailConfig(state.copyWith(showIntensityIcon: v)),
+      onChanged: (v) async {
+        final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
+        await ref
+            .read(earthquakeHistoryConfigProvider.notifier)
+            .save(
+              full.copyWith.detail(showIntensityIcon: v),
+            );
+      },
     );
   }
 }

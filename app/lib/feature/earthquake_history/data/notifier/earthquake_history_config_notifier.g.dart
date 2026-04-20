@@ -27,7 +27,7 @@ final class EarthquakeHistoryConfigNotifierProvider
         argument: null,
         retry: null,
         name: r'earthquakeHistoryConfigProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -41,7 +41,7 @@ final class EarthquakeHistoryConfigNotifierProvider
 }
 
 String _$earthquakeHistoryConfigNotifierHash() =>
-    r'689b044b05f29bafbec54b8fcd38bc7e739f4281';
+    r'8d04a779c027288dc89ce18f96d7c90d0ad0c6be';
 
 abstract class _$EarthquakeHistoryConfigNotifier
     extends $AsyncNotifier<EarthquakeHistoryConfig> {

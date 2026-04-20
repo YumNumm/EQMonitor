@@ -1,5 +1,4 @@
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
@@ -39,18 +38,7 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
             ? city.property!.name
             : null,
       );
-    case HomeEarthquakeHistoryScope.designatedRegion:
-      final cfg = await ref.watch(earthquakeHistoryConfigProvider.future);
-      final list = cfg.list;
-      final t = list.designatedRegionSearchType;
-      final c = list.designatedRegionCode;
-      if (t == null || c == null) {
-        return null;
-      }
-      return EarthquakeHistoryParameter(
-        regionSearchType: t,
-        regionCode: c,
-        regionName: list.designatedRegionName,
-      );
+    case HomeEarthquakeHistoryScope.custom:
+      return null;
   }
 }

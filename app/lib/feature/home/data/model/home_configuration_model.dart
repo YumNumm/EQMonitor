@@ -1,4 +1,7 @@
+import 'package:eqmonitor/core/util/converter/lat_lng_boundary_converter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 part 'home_configuration_model.freezed.dart';
 part 'home_configuration_model.g.dart';
@@ -15,8 +18,8 @@ enum HomeEarthquakeHistoryScope {
   currentLocation,
 
   /// 設定で指定した地域
-  @JsonValue('designatedRegion')
-  designatedRegion,
+  @JsonValue('custom')
+  custom,
 }
 
 /// ホーム地図の EEW 塗りつぶしモード
@@ -100,56 +103,6 @@ abstract class HomeKyoshinMonitorSettings with _$HomeKyoshinMonitorSettings {
       _$HomeKyoshinMonitorSettingsFromJson(json);
 }
 
-/// ホーム地図のユーザー保存表示範囲（[HomeMapDefaultBounds.custom] 用）
-class HomeMapCustomBounds {
-  const HomeMapCustomBounds({
-    required this.longitudeWest,
-    required this.longitudeEast,
-    required this.latitudeSouth,
-    required this.latitudeNorth,
-  });
-
-  factory HomeMapCustomBounds.fromJson(Map<String, dynamic> json) {
-    return HomeMapCustomBounds(
-      longitudeWest: (json['longitude_west'] as num).toDouble(),
-      longitudeEast: (json['longitude_east'] as num).toDouble(),
-      latitudeSouth: (json['latitude_south'] as num).toDouble(),
-      latitudeNorth: (json['latitude_north'] as num).toDouble(),
-    );
-  }
-
-  final double longitudeWest;
-  final double longitudeEast;
-  final double latitudeSouth;
-  final double latitudeNorth;
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-    'longitude_west': longitudeWest,
-    'longitude_east': longitudeEast,
-    'latitude_south': latitudeSouth,
-    'latitude_north': latitudeNorth,
-  };
-}
-
-HomeMapCustomBounds? _nullableCustomBoundsFromJson(Object? json) {
-  if (json == null) {
-    return null;
-  }
-  if (json is! Map<String, dynamic>) {
-    return null;
-  }
-  if (json.isEmpty) {
-    return null;
-  }
-  if (json['longitude_west'] == null) {
-    return null;
-  }
-  return HomeMapCustomBounds.fromJson(json);
-}
-
-Map<String, dynamic>? _nullableCustomBoundsToJson(HomeMapCustomBounds? v) =>
-    v?.toJson();
-
 @freezed
 abstract class HomeMapSettings with _$HomeMapSettings {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
@@ -157,12 +110,7 @@ abstract class HomeMapSettings with _$HomeMapSettings {
     @Default(null) double? maxZoom,
     @Default(HomeMapDefaultBounds.mainIsland)
     HomeMapDefaultBounds defaultBounds,
-    @JsonKey(
-      fromJson: _nullableCustomBoundsFromJson,
-      toJson: _nullableCustomBoundsToJson,
-    )
-    @Default(null)
-    HomeMapCustomBounds? customBounds,
+    @LatLngBoundaryJsonConverter() LatLngBoundary? customBounds,
     @Default(false) bool lockBearing,
   }) = _HomeMapSettings;
 
@@ -172,11 +120,15 @@ abstract class HomeMapSettings with _$HomeMapSettings {
 
 @freezed
 abstract class HomeCommonSettings with _$HomeCommonSettings {
-  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+  @JsonSerializable(
+    fieldRename: FieldRename.snake,
+    explicitToJson: true,
+  )
   const factory HomeCommonSettings({
     @Default(false) bool showLocation,
     @Default(HomeEarthquakeHistoryScope.nationwide)
     HomeEarthquakeHistoryScope earthquakeHistoryScope,
+    EarthquakeHistoryParameter? parameter,
   }) = _HomeCommonSettings;
 
   factory HomeCommonSettings.fromJson(Map<String, dynamic> json) =>
@@ -196,22 +148,5 @@ abstract class HomeConfigurationModel with _$HomeConfigurationModel {
   }) = _HomeConfigurationModel;
 
   factory HomeConfigurationModel.fromJson(Map<String, dynamic> json) =>
-      _$HomeConfigurationModelFromJson(_migrateHomeConfigurationJson(json));
-}
-
-/// 旧フォーマット（トップレベル `show_location` 等）をネスト構造へ移行する。
-Map<String, dynamic> _migrateHomeConfigurationJson(Map<String, dynamic> json) {
-  if (json.containsKey('common')) {
-    return json;
-  }
-  return <String, dynamic>{
-    'eew': <String, dynamic>{},
-    'kyoshin_monitor': <String, dynamic>{},
-    'map': <String, dynamic>{},
-    'common': <String, dynamic>{
-      'show_location': json['show_location'] ?? false,
-      'earthquake_history_scope':
-          json['earthquake_history_scope'] ?? 'nationwide',
-    },
-  };
+      _$HomeConfigurationModelFromJson(json);
 }

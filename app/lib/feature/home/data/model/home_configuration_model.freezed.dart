@@ -553,7 +553,7 @@ as HomeKmoniMarkerSize,
 /// @nodoc
 mixin _$HomeMapSettings {
 
- double? get maxZoom; HomeMapDefaultBounds get defaultBounds;@JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson) HomeMapCustomBounds? get customBounds; bool get lockBearing;
+ double? get maxZoom; HomeMapDefaultBounds get defaultBounds;@LatLngBoundaryJsonConverter() LatLngBoundary? get customBounds; bool get lockBearing;
 /// Create a copy of HomeMapSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -586,7 +586,7 @@ abstract mixin class $HomeMapSettingsCopyWith<$Res>  {
   factory $HomeMapSettingsCopyWith(HomeMapSettings value, $Res Function(HomeMapSettings) _then) = _$HomeMapSettingsCopyWithImpl;
 @useResult
 $Res call({
- double? maxZoom, HomeMapDefaultBounds defaultBounds,@JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson) HomeMapCustomBounds? customBounds, bool lockBearing
+ double? maxZoom, HomeMapDefaultBounds defaultBounds,@LatLngBoundaryJsonConverter() LatLngBoundary? customBounds, bool lockBearing
 });
 
 
@@ -608,7 +608,7 @@ class _$HomeMapSettingsCopyWithImpl<$Res>
 maxZoom: freezed == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
 as double?,defaultBounds: null == defaultBounds ? _self.defaultBounds : defaultBounds // ignore: cast_nullable_to_non_nullable
 as HomeMapDefaultBounds,customBounds: freezed == customBounds ? _self.customBounds : customBounds // ignore: cast_nullable_to_non_nullable
-as HomeMapCustomBounds?,lockBearing: null == lockBearing ? _self.lockBearing : lockBearing // ignore: cast_nullable_to_non_nullable
+as LatLngBoundary?,lockBearing: null == lockBearing ? _self.lockBearing : lockBearing // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -694,7 +694,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? maxZoom,  HomeMapDefaultBounds defaultBounds, @JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson)  HomeMapCustomBounds? customBounds,  bool lockBearing)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? maxZoom,  HomeMapDefaultBounds defaultBounds, @LatLngBoundaryJsonConverter()  LatLngBoundary? customBounds,  bool lockBearing)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeMapSettings() when $default != null:
 return $default(_that.maxZoom,_that.defaultBounds,_that.customBounds,_that.lockBearing);case _:
@@ -715,7 +715,7 @@ return $default(_that.maxZoom,_that.defaultBounds,_that.customBounds,_that.lockB
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? maxZoom,  HomeMapDefaultBounds defaultBounds, @JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson)  HomeMapCustomBounds? customBounds,  bool lockBearing)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? maxZoom,  HomeMapDefaultBounds defaultBounds, @LatLngBoundaryJsonConverter()  LatLngBoundary? customBounds,  bool lockBearing)  $default,) {final _that = this;
 switch (_that) {
 case _HomeMapSettings():
 return $default(_that.maxZoom,_that.defaultBounds,_that.customBounds,_that.lockBearing);case _:
@@ -735,7 +735,7 @@ return $default(_that.maxZoom,_that.defaultBounds,_that.customBounds,_that.lockB
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? maxZoom,  HomeMapDefaultBounds defaultBounds, @JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson)  HomeMapCustomBounds? customBounds,  bool lockBearing)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? maxZoom,  HomeMapDefaultBounds defaultBounds, @LatLngBoundaryJsonConverter()  LatLngBoundary? customBounds,  bool lockBearing)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeMapSettings() when $default != null:
 return $default(_that.maxZoom,_that.defaultBounds,_that.customBounds,_that.lockBearing);case _:
@@ -750,12 +750,12 @@ return $default(_that.maxZoom,_that.defaultBounds,_that.customBounds,_that.lockB
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeMapSettings implements HomeMapSettings {
-  const _HomeMapSettings({this.maxZoom = null, this.defaultBounds = HomeMapDefaultBounds.mainIsland, @JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson) this.customBounds = null, this.lockBearing = false});
+  const _HomeMapSettings({this.maxZoom = null, this.defaultBounds = HomeMapDefaultBounds.mainIsland, @LatLngBoundaryJsonConverter() this.customBounds, this.lockBearing = false});
   factory _HomeMapSettings.fromJson(Map<String, dynamic> json) => _$HomeMapSettingsFromJson(json);
 
 @override@JsonKey() final  double? maxZoom;
 @override@JsonKey() final  HomeMapDefaultBounds defaultBounds;
-@override@JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson) final  HomeMapCustomBounds? customBounds;
+@override@LatLngBoundaryJsonConverter() final  LatLngBoundary? customBounds;
 @override@JsonKey() final  bool lockBearing;
 
 /// Create a copy of HomeMapSettings
@@ -791,7 +791,7 @@ abstract mixin class _$HomeMapSettingsCopyWith<$Res> implements $HomeMapSettings
   factory _$HomeMapSettingsCopyWith(_HomeMapSettings value, $Res Function(_HomeMapSettings) _then) = __$HomeMapSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- double? maxZoom, HomeMapDefaultBounds defaultBounds,@JsonKey(fromJson: _nullableCustomBoundsFromJson, toJson: _nullableCustomBoundsToJson) HomeMapCustomBounds? customBounds, bool lockBearing
+ double? maxZoom, HomeMapDefaultBounds defaultBounds,@LatLngBoundaryJsonConverter() LatLngBoundary? customBounds, bool lockBearing
 });
 
 
@@ -813,7 +813,7 @@ class __$HomeMapSettingsCopyWithImpl<$Res>
 maxZoom: freezed == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
 as double?,defaultBounds: null == defaultBounds ? _self.defaultBounds : defaultBounds // ignore: cast_nullable_to_non_nullable
 as HomeMapDefaultBounds,customBounds: freezed == customBounds ? _self.customBounds : customBounds // ignore: cast_nullable_to_non_nullable
-as HomeMapCustomBounds?,lockBearing: null == lockBearing ? _self.lockBearing : lockBearing // ignore: cast_nullable_to_non_nullable
+as LatLngBoundary?,lockBearing: null == lockBearing ? _self.lockBearing : lockBearing // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -825,7 +825,7 @@ as bool,
 /// @nodoc
 mixin _$HomeCommonSettings {
 
- bool get showLocation; HomeEarthquakeHistoryScope get earthquakeHistoryScope;
+ bool get showLocation; HomeEarthquakeHistoryScope get earthquakeHistoryScope; EarthquakeHistoryParameter? get parameter;
 /// Create a copy of HomeCommonSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -838,16 +838,16 @@ $HomeCommonSettingsCopyWith<HomeCommonSettings> get copyWith => _$HomeCommonSett
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeCommonSettings&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation)&&(identical(other.earthquakeHistoryScope, earthquakeHistoryScope) || other.earthquakeHistoryScope == earthquakeHistoryScope));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeCommonSettings&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation)&&(identical(other.earthquakeHistoryScope, earthquakeHistoryScope) || other.earthquakeHistoryScope == earthquakeHistoryScope)&&(identical(other.parameter, parameter) || other.parameter == parameter));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,showLocation,earthquakeHistoryScope);
+int get hashCode => Object.hash(runtimeType,showLocation,earthquakeHistoryScope,parameter);
 
 @override
 String toString() {
-  return 'HomeCommonSettings(showLocation: $showLocation, earthquakeHistoryScope: $earthquakeHistoryScope)';
+  return 'HomeCommonSettings(showLocation: $showLocation, earthquakeHistoryScope: $earthquakeHistoryScope, parameter: $parameter)';
 }
 
 
@@ -858,11 +858,11 @@ abstract mixin class $HomeCommonSettingsCopyWith<$Res>  {
   factory $HomeCommonSettingsCopyWith(HomeCommonSettings value, $Res Function(HomeCommonSettings) _then) = _$HomeCommonSettingsCopyWithImpl;
 @useResult
 $Res call({
- bool showLocation, HomeEarthquakeHistoryScope earthquakeHistoryScope
+ bool showLocation, HomeEarthquakeHistoryScope earthquakeHistoryScope, EarthquakeHistoryParameter? parameter
 });
 
 
-
+$EarthquakeHistoryParameterCopyWith<$Res>? get parameter;
 
 }
 /// @nodoc
@@ -875,14 +875,27 @@ class _$HomeCommonSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeCommonSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? showLocation = null,Object? earthquakeHistoryScope = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? showLocation = null,Object? earthquakeHistoryScope = null,Object? parameter = freezed,}) {
   return _then(_self.copyWith(
 showLocation: null == showLocation ? _self.showLocation : showLocation // ignore: cast_nullable_to_non_nullable
 as bool,earthquakeHistoryScope: null == earthquakeHistoryScope ? _self.earthquakeHistoryScope : earthquakeHistoryScope // ignore: cast_nullable_to_non_nullable
-as HomeEarthquakeHistoryScope,
+as HomeEarthquakeHistoryScope,parameter: freezed == parameter ? _self.parameter : parameter // ignore: cast_nullable_to_non_nullable
+as EarthquakeHistoryParameter?,
   ));
 }
+/// Create a copy of HomeCommonSettings
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeHistoryParameterCopyWith<$Res>? get parameter {
+    if (_self.parameter == null) {
+    return null;
+  }
 
+  return $EarthquakeHistoryParameterCopyWith<$Res>(_self.parameter!, (value) {
+    return _then(_self.copyWith(parameter: value));
+  });
+}
 }
 
 
@@ -964,10 +977,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope,  EarthquakeHistoryParameter? parameter)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeCommonSettings() when $default != null:
-return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
+return $default(_that.showLocation,_that.earthquakeHistoryScope,_that.parameter);case _:
   return orElse();
 
 }
@@ -985,10 +998,10 @@ return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope,  EarthquakeHistoryParameter? parameter)  $default,) {final _that = this;
 switch (_that) {
 case _HomeCommonSettings():
-return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
+return $default(_that.showLocation,_that.earthquakeHistoryScope,_that.parameter);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1005,10 +1018,10 @@ return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLocation,  HomeEarthquakeHistoryScope earthquakeHistoryScope,  EarthquakeHistoryParameter? parameter)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeCommonSettings() when $default != null:
-return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
+return $default(_that.showLocation,_that.earthquakeHistoryScope,_that.parameter);case _:
   return null;
 
 }
@@ -1020,11 +1033,12 @@ return $default(_that.showLocation,_that.earthquakeHistoryScope);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeCommonSettings implements HomeCommonSettings {
-  const _HomeCommonSettings({this.showLocation = false, this.earthquakeHistoryScope = HomeEarthquakeHistoryScope.nationwide});
+  const _HomeCommonSettings({this.showLocation = false, this.earthquakeHistoryScope = HomeEarthquakeHistoryScope.nationwide, this.parameter});
   factory _HomeCommonSettings.fromJson(Map<String, dynamic> json) => _$HomeCommonSettingsFromJson(json);
 
 @override@JsonKey() final  bool showLocation;
 @override@JsonKey() final  HomeEarthquakeHistoryScope earthquakeHistoryScope;
+@override final  EarthquakeHistoryParameter? parameter;
 
 /// Create a copy of HomeCommonSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -1039,16 +1053,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeCommonSettings&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation)&&(identical(other.earthquakeHistoryScope, earthquakeHistoryScope) || other.earthquakeHistoryScope == earthquakeHistoryScope));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeCommonSettings&&(identical(other.showLocation, showLocation) || other.showLocation == showLocation)&&(identical(other.earthquakeHistoryScope, earthquakeHistoryScope) || other.earthquakeHistoryScope == earthquakeHistoryScope)&&(identical(other.parameter, parameter) || other.parameter == parameter));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,showLocation,earthquakeHistoryScope);
+int get hashCode => Object.hash(runtimeType,showLocation,earthquakeHistoryScope,parameter);
 
 @override
 String toString() {
-  return 'HomeCommonSettings(showLocation: $showLocation, earthquakeHistoryScope: $earthquakeHistoryScope)';
+  return 'HomeCommonSettings(showLocation: $showLocation, earthquakeHistoryScope: $earthquakeHistoryScope, parameter: $parameter)';
 }
 
 
@@ -1059,11 +1073,11 @@ abstract mixin class _$HomeCommonSettingsCopyWith<$Res> implements $HomeCommonSe
   factory _$HomeCommonSettingsCopyWith(_HomeCommonSettings value, $Res Function(_HomeCommonSettings) _then) = __$HomeCommonSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool showLocation, HomeEarthquakeHistoryScope earthquakeHistoryScope
+ bool showLocation, HomeEarthquakeHistoryScope earthquakeHistoryScope, EarthquakeHistoryParameter? parameter
 });
 
 
-
+@override $EarthquakeHistoryParameterCopyWith<$Res>? get parameter;
 
 }
 /// @nodoc
@@ -1076,15 +1090,28 @@ class __$HomeCommonSettingsCopyWithImpl<$Res>
 
 /// Create a copy of HomeCommonSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? showLocation = null,Object? earthquakeHistoryScope = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? showLocation = null,Object? earthquakeHistoryScope = null,Object? parameter = freezed,}) {
   return _then(_HomeCommonSettings(
 showLocation: null == showLocation ? _self.showLocation : showLocation // ignore: cast_nullable_to_non_nullable
 as bool,earthquakeHistoryScope: null == earthquakeHistoryScope ? _self.earthquakeHistoryScope : earthquakeHistoryScope // ignore: cast_nullable_to_non_nullable
-as HomeEarthquakeHistoryScope,
+as HomeEarthquakeHistoryScope,parameter: freezed == parameter ? _self.parameter : parameter // ignore: cast_nullable_to_non_nullable
+as EarthquakeHistoryParameter?,
   ));
 }
 
+/// Create a copy of HomeCommonSettings
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeHistoryParameterCopyWith<$Res>? get parameter {
+    if (_self.parameter == null) {
+    return null;
+  }
 
+  return $EarthquakeHistoryParameterCopyWith<$Res>(_self.parameter!, (value) {
+    return _then(_self.copyWith(parameter: value));
+  });
+}
 }
 
 

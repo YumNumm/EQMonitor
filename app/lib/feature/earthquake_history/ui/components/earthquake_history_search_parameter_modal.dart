@@ -45,14 +45,14 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
     // 各フィルターの有効/無効状態（初期値から判定）
     final isDateRangeEnabled = useState<bool>(false);
     final isEpicenterEnabled = useState<bool>(
-      initialParameter.hasEpicenterFilter,
+      initialParameter.epicenterCode != null,
     );
     final isIntensityEnabled = useState<bool>(
       initialParameter.intensityGte != null ||
           initialParameter.intensityLte != null,
     );
     final isRegionIntensityEnabled = useState<bool>(
-      initialParameter.hasRegionFilter,
+      initialParameter.regionCode != null,
     );
     final isDepthEnabled = useState<bool>(
       initialParameter.depthGte != null || initialParameter.depthLte != null,

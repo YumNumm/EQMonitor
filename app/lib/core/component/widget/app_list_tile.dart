@@ -66,7 +66,10 @@ class AppListTile extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         shape: shape,
         tileColor: backgroundColor,
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Text(subtitle),
         value: value!,
         onChanged: onChanged,

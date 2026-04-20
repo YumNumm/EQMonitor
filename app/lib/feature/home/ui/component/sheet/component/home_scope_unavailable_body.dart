@@ -17,7 +17,7 @@ class HomeScopeUnavailableBody extends StatelessWidget {
     final theme = Theme.of(context);
     final message = switch (scope) {
       .currentLocation => '現在地の市区町村を特定できません。位置情報の利用を許可してください。',
-      .designatedRegion => '指定地域が設定されていません。',
+      .custom => '指定地域が設定されていません。',
       .nationwide => '',
     };
 

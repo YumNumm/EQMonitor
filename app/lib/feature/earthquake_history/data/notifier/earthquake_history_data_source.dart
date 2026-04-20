@@ -108,7 +108,7 @@ class EarthquakeHistoryDataSource
           ? 10
           : 50;
 
-      if (_parameter.hasEpicenterFilter && _parameter.epicenterCode != null) {
+      if (_parameter.epicenterCode != null) {
         final result = await _repository.searchByEpicenter(
           code: _parameter.epicenterCode!,
           limit: limit,
@@ -122,7 +122,7 @@ class EarthquakeHistoryDataSource
         );
       }
 
-      if (_parameter.hasRegionFilter &&
+      if (_parameter.regionCode != null &&
           _parameter.regionCode != null &&
           _parameter.regionSearchType == RegionSearchType.prefecture) {
         final result = await _repository.searchByPrefecture(
@@ -138,7 +138,7 @@ class EarthquakeHistoryDataSource
         );
       }
 
-      if (_parameter.hasRegionFilter &&
+      if (_parameter.regionCode != null &&
           _parameter.regionCode != null &&
           _parameter.regionSearchType == RegionSearchType.city) {
         final result = await _repository.searchByCity(

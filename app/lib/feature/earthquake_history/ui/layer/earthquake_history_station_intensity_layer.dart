@@ -1,17 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/lpgm_intensity_icon.dart';
-import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
-import 'package:eqmonitor/core/util/widget_to_image.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/station_intensity_icon_notifier.dart';
@@ -32,18 +27,15 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   const EarthquakeHistoryStationIntensityLayer({
     required this.intensity,
     this.stationDisplayMode = StationDisplayMode.maxFocused,
-    this.maxIntensity,
     this.showLabel = false,
     this.showingLpgmIntensity = false,
     this.showIntensityIcon = true,
     super.key,
   });
 
-  final EarthquakeIntensity? intensity;
+  final EarthquakeIntensity intensity;
   final StationDisplayMode stationDisplayMode;
 
-  /// 全観測点中の最大震度（maxFocused モードで比較に使用）
-  final JmaIntensity? maxIntensity;
   final bool showLabel;
   final bool showingLpgmIntensity;
 
@@ -65,13 +57,11 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   static const _lpgmIconSmallPrefix = 'eq-station-lpgm-sm-';
   static const _lpgmIconSmallNoTextPrefix = 'eq-station-lpgm-sm-nt-';
 
-  /// v2.6.0 のレンダリングサイズに合わせた論理サイズ
-  static const _iconLogicalSize = Size(50, 50);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
+    final cachedBytes = ref.watch(stationIntensityIconBytesProvider);
 
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
@@ -81,9 +71,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           return null;
         }
 
-        final container = ref.container;
-        final cachedBytes = ref.read(stationIntensityIconBytesProvider);
-
         unawaited(() async {
           try {
             final geoJson = showingLpgmIntensity
@@ -91,18 +78,60 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 : _buildGeoJson(intensity, colorModel);
 
             await styleController.addSource(
-              GeoJsonSource(id: _sourceId, data: geoJson),
+              GeoJsonSource(
+                id: _sourceId,
+                data: geoJson,
+              ),
             );
 
             await styleController.addLayer(
               CircleStyleLayer(
                 id: _circleLayerId,
                 sourceId: _sourceId,
+                minZoom: 8,
                 layout: const {
                   'circle-sort-key': ['get', 'sortKey'],
                 },
                 paint: {
-                  'circle-radius': _buildRadiusExpression(),
+                  'circle-radius': switch (stationDisplayMode) {
+                    .allMinimized => [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      4,
+                      4,
+                      10,
+                      10,
+                    ],
+                    .normal => [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      4,
+                      2,
+                      10,
+                      8,
+                    ],
+                    .maxFocused => [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      4,
+                      [
+                        'case',
+                        ['get', 'isFocused'],
+                        3,
+                        1,
+                      ],
+                      10,
+                      [
+                        'case',
+                        ['get', 'isFocused'],
+                        10,
+                        7,
+                      ],
+                    ],
+                  },
                   'circle-color': ['get', 'color'],
                   'circle-stroke-color': '#ffffff',
                   'circle-stroke-width': [
@@ -118,24 +147,20 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               ),
             );
 
+            await styleController.addImages(cachedBytes);
+
             if (showIntensityIcon) {
-              await _registerIcons(
-                styleController,
-                container,
-                pixelRatio,
-                cachedBytes,
-              );
               await styleController.addLayer(
                 const SymbolStyleLayer(
                   id: _iconLayerId,
                   sourceId: _sourceId,
+                  minZoom: 8,
                   layout: {
                     'icon-image': ['get', 'iconId'],
                     'icon-allow-overlap': true,
                     'icon-ignore-placement': true,
                     // 高震度が上に描画されるよう sortKey（震度 index）を使用
                     'symbol-sort-key': ['get', 'sortKey'],
-                    // v2.6.0 の iconSize 式 (zoom 3→0.04, zoom 7→0.3, zoom 20→1)
                     'icon-size': [
                       'interpolate',
                       ['linear'],
@@ -157,14 +182,13 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 const SymbolStyleLayer(
                   id: _labelLayerId,
                   sourceId: _sourceId,
+                  minZoom: 8,
                   layout: {
                     'text-field': ['get', 'name'],
                     'text-size': 10,
                     'text-offset': [0, 1.2],
                     'text-anchor': 'top',
                     'text-allow-overlap': false,
-                    'icon-allow-overlap': true,
-                    'icon-ignore-placement': true,
                     'text-ignore-placement': true,
                   },
                   paint: {
@@ -200,111 +224,16 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         intensity,
         colorModel,
         stationDisplayMode,
-        maxIntensity,
         showLabel,
         showingLpgmIntensity,
         showIntensityIcon,
         pixelRatio,
+        cachedBytes,
       ],
     );
 
     return const SizedBox.shrink();
   }
-
-  // ---------------------------------------------------------------------------
-  // アイコン登録
-  //
-  // 起動時に EarthquakeHistoryStationIconPreloader が事前生成したバイト列が
-  // StationIntensityIconBytes にあればそれを直接 addImage で登録する（高速）。
-  // まだ生成されていないアイコンは renderWidgetToImageBytes でその場レンダリング
-  // し、UncontrolledProviderScope(container) 経由で intensityColorProvider を
-  // 参照できるようにする。
-  // ---------------------------------------------------------------------------
-
-  Future<void> _registerIcons(
-    StyleController styleController,
-    ProviderContainer container,
-    double pixelRatio,
-    Map<String, Uint8List> cachedBytes,
-  ) async {
-    final fromCache = <String, Uint8List>{};
-    // その場レンダリングが必要なアイコン
-    final toRender = <String, Widget>{};
-
-    if (showingLpgmIntensity) {
-      for (final lpgm in JmaLpgmIntensity.values) {
-        for (final (prefix, type) in [
-          (_lpgmIconSmallPrefix, IntensityIconType.small),
-          (_lpgmIconSmallNoTextPrefix, IntensityIconType.smallWithoutText),
-        ]) {
-          final id = '$prefix${lpgm.name}';
-          if (cachedBytes.containsKey(id)) {
-            fromCache[id] = cachedBytes[id]!;
-          } else {
-            toRender[id] = UncontrolledProviderScope(
-              container: container,
-              child: LpgmIntensityIcon(
-                intensity: lpgm,
-                type: type,
-              ),
-            );
-          }
-        }
-      }
-    } else {
-      for (final jma in JmaIntensity.values) {
-        for (final (prefix, type) in [
-          (_iconSmallPrefix, IntensityIconType.small),
-          (_iconSmallNoTextPrefix, IntensityIconType.smallWithoutText),
-        ]) {
-          final id = '$prefix${jma.name}';
-          if (cachedBytes.containsKey(id)) {
-            fromCache[id] = cachedBytes[id]!;
-          } else {
-            toRender[id] = UncontrolledProviderScope(
-              container: container,
-              child: IntensityValueIcon(intensity: jma, type: type),
-            );
-          }
-        }
-      }
-    }
-
-    // キャッシュ済みは一括登録
-    if (fromCache.isNotEmpty) {
-      await styleController.addImages(fromCache);
-    }
-
-    // 未キャッシュはその場でレンダリング
-    if (toRender.isNotEmpty) {
-      final imageSize = Size(
-        _iconLogicalSize.width * pixelRatio,
-        _iconLogicalSize.height * pixelRatio,
-      );
-      for (final entry in toRender.entries) {
-        final bytes = await renderWidgetToImageBytes(
-          widget: entry.value,
-          logicalSize: _iconLogicalSize,
-          pixelRatio: pixelRatio,
-        );
-        if (bytes != null) {
-          await styleController.addImage(entry.key, bytes);
-        } else {
-          // フォールバック: addImageFromWidget
-          await styleController.addImageFromWidget(
-            id: entry.key,
-            widget: entry.value,
-            logicalSize: _iconLogicalSize,
-            imageSize: imageSize,
-          );
-        }
-      }
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // GeoJSON 構築
-  // ---------------------------------------------------------------------------
 
   /// [stationDisplayMode] と [isFocused] に応じてアイコン ID を返す。
   String _iconIdForStation(String intensityName, bool isFocused) {
@@ -328,7 +257,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     IntensityColorModel colorModel,
   ) {
     if (intensity == null) {
-      return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
+      return jsonEncode({
+        'type': 'FeatureCollection',
+        'features': <dynamic>[],
+      });
     }
 
     final features = <Map<String, dynamic>>[];
@@ -338,7 +270,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           .fromJmaIntensity(jmaIntensity)
           .background
           .toHexStringRGB();
-      final isFocused = maxIntensity != null && jmaIntensity == maxIntensity;
+      final isFocused = intensity.maxIntensity == jmaIntensity;
       final iconId = _iconIdForStation(jmaIntensity.name, isFocused);
 
       for (final region in entry.value) {
@@ -418,58 +350,5 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     }
 
     return jsonEncode({'type': 'FeatureCollection', 'features': features});
-  }
-
-  // ---------------------------------------------------------------------------
-  // 円サイズ expression (CircleStyleLayer 用)
-  // ---------------------------------------------------------------------------
-
-  List<Object> _buildRadiusExpression() {
-    final smallRadius = [4, 1, 10, 3];
-    final normalRadius = [4, 2, 10, 8];
-    final largeRadius = [4, 3, 10, 10];
-
-    switch (stationDisplayMode) {
-      case StationDisplayMode.allMinimized:
-        return [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          4,
-          smallRadius[1],
-          10,
-          smallRadius[3],
-        ];
-      case StationDisplayMode.normal:
-        return [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          4,
-          normalRadius[1],
-          10,
-          normalRadius[3],
-        ];
-      case StationDisplayMode.maxFocused:
-        return [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          4,
-          [
-            'case',
-            ['get', 'isFocused'],
-            largeRadius[1],
-            smallRadius[1],
-          ],
-          10,
-          [
-            'case',
-            ['get', 'isFocused'],
-            largeRadius[3],
-            smallRadius[3],
-          ],
-        ];
-    }
   }
 }

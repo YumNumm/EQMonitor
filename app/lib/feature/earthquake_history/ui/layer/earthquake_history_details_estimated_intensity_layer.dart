@@ -32,7 +32,8 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
           await styleController.addSource(
             VectorSource(
               id: _sourceId,
-              url: tileUrl,
+              url: 'pmtiles://$tileUrl',
+              volatile: true,
             ),
           );
 
@@ -43,10 +44,7 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
               sourceLayerId: 'seismic_intensity',
               paint: {
                 'fill-opacity': 1.0,
-                'fill-color': [
-                  'get',
-                  'fill',
-                ],
+                'fill-color': ['get', 'fill'],
               },
             ),
           );

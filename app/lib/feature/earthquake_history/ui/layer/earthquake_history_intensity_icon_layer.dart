@@ -34,7 +34,7 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
   static const _citySourceId = 'eq-history-icon-city';
   static const _cityLayerId = 'eq-history-icon-city-symbol';
 
-  static const _iconSize = 64;
+  static const _iconSize = 32;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

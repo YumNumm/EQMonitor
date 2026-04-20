@@ -66,7 +66,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     );
 
     // 震央地検索の場合
-    if (param.hasEpicenterFilter && param.epicenterCode != null) {
+    if (param.epicenterCode != null) {
       final result = await repository.searchByEpicenter(
         code: param.epicenterCode!,
         limit: limit,
@@ -79,7 +79,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
 
     // 地域検索（都道府県）の場合
-    if (param.hasRegionFilter &&
+    if (param.regionCode != null &&
         param.regionCode != null &&
         param.regionSearchType == RegionSearchType.prefecture) {
       final result = await repository.searchByPrefecture(
@@ -94,7 +94,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
 
     // 地域検索（市区町村）の場合
-    if (param.hasRegionFilter &&
+    if (param.regionCode != null &&
         param.regionCode != null &&
         param.regionSearchType == RegionSearchType.city) {
       final result = await repository.searchByCity(

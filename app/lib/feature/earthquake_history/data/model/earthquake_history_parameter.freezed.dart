@@ -11,6 +11,7 @@ part of 'earthquake_history_parameter.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$EarthquakeHistoryParameter {
 
@@ -24,6 +25,8 @@ mixin _$EarthquakeHistoryParameter {
 @pragma('vm:prefer-inline')
 $EarthquakeHistoryParameterCopyWith<EarthquakeHistoryParameter> get copyWith => _$EarthquakeHistoryParameterCopyWithImpl<EarthquakeHistoryParameter>(this as EarthquakeHistoryParameter, _$identity);
 
+  /// Serializes this EarthquakeHistoryParameter to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +34,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryParameter&&(identical(other.magnitudeLte, magnitudeLte) || other.magnitudeLte == magnitudeLte)&&(identical(other.magnitudeGte, magnitudeGte) || other.magnitudeGte == magnitudeGte)&&(identical(other.depthLte, depthLte) || other.depthLte == depthLte)&&(identical(other.depthGte, depthGte) || other.depthGte == depthGte)&&(identical(other.intensityLte, intensityLte) || other.intensityLte == intensityLte)&&(identical(other.intensityGte, intensityGte) || other.intensityGte == intensityGte)&&const DeepCollectionEquality().equals(other.statuses, statuses)&&(identical(other.epicenterCode, epicenterCode) || other.epicenterCode == epicenterCode)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.regionSearchType, regionSearchType) || other.regionSearchType == regionSearchType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.regionIntensityLte, regionIntensityLte) || other.regionIntensityLte == regionIntensityLte)&&(identical(other.regionIntensityGte, regionIntensityGte) || other.regionIntensityGte == regionIntensityGte));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,magnitudeLte,magnitudeGte,depthLte,depthGte,intensityLte,intensityGte,const DeepCollectionEquality().hash(statuses),epicenterCode,epicenterName,regionSearchType,regionCode,regionName,regionIntensityLte,regionIntensityGte);
 
@@ -219,11 +222,11 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
   const _EarthquakeHistoryParameter({this.magnitudeLte, this.magnitudeGte, this.depthLte, this.depthGte, this.intensityLte, this.intensityGte, final  List<TelegramStatus>? statuses, this.epicenterCode, this.epicenterName, this.regionSearchType, this.regionCode, this.regionName, this.regionIntensityLte, this.regionIntensityGte}): _statuses = statuses,super._();
-  
+  factory _EarthquakeHistoryParameter.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryParameterFromJson(json);
 
 // 基本フィルター
 @override final  double? magnitudeLte;
@@ -257,14 +260,17 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
 @pragma('vm:prefer-inline')
 _$EarthquakeHistoryParameterCopyWith<_EarthquakeHistoryParameter> get copyWith => __$EarthquakeHistoryParameterCopyWithImpl<_EarthquakeHistoryParameter>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$EarthquakeHistoryParameterToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryParameter&&(identical(other.magnitudeLte, magnitudeLte) || other.magnitudeLte == magnitudeLte)&&(identical(other.magnitudeGte, magnitudeGte) || other.magnitudeGte == magnitudeGte)&&(identical(other.depthLte, depthLte) || other.depthLte == depthLte)&&(identical(other.depthGte, depthGte) || other.depthGte == depthGte)&&(identical(other.intensityLte, intensityLte) || other.intensityLte == intensityLte)&&(identical(other.intensityGte, intensityGte) || other.intensityGte == intensityGte)&&const DeepCollectionEquality().equals(other._statuses, _statuses)&&(identical(other.epicenterCode, epicenterCode) || other.epicenterCode == epicenterCode)&&(identical(other.epicenterName, epicenterName) || other.epicenterName == epicenterName)&&(identical(other.regionSearchType, regionSearchType) || other.regionSearchType == regionSearchType)&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.regionIntensityLte, regionIntensityLte) || other.regionIntensityLte == regionIntensityLte)&&(identical(other.regionIntensityGte, regionIntensityGte) || other.regionIntensityGte == regionIntensityGte));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,magnitudeLte,magnitudeGte,depthLte,depthGte,intensityLte,intensityGte,const DeepCollectionEquality().hash(_statuses),epicenterCode,epicenterName,regionSearchType,regionCode,regionName,regionIntensityLte,regionIntensityGte);
 

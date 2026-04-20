@@ -104,25 +104,19 @@ class _MapContent extends HookConsumerWidget {
       earthquake: earthquake,
       displayMode: config.hypocenterDisplayMode,
     );
-    final stationLayer = EarthquakeHistoryStationIntensityLayer(
-      intensity: earthquake.intensity,
-      stationDisplayMode: config.stationDisplayMode,
-      maxIntensity: earthquake.intensity?.maxIntensity,
-      showLabel: config.showStationLabel,
-      showingLpgmIntensity: config.showingLpgmIntensity,
-      showIntensityIcon: config.showIntensityIcon,
-    );
 
     void openModal(BuildContext ctx) {
       unawaited(
-        showEarthquakeHistoryMapDisplayModeModal(
-          ctx,
+        EarthquakeHistoryMapDisplayModeModal.show(
+          context: ctx,
           hasLpgmIntensity: earthquake.intensity?.maxLpgmIntensity != null,
           isOverriding: isOverriding.value,
           onDisableOverride: () => isOverriding.value = false,
         ),
       );
     }
+
+    final intensity = earthquake.intensity;
 
     return MapLibreEventProvider(
       child: Builder(
@@ -145,18 +139,19 @@ class _MapContent extends HookConsumerWidget {
                 },
                 children: [
                   // 塗りつぶし系（最背面）
-                  if (effectiveMode != IntensityFillMode.stationOnly)
+                  if (effectiveMode != IntensityFillMode.stationOnly &&
+                      earthquake.intensity != null)
                     EarthquakeHistoryFillLayer(
-                      intensity: earthquake.intensity,
+                      intensity: intensity!,
                       showingLpgmIntensity: config.showingLpgmIntensity,
-                    ),
-                  if (effectiveMode == IntensityFillMode.fillWithIcon)
+                    )
+                  else if (effectiveMode == IntensityFillMode.fillWithIcon)
                     EarthquakeHistoryIntensityIconLayer(
-                      intensity: earthquake.intensity,
+                      intensity: intensity,
                       showingLpgmIntensity: config.showingLpgmIntensity,
                     ),
                   // 推計震度ラスタ
-                  if (tileUrl != null && isOverriding.value)
+                  if (tileUrl != null)
                     EarthquakeHistoryDetailsEstimatedIntensityLayer(
                       tileUrl: tileUrl,
                     ),
@@ -169,7 +164,14 @@ class _MapContent extends HookConsumerWidget {
                   if (config.hypocenterDisplayMode ==
                       HypocenterDisplayMode.belowStations)
                     hypocenterLayer,
-                  stationLayer,
+                  if (intensity != null)
+                    EarthquakeHistoryStationIntensityLayer(
+                      intensity: intensity,
+                      stationDisplayMode: config.stationDisplayMode,
+                      showLabel: config.showStationLabel,
+                      showingLpgmIntensity: config.showingLpgmIntensity,
+                      showIntensityIcon: config.showIntensityIcon,
+                    ),
                   if (config.hypocenterDisplayMode !=
                       HypocenterDisplayMode.belowStations)
                     hypocenterLayer,

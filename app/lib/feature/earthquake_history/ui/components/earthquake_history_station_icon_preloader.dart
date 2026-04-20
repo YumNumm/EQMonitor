@@ -23,7 +23,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class EarthquakeHistoryStationIconPreloader extends HookConsumerWidget {
   const EarthquakeHistoryStationIconPreloader({super.key});
 
-  static const _iconLogicalSize = Size(50, 50);
+  static const _iconLogicalSize = Size(40, 40);
   static const _iconSmallPrefix = 'eq-station-sm-';
   static const _iconSmallNoTextPrefix = 'eq-station-sm-nt-';
   static const _lpgmIconSmallPrefix = 'eq-station-lpgm-sm-';
@@ -67,7 +67,9 @@ class EarthquakeHistoryStationIconPreloader extends HookConsumerWidget {
           logicalSize: _iconLogicalSize,
           pixelRatio: pixelRatio,
         );
-        if (bytes != null) rendered[id] = bytes;
+        if (bytes != null) {
+          rendered[id] = bytes;
+        }
       }
     }
 
@@ -85,7 +87,9 @@ class EarthquakeHistoryStationIconPreloader extends HookConsumerWidget {
           logicalSize: _iconLogicalSize,
           pixelRatio: pixelRatio,
         );
-        if (bytes != null) rendered[id] = bytes;
+        if (bytes != null) {
+          rendered[id] = bytes;
+        }
       }
     }
 

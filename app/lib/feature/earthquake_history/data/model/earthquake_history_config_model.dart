@@ -97,7 +97,7 @@ enum StationDisplayMode {
 
 /// 震央マーカーの表示方法
 enum HypocenterDisplayMode {
-  /// 低ズームでは非表示、ズームインで半透明表示（デフォルト）
+  /// 低ズームでは不透明、ズームインで半透明（デフォルト）
   zoomFade,
 
   /// 常に不透明表示（観測点レイヤーの上）

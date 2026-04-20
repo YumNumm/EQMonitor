@@ -6,6 +6,7 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:maplibre/maplibre.dart';
 
 /// 現在の表示範囲をホームのカスタム矩形として保存する。
@@ -83,11 +84,9 @@ class _Body extends HookConsumerWidget {
               .updateMap(
                 current.map.copyWith(
                   defaultBounds: HomeMapDefaultBounds.custom,
-                  customBounds: HomeMapCustomBounds(
-                    longitudeWest: region.longitudeWest,
-                    longitudeEast: region.longitudeEast,
-                    latitudeSouth: region.latitudeSouth,
-                    latitudeNorth: region.latitudeNorth,
+                  customBounds: LatLngBoundary.fromTwo(
+                    LatLng(region.longitudeWest, region.latitudeSouth),
+                    LatLng(region.longitudeEast, region.latitudeNorth),
                   ),
                 ),
               );
