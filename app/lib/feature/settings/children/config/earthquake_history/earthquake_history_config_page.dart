@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
@@ -15,8 +14,8 @@ class EarthquakeHistoryConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '地震履歴設定'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('地震履歴設定')),
       body: ListView(
         children: const [
           SettingsSectionHeader(text: '地震履歴一覧'),

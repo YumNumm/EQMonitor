@@ -1,4 +1,3 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -20,8 +19,8 @@ class DebugDeviceAdminPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceIdAsync = ref.watch(deviceIdProvider);
 
-    return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: 'デバイス管理（デバッグ）'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('デバイス管理（デバッグ）')),
       body: deviceIdAsync.when(
         data: (deviceId) => _DebugDeviceAdminBody(deviceId: deviceId),
         loading: () =>
@@ -175,22 +174,30 @@ class _Body extends HookConsumerWidget {
 
     Future<void> deleteDevice() async {
       var confirmed = false;
-      await AdaptiveAlertDialog.show(
+      await showAdaptiveDialog<void>(
         context: context,
-        title: 'デバイスを削除',
-        message: 'この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？',
-        actions: [
-          AlertAction(
-            title: 'キャンセル',
-            onPressed: () {},
-            style: AlertActionStyle.cancel,
+        builder: (context) => AlertDialog.adaptive(
+          title: const Text('デバイスを削除'),
+          content: const Text(
+            'この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？',
           ),
-          AlertAction(
-            title: '削除',
-            onPressed: () => confirmed = true,
-            style: AlertActionStyle.destructive,
-          ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('キャンセル'),
+            ),
+            TextButton(
+              onPressed: () {
+                confirmed = true;
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: const Text('削除'),
+            ),
+          ],
+        ),
       );
       if (!confirmed || !context.mounted) {
         return;

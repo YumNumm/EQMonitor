@@ -11,10 +11,6 @@ environment:
 resolution: workspace
 
 dependency_overrides:
-  adaptive_platform_ui:
-    git:
-      url: https://github.com/YumNumm/adaptive_platform_ui.git
-      ref: 6d1339f8c2deb6f25cc1a5e0bc6a980c843e8d02
   flutter_inappwebview: 6.2.0-beta.3
   maplibre:
     git:
@@ -48,7 +44,6 @@ dependency_overrides:
       path: packages/maplibre_webview
 
 dependencies:
-  adaptive_platform_ui: ^0.1.104
   app_settings: ^7.0.0
   cached_network_image: ^3.4.1
   clock: ^1.1.2

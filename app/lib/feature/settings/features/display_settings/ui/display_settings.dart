@@ -1,4 +1,3 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
@@ -14,9 +13,9 @@ class DisplaySettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: '表示設定'),
-      body: _Body(),
+    return Scaffold(
+      appBar: AppBar(title: const Text('表示設定')),
+      body: const _Body(),
     );
   }
 }

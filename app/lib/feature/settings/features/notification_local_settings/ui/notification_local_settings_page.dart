@@ -1,4 +1,3 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -7,9 +6,9 @@ class NotificationLocalSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: '通知音・表示設定'),
-      body: _Body(),
+    return Scaffold(
+      appBar: AppBar(title: const Text('通知音・表示設定')),
+      body: const _Body(),
     );
   }
 }

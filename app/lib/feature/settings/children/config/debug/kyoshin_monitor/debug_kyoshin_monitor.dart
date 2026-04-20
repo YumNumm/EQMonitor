@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
@@ -19,9 +18,9 @@ class DebugKyoshinMonitorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle.merge(
-      child: const AdaptiveScaffold(
-        appBar: AdaptiveAppBar(title: 'KyoshinMonitor'),
-        body: SingleChildScrollView(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('KyoshinMonitor')),
+        body: const SingleChildScrollView(
           primary: true,
           child: SafeArea(child: _Body()),
         ),

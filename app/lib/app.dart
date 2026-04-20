@@ -1,4 +1,3 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -55,39 +54,18 @@ class App extends HookConsumerWidget {
             brightness: Brightness.dark,
           );
         }
-        return AdaptiveApp.router(
+        return MaterialApp.router(
           title: 'EQMonitor',
           themeMode: theme.value,
           routerConfig: routerConfig,
-          materialLightTheme: buildTheme(
+          theme: buildTheme(
             colorScheme: lightColorScheme,
             customColors: lightCustomColors,
           ),
-          materialDarkTheme: buildTheme(
+          darkTheme: buildTheme(
             colorScheme: darkColorScheme,
             customColors: darkCustomColors,
           ),
-          cupertinoLightTheme: buildCupertinoTheme(
-            colorScheme: lightColorScheme,
-            customColors: lightCustomColors,
-          ),
-          cupertinoDarkTheme: buildCupertinoTheme(
-            colorScheme: darkColorScheme,
-            customColors: darkCustomColors,
-          ),
-          builder: (context, child) {
-            if (PlatformInfo.isIOS) {
-              return Theme(
-                data: buildTheme(
-                  colorScheme: lightColorScheme,
-                  customColors: lightCustomColors,
-                ),
-                child: child!,
-              );
-            }
-            return child!;
-          },
-
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

@@ -1,4 +1,3 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -18,8 +17,8 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
-    return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '設定'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('設定')),
       body: ListView(
         children: [
           Center(

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
@@ -83,13 +82,13 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
       [refreshTick.value],
     );
 
-    return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(
-        title: '通知配信ログ',
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('通知配信ログ'),
         actions: [
           if (!loading.value)
-            AdaptiveAppBarAction(
-              icon: Icons.refresh,
+            IconButton(
+              icon: const Icon(Icons.refresh),
               onPressed: () => refreshTick.value++,
             ),
         ],

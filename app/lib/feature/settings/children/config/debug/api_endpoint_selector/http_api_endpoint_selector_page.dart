@@ -1,4 +1,3 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -13,8 +12,8 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
     final defaultUrl = ref.watch(environmentProvider).restApiUrl;
     final developUrl = defaultUrl.replaceAll('api.', 'dev.api.');
     final state = ref.watch(telegramUrlProvider.select((v) => v.requireValue.restApiUrl));
-    return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: 'API Endpoint Selector'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('API Endpoint Selector')),
       body: Column(
         children: [
           BorderedContainer(

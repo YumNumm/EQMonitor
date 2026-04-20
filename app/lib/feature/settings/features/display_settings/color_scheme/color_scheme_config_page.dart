@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -39,8 +38,8 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
       }
     }
 
-    return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '震度配色設定'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('震度配色設定')),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -1,4 +1,3 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
@@ -106,8 +105,8 @@ class DebugEewCardPage extends HookConsumerWidget {
 
     final eew = buildEew();
 
-    return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: 'EEW Card デバッグ'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('EEW Card デバッグ')),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [

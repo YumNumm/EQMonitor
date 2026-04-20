@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -22,9 +21,9 @@ class DebugPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: 'Debug Page'),
-      body: _DebugWidget(),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Debug Page')),
+      body: const _DebugWidget(),
     );
   }
 }
