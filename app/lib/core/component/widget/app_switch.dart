@@ -59,12 +59,15 @@ class AppSwitch extends StatelessWidget {
                         BorderRadius.circular(shape.pill),
                       ),
                       border: .tween(
-                        Border.all(color: color.outlineSoft),
+                        Border.all(
+                          color: color.outlineSoft,
+                          width: 2,
+                        ),
                         Border.all(
                           color: theme.colorScheme.primary.withValues(
                             alpha: 0.5,
                           ),
-                          width: 2,
+                          width: 0,
                         ),
                       ),
                     ),

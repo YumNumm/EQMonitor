@@ -27,12 +27,7 @@ class HomeScopeSelector extends StatelessWidget {
     final typography = designSystem.typography;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        spacing.lg,
-        spacing.lg,
-        spacing.lg,
-        spacing.md,
-      ),
+      padding: EdgeInsets.all(spacing.xs),
       child: DropdownMenuFormField(
         initialSelection: scope,
         dropdownMenuEntries: [

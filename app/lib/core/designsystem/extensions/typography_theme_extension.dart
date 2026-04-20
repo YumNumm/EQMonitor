@@ -8,7 +8,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'typography_theme_extension.tailor.dart';
 
 const primaryFontFamily = 'Google Sans Flex';
-const codeFontFamily = 'Google Sans Code';
+const codeFontFamily = 'monospace';
 const japaneseFontFamilyFallback = <String>[FontFamily.notoSansJP];
 
 @tailorMixinComponent

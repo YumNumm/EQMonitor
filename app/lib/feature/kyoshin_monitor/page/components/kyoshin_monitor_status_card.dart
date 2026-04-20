@@ -74,7 +74,14 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                         ),
                       ],
                     _ when latestTime != null => [
-                      Flexible(child: Text(dateFormat.format(latestTime))),
+                      Flexible(
+                        child: Text(
+                          dateFormat.format(
+                            latestTime,
+                          ),
+                          style: dateTextStyle,
+                        ),
+                      ),
                     ],
                     _ => [
                       const SizedBox(
