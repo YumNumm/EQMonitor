@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_replay/ui/earthquake_replay_page.da
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
+import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
@@ -135,6 +136,7 @@ class TelegramListByEventIdRoute extends GoRouteData
 @TypedGoRoute<HomeRoute>(
   path: '/',
   routes: [
+    TypedGoRoute<HomeMapLayerRoute>(path: 'map-layer'),
     TypedGoRoute<EewDetailsByEventIdRoute>(
       path: 'eew-details-by-event-id/:eventId',
     ),
@@ -146,6 +148,14 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       const MaterialExtendedPage<void>(child: HomePage());
+}
+
+class HomeMapLayerRoute extends GoRouteData with $HomeMapLayerRoute {
+  const HomeMapLayerRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const HomeMapLayerPage();
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')

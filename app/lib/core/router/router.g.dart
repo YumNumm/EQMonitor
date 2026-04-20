@@ -145,6 +145,10 @@ RouteBase get $homeRoute => GoRouteData.$route(
   factory: $HomeRoute._fromState,
   routes: [
     GoRouteData.$route(
+      path: 'map-layer',
+      factory: $HomeMapLayerRoute._fromState,
+    ),
+    GoRouteData.$route(
       path: 'eew-details-by-event-id/:eventId',
       factory: $EewDetailsByEventIdRoute._fromState,
     ),
@@ -156,6 +160,27 @@ mixin $HomeRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $HomeMapLayerRoute on GoRouteData {
+  static HomeMapLayerRoute _fromState(GoRouterState state) =>
+      const HomeMapLayerRoute();
+
+  @override
+  String get location => GoRouteData.$location('/map-layer');
 
   @override
   void go(BuildContext context) => context.go(location);
