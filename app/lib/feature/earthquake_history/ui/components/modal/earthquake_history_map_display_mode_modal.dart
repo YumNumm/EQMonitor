@@ -207,6 +207,15 @@ class _DisplayModeModalBody extends ConsumerWidget {
               ),
             ),
             SwitchListTile.adaptive(
+              title: const Text('観測点に震度アイコンを表示'),
+              value: config.showIntensityIcon,
+              onChanged: (v) => unawaited(
+                notifier.updateDetailConfig(
+                  config.copyWith(showIntensityIcon: v),
+                ),
+              ),
+            ),
+            SwitchListTile.adaptive(
               title: const Text('震度凡例を表示'),
               value: config.showLegend,
               onChanged: (v) => unawaited(

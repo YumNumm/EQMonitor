@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/periodic_timer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,7 +39,9 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     // Resync timer
     var isResyncing = false;
     final interval = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.requireValue.api.imageFetchInterval),
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.requireValue.api.imageFetchInterval,
+      ),
     );
     ref.listen(
       periodicTimerProvider(
@@ -48,6 +51,14 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
         _,
         next,
       ) async {
+        final lifecycle = ref.read(appLifecycleProvider);
+        if ([
+          AppLifecycleState.paused,
+          AppLifecycleState.detached,
+          AppLifecycleState.inactive,
+        ].contains(lifecycle)) {
+          return;
+        }
         if (isResyncing) {
           return;
         }
@@ -125,9 +136,19 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
 Stream<void> _kyoshinMonitorDelayAdujustTiming(Ref ref) {
   final streamController = StreamController<void>();
   final delayAdjustInterval = ref.watch(
-    kyoshinMonitorSettingsProvider.select((v) => v.requireValue.api.delayAdjustInterval),
+    kyoshinMonitorSettingsProvider.select(
+      (v) => v.requireValue.api.delayAdjustInterval,
+    ),
   );
   ref.listen(periodicTimerProvider(delayAdjustInterval), (previous, next) {
+    final lifecycle = ref.read(appLifecycleProvider);
+    if ([
+      AppLifecycleState.paused,
+      AppLifecycleState.detached,
+      AppLifecycleState.inactive,
+    ].contains(lifecycle)) {
+      return;
+    }
     streamController.add(null);
   });
 

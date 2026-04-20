@@ -110,6 +110,7 @@ class _MapContent extends HookConsumerWidget {
       maxIntensity: earthquake.intensity?.maxIntensity,
       showLabel: config.showStationLabel,
       showingLpgmIntensity: config.showingLpgmIntensity,
+      showIntensityIcon: config.showIntensityIcon,
     );
 
     void openModal(BuildContext ctx) {

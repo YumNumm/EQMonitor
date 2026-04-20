@@ -41,7 +41,8 @@ abstract class EarthquakeHistoryDetailConfig
     IntensityFillMode intensityFillMode,
 
     /// 観測点の表示方法
-    @Default(StationDisplayMode.maxFocused) StationDisplayMode stationDisplayMode,
+    @Default(StationDisplayMode.maxFocused)
+    StationDisplayMode stationDisplayMode,
 
     /// 震央マーカーの表示方法
     @Default(HypocenterDisplayMode.zoomFade)
@@ -61,6 +62,9 @@ abstract class EarthquakeHistoryDetailConfig
 
     /// 長周期地震動階級を表示しているか
     @Default(false) bool showingLpgmIntensity,
+
+    /// 観測点に震度アイコンを重ねて表示するか (v2.6.0 互換)
+    @Default(true) bool showIntensityIcon,
   }) = _EarthquakeHistoryDetailConfig;
 
   factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>

@@ -189,6 +189,9 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
               text: showingLpgmIntensity ? '長周期地震動階級のアイコン' : '震度のアイコン',
             ),
           ),
+          _ShowIntensityIconToggle(
+            showingLpgmIntensity: showingLpgmIntensity,
+          ),
           if (hasLpgmIntensity) ...[
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
@@ -278,6 +281,30 @@ enum _IntensityMode {
 
   const _IntensityMode(this.name);
   final String name;
+}
+
+class _ShowIntensityIconToggle extends ConsumerWidget {
+  const _ShowIntensityIconToggle({required this.showingLpgmIntensity});
+
+  final bool showingLpgmIntensity;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(
+      earthquakeHistoryConfigProvider.select(
+        (value) => value.requireValue.detail,
+      ),
+    );
+    return SwitchListTile.adaptive(
+      title: Text(
+        showingLpgmIntensity ? '観測点に長周期地震動階級アイコンを表示' : '観測点に震度アイコンを表示',
+      ),
+      value: state.showIntensityIcon,
+      onChanged: (v) async => ref
+          .read(earthquakeHistoryConfigProvider.notifier)
+          .updateDetailConfig(state.copyWith(showIntensityIcon: v)),
+    );
+  }
 }
 
 class _IntensityModeSegmentedControl extends StatelessWidget {

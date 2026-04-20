@@ -40,6 +40,15 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
     })
     ..listen(periodicTimerProvider(interval), (_, next) async {
       if (next case AsyncData()) {
+        final lifecycle = ref.read(appLifecycleProvider);
+        final isBackground = [
+          AppLifecycleState.paused,
+          AppLifecycleState.detached,
+          AppLifecycleState.inactive,
+        ].contains(lifecycle);
+        if (isBackground) {
+          return;
+        }
         final delay = ref
             .read(kyoshinMonitorTimerProvider)
             .value

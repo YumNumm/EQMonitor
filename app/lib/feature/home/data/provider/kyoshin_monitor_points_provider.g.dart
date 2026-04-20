@@ -54,18 +54,18 @@ final class KyoshinMonitorObservationGeoJsonProvider
 String _$kyoshinMonitorObservationGeoJsonHash() =>
     r'a445d1ab5ad7b6d0466e9fa3d41d422a62022619';
 
-/// [HomeKyoshinMonitorSettings.minRealtimeShindo] による観測点フィルター適用後の GeoJSON
+/// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の GeoJSON
 
 @ProviderFor(homeKyoshinMonitorObservationGeoJson)
 final homeKyoshinMonitorObservationGeoJsonProvider =
     HomeKyoshinMonitorObservationGeoJsonProvider._();
 
-/// [HomeKyoshinMonitorSettings.minRealtimeShindo] による観測点フィルター適用後の GeoJSON
+/// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の GeoJSON
 
 final class HomeKyoshinMonitorObservationGeoJsonProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
-  /// [HomeKyoshinMonitorSettings.minRealtimeShindo] による観測点フィルター適用後の GeoJSON
+  /// ホーム設定の最低リアルタイム震度による観測点フィルター適用後の GeoJSON
   HomeKyoshinMonitorObservationGeoJsonProvider._()
     : super(
         from: null,
@@ -101,4 +101,4 @@ final class HomeKyoshinMonitorObservationGeoJsonProvider
 }
 
 String _$homeKyoshinMonitorObservationGeoJsonHash() =>
-    r'376998899c6bc66b0c0f24e4580964a699271280';
+    r'fd88ec3165df2fafb00ade8ec5e65760da4ef6c3';

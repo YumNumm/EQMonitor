@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
+import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_notifier.g.dart';
@@ -21,6 +23,14 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         if (ref.read(kyoshinMonitorSettingsProvider).requireValue.useKmoni) {
           await _fetchAndAnalyzeImage(value);
         }
+      }
+    });
+
+    ref.listen(appLifecycleProvider, (previous, next) {
+      if (next == AppLifecycleState.resumed &&
+          previous != null &&
+          previous != AppLifecycleState.resumed) {
+        ref.invalidate(kyoshinMonitorProvider);
       }
     });
 
@@ -83,7 +93,6 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
           layer: realtimeLayer,
           dateTime: targetTime,
         ),
-        flow: Flow.begin(),
       );
       fetchSw.stop();
 
