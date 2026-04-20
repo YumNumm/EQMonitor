@@ -22,7 +22,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     final color = designSystem.color;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
-    final typography = designSystem.typography;
     final homeAsync = ref.watch(homeConfigurationProvider);
     final paramAsync = ref.watch(homeEarthquakeHistoryParameterProvider);
 

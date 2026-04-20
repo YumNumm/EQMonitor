@@ -37,7 +37,7 @@ class HomeEarthquakeList extends StatelessWidget {
                   intensityIconSize: 32,
                   titleTextColor: textColor.primary,
                   descriptionTextColor: textColor.secondary,
-                  magnitudeTextColor: designSystem.palette.brandPrimary,
+                  magnitudeTextColor: textColor.primary,
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                 ),
