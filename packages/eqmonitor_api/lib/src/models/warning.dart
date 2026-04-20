@@ -13,6 +13,7 @@ abstract class Warning with _$Warning {
     required String text,
     required List<String> codes,
   }) = _Warning;
-  
-  factory Warning.fromJson(Map<String, Object?> json) => _$WarningFromJson(json);
+
+  factory Warning.fromJson(Map<String, Object?> json) =>
+      _$WarningFromJson(json);
 }

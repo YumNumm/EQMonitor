@@ -8,13 +8,13 @@ part 'tsunami_estimation_first_height.freezed.dart';
 part 'tsunami_estimation_first_height.g.dart';
 
 @Freezed()
-abstract class TsunamiEstimationFirstHeight with _$TsunamiEstimationFirstHeight {
+abstract class TsunamiEstimationFirstHeight
+    with _$TsunamiEstimationFirstHeight {
   const factory TsunamiEstimationFirstHeight({
-    @JsonKey(name: 'is_already_arrived')
-    required bool isAlreadyArrived,
-    @JsonKey(includeIfNull: false,name: 'arrival_time')
-    DateTime? arrivalTime,
+    @JsonKey(name: 'is_already_arrived') required bool isAlreadyArrived,
+    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
   }) = _TsunamiEstimationFirstHeight;
-  
-  factory TsunamiEstimationFirstHeight.fromJson(Map<String, Object?> json) => _$TsunamiEstimationFirstHeightFromJson(json);
+
+  factory TsunamiEstimationFirstHeight.fromJson(Map<String, Object?> json) =>
+      _$TsunamiEstimationFirstHeightFromJson(json);
 }

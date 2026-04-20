@@ -17,6 +17,7 @@ abstract class ApnsTokenResponse with _$ApnsTokenResponse {
     required String token,
     required Environment environment,
   }) = _ApnsTokenResponse;
-  
-  factory ApnsTokenResponse.fromJson(Map<String, Object?> json) => _$ApnsTokenResponseFromJson(json);
+
+  factory ApnsTokenResponse.fromJson(Map<String, Object?> json) =>
+      _$ApnsTokenResponseFromJson(json);
 }

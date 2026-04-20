@@ -9,7 +9,8 @@ enum EewIntensityRegionArrivalTimeType {
   @JsonValue('TIME')
   time('TIME'),
   @JsonValue('ARRIVED')
-  arrived('ARRIVED');
+  arrived('ARRIVED')
+  ;
 
   const EewIntensityRegionArrivalTimeType(this.json);
 
@@ -17,8 +18,10 @@ enum EewIntensityRegionArrivalTimeType {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

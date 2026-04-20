@@ -10,7 +10,8 @@ enum CoordinateType {
   @JsonValue('LAT_LNG')
   latLng('LAT_LNG'),
   @JsonValue('UNKNOWN')
-  unknown('UNKNOWN');
+  unknown('UNKNOWN')
+  ;
 
   const CoordinateType(this.json);
 
@@ -18,8 +19,10 @@ enum CoordinateType {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

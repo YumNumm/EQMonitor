@@ -13,6 +13,7 @@ abstract class ConflictResponse with _$ConflictResponse {
     required dynamic code,
     required String message,
   }) = _ConflictResponse;
-  
-  factory ConflictResponse.fromJson(Map<String, Object?> json) => _$ConflictResponseFromJson(json);
+
+  factory ConflictResponse.fromJson(Map<String, Object?> json) =>
+      _$ConflictResponseFromJson(json);
 }

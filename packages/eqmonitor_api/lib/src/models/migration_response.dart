@@ -14,6 +14,7 @@ abstract class MigrationResponse with _$MigrationResponse {
   const factory MigrationResponse({
     required MigrationResultResponse migrated,
   }) = _MigrationResponse;
-  
-  factory MigrationResponse.fromJson(Map<String, Object?> json) => _$MigrationResponseFromJson(json);
+
+  factory MigrationResponse.fromJson(Map<String, Object?> json) =>
+      _$MigrationResponseFromJson(json);
 }

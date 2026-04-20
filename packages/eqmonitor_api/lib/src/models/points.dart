@@ -17,10 +17,9 @@ abstract class Points with _$Points {
     required String region,
     required String type,
     required Location location,
-    @JsonKey(includeIfNull: true)
-    required num? intensity,
+    @JsonKey(includeIfNull: true) required num? intensity,
     required num intensityDiff,
   }) = _Points;
-  
+
   factory Points.fromJson(Map<String, Object?> json) => _$PointsFromJson(json);
 }

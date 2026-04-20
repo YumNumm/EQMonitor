@@ -10,13 +10,11 @@ part 'migration_result_response.g.dart';
 @Freezed()
 abstract class MigrationResultResponse with _$MigrationResultResponse {
   const factory MigrationResultResponse({
-    @JsonKey(name: 'earthquake_regions')
-    required num earthquakeRegions,
-    @JsonKey(name: 'eew_regions')
-    required num eewRegions,
-    @JsonKey(name: 'notification_settings')
-    required bool notificationSettings,
+    @JsonKey(name: 'earthquake_regions') required num earthquakeRegions,
+    @JsonKey(name: 'eew_regions') required num eewRegions,
+    @JsonKey(name: 'notification_settings') required bool notificationSettings,
   }) = _MigrationResultResponse;
-  
-  factory MigrationResultResponse.fromJson(Map<String, Object?> json) => _$MigrationResultResponseFromJson(json);
+
+  factory MigrationResultResponse.fromJson(Map<String, Object?> json) =>
+      _$MigrationResultResponseFromJson(json);
 }

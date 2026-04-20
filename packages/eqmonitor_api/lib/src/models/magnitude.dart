@@ -16,9 +16,9 @@ abstract class Magnitude with _$Magnitude {
     required Type3 type,
 
     /// typeがNORMALのときのみ出現する
-    @JsonKey(includeIfNull: false)
-    num? value,
+    @JsonKey(includeIfNull: false) num? value,
   }) = _Magnitude;
-  
-  factory Magnitude.fromJson(Map<String, Object?> json) => _$MagnitudeFromJson(json);
+
+  factory Magnitude.fromJson(Map<String, Object?> json) =>
+      _$MagnitudeFromJson(json);
 }

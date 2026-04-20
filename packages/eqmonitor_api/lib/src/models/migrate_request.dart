@@ -10,9 +10,9 @@ part 'migrate_request.g.dart';
 @Freezed()
 abstract class MigrateRequest with _$MigrateRequest {
   const factory MigrateRequest({
-    @JsonKey(name: 'old_device_id')
-    required String oldDeviceId,
+    @JsonKey(name: 'old_device_id') required String oldDeviceId,
   }) = _MigrateRequest;
-  
-  factory MigrateRequest.fromJson(Map<String, Object?> json) => _$MigrateRequestFromJson(json);
+
+  factory MigrateRequest.fromJson(Map<String, Object?> json) =>
+      _$MigrateRequestFromJson(json);
 }

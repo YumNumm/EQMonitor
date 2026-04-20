@@ -12,12 +12,11 @@ part 'tsunami_earthquake.g.dart';
 @Freezed()
 abstract class TsunamiEarthquake with _$TsunamiEarthquake {
   const factory TsunamiEarthquake({
-    @JsonKey(name: 'origin_time')
-    required DateTime originTime,
+    @JsonKey(name: 'origin_time') required DateTime originTime,
     required Hypocenter hypocenter,
-    @JsonKey(includeIfNull: false,name: 'arrival_time')
-    DateTime? arrivalTime,
+    @JsonKey(includeIfNull: false, name: 'arrival_time') DateTime? arrivalTime,
   }) = _TsunamiEarthquake;
-  
-  factory TsunamiEarthquake.fromJson(Map<String, Object?> json) => _$TsunamiEarthquakeFromJson(json);
+
+  factory TsunamiEarthquake.fromJson(Map<String, Object?> json) =>
+      _$TsunamiEarthquakeFromJson(json);
 }

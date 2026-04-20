@@ -9,9 +9,11 @@ enum IsCanceled {
   /// The name has been replaced because it contains a keyword. Original name: `true`.
   @JsonValue('true')
   valueTrue('true'),
+
   /// The name has been replaced because it contains a keyword. Original name: `false`.
   @JsonValue('false')
-  valueFalse('false');
+  valueFalse('false')
+  ;
 
   const IsCanceled(this.json);
 
@@ -19,8 +21,10 @@ enum IsCanceled {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

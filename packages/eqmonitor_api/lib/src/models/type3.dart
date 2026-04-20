@@ -11,7 +11,8 @@ enum Type3 {
   @JsonValue('UNKNOWN')
   unknown('UNKNOWN'),
   @JsonValue('OVER_M8')
-  overM8('OVER_M8');
+  overM8('OVER_M8')
+  ;
 
   const Type3(this.json);
 
@@ -19,8 +20,10 @@ enum Type3 {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

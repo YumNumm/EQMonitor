@@ -11,7 +11,8 @@ enum FirstHeightCondition {
   @JsonValue('FIRST_WAVE_CONFIRMED')
   firstWaveConfirmed('FIRST_WAVE_CONFIRMED'),
   @JsonValue('IMMINENT')
-  imminent('IMMINENT');
+  imminent('IMMINENT')
+  ;
 
   const FirstHeightCondition(this.json);
 
@@ -19,8 +20,10 @@ enum FirstHeightCondition {
   String toJson() {
     final value = json;
     if (value == null) {
-      throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+      throw StateError(
+        'Cannot convert enum value with null JSON representation to String. '
+        'This usually happens for \$unknown or @JsonValue(null) entries.',
+      );
     }
     return value as String;
   }

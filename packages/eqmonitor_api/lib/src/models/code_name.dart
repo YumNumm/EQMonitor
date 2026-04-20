@@ -14,6 +14,7 @@ abstract class CodeName with _$CodeName {
     required String code,
     required String name,
   }) = _CodeName;
-  
-  factory CodeName.fromJson(Map<String, Object?> json) => _$CodeNameFromJson(json);
+
+  factory CodeName.fromJson(Map<String, Object?> json) =>
+      _$CodeNameFromJson(json);
 }

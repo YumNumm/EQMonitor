@@ -13,6 +13,7 @@ abstract class BottomRight with _$BottomRight {
     required num latitude,
     required num longitude,
   }) = _BottomRight;
-  
-  factory BottomRight.fromJson(Map<String, Object?> json) => _$BottomRightFromJson(json);
+
+  factory BottomRight.fromJson(Map<String, Object?> json) =>
+      _$BottomRightFromJson(json);
 }

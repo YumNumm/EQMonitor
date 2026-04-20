@@ -13,11 +13,10 @@ part 'tsunami_observation.g.dart';
 abstract class TsunamiObservation with _$TsunamiObservation {
   const factory TsunamiObservation({
     required List<TsunamiObservationStation> stations,
-    @JsonKey(includeIfNull: false)
-    String? code,
-    @JsonKey(includeIfNull: false)
-    String? name,
+    @JsonKey(includeIfNull: false) String? code,
+    @JsonKey(includeIfNull: false) String? name,
   }) = _TsunamiObservation;
-  
-  factory TsunamiObservation.fromJson(Map<String, Object?> json) => _$TsunamiObservationFromJson(json);
+
+  factory TsunamiObservation.fromJson(Map<String, Object?> json) =>
+      _$TsunamiObservationFromJson(json);
 }

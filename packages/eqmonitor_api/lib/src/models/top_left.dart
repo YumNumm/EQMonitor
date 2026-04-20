@@ -13,6 +13,7 @@ abstract class TopLeft with _$TopLeft {
     required num latitude,
     required num longitude,
   }) = _TopLeft;
-  
-  factory TopLeft.fromJson(Map<String, Object?> json) => _$TopLeftFromJson(json);
+
+  factory TopLeft.fromJson(Map<String, Object?> json) =>
+      _$TopLeftFromJson(json);
 }
