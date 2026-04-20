@@ -4,13 +4,11 @@ import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
-  final resolvedColorScheme =
-      colorScheme ??
-      const ColorScheme.light().copyWith(
-        primary: const Color(0xFF2F6FE4),
-      );
-  final designSystem = resolvedColorScheme.brightness == Brightness.dark
+ThemeData buildTheme({
+  required ColorScheme colorScheme,
+  required CustomColors customColors,
+}) {
+  final designSystem = colorScheme.brightness == Brightness.dark
       ? DesignSystemThemeExtension.dark()
       : DesignSystemThemeExtension.light();
   final color = designSystem.color;
@@ -19,7 +17,7 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
   final shape = designSystem.shape;
 
   return ThemeData(
-    colorScheme: resolvedColorScheme,
+    colorScheme: colorScheme,
     scaffoldBackgroundColor: color.backgroundDefault,
     cardColor: color.surfaceDefault,
     dialogTheme: DialogThemeData(
@@ -33,7 +31,10 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
         borderRadius: BorderRadius.circular(shape.card),
       ),
     ),
-    extensions: [designSystem, ?customColors],
+    extensions: [
+      designSystem,
+      customColors,
+    ],
     useMaterial3: true,
     textTheme: TextTheme(
       displayLarge: typography.displayLarge,
@@ -54,9 +55,9 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
     fontFamily: primaryFontFamily,
     fontFamilyFallback: japaneseFontFamilyFallback,
     cupertinoOverrideTheme: CupertinoThemeData(
-      brightness: resolvedColorScheme.brightness,
+      brightness: colorScheme.brightness,
       applyThemeToAll: true,
-      primaryColor: resolvedColorScheme.primary,
+      primaryColor: colorScheme.primary,
       scaffoldBackgroundColor: color.surfaceDefault,
       barBackgroundColor: color.surfaceDefault,
     ),
@@ -85,22 +86,17 @@ ThemeData buildTheme({ColorScheme? colorScheme, CustomColors? customColors}) {
 }
 
 CupertinoThemeData buildCupertinoTheme({
-  ColorScheme? colorScheme,
-  CustomColors? customColors,
+  required ColorScheme colorScheme,
+  required CustomColors customColors,
 }) {
-  final resolvedColorScheme =
-      colorScheme ??
-      const ColorScheme.light().copyWith(
-        primary: const Color(0xFF2F6FE4),
-      );
-  final designSystem = resolvedColorScheme.brightness == Brightness.dark
+  final designSystem = colorScheme.brightness == Brightness.dark
       ? DesignSystemThemeExtension.dark()
       : DesignSystemThemeExtension.light();
 
   return CupertinoThemeData(
-    brightness: resolvedColorScheme.brightness,
+    brightness: colorScheme.brightness,
     applyThemeToAll: true,
-    primaryColor: resolvedColorScheme.primary,
+    primaryColor: colorScheme.primary,
     scaffoldBackgroundColor: designSystem.color.surfaceDefault,
     barBackgroundColor: designSystem.color.surfaceDefault,
   );
