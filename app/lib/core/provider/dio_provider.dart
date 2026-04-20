@@ -43,6 +43,8 @@ Future<Dio> dio(Ref ref) async {
         errorPen: AnsiPen()..red(),
         requestPen: AnsiPen()..yellow(),
         responsePen: AnsiPen()..green(),
+        printRequestHeaders: true,
+        hiddenHeaders: {'X-Firebase-AppCheck'},
         printResponseData: false,
         printErrorMessage: false,
       ),

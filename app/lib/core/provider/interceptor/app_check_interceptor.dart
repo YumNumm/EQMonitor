@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 class AppCheckInterceptor extends Interceptor {
-  static const _headerName = 'X-EQMonitor-Device-Check';
+  /// Firebase / バックエンドが検証する標準ヘッダー（REST カスタムリソースと同じ）。
+  static const _headerName = 'X-Firebase-AppCheck';
   static final _deviceUpsertPattern = RegExp(r'/v2/device/[^/]+$');
 
   @override
@@ -30,7 +31,11 @@ class AppCheckInterceptor extends Interceptor {
   }
 
   bool _requiresAppCheck(RequestOptions options) {
-    return options.method == 'GET' &&
-        options.path.contains('/v2/websocket/ticket');
+    if (options.method != 'GET') {
+      return false;
+    }
+    final path = options.path;
+    return path.contains('/v2/websocket/ticket') ||
+        path.contains('/v2/realtime/stream');
   }
 }
