@@ -17,6 +17,8 @@ import '../models/fcm_token_request.dart';
 import '../models/fcm_token_response.dart';
 import '../models/live_activity_token_request.dart';
 import '../models/live_activity_token_response.dart';
+import '../models/migrate_request.dart';
+import '../models/migration_response.dart';
 import '../models/notification_settings_request.dart';
 import '../models/notification_settings_response.dart';
 import '../models/region_setting_patch_request.dart';
@@ -245,6 +247,13 @@ abstract class DeviceApiClient {
   Future<HttpResponse<List<ShakeDetectionSubRegionResponse>>> getV2DeviceDeviceIdSettingsShakeDetectionSubRegions({
     @Path('deviceId') required String deviceId,
   });
+
+  /// 旧 Supabase のデバイス設定を新 DB に移行
+  @POST(DeviceApiClientUrls.postV2DeviceDeviceIdMigrate)
+  Future<HttpResponse<MigrationResponse>> postV2DeviceDeviceIdMigrate({
+    @Path('deviceId') required String deviceId,
+    @Body() required MigrateRequest body,
+  });
 }
 
 
@@ -313,5 +322,7 @@ abstract class DeviceApiClientUrls {
 	static const putV2DeviceDeviceIdSettingsShakeDetection = "/v2/device/{deviceId}/settings/shake-detection";
 	/// /v2/device/{deviceId}/settings/shake-detection/sub-regions
 	static const getV2DeviceDeviceIdSettingsShakeDetectionSubRegions = "/v2/device/{deviceId}/settings/shake-detection/sub-regions";
+	/// /v2/device/{deviceId}/migrate
+	static const postV2DeviceDeviceIdMigrate = "/v2/device/{deviceId}/migrate";
 }
 

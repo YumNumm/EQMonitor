@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/interceptor/app_check_interceptor.dart';
+import 'package:eqmonitor/core/provider/interceptor/device_id_interceptor.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -16,6 +18,7 @@ part 'dio_provider.g.dart';
 Future<Dio> dio(Ref ref) async {
   final package = ref.watch(packageInfoProvider);
   final telegramUrl = await ref.watch(telegramUrlProvider.future);
+  final deviceId = await ref.watch(deviceIdProvider.future);
 
   final dio = Dio(
     BaseOptions(
@@ -32,9 +35,8 @@ Future<Dio> dio(Ref ref) async {
       listFormat: ListFormat.multiCompatible,
     ),
   );
-  dio.interceptors.add(
-    AppCheckInterceptor(),
-  );
+  dio.interceptors.add(AppCheckInterceptor());
+  dio.interceptors.add(DeviceIdInterceptor(deviceId: deviceId));
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(

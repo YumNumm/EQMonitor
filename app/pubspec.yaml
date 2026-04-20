@@ -150,6 +150,8 @@ dependencies:
   uuid: ^4.5.1
   version: ^3.0.2
   web_socket_client: ^0.2.1
+  workflows:
+    path: ../packages/workflows
 
 dev_dependencies:
   altive_lints: ^2.1.0

@@ -1939,6 +1939,97 @@
         ]
       }
     },
+    "/v2/device/{deviceId}/migrate": {
+      "post": {
+        "operationId": "postV2DeviceByDeviceIdMigrate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MigrateRequest"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Device"
+        ],
+        "description": "旧 Supabase のデバイス設定を新 DB に移行",
+        "responses": {
+          "200": {
+            "description": "移行結果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "旧デバイスが見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "既にマイグレーション済み",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "deviceId",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v2/device/{deviceId}/notification/history": {
       "get": {
         "operationId": "getV2DeviceByDeviceIdNotificationHistory",
@@ -5586,6 +5677,63 @@
           "id",
           "code",
           "name"
+        ]
+      },
+      "MigrateRequest": {
+        "type": "object",
+        "properties": {
+          "old_device_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "old_device_id"
+        ]
+      },
+      "MigrationResultResponse": {
+        "type": "object",
+        "properties": {
+          "earthquake_regions": {
+            "type": "number"
+          },
+          "eew_regions": {
+            "type": "number"
+          },
+          "notification_settings": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "earthquake_regions",
+          "eew_regions",
+          "notification_settings"
+        ]
+      },
+      "MigrationResponse": {
+        "type": "object",
+        "properties": {
+          "migrated": {
+            "$ref": "#/components/schemas/MigrationResultResponse"
+          }
+        },
+        "required": [
+          "migrated"
+        ]
+      },
+      "ConflictResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "const": "CONFLICT"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
         ]
       },
       "NotificationLogItem": {

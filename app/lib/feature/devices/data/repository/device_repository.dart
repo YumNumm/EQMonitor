@@ -11,6 +11,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_repository.g.dart';
 
+// 409: already migrated — treat as idempotent success
+const _kMigratedStatus = 409;
+
 @Riverpod(keepAlive: true)
 Future<DeviceRepository> deviceRepository(Ref ref) async =>
     DeviceRepository(await ref.watch(apiClientProvider.future));
@@ -55,6 +58,53 @@ class DeviceRepository {
         }
         return Failure(exception, stackTrace);
     }
+  }
+
+  /// Migrates settings from a v2.6 Supabase device to this v3 device.
+  ///
+  /// Sequence (per spec):
+  /// 1. GET device — if 200 it already exists, skip PUT.
+  /// 2. PUT device  — only when step 1 returned 404.
+  /// 3. POST /migrate with [oldDeviceId].
+  ///
+  /// 409 on migrate is treated as idempotent success (already migrated).
+  Future<Result<void, Exception>> migrateFromLegacy({
+    required String deviceId,
+    required String oldDeviceId,
+  }) async {
+    // Step 1 — check existence
+    final getResult = await getDevice(deviceId);
+    final alreadyRegistered = switch (getResult) {
+      Success() => true,
+      Failure(:final exception) when _isNotFound(exception) => false,
+      Failure() => null, // unexpected error
+    };
+    if (alreadyRegistered == null) {
+      return getResult as Failure<void, Exception>;
+    }
+
+    // Step 2 — register only when absent
+    if (!alreadyRegistered) {
+      final putResult = await registerDevice(deviceId);
+      if (putResult is Failure<RegisteredDevice, Exception>) {
+        return Failure(putResult.exception, putResult.stackTrace);
+      }
+    }
+
+    // Step 3 — migrate legacy settings
+    return Result.capture(() async {
+      try {
+        await _api.device.postV2DeviceDeviceIdMigrate(
+          deviceId: deviceId,
+          body: api.MigrateRequest(oldDeviceId: oldDeviceId),
+        );
+      } on DioException catch (e) {
+        if (e.response?.statusCode == _kMigratedStatus) {
+          return; // idempotent
+        }
+        rethrow;
+      }
+    });
   }
 
   Future<Result<void, Exception>> syncPushTokens({
