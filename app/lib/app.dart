@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -54,15 +55,15 @@ class App extends HookConsumerWidget {
             brightness: Brightness.dark,
           );
         }
-        return MaterialApp.router(
+        return AdaptiveApp.router(
           title: 'EQMonitor',
           themeMode: theme.value,
           routerConfig: routerConfig,
-          theme: buildTheme(
+          materialLightTheme: buildTheme(
             colorScheme: lightColorScheme,
             customColors: lightCustomColors,
           ),
-          darkTheme: buildTheme(
+          materialDarkTheme: buildTheme(
             colorScheme: darkColorScheme,
             customColors: darkCustomColors,
           ),
