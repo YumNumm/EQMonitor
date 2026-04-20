@@ -1,8 +1,9 @@
 import 'package:cue/cue.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class AppSwitch extends StatelessWidget {
+class AppSwitch extends HookWidget {
   const AppSwitch({
     required this.value,
     required this.onChanged,
@@ -14,6 +15,7 @@ class AppSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pressed = useState(false);
     final designSystem = context.designSystem;
     final color = designSystem.color;
     final shape = designSystem.shape;
@@ -35,88 +37,122 @@ class AppSwitch extends StatelessWidget {
         toggled: value,
         child: Material(
           color: Colors.transparent,
-          child: InkResponse(
-            containedInkWell: true,
-            highlightShape: BoxShape.rectangle,
-            radius: 28,
-            borderRadius: BorderRadius.circular(shape.pill),
-            onTap: isEnabled ? () => onChanged?.call(!value) : null,
-            child: Cue.onToggle(
-              toggled: value,
-              motion: const .smooth(),
-              reverseMotion: const .snappy(),
-              child: SizedBox(
-                width: 60,
-                height: 36,
-                child: Actor(
-                  acts: [
-                    .decorate(
-                      color: .tween(
-                        color.surfaceCard,
-                        color.surfaceEmphasis,
-                      ),
-                      borderRadius: .fixed(
-                        BorderRadius.circular(shape.pill),
-                      ),
-                      border: .tween(
-                        Border.all(
-                          color: color.outlineSoft,
-                          width: 2,
+          child: Listener(
+            onPointerDown: isEnabled
+                ? (_) {
+                    pressed.value = true;
+                  }
+                : null,
+            onPointerUp: isEnabled
+                ? (_) {
+                    pressed.value = false;
+                  }
+                : null,
+            onPointerCancel: isEnabled
+                ? (_) {
+                    pressed.value = false;
+                  }
+                : null,
+            child: InkResponse(
+              containedInkWell: true,
+              highlightShape: BoxShape.rectangle,
+              radius: 28,
+              borderRadius: BorderRadius.circular(shape.pill),
+              onTap: isEnabled ? () => onChanged?.call(!value) : null,
+              child: Cue.onToggle(
+                toggled: value,
+                motion: const .smooth(),
+                reverseMotion: const .snappy(),
+                child: SizedBox(
+                  width: 60,
+                  height: 36,
+                  child: Actor(
+                    acts: [
+                      .decorate(
+                        color: .tween(
+                          color.surfaceCard,
+                          color.surfaceEmphasis,
                         ),
-                        Border.all(
-                          color: theme.colorScheme.primary.withValues(
-                            alpha: 0.5,
+                        borderRadius: .fixed(
+                          BorderRadius.circular(shape.pill),
+                        ),
+                        border: .tween(
+                          Border.all(
+                            color: color.outlineSoft,
+                            width: 2,
                           ),
-                          width: 0,
+                          Border.all(
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.5,
+                            ),
+                            width: 0,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Actor(
-                      acts: const [
-                        .align(
-                          from: Alignment.centerLeft,
-                          to: Alignment.centerRight,
-                        ),
-                      ],
+                    ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
                       child: Actor(
                         acts: const [
-                          .scale(
-                            from: 0.92,
-                            motion: .bouncy(),
+                          .align(
+                            from: Alignment.centerLeft,
+                            to: Alignment.centerRight,
                           ),
                         ],
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: value ? onThumbColor : offThumbColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.16),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
+                        child: Cue.onToggle(
+                          toggled: pressed.value,
+                          motion: const .snappy(),
+                          reverseMotion: const .snappy(),
+                          child: Actor(
+                            acts: const [
+                              .scale(
+                                from: 1,
+                                to: 1.12,
                               ),
                             ],
-                          ),
-                          child: SizedBox.square(
-                            dimension: 28,
-                            child: Center(
-                              child: Cue.onToggle(
-                                toggled: value,
-                                motion: const .snappy(),
-                                reverseMotion: const .snappy(),
-                                acts: const [
-                                  .scale(from: 0.6),
-                                  .fadeIn(from: 0.3),
-                                ],
-                                child: Icon(
-                                  value
-                                      ? Icons.check_rounded
-                                      : Icons.close_rounded,
-                                  size: 16,
-                                  color: value ? onIconColor : offIconColor,
+                            child: Actor(
+                              acts: const [
+                                .scale(
+                                  from: 0.92,
+                                  motion: .bouncy(),
+                                ),
+                              ],
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: value ? onThumbColor : offThumbColor,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.16,
+                                      ),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: SizedBox.square(
+                                  dimension: 28,
+                                  child: Center(
+                                    child: Cue.onToggle(
+                                      toggled: value,
+                                      motion: const .snappy(),
+                                      reverseMotion: const .snappy(),
+                                      acts: const [
+                                        .scale(from: 0.6),
+                                        .fadeIn(from: 0.3),
+                                      ],
+                                      child: Icon(
+                                        value
+                                            ? Icons.check_rounded
+                                            : Icons.close_rounded,
+                                        size: 16,
+                                        color: value
+                                            ? onIconColor
+                                            : offIconColor,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
