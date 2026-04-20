@@ -90,10 +90,10 @@ class _SheetBody extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(
-                spacing.lg,
                 spacing.sm,
-                spacing.lg,
-                spacing.xxl,
+                spacing.sm,
+                spacing.sm,
+                spacing.sm,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
