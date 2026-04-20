@@ -271,11 +271,28 @@ jobs:
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
           git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
 
-          # Android Firebase デプロイと同様（最大2000文字）
-          head -c 2000 changelog.tmp > changelog.txt
-          if [ "$(wc -c < changelog.tmp)" -gt 2000 ]; then
-            echo '...' >> changelog.txt
-          fi
+          # altool 向けに最大 2000 バイト（head -c は UTF-8 の途中で切れて read_text が失敗するため境界で切る）
+          python3 << 'PY'
+          from pathlib import Path
+
+          def truncate_utf8_bytes(data: bytes, limit: int) -> bytes:
+              if len(data) <= limit:
+                  return data
+              cut = data[:limit]
+              while cut:
+                  try:
+                      cut.decode("utf-8")
+                      return cut
+                  except UnicodeDecodeError:
+                      cut = cut[:-1]
+              return b""
+
+          tmp = Path("changelog.tmp").read_bytes()
+          clipped = truncate_utf8_bytes(tmp, 2000)
+          if len(clipped) < len(tmp):
+              clipped += b"\n..."
+          Path("changelog.txt").write_bytes(clipped)
+          PY
 
           # altool の beta テキストは "whatsNew" = "..."; 形式（README 参照）。日本語は ja.txt。
           BETA_TEXT_DIR="build/beta-app-store-text/beta-${APPLE_ID}/upload/IOS"
