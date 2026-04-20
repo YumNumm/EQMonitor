@@ -627,18 +627,18 @@ packages:
     dependency: transitive
     description:
       name: flutter_gen_core
-      sha256: "22b3198a4cb1255841a3662b41adad35d36d9037fcd9d129858240030417e0b1"
+      sha256: "454ec926fd0758667615942032e1e5308d240e309627bdf3f2bf55b17d54b23e"
       url: "https://pub.dev"
     source: hosted
-    version: "5.13.0+1"
+    version: "5.14.0"
   flutter_gen_runner:
     dependency: transitive
     description:
       name: flutter_gen_runner
-      sha256: "83fd55f5472a955725c5912819847e9770c4f295cd0ae4bdd26d99853f8a6546"
+      sha256: "2c926ab58103ea483963df9a000031e11958c7f4d1065ab021adc6829d9f6ddc"
       url: "https://pub.dev"
     source: hosted
-    version: "5.13.0+1"
+    version: "5.14.0"
   flutter_hooks:
     dependency: transitive
     description:
@@ -995,18 +995,18 @@ packages:
     dependency: transitive
     description:
       name: go_router
-      sha256: "5540e4a3f416dd4a93458257b908eb88353cbd0fb5b0a3d1bd7d849ba1e88735"
+      sha256: "08b742eef4f71c9df5af543751cd0b7f1c679c4088488f4223ecaddc1a813b79"
       url: "https://pub.dev"
     source: hosted
-    version: "17.2.1"
+    version: "17.2.2"
   go_router_builder:
     dependency: transitive
     description:
       name: go_router_builder
-      sha256: c9bfc336012b98096023e606e39ec8848858ba8ad3a8540e20b4a0e7cbe89140
+      sha256: "52c0403e3fc80db4058d44088f28227f4ecf046f9b8ccbea0e325d3c7b4bb7f5"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.1"
+    version: "4.3.0"
   google_api_availability:
     dependency: transitive
     description:
@@ -2047,10 +2047,10 @@ packages:
     dependency: transitive
     description:
       name: synchronized
-      sha256: c254ade258ec8282947a0acbbc90b9575b4f19673533ee46f2f6e9b3aeefd7c0
+      sha256: "63896c27e81b28f8cb4e69ead0d3e8f03f1d1e5fc531a3e579cabed6a2c7c9e5"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.0"
+    version: "3.4.0+1"
   talker:
     dependency: transitive
     description:
@@ -2167,10 +2167,10 @@ packages:
     dependency: transitive
     description:
       name: upgrader
-      sha256: abc25eb28c7df3815ce35f1cd2ac9e50d159c85d80dd3eaf7b2b5bfadc59fc05
+      sha256: b214edae773d70b76f926b49ec94958da818425065ea80901529f08afde6ca81
       url: "https://pub.dev"
     source: hosted
-    version: "13.0.0"
+    version: "13.1.0"
   url_launcher:
     dependency: transitive
     description:
