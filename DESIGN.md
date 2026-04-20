@@ -259,12 +259,25 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - 二次 CTA は `FilledButton.tonal` または `OutlinedButton` を使う。
 - 破壊的操作は赤い塗りボタンを乱用せず、通常はトーナルまたはテキストボタンで確認導線を挟む。
 - ボタン内文字は `labelLarge` を使う。
+- プラットフォーム差を自然に吸収したい操作部品では [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) を優先し、`AdaptiveButton` を第一候補とする。
 
 ## Segmented controls and chips
 
 - モード切り替え、表示種別切り替え、フィルタ切り替えにはセグメント UI を使う。
 - 最大 3 から 4 選択肢までを推奨する。それ以上はメニューや別画面に分離する。
 - 選択中は背景と文字色の両方で状態を示す。
+- セグメント UI は `SegmentedButton` や `CupertinoSlidingSegmentedControl` を個別に直接使い分けるのではなく、原則として [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) の `AdaptiveSegmentedControl` を利用する。
+
+## Dialogs, feedback, and platform-adaptive controls
+
+- すべての `AlertDialog` / `CupertinoAlertDialog` 相当の確認ダイアログは、原則として [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) の `AdaptiveAlertDialog` を利用する。
+- 一時的な通知は `SnackBar` を直接使わず、原則として `AdaptiveSnackBar` を利用する。
+- 長押しメニューや文脈依存アクションは `AdaptiveContextMenu` を優先する。
+- 日付選択は `AdaptiveDatePicker`、時刻選択は `AdaptiveTimePicker` を標準とする。
+- チェックボックス、スライダー、ラジオ、セグメント、スイッチなど、プラットフォーム差が体験に影響しやすい入力部品は `AdaptiveCheckbox`, `AdaptiveSlider`, `AdaptiveRadio`, `AdaptiveSegmentedControl`, `AdaptiveSwitch` を優先する。
+- テキスト入力は `TextField` / `CupertinoTextField` / `TextFormField` を直接使い分けるのではなく、原則として `AdaptiveTextField` と `AdaptiveTextFormField` を利用する。
+- フォームのグルーピングには `AdaptiveFormSection` を使い、iOS では `CupertinoFormSection` らしいまとまり、Android では Material 的なカードグループとして見せる。
+- 例外的に純正 Material / Cupertino ウィジェットを直接使う場合は、`adaptive_platform_ui` で満たせない要件があるときに限る。
 
 ## Onboarding and welcome screens
 
@@ -320,6 +333,9 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - 設定行、カード、シートは `ListTile`, `Card`, `BottomSheet`, `SegmentedButton` をベースにしてもよいが、余白と shape はこのドキュメントに合わせて調整する。
 - 読み込み中 UI は [`skeletonizer`](https://pub.dev/packages/skeletonizer) を標準採用とし、`Skeletonizer`, `Skeletonizer.sliver`, annotation 群を用いて既存レイアウトから skeleton を生成する。
 - Skeleton 用の fake data が必要なケースでは、本番レイアウトを崩さない最小限のダミーデータを用意し、`NetworkImage` などは `Skeleton.replace` や条件分岐で安全に扱う。
+- プラットフォーム適応が必要な UI 部品は [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) を標準採用とする。特に `AdaptiveAlertDialog`, `AdaptiveCheckbox`, `AdaptiveSlider`, `AdaptiveSegmentedControl`, `AdaptiveRadio`, `AdaptiveSnackBar`, `AdaptiveContextMenu`, `AdaptiveDatePicker`, `AdaptiveTimePicker`, `AdaptiveTextField`, `AdaptiveTextFormField`, `AdaptiveFormSection` を優先する。
+- `AlertDialog`, `CupertinoAlertDialog`, `SnackBar`, `showDatePicker`, `showTimePicker`, `TextField`, `TextFormField`, `CupertinoTextField` を新規実装で直接使うのは原則避け、adaptive なラッパーを優先する。
+- `adaptive_platform_ui` を使う画面では、日付・時刻・ボタン文言のローカライズが崩れないよう localization delegates を正しく設定する。
 
 # Do's and Don'ts
 

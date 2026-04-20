@@ -3,7 +3,6 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 /// 強震モニタの設定状況を考慮したスケールカード
 class KyoshinMonitorScaleCard extends ConsumerWidget {
@@ -19,16 +18,16 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
       ),
     );
     final type = switch (realtimeDataType) {
-      RealtimeDataType.shindo => KyoshinMonitorScaleType.intensity,
-      RealtimeDataType.pga => KyoshinMonitorScaleType.pga,
-      RealtimeDataType.pgv ||
-      RealtimeDataType.response0125Hz ||
-      RealtimeDataType.response025Hz ||
-      RealtimeDataType.response05Hz ||
-      RealtimeDataType.response1Hz ||
-      RealtimeDataType.response2Hz ||
-      RealtimeDataType.response4Hz => KyoshinMonitorScaleType.pgv,
-      RealtimeDataType.pgd => KyoshinMonitorScaleType.pgd,
+      .shindo => KyoshinMonitorScaleType.intensity,
+      .pga => KyoshinMonitorScaleType.pga,
+      .pgv ||
+      .response0125Hz ||
+      .response025Hz ||
+      .response05Hz ||
+      .response1Hz ||
+      .response2Hz ||
+      .response4Hz => KyoshinMonitorScaleType.pgv,
+      .pgd => KyoshinMonitorScaleType.pgd,
       _ => throw ArgumentError('Invalid realtimeDataType: $realtimeDataType)'),
     };
     final designSystem = context.designSystem;
