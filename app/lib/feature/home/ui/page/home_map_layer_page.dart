@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_hero_illustration.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_bounds_selector_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
@@ -95,6 +96,8 @@ class HomeMapLayerPage extends HookConsumerWidget {
                           '緊急地震速報、現在地、強震モニタ、地図の表示範囲をひとつのページで調整できます。',
                           style: typography.bodyMedium,
                         ),
+                        SizedBox(height: spacing.xl),
+                        const HomeMapLayerHeroIllustration(),
                       ],
                     ),
                   ),
