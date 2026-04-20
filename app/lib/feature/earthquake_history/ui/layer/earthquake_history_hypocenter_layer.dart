@@ -70,8 +70,6 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
               ),
             );
 
-            final opacityExpression = _buildOpacityExpression(displayMode);
-
             await styleController.addLayer(
               SymbolStyleLayer(
                 id: _layerId,
@@ -91,7 +89,18 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
                   ],
                 },
                 paint: {
-                  'icon-opacity': opacityExpression,
+                  'icon-opacity': switch (displayMode) {
+                    .zoomFade =>
+                      // 低ズームでは非表示、ズームインで半透明表示
+                      [
+                        'step',
+                        ['zoom'],
+                        1.0,
+                        8,
+                        0.6,
+                      ],
+                    .alwaysOpaque || .belowStations => 1.0,
+                  },
                 },
               ),
             );
@@ -113,24 +122,5 @@ class EarthquakeHistoryHypocenterLayer extends HookConsumerWidget {
     );
 
     return const SizedBox.shrink();
-  }
-
-  static Object _buildOpacityExpression(HypocenterDisplayMode mode) {
-    switch (mode) {
-      case HypocenterDisplayMode.zoomFade:
-        // 低ズームでは非表示、ズームインで半透明表示
-        return [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          5,
-          0.0,
-          8,
-          0.6,
-        ];
-      case HypocenterDisplayMode.alwaysOpaque:
-      case HypocenterDisplayMode.belowStations:
-        return 1.0;
-    }
   }
 }

@@ -27,6 +27,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     useEffect(
       () {
@@ -41,7 +42,10 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
               return;
             }
 
-            final polygon = hypocenterErrorPolygon(coords.latitude, coords.longitude);
+            final polygon = hypocenterErrorPolygon(
+              coords.latitude,
+              coords.longitude,
+            );
 
             await styleController.addSource(
               GeoJsonSource(
@@ -63,14 +67,23 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
             );
 
             await styleController.addLayer(
-              const LineStyleLayer(
+              LineStyleLayer(
                 id: _layerId,
                 sourceId: _sourceId,
                 paint: {
-                  'line-color': '#ffffff',
+                  'line-color': isDark ? '#ffffff' : '#000000',
+                  'line-cap': 'round',
+                  'line-join': 'round',
                   'line-width': 1.5,
+                  'line-blur': 0.2,
                   'line-dasharray': [4, 2],
-                  'line-opacity': 0.8,
+                  'line-opacity': [
+                    'step',
+                    ['zoom'],
+                    0.0,
+                    8,
+                    1.0,
+                  ],
                 },
               ),
             );
@@ -88,7 +101,7 @@ class EarthquakeHistoryHypocenterErrorLayer extends HookConsumerWidget {
           }
         };
       },
-      [styleController, earthquake],
+      [styleController, earthquake, isDark],
     );
 
     return const SizedBox.shrink();
