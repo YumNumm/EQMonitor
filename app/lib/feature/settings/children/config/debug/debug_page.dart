@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
@@ -20,9 +21,9 @@ class DebugPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Debug Page')),
-      body: const _DebugWidget(),
+    return const AdaptiveScaffold(
+      appBar: AdaptiveAppBar(title: 'Debug Page'),
+      body: _DebugWidget(),
     );
   }
 }
@@ -40,12 +41,17 @@ class _DebugWidget extends ConsumerWidget {
       dense: true,
       child: ListView(
         children: [
-          SwitchListTile(
+          ListTile(
             title: const Text('デバッグモード'),
             subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
-            value: isDebugEnabled,
-            onChanged: (value) async =>
-                ref.read(debugProvider.notifier).save(isEnabled: value),
+            trailing: AdaptiveSwitch(
+              value: isDebugEnabled,
+              onChanged: (value) async =>
+                  ref.read(debugProvider.notifier).save(isEnabled: value),
+            ),
+            onTap: () async => ref
+                .read(debugProvider.notifier)
+                .save(isEnabled: !isDebugEnabled),
           ),
           ListTile(
             title: const Text('Flavor'),

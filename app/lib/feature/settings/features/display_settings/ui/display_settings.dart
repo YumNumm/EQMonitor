@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -12,9 +13,9 @@ class DisplaySettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('表示設定')),
-      body: const _Body(),
+    return const AdaptiveScaffold(
+      appBar: AdaptiveAppBar(title: '表示設定'),
+      body: _Body(),
     );
   }
 }
@@ -130,14 +131,26 @@ class _ThemeSelector extends ConsumerWidget {
               child: choice,
             ),
           ),
-          SwitchListTile.adaptive(
+          ListTile(
             visualDensity: VisualDensity.compact,
             title: const Text('システム設定に従う'),
-            value: state == ThemeMode.system,
-            onChanged: (value) async => ref
+            trailing: AdaptiveSwitch(
+              value: state == ThemeMode.system,
+              onChanged: (value) async => ref
+                  .read(themeModeProvider.notifier)
+                  .setThemeMode(
+                    value
+                        ? ThemeMode.system
+                        : PlatformDispatcher.instance.platformBrightness ==
+                              Brightness.light
+                        ? ThemeMode.light
+                        : ThemeMode.dark,
+                  ),
+            ),
+            onTap: () async => ref
                 .read(themeModeProvider.notifier)
                 .setThemeMode(
-                  value
+                  state != ThemeMode.system
                       ? ThemeMode.system
                       : PlatformDispatcher.instance.platformBrightness ==
                             Brightness.light

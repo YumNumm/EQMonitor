@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -13,8 +14,8 @@ class EarthquakeHistoryConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('地震履歴設定')),
+    return AdaptiveScaffold(
+      appBar: const AdaptiveAppBar(title: '地震履歴設定'),
       body: ListView(
         children: const [
           SettingsSectionHeader(text: '地震履歴一覧'),
@@ -40,15 +41,28 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
     );
     return Column(
       children: [
-        SwitchListTile.adaptive(
+        ListTile(
           title: const Text('最大震度ごとの背景塗りつぶし'),
-          value: state.isFillBackground,
-          onChanged: (value) async {
+          trailing: AdaptiveSwitch(
+            value: state.isFillBackground,
+            onChanged: (value) async {
+              final full =
+                  ref.read(earthquakeHistoryConfigProvider).requireValue;
+              await ref
+                  .read(earthquakeHistoryConfigProvider.notifier)
+                  .save(
+                    full.copyWith.list(isFillBackground: value),
+                  );
+            },
+          ),
+          onTap: () async {
             final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
             await ref
                 .read(earthquakeHistoryConfigProvider.notifier)
                 .save(
-                  full.copyWith.list(isFillBackground: value),
+                  full.copyWith.list(
+                    isFillBackground: !state.isFillBackground,
+                  ),
                 );
           },
         ),
@@ -310,17 +324,29 @@ class _ShowIntensityIconToggle extends ConsumerWidget {
         (value) => value.requireValue.detail,
       ),
     );
-    return SwitchListTile.adaptive(
+    return ListTile(
       title: Text(
         showingLpgmIntensity ? '観測点に長周期地震動階級アイコンを表示' : '観測点に震度アイコンを表示',
       ),
-      value: state.showIntensityIcon,
-      onChanged: (v) async {
+      trailing: AdaptiveSwitch(
+        value: state.showIntensityIcon,
+        onChanged: (v) async {
+          final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
+          await ref
+              .read(earthquakeHistoryConfigProvider.notifier)
+              .save(
+                full.copyWith.detail(showIntensityIcon: v),
+              );
+        },
+      ),
+      onTap: () async {
         final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
         await ref
             .read(earthquakeHistoryConfigProvider.notifier)
             .save(
-              full.copyWith.detail(showIntensityIcon: v),
+              full.copyWith.detail(
+                showIntensityIcon: !state.showIntensityIcon,
+              ),
             );
       },
     );

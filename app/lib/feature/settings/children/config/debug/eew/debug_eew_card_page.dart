@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
@@ -104,8 +105,8 @@ class DebugEewCardPage extends HookConsumerWidget {
 
     final eew = buildEew();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('EEW Card デバッグ')),
+    return AdaptiveScaffold(
+      appBar: const AdaptiveAppBar(title: 'EEW Card デバッグ'),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [
@@ -651,12 +652,15 @@ class _BoolRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
+    return ListTile(
       dense: true,
       contentPadding: EdgeInsets.zero,
       title: Text(label, style: DebugEewCardPage._paramLabelStyle),
-      value: value,
-      onChanged: onChanged,
+      trailing: AdaptiveSwitch(
+        value: value,
+        onChanged: onChanged,
+      ),
+      onTap: () => onChanged(!value),
     );
   }
 }

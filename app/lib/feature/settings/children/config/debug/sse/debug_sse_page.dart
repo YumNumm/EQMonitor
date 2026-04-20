@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/sse/sse_connection_provider.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
@@ -30,18 +31,16 @@ class DebugSsePage extends HookConsumerWidget {
       });
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('SSE デバッグ'),
+    return AdaptiveScaffold(
+      appBar: AdaptiveAppBar(
+        title: 'SSE デバッグ',
         actions: [
-          IconButton(
-            tooltip: 'ログをクリア',
-            icon: const Icon(Icons.delete_outline),
+          AdaptiveAppBarAction(
+            icon: Icons.delete_outline,
             onPressed: () => entries.value = [],
           ),
-          IconButton(
-            tooltip: '再接続',
-            icon: const Icon(Icons.refresh),
+          AdaptiveAppBarAction(
+            icon: Icons.refresh,
             onPressed: () => ref.invalidate(sseConnectionProvider),
           ),
         ],

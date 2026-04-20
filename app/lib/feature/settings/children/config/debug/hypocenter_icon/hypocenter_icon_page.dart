@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,8 +17,8 @@ class HypocenterIconPage extends ConsumerWidget {
     final normalController = ScreenshotController();
     final lowPreciseController = ScreenshotController();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('震源アイコン生成')),
+    return AdaptiveScaffold(
+      appBar: const AdaptiveAppBar(title: '震源アイコン生成'),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

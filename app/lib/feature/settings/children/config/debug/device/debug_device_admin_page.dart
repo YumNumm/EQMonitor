@@ -19,10 +19,8 @@ class DebugDeviceAdminPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceIdAsync = ref.watch(deviceIdProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('デバイス管理（デバッグ）'),
-      ),
+    return AdaptiveScaffold(
+      appBar: const AdaptiveAppBar(title: 'デバイス管理（デバッグ）'),
       body: deviceIdAsync.when(
         data: (deviceId) => _DebugDeviceAdminBody(deviceId: deviceId),
         loading: () =>
@@ -339,24 +337,38 @@ class _Body extends HookConsumerWidget {
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 8),
-        SwitchListTile(
+        ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('津波情報の通知'),
-          value: tsunami.value,
-          onChanged: device == null || isBusy.value
+          trailing: AdaptiveSwitch(
+            value: tsunami.value,
+            onChanged: device == null || isBusy.value
+                ? null
+                : (v) {
+                    tsunami.value = v;
+                  },
+          ),
+          onTap: device == null || isBusy.value
               ? null
-              : (v) {
-                  tsunami.value = v;
+              : () {
+                  tsunami.value = !tsunami.value;
                 },
         ),
-        SwitchListTile(
+        ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('訓練報・試験報の通知'),
-          value: training.value,
-          onChanged: device == null || isBusy.value
+          trailing: AdaptiveSwitch(
+            value: training.value,
+            onChanged: device == null || isBusy.value
+                ? null
+                : (v) {
+                    training.value = v;
+                  },
+          ),
+          onTap: device == null || isBusy.value
               ? null
-              : (v) {
-                  training.value = v;
+              : () {
+                  training.value = !training.value;
                 },
         ),
         const SizedBox(height: 8),

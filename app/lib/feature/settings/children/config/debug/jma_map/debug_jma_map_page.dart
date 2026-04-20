@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_earthquake_nearest_observation_point.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
@@ -111,8 +112,8 @@ class DebugJmaMapPage extends HookConsumerWidget {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('JmaMap Debug')),
+    return AdaptiveScaffold(
+      appBar: const AdaptiveAppBar(title: 'JmaMap Debug'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: SafeArea(
