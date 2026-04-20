@@ -1,2 +1,0 @@
-#include "Environment.defaults.xcconfig"
-#include? "Environment.generated.xcconfig"
