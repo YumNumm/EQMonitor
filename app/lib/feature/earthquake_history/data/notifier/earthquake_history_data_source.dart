@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:eqmonitor/core/model/websocket/realtime_event_envelope.dart';
+import 'package:eqmonitor/core/model/websocket/ws_message.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/sse/sse_connection_provider.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
@@ -35,9 +37,9 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
     final timer = Timer.periodic(
       const Duration(minutes: 5),
       (_) async {
-        final sseState = ref.read(sseConnectionStatusProvider);
-        if (sseState == SseConnectionState.connected) {
-          log('SSE is connected, skip refresh');
+        final wsState = ref.read(wsConnectionStatusProvider);
+        if (wsState == WsConnectionState.connected) {
+          log('WS is connected, skip refresh');
           return;
         }
         if (ref.read(appLifecycleProvider) != AppLifecycleState.resumed) {
@@ -57,6 +59,21 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
       }
       final result = await repository.fetchEarthquakeList(limit: 10);
       dataSource.upsertItems(result.items);
+    });
+
+    ref.listen(wsConnectionProvider, (_, next) async {
+      if (next case AsyncData(:final value)) {
+        if (value case WsRealtimeMessage(:final data)) {
+          if (data is WsEarthquakeRealtimeEvent) {
+            if (data.operation == 'upsert') {
+              final result = await repository.fetchEarthquakeList(limit: 10);
+              dataSource.upsertItems(result.items);
+            } else if (data.operation == 'delete') {
+              dataSource.removeItemByEventId(data.eventId);
+            }
+          }
+        }
+      }
     });
   }
 
@@ -169,7 +186,7 @@ class EarthquakeHistoryDataSource
     }
   }
 
-  /// SSEやライフサイクルからのリアルタイム更新を反映する
+  /// WebSocketやライフサイクルからのリアルタイム更新を反映する。
   void upsertItems(List<EarthquakePartial> newItems) {
     final currentItems = [...notifier.values];
     for (final item in newItems) {
@@ -182,5 +199,10 @@ class EarthquakeHistoryDataSource
         currentItems[index] = item;
       }
     }
+  }
+
+  /// WebSocketの earthquake delete イベントで地震情報をリストから削除する。
+  void removeItemByEventId(String eventId) {
+    removeItems((_, item) => item.eventId == eventId);
   }
 }

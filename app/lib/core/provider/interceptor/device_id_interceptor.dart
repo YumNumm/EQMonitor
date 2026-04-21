@@ -10,8 +10,9 @@ class DeviceIdInterceptor extends Interceptor {
 
   final String deviceId;
 
-  static const _headerName = 'X-eqmonitor-device-id';
+  static const _headerName = 'x-eqmonitor-device-id';
   static final _devicePathPattern = RegExp('^/v2/device/[^/]');
+  static const _realtimeTicketPath = '/v2/realtime/ticket';
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -19,6 +20,9 @@ class DeviceIdInterceptor extends Interceptor {
         options.method == 'PUT' && _devicePathPattern.hasMatch(options.path);
 
     if (!isPutRegistration && _devicePathPattern.hasMatch(options.path)) {
+      options.headers[_headerName] = deviceId;
+    }
+    if (options.path.contains(_realtimeTicketPath)) {
       options.headers[_headerName] = deviceId;
     }
     handler.next(options);

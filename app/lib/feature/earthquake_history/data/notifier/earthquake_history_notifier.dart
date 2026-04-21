@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/model/websocket/realtime_event_envelope.dart';
+import 'package:eqmonitor/core/model/websocket/ws_message.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/sse/sse_connection_provider.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
@@ -26,17 +28,21 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   Future<EarthquakeHistoryNotifierState> build(
     EarthquakeHistoryParameter parameter,
   ) async {
-    // 検索条件を指定していないNotifierでのみ、5分ごとにデータ再取得するタイマーを設定
     if (parameter == const EarthquakeHistoryParameter()) {
       final refetchTimer = Timer.periodic(
         const Duration(minutes: 5),
-        (_) => _refreshIfSseNotConnected(),
+        (_) => _refreshIfWsNotConnected(),
       );
       ref
         ..onDispose(refetchTimer.cancel)
         ..listen(appLifecycleProvider, (_, next) async {
           if (next == AppLifecycleState.resumed) {
             await _onResumed();
+          }
+        })
+        ..listen(wsConnectionProvider, (_, next) async {
+          if (next case AsyncData(:final value)) {
+            await _onWsMessage(value);
           }
         });
     }
@@ -52,7 +58,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     required int limit,
   }) async {
     ref.invalidate(earthquakeHistoryDetailsProvider);
-
     return _fetchData(param: param, limit: limit, cursor: null);
   }
 
@@ -65,7 +70,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       earthquakeHistoryRepositoryProvider.future,
     );
 
-    // 震央地検索の場合
     if (param.epicenterCode != null) {
       final result = await repository.searchByEpicenter(
         code: param.epicenterCode!,
@@ -78,7 +82,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       );
     }
 
-    // 地域検索（都道府県）の場合
     if (param.regionCode != null &&
         param.regionCode != null &&
         param.regionSearchType == RegionSearchType.prefecture) {
@@ -93,7 +96,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       );
     }
 
-    // 地域検索（市区町村）の場合
     if (param.regionCode != null &&
         param.regionCode != null &&
         param.regionSearchType == RegionSearchType.city) {
@@ -108,7 +110,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       );
     }
 
-    // 通常の地震一覧取得
     final result = await repository.fetchEarthquakeList(
       limit: limit,
       cursor: cursor,
@@ -121,12 +122,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
   static final fetchNextDataMutation = Mutation<void>();
   Future<void> fetchNextData() async {
-    // 読み込み中の場合は何もしない
     if (state.isRefreshing || state.isReloading) {
       return;
     }
     final currentState = state.value;
-    // すでに全件取得済みの場合は何もしない
     if (currentState == null || currentState.nextToken == null) {
       return;
     }
@@ -159,14 +158,14 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     _upsertItems(result.items);
   }
 
-  Future<void> _refreshIfSseNotConnected() async {
+  Future<void> _refreshIfWsNotConnected() async {
     if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
       log('state is not AsyncData<EarthquakeHistoryNotifierState>');
       return;
     }
-    final sseState = ref.read(sseConnectionStatusProvider);
-    if (sseState == SseConnectionState.connected) {
-      log('SSE is connected');
+    final wsState = ref.read(wsConnectionStatusProvider);
+    if (wsState == WsConnectionState.connected) {
+      log('WS is connected');
       return;
     }
     if (parameter != const EarthquakeHistoryParameter()) {
@@ -177,13 +176,51 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       log('app is not resumed');
       return;
     }
-    log('refreshIfSseNotConnected');
+    log('refreshIfWsNotConnected');
 
     final repository = await ref.read(
       earthquakeHistoryRepositoryProvider.future,
     );
     final result = await repository.fetchEarthquakeList(limit: 10);
     _upsertItems(result.items);
+  }
+
+  Future<void> _onWsMessage(WsMessage msg) async {
+    if (msg case WsRealtimeMessage(:final data)) {
+      if (data is! WsEarthquakeRealtimeEvent) {
+        return;
+      }
+      if (data.operation == 'upsert') {
+        await _refreshFromEarthquakeUpsert();
+      } else if (data.operation == 'delete') {
+        _deleteItem(data.eventId);
+      }
+    }
+  }
+
+  Future<void> _refreshFromEarthquakeUpsert() async {
+    if (parameter != const EarthquakeHistoryParameter()) {
+      return;
+    }
+    final repository = await ref.read(
+      earthquakeHistoryRepositoryProvider.future,
+    );
+    final result = await repository.fetchEarthquakeList(limit: 10);
+    _upsertItems(result.items);
+  }
+
+  void _deleteItem(String eventId) {
+    if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
+      return;
+    }
+    final currentState = state.value;
+    if (currentState == null) {
+      return;
+    }
+    final items = [
+      ...currentState.items.where((e) => e.eventId != eventId),
+    ];
+    state = AsyncData((items: items, nextToken: currentState.nextToken));
   }
 
   void _upsertItems(List<EarthquakePartial> newItems) {
@@ -196,9 +233,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
     final items = [...currentState.items];
     for (final item in newItems) {
-      final rawIndex = items.indexWhere(
-        (e) => e.eventId == item.eventId,
-      );
+      final rawIndex = items.indexWhere((e) => e.eventId == item.eventId);
       final index = rawIndex == -1 ? null : rawIndex;
       if (index == null) {
         items.add(item);

@@ -29,7 +29,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_j
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/sse/debug_sse_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
@@ -196,7 +196,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugEewCardRoute>(path: 'eew-card'),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
-        TypedGoRoute<DebugSseRoute>(path: 'sse'),
+        TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
         TypedGoRoute<DebugNotificationDeliveryLogRoute>(
           path: 'notification-delivery-log',
         ),
@@ -376,12 +376,12 @@ class PlaygroundRoute extends GoRouteData with $PlaygroundRoute {
   }
 }
 
-class DebugSseRoute extends GoRouteData with $DebugSseRoute {
-  const DebugSseRoute();
+class DebugWebSocketRoute extends GoRouteData with $DebugWebSocketRoute {
+  const DebugWebSocketRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const DebugSsePage();
+    return const DebugWebSocketPage();
   }
 }
 

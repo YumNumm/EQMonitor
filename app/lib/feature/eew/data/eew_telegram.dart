@@ -3,8 +3,11 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
+import 'package:eqmonitor/core/model/websocket/realtime_event_envelope.dart';
+import 'package:eqmonitor/core/model/websocket/ws_message.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,6 +26,10 @@ class Eew extends _$Eew {
       }
     });
 
+    ref.listen(wsConnectionProvider, (_, next) {
+      next.whenData(_onWsMessage);
+    });
+
     final refreshTimer = Timer.periodic(
       const Duration(seconds: 10),
       (_) => _refetchRestApi(),
@@ -37,6 +44,18 @@ class Eew extends _$Eew {
     }
     talker.log('Refetch EEW');
     ref.invalidate(_eewRestProvider);
+  }
+
+  void _onWsMessage(WsMessage msg) {
+    switch (msg) {
+      case WsSnapshotMessage():
+        // snapshot の eews で即座に REST 再取得
+        _refetchRestApi();
+      case WsRealtimeMessage(:final data):
+        if (data is WsEewRealtimeEvent) {
+          _refetchRestApi();
+        }
+    }
   }
 
   void _upsert(EewTelegramItem item) {

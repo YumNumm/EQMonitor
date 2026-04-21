@@ -45,7 +45,7 @@ final class EewProvider
   }
 }
 
-String _$eewHash() => r'8e75023c07bb30de6a215458e1373e61c24b7b8f';
+String _$eewHash() => r'98d08648f85e9bdaf4b012903c24fd9118279c5d';
 
 abstract class _$Eew extends $Notifier<AsyncValue<List<EewTelegramItem>>> {
   AsyncValue<List<EewTelegramItem>> build();

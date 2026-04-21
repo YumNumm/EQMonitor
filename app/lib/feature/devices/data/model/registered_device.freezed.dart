@@ -212,7 +212,7 @@ return $default(_that.id,_that.platform,_that.userId,_that.locale,_that.createdA
 
 class _RegisteredDevice implements RegisteredDevice {
   const _RegisteredDevice({required this.id, required this.platform, required this.userId, required this.locale, required this.createdAtIso, required this.updatedAtIso});
-
+  
 
 @override final  String id;
 @override final  DevicePlatform platform;

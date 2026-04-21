@@ -34,8 +34,6 @@ class AppCheckInterceptor extends Interceptor {
     if (options.method != 'GET') {
       return false;
     }
-    final path = options.path;
-    return path.contains('/v2/websocket/ticket') ||
-        path.contains('/v2/realtime/stream');
+    return options.path.contains('/v2/realtime/ticket');
   }
 }

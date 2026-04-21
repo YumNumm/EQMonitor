@@ -67,17 +67,16 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('REST APIエンドポイント'),
             leading: const Icon(Icons.http),
             subtitle: Text(
-              '${ref.watch(telegramUrlProvider).requireValue.restApiUrl}\n'
-              '（/v2/realtime/stream の SSE は同じベース URL）',
+              ref.watch(telegramUrlProvider).requireValue.restApiUrl,
             ),
             onTap: () async =>
                 const HttpApiEndpointSelectorRoute().push<void>(context),
           ),
           ListTile(
-            title: const Text('SSE'),
-            leading: const Icon(Icons.stream),
-            subtitle: const Text('/v2/realtime/stream の受信ログ'),
-            onTap: () async => const DebugSseRoute().push<void>(context),
+            title: const Text('WebSocket'),
+            leading: const Icon(Icons.cable),
+            subtitle: const Text('WebSocket 接続状況と受信ログ'),
+            onTap: () async => const DebugWebSocketRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('KyoshinMonitor'),

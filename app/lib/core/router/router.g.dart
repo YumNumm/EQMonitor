@@ -309,7 +309,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'playground',
           factory: $PlaygroundRoute._fromState,
         ),
-        GoRouteData.$route(path: 'sse', factory: $DebugSseRoute._fromState),
+        GoRouteData.$route(
+          path: 'websocket',
+          factory: $DebugWebSocketRoute._fromState,
+        ),
         GoRouteData.$route(
           path: 'notification-delivery-log',
           factory: $DebugNotificationDeliveryLogRoute._fromState,
@@ -734,11 +737,12 @@ mixin $PlaygroundRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $DebugSseRoute on GoRouteData {
-  static DebugSseRoute _fromState(GoRouterState state) => const DebugSseRoute();
+mixin $DebugWebSocketRoute on GoRouteData {
+  static DebugWebSocketRoute _fromState(GoRouterState state) =>
+      const DebugWebSocketRoute();
 
   @override
-  String get location => GoRouteData.$location('/settings/debug/sse');
+  String get location => GoRouteData.$location('/settings/debug/websocket');
 
   @override
   void go(BuildContext context) => context.go(location);

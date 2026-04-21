@@ -51,7 +51,7 @@ final class DebugDeviceSessionProvider
 }
 
 String _$debugDeviceSessionHash() =>
-    r'0c9400e292f082b4c991b889d2f9e6b5bdf384a4';
+    r'7dceb197a4d73b18b8a8e7ab5e364f1fb832feca';
 
 @ProviderFor(debugNotificationHistory)
 final debugNotificationHistoryProvider = DebugNotificationHistoryProvider._();
