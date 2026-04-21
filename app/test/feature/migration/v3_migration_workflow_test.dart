@@ -12,34 +12,34 @@ const _oldDeviceId = 'legacy-device-id';
 
 const _fakeDevice = RegisteredDevice(
   id: _deviceId,
-  platform: RegisteredDevicePlatform.ios,
+  platform: DevicePlatform.ios,
   userId: null,
-  locale: RegisteredDeviceLocale.ja,
+  locale: DeviceLocale.ja,
   createdAtIso: '2026-01-01T00:00:00Z',
   updatedAtIso: '2026-01-01T00:00:00Z',
 );
 
 Result<RegisteredDevice, Exception> _notFound() => Failure(
-      DioException(
-        requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-        response: Response(
-          requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-          statusCode: 404,
-        ),
-        type: DioExceptionType.badResponse,
-      ),
-    );
+  DioException(
+    requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
+    response: Response(
+      requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
+      statusCode: 404,
+    ),
+    type: DioExceptionType.badResponse,
+  ),
+);
 
 Result<RegisteredDevice, Exception> _serverError() => Failure(
-      DioException(
-        requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-        response: Response(
-          requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
-          statusCode: 500,
-        ),
-        type: DioExceptionType.badResponse,
-      ),
-    );
+  DioException(
+    requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
+    response: Response(
+      requestOptions: RequestOptions(path: '/v2/device/$_deviceId'),
+      statusCode: 500,
+    ),
+    type: DioExceptionType.badResponse,
+  ),
+);
 
 void main() {
   late InMemoryWorkflowPersistence persistence;
@@ -51,11 +51,11 @@ void main() {
   });
 
   Future<void> run(FakeDeviceRepository repo) => runV3MigrationWorkflow(
-        runner: runner,
-        repository: repo,
-        deviceId: _deviceId,
-        oldDeviceId: _oldDeviceId,
-      );
+    runner: runner,
+    repository: repo,
+    deviceId: _deviceId,
+    oldDeviceId: _oldDeviceId,
+  );
 
   // ── happy path: device absent ───────────────────────────────────────────
 
@@ -146,35 +146,37 @@ void main() {
 
   // ── resume: migrateLegacySettings failure ──────────────────────────────
 
-  test('migrate失敗後の再実行: ensureDeviceAbsent・registerDevice はスキップされ migrate が再試行される',
-      () async {
-    var migrateShouldFail = true;
-    final repo = FakeDeviceRepository(
-      getResult: _notFound,
-      putResult: () => const Success(_fakeDevice),
-      migrateResult: () {
-        if (migrateShouldFail) {
-          return Failure(Exception('migrate network error'));
-        }
-        return const Success(null);
-      },
-    );
+  test(
+    'migrate失敗後の再実行: ensureDeviceAbsent・registerDevice はスキップされ migrate が再試行される',
+    () async {
+      var migrateShouldFail = true;
+      final repo = FakeDeviceRepository(
+        getResult: _notFound,
+        putResult: () => const Success(_fakeDevice),
+        migrateResult: () {
+          if (migrateShouldFail) {
+            return Failure(Exception('migrate network error'));
+          }
+          return const Success(null);
+        },
+      );
 
-    // 1回目: GET・PUT成功, migrate失敗
-    await expectLater(run(repo), throwsA(isA<Exception>()));
-    expect(repo.getCalls, 1);
-    expect(repo.putCalls, 1);
-    expect(repo.migrateCalls, 1);
+      // 1回目: GET・PUT成功, migrate失敗
+      await expectLater(run(repo), throwsA(isA<Exception>()));
+      expect(repo.getCalls, 1);
+      expect(repo.putCalls, 1);
+      expect(repo.migrateCalls, 1);
 
-    // 2回目: migrate を成功させる
-    migrateShouldFail = false;
-    await run(repo);
+      // 2回目: migrate を成功させる
+      migrateShouldFail = false;
+      await run(repo);
 
-    expect(repo.getCalls, 1, reason: 'ensureDeviceAbsent はキャッシュ済み');
-    expect(repo.putCalls, 1, reason: 'registerDevice はキャッシュ済み');
-    expect(repo.migrateCalls, 2, reason: 'migrate は再試行される');
-    expect(await isV3MigrationComplete(persistence), isTrue);
-  });
+      expect(repo.getCalls, 1, reason: 'ensureDeviceAbsent はキャッシュ済み');
+      expect(repo.putCalls, 1, reason: 'registerDevice はキャッシュ済み');
+      expect(repo.migrateCalls, 2, reason: 'migrate は再試行される');
+      expect(await isV3MigrationComplete(persistence), isTrue);
+    },
+  );
 
   // ── getDevice unexpected error ──────────────────────────────────────────
 
@@ -197,10 +199,10 @@ class FakeDeviceRepository extends DeviceRepository {
     required Result<RegisteredDevice, Exception> Function() getResult,
     required Result<RegisteredDevice, Exception> Function() putResult,
     required Result<void, Exception> Function() migrateResult,
-  })  : _getResult = getResult,
-        _putResult = putResult,
-        _migrateResult = migrateResult,
-        super(api.ApiClient(Dio()));
+  }) : _getResult = getResult,
+       _putResult = putResult,
+       _migrateResult = migrateResult,
+       super(api.ApiClient(Dio()));
 
   final Result<RegisteredDevice, Exception> Function() _getResult;
   final Result<RegisteredDevice, Exception> Function() _putResult;
@@ -220,9 +222,11 @@ class FakeDeviceRepository extends DeviceRepository {
   }
 
   @override
-  Future<Result<RegisteredDevice, Exception>> registerDevice(
-    String deviceId,
-  ) async {
+  Future<Result<RegisteredDevice, Exception>> registerDevice({
+    required String deviceId,
+    required DevicePlatform devicePlatform,
+    required DeviceLocale deviceLocale,
+  }) async {
     putCalls++;
     return _putResult();
   }

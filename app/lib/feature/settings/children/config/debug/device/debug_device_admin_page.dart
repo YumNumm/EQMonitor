@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -7,6 +9,7 @@ import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -151,7 +154,15 @@ class _Body extends HookConsumerWidget {
       await runWithBusy(() async {
         final messenger = ScaffoldMessenger.of(context);
         final repo = await ref.read(deviceRepositoryProvider.future);
-        final result = await repo.registerDevice(deviceId);
+        final result = await repo.registerDevice(
+          deviceId: deviceId,
+          devicePlatform: kIsWeb
+              ? .ios
+              : Platform.isIOS
+              ? .ios
+              : .android,
+          deviceLocale: .ja,
+        );
         if (!context.mounted) {
           return;
         }

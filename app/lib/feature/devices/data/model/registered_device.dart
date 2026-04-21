@@ -7,33 +7,33 @@ part 'registered_device.freezed.dart';
 abstract class RegisteredDevice with _$RegisteredDevice {
   const factory RegisteredDevice({
     required String id,
-    required RegisteredDevicePlatform platform,
+    required DevicePlatform platform,
     required String? userId,
-    required RegisteredDeviceLocale locale,
+    required DeviceLocale locale,
     required String createdAtIso,
     required String updatedAtIso,
   }) = _RegisteredDevice;
 }
 
-enum RegisteredDevicePlatform {
+enum DevicePlatform {
   ios,
   android,
 }
 
-enum RegisteredDeviceLocale {
+enum DeviceLocale {
   ja,
   en,
   zh,
 }
 
-extension RegisteredDevicePlatformDisplay on RegisteredDevicePlatform {
+extension DevicePlatformDisplay on DevicePlatform {
   String get displayLabel => switch (this) {
     .ios => 'iOS',
     .android => 'Android',
   };
 }
 
-extension RegisteredDeviceApiExtension on api.DeviceResponse {
+extension DeviceApiExtension on api.DeviceResponse {
   RegisteredDevice get toRegisteredDevice => RegisteredDevice(
     id: id,
     platform: switch (type) {
@@ -49,4 +49,20 @@ extension RegisteredDeviceApiExtension on api.DeviceResponse {
     createdAtIso: createdAt,
     updatedAtIso: updatedAt,
   );
+}
+
+
+extension DevicePlatformApiExtension on DevicePlatform {
+  api.DeviceType get toDeviceType => switch (this) {
+    .ios => api.DeviceType.ios,
+    .android => api.DeviceType.android,
+  };
+}
+
+extension DeviceLocaleApiExtension on DeviceLocale {
+  api.DeviceLocale get toDeviceLocale => switch (this) {
+    .ja => api.DeviceLocale.ja,
+    .en => api.DeviceLocale.en,
+    .zh => api.DeviceLocale.zh,
+  };
 }

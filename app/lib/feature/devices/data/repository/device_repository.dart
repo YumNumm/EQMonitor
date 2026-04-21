@@ -31,14 +31,16 @@ class DeviceRepository {
         return response.data.toRegisteredDevice;
       });
 
-  Future<Result<RegisteredDevice, Exception>> registerDevice(
-    String deviceId,
-  ) => Result.capture(() async {
+  Future<Result<RegisteredDevice, Exception>> registerDevice({
+    required String deviceId,
+    required DevicePlatform devicePlatform,
+    required DeviceLocale deviceLocale,
+  }) => Result.capture(() async {
     final response = await _api.device.putV2DeviceDeviceId(
       deviceId: deviceId,
       body: api.DeviceUpsertRequest(
-        type: api.DeviceType.ios,
-        locale: api.DeviceLocale.ja,
+        type: devicePlatform.toDeviceType,
+        locale: deviceLocale.toDeviceLocale,
       ),
     );
     return response.data.toRegisteredDevice;
@@ -49,16 +51,22 @@ class DeviceRepository {
         await _api.device.deleteV2DeviceDeviceId(deviceId: deviceId);
       });
 
-  Future<Result<RegisteredDevice, Exception>> fetchOrRegister(
-    String deviceId,
-  ) async {
+  Future<Result<RegisteredDevice, Exception>> fetchOrRegister({
+    required String deviceId,
+    required DevicePlatform devicePlatform,
+    required DeviceLocale deviceLocale,
+  }) async {
     final getResult = await getDevice(deviceId);
     switch (getResult) {
       case Success(:final value):
         return Success(value);
       case Failure(:final exception, :final stackTrace):
         if (_isNotFound(exception)) {
-          return registerDevice(deviceId);
+          return registerDevice(
+            deviceId: deviceId,
+            devicePlatform: devicePlatform,
+            deviceLocale: deviceLocale,
+          );
         }
         return Failure(exception, stackTrace);
     }
@@ -89,7 +97,15 @@ class DeviceRepository {
 
     // Step 2 — register only when absent
     if (!alreadyRegistered) {
-      final putResult = await registerDevice(deviceId);
+      final putResult = await registerDevice(
+        deviceId: deviceId,
+        devicePlatform: kIsWeb
+            ? .ios
+            : Platform.isIOS
+            ? .ios
+            : .android,
+        deviceLocale: .ja,
+      );
       if (putResult is Failure<RegisteredDevice, Exception>) {
         return Failure(putResult.exception, putResult.stackTrace);
       }

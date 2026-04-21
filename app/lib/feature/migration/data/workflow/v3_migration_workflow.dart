@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:workflows/workflows.dart';
 
 /// Instance ID used to key the durable migration workflow.
@@ -40,7 +43,10 @@ Future<void> runV3MigrationWorkflow({
             Success() => true,
             Failure(:final exception) when _isNotFound(exception) => false,
             Failure(:final exception, :final stackTrace) =>
-              Error.throwWithStackTrace(exception, stackTrace ?? StackTrace.empty),
+              Error.throwWithStackTrace(
+                exception,
+                stackTrace ?? StackTrace.empty,
+              ),
           };
         },
       );
@@ -50,7 +56,15 @@ Future<void> runV3MigrationWorkflow({
         await step<void>(
           'registerDevice',
           () async {
-            final result = await repository.registerDevice(deviceId);
+            final result = await repository.registerDevice(
+              deviceId: deviceId,
+              devicePlatform: kIsWeb
+                  ? .ios
+                  : Platform.isIOS
+                  ? .ios
+                  : .android,
+              deviceLocale: .ja,
+            );
             switch (result) {
               case Success():
                 break;
