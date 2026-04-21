@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cue/cue.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class AppSwitch extends HookWidget {
@@ -24,9 +27,7 @@ class AppSwitch extends HookWidget {
 
     final offThumbColor = color.backgroundSubtle;
     const onThumbColor = Color(0xFFC9D8F8);
-    final offIconColor = theme.colorScheme.onSurfaceVariant.withValues(
-      alpha: 0.85,
-    );
+    const offIconColor = Color(0xFFC9D8F8);
     const onIconColor = Color(0xFF48678F);
 
     return Opacity(
@@ -58,7 +59,12 @@ class AppSwitch extends HookWidget {
               highlightShape: BoxShape.rectangle,
               radius: 28,
               borderRadius: BorderRadius.circular(shape.pill),
-              onTap: isEnabled ? () => onChanged?.call(!value) : null,
+              onTap: isEnabled
+                  ? () {
+                      unawaited(HapticFeedback.selectionClick());
+                      onChanged?.call(!value);
+                    }
+                  : null,
               child: Cue.onToggle(
                 toggled: value,
                 motion: const .smooth(),

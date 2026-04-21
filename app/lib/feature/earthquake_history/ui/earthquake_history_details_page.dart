@@ -171,7 +171,6 @@ class _Sheet extends StatelessWidget {
         hasAppBar: false,
         child: Expanded(
           child: SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
             child: SafeArea(
               child: Column(
                 children: [

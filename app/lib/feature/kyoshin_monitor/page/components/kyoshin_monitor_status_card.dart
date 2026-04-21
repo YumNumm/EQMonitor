@@ -69,7 +69,9 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                             DateFormat(
                               'yyyy/MM/dd HH:mm:ss',
                             ).format(latestTime),
-                            style: const TextStyle(color: Colors.redAccent),
+                            style: dateTextStyle.copyWith(
+                              color: Colors.redAccent,
+                            ),
                           ),
                         ),
                       ],
