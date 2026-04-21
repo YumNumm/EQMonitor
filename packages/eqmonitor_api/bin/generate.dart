@@ -1,7 +1,9 @@
 import 'dart:io';
 
 void main(List<String> args) async {
-  final externalOpenapiPath = '../../backend/api/api/openapi.json';
+  final externalOpenapiPath = (await File(
+    '../../backend/api/api/openapi.json',
+  ).resolveSymbolicLinks());
 
   final packageDir = Directory.current;
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
@@ -25,7 +27,8 @@ void main(List<String> args) async {
 
     if (openapiFile.absolute.path != src.absolute.path) {
       await _step('外部 OpenAPI ファイルをコピー', () async {
-        final copied = src.copySync(openapiFile.path);
+        await openapiFile.create(recursive: true);
+        final copied = src.copySync(openapiFile.path , );
         print('copied: ${copied.path}');
       });
     }
@@ -233,10 +236,10 @@ void _patchIntensityModel(Directory libDir) {
   content = content.replaceFirst(
     '  }) = _Intensity;',
     '    @JsonKey(includeIfNull: false)\n'
-    '    List<IntensityItem>? cities,\n'
-    '    @JsonKey(includeIfNull: false)\n'
-    '    List<IntensityStationItem>? stations,\n'
-    '  }) = _Intensity;',
+        '    List<IntensityItem>? cities,\n'
+        '    @JsonKey(includeIfNull: false)\n'
+        '    List<IntensityStationItem>? stations,\n'
+        '  }) = _Intensity;',
   );
 
   intensityFile.writeAsStringSync(content);
