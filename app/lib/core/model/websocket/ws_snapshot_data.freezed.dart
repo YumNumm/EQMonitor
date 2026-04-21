@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WsSnapshotData {
 
- int get revision; DateTime get updatedAt; List<WsEventMessage> get eews;
+ int get revision; DateTime get updatedAt; List<EewItemWithRelations> get eews; List<EarthquakePartial> get earthquakes;
 /// Create a copy of WsSnapshotData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $WsSnapshotDataCopyWith<WsSnapshotData> get copyWith => _$WsSnapshotDataCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsSnapshotData&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.eews, eews));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsSnapshotData&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.eews, eews)&&const DeepCollectionEquality().equals(other.earthquakes, earthquakes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,revision,updatedAt,const DeepCollectionEquality().hash(eews));
+int get hashCode => Object.hash(runtimeType,revision,updatedAt,const DeepCollectionEquality().hash(eews),const DeepCollectionEquality().hash(earthquakes));
 
 @override
 String toString() {
-  return 'WsSnapshotData(revision: $revision, updatedAt: $updatedAt, eews: $eews)';
+  return 'WsSnapshotData(revision: $revision, updatedAt: $updatedAt, eews: $eews, earthquakes: $earthquakes)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $WsSnapshotDataCopyWith<$Res>  {
   factory $WsSnapshotDataCopyWith(WsSnapshotData value, $Res Function(WsSnapshotData) _then) = _$WsSnapshotDataCopyWithImpl;
 @useResult
 $Res call({
- int revision, DateTime updatedAt, List<WsEventMessage> eews
+ int revision, DateTime updatedAt, List<EewItemWithRelations> eews, List<EarthquakePartial> earthquakes
 });
 
 
@@ -65,12 +65,13 @@ class _$WsSnapshotDataCopyWithImpl<$Res>
 
 /// Create a copy of WsSnapshotData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? revision = null,Object? updatedAt = null,Object? eews = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? revision = null,Object? updatedAt = null,Object? eews = null,Object? earthquakes = null,}) {
   return _then(_self.copyWith(
 revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
 as int,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,eews: null == eews ? _self.eews : eews // ignore: cast_nullable_to_non_nullable
-as List<WsEventMessage>,
+as List<EewItemWithRelations>,earthquakes: null == earthquakes ? _self.earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<EarthquakePartial>,
   ));
 }
 
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int revision,  DateTime updatedAt,  List<WsEventMessage> eews)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int revision,  DateTime updatedAt,  List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WsSnapshotData() when $default != null:
-return $default(_that.revision,_that.updatedAt,_that.eews);case _:
+return $default(_that.revision,_that.updatedAt,_that.eews,_that.earthquakes);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.revision,_that.updatedAt,_that.eews);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int revision,  DateTime updatedAt,  List<WsEventMessage> eews)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int revision,  DateTime updatedAt,  List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes)  $default,) {final _that = this;
 switch (_that) {
 case _WsSnapshotData():
-return $default(_that.revision,_that.updatedAt,_that.eews);case _:
+return $default(_that.revision,_that.updatedAt,_that.eews,_that.earthquakes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.revision,_that.updatedAt,_that.eews);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int revision,  DateTime updatedAt,  List<WsEventMessage> eews)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int revision,  DateTime updatedAt,  List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes)?  $default,) {final _that = this;
 switch (_that) {
 case _WsSnapshotData() when $default != null:
-return $default(_that.revision,_that.updatedAt,_that.eews);case _:
+return $default(_that.revision,_that.updatedAt,_that.eews,_that.earthquakes);case _:
   return null;
 
 }
@@ -211,16 +212,23 @@ return $default(_that.revision,_that.updatedAt,_that.eews);case _:
 @JsonSerializable()
 
 class _WsSnapshotData implements WsSnapshotData {
-  const _WsSnapshotData({required this.revision, required this.updatedAt, final  List<WsEventMessage> eews = const []}): _eews = eews;
+  const _WsSnapshotData({required this.revision, required this.updatedAt, final  List<EewItemWithRelations> eews = const [], final  List<EarthquakePartial> earthquakes = const []}): _eews = eews,_earthquakes = earthquakes;
   factory _WsSnapshotData.fromJson(Map<String, dynamic> json) => _$WsSnapshotDataFromJson(json);
 
 @override final  int revision;
 @override final  DateTime updatedAt;
- final  List<WsEventMessage> _eews;
-@override@JsonKey() List<WsEventMessage> get eews {
+ final  List<EewItemWithRelations> _eews;
+@override@JsonKey() List<EewItemWithRelations> get eews {
   if (_eews is EqualUnmodifiableListView) return _eews;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_eews);
+}
+
+ final  List<EarthquakePartial> _earthquakes;
+@override@JsonKey() List<EarthquakePartial> get earthquakes {
+  if (_earthquakes is EqualUnmodifiableListView) return _earthquakes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_earthquakes);
 }
 
 
@@ -237,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WsSnapshotData&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._eews, _eews));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WsSnapshotData&&(identical(other.revision, revision) || other.revision == revision)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._eews, _eews)&&const DeepCollectionEquality().equals(other._earthquakes, _earthquakes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,revision,updatedAt,const DeepCollectionEquality().hash(_eews));
+int get hashCode => Object.hash(runtimeType,revision,updatedAt,const DeepCollectionEquality().hash(_eews),const DeepCollectionEquality().hash(_earthquakes));
 
 @override
 String toString() {
-  return 'WsSnapshotData(revision: $revision, updatedAt: $updatedAt, eews: $eews)';
+  return 'WsSnapshotData(revision: $revision, updatedAt: $updatedAt, eews: $eews, earthquakes: $earthquakes)';
 }
 
 
@@ -257,7 +265,7 @@ abstract mixin class _$WsSnapshotDataCopyWith<$Res> implements $WsSnapshotDataCo
   factory _$WsSnapshotDataCopyWith(_WsSnapshotData value, $Res Function(_WsSnapshotData) _then) = __$WsSnapshotDataCopyWithImpl;
 @override @useResult
 $Res call({
- int revision, DateTime updatedAt, List<WsEventMessage> eews
+ int revision, DateTime updatedAt, List<EewItemWithRelations> eews, List<EarthquakePartial> earthquakes
 });
 
 
@@ -274,12 +282,13 @@ class __$WsSnapshotDataCopyWithImpl<$Res>
 
 /// Create a copy of WsSnapshotData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? revision = null,Object? updatedAt = null,Object? eews = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? revision = null,Object? updatedAt = null,Object? eews = null,Object? earthquakes = null,}) {
   return _then(_WsSnapshotData(
 revision: null == revision ? _self.revision : revision // ignore: cast_nullable_to_non_nullable
 as int,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,eews: null == eews ? _self._eews : eews // ignore: cast_nullable_to_non_nullable
-as List<WsEventMessage>,
+as List<EewItemWithRelations>,earthquakes: null == earthquakes ? _self._earthquakes : earthquakes // ignore: cast_nullable_to_non_nullable
+as List<EarthquakePartial>,
   ));
 }
 

@@ -48,12 +48,13 @@ class Eew extends _$Eew {
 
   void _onWsMessage(WsMessage msg) {
     switch (msg) {
-      case WsSnapshotMessage():
-        // snapshot の eews で即座に REST 再取得
-        _refetchRestApi();
+      case WsSnapshotMessage(:final data):
+        // スナップショットの eews を直接反映
+        final items = data.eews.map((e) => e.toEewTelegramItem()).toList();
+        state = AsyncData(items);
       case WsRealtimeMessage(:final data):
         if (data is WsEewRealtimeEvent) {
-          _refetchRestApi();
+          _upsert(data.item.toEewTelegramItem());
         }
     }
   }

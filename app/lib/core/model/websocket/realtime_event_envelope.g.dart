@@ -11,9 +11,9 @@ part of 'realtime_event_envelope.dart';
 WsEewRealtimeEvent _$WsEewRealtimeEventFromJson(Map<String, dynamic> json) =>
     $checkedCreate('WsEewRealtimeEvent', json, ($checkedConvert) {
       final val = WsEewRealtimeEvent(
-        event: $checkedConvert(
-          'event',
-          (v) => WsEventMessage.fromJson(v as Map<String, dynamic>),
+        item: $checkedConvert(
+          'item',
+          (v) => EewItemWithRelations.fromJson(v as Map<String, dynamic>),
         ),
         $type: $checkedConvert('type', (v) => v as String?),
       );
@@ -21,15 +21,15 @@ WsEewRealtimeEvent _$WsEewRealtimeEventFromJson(Map<String, dynamic> json) =>
     }, fieldKeyMap: const {r'$type': 'type'});
 
 Map<String, dynamic> _$WsEewRealtimeEventToJson(WsEewRealtimeEvent instance) =>
-    <String, dynamic>{'event': instance.event, 'type': instance.$type};
+    <String, dynamic>{'item': instance.item, 'type': instance.$type};
 
 WsEarthquakeBroadcastEvent _$WsEarthquakeBroadcastEventFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('WsEarthquakeBroadcastEvent', json, ($checkedConvert) {
   final val = WsEarthquakeBroadcastEvent(
-    event: $checkedConvert(
-      'event',
-      (v) => WsEventMessage.fromJson(v as Map<String, dynamic>),
+    item: $checkedConvert(
+      'item',
+      (v) => EarthquakePartial.fromJson(v as Map<String, dynamic>),
     ),
     $type: $checkedConvert('type', (v) => v as String?),
   );
@@ -38,7 +38,7 @@ WsEarthquakeBroadcastEvent _$WsEarthquakeBroadcastEventFromJson(
 
 Map<String, dynamic> _$WsEarthquakeBroadcastEventToJson(
   WsEarthquakeBroadcastEvent instance,
-) => <String, dynamic>{'event': instance.event, 'type': instance.$type};
+) => <String, dynamic>{'item': instance.item, 'type': instance.$type};
 
 WsEarthquakeRealtimeEvent _$WsEarthquakeRealtimeEventFromJson(
   Map<String, dynamic> json,
@@ -49,7 +49,12 @@ WsEarthquakeRealtimeEvent _$WsEarthquakeRealtimeEventFromJson(
     final val = WsEarthquakeRealtimeEvent(
       operation: $checkedConvert('operation', (v) => v as String),
       eventId: $checkedConvert('event_id', (v) => v as String),
-      record: $checkedConvert('record', (v) => v as Map<String, dynamic>?),
+      record: $checkedConvert(
+        'record',
+        (v) => v == null
+            ? null
+            : EarthquakePartial.fromJson(v as Map<String, dynamic>),
+      ),
       $type: $checkedConvert('type', (v) => v as String?),
     );
     return val;

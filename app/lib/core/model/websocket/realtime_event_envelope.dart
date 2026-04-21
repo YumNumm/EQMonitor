@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/model/websocket/ws_event_message.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'realtime_event_envelope.freezed.dart';
@@ -11,13 +11,13 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
   /// EEW（緊急地震速報）
   @FreezedUnionValue('EEW')
   const factory RealtimeEventEnvelope.eew({
-    required WsEventMessage event,
+    required EewItemWithRelations item,
   }) = WsEewRealtimeEvent;
 
   /// 地震情報ブロードキャスト
   @FreezedUnionValue('EARTHQUAKE')
   const factory RealtimeEventEnvelope.earthquakeBroadcast({
-    required WsEventMessage event,
+    required EarthquakePartial item,
   }) = WsEarthquakeBroadcastEvent;
 
   /// 地震情報 upsert / delete
@@ -25,7 +25,7 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
   const factory RealtimeEventEnvelope.earthquake({
     required String operation,
     @JsonKey(name: 'event_id') required String eventId,
-    Map<String, dynamic>? record,
+    EarthquakePartial? record,
   }) = WsEarthquakeRealtimeEvent;
 
   /// 津波情報 upsert / delete

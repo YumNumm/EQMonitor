@@ -192,7 +192,7 @@ final class WsConnectionProvider
   WsConnection create() => WsConnection();
 }
 
-String _$wsConnectionHash() => r'8c9e8ca3c828221ce79f66bf164be709e2226c15';
+String _$wsConnectionHash() => r'c0ed48d37c723b81973626c359e3e28f84179863';
 
 abstract class _$WsConnection extends $StreamNotifier<WsMessage> {
   Stream<WsMessage> build();

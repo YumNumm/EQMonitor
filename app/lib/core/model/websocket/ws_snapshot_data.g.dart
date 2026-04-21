@@ -21,7 +21,20 @@ _WsSnapshotData _$WsSnapshotDataFromJson(Map<String, dynamic> json) =>
           (v) =>
               (v as List<dynamic>?)
                   ?.map(
-                    (e) => WsEventMessage.fromJson(e as Map<String, dynamic>),
+                    (e) => EewItemWithRelations.fromJson(
+                      e as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList() ??
+              const [],
+        ),
+        earthquakes: $checkedConvert(
+          'earthquakes',
+          (v) =>
+              (v as List<dynamic>?)
+                  ?.map(
+                    (e) =>
+                        EarthquakePartial.fromJson(e as Map<String, dynamic>),
                   )
                   .toList() ??
               const [],
@@ -35,4 +48,5 @@ Map<String, dynamic> _$WsSnapshotDataToJson(_WsSnapshotData instance) =>
       'revision': instance.revision,
       'updated_at': instance.updatedAt.toIso8601String(),
       'eews': instance.eews,
+      'earthquakes': instance.earthquakes,
     };
