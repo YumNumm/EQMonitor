@@ -1,7 +1,7 @@
 import 'dart:io';
 
 void main(List<String> args) async {
-  final externalOpenapiPath = _parseOpenapiFileArg(args);
+  final externalOpenapiPath = '../../backend/api/api/openapi.json';
 
   final packageDir = Directory.current;
   final openapiFile = File('${packageDir.path}/openapi/openapi.json');
@@ -115,18 +115,6 @@ void main(List<String> args) async {
   });
 
   stdout.writeln('\n✅ コード生成が完了しました');
-}
-
-String? _parseOpenapiFileArg(List<String> args) {
-  final idx = args.indexOf('-openapiFile');
-  if (idx == -1) {
-    return null;
-  }
-  if (idx + 1 >= args.length) {
-    stderr.writeln('-openapiFile にはファイルパスを指定してください');
-    exit(1);
-  }
-  return args[idx + 1];
 }
 
 Future<void> _step(String label, Future<void> Function() action) async {

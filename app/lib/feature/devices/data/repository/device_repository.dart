@@ -36,6 +36,10 @@ class DeviceRepository {
   ) => Result.capture(() async {
     final response = await _api.device.putV2DeviceDeviceId(
       deviceId: deviceId,
+      body: api.DeviceUpsertRequest(
+        type: api.DeviceType.ios,
+        locale: api.DeviceLocale.ja,
+      ),
     );
     return response.data.toRegisteredDevice;
   });
