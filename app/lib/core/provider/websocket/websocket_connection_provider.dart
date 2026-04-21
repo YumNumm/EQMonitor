@@ -5,9 +5,9 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
-import 'package:eqmonitor/core/model/websocket/ws_message.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'websocket_connection_provider.g.dart';

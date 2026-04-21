@@ -1,0 +1,21 @@
+name: eqmonitor_websocket
+description: EQMonitor WebSocket message types
+version: 1.0.0
+publish_to: "none"
+
+environment:
+  sdk: ^3.11.0
+
+resolution: workspace
+
+dependencies:
+  eqmonitor_api:
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.11.0
+
+dev_dependencies:
+  altive_lints: ^2.1.0
+  build_runner: ^2.11.1
+  eqmonitor_lints:
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5

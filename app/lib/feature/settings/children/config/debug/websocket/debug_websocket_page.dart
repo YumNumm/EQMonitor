@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/model/websocket/ws_message.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
+import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

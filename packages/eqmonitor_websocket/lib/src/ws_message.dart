@@ -1,5 +1,5 @@
-import 'package:eqmonitor/core/model/websocket/realtime_event_envelope.dart';
-import 'package:eqmonitor/core/model/websocket/ws_snapshot_data.dart';
+import 'package:eqmonitor_websocket/src/realtime_event_envelope.dart';
+import 'package:eqmonitor_websocket/src/ws_snapshot_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ws_message.freezed.dart';
