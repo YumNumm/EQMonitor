@@ -17,6 +17,7 @@ import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
+import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
@@ -57,6 +58,13 @@ GoRouter goRouter(Ref ref) => GoRouter(
   routes: $appRoutes,
   navigatorKey: App.navigatorKey,
   initialLocation: const HomeRoute().location,
+  redirect: (context, state) {
+    final isCompleted = ref.read(onboardingCompletedProvider);
+    if (!isCompleted && state.matchedLocation != '/onboarding') {
+      return '/onboarding';
+    }
+    return null;
+  },
   observers: [
     _NavigatorObserver(talker),
     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),

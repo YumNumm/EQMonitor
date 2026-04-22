@@ -2,17 +2,26 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class OnboardingPage extends HookWidget {
+enum _OnboardingStep { welcome, notification, complete }
+
+enum _PermissionStatus { notRequested, granted, denied }
+
+class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();
     final currentPage = useState(0);
+    final permissionStatus = useState(_PermissionStatus.notRequested);
     final ds = Theme.of(context).designSystemThemeExtension;
 
     const steps = [
@@ -21,17 +30,37 @@ class OnboardingPage extends HookWidget {
       _OnboardingStep.complete,
     ];
 
-    void goToNext() {
-      if (currentPage.value < steps.length - 1) {
-        unawaited(
-          pageController.nextPage(
-            duration: const Duration(milliseconds: 280),
-            curve: Curves.easeOutCubic,
-          ),
-        );
-      } else {
-        context.go('/');
+    Future<void> goToNext() async {
+      final step = steps[currentPage.value];
+
+      if (step == _OnboardingStep.notification &&
+          permissionStatus.value == _PermissionStatus.notRequested) {
+        final messaging = ref.read(firebaseMessagingProvider);
+        final settings = await messaging.requestPermission();
+        final status = settings.authorizationStatus;
+        if (status == AuthorizationStatus.authorized ||
+            status == AuthorizationStatus.provisional) {
+          permissionStatus.value = _PermissionStatus.granted;
+        } else {
+          permissionStatus.value = _PermissionStatus.denied;
+          return;
+        }
       }
+
+      if (currentPage.value == steps.length - 1) {
+        await ref.read(onboardingCompletedProvider.notifier).complete();
+        if (context.mounted) {
+          context.go('/');
+        }
+        return;
+      }
+
+      unawaited(
+        pageController.nextPage(
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+        ),
+      );
     }
 
     return Scaffold(
@@ -44,8 +73,10 @@ class OnboardingPage extends HookWidget {
                 controller: pageController,
                 onPageChanged: (index) => currentPage.value = index,
                 itemCount: steps.length,
-                itemBuilder: (context, index) =>
-                    _StepPage(step: steps[index]),
+                itemBuilder: (context, index) => _StepPage(
+                  step: steps[index],
+                  permissionStatus: permissionStatus.value,
+                ),
               ),
             ),
             _BottomBar(
@@ -61,18 +92,22 @@ class OnboardingPage extends HookWidget {
   }
 }
 
-enum _OnboardingStep { welcome, notification, complete }
-
 class _StepPage extends StatelessWidget {
-  const _StepPage({required this.step});
+  const _StepPage({
+    required this.step,
+    required this.permissionStatus,
+  });
 
   final _OnboardingStep step;
+  final _PermissionStatus permissionStatus;
 
   @override
   Widget build(BuildContext context) {
     return switch (step) {
       _OnboardingStep.welcome => const _WelcomeStepContent(),
-      _OnboardingStep.notification => const _NotificationStepContent(),
+      _OnboardingStep.notification => _NotificationStepContent(
+        permissionStatus: permissionStatus,
+      ),
       _OnboardingStep.complete => const _CompleteStepContent(),
     };
   }
@@ -116,7 +151,9 @@ class _WelcomeStepContent extends StatelessWidget {
 }
 
 class _NotificationStepContent extends StatelessWidget {
-  const _NotificationStepContent();
+  const _NotificationStepContent({required this.permissionStatus});
+
+  final _PermissionStatus permissionStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +175,15 @@ class _NotificationStepContent extends StatelessWidget {
               color: ds.textColor.secondary,
             ),
           ),
+          if (permissionStatus == _PermissionStatus.denied) ...[
+            SizedBox(height: ds.spacing.sm),
+            Text(
+              '通知は設定アプリからいつでも変更できます',
+              style: ds.typography.bodySmall.copyWith(
+                color: ds.textColor.tertiary,
+              ),
+            ),
+          ],
           const Spacer(),
           Center(
             child: _NotificationHero(
@@ -321,7 +367,7 @@ class _BottomBar extends StatelessWidget {
   final int currentPage;
   final int totalPages;
   final bool isLast;
-  final VoidCallback onNext;
+  final Future<void> Function() onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -351,7 +397,7 @@ class _BottomBar extends StatelessWidget {
             width: double.infinity,
             height: 52,
             child: FilledButton(
-              onPressed: onNext,
+              onPressed: () => unawaited(onNext()),
               style: FilledButton.styleFrom(
                 backgroundColor: ds.palette.brandPrimary,
                 foregroundColor: ds.textColor.inverse,
