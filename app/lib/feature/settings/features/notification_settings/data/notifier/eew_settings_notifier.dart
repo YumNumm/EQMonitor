@@ -139,14 +139,21 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     }
   }
 
-  Future<void> removeRegion(int regionId) async {
+  Future<void> removeRegion({
+    required int regionId,
+    required bool isCurrentLocation,
+  }) async {
     final current = state.requireValue;
     final deviceId = await ref.read(deviceIdProvider.future);
     final repo = await ref.read(
       deviceNotificationSettingsRepositoryProvider.future,
     );
-    final updated =
-        current.regions.where((r) => r.regionId != regionId).toList();
+    final updated = current.regions
+        .where(
+          (r) => !(r.regionId == regionId &&
+              r.isCurrentLocation == isCurrentLocation),
+        )
+        .toList();
     final result = await repo.putEewRegions(
       deviceId: deviceId,
       regions: updated,

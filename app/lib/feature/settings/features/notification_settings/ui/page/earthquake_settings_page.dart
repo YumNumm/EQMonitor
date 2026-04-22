@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_notification_settings.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_region_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -196,6 +195,9 @@ class _RegionsSection extends ConsumerWidget {
     );
     final isBusy = regionsState is MutationPending;
     final hasCurrentLocation = settings.regions.any((r) => r.isCurrentLocation);
+    final hasAllRegion = settings.regions.any(
+      (r) => !r.isCurrentLocation && r.regionId == 0,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +213,7 @@ class _RegionsSection extends ConsumerWidget {
             ),
           ),
         for (final region in settings.regions)
-          _RegionListTile(
+          NotificationRegionListTile(
             region: region,
             isBusy: isBusy,
             onDelete: () {
@@ -221,7 +223,10 @@ class _RegionsSection extends ConsumerWidget {
                   (tsx) async {
                     await tsx
                         .get(earthquakeSettingsProvider.notifier)
-                        .removeRegion(region.regionId);
+                        .removeRegion(
+                          regionId: region.regionId,
+                          isCurrentLocation: region.isCurrentLocation,
+                        );
                   },
                 ),
               );
@@ -231,6 +236,7 @@ class _RegionsSection extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Wrap(
             spacing: 8,
+            runSpacing: 8,
             children: [
               FilledButton.tonal(
                 onPressed: isBusy || hasCurrentLocation
@@ -251,8 +257,9 @@ class _RegionsSection extends ConsumerWidget {
                     ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child:
-                            CircularProgressIndicator.adaptive(strokeWidth: 2),
+                        child: CircularProgressIndicator.adaptive(
+                          strokeWidth: 2,
+                        ),
                       )
                     : const Text('現在地を追加'),
               ),
@@ -260,8 +267,10 @@ class _RegionsSection extends ConsumerWidget {
                 onPressed: isBusy
                     ? null
                     : () async {
-                        final result =
-                            await _showRegionPicker(context: context);
+                        final result = await showNotificationRegionPickerDialog(
+                          context,
+                          allRegionAlreadyAdded: hasAllRegion,
+                        );
                         if (result == null || !context.mounted) {
                           return;
                         }
@@ -284,132 +293,6 @@ class _RegionsSection extends ConsumerWidget {
               ),
             ],
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _RegionListTile extends StatelessWidget {
-  const _RegionListTile({
-    required this.region,
-    required this.isBusy,
-    required this.onDelete,
-  });
-
-  final NotificationRegion region;
-  final bool isBusy;
-  final VoidCallback onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    final name = region.isCurrentLocation
-        ? '現在地'
-        : (region.regionName ?? '地域ID: ${region.regionId}');
-    final threshold = region.minJmaIntensity;
-    return ListTile(
-      title: Text(name),
-      subtitle: Text('震度${threshold.mainText}${threshold.suffix}以上で通知'),
-      trailing: isBusy
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-            )
-          : IconButton(
-              tooltip: '削除',
-              onPressed: onDelete,
-              icon: const Icon(Icons.delete_outline),
-            ),
-    );
-  }
-}
-
-typedef _RegionPickerResult = ({
-  int regionId,
-  String regionName,
-  JmaIntensity minIntensity,
-});
-
-Future<_RegionPickerResult?> _showRegionPicker({
-  required BuildContext context,
-}) => showAdaptiveDialog<_RegionPickerResult>(
-      context: context,
-      builder: (_) => const _RegionPickerDialog(),
-    );
-
-class _RegionPickerDialog extends StatefulWidget {
-  const _RegionPickerDialog();
-
-  @override
-  State<_RegionPickerDialog> createState() => _RegionPickerDialogState();
-}
-
-class _RegionPickerDialogState extends State<_RegionPickerDialog> {
-  String? _selectedCode;
-  String? _selectedName;
-  JmaIntensity _intensity = JmaIntensity.four;
-
-  static const List<JmaIntensity> _intensities = [
-    JmaIntensity.one,
-    JmaIntensity.two,
-    JmaIntensity.three,
-    JmaIntensity.four,
-    JmaIntensity.fiveLower,
-    JmaIntensity.fiveUpper,
-    JmaIntensity.sixLower,
-    JmaIntensity.sixUpper,
-    JmaIntensity.seven,
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog.adaptive(
-      title: const Text('地域を追加'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PrefectureSelector(
-            selectedCode: _selectedCode,
-            onChanged: (sel) => setState(() {
-              _selectedCode = sel?.code;
-              _selectedName = sel?.name;
-            }),
-          ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<JmaIntensity>(
-            initialValue: _intensity,
-            decoration: const InputDecoration(labelText: '最小震度'),
-            items: _intensities
-                .map(
-                  (i) => DropdownMenuItem(
-                    value: i,
-                    child: Text('震度${i.mainText}${i.suffix}以上'),
-                  ),
-                )
-                .toList(),
-            onChanged: (v) {
-              if (v != null) {
-                setState(() => _intensity = v);
-              }
-            },
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('キャンセル'),
-        ),
-        FilledButton(
-          onPressed: _selectedCode == null
-              ? null
-              : () => Navigator.of(context).pop((
-                    regionId: int.parse(_selectedCode!),
-                    regionName: _selectedName!,
-                    minIntensity: _intensity,
-                  )),
-          child: const Text('追加'),
         ),
       ],
     );
