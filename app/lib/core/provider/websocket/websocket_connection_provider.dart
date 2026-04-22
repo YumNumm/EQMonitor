@@ -5,9 +5,9 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
-import 'package:eqmonitor/core/model/websocket/ws_message.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'websocket_connection_provider.g.dart';
@@ -51,6 +51,14 @@ class WsLastPingAt extends _$WsLastPingAt {
   DateTime? build() => null;
 
   void update() => state = DateTime.now();
+}
+
+@Riverpod(keepAlive: true)
+class WsPingRtt extends _$WsPingRtt {
+  @override
+  Duration? build() => null;
+
+  void update(Duration rtt) => state = rtt;
 }
 
 @Riverpod(keepAlive: true)
@@ -150,6 +158,13 @@ class WsConnection extends _$WsConnection {
 
         final type = decoded['type'] as String?;
         if (type == 'ping') {
+          final now = DateTime.now();
+          final lastPing = ref.read(wsLastPingAtProvider);
+          if (lastPing != null) {
+            ref.read(wsPingRttProvider.notifier).update(
+              now.difference(lastPing),
+            );
+          }
           ref.read(wsLastPingAtProvider.notifier).update();
           _ws?.add(jsonEncode({'type': 'pong'}));
           continue;

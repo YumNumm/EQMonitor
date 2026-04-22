@@ -4,14 +4,15 @@ import 'package:url_launcher/url_launcher.dart';
 class RealtimeDataTypeInfoDialog extends StatelessWidget {
   const RealtimeDataTypeInfoDialog({super.key});
 
-  static Future<void> show(BuildContext context) async => showDialog<void>(
-    context: context,
-    builder: (context) => const RealtimeDataTypeInfoDialog(),
-  );
+  static Future<void> show(BuildContext context) async =>
+      showAdaptiveDialog<void>(
+        context: context,
+        builder: (context) => const RealtimeDataTypeInfoDialog(),
+      );
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return AlertDialog.adaptive(
       title: const Text('強震モニタのデータ種別について'),
       content: const SingleChildScrollView(
         child: Column(

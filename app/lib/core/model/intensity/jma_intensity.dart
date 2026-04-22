@@ -98,3 +98,36 @@ extension JmaIntensityToApi on JmaIntensity {
     .seven => .value7,
   };
 }
+
+extension ApiMinJmaIntensityConverter on api.MinJmaIntensity {
+  JmaIntensity get toJmaIntensity => switch (this) {
+    api.MinJmaIntensity.value0 => JmaIntensity.zero,
+    api.MinJmaIntensity.value1 => JmaIntensity.one,
+    api.MinJmaIntensity.value2 => JmaIntensity.two,
+    api.MinJmaIntensity.value3 => JmaIntensity.three,
+    api.MinJmaIntensity.value4 => JmaIntensity.four,
+    api.MinJmaIntensity.value5unknown => JmaIntensity.fiveUnknown,
+    api.MinJmaIntensity.value5minus => JmaIntensity.fiveLower,
+    api.MinJmaIntensity.value5plus => JmaIntensity.fiveUpper,
+    api.MinJmaIntensity.value6minus => JmaIntensity.sixLower,
+    api.MinJmaIntensity.value6plus => JmaIntensity.sixUpper,
+    api.MinJmaIntensity.value7 => JmaIntensity.seven,
+  };
+}
+
+extension JmaIntensityToApiMin on JmaIntensity {
+  api.MinJmaIntensity? get toApiMinJmaIntensity => switch (this) {
+    JmaIntensity.unknown => null,
+    JmaIntensity.zero => api.MinJmaIntensity.value0,
+    JmaIntensity.one => api.MinJmaIntensity.value1,
+    JmaIntensity.two => api.MinJmaIntensity.value2,
+    JmaIntensity.three => api.MinJmaIntensity.value3,
+    JmaIntensity.four => api.MinJmaIntensity.value4,
+    JmaIntensity.fiveUnknown => api.MinJmaIntensity.value5unknown,
+    JmaIntensity.fiveLower => api.MinJmaIntensity.value5minus,
+    JmaIntensity.fiveUpper => api.MinJmaIntensity.value5plus,
+    JmaIntensity.sixLower => api.MinJmaIntensity.value6minus,
+    JmaIntensity.sixUpper => api.MinJmaIntensity.value6plus,
+    JmaIntensity.seven => api.MinJmaIntensity.value7,
+  };
+}

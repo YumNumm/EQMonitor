@@ -187,7 +187,7 @@ class _MonthSelector extends StatelessWidget {
           ),
           OutlinedButton.icon(
             onPressed: () async {
-              final result = await showDialog<Month?>(
+              final result = await showAdaptiveDialog<Month?>(
                 context: context,
                 builder: (context) => _MonthPickerDialog(
                   initialMonth: selectedMonth,
@@ -243,7 +243,7 @@ class _MonthPickerDialog extends HookWidget {
       selectedMonth.value = availableMonths.last;
     }
 
-    return AlertDialog(
+    return AlertDialog.adaptive(
       title: const Text('年月を選択'),
       content: Row(
         mainAxisSize: MainAxisSize.min,

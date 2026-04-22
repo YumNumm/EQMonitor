@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -57,6 +58,19 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('Flavor'),
             leading: const Icon(Icons.flag),
             subtitle: Text(flavorName),
+          ),
+          ListTile(
+            title: const Text('オンボーディング'),
+            subtitle: const Text('オンボーディングフローをプレビュー'),
+            leading: const Icon(Icons.start),
+            onTap: () async => const OnboardingRoute().push<void>(context),
+          ),
+          ListTile(
+            title: const Text('オンボーディングリセット'),
+            subtitle: const Text('完了フラグを消去してオンボーディングを再表示'),
+            leading: const Icon(Icons.restart_alt),
+            onTap: () async =>
+                ref.read(onboardingCompletedProvider.notifier).reset(),
           ),
           ListTile(
             title: const Text('ログ'),

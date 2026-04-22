@@ -61,6 +61,8 @@ dependencies:
     path: ../packages/earthquake_replay
   eqmonitor_api:
     path: ../packages/eqmonitor_api
+  eqmonitor_websocket:
+    path: ../packages/eqmonitor_websocket
   extensions:
     path: ../packages/extensions
   file_picker: ^11.0.2

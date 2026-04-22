@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/provider/debug_device_settings_providers.dart';
@@ -229,10 +230,10 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       title: '全般通知設定',
       child: Column(
         children: [
-          SwitchListTile(
+          AppSwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('津波情報の通知'),
-            subtitle: const Text('training / 訓練報とは別の津波関連通知'),
+            title: '津波情報の通知',
+            subtitle: 'training / 訓練報とは別の津波関連通知',
             value: tsunami.value,
             onChanged: isBusy.value
                 ? null
@@ -240,9 +241,9 @@ class _NotificationSettingsSection extends HookConsumerWidget {
                     tsunami.value = v;
                   },
           ),
-          SwitchListTile(
+          AppSwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('訓練報・試験報の通知'),
+            title: '訓練報・試験報の通知',
             value: training.value,
             onChanged: isBusy.value
                 ? null

@@ -1,17 +1,23 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/region_picker_map_page.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
 class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
   const EarthquakeHistorySearchParameterModal({
@@ -119,6 +125,85 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
       initialParameter.magnitudeLte ?? _MagnitudeRangeSelector.initialMax,
     );
 
+    // 現在地から選択中フラグ
+    final isResolvingLocation = useState(false);
+
+    // 現在地から地域コードを解決する
+    Future<void> resolveCurrentLocation() async {
+      isResolvingLocation.value = true;
+      try {
+        var permission = await Geolocator.checkPermission();
+        if (permission == LocationPermission.denied) {
+          permission = await Geolocator.requestPermission();
+        }
+        if (permission == LocationPermission.denied ||
+            permission == LocationPermission.deniedForever) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('位置情報の権限がありません')),
+            );
+          }
+          return;
+        }
+
+        final position = ref.read(locationStreamProvider).value ??
+            await Geolocator.getCurrentPosition(
+              locationSettings: const LocationSettings(
+                accuracy: LocationAccuracy.low,
+              ),
+            );
+        final latLng = lat_lng.LatLng(position.latitude, position.longitude);
+
+        if (selectedRegionType.value == 'city') {
+          final city = await ref.read(
+            jmaMapAreaInformationCityInsideProvider(latLng).future,
+          );
+          if (city?.property != null) {
+            selectedRegionCode.value = city!.property!.code;
+            selectedRegionName.value = city.property!.name;
+          }
+        } else {
+          final city = await ref.read(
+            jmaMapAreaInformationCityInsideProvider(latLng).future,
+          );
+          if (city?.property != null) {
+            final cityCode = city!.property!.code;
+            final prefix =
+                cityCode.length >= 2 ? cityCode.substring(0, 2) : cityCode;
+            final jmaCodeTable = ref.read(jmaCodeTableProvider);
+            final prefecture = jmaCodeTable
+                .areaInformationPrefectureEarthquake
+                .items
+                .firstWhereOrNull((p) => p.code.startsWith(prefix));
+            if (prefecture != null) {
+              selectedRegionCode.value = prefecture.code;
+              selectedRegionName.value = prefecture.name;
+            }
+          }
+        }
+      } on Exception catch (_) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('現在地の取得に失敗しました')),
+          );
+        }
+      } finally {
+        isResolvingLocation.value = false;
+      }
+    }
+
+    // 地図から選択
+    Future<void> selectFromMap() async {
+      final result = await RegionPickerMapPage.show(
+        context,
+        selectedType: selectedRegionType.value,
+      );
+      if (result != null) {
+        selectedRegionCode.value = result.code;
+        selectedRegionName.value = result.name;
+      }
+    }
+
     return Scaffold(
       backgroundColor: backgroundColor,
       body: CustomScrollView(
@@ -219,6 +304,12 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                       regionIntensityMin.value = min;
                       regionIntensityMax.value = max;
                     },
+                    onCurrentLocationPressed: isResolvingLocation.value
+                        ? null
+                        : () => unawaited(resolveCurrentLocation()),
+                    onSelectFromMapPressed: isResolvingLocation.value
+                        ? null
+                        : () => unawaited(selectFromMap()),
                   ),
                 ),
                 _SettingSection(
@@ -613,6 +704,8 @@ class _RegionIntensitySelector extends StatelessWidget {
     required this.intensityMax,
     required this.onRegionChanged,
     required this.onIntensityChanged,
+    this.onCurrentLocationPressed,
+    this.onSelectFromMapPressed,
   });
 
   final String? selectedCode;
@@ -622,6 +715,8 @@ class _RegionIntensitySelector extends StatelessWidget {
   final JmaIntensity intensityMax;
   final void Function(String?, String?, String) onRegionChanged;
   final void Function(JmaIntensity, JmaIntensity) onIntensityChanged;
+  final VoidCallback? onCurrentLocationPressed;
+  final VoidCallback? onSelectFromMapPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -688,9 +783,7 @@ class _RegionIntensitySelector extends StatelessWidget {
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: () {
-                  // TODO: 地図から選択
-                },
+                onPressed: onSelectFromMapPressed,
                 icon: const Icon(Icons.map_outlined),
                 label: const Text('地図から選択'),
               ),
@@ -698,9 +791,7 @@ class _RegionIntensitySelector extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: () {
-                  // TODO: 現在地から選択
-                },
+                onPressed: onCurrentLocationPressed,
                 icon: const Icon(Icons.my_location),
                 label: const Text('現在地'),
               ),

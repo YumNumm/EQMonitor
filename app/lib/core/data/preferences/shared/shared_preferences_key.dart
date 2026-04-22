@@ -10,6 +10,7 @@ enum SharedPreferencesKey {
   intensityColor('intensity_color'),
   locationTrackingMode('location_tracking_mode'),
   homeConfiguration('home_configuration'),
+  onboardingCompleted('onboarding_completed'),
   ;
 
   const SharedPreferencesKey(this.key);

@@ -168,6 +168,57 @@ abstract class _$WsLastPingAt extends $Notifier<DateTime?> {
   }
 }
 
+@ProviderFor(WsPingRtt)
+final wsPingRttProvider = WsPingRttProvider._();
+
+final class WsPingRttProvider extends $NotifierProvider<WsPingRtt, Duration?> {
+  WsPingRttProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'wsPingRttProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$wsPingRttHash();
+
+  @$internal
+  @override
+  WsPingRtt create() => WsPingRtt();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Duration? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Duration?>(value),
+    );
+  }
+}
+
+String _$wsPingRttHash() => r'102c61a7ec760afb0c41e8b1b05c84b653b404ed';
+
+abstract class _$WsPingRtt extends $Notifier<Duration?> {
+  Duration? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Duration?, Duration?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Duration?, Duration?>,
+              Duration?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(WsConnection)
 final wsConnectionProvider = WsConnectionProvider._();
 
@@ -192,7 +243,7 @@ final class WsConnectionProvider
   WsConnection create() => WsConnection();
 }
 
-String _$wsConnectionHash() => r'8c9e8ca3c828221ce79f66bf164be709e2226c15';
+String _$wsConnectionHash() => r'ac54d682e7521ce769dd41db7fba66a1c07c1d5b';
 
 abstract class _$WsConnection extends $StreamNotifier<WsMessage> {
   Stream<WsMessage> build();

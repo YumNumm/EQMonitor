@@ -281,12 +281,12 @@ Future<Color?> _showColorPickerDialog(
   BuildContext context,
   Color initialColor,
 ) {
-  return showDialog<Color>(
+  return showAdaptiveDialog<Color>(
     context: context,
     builder: (_) => HookBuilder(
       builder: (context) {
         final pickerColor = useState(initialColor);
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: const Text('背景色を選択'),
           content: SingleChildScrollView(
             child: ColorPicker(
