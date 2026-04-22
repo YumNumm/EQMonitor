@@ -125,6 +125,42 @@ class EarthquakeSettingsNotifier extends _$EarthquakeSettingsNotifier {
     }
   }
 
+  Future<void> addRegion({
+    required int regionId,
+    required String regionName,
+    required JmaIntensity minIntensity,
+  }) async {
+    final current = state.requireValue;
+    if (current.regions.any(
+      (r) => !r.isCurrentLocation && r.regionId == regionId,
+    )) {
+      return;
+    }
+    final deviceId = await ref.read(deviceIdProvider.future);
+    final repo = await ref.read(
+      deviceNotificationSettingsRepositoryProvider.future,
+    );
+    final updated = [
+      ...current.regions,
+      NotificationRegion(
+        regionId: regionId,
+        regionName: regionName,
+        isCurrentLocation: false,
+        minJmaIntensity: minIntensity,
+      ),
+    ];
+    final result = await repo.putEarthquakeRegions(
+      deviceId: deviceId,
+      regions: updated,
+    );
+    switch (result) {
+      case Success(:final value):
+        state = AsyncData(current.copyWith(regions: value));
+      case Failure(:final exception):
+        throw exception;
+    }
+  }
+
   Future<void> removeRegion(int regionId) async {
     final current = state.requireValue;
     final deviceId = await ref.read(deviceIdProvider.future);

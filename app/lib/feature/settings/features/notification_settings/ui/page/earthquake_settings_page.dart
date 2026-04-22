@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -228,28 +229,60 @@ class _RegionsSection extends ConsumerWidget {
           ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: FilledButton.tonal(
-            onPressed: isBusy || hasCurrentLocation
-                ? null
-                : () {
-                    unawaited(
-                      EarthquakeSettingsNotifier.updateRegionsMutation.run(
-                        ref,
-                        (tsx) async {
-                          await tsx
-                              .get(earthquakeSettingsProvider.notifier)
-                              .addCurrentLocationRegion();
-                        },
-                      ),
-                    );
-                  },
-            child: isBusy
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-                  )
-                : const Text('現在地を追加'),
+          child: Wrap(
+            spacing: 8,
+            children: [
+              FilledButton.tonal(
+                onPressed: isBusy || hasCurrentLocation
+                    ? null
+                    : () {
+                        unawaited(
+                          EarthquakeSettingsNotifier.updateRegionsMutation.run(
+                            ref,
+                            (tsx) async {
+                              await tsx
+                                  .get(earthquakeSettingsProvider.notifier)
+                                  .addCurrentLocationRegion();
+                            },
+                          ),
+                        );
+                      },
+                child: isBusy
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child:
+                            CircularProgressIndicator.adaptive(strokeWidth: 2),
+                      )
+                    : const Text('現在地を追加'),
+              ),
+              FilledButton.tonal(
+                onPressed: isBusy
+                    ? null
+                    : () async {
+                        final result =
+                            await _showRegionPicker(context: context);
+                        if (result == null || !context.mounted) {
+                          return;
+                        }
+                        unawaited(
+                          EarthquakeSettingsNotifier.updateRegionsMutation.run(
+                            ref,
+                            (tsx) async {
+                              await tsx
+                                  .get(earthquakeSettingsProvider.notifier)
+                                  .addRegion(
+                                    regionId: result.regionId,
+                                    regionName: result.regionName,
+                                    minIntensity: result.minIntensity,
+                                  );
+                            },
+                          ),
+                        );
+                      },
+                child: const Text('地域を追加'),
+              ),
+            ],
           ),
         ),
       ],
@@ -288,6 +321,97 @@ class _RegionListTile extends StatelessWidget {
               onPressed: onDelete,
               icon: const Icon(Icons.delete_outline),
             ),
+    );
+  }
+}
+
+typedef _RegionPickerResult = ({
+  int regionId,
+  String regionName,
+  JmaIntensity minIntensity,
+});
+
+Future<_RegionPickerResult?> _showRegionPicker({
+  required BuildContext context,
+}) => showDialog<_RegionPickerResult>(
+      context: context,
+      builder: (_) => const _RegionPickerDialog(),
+    );
+
+class _RegionPickerDialog extends StatefulWidget {
+  const _RegionPickerDialog();
+
+  @override
+  State<_RegionPickerDialog> createState() => _RegionPickerDialogState();
+}
+
+class _RegionPickerDialogState extends State<_RegionPickerDialog> {
+  String? _selectedCode;
+  String? _selectedName;
+  JmaIntensity _intensity = JmaIntensity.four;
+
+  static const List<JmaIntensity> _intensities = [
+    JmaIntensity.one,
+    JmaIntensity.two,
+    JmaIntensity.three,
+    JmaIntensity.four,
+    JmaIntensity.fiveLower,
+    JmaIntensity.fiveUpper,
+    JmaIntensity.sixLower,
+    JmaIntensity.sixUpper,
+    JmaIntensity.seven,
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('地域を追加'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PrefectureSelector(
+            selectedCode: _selectedCode,
+            onChanged: (sel) => setState(() {
+              _selectedCode = sel?.code;
+              _selectedName = sel?.name;
+            }),
+          ),
+          const SizedBox(height: 16),
+          DropdownButtonFormField<JmaIntensity>(
+            initialValue: _intensity,
+            decoration: const InputDecoration(labelText: '最小震度'),
+            items: _intensities
+                .map(
+                  (i) => DropdownMenuItem(
+                    value: i,
+                    child: Text('震度${i.mainText}${i.suffix}以上'),
+                  ),
+                )
+                .toList(),
+            onChanged: (v) {
+              if (v != null) {
+                setState(() => _intensity = v);
+              }
+            },
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('キャンセル'),
+        ),
+        FilledButton(
+          onPressed: _selectedCode == null
+              ? null
+              : () => Navigator.of(context).pop((
+                    regionId: int.parse(_selectedCode!),
+                    regionName: _selectedName!,
+                    minIntensity: _intensity,
+                  )),
+          child: const Text('追加'),
+        ),
+      ],
     );
   }
 }
