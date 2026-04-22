@@ -78,6 +78,29 @@ checksum = "sha256:3dd936f59d888a4eefce850615aa22e2ad27f6aa58e03a19ebfc0e4d5eb4e
 url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.15/tfcmt_windows_amd64.tar.gz"
 provenance = "github-attestations"
 
+[[tools.claude]]
+version = "2.1.116"
+backend = "aqua:anthropics/claude-code"
+
+[tools.claude."platforms.linux-arm64"]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.116/linux-arm64/claude"
+
+[tools.claude."platforms.linux-arm64-musl"]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.116/linux-arm64/claude"
+
+[tools.claude."platforms.linux-x64"]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.116/linux-x64/claude"
+
+[tools.claude."platforms.linux-x64-musl"]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.116/linux-x64/claude"
+
+[tools.claude."platforms.macos-arm64"]
+checksum = "blake3:734349de96e9fff453b14d8bd6dcec3ee7249c560bd8c6303cbaa6ad18dfe735"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.116/darwin-arm64/claude"
+
+[tools.claude."platforms.macos-x64"]
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.116/darwin-x64/claude"
+
 [[tools.firebase]]
 version = "15.14.0"
 backend = "aqua:firebase/firebase-tools"

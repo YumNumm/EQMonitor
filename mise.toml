@@ -25,6 +25,7 @@ pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
 gitleaks = "latest"
+claude = "latest"
 
 [settings]
 lockfile = true
