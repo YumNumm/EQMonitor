@@ -16,7 +16,6 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_region
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
@@ -179,7 +178,7 @@ class _MapHeader extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         KyoshinMonitorStatusCard(
-          onTap: () async => KyoshinMonitorSettingsModal.show(context),
+          onTap: () async => const HomeMapLayerRoute().push<void>(context),
         ),
         if (showScale)
           const Padding(

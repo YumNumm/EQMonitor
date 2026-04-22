@@ -17,6 +17,7 @@ class DebugWebSocketPage extends HookConsumerWidget {
     final status = ref.watch(wsConnectionStatusProvider);
     final currentUrl = ref.watch(wsCurrentUrlProvider);
     final lastPingAt = ref.watch(wsLastPingAtProvider);
+    final pingInterval = ref.watch(wsPingRttProvider);
 
     ref.listen(wsConnectionProvider, (_, next) {
       next.whenData((msg) {
@@ -49,6 +50,7 @@ class DebugWebSocketPage extends HookConsumerWidget {
             status: status,
             wsUrl: currentUrl,
             lastPingAt: lastPingAt,
+            pingInterval: pingInterval,
           ),
           const Divider(height: 1),
           Expanded(
@@ -79,11 +81,13 @@ class _WsStatusCard extends HookWidget {
     required this.status,
     required this.wsUrl,
     required this.lastPingAt,
+    required this.pingInterval,
   });
 
   final WsConnectionState status;
   final String? wsUrl;
   final DateTime? lastPingAt;
+  final Duration? pingInterval;
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +136,13 @@ class _WsStatusCard extends HookWidget {
           ],
           const SizedBox(height: 4),
           Text('最終 ping: $pingLabel', style: theme.textTheme.bodySmall),
+          if (pingInterval != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              'Ping 間隔: ${pingInterval!.inMilliseconds}ms',
+              style: theme.textTheme.bodySmall,
+            ),
+          ],
         ],
       ),
     );

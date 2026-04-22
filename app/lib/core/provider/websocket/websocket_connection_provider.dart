@@ -54,6 +54,14 @@ class WsLastPingAt extends _$WsLastPingAt {
 }
 
 @Riverpod(keepAlive: true)
+class WsPingRtt extends _$WsPingRtt {
+  @override
+  Duration? build() => null;
+
+  void update(Duration rtt) => state = rtt;
+}
+
+@Riverpod(keepAlive: true)
 class WsConnection extends _$WsConnection {
   WebSocket? _ws;
   var _disposed = false;
@@ -150,6 +158,13 @@ class WsConnection extends _$WsConnection {
 
         final type = decoded['type'] as String?;
         if (type == 'ping') {
+          final now = DateTime.now();
+          final lastPing = ref.read(wsLastPingAtProvider);
+          if (lastPing != null) {
+            ref.read(wsPingRttProvider.notifier).update(
+              now.difference(lastPing),
+            );
+          }
           ref.read(wsLastPingAtProvider.notifier).update();
           _ws?.add(jsonEncode({'type': 'pong'}));
           continue;
