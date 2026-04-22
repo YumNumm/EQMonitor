@@ -39,6 +39,12 @@ class SettingsScreen extends ConsumerWidget {
           const _AppVersionInformation(),
           const SettingsSectionHeader(text: '各種設定'),
           ListTile(
+            title: const Text('通知設定'),
+            leading: const Icon(Icons.notifications_outlined),
+            onTap: () async =>
+                const NotificationSettingsRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('表示設定'),
             leading: const Icon(Icons.color_lens),
             onTap: () async => const DisplayRoute().push<void>(context),

@@ -33,6 +33,10 @@ import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/earthquake_settings_page.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_settings_page.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
@@ -184,6 +188,14 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
     TypedGoRoute<TermOfServiceRoute>(path: 'term-of-service'),
     TypedGoRoute<PrivacyPolicyRoute>(path: 'privacy-policy'),
     TypedGoRoute<LicenseRoute>(path: 'license'),
+    TypedGoRoute<NotificationSettingsRoute>(
+      path: 'notification',
+      routes: [
+        TypedGoRoute<EewSettingsRoute>(path: 'eew'),
+        TypedGoRoute<EarthquakeSettingsRoute>(path: 'earthquake'),
+        TypedGoRoute<ShakeDetectionSettingsRoute>(path: 'shake'),
+      ],
+    ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
     TypedGoRoute<AboutThisAppRoute>(path: 'about-this-app'),
     TypedGoRoute<DebugRoute>(
@@ -238,6 +250,40 @@ class DisplayRoute extends GoRouteData with $DisplayRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DisplaySettingsScreen();
+}
+
+class NotificationSettingsRoute extends GoRouteData
+    with $NotificationSettingsRoute {
+  const NotificationSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const NotificationSettingsPage();
+}
+
+class EewSettingsRoute extends GoRouteData with $EewSettingsRoute {
+  const EewSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EewSettingsPage();
+}
+
+class EarthquakeSettingsRoute extends GoRouteData with $EarthquakeSettingsRoute {
+  const EarthquakeSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeSettingsPage();
+}
+
+class ShakeDetectionSettingsRoute extends GoRouteData
+    with $ShakeDetectionSettingsRoute {
+  const ShakeDetectionSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ShakeDetectionSettingsPage();
 }
 
 class DebugRoute extends GoRouteData with $DebugRoute {
