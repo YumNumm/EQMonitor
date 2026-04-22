@@ -9,6 +9,7 @@ part of 'router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
+  $onboardingRoute,
   $earthquakeHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
@@ -17,6 +18,32 @@ List<RouteBase> get $appRoutes => [
   $talkerRoute,
   $settingsRoute,
 ];
+
+RouteBase get $onboardingRoute => GoRouteData.$route(
+  path: '/onboarding',
+  factory: $OnboardingRoute._fromState,
+);
+
+mixin $OnboardingRoute on GoRouteData {
+  static OnboardingRoute _fromState(GoRouterState state) =>
+      const OnboardingRoute();
+
+  @override
+  String get location => GoRouteData.$location('/onboarding');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',

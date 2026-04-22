@@ -59,6 +59,12 @@ class _DebugWidget extends ConsumerWidget {
             subtitle: Text(flavorName),
           ),
           ListTile(
+            title: const Text('オンボーディング'),
+            subtitle: const Text('オンボーディングフローをプレビュー'),
+            leading: const Icon(Icons.start),
+            onTap: () async => const OnboardingRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('ログ'),
             leading: const Icon(Icons.list),
             onTap: () async => const TalkerRoute().push<void>(context),
