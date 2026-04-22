@@ -333,7 +333,7 @@ typedef _RegionPickerResult = ({
 
 Future<_RegionPickerResult?> _showRegionPicker({
   required BuildContext context,
-}) => showDialog<_RegionPickerResult>(
+}) => showAdaptiveDialog<_RegionPickerResult>(
       context: context,
       builder: (_) => const _RegionPickerDialog(),
     );
@@ -364,7 +364,7 @@ class _RegionPickerDialogState extends State<_RegionPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return AlertDialog.adaptive(
       title: const Text('地域を追加'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
