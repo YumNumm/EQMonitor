@@ -48,8 +48,8 @@ class EarthquakeHistoryRepository {
       magnitudeLte: magnitudeLte?.toString(),
       depthGte: depthGte?.toString(),
       depthLte: depthLte?.toString(),
-      intensityGte: intensityGte,
-      intensityLte: intensityLte,
+      intensityGte: intensityGte?.toApiJmaIntensity,
+      intensityLte: intensityLte?.toApiJmaIntensity,
     );
     return response.data.toEarthquakeListResponse(parameter: earthquakeParameter);
   }
