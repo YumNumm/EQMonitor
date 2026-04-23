@@ -9,40 +9,30 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
   const EarthquakeHistoryMapDisplayModeModal._({
     required this.hasLpgmIntensity,
-    required this.isOverriding,
-    this.onDisableOverride,
+    required this.hasTileUrl,
   });
 
   final bool hasLpgmIntensity;
-  final bool isOverriding;
-  final VoidCallback? onDisableOverride;
+  final bool hasTileUrl;
 
   /// 地図の表示設定モーダル
-  ///
-  /// 表示モード・観測点サブモード・震央設定・LPGM 等を変更する。
-  /// [isOverriding] が true のとき、推計震度 override が有効であることを表示する。
-  /// [onDisableOverride] は override を無効にして設定を反映させたいときに呼ばれる。
   static Future<void> show({
     required BuildContext context,
     required bool hasLpgmIntensity,
-    bool isOverriding = false,
-    VoidCallback? onDisableOverride,
+    bool hasTileUrl = false,
   }) => showModalBottomSheet(
     context: context,
     clipBehavior: Clip.antiAlias,
     isScrollControlled: true,
     builder: (context) => EarthquakeHistoryMapDisplayModeModal._(
       hasLpgmIntensity: hasLpgmIntensity,
-      isOverriding: isOverriding,
-      onDisableOverride: onDisableOverride,
+      hasTileUrl: hasTileUrl,
     ),
   );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final config = ref.watch(
-      earthquakeHistoryConfigProvider,
-    );
+    final config = ref.watch(earthquakeHistoryConfigProvider);
     final notifier = ref.read(earthquakeHistoryConfigProvider.notifier);
 
     final theme = Theme.of(context);
@@ -113,6 +103,58 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                       ],
                     ),
                   ),
+
+                  // 観測点の表示
+                  const _SectionHeader(title: '観測点の表示'),
+                  AppSwitchListTile(
+                    title: '観測点を表示',
+                    value: value.detail.showStation,
+                    onChanged: (v) async => notifier.save(
+                      value.copyWith.detail(showStation: v),
+                    ),
+                  ),
+                  if (value.detail.showStation) ...[
+                    const _SectionHeader(title: '観測点の表示方法'),
+                    RadioGroup<StationDisplayMode>(
+                      groupValue: value.detail.stationDisplayMode,
+                      onChanged: (m) async {
+                        if (m != null) {
+                          await notifier.save(
+                            value.copyWith.detail(stationDisplayMode: m),
+                          );
+                        }
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (final m in StationDisplayMode.values)
+                            RadioListTile<StationDisplayMode>.adaptive(
+                              title: Text(switch (m) {
+                                StationDisplayMode.maxFocused => '最大震度観測点を強調',
+                                StationDisplayMode.normal => '通常（全観測点同サイズ）',
+                                StationDisplayMode.allMinimized => '全観測点を縮小',
+                              }),
+                              value: m,
+                            ),
+                        ],
+                      ),
+                    ),
+                    AppSwitchListTile(
+                      title: '観測点名を表示',
+                      value: value.detail.showStationLabel,
+                      onChanged: (v) async => notifier.save(
+                        value.copyWith.detail(showStationLabel: v),
+                      ),
+                    ),
+                    AppSwitchListTile(
+                      title: '観測点に震度アイコンを表示',
+                      value: value.detail.showIntensityIcon,
+                      onChanged: (v) async => notifier.save(
+                        value.copyWith.detail(showIntensityIcon: v),
+                      ),
+                    ),
+                  ],
+
                   // その他のトグル
                   const _SectionHeader(title: 'その他'),
                   AppSwitchListTile(
@@ -120,20 +162,6 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                     value: value.detail.showHypocenterError,
                     onChanged: (v) async => notifier.save(
                       value.copyWith.detail(showHypocenterError: v),
-                    ),
-                  ),
-                  AppSwitchListTile(
-                    title: '観測点名を表示',
-                    value: value.detail.showStationLabel,
-                    onChanged: (v) async => notifier.save(
-                      value.copyWith.detail(showStationLabel: v),
-                    ),
-                  ),
-                  AppSwitchListTile(
-                    title: '観測点に震度アイコンを表示',
-                    value: value.detail.showIntensityIcon,
-                    onChanged: (v) async => notifier.save(
-                      value.copyWith.detail(showIntensityIcon: v),
                     ),
                   ),
                   AppSwitchListTile(
@@ -151,21 +179,20 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                         value.copyWith.detail(showingLpgmIntensity: v),
                       ),
                     ),
-                  if (isOverriding)
+
+                  // 推計震度
+                  if (hasTileUrl) ...[
+                    const _SectionHeader(title: '推計震度'),
                     AppSwitchListTile(
                       title: '推計震度データがある場合に自動で推計震度表示',
                       value: value.detail.useEstimatedIntensityWhenAvailable,
-                      onChanged: (v) async {
-                        await notifier.save(
-                          value.copyWith.detail(
-                            useEstimatedIntensityWhenAvailable: v,
-                          ),
-                        );
-                        if (!v) {
-                          onDisableOverride?.call();
-                        }
-                      },
+                      onChanged: (v) async => notifier.save(
+                        value.copyWith.detail(
+                          useEstimatedIntensityWhenAvailable: v,
+                        ),
+                      ),
                     ),
+                  ],
 
                   const SizedBox(height: 8),
                 ],

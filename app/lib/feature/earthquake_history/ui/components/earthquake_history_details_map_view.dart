@@ -110,8 +110,7 @@ class _MapContent extends HookConsumerWidget {
         EarthquakeHistoryMapDisplayModeModal.show(
           context: ctx,
           hasLpgmIntensity: earthquake.intensity?.maxLpgmIntensity != null,
-          isOverriding: isOverriding.value,
-          onDisableOverride: () => isOverriding.value = false,
+          hasTileUrl: tileUrl != null,
         ),
       );
     }
@@ -164,7 +163,7 @@ class _MapContent extends HookConsumerWidget {
                   if (config.hypocenterDisplayMode ==
                       HypocenterDisplayMode.belowStations)
                     hypocenterLayer,
-                  if (intensity != null)
+                  if (intensity != null && config.showStation)
                     EarthquakeHistoryStationIntensityLayer(
                       intensity: intensity,
                       stationDisplayMode: config.stationDisplayMode,
@@ -182,14 +181,14 @@ class _MapContent extends HookConsumerWidget {
                 ],
               ),
 
-              // 推計震度表示中バナー（右上）
+              // 推計震度表示中バナー（右上）— タップで override を解除
               if (tileUrl != null && isOverriding.value)
                 Positioned(
                   top: 8,
                   right: 8,
                   child: SafeArea(
                     child: FilledButton.tonal(
-                      onPressed: () => openModal(context),
+                      onPressed: () => isOverriding.value = false,
                       child: const Text('推計震度データ表示中'),
                     ),
                   ),

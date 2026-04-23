@@ -127,6 +127,7 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
         'show_intensity_icon',
         (v) => v as bool? ?? true,
       ),
+      showStation: $checkedConvert('show_station', (v) => v as bool? ?? true),
     );
     return val;
   },
@@ -141,6 +142,7 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
     'showLegend': 'show_legend',
     'showingLpgmIntensity': 'showing_lpgm_intensity',
     'showIntensityIcon': 'show_intensity_icon',
+    'showStation': 'show_station',
   },
 );
 
@@ -160,6 +162,7 @@ Map<String, dynamic> _$EarthquakeHistoryDetailConfigToJson(
   'show_legend': instance.showLegend,
   'showing_lpgm_intensity': instance.showingLpgmIntensity,
   'show_intensity_icon': instance.showIntensityIcon,
+  'show_station': instance.showStation,
 };
 
 const _$IntensityFillModeEnumMap = {

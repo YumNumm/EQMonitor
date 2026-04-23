@@ -65,6 +65,9 @@ abstract class EarthquakeHistoryDetailConfig
 
     /// 観測点に震度アイコンを重ねて表示するか (v2.6.0 互換)
     @Default(true) bool showIntensityIcon,
+
+    /// 観測点レイヤーを表示するか
+    @Default(true) bool showStation,
   }) = _EarthquakeHistoryDetailConfig;
 
   factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>
