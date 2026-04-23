@@ -182,7 +182,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 const SymbolStyleLayer(
                   id: _labelLayerId,
                   sourceId: _sourceId,
-                  minZoom: 8,
+                  minZoom: 9,
                   layout: {
                     'text-field': ['get', 'name'],
                     'text-size': 10,
