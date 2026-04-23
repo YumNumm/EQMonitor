@@ -173,6 +173,12 @@ class EarthquakeHistoryDataSource
       final result = await _repository.fetchEarthquakeList(
         limit: limit,
         cursor: cursor,
+        magnitudeGte: _parameter.magnitudeGte,
+        magnitudeLte: _parameter.magnitudeLte,
+        depthGte: _parameter.depthGte,
+        depthLte: _parameter.depthLte,
+        intensityGte: _parameter.intensityGte,
+        intensityLte: _parameter.intensityLte,
       );
       return Success(
         page: PageData(

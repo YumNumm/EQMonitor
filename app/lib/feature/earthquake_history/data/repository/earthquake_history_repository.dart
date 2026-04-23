@@ -34,10 +34,22 @@ class EarthquakeHistoryRepository {
   Future<EarthquakeListResponse> fetchEarthquakeList({
     int? limit,
     String? cursor,
+    double? magnitudeGte,
+    double? magnitudeLte,
+    int? depthGte,
+    int? depthLte,
+    JmaIntensity? intensityGte,
+    JmaIntensity? intensityLte,
   }) async {
     final response = await _api.earthquake.getV2Earthquake(
       limit: limit?.toString(),
       cursor: cursor,
+      magnitudeGte: magnitudeGte?.toString(),
+      magnitudeLte: magnitudeLte?.toString(),
+      depthGte: depthGte?.toString(),
+      depthLte: depthLte?.toString(),
+      intensityGte: intensityGte,
+      intensityLte: intensityLte,
     );
     return response.data.toEarthquakeListResponse(parameter: earthquakeParameter);
   }
