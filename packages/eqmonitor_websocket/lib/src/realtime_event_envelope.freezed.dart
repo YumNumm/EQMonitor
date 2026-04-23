@@ -173,14 +173,14 @@ return estimatedIntensity(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( EewItemWithRelations item)?  eew,TResult Function( EarthquakePartial item)?  earthquakeBroadcast,TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  EarthquakePartial? record)?  earthquake,TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  Map<String, dynamic>? record)?  tsunami,TResult Function( String eventId,  DateTime createdAt,  String level,  bool isReplay,  int pointCount)?  shakeDetected,TResult Function()?  estimatedIntensity,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( EewItemWithRelations item)?  eew,TResult Function( EarthquakePartial item)?  earthquakeBroadcast,TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  EarthquakePartial? record)?  earthquake,TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  Map<String, dynamic>? record)?  tsunami,TResult Function(@JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'created_at')  DateTime createdAt,  String level, @JsonKey(name: 'is_replay')  bool isReplay, @JsonKey(name: 'point_count')  int pointCount, @JsonKey(name: 'min_lat')  double minLat, @JsonKey(name: 'max_lat')  double maxLat, @JsonKey(name: 'min_lng')  double minLng, @JsonKey(name: 'max_lng')  double maxLng)?  shakeDetected,TResult Function()?  estimatedIntensity,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case WsEewRealtimeEvent() when eew != null:
 return eew(_that.item);case WsEarthquakeBroadcastEvent() when earthquakeBroadcast != null:
 return earthquakeBroadcast(_that.item);case WsEarthquakeRealtimeEvent() when earthquake != null:
 return earthquake(_that.operation,_that.eventId,_that.record);case WsTsunamiRealtimeEvent() when tsunami != null:
 return tsunami(_that.operation,_that.eventId,_that.record);case WsShakeDetectedRealtimeEvent() when shakeDetected != null:
-return shakeDetected(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount);case WsEstimatedIntensityRealtimeEvent() when estimatedIntensity != null:
+return shakeDetected(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng);case WsEstimatedIntensityRealtimeEvent() when estimatedIntensity != null:
 return estimatedIntensity();case _:
   return orElse();
 
@@ -199,14 +199,14 @@ return estimatedIntensity();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( EewItemWithRelations item)  eew,required TResult Function( EarthquakePartial item)  earthquakeBroadcast,required TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  EarthquakePartial? record)  earthquake,required TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  Map<String, dynamic>? record)  tsunami,required TResult Function( String eventId,  DateTime createdAt,  String level,  bool isReplay,  int pointCount)  shakeDetected,required TResult Function()  estimatedIntensity,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( EewItemWithRelations item)  eew,required TResult Function( EarthquakePartial item)  earthquakeBroadcast,required TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  EarthquakePartial? record)  earthquake,required TResult Function( String operation, @JsonKey(name: 'event_id')  String eventId,  Map<String, dynamic>? record)  tsunami,required TResult Function(@JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'created_at')  DateTime createdAt,  String level, @JsonKey(name: 'is_replay')  bool isReplay, @JsonKey(name: 'point_count')  int pointCount, @JsonKey(name: 'min_lat')  double minLat, @JsonKey(name: 'max_lat')  double maxLat, @JsonKey(name: 'min_lng')  double minLng, @JsonKey(name: 'max_lng')  double maxLng)  shakeDetected,required TResult Function()  estimatedIntensity,}) {final _that = this;
 switch (_that) {
 case WsEewRealtimeEvent():
 return eew(_that.item);case WsEarthquakeBroadcastEvent():
 return earthquakeBroadcast(_that.item);case WsEarthquakeRealtimeEvent():
 return earthquake(_that.operation,_that.eventId,_that.record);case WsTsunamiRealtimeEvent():
 return tsunami(_that.operation,_that.eventId,_that.record);case WsShakeDetectedRealtimeEvent():
-return shakeDetected(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount);case WsEstimatedIntensityRealtimeEvent():
+return shakeDetected(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng);case WsEstimatedIntensityRealtimeEvent():
 return estimatedIntensity();}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -221,14 +221,14 @@ return estimatedIntensity();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( EewItemWithRelations item)?  eew,TResult? Function( EarthquakePartial item)?  earthquakeBroadcast,TResult? Function( String operation, @JsonKey(name: 'event_id')  String eventId,  EarthquakePartial? record)?  earthquake,TResult? Function( String operation, @JsonKey(name: 'event_id')  String eventId,  Map<String, dynamic>? record)?  tsunami,TResult? Function( String eventId,  DateTime createdAt,  String level,  bool isReplay,  int pointCount)?  shakeDetected,TResult? Function()?  estimatedIntensity,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( EewItemWithRelations item)?  eew,TResult? Function( EarthquakePartial item)?  earthquakeBroadcast,TResult? Function( String operation, @JsonKey(name: 'event_id')  String eventId,  EarthquakePartial? record)?  earthquake,TResult? Function( String operation, @JsonKey(name: 'event_id')  String eventId,  Map<String, dynamic>? record)?  tsunami,TResult? Function(@JsonKey(name: 'event_id')  String eventId, @JsonKey(name: 'created_at')  DateTime createdAt,  String level, @JsonKey(name: 'is_replay')  bool isReplay, @JsonKey(name: 'point_count')  int pointCount, @JsonKey(name: 'min_lat')  double minLat, @JsonKey(name: 'max_lat')  double maxLat, @JsonKey(name: 'min_lng')  double minLng, @JsonKey(name: 'max_lng')  double maxLng)?  shakeDetected,TResult? Function()?  estimatedIntensity,}) {final _that = this;
 switch (_that) {
 case WsEewRealtimeEvent() when eew != null:
 return eew(_that.item);case WsEarthquakeBroadcastEvent() when earthquakeBroadcast != null:
 return earthquakeBroadcast(_that.item);case WsEarthquakeRealtimeEvent() when earthquake != null:
 return earthquake(_that.operation,_that.eventId,_that.record);case WsTsunamiRealtimeEvent() when tsunami != null:
 return tsunami(_that.operation,_that.eventId,_that.record);case WsShakeDetectedRealtimeEvent() when shakeDetected != null:
-return shakeDetected(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount);case WsEstimatedIntensityRealtimeEvent() when estimatedIntensity != null:
+return shakeDetected(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount,_that.minLat,_that.maxLat,_that.minLng,_that.maxLng);case WsEstimatedIntensityRealtimeEvent() when estimatedIntensity != null:
 return estimatedIntensity();case _:
   return null;
 
@@ -579,14 +579,18 @@ as Map<String, dynamic>?,
 @JsonSerializable()
 
 class WsShakeDetectedRealtimeEvent implements RealtimeEventEnvelope {
-  const WsShakeDetectedRealtimeEvent({required this.eventId, required this.createdAt, required this.level, required this.isReplay, required this.pointCount, final  String? $type}): $type = $type ?? 'shake_detected';
+  const WsShakeDetectedRealtimeEvent({@JsonKey(name: 'event_id') required this.eventId, @JsonKey(name: 'created_at') required this.createdAt, required this.level, @JsonKey(name: 'is_replay') required this.isReplay, @JsonKey(name: 'point_count') required this.pointCount, @JsonKey(name: 'min_lat') required this.minLat, @JsonKey(name: 'max_lat') required this.maxLat, @JsonKey(name: 'min_lng') required this.minLng, @JsonKey(name: 'max_lng') required this.maxLng, final  String? $type}): $type = $type ?? 'shake_detected';
   factory WsShakeDetectedRealtimeEvent.fromJson(Map<String, dynamic> json) => _$WsShakeDetectedRealtimeEventFromJson(json);
 
- final  String eventId;
- final  DateTime createdAt;
+@JsonKey(name: 'event_id') final  String eventId;
+@JsonKey(name: 'created_at') final  DateTime createdAt;
  final  String level;
- final  bool isReplay;
- final  int pointCount;
+@JsonKey(name: 'is_replay') final  bool isReplay;
+@JsonKey(name: 'point_count') final  int pointCount;
+@JsonKey(name: 'min_lat') final  double minLat;
+@JsonKey(name: 'max_lat') final  double maxLat;
+@JsonKey(name: 'min_lng') final  double minLng;
+@JsonKey(name: 'max_lng') final  double maxLng;
 
 @JsonKey(name: 'type')
 final String $type;
@@ -605,16 +609,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsShakeDetectedRealtimeEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsShakeDetectedRealtimeEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.minLat, minLat) || other.minLat == minLat)&&(identical(other.maxLat, maxLat) || other.maxLat == maxLat)&&(identical(other.minLng, minLng) || other.minLng == minLng)&&(identical(other.maxLng, maxLng) || other.maxLng == maxLng));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,isReplay,pointCount);
+int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,isReplay,pointCount,minLat,maxLat,minLng,maxLng);
 
 @override
 String toString() {
-  return 'RealtimeEventEnvelope.shakeDetected(eventId: $eventId, createdAt: $createdAt, level: $level, isReplay: $isReplay, pointCount: $pointCount)';
+  return 'RealtimeEventEnvelope.shakeDetected(eventId: $eventId, createdAt: $createdAt, level: $level, isReplay: $isReplay, pointCount: $pointCount, minLat: $minLat, maxLat: $maxLat, minLng: $minLng, maxLng: $maxLng)';
 }
 
 
@@ -625,7 +629,7 @@ abstract mixin class $WsShakeDetectedRealtimeEventCopyWith<$Res> implements $Rea
   factory $WsShakeDetectedRealtimeEventCopyWith(WsShakeDetectedRealtimeEvent value, $Res Function(WsShakeDetectedRealtimeEvent) _then) = _$WsShakeDetectedRealtimeEventCopyWithImpl;
 @useResult
 $Res call({
- String eventId, DateTime createdAt, String level, bool isReplay, int pointCount
+@JsonKey(name: 'event_id') String eventId,@JsonKey(name: 'created_at') DateTime createdAt, String level,@JsonKey(name: 'is_replay') bool isReplay,@JsonKey(name: 'point_count') int pointCount,@JsonKey(name: 'min_lat') double minLat,@JsonKey(name: 'max_lat') double maxLat,@JsonKey(name: 'min_lng') double minLng,@JsonKey(name: 'max_lng') double maxLng
 });
 
 
@@ -642,14 +646,18 @@ class _$WsShakeDetectedRealtimeEventCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeEventEnvelope
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? isReplay = null,Object? pointCount = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? isReplay = null,Object? pointCount = null,Object? minLat = null,Object? maxLat = null,Object? minLng = null,Object? maxLng = null,}) {
   return _then(WsShakeDetectedRealtimeEvent(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
 as String,isReplay: null == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
 as bool,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
-as int,
+as int,minLat: null == minLat ? _self.minLat : minLat // ignore: cast_nullable_to_non_nullable
+as double,maxLat: null == maxLat ? _self.maxLat : maxLat // ignore: cast_nullable_to_non_nullable
+as double,minLng: null == minLng ? _self.minLng : minLng // ignore: cast_nullable_to_non_nullable
+as double,maxLng: null == maxLng ? _self.maxLng : maxLng // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 

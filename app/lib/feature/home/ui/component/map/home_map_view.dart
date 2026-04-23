@@ -14,11 +14,13 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_lay
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_ps_wave_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_regions_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
@@ -133,6 +135,11 @@ class _MapContent extends ConsumerWidget {
                   final eews = ref.watch(eewAliveTelegramProvider) ?? [];
                   return EewPsWaveLayer(eews: eews);
                 },
+              ),
+              Consumer(
+                builder: (context, ref, _) => ShakeDetectionLayer(
+                  events: ref.watch(shakeDetectionVisibleProvider),
+                ),
               ),
               Consumer(
                 builder: (context, ref, _) => EewHypocenterLayer(

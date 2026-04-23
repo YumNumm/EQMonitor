@@ -13,6 +13,275 @@ part of 'home_configuration_model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
+mixin _$HomeShakeDetectionSettings {
+
+ bool get show; HomeShakeDetectionDisplayMode get displayMode; HomeShakeDetectionAnimationMode get animationMode;
+/// Create a copy of HomeShakeDetectionSettings
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$HomeShakeDetectionSettingsCopyWith<HomeShakeDetectionSettings> get copyWith => _$HomeShakeDetectionSettingsCopyWithImpl<HomeShakeDetectionSettings>(this as HomeShakeDetectionSettings, _$identity);
+
+  /// Serializes this HomeShakeDetectionSettings to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.displayMode, displayMode) || other.displayMode == displayMode)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,show,displayMode,animationMode);
+
+@override
+String toString() {
+  return 'HomeShakeDetectionSettings(show: $show, displayMode: $displayMode, animationMode: $animationMode)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $HomeShakeDetectionSettingsCopyWith<$Res>  {
+  factory $HomeShakeDetectionSettingsCopyWith(HomeShakeDetectionSettings value, $Res Function(HomeShakeDetectionSettings) _then) = _$HomeShakeDetectionSettingsCopyWithImpl;
+@useResult
+$Res call({
+ bool show, HomeShakeDetectionDisplayMode displayMode, HomeShakeDetectionAnimationMode animationMode
+});
+
+
+
+
+}
+/// @nodoc
+class _$HomeShakeDetectionSettingsCopyWithImpl<$Res>
+    implements $HomeShakeDetectionSettingsCopyWith<$Res> {
+  _$HomeShakeDetectionSettingsCopyWithImpl(this._self, this._then);
+
+  final HomeShakeDetectionSettings _self;
+  final $Res Function(HomeShakeDetectionSettings) _then;
+
+/// Create a copy of HomeShakeDetectionSettings
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? show = null,Object? displayMode = null,Object? animationMode = null,}) {
+  return _then(_self.copyWith(
+show: null == show ? _self.show : show // ignore: cast_nullable_to_non_nullable
+as bool,displayMode: null == displayMode ? _self.displayMode : displayMode // ignore: cast_nullable_to_non_nullable
+as HomeShakeDetectionDisplayMode,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
+as HomeShakeDetectionAnimationMode,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [HomeShakeDetectionSettings].
+extension HomeShakeDetectionSettingsPatterns on HomeShakeDetectionSettings {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _HomeShakeDetectionSettings value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _HomeShakeDetectionSettings() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _HomeShakeDetectionSettings value)  $default,){
+final _that = this;
+switch (_that) {
+case _HomeShakeDetectionSettings():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _HomeShakeDetectionSettings value)?  $default,){
+final _that = this;
+switch (_that) {
+case _HomeShakeDetectionSettings() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionDisplayMode displayMode,  HomeShakeDetectionAnimationMode animationMode)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _HomeShakeDetectionSettings() when $default != null:
+return $default(_that.show,_that.displayMode,_that.animationMode);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool show,  HomeShakeDetectionDisplayMode displayMode,  HomeShakeDetectionAnimationMode animationMode)  $default,) {final _that = this;
+switch (_that) {
+case _HomeShakeDetectionSettings():
+return $default(_that.show,_that.displayMode,_that.animationMode);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool show,  HomeShakeDetectionDisplayMode displayMode,  HomeShakeDetectionAnimationMode animationMode)?  $default,) {final _that = this;
+switch (_that) {
+case _HomeShakeDetectionSettings() when $default != null:
+return $default(_that.show,_that.displayMode,_that.animationMode);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+class _HomeShakeDetectionSettings implements HomeShakeDetectionSettings {
+  const _HomeShakeDetectionSettings({this.show = true, this.displayMode = HomeShakeDetectionDisplayMode.boundingBox, this.animationMode = HomeShakeDetectionAnimationMode.blink});
+  factory _HomeShakeDetectionSettings.fromJson(Map<String, dynamic> json) => _$HomeShakeDetectionSettingsFromJson(json);
+
+@override@JsonKey() final  bool show;
+@override@JsonKey() final  HomeShakeDetectionDisplayMode displayMode;
+@override@JsonKey() final  HomeShakeDetectionAnimationMode animationMode;
+
+/// Create a copy of HomeShakeDetectionSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$HomeShakeDetectionSettingsCopyWith<_HomeShakeDetectionSettings> get copyWith => __$HomeShakeDetectionSettingsCopyWithImpl<_HomeShakeDetectionSettings>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$HomeShakeDetectionSettingsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeShakeDetectionSettings&&(identical(other.show, show) || other.show == show)&&(identical(other.displayMode, displayMode) || other.displayMode == displayMode)&&(identical(other.animationMode, animationMode) || other.animationMode == animationMode));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,show,displayMode,animationMode);
+
+@override
+String toString() {
+  return 'HomeShakeDetectionSettings(show: $show, displayMode: $displayMode, animationMode: $animationMode)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$HomeShakeDetectionSettingsCopyWith<$Res> implements $HomeShakeDetectionSettingsCopyWith<$Res> {
+  factory _$HomeShakeDetectionSettingsCopyWith(_HomeShakeDetectionSettings value, $Res Function(_HomeShakeDetectionSettings) _then) = __$HomeShakeDetectionSettingsCopyWithImpl;
+@override @useResult
+$Res call({
+ bool show, HomeShakeDetectionDisplayMode displayMode, HomeShakeDetectionAnimationMode animationMode
+});
+
+
+
+
+}
+/// @nodoc
+class __$HomeShakeDetectionSettingsCopyWithImpl<$Res>
+    implements _$HomeShakeDetectionSettingsCopyWith<$Res> {
+  __$HomeShakeDetectionSettingsCopyWithImpl(this._self, this._then);
+
+  final _HomeShakeDetectionSettings _self;
+  final $Res Function(_HomeShakeDetectionSettings) _then;
+
+/// Create a copy of HomeShakeDetectionSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? show = null,Object? displayMode = null,Object? animationMode = null,}) {
+  return _then(_HomeShakeDetectionSettings(
+show: null == show ? _self.show : show // ignore: cast_nullable_to_non_nullable
+as bool,displayMode: null == displayMode ? _self.displayMode : displayMode // ignore: cast_nullable_to_non_nullable
+as HomeShakeDetectionDisplayMode,animationMode: null == animationMode ? _self.animationMode : animationMode // ignore: cast_nullable_to_non_nullable
+as HomeShakeDetectionAnimationMode,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$HomeEewSettings {
 
  HomeEewFillMode get fillMode; HomeEewAnimationRate get animationRate; bool get autoZoom; bool get showPSWaveCircle;
@@ -1118,7 +1387,7 @@ $EarthquakeHistoryParameterCopyWith<$Res>? get parameter {
 /// @nodoc
 mixin _$HomeConfigurationModel {
 
- HomeEewSettings get eew;@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings get kyoshinMonitor; HomeMapSettings get map; HomeCommonSettings get common;
+ HomeEewSettings get eew;@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings get kyoshinMonitor; HomeMapSettings get map; HomeCommonSettings get common; HomeShakeDetectionSettings get shakeDetection;
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1131,16 +1400,16 @@ $HomeConfigurationModelCopyWith<HomeConfigurationModel> get copyWith => _$HomeCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeConfigurationModel&&(identical(other.eew, eew) || other.eew == eew)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.map, map) || other.map == map)&&(identical(other.common, common) || other.common == common));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeConfigurationModel&&(identical(other.eew, eew) || other.eew == eew)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.map, map) || other.map == map)&&(identical(other.common, common) || other.common == common)&&(identical(other.shakeDetection, shakeDetection) || other.shakeDetection == shakeDetection));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eew,kyoshinMonitor,map,common);
+int get hashCode => Object.hash(runtimeType,eew,kyoshinMonitor,map,common,shakeDetection);
 
 @override
 String toString() {
-  return 'HomeConfigurationModel(eew: $eew, kyoshinMonitor: $kyoshinMonitor, map: $map, common: $common)';
+  return 'HomeConfigurationModel(eew: $eew, kyoshinMonitor: $kyoshinMonitor, map: $map, common: $common, shakeDetection: $shakeDetection)';
 }
 
 
@@ -1151,11 +1420,11 @@ abstract mixin class $HomeConfigurationModelCopyWith<$Res>  {
   factory $HomeConfigurationModelCopyWith(HomeConfigurationModel value, $Res Function(HomeConfigurationModel) _then) = _$HomeConfigurationModelCopyWithImpl;
 @useResult
 $Res call({
- HomeEewSettings eew,@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common
+ HomeEewSettings eew,@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common, HomeShakeDetectionSettings shakeDetection
 });
 
 
-$HomeEewSettingsCopyWith<$Res> get eew;$HomeKyoshinMonitorSettingsCopyWith<$Res> get kyoshinMonitor;$HomeMapSettingsCopyWith<$Res> get map;$HomeCommonSettingsCopyWith<$Res> get common;
+$HomeEewSettingsCopyWith<$Res> get eew;$HomeKyoshinMonitorSettingsCopyWith<$Res> get kyoshinMonitor;$HomeMapSettingsCopyWith<$Res> get map;$HomeCommonSettingsCopyWith<$Res> get common;$HomeShakeDetectionSettingsCopyWith<$Res> get shakeDetection;
 
 }
 /// @nodoc
@@ -1168,13 +1437,14 @@ class _$HomeConfigurationModelCopyWithImpl<$Res>
 
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eew = null,Object? kyoshinMonitor = null,Object? map = null,Object? common = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eew = null,Object? kyoshinMonitor = null,Object? map = null,Object? common = null,Object? shakeDetection = null,}) {
   return _then(_self.copyWith(
 eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
 as HomeEewSettings,kyoshinMonitor: null == kyoshinMonitor ? _self.kyoshinMonitor : kyoshinMonitor // ignore: cast_nullable_to_non_nullable
 as HomeKyoshinMonitorSettings,map: null == map ? _self.map : map // ignore: cast_nullable_to_non_nullable
 as HomeMapSettings,common: null == common ? _self.common : common // ignore: cast_nullable_to_non_nullable
-as HomeCommonSettings,
+as HomeCommonSettings,shakeDetection: null == shakeDetection ? _self.shakeDetection : shakeDetection // ignore: cast_nullable_to_non_nullable
+as HomeShakeDetectionSettings,
   ));
 }
 /// Create a copy of HomeConfigurationModel
@@ -1212,6 +1482,15 @@ $HomeCommonSettingsCopyWith<$Res> get common {
   
   return $HomeCommonSettingsCopyWith<$Res>(_self.common, (value) {
     return _then(_self.copyWith(common: value));
+  });
+}/// Create a copy of HomeConfigurationModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HomeShakeDetectionSettingsCopyWith<$Res> get shakeDetection {
+  
+  return $HomeShakeDetectionSettingsCopyWith<$Res>(_self.shakeDetection, (value) {
+    return _then(_self.copyWith(shakeDetection: value));
   });
 }
 }
@@ -1295,10 +1574,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel() when $default != null:
-return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common);case _:
+return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shakeDetection);case _:
   return orElse();
 
 }
@@ -1316,10 +1595,10 @@ return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)  $default,) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel():
-return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common);case _:
+return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shakeDetection);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1336,10 +1615,10 @@ return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel() when $default != null:
-return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common);case _:
+return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shakeDetection);case _:
   return null;
 
 }
@@ -1351,13 +1630,14 @@ return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeConfigurationModel implements HomeConfigurationModel {
-  const _HomeConfigurationModel({this.eew = const HomeEewSettings(), @JsonKey(name: 'kyoshin_monitor') this.kyoshinMonitor = const HomeKyoshinMonitorSettings(), this.map = const HomeMapSettings(), this.common = const HomeCommonSettings()});
+  const _HomeConfigurationModel({this.eew = const HomeEewSettings(), @JsonKey(name: 'kyoshin_monitor') this.kyoshinMonitor = const HomeKyoshinMonitorSettings(), this.map = const HomeMapSettings(), this.common = const HomeCommonSettings(), this.shakeDetection = const HomeShakeDetectionSettings()});
   factory _HomeConfigurationModel.fromJson(Map<String, dynamic> json) => _$HomeConfigurationModelFromJson(json);
 
 @override@JsonKey() final  HomeEewSettings eew;
 @override@JsonKey(name: 'kyoshin_monitor') final  HomeKyoshinMonitorSettings kyoshinMonitor;
 @override@JsonKey() final  HomeMapSettings map;
 @override@JsonKey() final  HomeCommonSettings common;
+@override@JsonKey() final  HomeShakeDetectionSettings shakeDetection;
 
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
@@ -1372,16 +1652,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeConfigurationModel&&(identical(other.eew, eew) || other.eew == eew)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.map, map) || other.map == map)&&(identical(other.common, common) || other.common == common));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeConfigurationModel&&(identical(other.eew, eew) || other.eew == eew)&&(identical(other.kyoshinMonitor, kyoshinMonitor) || other.kyoshinMonitor == kyoshinMonitor)&&(identical(other.map, map) || other.map == map)&&(identical(other.common, common) || other.common == common)&&(identical(other.shakeDetection, shakeDetection) || other.shakeDetection == shakeDetection));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eew,kyoshinMonitor,map,common);
+int get hashCode => Object.hash(runtimeType,eew,kyoshinMonitor,map,common,shakeDetection);
 
 @override
 String toString() {
-  return 'HomeConfigurationModel(eew: $eew, kyoshinMonitor: $kyoshinMonitor, map: $map, common: $common)';
+  return 'HomeConfigurationModel(eew: $eew, kyoshinMonitor: $kyoshinMonitor, map: $map, common: $common, shakeDetection: $shakeDetection)';
 }
 
 
@@ -1392,11 +1672,11 @@ abstract mixin class _$HomeConfigurationModelCopyWith<$Res> implements $HomeConf
   factory _$HomeConfigurationModelCopyWith(_HomeConfigurationModel value, $Res Function(_HomeConfigurationModel) _then) = __$HomeConfigurationModelCopyWithImpl;
 @override @useResult
 $Res call({
- HomeEewSettings eew,@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common
+ HomeEewSettings eew,@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common, HomeShakeDetectionSettings shakeDetection
 });
 
 
-@override $HomeEewSettingsCopyWith<$Res> get eew;@override $HomeKyoshinMonitorSettingsCopyWith<$Res> get kyoshinMonitor;@override $HomeMapSettingsCopyWith<$Res> get map;@override $HomeCommonSettingsCopyWith<$Res> get common;
+@override $HomeEewSettingsCopyWith<$Res> get eew;@override $HomeKyoshinMonitorSettingsCopyWith<$Res> get kyoshinMonitor;@override $HomeMapSettingsCopyWith<$Res> get map;@override $HomeCommonSettingsCopyWith<$Res> get common;@override $HomeShakeDetectionSettingsCopyWith<$Res> get shakeDetection;
 
 }
 /// @nodoc
@@ -1409,13 +1689,14 @@ class __$HomeConfigurationModelCopyWithImpl<$Res>
 
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eew = null,Object? kyoshinMonitor = null,Object? map = null,Object? common = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eew = null,Object? kyoshinMonitor = null,Object? map = null,Object? common = null,Object? shakeDetection = null,}) {
   return _then(_HomeConfigurationModel(
 eew: null == eew ? _self.eew : eew // ignore: cast_nullable_to_non_nullable
 as HomeEewSettings,kyoshinMonitor: null == kyoshinMonitor ? _self.kyoshinMonitor : kyoshinMonitor // ignore: cast_nullable_to_non_nullable
 as HomeKyoshinMonitorSettings,map: null == map ? _self.map : map // ignore: cast_nullable_to_non_nullable
 as HomeMapSettings,common: null == common ? _self.common : common // ignore: cast_nullable_to_non_nullable
-as HomeCommonSettings,
+as HomeCommonSettings,shakeDetection: null == shakeDetection ? _self.shakeDetection : shakeDetection // ignore: cast_nullable_to_non_nullable
+as HomeShakeDetectionSettings,
   ));
 }
 
@@ -1454,6 +1735,15 @@ $HomeCommonSettingsCopyWith<$Res> get common {
   
   return $HomeCommonSettingsCopyWith<$Res>(_self.common, (value) {
     return _then(_self.copyWith(common: value));
+  });
+}/// Create a copy of HomeConfigurationModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HomeShakeDetectionSettingsCopyWith<$Res> get shakeDetection {
+  
+  return $HomeShakeDetectionSettingsCopyWith<$Res>(_self.shakeDetection, (value) {
+    return _then(_self.copyWith(shakeDetection: value));
   });
 }
 }

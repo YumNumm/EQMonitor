@@ -75,4 +75,11 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
     final current = await future;
     await save(current.copyWith(common: common));
   }
+
+  Future<void> updateShakeDetection(
+    HomeShakeDetectionSettings shakeDetection,
+  ) async {
+    final current = await future;
+    await save(current.copyWith(shakeDetection: shakeDetection));
+  }
 }

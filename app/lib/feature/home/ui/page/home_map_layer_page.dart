@@ -123,6 +123,27 @@ class HomeMapLayerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: spacing.lg),
                   _SettingsSection(
+                    icon: Icons.vibration_rounded,
+                    title: '揺れ検知',
+                    description: '揺れ検知イベントの表示スタイルとアニメーションを調整します。',
+                    isExpanded:
+                        expandedSection.value ==
+                        _MapLayerSection.shakeDetection,
+                    onTap: () {
+                      expandedSection.value =
+                          expandedSection.value ==
+                              _MapLayerSection.shakeDetection
+                          ? null
+                          : _MapLayerSection.shakeDetection;
+                    },
+                    children: const [
+                      _ShakeDetectionShowTile(),
+                      _ShakeDetectionDisplayModeTile(),
+                      _ShakeDetectionAnimationModeTile(),
+                    ],
+                  ),
+                  SizedBox(height: spacing.lg),
+                  _SettingsSection(
                     icon: Icons.my_location_rounded,
                     title: '現在地',
                     description: '位置情報の利用許可と、地図上での表示設定です。',
@@ -194,7 +215,7 @@ class HomeMapLayerPage extends HookConsumerWidget {
   }
 }
 
-enum _MapLayerSection { eew, location, kyoshinMonitor, map }
+enum _MapLayerSection { eew, shakeDetection, location, kyoshinMonitor, map }
 
 class _SettingsSection extends StatelessWidget {
   const _SettingsSection({
@@ -1196,6 +1217,104 @@ class _MapCustomBoundsButton extends ConsumerWidget {
       actionLabel: '地図上で範囲を選択',
       onPressed: () async {
         await HomeMapBoundsSelectorPage.open(context);
+      },
+    );
+  }
+}
+
+class _ShakeDetectionShowTile extends ConsumerWidget {
+  const _ShakeDetectionShowTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSwitchTile(
+      title: '揺れ検知を地図上に表示',
+      subtitle: cfg.shakeDetection.show ? '検知イベントを枠で表示します。' : '揺れ検知を表示しません。',
+      value: cfg.shakeDetection.show,
+      onChanged: (next) async {
+        await ref
+            .read(homeConfigurationProvider.notifier)
+            .updateShakeDetection(cfg.shakeDetection.copyWith(show: next));
+      },
+    );
+  }
+}
+
+class _ShakeDetectionDisplayModeTile extends ConsumerWidget {
+  const _ShakeDetectionDisplayModeTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null || !cfg.shakeDetection.show) {
+      return const SizedBox.shrink();
+    }
+    final mode = cfg.shakeDetection.displayMode;
+
+    return _SettingSegmentedField<HomeShakeDetectionDisplayMode>(
+      title: '表示スタイル',
+      subtitle: '0.25° グリッドセルまたはバウンディングボックスで表示します。',
+      segments: const [
+        ButtonSegment(
+          value: HomeShakeDetectionDisplayMode.boundingBox,
+          label: Text('矩形'),
+        ),
+        ButtonSegment(
+          value: HomeShakeDetectionDisplayMode.gridCell,
+          label: Text('グリッド'),
+        ),
+      ],
+      selected: {mode},
+      onSelectionChanged: (next) async {
+        await ref
+            .read(homeConfigurationProvider.notifier)
+            .updateShakeDetection(
+              cfg.shakeDetection.copyWith(displayMode: next.first),
+            );
+      },
+    );
+  }
+}
+
+class _ShakeDetectionAnimationModeTile extends ConsumerWidget {
+  const _ShakeDetectionAnimationModeTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cfg = ref.watch(homeConfigurationProvider).value;
+    if (cfg == null || !cfg.shakeDetection.show) {
+      return const SizedBox.shrink();
+    }
+    final mode = cfg.shakeDetection.animationMode;
+
+    return _SettingSegmentedField<HomeShakeDetectionAnimationMode>(
+      title: 'アニメーション',
+      subtitle: '点滅・明滅・常時点灯から表示方法を選びます。',
+      segments: const [
+        ButtonSegment(
+          value: HomeShakeDetectionAnimationMode.blink,
+          label: Text('点滅'),
+        ),
+        ButtonSegment(
+          value: HomeShakeDetectionAnimationMode.fade,
+          label: Text('明滅'),
+        ),
+        ButtonSegment(
+          value: HomeShakeDetectionAnimationMode.solid,
+          label: Text('点灯'),
+        ),
+      ],
+      selected: {mode},
+      onSelectionChanged: (next) async {
+        await ref
+            .read(homeConfigurationProvider.notifier)
+            .updateShakeDetection(
+              cfg.shakeDetection.copyWith(animationMode: next.first),
+            );
       },
     );
   }

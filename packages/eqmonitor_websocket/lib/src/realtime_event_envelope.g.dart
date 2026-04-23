@@ -99,26 +99,52 @@ Map<String, dynamic> _$WsTsunamiRealtimeEventToJson(
 
 WsShakeDetectedRealtimeEvent _$WsShakeDetectedRealtimeEventFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('WsShakeDetectedRealtimeEvent', json, ($checkedConvert) {
-  final val = WsShakeDetectedRealtimeEvent(
-    eventId: $checkedConvert('eventId', (v) => v as String),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    level: $checkedConvert('level', (v) => v as String),
-    isReplay: $checkedConvert('isReplay', (v) => v as bool),
-    pointCount: $checkedConvert('pointCount', (v) => (v as num).toInt()),
-    $type: $checkedConvert('type', (v) => v as String?),
-  );
-  return val;
-}, fieldKeyMap: const {r'$type': 'type'});
+) => $checkedCreate(
+  'WsShakeDetectedRealtimeEvent',
+  json,
+  ($checkedConvert) {
+    final val = WsShakeDetectedRealtimeEvent(
+      eventId: $checkedConvert('event_id', (v) => v as String),
+      createdAt: $checkedConvert(
+        'created_at',
+        (v) => DateTime.parse(v as String),
+      ),
+      level: $checkedConvert('level', (v) => v as String),
+      isReplay: $checkedConvert('is_replay', (v) => v as bool),
+      pointCount: $checkedConvert('point_count', (v) => (v as num).toInt()),
+      minLat: $checkedConvert('min_lat', (v) => (v as num).toDouble()),
+      maxLat: $checkedConvert('max_lat', (v) => (v as num).toDouble()),
+      minLng: $checkedConvert('min_lng', (v) => (v as num).toDouble()),
+      maxLng: $checkedConvert('max_lng', (v) => (v as num).toDouble()),
+      $type: $checkedConvert('type', (v) => v as String?),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'eventId': 'event_id',
+    'createdAt': 'created_at',
+    'isReplay': 'is_replay',
+    'pointCount': 'point_count',
+    'minLat': 'min_lat',
+    'maxLat': 'max_lat',
+    'minLng': 'min_lng',
+    'maxLng': 'max_lng',
+    r'$type': 'type',
+  },
+);
 
 Map<String, dynamic> _$WsShakeDetectedRealtimeEventToJson(
   WsShakeDetectedRealtimeEvent instance,
 ) => <String, dynamic>{
-  'eventId': instance.eventId,
-  'createdAt': instance.createdAt.toIso8601String(),
+  'event_id': instance.eventId,
+  'created_at': instance.createdAt.toIso8601String(),
   'level': instance.level,
-  'isReplay': instance.isReplay,
-  'pointCount': instance.pointCount,
+  'is_replay': instance.isReplay,
+  'point_count': instance.pointCount,
+  'min_lat': instance.minLat,
+  'max_lat': instance.maxLat,
+  'min_lng': instance.minLng,
+  'max_lng': instance.maxLng,
   'type': instance.$type,
 };
 

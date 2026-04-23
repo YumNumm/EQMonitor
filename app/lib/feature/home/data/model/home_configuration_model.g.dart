@@ -8,6 +8,55 @@ part of 'home_configuration_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_HomeShakeDetectionSettings _$HomeShakeDetectionSettingsFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  '_HomeShakeDetectionSettings',
+  json,
+  ($checkedConvert) {
+    final val = _HomeShakeDetectionSettings(
+      show: $checkedConvert('show', (v) => v as bool? ?? true),
+      displayMode: $checkedConvert(
+        'display_mode',
+        (v) =>
+            $enumDecodeNullable(_$HomeShakeDetectionDisplayModeEnumMap, v) ??
+            HomeShakeDetectionDisplayMode.boundingBox,
+      ),
+      animationMode: $checkedConvert(
+        'animation_mode',
+        (v) =>
+            $enumDecodeNullable(_$HomeShakeDetectionAnimationModeEnumMap, v) ??
+            HomeShakeDetectionAnimationMode.blink,
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'displayMode': 'display_mode',
+    'animationMode': 'animation_mode',
+  },
+);
+
+Map<String, dynamic> _$HomeShakeDetectionSettingsToJson(
+  _HomeShakeDetectionSettings instance,
+) => <String, dynamic>{
+  'show': instance.show,
+  'display_mode': _$HomeShakeDetectionDisplayModeEnumMap[instance.displayMode]!,
+  'animation_mode':
+      _$HomeShakeDetectionAnimationModeEnumMap[instance.animationMode]!,
+};
+
+const _$HomeShakeDetectionDisplayModeEnumMap = {
+  HomeShakeDetectionDisplayMode.gridCell: 'gridCell',
+  HomeShakeDetectionDisplayMode.boundingBox: 'boundingBox',
+};
+
+const _$HomeShakeDetectionAnimationModeEnumMap = {
+  HomeShakeDetectionAnimationMode.blink: 'blink',
+  HomeShakeDetectionAnimationMode.fade: 'fade',
+  HomeShakeDetectionAnimationMode.solid: 'solid',
+};
+
 _HomeEewSettings _$HomeEewSettingsFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
       '_HomeEewSettings',
@@ -245,10 +294,19 @@ _HomeConfigurationModel _$HomeConfigurationModelFromJson(
             ? const HomeCommonSettings()
             : HomeCommonSettings.fromJson(v as Map<String, dynamic>),
       ),
+      shakeDetection: $checkedConvert(
+        'shake_detection',
+        (v) => v == null
+            ? const HomeShakeDetectionSettings()
+            : HomeShakeDetectionSettings.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
-  fieldKeyMap: const {'kyoshinMonitor': 'kyoshin_monitor'},
+  fieldKeyMap: const {
+    'kyoshinMonitor': 'kyoshin_monitor',
+    'shakeDetection': 'shake_detection',
+  },
 );
 
 Map<String, dynamic> _$HomeConfigurationModelToJson(
@@ -258,4 +316,5 @@ Map<String, dynamic> _$HomeConfigurationModelToJson(
   'kyoshin_monitor': instance.kyoshinMonitor.toJson(),
   'map': instance.map.toJson(),
   'common': instance.common.toJson(),
+  'shake_detection': instance.shakeDetection.toJson(),
 };
