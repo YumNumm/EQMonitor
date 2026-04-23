@@ -222,7 +222,15 @@ class EarthquakeAPIService {
 /// xconfigから設定を読み込むヘルパー
 class ConfigReader {
     /// APIベースURLを取得
+    /// 優先順位: App Groups UserDefaults → Info.plist (REST_API_URL) → ハードコードフォールバック
     static func getAPIBaseURL() -> URL {
+        // Flutter アプリが App Groups UserDefaults に書き込んだ URL を優先する
+        if let appGroupDefaults = UserDefaults(suiteName: "group.net.yumnumm.eqmonitor"),
+           let urlString = appGroupDefaults.string(forKey: "apiServerUrl"),
+           !urlString.isEmpty,
+           let url = URL(string: urlString) {
+            return url
+        }
         if let urlString = Bundle.main.object(forInfoDictionaryKey: "REST_API_URL") as? String,
            !urlString.isEmpty,
            let url = URL(string: urlString) {

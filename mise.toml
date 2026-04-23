@@ -26,6 +26,7 @@ zizmor = "latest"
 ghalint = "latest"
 gitleaks = "latest"
 claude = "latest"
+swift = "latest"
 
 [settings]
 lockfile = true

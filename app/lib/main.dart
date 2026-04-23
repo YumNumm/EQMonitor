@@ -10,6 +10,7 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
+import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
@@ -23,6 +24,7 @@ import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
+import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -184,6 +186,11 @@ Future<void> main() async {
   ).wait;
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));
+
+  if (!kIsWeb && Platform.isIOS) {
+    unawaited(container.read(appGroupSettingsWriterProvider.future));
+    unawaited(container.read(liveActivityTokenSyncWiringProvider.future));
+  }
 }
 
 Future<void> _registerNotificationChannelIfNeeded() async {
