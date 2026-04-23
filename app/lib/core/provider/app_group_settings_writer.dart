@@ -11,7 +11,9 @@ part 'app_group_settings_writer.g.dart';
 /// Widget Extension がこの値を読んで正しいエンドポイントへ接続する。
 @Riverpod(keepAlive: true)
 Future<void> appGroupSettingsWriter(Ref ref) async {
-  if (!Platform.isIOS) return;
+  if (!Platform.isIOS) {
+    return;
+  }
 
   final prefs = await ref.watch(appGroupPreferencesProvider.future);
   final env = ref.watch(environmentProvider);

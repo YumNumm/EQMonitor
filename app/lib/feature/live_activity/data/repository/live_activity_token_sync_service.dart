@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/live_activity_token_stream.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,30 @@ Future<LiveActivityTokenSyncService> liveActivityTokenSyncService(
   return LiveActivityTokenSyncService(deviceRepository: repo);
 }
 
+/// iOS のみ: Live Activity update token を監視してサーバへ同期する。
+/// main.dart で read することで起動時にリッスンが開始される。
+@Riverpod(keepAlive: true)
+Future<void> liveActivityTokenSyncWiring(Ref ref) async {
+  if (kIsWeb || !Platform.isIOS) {
+    return;
+  }
+  final service = await ref.watch(liveActivityTokenSyncServiceProvider.future);
+  final deviceId = await ref.watch(deviceIdProvider.future);
+
+  ref.listen<AsyncValue<LiveActivityTokenUpdate>>(
+    liveActivityPushTokenUpdatesProvider,
+    (_, next) => next.whenData(
+      (update) => unawaited(
+        service.syncToken(
+          deviceId: deviceId,
+          liveActivityId: update.liveActivityId,
+          token: update.token,
+        ),
+      ),
+    ),
+  );
+}
+
 class LiveActivityTokenSyncService {
   LiveActivityTokenSyncService({required DeviceRepository deviceRepository})
     : _repo = deviceRepository;
@@ -29,12 +54,10 @@ class LiveActivityTokenSyncService {
     required Stream<LiveActivityTokenUpdate> tokenStream,
     bool debugMode = false,
   }) {
-    _subscription?.cancel();
+    unawaited(_subscription?.cancel());
     _subscription = tokenStream.listen(
-      (update) => _onToken(
-        deviceId: deviceId,
-        update: update,
-        debugMode: debugMode,
+      (update) => unawaited(
+        _onToken(deviceId: deviceId, update: update, debugMode: debugMode),
       ),
     );
   }
@@ -55,7 +78,9 @@ class LiveActivityTokenSyncService {
   }
 
   Future<void> _showDebugNotification(LiveActivityTokenUpdate update) async {
-    if (!Platform.isIOS) return;
+    if (!Platform.isIOS) {
+      return;
+    }
     const details = NotificationDetails(
       iOS: DarwinNotificationDetails(
         presentAlert: true,
@@ -63,10 +88,10 @@ class LiveActivityTokenSyncService {
       ),
     );
     await FlutterLocalNotificationsPlugin().show(
-      update.liveActivityId.hashCode & 0x7FFFFFFF,
-      '[Debug] LA Token Updated',
-      '${update.activityType}: ${update.token.substring(0, 8)}…',
-      details,
+      id: update.liveActivityId.hashCode & 0x7FFFFFFF,
+      title: '[Debug] LA Token Updated',
+      body: '${update.activityType}: ${update.token.substring(0, 8)}…',
+      notificationDetails: details,
     );
   }
 
@@ -83,7 +108,7 @@ class LiveActivityTokenSyncService {
   }
 
   void dispose() {
-    _subscription?.cancel();
+    unawaited(_subscription?.cancel());
     _subscription = null;
   }
 }
