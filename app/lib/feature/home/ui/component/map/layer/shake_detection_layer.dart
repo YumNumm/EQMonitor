@@ -102,10 +102,24 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
     );
 
     final animationController = useAnimationController(
-      duration: const Duration(days: 365),
+      duration: const Duration(seconds: 2),
+    );
+
+    // eventsRef / settingsRef: listener内で常に最新値を参照するためのRef
+    final eventsRef = useRef(events);
+    final settingsRef = useRef(settings);
+    useEffect(
+      () {
+        eventsRef.value = events;
+        settingsRef.value = settings;
+        return null;
+      },
+      [events, settings],
     );
 
     // アニメーション制御
+    // events.isNotEmpty (bool) を deps にすることで、リスト参照が毎秒変わっても
+    // repeat() が不必要にリセットされるのを防ぐ
     useEffect(
       () {
         if (styleController == null) {
@@ -133,10 +147,18 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         }
         return null;
       },
-      [styleController, events, settings.animationMode, animationController],
+      // events.isNotEmpty を使い、リスト参照の変化で毎秒リセットされるのを防ぐ
+      [
+        styleController,
+        events.isNotEmpty,
+        settings.animationMode,
+        animationController,
+      ],
     );
 
     // データ更新
+    // eventsRef / settingsRef 経由で最新値を読むことで events をdepsから外し、
+    // 毎秒リスナーが再登録されるのを防ぐ
     useEffect(
       () {
         if (styleController == null) {
@@ -149,9 +171,13 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           }
           final opacity = _computeOpacity(
             animationController.value,
-            settings.animationMode,
+            settingsRef.value.animationMode,
           );
-          final geoJson = _buildGeoJson(events, settings.displayMode, opacity);
+          final geoJson = _buildGeoJson(
+            eventsRef.value,
+            settingsRef.value.displayMode,
+            opacity,
+          );
           unawaited(
             _updateGeoJsonIfChanged(
               styleController,
@@ -162,7 +188,8 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         }
 
         Timer? timer;
-        if (settings.animationMode == HomeShakeDetectionAnimationMode.solid) {
+        if (settingsRef.value.animationMode ==
+            HomeShakeDetectionAnimationMode.solid) {
           listener();
           timer = Timer.periodic(const Duration(seconds: 1), (_) => listener());
         } else {
@@ -174,13 +201,8 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
           animationController.removeListener(listener);
         };
       },
-      [
-        styleController,
-        events,
-        settings.displayMode,
-        settings.animationMode,
-        animationController,
-      ],
+      // animationMode が変わった時だけリスナーを再登録する
+      [styleController, settings.animationMode, animationController],
     );
 
     return const SizedBox.shrink();
