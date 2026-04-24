@@ -96,6 +96,7 @@ url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.118/linux-x64/claude"
 
 [tools.claude."platforms.macos-arm64"]
+checksum = "blake3:a4ef01d08238373bac1a965a83c6696ae4c14f4fb2707a07702c65f33e485f0f"
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.118/darwin-arm64/claude"
 
 [tools.claude."platforms.macos-x64"]
@@ -403,6 +404,9 @@ backend = "core:swift"
 
 [tools.swift."platforms.linux-x64"]
 checksum = "blake3:8a95707e406fa824266e95319f9f906415871df8f8dce47304a90302ec9977e8"
+
+[tools.swift."platforms.macos-arm64"]
+checksum = "blake3:7c85377fa6d9bdbeec3f6724522835c59d31483906d5bee41ec41807eff0ab00"
 
 [[tools.swiftformat]]
 version = "0.61.0"
