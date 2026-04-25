@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_parameter_persistent_delegate.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_search_parameter_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -91,6 +92,13 @@ class _PagingBody extends StatelessWidget {
                 },
               ),
             ],
+          ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: EarthquakeHistoryParameterPersistentDelegate(
+              parameter: parameter.value,
+              onChanged: onParameterChanged,
+            ),
           ),
           SliverGroupedPagingList<String?, String, EarthquakePartial>(
             dataSource: dataSource,

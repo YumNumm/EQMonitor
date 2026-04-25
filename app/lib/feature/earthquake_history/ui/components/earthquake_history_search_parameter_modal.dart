@@ -236,7 +236,69 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
               IconButton.filledTonal(
                 onPressed: () {
                   unawaited(HapticFeedback.lightImpact());
-                  Navigator.of(context).pop();
+                  final parameter = EarthquakeHistoryParameter(
+                    intensityGte: isIntensityEnabled.value &&
+                            intensityMin.value !=
+                                _IntensityRangeSelector.initialMin
+                        ? intensityMin.value
+                        : null,
+                    intensityLte: isIntensityEnabled.value &&
+                            intensityMax.value !=
+                                _IntensityRangeSelector.initialMax
+                        ? intensityMax.value
+                        : null,
+                    depthGte: isDepthEnabled.value &&
+                            depthMin.value != _DepthRangeSelector.initialMin
+                        ? depthMin.value
+                        : null,
+                    depthLte: isDepthEnabled.value &&
+                            depthMax.value != _DepthRangeSelector.initialMax
+                        ? depthMax.value
+                        : null,
+                    magnitudeGte: isMagnitudeEnabled.value &&
+                            magnitudeMin.value !=
+                                _MagnitudeRangeSelector.initialMin
+                        ? magnitudeMin.value
+                        : null,
+                    magnitudeLte: isMagnitudeEnabled.value &&
+                            magnitudeMax.value !=
+                                _MagnitudeRangeSelector.initialMax
+                        ? magnitudeMax.value
+                        : null,
+                    epicenterCode: isEpicenterEnabled.value &&
+                            selectedEpicenterCode.value != null
+                        ? int.tryParse(selectedEpicenterCode.value!)
+                        : null,
+                    epicenterName: isEpicenterEnabled.value &&
+                            selectedEpicenterCode.value != null
+                        ? selectedEpicenterName.value
+                        : null,
+                    regionSearchType: isRegionIntensityEnabled.value &&
+                            selectedRegionCode.value != null
+                        ? (selectedRegionType.value == 'prefecture'
+                            ? RegionSearchType.prefecture
+                            : RegionSearchType.city)
+                        : null,
+                    regionCode: isRegionIntensityEnabled.value
+                        ? selectedRegionCode.value
+                        : null,
+                    regionName: isRegionIntensityEnabled.value
+                        ? selectedRegionName.value
+                        : null,
+                    regionIntensityGte: isRegionIntensityEnabled.value &&
+                            selectedRegionCode.value != null &&
+                            regionIntensityMin.value !=
+                                _IntensityRangeSelector.initialMin
+                        ? regionIntensityMin.value
+                        : null,
+                    regionIntensityLte: isRegionIntensityEnabled.value &&
+                            selectedRegionCode.value != null &&
+                            regionIntensityMax.value !=
+                                _IntensityRangeSelector.initialMax
+                        ? regionIntensityMax.value
+                        : null,
+                  );
+                  Navigator.of(context).pop(parameter);
                 },
                 icon: const Icon(Icons.check),
               ),
