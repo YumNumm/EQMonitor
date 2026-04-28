@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/provider/jma_parameter/jma_earthquake_nearest_observation_point.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
@@ -89,7 +90,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
         }
 
         stopWatch.stop();
-        print(
+        talker.debug(
           '${selectedMapType.value} time: ${stopWatch.elapsedMicroseconds / 1000}ms',
         );
 
