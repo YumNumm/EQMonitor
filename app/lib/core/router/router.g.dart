@@ -13,6 +13,8 @@ List<RouteBase> get $appRoutes => [
   $earthquakeHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
+  $shakeDetectionHistoryRoute,
+  $shakeDetectionHistoryDetailsRoute,
   $telegramListByEventIdRoute,
   $homeRoute,
   $talkerRoute,
@@ -141,6 +143,68 @@ mixin $EarthquakeHistoryDetailsRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $shakeDetectionHistoryRoute => GoRouteData.$route(
+  path: '/shake-detection-history',
+  factory: $ShakeDetectionHistoryRoute._fromState,
+);
+
+mixin $ShakeDetectionHistoryRoute on GoRouteData {
+  static ShakeDetectionHistoryRoute _fromState(GoRouterState state) =>
+      const ShakeDetectionHistoryRoute();
+
+  @override
+  String get location => GoRouteData.$location('/shake-detection-history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $shakeDetectionHistoryDetailsRoute => GoRouteData.$route(
+  path: '/shake-detection-history-details/:eventId',
+  factory: $ShakeDetectionHistoryDetailsRoute._fromState,
+);
+
+mixin $ShakeDetectionHistoryDetailsRoute on GoRouteData {
+  static ShakeDetectionHistoryDetailsRoute _fromState(GoRouterState state) =>
+      ShakeDetectionHistoryDetailsRoute(
+        eventId: state.pathParameters['eventId']!,
+        $extra: state.extra as ShakeDetectionEvent,
+      );
+
+  ShakeDetectionHistoryDetailsRoute get _self =>
+      this as ShakeDetectionHistoryDetailsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/shake-detection-history-details/${Uri.encodeComponent(_self.eventId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $telegramListByEventIdRoute => GoRouteData.$route(

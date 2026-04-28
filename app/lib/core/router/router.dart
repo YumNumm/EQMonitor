@@ -41,6 +41,9 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
+import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
+import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_details_page.dart';
+import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
@@ -141,6 +144,34 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData
   Widget build(BuildContext context, GoRouterState state) {
     return EarthquakeHistoryDetailsPage(eventId: eventId);
   }
+}
+
+@TypedGoRoute<ShakeDetectionHistoryRoute>(path: '/shake-detection-history')
+class ShakeDetectionHistoryRoute extends GoRouteData
+    with $ShakeDetectionHistoryRoute {
+  const ShakeDetectionHistoryRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ShakeDetectionHistoryPage();
+}
+
+@TypedGoRoute<ShakeDetectionHistoryDetailsRoute>(
+  path: '/shake-detection-history-details/:eventId',
+)
+class ShakeDetectionHistoryDetailsRoute extends GoRouteData
+    with $ShakeDetectionHistoryDetailsRoute {
+  const ShakeDetectionHistoryDetailsRoute({
+    required this.eventId,
+    required this.$extra,
+  });
+
+  final String eventId;
+  final ShakeDetectionEvent $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      ShakeDetectionHistoryDetailsPage(event: $extra);
 }
 
 @TypedGoRoute<TelegramListByEventIdRoute>(
