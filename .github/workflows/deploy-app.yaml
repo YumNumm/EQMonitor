@@ -124,12 +124,16 @@ jobs:
         env:
           COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
         run: |
+          BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
           flutter build ios --config-only \
             --no-codesign \
             --no-pub \
             --build-number=${{ github.run_number }} \
             --dart-define-from-file=../environment/.env.prod \
-            --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION"
+            --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
+            --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
+            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
 
       - name: Extract App Store Connect API Key
         run: |
@@ -403,12 +407,18 @@ jobs:
         working-directory: app
         env:
           BUILD_NUMBER: ${{ github.run_number }}
+          COMMIT_INFORMATION: ${{ github.ref_name }}-${{ github.sha }}
         run: |
+          BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          BUILD_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
           flutter build appbundle \
             --release \
             --no-pub \
             --build-number="${BUILD_NUMBER}" \
-            --dart-define-from-file=../environment/.env.prod
+            --dart-define-from-file=../environment/.env.prod \
+            --dart-define COMMIT_INFORMATION="$COMMIT_INFORMATION" \
+            --dart-define BUILD_TIMESTAMP="$BUILD_TIMESTAMP" \
+            --dart-define BUILD_COMMIT_MESSAGE="$BUILD_COMMIT_MESSAGE"
 
       - name: Copy AAB to expected location
         run: |

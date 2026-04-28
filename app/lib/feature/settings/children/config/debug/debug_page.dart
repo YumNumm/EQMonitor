@@ -36,7 +36,7 @@ class _DebugWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDebugEnabled = ref.watch(debugProvider).value ?? false;
     final notificationToken = ref.watch(notificationTokenStreamProvider).value;
-    final flavorName = ref.watch(environmentProvider).flavor.name;
+    final buildCfg = ref.watch(buildConfigProvider);
 
     return ListTileTheme(
       dense: true,
@@ -57,7 +57,23 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('Flavor'),
             leading: const Icon(Icons.flag),
-            subtitle: Text(flavorName),
+            subtitle: Text(buildCfg.flavor.name),
+          ),
+          ListTile(
+            title: const Text('ビルド時刻'),
+            leading: const Icon(Icons.schedule),
+            subtitle: Text(
+              buildCfg.buildTimestamp.isEmpty ? '(not set)' : buildCfg.buildTimestamp,
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+            ),
+          ),
+          ListTile(
+            title: const Text('ビルド時コミットメッセージ'),
+            leading: const Icon(Icons.commit),
+            subtitle: Text(
+              buildCfg.buildCommitMessage.isEmpty ? '(not set)' : buildCfg.buildCommitMessage,
+              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+            ),
           ),
           ListTile(
             title: const Text('オンボーディング'),

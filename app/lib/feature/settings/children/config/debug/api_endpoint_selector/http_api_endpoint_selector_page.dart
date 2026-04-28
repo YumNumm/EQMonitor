@@ -9,7 +9,7 @@ class HttpApiEndpointSelectorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final defaultUrl = ref.watch(environmentProvider).restApiUrl;
+    final defaultUrl = ref.watch(buildConfigProvider).restApiUrl;
     final developUrl = defaultUrl.replaceAll('api.', 'dev.api.');
     final state = ref.watch(telegramUrlProvider.select((v) => v.requireValue.restApiUrl));
     return Scaffold(

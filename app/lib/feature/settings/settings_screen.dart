@@ -107,7 +107,7 @@ class _AppVersionInformation extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final packageInfo = ref.watch(packageInfoProvider);
-    final commitRaw = ref.watch(environmentProvider).commitInformation;
+    final commitRaw = ref.watch(buildConfigProvider).commitInformation;
     final commitLabel = commitRaw.isEmpty ? 'local-development' : commitRaw;
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;

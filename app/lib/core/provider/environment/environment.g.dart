@@ -11,49 +11,49 @@ part of 'environment.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(environment)
-final environmentProvider = EnvironmentProvider._();
+@ProviderFor(buildConfig)
+final buildConfigProvider = BuildConfigProvider._();
 
-final class EnvironmentProvider
+final class BuildConfigProvider
     extends
         $FunctionalProvider<
-          model.Environment,
-          model.Environment,
-          model.Environment
+          model.BuildConfig,
+          model.BuildConfig,
+          model.BuildConfig
         >
-    with $Provider<model.Environment> {
-  EnvironmentProvider._()
+    with $Provider<model.BuildConfig> {
+  BuildConfigProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'environmentProvider',
+        name: r'buildConfigProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$environmentHash();
+  String debugGetCreateSourceHash() => _$buildConfigHash();
 
   @$internal
   @override
-  $ProviderElement<model.Environment> $createElement(
+  $ProviderElement<model.BuildConfig> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  model.Environment create(Ref ref) {
-    return environment(ref);
+  model.BuildConfig create(Ref ref) {
+    return buildConfig(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(model.Environment value) {
+  Override overrideWithValue(model.BuildConfig value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<model.Environment>(value),
+      providerOverride: $SyncValueProvider<model.BuildConfig>(value),
     );
   }
 }
 
-String _$environmentHash() => r'2f61055d207fb8e2c2793ecb753d4b0c03c9d973';
+String _$buildConfigHash() => r'2f61055d207fb8e2c2793ecb753d4b0c03c9d973';

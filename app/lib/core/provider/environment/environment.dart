@@ -4,4 +4,4 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'environment.g.dart';
 
 @Riverpod(keepAlive: true)
-model.Environment environment(Ref ref) => model.Environment.fromEnvironment();
+model.BuildConfig buildConfig(Ref ref) => model.BuildConfig.fromEnvironment();

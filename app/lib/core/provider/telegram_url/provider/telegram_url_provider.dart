@@ -14,7 +14,7 @@ class TelegramUrl extends _$TelegramUrl {
   Future<TelegramUrlModel> build() async => _load();
 
   TelegramUrlModel _defaultTelegramUrl() {
-    final env = ref.read(environmentProvider);
+    final env = ref.read(buildConfigProvider);
     return TelegramUrlModel(
       restApiUrl: env.restApiUrl,
       wsApiUrl: env.wsApiUrl,

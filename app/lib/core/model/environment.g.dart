@@ -8,11 +8,11 @@ part of 'environment.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Environment _$EnvironmentFromJson(Map<String, dynamic> json) => $checkedCreate(
-  '_Environment',
+_BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
+  '_BuildConfig',
   json,
   ($checkedConvert) {
-    final val = _Environment(
+    final val = _BuildConfig(
       restApiUrl: $checkedConvert('rest_api_url', (v) => v as String),
       appIdSuffix: $checkedConvert('app_id_suffix', (v) => v as String),
       appName: $checkedConvert('app_name', (v) => v as String),
@@ -30,6 +30,11 @@ _Environment _$EnvironmentFromJson(Map<String, dynamic> json) => $checkedCreate(
         'google_android_client_id',
         (v) => v as String,
       ),
+      buildTimestamp: $checkedConvert('build_timestamp', (v) => v as String),
+      buildCommitMessage: $checkedConvert(
+        'build_commit_message',
+        (v) => v as String,
+      ),
     );
     return val;
   },
@@ -41,10 +46,12 @@ _Environment _$EnvironmentFromJson(Map<String, dynamic> json) => $checkedCreate(
     'wsApiUrl': 'ws_api_url',
     'googleIosClientId': 'google_ios_client_id',
     'googleAndroidClientId': 'google_android_client_id',
+    'buildTimestamp': 'build_timestamp',
+    'buildCommitMessage': 'build_commit_message',
   },
 );
 
-Map<String, dynamic> _$EnvironmentToJson(_Environment instance) =>
+Map<String, dynamic> _$BuildConfigToJson(_BuildConfig instance) =>
     <String, dynamic>{
       'rest_api_url': instance.restApiUrl,
       'app_id_suffix': instance.appIdSuffix,
@@ -54,6 +61,8 @@ Map<String, dynamic> _$EnvironmentToJson(_Environment instance) =>
       'ws_api_url': instance.wsApiUrl,
       'google_ios_client_id': instance.googleIosClientId,
       'google_android_client_id': instance.googleAndroidClientId,
+      'build_timestamp': instance.buildTimestamp,
+      'build_commit_message': instance.buildCommitMessage,
     };
 
 const _$FlavorEnumMap = {Flavor.dev: 'dev', Flavor.prod: 'prod'};

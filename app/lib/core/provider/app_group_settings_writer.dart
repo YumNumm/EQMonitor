@@ -16,7 +16,7 @@ Future<void> appGroupSettingsWriter(Ref ref) async {
   }
 
   final prefs = await ref.watch(appGroupPreferencesProvider.future);
-  final env = ref.watch(environmentProvider);
+  final env = ref.watch(buildConfigProvider);
 
   await Future.wait([
     prefs.setString('apiServerUrl', env.restApiUrl),
