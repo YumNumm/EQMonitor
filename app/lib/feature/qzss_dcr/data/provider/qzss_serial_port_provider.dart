@@ -89,9 +89,10 @@ class LatestQzssDcReport extends _$LatestQzssDcReport {
     if (connection.isConnected) {
       final stream = connectionNotifier.reportStream;
       if (stream != null) {
-        stream.listen((report) {
+        final subscription = stream.listen((report) {
           state = report;
         });
+        ref.onDispose(subscription.cancel);
       }
     }
 
