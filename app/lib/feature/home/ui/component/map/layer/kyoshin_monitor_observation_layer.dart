@@ -105,7 +105,7 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
           return null;
         }
 
-        ref.listenManual(
+        final subscription = ref.listenManual(
           homeKyoshinMonitorObservationGeoJsonProvider,
           (_, next) async {
             final sw = Stopwatch()..start();
@@ -119,7 +119,7 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
             sw.stop();
           },
         );
-        return null;
+        return subscription.close;
       },
       [
         styleController,
