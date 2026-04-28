@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/device_notification_settings_repository.dart';
@@ -75,6 +76,10 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
 
   Future<void> addCurrentLocationRegion() async {
     final current = state.requireValue;
+    talker.debug(
+      '[EEW] addCurrentLocationRegion: regions=${current.regions.length}, '
+      'hasCurrentLocation=${current.regions.any((r) => r.isCurrentLocation)}',
+    );
     if (current.regions.any((r) => r.isCurrentLocation)) {
       return;
     }
@@ -95,10 +100,13 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
       deviceId: deviceId,
       regions: updated,
     );
+    talker.debug('[EEW] putEewRegions result: $result');
     switch (result) {
       case Success(:final value):
+        talker.debug('[EEW] putEewRegions success: regions=${value.length}');
         state = AsyncData(current.copyWith(regions: value));
       case Failure(:final exception):
+        talker.error('[EEW] putEewRegions failure', exception);
         throw exception;
     }
   }

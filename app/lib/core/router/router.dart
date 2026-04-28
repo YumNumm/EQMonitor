@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/earthquake_replay_page.dart';
@@ -89,11 +90,13 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
 class EarthquakeHistoryRoute extends GoRouteData with $EarthquakeHistoryRoute {
-  const EarthquakeHistoryRoute();
+  const EarthquakeHistoryRoute({this.$extra});
+
+  final EarthquakeHistoryParameter? $extra;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeHistoryPage();
+      EarthquakeHistoryPage(initialParameter: $extra);
 }
 
 @TypedGoRoute<EarthquakeSearchResultRoute>(

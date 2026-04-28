@@ -190,6 +190,16 @@ class _RegionsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(EarthquakeSettingsNotifier.updateRegionsMutation, (_, next) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('地域の更新に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
     final regionsState = ref.watch(
       EarthquakeSettingsNotifier.updateRegionsMutation,
     );

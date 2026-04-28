@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/device_notification_settings_repository.dart';
@@ -97,6 +98,10 @@ class EarthquakeSettingsNotifier extends _$EarthquakeSettingsNotifier {
 
   Future<void> addCurrentLocationRegion() async {
     final current = state.requireValue;
+    talker.debug(
+      '[Earthquake] addCurrentLocationRegion: regions=${current.regions.length}, '
+      'hasCurrentLocation=${current.regions.any((r) => r.isCurrentLocation)}',
+    );
     if (current.regions.any((r) => r.isCurrentLocation)) {
       return;
     }
@@ -117,10 +122,15 @@ class EarthquakeSettingsNotifier extends _$EarthquakeSettingsNotifier {
       deviceId: deviceId,
       regions: updated,
     );
+    talker.debug('[Earthquake] putEarthquakeRegions result: $result');
     switch (result) {
       case Success(:final value):
+        talker.debug(
+          '[Earthquake] putEarthquakeRegions success: regions=${value.length}',
+        );
         state = AsyncData(current.copyWith(regions: value));
       case Failure(:final exception):
+        talker.error('[Earthquake] putEarthquakeRegions failure', exception);
         throw exception;
     }
   }

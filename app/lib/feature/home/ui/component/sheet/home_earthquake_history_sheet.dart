@@ -26,92 +26,100 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     final paramAsync = ref.watch(homeEarthquakeHistoryParameterProvider);
 
     return homeAsync.when(
-      data: (home) => Card.outlined(
-        margin: EdgeInsets.zero,
-        color: color.surfaceCard,
-        clipBehavior: Clip.antiAlias,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(shape.card),
-          side: BorderSide(color: color.outlineSoft),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            HomeScopeSelector(
-              scope: home.common.earthquakeHistoryScope,
-              onScopeChanged: (scope) async => ref
-                  .read(homeConfigurationProvider.notifier)
-                  .setEarthquakeHistoryScope(scope),
-            ),
-            paramAsync.when(
-              data: (param) {
-                if (param == null) {
-                  return HomeScopeUnavailableBody(
-                    scope: home.common.earthquakeHistoryScope,
-                    onRetry: () => ref.invalidate(
-                      homeEarthquakeHistoryParameterProvider,
+      data: (home) {
+        final isCurrentLocation = home.common.earthquakeHistoryScope ==
+            HomeEarthquakeHistoryScope.currentLocation;
+        final locationName = isCurrentLocation
+            ? paramAsync.value?.regionName
+            : null;
+        final currentParam = isCurrentLocation ? paramAsync.value : null;
+
+        return Card.outlined(
+          margin: EdgeInsets.zero,
+          color: color.surfaceCard,
+          clipBehavior: Clip.antiAlias,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(shape.card),
+            side: BorderSide(color: color.outlineSoft),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              HomeScopeSelector(
+                scope: home.common.earthquakeHistoryScope,
+                onScopeChanged: (scope) async => ref
+                    .read(homeConfigurationProvider.notifier)
+                    .setEarthquakeHistoryScope(scope),
+                locationName: locationName,
+              ),
+              paramAsync.when(
+                data: (param) {
+                  if (param == null) {
+                    return HomeScopeUnavailableBody(
+                      scope: home.common.earthquakeHistoryScope,
+                      onRetry: () => ref.invalidate(
+                        homeEarthquakeHistoryParameterProvider,
+                      ),
+                    );
+                  }
+                  final state = ref.watch(earthquakeHistoryProvider(param));
+                  final listSection = switch (state) {
+                    AsyncData(:final value) =>
+                      value.items.isEmpty
+                          ? const EarthquakeHistoryNotFound()
+                          : HomeEarthquakeList(earthquakes: value.items),
+                    AsyncError(:final error) => ErrorCard(
+                      error: error,
+                      margin: EdgeInsets.zero,
+                      onReload: () async {
+                        ref.invalidate(homeEarthquakeHistoryParameterProvider);
+                        ref.invalidate(earthquakeHistoryProvider(param));
+                      },
+                      padding: const EdgeInsets.all(8),
                     ),
-                  );
-                }
-                final state = ref.watch(earthquakeHistoryProvider(param));
-                final listSection = switch (state) {
-                  AsyncData(:final value) =>
-                    value.items.isEmpty
-                        ? const EarthquakeHistoryNotFound()
-                        : HomeEarthquakeList(earthquakes: value.items),
-                  AsyncError(:final error) => ErrorCard(
-                    error: error,
-                    margin: EdgeInsets.zero,
-                    onReload: () async {
-                      ref.invalidate(homeEarthquakeHistoryParameterProvider);
-                      ref.invalidate(earthquakeHistoryProvider(param));
-                    },
-                    padding: const EdgeInsets.all(8),
-                  ),
-                  _ => const _HomeEarthquakeHistorySheetSkeleton(),
-                };
-                if (home.common.earthquakeHistoryScope ==
-                    HomeEarthquakeHistoryScope.currentLocation) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      listSection,
-                    ],
-                  );
-                }
-                return listSection;
-              },
-              loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
-              error: (error, _) => ErrorCard(
-                error: error,
-                margin: EdgeInsets.zero,
-                onReload: () async =>
-                    ref.invalidate(homeEarthquakeHistoryParameterProvider),
-                padding: const EdgeInsets.all(8),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                spacing.lg,
-                spacing.xs,
-                spacing.lg,
-                spacing.md,
-              ),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () async =>
-                      const EarthquakeHistoryRoute().push<void>(context),
-                  child: const Text('さらに表示'),
+                    _ => const _HomeEarthquakeHistorySheetSkeleton(),
+                  };
+                  if (isCurrentLocation) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [listSection],
+                    );
+                  }
+                  return listSection;
+                },
+                loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
+                error: (error, _) => ErrorCard(
+                  error: error,
+                  margin: EdgeInsets.zero,
+                  onReload: () async =>
+                      ref.invalidate(homeEarthquakeHistoryParameterProvider),
+                  padding: const EdgeInsets.all(8),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  spacing.lg,
+                  spacing.xs,
+                  spacing.lg,
+                  spacing.md,
+                ),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () async => EarthquakeHistoryRoute(
+                      $extra: currentParam,
+                    ).push<void>(context),
+                    child: const Text('さらに表示'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
       loading: () => Card.outlined(
         margin: EdgeInsets.zero,
         color: color.surfaceCard,

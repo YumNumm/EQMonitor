@@ -13,22 +13,28 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
-  const EarthquakeHistoryPage({super.key});
+  const EarthquakeHistoryPage({super.key, this.initialParameter});
+
+  final EarthquakeHistoryParameter? initialParameter;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(
-      body: _SliverListBody(),
+    return Scaffold(
+      body: _SliverListBody(initialParameter: initialParameter),
     );
   }
 }
 
 class _SliverListBody extends HookConsumerWidget {
-  const _SliverListBody();
+  const _SliverListBody({this.initialParameter});
+
+  final EarthquakeHistoryParameter? initialParameter;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parameter = useState(const EarthquakeHistoryParameter());
+    final parameter = useState(
+      initialParameter ?? const EarthquakeHistoryParameter(),
+    );
     final dataSourceAsync = ref.watch(
       earthquakeHistoryDataSourceProvider(parameter.value),
     );

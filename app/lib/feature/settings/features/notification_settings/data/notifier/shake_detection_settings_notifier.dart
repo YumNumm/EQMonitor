@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/device_notification_settings_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -43,6 +44,10 @@ class ShakeDetectionSettingsNotifier
     api.ShakeDetectionLevel level = api.ShakeDetectionLevel.medium,
   }) async {
     final current = state.requireValue;
+    talker.debug(
+      '[ShakeDetection] addCurrentLocation: entries=${current.entries.length}, '
+      'hasCurrentLocation=${current.entries.any((e) => e.isCurrentLocation)}',
+    );
     if (current.entries.any((e) => e.isCurrentLocation)) {
       return;
     }
@@ -64,13 +69,18 @@ class ShakeDetectionSettingsNotifier
       deviceId: deviceId,
       entries: updated,
     );
+    talker.debug('[ShakeDetection] putShakeDetectionSettings result: $result');
     switch (result) {
       case Success(:final value):
+        talker.debug(
+          '[ShakeDetection] putShakeDetectionSettings success: entries=${value.length}',
+        );
         state = AsyncData((
           entries: _resolveNames(value, current.availableSubRegions),
           availableSubRegions: current.availableSubRegions,
         ));
       case Failure(:final exception):
+        talker.error('[ShakeDetection] putShakeDetectionSettings failure', exception);
         throw exception;
     }
   }

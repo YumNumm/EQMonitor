@@ -36,6 +36,29 @@ class _Body extends ConsumerWidget {
     final state = stateAsync.value ??
         const (entries: <ShakeDetectionEntry>[], availableSubRegions: []);
 
+    ref.listen(
+      ShakeDetectionSettingsNotifier.addCurrentLocationMutation,
+      (_, next) {
+        if (next is MutationError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('現在地の追加に失敗しました: ${next.error}'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
+    );
+    ref.listen(ShakeDetectionSettingsNotifier.removeEntryMutation, (_, next) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('地域の削除に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
     final addState = ref.watch(
       ShakeDetectionSettingsNotifier.addCurrentLocationMutation,
     );
