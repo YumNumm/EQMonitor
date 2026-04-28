@@ -34,13 +34,9 @@ class AquaHtmlParser {
         continue;
       }
 
-      try {
-        final event = _parseTableRow(row);
-        if (event != null) {
-          events.add(event);
-        }
-      } catch (e) {
-        rethrow;
+      final event = _parseTableRow(row);
+      if (event != null) {
+        events.add(event);
       }
     }
 
