@@ -1,4 +1,5 @@
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
@@ -77,17 +78,50 @@ class App extends HookConsumerWidget {
         );
       },
     );
-    if (kDebugMode) {
+    final buildCfg = ref.read(buildConfigProvider);
+    Widget result = app;
+
+    if (buildCfg.isBetaTesting) {
       final packageInfo = ref.watch(packageInfoProvider);
-      return Directionality(
+      result = Directionality(
+        textDirection: TextDirection.ltr,
+        child: Banner(
+          message: 'Beta',
+          location: BannerLocation.topEnd,
+          color: const Color(0xFFF4C75E),
+          textStyle: const TextStyle(
+            color: Color(0xFF0F141A),
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
+          ),
+          child: Banner(
+            message: 'v${packageInfo.version}+${packageInfo.buildNumber}',
+            location: BannerLocation.bottomEnd,
+            color: const Color(0xFFF4C75E),
+            textStyle: const TextStyle(
+              color: Color(0xFF0F141A),
+              fontSize: 8,
+              fontWeight: FontWeight.w600,
+            ),
+            child: result,
+          ),
+        ),
+      );
+    }
+
+    if (kDebugMode && !buildCfg.isBetaTesting) {
+      final packageInfo = ref.watch(packageInfoProvider);
+      result = Directionality(
         textDirection: TextDirection.ltr,
         child: Banner(
           message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
           location: BannerLocation.bottomStart,
-          child: app,
+          child: result,
         ),
       );
     }
-    return app;
+
+    return result;
   }
 }

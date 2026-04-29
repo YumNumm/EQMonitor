@@ -10,6 +10,7 @@ part of 'router.dart';
 
 List<RouteBase> get $appRoutes => [
   $onboardingRoute,
+  $betaTestingWarningRoute,
   $earthquakeHistoryRoute,
   $earthquakeSearchResultRoute,
   $earthquakeHistoryDetailsRoute,
@@ -32,6 +33,32 @@ mixin $OnboardingRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/onboarding');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $betaTestingWarningRoute => GoRouteData.$route(
+  path: '/beta-warning',
+  factory: $BetaTestingWarningRoute._fromState,
+);
+
+mixin $BetaTestingWarningRoute on GoRouteData {
+  static BetaTestingWarningRoute _fromState(GoRouterState state) =>
+      const BetaTestingWarningRoute();
+
+  @override
+  String get location => GoRouteData.$location('/beta-warning');
 
   @override
   void go(BuildContext context) => context.go(location);

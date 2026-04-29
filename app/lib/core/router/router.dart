@@ -18,6 +18,9 @@ import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
+import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
+import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
@@ -67,6 +70,14 @@ GoRouter goRouter(Ref ref) => GoRouter(
     if (!isCompleted && state.matchedLocation != '/onboarding') {
       return '/onboarding';
     }
+
+    if (isCompleted && ref.read(buildConfigProvider).isBetaTesting) {
+      final betaAgreed = ref.read(betaTestingAgreedProvider);
+      if (!betaAgreed && state.matchedLocation != '/beta-warning') {
+        return '/beta-warning';
+      }
+    }
+
     return null;
   },
   observers: [
@@ -89,6 +100,15 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const OnboardingPage();
+}
+
+@TypedGoRoute<BetaTestingWarningRoute>(path: '/beta-warning')
+class BetaTestingWarningRoute extends GoRouteData with $BetaTestingWarningRoute {
+  const BetaTestingWarningRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const BetaTestingWarningPage();
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')

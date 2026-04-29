@@ -11,6 +11,7 @@ enum SharedPreferencesKey {
   locationTrackingMode('location_tracking_mode'),
   homeConfiguration('home_configuration'),
   onboardingCompleted('onboarding_completed'),
+  betaTestingAgreed('beta_testing_agreed'),
   ;
 
   const SharedPreferencesKey(this.key);
