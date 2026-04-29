@@ -35,10 +35,15 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
 abstract class EarthquakeHistoryDetailConfig
     with _$EarthquakeHistoryDetailConfig {
   const factory EarthquakeHistoryDetailConfig({
-    /// 地図の震度表示モード（旧値は unknownEnumValue で stationOnly に migration）
-    @JsonKey(unknownEnumValue: IntensityFillMode.stationOnly)
-    @Default(IntensityFillMode.stationOnly)
-    IntensityFillMode intensityFillMode,
+    /// アイコンの表示モード
+    @JsonKey(unknownEnumValue: EarthquakeHistoryIconMode.auto)
+    @Default(EarthquakeHistoryIconMode.auto)
+    EarthquakeHistoryIconMode iconMode,
+
+    /// 塗りつぶしの表示モード
+    @JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.none)
+    @Default(EarthquakeHistoryFillMode.none)
+    EarthquakeHistoryFillMode fillMode,
 
     /// 観測点の表示方法
     @Default(StationDisplayMode.maxFocused)
@@ -63,9 +68,6 @@ abstract class EarthquakeHistoryDetailConfig
     /// 長周期地震動階級を表示しているか
     @Default(false) bool showingLpgmIntensity,
 
-    /// 観測点に震度アイコンを重ねて表示するか (v2.6.0 互換)
-    @Default(true) bool showIntensityIcon,
-
     /// 観測点レイヤーを表示するか
     @Default(true) bool showStation,
   }) = _EarthquakeHistoryDetailConfig;
@@ -74,16 +76,31 @@ abstract class EarthquakeHistoryDetailConfig
       _$EarthquakeHistoryDetailConfigFromJson(json);
 }
 
-/// 地震履歴詳細画面における震度の表示モード
-enum IntensityFillMode {
-  /// 観測点のみ表示
-  stationOnly,
+/// 地震履歴詳細画面におけるアイコン表示モード
+enum EarthquakeHistoryIconMode {
+  /// 自動（細分化地域→市区町村→観測点をズームに応じて段階表示）
+  auto,
 
-  /// 塗りつぶし（ズームレベルでregion⇔city自動切替）
-  fill,
+  /// 観測点アイコンのみ（データなければ細分化地域にフォールバック）
+  station,
 
-  /// 塗りつぶし + 震度アイコン
-  fillWithIcon,
+  /// 市区町村アイコンのみ（データなければ細分化地域にフォールバック）
+  municipality,
+
+  /// 細分化地域アイコンのみ
+  region,
+
+  /// アイコン非表示
+  none,
+}
+
+/// 地震履歴詳細画面における塗りつぶし表示モード
+enum EarthquakeHistoryFillMode {
+  /// 塗りつぶしなし
+  none,
+
+  /// アイコン表示モードに合わせて塗りつぶし
+  matchIcon,
 }
 
 /// 観測点の表示方法

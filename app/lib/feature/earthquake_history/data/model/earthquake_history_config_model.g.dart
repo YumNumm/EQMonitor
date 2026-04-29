@@ -84,15 +84,25 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
   json,
   ($checkedConvert) {
     final val = _EarthquakeHistoryDetailConfig(
-      intensityFillMode: $checkedConvert(
-        'intensity_fill_mode',
+      iconMode: $checkedConvert(
+        'icon_mode',
         (v) =>
             $enumDecodeNullable(
-              _$IntensityFillModeEnumMap,
+              _$EarthquakeHistoryIconModeEnumMap,
               v,
-              unknownValue: IntensityFillMode.stationOnly,
+              unknownValue: EarthquakeHistoryIconMode.auto,
             ) ??
-            IntensityFillMode.stationOnly,
+            EarthquakeHistoryIconMode.auto,
+      ),
+      fillMode: $checkedConvert(
+        'fill_mode',
+        (v) =>
+            $enumDecodeNullable(
+              _$EarthquakeHistoryFillModeEnumMap,
+              v,
+              unknownValue: EarthquakeHistoryFillMode.none,
+            ) ??
+            EarthquakeHistoryFillMode.none,
       ),
       stationDisplayMode: $checkedConvert(
         'station_display_mode',
@@ -123,16 +133,13 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
         'showing_lpgm_intensity',
         (v) => v as bool? ?? false,
       ),
-      showIntensityIcon: $checkedConvert(
-        'show_intensity_icon',
-        (v) => v as bool? ?? true,
-      ),
       showStation: $checkedConvert('show_station', (v) => v as bool? ?? true),
     );
     return val;
   },
   fieldKeyMap: const {
-    'intensityFillMode': 'intensity_fill_mode',
+    'iconMode': 'icon_mode',
+    'fillMode': 'fill_mode',
     'stationDisplayMode': 'station_display_mode',
     'hypocenterDisplayMode': 'hypocenter_display_mode',
     'showHypocenterError': 'show_hypocenter_error',
@@ -141,7 +148,6 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
         'use_estimated_intensity_when_available',
     'showLegend': 'show_legend',
     'showingLpgmIntensity': 'showing_lpgm_intensity',
-    'showIntensityIcon': 'show_intensity_icon',
     'showStation': 'show_station',
   },
 );
@@ -149,8 +155,8 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
 Map<String, dynamic> _$EarthquakeHistoryDetailConfigToJson(
   _EarthquakeHistoryDetailConfig instance,
 ) => <String, dynamic>{
-  'intensity_fill_mode':
-      _$IntensityFillModeEnumMap[instance.intensityFillMode]!,
+  'icon_mode': _$EarthquakeHistoryIconModeEnumMap[instance.iconMode]!,
+  'fill_mode': _$EarthquakeHistoryFillModeEnumMap[instance.fillMode]!,
   'station_display_mode':
       _$StationDisplayModeEnumMap[instance.stationDisplayMode]!,
   'hypocenter_display_mode':
@@ -161,14 +167,20 @@ Map<String, dynamic> _$EarthquakeHistoryDetailConfigToJson(
       instance.useEstimatedIntensityWhenAvailable,
   'show_legend': instance.showLegend,
   'showing_lpgm_intensity': instance.showingLpgmIntensity,
-  'show_intensity_icon': instance.showIntensityIcon,
   'show_station': instance.showStation,
 };
 
-const _$IntensityFillModeEnumMap = {
-  IntensityFillMode.stationOnly: 'stationOnly',
-  IntensityFillMode.fill: 'fill',
-  IntensityFillMode.fillWithIcon: 'fillWithIcon',
+const _$EarthquakeHistoryIconModeEnumMap = {
+  EarthquakeHistoryIconMode.auto: 'auto',
+  EarthquakeHistoryIconMode.station: 'station',
+  EarthquakeHistoryIconMode.municipality: 'municipality',
+  EarthquakeHistoryIconMode.region: 'region',
+  EarthquakeHistoryIconMode.none: 'none',
+};
+
+const _$EarthquakeHistoryFillModeEnumMap = {
+  EarthquakeHistoryFillMode.none: 'none',
+  EarthquakeHistoryFillMode.matchIcon: 'matchIcon',
 };
 
 const _$StationDisplayModeEnumMap = {
