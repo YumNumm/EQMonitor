@@ -401,7 +401,7 @@ class _BottomBar extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: ds.palette.brandPrimary,
                 foregroundColor: ds.textColor.inverse,
-                shape: RoundedRectangleBorder(
+                shape: RoundedSuperellipseBorder(
                   borderRadius: BorderRadius.circular(ds.shape.button),
                 ),
               ),

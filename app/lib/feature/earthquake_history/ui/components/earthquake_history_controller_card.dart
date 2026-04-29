@@ -31,7 +31,7 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
       color: colorScheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),
       child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,

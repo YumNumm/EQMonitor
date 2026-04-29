@@ -84,7 +84,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                 child: IconButton.filledTonal(
                   style: ButtonStyle(
                     shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
+                      RoundedSuperellipseBorder(
                         side: BorderSide(
                           color: colorScheme.primary.withValues(alpha: 0.2),
                         ),

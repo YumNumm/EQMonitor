@@ -29,7 +29,7 @@ class BorderedContainer extends StatelessWidget {
       elevation: elevation,
       color: accentColor ?? theme.colorScheme.surfaceContainer,
       // border
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         side: BorderSide(
           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
         ),

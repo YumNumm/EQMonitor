@@ -22,7 +22,7 @@ abstract class DebugReplayState with _$DebugReplayState {
   }) = _DebugReplayState;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DebugReplay extends _$DebugReplay {
   final List<Timer> _timers = [];
 
@@ -79,10 +79,9 @@ class DebugReplay extends _$DebugReplay {
     final next = state.currentIndex + 1;
     state = state.copyWith(
       currentIndex: next,
-      status:
-          next >= state.totalCount
-              ? DebugReplayStatus.completed
-              : DebugReplayStatus.playing,
+      status: next >= state.totalCount
+          ? DebugReplayStatus.completed
+          : DebugReplayStatus.playing,
     );
   }
 

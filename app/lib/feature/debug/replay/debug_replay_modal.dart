@@ -140,7 +140,7 @@ class _ScenarioCard extends StatelessWidget {
     return Card(
       color: color.surfaceRaised,
       elevation: 0,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
         side: BorderSide(color: color.outlineSoft),
       ),

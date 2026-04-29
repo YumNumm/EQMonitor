@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
-import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
@@ -15,8 +16,8 @@ const _eventTtl = Duration(minutes: 5);
 class ShakeDetection extends _$ShakeDetection {
   @override
   List<ShakeDetectionEvent> build() {
-    ref.listen(wsConnectionProvider, (_, next) {
-      next.whenData(_onWsMessage);
+    ref.listen(realtimeEventsProvider, (_, next) {
+      next.whenData(_onRealtimeEvent);
     });
 
     final timer = Timer.periodic(
@@ -27,65 +28,44 @@ class ShakeDetection extends _$ShakeDetection {
     return [];
   }
 
-  void _onWsMessage(WsMessage msg) {
-    switch (msg) {
-      case WsSnapshotMessage(:final data):
-        final events = data.shakes.map(_fromSnapshotEntry).toList();
-        state = events;
-      case WsRealtimeMessage(:final data):
-        if (data is WsShakeDetectedRealtimeEvent) {
-          _upsertFromRealtime(data);
-        }
+  void _onRealtimeEvent(RealtimeEvent event) {
+    switch (event) {
+      case RealtimeSnapshotEvent(:final shakes):
+        state = shakes.map(_fromShakeData).toList();
+      case RealtimeShakeDetectedEvent(:final data):
+        _upsert(_fromShakeData(data));
+      default:
+        return;
     }
   }
 
-  ShakeDetectionEvent _fromSnapshotEntry(WsSnapshotShakeEntry entry) {
+  ShakeDetectionEvent _fromShakeData(RealtimeShakeData d) {
     final level = ShakeDetectionLevel.values.firstWhere(
-      (e) => e.json == entry.level,
+      (e) => e.json == d.level,
       orElse: () => ShakeDetectionLevel.weaker,
     );
     return ShakeDetectionEvent(
-      eventId: entry.eventId,
-      createdAt: entry.createdAt,
+      eventId: d.eventId,
+      createdAt: d.createdAt,
       level: level,
-      isReplay: entry.isReplay,
-      pointCount: entry.pointCount,
-      minLat: entry.region.bottomRight.latitude,
-      maxLat: entry.region.topLeft.latitude,
-      minLng: entry.region.topLeft.longitude,
-      maxLng: entry.region.bottomRight.longitude,
+      isReplay: d.isReplay,
+      pointCount: d.pointCount,
+      minLat: d.minLat,
+      maxLat: d.maxLat,
+      minLng: d.minLng,
+      maxLng: d.maxLng,
     );
   }
 
-  void _upsertFromRealtime(WsShakeDetectedRealtimeEvent ws) {
-    final level = ShakeDetectionLevel.values.firstWhere(
-      (e) => e.json == ws.level,
-      orElse: () => ShakeDetectionLevel.weaker,
-    );
-    final event = ShakeDetectionEvent(
-      eventId: ws.eventId,
-      createdAt: ws.createdAt,
-      level: level,
-      isReplay: ws.isReplay,
-      pointCount: ws.pointCount,
-      minLat: ws.region.bottomRight.latitude,
-      maxLat: ws.region.topLeft.latitude,
-      minLng: ws.region.topLeft.longitude,
-      maxLng: ws.region.bottomRight.longitude,
-    );
-
+  void _upsert(ShakeDetectionEvent event) {
     final current = [...state];
-    final index = current.indexWhere((e) => e.eventId == ws.eventId);
+    final index = current.indexWhere((e) => e.eventId == event.eventId);
     if (index == -1) {
       current.add(event);
     } else {
       current[index] = event;
     }
     state = current;
-  }
-
-  void upsert(WsShakeDetectedRealtimeEvent event) {
-    _upsertFromRealtime(event);
   }
 
   void _cleanup() {

@@ -141,32 +141,30 @@ class _EewMainCard extends StatelessWidget {
         regionDisplayName != null &&
         regionDisplayName!.isNotEmpty;
 
-    return Card(
-      elevation: 1,
-      margin:
-          const EdgeInsets.symmetric(horizontal: 12) +
-          const EdgeInsets.only(bottom: 8),
-      clipBehavior: Clip.antiAlias,
-      color: colorScheme.surfaceContainerHighest,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: Color.lerp(
-            colorScheme.surface,
-            colorScheme.outline.withValues(alpha: 0.5),
-            0.65,
-          )!,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _EewCardHeader(
+          eew: eew,
+          isWarning: isWarning,
+          headerBackgroundColor: headerBackgroundColor,
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _EewCardHeader(
-            eew: eew,
-            isWarning: isWarning,
-            headerBackgroundColor: headerBackgroundColor,
+        Card(
+          elevation: 1,
+          clipBehavior: Clip.antiAlias,
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          color: colorScheme.surfaceContainerHighest,
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: Color.lerp(
+                colorScheme.surface,
+                colorScheme.outline.withValues(alpha: 0.5),
+                0.65,
+              )!,
+            ),
           ),
-          Padding(
+          child: Padding(
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,8 +199,8 @@ class _EewMainCard extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -221,74 +219,57 @@ class _EewCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typeLabel = isWarning ? '緊急地震速報（警報）' : '緊急地震速報（予報）';
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: headerBackgroundColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(
-            height: 8,
-            width: double.infinity,
-            child: _EewStripePattern(isWarning: isWarning),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    typeLabel,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontFamily.notoSansMono,
-                      color: Color(0xB3FFFFFF),
-                    ),
-                  ),
-                ),
-                _EewSerialBadge(eew: eew, isWarning: isWarning),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EewSerialBadge extends StatelessWidget {
-  const _EewSerialBadge({required this.eew, required this.isWarning});
-
-  final EewTelegramItem eew;
-  final bool isWarning;
-
-  static const _warningBadgeColor = Color.fromRGBO(120, 0, 0, 1);
-  static const _forecastBadgeColor = Color.fromRGBO(150, 65, 0, 1);
-
-  @override
-  Widget build(BuildContext context) {
-    final badgeColor = isWarning ? _warningBadgeColor : _forecastBadgeColor;
     final serialLabel = eew.isLastInfo
-        ? '#${eew.serialNo}(最終)'
-        : '#${eew.serialNo}';
+        ? '第${eew.serialNo}報（最終）'
+        : '第${eew.serialNo}報';
+    final hypocenterName = eew.hypocenter?.name ?? '震源不明';
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: badgeColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        serialLabel,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          fontFamily: FontFamily.notoSansMono,
-          color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: ClipRSuperellipse(
+        borderRadius: BorderRadius.circular(16),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: headerBackgroundColor,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 8,
+                width: double.infinity,
+                child: _EewStripePattern(isWarning: isWarning),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$typeLabel　$serialLabel',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontFamily.notoSansMono,
+                        color: Colors.white,
+                        height: 1.3,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${hypocenterName}で地震',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

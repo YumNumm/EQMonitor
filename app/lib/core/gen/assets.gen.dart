@@ -11,6 +11,13 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsDebugGen {
+  const $AssetsDebugGen();
+
+  /// Directory path: assets/debug/eew
+  $AssetsDebugEewGen get eew => const $AssetsDebugEewGen();
+}
+
 class $AssetsDocsGen {
   const $AssetsDocsGen();
 
@@ -75,6 +82,14 @@ class $AssetsParameterGen {
   List<String> get values => [earthquake, tsunami];
 }
 
+class $AssetsDebugEewGen {
+  const $AssetsDebugEewGen();
+
+  /// Directory path: assets/debug/eew/noto_peninsula_20240101
+  $AssetsDebugEewNotoPeninsula20240101Gen get notoPeninsula20240101 =>
+      const $AssetsDebugEewNotoPeninsula20240101Gen();
+}
+
 class $AssetsImagesMapGen {
   const $AssetsImagesMapGen();
 
@@ -104,11 +119,208 @@ class $AssetsImagesThemeGen {
   List<AssetGenImage> get values => [dark, light];
 }
 
+class $AssetsDebugEewNotoPeninsula20240101Gen {
+  const $AssetsDebugEewNotoPeninsula20240101Gen();
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/01.json
+  String get a01 => 'assets/debug/eew/noto_peninsula_20240101/01.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/02.json
+  String get a02 => 'assets/debug/eew/noto_peninsula_20240101/02.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/03.json
+  String get a03 => 'assets/debug/eew/noto_peninsula_20240101/03.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/04.json
+  String get a04 => 'assets/debug/eew/noto_peninsula_20240101/04.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/05.json
+  String get a05 => 'assets/debug/eew/noto_peninsula_20240101/05.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/06.json
+  String get a06 => 'assets/debug/eew/noto_peninsula_20240101/06.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/07.json
+  String get a07 => 'assets/debug/eew/noto_peninsula_20240101/07.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/08.json
+  String get a08 => 'assets/debug/eew/noto_peninsula_20240101/08.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/09.json
+  String get a09 => 'assets/debug/eew/noto_peninsula_20240101/09.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/10.json
+  String get a10 => 'assets/debug/eew/noto_peninsula_20240101/10.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/11.json
+  String get a11 => 'assets/debug/eew/noto_peninsula_20240101/11.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/12.json
+  String get a12 => 'assets/debug/eew/noto_peninsula_20240101/12.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/13.json
+  String get a13 => 'assets/debug/eew/noto_peninsula_20240101/13.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/14.json
+  String get a14 => 'assets/debug/eew/noto_peninsula_20240101/14.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/15.json
+  String get a15 => 'assets/debug/eew/noto_peninsula_20240101/15.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/16.json
+  String get a16 => 'assets/debug/eew/noto_peninsula_20240101/16.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/17.json
+  String get a17 => 'assets/debug/eew/noto_peninsula_20240101/17.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/18.json
+  String get a18 => 'assets/debug/eew/noto_peninsula_20240101/18.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/19.json
+  String get a19 => 'assets/debug/eew/noto_peninsula_20240101/19.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/20.json
+  String get a20 => 'assets/debug/eew/noto_peninsula_20240101/20.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/21.json
+  String get a21 => 'assets/debug/eew/noto_peninsula_20240101/21.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/22.json
+  String get a22 => 'assets/debug/eew/noto_peninsula_20240101/22.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/23.json
+  String get a23 => 'assets/debug/eew/noto_peninsula_20240101/23.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/24.json
+  String get a24 => 'assets/debug/eew/noto_peninsula_20240101/24.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/25.json
+  String get a25 => 'assets/debug/eew/noto_peninsula_20240101/25.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/26.json
+  String get a26 => 'assets/debug/eew/noto_peninsula_20240101/26.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/27.json
+  String get a27 => 'assets/debug/eew/noto_peninsula_20240101/27.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/28.json
+  String get a28 => 'assets/debug/eew/noto_peninsula_20240101/28.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/29.json
+  String get a29 => 'assets/debug/eew/noto_peninsula_20240101/29.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/30.json
+  String get a30 => 'assets/debug/eew/noto_peninsula_20240101/30.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/31.json
+  String get a31 => 'assets/debug/eew/noto_peninsula_20240101/31.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/32.json
+  String get a32 => 'assets/debug/eew/noto_peninsula_20240101/32.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/33.json
+  String get a33 => 'assets/debug/eew/noto_peninsula_20240101/33.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/34.json
+  String get a34 => 'assets/debug/eew/noto_peninsula_20240101/34.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/35.json
+  String get a35 => 'assets/debug/eew/noto_peninsula_20240101/35.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/36.json
+  String get a36 => 'assets/debug/eew/noto_peninsula_20240101/36.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/37.json
+  String get a37 => 'assets/debug/eew/noto_peninsula_20240101/37.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/38.json
+  String get a38 => 'assets/debug/eew/noto_peninsula_20240101/38.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/39.json
+  String get a39 => 'assets/debug/eew/noto_peninsula_20240101/39.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/40.json
+  String get a40 => 'assets/debug/eew/noto_peninsula_20240101/40.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/41.json
+  String get a41 => 'assets/debug/eew/noto_peninsula_20240101/41.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/42.json
+  String get a42 => 'assets/debug/eew/noto_peninsula_20240101/42.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/43.json
+  String get a43 => 'assets/debug/eew/noto_peninsula_20240101/43.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/44.json
+  String get a44 => 'assets/debug/eew/noto_peninsula_20240101/44.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/45.json
+  String get a45 => 'assets/debug/eew/noto_peninsula_20240101/45.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/46.json
+  String get a46 => 'assets/debug/eew/noto_peninsula_20240101/46.json';
+
+  /// File path: assets/debug/eew/noto_peninsula_20240101/index.json
+  String get index => 'assets/debug/eew/noto_peninsula_20240101/index.json';
+
+  /// List of all assets
+  List<String> get values => [
+    a01,
+    a02,
+    a03,
+    a04,
+    a05,
+    a06,
+    a07,
+    a08,
+    a09,
+    a10,
+    a11,
+    a12,
+    a13,
+    a14,
+    a15,
+    a16,
+    a17,
+    a18,
+    a19,
+    a20,
+    a21,
+    a22,
+    a23,
+    a24,
+    a25,
+    a26,
+    a27,
+    a28,
+    a29,
+    a30,
+    a31,
+    a32,
+    a33,
+    a34,
+    a35,
+    a36,
+    a37,
+    a38,
+    a39,
+    a40,
+    a41,
+    a42,
+    a43,
+    a44,
+    a45,
+    a46,
+    index,
+  ];
+}
+
 class Assets {
   const Assets._();
 
   static const String kyoshinShindoColorMap =
       'assets/KyoshinShindoColorMap.json';
+  static const $AssetsDebugGen debug = $AssetsDebugGen();
   static const $AssetsDocsGen docs = $AssetsDocsGen();
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const AssetGenImage header = AssetGenImage('assets/header.png');

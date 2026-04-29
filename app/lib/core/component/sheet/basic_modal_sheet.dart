@@ -32,7 +32,7 @@ class BasicModalSheet extends HookWidget {
           final isLandscape = size.width > size.height;
           final sheet = Sheet(
             backgroundColor: color.surfaceDefault,
-            shape: RoundedRectangleBorder(
+            shape: RoundedSuperellipseBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(shape.sheet),
               ),

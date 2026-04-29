@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'shake_detection_provider.dart';
+part of 'eqmonitor_ws_status_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,52 +11,52 @@ part of 'shake_detection_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(ShakeDetection)
-final shakeDetectionProvider = ShakeDetectionProvider._();
+@ProviderFor(EqMonitorWsStatus)
+final eqMonitorWsStatusProvider = EqMonitorWsStatusProvider._();
 
-final class ShakeDetectionProvider
-    extends $NotifierProvider<ShakeDetection, List<ShakeDetectionEvent>> {
-  ShakeDetectionProvider._()
+final class EqMonitorWsStatusProvider
+    extends $NotifierProvider<EqMonitorWsStatus, EqMonitorWsStatusState> {
+  EqMonitorWsStatusProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'shakeDetectionProvider',
+        name: r'eqMonitorWsStatusProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$shakeDetectionHash();
+  String debugGetCreateSourceHash() => _$eqMonitorWsStatusHash();
 
   @$internal
   @override
-  ShakeDetection create() => ShakeDetection();
+  EqMonitorWsStatus create() => EqMonitorWsStatus();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<ShakeDetectionEvent> value) {
+  Override overrideWithValue(EqMonitorWsStatusState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<ShakeDetectionEvent>>(value),
+      providerOverride: $SyncValueProvider<EqMonitorWsStatusState>(value),
     );
   }
 }
 
-String _$shakeDetectionHash() => r'ab8892c572f5a9108c644455d6f51791bbec1061';
+String _$eqMonitorWsStatusHash() => r'717eae8b1bae51d78e074717e9b8e65ffd8a0d03';
 
-abstract class _$ShakeDetection extends $Notifier<List<ShakeDetectionEvent>> {
-  List<ShakeDetectionEvent> build();
+abstract class _$EqMonitorWsStatus extends $Notifier<EqMonitorWsStatusState> {
+  EqMonitorWsStatusState build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<List<ShakeDetectionEvent>, List<ShakeDetectionEvent>>;
+        this.ref as $Ref<EqMonitorWsStatusState, EqMonitorWsStatusState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<ShakeDetectionEvent>, List<ShakeDetectionEvent>>,
-              List<ShakeDetectionEvent>,
+              AnyNotifier<EqMonitorWsStatusState, EqMonitorWsStatusState>,
+              EqMonitorWsStatusState,
               Object?,
               Object?
             >;

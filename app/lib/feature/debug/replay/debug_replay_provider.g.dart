@@ -22,7 +22,7 @@ final class DebugReplayProvider
         argument: null,
         retry: null,
         name: r'debugReplayProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -43,7 +43,7 @@ final class DebugReplayProvider
   }
 }
 
-String _$debugReplayHash() => r'c0b7b79bfcfe59bdd715cbc416511b53ae272b1a';
+String _$debugReplayHash() => r'2951db688b8dd6407bdf58860c0b1635c3133d8c';
 
 abstract class _$DebugReplay extends $Notifier<DebugReplayState> {
   DebugReplayState build();

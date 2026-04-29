@@ -98,9 +98,13 @@ class _MapContent extends HookConsumerWidget {
     final intensity = earthquake.intensity;
 
     // データ可用性に応じた iconMode のフォールバック解決
-    final hasCityData = intensity != null &&
-        intensity.intensityTree.values.any((r) => r.any((n) => n.cities.isNotEmpty));
-    final hasStationData = intensity != null &&
+    final hasCityData =
+        intensity != null &&
+        intensity.intensityTree.values.any(
+          (r) => r.any((n) => n.cities.isNotEmpty),
+        );
+    final hasStationData =
+        intensity != null &&
         intensity.intensityTree.values.any(
           (r) => r.any((n) => n.cities.any((c) => c.stations.isNotEmpty)),
         );
@@ -154,7 +158,8 @@ class _MapContent extends HookConsumerWidget {
                 },
                 children: [
                   // 塗りつぶし（最背面）
-                  if (effectiveFillMode == EarthquakeHistoryFillMode.matchIcon &&
+                  if (effectiveFillMode ==
+                          EarthquakeHistoryFillMode.matchIcon &&
                       intensity != null)
                     EarthquakeHistoryFillLayer(
                       intensity: intensity,
@@ -447,7 +452,7 @@ class _MapControllerCard extends StatelessWidget {
       color: colorScheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedSuperellipseBorder(borderRadius: BorderRadius.circular(12)),
       child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,

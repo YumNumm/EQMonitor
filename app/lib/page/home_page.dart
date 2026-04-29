@@ -60,7 +60,7 @@ class _SheetBody extends ConsumerWidget {
       elevation: 0,
       color: color.surfaceCard,
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.card),
         side: BorderSide(color: color.outlineSoft),
       ),

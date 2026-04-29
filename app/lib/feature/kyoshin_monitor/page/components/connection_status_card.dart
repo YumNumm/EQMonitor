@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/connectivity/connectivity_provider.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,27 +11,30 @@ class ConnectionStatusCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isConnected = ref.watch(isNetworkConnectedProvider);
-    final wsStatus = ref.watch(wsConnectionStatusProvider);
+    final wsPhase = ref.watch(
+      eqMonitorWsStatusProvider.select((s) => s.phase),
+    );
 
     final designSystem = context.designSystem;
     final palette = designSystem.palette;
 
-    final (IconData icon, String label, Color color) = switch (
-      (isConnected, wsStatus)
-    ) {
+    final (IconData icon, String label, Color color) = switch ((
+      isConnected,
+      wsPhase,
+    )) {
       (false, _) => (
         Icons.wifi_off_rounded,
         'ネットワーク未接続',
         palette.statusDanger,
       ),
-      (true, WsConnectionState.connected) => (
+      (true, WsPhase.connected) => (
         Icons.cell_tower_rounded,
-        'WS 接続中',
+        'リアルタイム 接続',
         palette.statusSuccess,
       ),
       (true, _) => (
         Icons.warning_amber_rounded,
-        'Polling 中',
+        'リアルタイム 接続',
         palette.statusWarning,
       ),
     };
@@ -38,7 +42,7 @@ class ConnectionStatusCard extends ConsumerWidget {
     return Card.outlined(
       color: designSystem.color.surfaceCard.withValues(alpha: 0.92),
       elevation: 0,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.md),
         side: BorderSide(color: designSystem.color.outlineSoft),
       ),

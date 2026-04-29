@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
-import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
@@ -36,8 +38,8 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
     final timer = Timer.periodic(
       const Duration(minutes: 5),
       (_) async {
-        final wsState = ref.read(wsConnectionStatusProvider);
-        if (wsState == WsConnectionState.connected) {
+        final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
+        if (wsPhase == WsPhase.connected) {
           log('WS is connected, skip refresh');
           return;
         }
@@ -60,17 +62,16 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
       dataSource.upsertItems(result.items);
     });
 
-    ref.listen(wsConnectionProvider, (_, next) async {
+    ref.listen(realtimeEventsProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
-        if (value case WsRealtimeMessage(:final data)) {
-          if (data is WsEarthquakeRealtimeEvent) {
-            if (data.operation == 'upsert') {
-              final result = await repository.fetchEarthquakeList(limit: 10);
-              dataSource.upsertItems(result.items);
-            } else if (data.operation == 'delete') {
-              dataSource.removeItemByEventId(data.eventId);
-            }
-          }
+        switch (value) {
+          case RealtimeEarthquakeUpsertEvent():
+            final result = await repository.fetchEarthquakeList(limit: 10);
+            dataSource.upsertItems(result.items);
+          case RealtimeEarthquakeDeleteEvent(:final eventId):
+            dataSource.removeItemByEventId(eventId);
+          default:
+            return;
         }
       }
     });

@@ -262,7 +262,7 @@ class _SettingsSection extends StatelessWidget {
       elevation: 0,
       color: color.surfaceRaised,
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.sheet),
         side: BorderSide(color: color.outlineSoft),
       ),
