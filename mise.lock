@@ -89,13 +89,13 @@ url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.123/linux-arm64/claude"
 
 [tools.claude."platforms.linux-x64"]
-checksum = "blake3:68e94c85aeccf37e562afa81bcdfd023ebf367c081b572dee1bf892c7c209e0b"
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.123/linux-x64/claude"
 
 [tools.claude."platforms.linux-x64-musl"]
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.123/linux-x64/claude"
 
 [tools.claude."platforms.macos-arm64"]
+checksum = "blake3:01cc8b081d990bc63cce912006d13256bd57d44822a747618ace341707ab259e"
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.123/darwin-arm64/claude"
 
 [tools.claude."platforms.macos-x64"]

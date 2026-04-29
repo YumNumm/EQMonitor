@@ -33,6 +33,17 @@ class HomeScopeSelector extends StatelessWidget {
       child: Row(
         children: [
           DropdownMenuFormField(
+            inputDecorationTheme: InputDecorationTheme(
+              contentPadding: const EdgeInsets.all(4),
+              constraints: const BoxConstraints.expand(
+                height: 40,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(shape.xl),
+                borderSide: BorderSide(color: color.outlineSoft),
+              ),
+              isDense: true,
+            ),
             initialSelection: scope,
             dropdownMenuEntries: [
               for (final s in HomeEarthquakeHistoryScope.values)

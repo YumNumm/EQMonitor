@@ -84,6 +84,10 @@ class ShakeDetection extends _$ShakeDetection {
     state = current;
   }
 
+  void upsert(WsShakeDetectedRealtimeEvent event) {
+    _upsertFromRealtime(event);
+  }
+
   void _cleanup() {
     final now = DateTime.now().toUtc();
     state = state

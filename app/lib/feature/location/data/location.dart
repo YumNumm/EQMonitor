@@ -9,7 +9,9 @@ part 'location.g.dart';
 @riverpod
 Stream<Position> locationStream(Ref ref) async* {
   final stream = Geolocator.getPositionStream(
-    locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.low,
+    ),
   );
 
   final lastKnownPosition = await Geolocator.getLastKnownPosition();

@@ -10,10 +10,12 @@ class HomeMapControllerCard extends StatelessWidget {
     super.key,
     this.onLayerButtonTap,
     this.onLocationButtonTap,
+    this.onDebugButtonTap,
   });
 
   final void Function()? onLayerButtonTap;
   final void Function()? onLocationButtonTap;
+  final void Function()? onDebugButtonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +64,17 @@ class HomeMapControllerCard extends StatelessWidget {
                         onLocationButtonTap?.call();
                       },
                     ),
+                    if (onDebugButtonTap != null)
+                      InkWell(
+                        child: Padding(
+                          padding: EdgeInsets.all(spacing.sm),
+                          child: const Icon(Icons.bug_report_rounded),
+                        ),
+                        onTap: () {
+                          hapticFeedback();
+                          onDebugButtonTap?.call();
+                        },
+                      ),
                   ]
                   .mapIndexed((index, child) => [if (index > 0) divider, child])
                   .flattened

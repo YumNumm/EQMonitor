@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/debug/replay/debug_replay_modal.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_station_icon_preloader.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -16,10 +17,12 @@ import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_warning_region
 import 'package:eqmonitor/feature/home/ui/component/map/layer/kyoshin_monitor_observation_layer.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/shake_detection_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/components/connection_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/ui/components/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
+import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -187,6 +190,7 @@ class _MapHeader extends ConsumerWidget {
         KyoshinMonitorStatusCard(
           onTap: () async => const HomeMapLayerRoute().push<void>(context),
         ),
+        const ConnectionStatusCard(),
         if (showScale)
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
@@ -195,11 +199,15 @@ class _MapHeader extends ConsumerWidget {
       ],
     );
 
+    final isDebug = ref.watch(debugProvider).value ?? false;
+
     final controllerCard = HomeMapControllerCard(
       onLayerButtonTap: () async =>
           const HomeMapLayerRoute().push<void>(context),
       onLocationButtonTap: () =>
           ref.read(homeMapCameraStateProvider.notifier).returnToHome(),
+      onDebugButtonTap:
+          isDebug ? () => DebugReplayModal.show(context) : null,
     );
 
     return Padding(

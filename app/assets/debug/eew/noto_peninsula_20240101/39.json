@@ -1,0 +1,1743 @@
+{
+  "event_id": "20240101161010",
+  "type": "VXSE45",
+  "status": "NORMAL",
+  "info_type": "PUBLICATION",
+  "serial_no": 39,
+  "headline": "能登半島沖で地震　北陸　甲信　東海　東北　関東　近畿で強い揺れ",
+  "is_canceled": false,
+  "is_warning": true,
+  "is_last_info": false,
+  "origin_time": "2024-01-01T07:10:08.000Z",
+  "arrival_time": "2024-01-01T07:10:10.000Z",
+  "accuracy": null,
+  "is_plum": false,
+  "editorial_office": "気象庁本庁",
+  "report_time": "2024-01-01T07:12:17.000Z",
+  "hypocenter": {
+    "value": {
+      "code": "495",
+      "name": "能登半島沖"
+    },
+    "coordinates": {
+      "type": "LAT_LNG",
+      "latitude": 37.6,
+      "longitude": 137.2
+    },
+    "magnitude": null,
+    "depth": 10
+  },
+  "forecast_intensity": {
+    "regions": [
+      {
+        "value": {
+          "code": "390",
+          "name": "石川県能登"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "7",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "381",
+          "name": "富山県西部"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "6-",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:10:50.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "391",
+          "name": "石川県加賀"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "6-",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:10:50.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "370",
+          "name": "新潟県上越"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "375",
+          "name": "新潟県佐渡"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "371",
+          "name": "新潟県中越"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "380",
+          "name": "富山県東部"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:10:54.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "420",
+          "name": "長野県北部"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:11:38.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "400",
+          "name": "福井県嶺北"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:11:13.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "372",
+          "name": "新潟県下越"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:11:23.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "430",
+          "name": "岐阜県飛騨"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "422",
+          "name": "長野県南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "432",
+          "name": "岐阜県美濃中西部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "421",
+          "name": "長野県中部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "252",
+          "name": "福島県会津"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "320",
+          "name": "群馬県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "321",
+          "name": "群馬県南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "431",
+          "name": "岐阜県美濃東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "401",
+          "name": "福井県嶺南"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "311",
+          "name": "栃木県南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "330",
+          "name": "埼玉県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "242",
+          "name": "山形県村山"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "301",
+          "name": "茨城県南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "331",
+          "name": "埼玉県南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "250",
+          "name": "福島県中通り"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "300",
+          "name": "茨城県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "341",
+          "name": "千葉県北西部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "530",
+          "name": "兵庫県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "310",
+          "name": "栃木県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "332",
+          "name": "埼玉県秩父"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "411",
+          "name": "山梨県中・西部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "243",
+          "name": "山形県置賜"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "500",
+          "name": "滋賀県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "451",
+          "name": "愛知県西部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "240",
+          "name": "山形県庄内"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "460",
+          "name": "三重県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "441",
+          "name": "静岡県東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "221",
+          "name": "宮城県南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "540",
+          "name": "奈良県"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "222",
+          "name": "宮城県中部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "501",
+          "name": "滋賀県南部"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:11:43.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "520",
+          "name": "大阪府北部"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:12:00.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "511",
+          "name": "京都府南部"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:12:01.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "440",
+          "name": "静岡県伊豆"
+        },
+        "is_plum": true,
+        "is_warning": false,
+        "intensity": {
+          "value": "4",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:12:17.000Z"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "412",
+          "name": "山梨県東部・富士五湖"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "241",
+          "name": "山形県最上"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "351",
+          "name": "東京都多摩東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "443",
+          "name": "静岡県西部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "450",
+          "name": "愛知県東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "361",
+          "name": "神奈川県西部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "510",
+          "name": "京都府北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "231",
+          "name": "秋田県沿岸南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "350",
+          "name": "東京都２３区"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "442",
+          "name": "静岡県中部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "360",
+          "name": "神奈川県東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "461",
+          "name": "三重県中部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "251",
+          "name": "福島県浜通り"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "233",
+          "name": "秋田県内陸南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "340",
+          "name": "千葉県北東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "220",
+          "name": "宮城県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "230",
+          "name": "秋田県沿岸北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "531",
+          "name": "兵庫県南東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "342",
+          "name": "千葉県南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "575",
+          "name": "島根県隠岐"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "521",
+          "name": "大阪府南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "213",
+          "name": "岩手県内陸南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "535",
+          "name": "兵庫県淡路島"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "201",
+          "name": "青森県津軽南部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "212",
+          "name": "岩手県内陸北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "563",
+          "name": "鳥取県西部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "570",
+          "name": "島根県東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "550",
+          "name": "和歌山県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "200",
+          "name": "青森県津軽北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "3",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "354",
+          "name": "神津島"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "2",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "600",
+          "name": "徳島県北部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "2",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME"
+        },
+        "lpgm_intensity": null
+      },
+      {
+        "value": {
+          "code": "630",
+          "name": "高知県東部"
+        },
+        "is_plum": false,
+        "is_warning": false,
+        "intensity": {
+          "value": "2",
+          "is_over": false
+        },
+        "arrival_time": {
+          "type": "TIME",
+          "value": "2024-01-01T07:12:20.000Z"
+        },
+        "lpgm_intensity": null
+      }
+    ],
+    "max_intensity": {
+      "value": "7",
+      "is_over": false
+    },
+    "max_lpgm_intensity": null
+  },
+  "warning": {
+    "zones": [
+      {
+        "value": {
+          "code": "9934",
+          "name": "北陸"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9935",
+          "name": "甲信"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9936",
+          "name": "東海"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9920",
+          "name": "東北"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9931",
+          "name": "関東"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9941",
+          "name": "近畿"
+        },
+        "had_warning": true
+      }
+    ],
+    "prefectures": [
+      {
+        "value": {
+          "code": "9170",
+          "name": "石川"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9160",
+          "name": "富山"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9150",
+          "name": "新潟"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9200",
+          "name": "長野"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9180",
+          "name": "福井"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9210",
+          "name": "岐阜"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9070",
+          "name": "福島"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9100",
+          "name": "群馬"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9090",
+          "name": "栃木"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9110",
+          "name": "埼玉"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9060",
+          "name": "山形"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9080",
+          "name": "茨城"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9120",
+          "name": "千葉"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9280",
+          "name": "兵庫"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9190",
+          "name": "山梨"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9250",
+          "name": "滋賀"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9230",
+          "name": "愛知"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9240",
+          "name": "三重"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9220",
+          "name": "静岡"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9040",
+          "name": "宮城"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "9290",
+          "name": "奈良"
+        },
+        "had_warning": true
+      }
+    ],
+    "regions": [
+      {
+        "value": {
+          "code": "390",
+          "name": "石川県能登"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "381",
+          "name": "富山県西部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "391",
+          "name": "石川県加賀"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "370",
+          "name": "新潟県上越"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "375",
+          "name": "新潟県佐渡"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "371",
+          "name": "新潟県中越"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "380",
+          "name": "富山県東部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "420",
+          "name": "長野県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "400",
+          "name": "福井県嶺北"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "430",
+          "name": "岐阜県飛騨"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "372",
+          "name": "新潟県下越"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "432",
+          "name": "岐阜県美濃中西部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "422",
+          "name": "長野県南部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "421",
+          "name": "長野県中部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "252",
+          "name": "福島県会津"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "320",
+          "name": "群馬県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "321",
+          "name": "群馬県南部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "431",
+          "name": "岐阜県美濃東部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "401",
+          "name": "福井県嶺南"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "311",
+          "name": "栃木県南部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "330",
+          "name": "埼玉県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "242",
+          "name": "山形県村山"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "331",
+          "name": "埼玉県南部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "301",
+          "name": "茨城県南部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "250",
+          "name": "福島県中通り"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "341",
+          "name": "千葉県北西部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "300",
+          "name": "茨城県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "530",
+          "name": "兵庫県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "310",
+          "name": "栃木県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "332",
+          "name": "埼玉県秩父"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "411",
+          "name": "山梨県中・西部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "243",
+          "name": "山形県置賜"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "500",
+          "name": "滋賀県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "451",
+          "name": "愛知県西部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "240",
+          "name": "山形県庄内"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "460",
+          "name": "三重県北部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "441",
+          "name": "静岡県東部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "221",
+          "name": "宮城県南部"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "540",
+          "name": "奈良県"
+        },
+        "had_warning": true
+      },
+      {
+        "value": {
+          "code": "222",
+          "name": "宮城県中部"
+        },
+        "had_warning": true
+      }
+    ]
+  }
+}
