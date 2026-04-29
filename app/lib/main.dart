@@ -62,9 +62,7 @@ Future<void> main() async {
     providerAndroid: kDebugMode
         ? const AndroidDebugProvider()
         : const AndroidPlayIntegrityProvider(),
-    providerApple: kDebugMode
-        ? const AppleDebugProvider()
-        : const AppleAppAttestProvider(),
+    providerApple:  const AppleAppAttestProvider(),
   );
 
   talker = TalkerFlutter.init(

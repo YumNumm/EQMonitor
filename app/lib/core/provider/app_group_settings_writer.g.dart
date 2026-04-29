@@ -50,4 +50,4 @@ final class AppGroupSettingsWriterProvider
 }
 
 String _$appGroupSettingsWriterHash() =>
-    r'c2fb7589994e4eace5ac1d68113e9b57fe52e4e2';
+    r'26009e3524c6a7a70102c4a0d3b67bf4f300153a';

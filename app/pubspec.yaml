@@ -48,6 +48,7 @@ dependencies:
   cached_network_image: ^3.4.1
   clock: ^1.1.2
   collection: ^1.19.1
+  connectivity_plus: ^7.1.1
   core:
     path: ../packages/core
   crypto: ^3.0.6

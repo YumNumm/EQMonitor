@@ -154,7 +154,7 @@ final class LatestQzssDcReportProvider
 }
 
 String _$latestQzssDcReportHash() =>
-    r'38db2e313850b276865f7ca3ae594542bcc59ab2';
+    r'4a308b072a1353268d53de5283cd153d48369efd';
 
 /// 最新の災危通報レポート
 
