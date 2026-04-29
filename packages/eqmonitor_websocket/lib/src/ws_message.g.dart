@@ -37,3 +37,14 @@ WsRealtimeMessage _$WsRealtimeMessageFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$WsRealtimeMessageToJson(WsRealtimeMessage instance) =>
     <String, dynamic>{'data': instance.data, 'type': instance.$type};
+
+WsPingMessage _$WsPingMessageFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('WsPingMessage', json, ($checkedConvert) {
+      final val = WsPingMessage(
+        $type: $checkedConvert('type', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {r'$type': 'type'});
+
+Map<String, dynamic> _$WsPingMessageToJson(WsPingMessage instance) =>
+    <String, dynamic>{'type': instance.$type};

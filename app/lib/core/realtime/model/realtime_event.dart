@@ -36,6 +36,12 @@ sealed class RealtimeEvent with _$RealtimeEvent {
     required RealtimeSource source,
   }) = RealtimeShakeDetectedEvent;
 
+  const factory RealtimeEvent.estimatedIntensityUpsert({
+    required String eventId,
+    required String estimatedIntensityTile,
+    required RealtimeSource source,
+  }) = RealtimeEstimatedIntensityUpsertEvent;
+
   factory RealtimeEvent.fromJson(Map<String, dynamic> json) =>
       _$RealtimeEventFromJson(json);
 }

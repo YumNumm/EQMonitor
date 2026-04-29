@@ -192,9 +192,35 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         await _refreshFromEarthquakeUpsert();
       case RealtimeEarthquakeDeleteEvent(:final eventId):
         _deleteItem(eventId);
+      case RealtimeEstimatedIntensityUpsertEvent(
+        :final eventId,
+        :final estimatedIntensityTile,
+      ):
+        _updateEstimatedIntensityTile(eventId, estimatedIntensityTile);
       default:
         return;
     }
+  }
+
+  void _updateEstimatedIntensityTile(
+    String eventId,
+    String estimatedIntensityTile,
+  ) {
+    if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
+      return;
+    }
+    final currentState = state.value;
+    if (currentState == null) {
+      return;
+    }
+    final items = [
+      for (final item in currentState.items)
+        if (item.eventId == eventId)
+          item.copyWith(estimatedIntensityTileUrl: estimatedIntensityTile)
+        else
+          item,
+    ];
+    state = AsyncData((items: items, nextToken: currentState.nextToken));
   }
 
   Future<void> _refreshFromEarthquakeUpsert() async {

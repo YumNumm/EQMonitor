@@ -139,6 +139,10 @@ WsEstimatedIntensityRealtimeEvent _$WsEstimatedIntensityRealtimeEventFromJson(
   $checkedConvert,
 ) {
   final val = WsEstimatedIntensityRealtimeEvent(
+    estimatedIntensity: $checkedConvert(
+      'estimatedIntensity',
+      (v) => WsEstimatedIntensityPayload.fromJson(v as Map<String, dynamic>),
+    ),
     $type: $checkedConvert('type', (v) => v as String?),
   );
   return val;
@@ -146,4 +150,7 @@ WsEstimatedIntensityRealtimeEvent _$WsEstimatedIntensityRealtimeEventFromJson(
 
 Map<String, dynamic> _$WsEstimatedIntensityRealtimeEventToJson(
   WsEstimatedIntensityRealtimeEvent instance,
-) => <String, dynamic>{'type': instance.$type};
+) => <String, dynamic>{
+  'estimatedIntensity': instance.estimatedIntensity,
+  'type': instance.$type,
+};

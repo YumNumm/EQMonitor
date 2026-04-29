@@ -35,6 +35,10 @@ RealtimeEvent _$RealtimeEventFromJson(
           return RealtimeShakeDetectedEvent.fromJson(
             json
           );
+                case 'estimatedIntensityUpsert':
+          return RealtimeEstimatedIntensityUpsertEvent.fromJson(
+            json
+          );
         
           default:
             throw CheckedFromJsonException(
@@ -124,7 +128,7 @@ extension RealtimeEventPatterns on RealtimeEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RealtimeSnapshotEvent value)?  snapshot,TResult Function( RealtimeEewUpsertEvent value)?  eewUpsert,TResult Function( RealtimeEarthquakeUpsertEvent value)?  earthquakeUpsert,TResult Function( RealtimeEarthquakeDeleteEvent value)?  earthquakeDelete,TResult Function( RealtimeShakeDetectedEvent value)?  shakeDetected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RealtimeSnapshotEvent value)?  snapshot,TResult Function( RealtimeEewUpsertEvent value)?  eewUpsert,TResult Function( RealtimeEarthquakeUpsertEvent value)?  earthquakeUpsert,TResult Function( RealtimeEarthquakeDeleteEvent value)?  earthquakeDelete,TResult Function( RealtimeShakeDetectedEvent value)?  shakeDetected,TResult Function( RealtimeEstimatedIntensityUpsertEvent value)?  estimatedIntensityUpsert,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RealtimeSnapshotEvent() when snapshot != null:
@@ -132,7 +136,8 @@ return snapshot(_that);case RealtimeEewUpsertEvent() when eewUpsert != null:
 return eewUpsert(_that);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
 return earthquakeUpsert(_that);case RealtimeEarthquakeDeleteEvent() when earthquakeDelete != null:
 return earthquakeDelete(_that);case RealtimeShakeDetectedEvent() when shakeDetected != null:
-return shakeDetected(_that);case _:
+return shakeDetected(_that);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
+return estimatedIntensityUpsert(_that);case _:
   return orElse();
 
 }
@@ -150,7 +155,7 @@ return shakeDetected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RealtimeSnapshotEvent value)  snapshot,required TResult Function( RealtimeEewUpsertEvent value)  eewUpsert,required TResult Function( RealtimeEarthquakeUpsertEvent value)  earthquakeUpsert,required TResult Function( RealtimeEarthquakeDeleteEvent value)  earthquakeDelete,required TResult Function( RealtimeShakeDetectedEvent value)  shakeDetected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RealtimeSnapshotEvent value)  snapshot,required TResult Function( RealtimeEewUpsertEvent value)  eewUpsert,required TResult Function( RealtimeEarthquakeUpsertEvent value)  earthquakeUpsert,required TResult Function( RealtimeEarthquakeDeleteEvent value)  earthquakeDelete,required TResult Function( RealtimeShakeDetectedEvent value)  shakeDetected,required TResult Function( RealtimeEstimatedIntensityUpsertEvent value)  estimatedIntensityUpsert,}){
 final _that = this;
 switch (_that) {
 case RealtimeSnapshotEvent():
@@ -158,7 +163,8 @@ return snapshot(_that);case RealtimeEewUpsertEvent():
 return eewUpsert(_that);case RealtimeEarthquakeUpsertEvent():
 return earthquakeUpsert(_that);case RealtimeEarthquakeDeleteEvent():
 return earthquakeDelete(_that);case RealtimeShakeDetectedEvent():
-return shakeDetected(_that);}
+return shakeDetected(_that);case RealtimeEstimatedIntensityUpsertEvent():
+return estimatedIntensityUpsert(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -172,7 +178,7 @@ return shakeDetected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RealtimeSnapshotEvent value)?  snapshot,TResult? Function( RealtimeEewUpsertEvent value)?  eewUpsert,TResult? Function( RealtimeEarthquakeUpsertEvent value)?  earthquakeUpsert,TResult? Function( RealtimeEarthquakeDeleteEvent value)?  earthquakeDelete,TResult? Function( RealtimeShakeDetectedEvent value)?  shakeDetected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RealtimeSnapshotEvent value)?  snapshot,TResult? Function( RealtimeEewUpsertEvent value)?  eewUpsert,TResult? Function( RealtimeEarthquakeUpsertEvent value)?  earthquakeUpsert,TResult? Function( RealtimeEarthquakeDeleteEvent value)?  earthquakeDelete,TResult? Function( RealtimeShakeDetectedEvent value)?  shakeDetected,TResult? Function( RealtimeEstimatedIntensityUpsertEvent value)?  estimatedIntensityUpsert,}){
 final _that = this;
 switch (_that) {
 case RealtimeSnapshotEvent() when snapshot != null:
@@ -180,7 +186,8 @@ return snapshot(_that);case RealtimeEewUpsertEvent() when eewUpsert != null:
 return eewUpsert(_that);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
 return earthquakeUpsert(_that);case RealtimeEarthquakeDeleteEvent() when earthquakeDelete != null:
 return earthquakeDelete(_that);case RealtimeShakeDetectedEvent() when shakeDetected != null:
-return shakeDetected(_that);case _:
+return shakeDetected(_that);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
+return estimatedIntensityUpsert(_that);case _:
   return null;
 
 }
@@ -197,14 +204,15 @@ return shakeDetected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes,  List<RealtimeShakeData> shakes,  RealtimeSource source)?  snapshot,TResult Function( EewItemWithRelations item,  RealtimeSource source)?  eewUpsert,TResult Function( EarthquakePartial record,  RealtimeSource source)?  earthquakeUpsert,TResult Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult Function( RealtimeShakeData data,  RealtimeSource source)?  shakeDetected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes,  List<RealtimeShakeData> shakes,  RealtimeSource source)?  snapshot,TResult Function( EewItemWithRelations item,  RealtimeSource source)?  eewUpsert,TResult Function( EarthquakePartial record,  RealtimeSource source)?  earthquakeUpsert,TResult Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult Function( RealtimeShakeData data,  RealtimeSource source)?  shakeDetected,TResult Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)?  estimatedIntensityUpsert,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RealtimeSnapshotEvent() when snapshot != null:
 return snapshot(_that.eews,_that.earthquakes,_that.shakes,_that.source);case RealtimeEewUpsertEvent() when eewUpsert != null:
 return eewUpsert(_that.item,_that.source);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
 return earthquakeUpsert(_that.record,_that.source);case RealtimeEarthquakeDeleteEvent() when earthquakeDelete != null:
 return earthquakeDelete(_that.eventId,_that.source);case RealtimeShakeDetectedEvent() when shakeDetected != null:
-return shakeDetected(_that.data,_that.source);case _:
+return shakeDetected(_that.data,_that.source);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
+return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that.source);case _:
   return orElse();
 
 }
@@ -222,14 +230,15 @@ return shakeDetected(_that.data,_that.source);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes,  List<RealtimeShakeData> shakes,  RealtimeSource source)  snapshot,required TResult Function( EewItemWithRelations item,  RealtimeSource source)  eewUpsert,required TResult Function( EarthquakePartial record,  RealtimeSource source)  earthquakeUpsert,required TResult Function( String eventId,  RealtimeSource source)  earthquakeDelete,required TResult Function( RealtimeShakeData data,  RealtimeSource source)  shakeDetected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes,  List<RealtimeShakeData> shakes,  RealtimeSource source)  snapshot,required TResult Function( EewItemWithRelations item,  RealtimeSource source)  eewUpsert,required TResult Function( EarthquakePartial record,  RealtimeSource source)  earthquakeUpsert,required TResult Function( String eventId,  RealtimeSource source)  earthquakeDelete,required TResult Function( RealtimeShakeData data,  RealtimeSource source)  shakeDetected,required TResult Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)  estimatedIntensityUpsert,}) {final _that = this;
 switch (_that) {
 case RealtimeSnapshotEvent():
 return snapshot(_that.eews,_that.earthquakes,_that.shakes,_that.source);case RealtimeEewUpsertEvent():
 return eewUpsert(_that.item,_that.source);case RealtimeEarthquakeUpsertEvent():
 return earthquakeUpsert(_that.record,_that.source);case RealtimeEarthquakeDeleteEvent():
 return earthquakeDelete(_that.eventId,_that.source);case RealtimeShakeDetectedEvent():
-return shakeDetected(_that.data,_that.source);}
+return shakeDetected(_that.data,_that.source);case RealtimeEstimatedIntensityUpsertEvent():
+return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that.source);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -243,14 +252,15 @@ return shakeDetected(_that.data,_that.source);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes,  List<RealtimeShakeData> shakes,  RealtimeSource source)?  snapshot,TResult? Function( EewItemWithRelations item,  RealtimeSource source)?  eewUpsert,TResult? Function( EarthquakePartial record,  RealtimeSource source)?  earthquakeUpsert,TResult? Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult? Function( RealtimeShakeData data,  RealtimeSource source)?  shakeDetected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( List<EewItemWithRelations> eews,  List<EarthquakePartial> earthquakes,  List<RealtimeShakeData> shakes,  RealtimeSource source)?  snapshot,TResult? Function( EewItemWithRelations item,  RealtimeSource source)?  eewUpsert,TResult? Function( EarthquakePartial record,  RealtimeSource source)?  earthquakeUpsert,TResult? Function( String eventId,  RealtimeSource source)?  earthquakeDelete,TResult? Function( RealtimeShakeData data,  RealtimeSource source)?  shakeDetected,TResult? Function( String eventId,  String estimatedIntensityTile,  RealtimeSource source)?  estimatedIntensityUpsert,}) {final _that = this;
 switch (_that) {
 case RealtimeSnapshotEvent() when snapshot != null:
 return snapshot(_that.eews,_that.earthquakes,_that.shakes,_that.source);case RealtimeEewUpsertEvent() when eewUpsert != null:
 return eewUpsert(_that.item,_that.source);case RealtimeEarthquakeUpsertEvent() when earthquakeUpsert != null:
 return earthquakeUpsert(_that.record,_that.source);case RealtimeEarthquakeDeleteEvent() when earthquakeDelete != null:
 return earthquakeDelete(_that.eventId,_that.source);case RealtimeShakeDetectedEvent() when shakeDetected != null:
-return shakeDetected(_that.data,_that.source);case _:
+return shakeDetected(_that.data,_that.source);case RealtimeEstimatedIntensityUpsertEvent() when estimatedIntensityUpsert != null:
+return estimatedIntensityUpsert(_that.eventId,_that.estimatedIntensityTile,_that.source);case _:
   return null;
 
 }
@@ -680,6 +690,83 @@ $RealtimeShakeDataCopyWith<$Res> get data {
     return _then(_self.copyWith(data: value));
   });
 }
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class RealtimeEstimatedIntensityUpsertEvent implements RealtimeEvent {
+  const RealtimeEstimatedIntensityUpsertEvent({required this.eventId, required this.estimatedIntensityTile, required this.source, final  String? $type}): $type = $type ?? 'estimatedIntensityUpsert';
+  factory RealtimeEstimatedIntensityUpsertEvent.fromJson(Map<String, dynamic> json) => _$RealtimeEstimatedIntensityUpsertEventFromJson(json);
+
+ final  String eventId;
+ final  String estimatedIntensityTile;
+@override final  RealtimeSource source;
+
+@JsonKey(name: 'runtimeType')
+final String $type;
+
+
+/// Create a copy of RealtimeEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RealtimeEstimatedIntensityUpsertEventCopyWith<RealtimeEstimatedIntensityUpsertEvent> get copyWith => _$RealtimeEstimatedIntensityUpsertEventCopyWithImpl<RealtimeEstimatedIntensityUpsertEvent>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RealtimeEstimatedIntensityUpsertEventToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeEstimatedIntensityUpsertEvent&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.estimatedIntensityTile, estimatedIntensityTile) || other.estimatedIntensityTile == estimatedIntensityTile)&&(identical(other.source, source) || other.source == source));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,eventId,estimatedIntensityTile,source);
+
+@override
+String toString() {
+  return 'RealtimeEvent.estimatedIntensityUpsert(eventId: $eventId, estimatedIntensityTile: $estimatedIntensityTile, source: $source)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RealtimeEstimatedIntensityUpsertEventCopyWith<$Res> implements $RealtimeEventCopyWith<$Res> {
+  factory $RealtimeEstimatedIntensityUpsertEventCopyWith(RealtimeEstimatedIntensityUpsertEvent value, $Res Function(RealtimeEstimatedIntensityUpsertEvent) _then) = _$RealtimeEstimatedIntensityUpsertEventCopyWithImpl;
+@override @useResult
+$Res call({
+ String eventId, String estimatedIntensityTile, RealtimeSource source
+});
+
+
+
+
+}
+/// @nodoc
+class _$RealtimeEstimatedIntensityUpsertEventCopyWithImpl<$Res>
+    implements $RealtimeEstimatedIntensityUpsertEventCopyWith<$Res> {
+  _$RealtimeEstimatedIntensityUpsertEventCopyWithImpl(this._self, this._then);
+
+  final RealtimeEstimatedIntensityUpsertEvent _self;
+  final $Res Function(RealtimeEstimatedIntensityUpsertEvent) _then;
+
+/// Create a copy of RealtimeEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? estimatedIntensityTile = null,Object? source = null,}) {
+  return _then(RealtimeEstimatedIntensityUpsertEvent(
+eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,estimatedIntensityTile: null == estimatedIntensityTile ? _self.estimatedIntensityTile : estimatedIntensityTile // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as RealtimeSource,
+  ));
+}
+
+
 }
 
 // dart format on

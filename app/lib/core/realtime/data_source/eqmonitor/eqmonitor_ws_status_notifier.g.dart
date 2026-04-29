@@ -43,7 +43,7 @@ final class EqMonitorWsStatusProvider
   }
 }
 
-String _$eqMonitorWsStatusHash() => r'717eae8b1bae51d78e074717e9b8e65ffd8a0d03';
+String _$eqMonitorWsStatusHash() => r'7fec0f7f6666d4d3356cdbd1b903f2e29545fb55';
 
 abstract class _$EqMonitorWsStatus extends $Notifier<EqMonitorWsStatusState> {
   EqMonitorWsStatusState build();

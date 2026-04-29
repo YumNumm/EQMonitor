@@ -23,6 +23,10 @@ WsMessage _$WsMessageFromJson(
           return WsRealtimeMessage.fromJson(
             json
           );
+                case 'ping':
+          return WsPingMessage.fromJson(
+            json
+          );
         
           default:
             throw CheckedFromJsonException(
@@ -38,7 +42,7 @@ WsMessage _$WsMessageFromJson(
 /// @nodoc
 mixin _$WsMessage {
 
- Object get data;
+
 
   /// Serializes this WsMessage to a JSON map.
   Map<String, dynamic> toJson();
@@ -46,16 +50,16 @@ mixin _$WsMessage {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsMessage&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsMessage);
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data));
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'WsMessage(data: $data)';
+  return 'WsMessage()';
 }
 
 
@@ -81,12 +85,13 @@ extension WsMessagePatterns on WsMessage {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WsSnapshotMessage value)?  snapshot,TResult Function( WsRealtimeMessage value)?  realtime,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WsSnapshotMessage value)?  snapshot,TResult Function( WsRealtimeMessage value)?  realtime,TResult Function( WsPingMessage value)?  ping,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case WsSnapshotMessage() when snapshot != null:
 return snapshot(_that);case WsRealtimeMessage() when realtime != null:
-return realtime(_that);case _:
+return realtime(_that);case WsPingMessage() when ping != null:
+return ping(_that);case _:
   return orElse();
 
 }
@@ -104,12 +109,13 @@ return realtime(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WsSnapshotMessage value)  snapshot,required TResult Function( WsRealtimeMessage value)  realtime,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WsSnapshotMessage value)  snapshot,required TResult Function( WsRealtimeMessage value)  realtime,required TResult Function( WsPingMessage value)  ping,}){
 final _that = this;
 switch (_that) {
 case WsSnapshotMessage():
 return snapshot(_that);case WsRealtimeMessage():
-return realtime(_that);}
+return realtime(_that);case WsPingMessage():
+return ping(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -123,12 +129,13 @@ return realtime(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WsSnapshotMessage value)?  snapshot,TResult? Function( WsRealtimeMessage value)?  realtime,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WsSnapshotMessage value)?  snapshot,TResult? Function( WsRealtimeMessage value)?  realtime,TResult? Function( WsPingMessage value)?  ping,}){
 final _that = this;
 switch (_that) {
 case WsSnapshotMessage() when snapshot != null:
 return snapshot(_that);case WsRealtimeMessage() when realtime != null:
-return realtime(_that);case _:
+return realtime(_that);case WsPingMessage() when ping != null:
+return ping(_that);case _:
   return null;
 
 }
@@ -145,11 +152,12 @@ return realtime(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( WsSnapshotData data)?  snapshot,TResult Function( RealtimeEventEnvelope data)?  realtime,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( WsSnapshotData data)?  snapshot,TResult Function( RealtimeEventEnvelope data)?  realtime,TResult Function()?  ping,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case WsSnapshotMessage() when snapshot != null:
 return snapshot(_that.data);case WsRealtimeMessage() when realtime != null:
-return realtime(_that.data);case _:
+return realtime(_that.data);case WsPingMessage() when ping != null:
+return ping();case _:
   return orElse();
 
 }
@@ -167,11 +175,12 @@ return realtime(_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( WsSnapshotData data)  snapshot,required TResult Function( RealtimeEventEnvelope data)  realtime,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( WsSnapshotData data)  snapshot,required TResult Function( RealtimeEventEnvelope data)  realtime,required TResult Function()  ping,}) {final _that = this;
 switch (_that) {
 case WsSnapshotMessage():
 return snapshot(_that.data);case WsRealtimeMessage():
-return realtime(_that.data);}
+return realtime(_that.data);case WsPingMessage():
+return ping();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -185,11 +194,12 @@ return realtime(_that.data);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( WsSnapshotData data)?  snapshot,TResult? Function( RealtimeEventEnvelope data)?  realtime,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( WsSnapshotData data)?  snapshot,TResult? Function( RealtimeEventEnvelope data)?  realtime,TResult? Function()?  ping,}) {final _that = this;
 switch (_that) {
 case WsSnapshotMessage() when snapshot != null:
 return snapshot(_that.data);case WsRealtimeMessage() when realtime != null:
-return realtime(_that.data);case _:
+return realtime(_that.data);case WsPingMessage() when ping != null:
+return ping();case _:
   return null;
 
 }
@@ -204,7 +214,7 @@ class WsSnapshotMessage implements WsMessage {
   const WsSnapshotMessage({required this.data, final  String? $type}): $type = $type ?? 'snapshot';
   factory WsSnapshotMessage.fromJson(Map<String, dynamic> json) => _$WsSnapshotMessageFromJson(json);
 
-@override final  WsSnapshotData data;
+ final  WsSnapshotData data;
 
 @JsonKey(name: 'type')
 final String $type;
@@ -286,7 +296,7 @@ class WsRealtimeMessage implements WsMessage {
   const WsRealtimeMessage({required this.data, final  String? $type}): $type = $type ?? 'realtime';
   factory WsRealtimeMessage.fromJson(Map<String, dynamic> json) => _$WsRealtimeMessageFromJson(json);
 
-@override final  RealtimeEventEnvelope data;
+ final  RealtimeEventEnvelope data;
 
 @JsonKey(name: 'type')
 final String $type;
@@ -360,5 +370,44 @@ $RealtimeEventEnvelopeCopyWith<$Res> get data {
   });
 }
 }
+
+/// @nodoc
+@JsonSerializable()
+
+class WsPingMessage implements WsMessage {
+  const WsPingMessage({final  String? $type}): $type = $type ?? 'ping';
+  factory WsPingMessage.fromJson(Map<String, dynamic> json) => _$WsPingMessageFromJson(json);
+
+
+
+@JsonKey(name: 'type')
+final String $type;
+
+
+
+@override
+Map<String, dynamic> toJson() {
+  return _$WsPingMessageToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsPingMessage);
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'WsMessage.ping()';
+}
+
+
+}
+
+
+
 
 // dart format on

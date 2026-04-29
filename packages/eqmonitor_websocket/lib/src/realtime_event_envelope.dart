@@ -1,4 +1,5 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor_websocket/src/ws_estimated_intensity_payload.dart';
 import 'package:eqmonitor_websocket/src/ws_shake_payload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -51,8 +52,9 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
 
   /// 推計震度
   @FreezedUnionValue('ESTIMATED_INTENSITY')
-  const factory RealtimeEventEnvelope.estimatedIntensity() =
-      WsEstimatedIntensityRealtimeEvent;
+  const factory RealtimeEventEnvelope.estimatedIntensity({
+    required WsEstimatedIntensityPayload estimatedIntensity,
+  }) = WsEstimatedIntensityRealtimeEvent;
 
   factory RealtimeEventEnvelope.fromJson(Map<String, dynamic> json) =>
       _$RealtimeEventEnvelopeFromJson(json);

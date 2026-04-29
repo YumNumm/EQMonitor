@@ -7,7 +7,6 @@ part 'ws_message.g.dart';
 
 /// WebSocket から受信するトップレベルメッセージ。
 /// `type` フィールドで分岐する discriminated union。
-/// `ping` はプロバイダー側で処理されるためここには含まれない。
 @Freezed(unionKey: 'type')
 sealed class WsMessage with _$WsMessage {
   @FreezedUnionValue('snapshot')
@@ -19,6 +18,9 @@ sealed class WsMessage with _$WsMessage {
   const factory WsMessage.realtime({
     required RealtimeEventEnvelope data,
   }) = WsRealtimeMessage;
+
+  @FreezedUnionValue('ping')
+  const factory WsMessage.ping() = WsPingMessage;
 
   factory WsMessage.fromJson(Map<String, dynamic> json) =>
       _$WsMessageFromJson(json);
