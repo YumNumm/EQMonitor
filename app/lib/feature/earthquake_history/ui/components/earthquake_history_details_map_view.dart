@@ -95,10 +95,28 @@ class _MapContent extends HookConsumerWidget {
       initStyle: styleString,
     );
 
-    // 有効な表示モードを決定（override 中は強制 stationOnly）
-    final effectiveMode = (tileUrl != null && isOverriding.value)
-        ? IntensityFillMode.stationOnly
-        : config.intensityFillMode;
+    final intensity = earthquake.intensity;
+
+    // データ可用性に応じた iconMode のフォールバック解決
+    final hasCityData = intensity != null &&
+        intensity.intensityTree.values.any((r) => r.any((n) => n.cities.isNotEmpty));
+    final hasStationData = intensity != null &&
+        intensity.intensityTree.values.any(
+          (r) => r.any((n) => n.cities.any((c) => c.stations.isNotEmpty)),
+        );
+
+    final resolvedIconMode = switch (config.iconMode) {
+      EarthquakeHistoryIconMode.station when !hasStationData =>
+        EarthquakeHistoryIconMode.region,
+      EarthquakeHistoryIconMode.municipality when !hasCityData =>
+        EarthquakeHistoryIconMode.region,
+      _ => config.iconMode,
+    };
+
+    // 推計震度タイル表示中は塗りつぶしを強制 none
+    final effectiveFillMode = (tileUrl != null && isOverriding.value)
+        ? EarthquakeHistoryFillMode.none
+        : config.fillMode;
 
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       earthquake: earthquake,
@@ -115,8 +133,6 @@ class _MapContent extends HookConsumerWidget {
       );
     }
 
-    final intensity = earthquake.intensity;
-
     return MapLibreEventProvider(
       child: Builder(
         builder: (context) {
@@ -131,22 +147,26 @@ class _MapContent extends HookConsumerWidget {
                       context: context,
                       event: event,
                       config: config,
-                      effectiveMode: effectiveMode,
+                      effectiveFillMode: effectiveFillMode,
                       jmaMap: jmaMapAsync.value,
                     );
                   }
                 },
                 children: [
-                  // 塗りつぶし系（最背面）
-                  if (effectiveMode != IntensityFillMode.stationOnly &&
-                      earthquake.intensity != null)
+                  // 塗りつぶし（最背面）
+                  if (effectiveFillMode == EarthquakeHistoryFillMode.matchIcon &&
+                      intensity != null)
                     EarthquakeHistoryFillLayer(
-                      intensity: intensity!,
+                      intensity: intensity,
+                      iconMode: resolvedIconMode,
                       showingLpgmIntensity: config.showingLpgmIntensity,
-                    )
-                  else if (effectiveMode == IntensityFillMode.fillWithIcon)
+                    ),
+                  // 地域・市区町村アイコン（塗りつぶしの上）
+                  if (intensity != null)
                     EarthquakeHistoryIntensityIconLayer(
                       intensity: intensity,
+                      iconMode: resolvedIconMode,
+                      hasStationData: hasStationData,
                       showingLpgmIntensity: config.showingLpgmIntensity,
                     ),
                   // 推計震度ラスタ
@@ -166,10 +186,10 @@ class _MapContent extends HookConsumerWidget {
                   if (intensity != null && config.showStation)
                     EarthquakeHistoryStationIntensityLayer(
                       intensity: intensity,
+                      iconMode: resolvedIconMode,
                       stationDisplayMode: config.stationDisplayMode,
                       showLabel: config.showStationLabel,
                       showingLpgmIntensity: config.showingLpgmIntensity,
-                      showIntensityIcon: config.showIntensityIcon,
                     ),
                   if (config.hypocenterDisplayMode !=
                       HypocenterDisplayMode.belowStations)
@@ -229,7 +249,7 @@ class _MapContent extends HookConsumerWidget {
     required BuildContext context,
     required MapEventClick event,
     required EarthquakeHistoryDetailConfig config,
-    required IntensityFillMode effectiveMode,
+    required EarthquakeHistoryFillMode effectiveFillMode,
     required Map<JmaMapType, JmaMap_JmaMapData>? jmaMap,
   }) {
     final controller = MapController.maybeOf(context);
@@ -261,8 +281,8 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    // 塗りつぶしレイヤータップ
-    if (jmaMap == null) {
+    // 塗りつぶしレイヤータップ（塗りつぶし表示中のみ）
+    if (effectiveFillMode == EarthquakeHistoryFillMode.none || jmaMap == null) {
       return;
     }
     final isCity = hitIds.contains(_cityFillLayerId);

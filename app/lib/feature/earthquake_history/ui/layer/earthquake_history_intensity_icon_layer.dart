@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -15,18 +16,29 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
 
-/// 地震履歴詳細の震度アイコンレイヤー
+/// 地震履歴詳細の地域・市区町村レベル震度アイコンレイヤー
 ///
 /// `jma_map` の polylabel 座標に角丸四角の震度アイコンを表示する。
+/// [iconMode] に応じて表示するレベルを制御する。
+/// - [EarthquakeHistoryIconMode.auto]: 細分化地域（zoom<9）→市区町村（zoom>=9 → zoom>=10 でフェードアウト）
+/// - [EarthquakeHistoryIconMode.region]: 細分化地域のみ
+/// - [EarthquakeHistoryIconMode.municipality]: 市区町村のみ
+/// - [EarthquakeHistoryIconMode.station] / [EarthquakeHistoryIconMode.none]: 表示なし
 /// [showingLpgmIntensity] が true の場合は長周期地震動階級アイコンを表示する。
 class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
   const EarthquakeHistoryIntensityIconLayer({
     required this.intensity,
+    required this.iconMode,
+    this.hasStationData = false,
     this.showingLpgmIntensity = false,
     super.key,
   });
 
   final EarthquakeIntensity? intensity;
+  final EarthquakeHistoryIconMode iconMode;
+
+  /// auto モードで観測点データがある場合 true → 市区町村アイコンを zoom 10→11 でフェードアウト
+  final bool hasStationData;
   final bool showingLpgmIntensity;
 
   static const _regionSourceId = 'eq-history-icon-region';
@@ -36,8 +48,22 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
 
   static const _iconSize = 32;
 
+  bool get _showRegion =>
+      iconMode == EarthquakeHistoryIconMode.auto ||
+      iconMode == EarthquakeHistoryIconMode.region;
+
+  bool get _showCity =>
+      iconMode == EarthquakeHistoryIconMode.auto ||
+      iconMode == EarthquakeHistoryIconMode.municipality;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // station / none モードは area icons を表示しない
+    if (iconMode == EarthquakeHistoryIconMode.station ||
+        iconMode == EarthquakeHistoryIconMode.none) {
+      return const SizedBox.shrink();
+    }
+
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
     final jmaMapAsync = ref.watch(jmaMapProvider);
@@ -57,85 +83,109 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
           try {
             await _registerIcons(styleController, colorModel);
 
-            final regionGeoJson = _buildRegionGeoJson(
-              intensity,
-              jmaMap,
-              colorModel,
-            );
-            final cityGeoJson = _buildCityGeoJson(
-              intensity,
-              jmaMap,
-              colorModel,
-            );
-            // 一次細分化地域アイコン (zoom < 9)
-            await styleController.addSource(
-              GeoJsonSource(id: _regionSourceId, data: regionGeoJson),
-            );
-            await styleController.addLayer(
-              const SymbolStyleLayer(
-                id: _regionLayerId,
-                sourceId: _regionSourceId,
-                layout: {
-                  'icon-image': ['get', 'icon'],
-                  'icon-allow-overlap': false,
-                  'icon-size': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    4,
-                    0.3,
-                    8,
-                    0.6,
-                  ],
-                },
-                paint: {
-                  'icon-opacity': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    8.0,
-                    1.0,
-                    9.0,
-                    0.0,
-                  ],
-                },
-              ),
-            );
+            if (_showRegion) {
+              final regionGeoJson = _buildRegionGeoJson(
+                intensity,
+                jmaMap,
+                colorModel,
+              );
+              await styleController.addSource(
+                GeoJsonSource(id: _regionSourceId, data: regionGeoJson),
+              );
+              // auto: zoom 8→9 でフェードアウト。region 固定: 常時表示
+              final regionOpacity = iconMode == EarthquakeHistoryIconMode.auto
+                  ? <Object>[
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      8.0,
+                      1.0,
+                      9.0,
+                      0.0,
+                    ]
+                  : 1.0;
+              await styleController.addLayer(
+                SymbolStyleLayer(
+                  id: _regionLayerId,
+                  sourceId: _regionSourceId,
+                  layout: const {
+                    'icon-image': ['get', 'icon'],
+                    'icon-allow-overlap': false,
+                    'icon-size': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      4,
+                      0.3,
+                      8,
+                      0.6,
+                    ],
+                  },
+                  paint: {'icon-opacity': regionOpacity},
+                ),
+              );
+            }
 
-            // 市区町村アイコン (zoom >= 9)
-            await styleController.addSource(
-              GeoJsonSource(id: _citySourceId, data: cityGeoJson),
-            );
-            await styleController.addLayer(
-              const SymbolStyleLayer(
-                id: _cityLayerId,
-                sourceId: _citySourceId,
-                layout: {
-                  'icon-image': ['get', 'icon'],
-                  'icon-allow-overlap': false,
-                  'icon-size': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    8,
-                    0.2,
-                    12,
-                    0.8,
-                  ],
-                },
-                paint: {
-                  'icon-opacity': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    8.0,
-                    0.0,
-                    9.0,
-                    1.0,
-                  ],
-                },
-              ),
-            );
+            if (_showCity) {
+              final cityGeoJson = _buildCityGeoJson(
+                intensity,
+                jmaMap,
+                colorModel,
+              );
+              await styleController.addSource(
+                GeoJsonSource(id: _citySourceId, data: cityGeoJson),
+              );
+              // auto: zoom 8→9 でフェードイン、観測点データありなら zoom 10→11 でフェードアウト
+              // municipality 固定: 常時表示
+              final Object cityOpacity;
+              if (iconMode == EarthquakeHistoryIconMode.auto) {
+                cityOpacity = hasStationData
+                    ? <Object>[
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        8.0,
+                        0.0,
+                        9.0,
+                        1.0,
+                        10.0,
+                        1.0,
+                        11.0,
+                        0.0,
+                      ]
+                    : <Object>[
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        8.0,
+                        0.0,
+                        9.0,
+                        1.0,
+                      ];
+              } else {
+                cityOpacity = 1.0;
+              }
+              await styleController.addLayer(
+                SymbolStyleLayer(
+                  id: _cityLayerId,
+                  sourceId: _citySourceId,
+                  layout: const {
+                    'icon-image': ['get', 'icon'],
+                    'icon-allow-overlap': false,
+                    'icon-size': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      8,
+                      0.2,
+                      12,
+                      0.8,
+                    ],
+                  },
+                  paint: {'icon-opacity': cityOpacity},
+                ),
+              );
+            }
           } on Exception catch (e) {
             talker.log(e);
           }
@@ -143,10 +193,14 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
 
         return () async {
           try {
-            await styleController.removeLayer(_cityLayerId);
-            await styleController.removeSource(_citySourceId);
-            await styleController.removeLayer(_regionLayerId);
-            await styleController.removeSource(_regionSourceId);
+            if (_showCity) {
+              await styleController.removeLayer(_cityLayerId);
+              await styleController.removeSource(_citySourceId);
+            }
+            if (_showRegion) {
+              await styleController.removeLayer(_regionLayerId);
+              await styleController.removeSource(_regionSourceId);
+            }
           } on Exception catch (e) {
             talker.log(e);
           }
@@ -158,6 +212,8 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
         colorModel,
         jmaMapAsync,
         showingLpgmIntensity,
+        iconMode,
+        hasStationData,
       ],
     );
 

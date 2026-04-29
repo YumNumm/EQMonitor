@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
@@ -16,19 +17,23 @@ import 'package:maplibre/maplibre.dart';
 
 /// 地震履歴詳細の震度塗りつぶしレイヤー
 ///
-/// zoom < 9 で一次細分化地域（areaForecastLocalE）、zoom >= 9 で市区町村
-/// （areaInformationCity）をフェードして切り替える。
-/// [showingLpgmIntensity] が true の場合は長周期地震動階級で塗り分ける。
+/// [iconMode] に応じて塗りつぶすレベルを決定する:
+/// - [EarthquakeHistoryIconMode.auto]: zoom < 9 で細分化地域、zoom >= 9 で市区町村
+/// - [EarthquakeHistoryIconMode.region]: 細分化地域のみ
+/// - [EarthquakeHistoryIconMode.municipality]: 市区町村のみ
+/// - [EarthquakeHistoryIconMode.station] / [EarthquakeHistoryIconMode.none]: 何も描画しない
 ///
-/// 震度（階級）ごとに Fill / Line レイヤーを分け、地物の `code` に対する `in` フィルタで描画対象を絞る。
+/// [showingLpgmIntensity] が true の場合は長周期地震動階級で塗り分ける。
 class EarthquakeHistoryFillLayer extends HookConsumerWidget {
   const EarthquakeHistoryFillLayer({
     required this.intensity,
+    required this.iconMode,
     this.showingLpgmIntensity = false,
     super.key,
   });
 
   final EarthquakeIntensity intensity;
+  final EarthquakeHistoryIconMode iconMode;
   final bool showingLpgmIntensity;
 
   @override
@@ -58,8 +63,8 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
         unawaited(() async {
           try {
             final specs = showingLpgmIntensity
-                ? _buildLpgmLayerSpecs(intensity, colorModel)
-                : _buildJmaLayerSpecs(intensity, colorModel);
+                ? _buildLpgmLayerSpecs(intensity, colorModel, iconMode)
+                : _buildJmaLayerSpecs(intensity, colorModel, iconMode);
             for (final spec in specs) {
               if (disposed) {
                 return;
@@ -77,7 +82,7 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
           unawaited(removeAdded());
         };
       },
-      [styleController, intensity, colorModel, showingLpgmIntensity],
+      [styleController, intensity, colorModel, showingLpgmIntensity, iconMode],
     );
 
     return const SizedBox.shrink();
@@ -208,198 +213,236 @@ class _LayerSpec {
 List<_LayerSpec> _buildJmaLayerSpecs(
   EarthquakeIntensity? intensity,
   IntensityColorModel colorModel,
+  EarthquakeHistoryIconMode iconMode,
 ) {
   final specs = <_LayerSpec>[];
+  final showRegion = iconMode == EarthquakeHistoryIconMode.auto ||
+      iconMode == EarthquakeHistoryIconMode.region;
+  final showCity = iconMode == EarthquakeHistoryIconMode.auto ||
+      iconMode == EarthquakeHistoryIconMode.municipality;
+
+  if (!showRegion && !showCity) {
+    return specs;
+  }
+
   final levels = _sortedJmaLevels(intensity);
-  for (final j in levels) {
-    final regionCodes = _jmaRegionCodes(intensity, j);
-    if (regionCodes.isEmpty) {
-      continue;
-    }
-    final filter = _codeInFilter(regionCodes);
-    final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
-    final fillId = 'eq-history-jma-${j.name}-region-fill';
-    final lineId = 'eq-history-jma-${j.name}-region-line';
-    specs.add(
-      _LayerSpec(
-        id: fillId,
-        layer: FillStyleLayer(
-          id: fillId,
-          sourceId: 'japan',
-          sourceLayerId: 'areaForecastLocalE',
-          filter: filter,
-          paint: {
-            'fill-color': color,
-            'fill-opacity': [
+
+  if (showRegion) {
+    for (final j in levels) {
+      final regionCodes = _jmaRegionCodes(intensity, j);
+      if (regionCodes.isEmpty) {
+        continue;
+      }
+      final filter = _codeInFilter(regionCodes);
+      final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
+      final fillId = 'eq-history-jma-${j.name}-region-fill';
+      final lineId = 'eq-history-jma-${j.name}-region-line';
+      // auto: zoom 8→9 でフェードアウト。region 固定: 常時表示
+      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
+          ? <Object>[
               'step',
               ['zoom'],
               8,
               0.6,
               9,
               0.0,
-            ],
-          },
-        ),
-      ),
-    );
-    specs.add(
-      _LayerSpec(
-        id: lineId,
-        layer: LineStyleLayer(
-          id: lineId,
-          sourceId: 'japan',
-          sourceLayerId: 'areaForecastLocalE',
-          filter: filter,
-          paint: {
-            'line-color': '#ffffff',
-            'line-width': 0.5,
-            'line-opacity': <Object>[
+            ]
+          : 0.6;
+      final lineOpacity = iconMode == EarthquakeHistoryIconMode.auto
+          ? <Object>[
               'interpolate',
-              <Object>['linear'],
-              <Object>['zoom'],
+              ['linear'],
+              ['zoom'],
               8.0,
               0.8,
               9.0,
               0.0,
-            ],
-          },
-        ),
-      ),
-    );
-  }
-  for (final j in levels) {
-    final cityCodes = _jmaCityCodes(intensity, j);
-    if (cityCodes.isEmpty) {
-      continue;
-    }
-    final filter = _codeInFilter(cityCodes);
-    final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
-    final fillId = 'eq-history-jma-${j.name}-city-fill';
-    specs.add(
-      _LayerSpec(
-        id: fillId,
-        layer: FillStyleLayer(
+            ]
+          : 0.8;
+      specs.add(
+        _LayerSpec(
           id: fillId,
-          sourceId: 'japan',
-          sourceLayerId: 'areaInformationCity',
-          filter: filter,
-          paint: {
-            'fill-color': color,
-            'fill-opacity': [
+          layer: FillStyleLayer(
+            id: fillId,
+            sourceId: 'japan',
+            sourceLayerId: 'areaForecastLocalE',
+            filter: filter,
+            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
+          ),
+        ),
+      );
+      specs.add(
+        _LayerSpec(
+          id: lineId,
+          layer: LineStyleLayer(
+            id: lineId,
+            sourceId: 'japan',
+            sourceLayerId: 'areaForecastLocalE',
+            filter: filter,
+            paint: {
+              'line-color': '#ffffff',
+              'line-width': 0.5,
+              'line-opacity': lineOpacity,
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  if (showCity) {
+    for (final j in levels) {
+      final cityCodes = _jmaCityCodes(intensity, j);
+      if (cityCodes.isEmpty) {
+        continue;
+      }
+      final filter = _codeInFilter(cityCodes);
+      final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
+      final fillId = 'eq-history-jma-${j.name}-city-fill';
+      // auto: zoom 8→9 でフェードイン。municipality 固定: 常時表示
+      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
+          ? <Object>[
               'step',
               ['zoom'],
               8,
               0.0,
               9,
               0.6,
-            ],
-          },
+            ]
+          : 0.6;
+      specs.add(
+        _LayerSpec(
+          id: fillId,
+          layer: FillStyleLayer(
+            id: fillId,
+            sourceId: 'japan',
+            sourceLayerId: 'areaInformationCity',
+            filter: filter,
+            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
+
   return specs;
 }
 
 List<_LayerSpec> _buildLpgmLayerSpecs(
   EarthquakeIntensity? intensity,
   IntensityColorModel colorModel,
+  EarthquakeHistoryIconMode iconMode,
 ) {
   final specs = <_LayerSpec>[];
+  final showRegion = iconMode == EarthquakeHistoryIconMode.auto ||
+      iconMode == EarthquakeHistoryIconMode.region;
+  final showCity = iconMode == EarthquakeHistoryIconMode.auto ||
+      iconMode == EarthquakeHistoryIconMode.municipality;
+
+  if (!showRegion && !showCity) {
+    return specs;
+  }
+
   final levels = _sortedLpgmLevels(intensity);
-  for (final j in levels) {
-    final regionCodes = _lpgmRegionCodes(intensity, j);
-    if (regionCodes.isEmpty) {
-      continue;
-    }
-    final filter = _codeInFilter(regionCodes);
-    final color = colorModel
-        .fromJmaLpgmIntensity(j)
-        .background
-        .toHexStringRGB();
-    final fillId = 'eq-history-lpgm-${j.name}-region-fill';
-    final lineId = 'eq-history-lpgm-${j.name}-region-line';
-    specs.add(
-      _LayerSpec(
-        id: fillId,
-        layer: FillStyleLayer(
-          id: fillId,
-          sourceId: 'japan',
-          sourceLayerId: 'areaForecastLocalE',
-          filter: filter,
-          paint: {
-            'fill-color': color,
-            'fill-opacity': <Object>[
+
+  if (showRegion) {
+    for (final j in levels) {
+      final regionCodes = _lpgmRegionCodes(intensity, j);
+      if (regionCodes.isEmpty) {
+        continue;
+      }
+      final filter = _codeInFilter(regionCodes);
+      final color =
+          colorModel.fromJmaLpgmIntensity(j).background.toHexStringRGB();
+      final fillId = 'eq-history-lpgm-${j.name}-region-fill';
+      final lineId = 'eq-history-lpgm-${j.name}-region-line';
+      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
+          ? <Object>[
               'interpolate',
-              <Object>['linear'],
-              <Object>['zoom'],
+              ['linear'],
+              ['zoom'],
               8.0,
               0.6,
               9.0,
               0.0,
-            ],
-          },
-        ),
-      ),
-    );
-    specs.add(
-      _LayerSpec(
-        id: lineId,
-        layer: LineStyleLayer(
-          id: lineId,
-          sourceId: 'japan',
-          sourceLayerId: 'areaForecastLocalE',
-          filter: filter,
-          paint: {
-            'line-color': '#ffffff',
-            'line-width': 0.5,
-            'line-opacity': <Object>[
+            ]
+          : 0.6;
+      final lineOpacity = iconMode == EarthquakeHistoryIconMode.auto
+          ? <Object>[
               'interpolate',
-              <Object>['linear'],
-              <Object>['zoom'],
+              ['linear'],
+              ['zoom'],
               8.0,
               0.8,
               9.0,
               0.0,
-            ],
-          },
-        ),
-      ),
-    );
-  }
-  for (final j in levels) {
-    final cityCodes = _lpgmCityCodes(intensity, j);
-    if (cityCodes.isEmpty) {
-      continue;
-    }
-    final filter = _codeInFilter(cityCodes);
-    final color = colorModel
-        .fromJmaLpgmIntensity(j)
-        .background
-        .toHexStringRGB();
-    final fillId = 'eq-history-lpgm-${j.name}-city-fill';
-    specs.add(
-      _LayerSpec(
-        id: fillId,
-        layer: FillStyleLayer(
+            ]
+          : 0.8;
+      specs.add(
+        _LayerSpec(
           id: fillId,
-          sourceId: 'japan',
-          sourceLayerId: 'areaInformationCity',
-          filter: filter,
-          paint: {
-            'fill-color': color,
-            'fill-opacity': [
+          layer: FillStyleLayer(
+            id: fillId,
+            sourceId: 'japan',
+            sourceLayerId: 'areaForecastLocalE',
+            filter: filter,
+            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
+          ),
+        ),
+      );
+      specs.add(
+        _LayerSpec(
+          id: lineId,
+          layer: LineStyleLayer(
+            id: lineId,
+            sourceId: 'japan',
+            sourceLayerId: 'areaForecastLocalE',
+            filter: filter,
+            paint: {
+              'line-color': '#ffffff',
+              'line-width': 0.5,
+              'line-opacity': lineOpacity,
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  if (showCity) {
+    for (final j in levels) {
+      final cityCodes = _lpgmCityCodes(intensity, j);
+      if (cityCodes.isEmpty) {
+        continue;
+      }
+      final filter = _codeInFilter(cityCodes);
+      final color =
+          colorModel.fromJmaLpgmIntensity(j).background.toHexStringRGB();
+      final fillId = 'eq-history-lpgm-${j.name}-city-fill';
+      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
+          ? <Object>[
               'step',
               ['zoom'],
               8,
               0.0,
               9,
               0.6,
-            ],
-          },
+            ]
+          : 0.6;
+      specs.add(
+        _LayerSpec(
+          id: fillId,
+          layer: FillStyleLayer(
+            id: fillId,
+            sourceId: 'japan',
+            sourceLayerId: 'areaInformationCity',
+            filter: filter,
+            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
+
   return specs;
 }

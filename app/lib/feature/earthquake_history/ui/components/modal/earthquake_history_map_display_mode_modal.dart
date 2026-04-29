@@ -104,6 +104,63 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                     ),
                   ),
 
+                  // アイコン表示モード
+                  const _SectionHeader(title: 'アイコンの表示'),
+                  RadioGroup<EarthquakeHistoryIconMode>(
+                    groupValue: value.detail.iconMode,
+                    onChanged: (m) async {
+                      if (m != null) {
+                        await notifier.save(
+                          value.copyWith.detail(iconMode: m),
+                        );
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final m in EarthquakeHistoryIconMode.values)
+                          RadioListTile<EarthquakeHistoryIconMode>.adaptive(
+                            title: Text(switch (m) {
+                              EarthquakeHistoryIconMode.auto =>
+                                '自動（地域→市区町村→観測点）',
+                              EarthquakeHistoryIconMode.station => '観測点',
+                              EarthquakeHistoryIconMode.municipality => '市区町村',
+                              EarthquakeHistoryIconMode.region => '細分化地域',
+                              EarthquakeHistoryIconMode.none => 'なし',
+                            }),
+                            value: m,
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  // 塗りつぶし表示モード
+                  const _SectionHeader(title: '塗りつぶし'),
+                  RadioGroup<EarthquakeHistoryFillMode>(
+                    groupValue: value.detail.fillMode,
+                    onChanged: (m) async {
+                      if (m != null) {
+                        await notifier.save(
+                          value.copyWith.detail(fillMode: m),
+                        );
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final m in EarthquakeHistoryFillMode.values)
+                          RadioListTile<EarthquakeHistoryFillMode>.adaptive(
+                            title: Text(switch (m) {
+                              EarthquakeHistoryFillMode.none => 'なし',
+                              EarthquakeHistoryFillMode.matchIcon =>
+                                'アイコンに合わせて塗りつぶし',
+                            }),
+                            value: m,
+                          ),
+                      ],
+                    ),
+                  ),
+
                   // 観測点の表示
                   const _SectionHeader(title: '観測点の表示'),
                   AppSwitchListTile(
@@ -144,13 +201,6 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                       value: value.detail.showStationLabel,
                       onChanged: (v) async => notifier.save(
                         value.copyWith.detail(showStationLabel: v),
-                      ),
-                    ),
-                    AppSwitchListTile(
-                      title: '観測点に震度アイコンを表示',
-                      value: value.detail.showIntensityIcon,
-                      onChanged: (v) async => notifier.save(
-                        value.copyWith.detail(showIntensityIcon: v),
                       ),
                     ),
                   ],
