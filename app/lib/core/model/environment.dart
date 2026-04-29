@@ -25,6 +25,8 @@ abstract class BuildConfig with _$BuildConfig {
 
   const BuildConfig._();
 
+  bool get isBetaTesting => const bool.fromEnvironment('IS_BETA_TESTING');
+
   factory BuildConfig.fromJson(Map<String, dynamic> json) =>
       _$BuildConfigFromJson(json);
 
