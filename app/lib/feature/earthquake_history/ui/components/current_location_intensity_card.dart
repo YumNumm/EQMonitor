@@ -11,7 +11,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
-/// 現在地に対応する震度（速報値）を表示する。取得はウィジェット内の [useFuture] で行う。
+/// 現在地に対応する震度を表示する。取得はウィジェット内の [useFuture] で行う。
 class CurrentLocationIntensityCard extends HookConsumerWidget {
   const CurrentLocationIntensityCard({required this.item, super.key});
 

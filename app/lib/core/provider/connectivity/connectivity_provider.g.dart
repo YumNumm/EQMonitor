@@ -93,4 +93,4 @@ final class IsNetworkConnectedProvider
 }
 
 String _$isNetworkConnectedHash() =>
-    r'aa34529e68e9de74d3c833a29f9d06d03bc5d456';
+    r'a693e75f9973530702398963a1e9ef9aa56a3e94';
