@@ -67,6 +67,8 @@ abstract class EewForecastRegionInfo with _$EewForecastRegionInfo {
     required bool isWarning,
     required JmaIntensity intensity,
     required bool intensityIsOver,
+    DateTime? arrivalTime,
+    @Default(false) bool isArrived,
     JmaLpgmIntensity? lpgmIntensity,
     @Default(false) bool lpgmIntensityIsOver,
   }) = _EewForecastRegionInfo;
@@ -162,6 +164,11 @@ extension on api.EewIntensityItem {
     isWarning: isWarning,
     intensity: intensity.value.toJmaIntensity,
     intensityIsOver: intensity.isOver,
+    arrivalTime: arrivalTime.type == api.EewIntensityRegionArrivalTimeType.time
+        ? arrivalTime.value
+        : null,
+    isArrived:
+        arrivalTime.type == api.EewIntensityRegionArrivalTimeType.arrived,
     lpgmIntensity: lpgmIntensity?.value.toJmaLpgmIntensity,
     lpgmIntensityIsOver: lpgmIntensity?.isOver ?? false,
   );

@@ -974,7 +974,7 @@ as bool,
 /// @nodoc
 mixin _$EewForecastRegionInfo {
 
- String get code; String get name; bool get isPlum; bool get isWarning; JmaIntensity get intensity; bool get intensityIsOver; JmaLpgmIntensity? get lpgmIntensity; bool get lpgmIntensityIsOver;
+ String get code; String get name; bool get isPlum; bool get isWarning; JmaIntensity get intensity; bool get intensityIsOver; DateTime? get arrivalTime; bool get isArrived; JmaLpgmIntensity? get lpgmIntensity; bool get lpgmIntensityIsOver;
 /// Create a copy of EewForecastRegionInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -985,16 +985,16 @@ $EewForecastRegionInfoCopyWith<EewForecastRegionInfo> get copyWith => _$EewForec
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewForecastRegionInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.intensityIsOver, intensityIsOver) || other.intensityIsOver == intensityIsOver)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.lpgmIntensityIsOver, lpgmIntensityIsOver) || other.lpgmIntensityIsOver == lpgmIntensityIsOver));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewForecastRegionInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.intensityIsOver, intensityIsOver) || other.intensityIsOver == intensityIsOver)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.isArrived, isArrived) || other.isArrived == isArrived)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.lpgmIntensityIsOver, lpgmIntensityIsOver) || other.lpgmIntensityIsOver == lpgmIntensityIsOver));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,code,name,isPlum,isWarning,intensity,intensityIsOver,lpgmIntensity,lpgmIntensityIsOver);
+int get hashCode => Object.hash(runtimeType,code,name,isPlum,isWarning,intensity,intensityIsOver,arrivalTime,isArrived,lpgmIntensity,lpgmIntensityIsOver);
 
 @override
 String toString() {
-  return 'EewForecastRegionInfo(code: $code, name: $name, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, intensityIsOver: $intensityIsOver, lpgmIntensity: $lpgmIntensity, lpgmIntensityIsOver: $lpgmIntensityIsOver)';
+  return 'EewForecastRegionInfo(code: $code, name: $name, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, intensityIsOver: $intensityIsOver, arrivalTime: $arrivalTime, isArrived: $isArrived, lpgmIntensity: $lpgmIntensity, lpgmIntensityIsOver: $lpgmIntensityIsOver)';
 }
 
 
@@ -1005,7 +1005,7 @@ abstract mixin class $EewForecastRegionInfoCopyWith<$Res>  {
   factory $EewForecastRegionInfoCopyWith(EewForecastRegionInfo value, $Res Function(EewForecastRegionInfo) _then) = _$EewForecastRegionInfoCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, bool isPlum, bool isWarning, JmaIntensity intensity, bool intensityIsOver, JmaLpgmIntensity? lpgmIntensity, bool lpgmIntensityIsOver
+ String code, String name, bool isPlum, bool isWarning, JmaIntensity intensity, bool intensityIsOver, DateTime? arrivalTime, bool isArrived, JmaLpgmIntensity? lpgmIntensity, bool lpgmIntensityIsOver
 });
 
 
@@ -1022,7 +1022,7 @@ class _$EewForecastRegionInfoCopyWithImpl<$Res>
 
 /// Create a copy of EewForecastRegionInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? intensityIsOver = null,Object? lpgmIntensity = freezed,Object? lpgmIntensityIsOver = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? intensityIsOver = null,Object? arrivalTime = freezed,Object? isArrived = null,Object? lpgmIntensity = freezed,Object? lpgmIntensityIsOver = null,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -1030,6 +1030,8 @@ as String,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullabl
 as bool,isWarning: null == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
 as bool,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,intensityIsOver: null == intensityIsOver ? _self.intensityIsOver : intensityIsOver // ignore: cast_nullable_to_non_nullable
+as bool,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,isArrived: null == isArrived ? _self.isArrived : isArrived // ignore: cast_nullable_to_non_nullable
 as bool,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,lpgmIntensityIsOver: null == lpgmIntensityIsOver ? _self.lpgmIntensityIsOver : lpgmIntensityIsOver // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -1117,10 +1119,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  bool isPlum,  bool isWarning,  JmaIntensity intensity,  bool intensityIsOver,  JmaLpgmIntensity? lpgmIntensity,  bool lpgmIntensityIsOver)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  bool isPlum,  bool isWarning,  JmaIntensity intensity,  bool intensityIsOver,  DateTime? arrivalTime,  bool isArrived,  JmaLpgmIntensity? lpgmIntensity,  bool lpgmIntensityIsOver)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewForecastRegionInfo() when $default != null:
-return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensity,_that.intensityIsOver,_that.lpgmIntensity,_that.lpgmIntensityIsOver);case _:
+return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensity,_that.intensityIsOver,_that.arrivalTime,_that.isArrived,_that.lpgmIntensity,_that.lpgmIntensityIsOver);case _:
   return orElse();
 
 }
@@ -1138,10 +1140,10 @@ return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  bool isPlum,  bool isWarning,  JmaIntensity intensity,  bool intensityIsOver,  JmaLpgmIntensity? lpgmIntensity,  bool lpgmIntensityIsOver)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  bool isPlum,  bool isWarning,  JmaIntensity intensity,  bool intensityIsOver,  DateTime? arrivalTime,  bool isArrived,  JmaLpgmIntensity? lpgmIntensity,  bool lpgmIntensityIsOver)  $default,) {final _that = this;
 switch (_that) {
 case _EewForecastRegionInfo():
-return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensity,_that.intensityIsOver,_that.lpgmIntensity,_that.lpgmIntensityIsOver);case _:
+return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensity,_that.intensityIsOver,_that.arrivalTime,_that.isArrived,_that.lpgmIntensity,_that.lpgmIntensityIsOver);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1158,10 +1160,10 @@ return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  bool isPlum,  bool isWarning,  JmaIntensity intensity,  bool intensityIsOver,  JmaLpgmIntensity? lpgmIntensity,  bool lpgmIntensityIsOver)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  bool isPlum,  bool isWarning,  JmaIntensity intensity,  bool intensityIsOver,  DateTime? arrivalTime,  bool isArrived,  JmaLpgmIntensity? lpgmIntensity,  bool lpgmIntensityIsOver)?  $default,) {final _that = this;
 switch (_that) {
 case _EewForecastRegionInfo() when $default != null:
-return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensity,_that.intensityIsOver,_that.lpgmIntensity,_that.lpgmIntensityIsOver);case _:
+return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensity,_that.intensityIsOver,_that.arrivalTime,_that.isArrived,_that.lpgmIntensity,_that.lpgmIntensityIsOver);case _:
   return null;
 
 }
@@ -1173,7 +1175,7 @@ return $default(_that.code,_that.name,_that.isPlum,_that.isWarning,_that.intensi
 
 
 class _EewForecastRegionInfo implements EewForecastRegionInfo {
-  const _EewForecastRegionInfo({required this.code, required this.name, required this.isPlum, required this.isWarning, required this.intensity, required this.intensityIsOver, this.lpgmIntensity, this.lpgmIntensityIsOver = false});
+  const _EewForecastRegionInfo({required this.code, required this.name, required this.isPlum, required this.isWarning, required this.intensity, required this.intensityIsOver, this.arrivalTime, this.isArrived = false, this.lpgmIntensity, this.lpgmIntensityIsOver = false});
   
 
 @override final  String code;
@@ -1182,6 +1184,8 @@ class _EewForecastRegionInfo implements EewForecastRegionInfo {
 @override final  bool isWarning;
 @override final  JmaIntensity intensity;
 @override final  bool intensityIsOver;
+@override final  DateTime? arrivalTime;
+@override@JsonKey() final  bool isArrived;
 @override final  JmaLpgmIntensity? lpgmIntensity;
 @override@JsonKey() final  bool lpgmIntensityIsOver;
 
@@ -1195,16 +1199,16 @@ _$EewForecastRegionInfoCopyWith<_EewForecastRegionInfo> get copyWith => __$EewFo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewForecastRegionInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.intensityIsOver, intensityIsOver) || other.intensityIsOver == intensityIsOver)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.lpgmIntensityIsOver, lpgmIntensityIsOver) || other.lpgmIntensityIsOver == lpgmIntensityIsOver));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewForecastRegionInfo&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.isPlum, isPlum) || other.isPlum == isPlum)&&(identical(other.isWarning, isWarning) || other.isWarning == isWarning)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.intensityIsOver, intensityIsOver) || other.intensityIsOver == intensityIsOver)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.isArrived, isArrived) || other.isArrived == isArrived)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity)&&(identical(other.lpgmIntensityIsOver, lpgmIntensityIsOver) || other.lpgmIntensityIsOver == lpgmIntensityIsOver));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,code,name,isPlum,isWarning,intensity,intensityIsOver,lpgmIntensity,lpgmIntensityIsOver);
+int get hashCode => Object.hash(runtimeType,code,name,isPlum,isWarning,intensity,intensityIsOver,arrivalTime,isArrived,lpgmIntensity,lpgmIntensityIsOver);
 
 @override
 String toString() {
-  return 'EewForecastRegionInfo(code: $code, name: $name, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, intensityIsOver: $intensityIsOver, lpgmIntensity: $lpgmIntensity, lpgmIntensityIsOver: $lpgmIntensityIsOver)';
+  return 'EewForecastRegionInfo(code: $code, name: $name, isPlum: $isPlum, isWarning: $isWarning, intensity: $intensity, intensityIsOver: $intensityIsOver, arrivalTime: $arrivalTime, isArrived: $isArrived, lpgmIntensity: $lpgmIntensity, lpgmIntensityIsOver: $lpgmIntensityIsOver)';
 }
 
 
@@ -1215,7 +1219,7 @@ abstract mixin class _$EewForecastRegionInfoCopyWith<$Res> implements $EewForeca
   factory _$EewForecastRegionInfoCopyWith(_EewForecastRegionInfo value, $Res Function(_EewForecastRegionInfo) _then) = __$EewForecastRegionInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, bool isPlum, bool isWarning, JmaIntensity intensity, bool intensityIsOver, JmaLpgmIntensity? lpgmIntensity, bool lpgmIntensityIsOver
+ String code, String name, bool isPlum, bool isWarning, JmaIntensity intensity, bool intensityIsOver, DateTime? arrivalTime, bool isArrived, JmaLpgmIntensity? lpgmIntensity, bool lpgmIntensityIsOver
 });
 
 
@@ -1232,7 +1236,7 @@ class __$EewForecastRegionInfoCopyWithImpl<$Res>
 
 /// Create a copy of EewForecastRegionInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? intensityIsOver = null,Object? lpgmIntensity = freezed,Object? lpgmIntensityIsOver = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? isPlum = null,Object? isWarning = null,Object? intensity = null,Object? intensityIsOver = null,Object? arrivalTime = freezed,Object? isArrived = null,Object? lpgmIntensity = freezed,Object? lpgmIntensityIsOver = null,}) {
   return _then(_EewForecastRegionInfo(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -1240,6 +1244,8 @@ as String,isPlum: null == isPlum ? _self.isPlum : isPlum // ignore: cast_nullabl
 as bool,isWarning: null == isWarning ? _self.isWarning : isWarning // ignore: cast_nullable_to_non_nullable
 as bool,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,intensityIsOver: null == intensityIsOver ? _self.intensityIsOver : intensityIsOver // ignore: cast_nullable_to_non_nullable
+as bool,arrivalTime: freezed == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,isArrived: null == isArrived ? _self.isArrived : isArrived // ignore: cast_nullable_to_non_nullable
 as bool,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,lpgmIntensityIsOver: null == lpgmIntensityIsOver ? _self.lpgmIntensityIsOver : lpgmIntensityIsOver // ignore: cast_nullable_to_non_nullable
 as bool,

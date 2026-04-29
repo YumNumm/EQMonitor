@@ -43,14 +43,27 @@ class EewCard extends ConsumerWidget {
         : null;
 
     final regionCode = regionItem?.property?.code;
-    final localForecastIntensity = _localForecastIntensity(eew, regionCode);
     final regionDisplayName = regionItem?.property?.name;
 
+    final localRegion = _localForecastRegion(eew, regionCode);
+    final localForecastIntensity = localRegion?.intensity;
+
     final nowValue = now.asData?.value;
+    final localIsArrived = localRegion?.isArrived ?? false;
+    final localArrivalTime = localRegion?.arrivalTime;
     final hasArrived =
-        eew.arrivalTime != null &&
-        nowValue != null &&
-        nowValue.isAfter(eew.arrivalTime!);
+        localIsArrived ||
+        (localArrivalTime != null &&
+            nowValue != null &&
+            nowValue.isAfter(localArrivalTime));
+
+    int? secondsUntilArrival;
+    if (!hasArrived && localArrivalTime != null && nowValue != null) {
+      final diff = localArrivalTime.difference(nowValue).inSeconds;
+      if (diff > 0) {
+        secondsUntilArrival = diff;
+      }
+    }
 
     final textTheme = Theme.of(context).textTheme;
 
@@ -65,6 +78,7 @@ class EewCard extends ConsumerWidget {
           localForecastIntensity: localForecastIntensity,
           regionDisplayName: regionDisplayName,
           hasArrived: hasArrived,
+          secondsUntilArrival: secondsUntilArrival,
         ),
         if (eew.status != TelegramStatus.normal)
           Center(
@@ -94,6 +108,7 @@ class _EewMainCard extends StatelessWidget {
     required this.localForecastIntensity,
     required this.regionDisplayName,
     required this.hasArrived,
+    this.secondsUntilArrival,
   });
 
   final EewTelegramItem eew;
@@ -102,6 +117,7 @@ class _EewMainCard extends StatelessWidget {
   final JmaIntensity? localForecastIntensity;
   final String? regionDisplayName;
   final bool hasArrived;
+  final int? secondsUntilArrival;
 
   static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
   static const _forecastHeaderColor = Color.fromRGBO(204, 102, 13, 1);
@@ -172,6 +188,7 @@ class _EewMainCard extends StatelessWidget {
                         intensity: localForecastIntensity!,
                         regionDisplayName: regionDisplayName!,
                         hasArrived: hasArrived,
+                        secondsUntilArrival: secondsUntilArrival,
                       ),
                     ],
                   ],
@@ -396,11 +413,13 @@ class _EewLocalForecastSection extends StatelessWidget {
     required this.intensity,
     required this.regionDisplayName,
     required this.hasArrived,
+    this.secondsUntilArrival,
   });
 
   final JmaIntensity intensity;
   final String regionDisplayName;
   final bool hasArrived;
+  final int? secondsUntilArrival;
 
   @override
   Widget build(BuildContext context) {
@@ -441,8 +460,23 @@ class _EewLocalForecastSection extends StatelessWidget {
               color: Colors.red,
             ),
           )
-        else
+        else ...[
           JmaForecastIntensityWidget(intensity: intensity),
+          if (secondsUntilArrival != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              'あと$secondsUntilArrival秒',
+              style: textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: FontFamily.notoSansMono,
+                letterSpacing: -0.5,
+                color: secondsUntilArrival! <= 10
+                    ? Colors.orange
+                    : colorScheme.onSurface,
+              ),
+            ),
+          ],
+        ],
       ],
     );
   }
@@ -692,7 +726,10 @@ class _StripePainter extends CustomPainter {
       oldDelegate.colors != colors;
 }
 
-JmaIntensity? _localForecastIntensity(EewTelegramItem eew, String? regionCode) {
+EewForecastRegionInfo? _localForecastRegion(
+  EewTelegramItem eew,
+  String? regionCode,
+) {
   if (regionCode == null) {
     return null;
   }
@@ -700,5 +737,5 @@ JmaIntensity? _localForecastIntensity(EewTelegramItem eew, String? regionCode) {
   if (regions == null || regions.isEmpty) {
     return null;
   }
-  return regions.firstWhereOrNull((r) => r.code == regionCode)?.intensity;
+  return regions.firstWhereOrNull((r) => r.code == regionCode);
 }
