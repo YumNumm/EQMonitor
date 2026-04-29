@@ -24,7 +24,10 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
       if (position == null) {
         return null;
       }
-      final latLng = LatLng(position.latitude, position.longitude);
+      // Round to 3 decimal places (~110m) to avoid re-fetching on tiny GPS fluctuations.
+      final lat = (position.latitude * 1000).round() / 1000;
+      final lng = (position.longitude * 1000).round() / 1000;
+      final latLng = LatLng(lat, lng);
       final city = await ref.watch(
         jmaMapAreaInformationCityInsideProvider(latLng).future,
       );
