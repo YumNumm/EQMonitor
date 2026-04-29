@@ -51,7 +51,7 @@ final class ShakeDetectionHistoryProvider
 }
 
 String _$shakeDetectionHistoryHash() =>
-    r'828a110f172fad9771f899bdccb4c596f1f29c22';
+    r'93366edec4b0b7bf62fccb4dab8d3eeb142e3e06';
 
 /// セッション中に受信したすべての揺れ検知イベントを蓄積するプロバイダー。
 /// shakeDetectionProvider（5分で削除）と異なり、クリーンアップしない。

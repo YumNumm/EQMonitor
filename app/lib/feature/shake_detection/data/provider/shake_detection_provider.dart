@@ -28,14 +28,36 @@ class ShakeDetection extends _$ShakeDetection {
   }
 
   void _onWsMessage(WsMessage msg) {
-    if (msg case WsRealtimeMessage(:final data)) {
-      if (data is WsShakeDetectedRealtimeEvent) {
-        _upsert(data);
-      }
+    switch (msg) {
+      case WsSnapshotMessage(:final data):
+        final events = data.shakes.map(_fromSnapshotEntry).toList();
+        state = events;
+      case WsRealtimeMessage(:final data):
+        if (data is WsShakeDetectedRealtimeEvent) {
+          _upsertFromRealtime(data);
+        }
     }
   }
 
-  void _upsert(WsShakeDetectedRealtimeEvent ws) {
+  ShakeDetectionEvent _fromSnapshotEntry(WsSnapshotShakeEntry entry) {
+    final level = ShakeDetectionLevel.values.firstWhere(
+      (e) => e.json == entry.level,
+      orElse: () => ShakeDetectionLevel.weaker,
+    );
+    return ShakeDetectionEvent(
+      eventId: entry.eventId,
+      createdAt: entry.createdAt,
+      level: level,
+      isReplay: entry.isReplay,
+      pointCount: entry.pointCount,
+      minLat: entry.region.bottomRight.latitude,
+      maxLat: entry.region.topLeft.latitude,
+      minLng: entry.region.topLeft.longitude,
+      maxLng: entry.region.bottomRight.longitude,
+    );
+  }
+
+  void _upsertFromRealtime(WsShakeDetectedRealtimeEvent ws) {
     final level = ShakeDetectionLevel.values.firstWhere(
       (e) => e.json == ws.level,
       orElse: () => ShakeDetectionLevel.weaker,
@@ -46,10 +68,10 @@ class ShakeDetection extends _$ShakeDetection {
       level: level,
       isReplay: ws.isReplay,
       pointCount: ws.pointCount,
-      minLat: ws.minLat,
-      maxLat: ws.maxLat,
-      minLng: ws.minLng,
-      maxLng: ws.maxLng,
+      minLat: ws.region.bottomRight.latitude,
+      maxLat: ws.region.topLeft.latitude,
+      minLng: ws.region.topLeft.longitude,
+      maxLng: ws.region.bottomRight.longitude,
     );
 
     final current = [...state];

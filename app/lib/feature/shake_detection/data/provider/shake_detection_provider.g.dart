@@ -43,7 +43,7 @@ final class ShakeDetectionProvider
   }
 }
 
-String _$shakeDetectionHash() => r'29008bbbe5b60a6e7cdbf0900aa8408b8e2f3b6e';
+String _$shakeDetectionHash() => r'ec5d24d1c3f8408de4ecb41639dfd30b6b84ee64';
 
 abstract class _$ShakeDetection extends $Notifier<List<ShakeDetectionEvent>> {
   List<ShakeDetectionEvent> build();

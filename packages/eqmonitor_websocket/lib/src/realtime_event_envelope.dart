@@ -1,4 +1,5 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor_websocket/src/ws_shake_payload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'realtime_event_envelope.freezed.dart';
@@ -39,15 +40,13 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
   /// 揺れ検知
   @FreezedUnionValue('shake_detected')
   const factory RealtimeEventEnvelope.shakeDetected({
-    @JsonKey(name: 'event_id') required String eventId,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
+    required String eventId,
+    required DateTime createdAt,
     required String level,
-    @JsonKey(name: 'is_replay') required bool isReplay,
-    @JsonKey(name: 'point_count') required int pointCount,
-    @JsonKey(name: 'min_lat') required double minLat,
-    @JsonKey(name: 'max_lat') required double maxLat,
-    @JsonKey(name: 'min_lng') required double minLng,
-    @JsonKey(name: 'max_lng') required double maxLng,
+    @Default([]) List<String> changeReasons,
+    required bool isReplay,
+    required int pointCount,
+    required WsShakeRegionPayload region,
   }) = WsShakeDetectedRealtimeEvent;
 
   /// 推計震度

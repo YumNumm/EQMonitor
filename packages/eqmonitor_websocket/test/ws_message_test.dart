@@ -69,15 +69,16 @@ void main() {
         'type': 'realtime',
         'data': {
           'type': 'shake_detected',
-          'event_id': 'shake-001',
-          'created_at': '2025-01-15T12:00:00.000Z',
-          'level': '2',
-          'is_replay': false,
-          'point_count': 10,
-          'min_lat': 35.5,
-          'max_lat': 36.0,
-          'min_lng': 139.0,
-          'max_lng': 140.0,
+          'eventId': 'shake-001',
+          'createdAt': '2025-01-15T12:00:00.000Z',
+          'level': 'Medium',
+          'changeReasons': ['new_event'],
+          'isReplay': false,
+          'pointCount': 10,
+          'region': {
+            'topLeft': {'latitude': 36.0, 'longitude': 139.0},
+            'bottomRight': {'latitude': 35.5, 'longitude': 140.0},
+          },
         },
       };
 
@@ -88,13 +89,13 @@ void main() {
       expect(realtime.data, isA<WsShakeDetectedRealtimeEvent>());
       final shake = realtime.data as WsShakeDetectedRealtimeEvent;
       expect(shake.eventId, equals('shake-001'));
-      expect(shake.level, equals('2'));
+      expect(shake.level, equals('Medium'));
       expect(shake.isReplay, isFalse);
       expect(shake.pointCount, equals(10));
-      expect(shake.minLat, equals(35.5));
-      expect(shake.maxLat, equals(36.0));
-      expect(shake.minLng, equals(139.0));
-      expect(shake.maxLng, equals(140.0));
+      expect(shake.region.topLeft.latitude, equals(36.0));
+      expect(shake.region.topLeft.longitude, equals(139.0));
+      expect(shake.region.bottomRight.latitude, equals(35.5));
+      expect(shake.region.bottomRight.longitude, equals(140.0));
     });
 
     test('realtime/ESTIMATED_INTENSITY メッセージを正しくパースできること', () {
@@ -163,15 +164,16 @@ void main() {
     test('shake_detected の is_replay=true を正しくパースできること', () {
       final json = <String, dynamic>{
         'type': 'shake_detected',
-        'event_id': 'replay-001',
-        'created_at': '2025-06-01T09:00:00.000Z',
-        'level': '1',
-        'is_replay': true,
-        'point_count': 3,
-        'min_lat': 34.0,
-        'max_lat': 35.0,
-        'min_lng': 136.0,
-        'max_lng': 137.0,
+        'eventId': 'replay-001',
+        'createdAt': '2025-06-01T09:00:00.000Z',
+        'level': 'Weak',
+        'changeReasons': ['level_changed'],
+        'isReplay': true,
+        'pointCount': 3,
+        'region': {
+          'topLeft': {'latitude': 35.0, 'longitude': 136.0},
+          'bottomRight': {'latitude': 34.0, 'longitude': 137.0},
+        },
       };
 
       final result = RealtimeEventEnvelope.fromJson(json);
