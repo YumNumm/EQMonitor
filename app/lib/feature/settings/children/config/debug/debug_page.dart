@@ -133,6 +133,12 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const NiedRoute().push(context),
           ),
           ListTile(
+            title: const Text('ナビゲーション'),
+            subtitle: const Text('ルート一覧から画面へ直接遷移'),
+            leading: const Icon(Icons.navigation),
+            onTap: () async => const DebugNavigationRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('Playground'),
             leading: const Icon(Icons.list),
             onTap: () async => const PlaygroundRoute().push(context),

@@ -34,6 +34,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_c
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart'; // ignore: directives_ordering
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
@@ -288,6 +289,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
+        TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -540,6 +542,15 @@ class EarthquakeReplayRoute extends GoRouteData with $EarthquakeReplayRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const EarthquakeReplayPage();
+  }
+}
+
+class DebugNavigationRoute extends GoRouteData with $DebugNavigationRoute {
+  const DebugNavigationRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NavigationDebugPage();
   }
 }
 
