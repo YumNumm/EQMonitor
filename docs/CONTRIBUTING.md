@@ -8,7 +8,7 @@ English version is for reference.
 ## こんにちは! そして ようこそ👋
 
 EQMonitorの開発に興味を持って頂きありがとうございます!
-どんな理由であれ、
+どんな理由であれ、Issueの作成やPull Requestの作成は大歓迎です🤗
 
 - [Issue](https://github.com/YumNumm/EQMonitor/issues)を作成する
   - 新機能の提案やバグの報告を行う
@@ -29,6 +29,10 @@ EQMonitorの開発に興味を持って頂きありがとうございます!
 ---
 
 # Contributing to EQMonitor
+
+Thank you for your interest in contributing to EQMonitor!
+
+You are welcome to create an Issue or Pull Request for any reason🤗
 
 ## Hello and Welcome!👋
 
