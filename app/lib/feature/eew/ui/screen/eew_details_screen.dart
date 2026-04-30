@@ -1,8 +1,10 @@
+import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class EewDetailsScreen extends HookConsumerWidget {
   const EewDetailsScreen({required this.eventId, super.key});
@@ -17,7 +19,7 @@ class EewDetailsScreen extends HookConsumerWidget {
       appBar: AppBar(title: Text('緊急地震速報 詳細 ($eventId)')),
       body: eewsAsyncValue.when(
         data: _buildEewList,
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const _EewDetailsScreenSkeleton(),
         error: (error, stack) => Center(child: Text('エラーが発生しました: $error')),
       ),
     );
@@ -25,7 +27,10 @@ class EewDetailsScreen extends HookConsumerWidget {
 
   Widget _buildEewList(List<EewTelegramItem> eews) {
     if (eews.isEmpty) {
-      return const Center(child: Text('データがありません'));
+      return const AppEmptyState(
+        message: 'EEW情報はありません',
+        icon: Icons.warning_amber_outlined,
+      );
     }
 
     return ListView.builder(
@@ -34,6 +39,41 @@ class EewDetailsScreen extends HookConsumerWidget {
         final eew = eews[index];
         return _EewCard(eew: eew);
       },
+    );
+  }
+}
+
+class _EewDetailsScreenSkeleton extends StatelessWidget {
+  const _EewDetailsScreenSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: ListView(
+        children: [
+          for (final i in List.generate(3, (i) => i))
+            Card(
+              margin: const EdgeInsets.all(8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('第${i + 1}報',
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 8),
+                    const Text('発生時刻: 2026/04/21 12:34:56'),
+                    const Text('報告時刻: 2026/04/21 12:34:58'),
+                    const Text('震源地: 東京都'),
+                    const Text('深さ: 10km'),
+                    const Text('マグニチュード: 5.5'),
+                    const Text('最大予測震度: 4'),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

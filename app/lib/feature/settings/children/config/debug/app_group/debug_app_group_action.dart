@@ -17,7 +17,7 @@ class DebugAppGroupAction {
     final controller = TextEditingController(text: current ?? '');
     final result = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => AlertDialog.adaptive(
         title: const Text('apiServerUrl を編集'),
         content: TextField(
           controller: controller,

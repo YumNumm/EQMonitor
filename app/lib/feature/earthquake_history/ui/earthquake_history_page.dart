@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   const EarthquakeHistoryPage({super.key, this.initialParameter});
@@ -40,7 +41,7 @@ class _SliverListBody extends HookConsumerWidget {
     );
 
     return dataSourceAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+      loading: () => const _EarthquakeHistorySkeleton(),
       error: (error, _) => ErrorCard(
         error: error,
         onReload: () async => ref.refresh(
@@ -127,12 +128,9 @@ class _PagingBody extends StatelessWidget {
                 ),
               ],
             ),
-            initialLoadingWidget: const Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-            appendLoadingWidget: const Padding(
-              padding: EdgeInsets.all(16),
-              child: Center(child: CircularProgressIndicator.adaptive()),
+            initialLoadingWidget: const _EarthquakeHistoryItemsSkeleton(),
+            appendLoadingWidget: const _EarthquakeHistoryItemsSkeleton(
+              itemCount: 2,
             ),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
@@ -148,6 +146,51 @@ class _PagingBody extends StatelessWidget {
                   : const SizedBox.shrink(),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EarthquakeHistorySkeleton extends StatelessWidget {
+  const _EarthquakeHistorySkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: ListView(
+        children: [
+          for (final i in List.generate(5, (i) => i))
+            ListTile(
+              leading: const CircleAvatar(radius: 16),
+              title: Text('震源地 $i'),
+              subtitle: const Text('2026/04/21 12:34 / 最大震度4 / M5.5'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EarthquakeHistoryItemsSkeleton extends StatelessWidget {
+  const _EarthquakeHistoryItemsSkeleton({this.itemCount = 5});
+
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final i in List.generate(itemCount, (i) => i))
+            ListTile(
+              leading: const CircleAvatar(radius: 16),
+              title: Text('震源地 $i'),
+              subtitle: const Text('2026/04/21 12:34 / 最大震度4 / M5.5'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+            ),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/app_group_values_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_action.dart';
@@ -63,10 +64,9 @@ class _Body extends ConsumerWidget {
           },
           onTap: () => action.editApiServerUrl(ref, context),
         ),
-        SwitchListTile(
-          secondary: const Icon(Icons.bug_report),
-          title: const Text('debugMode'),
-          subtitle: Text(values.debugMode?.toString() ?? '(未設定)'),
+        AppSwitchListTile(
+          title: 'debugMode',
+          subtitle: values.debugMode?.toString() ?? '(未設定)',
           value: values.debugMode ?? false,
           onChanged: (v) => action.setDebugMode(ref, value: v),
         ),
