@@ -57,8 +57,10 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
               FillStyleLayer(
                 id: layerId,
                 sourceId: 'eqmonitor_map',
+                sourceLayerId: 'areaForecastLocalEew',
                 paint: {
                   'fill-color': color.toHexString(),
+                  'fill-opacity': 0.0,
                 },
               ),
             );
