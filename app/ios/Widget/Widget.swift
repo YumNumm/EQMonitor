@@ -119,6 +119,7 @@ struct EarthquakeWidget: Widget {
         .configurationDisplayName("地震履歴")
         .description("最近の地震情報を表示します")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .contentMarginsDisabled()
     }
 }
 

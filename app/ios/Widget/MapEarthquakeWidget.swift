@@ -23,6 +23,7 @@ struct MapEarthquakeWidget: Widget {
         .configurationDisplayName("地震情報マップ")
         .description("最新の地震を地図で表示します")
         .supportedFamilies([.systemSmall, .systemMedium])
+        .contentMarginsDisabled()
     }
 }
 
