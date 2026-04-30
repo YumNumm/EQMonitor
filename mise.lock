@@ -131,7 +131,7 @@ backend = "asdf:flutter"
 
 [[tools.gcloud]]
 version = "565.0.0"
-backend = "vfox:gcloud"
+backend = "asdf:gcloud"
 
 [tools.gcloud."platforms.linux-arm64"]
 url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-565.0.0-linux-arm.tar.gz"
