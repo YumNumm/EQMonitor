@@ -330,16 +330,33 @@ jobs:
             --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
 
       - name: Upload Beta App Store text (TestFlight)
+        # Apple がビルドを処理するまで数分かかるため、30秒おきに最大10回（約5分）リトライする
+        # --use-old-altool は Xcode 26 の altool 互換性問題のワークアラウンド
         run: |
-          xcrun altool \
-            --beta-app-store-text build/beta-app-store-text \
-            --upload \
-            --apple-id "$APPLE_ID" \
-            --bundle-short-version-string "$VERSION" \
-            --bundle-version "${{ github.run_number }}" \
-            --platform ios \
-            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
-            --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
+          MAX_ATTEMPTS=10
+          INTERVAL=30
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
+            echo "Attempt ${attempt}/${MAX_ATTEMPTS}..."
+            if xcrun altool \
+              --beta-app-store-text build/beta-app-store-text \
+              --upload \
+              --apple-id "$APPLE_ID" \
+              --bundle-short-version-string "$VERSION" \
+              --bundle-version "${{ github.run_number }}" \
+              --platform ios \
+              --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
+              --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+              --use-old-altool; then
+              echo "What's New upload succeeded."
+              break
+            fi
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              echo "Failed. Waiting ${INTERVAL}s before retry..."
+              sleep "$INTERVAL"
+            else
+              echo "::warning::What's New upload failed after ${MAX_ATTEMPTS} attempts. Skipping."
+            fi
+          done
 
   build-android:
     name: Build Android
