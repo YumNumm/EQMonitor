@@ -16,12 +16,19 @@ class ShakeDetectionCard extends ConsumerWidget {
     final regionsAsync = ref.watch(
       shakeDetectionRegionsProvider(event),
     );
-    final regions = regionsAsync.asData?.value ?? {};
 
     final designSystem = Theme.of(context).designSystemThemeExtension;
     final color = designSystem.color;
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
+
+    final regionBody = switch (regionsAsync) {
+      AsyncLoading() => const LinearProgressIndicator(minHeight: 2),
+      AsyncError() => const SizedBox.shrink(),
+      AsyncData(:final value) when value.isNotEmpty =>
+        _ShakeDetectionRegionBody(regions: value),
+      _ => const SizedBox.shrink(),
+    };
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: spacing.lg),
@@ -38,8 +45,7 @@ class ShakeDetectionCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _ShakeDetectionCardHeader(event: event),
-            if (regions.isNotEmpty)
-              _ShakeDetectionRegionBody(regions: regions),
+            regionBody,
           ],
         ),
       ),
