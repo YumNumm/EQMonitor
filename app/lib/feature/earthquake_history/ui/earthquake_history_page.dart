@@ -128,9 +128,12 @@ class _PagingBody extends StatelessWidget {
                 ),
               ],
             ),
-            initialLoadingWidget: const _EarthquakeHistoryItemsSkeleton(),
-            appendLoadingWidget: const _EarthquakeHistoryItemsSkeleton(
+            initialLoadingWidget: const _EarthquakeHistorySkeleton(
+              scrollable: false,
+            ),
+            appendLoadingWidget: const _EarthquakeHistorySkeleton(
               itemCount: 2,
+              scrollable: false,
             ),
             errorBuilder: (context, error, stackTrace) => ErrorCard(
               error: error,
@@ -153,46 +156,27 @@ class _PagingBody extends StatelessWidget {
 }
 
 class _EarthquakeHistorySkeleton extends StatelessWidget {
-  const _EarthquakeHistorySkeleton();
-
-  @override
-  Widget build(BuildContext context) {
-    return Skeletonizer(
-      child: ListView(
-        children: [
-          for (final i in List.generate(5, (i) => i))
-            ListTile(
-              leading: const CircleAvatar(radius: 16),
-              title: Text('震源地 $i'),
-              subtitle: const Text('2026/04/21 12:34 / 最大震度4 / M5.5'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EarthquakeHistoryItemsSkeleton extends StatelessWidget {
-  const _EarthquakeHistoryItemsSkeleton({this.itemCount = 5});
+  const _EarthquakeHistorySkeleton({this.itemCount = 5, this.scrollable = true});
 
   final int itemCount;
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) {
+    final tiles = [
+      for (final i in List.generate(itemCount, (i) => i))
+        ListTile(
+          leading: const CircleAvatar(radius: 16),
+          title: Text('震源地 $i'),
+          subtitle: const Text('2026/04/21 12:34 / 最大震度4 / M5.5'),
+          trailing: const Icon(Icons.chevron_right_rounded),
+        ),
+    ];
+
     return Skeletonizer(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final i in List.generate(itemCount, (i) => i))
-            ListTile(
-              leading: const CircleAvatar(radius: 16),
-              title: Text('震源地 $i'),
-              subtitle: const Text('2026/04/21 12:34 / 最大震度4 / M5.5'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-            ),
-        ],
-      ),
+      child: scrollable
+          ? ListView(children: tiles)
+          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
     );
   }
 }
