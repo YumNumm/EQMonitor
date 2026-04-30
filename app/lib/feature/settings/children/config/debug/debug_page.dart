@@ -130,6 +130,16 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const DebugEewCardRoute().push(context),
           ),
           ListTile(
+            title: const Text('揺れ検知 Card'),
+            subtitle: Text(
+              'ホームと同じ揺れ検知カードの見た目をパラメータ検証',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.sensors_rounded),
+            onTap: () async =>
+                const DebugShakeDetectionCardRoute().push(context),
+          ),
+          ListTile(
             title: const Text('JmaMap'),
             leading: const Icon(Icons.map),
             onTap: () async => const DebugJmaMapRoute().push(context),
