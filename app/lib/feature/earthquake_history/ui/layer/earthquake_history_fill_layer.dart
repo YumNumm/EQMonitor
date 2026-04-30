@@ -105,7 +105,7 @@ List<JmaIntensity> _sortedJmaLevels(EarthquakeIntensity? intensity) {
   }
   for (final e
       in intensity?.intensityTree.entries ??
-          const <MapEntry<JmaIntensity, List<RegionIntensityNode>>>[]) {
+          const <MapEntry<JmaIntensity, List<PrefectureIntensityNode>>>[]) {
     for (final region in e.value) {
       for (final city in region.cities) {
         if (city.maxIntensity != null) {
@@ -156,7 +156,7 @@ List<JmaLpgmIntensity> _sortedLpgmLevels(EarthquakeIntensity? intensity) {
   }
   for (final e
       in intensity?.lpgmIntensityTree.entries ??
-          const <MapEntry<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>>[]) {
+          const <MapEntry<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>>[]) {
     for (final region in e.value) {
       for (final city in region.cities) {
         if (city.maxLpgmIntensity != null) {

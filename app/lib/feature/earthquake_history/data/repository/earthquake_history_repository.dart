@@ -133,7 +133,7 @@ class EarthquakeHistoryRepository {
 
   /// [cityAreaCode] … areaInformationCity のコード、[regionAreaCode] … areaForecastLocalE のコード。
   CurrentLocationIntensityDisplay? resolveCurrentLocationIntensity({
-    required Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
+    required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     required String? cityAreaCode,
     required String? regionAreaCode,
   }) {
@@ -175,7 +175,7 @@ class EarthquakeHistoryRepository {
   }
 
   CityIntensityNode? _findCityNodeByCode(
-    Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
+    Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     String areaCode,
   ) {
     for (final regions in intensityTree.values) {
@@ -191,7 +191,7 @@ class EarthquakeHistoryRepository {
   }
 
   JmaIntensity? _prefectureOnlyIntensity(
-    Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
+    Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     String areaCode,
   ) {
     for (final entry in intensityTree.entries) {

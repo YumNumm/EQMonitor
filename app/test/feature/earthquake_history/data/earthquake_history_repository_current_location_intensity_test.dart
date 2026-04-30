@@ -121,10 +121,8 @@ void main() {
           ),
         ],
       );
-      final tree = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final tree = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
         intensityTree: tree,
@@ -165,10 +163,8 @@ void main() {
           ),
         ],
       );
-      final tree = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final tree = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
         intensityTree: tree,
@@ -204,10 +200,8 @@ void main() {
           ),
         ],
       );
-      final tree = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final tree = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
         intensityTree: tree,

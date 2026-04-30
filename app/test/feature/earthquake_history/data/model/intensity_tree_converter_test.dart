@@ -108,10 +108,8 @@ void main() {
       );
       final parameter = _buildParameter(regions: []);
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result, isEmpty);
     });
@@ -145,10 +143,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 1);
@@ -200,10 +196,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       // 震度5強と震度4の2グループが存在
       expect(result.keys.toList(), [JmaIntensity.fiveUpper, JmaIntensity.four]);
@@ -268,10 +262,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 2);
@@ -328,10 +320,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       final keys = result.keys.toList();
       expect(keys, [
@@ -373,10 +363,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result[JmaIntensity.four]![0].cities.length, 1);
       expect(result[JmaIntensity.four]![0].cities[0].city.name, '宮城県北部');
@@ -420,10 +408,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]![0].cities.length, 1);
@@ -459,10 +445,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result[JmaIntensity.three]![0].cities[0].stations, isEmpty);
     });
@@ -519,12 +503,12 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-        cities: cities,
-        stations: stations,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(
+            intensity: intensity,
+            cities: cities,
+            stations: stations,
+          );
 
       final cityNode = result[JmaIntensity.three]![0].cities[0];
       expect(cityNode.city.name, '東京都23区');
@@ -573,10 +557,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.three]);
       expect(result[JmaIntensity.three]![0].cities[0].city.name, '東京都23区');
@@ -606,10 +588,8 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]![0].region.region.name, '宮城県');
@@ -624,10 +604,8 @@ void main() {
       );
       final parameter = _buildParameter(regions: []);
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       expect(result, isEmpty);
     });
@@ -642,10 +620,8 @@ void main() {
       );
       final parameter = _buildParameter(regions: []);
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToLpgmIntensityTree(intensity: intensity);
 
       expect(result, isEmpty);
     });
@@ -689,10 +665,8 @@ void main() {
         ],
       );
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToLpgmIntensityTree(intensity: intensity);
 
       expect(
         result.keys.toList(),
@@ -748,10 +722,8 @@ void main() {
         ],
       );
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToLpgmIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaLpgmIntensity.two]);
       expect(result[JmaLpgmIntensity.two]![0].cities.length, 1);
@@ -816,10 +788,8 @@ void main() {
         ],
       );
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToLpgmIntensityTree(intensity: intensity);
 
       final keys = result.keys.toList();
       expect(keys, [

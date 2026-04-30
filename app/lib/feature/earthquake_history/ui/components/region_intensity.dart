@@ -100,7 +100,7 @@ sealed class _RegionIntensityTreeContent {
 
 final class _TreeRegion extends _RegionIntensityTreeContent {
   const _TreeRegion(this.node);
-  final RegionIntensityNode node;
+  final PrefectureIntensityNode node;
 }
 
 final class _TreeCity extends _RegionIntensityTreeContent {
@@ -114,7 +114,7 @@ final class _TreeStation extends _RegionIntensityTreeContent {
 }
 
 List<TreeSliverNode<_RegionIntensityTreeContent>> _buildRegionDetailTree(
-  List<RegionIntensityNode> regions,
+  List<PrefectureIntensityNode> regions,
 ) {
   return [
     for (final region in regions)
@@ -148,7 +148,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
     required BuildContext context,
     required WidgetRef ref,
     required JmaIntensity intensity,
-    required List<RegionIntensityNode> regions,
+    required List<PrefectureIntensityNode> regions,
     String? eventId,
   }) => Navigator.of(context).push(
     SheetRoute(
@@ -164,7 +164,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
   final WidgetRef ref;
   final String? eventId;
   final JmaIntensity intensity;
-  final List<RegionIntensityNode> regions;
+  final List<PrefectureIntensityNode> regions;
 
   static const Curve _toggleCurve = TreeSliver.defaultAnimationCurve;
   static const Duration _toggleDuration = TreeSliver.defaultAnimationDuration;
@@ -255,7 +255,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
     TreeSliverNode<Object?> node,
     Duration duration,
     Curve curve,
-    RegionIntensityNode region,
+    PrefectureIntensityNode region,
   ) {
     final regionName = region.region.region.name;
     final regionMaxIntensity = region.region.maxIntensity;

@@ -13,22 +13,22 @@ part of 'lpgm_intensity_tree.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$RegionLpgmIntensityNode {
+mixin _$PrefectureLpgmIntensityNode {
 
 @EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem get region; JmaLpgmIntensity? get maxLpgmIntensity; List<CityLpgmIntensityNode> get cities;
-/// Create a copy of RegionLpgmIntensityNode
+/// Create a copy of PrefectureLpgmIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$RegionLpgmIntensityNodeCopyWith<RegionLpgmIntensityNode> get copyWith => _$RegionLpgmIntensityNodeCopyWithImpl<RegionLpgmIntensityNode>(this as RegionLpgmIntensityNode, _$identity);
+$PrefectureLpgmIntensityNodeCopyWith<PrefectureLpgmIntensityNode> get copyWith => _$PrefectureLpgmIntensityNodeCopyWithImpl<PrefectureLpgmIntensityNode>(this as PrefectureLpgmIntensityNode, _$identity);
 
-  /// Serializes this RegionLpgmIntensityNode to a JSON map.
+  /// Serializes this PrefectureLpgmIntensityNode to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegionLpgmIntensityNode&&(identical(other.region, region) || other.region == region)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other.cities, cities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrefectureLpgmIntensityNode&&(identical(other.region, region) || other.region == region)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other.cities, cities));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,15 +37,15 @@ int get hashCode => Object.hash(runtimeType,region,maxLpgmIntensity,const DeepCo
 
 @override
 String toString() {
-  return 'RegionLpgmIntensityNode(region: $region, maxLpgmIntensity: $maxLpgmIntensity, cities: $cities)';
+  return 'PrefectureLpgmIntensityNode(region: $region, maxLpgmIntensity: $maxLpgmIntensity, cities: $cities)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $RegionLpgmIntensityNodeCopyWith<$Res>  {
-  factory $RegionLpgmIntensityNodeCopyWith(RegionLpgmIntensityNode value, $Res Function(RegionLpgmIntensityNode) _then) = _$RegionLpgmIntensityNodeCopyWithImpl;
+abstract mixin class $PrefectureLpgmIntensityNodeCopyWith<$Res>  {
+  factory $PrefectureLpgmIntensityNodeCopyWith(PrefectureLpgmIntensityNode value, $Res Function(PrefectureLpgmIntensityNode) _then) = _$PrefectureLpgmIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
 @EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaLpgmIntensity? maxLpgmIntensity, List<CityLpgmIntensityNode> cities
@@ -56,14 +56,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$RegionLpgmIntensityNodeCopyWithImpl<$Res>
-    implements $RegionLpgmIntensityNodeCopyWith<$Res> {
-  _$RegionLpgmIntensityNodeCopyWithImpl(this._self, this._then);
+class _$PrefectureLpgmIntensityNodeCopyWithImpl<$Res>
+    implements $PrefectureLpgmIntensityNodeCopyWith<$Res> {
+  _$PrefectureLpgmIntensityNodeCopyWithImpl(this._self, this._then);
 
-  final RegionLpgmIntensityNode _self;
-  final $Res Function(RegionLpgmIntensityNode) _then;
+  final PrefectureLpgmIntensityNode _self;
+  final $Res Function(PrefectureLpgmIntensityNode) _then;
 
-/// Create a copy of RegionLpgmIntensityNode
+/// Create a copy of PrefectureLpgmIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? region = null,Object? maxLpgmIntensity = freezed,Object? cities = null,}) {
   return _then(_self.copyWith(
@@ -77,8 +77,8 @@ as List<CityLpgmIntensityNode>,
 }
 
 
-/// Adds pattern-matching-related methods to [RegionLpgmIntensityNode].
-extension RegionLpgmIntensityNodePatterns on RegionLpgmIntensityNode {
+/// Adds pattern-matching-related methods to [PrefectureLpgmIntensityNode].
+extension PrefectureLpgmIntensityNodePatterns on PrefectureLpgmIntensityNode {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -91,10 +91,10 @@ extension RegionLpgmIntensityNodePatterns on RegionLpgmIntensityNode {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RegionLpgmIntensityNode value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PrefectureLpgmIntensityNode value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _RegionLpgmIntensityNode() when $default != null:
+case _PrefectureLpgmIntensityNode() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -113,10 +113,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RegionLpgmIntensityNode value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PrefectureLpgmIntensityNode value)  $default,){
 final _that = this;
 switch (_that) {
-case _RegionLpgmIntensityNode():
+case _PrefectureLpgmIntensityNode():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -134,10 +134,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RegionLpgmIntensityNode value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PrefectureLpgmIntensityNode value)?  $default,){
 final _that = this;
 switch (_that) {
-case _RegionLpgmIntensityNode() when $default != null:
+case _PrefectureLpgmIntensityNode() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaLpgmIntensity? maxLpgmIntensity,  List<CityLpgmIntensityNode> cities)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _RegionLpgmIntensityNode() when $default != null:
+case _PrefectureLpgmIntensityNode() when $default != null:
 return $default(_that.region,_that.maxLpgmIntensity,_that.cities);case _:
   return orElse();
 
@@ -178,7 +178,7 @@ return $default(_that.region,_that.maxLpgmIntensity,_that.cities);case _:
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaLpgmIntensity? maxLpgmIntensity,  List<CityLpgmIntensityNode> cities)  $default,) {final _that = this;
 switch (_that) {
-case _RegionLpgmIntensityNode():
+case _PrefectureLpgmIntensityNode():
 return $default(_that.region,_that.maxLpgmIntensity,_that.cities);case _:
   throw StateError('Unexpected subclass');
 
@@ -198,7 +198,7 @@ return $default(_that.region,_that.maxLpgmIntensity,_that.cities);case _:
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaLpgmIntensity? maxLpgmIntensity,  List<CityLpgmIntensityNode> cities)?  $default,) {final _that = this;
 switch (_that) {
-case _RegionLpgmIntensityNode() when $default != null:
+case _PrefectureLpgmIntensityNode() when $default != null:
 return $default(_that.region,_that.maxLpgmIntensity,_that.cities);case _:
   return null;
 
@@ -210,9 +210,9 @@ return $default(_that.region,_that.maxLpgmIntensity,_that.cities);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _RegionLpgmIntensityNode implements RegionLpgmIntensityNode {
-  const _RegionLpgmIntensityNode({@EarthquakeParameterRegionItemConverter() required this.region, required this.maxLpgmIntensity, required final  List<CityLpgmIntensityNode> cities}): _cities = cities;
-  factory _RegionLpgmIntensityNode.fromJson(Map<String, dynamic> json) => _$RegionLpgmIntensityNodeFromJson(json);
+class _PrefectureLpgmIntensityNode implements PrefectureLpgmIntensityNode {
+  const _PrefectureLpgmIntensityNode({@EarthquakeParameterRegionItemConverter() required this.region, required this.maxLpgmIntensity, required final  List<CityLpgmIntensityNode> cities}): _cities = cities;
+  factory _PrefectureLpgmIntensityNode.fromJson(Map<String, dynamic> json) => _$PrefectureLpgmIntensityNodeFromJson(json);
 
 @override@EarthquakeParameterRegionItemConverter() final  EarthquakeParameterRegionItem region;
 @override final  JmaLpgmIntensity? maxLpgmIntensity;
@@ -224,20 +224,20 @@ class _RegionLpgmIntensityNode implements RegionLpgmIntensityNode {
 }
 
 
-/// Create a copy of RegionLpgmIntensityNode
+/// Create a copy of PrefectureLpgmIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$RegionLpgmIntensityNodeCopyWith<_RegionLpgmIntensityNode> get copyWith => __$RegionLpgmIntensityNodeCopyWithImpl<_RegionLpgmIntensityNode>(this, _$identity);
+_$PrefectureLpgmIntensityNodeCopyWith<_PrefectureLpgmIntensityNode> get copyWith => __$PrefectureLpgmIntensityNodeCopyWithImpl<_PrefectureLpgmIntensityNode>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$RegionLpgmIntensityNodeToJson(this, );
+  return _$PrefectureLpgmIntensityNodeToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegionLpgmIntensityNode&&(identical(other.region, region) || other.region == region)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other._cities, _cities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrefectureLpgmIntensityNode&&(identical(other.region, region) || other.region == region)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other._cities, _cities));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -246,15 +246,15 @@ int get hashCode => Object.hash(runtimeType,region,maxLpgmIntensity,const DeepCo
 
 @override
 String toString() {
-  return 'RegionLpgmIntensityNode(region: $region, maxLpgmIntensity: $maxLpgmIntensity, cities: $cities)';
+  return 'PrefectureLpgmIntensityNode(region: $region, maxLpgmIntensity: $maxLpgmIntensity, cities: $cities)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$RegionLpgmIntensityNodeCopyWith<$Res> implements $RegionLpgmIntensityNodeCopyWith<$Res> {
-  factory _$RegionLpgmIntensityNodeCopyWith(_RegionLpgmIntensityNode value, $Res Function(_RegionLpgmIntensityNode) _then) = __$RegionLpgmIntensityNodeCopyWithImpl;
+abstract mixin class _$PrefectureLpgmIntensityNodeCopyWith<$Res> implements $PrefectureLpgmIntensityNodeCopyWith<$Res> {
+  factory _$PrefectureLpgmIntensityNodeCopyWith(_PrefectureLpgmIntensityNode value, $Res Function(_PrefectureLpgmIntensityNode) _then) = __$PrefectureLpgmIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
 @EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaLpgmIntensity? maxLpgmIntensity, List<CityLpgmIntensityNode> cities
@@ -265,17 +265,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$RegionLpgmIntensityNodeCopyWithImpl<$Res>
-    implements _$RegionLpgmIntensityNodeCopyWith<$Res> {
-  __$RegionLpgmIntensityNodeCopyWithImpl(this._self, this._then);
+class __$PrefectureLpgmIntensityNodeCopyWithImpl<$Res>
+    implements _$PrefectureLpgmIntensityNodeCopyWith<$Res> {
+  __$PrefectureLpgmIntensityNodeCopyWithImpl(this._self, this._then);
 
-  final _RegionLpgmIntensityNode _self;
-  final $Res Function(_RegionLpgmIntensityNode) _then;
+  final _PrefectureLpgmIntensityNode _self;
+  final $Res Function(_PrefectureLpgmIntensityNode) _then;
 
-/// Create a copy of RegionLpgmIntensityNode
+/// Create a copy of PrefectureLpgmIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? region = null,Object? maxLpgmIntensity = freezed,Object? cities = null,}) {
-  return _then(_RegionLpgmIntensityNode(
+  return _then(_PrefectureLpgmIntensityNode(
 region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterRegionItem,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,cities: null == cities ? _self._cities : cities // ignore: cast_nullable_to_non_nullable

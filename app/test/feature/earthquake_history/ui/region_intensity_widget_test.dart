@@ -74,7 +74,7 @@ void main() {
         maxLpgmIntensity: null,
         intensityTree: {
           JmaIntensity.four: [
-            RegionIntensityNode(
+            PrefectureIntensityNode(
               region: IntensityRegion(
                 region: miyagiRegion,
                 maxIntensity: JmaIntensity.four,
@@ -118,7 +118,7 @@ void main() {
         maxLpgmIntensity: null,
         intensityTree: {
           JmaIntensity.four: [
-            RegionIntensityNode(
+            PrefectureIntensityNode(
               region: IntensityRegion(
                 region: miyagiRegion,
                 maxIntensity: JmaIntensity.four,

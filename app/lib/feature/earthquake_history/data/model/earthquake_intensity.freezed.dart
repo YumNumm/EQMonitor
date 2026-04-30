@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeIntensity {
 
- JmaIntensity get maxIntensity; JmaLpgmIntensity? get maxLpgmIntensity; Map<JmaIntensity, List<RegionIntensityNode>> get intensityTree; List<IntensityRegion> get regions; Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> get lpgmIntensityTree; List<LpgmIntensityRegion> get lpgmRegions;
+ JmaIntensity get maxIntensity; JmaLpgmIntensity? get maxLpgmIntensity; Map<JmaIntensity, List<PrefectureIntensityNode>> get intensityTree; List<IntensityRegion> get regions; Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> get lpgmIntensityTree; List<LpgmIntensityRegion> get lpgmRegions;
 /// Create a copy of EarthquakeIntensity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $EarthquakeIntensityCopyWith<$Res>  {
   factory $EarthquakeIntensityCopyWith(EarthquakeIntensity value, $Res Function(EarthquakeIntensity) _then) = _$EarthquakeIntensityCopyWithImpl;
 @useResult
 $Res call({
- JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<RegionIntensityNode>> intensityTree, List<IntensityRegion> regions, Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> lpgmIntensityTree, List<LpgmIntensityRegion> lpgmRegions
+ JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, List<IntensityRegion> regions, Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree, List<LpgmIntensityRegion> lpgmRegions
 });
 
 
@@ -70,9 +70,9 @@ class _$EarthquakeIntensityCopyWithImpl<$Res>
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,intensityTree: null == intensityTree ? _self.intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
-as Map<JmaIntensity, List<RegionIntensityNode>>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
+as Map<JmaIntensity, List<PrefectureIntensityNode>>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<IntensityRegion>,lpgmIntensityTree: null == lpgmIntensityTree ? _self.lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
-as Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>,lpgmRegions: null == lpgmRegions ? _self.lpgmRegions : lpgmRegions // ignore: cast_nullable_to_non_nullable
+as Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>,lpgmRegions: null == lpgmRegions ? _self.lpgmRegions : lpgmRegions // ignore: cast_nullable_to_non_nullable
 as List<LpgmIntensityRegion>,
   ));
 }
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,  List<IntensityRegion> regions,  Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> lpgmIntensityTree,  List<LpgmIntensityRegion> lpgmRegions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  List<IntensityRegion> regions,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree,  List<LpgmIntensityRegion> lpgmRegions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeIntensity() when $default != null:
 return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_that.regions,_that.lpgmIntensityTree,_that.lpgmRegions);case _:
@@ -179,7 +179,7 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,  List<IntensityRegion> regions,  Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> lpgmIntensityTree,  List<LpgmIntensityRegion> lpgmRegions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  List<IntensityRegion> regions,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree,  List<LpgmIntensityRegion> lpgmRegions)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeIntensity():
 return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_that.regions,_that.lpgmIntensityTree,_that.lpgmRegions);case _:
@@ -199,7 +199,7 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,  List<IntensityRegion> regions,  Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> lpgmIntensityTree,  List<LpgmIntensityRegion> lpgmRegions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  List<IntensityRegion> regions,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree,  List<LpgmIntensityRegion> lpgmRegions)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeIntensity() when $default != null:
 return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_that.regions,_that.lpgmIntensityTree,_that.lpgmRegions);case _:
@@ -214,13 +214,13 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_t
 @JsonSerializable()
 
 class _EarthquakeIntensity implements EarthquakeIntensity {
-  const _EarthquakeIntensity({required this.maxIntensity, required this.maxLpgmIntensity, required final  Map<JmaIntensity, List<RegionIntensityNode>> intensityTree, required final  List<IntensityRegion> regions, required final  Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> lpgmIntensityTree, required final  List<LpgmIntensityRegion> lpgmRegions}): _intensityTree = intensityTree,_regions = regions,_lpgmIntensityTree = lpgmIntensityTree,_lpgmRegions = lpgmRegions;
+  const _EarthquakeIntensity({required this.maxIntensity, required this.maxLpgmIntensity, required final  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required final  List<IntensityRegion> regions, required final  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree, required final  List<LpgmIntensityRegion> lpgmRegions}): _intensityTree = intensityTree,_regions = regions,_lpgmIntensityTree = lpgmIntensityTree,_lpgmRegions = lpgmRegions;
   factory _EarthquakeIntensity.fromJson(Map<String, dynamic> json) => _$EarthquakeIntensityFromJson(json);
 
 @override final  JmaIntensity maxIntensity;
 @override final  JmaLpgmIntensity? maxLpgmIntensity;
- final  Map<JmaIntensity, List<RegionIntensityNode>> _intensityTree;
-@override Map<JmaIntensity, List<RegionIntensityNode>> get intensityTree {
+ final  Map<JmaIntensity, List<PrefectureIntensityNode>> _intensityTree;
+@override Map<JmaIntensity, List<PrefectureIntensityNode>> get intensityTree {
   if (_intensityTree is EqualUnmodifiableMapView) return _intensityTree;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_intensityTree);
@@ -233,8 +233,8 @@ class _EarthquakeIntensity implements EarthquakeIntensity {
   return EqualUnmodifiableListView(_regions);
 }
 
- final  Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> _lpgmIntensityTree;
-@override Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> get lpgmIntensityTree {
+ final  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> _lpgmIntensityTree;
+@override Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> get lpgmIntensityTree {
   if (_lpgmIntensityTree is EqualUnmodifiableMapView) return _lpgmIntensityTree;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_lpgmIntensityTree);
@@ -281,7 +281,7 @@ abstract mixin class _$EarthquakeIntensityCopyWith<$Res> implements $EarthquakeI
   factory _$EarthquakeIntensityCopyWith(_EarthquakeIntensity value, $Res Function(_EarthquakeIntensity) _then) = __$EarthquakeIntensityCopyWithImpl;
 @override @useResult
 $Res call({
- JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<RegionIntensityNode>> intensityTree, List<IntensityRegion> regions, Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>> lpgmIntensityTree, List<LpgmIntensityRegion> lpgmRegions
+ JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, List<IntensityRegion> regions, Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree, List<LpgmIntensityRegion> lpgmRegions
 });
 
 
@@ -303,9 +303,9 @@ class __$EarthquakeIntensityCopyWithImpl<$Res>
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,intensityTree: null == intensityTree ? _self._intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
-as Map<JmaIntensity, List<RegionIntensityNode>>,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
+as Map<JmaIntensity, List<PrefectureIntensityNode>>,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
 as List<IntensityRegion>,lpgmIntensityTree: null == lpgmIntensityTree ? _self._lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
-as Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>,lpgmRegions: null == lpgmRegions ? _self._lpgmRegions : lpgmRegions // ignore: cast_nullable_to_non_nullable
+as Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>,lpgmRegions: null == lpgmRegions ? _self._lpgmRegions : lpgmRegions // ignore: cast_nullable_to_non_nullable
 as List<LpgmIntensityRegion>,
   ));
 }
