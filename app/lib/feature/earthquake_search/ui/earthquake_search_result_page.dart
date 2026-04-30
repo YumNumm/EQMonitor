@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class EarthquakeSearchResultPage extends HookConsumerWidget {
   const EarthquakeSearchResultPage({
@@ -162,13 +163,10 @@ class _SliverListBody extends HookConsumerWidget {
     Widget listView({
       required List<EarthquakeSearchResultItem> items,
       required bool hasNext,
-      Widget loading = const Center(
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      ),
+      Widget? loading,
     }) {
+      final loadingWidget =
+          loading ?? const _EarthquakeSearchSkeleton(itemCount: 2);
       if (items.isEmpty) {
         return const EarthquakeHistoryNotFound();
       }
@@ -182,7 +180,7 @@ class _SliverListBody extends HookConsumerWidget {
         itemBuilder: (context, index) {
           if (index == items.length) {
             if (state.isLoading) {
-              return loading;
+              return loadingWidget;
             }
             if (state.hasError) {
               final error = state.error!;
@@ -192,7 +190,7 @@ class _SliverListBody extends HookConsumerWidget {
               );
             }
             if (hasNext) {
-              return loading;
+              return loadingWidget;
             } else {
               return const EarthquakeHistoryAllFetched();
             }
@@ -229,8 +227,32 @@ class _SliverListBody extends HookConsumerWidget {
           items: value.items,
           hasNext: value.hasNext,
         ),
-        _ => const Center(child: CircularProgressIndicator.adaptive()),
+        _ => const _EarthquakeSearchSkeleton(),
       },
+    );
+  }
+}
+
+class _EarthquakeSearchSkeleton extends StatelessWidget {
+  const _EarthquakeSearchSkeleton({this.itemCount = 5});
+
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final i in List.generate(itemCount, (i) => i))
+            ListTile(
+              leading: const CircleAvatar(radius: 20),
+              title: Text('震源地 $i'),
+              subtitle: const Text('2026/04/21 12:34頃発生\n最大震度 4'),
+              trailing: const Text('M5.5'),
+            ),
+        ],
+      ),
     );
   }
 }
