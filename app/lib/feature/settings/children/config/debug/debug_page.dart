@@ -102,6 +102,13 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async =>
                 const HttpApiEndpointSelectorRoute().push<void>(context),
           ),
+          if (Platform.isIOS)
+            ListTile(
+              title: const Text('App Groups UserDefaults'),
+              subtitle: const Text('Widget が参照する UserDefaults を直接操作'),
+              leading: const Icon(Icons.widgets_outlined),
+              onTap: () => const DebugAppGroupRoute().push<void>(context),
+            ),
           ListTile(
             title: const Text('WebSocket'),
             leading: const Icon(Icons.cable),

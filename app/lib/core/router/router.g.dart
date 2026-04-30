@@ -473,6 +473,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugNavigationRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'app-group',
+          factory: $DebugAppGroupRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'nied',
           factory: $NiedRoute._fromState,
           routes: [
@@ -1079,6 +1083,27 @@ mixin $DebugNavigationRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/navigation');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugAppGroupRoute on GoRouteData {
+  static DebugAppGroupRoute _fromState(GoRouterState state) =>
+      const DebugAppGroupRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/app-group');
 
   @override
   void go(BuildContext context) => context.go(location);

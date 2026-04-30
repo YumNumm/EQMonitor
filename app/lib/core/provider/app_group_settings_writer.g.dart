@@ -10,20 +10,20 @@ part of 'app_group_settings_writer.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// アプリ起動時に apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
-/// Widget Extension がこの値を読んで正しいエンドポイントへ接続する。
+/// apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
+/// telegramUrlProvider を watch するため、デバッグ画面での URL 変更も Widget に即時反映される。
 
 @ProviderFor(appGroupSettingsWriter)
 final appGroupSettingsWriterProvider = AppGroupSettingsWriterProvider._();
 
-/// アプリ起動時に apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
-/// Widget Extension がこの値を読んで正しいエンドポイントへ接続する。
+/// apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
+/// telegramUrlProvider を watch するため、デバッグ画面での URL 変更も Widget に即時反映される。
 
 final class AppGroupSettingsWriterProvider
     extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
-  /// アプリ起動時に apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
-  /// Widget Extension がこの値を読んで正しいエンドポイントへ接続する。
+  /// apiServerUrl と debugMode を App Groups UserDefaults に書き込む。
+  /// telegramUrlProvider を watch するため、デバッグ画面での URL 変更も Widget に即時反映される。
   AppGroupSettingsWriterProvider._()
     : super(
         from: null,
@@ -50,4 +50,4 @@ final class AppGroupSettingsWriterProvider
 }
 
 String _$appGroupSettingsWriterHash() =>
-    r'26009e3524c6a7a70102c4a0d3b67bf4f300153a';
+    r'd08613148683519b69ceb4a4569504ccb94c10b8';

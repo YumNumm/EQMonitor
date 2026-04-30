@@ -28,6 +28,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/license_pag
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_device_admin_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
@@ -290,6 +291,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
+        TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -551,6 +553,15 @@ class DebugNavigationRoute extends GoRouteData with $DebugNavigationRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const NavigationDebugPage();
+  }
+}
+
+class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
+  const DebugAppGroupRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugAppGroupPage();
   }
 }
 

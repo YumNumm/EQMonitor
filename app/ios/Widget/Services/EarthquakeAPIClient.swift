@@ -239,7 +239,7 @@ class ConfigReader {
             return url
         }
         // フォールバック
-        return URL(string: "https://api.eqmonitor.app")!
+        return URL(string: "https://v2.api.eqmonitor.app")!
     }
 }
 
