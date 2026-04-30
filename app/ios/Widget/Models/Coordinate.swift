@@ -39,7 +39,7 @@ enum Coordinate: Codable, Equatable {
             let longitude = try container.decode(Double.self, forKey: .longitude)
             self = .latLng(latitude: latitude, longitude: longitude)
         case .unknown:
-            let condition = try container.decode(String.self, forKey: .condition)
+            let condition = try container.decodeIfPresent(String.self, forKey: .condition) ?? "不明"
             self = .unknown(condition: condition)
         }
     }

@@ -17,13 +17,8 @@ struct MapEarthquakeWidget: Widget {
             intent: EarthquakeWidgetIntent.self,
             provider: EarthquakeTimelineProvider()
         ) { entry in
-            if #available(iOS 17.0, *) {
-                MapEarthquakeWidgetView(entry: entry)
-                    .containerBackground(.background, for: .widget)
-            } else {
-                MapEarthquakeWidgetView(entry: entry)
-                    .containerBackground(.background, for: .widget)
-            }
+            MapEarthquakeWidgetView(entry: entry)
+                .containerBackground(Color.eqBg, for: .widget)
         }
         .configurationDisplayName("地震情報マップ")
         .description("最新の地震を地図で表示します")
