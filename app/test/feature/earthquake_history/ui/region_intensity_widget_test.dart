@@ -38,7 +38,7 @@ void main() {
         child: MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
-              child: RegionIntensityWidget(item: item),
+              child: EarthquakeIntensityWidget(item: item),
             ),
           ),
         ),
