@@ -35,7 +35,7 @@ class EewCard extends ConsumerWidget {
     final regionItem = position != null
         ? ref
               .watch(
-                jmaMapAreaForecastLocalEewInsideProvider(
+                jmaMapAreaForecastLocalEInsideProvider(
                   lat_lng.LatLng(position.latitude, position.longitude),
                 ),
               )

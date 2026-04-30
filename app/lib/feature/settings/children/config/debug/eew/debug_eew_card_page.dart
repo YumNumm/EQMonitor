@@ -66,7 +66,7 @@ class DebugEewCardPage extends HookConsumerWidget {
     final detectedRegionItem = position != null
         ? ref
               .watch(
-                jmaMapAreaForecastLocalEewInsideProvider(
+                jmaMapAreaForecastLocalEInsideProvider(
                   lat_lng.LatLng(position.latitude, position.longitude),
                 ),
               )
