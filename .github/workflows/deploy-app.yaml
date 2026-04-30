@@ -443,6 +443,9 @@ jobs:
       id-token: write
     environment:
       name: EQMonitor-Android
+    concurrency:
+      group: deploy-android-firebase-app-distribution
+      cancel-in-progress: false
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -529,6 +532,7 @@ jobs:
     timeout-minutes: 10
     concurrency:
       group: deploy-android-google-play
+      cancel-in-progress: false
     permissions:
       contents: read
       id-token: write
@@ -626,5 +630,3 @@ jobs:
             --release-notes="$(cat release-notes.json)" \
             --release-name "$RELEASE_NAME" \
             --package-name "net.yumnumm.eqmonitor"
-
-
