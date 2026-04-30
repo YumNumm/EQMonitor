@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class AppEmptyState extends StatelessWidget {
   const AppEmptyState({
-    super.key,
     required this.message,
+    super.key,
     this.icon = Icons.inbox_outlined,
     this.description,
     this.action,
