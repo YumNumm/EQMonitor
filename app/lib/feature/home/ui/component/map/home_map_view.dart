@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -80,6 +82,8 @@ class _MapContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsync = ref.watch(homeConfigurationProvider);
     final mapSettings = homeAsync.value?.map ?? const HomeMapSettings();
+    final showLocation =
+        homeAsync.value?.common.showLocation ?? false;
 
     final mapOptions = homeMapOptionsFromSettings(
       context: context,
@@ -92,6 +96,7 @@ class _MapContent extends ConsumerWidget {
       mapSettings.lockBearing,
       mapSettings.defaultBounds,
       mapSettings.customBounds,
+      showLocation,
     );
 
     return MapLibreEventProvider(
@@ -104,6 +109,9 @@ class _MapContent extends ConsumerWidget {
               ref
                   .read(homeMapCameraStateProvider.notifier)
                   .setController(controller);
+              if (showLocation) {
+                unawaited(controller.enableLocation());
+              }
             },
             onEvent: (event) =>
                 MapLibreEventProvider.maybeOf(context)?.emit(event),
