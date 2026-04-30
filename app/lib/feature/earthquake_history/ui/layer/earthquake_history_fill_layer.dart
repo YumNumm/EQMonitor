@@ -237,27 +237,12 @@ List<_LayerSpec> _buildJmaLayerSpecs(
       final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
       final fillId = 'eq-history-jma-${j.name}-region-fill';
       final lineId = 'eq-history-jma-${j.name}-region-line';
-      // auto: zoom 8→9 でフェードアウト。region 固定: 常時表示
+      // auto: zoom < 9 で細分化地域表示、zoom >= 9 で非表示
       final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'step',
-              ['zoom'],
-              8,
-              0.6,
-              9,
-              0.0,
-            ]
+          ? <Object>['step', ['zoom'], 0.6, 9, 0.0]
           : 0.6;
       final lineOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              8.0,
-              0.8,
-              9.0,
-              0.0,
-            ]
+          ? <Object>['step', ['zoom'], 0.8, 9, 0.0]
           : 0.8;
       specs.add(
         _LayerSpec(
@@ -299,16 +284,9 @@ List<_LayerSpec> _buildJmaLayerSpecs(
       final filter = _codeInFilter(cityCodes);
       final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
       final fillId = 'eq-history-jma-${j.name}-city-fill';
-      // auto: zoom 8→9 でフェードイン。municipality 固定: 常時表示
+      // auto: zoom >= 9 で市区町村表示、zoom < 9 で非表示
       final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'step',
-              ['zoom'],
-              8,
-              0.0,
-              9,
-              0.6,
-            ]
+          ? <Object>['step', ['zoom'], 0.0, 9, 0.6]
           : 0.6;
       specs.add(
         _LayerSpec(
@@ -357,26 +335,10 @@ List<_LayerSpec> _buildLpgmLayerSpecs(
       final fillId = 'eq-history-lpgm-${j.name}-region-fill';
       final lineId = 'eq-history-lpgm-${j.name}-region-line';
       final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              8.0,
-              0.6,
-              9.0,
-              0.0,
-            ]
+          ? <Object>['step', ['zoom'], 0.6, 9, 0.0]
           : 0.6;
       final lineOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              8.0,
-              0.8,
-              9.0,
-              0.0,
-            ]
+          ? <Object>['step', ['zoom'], 0.8, 9, 0.0]
           : 0.8;
       specs.add(
         _LayerSpec(
@@ -420,14 +382,7 @@ List<_LayerSpec> _buildLpgmLayerSpecs(
           colorModel.fromJmaLpgmIntensity(j).background.toHexStringRGB();
       final fillId = 'eq-history-lpgm-${j.name}-city-fill';
       final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'step',
-              ['zoom'],
-              8,
-              0.0,
-              9,
-              0.6,
-            ]
+          ? <Object>['step', ['zoom'], 0.0, 9, 0.6]
           : 0.6;
       specs.add(
         _LayerSpec(
