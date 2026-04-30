@@ -652,7 +652,8 @@ class _EpicenterSelector extends HookConsumerWidget {
       hintText: '震央地名を選択',
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
-          final epicenter = epicenters.firstWhere((e) => e.code == code);
+          final epicenter = epicenters.firstWhereOrNull((e) => e.code == code);
+          if (epicenter == null) return;
           onChanged(code, epicenter.name);
         } else {
           onChanged(null, null);
