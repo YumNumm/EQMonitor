@@ -20,7 +20,7 @@ EQMonitorの開発に興味を持って頂きありがとうございます!
   - 最大の励みになります
 
 > [!NOTE]
-> このプロジェクトは、尾上 遼太朗(@YumNumm)が趣味で開発を始めたプロジェクトです。
+> このプロジェクトは、尾上 遼太朗([@YumNumm])が趣味で開発を始めたプロジェクトです。
 > 私の実装したい機能を実装し、好きなように運用したいと思っています。開発を始めた当初より想定以上にアプリケーションを利用していただいていますが、基本的にこの考え方は変わっていません。
 > そのため、素敵な実装やアイディアを提案していただいても、それを採用しない可能性があります。
 >
@@ -42,9 +42,11 @@ EQMonitorの開発に興味を持って頂きありがとうございます!
   - To be the biggest motivation
 
 > [!NOTE]
-> This project is a project that I (@YumNumm, Ryotaro Onoue) started for fun.
+> This project is a project that I ([@YumNumm], Ryotaro Onoue) started for fun.
 > I want to implement the features I want to implement and operate it as I want.
 > Since the beginning of the development, the application has been used more than expected. Therefore, even if you propose a great implementation or idea, it may not be adopted.
 >
 > Also, please refrain from creating a large number of Issues and PRs by LLM-based code generation or agents.
 > There is a possibility that the user will be blocked without prior notice.
+
+[@YumNumm]: https://github.com/YumNumm
