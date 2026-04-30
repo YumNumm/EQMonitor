@@ -86,6 +86,7 @@ class _SheetBody extends ConsumerWidget {
       ),
     );
 
+    final padding = MediaQuery.paddingOf(context);
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -93,10 +94,10 @@ class _SheetBody extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(
-                spacing.sm,
-                spacing.sm,
-                spacing.sm,
-                spacing.sm,
+                spacing.sm + padding.left,
+                0,
+                spacing.sm + padding.right,
+                padding.bottom,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
