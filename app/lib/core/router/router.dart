@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
+import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
@@ -18,9 +21,6 @@ import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
-import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
-import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
@@ -103,7 +103,8 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
 }
 
 @TypedGoRoute<BetaTestingWarningRoute>(path: '/beta-warning')
-class BetaTestingWarningRoute extends GoRouteData with $BetaTestingWarningRoute {
+class BetaTestingWarningRoute extends GoRouteData
+    with $BetaTestingWarningRoute {
   const BetaTestingWarningRoute();
 
   @override
@@ -341,7 +342,8 @@ class EewSettingsRoute extends GoRouteData with $EewSettingsRoute {
       const EewSettingsPage();
 }
 
-class EarthquakeSettingsRoute extends GoRouteData with $EarthquakeSettingsRoute {
+class EarthquakeSettingsRoute extends GoRouteData
+    with $EarthquakeSettingsRoute {
   const EarthquakeSettingsRoute();
 
   @override

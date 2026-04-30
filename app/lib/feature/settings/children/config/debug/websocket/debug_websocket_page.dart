@@ -133,7 +133,9 @@ class _WsStatusCard extends HookWidget {
   }
 
   String _elapsedLabel(Duration d) {
-    if (d.inSeconds < 60) return '${d.inSeconds}秒前';
+    if (d.inSeconds < 60) {
+      return '${d.inSeconds}秒前';
+    }
     return '${d.inMinutes}分前';
   }
 }
