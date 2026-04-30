@@ -1,6 +1,8 @@
 English follows Japanese.
 English version is for reference.
 
+![Contribution Banner](./images/Contribution Banner.png)
+
 # EQMonitorへのコントリビューション
 
 ## こんにちは! そして ようこそ👋
