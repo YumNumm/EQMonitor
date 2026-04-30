@@ -294,7 +294,7 @@ List<_LayerSpec> _buildJmaLayerSpecs(
           layer: FillStyleLayer(
             id: fillId,
             sourceId: 'japan',
-            sourceLayerId: 'areaInformationCity',
+            sourceLayerId: 'areaInformationCityQuake',
             filter: filter,
             paint: {'fill-color': color, 'fill-opacity': fillOpacity},
           ),
@@ -390,7 +390,7 @@ List<_LayerSpec> _buildLpgmLayerSpecs(
           layer: FillStyleLayer(
             id: fillId,
             sourceId: 'japan',
-            sourceLayerId: 'areaInformationCity',
+            sourceLayerId: 'areaInformationCityQuake',
             filter: filter,
             paint: {'fill-color': color, 'fill-opacity': fillOpacity},
           ),
