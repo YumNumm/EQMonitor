@@ -68,12 +68,17 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           return null;
         }
 
+        var disposed = false;
+
         unawaited(() async {
           try {
             final geoJson = showingLpgmIntensity
                 ? _buildLpgmGeoJson(intensity, colorModel)
                 : _buildGeoJson(intensity, colorModel);
 
+            if (disposed) {
+              return;
+            }
             await styleController.addSource(
               GeoJsonSource(
                 id: _sourceId,
@@ -81,6 +86,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               ),
             );
 
+            if (disposed) {
+              return;
+            }
             await styleController.addLayer(
               CircleStyleLayer(
                 id: _circleLayerId,
@@ -144,8 +152,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               ),
             );
 
-            await styleController.addImages(cachedBytes);
-
+            if (disposed) {
+              return;
+            }
             if (_showIcon) {
               // auto モードはズームに応じてフェードイン、station モードは minZoom 8 から常時表示
               final iconOpacity = iconMode == EarthquakeHistoryIconMode.auto
@@ -186,6 +195,9 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               );
             }
 
+            if (disposed) {
+              return;
+            }
             if (showLabel) {
               await styleController.addLayer(
                 const SymbolStyleLayer(
@@ -213,19 +225,22 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           }
         }());
 
-        return () async {
-          try {
-            if (showLabel) {
-              await styleController.removeLayer(_labelLayerId);
+        return () {
+          disposed = true;
+          unawaited(() async {
+            try {
+              if (showLabel) {
+                await styleController.removeLayer(_labelLayerId);
+              }
+              if (_showIcon) {
+                await styleController.removeLayer(_iconLayerId);
+              }
+              await styleController.removeLayer(_circleLayerId);
+              await styleController.removeSource(_sourceId);
+            } on Exception catch (e) {
+              talker.log(e);
             }
-            if (_showIcon) {
-              await styleController.removeLayer(_iconLayerId);
-            }
-            await styleController.removeLayer(_circleLayerId);
-            await styleController.removeSource(_sourceId);
-          } on Exception catch (e) {
-            talker.log(e);
-          }
+          }());
         };
       },
       [
@@ -237,8 +252,27 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         showingLpgmIntensity,
         iconMode,
         pixelRatio,
-        cachedBytes,
       ],
+    );
+
+    // cachedBytes を別 effect で監視し、画像が揃ったタイミングで追加する。
+    // メインの effect とは分離することで、アイコンキャッシュの更新が
+    // source/layer の再構築を引き起こす race condition を防ぐ。
+    useEffect(
+      () {
+        if (styleController == null || cachedBytes.isEmpty) {
+          return null;
+        }
+        unawaited(() async {
+          try {
+            await styleController.addImages(cachedBytes);
+          } on Exception catch (e) {
+            talker.log(e);
+          }
+        }());
+        return null;
+      },
+      [styleController, cachedBytes],
     );
 
     return const SizedBox.shrink();
