@@ -1,4 +1,4 @@
-name: PR lint (gitleaks / ghalint / pinact / zizmor)
+name: Check GitHub Actions
 
 on:
   push:
