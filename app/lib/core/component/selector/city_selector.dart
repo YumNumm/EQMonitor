@@ -150,7 +150,9 @@ class _CityDropdown extends StatelessWidget {
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
           final city = cities.firstWhereOrNull((c) => c.code == code);
-          if (city == null) return;
+          if (city == null) {
+            return;
+          }
           onChanged((
             code: code,
             name: city.name,

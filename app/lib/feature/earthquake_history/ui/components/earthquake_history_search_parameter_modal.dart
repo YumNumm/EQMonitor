@@ -653,7 +653,9 @@ class _EpicenterSelector extends HookConsumerWidget {
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
           final epicenter = epicenters.firstWhereOrNull((e) => e.code == code);
-          if (epicenter == null) return;
+          if (epicenter == null) {
+            return;
+          }
           onChanged(code, epicenter.name);
         } else {
           onChanged(null, null);

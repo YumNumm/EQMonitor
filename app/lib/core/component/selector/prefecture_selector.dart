@@ -31,7 +31,9 @@ class PrefectureSelector extends ConsumerWidget {
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
           final prefecture = prefectures.firstWhereOrNull((p) => p.code == code);
-          if (prefecture == null) return;
+          if (prefecture == null) {
+            return;
+          }
           onChanged((code: code, name: prefecture.name));
         } else {
           onChanged(null);
