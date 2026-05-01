@@ -157,6 +157,130 @@
         ]
       }
     },
+    "/v2/admin/test-live-event": {
+      "post": {
+        "operationId": "postV2AdminTestLiveEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventType": {
+                    "enum": [
+                      "eew",
+                      "shake_detection"
+                    ],
+                    "type": "string"
+                  },
+                  "target": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "device_id"
+                          },
+                          "deviceId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "deviceId"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "push_to_start_token"
+                          },
+                          "token": {
+                            "type": "string"
+                          },
+                          "environment": {
+                            "enum": [
+                              "development",
+                              "production"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "token",
+                          "environment"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "eventType",
+                  "target"
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "description": "任意のデバイスにテスト用Live Activityイベントを送信",
+        "responses": {
+          "200": {
+            "description": "送信成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "認証エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "権限エラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "デバイスが見つからない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/admin/replay-files": {
       "get": {
         "operationId": "getV2AdminReplayFiles",
@@ -438,11 +562,12 @@
         "operationId": "getV2DeviceByDeviceId",
         "parameters": [
           {
-            "schema": {
-              "type": "string"
-            },
             "in": "path",
             "name": "deviceId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
             "required": true
           }
         ],
@@ -3697,6 +3822,231 @@
           },
           "500": {
             "description": "内部サーバエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/feeds": {
+      "get": {
+        "operationId": "getV2Feeds",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "locale",
+            "schema": {
+              "type": "string",
+              "default": "ja"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "important",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Feed"
+        ],
+        "description": "Feed一覧（お知らせ・地震関連情報など）",
+        "responses": {
+          "200": {
+            "description": "Feed一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/feeds/admin": {
+      "post": {
+        "operationId": "postV2FeedsAdmin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "feedType": {
+                    "anyOf": [
+                      {
+                        "const": "APP_UPDATE"
+                      },
+                      {
+                        "const": "INCIDENT"
+                      },
+                      {
+                        "const": "DEVELOPER_MESSAGE"
+                      }
+                    ]
+                  },
+                  "priority": {
+                    "anyOf": [
+                      {
+                        "const": "CRITICAL"
+                      },
+                      {
+                        "const": "HIGH"
+                      },
+                      {
+                        "const": "NORMAL"
+                      },
+                      {
+                        "const": "LOW"
+                      }
+                    ]
+                  },
+                  "isImportant": {
+                    "type": "boolean"
+                  },
+                  "publishedAt": {
+                    "type": "string"
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "url": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": []
+                  },
+                  "translations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "locale": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "summary": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "body": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      },
+                      "required": [
+                        "locale"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "feedType",
+                  "priority",
+                  "isImportant",
+                  "publishedAt",
+                  "data",
+                  "translations"
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "Feed"
+        ],
+        "description": "Feed作成（管理者のみ）",
+        "responses": {
+          "200": {
+            "description": "作成されたFeed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedCreateResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -7711,6 +8061,458 @@
         },
         "required": [
           "items"
+        ]
+      },
+      "FeedItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "feed_type": {
+            "anyOf": [
+              {
+                "const": "EARTHQUAKE_NOTICE"
+              },
+              {
+                "const": "EARTHQUAKE_EXPLANATION"
+              },
+              {
+                "const": "EARTHQUAKE_COUNTS"
+              },
+              {
+                "const": "EARTHQUAKE_NANKAI"
+              },
+              {
+                "const": "APP_UPDATE"
+              },
+              {
+                "const": "INCIDENT"
+              },
+              {
+                "const": "DEVELOPER_MESSAGE"
+              }
+            ]
+          },
+          "priority": {
+            "anyOf": [
+              {
+                "const": "CRITICAL"
+              },
+              {
+                "const": "HIGH"
+              },
+              {
+                "const": "NORMAL"
+              },
+              {
+                "const": "LOW"
+              }
+            ]
+          },
+          "is_important": {
+            "type": "boolean"
+          },
+          "published_at": {
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "EARTHQUAKE_NOTICE"
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "text"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "EARTHQUAKE_EXPLANATION"
+                  },
+                  "infoType": {
+                    "anyOf": [
+                      {
+                        "const": "PUBLICATION"
+                      },
+                      {
+                        "const": "CORRECTION"
+                      },
+                      {
+                        "const": "CANCELLATION"
+                      }
+                    ]
+                  },
+                  "naming": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "en": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ],
+                    "nullable": true
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "comments": {
+                    "type": "object",
+                    "properties": {
+                      "free": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "free"
+                    ],
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "type",
+                  "infoType",
+                  "text"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "EARTHQUAKE_COUNTS"
+                  },
+                  "infoType": {
+                    "anyOf": [
+                      {
+                        "const": "PUBLICATION"
+                      },
+                      {
+                        "const": "CORRECTION"
+                      },
+                      {
+                        "const": "CANCELLATION"
+                      }
+                    ]
+                  },
+                  "earthquakeCounts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "anyOf": [
+                            {
+                              "const": "１時間地震回数"
+                            },
+                            {
+                              "const": "累積地震回数"
+                            },
+                            {
+                              "const": "地震回数"
+                            }
+                          ]
+                        },
+                        "targetTime": {
+                          "type": "object",
+                          "properties": {
+                            "start": {
+                              "type": "string"
+                            },
+                            "end": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "start",
+                            "end"
+                          ]
+                        },
+                        "values": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "felt": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "all",
+                            "felt"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "targetTime",
+                        "values"
+                      ]
+                    },
+                    "nullable": true
+                  },
+                  "nextAdvisory": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "text": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "comments": {
+                    "type": "object",
+                    "properties": {
+                      "free": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "free"
+                    ],
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "type",
+                  "infoType"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "EARTHQUAKE_NANKAI"
+                  },
+                  "infoType": {
+                    "anyOf": [
+                      {
+                        "const": "PUBLICATION"
+                      },
+                      {
+                        "const": "CORRECTION"
+                      },
+                      {
+                        "const": "CANCELLATION"
+                      }
+                    ]
+                  },
+                  "telegramType": {
+                    "anyOf": [
+                      {
+                        "const": "南海トラフ地震臨時情報"
+                      },
+                      {
+                        "const": "南海トラフ地震関連解説情報"
+                      },
+                      {
+                        "const": "北海道・三陸沖後発地震注意情報"
+                      }
+                    ]
+                  },
+                  "earthquakeInfo": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "name"
+                        ],
+                        "nullable": true
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "appendix": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ],
+                    "nullable": true
+                  },
+                  "nextAdvisory": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "text": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "type",
+                  "infoType",
+                  "telegramType"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "APP_UPDATE"
+                  },
+                  "version": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "url": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "INCIDENT"
+                  },
+                  "url": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "const": "DEVELOPER_MESSAGE"
+                  },
+                  "url": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "feed_type",
+          "priority",
+          "is_important",
+          "published_at",
+          "expires_at",
+          "title",
+          "summary",
+          "data"
+        ]
+      },
+      "FeedListResponse": {
+        "type": "object",
+        "properties": {
+          "feeds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeedItem"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "feeds",
+          "next_cursor"
+        ]
+      },
+      "FeedCreateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
         ]
       },
       "TelegramListResponse": {
