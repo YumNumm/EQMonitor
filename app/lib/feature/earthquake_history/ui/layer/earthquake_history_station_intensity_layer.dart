@@ -80,10 +80,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               return;
             }
             await styleController.addSource(
-              GeoJsonSource(
-                id: _sourceId,
-                data: geoJson,
-              ),
+              GeoJsonSource(id: _sourceId, data: geoJson),
             );
 
             if (disposed) {
@@ -258,22 +255,19 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     // cachedBytes を別 effect で監視し、画像が揃ったタイミングで追加する。
     // メインの effect とは分離することで、アイコンキャッシュの更新が
     // source/layer の再構築を引き起こす race condition を防ぐ。
-    useEffect(
-      () {
-        if (styleController == null || cachedBytes.isEmpty) {
-          return null;
-        }
-        unawaited(() async {
-          try {
-            await styleController.addImages(cachedBytes);
-          } on Exception catch (e) {
-            talker.log(e);
-          }
-        }());
+    useEffect(() {
+      if (styleController == null || cachedBytes.isEmpty) {
         return null;
-      },
-      [styleController, cachedBytes],
-    );
+      }
+      unawaited(() async {
+        try {
+          await styleController.addImages(cachedBytes);
+        } on Exception catch (e) {
+          talker.log(e);
+        }
+      }());
+      return null;
+    }, [styleController, cachedBytes]);
 
     return const SizedBox.shrink();
   }
@@ -300,25 +294,24 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     IntensityColorModel colorModel,
   ) {
     if (intensity == null) {
-      return jsonEncode({
-        'type': 'FeatureCollection',
-        'features': <dynamic>[],
-      });
+      return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
     }
 
     final features = <Map<String, dynamic>>[];
     for (final entry in intensity.intensityTree.entries) {
-      final jmaIntensity = entry.key;
-      final color = colorModel
-          .fromJmaIntensity(jmaIntensity)
-          .background
-          .toHexStringRGB();
-      final isFocused = intensity.maxIntensity == jmaIntensity;
-      final iconId = _iconIdForStation(jmaIntensity.name, isFocused);
-
       for (final region in entry.value) {
         for (final city in region.cities) {
           for (final stationNode in city.stations) {
+            final jmaIntensity = stationNode.intensity?.maxIntensity;
+            if (jmaIntensity == null) {
+              continue;
+            }
+            final color = colorModel
+                .fromJmaIntensity(jmaIntensity)
+                .background
+                .toHexStringRGB();
+            final isFocused = intensity.maxIntensity == jmaIntensity;
+            final iconId = _iconIdForStation(jmaIntensity.name, isFocused);
             final station = stationNode.station;
             if (!station.hasLatitude() || !station.hasLongitude()) {
               continue;
@@ -357,16 +350,18 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
     final features = <Map<String, dynamic>>[];
     for (final entry in intensity.lpgmIntensityTree.entries) {
-      final lpgmIntensity = entry.key;
-      final color = colorModel
-          .fromJmaLpgmIntensity(lpgmIntensity)
-          .background
-          .toHexStringRGB();
-      final iconId = _lpgmIconIdForStation(lpgmIntensity.name);
-
       for (final region in entry.value) {
         for (final city in region.cities) {
           for (final stationNode in city.stations) {
+            final lpgmIntensity = stationNode.intensity?.maxLpgmIntensity;
+            if (lpgmIntensity == null) {
+              continue;
+            }
+            final color = colorModel
+                .fromJmaLpgmIntensity(lpgmIntensity)
+                .background
+                .toHexStringRGB();
+            final iconId = _lpgmIconIdForStation(lpgmIntensity.name);
             final station = stationNode.station;
             if (!station.hasLatitude() || !station.hasLongitude()) {
               continue;
