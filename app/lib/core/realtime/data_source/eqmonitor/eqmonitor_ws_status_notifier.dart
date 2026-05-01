@@ -7,9 +7,9 @@ import 'dart:ui';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_realtime_event_mapper.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
-import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -29,6 +29,7 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
   EqMonitorWsStatusState build() {
     final version = ++_buildVersion;
     bool isActive() => _buildVersion == version && !_eventController.isClosed;
+    final realtimeEventMapper = ref.watch(eqMonitorRealtimeEventMapperProvider);
     _ws = null;
 
     ref.onDispose(() {
@@ -51,15 +52,18 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
       }
     });
 
-    unawaited(_connectWithRetry(isActive));
+    unawaited(_connectWithRetry(isActive, realtimeEventMapper));
     return const EqMonitorWsStatusState();
   }
 
-  Future<void> _connectWithRetry(bool Function() isActive) async {
+  Future<void> _connectWithRetry(
+    bool Function() isActive,
+    EqMonitorRealtimeEventMapper realtimeEventMapper,
+  ) async {
     var retryCount = 0;
     while (isActive()) {
       try {
-        await _connect(isActive);
+        await _connect(isActive, realtimeEventMapper);
         retryCount = 0;
       } on Exception catch (e, st) {
         if (!isActive()) {
@@ -76,7 +80,10 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
     }
   }
 
-  Future<void> _connect(bool Function() isActive) async {
+  Future<void> _connect(
+    bool Function() isActive,
+    EqMonitorRealtimeEventMapper realtimeEventMapper,
+  ) async {
     _setConnecting();
 
     final api = await ref.read(apiClientProvider.future);
@@ -120,7 +127,7 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
         }
 
         talker.log('EqMonitorWS message (${message.runtimeType})');
-        for (final event in _toRealtimeEvents(message)) {
+        for (final event in realtimeEventMapper.map(message)) {
           if (!_eventController.isClosed) {
             _eventController.add(event);
           }
@@ -166,97 +173,4 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
     }
     return uri.replace(queryParameters: params).toString();
   }
-
-  List<RealtimeEvent> _toRealtimeEvents(WsMessage msg) {
-    return switch (msg) {
-      WsSnapshotMessage(:final data) => [
-        RealtimeEvent.snapshot(
-          eews: data.eews,
-          earthquakes: data.earthquakes,
-          shakes: data.shakes.map(_toRealtimeShakeData).toList(),
-          source: RealtimeSource.eqmonitor,
-        ),
-      ],
-      WsRealtimeMessage(:final data) => switch (data) {
-        WsEewRealtimeEvent(:final item) => [
-          RealtimeEvent.eewUpsert(
-            item: item,
-            source: RealtimeSource.eqmonitor,
-          ),
-        ],
-        WsEarthquakeRealtimeEvent(
-          :final operation,
-          :final eventId,
-          :final record,
-        ) =>
-          switch (operation) {
-            'upsert' when record != null => [
-              RealtimeEvent.earthquakeUpsert(
-                record: record,
-                source: RealtimeSource.eqmonitor,
-              ),
-            ],
-            'delete' => [
-              RealtimeEvent.earthquakeDelete(
-                eventId: eventId,
-                source: RealtimeSource.eqmonitor,
-              ),
-            ],
-            _ => const <RealtimeEvent>[],
-          },
-        WsShakeDetectedRealtimeEvent(
-          :final eventId,
-          :final createdAt,
-          :final level,
-          :final changeReasons,
-          :final isReplay,
-          :final pointCount,
-          :final region,
-        ) =>
-          [
-            RealtimeEvent.shakeDetected(
-              data: RealtimeShakeData(
-                eventId: eventId,
-                createdAt: createdAt,
-                level: level,
-                isReplay: isReplay,
-                pointCount: pointCount,
-                minLat: region.bottomRight.latitude,
-                maxLat: region.topLeft.latitude,
-                minLng: region.topLeft.longitude,
-                maxLng: region.bottomRight.longitude,
-                changeReasons: changeReasons,
-              ),
-              source: RealtimeSource.eqmonitor,
-            ),
-          ],
-        WsEstimatedIntensityRealtimeEvent(:final estimatedIntensity) => [
-          RealtimeEvent.estimatedIntensityUpsert(
-            eventId: estimatedIntensity.eventId,
-            estimatedIntensityTile:
-                '$_tilesBaseUrl/${estimatedIntensity.estimatedIntensityKey}',
-            source: RealtimeSource.eqmonitor,
-          ),
-        ],
-        _ => const <RealtimeEvent>[],
-      },
-      WsPingMessage() => const <RealtimeEvent>[],
-    };
-  }
-
-  static const _tilesBaseUrl = 'https://tiles.eqmonitor.app';
-
-  RealtimeShakeData _toRealtimeShakeData(WsSnapshotShakeEntry e) =>
-      RealtimeShakeData(
-        eventId: e.eventId,
-        createdAt: e.createdAt,
-        level: e.level,
-        isReplay: e.isReplay,
-        pointCount: e.pointCount,
-        minLat: e.region.bottomRight.latitude,
-        maxLat: e.region.topLeft.latitude,
-        minLng: e.region.topLeft.longitude,
-        maxLng: e.region.bottomRight.longitude,
-        changeReasons: e.changeReasons,
-      );
 }

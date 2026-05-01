@@ -6,5 +6,6 @@ part 'eqmonitor_ws_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
 Stream<RealtimeEvent> eqMonitorWsDataSource(Ref ref) {
-  return ref.read(eqMonitorWsStatusProvider.notifier).eventStream;
+  ref.read(eqMonitorWsStatusProvider);
+  return ref.watch(eqMonitorWsStatusProvider.notifier).eventStream;
 }
