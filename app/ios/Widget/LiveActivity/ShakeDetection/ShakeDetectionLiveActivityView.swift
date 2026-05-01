@@ -101,6 +101,62 @@ struct ShakeLevelChip: View {
     }
 }
 
+// MARK: - Location Summary
+
+@available(iOS 16.1, *)
+struct ShakeDetectionLocationSummaryView: View {
+    let location: LocationInfo?
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            Image(systemName: "location.fill")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.white.opacity(0.86))
+                .frame(width: 28, height: 28)
+                .background(Color.white.opacity(0.12))
+                .clipShape(Circle())
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("観測地点")
+                    .liveActivityLabelStyle()
+                Text(locationText)
+                    .font(.system(size: 19, weight: .heavy))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var locationText: String {
+        guard let regionName = location?.regionName, !regionName.isEmpty else {
+            return "観測地点情報なし"
+        }
+        return "\(regionName)で検知"
+    }
+}
+
+@available(iOS 16.1, *)
+struct ShakeObservedIntensityPill: View {
+    let intensity: Double
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            Text("計測震度")
+                .liveActivityLabelStyle()
+            Text(String(format: "%.1f", intensity))
+                .font(.system(size: 18, weight: .black, design: .monospaced))
+                .foregroundColor(.primary)
+                .monospacedDigit()
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 7)
+        .background(Color.primary.opacity(0.08))
+        .clipShape(Capsule())
+    }
+}
+
 // MARK: - Lock Screen View
 
 @available(iOS 16.1, *)
@@ -122,25 +178,26 @@ struct ShakeDetectionLockScreenView: View {
             .padding(.bottom, 8)
 
             // メインコンテンツ
-            HStack(alignment: .center, spacing: 12) {
-                // 揺れレベルChip
-                if let level = state.shakeLevel {
-                    ShakeLevelChip(level: level)
-                }
+            VStack(alignment: .leading, spacing: 10) {
+                ShakeDetectionLocationSummaryView(location: state.location)
 
-                // 地名
-                if let location = state.location {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("観測地点")
-                            .liveActivityLabelStyle()
-                        Text(location.regionName)
-                            .font(.system(size: 16, weight: .heavy))
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
+                HStack(alignment: .center, spacing: 8) {
+                    if let level = state.shakeLevel {
+                        ShakeLevelChip(level: level)
+                    }
+
+                    Text("端末周辺で揺れを検知しました")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(liveActivitySecondaryTextColor)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+
+                    Spacer(minLength: 0)
+
+                    if let intensity = state.location?.intensity {
+                        ShakeObservedIntensityPill(intensity: intensity)
                     }
                 }
-
-                Spacer()
             }
             .padding(.horizontal, standardMargin)
             .padding(.bottom, standardMargin)

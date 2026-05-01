@@ -325,10 +325,22 @@ struct ShakeExpandedCenterView: View {
     let state: ShakeDetectionContentState
 
     var body: some View {
-        if let level = state.shakeLevel {
-            Text(level.displayString)
-                .font(.system(size: 14, weight: .bold))
+        VStack(alignment: .leading, spacing: 1) {
+            Text("観測地点")
+                .font(.system(size: 9, weight: .medium))
+                .foregroundColor(.secondary)
+            Text(locationText)
+                .font(.system(size: 15, weight: .bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
         }
+    }
+
+    private var locationText: String {
+        guard let regionName = state.location?.regionName, !regionName.isEmpty else {
+            return "地点情報なし"
+        }
+        return regionName
     }
 }
 
@@ -337,12 +349,29 @@ struct ShakeExpandedBottomView: View {
     let state: ShakeDetectionContentState
 
     var body: some View {
-        HStack {
-            if let location = state.location {
-                Text(location.regionName)
-                    .font(.system(size: 13, weight: .semibold))
+        HStack(alignment: .firstTextBaseline) {
+            if let level = state.shakeLevel {
+                Text(level.displayString)
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
             }
+
             Spacer()
+
+            if let intensity = state.location?.intensity {
+                HStack(alignment: .firstTextBaseline, spacing: 2) {
+                    Text("計測震度")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(.secondary)
+                    Text(String(format: "%.1f", intensity))
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .monospacedDigit()
+                }
+            } else if let date = state.detectedDate {
+                Text(date, style: .time)
+                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+            }
         }
     }
 }
