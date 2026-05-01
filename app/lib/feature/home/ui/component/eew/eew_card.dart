@@ -164,18 +164,16 @@ class _EewMainCard extends StatelessWidget {
         regionDisplayName != null &&
         regionDisplayName!.isNotEmpty;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.lg),
-      child: Card(
-        elevation: 0,
-        clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.zero,
-        color: color.surfaceCard,
-        shape: RoundedSuperellipseBorder(
-          borderRadius: BorderRadius.circular(shape.card),
-          side: BorderSide(color: color.outlineSoft),
-        ),
-        child: Column(
+    return Card(
+      elevation: 0,
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
+      color: color.surfaceCard,
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(shape.card),
+        side: BorderSide(color: color.outlineSoft),
+      ),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _EewCardHeader(
@@ -219,7 +217,6 @@ class _EewMainCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }
