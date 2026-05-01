@@ -75,6 +75,18 @@ class IntensityTreeConverter {
     return map;
   }
 
+  Map<String, String> _stationCityCodeMap() {
+    final map = <String, String>{};
+    for (final r in parameter.regions) {
+      for (final c in r.cities) {
+        for (final s in c.stations) {
+          map[s.code] = c.code;
+        }
+      }
+    }
+    return map;
+  }
+
   String? _prefectureCode(EarthquakeParameterCityItem city) {
     for (final r in parameter.regions) {
       for (final c in r.cities) {
@@ -92,7 +104,10 @@ class IntensityTreeConverter {
   ) {
     final cityParam = _cityParamMap();
     final stationParam = _stationParamMap();
-    final byPrefix = _stationsByCityPrefix(apiStations);
+    final byCityCode = _stationsByCityCode(
+      stations: apiStations,
+      stationCityCode: _stationCityCodeMap(),
+    );
     final grouped = <JmaIntensity, Map<String, List<CityIntensityNode>>>{};
 
     for (final apiCity in apiCities) {
@@ -116,13 +131,8 @@ class IntensityTreeConverter {
         continue;
       }
 
-      final cityPrefix = code.substring(0, 5);
-      final matchedStations = (byPrefix[cityPrefix] ?? const [])
-          .where((s) => s.maxIntensity == apiCity.maxIntensity)
-          .toList();
-
       final stationNodes = <StationIntensityNode>[];
-      for (final st in matchedStations) {
+      for (final st in byCityCode[code] ?? const <api.IntensityStationItem>[]) {
         final paramSt = stationParam[st.value.code];
         if (paramSt == null) {
           continue;
@@ -202,12 +212,14 @@ class IntensityTreeConverter {
         continue;
       }
 
-      grouped.putIfAbsent(jma, () => []).add(
-        PrefectureIntensityNode(
-          region: IntensityRegion(region: regionItem, maxIntensity: jma),
-          cities: const [],
-        ),
-      );
+      grouped
+          .putIfAbsent(jma, () => [])
+          .add(
+            PrefectureIntensityNode(
+              region: IntensityRegion(region: regionItem, maxIntensity: jma),
+              cities: const [],
+            ),
+          );
     }
 
     for (final entry in grouped.entries) {
@@ -277,7 +289,10 @@ class IntensityTreeConverter {
   ) {
     final cityParam = _cityParamMap();
     final stationParam = _stationParamMap();
-    final byPrefix = _stationsByCityPrefix(apiStations);
+    final byCityCode = _stationsByCityCode(
+      stations: apiStations,
+      stationCityCode: _stationCityCodeMap(),
+    );
     final grouped =
         <JmaLpgmIntensity, Map<String, List<CityLpgmIntensityNode>>>{};
 
@@ -302,13 +317,8 @@ class IntensityTreeConverter {
         continue;
       }
 
-      final cityPrefix = code.substring(0, 5);
-      final matchedStations = (byPrefix[cityPrefix] ?? const [])
-          .where((s) => s.maxLpgmIntensity == apiCity.maxLpgmIntensity)
-          .toList();
-
       final stationNodes = <StationLpgmIntensityNode>[];
-      for (final st in matchedStations) {
+      for (final st in byCityCode[code] ?? const <api.IntensityStationItem>[]) {
         final paramSt = stationParam[st.value.code];
         if (paramSt == null) {
           continue;
@@ -372,9 +382,7 @@ class IntensityTreeConverter {
   }
 
   Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
-  _lpgmFromPrefecturesOnly(
-    List<api.IntensityItem> prefectures,
-  ) {
+  _lpgmFromPrefecturesOnly(List<api.IntensityItem> prefectures) {
     final paramRegionMap = {for (final r in parameter.regions) r.code: r};
     final grouped = <JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>{};
 
@@ -388,13 +396,15 @@ class IntensityTreeConverter {
         continue;
       }
 
-      grouped.putIfAbsent(lpgm, () => []).add(
-        PrefectureLpgmIntensityNode(
-          region: regionItem,
-          maxLpgmIntensity: lpgm,
-          cities: const [],
-        ),
-      );
+      grouped
+          .putIfAbsent(lpgm, () => [])
+          .add(
+            PrefectureLpgmIntensityNode(
+              region: regionItem,
+              maxLpgmIntensity: lpgm,
+              cities: const [],
+            ),
+          );
     }
 
     for (final entry in grouped.entries) {
@@ -453,17 +463,17 @@ class IntensityTreeConverter {
   }
 }
 
-Map<String, List<api.IntensityStationItem>> _stationsByCityPrefix(
-  List<api.IntensityStationItem> stations,
-) {
+Map<String, List<api.IntensityStationItem>> _stationsByCityCode({
+  required List<api.IntensityStationItem> stations,
+  required Map<String, String> stationCityCode,
+}) {
   final map = <String, List<api.IntensityStationItem>>{};
   for (final s in stations) {
-    final code = s.value.code;
-    if (code.length < 5) {
+    final cityCode = stationCityCode[s.value.code];
+    if (cityCode == null) {
       continue;
     }
-    final prefix = code.substring(0, 5);
-    map.putIfAbsent(prefix, () => []).add(s);
+    map.putIfAbsent(cityCode, () => []).add(s);
   }
   return map;
 }
