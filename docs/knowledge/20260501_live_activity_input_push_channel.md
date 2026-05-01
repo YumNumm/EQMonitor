@@ -16,3 +16,11 @@ input-push-channel: {apnsChannelId}
 ```bash
 rg -n "input-push-channel|apns-channel-id" backend/service/notification-resolver backend/service/redis-manager backend/service/notification-sender
 ```
+
+関連ドキュメント:
+
+- `backend/docs/apns-live-activity-broadcast.md`: APNs Broadcast の設計と start/update/end の責務分担。
+- `docs/live-activity-implementation-review.md`: 現在の実装レビューと既知の不整合。
+- `backend/docs/notification-observability.md`: 通知配信と Live Activity の監視設計。
+
+「Live Activity は開始されるが更新されない」場合は、まず start の `input-push-channel` と update/end の `apns-channel-id` が同じ APNs 環境の channel ID を指しているか確認する。現状の EEW update/end は production 固定の経路があるため、sandbox 端末では start だけ成功して update/end が届かない可能性がある。

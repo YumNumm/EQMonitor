@@ -92,12 +92,12 @@ Valkey EVENTS stream
             │    payload.aps.event = "start"
             │    payload.aps["attributes-type"] = "EewLiveActivityAttributes"
             │    payload.aps.attributes = { id: liveActivityId, eventId }
-            │    header["apns-channel-id"] = inputPushChannel (APNs UUID)
+            │    header["input-push-channel"] = inputPushChannel (APNs UUID)
             └─ liveActivityTokenRepository.createLiveActivityTokens()
                  └─ live_activity_update_token に token='' で INSERT
 ```
 
-APNs start を受信した iOS デバイスは、`apns-channel-id` ヘッダーで指定されたチャンネルを自動購読する（iOS 18+ Broadcast）。
+APNs start を受信した iOS デバイスは、`input-push-channel` ヘッダーで指定されたチャンネルを自動購読する（iOS 18+ Broadcast）。`apns-channel-id` は update/end の Broadcast 送信時に使うヘッダーであり、start 時の購読指定には使わない。
 
 ### 2.3 揺れ検知初回通知時
 
@@ -207,6 +207,8 @@ if (shouldUpdateLiveActivity && contentState && channelSyncService) {
 EEW の更新は APNs Broadcast によりチャンネルを購読しているすべてのデバイスへ届く。
 最終報後 3 分間は端末が update token を登録できる猶予として残す設計。
 
+現状の EEW 更新・終了ブロードキャストは `production` 環境のチャンネルだけを解決し、`buildApnsBroadcastMessageFn` にも `environment: 'production'` を渡している。start はデバイスごとの `device.apnsEnvironment` を使うため、sandbox 端末では Live Activity が開始されても update/end が届かない可能性がある。
+
 ### 5.2 揺れ検知 更新
 
 ```typescript
@@ -268,6 +270,23 @@ Broadcast 方式が正式に採用されているなら、以下を整理すべ�
 3. Flutter 側の `syncLiveActivityUpdateToken()` 呼び出しを削除
 4. `LiveActivityTokenRepository` の unused メソッドを削除
 
+### 🟡 運用リスク: EEW Broadcast 更新の環境が production 固定
+
+EEW の push-to-start は `device.apnsEnvironment` を使って APNs URL と `input-push-channel` を決める。一方で、`serialNo > 1` の update と最終報/キャンセル時の end は、`channelSyncService.getApnsChannelId(..., 'production')` と `environment: 'production'` で固定されている。
+
+このため、development/sandbox の push-to-start token では Live Activity が開始されても、更新チャンネルが production 側に送られて update/end を受け取れない可能性がある。開発ビルドで「開始されるが更新されない」場合は、まず以下を確認する。
+
+1. start 送信ログの `environment` と `inputPushChannel`
+2. update/end Broadcast メッセージの `environment` と `apns-channel-id`
+3. `ChannelSyncService` が development と production の両方でチャンネル同期しているか
+4. `eew.region.{code}` と `eew.region.0` のチャンネル解決に miss が出ていないか
+
+### 🟡 可観測性不足: Live Activity と通知配信の成功率を分離して追えない
+
+`notification-sender` には `notification_sender_sent_total` / `notification_sender_send_duration_seconds` があるが、現状のラベルは `framework` 中心で、EEW / 揺れ検知 / Live Activity phase までは分離できない。さらに APNs Broadcast 経路は通常 APNs と同じ成功/失敗 Counter/Histogram に乗っていない。
+
+後続の監視設計は `backend/docs/notification-observability.md` にまとめる。Grafana ダッシュボードとアラート定義の実体は `home8s` 側で管理し、このリポジトリではメトリクス仕様・PromQL 例・実装 TODO を管理する。
+
 ---
 
 ## 7. 正常に動作している部分
@@ -276,8 +295,8 @@ Broadcast 方式が正式に採用されているなら、以下を整理すべ�
 | ---- | ---- | ---- |
 | pushToStartToken の取得と登録 | ✅ 正常 | iOS 17.2+ / iOS 16.1 の判定も実装済み |
 | EEW serialNo==1 の Live Activity 開始 | ✅ 正常 | チャンネル指定・contentState 生成ともに正常 |
-| EEW serialNo>1 の Broadcast update | ✅ 正常 | 全地域チャンネル + 影響地域チャンネルへ配信 |
-| EEW 最終報後 3 分遅延 end | ✅ 正常 | `LiveActivityEndScheduler` で実装済み |
+| EEW serialNo>1 の Broadcast update | 🟡 要確認 | 全地域チャンネル + 影響地域チャンネルへ配信。ただし現状は production 固定 |
+| EEW 最終報後 3 分遅延 end | 🟡 要確認 | `LiveActivityEndScheduler` で実装済み。ただし現状は production 固定 |
 | 揺れ検知 initial push-to-start | 🔴 バグあり | `shake.all` を APNs UUID と誤用 |
 | 揺れ検知 Broadcast update/end | 🔴 バグあり | 同上 |
 | update token の DB/Valkey への書き込み | ✅ 動作する | ただし実質的に使われていない |
