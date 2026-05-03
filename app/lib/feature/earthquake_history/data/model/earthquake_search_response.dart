@@ -1,10 +1,11 @@
+import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/epicenter_search_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/station_search_info.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:jma_parameter_types/earthquake_param.pb.dart' show EarthquakeParameter;
+import 'package:jma_parameter_types/earthquake_param.pb.dart';
 
 part 'earthquake_search_response.freezed.dart';
 part 'earthquake_search_response.g.dart';
@@ -70,12 +71,19 @@ extension IntensityRegionSearchResponseToApp
     on api.IntensityRegionSearchResponse {
   PaginatedSearchResponse<IntensityAreaSearchItem> toAppResponse({
     required EarthquakeParameter parameter,
+    required String areaCode,
+    required String areaName,
   }) => PaginatedSearchResponse(
     items: items
         .map(
           (e) => IntensityAreaSearchItem(
             eventId: e.eventId,
-            area: e.region.toIntensityAreaInfo,
+            area: IntensityAreaInfo(
+              code: areaCode,
+              name: areaName,
+              intensity: e.intensity.toJmaIntensity,
+              lpgmIntensity: null,
+            ),
             earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
@@ -88,12 +96,19 @@ extension IntensityPrefectureSearchResponseToApp
     on api.IntensityPrefectureSearchResponse {
   PaginatedSearchResponse<IntensityAreaSearchItem> toAppResponse({
     required EarthquakeParameter parameter,
+    required String areaCode,
+    required String areaName,
   }) => PaginatedSearchResponse(
     items: items
         .map(
           (e) => IntensityAreaSearchItem(
             eventId: e.eventId,
-            area: e.prefecture.toIntensityAreaInfo,
+            area: IntensityAreaInfo(
+              code: areaCode,
+              name: areaName,
+              intensity: e.intensity.toJmaIntensity,
+              lpgmIntensity: null,
+            ),
             earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
@@ -105,12 +120,19 @@ extension IntensityPrefectureSearchResponseToApp
 extension IntensityCitySearchResponseToApp on api.IntensityCitySearchResponse {
   PaginatedSearchResponse<IntensityAreaSearchItem> toAppResponse({
     required EarthquakeParameter parameter,
+    required String areaCode,
+    required String areaName,
   }) => PaginatedSearchResponse(
     items: items
         .map(
           (e) => IntensityAreaSearchItem(
             eventId: e.eventId,
-            area: e.city.toIntensityAreaInfo,
+            area: IntensityAreaInfo(
+              code: areaCode,
+              name: areaName,
+              intensity: e.intensity.toJmaIntensity,
+              lpgmIntensity: null,
+            ),
             earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )
@@ -123,12 +145,21 @@ extension IntensityStationSearchResponseToApp
     on api.IntensityStationSearchResponse {
   PaginatedSearchResponse<StationSearchItem> toAppResponse({
     required EarthquakeParameter parameter,
+    required String stationCode,
+    required String stationName,
   }) => PaginatedSearchResponse(
     items: items
         .map(
           (e) => StationSearchItem(
             eventId: e.eventId,
-            station: e.station.toStationSearchInfo,
+            station: StationSearchInfo(
+              code: stationCode,
+              name: stationName,
+              intensity: e.intensity.toJmaIntensity,
+              lpgmIntensity: null,
+              sva: null,
+              prePeriods: null,
+            ),
             earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )

@@ -93,14 +93,7 @@ void main() {
             ),
           ],
         },
-        regions: [
-          IntensityRegion(
-            region: miyagiRegion,
-            maxIntensity: JmaIntensity.four,
-          ),
-        ],
         lpgmIntensityTree: const {},
-        lpgmRegions: const [],
       ),
     );
 
@@ -136,14 +129,7 @@ void main() {
             ),
           ],
         },
-        regions: [
-          IntensityRegion(
-            region: miyagiRegion,
-            maxIntensity: JmaIntensity.four,
-          ),
-        ],
         lpgmIntensityTree: const {},
-        lpgmRegions: const [],
       ),
     );
 

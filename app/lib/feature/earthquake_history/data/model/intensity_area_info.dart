@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity_area_info.freezed.dart';
@@ -18,13 +17,4 @@ abstract class IntensityAreaInfo with _$IntensityAreaInfo {
 
   factory IntensityAreaInfo.fromJson(Map<String, dynamic> json) =>
       _$IntensityAreaInfoFromJson(json);
-}
-
-extension IntensityRegionInfoToApp on api.IntensityRegionInfo {
-  IntensityAreaInfo get toIntensityAreaInfo => IntensityAreaInfo(
-    code: code,
-    name: name,
-    intensity: intensity?.toJmaIntensity,
-    lpgmIntensity: lpgmIntensity?.toJmaLpgmIntensity,
-  );
 }

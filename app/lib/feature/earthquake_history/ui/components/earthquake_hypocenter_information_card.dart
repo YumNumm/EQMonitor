@@ -57,7 +57,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
                     item: item,
                     hypocenter: hypocenter,
                     hasIntensityDetails:
-                        item.intensity?.regions.isNotEmpty ?? false,
+                        item.intensity?.intensityTree.isNotEmpty ?? false,
                   ),
                 ),
               ],

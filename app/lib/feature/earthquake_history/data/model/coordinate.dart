@@ -18,25 +18,8 @@ sealed class Coordinate with _$Coordinate {
 }
 
 extension CoordinateApiExtension on api.Coordinate {
-  Coordinate get toCoordinate => switch (type) {
-    .latLng => .latLng(
-      latitude:
-          latitude?.toDouble() ??
-          (throw CheckedFromJsonException(
-            toJson(),
-            'latitude',
-            'Coordinate',
-            'latitude',
-          )),
-      longitude:
-          longitude?.toDouble() ??
-          (throw CheckedFromJsonException(
-            toJson(),
-            'longitude',
-            'Coordinate',
-            'longitude',
-          )),
-    ),
-    .unknown => const .unknown(),
-  };
+  Coordinate get toCoordinate => Coordinate.latLng(
+    latitude: latitude.toDouble(),
+    longitude: longitude.toDouble(),
+  );
 }
