@@ -16,8 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$Coordinate {
 
 /// 緯度
-@JsonKey(includeIfNull: false) num? get latitude;/// 経度
-@JsonKey(includeIfNull: false) num? get longitude;
+ num get latitude;/// 経度
+ num get longitude;
 /// Create a copy of Coordinate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -50,7 +50,7 @@ abstract mixin class $CoordinateCopyWith<$Res>  {
   factory $CoordinateCopyWith(Coordinate value, $Res Function(Coordinate) _then) = _$CoordinateCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeIfNull: false) num? latitude,@JsonKey(includeIfNull: false) num? longitude
+ num latitude, num longitude
 });
 
 
@@ -67,11 +67,11 @@ class _$CoordinateCopyWithImpl<$Res>
 
 /// Create a copy of Coordinate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? latitude = freezed,Object? longitude = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? latitude = null,Object? longitude = null,}) {
   return _then(_self.copyWith(
-latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
-as num?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as num?,
+latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as num,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as num,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? latitude, @JsonKey(includeIfNull: false)  num? longitude)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( num latitude,  num longitude)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Coordinate() when $default != null:
 return $default(_that.latitude,_that.longitude);case _:
@@ -177,7 +177,7 @@ return $default(_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeIfNull: false)  num? latitude, @JsonKey(includeIfNull: false)  num? longitude)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( num latitude,  num longitude)  $default,) {final _that = this;
 switch (_that) {
 case _Coordinate():
 return $default(_that.latitude,_that.longitude);case _:
@@ -197,7 +197,7 @@ return $default(_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeIfNull: false)  num? latitude, @JsonKey(includeIfNull: false)  num? longitude)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( num latitude,  num longitude)?  $default,) {final _that = this;
 switch (_that) {
 case _Coordinate() when $default != null:
 return $default(_that.latitude,_that.longitude);case _:
@@ -212,13 +212,13 @@ return $default(_that.latitude,_that.longitude);case _:
 @JsonSerializable()
 
 class _Coordinate implements Coordinate {
-  const _Coordinate({@JsonKey(includeIfNull: false) this.latitude, @JsonKey(includeIfNull: false) this.longitude});
+  const _Coordinate({required this.latitude, required this.longitude});
   factory _Coordinate.fromJson(Map<String, dynamic> json) => _$CoordinateFromJson(json);
 
 /// 緯度
-@override@JsonKey(includeIfNull: false) final  num? latitude;
+@override final  num latitude;
 /// 経度
-@override@JsonKey(includeIfNull: false) final  num? longitude;
+@override final  num longitude;
 
 /// Create a copy of Coordinate
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$CoordinateCopyWith<$Res> implements $CoordinateCopyWith<$
   factory _$CoordinateCopyWith(_Coordinate value, $Res Function(_Coordinate) _then) = __$CoordinateCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeIfNull: false) num? latitude,@JsonKey(includeIfNull: false) num? longitude
+ num latitude, num longitude
 });
 
 
@@ -270,11 +270,11 @@ class __$CoordinateCopyWithImpl<$Res>
 
 /// Create a copy of Coordinate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? latitude = freezed,Object? longitude = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? latitude = null,Object? longitude = null,}) {
   return _then(_Coordinate(
-latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
-as num?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
-as num?,
+latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as num,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as num,
   ));
 }
 

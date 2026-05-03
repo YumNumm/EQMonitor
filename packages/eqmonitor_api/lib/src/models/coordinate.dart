@@ -12,12 +12,10 @@ part 'coordinate.g.dart';
 abstract class Coordinate with _$Coordinate {
   const factory Coordinate({
     /// 緯度
-    @JsonKey(includeIfNull: false)
-    num? latitude,
+    required num latitude,
 
     /// 経度
-    @JsonKey(includeIfNull: false)
-    num? longitude,
+    required num longitude,
   }) = _Coordinate;
   
   factory Coordinate.fromJson(Map<String, Object?> json) => _$CoordinateFromJson(json);
