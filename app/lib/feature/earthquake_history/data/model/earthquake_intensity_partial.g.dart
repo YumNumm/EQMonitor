@@ -23,12 +23,6 @@ _EarthquakeIntensityPartial _$EarthquakeIntensityPartialFromJson(
         'max_lpgm_intensity',
         (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
-      regions: $checkedConvert(
-        'regions',
-        (v) => (v as List<dynamic>)
-            .map((e) => IntensityRegion.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
     );
     return val;
   },
@@ -43,7 +37,6 @@ Map<String, dynamic> _$EarthquakeIntensityPartialToJson(
 ) => <String, dynamic>{
   'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
   'max_lpgm_intensity': _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensity],
-  'regions': instance.regions,
 };
 
 const _$JmaIntensityEnumMap = {

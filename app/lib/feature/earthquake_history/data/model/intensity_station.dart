@@ -35,12 +35,12 @@ abstract class PrePeriod with _$PrePeriod {
 
 extension IntensityStationApiExtension on api.IntensityStationItem {
   IntensityStation get toIntensityStation => IntensityStation(
-    code: value.code,
-    name: value.name,
+    code: code,
+    name: code,
     sva: sva?.toDouble(),
     prePeriods: prePeriods?.map((e) => e.toPrePeriod).toList(),
-    maxIntensity: maxIntensity?.toJmaIntensity,
-    maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,
+    maxIntensity: null,
+    maxLpgmIntensity: null,
   );
 }
 

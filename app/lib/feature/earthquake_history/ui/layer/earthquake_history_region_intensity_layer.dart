@@ -88,21 +88,17 @@ class EarthquakeHistoryRegionIntensityLayer extends HookConsumerWidget {
     EarthquakeIntensity? intensity,
     IntensityColorModel colorModel,
   ) {
-    final regions = intensity?.regions ?? [];
+    final pairs = intensity?.forecastLocalEIntensityPairs ?? [];
     final args = <Object>[
       'match',
       <Object>['get', 'code'],
     ];
 
-    for (final r in regions) {
-      final maxIntensity = r.maxIntensity;
-      if (maxIntensity == null) {
-        continue;
-      }
+    for (final p in pairs) {
       args
-        ..add(r.region.code)
+        ..add(p.code)
         ..add(
-          colorModel.fromJmaIntensity(maxIntensity).background.toHexStringRGB(),
+          colorModel.fromJmaIntensity(p.intensity).background.toHexStringRGB(),
         );
     }
 
