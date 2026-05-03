@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Intensity {
 
-@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity;@JsonKey(name: 'intensity_tree') List<IntensityTree> get intensityTree;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? get lpgmIntensityTree;
+@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity;/// API が詳細未取得などで省略または null を返す場合がある
+@JsonKey(name: 'intensity_tree') List<IntensityTree>? get intensityTree;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? get lpgmIntensityTree;
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +49,7 @@ abstract mixin class $IntensityCopyWith<$Res>  {
   factory $IntensityCopyWith(Intensity value, $Res Function(Intensity) _then) = _$IntensityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(name: 'intensity_tree') List<IntensityTree> intensityTree,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? lpgmIntensityTree
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(name: 'intensity_tree') List<IntensityTree>? intensityTree,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? lpgmIntensityTree
 });
 
 
@@ -65,11 +66,11 @@ class _$IntensityCopyWithImpl<$Res>
 
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? intensityTree = null,Object? maxLpgmIntensity = freezed,Object? lpgmIntensityTree = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? intensityTree = freezed,Object? maxLpgmIntensity = freezed,Object? lpgmIntensityTree = freezed,}) {
   return _then(_self.copyWith(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,intensityTree: null == intensityTree ? _self.intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
-as List<IntensityTree>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,intensityTree: freezed == intensityTree ? _self.intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
+as List<IntensityTree>?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,lpgmIntensityTree: freezed == lpgmIntensityTree ? _self.lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
 as List<LpgmIntensityTree>?,
   ));
@@ -156,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree>? intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Intensity() when $default != null:
 return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_that.lpgmIntensityTree);case _:
@@ -177,7 +178,7 @@ return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree>? intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)  $default,) {final _that = this;
 switch (_that) {
 case _Intensity():
 return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_that.lpgmIntensityTree);case _:
@@ -197,7 +198,7 @@ return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree>? intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)?  $default,) {final _that = this;
 switch (_that) {
 case _Intensity() when $default != null:
 return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_that.lpgmIntensityTree);case _:
@@ -212,15 +213,19 @@ return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_t
 @JsonSerializable()
 
 class _Intensity implements Intensity {
-  const _Intensity({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(name: 'intensity_tree') required final  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') final  List<LpgmIntensityTree>? lpgmIntensityTree}): _intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
+  const _Intensity({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(name: 'intensity_tree') final  List<IntensityTree>? intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') final  List<LpgmIntensityTree>? lpgmIntensityTree}): _intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
   factory _Intensity.fromJson(Map<String, dynamic> json) => _$IntensityFromJson(json);
 
 @override@JsonKey(name: 'max_intensity') final  JmaIntensity maxIntensity;
- final  List<IntensityTree> _intensityTree;
-@override@JsonKey(name: 'intensity_tree') List<IntensityTree> get intensityTree {
+/// API が詳細未取得などで省略または null を返す場合がある
+ final  List<IntensityTree>? _intensityTree;
+/// API が詳細未取得などで省略または null を返す場合がある
+@override@JsonKey(name: 'intensity_tree') List<IntensityTree>? get intensityTree {
+  final value = _intensityTree;
+  if (value == null) return null;
   if (_intensityTree is EqualUnmodifiableListView) return _intensityTree;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_intensityTree);
+  return EqualUnmodifiableListView(value);
 }
 
 @override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
@@ -267,7 +272,7 @@ abstract mixin class _$IntensityCopyWith<$Res> implements $IntensityCopyWith<$Re
   factory _$IntensityCopyWith(_Intensity value, $Res Function(_Intensity) _then) = __$IntensityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(name: 'intensity_tree') List<IntensityTree> intensityTree,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? lpgmIntensityTree
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(name: 'intensity_tree') List<IntensityTree>? intensityTree,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? lpgmIntensityTree
 });
 
 
@@ -284,11 +289,11 @@ class __$IntensityCopyWithImpl<$Res>
 
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? intensityTree = null,Object? maxLpgmIntensity = freezed,Object? lpgmIntensityTree = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? intensityTree = freezed,Object? maxLpgmIntensity = freezed,Object? lpgmIntensityTree = freezed,}) {
   return _then(_Intensity(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,intensityTree: null == intensityTree ? _self._intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
-as List<IntensityTree>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,intensityTree: freezed == intensityTree ? _self._intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
+as List<IntensityTree>?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,lpgmIntensityTree: freezed == lpgmIntensityTree ? _self._lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
 as List<LpgmIntensityTree>?,
   ));

@@ -19,8 +19,8 @@ _Intensity _$IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       intensityTree: $checkedConvert(
         'intensity_tree',
-        (v) => (v as List<dynamic>)
-            .map((e) => IntensityTree.fromJson(e as Map<String, dynamic>))
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => IntensityTree.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
       maxLpgmIntensity: $checkedConvert(

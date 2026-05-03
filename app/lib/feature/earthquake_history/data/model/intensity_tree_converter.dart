@@ -19,7 +19,7 @@ class IntensityTreeConverter {
   Map<JmaIntensity, List<PrefectureIntensityNode>> convertToIntensityTree({
     required api.Intensity intensity,
   }) {
-    final trees = intensity.intensityTree;
+    final trees = intensity.intensityTree ?? [];
     if (trees.isEmpty) {
       return {};
     }

@@ -18,8 +18,10 @@ abstract class Intensity with _$Intensity {
   const factory Intensity({
     @JsonKey(name: 'max_intensity')
     required JmaIntensity maxIntensity,
+
+    /// API が詳細未取得などで省略または null を返す場合がある
     @JsonKey(name: 'intensity_tree')
-    required List<IntensityTree> intensityTree,
+    List<IntensityTree>? intensityTree,
     @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
     JmaLpgmIntensity? maxLpgmIntensity,
     @JsonKey(includeIfNull: false,name: 'lpgm_intensity_tree')
