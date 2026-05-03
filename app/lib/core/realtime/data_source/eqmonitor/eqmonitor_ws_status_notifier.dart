@@ -190,13 +190,13 @@ class EqMonitorWsStatus extends _$EqMonitorWsStatus {
           :final record,
         ) =>
           switch (operation) {
-            'upsert' when record != null => [
+            WsRealtimeOperation.upsert when record != null => [
               RealtimeEvent.earthquakeUpsert(
                 record: record,
                 source: RealtimeSource.eqmonitor,
               ),
             ],
-            'delete' => [
+            WsRealtimeOperation.delete => [
               RealtimeEvent.earthquakeDelete(
                 eventId: eventId,
                 source: RealtimeSource.eqmonitor,

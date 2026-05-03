@@ -1,5 +1,6 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:eqmonitor_websocket/src/ws_estimated_intensity_payload.dart';
+import 'package:eqmonitor_websocket/src/ws_realtime_operation.dart';
 import 'package:eqmonitor_websocket/src/ws_shake_payload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -25,7 +26,7 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
   /// 地震情報 upsert / delete
   @FreezedUnionValue('earthquake')
   const factory RealtimeEventEnvelope.earthquake({
-    required String operation,
+    required WsRealtimeOperation operation,
     @JsonKey(name: 'event_id') required String eventId,
     EarthquakePartial? record,
   }) = WsEarthquakeRealtimeEvent;
@@ -33,7 +34,7 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
   /// 津波情報 upsert / delete
   @FreezedUnionValue('tsunami')
   const factory RealtimeEventEnvelope.tsunami({
-    required String operation,
+    required WsRealtimeOperation operation,
     @JsonKey(name: 'event_id') required String eventId,
     Map<String, dynamic>? record,
   }) = WsTsunamiRealtimeEvent;
