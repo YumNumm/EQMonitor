@@ -10,7 +10,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'intensity_tree_converter.g.dart';
 
 class IntensityTreeConverter {
-  const IntensityTreeConverter({required this.parameter});
+  const IntensityTreeConverter({
+    required this.parameter,
+  });
 
   final EarthquakeParameter parameter;
 
