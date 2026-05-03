@@ -157,130 +157,6 @@
         ]
       }
     },
-    "/v2/admin/test-live-event": {
-      "post": {
-        "operationId": "postV2AdminTestLiveEvent",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "eventType": {
-                    "enum": [
-                      "eew",
-                      "shake_detection"
-                    ],
-                    "type": "string"
-                  },
-                  "target": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "const": "device_id"
-                          },
-                          "deviceId": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "deviceId"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "const": "push_to_start_token"
-                          },
-                          "token": {
-                            "type": "string"
-                          },
-                          "environment": {
-                            "enum": [
-                              "development",
-                              "production"
-                            ],
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "token",
-                          "environment"
-                        ]
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "eventType",
-                  "target"
-                ]
-              }
-            }
-          }
-        },
-        "tags": [
-          "Admin"
-        ],
-        "description": "任意のデバイスにテスト用Live Activityイベントを送信",
-        "responses": {
-          "200": {
-            "description": "送信成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "ok": {
-                      "const": true
-                    }
-                  },
-                  "required": [
-                    "ok"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "認証エラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "権限エラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ForbiddenResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "デバイスが見つからない",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v2/admin/replay-files": {
       "get": {
         "operationId": "getV2AdminReplayFiles",
@@ -562,12 +438,11 @@
         "operationId": "getV2DeviceByDeviceId",
         "parameters": [
           {
+            "schema": {
+              "type": "string"
+            },
             "in": "path",
             "name": "deviceId",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
             "required": true
           }
         ],
@@ -2669,6 +2544,81 @@
         }
       }
     },
+    "/v2/earthquake/{eventId}/intensity-map": {
+      "get": {
+        "operationId": "getV2EarthquakeByEventIdIntensityMap",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EarthquakeIntensityMapEventIdParam"
+          },
+          {
+            "in": "query",
+            "name": "locale",
+            "schema": {
+              "enum": [
+                "ja",
+                "en",
+                "zh"
+              ],
+              "type": "string",
+              "default": "ja"
+            }
+          }
+        ],
+        "tags": [
+          "Earthquake"
+        ],
+        "description": "地震イベントの震度分布図（最新）",
+        "responses": {
+          "200": {
+            "description": "震度分布図URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "object_key": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "object_key"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "地震情報が見つかりません",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/earthquake/intensity/region/{code}": {
       "get": {
         "operationId": "getV2EarthquakeIntensityRegionByCode",
@@ -3747,231 +3697,6 @@
           },
           "500": {
             "description": "内部サーバエラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/feeds": {
-      "get": {
-        "operationId": "getV2Feeds",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "locale",
-            "schema": {
-              "type": "string",
-              "default": "ja"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "string",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "in": "query",
-            "name": "after",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "important",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "tags": [
-          "Feed"
-        ],
-        "description": "Feed一覧（お知らせ・地震関連情報など）",
-        "responses": {
-          "200": {
-            "description": "Feed一覧",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedListResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/feeds/admin": {
-      "post": {
-        "operationId": "postV2FeedsAdmin",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "feedType": {
-                    "anyOf": [
-                      {
-                        "const": "APP_UPDATE"
-                      },
-                      {
-                        "const": "INCIDENT"
-                      },
-                      {
-                        "const": "DEVELOPER_MESSAGE"
-                      }
-                    ]
-                  },
-                  "priority": {
-                    "anyOf": [
-                      {
-                        "const": "CRITICAL"
-                      },
-                      {
-                        "const": "HIGH"
-                      },
-                      {
-                        "const": "NORMAL"
-                      },
-                      {
-                        "const": "LOW"
-                      }
-                    ]
-                  },
-                  "isImportant": {
-                    "type": "boolean"
-                  },
-                  "publishedAt": {
-                    "type": "string"
-                  },
-                  "expiresAt": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "version": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "url": {
-                        "type": "string",
-                        "nullable": true
-                      }
-                    },
-                    "required": []
-                  },
-                  "translations": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "locale": {
-                          "type": "string"
-                        },
-                        "title": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "summary": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "body": {
-                          "type": "string",
-                          "nullable": true
-                        }
-                      },
-                      "required": [
-                        "locale"
-                      ]
-                    }
-                  }
-                },
-                "required": [
-                  "feedType",
-                  "priority",
-                  "isImportant",
-                  "publishedAt",
-                  "data",
-                  "translations"
-                ]
-              }
-            }
-          }
-        },
-        "tags": [
-          "Feed"
-        ],
-        "description": "Feed作成（管理者のみ）",
-        "responses": {
-          "200": {
-            "description": "作成されたFeed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FeedCreateResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -6390,25 +6115,48 @@
         ],
         "description": "コードと名前のペア"
       },
+      "CoordinateType": {
+        "enum": [
+          "LAT_LNG",
+          "UNKNOWN"
+        ],
+        "type": "string",
+        "description": "震源座標の種別"
+      },
       "Coordinate": {
         "type": "object",
         "properties": {
+          "type": {
+            "$ref": "#/components/schemas/CoordinateType"
+          },
           "latitude": {
             "type": "number",
-            "description": "緯度",
+            "description": "緯度(typeがLAT_LNGのときのみ出現する)",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "経度",
+            "description": "経度(typeがLAT_LNGのときのみ出現する)",
+            "nullable": true
+          },
+          "condition": {
+            "type": "string",
+            "description": "不明の場合のみ出現する",
             "nullable": true
           }
         },
-        "required": [],
+        "required": [
+          "type"
+        ],
         "examples": [
           {
+            "type": "LAT_LNG",
             "latitude": 35.681236,
             "longitude": 139.767125
+          },
+          {
+            "type": "UNKNOWN",
+            "condition": "不明"
           }
         ],
         "description": "震源座標"
@@ -6541,6 +6289,110 @@
         ],
         "description": "震源に関する情報"
       },
+      "IntensityMapImageUrl": {
+        "type": "string",
+        "format": "uri"
+      },
+      "IntensityMapImageItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "画像レコードID"
+          },
+          "language": {
+            "enum": [
+              "ja",
+              "en",
+              "zh"
+            ],
+            "type": "string",
+            "description": "画像の言語"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "画像URL"
+          },
+          "file_size": {
+            "type": "number",
+            "description": "画像ファイルサイズ(bytes)"
+          },
+          "size": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number",
+                "description": "画像幅(px)"
+              },
+              "y": {
+                "type": "number",
+                "description": "画像高さ(px)"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ]
+          },
+          "generator_instance": {
+            "type": "string",
+            "description": "生成インスタンス名"
+          },
+          "render_duration_ms": {
+            "type": "number",
+            "description": "レンダリング時間(ms)"
+          },
+          "upload_duration_ms": {
+            "type": "number",
+            "description": "アップロード時間(ms)"
+          },
+          "total_duration_ms": {
+            "type": "number",
+            "description": "総処理時間(ms)"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "language",
+          "image_url",
+          "file_size",
+          "size",
+          "generator_instance",
+          "render_duration_ms",
+          "upload_duration_ms",
+          "total_duration_ms",
+          "generated_at"
+        ]
+      },
+      "IntensityMapImageGroup": {
+        "type": "object",
+        "properties": {
+          "telegram_id": {
+            "type": "string",
+            "description": "電文ID"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageItem"
+            }
+          }
+        },
+        "required": [
+          "telegram_id",
+          "created_at",
+          "images"
+        ]
+      },
       "EarthquakeDatasource": {
         "enum": [
           "JMA_INTENSITY_DATABASE",
@@ -6560,6 +6412,33 @@
         "type": "string",
         "description": "LPGM震度"
       },
+      "IntensityItem": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/CodeName"
+          },
+          "max_intensity": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JmaIntensity"
+              }
+            ]
+          },
+          "max_lpgm_intensity": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JmaLpgmIntensity"
+              }
+            ]
+          }
+        },
+        "required": [
+          "value"
+        ]
+      },
       "IntensityPartial": {
         "type": "object",
         "properties": {
@@ -6573,10 +6452,24 @@
                 "$ref": "#/components/schemas/JmaLpgmIntensity"
               }
             ]
+          },
+          "prefectures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityItem"
+            }
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityItem"
+            }
           }
         },
         "required": [
-          "max_intensity"
+          "max_intensity",
+          "prefectures",
+          "regions"
         ]
       },
       "EarthquakePartial": {
@@ -6622,6 +6515,21 @@
             ],
             "nullable": true
           },
+          "intensity_map_image": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IntensityMapImageUrl"
+              }
+            ]
+          },
+          "intensity_map_images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageGroup"
+            },
+            "nullable": true
+          },
           "datasource": {
             "$ref": "#/components/schemas/EarthquakeDatasource"
           },
@@ -6665,107 +6573,46 @@
           "items"
         ]
       },
-      "IntensityTreeRegionId": {
-        "type": "string",
-        "description": "RegionID"
-      },
-      "IntensityTreeStationId": {
-        "type": "string",
-        "description": "観測点ID"
-      },
-      "IntensityTree": {
-        "type": "object",
-        "properties": {
-          "intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
-          },
-          "regions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IntensityTreeRegionId"
-            }
-          },
-          "stations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IntensityTreeStationId"
-            },
-            "nullable": true
-          }
-        },
-        "required": [
-          "intensity",
-          "regions"
-        ]
-      },
-      "LpgmIntensityTreeRegionId": {
-        "type": "string",
-        "description": "RegionID"
-      },
       "IntensityStationItem": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "観測点ID"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IntensityItem"
           },
-          "sva": {
-            "type": "number",
-            "description": "絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値",
-            "nullable": true
-          },
-          "prePeriods": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "band": {
-                  "type": "number"
-                },
-                "lpgm_intensity": {
-                  "$ref": "#/components/schemas/JmaLpgmIntensity"
-                },
-                "sva": {
-                  "type": "number"
-                }
+          {
+            "type": "object",
+            "properties": {
+              "sva": {
+                "type": "number",
+                "description": "絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値",
+                "nullable": true
               },
-              "required": [
-                "band",
-                "lpgm_intensity",
-                "sva"
-              ]
+              "prePeriods": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "band": {
+                      "type": "number"
+                    },
+                    "lpgm_intensity": {
+                      "$ref": "#/components/schemas/JmaLpgmIntensity"
+                    },
+                    "sva": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "band",
+                    "lpgm_intensity",
+                    "sva"
+                  ]
+                },
+                "description": "1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル",
+                "nullable": true
+              }
             },
-            "description": "1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル",
-            "nullable": true
+            "required": []
           }
-        },
-        "required": [
-          "code"
-        ]
-      },
-      "LpgmIntensityTree": {
-        "type": "object",
-        "properties": {
-          "lpgm_intensity": {
-            "$ref": "#/components/schemas/JmaLpgmIntensity"
-          },
-          "regions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LpgmIntensityTreeRegionId"
-            }
-          },
-          "stations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IntensityStationItem"
-            }
-          }
-        },
-        "required": [
-          "lpgm_intensity",
-          "regions",
-          "stations"
         ]
       },
       "Intensity": {
@@ -6782,23 +6629,37 @@
               }
             ]
           },
-          "intensity_tree": {
+          "prefectures": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IntensityTree"
+              "$ref": "#/components/schemas/IntensityItem"
             }
           },
-          "lpgm_intensity_tree": {
+          "regions": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LpgmIntensityTree"
+              "$ref": "#/components/schemas/IntensityItem"
+            }
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityItem"
+            },
+            "nullable": true
+          },
+          "stations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityStationItem"
             },
             "nullable": true
           }
         },
         "required": [
           "max_intensity",
-          "intensity_tree"
+          "prefectures",
+          "regions"
         ],
         "description": "震度に関する情報"
       },
@@ -7005,6 +6866,21 @@
             ],
             "nullable": true
           },
+          "intensity_map_image": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IntensityMapImageUrl"
+              }
+            ]
+          },
+          "intensity_map_images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntensityMapImageGroup"
+            },
+            "nullable": true
+          },
           "datasource": {
             "$ref": "#/components/schemas/EarthquakeDatasource"
           },
@@ -7053,14 +6929,51 @@
           "earthquake"
         ]
       },
+      "IntensityRegionInfo": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "intensity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JmaIntensity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lpgm_intensity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JmaLpgmIntensity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "intensity",
+          "lpgm_intensity"
+        ]
+      },
       "IntensityRegionSearchItem": {
         "type": "object",
         "properties": {
           "event_id": {
             "type": "string"
           },
-          "intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
+          "region": {
+            "$ref": "#/components/schemas/IntensityRegionInfo"
           },
           "earthquake": {
             "$ref": "#/components/schemas/EarthquakePartial"
@@ -7068,7 +6981,7 @@
         },
         "required": [
           "event_id",
-          "intensity",
+          "region",
           "earthquake"
         ]
       },
@@ -7102,8 +7015,8 @@
           "event_id": {
             "type": "string"
           },
-          "intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
+          "prefecture": {
+            "$ref": "#/components/schemas/IntensityRegionInfo"
           },
           "earthquake": {
             "$ref": "#/components/schemas/EarthquakePartial"
@@ -7111,7 +7024,7 @@
         },
         "required": [
           "event_id",
-          "intensity",
+          "prefecture",
           "earthquake"
         ]
       },
@@ -7145,8 +7058,8 @@
           "event_id": {
             "type": "string"
           },
-          "intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
+          "city": {
+            "$ref": "#/components/schemas/IntensityRegionInfo"
           },
           "earthquake": {
             "$ref": "#/components/schemas/EarthquakePartial"
@@ -7154,7 +7067,7 @@
         },
         "required": [
           "event_id",
-          "intensity",
+          "city",
           "earthquake"
         ]
       },
@@ -7182,14 +7095,92 @@
           "items"
         ]
       },
+      "IntensityStationInfo": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "intensity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JmaIntensity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lpgm_intensity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JmaLpgmIntensity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sva": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pre_periods": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "band": {
+                      "type": "number"
+                    },
+                    "lpgm_intensity": {
+                      "type": "string"
+                    },
+                    "sva": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "band",
+                    "lpgm_intensity",
+                    "sva"
+                  ]
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "intensity",
+          "lpgm_intensity",
+          "sva",
+          "pre_periods"
+        ]
+      },
       "IntensityStationSearchItem": {
         "type": "object",
         "properties": {
           "event_id": {
             "type": "string"
           },
-          "intensity": {
-            "$ref": "#/components/schemas/JmaIntensity"
+          "station": {
+            "$ref": "#/components/schemas/IntensityStationInfo"
           },
           "earthquake": {
             "$ref": "#/components/schemas/EarthquakePartial"
@@ -7197,7 +7188,7 @@
         },
         "required": [
           "event_id",
-          "intensity",
+          "station",
           "earthquake"
         ]
       },
@@ -7720,458 +7711,6 @@
         },
         "required": [
           "items"
-        ]
-      },
-      "FeedItem": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "feed_type": {
-            "anyOf": [
-              {
-                "const": "EARTHQUAKE_NOTICE"
-              },
-              {
-                "const": "EARTHQUAKE_EXPLANATION"
-              },
-              {
-                "const": "EARTHQUAKE_COUNTS"
-              },
-              {
-                "const": "EARTHQUAKE_NANKAI"
-              },
-              {
-                "const": "APP_UPDATE"
-              },
-              {
-                "const": "INCIDENT"
-              },
-              {
-                "const": "DEVELOPER_MESSAGE"
-              }
-            ]
-          },
-          "priority": {
-            "anyOf": [
-              {
-                "const": "CRITICAL"
-              },
-              {
-                "const": "HIGH"
-              },
-              {
-                "const": "NORMAL"
-              },
-              {
-                "const": "LOW"
-              }
-            ]
-          },
-          "is_important": {
-            "type": "boolean"
-          },
-          "published_at": {
-            "type": "string"
-          },
-          "expires_at": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "summary": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "data": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "const": "EARTHQUAKE_NOTICE"
-                  },
-                  "text": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "text"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "const": "EARTHQUAKE_EXPLANATION"
-                  },
-                  "infoType": {
-                    "anyOf": [
-                      {
-                        "const": "PUBLICATION"
-                      },
-                      {
-                        "const": "CORRECTION"
-                      },
-                      {
-                        "const": "CANCELLATION"
-                      }
-                    ]
-                  },
-                  "naming": {
-                    "type": "object",
-                    "properties": {
-                      "text": {
-                        "type": "string"
-                      },
-                      "en": {
-                        "type": "string",
-                        "nullable": true
-                      }
-                    },
-                    "required": [
-                      "text"
-                    ],
-                    "nullable": true
-                  },
-                  "text": {
-                    "type": "string"
-                  },
-                  "comments": {
-                    "type": "object",
-                    "properties": {
-                      "free": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "free"
-                    ],
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "type",
-                  "infoType",
-                  "text"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "const": "EARTHQUAKE_COUNTS"
-                  },
-                  "infoType": {
-                    "anyOf": [
-                      {
-                        "const": "PUBLICATION"
-                      },
-                      {
-                        "const": "CORRECTION"
-                      },
-                      {
-                        "const": "CANCELLATION"
-                      }
-                    ]
-                  },
-                  "earthquakeCounts": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "anyOf": [
-                            {
-                              "const": "１時間地震回数"
-                            },
-                            {
-                              "const": "累積地震回数"
-                            },
-                            {
-                              "const": "地震回数"
-                            }
-                          ]
-                        },
-                        "targetTime": {
-                          "type": "object",
-                          "properties": {
-                            "start": {
-                              "type": "string"
-                            },
-                            "end": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "start",
-                            "end"
-                          ]
-                        },
-                        "values": {
-                          "type": "object",
-                          "properties": {
-                            "all": {
-                              "anyOf": [
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "null"
-                                }
-                              ]
-                            },
-                            "felt": {
-                              "anyOf": [
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "null"
-                                }
-                              ]
-                            }
-                          },
-                          "required": [
-                            "all",
-                            "felt"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "targetTime",
-                        "values"
-                      ]
-                    },
-                    "nullable": true
-                  },
-                  "nextAdvisory": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "text": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "comments": {
-                    "type": "object",
-                    "properties": {
-                      "free": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "free"
-                    ],
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "type",
-                  "infoType"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "const": "EARTHQUAKE_NANKAI"
-                  },
-                  "infoType": {
-                    "anyOf": [
-                      {
-                        "const": "PUBLICATION"
-                      },
-                      {
-                        "const": "CORRECTION"
-                      },
-                      {
-                        "const": "CANCELLATION"
-                      }
-                    ]
-                  },
-                  "telegramType": {
-                    "anyOf": [
-                      {
-                        "const": "南海トラフ地震臨時情報"
-                      },
-                      {
-                        "const": "南海トラフ地震関連解説情報"
-                      },
-                      {
-                        "const": "北海道・三陸沖後発地震注意情報"
-                      }
-                    ]
-                  },
-                  "earthquakeInfo": {
-                    "type": "object",
-                    "properties": {
-                      "kind": {
-                        "type": "object",
-                        "properties": {
-                          "code": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "code",
-                          "name"
-                        ],
-                        "nullable": true
-                      },
-                      "text": {
-                        "type": "string"
-                      },
-                      "appendix": {
-                        "type": "string",
-                        "nullable": true
-                      }
-                    },
-                    "required": [
-                      "text"
-                    ],
-                    "nullable": true
-                  },
-                  "nextAdvisory": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "text": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "type",
-                  "infoType",
-                  "telegramType"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "const": "APP_UPDATE"
-                  },
-                  "version": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "url": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "type"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "const": "INCIDENT"
-                  },
-                  "url": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "type"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "const": "DEVELOPER_MESSAGE"
-                  },
-                  "url": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "type"
-                ]
-              }
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "feed_type",
-          "priority",
-          "is_important",
-          "published_at",
-          "expires_at",
-          "title",
-          "summary",
-          "data"
-        ]
-      },
-      "FeedListResponse": {
-        "type": "object",
-        "properties": {
-          "feeds": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeedItem"
-            }
-          },
-          "next_cursor": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "required": [
-          "feeds",
-          "next_cursor"
-        ]
-      },
-      "FeedCreateResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id"
         ]
       },
       "TelegramListResponse": {
@@ -9364,6 +8903,15 @@
         "required": true
       },
       "EarthquakeEventIdParam": {
+        "in": "path",
+        "name": "eventId",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{14}$"
+        },
+        "required": true
+      },
+      "EarthquakeIntensityMapEventIdParam": {
         "in": "path",
         "name": "eventId",
         "schema": {
