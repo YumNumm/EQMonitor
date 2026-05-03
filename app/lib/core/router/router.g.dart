@@ -441,6 +441,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugEewCardRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'shake-detection-card',
+          factory: $DebugShakeDetectionCardRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'jma-map',
           factory: $DebugJmaMapRoute._fromState,
         ),
@@ -467,6 +471,14 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'earthquake-replay',
           factory: $EarthquakeReplayRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'navigation',
+          factory: $DebugNavigationRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'app-group',
+          factory: $DebugAppGroupRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'nied',
@@ -919,6 +931,28 @@ mixin $DebugEewCardRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugShakeDetectionCardRoute on GoRouteData {
+  static DebugShakeDetectionCardRoute _fromState(GoRouterState state) =>
+      const DebugShakeDetectionCardRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/shake-detection-card');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $DebugJmaMapRoute on GoRouteData {
   static DebugJmaMapRoute _fromState(GoRouterState state) =>
       const DebugJmaMapRoute();
@@ -1054,6 +1088,48 @@ mixin $EarthquakeReplayRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/earthquake-replay');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugNavigationRoute on GoRouteData {
+  static DebugNavigationRoute _fromState(GoRouterState state) =>
+      const DebugNavigationRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/navigation');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugAppGroupRoute on GoRouteData {
+  static DebugAppGroupRoute _fromState(GoRouterState state) =>
+      const DebugAppGroupRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/app-group');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -33,14 +33,18 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
           return null;
         }
 
-        unawaited(_initializeLayers(styleController));
-        isInitialized.value = true;
+        unawaited(() async {
+          await _initializeLayers(styleController);
+          isInitialized.value = true;
+          await _updateLayers(styleController, eew, travelTimeMap);
+        }());
 
         return () async {
+          isInitialized.value = false;
           await _removeLayers(styleController);
         };
       },
-      [styleController],
+      [styleController, eew, travelTimeMap],
     );
 
     useEffect(

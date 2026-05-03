@@ -1,7 +1,9 @@
-name: Flutter Check
+name: PR Flutter Check
 
 on:
   pull_request:
+    branches:
+      - "*"
   merge_group:
 
 permissions:
@@ -10,7 +12,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: flutter-${{ github.ref }}
+  group: pr-flutter-check-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

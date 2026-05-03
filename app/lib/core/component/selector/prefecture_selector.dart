@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -29,9 +30,10 @@ class PrefectureSelector extends ConsumerWidget {
       hintText: hintText,
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
-          final prefecture = prefectures.firstWhere(
-            (p) => p.code == code,
-          );
+          final prefecture = prefectures.firstWhereOrNull((p) => p.code == code);
+          if (prefecture == null) {
+            return;
+          }
           onChanged((code: code, name: prefecture.name));
         } else {
           onChanged(null);

@@ -108,10 +108,9 @@ void main() {
       );
       final parameter = _buildParameter(regions: []);
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result, isEmpty);
     });
@@ -120,11 +119,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value4,
         prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
+          (code: '040000', name: '宮城県', maxIntensity: api.JmaIntensity.value4),
         ],
         regions: [
           (
@@ -145,15 +140,17 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 1);
       expect(result[JmaIntensity.four]![0].region.region.name, '宮城県');
-      expect(result[JmaIntensity.four]![0].region.maxIntensity, JmaIntensity.four);
+      expect(
+        result[JmaIntensity.four]![0].region.maxIntensity,
+        JmaIntensity.four,
+      );
       expect(result[JmaIntensity.four]![0].cities.length, 1);
       expect(result[JmaIntensity.four]![0].cities[0].city.name, '宮城県北部');
       expect(
@@ -200,10 +197,9 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       // 震度5強と震度4の2グループが存在
       expect(result.keys.toList(), [JmaIntensity.fiveUpper, JmaIntensity.four]);
@@ -227,16 +223,8 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value4,
         prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
-          (
-            code: '070000',
-            name: '福島県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
+          (code: '040000', name: '宮城県', maxIntensity: api.JmaIntensity.value4),
+          (code: '070000', name: '福島県', maxIntensity: api.JmaIntensity.value4),
         ],
         regions: [
           (
@@ -268,10 +256,9 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 2);
@@ -328,10 +315,9 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       final keys = result.keys.toList();
       expect(keys, [
@@ -345,11 +331,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value4,
         prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
+          (code: '040000', name: '宮城県', maxIntensity: api.JmaIntensity.value4),
         ],
         regions: [
           (
@@ -373,10 +355,9 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result[JmaIntensity.four]![0].cities.length, 1);
       expect(result[JmaIntensity.four]![0].cities[0].city.name, '宮城県北部');
@@ -386,11 +367,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value4,
         prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
+          (code: '040000', name: '宮城県', maxIntensity: api.JmaIntensity.value4),
         ],
         regions: [
           (
@@ -420,10 +397,9 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]![0].cities.length, 1);
@@ -434,11 +410,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value3,
         prefectures: [
-          (
-            code: '130000',
-            name: '東京都',
-            maxIntensity: api.JmaIntensity.value3,
-          ),
+          (code: '130000', name: '東京都', maxIntensity: api.JmaIntensity.value3),
         ],
         regions: [
           (
@@ -459,10 +431,9 @@ void main() {
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result[JmaIntensity.three]![0].cities[0].stations, isEmpty);
     });
@@ -471,11 +442,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value3,
         prefectures: [
-          (
-            code: '130000',
-            name: '東京都',
-            maxIntensity: api.JmaIntensity.value3,
-          ),
+          (code: '130000', name: '東京都', maxIntensity: api.JmaIntensity.value3),
         ],
         regions: [
           (
@@ -510,21 +477,19 @@ void main() {
               (
                 code: '1310000',
                 name: '東京都23区',
-                stations: [
-                  (code: '13100000001', name: 'テスト観測点'),
-                ],
+                stations: [(code: '13100000001', name: 'テスト観測点')],
               ),
             ],
           ),
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-        cities: cities,
-        stations: stations,
-      );
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(
+            intensity: intensity,
+            cities: cities,
+            stations: stations,
+          );
 
       final cityNode = result[JmaIntensity.three]![0].cities[0];
       expect(cityNode.city.name, '東京都23区');
@@ -538,6 +503,55 @@ void main() {
       );
     });
 
+    test('観測点の所属市区町村はパラメータで解決し、観測点自身の震度を保持する', () {
+      final intensity = _buildIntensity(
+        maxIntensity: api.JmaIntensity.value4,
+        prefectures: [
+          (code: '130000', name: '東京都', maxIntensity: api.JmaIntensity.value4),
+        ],
+        regions: const [],
+      );
+      final cities = [
+        const api.IntensityItem(
+          value: api.CodeName(code: '1310000', name: '東京都23区'),
+          maxIntensity: api.JmaIntensity.value4,
+        ),
+      ];
+      final stations = [
+        _station(
+          code: '999999',
+          name: '市区町村コード接頭辞と一致しない観測点',
+          maxIntensity: api.JmaIntensity.value2,
+        ),
+      ];
+      final parameter = _buildParameter(
+        regions: [
+          (
+            code: '130000',
+            name: '東京都',
+            cities: [
+              (
+                code: '1310000',
+                name: '東京都23区',
+                stations: [(code: '999999', name: '市区町村コード接頭辞と一致しない観測点')],
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final result = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(
+            intensity: intensity,
+            cities: cities,
+            stations: stations,
+          );
+
+      final stationNode = result[JmaIntensity.four]![0].cities[0].stations[0];
+      expect(stationNode.station.name, '市区町村コード接頭辞と一致しない観測点');
+      expect(stationNode.intensity?.maxIntensity, JmaIntensity.two);
+    });
+
     test('regionsが空でIntensity.citiesのみの場合もツリーが構築される', () {
       final cities = [
         const api.IntensityItem(
@@ -548,11 +562,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value3,
         prefectures: [
-          (
-            code: '130000',
-            name: '東京都',
-            maxIntensity: api.JmaIntensity.value3,
-          ),
+          (code: '130000', name: '東京都', maxIntensity: api.JmaIntensity.value3),
         ],
         regions: [],
         cities: cities,
@@ -562,21 +572,14 @@ void main() {
           (
             code: '130000',
             name: '東京都',
-            cities: [
-              (
-                code: '1310000',
-                name: '東京都23区',
-                stations: const [],
-              ),
-            ],
+            cities: [(code: '1310000', name: '東京都23区', stations: const [])],
           ),
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.three]);
       expect(result[JmaIntensity.three]![0].cities[0].city.name, '東京都23区');
@@ -586,11 +589,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value4,
         prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
+          (code: '040000', name: '宮城県', maxIntensity: api.JmaIntensity.value4),
         ],
         regions: [],
       );
@@ -599,17 +598,14 @@ void main() {
           (
             code: '040000',
             name: '宮城県',
-            cities: [
-              (code: '0420100', name: '宮城県北部', stations: const []),
-            ],
+            cities: [(code: '0420100', name: '宮城県北部', stations: const [])],
           ),
         ],
       );
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]![0].region.region.name, '宮城県');
@@ -624,10 +620,9 @@ void main() {
       );
       final parameter = _buildParameter(regions: []);
 
-      final result = convertToIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToIntensityTree(intensity: intensity);
 
       expect(result, isEmpty);
     });
@@ -642,10 +637,9 @@ void main() {
       );
       final parameter = _buildParameter(regions: []);
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToLpgmIntensityTree(intensity: intensity);
 
       expect(result, isEmpty);
     });
@@ -689,15 +683,14 @@ void main() {
         ],
       );
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToLpgmIntensityTree(intensity: intensity);
 
-      expect(
-        result.keys.toList(),
-        [JmaLpgmIntensity.three, JmaLpgmIntensity.one],
-      );
+      expect(result.keys.toList(), [
+        JmaLpgmIntensity.three,
+        JmaLpgmIntensity.one,
+      ]);
 
       final group3 = result[JmaLpgmIntensity.three]!;
       expect(group3.length, 1);
@@ -714,11 +707,7 @@ void main() {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value4,
         prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
+          (code: '040000', name: '宮城県', maxIntensity: api.JmaIntensity.value4),
         ],
         regions: [
           (
@@ -748,17 +737,13 @@ void main() {
         ],
       );
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToLpgmIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaLpgmIntensity.two]);
       expect(result[JmaLpgmIntensity.two]![0].cities.length, 1);
-      expect(
-        result[JmaLpgmIntensity.two]![0].cities[0].city.name,
-        '宮城県南部',
-      );
+      expect(result[JmaLpgmIntensity.two]![0].cities[0].city.name, '宮城県南部');
     });
 
     test('LPGM震度キーは降順にソートされる', () {
@@ -771,11 +756,7 @@ void main() {
             name: '宮城県',
             maxIntensity: api.JmaIntensity.value5plus,
           ),
-          (
-            code: '070000',
-            name: '福島県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
+          (code: '070000', name: '福島県', maxIntensity: api.JmaIntensity.value4),
         ],
         regions: [
           (
@@ -816,10 +797,9 @@ void main() {
         ],
       );
 
-      final result = convertToLpgmIntensityTree(
-        intensity: intensity,
+      final result = IntensityTreeConverter(
         parameter: parameter,
-      );
+      ).convertToLpgmIntensityTree(intensity: intensity);
 
       final keys = result.keys.toList();
       expect(keys, [

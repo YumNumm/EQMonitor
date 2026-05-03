@@ -15,7 +15,7 @@ import Foundation
 /// - unknown: 不明
 enum Depth: Codable, Equatable {
     case shallow
-    case normal(value: Int)
+    case normal(value: Double)
     case over700
     case unknown
 
@@ -41,7 +41,7 @@ enum Depth: Codable, Equatable {
         case .shallow:
             self = .shallow
         case .normal:
-            let value = try container.decode(Int.self, forKey: .value)
+            let value = try container.decode(Double.self, forKey: .value)
             self = .normal(value: value)
         case .over700:
             self = .over700
@@ -75,7 +75,7 @@ enum Depth: Codable, Equatable {
         case .shallow:
             return 0
         case .normal(let value):
-            return value
+            return Int(value)
         case .over700:
             return 700
         case .unknown:
@@ -89,7 +89,7 @@ enum Depth: Codable, Equatable {
         case .shallow:
             return "ごく浅い"
         case .normal(let value):
-            return "\(value)km"
+            return "\(Int(value))km"
         case .over700:
             return "700km以上"
         case .unknown:

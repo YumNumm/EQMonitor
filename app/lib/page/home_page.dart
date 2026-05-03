@@ -5,7 +5,9 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
+import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
+import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -36,6 +38,7 @@ class _SheetBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
+    final shakeEvents = ref.watch(shakeDetectionVisibleProvider);
     final designSystem = context.designSystem;
     final color = designSystem.color;
     final spacing = designSystem.spacing;
@@ -83,6 +86,7 @@ class _SheetBody extends ConsumerWidget {
       ),
     );
 
+    final padding = MediaQuery.paddingOf(context);
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -90,16 +94,27 @@ class _SheetBody extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(
-                spacing.sm,
-                spacing.sm,
-                spacing.sm,
-                spacing.sm,
+                spacing.sm + padding.left,
+                0,
+                spacing.sm + padding.right,
+                padding.bottom,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: spacing.xs),
                   if (state.isNotEmpty) eewCards,
+                  if (shakeEvents.isNotEmpty)
+                    Column(
+                      children: shakeEvents
+                          .map(
+                            (e) => Padding(
+                              padding: EdgeInsets.only(bottom: spacing.md),
+                              child: ShakeDetectionCard(event: e),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   const HomeEarthquakeHistorySheet(),
                   SizedBox(height: spacing.lg),
                   actionsCard,

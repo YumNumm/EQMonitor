@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
+import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
@@ -18,9 +21,6 @@ import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_page.dart';
 import 'package:eqmonitor/feature/nied/ui/nied_page.dart';
-import 'package:eqmonitor/core/provider/environment/environment.dart';
-import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
-import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
@@ -28,13 +28,16 @@ import 'package:eqmonitor/feature/settings/children/application_info/license_pag
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_device_admin_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
@@ -103,7 +106,8 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
 }
 
 @TypedGoRoute<BetaTestingWarningRoute>(path: '/beta-warning')
-class BetaTestingWarningRoute extends GoRouteData with $BetaTestingWarningRoute {
+class BetaTestingWarningRoute extends GoRouteData
+    with $BetaTestingWarningRoute {
   const BetaTestingWarningRoute();
 
   @override
@@ -278,6 +282,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugEewCardRoute>(path: 'eew-card'),
+        TypedGoRoute<DebugShakeDetectionCardRoute>(
+          path: 'shake-detection-card',
+        ),
         TypedGoRoute<DebugJmaMapRoute>(path: 'jma-map'),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
         TypedGoRoute<DebugWebSocketRoute>(path: 'websocket'),
@@ -287,6 +294,8 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
+        TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
+        TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -341,7 +350,8 @@ class EewSettingsRoute extends GoRouteData with $EewSettingsRoute {
       const EewSettingsPage();
 }
 
-class EarthquakeSettingsRoute extends GoRouteData with $EarthquakeSettingsRoute {
+class EarthquakeSettingsRoute extends GoRouteData
+    with $EarthquakeSettingsRoute {
   const EarthquakeSettingsRoute();
 
   @override
@@ -466,6 +476,16 @@ class DebugEewCardRoute extends GoRouteData with $DebugEewCardRoute {
   }
 }
 
+class DebugShakeDetectionCardRoute extends GoRouteData
+    with $DebugShakeDetectionCardRoute {
+  const DebugShakeDetectionCardRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugShakeDetectionCardPage();
+  }
+}
+
 class DebugJmaMapRoute extends GoRouteData with $DebugJmaMapRoute {
   const DebugJmaMapRoute();
 
@@ -538,6 +558,24 @@ class EarthquakeReplayRoute extends GoRouteData with $EarthquakeReplayRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const EarthquakeReplayPage();
+  }
+}
+
+class DebugNavigationRoute extends GoRouteData with $DebugNavigationRoute {
+  const DebugNavigationRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NavigationDebugPage();
+  }
+}
+
+class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
+  const DebugAppGroupRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugAppGroupPage();
   }
 }
 

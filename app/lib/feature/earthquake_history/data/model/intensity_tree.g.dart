@@ -8,25 +8,26 @@ part of 'intensity_tree.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_RegionIntensityNode _$RegionIntensityNodeFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('_RegionIntensityNode', json, ($checkedConvert) {
-      final val = _RegionIntensityNode(
-        region: $checkedConvert(
-          'region',
-          (v) => IntensityRegion.fromJson(v as Map<String, dynamic>),
-        ),
-        cities: $checkedConvert(
-          'cities',
-          (v) => (v as List<dynamic>)
-              .map((e) => CityIntensityNode.fromJson(e as Map<String, dynamic>))
-              .toList(),
-        ),
-      );
-      return val;
-    });
+_PrefectureIntensityNode _$PrefectureIntensityNodeFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_PrefectureIntensityNode', json, ($checkedConvert) {
+  final val = _PrefectureIntensityNode(
+    region: $checkedConvert(
+      'region',
+      (v) => IntensityRegion.fromJson(v as Map<String, dynamic>),
+    ),
+    cities: $checkedConvert(
+      'cities',
+      (v) => (v as List<dynamic>)
+          .map((e) => CityIntensityNode.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$RegionIntensityNodeToJson(
-  _RegionIntensityNode instance,
+Map<String, dynamic> _$PrefectureIntensityNodeToJson(
+  _PrefectureIntensityNode instance,
 ) => <String, dynamic>{'region': instance.region, 'cities': instance.cities};
 
 _IntensityRegion _$IntensityRegionFromJson(Map<String, dynamic> json) =>

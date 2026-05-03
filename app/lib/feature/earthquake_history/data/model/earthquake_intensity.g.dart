@@ -30,8 +30,9 @@ _EarthquakeIntensity _$EarthquakeIntensityFromJson(
             $enumDecode(_$JmaIntensityEnumMap, k),
             (e as List<dynamic>)
                 .map(
-                  (e) =>
-                      RegionIntensityNode.fromJson(e as Map<String, dynamic>),
+                  (e) => PrefectureIntensityNode.fromJson(
+                    e as Map<String, dynamic>,
+                  ),
                 )
                 .toList(),
           ),
@@ -50,7 +51,7 @@ _EarthquakeIntensity _$EarthquakeIntensityFromJson(
             $enumDecode(_$JmaLpgmIntensityEnumMap, k),
             (e as List<dynamic>)
                 .map(
-                  (e) => RegionLpgmIntensityNode.fromJson(
+                  (e) => PrefectureLpgmIntensityNode.fromJson(
                     e as Map<String, dynamic>,
                   ),
                 )

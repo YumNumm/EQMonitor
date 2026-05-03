@@ -94,6 +94,7 @@ class _MapContent extends HookConsumerWidget {
       initZoom: zoom,
       initStyle: styleString,
     );
+    final styleGeneration = useState(0);
 
     final intensity = earthquake.intensity;
 
@@ -146,6 +147,9 @@ class _MapContent extends HookConsumerWidget {
                 options: mapOptions,
                 onEvent: (event) {
                   MapLibreEventProvider.of(context).emit(event);
+                  if (event is MapEventStyleLoaded) {
+                    styleGeneration.value += 1;
+                  }
                   if (event is MapEventClick) {
                     _handleTap(
                       context: context,
@@ -158,46 +162,60 @@ class _MapContent extends HookConsumerWidget {
                 },
                 children: [
                   // 塗りつぶし（最背面）
-                  if (effectiveFillMode ==
+                  if (styleGeneration.value > 0 &&
+                      effectiveFillMode ==
                           EarthquakeHistoryFillMode.matchIcon &&
                       intensity != null)
                     EarthquakeHistoryFillLayer(
+                      key: ValueKey('fill-${styleGeneration.value}'),
                       intensity: intensity,
                       iconMode: resolvedIconMode,
                       showingLpgmIntensity: config.showingLpgmIntensity,
                     ),
                   // 地域・市区町村アイコン（塗りつぶしの上）
-                  if (intensity != null)
+                  if (styleGeneration.value > 0 && intensity != null)
                     EarthquakeHistoryIntensityIconLayer(
+                      key: ValueKey('area-icon-${styleGeneration.value}'),
                       intensity: intensity,
                       iconMode: resolvedIconMode,
                       hasStationData: hasStationData,
                       showingLpgmIntensity: config.showingLpgmIntensity,
                     ),
                   // 推計震度ラスタ
-                  if (tileUrl != null)
+                  if (styleGeneration.value > 0 &&
+                      tileUrl != null &&
+                      isOverriding.value)
                     EarthquakeHistoryDetailsEstimatedIntensityLayer(
+                      key: ValueKey('estimated-${styleGeneration.value}'),
                       tileUrl: tileUrl,
                     ),
                   // 震央誤差矩形
-                  if (config.showHypocenterError)
+                  if (styleGeneration.value > 0 && config.showHypocenterError)
                     EarthquakeHistoryHypocenterErrorLayer(
+                      key: ValueKey(
+                        'hypocenter-error-${styleGeneration.value}',
+                      ),
                       earthquake: earthquake,
                     ),
                   // 観測点・震央（z 順を HypocenterDisplayMode で制御）
-                  if (config.hypocenterDisplayMode ==
-                      HypocenterDisplayMode.belowStations)
+                  if (styleGeneration.value > 0 &&
+                      config.hypocenterDisplayMode ==
+                          HypocenterDisplayMode.belowStations)
                     hypocenterLayer,
-                  if (intensity != null && config.showStation)
+                  if (styleGeneration.value > 0 &&
+                      intensity != null &&
+                      config.showStation)
                     EarthquakeHistoryStationIntensityLayer(
+                      key: ValueKey('station-${styleGeneration.value}'),
                       intensity: intensity,
                       iconMode: resolvedIconMode,
                       stationDisplayMode: config.stationDisplayMode,
                       showLabel: config.showStationLabel,
                       showingLpgmIntensity: config.showingLpgmIntensity,
                     ),
-                  if (config.hypocenterDisplayMode !=
-                      HypocenterDisplayMode.belowStations)
+                  if (styleGeneration.value > 0 &&
+                      config.hypocenterDisplayMode !=
+                          HypocenterDisplayMode.belowStations)
                     hypocenterLayer,
                   EarthquakeHistoryDetailsMapCameraController(
                     eventId: eventId,
@@ -299,10 +317,7 @@ class _MapContent extends HookConsumerWidget {
     final mapData = isCity
         ? jmaMap.areaInformationCity
         : jmaMap.areaForecastLocalE;
-    final latLng = JmaMap_LatLng(
-      lat: event.point.lat,
-      lng: event.point.lon,
-    );
+    final latLng = JmaMap_LatLng(lat: event.point.lat, lng: event.point.lon);
     final result = JmaMapUtility().findNearestItem(latLng, mapData);
     final item = result.item;
     if (item == null) {

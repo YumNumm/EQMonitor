@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -38,8 +40,11 @@ class Eew extends _$Eew {
 
     final refreshTimer = Timer.periodic(
       const Duration(seconds: 10),
-      (_) async {
-        // TODO(YumNumm): WebSocketが接続されていない場合には、API経由で取得する
+      (_) {
+        final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
+        if (wsPhase != WsPhase.connected) {
+          ref.invalidate(_eewRestProvider);
+        }
       },
     );
     ref.onDispose(refreshTimer.cancel);

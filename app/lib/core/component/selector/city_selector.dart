@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:flutter/material.dart';
@@ -148,9 +149,10 @@ class _CityDropdown extends StatelessWidget {
       enableFilter: true,
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
-          final city = cities.firstWhere(
-            (c) => c.code == code,
-          );
+          final city = cities.firstWhereOrNull((c) => c.code == code);
+          if (city == null) {
+            return;
+          }
           onChanged((
             code: code,
             name: city.name,

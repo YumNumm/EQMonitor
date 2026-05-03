@@ -8,13 +8,13 @@ part of 'lpgm_intensity_tree.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_RegionLpgmIntensityNode _$RegionLpgmIntensityNodeFromJson(
+_PrefectureLpgmIntensityNode _$PrefectureLpgmIntensityNodeFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
-  '_RegionLpgmIntensityNode',
+  '_PrefectureLpgmIntensityNode',
   json,
   ($checkedConvert) {
-    final val = _RegionLpgmIntensityNode(
+    final val = _PrefectureLpgmIntensityNode(
       region: $checkedConvert(
         'region',
         (v) => const EarthquakeParameterRegionItemConverter().fromJson(
@@ -39,8 +39,8 @@ _RegionLpgmIntensityNode _$RegionLpgmIntensityNodeFromJson(
   fieldKeyMap: const {'maxLpgmIntensity': 'max_lpgm_intensity'},
 );
 
-Map<String, dynamic> _$RegionLpgmIntensityNodeToJson(
-  _RegionLpgmIntensityNode instance,
+Map<String, dynamic> _$PrefectureLpgmIntensityNodeToJson(
+  _PrefectureLpgmIntensityNode instance,
 ) => <String, dynamic>{
   'region': const EarthquakeParameterRegionItemConverter().toJson(
     instance.region,

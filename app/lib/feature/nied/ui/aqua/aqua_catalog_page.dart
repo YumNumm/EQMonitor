@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:core/core.dart';
+import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:nied_api_client/nied_api_client.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class AquaCatalogPage extends HookConsumerWidget {
@@ -75,7 +77,7 @@ class _AquaCatalogList extends HookConsumerWidget {
     final snapshot = useFuture(future);
 
     if (snapshot.connectionState == ConnectionState.waiting) {
-      return const Center(child: CircularProgressIndicator());
+      return const _AquaCatalogSkeleton();
     }
 
     if (snapshot.hasError) {
@@ -101,8 +103,9 @@ class _AquaCatalogList extends HookConsumerWidget {
     final events = snapshot.data ?? [];
 
     if (events.isEmpty) {
-      return const Center(
-        child: Text('データがありません'),
+      return const AppEmptyState(
+        message: 'データがありません',
+        icon: Icons.folder_open_outlined,
       );
     }
 
@@ -147,6 +150,28 @@ class _AquaCatalogList extends HookConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AquaCatalogSkeleton extends StatelessWidget {
+  const _AquaCatalogSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: ListView(
+        children: [
+          for (final i in List.generate(5, (i) => i))
+            ListTile(
+              title: Text('震源地 $i'),
+              subtitle: const Text(
+                '発生日時: 2026-04-21 12:34:56 JST\nM5.5 / 深さ 10km',
+              ),
+              trailing: const SizedBox(width: 80, height: 48),
+            ),
+        ],
+      ),
     );
   }
 }

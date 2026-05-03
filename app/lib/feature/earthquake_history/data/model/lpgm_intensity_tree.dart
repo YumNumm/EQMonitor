@@ -7,18 +7,18 @@ import 'package:jma_parameter_types/earthquake_param.pb.dart';
 part 'lpgm_intensity_tree.freezed.dart';
 part 'lpgm_intensity_tree.g.dart';
 
-/// 地方(都道府県)単位の長周期地震動階級ノード
+/// 都道府県単位の長周期地震動階級ノード
 @freezed
-abstract class RegionLpgmIntensityNode with _$RegionLpgmIntensityNode {
-  const factory RegionLpgmIntensityNode({
+abstract class PrefectureLpgmIntensityNode with _$PrefectureLpgmIntensityNode {
+  const factory PrefectureLpgmIntensityNode({
     @EarthquakeParameterRegionItemConverter()
     required EarthquakeParameterRegionItem region,
     required JmaLpgmIntensity? maxLpgmIntensity,
     required List<CityLpgmIntensityNode> cities,
-  }) = _RegionLpgmIntensityNode;
+  }) = _PrefectureLpgmIntensityNode;
 
-  factory RegionLpgmIntensityNode.fromJson(Map<String, dynamic> json) =>
-      _$RegionLpgmIntensityNodeFromJson(json);
+  factory PrefectureLpgmIntensityNode.fromJson(Map<String, dynamic> json) =>
+      _$PrefectureLpgmIntensityNodeFromJson(json);
 }
 
 @freezed

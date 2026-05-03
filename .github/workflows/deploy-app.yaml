@@ -256,64 +256,6 @@ jobs:
             echo "::add-mask::${mask_value}"
           done
 
-      - name: Output release version
-        run: |
-          VERSION=$(yq .version app/pubspec.yaml -r)
-          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
-          REF_NAME=$(git rev-parse --abbrev-ref HEAD)
-          echo "[$VERSION - $REF_NAME]" > changelog.tmp
-
-      - name: Output git log
-        run: |
-          APPLE_ID="${APP_APPLE_ID_FROM_SECRET:-$APP_STORE_CONNECT_APP_APPLE_ID}"
-          if [ -z "$APPLE_ID" ]; then
-            echo "::error::App Store Connect のアプリ Apple ID（数値）を設定してください: GitHub Secret APP_STORE_CONNECT_APP_APPLE_ID、または mise の APP_STORE_CONNECT_APP_APPLE_ID"
-            exit 1
-          fi
-          echo "APPLE_ID=${APPLE_ID}" >> "$GITHUB_ENV"
-
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || LAST_TAG=$(git rev-list --max-parents=0 HEAD)
-          git log "${LAST_TAG}..HEAD" --pretty=format:"- [%ad] %an: %s %h" >> changelog.tmp
-
-          # altool 向けに最大 2000 バイト（head -c は UTF-8 の途中で切れて read_text が失敗するため境界で切る）
-          python3 << 'PY'
-          from pathlib import Path
-
-          def truncate_utf8_bytes(data: bytes, limit: int) -> bytes:
-              if len(data) <= limit:
-                  return data
-              cut = data[:limit]
-              while cut:
-                  try:
-                      cut.decode("utf-8")
-                      return cut
-                  except UnicodeDecodeError:
-                      cut = cut[:-1]
-              return b""
-
-          tmp = Path("changelog.tmp").read_bytes()
-          clipped = truncate_utf8_bytes(tmp, 2000)
-          if len(clipped) < len(tmp):
-              clipped += b"\n..."
-          Path("changelog.txt").write_bytes(clipped)
-          PY
-
-          # altool の beta テキストは "whatsNew" = "..."; 形式（README 参照）。日本語は ja.txt。
-          BETA_TEXT_DIR="build/beta-app-store-text/beta-${APPLE_ID}/upload/IOS"
-          mkdir -p "$BETA_TEXT_DIR"
-          export BETA_TEXT_DIR
-          python3 << 'PY'
-          import os
-          import pathlib
-
-          root = pathlib.Path(os.environ["BETA_TEXT_DIR"])
-          changelog = pathlib.Path("changelog.txt").read_text(encoding="utf-8")
-          if len(changelog) > 4000:
-              changelog = changelog[:3997] + "\n…"
-          c = changelog.replace("\\", "\\\\").replace('"', '\\"')
-          (root / "ja.txt").write_text('"whatsNew" = "' + c + '";\n', encoding="utf-8")
-          PY
-
       - name: Extract App Store Connect API Key
         run: |
           mkdir -p "$HOME/.private_keys"
@@ -326,18 +268,6 @@ jobs:
             --upload-app \
             -f build/EQMonitor.ipa \
             --type ios \
-            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
-            --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
-
-      - name: Upload Beta App Store text (TestFlight)
-        run: |
-          xcrun altool \
-            --beta-app-store-text build/beta-app-store-text \
-            --upload \
-            --apple-id "$APPLE_ID" \
-            --bundle-short-version-string "$VERSION" \
-            --bundle-version "${{ github.run_number }}" \
-            --platform ios \
             --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
             --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
 
@@ -443,6 +373,9 @@ jobs:
       id-token: write
     environment:
       name: EQMonitor-Android
+    concurrency:
+      group: deploy-android-firebase-app-distribution
+      cancel-in-progress: false
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -529,6 +462,7 @@ jobs:
     timeout-minutes: 10
     concurrency:
       group: deploy-android-google-play
+      cancel-in-progress: false
     permissions:
       contents: read
       id-token: write
@@ -626,5 +560,3 @@ jobs:
             --release-notes="$(cat release-notes.json)" \
             --release-name "$RELEASE_NAME" \
             --package-name "net.yumnumm.eqmonitor"
-
-

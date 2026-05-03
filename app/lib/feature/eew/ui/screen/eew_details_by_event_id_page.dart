@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
   const EewDetailsByEventIdPage({required this.eventId, super.key});
@@ -35,7 +37,10 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
       body: eewsAsyncValue.when(
         data: (eews) {
           if (eews.isEmpty) {
-            return const Center(child: Text('データがありません'));
+            return const AppEmptyState(
+              message: 'EEW情報はありません',
+              icon: Icons.warning_amber_outlined,
+            );
           }
           final sortedEews = eews.sorted(
             (a, b) => a.serialNo.compareTo(b.serialNo),
@@ -69,11 +74,32 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             initZoom: 5,
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const _EewDetailsByEventIdSkeleton(),
         error: (error, stack) => ErrorCard(
           error: error,
           onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
         ),
+      ),
+    );
+  }
+}
+
+class _EewDetailsByEventIdSkeleton extends StatelessWidget {
+  const _EewDetailsByEventIdSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: ListView(
+        children: [
+          for (final i in List.generate(3, (i) => i))
+            ListTile(
+              leading: const CircleAvatar(radius: 16),
+              title: Text('第${i + 1}報'),
+              subtitle: const Text('2026/04/21 12:34:56'),
+              trailing: const Text('M5.5'),
+            ),
+        ],
       ),
     );
   }

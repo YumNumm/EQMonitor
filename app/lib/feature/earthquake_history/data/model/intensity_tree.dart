@@ -9,16 +9,16 @@ import 'package:jma_parameter_types/earthquake_param.pb.dart';
 part 'intensity_tree.freezed.dart';
 part 'intensity_tree.g.dart';
 
-/// 地方(都道府県)単位の震度ノード
+/// 都道府県単位の震度ノード
 @freezed
-abstract class RegionIntensityNode with _$RegionIntensityNode {
-  const factory RegionIntensityNode({
+abstract class PrefectureIntensityNode with _$PrefectureIntensityNode {
+  const factory PrefectureIntensityNode({
     required IntensityRegion region,
     required List<CityIntensityNode> cities,
-  }) = _RegionIntensityNode;
+  }) = _PrefectureIntensityNode;
 
-  factory RegionIntensityNode.fromJson(Map<String, dynamic> json) =>
-      _$RegionIntensityNodeFromJson(json);
+  factory PrefectureIntensityNode.fromJson(Map<String, dynamic> json) =>
+      _$PrefectureIntensityNodeFromJson(json);
 }
 
 @freezed
