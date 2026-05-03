@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
@@ -10,7 +9,6 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_camera_controller.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
@@ -25,7 +23,6 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
@@ -33,12 +30,10 @@ import 'package:maplibre/maplibre.dart';
 class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
   const EarthquakeHistoryDetailsMapView({
     required this.earthquake,
-    required this.eventId,
     super.key,
   });
 
   final Earthquake earthquake;
-  final String eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,10 +43,11 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
       AsyncData(:final value) when value.styleString != null => _MapContent(
         styleString: value.styleString!,
         earthquake: earthquake,
-        eventId: eventId,
       ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
+      _ => const Center(
+        child: CircularProgressIndicator.adaptive(),
+      ),
     };
   }
 }
@@ -60,12 +56,10 @@ class _MapContent extends HookConsumerWidget {
   const _MapContent({
     required this.styleString,
     required this.earthquake,
-    required this.eventId,
   });
 
   final String styleString;
   final Earthquake earthquake;
-  final String eventId;
 
   static const _stationLayerId = 'eq-history-station-intensity-circle';
   static const _regionFillLayerId = 'eq-history-fill-region';
@@ -73,19 +67,12 @@ class _MapContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final config =
-        ref.watch(
-          earthquakeHistoryConfigProvider.select((v) => v.value?.detail),
-        ) ??
-        const EarthquakeHistoryDetailConfig();
-    final jmaMapAsync = ref.watch(jmaMapProvider);
+    final config = ref.watch(
+      earthquakeHistoryConfigProvider.select((v) => v.requireValue.detail),
+    );
+    final jmaMap = ref.watch(jmaMapProvider).requireValue;
 
     final tileUrl = earthquake.estimatedIntensityTileUrl;
-
-    // エフェメラル override 状態: 画面を開いたとき tileUrl があり、且つ設定で有効なら true
-    final isOverriding = useState(
-      tileUrl != null && config.useEstimatedIntensityWhenAvailable,
-    );
 
     final center = initialGeographicForEarthquake(earthquake);
     final zoom = initialZoomForEarthquake(earthquake);
@@ -94,35 +81,6 @@ class _MapContent extends HookConsumerWidget {
       initZoom: zoom,
       initStyle: styleString,
     );
-    final styleGeneration = useState(0);
-
-    final intensity = earthquake.intensity;
-
-    // データ可用性に応じた iconMode のフォールバック解決
-    final hasCityData =
-        intensity != null &&
-        intensity.intensityTree.values.any(
-          (r) => r.any((n) => n.cities.isNotEmpty),
-        );
-    final hasStationData =
-        intensity != null &&
-        intensity.intensityTree.values.any(
-          (r) => r.any((n) => n.cities.any((c) => c.stations.isNotEmpty)),
-        );
-
-    final resolvedIconMode = switch (config.iconMode) {
-      EarthquakeHistoryIconMode.station when !hasStationData =>
-        EarthquakeHistoryIconMode.region,
-      EarthquakeHistoryIconMode.municipality when !hasCityData =>
-        EarthquakeHistoryIconMode.region,
-      _ => config.iconMode,
-    };
-
-    // 推計震度タイル表示中は塗りつぶしを強制 none
-    final effectiveFillMode = (tileUrl != null && isOverriding.value)
-        ? EarthquakeHistoryFillMode.none
-        : config.fillMode;
-
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       earthquake: earthquake,
       displayMode: config.hypocenterDisplayMode,
@@ -147,99 +105,55 @@ class _MapContent extends HookConsumerWidget {
                 options: mapOptions,
                 onEvent: (event) {
                   MapLibreEventProvider.of(context).emit(event);
-                  if (event is MapEventStyleLoaded) {
-                    styleGeneration.value += 1;
-                  }
                   if (event is MapEventClick) {
                     _handleTap(
                       context: context,
                       event: event,
                       config: config,
-                      effectiveFillMode: effectiveFillMode,
-                      jmaMap: jmaMapAsync.value,
+                      jmaMap: jmaMap,
                     );
                   }
                 },
                 children: [
-                  // 塗りつぶし（最背面）
-                  if (styleGeneration.value > 0 &&
-                      effectiveFillMode ==
-                          EarthquakeHistoryFillMode.matchIcon &&
-                      intensity != null)
-                    EarthquakeHistoryFillLayer(
-                      key: ValueKey('fill-${styleGeneration.value}'),
-                      intensity: intensity,
-                      iconMode: resolvedIconMode,
-                      showingLpgmIntensity: config.showingLpgmIntensity,
-                    ),
+                  EarthquakeHistoryFillLayer(
+                    key: const ValueKey('fill'),
+                    earthquake: earthquake,
+                    config: config,
+                  ),
                   // 地域・市区町村アイコン（塗りつぶしの上）
-                  if (styleGeneration.value > 0 && intensity != null)
-                    EarthquakeHistoryIntensityIconLayer(
-                      key: ValueKey('area-icon-${styleGeneration.value}'),
-                      intensity: intensity,
-                      iconMode: resolvedIconMode,
-                      hasStationData: hasStationData,
-                      showingLpgmIntensity: config.showingLpgmIntensity,
-                    ),
-                  // 推計震度ラスタ
-                  if (styleGeneration.value > 0 &&
-                      tileUrl != null &&
-                      isOverriding.value)
+                  EarthquakeHistoryIntensityIconLayer(
+                    key: const ValueKey('area-icon'),
+                    earthquake: earthquake,
+                    config: config,
+                  ),
+                  // 推計震度
+                  if (tileUrl != null)
                     EarthquakeHistoryDetailsEstimatedIntensityLayer(
-                      key: ValueKey('estimated-${styleGeneration.value}'),
+                      key: const ValueKey('estimated'),
                       tileUrl: tileUrl,
                     ),
                   // 震央誤差矩形
-                  if (styleGeneration.value > 0 && config.showHypocenterError)
+                  if (config.showHypocenterError)
                     EarthquakeHistoryHypocenterErrorLayer(
-                      key: ValueKey(
-                        'hypocenter-error-${styleGeneration.value}',
-                      ),
+                      key: const ValueKey('hypocenter-error'),
                       earthquake: earthquake,
                     ),
                   // 観測点・震央（z 順を HypocenterDisplayMode で制御）
-                  if (styleGeneration.value > 0 &&
-                      config.hypocenterDisplayMode ==
-                          HypocenterDisplayMode.belowStations)
+                  if (config.hypocenterDisplayMode ==
+                      HypocenterDisplayMode.belowStations)
                     hypocenterLayer,
-                  if (styleGeneration.value > 0 &&
-                      intensity != null &&
-                      config.showStation)
+                  if (config.showStation)
                     EarthquakeHistoryStationIntensityLayer(
-                      key: ValueKey('station-${styleGeneration.value}'),
-                      intensity: intensity,
-                      iconMode: resolvedIconMode,
-                      stationDisplayMode: config.stationDisplayMode,
-                      showLabel: config.showStationLabel,
-                      showingLpgmIntensity: config.showingLpgmIntensity,
+                      key: const ValueKey('station'),
+                      earthquake: earthquake,
+                      config: config,
                     ),
-                  if (styleGeneration.value > 0 &&
-                      config.hypocenterDisplayMode !=
-                          HypocenterDisplayMode.belowStations)
-                    hypocenterLayer,
-                  EarthquakeHistoryDetailsMapCameraController(
-                    eventId: eventId,
-                    earthquake: earthquake,
-                  ),
                 ],
               ),
 
-              // 推計震度表示中バナー（右上）— タップで override を解除
-              if (tileUrl != null && isOverriding.value)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: SafeArea(
-                    child: FilledButton.tonal(
-                      onPressed: () => isOverriding.value = false,
-                      child: const Text('推計震度データ表示中'),
-                    ),
-                  ),
-                ),
-
               // コントローラカード（右上）
               Positioned(
-                top: tileUrl != null && isOverriding.value ? 56 : 8,
+                top: 8,
                 right: 8,
                 child: SafeArea(
                   child: _MapControllerCard(
@@ -272,8 +186,7 @@ class _MapContent extends HookConsumerWidget {
     required BuildContext context,
     required MapEventClick event,
     required EarthquakeHistoryDetailConfig config,
-    required EarthquakeHistoryFillMode effectiveFillMode,
-    required Map<JmaMapType, JmaMap_JmaMapData>? jmaMap,
+    required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
   }) {
     final controller = MapController.maybeOf(context);
     if (controller == null) {
@@ -304,10 +217,6 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    // 塗りつぶしレイヤータップ（塗りつぶし表示中のみ）
-    if (effectiveFillMode == EarthquakeHistoryFillMode.none || jmaMap == null) {
-      return;
-    }
     final isCity = hitIds.contains(_cityFillLayerId);
     final isRegion = hitIds.contains(_regionFillLayerId);
     if (!isCity && !isRegion) {
@@ -337,9 +246,7 @@ class _MapContent extends HookConsumerWidget {
         ),
       );
     } else {
-      final region = earthquake.intensity?.regions.firstWhereOrNull(
-        (r) => r.region.code == code,
-      );
+      final region = _findRegionByCode(code);
       unawaited(
         showAreaPopup(
           context,
@@ -393,6 +300,21 @@ class _MapContent extends HookConsumerWidget {
           if (city.city.code == code) {
             return city;
           }
+        }
+      }
+    }
+    return null;
+  }
+
+  IntensityRegion? _findRegionByCode(String code) {
+    final intensity = earthquake.intensity;
+    if (intensity == null) {
+      return null;
+    }
+    for (final entry in intensity.intensityTree.entries) {
+      for (final region in entry.value) {
+        if (region.region.region.code == code) {
+          return region.region;
         }
       }
     }
@@ -461,7 +383,9 @@ class _MapControllerCard extends StatelessWidget {
       child: Divider(height: 0),
     );
 
-    void haptic() => unawaited(HapticFeedback.lightImpact());
+    void haptic() => unawaited(
+      HapticFeedback.lightImpact(),
+    );
 
     return Card(
       color: colorScheme.surfaceContainerHighest,

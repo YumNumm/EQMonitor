@@ -16,13 +16,11 @@ class IntensityTreeConverter {
 
   Map<JmaIntensity, List<PrefectureIntensityNode>> convertToIntensityTree({
     required api.Intensity intensity,
-    List<api.IntensityItem>? cities,
-    List<api.IntensityStationItem>? stations,
   }) {
-    final citiesList = cities ?? intensity.cities;
-    final stationsList = stations ?? intensity.stations;
-    if (citiesList != null && citiesList.isNotEmpty) {
-      return _fromCities(citiesList, stationsList ?? const []);
+    final citiesList = intensity.cities ?? [];
+    final stationsList = intensity.stations ?? [];
+    if (citiesList.isNotEmpty) {
+      return _fromCities(citiesList, stationsList);
     }
     if (intensity.regions.isNotEmpty) {
       return _fromRegions(intensity.regions);
@@ -36,13 +34,11 @@ class IntensityTreeConverter {
   Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
   convertToLpgmIntensityTree({
     required api.Intensity intensity,
-    List<api.IntensityItem>? cities,
-    List<api.IntensityStationItem>? stations,
   }) {
-    final citiesList = cities ?? intensity.cities;
-    final stationsList = stations ?? intensity.stations;
-    if (citiesList != null && citiesList.isNotEmpty) {
-      return _lpgmFromCities(citiesList, stationsList ?? const []);
+    final cities = intensity.cities ?? [];
+    final stations = intensity.stations ?? [];
+    if (cities.isNotEmpty) {
+      return _lpgmFromCities(cities, stations);
     }
     if (intensity.regions.isNotEmpty) {
       return _lpgmFromRegions(intensity.regions);
@@ -55,9 +51,9 @@ class IntensityTreeConverter {
 
   Map<String, EarthquakeParameterCityItem> _cityParamMap() {
     final map = <String, EarthquakeParameterCityItem>{};
-    for (final r in parameter.regions) {
-      for (final c in r.cities) {
-        map[c.code] = c;
+    for (final region in parameter.regions) {
+      for (final city in region.cities) {
+        map[city.code] = city;
       }
     }
     return map;
@@ -65,10 +61,10 @@ class IntensityTreeConverter {
 
   Map<String, EarthquakeParameterStationItem> _stationParamMap() {
     final map = <String, EarthquakeParameterStationItem>{};
-    for (final r in parameter.regions) {
-      for (final c in r.cities) {
-        for (final s in c.stations) {
-          map[s.code] = s;
+    for (final region in parameter.regions) {
+      for (final city in region.cities) {
+        for (final station in city.stations) {
+          map[station.code] = station;
         }
       }
     }
@@ -77,10 +73,10 @@ class IntensityTreeConverter {
 
   Map<String, String> _stationCityCodeMap() {
     final map = <String, String>{};
-    for (final r in parameter.regions) {
-      for (final c in r.cities) {
-        for (final s in c.stations) {
-          map[s.code] = c.code;
+    for (final region in parameter.regions) {
+      for (final city in region.cities) {
+        for (final station in city.stations) {
+          map[station.code] = city.code;
         }
       }
     }
@@ -88,10 +84,10 @@ class IntensityTreeConverter {
   }
 
   String? _prefectureCode(EarthquakeParameterCityItem city) {
-    for (final r in parameter.regions) {
-      for (final c in r.cities) {
-        if (c.code == city.code) {
-          return r.code;
+    for (final region in parameter.regions) {
+      for (final parameterCity in region.cities) {
+        if (parameterCity.code == city.code) {
+          return region.code;
         }
       }
     }
@@ -307,26 +303,23 @@ class IntensityTreeConverter {
         continue;
       }
 
-      final code = apiCity.value.code;
-      if (code.length < 5) {
-        continue;
-      }
-
       final prefCode = _prefectureCode(cityItem);
       if (prefCode == null) {
         continue;
       }
 
       final stationNodes = <StationLpgmIntensityNode>[];
-      for (final st in byCityCode[code] ?? const <api.IntensityStationItem>[]) {
-        final paramSt = stationParam[st.value.code];
-        if (paramSt == null) {
+      for (final station
+          in byCityCode[apiCity.value.code] ??
+              const <api.IntensityStationItem>[]) {
+        final parameterStation = stationParam[station.value.code];
+        if (parameterStation == null) {
           continue;
         }
         stationNodes.add(
           StationLpgmIntensityNode(
-            station: paramSt,
-            intensity: st.toIntensityStation,
+            station: parameterStation,
+            intensity: station.toIntensityStation,
           ),
         );
       }

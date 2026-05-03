@@ -49,4 +49,4 @@ final class EqMonitorWsDataSourceProvider
 }
 
 String _$eqMonitorWsDataSourceHash() =>
-    r'463c82ba657c17e43922c430e516b96231fd1c45';
+    r'01e392ea2eeb9e3018fc557d6c5c97d8f70dfd5c';

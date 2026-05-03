@@ -52,7 +52,7 @@ void main() {
       final result = mapper.map(
         const WsMessage.realtime(
           data: RealtimeEventEnvelope.earthquake(
-            operation: 'delete',
+            operation: .delete,
             eventId: '20260501090000',
           ),
         ),

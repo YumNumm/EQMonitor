@@ -10,12 +10,17 @@ part of 'realtime_event_bootstrap_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// アプリ起動時にリアルタイムイベントの購読を開始する。
+
 @ProviderFor(realtimeEventBootstrap)
 final realtimeEventBootstrapProvider = RealtimeEventBootstrapProvider._();
+
+/// アプリ起動時にリアルタイムイベントの購読を開始する。
 
 final class RealtimeEventBootstrapProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
+  /// アプリ起動時にリアルタイムイベントの購読を開始する。
   RealtimeEventBootstrapProvider._()
     : super(
         from: null,
@@ -39,7 +44,15 @@ final class RealtimeEventBootstrapProvider
   void create(Ref ref) {
     return realtimeEventBootstrap(ref);
   }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
 }
 
 String _$realtimeEventBootstrapHash() =>
-    r'91f18185b6a2d3a50ad891c8d42202d466639b16';
+    r'401143efe2b93958d4d7e2d997859f413fa15a1c';
