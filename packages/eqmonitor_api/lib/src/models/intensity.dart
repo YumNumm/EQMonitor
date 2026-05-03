@@ -4,10 +4,10 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'intensity_item.dart';
-import 'intensity_station_item.dart';
+import 'intensity_tree.dart';
 import 'jma_intensity.dart';
 import 'jma_lpgm_intensity.dart';
+import 'lpgm_intensity_tree.dart';
 
 part 'intensity.freezed.dart';
 part 'intensity.g.dart';
@@ -18,14 +18,12 @@ abstract class Intensity with _$Intensity {
   const factory Intensity({
     @JsonKey(name: 'max_intensity')
     required JmaIntensity maxIntensity,
-    required List<IntensityItem> prefectures,
-    required List<IntensityItem> regions,
+    @JsonKey(name: 'intensity_tree')
+    required List<IntensityTree> intensityTree,
     @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
     JmaLpgmIntensity? maxLpgmIntensity,
-    @JsonKey(includeIfNull: false)
-    List<IntensityItem>? cities,
-    @JsonKey(includeIfNull: false)
-    List<IntensityStationItem>? stations,
+    @JsonKey(includeIfNull: false,name: 'lpgm_intensity_tree')
+    List<LpgmIntensityTree>? lpgmIntensityTree,
   }) = _Intensity;
   
   factory Intensity.fromJson(Map<String, Object?> json) => _$IntensityFromJson(json);

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityPartial {
 
-@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity; List<IntensityItem> get prefectures; List<IntensityItem> get regions;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
+@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of IntensityPartial
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $IntensityPartialCopyWith<IntensityPartial> get copyWith => _$IntensityPartialCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other.prefectures, prefectures)&&const DeepCollectionEquality().equals(other.regions, regions)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,const DeepCollectionEquality().hash(prefectures),const DeepCollectionEquality().hash(regions),maxLpgmIntensity);
+int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity);
 
 @override
 String toString() {
-  return 'IntensityPartial(maxIntensity: $maxIntensity, prefectures: $prefectures, regions: $regions, maxLpgmIntensity: $maxLpgmIntensity)';
+  return 'IntensityPartial(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $IntensityPartialCopyWith<$Res>  {
   factory $IntensityPartialCopyWith(IntensityPartial value, $Res Function(IntensityPartial) _then) = _$IntensityPartialCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -65,12 +65,10 @@ class _$IntensityPartialCopyWithImpl<$Res>
 
 /// Create a copy of IntensityPartial
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? prefectures = null,Object? regions = null,Object? maxLpgmIntensity = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,}) {
   return _then(_self.copyWith(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,
   ));
 }
@@ -156,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityPartial() when $default != null:
-return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
   return orElse();
 
 }
@@ -177,10 +175,10 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityPartial():
-return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +195,10 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityPartial() when $default != null:
-return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity);case _:
   return null;
 
 }
@@ -212,24 +210,10 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 @JsonSerializable()
 
 class _IntensityPartial implements IntensityPartial {
-  const _IntensityPartial({@JsonKey(name: 'max_intensity') required this.maxIntensity, required final  List<IntensityItem> prefectures, required final  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _prefectures = prefectures,_regions = regions;
+  const _IntensityPartial({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity});
   factory _IntensityPartial.fromJson(Map<String, dynamic> json) => _$IntensityPartialFromJson(json);
 
 @override@JsonKey(name: 'max_intensity') final  JmaIntensity maxIntensity;
- final  List<IntensityItem> _prefectures;
-@override List<IntensityItem> get prefectures {
-  if (_prefectures is EqualUnmodifiableListView) return _prefectures;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_prefectures);
-}
-
- final  List<IntensityItem> _regions;
-@override List<IntensityItem> get regions {
-  if (_regions is EqualUnmodifiableListView) return _regions;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_regions);
-}
-
 @override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
 
 /// Create a copy of IntensityPartial
@@ -245,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other._prefectures, _prefectures)&&const DeepCollectionEquality().equals(other._regions, _regions)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityPartial&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,const DeepCollectionEquality().hash(_prefectures),const DeepCollectionEquality().hash(_regions),maxLpgmIntensity);
+int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity);
 
 @override
 String toString() {
-  return 'IntensityPartial(maxIntensity: $maxIntensity, prefectures: $prefectures, regions: $regions, maxLpgmIntensity: $maxLpgmIntensity)';
+  return 'IntensityPartial(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity)';
 }
 
 
@@ -265,7 +249,7 @@ abstract mixin class _$IntensityPartialCopyWith<$Res> implements $IntensityParti
   factory _$IntensityPartialCopyWith(_IntensityPartial value, $Res Function(_IntensityPartial) _then) = __$IntensityPartialCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -282,12 +266,10 @@ class __$IntensityPartialCopyWithImpl<$Res>
 
 /// Create a copy of IntensityPartial
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? prefectures = null,Object? regions = null,Object? maxLpgmIntensity = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,}) {
   return _then(_IntensityPartial(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,prefectures: null == prefectures ? _self._prefectures : prefectures // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,
   ));
 }

@@ -18,18 +18,6 @@ _IntensityPartial _$IntensityPartialFromJson(Map<String, dynamic> json) =>
             'max_intensity',
             (v) => $enumDecode(_$JmaIntensityEnumMap, v),
           ),
-          prefectures: $checkedConvert(
-            'prefectures',
-            (v) => (v as List<dynamic>)
-                .map((e) => IntensityItem.fromJson(e as Map<String, dynamic>))
-                .toList(),
-          ),
-          regions: $checkedConvert(
-            'regions',
-            (v) => (v as List<dynamic>)
-                .map((e) => IntensityItem.fromJson(e as Map<String, dynamic>))
-                .toList(),
-          ),
           maxLpgmIntensity: $checkedConvert(
             'max_lpgm_intensity',
             (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
@@ -46,8 +34,6 @@ _IntensityPartial _$IntensityPartialFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$IntensityPartialToJson(_IntensityPartial instance) =>
     <String, dynamic>{
       'max_intensity': instance.maxIntensity,
-      'prefectures': instance.prefectures,
-      'regions': instance.regions,
       'max_lpgm_intensity': ?instance.maxLpgmIntensity,
     };
 

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityPrefectureSearchItem {
 
-@JsonKey(name: 'event_id') String get eventId; IntensityRegionInfo get prefecture; EarthquakePartial get earthquake;
+@JsonKey(name: 'event_id') String get eventId; JmaIntensity get intensity; EarthquakePartial get earthquake;
 /// Create a copy of IntensityPrefectureSearchItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $IntensityPrefectureSearchItemCopyWith<IntensityPrefectureSearchItem> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityPrefectureSearchItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.prefecture, prefecture) || other.prefecture == prefecture)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityPrefectureSearchItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,prefecture,earthquake);
+int get hashCode => Object.hash(runtimeType,eventId,intensity,earthquake);
 
 @override
 String toString() {
-  return 'IntensityPrefectureSearchItem(eventId: $eventId, prefecture: $prefecture, earthquake: $earthquake)';
+  return 'IntensityPrefectureSearchItem(eventId: $eventId, intensity: $intensity, earthquake: $earthquake)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $IntensityPrefectureSearchItemCopyWith<$Res>  {
   factory $IntensityPrefectureSearchItemCopyWith(IntensityPrefectureSearchItem value, $Res Function(IntensityPrefectureSearchItem) _then) = _$IntensityPrefectureSearchItemCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'event_id') String eventId, IntensityRegionInfo prefecture, EarthquakePartial earthquake
+@JsonKey(name: 'event_id') String eventId, JmaIntensity intensity, EarthquakePartial earthquake
 });
 
 
-$IntensityRegionInfoCopyWith<$Res> get prefecture;$EarthquakePartialCopyWith<$Res> get earthquake;
+$EarthquakePartialCopyWith<$Res> get earthquake;
 
 }
 /// @nodoc
@@ -65,24 +65,15 @@ class _$IntensityPrefectureSearchItemCopyWithImpl<$Res>
 
 /// Create a copy of IntensityPrefectureSearchItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? prefecture = null,Object? earthquake = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? intensity = null,Object? earthquake = null,}) {
   return _then(_self.copyWith(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+as String,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakePartial,
   ));
 }
 /// Create a copy of IntensityPrefectureSearchItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityRegionInfoCopyWith<$Res> get prefecture {
-  
-  return $IntensityRegionInfoCopyWith<$Res>(_self.prefecture, (value) {
-    return _then(_self.copyWith(prefecture: value));
-  });
-}/// Create a copy of IntensityPrefectureSearchItem
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -173,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  IntensityRegionInfo prefecture,  EarthquakePartial earthquake)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  JmaIntensity intensity,  EarthquakePartial earthquake)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityPrefectureSearchItem() when $default != null:
-return $default(_that.eventId,_that.prefecture,_that.earthquake);case _:
+return $default(_that.eventId,_that.intensity,_that.earthquake);case _:
   return orElse();
 
 }
@@ -194,10 +185,10 @@ return $default(_that.eventId,_that.prefecture,_that.earthquake);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  IntensityRegionInfo prefecture,  EarthquakePartial earthquake)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'event_id')  String eventId,  JmaIntensity intensity,  EarthquakePartial earthquake)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityPrefectureSearchItem():
-return $default(_that.eventId,_that.prefecture,_that.earthquake);case _:
+return $default(_that.eventId,_that.intensity,_that.earthquake);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -214,10 +205,10 @@ return $default(_that.eventId,_that.prefecture,_that.earthquake);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'event_id')  String eventId,  IntensityRegionInfo prefecture,  EarthquakePartial earthquake)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'event_id')  String eventId,  JmaIntensity intensity,  EarthquakePartial earthquake)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityPrefectureSearchItem() when $default != null:
-return $default(_that.eventId,_that.prefecture,_that.earthquake);case _:
+return $default(_that.eventId,_that.intensity,_that.earthquake);case _:
   return null;
 
 }
@@ -229,11 +220,11 @@ return $default(_that.eventId,_that.prefecture,_that.earthquake);case _:
 @JsonSerializable()
 
 class _IntensityPrefectureSearchItem implements IntensityPrefectureSearchItem {
-  const _IntensityPrefectureSearchItem({@JsonKey(name: 'event_id') required this.eventId, required this.prefecture, required this.earthquake});
+  const _IntensityPrefectureSearchItem({@JsonKey(name: 'event_id') required this.eventId, required this.intensity, required this.earthquake});
   factory _IntensityPrefectureSearchItem.fromJson(Map<String, dynamic> json) => _$IntensityPrefectureSearchItemFromJson(json);
 
 @override@JsonKey(name: 'event_id') final  String eventId;
-@override final  IntensityRegionInfo prefecture;
+@override final  JmaIntensity intensity;
 @override final  EarthquakePartial earthquake;
 
 /// Create a copy of IntensityPrefectureSearchItem
@@ -249,16 +240,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityPrefectureSearchItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.prefecture, prefecture) || other.prefecture == prefecture)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityPrefectureSearchItem&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.earthquake, earthquake) || other.earthquake == earthquake));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,prefecture,earthquake);
+int get hashCode => Object.hash(runtimeType,eventId,intensity,earthquake);
 
 @override
 String toString() {
-  return 'IntensityPrefectureSearchItem(eventId: $eventId, prefecture: $prefecture, earthquake: $earthquake)';
+  return 'IntensityPrefectureSearchItem(eventId: $eventId, intensity: $intensity, earthquake: $earthquake)';
 }
 
 
@@ -269,11 +260,11 @@ abstract mixin class _$IntensityPrefectureSearchItemCopyWith<$Res> implements $I
   factory _$IntensityPrefectureSearchItemCopyWith(_IntensityPrefectureSearchItem value, $Res Function(_IntensityPrefectureSearchItem) _then) = __$IntensityPrefectureSearchItemCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'event_id') String eventId, IntensityRegionInfo prefecture, EarthquakePartial earthquake
+@JsonKey(name: 'event_id') String eventId, JmaIntensity intensity, EarthquakePartial earthquake
 });
 
 
-@override $IntensityRegionInfoCopyWith<$Res> get prefecture;@override $EarthquakePartialCopyWith<$Res> get earthquake;
+@override $EarthquakePartialCopyWith<$Res> get earthquake;
 
 }
 /// @nodoc
@@ -286,25 +277,16 @@ class __$IntensityPrefectureSearchItemCopyWithImpl<$Res>
 
 /// Create a copy of IntensityPrefectureSearchItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? prefecture = null,Object? earthquake = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? intensity = null,Object? earthquake = null,}) {
   return _then(_IntensityPrefectureSearchItem(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,prefecture: null == prefecture ? _self.prefecture : prefecture // ignore: cast_nullable_to_non_nullable
-as IntensityRegionInfo,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
+as String,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,earthquake: null == earthquake ? _self.earthquake : earthquake // ignore: cast_nullable_to_non_nullable
 as EarthquakePartial,
   ));
 }
 
 /// Create a copy of IntensityPrefectureSearchItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$IntensityRegionInfoCopyWith<$Res> get prefecture {
-  
-  return $IntensityRegionInfoCopyWith<$Res>(_self.prefecture, (value) {
-    return _then(_self.copyWith(prefecture: value));
-  });
-}/// Create a copy of IntensityPrefectureSearchItem
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

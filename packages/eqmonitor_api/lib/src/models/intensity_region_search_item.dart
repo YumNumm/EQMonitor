@@ -5,7 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'earthquake_partial.dart';
-import 'intensity_region_info.dart';
+import 'jma_intensity.dart';
 
 part 'intensity_region_search_item.freezed.dart';
 part 'intensity_region_search_item.g.dart';
@@ -15,7 +15,7 @@ abstract class IntensityRegionSearchItem with _$IntensityRegionSearchItem {
   const factory IntensityRegionSearchItem({
     @JsonKey(name: 'event_id')
     required String eventId,
-    required IntensityRegionInfo region,
+    required JmaIntensity intensity,
     required EarthquakePartial earthquake,
   }) = _IntensityRegionSearchItem;
   

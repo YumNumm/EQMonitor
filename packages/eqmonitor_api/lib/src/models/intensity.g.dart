@@ -17,34 +17,20 @@ _Intensity _$IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
         'max_intensity',
         (v) => $enumDecode(_$JmaIntensityEnumMap, v),
       ),
-      prefectures: $checkedConvert(
-        'prefectures',
+      intensityTree: $checkedConvert(
+        'intensity_tree',
         (v) => (v as List<dynamic>)
-            .map((e) => IntensityItem.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-      regions: $checkedConvert(
-        'regions',
-        (v) => (v as List<dynamic>)
-            .map((e) => IntensityItem.fromJson(e as Map<String, dynamic>))
+            .map((e) => IntensityTree.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
       maxLpgmIntensity: $checkedConvert(
         'max_lpgm_intensity',
         (v) => $enumDecodeNullable(_$JmaLpgmIntensityEnumMap, v),
       ),
-      cities: $checkedConvert(
-        'cities',
+      lpgmIntensityTree: $checkedConvert(
+        'lpgm_intensity_tree',
         (v) => (v as List<dynamic>?)
-            ?.map((e) => IntensityItem.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      ),
-      stations: $checkedConvert(
-        'stations',
-        (v) => (v as List<dynamic>?)
-            ?.map(
-              (e) => IntensityStationItem.fromJson(e as Map<String, dynamic>),
-            )
+            ?.map((e) => LpgmIntensityTree.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
     );
@@ -52,18 +38,18 @@ _Intensity _$IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
   },
   fieldKeyMap: const {
     'maxIntensity': 'max_intensity',
+    'intensityTree': 'intensity_tree',
     'maxLpgmIntensity': 'max_lpgm_intensity',
+    'lpgmIntensityTree': 'lpgm_intensity_tree',
   },
 );
 
 Map<String, dynamic> _$IntensityToJson(_Intensity instance) =>
     <String, dynamic>{
       'max_intensity': instance.maxIntensity,
-      'prefectures': instance.prefectures,
-      'regions': instance.regions,
+      'intensity_tree': instance.intensityTree,
       'max_lpgm_intensity': ?instance.maxLpgmIntensity,
-      'cities': ?instance.cities,
-      'stations': ?instance.stations,
+      'lpgm_intensity_tree': ?instance.lpgmIntensityTree,
     };
 
 const _$JmaIntensityEnumMap = {

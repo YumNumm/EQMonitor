@@ -4,9 +4,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'code_name.dart';
-import 'jma_intensity.dart';
-import 'jma_lpgm_intensity.dart';
 import 'pre_periods.dart';
 
 part 'intensity_station_item.freezed.dart';
@@ -15,11 +12,8 @@ part 'intensity_station_item.g.dart';
 @Freezed()
 abstract class IntensityStationItem with _$IntensityStationItem {
   const factory IntensityStationItem({
-    required CodeName value,
-    @JsonKey(includeIfNull: false,name: 'max_intensity')
-    JmaIntensity? maxIntensity,
-    @JsonKey(includeIfNull: false,name: 'max_lpgm_intensity')
-    JmaLpgmIntensity? maxLpgmIntensity,
+    /// 観測点ID
+    required String code,
 
     /// 絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値
     @JsonKey(includeIfNull: false)
