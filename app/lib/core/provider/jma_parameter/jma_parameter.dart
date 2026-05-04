@@ -1,11 +1,9 @@
-import 'package:eqmonitor/core/gen/assets.gen.dart';
-import 'package:flutter/services.dart';
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
-import 'package:jma_parameter_types/tsunami_param.pb.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-export 'package:jma_parameter_types/earthquake_param.pb.dart';
-export 'package:jma_parameter_types/tsunami_param.pb.dart';
+export 'package:eqmonitor/feature/parameter/data/model/earthquake/earthquake_parameter.dart';
+export 'package:eqmonitor/feature/parameter/data/model/tsunami/tsunami_parameter.dart';
 
 part 'jma_parameter.g.dart';
 
@@ -16,17 +14,9 @@ typedef JmaParameterState = ({
 
 @Riverpod(keepAlive: true)
 Future<JmaParameterState> jmaParameter(Ref ref) async {
-  final earthquake = await _loadEarthquakeParameter();
-  final tsunami = await _loadTsunamiParameter();
-  return (earthquake: earthquake, tsunami: tsunami);
-}
-
-Future<EarthquakeParameter> _loadEarthquakeParameter() async {
-  final bytes = await rootBundle.load(Assets.parameter.earthquake);
-  return EarthquakeParameter.fromBuffer(bytes.buffer.asUint8List());
-}
-
-Future<TsunamiParameter> _loadTsunamiParameter() async {
-  final bytes = await rootBundle.load(Assets.parameter.tsunami);
-  return TsunamiParameter.fromBuffer(bytes.buffer.asUint8List());
+  final parameterSet = await ref.watch(parameterSetProvider.future);
+  return (
+    earthquake: parameterSet.earthquake,
+    tsunami: parameterSet.tsunami,
+  );
 }

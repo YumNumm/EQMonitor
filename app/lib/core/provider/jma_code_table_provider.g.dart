@@ -15,8 +15,15 @@ part of 'jma_code_table_provider.dart';
 final jmaCodeTableProvider = JmaCodeTableProvider._();
 
 final class JmaCodeTableProvider
-    extends $FunctionalProvider<JmaCodeTable, JmaCodeTable, JmaCodeTable>
-    with $Provider<JmaCodeTable> {
+    extends
+        $FunctionalProvider<
+          AsyncValue<JmaCodeTableParameter>,
+          JmaCodeTableParameter,
+          FutureOr<JmaCodeTableParameter>
+        >
+    with
+        $FutureModifier<JmaCodeTableParameter>,
+        $FutureProvider<JmaCodeTableParameter> {
   JmaCodeTableProvider._()
     : super(
         from: null,
@@ -33,21 +40,14 @@ final class JmaCodeTableProvider
 
   @$internal
   @override
-  $ProviderElement<JmaCodeTable> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<JmaCodeTableParameter> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  JmaCodeTable create(Ref ref) {
+  FutureOr<JmaCodeTableParameter> create(Ref ref) {
     return jmaCodeTable(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(JmaCodeTable value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<JmaCodeTable>(value),
-    );
   }
 }
 
-String _$jmaCodeTableHash() => r'94db7e0261aaf71cfee48960a72415da70d378c7';
+String _$jmaCodeTableHash() => r'c28b14c41b3e6af4ff3f276a0f159178416c8b44';
