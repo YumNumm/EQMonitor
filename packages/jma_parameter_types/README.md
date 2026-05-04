@@ -1,2 +1,0 @@
-# JMA Parameter Types
-
