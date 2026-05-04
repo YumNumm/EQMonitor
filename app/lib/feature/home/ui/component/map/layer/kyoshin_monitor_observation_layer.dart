@@ -115,6 +115,10 @@ class KyoshinMonitorObservationLayer extends HookConsumerWidget {
                 id: _sourceId,
                 data: next,
               ),
+              arguments: {
+                'sourceId': _sourceId,
+                'nextDataLength': next.length,
+              },
             );
             sw.stop();
           },

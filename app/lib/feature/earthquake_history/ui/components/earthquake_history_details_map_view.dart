@@ -20,11 +20,12 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_intensity_icon_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
@@ -42,10 +43,13 @@ class EarthquakeHistoryDetailsMapView extends HookConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null => _MapContent(
-        styleString: value.styleString!,
-        earthquake: earthquake,
-      ),
+      AsyncData(:final value) when value.styleString != null =>
+        MapLibreEventProvider(
+          child: _MapContent(
+            styleString: value.styleString!,
+            earthquake: earthquake,
+          ),
+        ),
       AsyncError(:final error) => Center(child: ErrorCard(error: error)),
       _ => const Center(
         child: CircularProgressIndicator.adaptive(),
@@ -74,16 +78,17 @@ class _MapContent extends HookConsumerWidget {
     );
     final jmaMap = ref.watch(jmaMapProvider).requireValue;
 
-    final builderContextRef = useRef<BuildContext?>(null);
-    ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (_, next) {
+    ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
+      _,
+      next,
+    ) {
       if (next == null) {
         return;
       }
-      final ctx = builderContextRef.value;
-      if (ctx == null) {
+      if (!context.mounted) {
         return;
       }
-      final controller = MapController.maybeOf(ctx);
+      final controller = MapController.maybeOf(context);
       if (controller == null) {
         return;
       }
@@ -115,6 +120,7 @@ class _MapContent extends HookConsumerWidget {
       earthquake: earthquake,
       displayMode: config.hypocenterDisplayMode,
     );
+    const debugDialogAction = EarthquakeHistoryMapLayerDebugDialogAction();
 
     void openModal(BuildContext ctx) {
       unawaited(
@@ -126,93 +132,95 @@ class _MapContent extends HookConsumerWidget {
       );
     }
 
-    return MapLibreEventProvider(
-      child: Builder(
-        builder: (context) {
-          builderContextRef.value = context;
-          return Stack(
-            children: [
-              MapLibreMap(
-                options: mapOptions,
-                onEvent: (event) {
-                  MapLibreEventProvider.of(context).emit(event);
-                  if (event is MapEventClick) {
-                    _handleTap(
-                      context: context,
-                      event: event,
-                      config: config,
-                      jmaMap: jmaMap,
-                    );
-                  }
-                },
-                children: [
-                  EarthquakeHistoryFillLayer(
-                    key: const ValueKey('fill'),
-                    earthquake: earthquake,
-                    config: config,
-                  ),
-                  // 地域・市区町村アイコン（塗りつぶしの上）
-                  EarthquakeHistoryIntensityIconLayer(
-                    key: const ValueKey('area-icon'),
-                    earthquake: earthquake,
-                    config: config,
-                  ),
-                  // 推計震度
-                  if (tileUrl != null)
-                    EarthquakeHistoryDetailsEstimatedIntensityLayer(
-                      key: const ValueKey('estimated'),
-                      tileUrl: tileUrl,
-                    ),
-                  // 震央誤差矩形
-                  if (config.showHypocenterError)
-                    EarthquakeHistoryHypocenterErrorLayer(
-                      key: const ValueKey('hypocenter-error'),
-                      earthquake: earthquake,
-                    ),
-                  // 観測点・震央（z 順を HypocenterDisplayMode で制御）
-                  if (config.hypocenterDisplayMode ==
-                      HypocenterDisplayMode.belowStations)
-                    hypocenterLayer,
-                  if (config.showStation)
-                    EarthquakeHistoryStationIntensityLayer(
-                      key: const ValueKey('station'),
-                      earthquake: earthquake,
-                      config: config,
-                    ),
-                  if (config.hypocenterDisplayMode !=
-                      HypocenterDisplayMode.belowStations)
-                    hypocenterLayer,
-                ],
+    return Stack(
+      children: [
+        MapLibreMap(
+          options: mapOptions,
+          onEvent: (event) {
+            MapLibreEventProvider.of(context).emit(event);
+            if (event is MapEventClick) {
+              _handleTap(
+                context: context,
+                event: event,
+                config: config,
+                jmaMap: jmaMap,
+              );
+            }
+          },
+          children: [
+            EarthquakeHistoryFillLayer(
+              key: const ValueKey('fill'),
+              earthquake: earthquake,
+              config: config,
+            ),
+            // 地域・市区町村アイコン（塗りつぶしの上）
+            EarthquakeHistoryIntensityIconLayer(
+              key: const ValueKey('area-icon'),
+              earthquake: earthquake,
+              config: config,
+            ),
+            // 推計震度
+            if (tileUrl != null)
+              EarthquakeHistoryDetailsEstimatedIntensityLayer(
+                key: const ValueKey('estimated'),
+                tileUrl: tileUrl,
               ),
-
-              // コントローラカード（右上）
-              Positioned(
-                top: 8,
-                right: 8,
-                child: SafeArea(
-                  child: _MapControllerCard(
-                    onLayersTap: () => openModal(context),
-                    onFitBoundsTap: () => _fitBounds(context),
-                  ),
-                ),
+            // 震央誤差矩形
+            if (config.showHypocenterError)
+              EarthquakeHistoryHypocenterErrorLayer(
+                key: const ValueKey('hypocenter-error'),
+                earthquake: earthquake,
               ),
+            // 観測点・震央（z 順を HypocenterDisplayMode で制御）
+            if (config.hypocenterDisplayMode ==
+                HypocenterDisplayMode.belowStations)
+              hypocenterLayer,
+            if (config.showStation)
+              EarthquakeHistoryStationIntensityLayer(
+                key: const ValueKey('station'),
+                earthquake: earthquake,
+                config: config,
+              ),
+            if (config.hypocenterDisplayMode !=
+                HypocenterDisplayMode.belowStations)
+              hypocenterLayer,
+          ],
+        ),
 
-              // 震度凡例（右下）
-              if (config.showLegend)
-                Positioned(
-                  bottom: 8,
-                  right: 8,
-                  child: SafeArea(
-                    child: EarthquakeHistoryMapLegend(
-                      intensity: earthquake.intensity,
-                      showingLpgmIntensity: config.showingLpgmIntensity,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
-      ),
+        // コントローラカード（右上）
+        Positioned(
+          top: 8,
+          right: 8,
+          child: SafeArea(
+            child: _MapControllerCard(
+              onLayersTap: () => openModal(context),
+              onFitBoundsTap: () => _fitBounds(context),
+              onDebugTap: kDebugMode
+                  ? () => unawaited(
+                      debugDialogAction.show(
+                        context: context,
+                        earthquake: earthquake,
+                        config: config,
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+        ),
+
+        // 震度凡例（右下）
+        if (config.showLegend)
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: SafeArea(
+              child: EarthquakeHistoryMapLegend(
+                intensity: earthquake.intensity,
+                showingLpgmIntensity: config.showingLpgmIntensity,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -404,10 +412,12 @@ class _MapControllerCard extends StatelessWidget {
   const _MapControllerCard({
     required this.onLayersTap,
     required this.onFitBoundsTap,
+    required this.onDebugTap,
   });
 
   final VoidCallback onLayersTap;
   final VoidCallback onFitBoundsTap;
+  final VoidCallback? onDebugTap;
 
   @override
   Widget build(BuildContext context) {
@@ -451,8 +461,264 @@ class _MapControllerCard extends StatelessWidget {
                 child: Icon(Icons.zoom_out_map_rounded),
               ),
             ),
+            if (onDebugTap != null) ...[
+              divider,
+              InkWell(
+                onTap: () {
+                  haptic();
+                  onDebugTap?.call();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.bug_report_rounded),
+                ),
+              ),
+            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class EarthquakeHistoryMapLayerDebugDialogAction {
+  const EarthquakeHistoryMapLayerDebugDialogAction();
+
+  Future<void> show({
+    required BuildContext context,
+    required Earthquake earthquake,
+    required EarthquakeHistoryDetailConfig config,
+  }) {
+    const modeResolver = EarthquakeHistoryMapLayerModeResolver();
+    final availability = modeResolver.resolveAvailability(
+      earthquake: earthquake,
+      showingLpgmIntensity: config.showingLpgmIntensity,
+    );
+    final iconLayerMode = modeResolver.resolveMapLayerMode(
+      earthquake: earthquake,
+      config: config,
+    );
+    final fillLayerMode = modeResolver.resolveFillLayerMode(
+      earthquake: earthquake,
+      config: config,
+    );
+
+    return showDialog<void>(
+      context: context,
+      builder: (context) => _MapLayerModeDebugDialog(
+        availability: availability,
+        config: config,
+        iconLayerMode: iconLayerMode,
+        fillLayerMode: fillLayerMode,
+      ),
+    );
+  }
+}
+
+class _MapLayerModeDebugDialog extends StatelessWidget {
+  const _MapLayerModeDebugDialog({
+    required this.availability,
+    required this.config,
+    required this.iconLayerMode,
+    required this.fillLayerMode,
+  });
+
+  final EarthquakeHistoryMapLayerAvailability availability;
+  final EarthquakeHistoryDetailConfig config;
+  final EarthquakeHistoryMapLayerMode iconLayerMode;
+  final EarthquakeHistoryMapLayerMode fillLayerMode;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Map Layer Mode Debug'),
+      content: SingleChildScrollView(
+        child: _MapLayerModeDebugContent(
+          availability: availability,
+          config: config,
+          iconLayerMode: iconLayerMode,
+          fillLayerMode: fillLayerMode,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('閉じる'),
+        ),
+      ],
+    );
+  }
+}
+
+class _MapLayerModeDebugContent extends StatelessWidget {
+  const _MapLayerModeDebugContent({
+    required this.availability,
+    required this.config,
+    required this.iconLayerMode,
+    required this.fillLayerMode,
+  });
+
+  final EarthquakeHistoryMapLayerAvailability availability;
+  final EarthquakeHistoryDetailConfig config;
+  final EarthquakeHistoryMapLayerMode iconLayerMode;
+  final EarthquakeHistoryMapLayerMode fillLayerMode;
+
+  @override
+  Widget build(BuildContext context) {
+    const zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds;
+    const modeResolver = EarthquakeHistoryMapLayerModeResolver();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _DebugSection(
+          title: 'Resolved',
+          children: [
+            _DebugRow(label: 'iconLayerMode', value: iconLayerMode.name),
+            _DebugRow(label: 'fillLayerMode', value: fillLayerMode.name),
+          ],
+        ),
+        _DebugSection(
+          title: 'Layer Visibility',
+          children: [
+            _DebugRow(
+              label: 'regionIcon',
+              value: modeResolver.showsRegionIcon(iconLayerMode).toString(),
+            ),
+            _DebugRow(
+              label: 'cityIcon',
+              value: modeResolver.showsCityIcon(iconLayerMode).toString(),
+            ),
+            _DebugRow(
+              label: 'stationIcon',
+              value: modeResolver.showsStationIcon(iconLayerMode).toString(),
+            ),
+            _DebugRow(
+              label: 'regionFill',
+              value: modeResolver.showsRegionFill(fillLayerMode).toString(),
+            ),
+            _DebugRow(
+              label: 'cityFill',
+              value: modeResolver.showsCityFill(fillLayerMode).toString(),
+            ),
+          ],
+        ),
+        _DebugSection(
+          title: 'Availability',
+          children: [
+            _DebugRow(
+              label: 'region',
+              value: availability.region.toString(),
+            ),
+            _DebugRow(label: 'city', value: availability.city.toString()),
+            _DebugRow(
+              label: 'station',
+              value: availability.station.toString(),
+            ),
+          ],
+        ),
+        _DebugSection(
+          title: 'Config',
+          children: [
+            _DebugRow(label: 'iconMode', value: config.iconMode.name),
+            _DebugRow(label: 'fillMode', value: config.fillMode.name),
+            _DebugRow(
+              label: 'showingLpgmIntensity',
+              value: config.showingLpgmIntensity.toString(),
+            ),
+            _DebugRow(
+              label: 'showStation',
+              value: config.showStation.toString(),
+            ),
+            _DebugRow(
+              label: 'showStationLabel',
+              value: config.showStationLabel.toString(),
+            ),
+            _DebugRow(
+              label: 'stationDisplayMode',
+              value: config.stationDisplayMode.name,
+            ),
+          ],
+        ),
+        _DebugSection(
+          title: 'Zoom Thresholds',
+          children: [
+            _DebugRow(
+              label: 'regionToCity',
+              value: zoomThresholds.regionToCity.toString(),
+            ),
+            _DebugRow(
+              label: 'cityToStation',
+              value: zoomThresholds.cityToStation.toString(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _DebugSection extends StatelessWidget {
+  const _DebugSection({
+    required this.title,
+    required this.children,
+  });
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
+
+class _DebugRow extends StatelessWidget {
+  const _DebugRow({
+    required this.label,
+    required this.value,
+  });
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 140,
+            child: Text(label, style: textTheme.bodySmall),
+          ),
+          Expanded(
+            child: SelectableText(
+              value,
+              style: textTheme.bodySmall,
+            ),
+          ),
+        ],
       ),
     );
   }

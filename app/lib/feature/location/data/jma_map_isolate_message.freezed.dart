@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JmaMapCalculateMessage {
 
- int get id; Uint8List get mapDataBytes; double get lat; double get lng;
+ int get id; JmaMapType get type; double get lat; double get lng;
 /// Create a copy of JmaMapCalculateMessage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $JmaMapCalculateMessageCopyWith<JmaMapCalculateMessage> get copyWith => _$JmaMap
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JmaMapCalculateMessage&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.mapDataBytes, mapDataBytes)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JmaMapCalculateMessage&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(mapDataBytes),lat,lng);
+int get hashCode => Object.hash(runtimeType,id,type,lat,lng);
 
 @override
 String toString() {
-  return 'JmaMapCalculateMessage(id: $id, mapDataBytes: $mapDataBytes, lat: $lat, lng: $lng)';
+  return 'JmaMapCalculateMessage(id: $id, type: $type, lat: $lat, lng: $lng)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $JmaMapCalculateMessageCopyWith<$Res>  {
   factory $JmaMapCalculateMessageCopyWith(JmaMapCalculateMessage value, $Res Function(JmaMapCalculateMessage) _then) = _$JmaMapCalculateMessageCopyWithImpl;
 @useResult
 $Res call({
- int id, Uint8List mapDataBytes, double lat, double lng
+ int id, JmaMapType type, double lat, double lng
 });
 
 
@@ -62,11 +62,11 @@ class _$JmaMapCalculateMessageCopyWithImpl<$Res>
 
 /// Create a copy of JmaMapCalculateMessage
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? mapDataBytes = null,Object? lat = null,Object? lng = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? lat = null,Object? lng = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,mapDataBytes: null == mapDataBytes ? _self.mapDataBytes : mapDataBytes // ignore: cast_nullable_to_non_nullable
-as Uint8List,lat: null == lat ? _self.lat : lat // ignore: cast_nullable_to_non_nullable
+as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as JmaMapType,lat: null == lat ? _self.lat : lat // ignore: cast_nullable_to_non_nullable
 as double,lng: null == lng ? _self.lng : lng // ignore: cast_nullable_to_non_nullable
 as double,
   ));
@@ -153,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  Uint8List mapDataBytes,  double lat,  double lng)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  JmaMapType type,  double lat,  double lng)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JmaMapCalculateMessage() when $default != null:
-return $default(_that.id,_that.mapDataBytes,_that.lat,_that.lng);case _:
+return $default(_that.id,_that.type,_that.lat,_that.lng);case _:
   return orElse();
 
 }
@@ -174,10 +174,10 @@ return $default(_that.id,_that.mapDataBytes,_that.lat,_that.lng);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  Uint8List mapDataBytes,  double lat,  double lng)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  JmaMapType type,  double lat,  double lng)  $default,) {final _that = this;
 switch (_that) {
 case _JmaMapCalculateMessage():
-return $default(_that.id,_that.mapDataBytes,_that.lat,_that.lng);case _:
+return $default(_that.id,_that.type,_that.lat,_that.lng);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +194,10 @@ return $default(_that.id,_that.mapDataBytes,_that.lat,_that.lng);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  Uint8List mapDataBytes,  double lat,  double lng)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  JmaMapType type,  double lat,  double lng)?  $default,) {final _that = this;
 switch (_that) {
 case _JmaMapCalculateMessage() when $default != null:
-return $default(_that.id,_that.mapDataBytes,_that.lat,_that.lng);case _:
+return $default(_that.id,_that.type,_that.lat,_that.lng);case _:
   return null;
 
 }
@@ -209,11 +209,11 @@ return $default(_that.id,_that.mapDataBytes,_that.lat,_that.lng);case _:
 
 
 class _JmaMapCalculateMessage implements JmaMapCalculateMessage {
-  const _JmaMapCalculateMessage({required this.id, required this.mapDataBytes, required this.lat, required this.lng});
+  const _JmaMapCalculateMessage({required this.id, required this.type, required this.lat, required this.lng});
   
 
 @override final  int id;
-@override final  Uint8List mapDataBytes;
+@override final  JmaMapType type;
 @override final  double lat;
 @override final  double lng;
 
@@ -227,16 +227,16 @@ _$JmaMapCalculateMessageCopyWith<_JmaMapCalculateMessage> get copyWith => __$Jma
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JmaMapCalculateMessage&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.mapDataBytes, mapDataBytes)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JmaMapCalculateMessage&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(mapDataBytes),lat,lng);
+int get hashCode => Object.hash(runtimeType,id,type,lat,lng);
 
 @override
 String toString() {
-  return 'JmaMapCalculateMessage(id: $id, mapDataBytes: $mapDataBytes, lat: $lat, lng: $lng)';
+  return 'JmaMapCalculateMessage(id: $id, type: $type, lat: $lat, lng: $lng)';
 }
 
 
@@ -247,7 +247,7 @@ abstract mixin class _$JmaMapCalculateMessageCopyWith<$Res> implements $JmaMapCa
   factory _$JmaMapCalculateMessageCopyWith(_JmaMapCalculateMessage value, $Res Function(_JmaMapCalculateMessage) _then) = __$JmaMapCalculateMessageCopyWithImpl;
 @override @useResult
 $Res call({
- int id, Uint8List mapDataBytes, double lat, double lng
+ int id, JmaMapType type, double lat, double lng
 });
 
 
@@ -264,11 +264,11 @@ class __$JmaMapCalculateMessageCopyWithImpl<$Res>
 
 /// Create a copy of JmaMapCalculateMessage
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? mapDataBytes = null,Object? lat = null,Object? lng = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? lat = null,Object? lng = null,}) {
   return _then(_JmaMapCalculateMessage(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,mapDataBytes: null == mapDataBytes ? _self.mapDataBytes : mapDataBytes // ignore: cast_nullable_to_non_nullable
-as Uint8List,lat: null == lat ? _self.lat : lat // ignore: cast_nullable_to_non_nullable
+as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as JmaMapType,lat: null == lat ? _self.lat : lat // ignore: cast_nullable_to_non_nullable
 as double,lng: null == lng ? _self.lng : lng // ignore: cast_nullable_to_non_nullable
 as double,
   ));
