@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
@@ -13,11 +11,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_focus_notifier.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sheet/route.dart';
 
-class EarthquakeIntensityWidget extends ConsumerWidget {
+class EarthquakeIntensityWidget extends StatelessWidget {
   const EarthquakeIntensityWidget({
     required this.item,
     this.eventId,
@@ -28,9 +25,7 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
   final String? eventId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
+  Widget build(BuildContext context) {
     final intensity = item.intensity;
 
     if (intensity == null) {
@@ -49,44 +44,11 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
         children: [
           const SheetHeader(title: '各地の震度'),
           ...intensityTree.entries.map(
-            (entry) {
-              final jmaIntensity = entry.key;
-              return ListTile(
-                isThreeLine: true,
-                visualDensity: VisualDensity.compact,
-                titleAlignment: ListTileTitleAlignment.titleHeight,
-                leading: IntensityValueIcon(
-                  intensity: jmaIntensity,
-                  type: IntensityIconType.filled,
-                  size: 40,
-                ),
-                title: Text(
-                  '震度${jmaIntensity.label}',
-                  style: textTheme.titleMedium,
-                ),
-                subtitle: Text(
-                  entry.value
-                      .map(
-                        (e) => e.region.region.name,
-                      )
-                      .join('、'),
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontFamily: FontFamily.notoSansJP,
-                    fontSize: 13,
-                  ),
-                ),
-                onTap: () async => _PrefectureIntensitySheet.show(
-                  context: context,
-                  ref: ref,
-                  eventId: eventId,
-                  intensity: jmaIntensity,
-                  prefectures: entry.value,
-                ),
-                trailing: const Icon(Icons.chevron_right),
-              );
-            },
+            (entry) => _IntensityLevelSection(
+              intensity: entry.key,
+              prefectures: entry.value,
+              eventId: eventId,
+            ),
           ),
         ],
       ),
@@ -94,285 +56,274 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
   }
 }
 
-sealed class _IntensityTreeContent {
-  const _IntensityTreeContent();
-}
-
-final class _TreePrefecture extends _IntensityTreeContent {
-  const _TreePrefecture(this.node);
-  final PrefectureIntensityNode node;
-}
-
-final class _TreeCity extends _IntensityTreeContent {
-  const _TreeCity(this.node);
-  final CityIntensityNode node;
-}
-
-final class _TreeStation extends _IntensityTreeContent {
-  const _TreeStation(this.node);
-  final StationIntensityNode node;
-}
-
-List<TreeSliverNode<_IntensityTreeContent>> _buildPrefectureDetailTree(
-  List<PrefectureIntensityNode> prefectures,
-) {
-  return [
-    for (final prefecture in prefectures)
-      TreeSliverNode<_IntensityTreeContent>(
-        _TreePrefecture(prefecture),
-        children: [
-          for (final city in prefecture.cities)
-            TreeSliverNode<_IntensityTreeContent>(
-              _TreeCity(city),
-              children: [
-                for (final station in city.stations)
-                  TreeSliverNode<_IntensityTreeContent>(
-                    _TreeStation(station),
-                  ),
-              ],
-            ),
-        ],
-      ),
-  ];
-}
-
-class _PrefectureIntensitySheet extends StatelessWidget {
-  const _PrefectureIntensitySheet({
-    required this.ref,
-    required this.eventId,
+/// 震度レベル別のセクション（例: 震度5弱）。
+/// City以下のデータがある場合はインラインで展開可能。ない場合は速報震度として折りたたみなし。
+class _IntensityLevelSection extends HookWidget {
+  const _IntensityLevelSection({
     required this.intensity,
     required this.prefectures,
+    required this.eventId,
   });
 
-  static Future<void> show({
-    required BuildContext context,
-    required WidgetRef ref,
-    required JmaIntensity intensity,
-    required List<PrefectureIntensityNode> prefectures,
-    String? eventId,
-  }) => Navigator.of(context).push(
-    SheetRoute(
-      builder: (context) => _PrefectureIntensitySheet(
-        ref: ref,
-        eventId: eventId,
-        intensity: intensity,
-        prefectures: prefectures,
-      ),
-    ),
-  );
-
-  final WidgetRef ref;
-  final String? eventId;
   final JmaIntensity intensity;
   final List<PrefectureIntensityNode> prefectures;
+  final String? eventId;
 
-  static const Curve _toggleCurve = TreeSliver.defaultAnimationCurve;
-  static const Duration _toggleDuration = TreeSliver.defaultAnimationDuration;
+  @override
+  Widget build(BuildContext context) {
+    final isExpanded = useState(false);
+    final theme = Theme.of(context);
+    // City以下の要素がひとつでもあれば展開可能
+    final hasCityData = prefectures.any((p) => p.cities.isNotEmpty);
+    final regionNames = prefectures.map((e) => e.region.region.name).join('、');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          isThreeLine: true,
+          visualDensity: VisualDensity.compact,
+          titleAlignment: ListTileTitleAlignment.titleHeight,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+          leading: IntensityValueIcon(
+            intensity: intensity,
+            type: IntensityIconType.filled,
+            size: 40,
+          ),
+          title: Text(
+            '震度${intensity.label}',
+            style: theme.textTheme.titleMedium,
+          ),
+          subtitle: Text(
+            regionNames,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontFamily: FontFamily.notoSansJP,
+              fontSize: 13,
+            ),
+          ),
+          trailing: hasCityData
+              ? AnimatedRotation(
+                  turns: isExpanded.value ? 0.5 : 0.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: const Icon(Icons.expand_more),
+                )
+              : null,
+          onTap: hasCityData
+              ? () => isExpanded.value = !isExpanded.value
+              : null,
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: isExpanded.value
+              ? Column(
+                  children: [
+                    for (final prefecture in prefectures)
+                      _PrefectureTile(
+                        prefecture: prefecture,
+                        eventId: eventId,
+                      ),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
+}
+
+/// 都道府県単位のタイル。
+/// cities が空の場合（速報震度のみ）は展開不可。そうでない場合は市区町村ツリーを展開。
+class _PrefectureTile extends HookWidget {
+  const _PrefectureTile({
+    required this.prefecture,
+    required this.eventId,
+  });
+
+  final PrefectureIntensityNode prefecture;
+  final String? eventId;
+
+  @override
+  Widget build(BuildContext context) {
+    final isExpanded = useState(false);
+    final hasCities = prefecture.cities.isNotEmpty;
+
+    final mapButton = eventId != null
+        ? _MapFocusButton(
+            eventId: eventId!,
+            focus: EarthquakeIntensityMapFocus(
+              kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
+              code: prefecture.region.region.code,
+            ),
+          )
+        : null;
+
+    final trailing = _buildTrailing(
+      hasChildren: hasCities,
+      isExpanded: isExpanded.value,
+      mapButton: mapButton,
+    );
+
+    return Column(
+      children: [
+        ListTile(
+          visualDensity: VisualDensity.compact,
+          contentPadding: const EdgeInsets.only(left: 20, right: 8),
+          leading: _IntensityLpgmBadgeRow(
+            maxIntensity: prefecture.region.maxIntensity,
+            maxLpgm: null,
+            intensityIconSize: 28,
+          ),
+          title: Text(
+            prefecture.region.region.name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: trailing,
+          onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: isExpanded.value
+              ? Column(
+                  children: [
+                    for (final city in prefecture.cities)
+                      _CityTile(city: city, eventId: eventId),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
+}
+
+/// 市区町村単位のタイル。stations がある場合は観測点ツリーを展開。
+class _CityTile extends HookWidget {
+  const _CityTile({
+    required this.city,
+    required this.eventId,
+  });
+
+  final CityIntensityNode city;
+  final String? eventId;
+
+  @override
+  Widget build(BuildContext context) {
+    final isExpanded = useState(false);
+    final hasStations = city.stations.isNotEmpty;
+
+    final mapButton = eventId != null
+        ? _MapFocusButton(
+            eventId: eventId!,
+            focus: EarthquakeIntensityMapFocus(
+              kind: EarthquakeIntensityMapFocusKind.city,
+              code: city.city.code,
+            ),
+          )
+        : null;
+
+    final trailing = _buildTrailing(
+      hasChildren: hasStations,
+      isExpanded: isExpanded.value,
+      mapButton: mapButton,
+    );
+
+    return Column(
+      children: [
+        ListTile(
+          visualDensity: VisualDensity.compact,
+          contentPadding: const EdgeInsets.only(left: 32, right: 8),
+          leading: _IntensityLpgmBadgeRow(
+            maxIntensity: city.maxIntensity,
+            maxLpgm: city.maxLpgmIntensity,
+            intensityIconSize: 24,
+            lpgmIconSize: 22,
+          ),
+          title: Text(
+            city.city.name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: trailing,
+          onTap: hasStations ? () => isExpanded.value = !isExpanded.value : null,
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: isExpanded.value
+              ? Column(
+                  children: [
+                    for (final station in city.stations)
+                      _StationTile(station: station, eventId: eventId),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
+}
+
+/// 観測点単位のタイル。
+class _StationTile extends StatelessWidget {
+  const _StationTile({
+    required this.station,
+    required this.eventId,
+  });
+
+  final StationIntensityNode station;
+  final String? eventId;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final tree = _buildPrefectureDetailTree(prefectures);
 
-    return Scaffold(
-      appBar: AppBar(title: Text('震度${intensity.label}の地域')),
-      body: CustomScrollView(
-        slivers: [
-          TreeSliver<_IntensityTreeContent>(
-            tree: tree,
-            indentation: TreeSliverIndentationType.none,
-            treeNodeBuilder: (context, node, toggleAnimationStyle) =>
-                _detailTreeNodeBuilder(
-                  context,
-                  ref,
-                  colorScheme,
-                  node,
-                  toggleAnimationStyle,
-                ),
-            treeRowExtentBuilder: (node, dimensions) {
-              final content = node.content! as _IntensityTreeContent;
-              return switch (content) {
-                _TreePrefecture() => 56,
-                _TreeCity() => 52,
-                _TreeStation() => 44,
-              };
-            },
-          ),
-        ],
+    return ListTile(
+      visualDensity: VisualDensity.compact,
+      contentPadding: const EdgeInsets.only(left: 44, right: 8),
+      leading: _IntensityLpgmBadgeRow(
+        maxIntensity: station.intensity?.maxIntensity,
+        maxLpgm: station.intensity?.maxLpgmIntensity,
+        intensityIconSize: 18,
+        lpgmIconSize: 16,
       ),
-    );
-  }
-
-  Widget _detailTreeNodeBuilder(
-    BuildContext context,
-    WidgetRef ref,
-    ColorScheme colorScheme,
-    TreeSliverNode<Object?> node,
-    AnimationStyle toggleAnimationStyle,
-  ) {
-    final content = node.content! as _IntensityTreeContent;
-    final duration = toggleAnimationStyle.duration ?? _toggleDuration;
-    final curve = toggleAnimationStyle.curve ?? _toggleCurve;
-    final depth = node.depth ?? 0;
-    final indent = 12.0 * depth;
-
-    return TreeSliver.wrapChildToToggleNode(
-      node: node,
-      child: Padding(
-        padding: EdgeInsets.only(left: indent + 8, right: 8, top: 4, bottom: 4),
-        child: switch (content) {
-          final _TreePrefecture c => _prefectureRow(
-            context,
-            ref,
-            node,
-            duration,
-            curve,
-            c.node,
-          ),
-          final _TreeCity c => _cityRow(
-            context,
-            ref,
-            node,
-            duration,
-            curve,
-            colorScheme,
-            c.node,
-          ),
-          final _TreeStation c => _stationRow(
-            context,
-            ref,
-            colorScheme,
-            c.node,
-          ),
-        },
+      title: Text(
+        station.station.name,
+        style: TextStyle(
+          fontSize: 13,
+          color: colorScheme.onSurfaceVariant,
+        ),
       ),
+      trailing: eventId != null
+          ? _MapFocusButton(
+              eventId: eventId!,
+              focus: EarthquakeIntensityMapFocus(
+                kind: EarthquakeIntensityMapFocusKind.station,
+                code: station.station.code,
+              ),
+            )
+          : null,
     );
   }
+}
 
-  Widget _prefectureRow(
-    BuildContext context,
-    WidgetRef ref,
-    TreeSliverNode<Object?> node,
-    Duration duration,
-    Curve curve,
-    PrefectureIntensityNode prefecture,
-  ) {
-    final regionName = prefecture.region.region.name;
-    final regionMaxIntensity = prefecture.region.maxIntensity;
+/// 地図フォーカスボタン。タップで地図の表示範囲を指定箇所へ移動する。
+class _MapFocusButton extends ConsumerWidget {
+  const _MapFocusButton({
+    required this.eventId,
+    required this.focus,
+  });
 
-    return Row(
-      children: [
-        _IntensityLpgmBadgeRow(
-          maxIntensity: regionMaxIntensity,
-          maxLpgm: null,
-          intensityIconSize: 28,
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            regionName,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        if (eventId != null)
-          _mapFocusButton(
-            context,
-            ref,
-            EarthquakeIntensityMapFocus(
-              kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
-              code: prefecture.region.region.code,
-            ),
-          ),
-        if (node.children.isNotEmpty)
-          _expandIcon(context, node, duration, curve),
-      ],
-    );
-  }
+  final String eventId;
+  final EarthquakeIntensityMapFocus focus;
 
-  Widget _cityRow(
-    BuildContext context,
-    WidgetRef ref,
-    TreeSliverNode<Object?> node,
-    Duration duration,
-    Curve curve,
-    ColorScheme colorScheme,
-    CityIntensityNode city,
-  ) {
-    final maxIntensity = city.maxIntensity;
-    final maxLpgm = city.maxLpgmIntensity;
-
-    return Row(
-      children: [
-        _IntensityLpgmBadgeRow(
-          maxIntensity: maxIntensity,
-          maxLpgm: maxLpgm,
-          intensityIconSize: 24,
-          lpgmIconSize: 22,
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            city.city.name,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        if (eventId != null)
-          _mapFocusButton(
-            context,
-            ref,
-            EarthquakeIntensityMapFocus(
-              kind: EarthquakeIntensityMapFocusKind.city,
-              code: city.city.code,
-            ),
-          ),
-        if (node.children.isNotEmpty)
-          _expandIcon(context, node, duration, curve),
-      ],
-    );
-  }
-
-  Widget _stationRow(
-    BuildContext context,
-    WidgetRef ref,
-    ColorScheme colorScheme,
-    StationIntensityNode station,
-  ) {
-    return Row(
-      children: [
-        _IntensityLpgmBadgeRow(
-          maxIntensity: station.intensity?.maxIntensity,
-          maxLpgm: station.intensity?.maxLpgmIntensity,
-          intensityIconSize: 18,
-          lpgmIconSize: 16,
-        ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            station.station.name,
-            style: TextStyle(
-              fontSize: 13,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-        if (eventId != null)
-          _mapFocusButton(
-            context,
-            ref,
-            EarthquakeIntensityMapFocus(
-              kind: EarthquakeIntensityMapFocusKind.station,
-              code: station.station.code,
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _mapFocusButton(
-    BuildContext context,
-    WidgetRef ref,
-    EarthquakeIntensityMapFocus focus,
-  ) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       tooltip: '地図で表示',
       icon: const Icon(Icons.map_outlined, size: 20),
@@ -381,34 +332,37 @@ class _PrefectureIntensitySheet extends StatelessWidget {
       constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
       onPressed: () {
         ref
-            .read(earthquakeHistoryMapFocusProvider(eventId!).notifier)
-            .select(
-              focus,
-            );
-        unawaited(Navigator.of(context).maybePop());
+            .read(earthquakeHistoryMapFocusProvider(eventId).notifier)
+            .select(focus);
       },
     );
   }
+}
 
-  Widget _expandIcon(
-    BuildContext context,
-    TreeSliverNode<Object?> node,
-    Duration duration,
-    Curve curve,
-  ) {
-    final index = TreeSliverController.of(context).getActiveIndexFor(node);
-    return SizedBox(
-      width: 40,
-      height: 40,
-      child: AnimatedRotation(
-        key: ValueKey<int?>(index),
-        turns: node.isExpanded ? 0.5 : 0.0,
-        duration: duration,
-        curve: curve,
+/// trailing に地図ボタンと展開アイコンを組み合わせるヘルパー。
+Widget? _buildTrailing({
+  required bool hasChildren,
+  required bool isExpanded,
+  Widget? mapButton,
+}) {
+  if (!hasChildren && mapButton == null) {
+    return null;
+  }
+  if (!hasChildren) {
+    return mapButton;
+  }
+
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      ?mapButton,
+      AnimatedRotation(
+        turns: isExpanded ? 0.5 : 0.0,
+        duration: const Duration(milliseconds: 200),
         child: const Icon(Icons.expand_more),
       ),
-    );
-  }
+    ],
+  );
 }
 
 class _IntensityLpgmBadgeRow extends StatelessWidget {
