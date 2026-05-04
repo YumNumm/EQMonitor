@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_map_focus_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_camera.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_legend.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_map_popup.dart';
@@ -23,6 +24,7 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_map/jma_map.dart';
 import 'package:maplibre/maplibre.dart';
@@ -72,6 +74,34 @@ class _MapContent extends HookConsumerWidget {
     );
     final jmaMap = ref.watch(jmaMapProvider).requireValue;
 
+    final builderContextRef = useRef<BuildContext?>(null);
+    ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (_, next) {
+      if (next == null) {
+        return;
+      }
+      final ctx = builderContextRef.value;
+      if (ctx == null) {
+        return;
+      }
+      final controller = MapController.maybeOf(ctx);
+      if (controller == null) {
+        return;
+      }
+      final geo = geographicForEarthquakeIntensityFocus(earthquake, next);
+      if (geo == null) {
+        return;
+      }
+      unawaited(
+        controller.animateCamera(
+          center: geo,
+          zoom: kEarthquakeHistoryMapFocusZoom,
+        ),
+      );
+      ref
+          .read(earthquakeHistoryMapFocusProvider(earthquake.eventId).notifier)
+          .select(null);
+    });
+
     final tileUrl = earthquake.estimatedIntensityTileUrl;
 
     final center = initialGeographicForEarthquake(earthquake);
@@ -99,6 +129,7 @@ class _MapContent extends HookConsumerWidget {
     return MapLibreEventProvider(
       child: Builder(
         builder: (context) {
+          builderContextRef.value = context;
           return Stack(
             children: [
               MapLibreMap(
