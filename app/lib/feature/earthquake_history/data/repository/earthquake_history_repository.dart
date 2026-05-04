@@ -45,6 +45,17 @@ class EarthquakeHistoryRepository {
     return null;
   }
 
+  String? _regionCodeForCity(String cityCode) {
+    for (final region in earthquakeParameter.regions) {
+      for (final city in region.cities) {
+        if (city.code == cityCode) {
+          return region.code;
+        }
+      }
+    }
+    return null;
+  }
+
   String? _resolveStationDisplayName(String stationCode) {
     for (final region in earthquakeParameter.regions) {
       for (final city in region.cities) {
@@ -189,7 +200,12 @@ class EarthquakeHistoryRepository {
           usedCityLevelData: true,
         );
       }
-      final prefJ = _prefectureOnlyIntensity(intensityTree, cityAreaCode);
+      // 市区町村が震度ツリーにない場合、親地域コードで速報震度を探す
+      // （cityAreaCode は7桁、regionCode は2〜3桁で別体系のため直接比較不可）
+      final regionCode = _regionCodeForCity(cityAreaCode);
+      final prefJ = regionCode != null
+          ? _prefectureOnlyIntensity(intensityTree, regionCode)
+          : null;
       if (prefJ != null) {
         return CurrentLocationIntensityDisplay(
           intensity: prefJ,
