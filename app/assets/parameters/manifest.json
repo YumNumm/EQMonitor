@@ -1,0 +1,60 @@
+{
+  "parameters": [
+    {
+      "type": "jma_code_table",
+      "schema_version": 1,
+      "source_version": "20260430-69617bc33dd66589f4ff63e82e98d6f0d2283071b4905903b450784e3adfaf5beb66e3588e71252da6e0f4a6a4faada3",
+      "source_updated_at": null,
+      "generated_at": "2026-05-04T10:13:05.981Z",
+      "source_urls": [
+        "https://xml.kishou.go.jp/tec_material.html",
+        "https://xml.kishou.go.jp/jmaxml_20260430_Code.zip",
+        "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
+      ],
+      "sha256": "d6e474372d490b9df54e43fb31a668237e323507894a34ef345e84ba3c76bf41",
+      "size_bytes": 604764,
+      "url": "/v2/parameters/jma_code_table"
+    },
+    {
+      "type": "earthquake_stations",
+      "schema_version": 1,
+      "source_version": "20260312",
+      "source_updated_at": "2026-03-12T12:00:00+09:00",
+      "generated_at": "2026-05-04T10:13:05.981Z",
+      "source_urls": [
+        "https://api.dmdata.jp/v2/parameter/earthquake/station",
+        "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
+      ],
+      "sha256": "889cd8de2f023508ec8223941f291e65b60e9121abdc68bfeafd8249aa5520d1",
+      "size_bytes": 4395226,
+      "url": "/v2/parameters/earthquake_stations"
+    },
+    {
+      "type": "tsunami_stations",
+      "schema_version": 1,
+      "source_version": "20260312",
+      "source_updated_at": "2026-03-12T12:00:00+09:00",
+      "generated_at": "2026-05-04T10:13:05.981Z",
+      "source_urls": [
+        "https://api.dmdata.jp/v2/parameter/tsunami/station",
+        "https://www.data.jma.go.jp/developer/jma_multilingual.xlsx"
+      ],
+      "sha256": "ee99a5353933c1dcd1f324c1ff9d45426654730c9082e362e082fa3d002990f3",
+      "size_bytes": 299167,
+      "url": "/v2/parameters/tsunami_stations"
+    },
+    {
+      "type": "kyoshin_observation_points",
+      "schema_version": 1,
+      "source_version": "v2026.05.03",
+      "source_updated_at": "2026-05-03T06:46:46Z",
+      "generated_at": "2026-05-04T10:13:05.981Z",
+      "source_urls": [
+        "https://github.com/ingen084/kyoshin-monitor-observation-points/releases/download/v2026.05.03/intensity-points.json"
+      ],
+      "sha256": "1387a4e6ab250248618cc30f6c7d8c558b6d5d2032e3b581e30ac5ffb7b27696",
+      "size_bytes": 816522,
+      "url": "/v2/parameters/kyoshin_observation_points"
+    }
+  ]
+}
