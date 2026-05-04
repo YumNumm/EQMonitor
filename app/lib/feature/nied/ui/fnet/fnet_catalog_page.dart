@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:core/core.dart';
+import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/nied/data/provider/nied_api_client_provider.dart';
 import 'package:flutter/material.dart';
@@ -89,8 +90,9 @@ class _FnetCatalogList extends HookConsumerWidget {
     final events = snapshot.data ?? [];
 
     if (events.isEmpty) {
-      return const Center(
-        child: Text('データがありません'),
+      return const AppEmptyState(
+        message: 'データがありません',
+        icon: Icons.folder_open_outlined,
       );
     }
 

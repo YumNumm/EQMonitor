@@ -44,43 +44,11 @@ EarthquakeParameter _param({
 
 api.Intensity _intensity({
   required api.JmaIntensity maxIntensity,
-  required List<({String code, String name, api.JmaIntensity? maxIntensity})>
-  prefectures,
-  required List<
-    ({
-      String code,
-      String name,
-      api.JmaIntensity? maxIntensity,
-      api.JmaLpgmIntensity? maxLpgmIntensity,
-    })
-  >
-  regions,
-  api.JmaLpgmIntensity? maxLpgmIntensity,
-  List<api.IntensityItem>? cities,
-  List<api.IntensityStationItem>? stations,
+  required List<api.IntensityTree> intensityTree,
 }) {
   return api.Intensity(
     maxIntensity: maxIntensity,
-    maxLpgmIntensity: maxLpgmIntensity,
-    prefectures: prefectures
-        .map(
-          (p) => api.IntensityItem(
-            value: api.CodeName(code: p.code, name: p.name),
-            maxIntensity: p.maxIntensity,
-          ),
-        )
-        .toList(),
-    regions: regions
-        .map(
-          (r) => api.IntensityItem(
-            value: api.CodeName(code: r.code, name: r.name),
-            maxIntensity: r.maxIntensity,
-            maxLpgmIntensity: r.maxLpgmIntensity,
-          ),
-        )
-        .toList(),
-    cities: cities,
-    stations: stations,
+    intensityTree: intensityTree,
   );
 }
 
@@ -96,19 +64,10 @@ void main() {
     test('市区町村コードで細分区域ノードに一致すれば震度を返す', () {
       final intensity = _intensity(
         maxIntensity: api.JmaIntensity.value4,
-        prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
-        ],
-        regions: [
-          (
-            code: '0420100',
-            name: '宮城県北部',
-            maxIntensity: api.JmaIntensity.value4,
-            maxLpgmIntensity: null,
+        intensityTree: const [
+          api.IntensityTree(
+            intensity: api.JmaIntensity.value4,
+            regions: ['0420100'],
           ),
         ],
       );
@@ -121,10 +80,8 @@ void main() {
           ),
         ],
       );
-      final tree = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final tree = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
         intensityTree: tree,
@@ -140,19 +97,10 @@ void main() {
     test('市区町村に無く細分区域コードでフォールバックする', () {
       final intensity = _intensity(
         maxIntensity: api.JmaIntensity.value4,
-        prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
-          ),
-        ],
-        regions: [
-          (
-            code: '0420100',
-            name: '宮城県北部',
-            maxIntensity: api.JmaIntensity.value4,
-            maxLpgmIntensity: null,
+        intensityTree: const [
+          api.IntensityTree(
+            intensity: api.JmaIntensity.value4,
+            regions: ['0420100'],
           ),
         ],
       );
@@ -165,10 +113,8 @@ void main() {
           ),
         ],
       );
-      final tree = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final tree = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
         intensityTree: tree,
@@ -184,14 +130,12 @@ void main() {
     test('prefecturesのみのツリーでは都道府県コードで解決する', () {
       final intensity = _intensity(
         maxIntensity: api.JmaIntensity.value4,
-        prefectures: [
-          (
-            code: '040000',
-            name: '宮城県',
-            maxIntensity: api.JmaIntensity.value4,
+        intensityTree: const [
+          api.IntensityTree(
+            intensity: api.JmaIntensity.value4,
+            regions: ['040000'],
           ),
         ],
-        regions: [],
       );
       final parameter = _param(
         regions: [
@@ -204,10 +148,8 @@ void main() {
           ),
         ],
       );
-      final tree = convertToIntensityTree(
-        intensity: intensity,
-        parameter: parameter,
-      );
+      final tree = IntensityTreeConverter(parameter: parameter)
+          .convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
         intensityTree: tree,

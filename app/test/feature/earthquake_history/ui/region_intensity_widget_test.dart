@@ -38,7 +38,7 @@ void main() {
         child: MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
-              child: RegionIntensityWidget(item: item),
+              child: EarthquakeIntensityWidget(item: item),
             ),
           ),
         ),
@@ -74,7 +74,7 @@ void main() {
         maxLpgmIntensity: null,
         intensityTree: {
           JmaIntensity.four: [
-            RegionIntensityNode(
+            PrefectureIntensityNode(
               region: IntensityRegion(
                 region: miyagiRegion,
                 maxIntensity: JmaIntensity.four,
@@ -93,14 +93,7 @@ void main() {
             ),
           ],
         },
-        regions: [
-          IntensityRegion(
-            region: miyagiRegion,
-            maxIntensity: JmaIntensity.four,
-          ),
-        ],
         lpgmIntensityTree: const {},
-        lpgmRegions: const [],
       ),
     );
 
@@ -118,7 +111,7 @@ void main() {
         maxLpgmIntensity: null,
         intensityTree: {
           JmaIntensity.four: [
-            RegionIntensityNode(
+            PrefectureIntensityNode(
               region: IntensityRegion(
                 region: miyagiRegion,
                 maxIntensity: JmaIntensity.four,
@@ -136,14 +129,7 @@ void main() {
             ),
           ],
         },
-        regions: [
-          IntensityRegion(
-            region: miyagiRegion,
-            maxIntensity: JmaIntensity.four,
-          ),
-        ],
         lpgmIntensityTree: const {},
-        lpgmRegions: const [],
       ),
     );
 

@@ -58,7 +58,7 @@ class AppListTile extends StatelessWidget {
     final backgroundColor = colorScheme.secondaryContainer;
     final textColor = colorScheme.onSecondaryContainer;
 
-    final shape = RoundedRectangleBorder(
+    final shape = RoundedSuperellipseBorder(
       borderRadius: BorderRadius.circular(16),
     );
 

@@ -52,7 +52,7 @@ dependencies:
   core:
     path: ../packages/core
   crypto: ^3.0.6
-  cue: ^0.1.4
+  cue: ^0.2.1
   dart_azarashi:
     path: ../packages/dart_azarashi
   device_info_plus: ^12.1.0
@@ -120,7 +120,7 @@ dependencies:
     path: ../packages/kyoshin_observation_point_types
   lat_lng:
     path: ../packages/lat_lng
-  latlong2: ^0.9.1
+  latlong2: ^0.10.1
   libserialport_plus: ^0.1.0
   live_activity_util:
     path: ../packages/live_activity_util

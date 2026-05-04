@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
-import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
@@ -35,7 +35,7 @@ class EewCard extends ConsumerWidget {
     final regionItem = position != null
         ? ref
               .watch(
-                jmaMapAreaForecastLocalEewInsideProvider(
+                jmaMapAreaForecastLocalEInsideProvider(
                   lat_lng.LatLng(position.latitude, position.longitude),
                 ),
               )
@@ -45,7 +45,23 @@ class EewCard extends ConsumerWidget {
     final regionCode = regionItem?.property?.code;
     final regionDisplayName = regionItem?.property?.name;
 
-    final localRegion = _localForecastRegion(eew, regionCode);
+    EewForecastRegionInfo? localForecastRegion(
+      EewTelegramItem eew,
+      String? regionCode,
+    ) {
+      if (regionCode == null) {
+        return null;
+      }
+      final regions = eew.forecastIntensity?.regions;
+      if (regions == null || regions.isEmpty) {
+        return null;
+      }
+      return regions.firstWhereOrNull(
+        (r) => r.code == regionCode,
+      );
+    }
+
+    final localRegion = localForecastRegion(eew, regionCode);
     final localForecastIntensity = localRegion?.intensity;
 
     final nowValue = now.asData?.value;
@@ -65,7 +81,8 @@ class EewCard extends ConsumerWidget {
       }
     }
 
-    final textTheme = Theme.of(context).textTheme;
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final textColor = designSystem.textColor;
 
     return Stack(
       alignment: Alignment.center,
@@ -77,8 +94,11 @@ class EewCard extends ConsumerWidget {
           happenedTime: happenedTime,
           localForecastIntensity: localForecastIntensity,
           regionDisplayName: regionDisplayName,
-          hasArrived: hasArrived,
           secondsUntilArrival: secondsUntilArrival,
+          showArrived:
+              localRegion != null &&
+              (hasArrived ||
+                  (localArrivalTime != null && secondsUntilArrival == null)),
         ),
         if (eew.status != TelegramStatus.normal)
           Center(
@@ -87,9 +107,9 @@ class EewCard extends ConsumerWidget {
                 eew.status.name,
                 style: TextStyle(
                   fontSize: 100,
-                  fontWeight: FontWeight.bold,
-                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.2),
-                  fontFamily: FontFamily.notoSansMono,
+                  fontWeight: FontWeight.w700,
+                  color: textColor.secondary.withValues(alpha: 0.2),
+                  fontFamily: codeFontFamily,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -107,7 +127,7 @@ class _EewMainCard extends StatelessWidget {
     required this.happenedTime,
     required this.localForecastIntensity,
     required this.regionDisplayName,
-    required this.hasArrived,
+    required this.showArrived,
     this.secondsUntilArrival,
   });
 
@@ -116,7 +136,7 @@ class _EewMainCard extends StatelessWidget {
   final DateTime happenedTime;
   final JmaIntensity? localForecastIntensity;
   final String? regionDisplayName;
-  final bool hasArrived;
+  final bool showArrived;
   final int? secondsUntilArrival;
 
   static const _warningHeaderColor = Color.fromRGBO(179, 26, 26, 1);
@@ -124,14 +144,17 @@ class _EewMainCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final color = designSystem.color;
+    final spacing = designSystem.spacing;
+    final shape = designSystem.shape;
     final forecastIntensity = eew.forecastIntensity;
     final maxIntensity =
         forecastIntensity?.maxIntensity ?? JmaIntensity.unknown;
     final maxLpgmIntensity = forecastIntensity?.maxLpgmIntensity;
 
     final headerBackgroundColor = eew.isCanceled
-        ? colorScheme.surfaceContainerLowest
+        ? color.surfaceRaised
         : isWarning
         ? _warningHeaderColor
         : _forecastHeaderColor;
@@ -142,67 +165,58 @@ class _EewMainCard extends StatelessWidget {
         regionDisplayName!.isNotEmpty;
 
     return Card(
-      elevation: 1,
-      margin:
-          const EdgeInsets.symmetric(horizontal: 12) +
-          const EdgeInsets.only(bottom: 8),
+      elevation: 0,
       clipBehavior: Clip.antiAlias,
-      color: colorScheme.surfaceContainerHighest,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: Color.lerp(
-            colorScheme.surface,
-            colorScheme.outline.withValues(alpha: 0.5),
-            0.65,
-          )!,
-        ),
+      margin: EdgeInsets.zero,
+      color: color.surfaceCard,
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(shape.card),
+        side: BorderSide(color: color.outlineSoft),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _EewCardHeader(
-            eew: eew,
-            isWarning: isWarning,
-            headerBackgroundColor: headerBackgroundColor,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _EewMaxIntensitySection(maxIntensity: maxIntensity),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _EewHypocenterSection(
-                        eew: eew,
-                        happenedTime: happenedTime,
-                      ),
-                    ),
-                    if (showLocalForecast) ...[
-                      const SizedBox(width: 8),
-                      _EewLocalForecastSection(
-                        intensity: localForecastIntensity!,
-                        regionDisplayName: regionDisplayName!,
-                        hasArrived: hasArrived,
-                        secondsUntilArrival: secondsUntilArrival,
-                      ),
-                    ],
-                  ],
-                ),
-                if (maxLpgmIntensity != null &&
-                    maxLpgmIntensity != JmaLpgmIntensity.zero) ...[
-                  const SizedBox(height: 12),
-                  _EewLpgmSection(intensity: maxLpgmIntensity),
-                ],
-              ],
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _EewCardHeader(
+              eew: eew,
+              isWarning: isWarning,
+              headerBackgroundColor: headerBackgroundColor,
+              secondsUntilArrival: secondsUntilArrival,
+              showArrived: showArrived,
             ),
-          ),
-        ],
-      ),
+            Padding(
+              padding: EdgeInsets.all(spacing.sm),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      _EewMaxIntensitySection(maxIntensity: maxIntensity),
+                      SizedBox(width: spacing.sm),
+                      Expanded(
+                        child: _EewHypocenterSection(
+                          eew: eew,
+                          happenedTime: happenedTime,
+                        ),
+                      ),
+                      if (showLocalForecast) ...[
+                        SizedBox(width: spacing.sm),
+                        _EewLocalForecastSection(
+                          intensity: localForecastIntensity!,
+                          regionDisplayName: regionDisplayName!,
+                        ),
+                      ],
+                    ],
+                  ),
+                  if (maxLpgmIntensity != null &&
+                      maxLpgmIntensity != JmaLpgmIntensity.zero) ...[
+                    SizedBox(height: spacing.sm),
+                    _EewLpgmSection(intensity: maxLpgmIntensity),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
     );
   }
 }
@@ -212,21 +226,106 @@ class _EewCardHeader extends StatelessWidget {
     required this.eew,
     required this.isWarning,
     required this.headerBackgroundColor,
+    required this.showArrived,
+    this.secondsUntilArrival,
   });
 
   final EewTelegramItem eew;
   final bool isWarning;
   final Color headerBackgroundColor;
+  final bool showArrived;
+  final int? secondsUntilArrival;
+
+  static const _secondaryTextColor = Color.fromRGBO(255, 255, 255, 0.7);
 
   @override
   Widget build(BuildContext context) {
-    final typeLabel = isWarning ? '緊急地震速報（警報）' : '緊急地震速報（予報）';
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final spacing = designSystem.spacing;
+
+    final typeLabel = isWarning ? '緊急地震速報(警報)' : '緊急地震速報(予報)';
+    final serialLabel = eew.isLastInfo
+        ? '最終 第${eew.serialNo}報'
+        : '第${eew.serialNo}報';
+    final typeLabelWithSerial = '$typeLabel $serialLabel';
+    final headline = eew.headline;
+
+    final secs = secondsUntilArrival;
+    final countdownText = (secs != null && secs > 0) ? '$secs秒' : null;
+    final hypocenterName = eew.hypocenter?.name;
+    final headlineText = (headline != null && headline.isNotEmpty)
+        ? headline.replaceAll('　', ' ').replaceAll('で地震 ', 'で地震\n')
+        : hypocenterName != null
+        ? '$hypocenterNameで地震発生'
+        : '地震発生';
+
+    final leftColumn = Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            typeLabelWithSerial,
+            style: typography.monoSmall.copyWith(
+              color: _secondaryTextColor,
+              letterSpacing: 0,
+            ),
+          ),
+          Text(
+            headlineText,
+            style: typography.titleSmall.copyWith(
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+            overflow: TextOverflow.visible,
+          ),
+        ],
+      ),
+    );
+
+    final Widget? rightColumn;
+    if (countdownText != null) {
+      rightColumn = Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            '主要動到達まで',
+            style: typography.labelSmall.copyWith(color: _secondaryTextColor),
+          ),
+          Text(
+            countdownText,
+            style: typography.monoMedium.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: -0.5,
+            ),
+          ),
+        ],
+      );
+    } else if (showArrived) {
+      rightColumn = Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            '主要動',
+            style: typography.labelSmall.copyWith(color: _secondaryTextColor),
+          ),
+          Text(
+            '到達済み',
+            style: typography.titleSmall.copyWith(
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      );
+    } else {
+      rightColumn = null;
+    }
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: headerBackgroundColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      ),
+      decoration: BoxDecoration(color: headerBackgroundColor),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -236,60 +335,19 @@ class _EewCardHeader extends StatelessWidget {
             child: _EewStripePattern(isWarning: isWarning),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: spacing.sm,
+              vertical: spacing.sm,
+            ),
             child: Row(
+              spacing: spacing.sm,
               children: [
-                Expanded(
-                  child: Text(
-                    typeLabel,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontFamily.notoSansMono,
-                      color: Color(0xB3FFFFFF),
-                    ),
-                  ),
-                ),
-                _EewSerialBadge(eew: eew, isWarning: isWarning),
+                leftColumn,
+                ?rightColumn,
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _EewSerialBadge extends StatelessWidget {
-  const _EewSerialBadge({required this.eew, required this.isWarning});
-
-  final EewTelegramItem eew;
-  final bool isWarning;
-
-  static const _warningBadgeColor = Color.fromRGBO(120, 0, 0, 1);
-  static const _forecastBadgeColor = Color.fromRGBO(150, 65, 0, 1);
-
-  @override
-  Widget build(BuildContext context) {
-    final badgeColor = isWarning ? _warningBadgeColor : _forecastBadgeColor;
-    final serialLabel = eew.isLastInfo
-        ? '#${eew.serialNo}(最終)'
-        : '#${eew.serialNo}';
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: badgeColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        serialLabel,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          fontFamily: FontFamily.notoSansMono,
-          color: Colors.white,
-        ),
       ),
     );
   }
@@ -302,18 +360,16 @@ class _EewMaxIntensitySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final textColor = designSystem.textColor;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          '予想震度',
-          style: textTheme.labelLarge!.copyWith(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface.withValues(alpha: 0.85),
-          ),
+          '最大震度',
+          style: typography.labelMedium.copyWith(color: textColor.secondary),
         ),
         const SizedBox(height: 2),
         JmaForecastIntensityWidget(intensity: maxIntensity),
@@ -333,9 +389,11 @@ class _EewHypocenterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final textColor = designSystem.textColor;
+    final spacing = designSystem.spacing;
     final hypocenter = eew.hypocenter;
-    final hypoLabel = eew.isPlum ? '検知観測点' : '震源地';
     final timeLabel = (eew.originTime == null || eew.isPlum) ? '地震検知' : '地震発生';
     final localHappened = happenedTime.toLocal();
 
@@ -346,37 +404,24 @@ class _EewHypocenterSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.ideographic,
           children: [
-            _SecondaryLabel(text: hypoLabel),
-            const SizedBox(width: 4),
-            Expanded(
-              child: Text(
-                hypocenter?.name ?? '不明',
-                style: textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.w800,
+            if (eew.isPlum)
+              Text(
+                'PLUM法による検知',
+                style: typography.titleSmall.copyWith(
+                  fontFamily: codeFontFamily,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              )
+            else
+              Row(
+                spacing: spacing.md,
+                children: [
+                  _MagnitudeRow(magnitude: hypocenter?.magnitude),
+                  _DepthRow(depth: hypocenter?.depth),
+                ],
               ),
-            ),
           ],
         ),
         const SizedBox(height: 4),
-        if (eew.isPlum)
-          Text(
-            'PLUM法による検知',
-            style: textTheme.titleSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansMono,
-            ),
-          )
-        else
-          Row(
-            spacing: 14,
-            children: [
-              _MagnitudeRow(magnitude: hypocenter?.magnitude),
-              _DepthRow(depth: hypocenter?.depth),
-            ],
-          ),
         const SizedBox(height: 4),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -386,18 +431,17 @@ class _EewHypocenterSection extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               DateFormat('MM/dd').format(localHappened),
-              style: textTheme.labelLarge!.copyWith(
-                fontWeight: FontWeight.w600,
-                fontFamily: FontFamily.notoSansMono,
+              style: typography.labelLarge.copyWith(
+                fontFamily: codeFontFamily,
                 letterSpacing: -0.5,
+                color: textColor.secondary,
               ),
             ),
             const SizedBox(width: 4),
             Text(
               DateFormat('HH:mm:ss').format(localHappened),
-              style: textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.bold,
-                fontFamily: FontFamily.notoSansMono,
+              style: typography.titleMedium.copyWith(
+                fontFamily: codeFontFamily,
                 letterSpacing: -0.5,
               ),
             ),
@@ -412,39 +456,33 @@ class _EewLocalForecastSection extends StatelessWidget {
   const _EewLocalForecastSection({
     required this.intensity,
     required this.regionDisplayName,
-    required this.hasArrived,
-    this.secondsUntilArrival,
   });
 
   final JmaIntensity intensity;
   final String regionDisplayName;
-  final bool hasArrived;
-  final int? secondsUntilArrival;
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final textColor = designSystem.textColor;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: .min,
       children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Icon(
               Icons.location_on,
-              size: 12,
-              color: colorScheme.onSurface.withValues(alpha: 0.55),
+              size: 9,
+              color: textColor.secondary,
             ),
             const SizedBox(width: 2),
             Flexible(
               child: Text(
                 regionDisplayName,
-                style: textTheme.labelSmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: typography.labelMedium,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -452,31 +490,9 @@ class _EewLocalForecastSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 2),
-        if (hasArrived)
-          Text(
-            '到達済',
-            style: textTheme.titleMedium!.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.red,
-            ),
-          )
-        else ...[
-          JmaForecastIntensityWidget(intensity: intensity),
-          if (secondsUntilArrival != null) ...[
-            const SizedBox(height: 2),
-            Text(
-              'あと$secondsUntilArrival秒',
-              style: textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.bold,
-                fontFamily: FontFamily.notoSansMono,
-                letterSpacing: -0.5,
-                color: secondsUntilArrival! <= 10
-                    ? Colors.orange
-                    : colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ],
+        JmaForecastIntensityWidget(
+          intensity: intensity,
+        ),
       ],
     );
   }
@@ -489,33 +505,25 @@ class _EewLpgmSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final spacing = designSystem.spacing;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            Text('最大LPGM', style: textTheme.labelLarge),
-            JmaForecastLgIntensityWidget(intensity: intensity),
-          ],
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '予想最大長周期地震動階級 ${intensity.label}',
-                style: textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Text('高層階では特に周期の長い揺れに注意してください'),
-            ],
+    return Padding(
+      padding: EdgeInsets.all(spacing.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '予想最大長周期地震動階級 ${intensity.label}',
+            style: typography.titleMedium,
           ),
-        ),
-      ],
+          Text(
+            '高層階では特に周期の長い揺れに注意してください',
+            style: typography.bodySmall,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -527,7 +535,7 @@ class _BackgroundIndexText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final textColor = Theme.of(context).designSystemThemeExtension.textColor;
 
     return Center(
       child: FittedBox(
@@ -535,9 +543,9 @@ class _BackgroundIndexText extends StatelessWidget {
           index,
           style: TextStyle(
             fontSize: 100,
-            fontWeight: FontWeight.bold,
-            fontFamily: FontFamily.notoSansMono,
-            color: textTheme.bodyMedium!.color!.withValues(alpha: 0.3),
+            fontWeight: FontWeight.w700,
+            fontFamily: codeFontFamily,
+            color: textColor.secondary.withValues(alpha: 0.3),
           ),
         ),
       ),
@@ -552,14 +560,13 @@ class _SecondaryLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final textColor = designSystem.textColor;
 
     return Text(
       text,
-      style: Theme.of(context).textTheme.labelSmall!.copyWith(
-        fontWeight: FontWeight.bold,
-        color: colorScheme.onSurface.withValues(alpha: 0.55),
-      ),
+      style: typography.labelSmall.copyWith(color: textColor.secondary),
     );
   }
 }
@@ -571,8 +578,9 @@ class _MagnitudeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final secondary = textTheme.titleSmall!.color!.withValues(alpha: 0.55);
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final textColor = designSystem.textColor;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -580,28 +588,19 @@ class _MagnitudeRow extends StatelessWidget {
       textBaseline: TextBaseline.alphabetic,
       children: [
         Text(
-          'M',
-          style: textTheme.labelSmall!.copyWith(
-            fontWeight: FontWeight.bold,
-            color: secondary,
-          ),
+          'M ',
+          style: typography.labelSmall.copyWith(color: textColor.secondary),
         ),
         if (magnitude != null)
           Text(
             magnitude!.toStringAsFixed(1),
-            style: textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansMono,
-              letterSpacing: -2.5,
+            style: typography.titleLarge.copyWith(
+              fontFamily: codeFontFamily,
+              letterSpacing: -0.5,
             ),
           )
         else
-          Text(
-            '不明',
-            style: textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text('不明', style: typography.titleLarge),
       ],
     );
   }
@@ -614,8 +613,9 @@ class _DepthRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final secondary = textTheme.titleSmall!.color!.withValues(alpha: 0.55);
+    final designSystem = Theme.of(context).designSystemThemeExtension;
+    final typography = designSystem.typography;
+    final textColor = designSystem.textColor;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -623,55 +623,36 @@ class _DepthRow extends StatelessWidget {
       textBaseline: TextBaseline.alphabetic,
       children: [
         Text(
-          '深さ',
-          style: textTheme.labelSmall!.copyWith(
-            fontWeight: FontWeight.bold,
-            color: secondary,
-          ),
+          '深さ ',
+          style: typography.labelSmall.copyWith(color: textColor.secondary),
         ),
         if (depth == null)
-          Text(
-            '不明',
-            style: textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          )
+          Text('不明', style: typography.titleLarge)
         else if (depth == 0)
-          Text(
-            'ごく浅い',
-            style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
-          )
+          Text('ごく浅い', style: typography.titleLarge)
         else if (depth! >= 700) ...[
           Text(
             '$depth',
-            style: textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansMono,
-              letterSpacing: -1,
+            style: typography.titleLarge.copyWith(
+              fontFamily: codeFontFamily,
+              letterSpacing: -0.5,
             ),
           ),
           Text(
             ' km以上',
-            style: textTheme.labelSmall!.copyWith(
-              fontWeight: FontWeight.w500,
-              color: secondary,
-            ),
+            style: typography.labelSmall.copyWith(color: textColor.secondary),
           ),
         ] else ...[
           Text(
-            '$depth',
-            style: textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansMono,
-              letterSpacing: -1,
+            '$depth ',
+            style: typography.titleLarge.copyWith(
+              fontFamily: codeFontFamily,
+              letterSpacing: -0.5,
             ),
           ),
           Text(
-            ' km',
-            style: textTheme.labelSmall!.copyWith(
-              fontWeight: FontWeight.w500,
-              color: secondary,
-            ),
+            'km',
+            style: typography.labelSmall.copyWith(color: textColor.secondary),
           ),
         ],
       ],
@@ -724,18 +705,4 @@ class _StripePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _StripePainter oldDelegate) =>
       oldDelegate.colors != colors;
-}
-
-EewForecastRegionInfo? _localForecastRegion(
-  EewTelegramItem eew,
-  String? regionCode,
-) {
-  if (regionCode == null) {
-    return null;
-  }
-  final regions = eew.forecastIntensity?.regions;
-  if (regions == null || regions.isEmpty) {
-    return null;
-  }
-  return regions.firstWhereOrNull((r) => r.code == regionCode);
 }

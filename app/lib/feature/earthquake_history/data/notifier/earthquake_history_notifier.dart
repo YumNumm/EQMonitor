@@ -4,12 +4,14 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
-import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -39,9 +41,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
             await _onResumed();
           }
         })
-        ..listen(wsConnectionProvider, (_, next) async {
+        ..listen(realtimeEventsProvider, (_, next) async {
           if (next case AsyncData(:final value)) {
-            await _onWsMessage(value);
+            await _onRealtimeEvent(value);
           }
         });
     }
@@ -162,8 +164,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       log('state is not AsyncData<EarthquakeHistoryNotifierState>');
       return;
     }
-    final wsState = ref.read(wsConnectionStatusProvider);
-    if (wsState == WsConnectionState.connected) {
+    final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
+    if (wsPhase == WsPhase.connected) {
       log('WS is connected');
       return;
     }
@@ -184,17 +186,41 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     _upsertItems(result.items);
   }
 
-  Future<void> _onWsMessage(WsMessage msg) async {
-    if (msg case WsRealtimeMessage(:final data)) {
-      if (data is! WsEarthquakeRealtimeEvent) {
-        return;
-      }
-      if (data.operation == 'upsert') {
+  Future<void> _onRealtimeEvent(RealtimeEvent event) async {
+    switch (event) {
+      case RealtimeEarthquakeUpsertEvent():
         await _refreshFromEarthquakeUpsert();
-      } else if (data.operation == 'delete') {
-        _deleteItem(data.eventId);
-      }
+      case RealtimeEarthquakeDeleteEvent(:final eventId):
+        _deleteItem(eventId);
+      case RealtimeEstimatedIntensityUpsertEvent(
+        :final eventId,
+        :final estimatedIntensityTile,
+      ):
+        _updateEstimatedIntensityTile(eventId, estimatedIntensityTile);
+      default:
+        return;
     }
+  }
+
+  void _updateEstimatedIntensityTile(
+    String eventId,
+    String estimatedIntensityTile,
+  ) {
+    if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
+      return;
+    }
+    final currentState = state.value;
+    if (currentState == null) {
+      return;
+    }
+    final items = [
+      for (final item in currentState.items)
+        if (item.eventId == eventId)
+          item.copyWith(estimatedIntensityTileUrl: estimatedIntensityTile)
+        else
+          item,
+    ];
+    state = AsyncData((items: items, nextToken: currentState.nextToken));
   }
 
   Future<void> _refreshFromEarthquakeUpsert() async {

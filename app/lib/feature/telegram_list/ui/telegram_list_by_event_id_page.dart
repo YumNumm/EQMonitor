@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
@@ -7,6 +8,7 @@ import 'package:eqmonitor/feature/telegram_list/ui/components/telegram_list_tile
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class TelegramListByEventIdPage extends HookConsumerWidget {
   const TelegramListByEventIdPage({required this.eventId, super.key});
@@ -64,7 +66,7 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
                 .read(telegramListByEventIdProvider(eventId).notifier)
                 .refresh(),
           ),
-          _ => const Center(child: CircularProgressIndicator()),
+          _ => const _TelegramListSkeleton(),
         },
       ),
     );
@@ -91,7 +93,10 @@ class _TelegramListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return const Center(child: Text('電文がありません'));
+      return const AppEmptyState(
+        message: '電文はありません',
+        icon: Icons.description_outlined,
+      );
     }
 
     return ListView.separated(
@@ -124,19 +129,13 @@ class _TelegramListView extends StatelessWidget {
 
   Widget _buildFooter(BuildContext context) {
     if (isLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(16),
-        child: Center(child: CircularProgressIndicator()),
-      );
+      return const _TelegramListSkeleton(itemCount: 2);
     }
     if (error != null) {
       return ErrorCard(error: error!, onReload: onReload);
     }
     if (hasNext) {
-      return const Padding(
-        padding: EdgeInsets.all(16),
-        child: Center(child: CircularProgressIndicator()),
-      );
+      return const _TelegramListSkeleton(itemCount: 2);
     }
     return const Padding(
       padding: EdgeInsets.all(16),
@@ -145,6 +144,31 @@ class _TelegramListView extends StatelessWidget {
           'すべての電文を取得しました',
           style: TextStyle(color: Colors.grey),
         ),
+      ),
+    );
+  }
+}
+
+class _TelegramListSkeleton extends StatelessWidget {
+  const _TelegramListSkeleton({this.itemCount = 5});
+
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final i in List.generate(itemCount, (i) => i)) ...[
+            ListTile(
+              leading: const CircleAvatar(radius: 16),
+              title: Text('VXSE4${i + 3} 2026/04/21 12:34:56'),
+              subtitle: const Text('eventId: 20260421123456'),
+            ),
+            if (i < itemCount - 1) const Divider(height: 1),
+          ],
+        ],
       ),
     );
   }

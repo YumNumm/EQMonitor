@@ -79,7 +79,7 @@ Geographic? geographicForEarthquakeIntensityFocus(
   return null;
 }
 
-Geographic? _representativeGeographicForRegion(RegionIntensityNode regionNode) {
+Geographic? _representativeGeographicForRegion(PrefectureIntensityNode regionNode) {
   for (final city in regionNode.cities) {
     final g = _representativeGeographicForCity(city);
     if (g != null) {

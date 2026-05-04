@@ -39,7 +39,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
           color: color.surfaceCard,
           clipBehavior: Clip.antiAlias,
           elevation: 0,
-          shape: RoundedRectangleBorder(
+          shape: RoundedSuperellipseBorder(
             borderRadius: BorderRadius.circular(shape.card),
             side: BorderSide(color: color.outlineSoft),
           ),
@@ -124,7 +124,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
         margin: EdgeInsets.zero,
         color: color.surfaceCard,
         elevation: 0,
-        shape: RoundedRectangleBorder(
+        shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(shape.card),
           side: BorderSide(color: color.outlineSoft),
         ),

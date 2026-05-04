@@ -5,9 +5,12 @@ import 'package:eqmonitor/core/model/telegram/telegram_info_type.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart' as lat_lng;
 
 /// デバッグ用。ホーム画面と同じ [EewCard] の見た目を、パラメータ操作で検証する。
 class DebugEewCardPage extends HookConsumerWidget {
@@ -53,6 +56,25 @@ class DebugEewCardPage extends HookConsumerWidget {
 
     final showStackIndex = useState(false);
 
+    final showLocalRegion = useState(false);
+    final localRegionIntensity = useState(JmaIntensity.fiveLower);
+    final showCountdown = useState(false);
+    final countdownSeconds = useState(30);
+    final isArrivedLocal = useState(false);
+
+    final position = ref.watch(locationStreamProvider).value;
+    final detectedRegionItem = position != null
+        ? ref
+              .watch(
+                jmaMapAreaForecastLocalEInsideProvider(
+                  lat_lng.LatLng(position.latitude, position.longitude),
+                ),
+              )
+              .value
+        : null;
+    final detectedRegionCode = detectedRegionItem?.property?.code;
+    final detectedRegionName = detectedRegionItem?.property?.name;
+
     EewTelegramItem buildEew() {
       final now = DateTime.now().toUtc();
       final mag = magnitude.value;
@@ -74,8 +96,24 @@ class DebugEewCardPage extends HookConsumerWidget {
         lpgm = JmaLpgmIntensity.zero;
       }
 
+      final localRegion = (showLocalRegion.value && detectedRegionCode != null)
+          ? EewForecastRegionInfo(
+              code: detectedRegionCode,
+              name: detectedRegionName ?? detectedRegionCode,
+              isPlum: isPlum.value,
+              isWarning: isWarning.value ?? false,
+              intensity: localRegionIntensity.value,
+              intensityIsOver: false,
+              arrivalTime: showCountdown.value && !isArrivedLocal.value
+                  ? DateTime.now().toUtc().add(
+                      Duration(seconds: countdownSeconds.value),
+                    )
+                  : null,
+              isArrived: isArrivedLocal.value,
+            )
+          : null;
       final forecast = EewForecastIntensityInfo(
-        regions: const [],
+        regions: localRegion != null ? [localRegion] : const [],
         maxIntensity: maxIntensity.value,
         maxIntensityIsOver: maxIntensityIsOver.value,
         maxLpgmIntensity: lpgm,
@@ -381,6 +419,75 @@ class DebugEewCardPage extends HookConsumerWidget {
                     label: 'maxLpgmIntensityIsOver',
                     value: maxLpgmIsOver.value,
                     onChanged: (v) => maxLpgmIsOver.value = v,
+                  ),
+                ],
+              ],
+            ),
+          ),
+          _ParamSection(
+            title: 'カウントダウン・現在地予測震度',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    detectedRegionCode != null
+                        ? '現在地リージョン: $detectedRegionName ($detectedRegionCode)'
+                        : '現在地リージョン: 未取得（GPS 許可が必要）',
+                    style: _paramLabelStyle.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                _BoolRow(
+                  label: '現在地の予測震度を表示',
+                  value: showLocalRegion.value,
+                  onChanged: (v) => showLocalRegion.value = v,
+                ),
+                if (showLocalRegion.value && detectedRegionCode != null) ...[
+                  _LabeledRow(
+                    label: '現在地の予測震度',
+                    child: DropdownButton<JmaIntensity>(
+                      isExpanded: true,
+                      value: localRegionIntensity.value,
+                      style: _paramValueStyle,
+                      items: JmaIntensity.values
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e.label, style: _paramValueStyle),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) {
+                        if (v != null) {
+                          localRegionIntensity.value = v;
+                        }
+                      },
+                    ),
+                  ),
+                  _BoolRow(
+                    label: 'カウントダウンを表示',
+                    value: showCountdown.value,
+                    onChanged: (v) => showCountdown.value = v,
+                  ),
+                  if (showCountdown.value && !isArrivedLocal.value)
+                    _LabeledRow(
+                      label: '到達まで: ${countdownSeconds.value} 秒',
+                      child: Slider(
+                        value: countdownSeconds.value.toDouble(),
+                        min: 5,
+                        max: 120,
+                        divisions: 23,
+                        label: '${countdownSeconds.value}秒',
+                        onChanged: (v) => countdownSeconds.value = v.round(),
+                      ),
+                    ),
+                  _BoolRow(
+                    label: '到着済み（isArrived）',
+                    value: isArrivedLocal.value,
+                    onChanged: (v) => isArrivedLocal.value = v,
                   ),
                 ],
               ],

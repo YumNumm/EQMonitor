@@ -44,6 +44,10 @@ class MapStyleUtil {
           'type': 'vector',
           'url': 'pmtiles://https://v2.map.eqmonitor.app/overview.pmtiles',
         },
+        'eqmonitor_map': {
+          'type': 'vector',
+          'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
+        },
       },
       'layers': [
         // 背景

@@ -5,9 +5,11 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/station_intensity_icon_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,29 +17,24 @@ import 'package:maplibre/maplibre.dart';
 
 /// 地震履歴詳細の観測点震度レイヤー
 ///
-/// [stationDisplayMode] に応じて観測点サイズを変更する。
-/// [showingLpgmIntensity] が true の場合は長周期地震動階級で色分けする。
-/// [showLabel] が true の場合は観測点名ラベルを表示する。
-/// [iconMode] に応じて観測点アイコンの表示方法を制御する。
-/// - [EarthquakeHistoryIconMode.auto]: zoom 10→11 でフェードイン
-/// - [EarthquakeHistoryIconMode.station]: minZoom 8 から常時表示
+/// stationDisplayMode に応じて観測点サイズを変更する。
+/// showingLpgmIntensity が true の場合は長周期地震動階級で色分けする。
+/// showStationLabel が true の場合は観測点名ラベルを表示する。
+/// mode に応じて観測点アイコンの表示方法を制御する。
+/// - auto: zoomThresholds.cityToStation から表示
+/// - station: minZoom 8 から常時表示
 /// - それ以外: アイコン非表示（ドットのみ）
 class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   const EarthquakeHistoryStationIntensityLayer({
-    required this.intensity,
-    required this.iconMode,
-    this.stationDisplayMode = StationDisplayMode.maxFocused,
-    this.showLabel = false,
-    this.showingLpgmIntensity = false,
+    required this.earthquake,
+    required this.config,
+    this.zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds,
     super.key,
   });
 
-  final EarthquakeIntensity intensity;
-  final EarthquakeHistoryIconMode iconMode;
-  final StationDisplayMode stationDisplayMode;
-
-  final bool showLabel;
-  final bool showingLpgmIntensity;
+  final Earthquake earthquake;
+  final EarthquakeHistoryDetailConfig config;
+  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
 
   static const _sourceId = 'eq-history-station-intensity';
   static const _circleLayerId = 'eq-history-station-intensity-circle';
@@ -50,12 +47,20 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   static const _lpgmIconSmallPrefix = 'eq-station-lpgm-sm-';
   static const _lpgmIconSmallNoTextPrefix = 'eq-station-lpgm-sm-nt-';
 
-  bool get _showIcon =>
-      iconMode == EarthquakeHistoryIconMode.auto ||
-      iconMode == EarthquakeHistoryIconMode.station;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final intensity = earthquake.intensity;
+    if (intensity == null || !config.showStation) {
+      return const SizedBox.shrink();
+    }
+
+    final modeResolver = useMemoized(
+      () => const EarthquakeHistoryMapLayerModeResolver(),
+    );
+    final mode = modeResolver.resolveMapLayerMode(
+      earthquake: earthquake,
+      config: config,
+    );
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
     final cachedBytes = ref.watch(stationIntensityIconBytesProvider);
@@ -68,19 +73,24 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           return null;
         }
 
+        var disposed = false;
+
         unawaited(() async {
           try {
-            final geoJson = showingLpgmIntensity
+            final geoJson = config.showingLpgmIntensity
                 ? _buildLpgmGeoJson(intensity, colorModel)
                 : _buildGeoJson(intensity, colorModel);
 
+            if (disposed) {
+              return;
+            }
             await styleController.addSource(
-              GeoJsonSource(
-                id: _sourceId,
-                data: geoJson,
-              ),
+              GeoJsonSource(id: _sourceId, data: geoJson),
             );
 
+            if (disposed) {
+              return;
+            }
             await styleController.addLayer(
               CircleStyleLayer(
                 id: _circleLayerId,
@@ -90,7 +100,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                   'circle-sort-key': ['get', 'sortKey'],
                 },
                 paint: {
-                  'circle-radius': switch (stationDisplayMode) {
+                  'circle-radius': switch (config.stationDisplayMode) {
                     .allMinimized => [
                       'interpolate',
                       ['linear'],
@@ -144,21 +154,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               ),
             );
 
-            await styleController.addImages(cachedBytes);
-
-            if (_showIcon) {
-              // auto モードはズームに応じてフェードイン、station モードは minZoom 8 から常時表示
-              final iconOpacity = iconMode == EarthquakeHistoryIconMode.auto
-                  ? <Object>[
-                      'interpolate',
-                      ['linear'],
-                      ['zoom'],
-                      10.0,
-                      0.0,
-                      11.0,
-                      1.0,
-                    ]
-                  : 1.0;
+            if (disposed) {
+              return;
+            }
+            if (modeResolver.showsStationIcon(mode)) {
               await styleController.addLayer(
                 SymbolStyleLayer(
                   id: _iconLayerId,
@@ -181,12 +180,20 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                       1.0,
                     ],
                   },
-                  paint: {'icon-opacity': iconOpacity},
+                  paint: {
+                    'icon-opacity': modeResolver.stationIconOpacity(
+                      mode: mode,
+                      zoomThresholds: zoomThresholds,
+                    ),
+                  },
                 ),
               );
             }
 
-            if (showLabel) {
+            if (disposed) {
+              return;
+            }
+            if (config.showStationLabel) {
               await styleController.addLayer(
                 const SymbolStyleLayer(
                   id: _labelLayerId,
@@ -213,40 +220,61 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
           }
         }());
 
-        return () async {
-          try {
-            if (showLabel) {
-              await styleController.removeLayer(_labelLayerId);
+        return () {
+          disposed = true;
+          unawaited(() async {
+            try {
+              if (config.showStationLabel) {
+                await styleController.removeLayer(_labelLayerId);
+              }
+              if (modeResolver.showsStationIcon(mode)) {
+                await styleController.removeLayer(_iconLayerId);
+              }
+              await styleController.removeLayer(_circleLayerId);
+              await styleController.removeSource(_sourceId);
+            } on Exception catch (e) {
+              talker.log(e);
             }
-            if (_showIcon) {
-              await styleController.removeLayer(_iconLayerId);
-            }
-            await styleController.removeLayer(_circleLayerId);
-            await styleController.removeSource(_sourceId);
-          } on Exception catch (e) {
-            talker.log(e);
-          }
+          }());
         };
       },
       [
         styleController,
         intensity,
         colorModel,
-        stationDisplayMode,
-        showLabel,
-        showingLpgmIntensity,
-        iconMode,
+        config.stationDisplayMode,
+        config.showStationLabel,
+        config.showingLpgmIntensity,
+        mode,
+        zoomThresholds,
+        modeResolver,
         pixelRatio,
-        cachedBytes,
       ],
     );
+
+    // cachedBytes を別 effect で監視し、画像が揃ったタイミングで追加する。
+    // メインの effect とは分離することで、アイコンキャッシュの更新が
+    // source/layer の再構築を引き起こす race condition を防ぐ。
+    useEffect(() {
+      if (styleController == null || cachedBytes.isEmpty) {
+        return null;
+      }
+      unawaited(() async {
+        try {
+          await styleController.addImages(cachedBytes);
+        } on Exception catch (e) {
+          talker.log(e);
+        }
+      }());
+      return null;
+    }, [styleController, cachedBytes]);
 
     return const SizedBox.shrink();
   }
 
-  /// [stationDisplayMode] と [isFocused] に応じてアイコン ID を返す。
+  /// stationDisplayMode と isFocused に応じてアイコン ID を返す。
   String _iconIdForStation(String intensityName, bool isFocused) {
-    final useSmall = switch (stationDisplayMode) {
+    final useSmall = switch (config.stationDisplayMode) {
       StationDisplayMode.normal => true,
       StationDisplayMode.maxFocused => isFocused,
       StationDisplayMode.allMinimized => false,
@@ -256,7 +284,8 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   }
 
   String _lpgmIconIdForStation(String lpgmName) {
-    final useSmall = stationDisplayMode != StationDisplayMode.allMinimized;
+    final useSmall =
+        config.stationDisplayMode != StationDisplayMode.allMinimized;
     final prefix = useSmall ? _lpgmIconSmallPrefix : _lpgmIconSmallNoTextPrefix;
     return '$prefix$lpgmName';
   }
@@ -266,25 +295,24 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     IntensityColorModel colorModel,
   ) {
     if (intensity == null) {
-      return jsonEncode({
-        'type': 'FeatureCollection',
-        'features': <dynamic>[],
-      });
+      return jsonEncode({'type': 'FeatureCollection', 'features': <dynamic>[]});
     }
 
     final features = <Map<String, dynamic>>[];
     for (final entry in intensity.intensityTree.entries) {
-      final jmaIntensity = entry.key;
-      final color = colorModel
-          .fromJmaIntensity(jmaIntensity)
-          .background
-          .toHexStringRGB();
-      final isFocused = intensity.maxIntensity == jmaIntensity;
-      final iconId = _iconIdForStation(jmaIntensity.name, isFocused);
-
       for (final region in entry.value) {
         for (final city in region.cities) {
           for (final stationNode in city.stations) {
+            final jmaIntensity = stationNode.intensity?.maxIntensity;
+            if (jmaIntensity == null) {
+              continue;
+            }
+            final color = colorModel
+                .fromJmaIntensity(jmaIntensity)
+                .background
+                .toHexStringRGB();
+            final isFocused = intensity.maxIntensity == jmaIntensity;
+            final iconId = _iconIdForStation(jmaIntensity.name, isFocused);
             final station = stationNode.station;
             if (!station.hasLatitude() || !station.hasLongitude()) {
               continue;
@@ -323,16 +351,18 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
 
     final features = <Map<String, dynamic>>[];
     for (final entry in intensity.lpgmIntensityTree.entries) {
-      final lpgmIntensity = entry.key;
-      final color = colorModel
-          .fromJmaLpgmIntensity(lpgmIntensity)
-          .background
-          .toHexStringRGB();
-      final iconId = _lpgmIconIdForStation(lpgmIntensity.name);
-
       for (final region in entry.value) {
         for (final city in region.cities) {
           for (final stationNode in city.stations) {
+            final lpgmIntensity = stationNode.intensity?.maxLpgmIntensity;
+            if (lpgmIntensity == null) {
+              continue;
+            }
+            final color = colorModel
+                .fromJmaLpgmIntensity(lpgmIntensity)
+                .background
+                .toHexStringRGB();
+            final iconId = _lpgmIconIdForStation(lpgmIntensity.name);
             final station = stationNode.station;
             if (!station.hasLatitude() || !station.hasLongitude()) {
               continue;

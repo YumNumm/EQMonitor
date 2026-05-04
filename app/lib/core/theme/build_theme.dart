@@ -27,7 +27,7 @@ ThemeData buildTheme({
     cardTheme: CardThemeData(
       color: color.surfaceCard,
       surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.card),
       ),
     ),
@@ -76,7 +76,7 @@ ThemeData buildTheme({
       menuStyle: MenuStyle(
         padding: WidgetStateProperty.all(EdgeInsets.zero),
         shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
+          RoundedSuperellipseBorder(
             borderRadius: BorderRadius.circular(shape.sm),
           ),
         ),

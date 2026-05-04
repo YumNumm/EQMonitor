@@ -11,26 +11,14 @@ part of 'coordinate.dart';
 _Coordinate _$CoordinateFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_Coordinate', json, ($checkedConvert) {
       final val = _Coordinate(
-        type: $checkedConvert(
-          'type',
-          (v) => $enumDecode(_$CoordinateTypeEnumMap, v),
-        ),
-        latitude: $checkedConvert('latitude', (v) => v as num?),
-        longitude: $checkedConvert('longitude', (v) => v as num?),
-        condition: $checkedConvert('condition', (v) => v as String?),
+        latitude: $checkedConvert('latitude', (v) => v as num),
+        longitude: $checkedConvert('longitude', (v) => v as num),
       );
       return val;
     });
 
 Map<String, dynamic> _$CoordinateToJson(_Coordinate instance) =>
     <String, dynamic>{
-      'type': instance.type,
-      'latitude': ?instance.latitude,
-      'longitude': ?instance.longitude,
-      'condition': ?instance.condition,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
     };
-
-const _$CoordinateTypeEnumMap = {
-  CoordinateType.latLng: 'LAT_LNG',
-  CoordinateType.unknown: 'UNKNOWN',
-};

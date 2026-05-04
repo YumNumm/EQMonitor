@@ -38,10 +38,6 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 ## 環境構築
 
-> [!INFO]
-> バックエンド実装は、[`YumNumm/eqmonitor-backend`](https://github.com/YumNumm/eqmonitor-backend)に格納されています。(Private Repository)
-> 本リポジトリの`/backend`にsubmoduleとして追加されています
-
 下記のコマンドをターミナルから実行してください。
 
 1. プロジェクトをcloneします。
@@ -55,8 +51,9 @@ cd EQMonitor
 > 本リポジトリは、submoduleとして[`YumNumm/eqmonitor-backend`](https://github.com/YumNumm/eqmonitor-backend)を含んでいます。
 > eqmonitor-backendはPrivate Repositoryであるため、クローンできない場合があります。
 > アプリケーションのビルド時には、submoduleを利用する必要はありません。
+> バックエンド実装をオープンソースにする予定はありません。
 
-1. [mise](https://mise.jdx.dev/)をインストールしてください
+1. [mise-en-place](https://mise.jdx.dev/)をインストールしてください
 
 1. flutterなどの依存関係をダウンロードします
 
@@ -85,21 +82,6 @@ cd EQMonitor
 
 1. `flutter run` でアプリケーションを起動します。
 
-## アーキテクチャ
+## コントリビューション
 
-- アプリケーション
-  - 状態管理: Riverpod, Flutter Hooks
-  - データ取得: Dio, retrofit, eqapi_client
-  - JSONシリアライズ/デシリアライズ: freezed, json_serializable
-  - マップ: flutter-maplibre
-
-- エッジサーバサイド(API)
-  - 実行環境: Cloudflare Workers
-  - データベース: Cloudflare D1 + Supabase
-  - キャッシュ: Cloudflare KV
-  - WebSocket(Fallback): Cloudflare Durable Objects
-
-- バックエンド(通知配信, DB追加, データ加工, WebSocket, 揺れ検知)
-  - 実行環境: Oracle Cloud Infrastructure Compute Instance, Docker Compose
-  - データベース(キャッシュ用): PostgreSQL
-  - 言語: Node.js(TS), Bun(TS), Golang, C#
+[CONTRIBUTING.md](./docs/CONTRIBUTING.md)を参照してください。

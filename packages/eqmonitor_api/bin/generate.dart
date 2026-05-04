@@ -28,7 +28,9 @@ void main(List<String> args) async {
     if (openapiFile.absolute.path != src.absolute.path) {
       await _step('外部 OpenAPI ファイルをコピー', () async {
         await openapiFile.create(recursive: true);
-        final copied = src.copySync(openapiFile.path , );
+        final copied = src.copySync(
+          openapiFile.path,
+        );
         print('copied: ${copied.path}');
       });
     }
@@ -95,17 +97,6 @@ void main(List<String> args) async {
 
   await _step('statuses クエリパラメータの型パッチ', () async {
     _patchStatusesQueryInApiClients(libDir);
-  });
-
-  /// `components/schemas/Intensity` は cities/stations を含むが、
-  /// `EarthquakePartial.properties.intensity` が **同形の inline object** として
-  /// 別定義されており（cities/stations なし）、swagger_parser が両方に同じクラス名
-  /// `Intensity` を付け `intensity.dart` を **2回生成して上書き**する。
-  /// 後勝ちの inline 版（4フィールド）が残り cities/stations が欠落する。
-  /// 根本対応は OpenAPI 側で `intensity` を `#/components/schemas/Intensity` の
-  /// `$ref` に統一すること。
-  await _step('Intensity モデルに cities/stations フィールドを追加', () async {
-    _patchIntensityModel(libDir);
   });
 
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
@@ -204,46 +195,6 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
       stdout.writeln('  Patched statuses query: ${entity.path}');
     }
   }
-}
-
-/// swagger_parser が nullable 配列フィールドを落とすバグの workaround。
-/// 生成された `intensity.dart` に `cities` と `stations` フィールドを追加する。
-void _patchIntensityModel(Directory libDir) {
-  final intensityFile = File('${libDir.path}/models/intensity.dart');
-  if (!intensityFile.existsSync()) {
-    stdout.writeln('  intensity.dart が見つかりません。スキップします。');
-    return;
-  }
-
-  var content = intensityFile.readAsStringSync();
-
-  // すでにパッチ済みならスキップ
-  if (content.contains("List<IntensityStationItem>? stations")) {
-    stdout.writeln('  すでにパッチ済みです。スキップします。');
-    return;
-  }
-
-  // import の追加
-  const stationItemImport = "import 'intensity_station_item.dart';";
-  if (!content.contains(stationItemImport)) {
-    content = content.replaceFirst(
-      "import 'intensity_item.dart';",
-      "import 'intensity_item.dart';\n$stationItemImport",
-    );
-  }
-
-  // `}) = _Intensity;` の直前にフィールドを追加
-  content = content.replaceFirst(
-    '  }) = _Intensity;',
-    '    @JsonKey(includeIfNull: false)\n'
-        '    List<IntensityItem>? cities,\n'
-        '    @JsonKey(includeIfNull: false)\n'
-        '    List<IntensityStationItem>? stations,\n'
-        '  }) = _Intensity;',
-  );
-
-  intensityFile.writeAsStringSync(content);
-  stdout.writeln('  Patched: ${intensityFile.path}');
 }
 
 Future<void> _run(String exe, List<String> args, String cwd) async {

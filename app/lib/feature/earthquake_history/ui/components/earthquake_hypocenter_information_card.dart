@@ -39,7 +39,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
         horizontal: 8,
       ).add(const EdgeInsets.only(bottom: 4)),
       elevation: 0,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: cardBackgroundColor, width: 0),
       ),
@@ -57,7 +57,7 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
                     item: item,
                     hypocenter: hypocenter,
                     hasIntensityDetails:
-                        item.intensity?.regions.isNotEmpty ?? false,
+                        item.intensity?.intensityTree.isNotEmpty ?? false,
                   ),
                 ),
               ],

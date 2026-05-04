@@ -1,0 +1,53 @@
+name: PR Flutter Check
+
+on:
+  pull_request:
+    branches:
+      - "*"
+  merge_group:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+concurrency:
+  group: pr-flutter-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: ./.github/workflows/wc-changes.yaml
+
+  flutter-analyze:
+    needs: changes
+    if: needs.changes.outputs.flutter == 'true'
+    permissions:
+      contents: read
+      checks: write
+    uses: ./.github/workflows/wc-check-dart-analyze.yaml
+
+  flutter-test:
+    needs: changes
+    if: needs.changes.outputs.flutter == 'true'
+    permissions:
+      contents: read
+      checks: write
+    uses: ./.github/workflows/wc-check-dart-test.yaml
+
+  status-check:
+    name: Flutter Status Check
+    runs-on: ubuntu-slim
+    timeout-minutes: 1
+    needs:
+      - flutter-analyze
+      - flutter-test
+    permissions: {}
+    if: always()
+    steps:
+      - name: Check job results
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1

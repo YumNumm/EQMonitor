@@ -34,7 +34,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
     return Card.outlined(
       color: designSystem.color.surfaceCard.withValues(alpha: 0.92),
       elevation: 0,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(designSystem.shape.md),
         side: BorderSide(color: designSystem.color.outlineSoft),
       ),

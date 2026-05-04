@@ -102,6 +102,13 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async =>
                 const HttpApiEndpointSelectorRoute().push<void>(context),
           ),
+          if (Platform.isIOS)
+            ListTile(
+              title: const Text('App Groups UserDefaults'),
+              subtitle: const Text('Widget が参照する UserDefaults を直接操作'),
+              leading: const Icon(Icons.widgets_outlined),
+              onTap: () => const DebugAppGroupRoute().push<void>(context),
+            ),
           ListTile(
             title: const Text('WebSocket'),
             leading: const Icon(Icons.cable),
@@ -123,6 +130,16 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const DebugEewCardRoute().push(context),
           ),
           ListTile(
+            title: const Text('揺れ検知 Card'),
+            subtitle: Text(
+              'ホームと同じ揺れ検知カードの見た目をパラメータ検証',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.sensors_rounded),
+            onTap: () async =>
+                const DebugShakeDetectionCardRoute().push(context),
+          ),
+          ListTile(
             title: const Text('JmaMap'),
             leading: const Icon(Icons.map),
             onTap: () async => const DebugJmaMapRoute().push(context),
@@ -131,6 +148,12 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('NIED'),
             leading: const Icon(Icons.science),
             onTap: () async => const NiedRoute().push(context),
+          ),
+          ListTile(
+            title: const Text('ナビゲーション'),
+            subtitle: const Text('ルート一覧から画面へ直接遷移'),
+            leading: const Icon(Icons.navigation),
+            onTap: () async => const DebugNavigationRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('Playground'),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
@@ -22,7 +23,7 @@ abstract class DebugReplayState with _$DebugReplayState {
   }) = _DebugReplayState;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DebugReplay extends _$DebugReplay {
   final List<Timer> _timers = [];
 
@@ -69,20 +70,47 @@ class DebugReplay extends _$DebugReplay {
   }
 
   void _inject(EewItemWithRelations item, Duration offset) {
+    final replayShiftedForecastIntensity = item.forecastIntensity?.copyWith(
+      regions: item.forecastIntensity!.regions
+          .map(
+            (region) => region.copyWith(
+              arrivalTime: region.arrivalTime.copyWith(
+                value: region.arrivalTime.value?.add(offset),
+              ),
+            ),
+          )
+          .toList(),
+    );
+    final existingMagnitude = ref
+        .read(eewProvider)
+        .value
+        ?.where((eew) => eew.eventId == item.eventId)
+        .firstOrNull
+        ?.hypocenter
+        ?.magnitude;
+
+    final replayShiftedHypocenter =
+        item.hypocenter != null &&
+            item.hypocenter!.magnitude == null &&
+            existingMagnitude != null
+        ? item.hypocenter!.copyWith(magnitude: existingMagnitude)
+        : item.hypocenter;
+
     final shifted = item.copyWith(
       reportTime: item.reportTime.add(offset),
       originTime: item.originTime?.add(offset),
       arrivalTime: item.arrivalTime?.add(offset),
+      forecastIntensity: replayShiftedForecastIntensity,
+      hypocenter: replayShiftedHypocenter,
     );
     ref.read(eewProvider.notifier).upsert(shifted.toEewTelegramItem());
 
     final next = state.currentIndex + 1;
     state = state.copyWith(
       currentIndex: next,
-      status:
-          next >= state.totalCount
-              ? DebugReplayStatus.completed
-              : DebugReplayStatus.playing,
+      status: next >= state.totalCount
+          ? DebugReplayStatus.completed
+          : DebugReplayStatus.playing,
     );
   }
 

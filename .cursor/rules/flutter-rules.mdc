@@ -1,6 +1,5 @@
 ---
-description: EQMonitor Flutter / Dart のコーディング規約
-globs: *.dart
+alwaysApply: false
 ---
 # EQMonitor Flutter Rules
 
@@ -22,7 +21,7 @@ globs: *.dart
 
 ### 全体構造
 
-```
+```text
 lib/
 ├── core/          # アプリ全体の根幹（共通コンポーネント・テーマ・ルーター・ユーティリティ等）
 ├── features/      # 機能単位のモジュール
@@ -33,7 +32,7 @@ lib/
 
 ### features/${NAME}/ の構造
 
-```
+```text
 features/${NAME}/
 ├── data/
 │   ├── model/
@@ -190,7 +189,10 @@ Future<void> doSomething() async {
 - 重い処理（JSON パース等）には `compute()` で Isolate を活用する
 - enum等でdartのdot shorthandを利用できる場合は利用する
 
-## プライベート関数の禁止と代替設計
+## グローバル関数・プライベート関数の禁止と代替設計
+
+top-level / global 関数の定義は禁止する。プライベートな top-level 関数（例: `_buildLayer`）も禁止する。
+処理は用途に応じて専用 class に切り出し、必要な場所では Riverpod で DI すること。
 
 クラス内でのプライベートメソッドは、テスト可能性を損なうため原則禁止する。
 用途に応じて以下のルールに従って代替実装を選ぶこと。

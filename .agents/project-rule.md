@@ -1,0 +1,1 @@
+../.cursor/rules/project-rule.mdc

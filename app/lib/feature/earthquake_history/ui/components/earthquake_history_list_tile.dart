@@ -49,10 +49,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
 
-    final maxIntensityPrefectures = intensity?.regions
-        .where((e) => e.maxIntensity == intensity.maxIntensity)
-        .map((e) => e.region.name)
-        .toList();
+    const maxIntensityPrefectures = <String>[];
     final title = switch ((
       hypoName,
       hypoDetailName,

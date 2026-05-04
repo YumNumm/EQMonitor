@@ -35,7 +35,7 @@ class HomeMapControllerCard extends StatelessWidget {
       color: color.surfaceCard.withValues(alpha: 0.92),
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedRectangleBorder(
+      shape: RoundedSuperellipseBorder(
         borderRadius: BorderRadius.circular(shape.md),
         side: BorderSide(color: color.outlineSoft),
       ),

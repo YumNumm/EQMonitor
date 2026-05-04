@@ -64,6 +64,9 @@ class EarthquakeAPIService {
         // JSONDecoderの設定
         self.decoder = JSONDecoder()
 
+        // スネークケース → キャメルケース自動変換
+        self.decoder.keyDecodingStrategy = .convertFromSnakeCase
+
         // ISO8601日付フォーマットの設定
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -152,12 +155,11 @@ class EarthquakeAPIService {
     ///   - limit: 取得件数（デフォルト10件）
     /// - Returns: Widget表示用の地震情報配列
     func fetchEarthquakesByRegion(regionCode: String, limit: Int = 10) async throws -> [EarthquakeDisplayItem] {
-        guard var urlComponents = URLComponents(string: "\(baseURL.absoluteString)/v2/earthquake/intensity/region") else {
+        guard var urlComponents = URLComponents(string: "\(baseURL.absoluteString)/v2/earthquake/intensity/region/\(regionCode)") else {
             throw APIError.invalidURL
         }
 
         urlComponents.queryItems = [
-            URLQueryItem(name: "code", value: regionCode),
             URLQueryItem(name: "limit", value: String(limit))
         ]
 

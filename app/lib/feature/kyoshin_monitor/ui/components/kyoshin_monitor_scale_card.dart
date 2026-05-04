@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
           vertical: designSystem.spacing.md,
         ),
         decoration: BoxDecoration(
-          color: color.surfaceCard.withValues(alpha: 0.92),
+          color: color.surfaceCard.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(designSystem.shape.md),
           border: Border.all(color: color.outlineSoft),
         ),
@@ -54,6 +55,10 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
               style: designSystem.typography.monoSmall.copyWith(
                 textBaseline: TextBaseline.alphabetic,
                 fontWeight: FontWeight.w700,
+                fontFamily: FontFamily.notoSansMono,
+                fontFamilyFallback: [
+                  FontFamily.notoSansJP,
+                ],
               ),
             ),
             SizedBox(height: designSystem.spacing.sm),
@@ -68,6 +73,10 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
               textStyle: designSystem.typography.monoSmall.copyWith(
                 textBaseline: TextBaseline.alphabetic,
                 fontSize: 10,
+                fontFamily: FontFamily.notoSansMono,
+                fontFamilyFallback: [
+                  FontFamily.notoSansJP,
+                ],
               ),
             ),
           ],

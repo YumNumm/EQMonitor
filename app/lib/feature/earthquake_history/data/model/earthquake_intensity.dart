@@ -15,11 +15,9 @@ abstract class EarthquakeIntensity with _$EarthquakeIntensity {
   const factory EarthquakeIntensity({
     required JmaIntensity maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
-    required Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
-    required List<IntensityRegion> regions,
-    required Map<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>
+    required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
+    required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
     lpgmIntensityTree,
-    required List<LpgmIntensityRegion> lpgmRegions,
   }) = _EarthquakeIntensity;
 
   factory EarthquakeIntensity.fromJson(Map<String, dynamic> json) =>
@@ -30,42 +28,39 @@ extension EarthquakeIntensityApiExtension on api.Intensity {
   EarthquakeIntensity toEarthquakeIntensity({
     required EarthquakeParameter parameter,
   }) {
-    final paramRegionMap = {for (final r in parameter.regions) r.code: r};
+    final converter = IntensityTreeConverter(parameter: parameter);
     return EarthquakeIntensity(
       maxIntensity: maxIntensity.toJmaIntensity,
       maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,
-      intensityTree: convertToIntensityTree(
+      intensityTree: converter.convertToIntensityTree(
         intensity: this,
-        parameter: parameter,
-        cities: cities,
-        stations: stations,
       ),
-      regions: regions.map((e) {
-        final paramRegion = paramRegionMap[e.value.code];
-        if (paramRegion == null) {
-          return null;
-        }
-        return IntensityRegion(
-          region: paramRegion,
-          maxIntensity: e.maxIntensity?.toJmaIntensity,
-        );
-      }).whereType<IntensityRegion>().toList(),
-      lpgmIntensityTree: convertToLpgmIntensityTree(
+      lpgmIntensityTree: converter.convertToLpgmIntensityTree(
         intensity: this,
-        parameter: parameter,
-        cities: cities,
-        stations: stations,
       ),
-      lpgmRegions: regions.map((e) {
-        final paramRegion = paramRegionMap[e.value.code];
-        if (paramRegion == null) {
-          return null;
-        }
-        return LpgmIntensityRegion(
-          region: paramRegion,
-          maxLpgmIntensity: e.maxLpgmIntensity?.toJmaLpgmIntensity,
-        );
-      }).whereType<LpgmIntensityRegion>().toList(),
     );
+  }
+}
+
+extension EarthquakeIntensityMapLayer on EarthquakeIntensity {
+  /// `areaForecastLocalE` の `code` と塗り分け震度（都道府県のみ／細分化地域）
+  Iterable<({String code, JmaIntensity intensity})>
+  get forecastLocalEIntensityPairs sync* {
+    for (final entry in intensityTree.entries) {
+      final level = entry.key;
+      for (final pref in entry.value) {
+        if (pref.cities.isEmpty) {
+          final j = pref.region.maxIntensity ?? level;
+          yield (code: pref.region.region.code, intensity: j);
+        } else {
+          for (final city in pref.cities) {
+            final j = city.maxIntensity;
+            if (j != null) {
+              yield (code: city.city.code, intensity: j);
+            }
+          }
+        }
+      }
+    }
   }
 }

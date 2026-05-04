@@ -23,10 +23,6 @@ abstract class BuildConfig with _$BuildConfig {
     required String buildCommitMessage,
   }) = _BuildConfig;
 
-  const BuildConfig._();
-
-  bool get isBetaTesting => const bool.fromEnvironment('IS_BETA_TESTING');
-
   factory BuildConfig.fromJson(Map<String, dynamic> json) =>
       _$BuildConfigFromJson(json);
 
@@ -46,4 +42,8 @@ abstract class BuildConfig with _$BuildConfig {
     buildTimestamp: const String.fromEnvironment('BUILD_TIMESTAMP'),
     buildCommitMessage: const String.fromEnvironment('BUILD_COMMIT_MESSAGE'),
   );
+
+  const BuildConfig._();
+
+  bool get isBetaTesting => const bool.fromEnvironment('IS_BETA_TESTING');
 }

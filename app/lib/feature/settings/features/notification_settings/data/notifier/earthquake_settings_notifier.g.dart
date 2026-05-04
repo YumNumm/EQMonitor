@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'earthquake_settings_notifier.dart';
+part of 'earthquake_notification_settings_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -11,13 +11,13 @@ part of 'earthquake_settings_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(EarthquakeSettingsNotifier)
+@ProviderFor(EarthquakeNotificationSettingsNotifier)
 final earthquakeSettingsProvider = EarthquakeSettingsNotifierProvider._();
 
 final class EarthquakeSettingsNotifierProvider
     extends
         $AsyncNotifierProvider<
-          EarthquakeSettingsNotifier,
+          EarthquakeNotificationSettingsNotifier,
           EarthquakeNotificationSettings
         > {
   EarthquakeSettingsNotifierProvider._()
@@ -36,7 +36,8 @@ final class EarthquakeSettingsNotifierProvider
 
   @$internal
   @override
-  EarthquakeSettingsNotifier create() => EarthquakeSettingsNotifier();
+  EarthquakeNotificationSettingsNotifier create() =>
+      EarthquakeNotificationSettingsNotifier();
 }
 
 String _$earthquakeSettingsNotifierHash() =>

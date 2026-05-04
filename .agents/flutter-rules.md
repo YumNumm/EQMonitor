@@ -1,0 +1,1 @@
+../.cursor/rules/flutter-rules.mdc

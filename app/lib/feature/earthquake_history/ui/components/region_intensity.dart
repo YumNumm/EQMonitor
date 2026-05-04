@@ -17,8 +17,8 @@ import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/route.dart';
 
-class RegionIntensityWidget extends ConsumerWidget {
-  const RegionIntensityWidget({
+class EarthquakeIntensityWidget extends ConsumerWidget {
+  const EarthquakeIntensityWidget({
     required this.item,
     this.eventId,
     super.key,
@@ -77,12 +77,12 @@ class RegionIntensityWidget extends ConsumerWidget {
                     fontSize: 13,
                   ),
                 ),
-                onTap: () async => _RegionModalBottomSheet.show(
+                onTap: () async => _PrefectureIntensitySheet.show(
                   context: context,
                   ref: ref,
                   eventId: eventId,
                   intensity: jmaIntensity,
-                  regions: entry.value,
+                  prefectures: entry.value,
                 ),
                 trailing: const Icon(Icons.chevron_right),
               );
@@ -94,39 +94,39 @@ class RegionIntensityWidget extends ConsumerWidget {
   }
 }
 
-sealed class _RegionIntensityTreeContent {
-  const _RegionIntensityTreeContent();
+sealed class _IntensityTreeContent {
+  const _IntensityTreeContent();
 }
 
-final class _TreeRegion extends _RegionIntensityTreeContent {
-  const _TreeRegion(this.node);
-  final RegionIntensityNode node;
+final class _TreePrefecture extends _IntensityTreeContent {
+  const _TreePrefecture(this.node);
+  final PrefectureIntensityNode node;
 }
 
-final class _TreeCity extends _RegionIntensityTreeContent {
+final class _TreeCity extends _IntensityTreeContent {
   const _TreeCity(this.node);
   final CityIntensityNode node;
 }
 
-final class _TreeStation extends _RegionIntensityTreeContent {
+final class _TreeStation extends _IntensityTreeContent {
   const _TreeStation(this.node);
   final StationIntensityNode node;
 }
 
-List<TreeSliverNode<_RegionIntensityTreeContent>> _buildRegionDetailTree(
-  List<RegionIntensityNode> regions,
+List<TreeSliverNode<_IntensityTreeContent>> _buildPrefectureDetailTree(
+  List<PrefectureIntensityNode> prefectures,
 ) {
   return [
-    for (final region in regions)
-      TreeSliverNode<_RegionIntensityTreeContent>(
-        _TreeRegion(region),
+    for (final prefecture in prefectures)
+      TreeSliverNode<_IntensityTreeContent>(
+        _TreePrefecture(prefecture),
         children: [
-          for (final city in region.cities)
-            TreeSliverNode<_RegionIntensityTreeContent>(
+          for (final city in prefecture.cities)
+            TreeSliverNode<_IntensityTreeContent>(
               _TreeCity(city),
               children: [
                 for (final station in city.stations)
-                  TreeSliverNode<_RegionIntensityTreeContent>(
+                  TreeSliverNode<_IntensityTreeContent>(
                     _TreeStation(station),
                   ),
               ],
@@ -136,27 +136,27 @@ List<TreeSliverNode<_RegionIntensityTreeContent>> _buildRegionDetailTree(
   ];
 }
 
-class _RegionModalBottomSheet extends StatelessWidget {
-  const _RegionModalBottomSheet({
+class _PrefectureIntensitySheet extends StatelessWidget {
+  const _PrefectureIntensitySheet({
     required this.ref,
     required this.eventId,
     required this.intensity,
-    required this.regions,
+    required this.prefectures,
   });
 
   static Future<void> show({
     required BuildContext context,
     required WidgetRef ref,
     required JmaIntensity intensity,
-    required List<RegionIntensityNode> regions,
+    required List<PrefectureIntensityNode> prefectures,
     String? eventId,
   }) => Navigator.of(context).push(
     SheetRoute(
-      builder: (context) => _RegionModalBottomSheet(
+      builder: (context) => _PrefectureIntensitySheet(
         ref: ref,
         eventId: eventId,
         intensity: intensity,
-        regions: regions,
+        prefectures: prefectures,
       ),
     ),
   );
@@ -164,7 +164,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
   final WidgetRef ref;
   final String? eventId;
   final JmaIntensity intensity;
-  final List<RegionIntensityNode> regions;
+  final List<PrefectureIntensityNode> prefectures;
 
   static const Curve _toggleCurve = TreeSliver.defaultAnimationCurve;
   static const Duration _toggleDuration = TreeSliver.defaultAnimationDuration;
@@ -172,17 +172,17 @@ class _RegionModalBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final tree = _buildRegionDetailTree(regions);
+    final tree = _buildPrefectureDetailTree(prefectures);
 
     return Scaffold(
       appBar: AppBar(title: Text('震度${intensity.label}の地域')),
       body: CustomScrollView(
         slivers: [
-          TreeSliver<_RegionIntensityTreeContent>(
+          TreeSliver<_IntensityTreeContent>(
             tree: tree,
             indentation: TreeSliverIndentationType.none,
             treeNodeBuilder: (context, node, toggleAnimationStyle) =>
-                _regionDetailTreeNodeBuilder(
+                _detailTreeNodeBuilder(
                   context,
                   ref,
                   colorScheme,
@@ -190,9 +190,9 @@ class _RegionModalBottomSheet extends StatelessWidget {
                   toggleAnimationStyle,
                 ),
             treeRowExtentBuilder: (node, dimensions) {
-              final content = node.content! as _RegionIntensityTreeContent;
+              final content = node.content! as _IntensityTreeContent;
               return switch (content) {
-                _TreeRegion() => 56,
+                _TreePrefecture() => 56,
                 _TreeCity() => 52,
                 _TreeStation() => 44,
               };
@@ -203,14 +203,14 @@ class _RegionModalBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _regionDetailTreeNodeBuilder(
+  Widget _detailTreeNodeBuilder(
     BuildContext context,
     WidgetRef ref,
     ColorScheme colorScheme,
     TreeSliverNode<Object?> node,
     AnimationStyle toggleAnimationStyle,
   ) {
-    final content = node.content! as _RegionIntensityTreeContent;
+    final content = node.content! as _IntensityTreeContent;
     final duration = toggleAnimationStyle.duration ?? _toggleDuration;
     final curve = toggleAnimationStyle.curve ?? _toggleCurve;
     final depth = node.depth ?? 0;
@@ -221,7 +221,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(left: indent + 8, right: 8, top: 4, bottom: 4),
         child: switch (content) {
-          final _TreeRegion c => _regionRow(
+          final _TreePrefecture c => _prefectureRow(
             context,
             ref,
             node,
@@ -249,16 +249,16 @@ class _RegionModalBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _regionRow(
+  Widget _prefectureRow(
     BuildContext context,
     WidgetRef ref,
     TreeSliverNode<Object?> node,
     Duration duration,
     Curve curve,
-    RegionIntensityNode region,
+    PrefectureIntensityNode prefecture,
   ) {
-    final regionName = region.region.region.name;
-    final regionMaxIntensity = region.region.maxIntensity;
+    final regionName = prefecture.region.region.name;
+    final regionMaxIntensity = prefecture.region.maxIntensity;
 
     return Row(
       children: [
@@ -280,7 +280,7 @@ class _RegionModalBottomSheet extends StatelessWidget {
             ref,
             EarthquakeIntensityMapFocus(
               kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
-              code: region.region.region.code,
+              code: prefecture.region.region.code,
             ),
           ),
         if (node.children.isNotEmpty)

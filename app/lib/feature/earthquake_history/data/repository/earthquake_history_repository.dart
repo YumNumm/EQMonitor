@@ -31,6 +31,33 @@ class EarthquakeHistoryRepository {
   final api.ApiClient _api;
   final EarthquakeParameter earthquakeParameter;
 
+  String? _resolveAreaDisplayName(String areaCode) {
+    for (final region in earthquakeParameter.regions) {
+      if (region.code == areaCode) {
+        return region.name;
+      }
+      for (final city in region.cities) {
+        if (city.code == areaCode) {
+          return city.name;
+        }
+      }
+    }
+    return null;
+  }
+
+  String? _resolveStationDisplayName(String stationCode) {
+    for (final region in earthquakeParameter.regions) {
+      for (final city in region.cities) {
+        for (final station in city.stations) {
+          if (station.code == stationCode) {
+            return station.name;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   Future<EarthquakeListResponse> fetchEarthquakeList({
     int? limit,
     String? cursor,
@@ -75,7 +102,11 @@ class EarthquakeHistoryRepository {
       limit: limit?.toString(),
       cursor: cursor,
     );
-    return response.data.toAppResponse(parameter: earthquakeParameter);
+    return response.data.toAppResponse(
+      parameter: earthquakeParameter,
+      areaCode: code,
+      areaName: _resolveAreaDisplayName(code) ?? code,
+    );
   }
 
   Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByPrefecture({
@@ -89,7 +120,11 @@ class EarthquakeHistoryRepository {
           limit: limit?.toString(),
           cursor: cursor,
         );
-    return response.data.toAppResponse(parameter: earthquakeParameter);
+    return response.data.toAppResponse(
+      parameter: earthquakeParameter,
+      areaCode: code,
+      areaName: _resolveAreaDisplayName(code) ?? code,
+    );
   }
 
   Future<PaginatedSearchResponse<IntensityAreaSearchItem>> searchByCity({
@@ -102,7 +137,11 @@ class EarthquakeHistoryRepository {
       limit: limit?.toString(),
       cursor: cursor,
     );
-    return response.data.toAppResponse(parameter: earthquakeParameter);
+    return response.data.toAppResponse(
+      parameter: earthquakeParameter,
+      areaCode: code,
+      areaName: _resolveAreaDisplayName(code) ?? code,
+    );
   }
 
   Future<PaginatedSearchResponse<StationSearchItem>> searchByStation({
@@ -115,7 +154,11 @@ class EarthquakeHistoryRepository {
       limit: limit?.toString(),
       cursor: cursor,
     );
-    return response.data.toAppResponse(parameter: earthquakeParameter);
+    return response.data.toAppResponse(
+      parameter: earthquakeParameter,
+      stationCode: code,
+      stationName: _resolveStationDisplayName(code) ?? code,
+    );
   }
 
   Future<PaginatedSearchResponse<EpicenterSearchItem>> searchByEpicenter({
@@ -133,7 +176,7 @@ class EarthquakeHistoryRepository {
 
   /// [cityAreaCode] … areaInformationCity のコード、[regionAreaCode] … areaForecastLocalE のコード。
   CurrentLocationIntensityDisplay? resolveCurrentLocationIntensity({
-    required Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
+    required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     required String? cityAreaCode,
     required String? regionAreaCode,
   }) {
@@ -175,7 +218,7 @@ class EarthquakeHistoryRepository {
   }
 
   CityIntensityNode? _findCityNodeByCode(
-    Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
+    Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     String areaCode,
   ) {
     for (final regions in intensityTree.values) {
@@ -191,7 +234,7 @@ class EarthquakeHistoryRepository {
   }
 
   JmaIntensity? _prefectureOnlyIntensity(
-    Map<JmaIntensity, List<RegionIntensityNode>> intensityTree,
+    Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     String areaCode,
   ) {
     for (final entry in intensityTree.entries) {

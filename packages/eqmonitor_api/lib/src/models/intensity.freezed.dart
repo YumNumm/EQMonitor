@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Intensity {
 
-@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity; List<IntensityItem> get prefectures; List<IntensityItem> get regions;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;@JsonKey(includeIfNull: false) List<IntensityItem>? get cities;@JsonKey(includeIfNull: false) List<IntensityStationItem>? get stations;
+@JsonKey(name: 'max_intensity') JmaIntensity get maxIntensity;@JsonKey(name: 'intensity_tree') List<IntensityTree> get intensityTree;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? get lpgmIntensityTree;
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $IntensityCopyWith<Intensity> get copyWith => _$IntensityCopyWithImpl<Intensity>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Intensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other.prefectures, prefectures)&&const DeepCollectionEquality().equals(other.regions, regions)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other.cities, cities)&&const DeepCollectionEquality().equals(other.stations, stations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Intensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other.intensityTree, intensityTree)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other.lpgmIntensityTree, lpgmIntensityTree));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,const DeepCollectionEquality().hash(prefectures),const DeepCollectionEquality().hash(regions),maxLpgmIntensity,const DeepCollectionEquality().hash(cities),const DeepCollectionEquality().hash(stations));
+int get hashCode => Object.hash(runtimeType,maxIntensity,const DeepCollectionEquality().hash(intensityTree),maxLpgmIntensity,const DeepCollectionEquality().hash(lpgmIntensityTree));
 
 @override
 String toString() {
-  return 'Intensity(maxIntensity: $maxIntensity, prefectures: $prefectures, regions: $regions, maxLpgmIntensity: $maxLpgmIntensity, cities: $cities, stations: $stations)';
+  return 'Intensity(maxIntensity: $maxIntensity, intensityTree: $intensityTree, maxLpgmIntensity: $maxLpgmIntensity, lpgmIntensityTree: $lpgmIntensityTree)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $IntensityCopyWith<$Res>  {
   factory $IntensityCopyWith(Intensity value, $Res Function(Intensity) _then) = _$IntensityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false) List<IntensityItem>? cities,@JsonKey(includeIfNull: false) List<IntensityStationItem>? stations
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(name: 'intensity_tree') List<IntensityTree> intensityTree,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? lpgmIntensityTree
 });
 
 
@@ -65,15 +65,13 @@ class _$IntensityCopyWithImpl<$Res>
 
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? prefectures = null,Object? regions = null,Object? maxLpgmIntensity = freezed,Object? cities = freezed,Object? stations = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? intensityTree = null,Object? maxLpgmIntensity = freezed,Object? lpgmIntensityTree = freezed,}) {
   return _then(_self.copyWith(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,prefectures: null == prefectures ? _self.prefectures : prefectures // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,cities: freezed == cities ? _self.cities : cities // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>?,stations: freezed == stations ? _self.stations : stations // ignore: cast_nullable_to_non_nullable
-as List<IntensityStationItem>?,
+as JmaIntensity,intensityTree: null == intensityTree ? _self.intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
+as List<IntensityTree>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,lpgmIntensityTree: freezed == lpgmIntensityTree ? _self.lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
+as List<LpgmIntensityTree>?,
   ));
 }
 
@@ -158,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false)  List<IntensityItem>? cities, @JsonKey(includeIfNull: false)  List<IntensityStationItem>? stations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Intensity() when $default != null:
-return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity,_that.cities,_that.stations);case _:
+return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_that.lpgmIntensityTree);case _:
   return orElse();
 
 }
@@ -179,10 +177,10 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false)  List<IntensityItem>? cities, @JsonKey(includeIfNull: false)  List<IntensityStationItem>? stations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)  $default,) {final _that = this;
 switch (_that) {
 case _Intensity():
-return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity,_that.cities,_that.stations);case _:
+return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_that.lpgmIntensityTree);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +197,10 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity,  List<IntensityItem> prefectures,  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false)  List<IntensityItem>? cities, @JsonKey(includeIfNull: false)  List<IntensityStationItem>? stations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'max_intensity')  JmaIntensity maxIntensity, @JsonKey(name: 'intensity_tree')  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree')  List<LpgmIntensityTree>? lpgmIntensityTree)?  $default,) {final _that = this;
 switch (_that) {
 case _Intensity() when $default != null:
-return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgmIntensity,_that.cities,_that.stations);case _:
+return $default(_that.maxIntensity,_that.intensityTree,_that.maxLpgmIntensity,_that.lpgmIntensityTree);case _:
   return null;
 
 }
@@ -214,39 +212,23 @@ return $default(_that.maxIntensity,_that.prefectures,_that.regions,_that.maxLpgm
 @JsonSerializable()
 
 class _Intensity implements Intensity {
-  const _Intensity({@JsonKey(name: 'max_intensity') required this.maxIntensity, required final  List<IntensityItem> prefectures, required final  List<IntensityItem> regions, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false) final  List<IntensityItem>? cities, @JsonKey(includeIfNull: false) final  List<IntensityStationItem>? stations}): _prefectures = prefectures,_regions = regions,_cities = cities,_stations = stations;
+  const _Intensity({@JsonKey(name: 'max_intensity') required this.maxIntensity, @JsonKey(name: 'intensity_tree') required final  List<IntensityTree> intensityTree, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') final  List<LpgmIntensityTree>? lpgmIntensityTree}): _intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
   factory _Intensity.fromJson(Map<String, dynamic> json) => _$IntensityFromJson(json);
 
 @override@JsonKey(name: 'max_intensity') final  JmaIntensity maxIntensity;
- final  List<IntensityItem> _prefectures;
-@override List<IntensityItem> get prefectures {
-  if (_prefectures is EqualUnmodifiableListView) return _prefectures;
+ final  List<IntensityTree> _intensityTree;
+@override@JsonKey(name: 'intensity_tree') List<IntensityTree> get intensityTree {
+  if (_intensityTree is EqualUnmodifiableListView) return _intensityTree;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_prefectures);
-}
-
- final  List<IntensityItem> _regions;
-@override List<IntensityItem> get regions {
-  if (_regions is EqualUnmodifiableListView) return _regions;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_regions);
+  return EqualUnmodifiableListView(_intensityTree);
 }
 
 @override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
- final  List<IntensityItem>? _cities;
-@override@JsonKey(includeIfNull: false) List<IntensityItem>? get cities {
-  final value = _cities;
+ final  List<LpgmIntensityTree>? _lpgmIntensityTree;
+@override@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? get lpgmIntensityTree {
+  final value = _lpgmIntensityTree;
   if (value == null) return null;
-  if (_cities is EqualUnmodifiableListView) return _cities;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(value);
-}
-
- final  List<IntensityStationItem>? _stations;
-@override@JsonKey(includeIfNull: false) List<IntensityStationItem>? get stations {
-  final value = _stations;
-  if (value == null) return null;
-  if (_stations is EqualUnmodifiableListView) return _stations;
+  if (_lpgmIntensityTree is EqualUnmodifiableListView) return _lpgmIntensityTree;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(value);
 }
@@ -265,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Intensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other._prefectures, _prefectures)&&const DeepCollectionEquality().equals(other._regions, _regions)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other._cities, _cities)&&const DeepCollectionEquality().equals(other._stations, _stations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Intensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&const DeepCollectionEquality().equals(other._intensityTree, _intensityTree)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other._lpgmIntensityTree, _lpgmIntensityTree));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,const DeepCollectionEquality().hash(_prefectures),const DeepCollectionEquality().hash(_regions),maxLpgmIntensity,const DeepCollectionEquality().hash(_cities),const DeepCollectionEquality().hash(_stations));
+int get hashCode => Object.hash(runtimeType,maxIntensity,const DeepCollectionEquality().hash(_intensityTree),maxLpgmIntensity,const DeepCollectionEquality().hash(_lpgmIntensityTree));
 
 @override
 String toString() {
-  return 'Intensity(maxIntensity: $maxIntensity, prefectures: $prefectures, regions: $regions, maxLpgmIntensity: $maxLpgmIntensity, cities: $cities, stations: $stations)';
+  return 'Intensity(maxIntensity: $maxIntensity, intensityTree: $intensityTree, maxLpgmIntensity: $maxLpgmIntensity, lpgmIntensityTree: $lpgmIntensityTree)';
 }
 
 
@@ -285,7 +267,7 @@ abstract mixin class _$IntensityCopyWith<$Res> implements $IntensityCopyWith<$Re
   factory _$IntensityCopyWith(_Intensity value, $Res Function(_Intensity) _then) = __$IntensityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity, List<IntensityItem> prefectures, List<IntensityItem> regions,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false) List<IntensityItem>? cities,@JsonKey(includeIfNull: false) List<IntensityStationItem>? stations
+@JsonKey(name: 'max_intensity') JmaIntensity maxIntensity,@JsonKey(name: 'intensity_tree') List<IntensityTree> intensityTree,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false, name: 'lpgm_intensity_tree') List<LpgmIntensityTree>? lpgmIntensityTree
 });
 
 
@@ -302,15 +284,13 @@ class __$IntensityCopyWithImpl<$Res>
 
 /// Create a copy of Intensity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? prefectures = null,Object? regions = null,Object? maxLpgmIntensity = freezed,Object? cities = freezed,Object? stations = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? intensityTree = null,Object? maxLpgmIntensity = freezed,Object? lpgmIntensityTree = freezed,}) {
   return _then(_Intensity(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,prefectures: null == prefectures ? _self._prefectures : prefectures // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,cities: freezed == cities ? _self._cities : cities // ignore: cast_nullable_to_non_nullable
-as List<IntensityItem>?,stations: freezed == stations ? _self._stations : stations // ignore: cast_nullable_to_non_nullable
-as List<IntensityStationItem>?,
+as JmaIntensity,intensityTree: null == intensityTree ? _self._intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
+as List<IntensityTree>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,lpgmIntensityTree: freezed == lpgmIntensityTree ? _self._lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
+as List<LpgmIntensityTree>?,
   ));
 }
 

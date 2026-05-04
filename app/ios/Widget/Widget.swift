@@ -113,17 +113,13 @@ struct EarthquakeWidget: Widget {
             intent: EarthquakeWidgetIntent.self,
             provider: EarthquakeTimelineProvider()
         ) { entry in
-            if #available(iOS 17.0, *) {
-                EarthquakeWidgetView(entry: entry)
-                    .containerBackground(.background, for: .widget)
-            } else {
-                EarthquakeWidgetView(entry: entry)
-                    .containerBackground(.background, for: .widget)
-            }
+            EarthquakeWidgetView(entry: entry)
+                .containerBackground(Color.eqBg, for: .widget)
         }
         .configurationDisplayName("地震履歴")
         .description("最近の地震情報を表示します")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .contentMarginsDisabled()
     }
 }
 

@@ -50,7 +50,7 @@ jobs:
 
       # https://github.com/jdx/mise-action
       - name: Install Mise dependencies
-        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1.6.4.0.1
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
         env:
           # See: https://mise.jdx.dev/getting-started.html#github-api-rate-limiting
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -89,7 +89,9 @@ jobs:
       - name: Determine base branch
         id: determine-base-branch
         env:
-          BASE_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.event.repository.default_branch }}
+          BASE_BRANCH: ${{ github.event_name == 'pull_request' &&
+            github.event.pull_request.base.ref ||
+            github.event.repository.default_branch }}
         run: |
           echo "base_branch=$BASE_BRANCH" >> "$GITHUB_OUTPUT"
           echo "base_branch=$BASE_BRANCH"

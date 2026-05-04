@@ -2,18 +2,14 @@
 //  MapEarthquakeWidgetView.swift
 //  Widget
 //
-//  Created by Widget Generator
-//
 
 import SwiftUI
 import WidgetKit
 import MapKit
 
-// 地図付き地震Widget（直近1件のみ）
 struct MapEarthquakeWidgetView: View {
     let entry: EarthquakeEntry
     @Environment(\.widgetFamily) var widgetFamily
-    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         GeometryReader { geometry in
@@ -21,69 +17,84 @@ struct MapEarthquakeWidgetView: View {
                let latitude = earthquake.latitude,
                let longitude = earthquake.longitude {
                 ZStack(alignment: .bottom) {
-                    // 背景地図
                     MapSnapshotView(
                         latitude: latitude,
                         longitude: longitude,
                         size: geometry.size
                     )
 
-                    // 情報オーバーレイ
-                    VStack(alignment: .leading, spacing: widgetFamily == .systemSmall ? 2 : 4) {
-                        Text(earthquake.hypocenterName)
-                            .font(.system(size: widgetFamily == .systemSmall ? 13 : 16, weight: .bold))
-                            .foregroundStyle(.primary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                            .truncationMode(.tail)
-                            .frame(maxWidth: geometry.size.width - (widgetFamily == .systemSmall ? 20 : 32), alignment: .leading)
-
-                        HStack(spacing: widgetFamily == .systemSmall ? 3 : 6) {
-                            Text(earthquake.magnitude)
-                                .font(.system(size: widgetFamily == .systemSmall ? 11 : 14, weight: .semibold).monospaced())
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.85)
-
-                            HStack(alignment: .lastTextBaseline, spacing: 2) {
-                                Text("最大震度")
-                                    .font(.system(size: widgetFamily == .systemSmall ? 9 : 11))
-                                    .foregroundStyle(.secondary)
-
-                                IntensityView(
-                                    intensity: earthquake.formattedIntensity,
-                                    mainSize: widgetFamily == .systemSmall ? 16 : 20,
-                                    subSize: widgetFamily == .systemSmall ? 10 : 12
-                                )
-                            }
-
-                            Spacer(minLength: 0)
-                        }
-
-                        Text(earthquake.formattedTime)
-                            .font(.system(size: widgetFamily == .systemSmall ? 9 : 12).monospaced())
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.85)
-                    }
-                    .padding(widgetFamily == .systemSmall ? 8 : 14)
-                    .frame(width: geometry.size.width, alignment: .leading)
-                    .background(.ultraThinMaterial)
+                    MapInfoOverlay(
+                        earthquake: earthquake,
+                        compact: widgetFamily == .systemSmall,
+                        width: geometry.size.width
+                    )
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
             } else if let error = entry.error {
-                ErrorView(error: error)
+                EQErrorView(error: error)
                     .padding()
                     .frame(width: geometry.size.width, height: geometry.size.height)
             } else {
-                EmptyView(message: "地震情報が\nありません")
+                EQEmptyView()
                     .frame(width: geometry.size.width, height: geometry.size.height)
             }
         }
     }
 }
 
-// MapKitスナップショット
+// MARK: - Overlay
+
+private struct MapInfoOverlay: View {
+    let earthquake: EarthquakeDisplayItem
+    let compact: Bool
+    let width: CGFloat
+
+    var body: some View {
+        HStack(alignment: .center, spacing: compact ? 6 : 10) {
+            IntensityBadge(
+                intensity: earthquake.formattedIntensity,
+                backgroundColor: earthquake.intensityBackgroundColor,
+                textColor: earthquake.intensityTextColor,
+                size: compact ? 36 : 44
+            )
+
+            VStack(alignment: .leading, spacing: compact ? 1 : 2) {
+                Text(earthquake.hypocenterName)
+                    .font(.system(size: compact ? 13 : 16, weight: .bold))
+                    .foregroundStyle(Color.eqTextPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .truncationMode(.tail)
+
+                HStack(spacing: 4) {
+                    Text(earthquake.magnitude)
+                        .font(.system(size: compact ? 10 : 13, weight: .semibold).monospaced())
+                        .foregroundStyle(Color.eqTextSecondary)
+
+                    Text("·")
+                        .foregroundStyle(Color.eqTextTertiary)
+
+                    Text(earthquake.formattedTime)
+                        .font(.system(size: compact ? 10 : 12).monospaced())
+                        .foregroundStyle(Color.eqTextTertiary)
+                }
+                .lineLimit(1)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, compact ? 10 : 14)
+        .padding(.vertical, compact ? 8 : 12)
+        .frame(width: width)
+        .background(
+            Color.eqBg.opacity(0.88)
+                .background(.ultraThinMaterial.opacity(0.5))
+        )
+    }
+}
+
+// MARK: - Map Snapshot
+
 struct MapSnapshotView: View {
     let latitude: Double
     let longitude: Double
@@ -98,7 +109,7 @@ struct MapSnapshotView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
-                Color.gray.opacity(0.3)
+                Color.eqSurface
             }
         }
         .task {

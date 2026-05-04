@@ -27,15 +27,17 @@ class ShakeDetectionHistoryDetailsPage extends ConsumerWidget {
     final mapConfiguration = ref.watch(mapConfigurationProvider);
 
     return switch (mapConfiguration) {
-      AsyncData(:final value) when value.styleString != null =>
-        _PageContent(styleString: value.styleString!, event: event),
+      AsyncData(:final value) when value.styleString != null => _PageContent(
+        styleString: value.styleString!,
+        event: event,
+      ),
       AsyncError(:final error) => Scaffold(
-          appBar: AppBar(),
-          body: Center(child: ErrorCard(error: error)),
-        ),
+        appBar: AppBar(),
+        body: Center(child: ErrorCard(error: error)),
+      ),
       _ => const Scaffold(
-          body: Center(child: CircularProgressIndicator.adaptive()),
-        ),
+        body: Center(child: CircularProgressIndicator.adaptive()),
+      ),
     };
   }
 }
@@ -173,7 +175,7 @@ class _PageContent extends HookConsumerWidget {
                 child: IconButton.filledTonal(
                   style: ButtonStyle(
                     shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
+                      RoundedSuperellipseBorder(
                         side: BorderSide(
                           color: colorScheme.primary.withValues(alpha: 0.2),
                         ),

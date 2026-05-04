@@ -20,6 +20,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_bootstrap_provider.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
@@ -182,6 +183,8 @@ Future<void> main() async {
     container.read(travelTimeInternalProvider.future),
     container.read(earthquakeHistoryConfigProvider.future),
   ).wait;
+
+  container.read(realtimeEventBootstrapProvider);
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));
 

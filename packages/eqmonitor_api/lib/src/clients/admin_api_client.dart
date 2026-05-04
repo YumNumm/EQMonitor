@@ -10,6 +10,8 @@ import '../models/admin_dispatch_summary_list_response.dart';
 import '../models/admin_replay_file_detail_response.dart';
 import '../models/admin_replay_file_download_url_response.dart';
 import '../models/admin_replay_file_list_response.dart';
+import '../models/post_v2_admin_test_live_event_response.dart';
+import '../models/v2_admin_test_live_event_request_body.dart';
 
 part 'admin_api_client.g.dart';
 
@@ -25,6 +27,12 @@ abstract class AdminApiClient {
   @GET(AdminApiClientUrls.getV2AdminDispatchesCorrelationKey)
   Future<HttpResponse<AdminDispatchSummaryDetailResponse>> getV2AdminDispatchesCorrelationKey({
     @Path('correlationKey') required String correlationKey,
+  });
+
+  /// 任意のデバイスにテスト用Live Activityイベントを送信
+  @POST(AdminApiClientUrls.postV2AdminTestLiveEvent)
+  Future<HttpResponse<PostV2AdminTestLiveEventResponse>> postV2AdminTestLiveEvent({
+    @Body() required V2AdminTestLiveEventRequestBody body,
   });
 
   /// リプレイファイル一覧.
@@ -55,6 +63,8 @@ abstract class AdminApiClientUrls {
 	static const getV2AdminDispatches = "/v2/admin/dispatches";
 	/// /v2/admin/dispatches/{correlationKey}
 	static const getV2AdminDispatchesCorrelationKey = "/v2/admin/dispatches/{correlationKey}";
+	/// /v2/admin/test-live-event
+	static const postV2AdminTestLiveEvent = "/v2/admin/test-live-event";
 	/// /v2/admin/replay-files
 	static const getV2AdminReplayFiles = "/v2/admin/replay-files";
 	/// /v2/admin/replay-files/{id}

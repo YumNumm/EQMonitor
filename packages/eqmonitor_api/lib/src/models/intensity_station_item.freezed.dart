@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntensityStationItem {
 
- CodeName get value;@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? get maxIntensity;@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;/// 絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値
+/// 観測点ID
+ String get code;/// 絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値
 @JsonKey(includeIfNull: false) num? get sva;/// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
 @JsonKey(includeIfNull: false) List<PrePeriods>? get prePeriods;
 /// Create a copy of IntensityStationItem
@@ -30,16 +31,16 @@ $IntensityStationItemCopyWith<IntensityStationItem> get copyWith => _$IntensityS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityStationItem&&(identical(other.value, value) || other.value == value)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&(identical(other.sva, sva) || other.sva == sva)&&const DeepCollectionEquality().equals(other.prePeriods, prePeriods));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IntensityStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.sva, sva) || other.sva == sva)&&const DeepCollectionEquality().equals(other.prePeriods, prePeriods));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,maxIntensity,maxLpgmIntensity,sva,const DeepCollectionEquality().hash(prePeriods));
+int get hashCode => Object.hash(runtimeType,code,sva,const DeepCollectionEquality().hash(prePeriods));
 
 @override
 String toString() {
-  return 'IntensityStationItem(value: $value, maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, sva: $sva, prePeriods: $prePeriods)';
+  return 'IntensityStationItem(code: $code, sva: $sva, prePeriods: $prePeriods)';
 }
 
 
@@ -50,11 +51,11 @@ abstract mixin class $IntensityStationItemCopyWith<$Res>  {
   factory $IntensityStationItemCopyWith(IntensityStationItem value, $Res Function(IntensityStationItem) _then) = _$IntensityStationItemCopyWithImpl;
 @useResult
 $Res call({
- CodeName value,@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false) List<PrePeriods>? prePeriods
+ String code,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false) List<PrePeriods>? prePeriods
 });
 
 
-$CodeNameCopyWith<$Res> get value;
+
 
 }
 /// @nodoc
@@ -67,26 +68,15 @@ class _$IntensityStationItemCopyWithImpl<$Res>
 
 /// Create a copy of IntensityStationItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,Object? sva = freezed,Object? prePeriods = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? sva = freezed,Object? prePeriods = freezed,}) {
   return _then(_self.copyWith(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as CodeName,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num?,prePeriods: freezed == prePeriods ? _self.prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods>?,
   ));
 }
-/// Create a copy of IntensityStationItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$CodeNameCopyWith<$Res> get value {
-  
-  return $CodeNameCopyWith<$Res>(_self.value, (value) {
-    return _then(_self.copyWith(value: value));
-  });
-}
+
 }
 
 
@@ -168,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityStationItem() when $default != null:
-return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity,_that.sva,_that.prePeriods);case _:
+return $default(_that.code,_that.sva,_that.prePeriods);case _:
   return orElse();
 
 }
@@ -189,10 +179,10 @@ return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity,_that.sva,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationItem():
-return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity,_that.sva,_that.prePeriods);case _:
+return $default(_that.code,_that.sva,_that.prePeriods);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +199,10 @@ return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity,_that.sva,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CodeName value, @JsonKey(includeIfNull: false, name: 'max_intensity')  JmaIntensity? maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code, @JsonKey(includeIfNull: false)  num? sva, @JsonKey(includeIfNull: false)  List<PrePeriods>? prePeriods)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityStationItem() when $default != null:
-return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity,_that.sva,_that.prePeriods);case _:
+return $default(_that.code,_that.sva,_that.prePeriods);case _:
   return null;
 
 }
@@ -224,12 +214,11 @@ return $default(_that.value,_that.maxIntensity,_that.maxLpgmIntensity,_that.sva,
 @JsonSerializable()
 
 class _IntensityStationItem implements IntensityStationItem {
-  const _IntensityStationItem({required this.value, @JsonKey(includeIfNull: false, name: 'max_intensity') this.maxIntensity, @JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') this.maxLpgmIntensity, @JsonKey(includeIfNull: false) this.sva, @JsonKey(includeIfNull: false) final  List<PrePeriods>? prePeriods}): _prePeriods = prePeriods;
+  const _IntensityStationItem({required this.code, @JsonKey(includeIfNull: false) this.sva, @JsonKey(includeIfNull: false) final  List<PrePeriods>? prePeriods}): _prePeriods = prePeriods;
   factory _IntensityStationItem.fromJson(Map<String, dynamic> json) => _$IntensityStationItemFromJson(json);
 
-@override final  CodeName value;
-@override@JsonKey(includeIfNull: false, name: 'max_intensity') final  JmaIntensity? maxIntensity;
-@override@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
+/// 観測点ID
+@override final  String code;
 /// 絶対速度応答スペクトルの1.6秒～7.8秒周期帯における最大値
 @override@JsonKey(includeIfNull: false) final  num? sva;
 /// 1秒～7秒の範囲で1秒毎の周期帯における長周期地震動階級と絶対応答スペクトル
@@ -257,16 +246,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityStationItem&&(identical(other.value, value) || other.value == value)&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&(identical(other.sva, sva) || other.sva == sva)&&const DeepCollectionEquality().equals(other._prePeriods, _prePeriods));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IntensityStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.sva, sva) || other.sva == sva)&&const DeepCollectionEquality().equals(other._prePeriods, _prePeriods));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,maxIntensity,maxLpgmIntensity,sva,const DeepCollectionEquality().hash(_prePeriods));
+int get hashCode => Object.hash(runtimeType,code,sva,const DeepCollectionEquality().hash(_prePeriods));
 
 @override
 String toString() {
-  return 'IntensityStationItem(value: $value, maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, sva: $sva, prePeriods: $prePeriods)';
+  return 'IntensityStationItem(code: $code, sva: $sva, prePeriods: $prePeriods)';
 }
 
 
@@ -277,11 +266,11 @@ abstract mixin class _$IntensityStationItemCopyWith<$Res> implements $IntensityS
   factory _$IntensityStationItemCopyWith(_IntensityStationItem value, $Res Function(_IntensityStationItem) _then) = __$IntensityStationItemCopyWithImpl;
 @override @useResult
 $Res call({
- CodeName value,@JsonKey(includeIfNull: false, name: 'max_intensity') JmaIntensity? maxIntensity,@JsonKey(includeIfNull: false, name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false) List<PrePeriods>? prePeriods
+ String code,@JsonKey(includeIfNull: false) num? sva,@JsonKey(includeIfNull: false) List<PrePeriods>? prePeriods
 });
 
 
-@override $CodeNameCopyWith<$Res> get value;
+
 
 }
 /// @nodoc
@@ -294,27 +283,16 @@ class __$IntensityStationItemCopyWithImpl<$Res>
 
 /// Create a copy of IntensityStationItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? maxIntensity = freezed,Object? maxLpgmIntensity = freezed,Object? sva = freezed,Object? prePeriods = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? sva = freezed,Object? prePeriods = freezed,}) {
   return _then(_IntensityStationItem(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as CodeName,maxIntensity: freezed == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,sva: freezed == sva ? _self.sva : sva // ignore: cast_nullable_to_non_nullable
 as num?,prePeriods: freezed == prePeriods ? _self._prePeriods : prePeriods // ignore: cast_nullable_to_non_nullable
 as List<PrePeriods>?,
   ));
 }
 
-/// Create a copy of IntensityStationItem
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$CodeNameCopyWith<$Res> get value {
-  
-  return $CodeNameCopyWith<$Res>(_self.value, (value) {
-    return _then(_self.copyWith(value: value));
-  });
-}
+
 }
 
 // dart format on

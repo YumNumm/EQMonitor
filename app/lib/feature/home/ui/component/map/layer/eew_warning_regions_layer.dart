@@ -42,12 +42,19 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
           return null;
         }
 
+        // レイヤー追加時点の codes でフィルターを設定し、フィルターなし全件表示を防ぐ
+        final initialFilter = codes.isEmpty
+            ? const <Object>['==', '1', '2']
+            : <Object>['in', ['get', 'code'], ['literal', codes]];
+
         unawaited(() async {
           await styleController.addLayer(
-            const FillStyleLayer(
+            FillStyleLayer(
               id: _layerId,
               sourceId: 'eqmonitor_map',
-              paint: {
+              sourceLayerId: 'areaForecastLocalEew',
+              filter: initialFilter,
+              paint: const {
                 'fill-color': '#FF0000',
                 'fill-opacity': 0.25,
               },
@@ -69,7 +76,7 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
           return null;
         }
         final filter = codes.isEmpty
-            ? <Object>['==', '1', '2']
+            ? const <Object>['==', '1', '2']
             : <Object>[
                 'in',
                 ['get', 'code'],

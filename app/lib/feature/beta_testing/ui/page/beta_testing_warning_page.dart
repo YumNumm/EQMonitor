@@ -190,9 +190,7 @@ class _AgreementBottom extends ConsumerWidget {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () async {
-                  await ref
-                      .read(betaTestingAgreedProvider.notifier)
-                      .agree();
+                  await ref.read(betaTestingAgreedProvider.notifier).agree();
                   if (context.mounted) {
                     context.go('/');
                   }
@@ -201,7 +199,7 @@ class _AgreementBottom extends ConsumerWidget {
                   backgroundColor: ds.palette.statusWarning,
                   foregroundColor: const Color(0xFF0F141A),
                   padding: EdgeInsets.symmetric(vertical: ds.spacing.lg),
-                  shape: RoundedRectangleBorder(
+                  shape: RoundedSuperellipseBorder(
                     borderRadius: BorderRadius.circular(ds.shape.button),
                   ),
                 ),

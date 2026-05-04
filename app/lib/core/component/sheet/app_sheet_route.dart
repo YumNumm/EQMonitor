@@ -12,7 +12,7 @@ class AppSheetRoute<T> extends SheetRoute<T> {
           child: Material(
             elevation: 2,
             clipBehavior: Clip.hardEdge,
-            shape: const RoundedRectangleBorder(
+            shape: const RoundedSuperellipseBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
             child: child,

@@ -6,47 +6,85 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/util/converter/color_converter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre/maplibre.dart';
 
-/// 地震履歴詳細の震度塗りつぶしレイヤー
-///
-/// [iconMode] に応じて塗りつぶすレベルを決定する:
-/// - [EarthquakeHistoryIconMode.auto]: zoom < 9 で細分化地域、zoom >= 9 で市区町村
-/// - [EarthquakeHistoryIconMode.region]: 細分化地域のみ
-/// - [EarthquakeHistoryIconMode.municipality]: 市区町村のみ
-/// - [EarthquakeHistoryIconMode.station] / [EarthquakeHistoryIconMode.none]: 何も描画しない
-///
-/// [showingLpgmIntensity] が true の場合は長周期地震動階級で塗り分ける。
-class EarthquakeHistoryFillLayer extends HookConsumerWidget {
+class EarthquakeHistoryFillLayer extends HookWidget {
   const EarthquakeHistoryFillLayer({
-    required this.intensity,
-    required this.iconMode,
-    this.showingLpgmIntensity = false,
+    required this.earthquake,
+    required this.config,
+    this.zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds,
     super.key,
   });
 
+  final Earthquake earthquake;
+  final EarthquakeHistoryDetailConfig config;
+  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
+
+  @override
+  Widget build(BuildContext context) {
+    final intensity = earthquake.intensity;
+    if (intensity == null) {
+      return const SizedBox.shrink();
+    }
+
+    final modeResolver = useMemoized(
+      () => const EarthquakeHistoryMapLayerModeResolver(),
+    );
+    final mode = modeResolver.resolveFillLayerMode(
+      earthquake: earthquake,
+      config: config,
+    );
+    if (mode == EarthquakeHistoryMapLayerMode.none ||
+        mode == EarthquakeHistoryMapLayerMode.station) {
+      return const SizedBox.shrink();
+    }
+
+    return _ResolvedEarthquakeHistoryFillLayer(
+      intensity: intensity,
+      mode: mode,
+      showingLpgmIntensity: config.showingLpgmIntensity,
+      zoomThresholds: zoomThresholds,
+      modeResolver: modeResolver,
+    );
+  }
+}
+
+class _ResolvedEarthquakeHistoryFillLayer extends HookConsumerWidget {
+  const _ResolvedEarthquakeHistoryFillLayer({
+    required this.intensity,
+    required this.mode,
+    required this.showingLpgmIntensity,
+    required this.zoomThresholds,
+    required this.modeResolver,
+  });
+
   final EarthquakeIntensity intensity;
-  final EarthquakeHistoryIconMode iconMode;
+  final EarthquakeHistoryMapLayerMode mode;
   final bool showingLpgmIntensity;
+  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
+  final EarthquakeHistoryMapLayerModeResolver modeResolver;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
+    final fillLayerBuilder = useMemoized(
+      () => EarthquakeHistoryFillLayerBuilder(modeResolver: modeResolver),
+      [modeResolver],
+    );
+    if (styleController == null) {
+      return const SizedBox.shrink();
+    }
 
     useEffect(
       () {
-        if (styleController == null) {
-          return null;
-        }
-
         final addedLayerIds = <String>[];
         var disposed = false;
 
@@ -62,15 +100,19 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
 
         unawaited(() async {
           try {
-            final specs = showingLpgmIntensity
-                ? _buildLpgmLayerSpecs(intensity, colorModel, iconMode)
-                : _buildJmaLayerSpecs(intensity, colorModel, iconMode);
-            for (final spec in specs) {
+            final layers = fillLayerBuilder.build(
+              intensity: intensity,
+              colorModel: colorModel,
+              mode: mode,
+              showingLpgmIntensity: showingLpgmIntensity,
+              zoomThresholds: zoomThresholds,
+            );
+            for (final layer in layers) {
               if (disposed) {
                 return;
               }
-              await styleController.addLayer(spec.layer);
-              addedLayerIds.add(spec.id);
+              await styleController.addLayer(layer);
+              addedLayerIds.add(layer.id);
             }
           } on Exception catch (e) {
             talker.log(e);
@@ -82,367 +124,347 @@ class EarthquakeHistoryFillLayer extends HookConsumerWidget {
           unawaited(removeAdded());
         };
       },
-      [styleController, intensity, colorModel, showingLpgmIntensity, iconMode],
+      [
+        styleController,
+        intensity,
+        colorModel,
+        mode,
+        showingLpgmIntensity,
+        zoomThresholds,
+        fillLayerBuilder,
+      ],
     );
 
     return const SizedBox.shrink();
   }
 }
 
-List<Object> _codeInFilter(List<String> codes) => <Object>[
-  'in',
-  <Object>['get', 'code'],
-  <Object>['literal', codes],
-];
+const _regionSourceLayerId = 'areaForecastLocalE';
+const _citySourceLayerId = 'areaInformationCityQuake';
+const _regionFillOpacity = 0.6;
+const _regionLineOpacity = 0.8;
+const _cityFillOpacity = 0.6;
 
-List<JmaIntensity> _sortedJmaLevels(EarthquakeIntensity? intensity) {
-  final set = <JmaIntensity>{};
-  for (final r in intensity?.regions ?? const <IntensityRegion>[]) {
-    final m = r.maxIntensity;
-    if (m != null) {
-      set.add(m);
+class EarthquakeHistoryFillLayerBuilder {
+  const EarthquakeHistoryFillLayerBuilder({required this.modeResolver});
+
+  final EarthquakeHistoryMapLayerModeResolver modeResolver;
+
+  List<StyleLayer> build({
+    required EarthquakeIntensity intensity,
+    required IntensityColorModel colorModel,
+    required EarthquakeHistoryMapLayerMode mode,
+    required bool showingLpgmIntensity,
+    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+  }) {
+    if (mode == EarthquakeHistoryMapLayerMode.none ||
+        mode == EarthquakeHistoryMapLayerMode.station) {
+      return const [];
     }
+    return showingLpgmIntensity
+        ? buildLpgmLayers(
+            intensity: intensity,
+            colorModel: colorModel,
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+          )
+        : buildJmaLayers(
+            intensity: intensity,
+            colorModel: colorModel,
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+          );
   }
-  for (final e
-      in intensity?.intensityTree.entries ??
-          const <MapEntry<JmaIntensity, List<RegionIntensityNode>>>[]) {
-    for (final region in e.value) {
+
+  List<StyleLayer> buildJmaLayers({
+    required EarthquakeIntensity intensity,
+    required IntensityColorModel colorModel,
+    required EarthquakeHistoryMapLayerMode mode,
+    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+  }) {
+    final layers = <StyleLayer>[];
+    final levels = sortedJmaLevels(intensity);
+    if (modeResolver.showsRegionFill(mode)) {
+      for (final level in levels) {
+        final codes = jmaRegionCodes(intensity, level);
+        if (codes.isEmpty) {
+          continue;
+        }
+        final color = colorModel
+            .fromJmaIntensity(level)
+            .background
+            .toHexStringRGB();
+        layers.addAll(
+          buildRegionLayers(
+            idPrefix: 'eq-history-jma-${level.name}',
+            codes: codes,
+            color: color,
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+          ),
+        );
+      }
+    }
+
+    if (modeResolver.showsCityFill(mode)) {
+      for (final level in levels) {
+        final codes = jmaCityCodes(intensity, level);
+        if (codes.isEmpty) {
+          continue;
+        }
+        final color = colorModel
+            .fromJmaIntensity(level)
+            .background
+            .toHexStringRGB();
+        layers.add(
+          buildCityLayer(
+            idPrefix: 'eq-history-jma-${level.name}',
+            codes: codes,
+            color: color,
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+          ),
+        );
+      }
+    }
+    return layers;
+  }
+
+  List<StyleLayer> buildLpgmLayers({
+    required EarthquakeIntensity intensity,
+    required IntensityColorModel colorModel,
+    required EarthquakeHistoryMapLayerMode mode,
+    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+  }) {
+    final layers = <StyleLayer>[];
+    final levels = sortedLpgmLevels(intensity);
+    if (modeResolver.showsRegionFill(mode)) {
+      for (final level in levels) {
+        final codes = lpgmRegionCodes(intensity, level);
+        if (codes.isEmpty) {
+          continue;
+        }
+        final color = colorModel
+            .fromJmaLpgmIntensity(level)
+            .background
+            .toHexStringRGB();
+        layers.addAll(
+          buildRegionLayers(
+            idPrefix: 'eq-history-lpgm-${level.name}',
+            codes: codes,
+            color: color,
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+          ),
+        );
+      }
+    }
+
+    if (modeResolver.showsCityFill(mode)) {
+      for (final level in levels) {
+        final codes = lpgmCityCodes(intensity, level);
+        if (codes.isEmpty) {
+          continue;
+        }
+        final color = colorModel
+            .fromJmaLpgmIntensity(level)
+            .background
+            .toHexStringRGB();
+        layers.add(
+          buildCityLayer(
+            idPrefix: 'eq-history-lpgm-${level.name}',
+            codes: codes,
+            color: color,
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+          ),
+        );
+      }
+    }
+    return layers;
+  }
+
+  List<StyleLayer> buildRegionLayers({
+    required String idPrefix,
+    required List<String> codes,
+    required String color,
+    required EarthquakeHistoryMapLayerMode mode,
+    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+  }) {
+    final fillId = '$idPrefix-region-fill';
+    final lineId = '$idPrefix-region-line';
+    final filter = codeFilter(codes);
+    return [
+      FillStyleLayer(
+        id: fillId,
+        sourceId: 'japan',
+        sourceLayerId: _regionSourceLayerId,
+        filter: filter,
+        paint: {
+          'fill-color': color,
+          'fill-opacity': modeResolver.regionFillOpacity(
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+            visibleOpacity: _regionFillOpacity,
+          ),
+        },
+      ),
+      LineStyleLayer(
+        id: lineId,
+        sourceId: 'japan',
+        sourceLayerId: _regionSourceLayerId,
+        filter: filter,
+        paint: {
+          'line-color': '#ffffff',
+          'line-width': 0.5,
+          'line-opacity': modeResolver.regionFillOpacity(
+            mode: mode,
+            zoomThresholds: zoomThresholds,
+            visibleOpacity: _regionLineOpacity,
+          ),
+        },
+      ),
+    ];
+  }
+
+  StyleLayer buildCityLayer({
+    required String idPrefix,
+    required List<String> codes,
+    required String color,
+    required EarthquakeHistoryMapLayerMode mode,
+    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
+  }) {
+    return FillStyleLayer(
+      id: '$idPrefix-city-fill',
+      sourceId: 'japan',
+      sourceLayerId: _citySourceLayerId,
+      filter: codeFilter(codes),
+      paint: {
+        'fill-color': color,
+        'fill-opacity': modeResolver.cityFillOpacity(
+          mode: mode,
+          zoomThresholds: zoomThresholds,
+          visibleOpacity: _cityFillOpacity,
+        ),
+      },
+    );
+  }
+
+  List<Object> codeFilter(List<String> codes) => [
+    'in',
+    ['get', 'code'],
+    ['literal', codes],
+  ];
+
+  List<JmaIntensity> sortedJmaLevels(EarthquakeIntensity intensity) {
+    final levels = <JmaIntensity>{};
+    for (final entry in intensity.intensityTree.entries) {
+      for (final region in entry.value) {
+        final maxIntensity = region.region.maxIntensity;
+        if (maxIntensity != null) {
+          levels.add(maxIntensity);
+        }
+        for (final city in region.cities) {
+          if (city.maxIntensity != null) {
+            levels.add(entry.key);
+            break;
+          }
+        }
+      }
+    }
+    return levels.toList()
+      ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
+  }
+
+  List<String> jmaRegionCodes(
+    EarthquakeIntensity intensity,
+    JmaIntensity intensityLevel,
+  ) {
+    final codes = <String>[];
+    final nodes = intensity.intensityTree[intensityLevel];
+    if (nodes == null) {
+      return codes;
+    }
+    for (final region in nodes) {
+      if (region.region.maxIntensity == intensityLevel) {
+        codes.add(region.region.region.code);
+      }
+    }
+    return codes;
+  }
+
+  List<String> jmaCityCodes(
+    EarthquakeIntensity intensity,
+    JmaIntensity intensityLevel,
+  ) {
+    final codes = <String>[];
+    final nodes = intensity.intensityTree[intensityLevel];
+    if (nodes == null) {
+      return codes;
+    }
+    for (final region in nodes) {
       for (final city in region.cities) {
         if (city.maxIntensity != null) {
-          set.add(e.key);
-          break;
+          codes.add(city.city.code);
         }
       }
     }
+    return codes;
   }
-  final list = set.toList()
-    ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
-  return list;
-}
 
-List<String> _jmaRegionCodes(EarthquakeIntensity? intensity, JmaIntensity j) {
-  final out = <String>[];
-  for (final r in intensity?.regions ?? const <IntensityRegion>[]) {
-    if (r.maxIntensity == j) {
-      out.add(r.region.code);
-    }
-  }
-  return out;
-}
-
-List<String> _jmaCityCodes(EarthquakeIntensity? intensity, JmaIntensity j) {
-  final out = <String>[];
-  final nodes = intensity?.intensityTree[j];
-  if (nodes == null) {
-    return out;
-  }
-  for (final region in nodes) {
-    for (final city in region.cities) {
-      if (city.maxIntensity != null) {
-        out.add(city.city.code);
+  List<JmaLpgmIntensity> sortedLpgmLevels(EarthquakeIntensity intensity) {
+    final levels = <JmaLpgmIntensity>{};
+    for (final entry in intensity.lpgmIntensityTree.entries) {
+      for (final region in entry.value) {
+        final maxIntensity = region.maxLpgmIntensity;
+        if (maxIntensity != null) {
+          levels.add(maxIntensity);
+        }
+        for (final city in region.cities) {
+          if (city.maxLpgmIntensity != null) {
+            levels.add(entry.key);
+            break;
+          }
+        }
       }
     }
+    return levels.toList()
+      ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
   }
-  return out;
-}
 
-List<JmaLpgmIntensity> _sortedLpgmLevels(EarthquakeIntensity? intensity) {
-  final set = <JmaLpgmIntensity>{};
-  for (final r in intensity?.lpgmRegions ?? const <LpgmIntensityRegion>[]) {
-    final m = r.maxLpgmIntensity;
-    if (m != null) {
-      set.add(m);
+  List<String> lpgmRegionCodes(
+    EarthquakeIntensity intensity,
+    JmaLpgmIntensity intensityLevel,
+  ) {
+    final codes = <String>[];
+    final nodes = intensity.lpgmIntensityTree[intensityLevel];
+    if (nodes == null) {
+      return codes;
     }
+    for (final region in nodes) {
+      if (region.maxLpgmIntensity == intensityLevel) {
+        codes.add(region.region.code);
+      }
+    }
+    return codes;
   }
-  for (final e
-      in intensity?.lpgmIntensityTree.entries ??
-          const <MapEntry<JmaLpgmIntensity, List<RegionLpgmIntensityNode>>>[]) {
-    for (final region in e.value) {
+
+  List<String> lpgmCityCodes(
+    EarthquakeIntensity intensity,
+    JmaLpgmIntensity intensityLevel,
+  ) {
+    final codes = <String>[];
+    final nodes = intensity.lpgmIntensityTree[intensityLevel];
+    if (nodes == null) {
+      return codes;
+    }
+    for (final region in nodes) {
       for (final city in region.cities) {
         if (city.maxLpgmIntensity != null) {
-          set.add(e.key);
-          break;
+          codes.add(city.city.code);
         }
       }
     }
+    return codes;
   }
-  final list = set.toList()
-    ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
-  return list;
-}
-
-List<String> _lpgmRegionCodes(
-  EarthquakeIntensity? intensity,
-  JmaLpgmIntensity j,
-) {
-  final out = <String>[];
-  for (final r in intensity?.lpgmRegions ?? const <LpgmIntensityRegion>[]) {
-    if (r.maxLpgmIntensity == j) {
-      out.add(r.region.code);
-    }
-  }
-  return out;
-}
-
-List<String> _lpgmCityCodes(
-  EarthquakeIntensity? intensity,
-  JmaLpgmIntensity j,
-) {
-  final out = <String>[];
-  final nodes = intensity?.lpgmIntensityTree[j];
-  if (nodes == null) {
-    return out;
-  }
-  for (final region in nodes) {
-    for (final city in region.cities) {
-      if (city.maxLpgmIntensity != null) {
-        out.add(city.city.code);
-      }
-    }
-  }
-  return out;
-}
-
-class _LayerSpec {
-  const _LayerSpec({required this.id, required this.layer});
-
-  final String id;
-  final StyleLayer layer;
-}
-
-List<_LayerSpec> _buildJmaLayerSpecs(
-  EarthquakeIntensity? intensity,
-  IntensityColorModel colorModel,
-  EarthquakeHistoryIconMode iconMode,
-) {
-  final specs = <_LayerSpec>[];
-  final showRegion = iconMode == EarthquakeHistoryIconMode.auto ||
-      iconMode == EarthquakeHistoryIconMode.region;
-  final showCity = iconMode == EarthquakeHistoryIconMode.auto ||
-      iconMode == EarthquakeHistoryIconMode.municipality;
-
-  if (!showRegion && !showCity) {
-    return specs;
-  }
-
-  final levels = _sortedJmaLevels(intensity);
-
-  if (showRegion) {
-    for (final j in levels) {
-      final regionCodes = _jmaRegionCodes(intensity, j);
-      if (regionCodes.isEmpty) {
-        continue;
-      }
-      final filter = _codeInFilter(regionCodes);
-      final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
-      final fillId = 'eq-history-jma-${j.name}-region-fill';
-      final lineId = 'eq-history-jma-${j.name}-region-line';
-      // auto: zoom 8→9 でフェードアウト。region 固定: 常時表示
-      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'step',
-              ['zoom'],
-              8,
-              0.6,
-              9,
-              0.0,
-            ]
-          : 0.6;
-      final lineOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              8.0,
-              0.8,
-              9.0,
-              0.0,
-            ]
-          : 0.8;
-      specs.add(
-        _LayerSpec(
-          id: fillId,
-          layer: FillStyleLayer(
-            id: fillId,
-            sourceId: 'japan',
-            sourceLayerId: 'areaForecastLocalE',
-            filter: filter,
-            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
-          ),
-        ),
-      );
-      specs.add(
-        _LayerSpec(
-          id: lineId,
-          layer: LineStyleLayer(
-            id: lineId,
-            sourceId: 'japan',
-            sourceLayerId: 'areaForecastLocalE',
-            filter: filter,
-            paint: {
-              'line-color': '#ffffff',
-              'line-width': 0.5,
-              'line-opacity': lineOpacity,
-            },
-          ),
-        ),
-      );
-    }
-  }
-
-  if (showCity) {
-    for (final j in levels) {
-      final cityCodes = _jmaCityCodes(intensity, j);
-      if (cityCodes.isEmpty) {
-        continue;
-      }
-      final filter = _codeInFilter(cityCodes);
-      final color = colorModel.fromJmaIntensity(j).background.toHexStringRGB();
-      final fillId = 'eq-history-jma-${j.name}-city-fill';
-      // auto: zoom 8→9 でフェードイン。municipality 固定: 常時表示
-      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'step',
-              ['zoom'],
-              8,
-              0.0,
-              9,
-              0.6,
-            ]
-          : 0.6;
-      specs.add(
-        _LayerSpec(
-          id: fillId,
-          layer: FillStyleLayer(
-            id: fillId,
-            sourceId: 'japan',
-            sourceLayerId: 'areaInformationCity',
-            filter: filter,
-            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
-          ),
-        ),
-      );
-    }
-  }
-
-  return specs;
-}
-
-List<_LayerSpec> _buildLpgmLayerSpecs(
-  EarthquakeIntensity? intensity,
-  IntensityColorModel colorModel,
-  EarthquakeHistoryIconMode iconMode,
-) {
-  final specs = <_LayerSpec>[];
-  final showRegion = iconMode == EarthquakeHistoryIconMode.auto ||
-      iconMode == EarthquakeHistoryIconMode.region;
-  final showCity = iconMode == EarthquakeHistoryIconMode.auto ||
-      iconMode == EarthquakeHistoryIconMode.municipality;
-
-  if (!showRegion && !showCity) {
-    return specs;
-  }
-
-  final levels = _sortedLpgmLevels(intensity);
-
-  if (showRegion) {
-    for (final j in levels) {
-      final regionCodes = _lpgmRegionCodes(intensity, j);
-      if (regionCodes.isEmpty) {
-        continue;
-      }
-      final filter = _codeInFilter(regionCodes);
-      final color =
-          colorModel.fromJmaLpgmIntensity(j).background.toHexStringRGB();
-      final fillId = 'eq-history-lpgm-${j.name}-region-fill';
-      final lineId = 'eq-history-lpgm-${j.name}-region-line';
-      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              8.0,
-              0.6,
-              9.0,
-              0.0,
-            ]
-          : 0.6;
-      final lineOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              8.0,
-              0.8,
-              9.0,
-              0.0,
-            ]
-          : 0.8;
-      specs.add(
-        _LayerSpec(
-          id: fillId,
-          layer: FillStyleLayer(
-            id: fillId,
-            sourceId: 'japan',
-            sourceLayerId: 'areaForecastLocalE',
-            filter: filter,
-            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
-          ),
-        ),
-      );
-      specs.add(
-        _LayerSpec(
-          id: lineId,
-          layer: LineStyleLayer(
-            id: lineId,
-            sourceId: 'japan',
-            sourceLayerId: 'areaForecastLocalE',
-            filter: filter,
-            paint: {
-              'line-color': '#ffffff',
-              'line-width': 0.5,
-              'line-opacity': lineOpacity,
-            },
-          ),
-        ),
-      );
-    }
-  }
-
-  if (showCity) {
-    for (final j in levels) {
-      final cityCodes = _lpgmCityCodes(intensity, j);
-      if (cityCodes.isEmpty) {
-        continue;
-      }
-      final filter = _codeInFilter(cityCodes);
-      final color =
-          colorModel.fromJmaLpgmIntensity(j).background.toHexStringRGB();
-      final fillId = 'eq-history-lpgm-${j.name}-city-fill';
-      final fillOpacity = iconMode == EarthquakeHistoryIconMode.auto
-          ? <Object>[
-              'step',
-              ['zoom'],
-              8,
-              0.0,
-              9,
-              0.6,
-            ]
-          : 0.6;
-      specs.add(
-        _LayerSpec(
-          id: fillId,
-          layer: FillStyleLayer(
-            id: fillId,
-            sourceId: 'japan',
-            sourceLayerId: 'areaInformationCity',
-            filter: filter,
-            paint: {'fill-color': color, 'fill-opacity': fillOpacity},
-          ),
-        ),
-      );
-    }
-  }
-
-  return specs;
 }

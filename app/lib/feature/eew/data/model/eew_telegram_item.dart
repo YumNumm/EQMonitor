@@ -129,16 +129,14 @@ extension EewItemWithRelationsConverter on api.EewItemWithRelations {
 
 extension on api.EewHypocenter {
   EewHypocenterInfo _toEewHypocenterInfo() {
-    final isLatLng = coordinates.type == api.CoordinateType.latLng;
     return EewHypocenterInfo(
       code: value.code,
       name: value.name,
       detailedCode: detailed?.code,
       detailedName: detailed?.name,
-      latitude: isLatLng ? coordinates.latitude?.toDouble() : null,
-      longitude: isLatLng ? coordinates.longitude?.toDouble() : null,
-      hasLatLng: isLatLng,
-      coordinateCondition: coordinates.condition,
+      latitude: coordinates.latitude.toDouble(),
+      longitude: coordinates.longitude.toDouble(),
+      hasLatLng: true,
       magnitude: magnitude?.toDouble(),
       depth: depth?.toInt(),
     );

@@ -1,8 +1,8 @@
-import 'dart:convert';
-
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_connection_provider.dart';
-import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
+import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -13,16 +13,13 @@ class DebugWebSocketPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = useState<List<({DateTime at, WsMessage msg})>>([]);
-    final status = ref.watch(wsConnectionStatusProvider);
-    final currentUrl = ref.watch(wsCurrentUrlProvider);
-    final lastPingAt = ref.watch(wsLastPingAtProvider);
-    final pingInterval = ref.watch(wsPingRttProvider);
+    final messages = useState<List<({DateTime at, RealtimeEvent event})>>([]);
+    final wsStatus = ref.watch(eqMonitorWsStatusProvider);
 
-    ref.listen(wsConnectionProvider, (_, next) {
-      next.whenData((msg) {
+    ref.listen(realtimeEventsProvider, (_, next) {
+      next.whenData((event) {
         final nextList = [
-          (at: DateTime.now(), msg: msg),
+          (at: DateTime.now(), event: event),
           ...messages.value.take(99),
         ];
         messages.value = nextList;
@@ -39,19 +36,14 @@ class DebugWebSocketPage extends HookConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => ref.invalidate(wsConnectionProvider),
+            onPressed: () => ref.invalidate(eqMonitorWsStatusProvider),
           ),
         ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _WsStatusCard(
-            status: status,
-            wsUrl: currentUrl,
-            lastPingAt: lastPingAt,
-            pingInterval: pingInterval,
-          ),
+          _WsStatusCard(wsStatus: wsStatus),
           const Divider(height: 1),
           Expanded(
             child: messages.value.isEmpty
@@ -63,9 +55,9 @@ class DebugWebSocketPage extends HookConsumerWidget {
                     itemCount: messages.value.length,
                     itemBuilder: (context, index) {
                       final e = messages.value[index];
-                      return _WsMessageCard(
+                      return _WsEventCard(
                         receivedAt: e.at,
-                        msg: e.msg,
+                        event: e.event,
                       );
                     },
                   ),
@@ -77,17 +69,9 @@ class DebugWebSocketPage extends HookConsumerWidget {
 }
 
 class _WsStatusCard extends HookWidget {
-  const _WsStatusCard({
-    required this.status,
-    required this.wsUrl,
-    required this.lastPingAt,
-    required this.pingInterval,
-  });
+  const _WsStatusCard({required this.wsStatus});
 
-  final WsConnectionState status;
-  final String? wsUrl;
-  final DateTime? lastPingAt;
-  final Duration? pingInterval;
+  final EqMonitorWsStatusState wsStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -98,20 +82,20 @@ class _WsStatusCard extends HookWidget {
     );
 
     final theme = Theme.of(context);
-    final statusLabel = switch (status) {
-      WsConnectionState.connecting => '接続中',
-      WsConnectionState.connected => '接続済み',
-      WsConnectionState.disconnected => '切断',
+    final statusLabel = switch (wsStatus.phase) {
+      WsPhase.connecting => '接続中',
+      WsPhase.connected => '接続済み',
+      WsPhase.disconnected => '切断',
     };
-    final statusColor = switch (status) {
-      WsConnectionState.connecting => theme.colorScheme.secondary,
-      WsConnectionState.connected => theme.colorScheme.primary,
-      WsConnectionState.disconnected => theme.colorScheme.error,
+    final statusColor = switch (wsStatus.phase) {
+      WsPhase.connecting => theme.colorScheme.secondary,
+      WsPhase.connected => theme.colorScheme.primary,
+      WsPhase.disconnected => theme.colorScheme.error,
     };
 
-    final pingLabel = lastPingAt == null
+    final pingLabel = wsStatus.lastPingAt == null
         ? 'なし'
-        : _elapsedLabel(DateTime.now().difference(lastPingAt!));
+        : _elapsedLabel(DateTime.now().difference(wsStatus.lastPingAt!));
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -125,10 +109,10 @@ class _WsStatusCard extends HookWidget {
               Text(statusLabel, style: theme.textTheme.titleMedium),
             ],
           ),
-          if (wsUrl != null) ...[
+          if (wsStatus.currentUrl != null) ...[
             const SizedBox(height: 8),
             SelectableText(
-              wsUrl!,
+              wsStatus.currentUrl!,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontFamily: FontFamily.notoSansMono,
               ),
@@ -136,10 +120,10 @@ class _WsStatusCard extends HookWidget {
           ],
           const SizedBox(height: 4),
           Text('最終 ping: $pingLabel', style: theme.textTheme.bodySmall),
-          if (pingInterval != null) ...[
+          if (wsStatus.pingRtt != null) ...[
             const SizedBox(height: 2),
             Text(
-              'Ping 間隔: ${pingInterval!.inMilliseconds}ms',
+              'Ping RTT: ${wsStatus.pingRtt!.inMilliseconds}ms',
               style: theme.textTheme.bodySmall,
             ),
           ],
@@ -156,22 +140,38 @@ class _WsStatusCard extends HookWidget {
   }
 }
 
-class _WsMessageCard extends StatelessWidget {
-  const _WsMessageCard({
+class _WsEventCard extends StatelessWidget {
+  const _WsEventCard({
     required this.receivedAt,
-    required this.msg,
+    required this.event,
   });
 
   final DateTime receivedAt;
-  final WsMessage msg;
+  final RealtimeEvent event;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final displayType = switch (msg) {
-      WsSnapshotMessage() => 'snapshot',
-      WsRealtimeMessage(:final data) => 'realtime / ${data.runtimeType}',
+    final displayType = switch (event) {
+      RealtimeSnapshotEvent() => 'snapshot',
+      RealtimeEewUpsertEvent() => 'eew/upsert',
+      RealtimeEarthquakeUpsertEvent() => 'earthquake/upsert',
+      RealtimeEarthquakeDeleteEvent() => 'earthquake/delete',
+      RealtimeShakeDetectedEvent() => 'shake_detected',
+      RealtimeEstimatedIntensityUpsertEvent() => 'estimated_intensity/upsert',
+    };
+
+    final detail = switch (event) {
+      RealtimeSnapshotEvent(:final eews, :final earthquakes, :final shakes) =>
+        'eews=${eews.length} earthquakes=${earthquakes.length} shakes=${shakes.length}',
+      RealtimeEewUpsertEvent(:final item) => 'eventId=${item.eventId}',
+      RealtimeEarthquakeUpsertEvent(:final record) =>
+        'eventId=${record.eventId}',
+      RealtimeEarthquakeDeleteEvent(:final eventId) => 'eventId=$eventId',
+      RealtimeShakeDetectedEvent(:final data) => 'eventId=${data.eventId}',
+      RealtimeEstimatedIntensityUpsertEvent(:final eventId) =>
+        'eventId=$eventId',
     };
 
     final timeStr =
@@ -180,42 +180,34 @@ class _WsMessageCard extends StatelessWidget {
         '${receivedAt.second.toString().padLeft(2, '0')}.'
         '${receivedAt.millisecond.toString().padLeft(3, '0')}';
 
-    String pretty;
-    try {
-      pretty = const JsonEncoder.withIndent('  ').convert(msg.toJson());
-    } on Object {
-      pretty = msg.toString();
-    }
+    final copyText = '[$timeStr] $displayType $detail';
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: InkWell(
-        onTap: () async => Clipboard.setData(ClipboardData(text: pretty)),
+        onTap: () async => Clipboard.setData(ClipboardData(text: copyText)),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      displayType,
-                      style: theme.textTheme.titleSmall,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(displayType, style: theme.textTheme.titleSmall),
+                    const SizedBox(height: 4),
+                    Text(
+                      detail,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontFamily: FontFamily.notoSansMono,
+                      ),
                     ),
-                  ),
-                  Text(
-                    timeStr,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontFamily: FontFamily.notoSansMono,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-              SelectableText(
-                pretty,
-                style: theme.textTheme.bodySmall?.copyWith(
+              Text(
+                timeStr,
+                style: theme.textTheme.labelSmall?.copyWith(
                   fontFamily: FontFamily.notoSansMono,
                 ),
               ),

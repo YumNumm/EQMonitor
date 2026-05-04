@@ -58,7 +58,7 @@ class HomeScopeSelector extends StatelessWidget {
               padding: WidgetStateProperty.all(EdgeInsets.zero),
               backgroundColor: WidgetStatePropertyAll(color.surfaceRaised),
               shape: WidgetStateProperty.all(
-                RoundedRectangleBorder(
+                RoundedSuperellipseBorder(
                   borderRadius: BorderRadius.circular(shape.md),
                   side: BorderSide(color: color.outlineSoft),
                 ),
