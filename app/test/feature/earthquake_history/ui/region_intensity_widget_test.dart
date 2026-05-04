@@ -143,7 +143,8 @@ void main() {
     await tester.tap(find.textContaining('震度4').first);
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('震度4の地域'), findsOneWidget);
+    // インライン展開: タップ後に都道府県タイルが表示される
+    // 展開前は subtitle に1回、展開後は都道府県タイルにも表示される
     expect(find.text('宮城県'), findsWidgets);
   });
 

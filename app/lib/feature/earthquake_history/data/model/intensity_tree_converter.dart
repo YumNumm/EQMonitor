@@ -163,14 +163,16 @@ class IntensityTreeConverter {
       );
     }
 
-    return {
+    final built = <JmaIntensity, List<PrefectureIntensityNode>>{
       for (final entry in resultMap.entries)
         entry.key: [
           for (final prefNode in entry.value.values)
             prefNode.build(entry.key),
         ],
-    }..entries.toList().sort(
-      (a, b) => b.key.index.compareTo(a.key.index),
+    };
+    return Map.fromEntries(
+      built.entries.toList()
+        ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex)),
     );
   }
 
@@ -222,6 +224,29 @@ class IntensityTreeConverter {
   }) {
     final result = <String, _LpgmPrefectureData>{};
 
+    // Build lookup maps for city/region code resolution
+    final cityCodeToCity = <String, EarthquakeParameterCityItem>{};
+    final cityCodeToRegion = <String, EarthquakeParameterRegionItem>{};
+    for (final region in _allRegions) {
+      for (final city in region.cities) {
+        cityCodeToCity[city.code] = city;
+        cityCodeToRegion[city.code] = region;
+      }
+    }
+
+    // Process city-level region codes
+    for (final code in tree.regions) {
+      final city = cityCodeToCity[code];
+      final region = cityCodeToRegion[code];
+      if (city == null || region == null) {
+        continue;
+      }
+      result
+          .putIfAbsent(region.code, () => _LpgmPrefectureData(region: region))
+          .addCity(city);
+    }
+
+    // Process station-level data
     for (final stationItem in tree.stations) {
       final stationCode = stationItem.code;
       final cityCode = stationCityCode[stationCode];
@@ -366,7 +391,7 @@ class _MutablePrefectureNode {
         .whereType<JmaIntensity>()
         .fold<JmaIntensity?>(
           null,
-          (prev, i) => prev == null || i.index > prev.index ? i : prev,
+          (prev, i) => prev == null || i.orderIndex > prev.orderIndex ? i : prev,
         );
 
     return PrefectureIntensityNode(
@@ -401,7 +426,7 @@ class _MutableCityNode {
         .whereType<JmaIntensity>()
         .fold<JmaIntensity?>(
           null,
-          (prev, i) => prev == null || i.index > prev.index ? i : prev,
+          (prev, i) => prev == null || i.orderIndex > prev.orderIndex ? i : prev,
         );
     final maxIntensity = stationMaxIntensity ?? cityLevelIntensity;
 
@@ -418,6 +443,10 @@ class _LpgmPrefectureData {
 
   final EarthquakeParameterRegionItem region;
   final Map<EarthquakeParameterCityItem, List<String>> cityStations = {};
+
+  void addCity(EarthquakeParameterCityItem city) {
+    cityStations.putIfAbsent(city, () => []);
+  }
 
   void addStation(EarthquakeParameterCityItem city, String stationCode) {
     cityStations.putIfAbsent(city, () => []).add(stationCode);
