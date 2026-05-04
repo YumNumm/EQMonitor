@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
-import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
+import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
@@ -237,14 +238,7 @@ class _DebugWidget extends ConsumerWidget {
               ),
             ),
           ),
-          ListTile(
-            title: const Text('観測点パラメータ'),
-            subtitle: Text(
-              'Earthquake: ${ref.watch(jmaParameterProvider).value?.earthquake.metadata.schemaVersion ?? 'null'}\n'
-              'Tsunami   : ${ref.watch(jmaParameterProvider).value?.tsunami.metadata.schemaVersion ?? 'null'}',
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
-            ),
-          ),
+          const _ParameterDebugSection(),
           const Divider(),
           const _AppCheckSection(),
         ],
@@ -336,5 +330,100 @@ class _AppCheckSection extends ConsumerWidget {
       return kDebugMode ? 'AppleDebugProvider' : 'AppleAppAttestProvider';
     }
     return 'Unknown';
+  }
+}
+
+class _ParameterDebugSection extends ConsumerStatefulWidget {
+  const _ParameterDebugSection();
+
+  @override
+  ConsumerState<_ParameterDebugSection> createState() =>
+      _ParameterDebugSectionState();
+}
+
+class _ParameterDebugSectionState
+    extends ConsumerState<_ParameterDebugSection> {
+  var _isRefreshing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final paramAsync = ref.watch(parameterSetProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          title: const Text('パラメータ'),
+          leading: const Icon(Icons.data_object),
+          trailing: _isRefreshing
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: '強制再取得',
+                  onPressed: () async {
+                    setState(() => _isRefreshing = true);
+                    final messenger = ScaffoldMessenger.of(context);
+                    try {
+                      final updated = await ref
+                          .read(parameterSetProvider.notifier)
+                          .refresh();
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            updated ? 'パラメータを更新しました' : 'パラメータは最新です',
+                          ),
+                        ),
+                      );
+                    } on Exception catch (e) {
+                      messenger.showSnackBar(
+                        SnackBar(content: Text('エラー: $e')),
+                      );
+                    } finally {
+                      if (mounted) {
+                        setState(() => _isRefreshing = false);
+                      }
+                    }
+                  },
+                ),
+        ),
+        switch (paramAsync) {
+          AsyncLoading() => const ListTile(
+            leading: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            title: Text('読み込み中...'),
+          ),
+          AsyncError(:final error) => ListTile(
+            leading: const Icon(Icons.error_outline),
+            title: const Text('読み込みエラー'),
+            subtitle: Text(
+              error.toString(),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+          AsyncData(:final value) => Column(
+            children: [
+              for (final item in value.manifest.parameters)
+                ListTile(
+                  dense: true,
+                  title: Text(item.type.pathSegment),
+                  subtitle: Text(
+                    'ver: ${item.sourceVersion}  generated: ${item.generatedAt}\n'
+                    'sha256: ${item.sha256.substring(0, 8)}…',
+                    style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+                  ),
+                  isThreeLine: true,
+                ),
+            ],
+          ),
+        },
+      ],
+    );
   }
 }
