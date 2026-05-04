@@ -28,7 +28,7 @@ _TsunamiListItem _$TsunamiListItemFromJson(Map<String, dynamic> json) =>
           telegramTypes: $checkedConvert(
             'telegram_types',
             (v) => (v as List<dynamic>)
-                .map((e) => $enumDecode(_$TelegramTypesEnumMap, e))
+                .map((e) => $enumDecode(_$TelegramTypeEnumMap, e))
                 .toList(),
           ),
           headline: $checkedConvert('headline', (v) => v as String?),
@@ -42,7 +42,7 @@ _TsunamiListItem _$TsunamiListItemFromJson(Map<String, dynamic> json) =>
           ),
           status: $checkedConvert(
             'status',
-            (v) => $enumDecodeNullable(_$StatusEnumMap, v),
+            (v) => $enumDecodeNullable(_$TelegramStatusEnumMap, v),
           ),
           maxForecastGrade: $checkedConvert(
             'max_forecast_grade',
@@ -96,16 +96,32 @@ Map<String, dynamic> _$TsunamiListItemToJson(_TsunamiListItem instance) =>
       'earthquake_magnitude': ?instance.earthquakeMagnitude,
     };
 
-const _$TelegramTypesEnumMap = {
-  TelegramTypes.vtse41: 'VTSE41',
-  TelegramTypes.vtse51: 'VTSE51',
-  TelegramTypes.vtse52: 'VTSE52',
+const _$TelegramTypeEnumMap = {
+  TelegramType.vzse40: 'VZSE40',
+  TelegramType.vxse42: 'VXSE42',
+  TelegramType.vxse43: 'VXSE43',
+  TelegramType.vxse44: 'VXSE44',
+  TelegramType.vxse45: 'VXSE45',
+  TelegramType.vxse47: 'VXSE47',
+  TelegramType.vtse41: 'VTSE41',
+  TelegramType.vtse51: 'VTSE51',
+  TelegramType.vtse52: 'VTSE52',
+  TelegramType.vxse51: 'VXSE51',
+  TelegramType.vxse52: 'VXSE52',
+  TelegramType.vxse53: 'VXSE53',
+  TelegramType.vxse56: 'VXSE56',
+  TelegramType.vxse60: 'VXSE60',
+  TelegramType.vxse61: 'VXSE61',
+  TelegramType.vxse62: 'VXSE62',
+  TelegramType.nankai: 'NANKAI',
+  TelegramType.vyse60: 'VYSE60',
+  TelegramType.shindoDb: 'SHINDO_DB',
 };
 
-const _$StatusEnumMap = {
-  Status.normal: 'NORMAL',
-  Status.training: 'TRAINING',
-  Status.test: 'TEST',
+const _$TelegramStatusEnumMap = {
+  TelegramStatus.normal: 'NORMAL',
+  TelegramStatus.training: 'TRAINING',
+  TelegramStatus.test: 'TEST',
 };
 
 const _$TsunamiWarningKindEnumMap = {

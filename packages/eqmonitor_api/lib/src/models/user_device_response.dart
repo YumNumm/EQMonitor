@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'locale.dart';
-import 'type.dart';
+import 'device_locale.dart';
+import 'device_type.dart';
 
 part 'user_device_response.freezed.dart';
 part 'user_device_response.g.dart';
@@ -14,8 +14,8 @@ part 'user_device_response.g.dart';
 abstract class UserDeviceResponse with _$UserDeviceResponse {
   const factory UserDeviceResponse({
     required String id,
-    required Type type,
-    required Locale locale,
+    required DeviceType type,
+    required DeviceLocale locale,
     @JsonKey(name: 'created_at')
     required String createdAt,
     @JsonKey(name: 'updated_at')

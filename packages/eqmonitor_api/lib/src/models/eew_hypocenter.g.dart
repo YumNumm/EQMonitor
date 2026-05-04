@@ -15,16 +15,17 @@ _EewHypocenter _$EewHypocenterFromJson(Map<String, dynamic> json) =>
           'value',
           (v) => CodeName.fromJson(v as Map<String, dynamic>),
         ),
-        coordinates: $checkedConvert(
-          'coordinates',
-          (v) => Coordinate.fromJson(v as Map<String, dynamic>),
-        ),
         magnitude: $checkedConvert('magnitude', (v) => v as num?),
         depth: $checkedConvert('depth', (v) => v as num?),
         detailed: $checkedConvert(
           'detailed',
           (v) =>
               v == null ? null : CodeName.fromJson(v as Map<String, dynamic>),
+        ),
+        coordinates: $checkedConvert(
+          'coordinates',
+          (v) =>
+              v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;
@@ -33,8 +34,8 @@ _EewHypocenter _$EewHypocenterFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$EewHypocenterToJson(_EewHypocenter instance) =>
     <String, dynamic>{
       'value': instance.value,
-      'coordinates': instance.coordinates,
       'magnitude': instance.magnitude,
       'depth': instance.depth,
       'detailed': ?instance.detailed,
+      'coordinates': ?instance.coordinates,
     };

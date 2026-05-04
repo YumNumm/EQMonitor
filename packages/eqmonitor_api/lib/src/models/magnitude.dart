@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'type3.dart';
+import 'magnitude_type.dart';
 
 part 'magnitude.freezed.dart';
 part 'magnitude.g.dart';
@@ -13,7 +13,7 @@ part 'magnitude.g.dart';
 @Freezed()
 abstract class Magnitude with _$Magnitude {
   const factory Magnitude({
-    required Type3 type,
+    required MagnitudeType type,
 
     /// typeがNORMALのときのみ出現する
     @JsonKey(includeIfNull: false)

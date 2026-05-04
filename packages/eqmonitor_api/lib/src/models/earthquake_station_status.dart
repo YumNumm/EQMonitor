@@ -5,22 +5,27 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum TelegramTypes {
-  @JsonValue('VTSE41')
-  vtse41('VTSE41'),
-  @JsonValue('VTSE51')
-  vtse51('VTSE51'),
-  @JsonValue('VTSE52')
-  vtse52('VTSE52');
+enum EarthquakeStationStatus {
+  @JsonValue('operating')
+  operating('operating'),
+  @JsonValue('changed')
+  changed('changed'),
+  /// The name has been replaced because it contains a keyword. Original name: `new`.
+  @JsonValue('new')
+  valueNew('new'),
+  @JsonValue('abolished')
+  abolished('abolished'),
+  @JsonValue('unknown')
+  unknown('unknown');
 
-  const TelegramTypes(this.json);
+  const EarthquakeStationStatus(this.json);
 
   final String? json;
   String toJson() {
     final value = json;
     if (value == null) {
       throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+          'This usually happens for \\$unknown or @JsonValue(null) entries.');
     }
     return value as String;
   }
