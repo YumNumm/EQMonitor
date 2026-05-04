@@ -1,7 +1,7 @@
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 
 part 'kmoni_observation_point.freezed.dart';
 

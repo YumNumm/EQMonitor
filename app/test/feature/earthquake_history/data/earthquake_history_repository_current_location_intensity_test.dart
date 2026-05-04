@@ -2,43 +2,53 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
 import 'package:test/test.dart';
+
+const _testMetadata = ParameterMetadata(
+  type: ParameterType.earthquakeStations,
+  schemaVersion: '1.0',
+  sourceVersion: '1.0',
+  sourceUpdatedAt: null,
+  generatedAt: '2024-01-01T00:00:00Z',
+  sourceUrls: [],
+  sha256: 'test_hash',
+);
 
 EarthquakeParameter _param({
   required List<
     ({
       String code,
       String name,
-      List<
-        ({
-          String code,
-          String name,
-          List<({String code, String name})> stations,
-        })
-      >
-      cities,
+      List<({String code, String name, List<({String code, String name})> stations})> cities,
     })
   >
   regions,
 }) {
   return EarthquakeParameter(
-    regions: regions.map(
-      (r) => EarthquakeParameterRegionItem(
-        code: r.code,
-        name: r.name,
-        cities: r.cities.map(
-          (c) => EarthquakeParameterCityItem(
-            code: c.code,
-            name: c.name,
-            stations: c.stations.map(
-              (s) => EarthquakeParameterStationItem(code: s.code, name: s.name),
-            ),
+    metadata: _testMetadata,
+    prefectures: [
+      EarthquakeParameterPrefectureItem(
+        code: 'test_pref',
+        name: const LocalizedName(ja: 'テスト都道府県'),
+        regions: regions.map(
+          (r) => EarthquakeParameterRegionItem(
+            code: r.code,
+            name: LocalizedName(ja: r.name),
+            kana: null,
+            cities: r.cities.map(
+              (c) => EarthquakeParameterCityItem(
+                code: c.code,
+                name: LocalizedName(ja: c.name),
+                kana: null,
+                stations: const [],
+              ),
+            ).toList(),
           ),
-        ),
+        ).toList(),
       ),
-    ),
+    ],
   );
 }
 

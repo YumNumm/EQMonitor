@@ -96,7 +96,7 @@ final class KyoshinMonitorInternalObservationPointsConvertedProvider
 }
 
 String _$kyoshinMonitorInternalObservationPointsConvertedHash() =>
-    r'51427c40b3db363acc7c314492e24e72b2081f6a';
+    r'e38cfbc688e60eec4cc745e5f538e4f0ad5e26bd';
 
 @ProviderFor(kyoshinObservationPoints)
 final kyoshinObservationPointsProvider = KyoshinObservationPointsProvider._();
@@ -104,13 +104,13 @@ final kyoshinObservationPointsProvider = KyoshinObservationPointsProvider._();
 final class KyoshinObservationPointsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<KyoshinObservationPoints>,
-          KyoshinObservationPoints,
-          FutureOr<KyoshinObservationPoints>
+          AsyncValue<KyoshinObservationPointsParameter>,
+          KyoshinObservationPointsParameter,
+          FutureOr<KyoshinObservationPointsParameter>
         >
     with
-        $FutureModifier<KyoshinObservationPoints>,
-        $FutureProvider<KyoshinObservationPoints> {
+        $FutureModifier<KyoshinObservationPointsParameter>,
+        $FutureProvider<KyoshinObservationPointsParameter> {
   KyoshinObservationPointsProvider._()
     : super(
         from: null,
@@ -127,18 +127,18 @@ final class KyoshinObservationPointsProvider
 
   @$internal
   @override
-  $FutureProviderElement<KyoshinObservationPoints> $createElement(
+  $FutureProviderElement<KyoshinObservationPointsParameter> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<KyoshinObservationPoints> create(Ref ref) {
+  FutureOr<KyoshinObservationPointsParameter> create(Ref ref) {
     return kyoshinObservationPoints(ref);
   }
 }
 
 String _$kyoshinObservationPointsHash() =>
-    r'ccb29276efba88c4c037ca87ee1293582f7168be';
+    r'624fb90998c1f33074b969636060bfa9fdb5f443';
 
 /// protobuf の観測点を GeoJSON 生成用の純 Dart 型へ変換（Worker Isolate 境界用）。
 
@@ -186,7 +186,7 @@ final class KyoshinNamedObservationPointsProvider
 }
 
 String _$kyoshinNamedObservationPointsHash() =>
-    r'ab93210f4f6b510040c0e145deb1b3dd476e5ef4';
+    r'47c7b2d53baa37f1d3e3f7a1057f88124f993258';
 
 @ProviderFor(kyoshinMonitorInternalObservationPoints)
 final kyoshinMonitorInternalObservationPointsProvider =
@@ -195,13 +195,13 @@ final kyoshinMonitorInternalObservationPointsProvider =
 final class KyoshinMonitorInternalObservationPointsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<KyoshinObservationPoints>,
-          KyoshinObservationPoints,
-          FutureOr<KyoshinObservationPoints>
+          AsyncValue<KyoshinObservationPointsParameter>,
+          KyoshinObservationPointsParameter,
+          FutureOr<KyoshinObservationPointsParameter>
         >
     with
-        $FutureModifier<KyoshinObservationPoints>,
-        $FutureProvider<KyoshinObservationPoints> {
+        $FutureModifier<KyoshinObservationPointsParameter>,
+        $FutureProvider<KyoshinObservationPointsParameter> {
   KyoshinMonitorInternalObservationPointsProvider._()
     : super(
         from: null,
@@ -219,15 +219,15 @@ final class KyoshinMonitorInternalObservationPointsProvider
 
   @$internal
   @override
-  $FutureProviderElement<KyoshinObservationPoints> $createElement(
+  $FutureProviderElement<KyoshinObservationPointsParameter> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<KyoshinObservationPoints> create(Ref ref) {
+  FutureOr<KyoshinObservationPointsParameter> create(Ref ref) {
     return kyoshinMonitorInternalObservationPoints(ref);
   }
 }
 
 String _$kyoshinMonitorInternalObservationPointsHash() =>
-    r'e6165440e4dbbff60debe63240022a39dc8691c3';
+    r'7f32a6ed3b8c0efa7279f3695fd42a153f7d7fe6';

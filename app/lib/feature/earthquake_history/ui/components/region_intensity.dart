@@ -178,7 +178,7 @@ class _PrefectureTile extends HookWidget {
             intensityIconSize: 28,
           ),
           title: Text(
-            prefecture.region.region.name,
+            prefecture.region.region.name.ja,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: trailing,
@@ -245,7 +245,7 @@ class _CityTile extends HookWidget {
             lpgmIconSize: 22,
           ),
           title: Text(
-            city.city.name,
+            city.city.name.ja,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: trailing,
@@ -293,7 +293,7 @@ class _StationTile extends StatelessWidget {
         lpgmIconSize: 16,
       ),
       title: Text(
-        station.station.name,
+        station.station.name.ja,
         style: TextStyle(
           fontSize: 13,
           color: colorScheme.onSurfaceVariant,

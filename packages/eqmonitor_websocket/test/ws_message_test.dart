@@ -1,5 +1,6 @@
 import 'package:eqmonitor_websocket/src/realtime_event_envelope.dart';
 import 'package:eqmonitor_websocket/src/ws_message.dart';
+import 'package:eqmonitor_websocket/src/ws_realtime_operation.dart';
 import 'package:eqmonitor_websocket/src/ws_snapshot_data.dart';
 import 'package:test/test.dart';
 
@@ -47,7 +48,7 @@ void main() {
         'type': 'realtime',
         'data': {
           'type': 'earthquake',
-          'operation': 'DELETE',
+          'operation': 'delete',
           'event_id': '20250115120000',
           'record': null,
         },
@@ -59,7 +60,7 @@ void main() {
       final realtime = result as WsRealtimeMessage;
       expect(realtime.data, isA<WsEarthquakeRealtimeEvent>());
       final eq = realtime.data as WsEarthquakeRealtimeEvent;
-      expect(eq.operation, equals('DELETE'));
+      expect(eq.operation, equals(WsRealtimeOperation.delete));
       expect(eq.eventId, equals('20250115120000'));
       expect(eq.record, isNull);
     });
@@ -101,7 +102,14 @@ void main() {
     test('realtime/ESTIMATED_INTENSITY メッセージを正しくパースできること', () {
       final json = <String, dynamic>{
         'type': 'realtime',
-        'data': {'type': 'ESTIMATED_INTENSITY'},
+        'data': {
+          'type': 'ESTIMATED_INTENSITY',
+          'estimatedIntensity': {
+            'eventId': 'test-event',
+            'estimatedIntensityKey': 'test-key',
+            'createdAt': '2025-01-15T12:00:00.000Z',
+          },
+        },
       };
 
       final result = WsMessage.fromJson(json);
@@ -116,7 +124,7 @@ void main() {
     test('earthquake upsert を正しくパースできること', () {
       final json = <String, dynamic>{
         'type': 'earthquake',
-        'operation': 'INSERT',
+        'operation': 'upsert',
         'event_id': '20250115120000',
         'record': null,
       };
@@ -125,7 +133,7 @@ void main() {
 
       expect(result, isA<WsEarthquakeRealtimeEvent>());
       final eq = result as WsEarthquakeRealtimeEvent;
-      expect(eq.operation, equals('INSERT'));
+      expect(eq.operation, equals(WsRealtimeOperation.upsert));
       expect(eq.eventId, equals('20250115120000'));
       expect(eq.record, isNull);
     });
@@ -133,7 +141,7 @@ void main() {
     test('earthquake delete を正しくパースできること', () {
       final json = <String, dynamic>{
         'type': 'earthquake',
-        'operation': 'DELETE',
+        'operation': 'delete',
         'event_id': '20250115120000',
       };
 
@@ -141,13 +149,13 @@ void main() {
 
       expect(result, isA<WsEarthquakeRealtimeEvent>());
       final eq = result as WsEarthquakeRealtimeEvent;
-      expect(eq.operation, equals('DELETE'));
+      expect(eq.operation, equals(WsRealtimeOperation.delete));
     });
 
     test('tsunami を正しくパースできること', () {
       final json = <String, dynamic>{
         'type': 'tsunami',
-        'operation': 'INSERT',
+        'operation': 'upsert',
         'event_id': 'tsunami-001',
         'record': {'key': 'value'},
       };
@@ -156,7 +164,7 @@ void main() {
 
       expect(result, isA<WsTsunamiRealtimeEvent>());
       final tsunami = result as WsTsunamiRealtimeEvent;
-      expect(tsunami.operation, equals('INSERT'));
+      expect(tsunami.operation, equals(WsRealtimeOperation.upsert));
       expect(tsunami.eventId, equals('tsunami-001'));
       expect(tsunami.record, equals({'key': 'value'}));
     });
@@ -185,7 +193,14 @@ void main() {
     });
 
     test('ESTIMATED_INTENSITY を正しくパースできること', () {
-      final json = <String, dynamic>{'type': 'ESTIMATED_INTENSITY'};
+      final json = <String, dynamic>{
+        'type': 'ESTIMATED_INTENSITY',
+        'estimatedIntensity': {
+          'eventId': 'test-event',
+          'estimatedIntensityKey': 'test-key',
+          'createdAt': '2025-01-15T12:00:00.000Z',
+        },
+      };
 
       final result = RealtimeEventEnvelope.fromJson(json);
 

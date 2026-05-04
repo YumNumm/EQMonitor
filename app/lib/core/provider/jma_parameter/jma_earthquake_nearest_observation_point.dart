@@ -15,9 +15,10 @@ jmaEarthquakeNearestObservationPoint(Ref ref, LatLng latLng) async {
   }
 
   final earthquake = parameter.earthquake;
-  final points = earthquake.regions.expand(
-    (region) => region.cities.expand((city) => city.stations),
-  );
+  final points = earthquake.prefectures
+      .expand((prefecture) => prefecture.regions)
+      .expand((region) => region.cities)
+      .expand((city) => city.stations);
 
   return minBy(
     points.map((point) => (point, point.distanceTo(latLng))),
@@ -28,7 +29,7 @@ jmaEarthquakeNearestObservationPoint(Ref ref, LatLng latLng) async {
 extension on EarthquakeParameterStationItem {
   double distanceTo(LatLng latLng) {
     final referencePoint = Geographic(lon: latLng.lon, lat: latLng.lat);
-    final point = Geographic(lon: longitude, lat: latitude);
+    final point = Geographic(lon: location.lon, lat: location.lat);
     return referencePoint.distanceTo2D(point);
   }
 }

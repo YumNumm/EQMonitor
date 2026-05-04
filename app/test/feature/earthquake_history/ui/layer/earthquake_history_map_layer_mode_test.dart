@@ -10,7 +10,8 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.d
 import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -297,32 +298,53 @@ class EarthquakeHistoryMapLayerModeTestData {
 
   IntensityRegion regionNode({required JmaIntensity? maxIntensity}) {
     return IntensityRegion(
-      region: EarthquakeParameterRegionItem(code: '001', name: 'テスト地域'),
+      region: const EarthquakeParameterRegionItem(
+        code: '001',
+        name: LocalizedName(ja: 'テスト地域'),
+        kana: null,
+        cities: [],
+      ),
       maxIntensity: maxIntensity,
     );
   }
 
   EarthquakeParameterCityItem cityNode() {
-    return EarthquakeParameterCityItem(code: '001001', name: 'テスト市区町村');
+    return const EarthquakeParameterCityItem(
+      code: '001001',
+      name: LocalizedName(ja: 'テスト市区町村'),
+      kana: null,
+      stations: [],
+    );
   }
 
   EarthquakeParameterCityItem lpgmCityNode() {
-    return EarthquakeParameterCityItem(code: '001001', name: 'テスト市区町村');
+    return const EarthquakeParameterCityItem(
+      code: '001001',
+      name: LocalizedName(ja: 'テスト市区町村'),
+      kana: null,
+      stations: [],
+    );
   }
 
   StationIntensityNode stationNode({
     required JmaIntensity? maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
   }) {
-    final station = EarthquakeParameterStationItem(
+    const station = EarthquakeParameterStationItem(
       code: '001001001',
-      name: 'テスト観測点',
+      noCode: '001001001',
+      name: LocalizedName(ja: 'テスト観測点'),
+      kana: null,
+      status: EarthquakeStationStatus.operating,
+      sourceStatus: 'test',
+      owner: 'test',
+      location: LatLng(0, 0),
     );
     return StationIntensityNode(
       station: station,
       intensity: IntensityStation(
         code: station.code,
-        name: station.name,
+        name: station.name.ja,
         sva: null,
         prePeriods: null,
         maxIntensity: maxIntensity,

@@ -50,4 +50,4 @@ final class JmaParameterProvider
   }
 }
 
-String _$jmaParameterHash() => r'bdb0eeeee4b9b0cbef6fb49d239e3bee2ece13f8';
+String _$jmaParameterHash() => r'7971760b2c25010dbc83e68aef3286beb7c88d96';

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_utility.dart';
@@ -17,8 +18,26 @@ part 'jma_map_isolate.g.dart';
 // ---------------------------------------------------------------------------
 
 @pragma('vm:entry-point')
-void jmaMapWorkerEntryPoint(SendPort mainSendPort) {
+void jmaMapWorkerEntryPoint(JmaMapWorkerArgument argument) {
+  final mainSendPort = argument.mainSendPort;
   final receivePort = ReceivePort();
+  late final Map<JmaMapType, JmaMap_JmaMapData> jmaMap;
+  try {
+    jmaMap = {
+      for (final entry in argument.mapDataBytesByType.entries)
+        entry.key: JmaMap_JmaMapData.fromBuffer(entry.value),
+    };
+  } on Object catch (e, st) {
+    mainSendPort.send(
+      JmaMapWorkerStartupError(
+        errorMessage: e.toString(),
+        errorStack: st.toString(),
+      ),
+    );
+    receivePort.close();
+    return;
+  }
+
   mainSendPort.send(receivePort.sendPort);
 
   receivePort.listen((message) {
@@ -27,14 +46,38 @@ void jmaMapWorkerEntryPoint(SendPort mainSendPort) {
       return;
     }
     if (message is JmaMapCalculateMessage) {
-      _runCalculate(mainSendPort, message);
+      _runCalculate(mainSendPort, jmaMap, message);
     }
   });
 }
 
-void _runCalculate(SendPort mainSendPort, JmaMapCalculateMessage message) {
+final class JmaMapWorkerArgument {
+  const JmaMapWorkerArgument({
+    required this.mainSendPort,
+    required this.mapDataBytesByType,
+  });
+
+  final SendPort mainSendPort;
+  final Map<JmaMapType, Uint8List> mapDataBytesByType;
+}
+
+final class JmaMapWorkerStartupError {
+  const JmaMapWorkerStartupError({
+    required this.errorMessage,
+    required this.errorStack,
+  });
+
+  final String errorMessage;
+  final String errorStack;
+}
+
+void _runCalculate(
+  SendPort mainSendPort,
+  Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
+  JmaMapCalculateMessage message,
+) {
   try {
-    final mapData = JmaMap_JmaMapData.fromBuffer(message.mapDataBytes);
+    final mapData = jmaMap[message.type]!;
     final (:item, :distanceKm) = JmaMapUtility().findNearestItem(
       JmaMap_LatLng(lat: message.lat, lng: message.lng),
       mapData,
@@ -96,20 +139,17 @@ final class JmaMapIsolate {
     required SendPort workerSendPort,
     required StreamSubscription<Object?> subscription,
     required Map<int, Completer<MapDataItem?>> pending,
-    required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
-  })  : _isolate = isolate,
-        _mainReceive = mainReceive,
-        _workerSendPort = workerSendPort,
-        _subscription = subscription,
-        _pending = pending,
-        _jmaMap = jmaMap;
+  }) : _isolate = isolate,
+       _mainReceive = mainReceive,
+       _workerSendPort = workerSendPort,
+       _subscription = subscription,
+       _pending = pending;
 
   final Isolate _isolate;
   final ReceivePort _mainReceive;
   final SendPort _workerSendPort;
   final StreamSubscription<Object?> _subscription;
   final Map<int, Completer<MapDataItem?>> _pending;
-  final Map<JmaMapType, JmaMap_JmaMapData> _jmaMap;
 
   var _nextId = 0;
 
@@ -126,6 +166,15 @@ final class JmaMapIsolate {
       if (message is SendPort) {
         if (!workerPortCompleter.isCompleted) {
           workerPortCompleter.complete(message);
+        }
+        return;
+      }
+      if (message is JmaMapWorkerStartupError) {
+        if (!workerPortCompleter.isCompleted) {
+          workerPortCompleter.completeError(
+            Exception(message.errorMessage),
+            StackTrace.fromString(message.errorStack),
+          );
         }
         return;
       }
@@ -150,7 +199,13 @@ final class JmaMapIsolate {
     try {
       isolate = await Isolate.spawn(
         jmaMapWorkerEntryPoint,
-        mainReceive.sendPort,
+        JmaMapWorkerArgument(
+          mainSendPort: mainReceive.sendPort,
+          mapDataBytesByType: {
+            for (final entry in jmaMap.entries)
+              entry.key: entry.value.writeToBuffer(),
+          },
+        ),
         debugName: 'jma_map_analyzer',
       );
       workerSendPort = await workerPortCompleter.future;
@@ -166,7 +221,6 @@ final class JmaMapIsolate {
       workerSendPort: workerSendPort,
       subscription: subscription,
       pending: pending,
-      jmaMap: jmaMap,
     );
   }
 
@@ -175,16 +229,13 @@ final class JmaMapIsolate {
     required double longitude,
     required JmaMapType type,
   }) {
-    final mapData = _jmaMap[type]!;
-    final bytes = mapData.writeToBuffer();
-
     final id = _nextId++;
     final completer = Completer<MapDataItem?>();
     _pending[id] = completer;
     _workerSendPort.send(
       JmaMapCalculateMessage(
         id: id,
-        mapDataBytes: bytes,
+        type: type,
         lat: latitude,
         lng: longitude,
       ),

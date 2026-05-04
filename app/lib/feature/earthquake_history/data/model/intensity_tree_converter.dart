@@ -9,67 +9,183 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'intensity_tree_converter.g.dart';
 
+@Riverpod(keepAlive: true)
+Future<IntensityTreeConverter> intensityTreeConverter(Ref ref) async {
+  final jmaParam = await ref.watch(jmaParameterProvider.future);
+  return IntensityTreeConverter(parameter: jmaParam.earthquake);
+}
+
 class IntensityTreeConverter {
-  const IntensityTreeConverter({
-    required this.parameter,
-  });
+  const IntensityTreeConverter({required this.parameter});
 
   final EarthquakeParameter parameter;
+
+  Iterable<EarthquakeParameterRegionItem> get _allRegions =>
+      parameter.prefectures.expand((p) => p.regions);
+
+  Map<String, EarthquakeParameterStationItem> _stationParamMap() => {
+    for (final region in _allRegions)
+      for (final city in region.cities)
+        for (final station in city.stations) station.code: station,
+  };
+
+  Map<String, String> _stationCityCodeMap() => {
+    for (final region in _allRegions)
+      for (final city in region.cities)
+        for (final station in city.stations) station.code: city.code,
+  };
+
+  /// 市区町村コードの先頭 N 文字でキー付けしたコード → city マップ。
+  Map<String, EarthquakeParameterCityItem> _cityIdentificationPrefixMap() {
+    const prefixLength = 5;
+    final result = <String, EarthquakeParameterCityItem>{};
+    for (final region in _allRegions) {
+      for (final city in region.cities) {
+        final key = city.code.length >= prefixLength
+            ? city.code.substring(0, prefixLength)
+            : city.code;
+        result.putIfAbsent(key, () => city);
+      }
+    }
+    return result;
+  }
 
   Map<JmaIntensity, List<PrefectureIntensityNode>> convertToIntensityTree({
     required api.Intensity intensity,
   }) {
-    final trees = intensity.intensityTree;
-    if (trees.isEmpty) {
-      return {};
-    }
-
-    final cityPrefixToCityCode = _cityIdentificationPrefixMap();
     final stationParam = _stationParamMap();
     final stationCityCode = _stationCityCodeMap();
 
-    final result = <JmaIntensity, List<PrefectureIntensityNode>>{};
+    // station code → intensities
+    final stationIntensityMap = <String, IntensityStation>{};
+    for (final entry in intensity.intensityTree) {
+      final ji = entry.intensity.toJmaIntensity;
+      for (final stationCode in entry.stations ?? <String>[]) {
+        stationIntensityMap[stationCode] = IntensityStation(
+          code: stationCode,
+          name: stationCode,
+          sva: null,
+          prePeriods: null,
+          maxIntensity: ji,
+          maxLpgmIntensity: null,
+        );
+      }
+    }
 
-    for (final tree in trees) {
-      final jma = tree.intensity.toJmaIntensity;
-      final prefecturesByCode = _buildJmaPrefectureCityStations(
-        tree: tree,
-        cityPrefixToCityCode: cityPrefixToCityCode,
-        stationCityCode: stationCityCode,
-      );
-      if (prefecturesByCode.isEmpty) {
+    // コード参照マップ（entry.regions 処理用）
+    final cityCodeToCity = <String, EarthquakeParameterCityItem>{};
+    final cityCodeToRegion = <String, EarthquakeParameterRegionItem>{};
+    final regionCodeToRegion = <String, EarthquakeParameterRegionItem>{};
+    for (final region in _allRegions) {
+      regionCodeToRegion[region.code] = region;
+      for (final city in region.cities) {
+        cityCodeToCity[city.code] = city;
+        cityCodeToRegion[city.code] = region;
+      }
+    }
+
+    // entry.regions に含まれるコードを city-level または region-only として分類
+    final cityLevelIntensityMap = <String, JmaIntensity>{};
+    final regionOnlyIntensityMap = <String, JmaIntensity>{};
+    for (final entry in intensity.intensityTree) {
+      final ji = entry.intensity.toJmaIntensity;
+      for (final code in entry.regions) {
+        if (cityCodeToCity.containsKey(code)) {
+          cityLevelIntensityMap[code] = ji;
+        } else if (regionCodeToRegion.containsKey(code)) {
+          regionOnlyIntensityMap[code] = ji;
+        }
+      }
+    }
+
+    // Build tree: JmaIntensity → [PrefectureIntensityNode]
+    final resultMap = <JmaIntensity, Map<String, _MutablePrefectureNode>>{};
+
+    // station-level data
+    for (final stationCode in stationIntensityMap.keys) {
+      final stationItem = stationParam[stationCode];
+      if (stationItem == null) {
+        continue;
+      }
+      final cityCode = stationCityCode[stationCode];
+      if (cityCode == null) {
         continue;
       }
 
-      final nodes = _toPrefectureIntensityNodes(
-        prefecturesByCode: prefecturesByCode,
-        treeIntensity: tree.intensity,
-        stationParam: stationParam,
-        levelJma: jma,
+      final intensityEntry = stationIntensityMap[stationCode]!;
+      final ji = intensityEntry.maxIntensity!;
+
+      EarthquakeParameterRegionItem? foundRegion;
+      EarthquakeParameterCityItem? foundCity;
+      outer:
+      for (final region in _allRegions) {
+        for (final city in region.cities) {
+          if (city.code == cityCode) {
+            foundRegion = region;
+            foundCity = city;
+            break outer;
+          }
+        }
+      }
+      if (foundRegion == null || foundCity == null) {
+        continue;
+      }
+
+      final prefectureNodes = resultMap.putIfAbsent(ji, () => {});
+      final prefNode = prefectureNodes.putIfAbsent(
+        foundRegion.code,
+        () => _MutablePrefectureNode(region: foundRegion!),
       );
-      final existing = result[jma];
-      result[jma] = existing == null
-          ? nodes
-          : _mergePrefectureIntensityNodeLists(existing, nodes);
+      prefNode.addStation(foundCity, stationItem, intensityEntry);
     }
 
+    // city-level data（entry.regions に含まれる市区町村コード）
+    for (final cityEntry in cityLevelIntensityMap.entries) {
+      final city = cityCodeToCity[cityEntry.key]!;
+      final region = cityCodeToRegion[cityEntry.key]!;
+      final ji = cityEntry.value;
+      final prefectureNodes = resultMap.putIfAbsent(ji, () => {});
+      final prefNode = prefectureNodes.putIfAbsent(
+        region.code,
+        () => _MutablePrefectureNode(region: region),
+      );
+      prefNode.addCityWithIntensity(city, ji);
+    }
+
+    // region-only data（entry.regions に含まれる地域コード）
+    for (final regionEntry in regionOnlyIntensityMap.entries) {
+      final region = regionCodeToRegion[regionEntry.key]!;
+      final ji = regionEntry.value;
+      final prefectureNodes = resultMap.putIfAbsent(ji, () => {});
+      prefectureNodes.putIfAbsent(
+        region.code,
+        () => _MutablePrefectureNode(region: region),
+      );
+    }
+
+    final built = <JmaIntensity, List<PrefectureIntensityNode>>{
+      for (final entry in resultMap.entries)
+        entry.key: [
+          for (final prefNode in entry.value.values)
+            prefNode.build(entry.key),
+        ],
+    };
     return Map.fromEntries(
-      result.entries.toList()
+      built.entries.toList()
         ..sort((a, b) => b.key.orderIndex.compareTo(a.key.orderIndex)),
     );
   }
 
-  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> convertToLpgmIntensityTree({
-    required api.Intensity intensity,
-  }) {
+  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
+  convertToLpgmIntensityTree({required api.Intensity intensity}) {
     final trees = intensity.lpgmIntensityTree;
     if (trees == null || trees.isEmpty) {
       return {};
     }
 
-    final cityPrefixToCityCode = _cityIdentificationPrefixMap();
     final stationParam = _stationParamMap();
     final stationCityCode = _stationCityCodeMap();
+    final cityPrefixToCityCode = _cityIdentificationPrefixMap();
 
     final result = <JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>{};
 
@@ -86,7 +202,6 @@ class IntensityTreeConverter {
 
       final nodes = _toPrefectureLpgmIntensityNodes(
         prefecturesByCode: prefecturesByCode,
-        tree: tree,
         stationParam: stationParam,
         levelLpgm: lpgm,
       );
@@ -102,471 +217,238 @@ class IntensityTreeConverter {
     );
   }
 
-  /// 市区町村コードの先頭5桁 → 市区町村コード（パラメータ由来、ソート済みで後勝ち）
-  Map<String, String> _cityIdentificationPrefixMap() {
-    final cityCodes = parameter.regions
-        .expand((r) => r.cities)
-        .map((c) => c.code)
-        .toList()
-      ..sort();
-    return Map.fromEntries(
-      cityCodes.map((cityCode) {
-        final prefix = cityCode.length >= 5
-            ? cityCode.substring(0, 5)
-            : cityCode;
-        return MapEntry(prefix, cityCode);
-      }),
-    );
-  }
-
-  Map<String, EarthquakeParameterStationItem> _stationParamMap() {
-    final map = <String, EarthquakeParameterStationItem>{};
-    for (final region in parameter.regions) {
-      for (final city in region.cities) {
-        for (final station in city.stations) {
-          map[station.code] = station;
-        }
-      }
-    }
-    return map;
-  }
-
-  Map<String, String> _stationCityCodeMap() {
-    final map = <String, String>{};
-    for (final region in parameter.regions) {
-      for (final city in region.cities) {
-        for (final station in city.stations) {
-          map[station.code] = city.code;
-        }
-      }
-    }
-    return map;
-  }
-
-  Map<String, EarthquakeParameterCityItem> _cityParamMap() {
-    final map = <String, EarthquakeParameterCityItem>{};
-    for (final region in parameter.regions) {
-      for (final city in region.cities) {
-        map[city.code] = city;
-      }
-    }
-    return map;
-  }
-
-  Map<String, EarthquakeParameterRegionItem> _regionParamMap() {
-    return {for (final r in parameter.regions) r.code: r};
-  }
-
-  String _prefectureCodeForCity(String cityCode) {
-    for (final region in parameter.regions) {
-      for (final city in region.cities) {
-        if (city.code == cityCode) {
-          return region.code;
-        }
-      }
-    }
-    return cityCode.length >= 2 ? cityCode.substring(0, 2) : cityCode;
-  }
-
-  /// 震度ツリー1要素分: 都道府県コード → 市区町村コード → 観測点コード集合
-  Map<String, Map<String, Set<String>>> _buildJmaPrefectureCityStations({
-    required api.IntensityTree tree,
-    required Map<String, String> cityPrefixToCityCode,
-    required Map<String, String> stationCityCode,
-  }) {
-    final prefecturesByCode = <String, Map<String, Set<String>>>{};
-    final cityParam = _cityParamMap();
-    final paramRegionMap = _regionParamMap();
-
-    for (final regionId in tree.regions) {
-      if (paramRegionMap.containsKey(regionId)) {
-        _ensurePrefecture(prefecturesByCode, regionId);
-      }
-    }
-
-    for (final regionId in tree.regions) {
-      if (regionId.length >= 5) {
-        final cityItem = cityParam[regionId];
-        if (cityItem != null) {
-          _ensureCity(prefecturesByCode, regionId);
-        }
-      }
-    }
-
-    for (final stationCode in tree.stations ?? const <String>[]) {
-      final prefix = stationCode.length >= 5
-          ? stationCode.substring(0, 5)
-          : stationCode;
-      final cityCode =
-          cityPrefixToCityCode[prefix] ?? stationCityCode[stationCode];
-      if (cityCode == null) {
-        continue;
-      }
-      _ensureCity(prefecturesByCode, cityCode).add(stationCode);
-    }
-
-    return prefecturesByCode;
-  }
-
-  Map<String, Map<String, Set<String>>> _buildLpgmPrefectureCityStations({
+  Map<String, _LpgmPrefectureData> _buildLpgmPrefectureCityStations({
     required api.LpgmIntensityTree tree,
-    required Map<String, String> cityPrefixToCityCode,
+    required Map<String, EarthquakeParameterCityItem> cityPrefixToCityCode,
     required Map<String, String> stationCityCode,
   }) {
-    final prefecturesByCode = <String, Map<String, Set<String>>>{};
-    final cityParam = _cityParamMap();
-    final paramRegionMap = _regionParamMap();
+    final result = <String, _LpgmPrefectureData>{};
 
-    for (final regionId in tree.regions) {
-      if (paramRegionMap.containsKey(regionId)) {
-        _ensurePrefecture(prefecturesByCode, regionId);
+    // Build lookup maps for city/region code resolution
+    final cityCodeToCity = <String, EarthquakeParameterCityItem>{};
+    final cityCodeToRegion = <String, EarthquakeParameterRegionItem>{};
+    for (final region in _allRegions) {
+      for (final city in region.cities) {
+        cityCodeToCity[city.code] = city;
+        cityCodeToRegion[city.code] = region;
       }
     }
 
-    for (final regionId in tree.regions) {
-      if (regionId.length >= 5) {
-        final cityItem = cityParam[regionId];
-        if (cityItem != null) {
-          _ensureCity(prefecturesByCode, regionId);
-        }
+    // Process city-level region codes
+    for (final code in tree.regions) {
+      final city = cityCodeToCity[code];
+      final region = cityCodeToRegion[code];
+      if (city == null || region == null) {
+        continue;
       }
+      result
+          .putIfAbsent(region.code, () => _LpgmPrefectureData(region: region))
+          .addCity(city);
     }
 
-    for (final station in tree.stations) {
-      final prefix = station.code.length >= 5
-          ? station.code.substring(0, 5)
-          : station.code;
-      final cityCode =
-          cityPrefixToCityCode[prefix] ?? stationCityCode[station.code];
+    // Process station-level data
+    for (final stationItem in tree.stations) {
+      final stationCode = stationItem.code;
+      final cityCode = stationCityCode[stationCode];
       if (cityCode == null) {
         continue;
       }
-      _ensureCity(prefecturesByCode, cityCode).add(station.code);
-    }
 
-    return prefecturesByCode;
-  }
-
-  Map<String, Set<String>> _ensurePrefecture(
-    Map<String, Map<String, Set<String>>> prefecturesByCode,
-    String prefectureCode,
-  ) {
-    final current = prefecturesByCode[prefectureCode];
-    if (current != null) {
-      return current;
-    }
-    final citiesByCode = <String, Set<String>>{};
-    prefecturesByCode[prefectureCode] = citiesByCode;
-    return citiesByCode;
-  }
-
-  Set<String> _ensureCity(
-    Map<String, Map<String, Set<String>>> prefecturesByCode,
-    String cityCode,
-  ) {
-    final prefCode = _prefectureCodeForCity(cityCode);
-    final citiesByCode = _ensurePrefecture(prefecturesByCode, prefCode);
-    final current = citiesByCode[cityCode];
-    if (current != null) {
-      return current;
-    }
-    final stationCodes = <String>{};
-    citiesByCode[cityCode] = stationCodes;
-    return stationCodes;
-  }
-
-  List<PrefectureIntensityNode> _toPrefectureIntensityNodes({
-    required Map<String, Map<String, Set<String>>> prefecturesByCode,
-    required api.JmaIntensity treeIntensity,
-    required Map<String, EarthquakeParameterStationItem> stationParam,
-    required JmaIntensity levelJma,
-  }) {
-    final paramRegionMap = _regionParamMap();
-    final cityParam = _cityParamMap();
-    final regionNodes = <PrefectureIntensityNode>[];
-
-    for (final prefEntry in prefecturesByCode.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key))) {
-      final prefCode = prefEntry.key;
-      final citiesByCode = prefEntry.value;
-      final regionItem = paramRegionMap[prefCode];
-      if (regionItem == null) {
+      EarthquakeParameterRegionItem? foundRegion;
+      EarthquakeParameterCityItem? foundCity;
+      outer:
+      for (final region in _allRegions) {
+        for (final city in region.cities) {
+          if (city.code == cityCode) {
+            foundRegion = region;
+            foundCity = city;
+            break outer;
+          }
+        }
+      }
+      if (foundRegion == null || foundCity == null) {
         continue;
       }
 
-      final cities = <CityIntensityNode>[];
-      for (final cityEntry in citiesByCode.entries.toList()
-        ..sort((a, b) => a.key.compareTo(b.key))) {
-        final cityCode = cityEntry.key;
-        final stationCodes = cityEntry.value.toList()..sort();
-        final cityItem = cityParam[cityCode];
-        if (cityItem == null) {
-          continue;
-        }
-
-        final stationNodes = <StationIntensityNode>[];
-        for (final code in stationCodes) {
-          final paramSt = stationParam[code];
-          if (paramSt == null) {
-            continue;
-          }
-          stationNodes.add(
-            StationIntensityNode(
-              station: paramSt,
-              intensity: IntensityStation(
-                code: code,
-                name: paramSt.name,
-                sva: null,
-                prePeriods: const [],
-                maxIntensity: treeIntensity.toJmaIntensity,
-                maxLpgmIntensity: null,
-              ),
-            ),
-          );
-        }
-
-        cities.add(
-          CityIntensityNode(
-            city: cityItem,
-            maxIntensity: levelJma,
-            stations: stationNodes,
-          ),
-        );
-      }
-
-      regionNodes.add(
-        PrefectureIntensityNode(
-          region: IntensityRegion(
-            region: regionItem,
-            maxIntensity: levelJma,
-          ),
-          cities: cities,
-        ),
+      final prefData = result.putIfAbsent(
+        foundRegion.code,
+        () => _LpgmPrefectureData(region: foundRegion!),
       );
+      prefData.addStation(foundCity, stationCode);
     }
 
-    regionNodes.sort(
-      (a, b) => a.region.region.name.compareTo(b.region.region.name),
-    );
-    return regionNodes;
+    return result;
   }
 
   List<PrefectureLpgmIntensityNode> _toPrefectureLpgmIntensityNodes({
-    required Map<String, Map<String, Set<String>>> prefecturesByCode,
-    required api.LpgmIntensityTree tree,
+    required Map<String, _LpgmPrefectureData> prefecturesByCode,
     required Map<String, EarthquakeParameterStationItem> stationParam,
     required JmaLpgmIntensity levelLpgm,
   }) {
-    final paramRegionMap = _regionParamMap();
-    final cityParam = _cityParamMap();
-    final apiStationByCode = {
-      for (final s in tree.stations) s.code: s,
-    };
-
-    final regionNodes = <PrefectureLpgmIntensityNode>[];
-
-    for (final prefEntry in prefecturesByCode.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key))) {
-      final prefCode = prefEntry.key;
-      final citiesByCode = prefEntry.value;
-      final regionItem = paramRegionMap[prefCode];
-      if (regionItem == null) {
-        continue;
-      }
-
+    final nodes = <PrefectureLpgmIntensityNode>[];
+    for (final prefData in prefecturesByCode.values) {
       final cities = <CityLpgmIntensityNode>[];
-      for (final cityEntry in citiesByCode.entries.toList()
-        ..sort((a, b) => a.key.compareTo(b.key))) {
-        final cityCode = cityEntry.key;
-        final stationCodes = cityEntry.value.toList()..sort();
-        final cityItem = cityParam[cityCode];
-        if (cityItem == null) {
-          continue;
-        }
-
-        final stationNodes = <StationLpgmIntensityNode>[];
-        for (final code in stationCodes) {
-          final parameterStation = stationParam[code];
-          if (parameterStation == null) {
-            continue;
-          }
-          final apiStation = apiStationByCode[code];
-          if (apiStation == null) {
-            continue;
-          }
-          stationNodes.add(
-            StationLpgmIntensityNode(
-              station: parameterStation,
-              intensity: IntensityStation(
-                code: apiStation.code,
-                name: parameterStation.name,
-                sva: apiStation.sva?.toDouble(),
-                prePeriods: apiStation.prePeriods
-                        ?.map((e) => e.toPrePeriod)
-                        .toList() ??
-                    const [],
-                maxIntensity: null,
-                maxLpgmIntensity: tree.lpgmIntensity.toJmaLpgmIntensity,
-              ),
-            ),
-          );
-        }
+      for (final entry in prefData.cityStations.entries) {
+        final city = entry.key;
+        final stationCodes = entry.value;
+        final stationNodes = stationCodes
+            .map((code) {
+              final stItem = stationParam[code];
+              if (stItem == null) {
+                return null;
+              }
+              return StationLpgmIntensityNode(
+                station: stItem,
+                intensity: IntensityStation(
+                  code: code,
+                  name: code,
+                  sva: null,
+                  prePeriods: null,
+                  maxIntensity: null,
+                  maxLpgmIntensity: levelLpgm,
+                ),
+              );
+            })
+            .nonNulls
+            .toList();
 
         cities.add(
           CityLpgmIntensityNode(
-            city: cityItem,
+            city: city,
             maxLpgmIntensity: levelLpgm,
             stations: stationNodes,
           ),
         );
       }
 
-      regionNodes.add(
+      nodes.add(
         PrefectureLpgmIntensityNode(
-          region: regionItem,
+          region: prefData.region,
           maxLpgmIntensity: levelLpgm,
           cities: cities,
         ),
       );
     }
-
-    regionNodes.sort((a, b) => a.region.name.compareTo(b.region.name));
-    return regionNodes;
-  }
-
-  List<PrefectureIntensityNode> _mergePrefectureIntensityNodeLists(
-    List<PrefectureIntensityNode> a,
-    List<PrefectureIntensityNode> b,
-  ) {
-    final byPref = <String, PrefectureIntensityNode>{};
-    for (final n in a) {
-      byPref[n.region.region.code] = n;
-    }
-    for (final n in b) {
-      final code = n.region.region.code;
-      final existing = byPref[code];
-      byPref[code] = existing == null
-          ? n
-          : _mergeSinglePrefectureIntensity(existing, n);
-    }
-    final merged = byPref.values.toList()
-      ..sort((x, y) => x.region.region.name.compareTo(y.region.region.name));
-    return merged;
-  }
-
-  PrefectureIntensityNode _mergeSinglePrefectureIntensity(
-    PrefectureIntensityNode a,
-    PrefectureIntensityNode b,
-  ) {
-    final byCity = <String, CityIntensityNode>{};
-    for (final c in a.cities) {
-      byCity[c.city.code] = c;
-    }
-    for (final c in b.cities) {
-      final existing = byCity[c.city.code];
-      byCity[c.city.code] = existing == null
-          ? c
-          : CityIntensityNode(
-              city: existing.city,
-              maxIntensity: existing.maxIntensity ?? c.maxIntensity,
-              maxLpgmIntensity: existing.maxLpgmIntensity ?? c.maxLpgmIntensity,
-              stations: _mergeStationIntensityNodes(existing.stations, c.stations),
-            );
-    }
-    final cities = byCity.values.toList()
-      ..sort((x, y) => x.city.name.compareTo(y.city.name));
-    return PrefectureIntensityNode(
-      region: IntensityRegion(
-        region: a.region.region,
-        maxIntensity: a.region.maxIntensity ?? b.region.maxIntensity,
-      ),
-      cities: cities,
-    );
-  }
-
-  List<StationIntensityNode> _mergeStationIntensityNodes(
-    List<StationIntensityNode> a,
-    List<StationIntensityNode> b,
-  ) {
-    final byCode = <String, StationIntensityNode>{};
-    for (final n in a) {
-      byCode[n.station.code] = n;
-    }
-    for (final n in b) {
-      byCode[n.station.code] = n;
-    }
-    final merged = byCode.values.toList()
-      ..sort((x, y) => x.station.name.compareTo(y.station.name));
-    return merged;
+    return nodes;
   }
 
   List<PrefectureLpgmIntensityNode> _mergePrefectureLpgmIntensityNodeLists(
     List<PrefectureLpgmIntensityNode> a,
     List<PrefectureLpgmIntensityNode> b,
   ) {
-    final byPref = <String, PrefectureLpgmIntensityNode>{};
-    for (final n in a) {
-      byPref[n.region.code] = n;
+    final merged = <String, PrefectureLpgmIntensityNode>{};
+    for (final node in [...a, ...b]) {
+      final key = node.region.code;
+      final existing = merged[key];
+      if (existing == null) {
+        merged[key] = node;
+      } else {
+        merged[key] = PrefectureLpgmIntensityNode(
+          region: existing.region,
+          maxLpgmIntensity: existing.maxLpgmIntensity,
+          cities: [...existing.cities, ...node.cities],
+        );
+      }
     }
-    for (final n in b) {
-      final code = n.region.code;
-      final existing = byPref[code];
-      byPref[code] = existing == null
-          ? n
-          : _mergeSinglePrefectureLpgm(existing, n);
-    }
-    final merged = byPref.values.toList()
-      ..sort((x, y) => x.region.name.compareTo(y.region.name));
-    return merged;
-  }
-
-  PrefectureLpgmIntensityNode _mergeSinglePrefectureLpgm(
-    PrefectureLpgmIntensityNode a,
-    PrefectureLpgmIntensityNode b,
-  ) {
-    final byCity = <String, CityLpgmIntensityNode>{};
-    for (final c in a.cities) {
-      byCity[c.city.code] = c;
-    }
-    for (final c in b.cities) {
-      final existing = byCity[c.city.code];
-      byCity[c.city.code] = existing == null
-          ? c
-          : CityLpgmIntensityNode(
-              city: existing.city,
-              maxLpgmIntensity:
-                  existing.maxLpgmIntensity ?? c.maxLpgmIntensity,
-              stations: _mergeStationLpgmNodes(existing.stations, c.stations),
-            );
-    }
-    final cities = byCity.values.toList()
-      ..sort((x, y) => x.city.name.compareTo(y.city.name));
-    return PrefectureLpgmIntensityNode(
-      region: a.region,
-      maxLpgmIntensity: a.maxLpgmIntensity ?? b.maxLpgmIntensity,
-      cities: cities,
-    );
-  }
-
-  List<StationLpgmIntensityNode> _mergeStationLpgmNodes(
-    List<StationLpgmIntensityNode> a,
-    List<StationLpgmIntensityNode> b,
-  ) {
-    final byCode = <String, StationLpgmIntensityNode>{};
-    for (final n in a) {
-      byCode[n.station.code] = n;
-    }
-    for (final n in b) {
-      byCode[n.station.code] = n;
-    }
-    final merged = byCode.values.toList()
-      ..sort((x, y) => x.station.name.compareTo(y.station.name));
-    return merged;
+    return merged.values.toList();
   }
 }
 
-@Riverpod(keepAlive: true)
-Future<IntensityTreeConverter> intensityTreeConverter(Ref ref) async {
-  final jmaParam = await ref.watch(jmaParameterProvider.future);
-  return IntensityTreeConverter(parameter: jmaParam.earthquake);
+// ---------------------------------------------------------------------------
+// Private helpers
+// ---------------------------------------------------------------------------
+
+class _MutablePrefectureNode {
+  _MutablePrefectureNode({required this.region});
+
+  final EarthquakeParameterRegionItem region;
+  final Map<String, _MutableCityNode> _cities = {};
+
+  void addStation(
+    EarthquakeParameterCityItem city,
+    EarthquakeParameterStationItem station,
+    IntensityStation intensityStation,
+  ) {
+    _cities
+        .putIfAbsent(city.code, () => _MutableCityNode(city: city))
+        .addStation(station, intensityStation);
+  }
+
+  void addCityWithIntensity(
+    EarthquakeParameterCityItem city,
+    JmaIntensity intensity,
+  ) {
+    _cities.putIfAbsent(
+      city.code,
+      () => _MutableCityNode(city: city, cityLevelIntensity: intensity),
+    );
+  }
+
+  PrefectureIntensityNode build(JmaIntensity prefectureIntensity) {
+    final cities = _cities.values.map((c) => c.build()).toList();
+    final maxIntensity = cities
+        .map((c) => c.maxIntensity)
+        .whereType<JmaIntensity>()
+        .fold<JmaIntensity?>(
+          null,
+          (prev, i) => prev == null || i.orderIndex > prev.orderIndex ? i : prev,
+        );
+
+    return PrefectureIntensityNode(
+      region: IntensityRegion(
+        region: region,
+        maxIntensity: maxIntensity ?? prefectureIntensity,
+      ),
+      cities: cities,
+    );
+  }
+}
+
+class _MutableCityNode {
+  _MutableCityNode({required this.city, this.cityLevelIntensity});
+
+  final EarthquakeParameterCityItem city;
+  final JmaIntensity? cityLevelIntensity;
+  final List<StationIntensityNode> stations = [];
+
+  void addStation(
+    EarthquakeParameterStationItem station,
+    IntensityStation intensityStation,
+  ) {
+    stations.add(
+      StationIntensityNode(station: station, intensity: intensityStation),
+    );
+  }
+
+  CityIntensityNode build() {
+    final stationMaxIntensity = stations
+        .map((s) => s.intensity?.maxIntensity)
+        .whereType<JmaIntensity>()
+        .fold<JmaIntensity?>(
+          null,
+          (prev, i) => prev == null || i.orderIndex > prev.orderIndex ? i : prev,
+        );
+    final maxIntensity = stationMaxIntensity ?? cityLevelIntensity;
+
+    return CityIntensityNode(
+      city: city,
+      maxIntensity: maxIntensity,
+      stations: stations,
+    );
+  }
+}
+
+class _LpgmPrefectureData {
+  _LpgmPrefectureData({required this.region});
+
+  final EarthquakeParameterRegionItem region;
+  final Map<EarthquakeParameterCityItem, List<String>> cityStations = {};
+
+  void addCity(EarthquakeParameterCityItem city) {
+    cityStations.putIfAbsent(city, () => []);
+  }
+
+  void addStation(EarthquakeParameterCityItem city, String stationCode) {
+    cityStations.putIfAbsent(city, () => []).add(stationCode);
+  }
 }

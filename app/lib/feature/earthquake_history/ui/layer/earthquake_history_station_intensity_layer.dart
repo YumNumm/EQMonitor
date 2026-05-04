@@ -314,19 +314,15 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             final isFocused = intensity.maxIntensity == jmaIntensity;
             final iconId = _iconIdForStation(jmaIntensity.name, isFocused);
             final station = stationNode.station;
-            if (!station.hasLatitude() || !station.hasLongitude()) {
-              continue;
-            }
-
             features.add({
               'type': 'Feature',
               'geometry': {
                 'type': 'Point',
-                'coordinates': [station.longitude, station.latitude],
+                'coordinates': [station.location.lon, station.location.lat],
               },
               'properties': {
                 'color': color,
-                'name': station.name,
+                'name': station.name.ja,
                 'isFocused': isFocused,
                 'iconId': iconId,
                 // 高震度が上に描画されるよう index をソートキーに使用
@@ -364,19 +360,15 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                 .toHexStringRGB();
             final iconId = _lpgmIconIdForStation(lpgmIntensity.name);
             final station = stationNode.station;
-            if (!station.hasLatitude() || !station.hasLongitude()) {
-              continue;
-            }
-
             features.add({
               'type': 'Feature',
               'geometry': {
                 'type': 'Point',
-                'coordinates': [station.longitude, station.latitude],
+                'coordinates': [station.location.lon, station.location.lat],
               },
               'properties': {
                 'color': color,
-                'name': station.name,
+                'name': station.name.ja,
                 'isFocused': false,
                 'iconId': iconId,
                 // 高階級が上に描画されるよう index をソートキーに使用

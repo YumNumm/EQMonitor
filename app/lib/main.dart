@@ -14,7 +14,6 @@ import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
-import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -119,7 +118,6 @@ Future<void> main() async {
       (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
       kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
       kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
-      loadJmaCodeTable(),
       kIsWeb
           ? Future<Null>.value()
           : FlutterLocalNotificationsPlugin().initialize(
@@ -166,7 +164,6 @@ Future<void> main() async {
       if (results.$1.$4 != null)
         iosDeviceInfoProvider.overrideWithValue(results.$1.$4!),
       applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$6!),
-      jmaCodeTableProvider.overrideWithValue(results.$1.$7),
       if (results.$2.$1 != null)
         kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
     ],

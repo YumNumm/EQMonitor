@@ -1,13 +1,11 @@
-import 'package:eqmonitor/core/gen/assets.gen.dart';
-import 'package:flutter/services.dart';
-import 'package:jma_code_table_types/jma_code_table.pb.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jma_code_table_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-JmaCodeTable jmaCodeTable(Ref ref) => throw UnimplementedError();
-
-Future<JmaCodeTable> loadJmaCodeTable() async => JmaCodeTable.fromBuffer(
-  (await rootBundle.load(Assets.jmaCodeTable)).buffer.asUint8List(),
-);
+Future<JmaCodeTableParameter> jmaCodeTable(Ref ref) async {
+  final parameterSet = await ref.watch(parameterSetProvider.future);
+  return parameterSet.jmaCodeTable;
+}

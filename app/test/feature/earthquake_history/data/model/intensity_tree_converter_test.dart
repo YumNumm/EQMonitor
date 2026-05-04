@@ -1,43 +1,72 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:test/test.dart';
+
+const _testMetadata = ParameterMetadata(
+  type: ParameterType.earthquakeStations,
+  schemaVersion: '1.0',
+  sourceVersion: '1.0',
+  sourceUpdatedAt: null,
+  generatedAt: '2024-01-01T00:00:00Z',
+  sourceUrls: [],
+  sha256: 'test_hash',
+);
+
+EarthquakeParameterStationItem _buildStation({
+  required String code,
+  required String name,
+}) {
+  return EarthquakeParameterStationItem(
+    code: code,
+    noCode: code,
+    name: LocalizedName(ja: name),
+    kana: null,
+    status: EarthquakeStationStatus.operating,
+    sourceStatus: '',
+    owner: '',
+    location: const LatLng(0, 0),
+  );
+}
 
 EarthquakeParameter _buildParameter({
   required List<
     ({
       String code,
       String name,
-      List<
-        ({
-          String code,
-          String name,
-          List<({String code, String name})> stations,
-        })
-      >
-      cities,
+      List<({String code, String name, List<({String code, String name})> stations})> cities,
     })
   >
   regions,
 }) {
   return EarthquakeParameter(
-    regions: regions.map(
-      (r) => EarthquakeParameterRegionItem(
-        code: r.code,
-        name: r.name,
-        cities: r.cities.map(
-          (c) => EarthquakeParameterCityItem(
-            code: c.code,
-            name: c.name,
-            stations: c.stations.map(
-              (s) => EarthquakeParameterStationItem(code: s.code, name: s.name),
-            ),
+    metadata: _testMetadata,
+    prefectures: [
+      EarthquakeParameterPrefectureItem(
+        code: 'test_pref',
+        name: const LocalizedName(ja: 'テスト都道府県'),
+        regions: regions.map(
+          (r) => EarthquakeParameterRegionItem(
+            code: r.code,
+            name: LocalizedName(ja: r.name),
+            kana: null,
+            cities: r.cities.map(
+              (c) => EarthquakeParameterCityItem(
+                code: c.code,
+                name: LocalizedName(ja: c.name),
+                kana: null,
+                stations: c.stations
+                    .map((s) => _buildStation(code: s.code, name: s.name))
+                    .toList(),
+              ),
+            ).toList(),
           ),
-        ),
+        ).toList(),
       ),
-    ),
+    ],
   );
 }
 
@@ -109,13 +138,13 @@ void main() {
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 1);
-      expect(result[JmaIntensity.four]![0].region.region.name, '宮城県');
+      expect(result[JmaIntensity.four]![0].region.region.name.ja, '宮城県');
       expect(
         result[JmaIntensity.four]![0].region.maxIntensity,
         JmaIntensity.four,
       );
       expect(result[JmaIntensity.four]![0].cities.length, 1);
-      expect(result[JmaIntensity.four]![0].cities[0].city.name, '宮城県北部');
+      expect(result[JmaIntensity.four]![0].cities[0].city.name.ja, '宮城県北部');
       expect(
         result[JmaIntensity.four]![0].cities[0].maxIntensity,
         JmaIntensity.four,
@@ -157,15 +186,15 @@ void main() {
 
       final group5Plus = result[JmaIntensity.fiveUpper]!;
       expect(group5Plus.length, 1);
-      expect(group5Plus[0].region.region.name, '宮城県');
+      expect(group5Plus[0].region.region.name.ja, '宮城県');
       expect(group5Plus[0].cities.length, 1);
-      expect(group5Plus[0].cities[0].city.name, '宮城県北部');
+      expect(group5Plus[0].cities[0].city.name.ja, '宮城県北部');
 
       final group4 = result[JmaIntensity.four]!;
       expect(group4.length, 1);
-      expect(group4[0].region.region.name, '宮城県');
+      expect(group4[0].region.region.name.ja, '宮城県');
       expect(group4[0].cities.length, 1);
-      expect(group4[0].cities[0].city.name, '宮城県南部');
+      expect(group4[0].cities[0].city.name.ja, '宮城県南部');
     });
 
     test('複数都道府県が同一震度グループに含まれる', () {
@@ -201,7 +230,7 @@ void main() {
       expect(result[JmaIntensity.four]!.length, 2);
 
       final regionNames = result[JmaIntensity.four]!
-          .map((r) => r.region.region.name)
+          .map((r) => r.region.region.name.ja)
           .toList();
       expect(regionNames, contains('宮城県'));
       expect(regionNames, contains('福島県'));
@@ -279,7 +308,7 @@ void main() {
       ).convertToIntensityTree(intensity: intensity);
 
       expect(result[JmaIntensity.four]![0].cities.length, 1);
-      expect(result[JmaIntensity.four]![0].cities[0].city.name, '宮城県北部');
+      expect(result[JmaIntensity.four]![0].cities[0].city.name.ja, '宮城県北部');
     });
 
     test('regionsのみの場合はstationノードは空リスト', () {
@@ -340,7 +369,7 @@ void main() {
           .convertToIntensityTree(intensity: intensity);
 
       final stationNode = result[JmaIntensity.four]![0].cities[0].stations[0];
-      expect(stationNode.station.name, 'テスト観測点');
+      expect(stationNode.station.name.ja, 'テスト観測点');
       expect(stationNode.intensity?.maxIntensity, JmaIntensity.four);
     });
 
@@ -369,7 +398,7 @@ void main() {
       ).convertToIntensityTree(intensity: intensity);
 
       expect(result.keys.toList(), [JmaIntensity.four]);
-      expect(result[JmaIntensity.four]![0].region.region.name, '宮城県');
+      expect(result[JmaIntensity.four]![0].region.region.name.ja, '宮城県');
       expect(result[JmaIntensity.four]![0].cities, isEmpty);
     });
   });
@@ -432,13 +461,13 @@ void main() {
 
       final group3 = result[JmaLpgmIntensity.three]!;
       expect(group3.length, 1);
-      expect(group3[0].region.name, '宮城県');
+      expect(group3[0].region.name.ja, '宮城県');
       expect(group3[0].cities.length, 1);
-      expect(group3[0].cities[0].city.name, '宮城県北部');
+      expect(group3[0].cities[0].city.name.ja, '宮城県北部');
 
       final group1 = result[JmaLpgmIntensity.one]!;
       expect(group1.length, 1);
-      expect(group1[0].cities[0].city.name, '宮城県南部');
+      expect(group1[0].cities[0].city.name.ja, '宮城県南部');
     });
 
     test('LPGM震度キーは降順にソートされる', () {

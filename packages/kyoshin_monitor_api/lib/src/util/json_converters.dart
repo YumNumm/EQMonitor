@@ -1,8 +1,14 @@
 import 'package:intl/intl.dart';
 
 /// 文字列からDateTime型に変換
-DateTime? dateTimeOrNullFromString(String? value) =>
-    value != null ? dateTimeFromString(value) : null;
+DateTime? dateTimeOrNullFromString(String? value) {
+  if (value == null) return null;
+  try {
+    return dateTimeFromString(value);
+  } on FormatException {
+    return null;
+  }
+}
 
 DateTime dateTimeFromString(String value) =>
     DateTime.parse(value.replaceAll('/', '-'));
@@ -73,7 +79,7 @@ DateTime? originTimeFromString(String? value) {
     final minute = int.parse(value.substring(10, 12));
     final second = int.parse(value.substring(12, 14));
     return DateTime(year, month, day, hour, minute, second);
-  } on FormatException catch (_) {
+  } on Object catch (_) {
     return null;
   }
 }

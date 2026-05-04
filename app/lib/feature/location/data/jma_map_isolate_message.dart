@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/location/data/model/map_data_item.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -9,7 +8,7 @@ part 'jma_map_isolate_message.freezed.dart';
 abstract class JmaMapCalculateMessage with _$JmaMapCalculateMessage {
   const factory JmaMapCalculateMessage({
     required int id,
-    required Uint8List mapDataBytes,
+    required JmaMapType type,
     required double lat,
     required double lng,
   }) = _JmaMapCalculateMessage;

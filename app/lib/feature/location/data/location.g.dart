@@ -43,7 +43,7 @@ final class LocationStreamProvider
   }
 }
 
-String _$locationStreamHash() => r'512cf5869f3db7a5bc88d1c027ab5cc84e006ab8';
+String _$locationStreamHash() => r'0f1636bf1583f78551f435c90fbad18f74f6f5ee';
 
 /// 近隣の強震観測点
 
@@ -92,4 +92,4 @@ final class ClosestKmoniObservationPointStreamProvider
 }
 
 String _$closestKmoniObservationPointStreamHash() =>
-    r'bea3ab9a902376f5f0b2a0d2f3b41317f6e8f17f';
+    r'5cb8366871efb913595a5e3fe4047e4fa68c784a';

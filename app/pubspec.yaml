@@ -105,19 +105,13 @@ dependencies:
   image: ^4.4.0
   in_app_review: ^2.0.10
   intl: ^0.20.2
-  jma_code_table_types:
-    path: ../packages/jma_code_table_types
   jma_map:
     path: ../packages/jma_map
-  jma_parameter_types:
-    path: ../packages/jma_parameter_types
   json_annotation: ^4.11.0
   kyoshin_monitor_api:
     path: ../packages/kyoshin_monitor_api
   kyoshin_monitor_image_parser:
     path: ../packages/kyoshin_monitor_image_parser
-  kyoshin_observation_point_types:
-    path: ../packages/kyoshin_observation_point_types
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.10.1
@@ -195,6 +189,7 @@ flutter:
     - assets/fonts/
     - assets/docs/
     - assets/parameter/
+    - assets/parameters/
     - assets/debug/
     - assets/debug/eew/noto_peninsula_20240101/
 

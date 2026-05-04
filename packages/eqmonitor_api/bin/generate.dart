@@ -99,6 +99,10 @@ void main(List<String> args) async {
     _patchStatusesQueryInApiClients(libDir);
   });
 
+  await _step('ParametersApiClient の ParameterDataResponse をパッチ', () async {
+    _patchParameterDataResponseInApiClient(libDir);
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
@@ -194,6 +198,37 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
       entity.writeAsStringSync(content);
       stdout.writeln('  Patched statuses query: ${entity.path}');
     }
+  }
+}
+
+/// [parameters_api_client.dart] の `ParameterDataResponse` を
+/// `Map<String, Object?>` に置き換える。
+///
+/// swagger_parser は OpenAPI の anyOf/oneOf discriminator 無しの union 型を
+/// `ParameterDataResponse` として生成するが、パラメーター取得エンドポイントは
+/// type ごとに異なるスキーマを返すため、アプリ側で type に応じてパースする。
+/// そのため Retrofit 型パラメーターは raw map で受け取る。
+void _patchParameterDataResponseInApiClient(Directory libDir) {
+  final clientFile = File(
+    '${libDir.path}/clients/parameters_api_client.dart',
+  );
+  if (!clientFile.existsSync()) return;
+
+  var content = clientFile.readAsStringSync();
+  final original = content;
+
+  content = content.replaceAll(
+    "import '../models/parameter_data_response.dart';",
+    '',
+  );
+  content = content.replaceAll(
+    'HttpResponse<ParameterDataResponse>',
+    'HttpResponse<Map<String, Object?>>',
+  );
+
+  if (content != original) {
+    clientFile.writeAsStringSync(content);
+    stdout.writeln('  Patched: ${clientFile.path}');
   }
 }
 

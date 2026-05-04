@@ -63,13 +63,10 @@ Geographic? geographicForEarthquakeIntensityFocus(
             for (final stationNode in city.stations) {
               final station = stationNode.station;
               if (station.code == focus.code) {
-                if (station.hasLatitude() && station.hasLongitude()) {
-                  return Geographic(
-                    lon: station.longitude,
-                    lat: station.latitude,
-                  );
-                }
-                return null;
+                return Geographic(
+                  lon: station.location.lon,
+                  lat: station.location.lat,
+                );
               }
             }
           }
@@ -90,9 +87,10 @@ Geographic? _representativeGeographicForRegion(PrefectureIntensityNode regionNod
   for (final city in regionNode.cities) {
     for (final stationNode in city.stations) {
       final station = stationNode.station;
-      if (station.hasLatitude() && station.hasLongitude()) {
-        fallback ??= Geographic(lon: station.longitude, lat: station.latitude);
-      }
+      fallback ??= Geographic(
+        lon: station.location.lon,
+        lat: station.location.lat,
+      );
     }
   }
   return fallback;
@@ -101,9 +99,7 @@ Geographic? _representativeGeographicForRegion(PrefectureIntensityNode regionNod
 Geographic? _representativeGeographicForCity(CityIntensityNode cityNode) {
   for (final stationNode in cityNode.stations) {
     final station = stationNode.station;
-    if (station.hasLatitude() && station.hasLongitude()) {
-      return Geographic(lon: station.longitude, lat: station.latitude);
-    }
+    return Geographic(lon: station.location.lon, lat: station.location.lat);
   }
   return null;
 }

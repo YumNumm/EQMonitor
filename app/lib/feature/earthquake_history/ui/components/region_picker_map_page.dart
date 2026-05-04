@@ -62,15 +62,17 @@ class _RegionPickerMapPageState extends ConsumerState<RegionPickerMapPage> {
           final cityCode = city!.property!.code;
           final prefix =
               cityCode.length >= 2 ? cityCode.substring(0, 2) : cityCode;
-          final jmaCodeTable = ref.read(jmaCodeTableProvider);
+          final jmaCodeTable = ref.read(jmaCodeTableProvider).value;
           final prefecture = jmaCodeTable
+              ?.codeTables
               .areaInformationPrefectureEarthquake
-              .items
-              .firstWhereOrNull((p) => p.code.startsWith(prefix));
+              .firstWhereOrNull(
+                (p) => p.code.startsWith(prefix),
+              );
           if (prefecture != null) {
             setState(() {
               _resolvedCode = prefecture.code;
-              _resolvedName = prefecture.name;
+              _resolvedName = prefecture.name.ja;
             });
           }
         }

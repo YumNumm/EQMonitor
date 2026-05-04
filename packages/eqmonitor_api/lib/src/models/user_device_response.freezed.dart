@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserDeviceResponse {
 
- String get id; Type get type; Locale get locale;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
+ String get id; DeviceType get type; DeviceLocale get locale;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;
 /// Create a copy of UserDeviceResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UserDeviceResponseCopyWith<$Res>  {
   factory $UserDeviceResponseCopyWith(UserDeviceResponse value, $Res Function(UserDeviceResponse) _then) = _$UserDeviceResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, Type type, Locale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+ String id, DeviceType type, DeviceLocale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 
@@ -69,8 +69,8 @@ class _$UserDeviceResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as Locale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as DeviceLocale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  Type type,  Locale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserDeviceResponse() when $default != null:
 return $default(_that.id,_that.type,_that.locale,_that.createdAt,_that.updatedAt);case _:
@@ -178,7 +178,7 @@ return $default(_that.id,_that.type,_that.locale,_that.createdAt,_that.updatedAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  Type type,  Locale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _UserDeviceResponse():
 return $default(_that.id,_that.type,_that.locale,_that.createdAt,_that.updatedAt);case _:
@@ -198,7 +198,7 @@ return $default(_that.id,_that.type,_that.locale,_that.createdAt,_that.updatedAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  Type type,  Locale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DeviceType type,  DeviceLocale locale, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UserDeviceResponse() when $default != null:
 return $default(_that.id,_that.type,_that.locale,_that.createdAt,_that.updatedAt);case _:
@@ -217,8 +217,8 @@ class _UserDeviceResponse implements UserDeviceResponse {
   factory _UserDeviceResponse.fromJson(Map<String, dynamic> json) => _$UserDeviceResponseFromJson(json);
 
 @override final  String id;
-@override final  Type type;
-@override final  Locale locale;
+@override final  DeviceType type;
+@override final  DeviceLocale locale;
 @override@JsonKey(name: 'created_at') final  String createdAt;
 @override@JsonKey(name: 'updated_at') final  String updatedAt;
 
@@ -255,7 +255,7 @@ abstract mixin class _$UserDeviceResponseCopyWith<$Res> implements $UserDeviceRe
   factory _$UserDeviceResponseCopyWith(_UserDeviceResponse value, $Res Function(_UserDeviceResponse) _then) = __$UserDeviceResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, Type type, Locale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
+ String id, DeviceType type, DeviceLocale locale,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt
 });
 
 
@@ -276,8 +276,8 @@ class __$UserDeviceResponseCopyWithImpl<$Res>
   return _then(_UserDeviceResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as Locale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as DeviceLocale,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));

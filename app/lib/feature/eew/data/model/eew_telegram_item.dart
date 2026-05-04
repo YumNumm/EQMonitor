@@ -134,9 +134,9 @@ extension on api.EewHypocenter {
       name: value.name,
       detailedCode: detailed?.code,
       detailedName: detailed?.name,
-      latitude: coordinates.latitude.toDouble(),
-      longitude: coordinates.longitude.toDouble(),
-      hasLatLng: true,
+      latitude: coordinates?.latitude.toDouble(),
+      longitude: coordinates?.longitude.toDouble(),
+      hasLatLng: coordinates != null,
       magnitude: magnitude?.toDouble(),
       depth: depth?.toInt(),
     );

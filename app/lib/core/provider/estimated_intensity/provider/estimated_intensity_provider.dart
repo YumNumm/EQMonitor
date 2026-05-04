@@ -172,33 +172,31 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
   List<_CachedPoint> _generateCachedPoints(EarthquakeParameter earthquake) {
     final result = <_CachedPoint>[];
-    for (final region in earthquake.regions) {
-      for (final city in region.cities) {
-        for (final station in city.stations) {
-          result.add((
-            regionCode: region.code,
-            cityCode: city.code,
-            station: station,
-          ));
+    for (final prefecture in earthquake.prefectures) {
+      for (final region in prefecture.regions) {
+        for (final city in region.cities) {
+          for (final station in city.stations) {
+            result.add((
+              regionCode: region.code,
+              cityCode: city.code,
+              station: station,
+            ));
+          }
         }
       }
     }
     return result;
   }
 
+  // TODO: earthquake_stations.json に arv_400 フィールドが含まれていないため、
+  // 現状この計算は機能しない。バックエンドが arv_400 を earthquake stations API
+  // レスポンスに追加するまで空リストを返す。
+  // 詳細: docs/todo/800_estimated_intensity_arv400.md
   List<CalculationPoint> _generateCalculationPoints(
     Iterable<_CachedPoint> points,
-  ) {
-    final result = <CalculationPoint>[];
-    for (final point in points) {
-      result.add((
-        lat: point.station.latitude,
-        lon: point.station.longitude,
-        arv400: point.station.arv400,
-      ));
-    }
-    return result;
-  }
+  ) =>
+      [];
+
 }
 
 @Riverpod(keepAlive: true)
