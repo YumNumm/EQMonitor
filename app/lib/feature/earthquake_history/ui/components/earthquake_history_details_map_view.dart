@@ -148,6 +148,9 @@ class _MapContent extends HookConsumerWidget {
                       earthquake: earthquake,
                       config: config,
                     ),
+                  if (config.hypocenterDisplayMode !=
+                      HypocenterDisplayMode.belowStations)
+                    hypocenterLayer,
                 ],
               ),
 
