@@ -5,7 +5,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../models/parameter_data_response.dart';
 import '../models/parameter_type.dart';
 import '../models/parameters_manifest_response.dart';
 
@@ -17,12 +16,15 @@ abstract class ParametersApiClient {
 
   /// パラメーターデータのバージョン・取得先一覧
   @GET(ParametersApiClientUrls.getV2ParametersManifest)
-  Future<HttpResponse<ParametersManifestResponse>> getV2ParametersManifest();
+  Future<HttpResponse<ParametersManifestResponse>> getV2ParametersManifest({
+    @Header('if-none-match') String? ifNoneMatch,
+  });
 
   /// 指定したパラメーターデータ
   @GET(ParametersApiClientUrls.getV2ParametersType)
-  Future<HttpResponse<ParameterDataResponse>> getV2ParametersType({
+  Future<HttpResponse<Map<String, Object?>>> getV2ParametersType({
     @Path('type') required ParameterType type,
+    @Header('if-none-match') String? ifNoneMatch,
   });
 }
 

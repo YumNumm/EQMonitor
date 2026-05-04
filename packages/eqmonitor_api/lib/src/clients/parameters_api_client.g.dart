@@ -22,11 +22,14 @@ class _ParametersApiClient implements ParametersApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ParametersManifestResponse>>
-  getV2ParametersManifest() async {
+  Future<HttpResponse<ParametersManifestResponse>> getV2ParametersManifest({
+    String? ifNoneMatch,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'if-none-match': ifNoneMatch};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<ParametersManifestResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
@@ -51,14 +54,17 @@ class _ParametersApiClient implements ParametersApiClient {
   }
 
   @override
-  Future<HttpResponse<InvalidType>> getV2ParametersType({
+  Future<HttpResponse<Map<String, Object?>>> getV2ParametersType({
     required ParameterType type,
+    String? ifNoneMatch,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'if-none-match': ifNoneMatch};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<InvalidType>>(
+    final _options = _setStreamType<HttpResponse<Map<String, Object?>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -69,9 +75,9 @@ class _ParametersApiClient implements ParametersApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late InvalidType _value;
+    late Map<String, Object?> _value;
     try {
-      _value = InvalidType.fromJson(_result.data!);
+      _value = _result.data!.cast<String, Object?>();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
