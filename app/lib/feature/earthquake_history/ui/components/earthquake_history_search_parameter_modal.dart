@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
-import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -176,7 +175,7 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                 ?.codeTables
                 .areaInformationPrefectureEarthquake
                 .firstWhereOrNull(
-                  (JmaCodeTableItem p) => p.code.startsWith(prefix),
+                  (p) => p.code.startsWith(prefix),
                 );
             if (prefecture != null) {
               selectedRegionCode.value = prefecture.code;
@@ -657,7 +656,7 @@ class _EpicenterSelector extends HookConsumerWidget {
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
           final epicenter = epicenters
-              .firstWhereOrNull((JmaCodeTableItem e) => e.code == code);
+              .firstWhereOrNull((e) => e.code == code);
           if (epicenter == null) {
             return;
           }
@@ -672,7 +671,7 @@ class _EpicenterSelector extends HookConsumerWidget {
           label: '指定しない',
         ),
         ...epicenters.map(
-          (JmaCodeTableItem e) => DropdownMenuEntry(
+          (e) => DropdownMenuEntry(
             value: e.code,
             label: e.name.ja,
           ),

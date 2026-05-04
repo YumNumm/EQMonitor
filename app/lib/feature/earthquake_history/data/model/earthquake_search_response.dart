@@ -3,9 +3,9 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_parti
 import 'package:eqmonitor/feature/earthquake_history/data/model/epicenter_search_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/station_search_info.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 
 part 'earthquake_search_response.freezed.dart';
 part 'earthquake_search_response.g.dart';

@@ -104,9 +104,13 @@ class IntensityTreeConverter {
     // station-level data
     for (final stationCode in stationIntensityMap.keys) {
       final stationItem = stationParam[stationCode];
-      if (stationItem == null) continue;
+      if (stationItem == null) {
+        continue;
+      }
       final cityCode = stationCityCode[stationCode];
-      if (cityCode == null) continue;
+      if (cityCode == null) {
+        continue;
+      }
 
       final intensityEntry = stationIntensityMap[stationCode]!;
       final ji = intensityEntry.maxIntensity!;
@@ -123,7 +127,9 @@ class IntensityTreeConverter {
           }
         }
       }
-      if (foundRegion == null || foundCity == null) continue;
+      if (foundRegion == null || foundCity == null) {
+        continue;
+      }
 
       final prefectureNodes = resultMap.putIfAbsent(ji, () => {});
       final prefNode = prefectureNodes.putIfAbsent(
@@ -171,7 +177,9 @@ class IntensityTreeConverter {
   Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
   convertToLpgmIntensityTree({required api.Intensity intensity}) {
     final trees = intensity.lpgmIntensityTree;
-    if (trees == null || trees.isEmpty) return {};
+    if (trees == null || trees.isEmpty) {
+      return {};
+    }
 
     final stationParam = _stationParamMap();
     final stationCityCode = _stationCityCodeMap();
@@ -186,7 +194,9 @@ class IntensityTreeConverter {
         cityPrefixToCityCode: cityPrefixToCityCode,
         stationCityCode: stationCityCode,
       );
-      if (prefecturesByCode.isEmpty) continue;
+      if (prefecturesByCode.isEmpty) {
+        continue;
+      }
 
       final nodes = _toPrefectureLpgmIntensityNodes(
         prefecturesByCode: prefecturesByCode,
@@ -215,7 +225,9 @@ class IntensityTreeConverter {
     for (final stationItem in tree.stations) {
       final stationCode = stationItem.code;
       final cityCode = stationCityCode[stationCode];
-      if (cityCode == null) continue;
+      if (cityCode == null) {
+        continue;
+      }
 
       EarthquakeParameterRegionItem? foundRegion;
       EarthquakeParameterCityItem? foundCity;
@@ -229,7 +241,9 @@ class IntensityTreeConverter {
           }
         }
       }
-      if (foundRegion == null || foundCity == null) continue;
+      if (foundRegion == null || foundCity == null) {
+        continue;
+      }
 
       final prefData = result.putIfAbsent(
         foundRegion.code,
@@ -255,7 +269,9 @@ class IntensityTreeConverter {
         final stationNodes = stationCodes
             .map((code) {
               final stItem = stationParam[code];
-              if (stItem == null) return null;
+              if (stItem == null) {
+                return null;
+              }
               return StationLpgmIntensityNode(
                 station: stItem,
                 intensity: IntensityStation(

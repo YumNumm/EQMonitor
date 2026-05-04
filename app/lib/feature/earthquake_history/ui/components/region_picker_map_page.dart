@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
-import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +67,7 @@ class _RegionPickerMapPageState extends ConsumerState<RegionPickerMapPage> {
               ?.codeTables
               .areaInformationPrefectureEarthquake
               .firstWhereOrNull(
-                (JmaCodeTableItem p) => p.code.startsWith(prefix),
+                (p) => p.code.startsWith(prefix),
               );
           if (prefecture != null) {
             setState(() {

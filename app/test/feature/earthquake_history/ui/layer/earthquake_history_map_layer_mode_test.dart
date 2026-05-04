@@ -330,10 +330,10 @@ class EarthquakeHistoryMapLayerModeTestData {
     required JmaIntensity? maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
   }) {
-    final station = EarthquakeParameterStationItem(
+    const station = EarthquakeParameterStationItem(
       code: '001001001',
       noCode: '001001001',
-      name: const LocalizedName(ja: 'テスト観測点'),
+      name: LocalizedName(ja: 'テスト観測点'),
       kana: null,
       status: EarthquakeStationStatus.operating,
       sourceStatus: 'test',

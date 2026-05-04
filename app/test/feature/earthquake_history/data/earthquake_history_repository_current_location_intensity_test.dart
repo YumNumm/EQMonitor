@@ -2,17 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:test/test.dart';
 
-final _testMetadata = ParameterMetadata(
+const _testMetadata = ParameterMetadata(
   type: ParameterType.earthquakeStations,
   schemaVersion: '1.0',
   sourceVersion: '1.0',
   sourceUpdatedAt: null,
   generatedAt: '2024-01-01T00:00:00Z',
-  sourceUrls: const [],
+  sourceUrls: [],
   sha256: 'test_hash',
 );
 

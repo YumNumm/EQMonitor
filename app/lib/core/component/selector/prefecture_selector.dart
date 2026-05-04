@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -36,7 +35,7 @@ class PrefectureSelector extends ConsumerWidget {
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
           final prefecture = prefectures
-              .firstWhereOrNull((JmaCodeTableItem p) => p.code == code);
+              .firstWhereOrNull((p) => p.code == code);
           if (prefecture == null) {
             return;
           }
@@ -51,7 +50,7 @@ class PrefectureSelector extends ConsumerWidget {
           label: '選択してください',
         ),
         ...prefectures.map(
-          (JmaCodeTableItem e) =>
+          (e) =>
               DropdownMenuEntry(value: e.code, label: e.name.ja),
         ),
       ],

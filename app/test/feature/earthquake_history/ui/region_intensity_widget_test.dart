@@ -8,10 +8,10 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_inten
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -61,7 +61,7 @@ void main() {
     );
   }
 
-  final miyagiRegion = const EarthquakeParameterRegionItem(
+  const miyagiRegion = EarthquakeParameterRegionItem(
     code: '040000',
     name: LocalizedName(ja: '宮城県'),
     kana: null,
@@ -70,7 +70,7 @@ void main() {
 
   testWidgets('各地の震度セクションに震度タイルと地域名が出る', (tester) async {
     final item = itemWithIntensity(
-      EarthquakeIntensity(
+      const EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
         maxLpgmIntensity: null,
         intensityTree: {
@@ -82,7 +82,7 @@ void main() {
               ),
               cities: [
                 CityIntensityNode(
-                  city: const EarthquakeParameterCityItem(
+                  city: EarthquakeParameterCityItem(
                     code: '0420100',
                     name: LocalizedName(ja: '宮城県北部'),
                     kana: null,
@@ -90,13 +90,13 @@ void main() {
                   ),
                   maxIntensity: JmaIntensity.four,
                   maxLpgmIntensity: JmaLpgmIntensity.one,
-                  stations: const [],
+                  stations: [],
                 ),
               ],
             ),
           ],
         },
-        lpgmIntensityTree: const {},
+        lpgmIntensityTree: {},
       ),
     );
 
@@ -109,7 +109,7 @@ void main() {
 
   testWidgets('震度行タップでモーダルに地域名が出る', (tester) async {
     final item = itemWithIntensity(
-      EarthquakeIntensity(
+      const EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
         maxLpgmIntensity: null,
         intensityTree: {
@@ -121,20 +121,20 @@ void main() {
               ),
               cities: [
                 CityIntensityNode(
-                  city: const EarthquakeParameterCityItem(
+                  city: EarthquakeParameterCityItem(
                     code: '0420100',
                     name: LocalizedName(ja: '宮城県北部'),
                     kana: null,
                     stations: [],
                   ),
                   maxIntensity: JmaIntensity.four,
-                  stations: const [],
+                  stations: [],
                 ),
               ],
             ),
           ],
         },
-        lpgmIntensityTree: const {},
+        lpgmIntensityTree: {},
       ),
     );
 
