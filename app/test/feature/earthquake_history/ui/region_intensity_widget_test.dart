@@ -11,7 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intens
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -61,9 +61,10 @@ void main() {
     );
   }
 
-  final miyagiRegion = EarthquakeParameterRegionItem(
+  final miyagiRegion = const EarthquakeParameterRegionItem(
     code: '040000',
-    name: '宮城県',
+    name: LocalizedName(ja: '宮城県'),
+    kana: null,
     cities: [],
   );
 
@@ -81,9 +82,11 @@ void main() {
               ),
               cities: [
                 CityIntensityNode(
-                  city: EarthquakeParameterCityItem(
+                  city: const EarthquakeParameterCityItem(
                     code: '0420100',
-                    name: '宮城県北部',
+                    name: LocalizedName(ja: '宮城県北部'),
+                    kana: null,
+                    stations: [],
                   ),
                   maxIntensity: JmaIntensity.four,
                   maxLpgmIntensity: JmaLpgmIntensity.one,
@@ -118,9 +121,11 @@ void main() {
               ),
               cities: [
                 CityIntensityNode(
-                  city: EarthquakeParameterCityItem(
+                  city: const EarthquakeParameterCityItem(
                     code: '0420100',
-                    name: '宮城県北部',
+                    name: LocalizedName(ja: '宮城県北部'),
+                    kana: null,
+                    stations: [],
                   ),
                   maxIntensity: JmaIntensity.four,
                   stations: const [],

@@ -1,6 +1,12 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'parameter_json_parser.g.dart';
+
+@riverpod
+ParameterJsonParser parameterJsonParser(Ref ref) => const ParameterJsonParser();
 
 final class ParameterJsonParser {
   const ParameterJsonParser();

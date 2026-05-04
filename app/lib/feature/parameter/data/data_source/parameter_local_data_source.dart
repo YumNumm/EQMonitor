@@ -1,10 +1,21 @@
 import 'dart:io';
 
+import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'parameter_local_data_source.g.dart';
+
+@Riverpod(keepAlive: true)
+Future<ParameterLocalDataSource> parameterLocalDataSource(Ref ref) async =>
+    ParameterLocalDataSource(
+      documentsDirectory: ref.watch(applicationDocumentsDirectoryProvider),
+    );
 
 final class ParameterLocalDataSource {
-  const ParameterLocalDataSource({required Directory documentsDirectory})
-    : _documentsDirectory = documentsDirectory;
+  const ParameterLocalDataSource({
+    required Directory documentsDirectory,
+  }) : _documentsDirectory = documentsDirectory;
 
   final Directory _documentsDirectory;
 
@@ -34,8 +45,7 @@ final class ParameterLocalDataSource {
     return file.readAsString();
   }
 
-  Future<bool> hasParameterJson(ParameterType type) =>
-      parameterFile(type).exists();
+  bool hasParameterJson(ParameterType type) => parameterFile(type).existsSync();
 
   Future<String?> readEtag() async {
     final file = etagFile;

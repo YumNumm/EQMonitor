@@ -305,7 +305,7 @@ $IntensityRegionCopyWith<$Res> get region {
 /// @nodoc
 mixin _$IntensityRegion {
 
-@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem get region; JmaIntensity? get maxIntensity;
+ EarthquakeParameterRegionItem get region; JmaIntensity? get maxIntensity;
 /// Create a copy of IntensityRegion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -338,11 +338,11 @@ abstract mixin class $IntensityRegionCopyWith<$Res>  {
   factory $IntensityRegionCopyWith(IntensityRegion value, $Res Function(IntensityRegion) _then) = _$IntensityRegionCopyWithImpl;
 @useResult
 $Res call({
-@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaIntensity? maxIntensity
+ EarthquakeParameterRegionItem region, JmaIntensity? maxIntensity
 });
 
 
-
+$EarthquakeParameterRegionItemCopyWith<$Res> get region;
 
 }
 /// @nodoc
@@ -362,7 +362,16 @@ as EarthquakeParameterRegionItem,maxIntensity: freezed == maxIntensity ? _self.m
 as JmaIntensity?,
   ));
 }
-
+/// Create a copy of IntensityRegion
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeParameterRegionItemCopyWith<$Res> get region {
+  
+  return $EarthquakeParameterRegionItemCopyWith<$Res>(_self.region, (value) {
+    return _then(_self.copyWith(region: value));
+  });
+}
 }
 
 
@@ -444,7 +453,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IntensityRegion() when $default != null:
 return $default(_that.region,_that.maxIntensity);case _:
@@ -465,7 +474,7 @@ return $default(_that.region,_that.maxIntensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _IntensityRegion():
 return $default(_that.region,_that.maxIntensity);case _:
@@ -485,7 +494,7 @@ return $default(_that.region,_that.maxIntensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterRegionItemConverter()  EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterRegionItem region,  JmaIntensity? maxIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _IntensityRegion() when $default != null:
 return $default(_that.region,_that.maxIntensity);case _:
@@ -500,10 +509,10 @@ return $default(_that.region,_that.maxIntensity);case _:
 @JsonSerializable()
 
 class _IntensityRegion implements IntensityRegion {
-  const _IntensityRegion({@EarthquakeParameterRegionItemConverter() required this.region, required this.maxIntensity});
+  const _IntensityRegion({required this.region, required this.maxIntensity});
   factory _IntensityRegion.fromJson(Map<String, dynamic> json) => _$IntensityRegionFromJson(json);
 
-@override@EarthquakeParameterRegionItemConverter() final  EarthquakeParameterRegionItem region;
+@override final  EarthquakeParameterRegionItem region;
 @override final  JmaIntensity? maxIntensity;
 
 /// Create a copy of IntensityRegion
@@ -539,11 +548,11 @@ abstract mixin class _$IntensityRegionCopyWith<$Res> implements $IntensityRegion
   factory _$IntensityRegionCopyWith(_IntensityRegion value, $Res Function(_IntensityRegion) _then) = __$IntensityRegionCopyWithImpl;
 @override @useResult
 $Res call({
-@EarthquakeParameterRegionItemConverter() EarthquakeParameterRegionItem region, JmaIntensity? maxIntensity
+ EarthquakeParameterRegionItem region, JmaIntensity? maxIntensity
 });
 
 
-
+@override $EarthquakeParameterRegionItemCopyWith<$Res> get region;
 
 }
 /// @nodoc
@@ -564,14 +573,23 @@ as JmaIntensity?,
   ));
 }
 
-
+/// Create a copy of IntensityRegion
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeParameterRegionItemCopyWith<$Res> get region {
+  
+  return $EarthquakeParameterRegionItemCopyWith<$Res>(_self.region, (value) {
+    return _then(_self.copyWith(region: value));
+  });
+}
 }
 
 
 /// @nodoc
 mixin _$CityIntensityNode {
 
-@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem get city; JmaIntensity? get maxIntensity; List<StationIntensityNode> get stations;@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
+ EarthquakeParameterCityItem get city; JmaIntensity? get maxIntensity; List<StationIntensityNode> get stations;@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -604,11 +622,11 @@ abstract mixin class $CityIntensityNodeCopyWith<$Res>  {
   factory $CityIntensityNodeCopyWith(CityIntensityNode value, $Res Function(CityIntensityNode) _then) = _$CityIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
-@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+ EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
-
+$EarthquakeParameterCityItemCopyWith<$Res> get city;
 
 }
 /// @nodoc
@@ -630,7 +648,16 @@ as List<StationIntensityNode>,maxLpgmIntensity: freezed == maxLpgmIntensity ? _s
 as JmaLpgmIntensity?,
   ));
 }
-
+/// Create a copy of CityIntensityNode
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeParameterCityItemCopyWith<$Res> get city {
+  
+  return $EarthquakeParameterCityItemCopyWith<$Res>(_self.city, (value) {
+    return _then(_self.copyWith(city: value));
+  });
+}
 }
 
 
@@ -712,7 +739,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
 return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
@@ -733,7 +760,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntens
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode():
 return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
@@ -753,7 +780,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntens
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterCityItemConverter()  EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
 return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
@@ -768,10 +795,10 @@ return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntens
 @JsonSerializable()
 
 class _CityIntensityNode implements CityIntensityNode {
-  const _CityIntensityNode({@EarthquakeParameterCityItemConverter() required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _stations = stations;
+  const _CityIntensityNode({required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _stations = stations;
   factory _CityIntensityNode.fromJson(Map<String, dynamic> json) => _$CityIntensityNodeFromJson(json);
 
-@override@EarthquakeParameterCityItemConverter() final  EarthquakeParameterCityItem city;
+@override final  EarthquakeParameterCityItem city;
 @override final  JmaIntensity? maxIntensity;
  final  List<StationIntensityNode> _stations;
 @override List<StationIntensityNode> get stations {
@@ -815,11 +842,11 @@ abstract mixin class _$CityIntensityNodeCopyWith<$Res> implements $CityIntensity
   factory _$CityIntensityNodeCopyWith(_CityIntensityNode value, $Res Function(_CityIntensityNode) _then) = __$CityIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
-@EarthquakeParameterCityItemConverter() EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+ EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
-
+@override $EarthquakeParameterCityItemCopyWith<$Res> get city;
 
 }
 /// @nodoc
@@ -842,14 +869,23 @@ as JmaLpgmIntensity?,
   ));
 }
 
-
+/// Create a copy of CityIntensityNode
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeParameterCityItemCopyWith<$Res> get city {
+  
+  return $EarthquakeParameterCityItemCopyWith<$Res>(_self.city, (value) {
+    return _then(_self.copyWith(city: value));
+  });
+}
 }
 
 
 /// @nodoc
 mixin _$StationIntensityNode {
 
-@EarthquakeParameterStationItemConverter() EarthquakeParameterStationItem get station; IntensityStation? get intensity;
+ EarthquakeParameterStationItem get station; IntensityStation? get intensity;
 /// Create a copy of StationIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -882,11 +918,11 @@ abstract mixin class $StationIntensityNodeCopyWith<$Res>  {
   factory $StationIntensityNodeCopyWith(StationIntensityNode value, $Res Function(StationIntensityNode) _then) = _$StationIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
-@EarthquakeParameterStationItemConverter() EarthquakeParameterStationItem station, IntensityStation? intensity
+ EarthquakeParameterStationItem station, IntensityStation? intensity
 });
 
 
-$IntensityStationCopyWith<$Res>? get intensity;
+$EarthquakeParameterStationItemCopyWith<$Res> get station;$IntensityStationCopyWith<$Res>? get intensity;
 
 }
 /// @nodoc
@@ -907,6 +943,15 @@ as IntensityStation?,
   ));
 }
 /// Create a copy of StationIntensityNode
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeParameterStationItemCopyWith<$Res> get station {
+  
+  return $EarthquakeParameterStationItemCopyWith<$Res>(_self.station, (value) {
+    return _then(_self.copyWith(station: value));
+  });
+}/// Create a copy of StationIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -1000,7 +1045,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@EarthquakeParameterStationItemConverter()  EarthquakeParameterStationItem station,  IntensityStation? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterStationItem station,  IntensityStation? intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StationIntensityNode() when $default != null:
 return $default(_that.station,_that.intensity);case _:
@@ -1021,7 +1066,7 @@ return $default(_that.station,_that.intensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@EarthquakeParameterStationItemConverter()  EarthquakeParameterStationItem station,  IntensityStation? intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterStationItem station,  IntensityStation? intensity)  $default,) {final _that = this;
 switch (_that) {
 case _StationIntensityNode():
 return $default(_that.station,_that.intensity);case _:
@@ -1041,7 +1086,7 @@ return $default(_that.station,_that.intensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@EarthquakeParameterStationItemConverter()  EarthquakeParameterStationItem station,  IntensityStation? intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterStationItem station,  IntensityStation? intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _StationIntensityNode() when $default != null:
 return $default(_that.station,_that.intensity);case _:
@@ -1056,10 +1101,10 @@ return $default(_that.station,_that.intensity);case _:
 @JsonSerializable()
 
 class _StationIntensityNode implements StationIntensityNode {
-  const _StationIntensityNode({@EarthquakeParameterStationItemConverter() required this.station, required this.intensity});
+  const _StationIntensityNode({required this.station, required this.intensity});
   factory _StationIntensityNode.fromJson(Map<String, dynamic> json) => _$StationIntensityNodeFromJson(json);
 
-@override@EarthquakeParameterStationItemConverter() final  EarthquakeParameterStationItem station;
+@override final  EarthquakeParameterStationItem station;
 @override final  IntensityStation? intensity;
 
 /// Create a copy of StationIntensityNode
@@ -1095,11 +1140,11 @@ abstract mixin class _$StationIntensityNodeCopyWith<$Res> implements $StationInt
   factory _$StationIntensityNodeCopyWith(_StationIntensityNode value, $Res Function(_StationIntensityNode) _then) = __$StationIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
-@EarthquakeParameterStationItemConverter() EarthquakeParameterStationItem station, IntensityStation? intensity
+ EarthquakeParameterStationItem station, IntensityStation? intensity
 });
 
 
-@override $IntensityStationCopyWith<$Res>? get intensity;
+@override $EarthquakeParameterStationItemCopyWith<$Res> get station;@override $IntensityStationCopyWith<$Res>? get intensity;
 
 }
 /// @nodoc
@@ -1121,6 +1166,15 @@ as IntensityStation?,
 }
 
 /// Create a copy of StationIntensityNode
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EarthquakeParameterStationItemCopyWith<$Res> get station {
+  
+  return $EarthquakeParameterStationItemCopyWith<$Res>(_self.station, (value) {
+    return _then(_self.copyWith(station: value));
+  });
+}/// Create a copy of StationIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

@@ -5,7 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_i
 import 'package:eqmonitor/feature/earthquake_history/data/model/station_search_info.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 
 part 'earthquake_search_response.freezed.dart';
 part 'earthquake_search_response.g.dart';

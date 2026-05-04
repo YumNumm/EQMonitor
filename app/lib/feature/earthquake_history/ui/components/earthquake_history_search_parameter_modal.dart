@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -170,14 +171,16 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
             final cityCode = city!.property!.code;
             final prefix =
                 cityCode.length >= 2 ? cityCode.substring(0, 2) : cityCode;
-            final jmaCodeTable = ref.read(jmaCodeTableProvider);
+            final jmaCodeTable = ref.read(jmaCodeTableProvider).value;
             final prefecture = jmaCodeTable
+                ?.codeTables
                 .areaInformationPrefectureEarthquake
-                .items
-                .firstWhereOrNull((p) => p.code.startsWith(prefix));
+                .firstWhereOrNull(
+                  (JmaCodeTableItem p) => p.code.startsWith(prefix),
+                );
             if (prefecture != null) {
               selectedRegionCode.value = prefecture.code;
-              selectedRegionName.value = prefecture.name;
+              selectedRegionName.value = prefecture.name.ja;
             }
           }
         }
@@ -643,8 +646,9 @@ class _EpicenterSelector extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final jmaCodeTable = ref.watch(jmaCodeTableProvider);
-    final epicenters = jmaCodeTable.areaEpicenter.items;
+    final epicenters =
+        ref.watch(jmaCodeTableProvider).value?.codeTables.areaEpicenter
+        ?? [];
 
     return DropdownMenu<String>(
       expandedInsets: EdgeInsets.zero,
@@ -652,11 +656,12 @@ class _EpicenterSelector extends HookConsumerWidget {
       hintText: '震央地名を選択',
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
-          final epicenter = epicenters.firstWhereOrNull((e) => e.code == code);
+          final epicenter = epicenters
+              .firstWhereOrNull((JmaCodeTableItem e) => e.code == code);
           if (epicenter == null) {
             return;
           }
-          onChanged(code, epicenter.name);
+          onChanged(code, epicenter.name.ja);
         } else {
           onChanged(null, null);
         }
@@ -667,9 +672,9 @@ class _EpicenterSelector extends HookConsumerWidget {
           label: '指定しない',
         ),
         ...epicenters.map(
-          (e) => DropdownMenuEntry(
+          (JmaCodeTableItem e) => DropdownMenuEntry(
             value: e.code,
-            label: e.name,
+            label: e.name.ja,
           ),
         ),
       ],

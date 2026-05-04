@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
@@ -62,15 +63,17 @@ class _RegionPickerMapPageState extends ConsumerState<RegionPickerMapPage> {
           final cityCode = city!.property!.code;
           final prefix =
               cityCode.length >= 2 ? cityCode.substring(0, 2) : cityCode;
-          final jmaCodeTable = ref.read(jmaCodeTableProvider);
+          final jmaCodeTable = ref.read(jmaCodeTableProvider).value;
           final prefecture = jmaCodeTable
+              ?.codeTables
               .areaInformationPrefectureEarthquake
-              .items
-              .firstWhereOrNull((p) => p.code.startsWith(prefix));
+              .firstWhereOrNull(
+                (JmaCodeTableItem p) => p.code.startsWith(prefix),
+              );
           if (prefecture != null) {
             setState(() {
               _resolvedCode = prefecture.code;
-              _resolvedName = prefecture.name;
+              _resolvedName = prefecture.name.ja;
             });
           }
         }

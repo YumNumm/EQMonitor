@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
-import 'package:eqmonitor/feature/parameter/data/provider/parameter_provider.dart';
+import 'package:eqmonitor/feature/parameter/data/repository/parameter_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

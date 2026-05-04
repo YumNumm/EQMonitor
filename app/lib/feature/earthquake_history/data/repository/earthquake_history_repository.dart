@@ -31,14 +31,17 @@ class EarthquakeHistoryRepository {
   final api.ApiClient _api;
   final EarthquakeParameter earthquakeParameter;
 
+  Iterable<EarthquakeParameterRegionItem> get _allRegions =>
+      earthquakeParameter.prefectures.expand((p) => p.regions);
+
   String? _resolveAreaDisplayName(String areaCode) {
-    for (final region in earthquakeParameter.regions) {
+    for (final region in _allRegions) {
       if (region.code == areaCode) {
-        return region.name;
+        return region.name.ja;
       }
       for (final city in region.cities) {
         if (city.code == areaCode) {
-          return city.name;
+          return city.name.ja;
         }
       }
     }
@@ -46,7 +49,7 @@ class EarthquakeHistoryRepository {
   }
 
   String? _regionCodeForCity(String cityCode) {
-    for (final region in earthquakeParameter.regions) {
+    for (final region in _allRegions) {
       for (final city in region.cities) {
         if (city.code == cityCode) {
           return region.code;
@@ -57,11 +60,11 @@ class EarthquakeHistoryRepository {
   }
 
   String? _resolveStationDisplayName(String stationCode) {
-    for (final region in earthquakeParameter.regions) {
+    for (final region in _allRegions) {
       for (final city in region.cities) {
         for (final station in city.stations) {
           if (station.code == stationCode) {
-            return station.name;
+            return station.name.ja;
           }
         }
       }
@@ -205,7 +208,7 @@ class EarthquakeHistoryRepository {
       final regionCode = _regionCodeForCity(cityAreaCode);
       final prefJ = regionCode != null
           ? _prefectureOnlyIntensity(intensityTree, regionCode)
-          : null;
+          : _prefectureOnlyIntensity(intensityTree, cityAreaCode);
       if (prefJ != null) {
         return CurrentLocationIntensityDisplay(
           intensity: prefJ,

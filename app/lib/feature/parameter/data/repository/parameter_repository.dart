@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/data_source/parameter_asset_data_source.dart';
 import 'package:eqmonitor/feature/parameter/data/data_source/parameter_local_data_source.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
@@ -11,16 +11,17 @@ import 'package:eqmonitor/feature/parameter/data/repository/parameter_json_parse
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'parameter_repository.g.dart';
+
 @Riverpod(keepAlive: true)
 Future<ParameterRepository> parameterRepository(Ref ref) async {
-  final dio = await ref.watch(dioProvider.future);
   return ParameterRepository(
-    apiClient: api.ParametersApiClient(dio),
-    assetDataSource: ParameterAssetDataSource(bundle: rootBundle),
-    localDataSource: ParameterLocalDataSource(
-      documentsDirectory: ref.watch(applicationDocumentsDirectoryProvider),
+    apiClient: await ref.watch(
+      apiClientProvider.selectAsync((v) => v.parameters),
     ),
-    parser: const ParameterJsonParser(),
+    assetDataSource: ref.watch(parameterAssetDataSourceProvider),
+    localDataSource: await ref.watch(parameterLocalDataSourceProvider.future),
+    parser: ref.watch(parameterJsonParserProvider),
   );
 }
 
@@ -78,7 +79,9 @@ final class ParameterRepository {
     final manifestJson = await _assetDataSource.readManifestJson();
     final parameterJsonByType = <ParameterType, String>{};
     for (final type in ParameterType.values) {
-      parameterJsonByType[type] = await _assetDataSource.readParameterJson(type);
+      parameterJsonByType[type] = await _assetDataSource.readParameterJson(
+        type,
+      );
     }
     return _parser.parseSet(
       manifestJson: manifestJson,
@@ -119,7 +122,7 @@ final class ParameterRepository {
         final currentItem = currentManifest?.parameters.firstWhereOrNull(
           (p) => p.type == appType,
         );
-        final hasLocalParameter = await _localDataSource.hasParameterJson(
+        final hasLocalParameter = _localDataSource.hasParameterJson(
           appType,
         );
         if (currentItem?.sha256 == item.sha256 && hasLocalParameter) {

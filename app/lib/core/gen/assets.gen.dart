@@ -82,6 +82,35 @@ class $AssetsParameterGen {
   List<String> get values => [earthquake, tsunami];
 }
 
+class $AssetsParametersGen {
+  const $AssetsParametersGen();
+
+  /// File path: assets/parameters/earthquake_stations.json
+  String get earthquakeStations => 'assets/parameters/earthquake_stations.json';
+
+  /// File path: assets/parameters/jma_code_table.json
+  String get jmaCodeTable => 'assets/parameters/jma_code_table.json';
+
+  /// File path: assets/parameters/kyoshin_observation_points.json
+  String get kyoshinObservationPoints =>
+      'assets/parameters/kyoshin_observation_points.json';
+
+  /// File path: assets/parameters/manifest.json
+  String get manifest => 'assets/parameters/manifest.json';
+
+  /// File path: assets/parameters/tsunami_stations.json
+  String get tsunamiStations => 'assets/parameters/tsunami_stations.json';
+
+  /// List of all assets
+  List<String> get values => [
+    earthquakeStations,
+    jmaCodeTable,
+    kyoshinObservationPoints,
+    manifest,
+    tsunamiStations,
+  ];
+}
+
 class $AssetsDebugEewGen {
   const $AssetsDebugEewGen();
 
@@ -332,6 +361,7 @@ class Assets {
       'assets/kyoshin_observation_point.pb';
   static const $AssetsMapGen map = $AssetsMapGen();
   static const $AssetsParameterGen parameter = $AssetsParameterGen();
+  static const $AssetsParametersGen parameters = $AssetsParametersGen();
   static const String tjma2001 = 'assets/tjma2001.csv';
 
   /// List of all assets

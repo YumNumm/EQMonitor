@@ -25,12 +25,12 @@ $EstimatedIntensityPointCopyWith<EstimatedIntensityPoint> get copyWith => _$Esti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.station, station) || other.station == station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&const DeepCollectionEquality().equals(other.station, station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,regionCode,cityCode,station,intensity);
+int get hashCode => Object.hash(runtimeType,regionCode,cityCode,const DeepCollectionEquality().hash(station),intensity);
 
 @override
 String toString() {
@@ -62,11 +62,11 @@ class _$EstimatedIntensityPointCopyWithImpl<$Res>
 
 /// Create a copy of EstimatedIntensityPoint
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionCode = null,Object? cityCode = null,Object? station = null,Object? intensity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionCode = null,Object? cityCode = null,Object? station = freezed,Object? intensity = null,}) {
   return _then(_self.copyWith(
 regionCode: null == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
 as String,cityCode: null == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String,station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
+as String,station: freezed == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterStationItem,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as double,
   ));
@@ -227,12 +227,12 @@ _$EstimatedIntensityPointCopyWith<_EstimatedIntensityPoint> get copyWith => __$E
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.station, station) || other.station == station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EstimatedIntensityPoint&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&const DeepCollectionEquality().equals(other.station, station)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,regionCode,cityCode,station,intensity);
+int get hashCode => Object.hash(runtimeType,regionCode,cityCode,const DeepCollectionEquality().hash(station),intensity);
 
 @override
 String toString() {
@@ -264,11 +264,11 @@ class __$EstimatedIntensityPointCopyWithImpl<$Res>
 
 /// Create a copy of EstimatedIntensityPoint
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionCode = null,Object? cityCode = null,Object? station = null,Object? intensity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionCode = null,Object? cityCode = null,Object? station = freezed,Object? intensity = null,}) {
   return _then(_EstimatedIntensityPoint(
 regionCode: null == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
 as String,cityCode: null == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
-as String,station: null == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
+as String,station: freezed == station ? _self.station : station // ignore: cast_nullable_to_non_nullable
 as EarthquakeParameterStationItem,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as double,
   ));

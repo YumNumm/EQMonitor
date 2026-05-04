@@ -66,7 +66,7 @@ _KyoshinObservationPoint _$KyoshinObservationPointFromJson(
                 v as Map<String, dynamic>,
               ),
       ),
-      arv400: $checkedConvert('arv400', (v) => (v as num?)?.toDouble()),
+      arv400: $checkedConvert('arv_400', (v) => (v as num?)?.toDouble()),
     );
     return val;
   },
@@ -90,7 +90,7 @@ Map<String, dynamic> _$KyoshinObservationPointToJson(
   'is_suspended': instance.isSuspended,
   'location': instance.location,
   'point': instance.point,
-  'arv400': instance.arv400,
+  'arv_400': instance.arv400,
 };
 
 const _$KyoshinObservationPointTypeEnumMap = {

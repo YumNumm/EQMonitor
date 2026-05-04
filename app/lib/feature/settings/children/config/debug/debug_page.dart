@@ -240,8 +240,8 @@ class _DebugWidget extends ConsumerWidget {
           ListTile(
             title: const Text('観測点パラメータ'),
             subtitle: Text(
-              'Earthquake: ${ref.watch(jmaParameterProvider).value?.earthquake.header.version ?? 'null'}\n'
-              'Tsunami   : ${ref.watch(jmaParameterProvider).value?.tsunami.header.version ?? 'null'}',
+              'Earthquake: ${ref.watch(jmaParameterProvider).value?.earthquake.metadata.schemaVersion ?? 'null'}\n'
+              'Tsunami   : ${ref.watch(jmaParameterProvider).value?.tsunami.metadata.schemaVersion ?? 'null'}',
               style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
           ),

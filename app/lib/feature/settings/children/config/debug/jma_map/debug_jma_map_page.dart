@@ -342,10 +342,9 @@ class DebugJmaMapPage extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInfoRow('コード', item.code),
-        _buildInfoRow('名前', item.name),
-        _buildInfoRow('緯度', item.latitude.toString()),
-        _buildInfoRow('経度', item.longitude.toString()),
-        if (item.hasArv400()) _buildInfoRow('ARV400', item.arv400.toString()),
+        _buildInfoRow('名前', item.name.ja),
+        _buildInfoRow('緯度', item.location.lat.toString()),
+        _buildInfoRow('経度', item.location.lon.toString()),
       ],
     );
   }

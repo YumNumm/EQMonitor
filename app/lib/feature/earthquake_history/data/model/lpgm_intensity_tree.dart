@@ -1,8 +1,7 @@
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_station.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:jma_parameter_types/earthquake_param.pb.dart';
 
 part 'lpgm_intensity_tree.freezed.dart';
 part 'lpgm_intensity_tree.g.dart';
@@ -11,7 +10,6 @@ part 'lpgm_intensity_tree.g.dart';
 @freezed
 abstract class PrefectureLpgmIntensityNode with _$PrefectureLpgmIntensityNode {
   const factory PrefectureLpgmIntensityNode({
-    @EarthquakeParameterRegionItemConverter()
     required EarthquakeParameterRegionItem region,
     required JmaLpgmIntensity? maxLpgmIntensity,
     required List<CityLpgmIntensityNode> cities,
@@ -24,7 +22,6 @@ abstract class PrefectureLpgmIntensityNode with _$PrefectureLpgmIntensityNode {
 @freezed
 abstract class LpgmIntensityRegion with _$LpgmIntensityRegion {
   const factory LpgmIntensityRegion({
-    @EarthquakeParameterRegionItemConverter()
     required EarthquakeParameterRegionItem region,
     required JmaLpgmIntensity? maxLpgmIntensity,
   }) = _LpgmIntensityRegion;
@@ -37,7 +34,6 @@ abstract class LpgmIntensityRegion with _$LpgmIntensityRegion {
 @freezed
 abstract class CityLpgmIntensityNode with _$CityLpgmIntensityNode {
   const factory CityLpgmIntensityNode({
-    @EarthquakeParameterCityItemConverter()
     required EarthquakeParameterCityItem city,
     required JmaLpgmIntensity? maxLpgmIntensity,
     required List<StationLpgmIntensityNode> stations,
@@ -51,7 +47,6 @@ abstract class CityLpgmIntensityNode with _$CityLpgmIntensityNode {
 @freezed
 abstract class StationLpgmIntensityNode with _$StationLpgmIntensityNode {
   const factory StationLpgmIntensityNode({
-    @EarthquakeParameterStationItemConverter()
     required EarthquakeParameterStationItem station,
     required IntensityStation? intensity,
   }) = _StationLpgmIntensityNode;

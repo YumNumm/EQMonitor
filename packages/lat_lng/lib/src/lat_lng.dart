@@ -6,8 +6,8 @@ class LatLng extends Point<double> {
   const LatLng(this.lat, this.lon) : super(lat, lon);
   factory LatLng.fromJson(Map<String, dynamic> json) {
     return LatLng(
-      (json['lat'] as num).toDouble(),
-      (json['lon'] as num).toDouble(),
+      ((json['latitude'] ?? json['lat']) as num).toDouble(),
+      ((json['longitude'] ?? json['lon']) as num).toDouble(),
     );
   }
 
@@ -19,7 +19,7 @@ class LatLng extends Point<double> {
     return 'LatLng(lat: $lat, lon: $lon)';
   }
 
-  Map<String, dynamic> toJson() => {'lat': lat, 'lon': lon};
+  Map<String, dynamic> toJson() => {'latitude': lat, 'longitude': lon};
 }
 
 extension LatLngEx on LatLng {

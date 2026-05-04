@@ -50,7 +50,7 @@ $Res call({
 });
 
 
-
+$KyoshinObservationPointCopyWith<$Res> get point;
 
 }
 /// @nodoc
@@ -73,7 +73,16 @@ as double?,pgaColor: freezed == pgaColor ? _self.pgaColor : pgaColor // ignore: 
 as Color?,
   ));
 }
-
+/// Create a copy of AnalyzedKmoniObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$KyoshinObservationPointCopyWith<$Res> get point {
+  
+  return $KyoshinObservationPointCopyWith<$Res>(_self.point, (value) {
+    return _then(_self.copyWith(point: value));
+  });
+}
 }
 
 
@@ -255,7 +264,7 @@ $Res call({
 });
 
 
-
+@override $KyoshinObservationPointCopyWith<$Res> get point;
 
 }
 /// @nodoc
@@ -279,7 +288,16 @@ as Color?,
   ));
 }
 
-
+/// Create a copy of AnalyzedKmoniObservationPoint
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$KyoshinObservationPointCopyWith<$Res> get point {
+  
+  return $KyoshinObservationPointCopyWith<$Res>(_self.point, (value) {
+    return _then(_self.copyWith(point: value));
+  });
+}
 }
 
 // dart format on

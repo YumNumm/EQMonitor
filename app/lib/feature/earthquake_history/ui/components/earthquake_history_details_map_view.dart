@@ -251,7 +251,7 @@ class _MapContent extends HookConsumerWidget {
       unawaited(
         showStationPopup(
           context,
-          stationName: stationNode.station.name,
+          stationName: stationNode.station.name.ja,
           intensity: stationNode.intensity?.maxIntensity,
           lpgmIntensity: stationNode.intensity?.maxLpgmIntensity,
         ),
@@ -313,12 +313,9 @@ class _MapContent extends HookConsumerWidget {
         for (final city in region.cities) {
           for (final stationNode in city.stations) {
             final station = stationNode.station;
-            if (!station.hasLatitude() || !station.hasLongitude()) {
-              continue;
-            }
             final dist =
-                math.pow(station.latitude - point.lat, 2) +
-                math.pow(station.longitude - point.lon, 2);
+                math.pow(station.location.lat - point.lat, 2) +
+                math.pow(station.location.lon - point.lon, 2);
             if (dist < minDist) {
               minDist = dist.toDouble();
               nearest = stationNode;
@@ -378,10 +375,7 @@ class _MapContent extends HookConsumerWidget {
           for (final city in region.cities) {
             for (final stationNode in city.stations) {
               final s = stationNode.station;
-              if (!s.hasLatitude() || !s.hasLongitude()) {
-                continue;
-              }
-              points.add(Geographic(lon: s.longitude, lat: s.latitude));
+              points.add(Geographic(lon: s.location.lon, lat: s.location.lat));
             }
           }
         }

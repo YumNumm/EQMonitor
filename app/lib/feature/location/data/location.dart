@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
+import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -50,7 +50,7 @@ Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
             e,
             const Distance().as(
               LengthUnit.Kilometer,
-              LatLng(e.location.latitude, e.location.longitude),
+              LatLng(e.location.lat, e.location.lon),
               currentPosition,
             ),
           ),

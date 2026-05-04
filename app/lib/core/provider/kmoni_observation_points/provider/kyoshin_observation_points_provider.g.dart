@@ -96,7 +96,7 @@ final class KyoshinMonitorInternalObservationPointsConvertedProvider
 }
 
 String _$kyoshinMonitorInternalObservationPointsConvertedHash() =>
-    r'f6684b034074c42307bd223125aee126c10e5a35';
+    r'e38cfbc688e60eec4cc745e5f538e4f0ad5e26bd';
 
 @ProviderFor(kyoshinObservationPoints)
 final kyoshinObservationPointsProvider = KyoshinObservationPointsProvider._();
@@ -186,7 +186,7 @@ final class KyoshinNamedObservationPointsProvider
 }
 
 String _$kyoshinNamedObservationPointsHash() =>
-    r'1091d55030287213b4b2d2e49a91997e52c220cd';
+    r'47c7b2d53baa37f1d3e3f7a1057f88124f993258';
 
 @ProviderFor(kyoshinMonitorInternalObservationPoints)
 final kyoshinMonitorInternalObservationPointsProvider =
@@ -230,4 +230,4 @@ final class KyoshinMonitorInternalObservationPointsProvider
 }
 
 String _$kyoshinMonitorInternalObservationPointsHash() =>
-    r'e72f20ba082d943b47c0e149ca555fbecc54ec2d';
+    r'7f32a6ed3b8c0efa7279f3695fd42a153f7d7fe6';
