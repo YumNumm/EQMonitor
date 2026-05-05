@@ -51,4 +51,4 @@ final class ParameterRepositoryProvider
 }
 
 String _$parameterRepositoryHash() =>
-    r'0000000000000000000000000000000000000000';
+    r'92c92180e2d6ac049af15a1b49ce1d515e5dd8aa';

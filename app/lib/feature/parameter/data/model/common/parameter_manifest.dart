@@ -18,7 +18,7 @@ abstract class ParameterManifest with _$ParameterManifest {
 abstract class ParameterManifestItem with _$ParameterManifestItem {
   const factory ParameterManifestItem({
     required ParameterType type,
-    required String schemaVersion,
+    required int schemaVersion,
     required String sourceVersion,
     required String? sourceUpdatedAt,
     required String generatedAt,

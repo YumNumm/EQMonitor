@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParameterMetadata {
 
- ParameterType get type; String get schemaVersion; String get sourceVersion; String? get sourceUpdatedAt; String get generatedAt; List<String> get sourceUrls; String get sha256;
+ ParameterType get type; int get schemaVersion; String get sourceVersion; String? get sourceUpdatedAt; String get generatedAt; List<String> get sourceUrls; String get sha256;
 /// Create a copy of ParameterMetadata
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ParameterMetadataCopyWith<$Res>  {
   factory $ParameterMetadataCopyWith(ParameterMetadata value, $Res Function(ParameterMetadata) _then) = _$ParameterMetadataCopyWithImpl;
 @useResult
 $Res call({
- ParameterType type, String schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256
+ ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256
 });
 
 
@@ -69,7 +69,7 @@ class _$ParameterMetadataCopyWithImpl<$Res>
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
-as String,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
+as int,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
 as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
 as String,sourceUrls: null == sourceUrls ? _self.sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type,  String schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParameterMetadata() when $default != null:
 return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256);case _:
@@ -180,7 +180,7 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type,  String schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)  $default,) {final _that = this;
 switch (_that) {
 case _ParameterMetadata():
 return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256);case _:
@@ -200,7 +200,7 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type,  String schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256)?  $default,) {final _that = this;
 switch (_that) {
 case _ParameterMetadata() when $default != null:
 return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256);case _:
@@ -219,7 +219,7 @@ class _ParameterMetadata implements ParameterMetadata {
   factory _ParameterMetadata.fromJson(Map<String, dynamic> json) => _$ParameterMetadataFromJson(json);
 
 @override final  ParameterType type;
-@override final  String schemaVersion;
+@override final  int schemaVersion;
 @override final  String sourceVersion;
 @override final  String? sourceUpdatedAt;
 @override final  String generatedAt;
@@ -265,7 +265,7 @@ abstract mixin class _$ParameterMetadataCopyWith<$Res> implements $ParameterMeta
   factory _$ParameterMetadataCopyWith(_ParameterMetadata value, $Res Function(_ParameterMetadata) _then) = __$ParameterMetadataCopyWithImpl;
 @override @useResult
 $Res call({
- ParameterType type, String schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256
+ ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256
 });
 
 
@@ -286,7 +286,7 @@ class __$ParameterMetadataCopyWithImpl<$Res>
   return _then(_ParameterMetadata(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
-as String,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
+as int,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
 as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
 as String,sourceUrls: null == sourceUrls ? _self._sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable

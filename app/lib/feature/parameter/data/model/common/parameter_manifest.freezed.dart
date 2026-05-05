@@ -284,7 +284,7 @@ as List<ParameterManifestItem>,
 /// @nodoc
 mixin _$ParameterManifestItem {
 
- ParameterType get type; String get schemaVersion; String get sourceVersion; String? get sourceUpdatedAt; String get generatedAt; List<String> get sourceUrls; String get sha256; int get sizeBytes; String get url;
+ ParameterType get type; int get schemaVersion; String get sourceVersion; String? get sourceUpdatedAt; String get generatedAt; List<String> get sourceUrls; String get sha256; int get sizeBytes; String get url;
 /// Create a copy of ParameterManifestItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -317,7 +317,7 @@ abstract mixin class $ParameterManifestItemCopyWith<$Res>  {
   factory $ParameterManifestItemCopyWith(ParameterManifestItem value, $Res Function(ParameterManifestItem) _then) = _$ParameterManifestItemCopyWithImpl;
 @useResult
 $Res call({
- ParameterType type, String schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256, int sizeBytes, String url
+ ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256, int sizeBytes, String url
 });
 
 
@@ -338,7 +338,7 @@ class _$ParameterManifestItemCopyWithImpl<$Res>
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
-as String,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
+as int,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
 as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
 as String,sourceUrls: null == sourceUrls ? _self.sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable
@@ -430,7 +430,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type,  String schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256,  int sizeBytes,  String url)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256,  int sizeBytes,  String url)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParameterManifestItem() when $default != null:
 return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
@@ -451,7 +451,7 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type,  String schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256,  int sizeBytes,  String url)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256,  int sizeBytes,  String url)  $default,) {final _that = this;
 switch (_that) {
 case _ParameterManifestItem():
 return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
@@ -471,7 +471,7 @@ return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceU
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type,  String schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256,  int sizeBytes,  String url)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ParameterType type,  int schemaVersion,  String sourceVersion,  String? sourceUpdatedAt,  String generatedAt,  List<String> sourceUrls,  String sha256,  int sizeBytes,  String url)?  $default,) {final _that = this;
 switch (_that) {
 case _ParameterManifestItem() when $default != null:
 return $default(_that.type,_that.schemaVersion,_that.sourceVersion,_that.sourceUpdatedAt,_that.generatedAt,_that.sourceUrls,_that.sha256,_that.sizeBytes,_that.url);case _:
@@ -490,7 +490,7 @@ class _ParameterManifestItem implements ParameterManifestItem {
   factory _ParameterManifestItem.fromJson(Map<String, dynamic> json) => _$ParameterManifestItemFromJson(json);
 
 @override final  ParameterType type;
-@override final  String schemaVersion;
+@override final  int schemaVersion;
 @override final  String sourceVersion;
 @override final  String? sourceUpdatedAt;
 @override final  String generatedAt;
@@ -538,7 +538,7 @@ abstract mixin class _$ParameterManifestItemCopyWith<$Res> implements $Parameter
   factory _$ParameterManifestItemCopyWith(_ParameterManifestItem value, $Res Function(_ParameterManifestItem) _then) = __$ParameterManifestItemCopyWithImpl;
 @override @useResult
 $Res call({
- ParameterType type, String schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256, int sizeBytes, String url
+ ParameterType type, int schemaVersion, String sourceVersion, String? sourceUpdatedAt, String generatedAt, List<String> sourceUrls, String sha256, int sizeBytes, String url
 });
 
 
@@ -559,7 +559,7 @@ class __$ParameterManifestItemCopyWithImpl<$Res>
   return _then(_ParameterManifestItem(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ParameterType,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
-as String,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
+as int,sourceVersion: null == sourceVersion ? _self.sourceVersion : sourceVersion // ignore: cast_nullable_to_non_nullable
 as String,sourceUpdatedAt: freezed == sourceUpdatedAt ? _self.sourceUpdatedAt : sourceUpdatedAt // ignore: cast_nullable_to_non_nullable
 as String?,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
 as String,sourceUrls: null == sourceUrls ? _self._sourceUrls : sourceUrls // ignore: cast_nullable_to_non_nullable

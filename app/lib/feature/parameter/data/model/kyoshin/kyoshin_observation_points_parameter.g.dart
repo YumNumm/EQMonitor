@@ -75,6 +75,7 @@ _KyoshinObservationPoint _$KyoshinObservationPointFromJson(
     'prefectureCode': 'prefecture_code',
     'regionCode': 'region_code',
     'isSuspended': 'is_suspended',
+    'arv400': 'arv_400',
   },
 );
 

@@ -8,10 +8,11 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/data/r
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'earthquake_settings_notifier.g.dart';
+part 'earthquake_notification_settings_notifier.g.dart';
 
 @riverpod
-class EarthquakeNotificationSettingsNotifier extends _$EarthquakeSettingsNotifier {
+class EarthquakeNotificationSettingsNotifier
+    extends _$EarthquakeNotificationSettingsNotifier {
   static final saveSettingsMutation = Mutation<void>();
   static final updateRegionsMutation = Mutation<void>();
 

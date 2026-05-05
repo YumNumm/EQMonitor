@@ -28,11 +28,11 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settingsAsync = ref.watch(earthquakeSettingsProvider);
+    final settingsAsync = ref.watch(earthquakeNotificationSettingsProvider);
 
     if (settingsAsync.hasError && !settingsAsync.isLoading) {
       return _ErrorBody(
-        onRetry: () => ref.invalidate(earthquakeSettingsProvider),
+        onRetry: () => ref.invalidate(earthquakeNotificationSettingsProvider),
       );
     }
 
@@ -87,7 +87,7 @@ class _EnabledSection extends ConsumerWidget {
                   ref,
                   (tsx) async {
                     await tsx
-                        .get(earthquakeSettingsProvider.notifier)
+                        .get(earthquakeNotificationSettingsProvider.notifier)
                         .setEnabled(enabled: value);
                   },
                 ),
@@ -146,7 +146,7 @@ class _ThresholdSection extends ConsumerWidget {
                     ref,
                     (tsx) async {
                       await tsx
-                          .get(earthquakeSettingsProvider.notifier)
+                          .get(earthquakeNotificationSettingsProvider.notifier)
                           .setCriticalThreshold(
                             picked == _kClearThreshold ? null : picked,
                           );
@@ -181,7 +181,7 @@ class _EstimatedIntensitySection extends ConsumerWidget {
                   ref,
                   (tsx) async {
                     await tsx
-                        .get(earthquakeSettingsProvider.notifier)
+                        .get(earthquakeNotificationSettingsProvider.notifier)
                         .setEstimatedIntensityEnabled(enabled: value);
                   },
                 ),
@@ -244,7 +244,7 @@ class _RegionsSection extends ConsumerWidget {
                       ref,
                       (tsx) async {
                         await tsx
-                            .get(earthquakeSettingsProvider.notifier)
+                            .get(earthquakeNotificationSettingsProvider.notifier)
                             .removeRegion(
                               regionId: region.regionId,
                               isCurrentLocation: region.isCurrentLocation,
@@ -271,7 +271,7 @@ class _RegionsSection extends ConsumerWidget {
                                 ref,
                                 (tsx) async {
                                   await tsx
-                                      .get(earthquakeSettingsProvider.notifier)
+                                      .get(earthquakeNotificationSettingsProvider.notifier)
                                       .addCurrentLocationRegion();
                                 },
                               ),
@@ -305,7 +305,7 @@ class _RegionsSection extends ConsumerWidget {
                                 ref,
                                 (tsx) async {
                                   await tsx
-                                      .get(earthquakeSettingsProvider.notifier)
+                                      .get(earthquakeNotificationSettingsProvider.notifier)
                                       .addRegion(
                                         regionId: result.regionId,
                                         regionName: result.regionName,

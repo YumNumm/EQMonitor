@@ -28,7 +28,7 @@ final class ParameterJsonParserProvider
         argument: null,
         retry: null,
         name: r'parameterJsonParserProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -57,4 +57,4 @@ final class ParameterJsonParserProvider
 }
 
 String _$parameterJsonParserHash() =>
-    r'0000000000000000000000000000000000000000';
+    r'44db88067e9de0ba4e3333a847c0729f9f957ade';

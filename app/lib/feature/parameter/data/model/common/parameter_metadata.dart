@@ -8,7 +8,7 @@ part 'parameter_metadata.g.dart';
 abstract class ParameterMetadata with _$ParameterMetadata {
   const factory ParameterMetadata({
     required ParameterType type,
-    required String schemaVersion,
+    required int schemaVersion,
     required String sourceVersion,
     required String? sourceUpdatedAt,
     required String generatedAt,

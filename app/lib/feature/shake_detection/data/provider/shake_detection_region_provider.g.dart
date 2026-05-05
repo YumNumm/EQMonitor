@@ -11,19 +11,19 @@ part of 'shake_detection_region_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-/// region 文字列を都道府県ごとにグループ化して返す。
+/// 都道府県ごとの地域名リストを返す。
 ///
 /// キー: 都道府県名（例: "岩手県"）
-/// 値: 地域名のリスト（例: ["沿岸北部", "内陸北部"]）
+/// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
 
 @ProviderFor(shakeDetectionRegions)
 final shakeDetectionRegionsProvider = ShakeDetectionRegionsFamily._();
 
 /// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-/// region 文字列を都道府県ごとにグループ化して返す。
+/// 都道府県ごとの地域名リストを返す。
 ///
 /// キー: 都道府県名（例: "岩手県"）
-/// 値: 地域名のリスト（例: ["沿岸北部", "内陸北部"]）
+/// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
 
 final class ShakeDetectionRegionsProvider
     extends
@@ -36,10 +36,10 @@ final class ShakeDetectionRegionsProvider
         $FutureModifier<Map<String, List<String>>>,
         $FutureProvider<Map<String, List<String>>> {
   /// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-  /// region 文字列を都道府県ごとにグループ化して返す。
+  /// 都道府県ごとの地域名リストを返す。
   ///
   /// キー: 都道府県名（例: "岩手県"）
-  /// 値: 地域名のリスト（例: ["沿岸北部", "内陸北部"]）
+  /// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
   ShakeDetectionRegionsProvider._({
     required ShakeDetectionRegionsFamily super.from,
     required ShakeDetectionEvent super.argument,
@@ -85,13 +85,13 @@ final class ShakeDetectionRegionsProvider
 }
 
 String _$shakeDetectionRegionsHash() =>
-    r'42a90a2e0c925afec52726adefd1ec577a145f28';
+    r'49a3b277715796cec950e6ac67cdc28f5f2dc802';
 
 /// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-/// region 文字列を都道府県ごとにグループ化して返す。
+/// 都道府県ごとの地域名リストを返す。
 ///
 /// キー: 都道府県名（例: "岩手県"）
-/// 値: 地域名のリスト（例: ["沿岸北部", "内陸北部"]）
+/// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
 
 final class ShakeDetectionRegionsFamily extends $Family
     with
@@ -109,10 +109,10 @@ final class ShakeDetectionRegionsFamily extends $Family
       );
 
   /// 揺れ検知イベントのバウンディングボックス内に含まれる観測点の
-  /// region 文字列を都道府県ごとにグループ化して返す。
+  /// 都道府県ごとの地域名リストを返す。
   ///
   /// キー: 都道府県名（例: "岩手県"）
-  /// 値: 地域名のリスト（例: ["沿岸北部", "内陸北部"]）
+  /// 値: EEW予報区名のリスト（例: ["岩手県沿岸北部", "岩手県内陸北部"]）
 
   ShakeDetectionRegionsProvider call(ShakeDetectionEvent event) =>
       ShakeDetectionRegionsProvider._(argument: event, from: this);

@@ -71,7 +71,7 @@ final class JmaEarthquakeNearestObservationPointProvider
 }
 
 String _$jmaEarthquakeNearestObservationPointHash() =>
-    r'21a12adc56a07f503d016b4fa4844f539233f0c8';
+    r'dda1faf668fb40235897d34c76be9c8e00116f4c';
 
 final class JmaEarthquakeNearestObservationPointFamily extends $Family
     with
