@@ -12,20 +12,9 @@ abstract class AnalyzedKmoniObservationPoint
     required KyoshinObservationPoint point,
     // ここから
     double? intensityValue,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+@ColorJsonConverter()
     Color? intensityColor,
     double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
+@ColorJsonConverter() Color? pgaColor,
   }) = _AnalyzedKmoniObservationPoint;
-}
-
-String? colorToJson(Color? color) {
-  return color?.sRgbValue.toRadixString(16);
-}
-
-Color? colorFromJson(String? color) {
-  if (color == null) {
-    return null;
-  }
-  return Color(int.parse(color, radix: 16));
 }
