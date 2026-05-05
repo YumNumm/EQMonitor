@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -194,10 +193,8 @@ abstract class IntensityColorModel with _$IntensityColorModel {
 @freezed
 abstract class TextColorModel with _$TextColorModel {
   const factory TextColorModel({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color foreground,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color background,
+    @ColorJsonConverter() required Color foreground,
+    @ColorJsonConverter() required Color background,
   }) = _TextColorModel;
 
   factory TextColorModel.fromJson(Map<String, dynamic> json) =>
@@ -289,27 +286,4 @@ extension IntensityColorModelExt on IntensityColorModel {
         JmaLpgmIntensity.three => fiveLower,
         JmaLpgmIntensity.four => seven,
       };
-}
-
-Color colorFromJson(String color) {
-  final parsed = int.parse(color, radix: 16);
-  if (color.length <= 6) {
-    return Color(0xFF000000 | parsed);
-  }
-  final alpha = (parsed >> 24) & 0xFF;
-  if (alpha == 0) {
-    // Backward compatibility for previously persisted RGB-only 8-digit values.
-    return Color(0xFF000000 | (parsed & 0x00FFFFFF));
-  }
-  return Color(parsed);
-}
-
-String colorToJson(Color color) {
-  final sRgb = color.withValues(colorSpace: ColorSpace.sRGB);
-  final a = (sRgb.a * 255).toInt();
-  final r = (sRgb.r * 255).toInt();
-  final g = (sRgb.g * 255).toInt();
-  final b = (sRgb.b * 255).toInt();
-  final hex = a << 24 | r << 16 | g << 8 | b;
-  return hex.toRadixString(16).padLeft(8, '0');
 }

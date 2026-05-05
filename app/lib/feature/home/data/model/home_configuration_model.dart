@@ -183,7 +183,6 @@ abstract class HomeConfigurationModel with _$HomeConfigurationModel {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory HomeConfigurationModel({
     @Default(HomeEewSettings()) HomeEewSettings eew,
-    @JsonKey(name: 'kyoshin_monitor')
     @Default(HomeKyoshinMonitorSettings())
     HomeKyoshinMonitorSettings kyoshinMonitor,
     @Default(HomeMapSettings()) HomeMapSettings map,

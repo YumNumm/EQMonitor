@@ -34,7 +34,7 @@ abstract class KyoshinObservationPoint with _$KyoshinObservationPoint {
     required bool isSuspended,
     required LatLng location,
     required KyoshinObservationPointMapPoint? point,
-    @JsonKey(name: 'arv_400') required double? arv400,
+    required double? arv400,
   }) = _KyoshinObservationPoint;
 
   factory KyoshinObservationPoint.fromJson(Map<String, dynamic> json) =>

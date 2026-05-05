@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnalyzedKmoniObservationPoint {
 
- KyoshinObservationPoint get point;// ここから
- double? get intensityValue;@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? get intensityColor; double? get pga;@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? get pgaColor;
+ KyoshinObservationPoint get point; double? get intensityValue;@ColorJsonConverter() Color? get intensityColor; double? get pga;@ColorJsonConverter() Color? get pgaColor;
 /// Create a copy of AnalyzedKmoniObservationPoint
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +45,7 @@ abstract mixin class $AnalyzedKmoniObservationPointCopyWith<$Res>  {
   factory $AnalyzedKmoniObservationPointCopyWith(AnalyzedKmoniObservationPoint value, $Res Function(AnalyzedKmoniObservationPoint) _then) = _$AnalyzedKmoniObservationPointCopyWithImpl;
 @useResult
 $Res call({
- KyoshinObservationPoint point, double? intensityValue,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? intensityColor, double? pga,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor
+ KyoshinObservationPoint point, double? intensityValue,@ColorJsonConverter() Color? intensityColor, double? pga,@ColorJsonConverter() Color? pgaColor
 });
 
 
@@ -164,7 +163,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( KyoshinObservationPoint point,  double? intensityValue, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color? intensityColor,  double? pga, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color? pgaColor)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( KyoshinObservationPoint point,  double? intensityValue, @ColorJsonConverter()  Color? intensityColor,  double? pga, @ColorJsonConverter()  Color? pgaColor)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnalyzedKmoniObservationPoint() when $default != null:
 return $default(_that.point,_that.intensityValue,_that.intensityColor,_that.pga,_that.pgaColor);case _:
@@ -185,7 +184,7 @@ return $default(_that.point,_that.intensityValue,_that.intensityColor,_that.pga,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( KyoshinObservationPoint point,  double? intensityValue, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color? intensityColor,  double? pga, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color? pgaColor)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( KyoshinObservationPoint point,  double? intensityValue, @ColorJsonConverter()  Color? intensityColor,  double? pga, @ColorJsonConverter()  Color? pgaColor)  $default,) {final _that = this;
 switch (_that) {
 case _AnalyzedKmoniObservationPoint():
 return $default(_that.point,_that.intensityValue,_that.intensityColor,_that.pga,_that.pgaColor);case _:
@@ -205,7 +204,7 @@ return $default(_that.point,_that.intensityValue,_that.intensityColor,_that.pga,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( KyoshinObservationPoint point,  double? intensityValue, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color? intensityColor,  double? pga, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color? pgaColor)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( KyoshinObservationPoint point,  double? intensityValue, @ColorJsonConverter()  Color? intensityColor,  double? pga, @ColorJsonConverter()  Color? pgaColor)?  $default,) {final _that = this;
 switch (_that) {
 case _AnalyzedKmoniObservationPoint() when $default != null:
 return $default(_that.point,_that.intensityValue,_that.intensityColor,_that.pga,_that.pgaColor);case _:
@@ -220,15 +219,14 @@ return $default(_that.point,_that.intensityValue,_that.intensityColor,_that.pga,
 
 
 class _AnalyzedKmoniObservationPoint implements AnalyzedKmoniObservationPoint {
-  const _AnalyzedKmoniObservationPoint({required this.point, this.intensityValue, @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.intensityColor, this.pga, @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.pgaColor});
+  const _AnalyzedKmoniObservationPoint({required this.point, this.intensityValue, @ColorJsonConverter() this.intensityColor, this.pga, @ColorJsonConverter() this.pgaColor});
   
 
 @override final  KyoshinObservationPoint point;
-// ここから
 @override final  double? intensityValue;
-@override@JsonKey(fromJson: colorFromJson, toJson: colorToJson) final  Color? intensityColor;
+@override@ColorJsonConverter() final  Color? intensityColor;
 @override final  double? pga;
-@override@JsonKey(fromJson: colorFromJson, toJson: colorToJson) final  Color? pgaColor;
+@override@ColorJsonConverter() final  Color? pgaColor;
 
 /// Create a copy of AnalyzedKmoniObservationPoint
 /// with the given fields replaced by the non-null parameter values.
@@ -260,7 +258,7 @@ abstract mixin class _$AnalyzedKmoniObservationPointCopyWith<$Res> implements $A
   factory _$AnalyzedKmoniObservationPointCopyWith(_AnalyzedKmoniObservationPoint value, $Res Function(_AnalyzedKmoniObservationPoint) _then) = __$AnalyzedKmoniObservationPointCopyWithImpl;
 @override @useResult
 $Res call({
- KyoshinObservationPoint point, double? intensityValue,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? intensityColor, double? pga,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor
+ KyoshinObservationPoint point, double? intensityValue,@ColorJsonConverter() Color? intensityColor, double? pga,@ColorJsonConverter() Color? pgaColor
 });
 
 

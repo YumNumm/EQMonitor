@@ -9,9 +9,8 @@ part 'map_configuration.g.dart';
 abstract class MapConfiguration with _$MapConfiguration {
   const factory MapConfiguration({
     required MapTheme theme,
-    @JsonKey(includeToJson: false, includeFromJson: false)
     MapColorScheme? colorScheme,
-    @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
+    String? styleString,
   }) = _MapConfiguration;
 
   factory MapConfiguration.fromJson(Map<String, dynamic> json) =>

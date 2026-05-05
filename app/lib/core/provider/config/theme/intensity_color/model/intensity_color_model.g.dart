@@ -90,11 +90,11 @@ _TextColorModel _$TextColorModelFromJson(Map<String, dynamic> json) =>
       final val = _TextColorModel(
         foreground: $checkedConvert(
           'foreground',
-          (v) => colorFromJson(v as String),
+          (v) => const ColorJsonConverter().fromJson(v as String),
         ),
         background: $checkedConvert(
           'background',
-          (v) => colorFromJson(v as String),
+          (v) => const ColorJsonConverter().fromJson(v as String),
         ),
       );
       return val;
@@ -102,6 +102,6 @@ _TextColorModel _$TextColorModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$TextColorModelToJson(_TextColorModel instance) =>
     <String, dynamic>{
-      'foreground': colorToJson(instance.foreground),
-      'background': colorToJson(instance.background),
+      'foreground': const ColorJsonConverter().toJson(instance.foreground),
+      'background': const ColorJsonConverter().toJson(instance.background),
     };

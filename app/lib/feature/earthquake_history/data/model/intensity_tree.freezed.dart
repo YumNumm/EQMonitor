@@ -589,7 +589,7 @@ $EarthquakeParameterRegionItemCopyWith<$Res> get region {
 /// @nodoc
 mixin _$CityIntensityNode {
 
- EarthquakeParameterCityItem get city; JmaIntensity? get maxIntensity; List<StationIntensityNode> get stations;@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? get maxLpgmIntensity;
+ EarthquakeParameterCityItem get city; JmaIntensity? get maxIntensity; List<StationIntensityNode> get stations; JmaLpgmIntensity? get maxLpgmIntensity;
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -622,7 +622,7 @@ abstract mixin class $CityIntensityNodeCopyWith<$Res>  {
   factory $CityIntensityNodeCopyWith(CityIntensityNode value, $Res Function(CityIntensityNode) _then) = _$CityIntensityNodeCopyWithImpl;
 @useResult
 $Res call({
- EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+ EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations, JmaLpgmIntensity? maxLpgmIntensity
 });
 
 
@@ -739,7 +739,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
 return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
@@ -760,7 +760,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntens
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations,  JmaLpgmIntensity? maxLpgmIntensity)  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode():
 return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
@@ -780,7 +780,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntens
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity')  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( EarthquakeParameterCityItem city,  JmaIntensity? maxIntensity,  List<StationIntensityNode> stations,  JmaLpgmIntensity? maxLpgmIntensity)?  $default,) {final _that = this;
 switch (_that) {
 case _CityIntensityNode() when $default != null:
 return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntensity);case _:
@@ -795,7 +795,7 @@ return $default(_that.city,_that.maxIntensity,_that.stations,_that.maxLpgmIntens
 @JsonSerializable()
 
 class _CityIntensityNode implements CityIntensityNode {
-  const _CityIntensityNode({required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations, @JsonKey(name: 'max_lpgm_intensity') this.maxLpgmIntensity}): _stations = stations;
+  const _CityIntensityNode({required this.city, required this.maxIntensity, required final  List<StationIntensityNode> stations, this.maxLpgmIntensity}): _stations = stations;
   factory _CityIntensityNode.fromJson(Map<String, dynamic> json) => _$CityIntensityNodeFromJson(json);
 
 @override final  EarthquakeParameterCityItem city;
@@ -807,7 +807,7 @@ class _CityIntensityNode implements CityIntensityNode {
   return EqualUnmodifiableListView(_stations);
 }
 
-@override@JsonKey(name: 'max_lpgm_intensity') final  JmaLpgmIntensity? maxLpgmIntensity;
+@override final  JmaLpgmIntensity? maxLpgmIntensity;
 
 /// Create a copy of CityIntensityNode
 /// with the given fields replaced by the non-null parameter values.
@@ -842,7 +842,7 @@ abstract mixin class _$CityIntensityNodeCopyWith<$Res> implements $CityIntensity
   factory _$CityIntensityNodeCopyWith(_CityIntensityNode value, $Res Function(_CityIntensityNode) _then) = __$CityIntensityNodeCopyWithImpl;
 @override @useResult
 $Res call({
- EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations,@JsonKey(name: 'max_lpgm_intensity') JmaLpgmIntensity? maxLpgmIntensity
+ EarthquakeParameterCityItem city, JmaIntensity? maxIntensity, List<StationIntensityNode> stations, JmaLpgmIntensity? maxLpgmIntensity
 });
 
 

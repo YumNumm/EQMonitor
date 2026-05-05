@@ -506,7 +506,7 @@ $TextColorModelCopyWith<$Res> get seven {
 /// @nodoc
 mixin _$TextColorModel {
 
-@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color get foreground;@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color get background;
+@ColorJsonConverter() Color get foreground;@ColorJsonConverter() Color get background;
 /// Create a copy of TextColorModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -539,7 +539,7 @@ abstract mixin class $TextColorModelCopyWith<$Res>  {
   factory $TextColorModelCopyWith(TextColorModel value, $Res Function(TextColorModel) _then) = _$TextColorModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background
+@ColorJsonConverter() Color foreground,@ColorJsonConverter() Color background
 });
 
 
@@ -645,7 +645,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color foreground, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color background)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color foreground, @ColorJsonConverter()  Color background)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TextColorModel() when $default != null:
 return $default(_that.foreground,_that.background);case _:
@@ -666,7 +666,7 @@ return $default(_that.foreground,_that.background);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color foreground, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color background)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color foreground, @ColorJsonConverter()  Color background)  $default,) {final _that = this;
 switch (_that) {
 case _TextColorModel():
 return $default(_that.foreground,_that.background);case _:
@@ -686,7 +686,7 @@ return $default(_that.foreground,_that.background);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color foreground, @JsonKey(fromJson: colorFromJson, toJson: colorToJson)  Color background)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ColorJsonConverter()  Color foreground, @ColorJsonConverter()  Color background)?  $default,) {final _that = this;
 switch (_that) {
 case _TextColorModel() when $default != null:
 return $default(_that.foreground,_that.background);case _:
@@ -701,11 +701,11 @@ return $default(_that.foreground,_that.background);case _:
 @JsonSerializable()
 
 class _TextColorModel implements TextColorModel {
-  const _TextColorModel({@JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.foreground, @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.background});
+  const _TextColorModel({@ColorJsonConverter() required this.foreground, @ColorJsonConverter() required this.background});
   factory _TextColorModel.fromJson(Map<String, dynamic> json) => _$TextColorModelFromJson(json);
 
-@override@JsonKey(fromJson: colorFromJson, toJson: colorToJson) final  Color foreground;
-@override@JsonKey(fromJson: colorFromJson, toJson: colorToJson) final  Color background;
+@override@ColorJsonConverter() final  Color foreground;
+@override@ColorJsonConverter() final  Color background;
 
 /// Create a copy of TextColorModel
 /// with the given fields replaced by the non-null parameter values.
@@ -740,7 +740,7 @@ abstract mixin class _$TextColorModelCopyWith<$Res> implements $TextColorModelCo
   factory _$TextColorModelCopyWith(_TextColorModel value, $Res Function(_TextColorModel) _then) = __$TextColorModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background
+@ColorJsonConverter() Color foreground,@ColorJsonConverter() Color background
 });
 
 

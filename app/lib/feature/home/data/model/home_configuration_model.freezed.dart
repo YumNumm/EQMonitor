@@ -1387,7 +1387,7 @@ $EarthquakeHistoryParameterCopyWith<$Res>? get parameter {
 /// @nodoc
 mixin _$HomeConfigurationModel {
 
- HomeEewSettings get eew;@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings get kyoshinMonitor; HomeMapSettings get map; HomeCommonSettings get common; HomeShakeDetectionSettings get shakeDetection;
+ HomeEewSettings get eew; HomeKyoshinMonitorSettings get kyoshinMonitor; HomeMapSettings get map; HomeCommonSettings get common; HomeShakeDetectionSettings get shakeDetection;
 /// Create a copy of HomeConfigurationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1420,7 +1420,7 @@ abstract mixin class $HomeConfigurationModelCopyWith<$Res>  {
   factory $HomeConfigurationModelCopyWith(HomeConfigurationModel value, $Res Function(HomeConfigurationModel) _then) = _$HomeConfigurationModelCopyWithImpl;
 @useResult
 $Res call({
- HomeEewSettings eew,@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common, HomeShakeDetectionSettings shakeDetection
+ HomeEewSettings eew, HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common, HomeShakeDetectionSettings shakeDetection
 });
 
 
@@ -1574,7 +1574,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HomeEewSettings eew,  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel() when $default != null:
 return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shakeDetection);case _:
@@ -1595,7 +1595,7 @@ return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shak
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HomeEewSettings eew,  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)  $default,) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel():
 return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shakeDetection);case _:
@@ -1615,7 +1615,7 @@ return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shak
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HomeEewSettings eew, @JsonKey(name: 'kyoshin_monitor')  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HomeEewSettings eew,  HomeKyoshinMonitorSettings kyoshinMonitor,  HomeMapSettings map,  HomeCommonSettings common,  HomeShakeDetectionSettings shakeDetection)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeConfigurationModel() when $default != null:
 return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shakeDetection);case _:
@@ -1630,11 +1630,11 @@ return $default(_that.eew,_that.kyoshinMonitor,_that.map,_that.common,_that.shak
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _HomeConfigurationModel implements HomeConfigurationModel {
-  const _HomeConfigurationModel({this.eew = const HomeEewSettings(), @JsonKey(name: 'kyoshin_monitor') this.kyoshinMonitor = const HomeKyoshinMonitorSettings(), this.map = const HomeMapSettings(), this.common = const HomeCommonSettings(), this.shakeDetection = const HomeShakeDetectionSettings()});
+  const _HomeConfigurationModel({this.eew = const HomeEewSettings(), this.kyoshinMonitor = const HomeKyoshinMonitorSettings(), this.map = const HomeMapSettings(), this.common = const HomeCommonSettings(), this.shakeDetection = const HomeShakeDetectionSettings()});
   factory _HomeConfigurationModel.fromJson(Map<String, dynamic> json) => _$HomeConfigurationModelFromJson(json);
 
 @override@JsonKey() final  HomeEewSettings eew;
-@override@JsonKey(name: 'kyoshin_monitor') final  HomeKyoshinMonitorSettings kyoshinMonitor;
+@override@JsonKey() final  HomeKyoshinMonitorSettings kyoshinMonitor;
 @override@JsonKey() final  HomeMapSettings map;
 @override@JsonKey() final  HomeCommonSettings common;
 @override@JsonKey() final  HomeShakeDetectionSettings shakeDetection;
@@ -1672,7 +1672,7 @@ abstract mixin class _$HomeConfigurationModelCopyWith<$Res> implements $HomeConf
   factory _$HomeConfigurationModelCopyWith(_HomeConfigurationModel value, $Res Function(_HomeConfigurationModel) _then) = __$HomeConfigurationModelCopyWithImpl;
 @override @useResult
 $Res call({
- HomeEewSettings eew,@JsonKey(name: 'kyoshin_monitor') HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common, HomeShakeDetectionSettings shakeDetection
+ HomeEewSettings eew, HomeKyoshinMonitorSettings kyoshinMonitor, HomeMapSettings map, HomeCommonSettings common, HomeShakeDetectionSettings shakeDetection
 });
 
 

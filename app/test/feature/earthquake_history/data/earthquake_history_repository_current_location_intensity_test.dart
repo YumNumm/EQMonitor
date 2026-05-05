@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 
 const _testMetadata = ParameterMetadata(
   type: ParameterType.earthquakeStations,
-  schemaVersion: '1.0',
+  schemaVersion: 1,
   sourceVersion: '1.0',
   sourceUpdatedAt: null,
   generatedAt: '2024-01-01T00:00:00Z',

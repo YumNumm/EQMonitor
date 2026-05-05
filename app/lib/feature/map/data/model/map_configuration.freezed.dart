@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MapConfiguration {
 
- MapTheme get theme;@JsonKey(includeToJson: false, includeFromJson: false) MapColorScheme? get colorScheme;@JsonKey(includeToJson: false, includeFromJson: false) String? get styleString;
+ MapTheme get theme; MapColorScheme? get colorScheme; String? get styleString;
 /// Create a copy of MapConfiguration
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $MapConfigurationCopyWith<$Res>  {
   factory $MapConfigurationCopyWith(MapConfiguration value, $Res Function(MapConfiguration) _then) = _$MapConfigurationCopyWithImpl;
 @useResult
 $Res call({
- MapTheme theme,@JsonKey(includeToJson: false, includeFromJson: false) MapColorScheme? colorScheme,@JsonKey(includeToJson: false, includeFromJson: false) String? styleString
+ MapTheme theme, MapColorScheme? colorScheme, String? styleString
 });
 
 
@@ -167,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MapTheme theme, @JsonKey(includeToJson: false, includeFromJson: false)  MapColorScheme? colorScheme, @JsonKey(includeToJson: false, includeFromJson: false)  String? styleString)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MapTheme theme,  MapColorScheme? colorScheme,  String? styleString)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapConfiguration() when $default != null:
 return $default(_that.theme,_that.colorScheme,_that.styleString);case _:
@@ -188,7 +188,7 @@ return $default(_that.theme,_that.colorScheme,_that.styleString);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MapTheme theme, @JsonKey(includeToJson: false, includeFromJson: false)  MapColorScheme? colorScheme, @JsonKey(includeToJson: false, includeFromJson: false)  String? styleString)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MapTheme theme,  MapColorScheme? colorScheme,  String? styleString)  $default,) {final _that = this;
 switch (_that) {
 case _MapConfiguration():
 return $default(_that.theme,_that.colorScheme,_that.styleString);case _:
@@ -208,7 +208,7 @@ return $default(_that.theme,_that.colorScheme,_that.styleString);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MapTheme theme, @JsonKey(includeToJson: false, includeFromJson: false)  MapColorScheme? colorScheme, @JsonKey(includeToJson: false, includeFromJson: false)  String? styleString)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MapTheme theme,  MapColorScheme? colorScheme,  String? styleString)?  $default,) {final _that = this;
 switch (_that) {
 case _MapConfiguration() when $default != null:
 return $default(_that.theme,_that.colorScheme,_that.styleString);case _:
@@ -223,12 +223,12 @@ return $default(_that.theme,_that.colorScheme,_that.styleString);case _:
 @JsonSerializable()
 
 class _MapConfiguration implements MapConfiguration {
-  const _MapConfiguration({required this.theme, @JsonKey(includeToJson: false, includeFromJson: false) this.colorScheme, @JsonKey(includeToJson: false, includeFromJson: false) this.styleString});
+  const _MapConfiguration({required this.theme, this.colorScheme, this.styleString});
   factory _MapConfiguration.fromJson(Map<String, dynamic> json) => _$MapConfigurationFromJson(json);
 
 @override final  MapTheme theme;
-@override@JsonKey(includeToJson: false, includeFromJson: false) final  MapColorScheme? colorScheme;
-@override@JsonKey(includeToJson: false, includeFromJson: false) final  String? styleString;
+@override final  MapColorScheme? colorScheme;
+@override final  String? styleString;
 
 /// Create a copy of MapConfiguration
 /// with the given fields replaced by the non-null parameter values.
@@ -263,7 +263,7 @@ abstract mixin class _$MapConfigurationCopyWith<$Res> implements $MapConfigurati
   factory _$MapConfigurationCopyWith(_MapConfiguration value, $Res Function(_MapConfiguration) _then) = __$MapConfigurationCopyWithImpl;
 @override @useResult
 $Res call({
- MapTheme theme,@JsonKey(includeToJson: false, includeFromJson: false) MapColorScheme? colorScheme,@JsonKey(includeToJson: false, includeFromJson: false) String? styleString
+ MapTheme theme, MapColorScheme? colorScheme, String? styleString
 });
 
 

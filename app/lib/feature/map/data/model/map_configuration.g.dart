@@ -9,18 +9,37 @@ part of 'map_configuration.dart';
 // **************************************************************************
 
 _MapConfiguration _$MapConfigurationFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('_MapConfiguration', json, ($checkedConvert) {
-      final val = _MapConfiguration(
-        theme: $checkedConvert(
-          'theme',
-          (v) => $enumDecode(_$MapThemeEnumMap, v),
-        ),
-      );
-      return val;
-    });
+    $checkedCreate(
+      '_MapConfiguration',
+      json,
+      ($checkedConvert) {
+        final val = _MapConfiguration(
+          theme: $checkedConvert(
+            'theme',
+            (v) => $enumDecode(_$MapThemeEnumMap, v),
+          ),
+          colorScheme: $checkedConvert(
+            'color_scheme',
+            (v) => v == null
+                ? null
+                : MapColorScheme.fromJson(v as Map<String, dynamic>),
+          ),
+          styleString: $checkedConvert('style_string', (v) => v as String?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'colorScheme': 'color_scheme',
+        'styleString': 'style_string',
+      },
+    );
 
 Map<String, dynamic> _$MapConfigurationToJson(_MapConfiguration instance) =>
-    <String, dynamic>{'theme': _$MapThemeEnumMap[instance.theme]!};
+    <String, dynamic>{
+      'theme': _$MapThemeEnumMap[instance.theme]!,
+      'color_scheme': instance.colorScheme,
+      'style_string': instance.styleString,
+    };
 
 const _$MapThemeEnumMap = {
   MapTheme.light: 'light',
@@ -66,12 +85,21 @@ _MapColorScheme _$MapColorSchemeFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$MapColorSchemeToJson(
-  _MapColorScheme instance,
-) => <String, dynamic>{
-  'background_color': const ColorJsonConverter().toJson(instance.backgroundColor),
-  'world_land_color': const ColorJsonConverter().toJson(instance.worldLandColor),
-  'world_line_color': const ColorJsonConverter().toJson(instance.worldLineColor),
-  'japan_land_color': const ColorJsonConverter().toJson(instance.japanLandColor),
-  'japan_line_color': const ColorJsonConverter().toJson(instance.japanLineColor),
-};
+Map<String, dynamic> _$MapColorSchemeToJson(_MapColorScheme instance) =>
+    <String, dynamic>{
+      'background_color': const ColorJsonConverter().toJson(
+        instance.backgroundColor,
+      ),
+      'world_land_color': const ColorJsonConverter().toJson(
+        instance.worldLandColor,
+      ),
+      'world_line_color': const ColorJsonConverter().toJson(
+        instance.worldLineColor,
+      ),
+      'japan_land_color': const ColorJsonConverter().toJson(
+        instance.japanLandColor,
+      ),
+      'japan_line_color': const ColorJsonConverter().toJson(
+        instance.japanLineColor,
+      ),
+    };

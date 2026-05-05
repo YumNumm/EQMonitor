@@ -2,7 +2,9 @@ import 'package:intl/intl.dart';
 
 /// 文字列からDateTime型に変換
 DateTime? dateTimeOrNullFromString(String? value) {
-  if (value == null) return null;
+  if (value == null) {
+    return null;
+  }
   try {
     return dateTimeFromString(value);
   } on FormatException {
