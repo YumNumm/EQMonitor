@@ -52,6 +52,7 @@ import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_det
 import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
+import 'package:eqmonitor/page/splash_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
@@ -67,8 +68,12 @@ part 'router.g.dart';
 GoRouter goRouter(Ref ref) => GoRouter(
   routes: $appRoutes,
   navigatorKey: App.navigatorKey,
-  initialLocation: const HomeRoute().location,
+  initialLocation: const SplashRoute().location,
   redirect: (context, state) {
+    if (state.matchedLocation == '/splash') {
+      return null;
+    }
+
     final isCompleted = ref.read(onboardingCompletedProvider);
     if (!isCompleted && state.matchedLocation != '/onboarding') {
       return '/onboarding';
@@ -94,6 +99,15 @@ class GoRouterRedirectException implements Exception {
   GoRouterRedirectException(this.message);
 
   final String message;
+}
+
+@TypedGoRoute<SplashRoute>(path: '/splash')
+class SplashRoute extends GoRouteData with $SplashRoute {
+  const SplashRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SplashPage();
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')

@@ -14,14 +14,11 @@ import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
-import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_bootstrap_provider.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
@@ -172,14 +169,6 @@ Future<void> main() async {
     ],
     retry: (_, _) => null,
   );
-
-  await (
-    container.read(
-      kyoshinMonitorInternalObservationPointsConvertedProvider.future,
-    ),
-    container.read(travelTimeInternalProvider.future),
-    container.read(earthquakeHistoryConfigProvider.future),
-  ).wait;
 
   container.read(realtimeEventBootstrapProvider);
 
