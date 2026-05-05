@@ -26,11 +26,11 @@ enum MapStyleTheme { light, dark, system }
 @freezed
 abstract class MapStyleColorScheme with _$MapStyleColorScheme {
   const factory MapStyleColorScheme({
-    @ColorConverter() required Color backgroundColor,
-    @ColorConverter() required Color landColor,
-    @ColorConverter() required Color lineColor,
-    @ColorConverter() required Color japanLandColor,
-    @ColorConverter() required Color japanLineColor,
+    @ColorJsonConverter() required Color backgroundColor,
+    @ColorJsonConverter() required Color landColor,
+    @ColorJsonConverter() required Color lineColor,
+    @ColorJsonConverter() required Color japanLandColor,
+    @ColorJsonConverter() required Color japanLineColor,
   }) = _MapStyleColorScheme;
 
   factory MapStyleColorScheme.fromJson(Map<String, dynamic> json) =>

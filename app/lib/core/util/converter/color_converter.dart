@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ColorConverter implements JsonConverter<Color, String> {
-  const ColorConverter();
+class ColorJsonConverter implements JsonConverter<Color, String> {
+  const ColorJsonConverter();
 
   @override
   Color fromJson(String json) {

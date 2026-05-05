@@ -36,23 +36,23 @@ _MapColorScheme _$MapColorSchemeFromJson(Map<String, dynamic> json) =>
         final val = _MapColorScheme(
           backgroundColor: $checkedConvert(
             'background_color',
-            (v) => const ColorConverter().fromJson(v as String),
+            (v) => const ColorJsonConverter().fromJson(v as String),
           ),
           worldLandColor: $checkedConvert(
             'world_land_color',
-            (v) => const ColorConverter().fromJson(v as String),
+            (v) => const ColorJsonConverter().fromJson(v as String),
           ),
           worldLineColor: $checkedConvert(
             'world_line_color',
-            (v) => const ColorConverter().fromJson(v as String),
+            (v) => const ColorJsonConverter().fromJson(v as String),
           ),
           japanLandColor: $checkedConvert(
             'japan_land_color',
-            (v) => const ColorConverter().fromJson(v as String),
+            (v) => const ColorJsonConverter().fromJson(v as String),
           ),
           japanLineColor: $checkedConvert(
             'japan_line_color',
-            (v) => const ColorConverter().fromJson(v as String),
+            (v) => const ColorJsonConverter().fromJson(v as String),
           ),
         );
         return val;
@@ -69,9 +69,9 @@ _MapColorScheme _$MapColorSchemeFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MapColorSchemeToJson(
   _MapColorScheme instance,
 ) => <String, dynamic>{
-  'background_color': const ColorConverter().toJson(instance.backgroundColor),
-  'world_land_color': const ColorConverter().toJson(instance.worldLandColor),
-  'world_line_color': const ColorConverter().toJson(instance.worldLineColor),
-  'japan_land_color': const ColorConverter().toJson(instance.japanLandColor),
-  'japan_line_color': const ColorConverter().toJson(instance.japanLineColor),
+  'background_color': const ColorJsonConverter().toJson(instance.backgroundColor),
+  'world_land_color': const ColorJsonConverter().toJson(instance.worldLandColor),
+  'world_line_color': const ColorJsonConverter().toJson(instance.worldLineColor),
+  'japan_land_color': const ColorJsonConverter().toJson(instance.japanLandColor),
+  'japan_line_color': const ColorJsonConverter().toJson(instance.japanLineColor),
 };

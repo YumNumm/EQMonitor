@@ -308,7 +308,7 @@ $MapStyleColorSchemeCopyWith<$Res>? get colorScheme {
 /// @nodoc
 mixin _$MapStyleColorScheme {
 
-@ColorConverter() Color get backgroundColor;@ColorConverter() Color get landColor;@ColorConverter() Color get lineColor;@ColorConverter() Color get japanLandColor;@ColorConverter() Color get japanLineColor;
+@ColorJsonConverter() Color get backgroundColor;@ColorJsonConverter() Color get landColor;@ColorJsonConverter() Color get lineColor;@ColorJsonConverter() Color get japanLandColor;@ColorJsonConverter() Color get japanLineColor;
 /// Create a copy of MapStyleColorScheme
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -341,7 +341,7 @@ abstract mixin class $MapStyleColorSchemeCopyWith<$Res>  {
   factory $MapStyleColorSchemeCopyWith(MapStyleColorScheme value, $Res Function(MapStyleColorScheme) _then) = _$MapStyleColorSchemeCopyWithImpl;
 @useResult
 $Res call({
-@ColorConverter() Color backgroundColor,@ColorConverter() Color landColor,@ColorConverter() Color lineColor,@ColorConverter() Color japanLandColor,@ColorConverter() Color japanLineColor
+@ColorJsonConverter() Color backgroundColor,@ColorJsonConverter() Color landColor,@ColorJsonConverter() Color lineColor,@ColorJsonConverter() Color japanLandColor,@ColorJsonConverter() Color japanLineColor
 });
 
 
@@ -450,7 +450,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ColorConverter()  Color backgroundColor, @ColorConverter()  Color landColor, @ColorConverter()  Color lineColor, @ColorConverter()  Color japanLandColor, @ColorConverter()  Color japanLineColor)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color backgroundColor, @ColorJsonConverter()  Color landColor, @ColorJsonConverter()  Color lineColor, @ColorJsonConverter()  Color japanLandColor, @ColorJsonConverter()  Color japanLineColor)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapStyleColorScheme() when $default != null:
 return $default(_that.backgroundColor,_that.landColor,_that.lineColor,_that.japanLandColor,_that.japanLineColor);case _:
@@ -471,7 +471,7 @@ return $default(_that.backgroundColor,_that.landColor,_that.lineColor,_that.japa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ColorConverter()  Color backgroundColor, @ColorConverter()  Color landColor, @ColorConverter()  Color lineColor, @ColorConverter()  Color japanLandColor, @ColorConverter()  Color japanLineColor)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ColorJsonConverter()  Color backgroundColor, @ColorJsonConverter()  Color landColor, @ColorJsonConverter()  Color lineColor, @ColorJsonConverter()  Color japanLandColor, @ColorJsonConverter()  Color japanLineColor)  $default,) {final _that = this;
 switch (_that) {
 case _MapStyleColorScheme():
 return $default(_that.backgroundColor,_that.landColor,_that.lineColor,_that.japanLandColor,_that.japanLineColor);case _:
@@ -491,7 +491,7 @@ return $default(_that.backgroundColor,_that.landColor,_that.lineColor,_that.japa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ColorConverter()  Color backgroundColor, @ColorConverter()  Color landColor, @ColorConverter()  Color lineColor, @ColorConverter()  Color japanLandColor, @ColorConverter()  Color japanLineColor)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ColorJsonConverter()  Color backgroundColor, @ColorJsonConverter()  Color landColor, @ColorJsonConverter()  Color lineColor, @ColorJsonConverter()  Color japanLandColor, @ColorJsonConverter()  Color japanLineColor)?  $default,) {final _that = this;
 switch (_that) {
 case _MapStyleColorScheme() when $default != null:
 return $default(_that.backgroundColor,_that.landColor,_that.lineColor,_that.japanLandColor,_that.japanLineColor);case _:
@@ -506,14 +506,14 @@ return $default(_that.backgroundColor,_that.landColor,_that.lineColor,_that.japa
 @JsonSerializable()
 
 class _MapStyleColorScheme implements MapStyleColorScheme {
-  const _MapStyleColorScheme({@ColorConverter() required this.backgroundColor, @ColorConverter() required this.landColor, @ColorConverter() required this.lineColor, @ColorConverter() required this.japanLandColor, @ColorConverter() required this.japanLineColor});
+  const _MapStyleColorScheme({@ColorJsonConverter() required this.backgroundColor, @ColorJsonConverter() required this.landColor, @ColorJsonConverter() required this.lineColor, @ColorJsonConverter() required this.japanLandColor, @ColorJsonConverter() required this.japanLineColor});
   factory _MapStyleColorScheme.fromJson(Map<String, dynamic> json) => _$MapStyleColorSchemeFromJson(json);
 
-@override@ColorConverter() final  Color backgroundColor;
-@override@ColorConverter() final  Color landColor;
-@override@ColorConverter() final  Color lineColor;
-@override@ColorConverter() final  Color japanLandColor;
-@override@ColorConverter() final  Color japanLineColor;
+@override@ColorJsonConverter() final  Color backgroundColor;
+@override@ColorJsonConverter() final  Color landColor;
+@override@ColorJsonConverter() final  Color lineColor;
+@override@ColorJsonConverter() final  Color japanLandColor;
+@override@ColorJsonConverter() final  Color japanLineColor;
 
 /// Create a copy of MapStyleColorScheme
 /// with the given fields replaced by the non-null parameter values.
@@ -548,7 +548,7 @@ abstract mixin class _$MapStyleColorSchemeCopyWith<$Res> implements $MapStyleCol
   factory _$MapStyleColorSchemeCopyWith(_MapStyleColorScheme value, $Res Function(_MapStyleColorScheme) _then) = __$MapStyleColorSchemeCopyWithImpl;
 @override @useResult
 $Res call({
-@ColorConverter() Color backgroundColor,@ColorConverter() Color landColor,@ColorConverter() Color lineColor,@ColorConverter() Color japanLandColor,@ColorConverter() Color japanLineColor
+@ColorJsonConverter() Color backgroundColor,@ColorJsonConverter() Color landColor,@ColorJsonConverter() Color lineColor,@ColorJsonConverter() Color japanLandColor,@ColorJsonConverter() Color japanLineColor
 });
 
 
