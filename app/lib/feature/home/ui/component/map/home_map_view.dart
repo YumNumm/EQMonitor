@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/debug/replay/debug_replay_modal.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_station_icon_preloader.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
@@ -82,8 +81,7 @@ class _MapContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsync = ref.watch(homeConfigurationProvider);
     final mapSettings = homeAsync.value?.map ?? const HomeMapSettings();
-    final showLocation =
-        homeAsync.value?.common.showLocation ?? false;
+    final showLocation = homeAsync.value?.common.showLocation ?? false;
 
     final mapOptions = homeMapOptionsFromSettings(
       context: context,
@@ -110,7 +108,9 @@ class _MapContent extends ConsumerWidget {
                   .read(homeMapCameraStateProvider.notifier)
                   .setController(controller);
               if (showLocation) {
-                unawaited(controller.enableLocation());
+                unawaited(
+                  controller.enableLocation(),
+                );
               }
             },
             onEvent: (event) =>
@@ -120,7 +120,7 @@ class _MapContent extends ConsumerWidget {
                 builder: (context, ref, _) {
                   final fillMode = ref.watch(
                     homeConfigurationProvider.select(
-                      (a) => a.value?.eew.fillMode ?? HomeEewFillMode.intensity,
+                      (a) => a.value?.eew.fillMode ?? .intensity,
                     ),
                   );
                   final eews = ref.watch(eewAliveTelegramProvider) ?? [];
@@ -130,13 +130,13 @@ class _MapContent extends ConsumerWidget {
                       .flattened
                       .toList();
                   return switch (fillMode) {
-                    HomeEewFillMode.intensity => EewEstimatedIntensityLayer(
+                    .intensity => EewEstimatedIntensityLayer(
                       eewRegions: regions,
                     ),
-                    HomeEewFillMode.warning => EewWarningRegionsLayer(
+                    .warning => EewWarningRegionsLayer(
                       eews: eews,
                     ),
-                    HomeEewFillMode.none => const SizedBox.shrink(),
+                    .none => const SizedBox.shrink(),
                   };
                 },
               ),
@@ -157,17 +157,13 @@ class _MapContent extends ConsumerWidget {
                   eews: ref.watch(eewAliveTelegramProvider) ?? [],
                 ),
               ),
-              const SafeArea(child: _MapHeader()),
+              const SafeArea(
+                child: _MapHeader(),
+              ),
             ],
           );
 
-          return Stack(
-            children: [
-              SizedBox.expand(child: mapWidget),
-              // アプリ起動時に観測点震度アイコンを事前レンダリングする
-              const EarthquakeHistoryStationIconPreloader(),
-            ],
-          );
+          return mapWidget;
         },
       ),
     );
@@ -214,8 +210,7 @@ class _MapHeader extends ConsumerWidget {
           const HomeMapLayerRoute().push<void>(context),
       onLocationButtonTap: () =>
           ref.read(homeMapCameraStateProvider.notifier).returnToHome(),
-      onDebugButtonTap:
-          isDebug ? () => DebugReplayModal.show(context) : null,
+      onDebugButtonTap: isDebug ? () => DebugReplayModal.show(context) : null,
     );
 
     return Padding(

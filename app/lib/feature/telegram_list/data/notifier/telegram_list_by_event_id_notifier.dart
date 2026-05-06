@@ -15,10 +15,6 @@ typedef TelegramListByEventIdState = ({
 class TelegramListByEventId extends _$TelegramListByEventId {
   @override
   Future<TelegramListByEventIdState> build(String eventId) async {
-    return _fetchInitialData();
-  }
-
-  Future<TelegramListByEventIdState> _fetchInitialData() async {
     final client = await ref.read(apiClientProvider.future);
     final response = await client.telegram.getV2TelegramEventIdEventId(
       eventId: eventId,
@@ -26,15 +22,17 @@ class TelegramListByEventId extends _$TelegramListByEventId {
     );
     final data = response.data;
     return (
-      items: data.items.map((e) => e.toTelegramItem).toList(),
+      items: data.items.map((e) => e.toTelegramItem).sorted((a, b) {
+        final comparedByReportAt = b.reportAt.compareTo(a.reportAt);
+        if (comparedByReportAt != 0) {
+          return comparedByReportAt;
+        }
+        if (a.serialNo != null && b.serialNo != null) {
+          return b.serialNo!.compareTo(a.serialNo!);
+        }
+        return 0;
+      }),
       nextToken: data.nextToken,
-    );
-  }
-
-  Future<void> refresh() async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard<TelegramListByEventIdState>(
-      _fetchInitialData,
     );
   }
 

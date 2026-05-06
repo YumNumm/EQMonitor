@@ -39,8 +39,8 @@ abstract class EarthquakeHistoryMapLayerZoomThresholds
 
 const defaultEarthquakeHistoryMapLayerZoomThresholds =
     EarthquakeHistoryMapLayerZoomThresholds(
-      regionToCity: 9,
-      cityToStation: 11,
+      regionToCity: 8,
+      cityToStation: 10,
     );
 
 class EarthquakeHistoryMapLayerModeResolver {

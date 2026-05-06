@@ -5,8 +5,7 @@ import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -315,7 +314,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       title: Text(
         title,
         style: theme.textTheme.titleMedium!.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
         ),
       ),
       subtitle: Text(
@@ -327,16 +326,16 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
         ),
       ),
       leading: localIntensity != null
-          ? IntensityValueIcon(
+          ? JmaIntensityIcon(
               intensity: localIntensity,
-              type: IntensityIconType.filled,
+              type: .filled,
               size: 40,
             )
           : null,
       trailing: _MagnitudeText(
         text: magnitudeText,
         style: theme.textTheme.labelLarge!.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           fontFamily: FontFamily.notoSansMono,
         ),
       ),
@@ -350,7 +349,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
     return switch (magnitude) {
       EarthquakeMagnitudeValue(:final value) => 'M${value.toStringAsFixed(1)}',
       EarthquakeMagnitudeUnknown() => 'M不明',
-      EarthquakeMagnitudeOverM8() => 'M8超',
+      EarthquakeMagnitudeOverM8() => 'M8を超える巨大地震',
     };
   }
 }

@@ -1,11 +1,13 @@
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_list_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_tree.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -191,9 +193,11 @@ class EarthquakeHistoryRepository {
   }
 
   /// [cityAreaCode] … areaInformationCity のコード、[regionAreaCode] … areaForecastLocalE のコード。
-  CurrentLocationIntensityDisplay? resolveCurrentLocationIntensity({
+  CurrentLocationIntensityDisplay resolveCurrentLocationIntensity({
     required Map<JmaIntensity, List<IntensityRegion>> regions,
     required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
+    required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
+    lpgmIntensityTree,
     required String? cityAreaCode,
     required String? regionAreaCode,
   }) {
@@ -201,9 +205,9 @@ class EarthquakeHistoryRepository {
       final cityNode = _findCityNodeByCode(intensityTree, cityAreaCode);
       final j = cityNode?.maxIntensity;
       if (j != null) {
-        return CurrentLocationIntensityDisplay(
+        return CurrentLocationIntensityDisplay.result(
           intensity: j,
-          usedCityLevelData: true,
+          lpgmIntensity: _cityLpgmIntensity(lpgmIntensityTree, cityAreaCode),
         );
       }
       // 市区町村が震度ツリーにない場合、親地域コードで速報震度を探す
@@ -213,9 +217,8 @@ class EarthquakeHistoryRepository {
           ? _regionIntensity(regions, regionCode)
           : _regionIntensity(regions, cityAreaCode);
       if (prefJ != null) {
-        return CurrentLocationIntensityDisplay(
+        return CurrentLocationIntensityDisplay.quick(
           intensity: prefJ,
-          usedCityLevelData: false,
         );
       }
     }
@@ -223,20 +226,18 @@ class EarthquakeHistoryRepository {
       final cityNode = _findCityNodeByCode(intensityTree, regionAreaCode);
       final j = cityNode?.maxIntensity;
       if (j != null) {
-        return CurrentLocationIntensityDisplay(
+        return CurrentLocationIntensityDisplay.quick(
           intensity: j,
-          usedCityLevelData: false,
         );
       }
       final prefJ = _regionIntensity(regions, regionAreaCode);
       if (prefJ != null) {
-        return CurrentLocationIntensityDisplay(
+        return CurrentLocationIntensityDisplay.quick(
           intensity: prefJ,
-          usedCityLevelData: false,
         );
       }
     }
-    return null;
+    return const CurrentLocationIntensityDisplay.none();
   }
 
   CityIntensityNode? _findCityNodeByCode(
@@ -248,6 +249,22 @@ class EarthquakeHistoryRepository {
         for (final city in regionNode.cities) {
           if (city.city.code == areaCode) {
             return city;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  JmaLpgmIntensity? _cityLpgmIntensity(
+    Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree,
+    String cityAreaCode,
+  ) {
+    for (final regions in lpgmIntensityTree.values) {
+      for (final regionNode in regions) {
+        for (final city in regionNode.cities) {
+          if (city.city.code == cityAreaCode) {
+            return city.maxLpgmIntensity;
           }
         }
       }

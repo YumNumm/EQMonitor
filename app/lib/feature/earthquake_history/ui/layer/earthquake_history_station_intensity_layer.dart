@@ -8,8 +8,8 @@ import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/notifier/station_intensity_icon_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -41,11 +41,11 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   static const _iconLayerId = 'eq-history-station-intensity-icon';
   static const _labelLayerId = 'eq-history-station-intensity-label';
 
-  // アイコン画像 ID（region icon の eq-history-intensity-icon- と衝突しない prefix）
-  static const _iconSmallPrefix = 'eq-station-sm-';
-  static const _iconSmallNoTextPrefix = 'eq-station-sm-nt-';
-  static const _lpgmIconSmallPrefix = 'eq-station-lpgm-sm-';
-  static const _lpgmIconSmallNoTextPrefix = 'eq-station-lpgm-sm-nt-';
+  static const _iconSmallPrefix = 'JmaIntensity.small.';
+  static const _iconSmallNoTextPrefix = 'JmaIntensity.smallWithoutText.';
+  static const _lpgmIconSmallPrefix = 'JmaLpgmIntensity.small.';
+  static const _lpgmIconSmallNoTextPrefix =
+      'JmaLpgmIntensity.smallWithoutText.';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,7 +63,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     );
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
-    final cachedBytes = ref.watch(stationIntensityIconBytesProvider);
+    final cachedBytes = ref
+        .watch(intensityIconProvider)
+        .value
+        ?.toMapStyleImages;
 
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
@@ -256,7 +259,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     // メインの effect とは分離することで、アイコンキャッシュの更新が
     // source/layer の再構築を引き起こす race condition を防ぐ。
     useEffect(() {
-      if (styleController == null || cachedBytes.isEmpty) {
+      if (styleController == null || cachedBytes == null) {
         return null;
       }
       unawaited(() async {

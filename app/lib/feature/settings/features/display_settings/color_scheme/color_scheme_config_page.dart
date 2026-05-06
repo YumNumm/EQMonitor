@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-
-import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
@@ -310,22 +309,31 @@ Future<Color?> _showColorPickerDialog(
   );
 }
 
-class _IntensityWidgets extends StatelessWidget {
+class _IntensityWidgets extends ConsumerWidget {
   const _IntensityWidgets({required this.colorModel});
 
   final IntensityColorModel colorModel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final providerContainer = ProviderContainer(
+      parent: ref.container,
+      overrides: [
+        intensityColorProvider.overrideWithValue(colorModel),
+      ],
+    );
     return Wrap(
       spacing: 4,
       runSpacing: 4,
       children: [
         ...JmaIntensity.values.map(
-          (e) => JmaForecastIntensityWidget(
-            intensity: e,
-            colorModel: colorModel,
-            size: 40,
+          (e) => UncontrolledProviderScope(
+            container: providerContainer,
+            child: JmaIntensityIcon(
+              intensity: e,
+              type: .filled,
+              size: 40,
+            ),
           ),
         ),
       ],

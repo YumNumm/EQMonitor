@@ -1,10 +1,7 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_map_focus.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
@@ -88,13 +85,13 @@ class _IntensityLevelSection extends HookWidget {
           visualDensity: VisualDensity.compact,
           titleAlignment: ListTileTitleAlignment.titleHeight,
           contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-          leading: IntensityValueIcon(
+          leading: JmaIntensityIcon(
             intensity: intensity,
-            type: IntensityIconType.filled,
+            type: .filled,
             size: 40,
           ),
           title: Text(
-            '震度${intensity.label}',
+            '震度${intensity.mainText}',
             style: theme.textTheme.titleMedium,
           ),
           subtitle: Text(
@@ -173,16 +170,14 @@ class _PrefectureTile extends HookWidget {
     return Column(
       children: [
         ListTile(
-          visualDensity: VisualDensity.compact,
-          contentPadding: const EdgeInsets.only(left: 20, right: 8),
-          leading: _IntensityLpgmBadgeRow(
-            maxIntensity: prefecture.prefecture.maxIntensity,
-            maxLpgm: null,
-            intensityIconSize: 28,
-          ),
+          visualDensity: .compact,
+          dense: true,
+          contentPadding: const .only(left: 20, right: 8),
           title: Text(
             prefecture.prefecture.prefecture.name.ja,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontWeight: .bold,
+            ),
           ),
           trailing: trailing,
           onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
@@ -240,16 +235,11 @@ class _CityTile extends HookWidget {
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
+          dense: true,
           contentPadding: const EdgeInsets.only(left: 32, right: 8),
-          leading: _IntensityLpgmBadgeRow(
-            maxIntensity: city.maxIntensity,
-            maxLpgm: city.maxLpgmIntensity,
-            intensityIconSize: 24,
-            lpgmIconSize: 22,
-          ),
           title: Text(
             city.city.name.ja,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(),
           ),
           trailing: trailing,
           onTap: hasStations
@@ -291,12 +281,6 @@ class _StationTile extends StatelessWidget {
     return ListTile(
       visualDensity: VisualDensity.compact,
       contentPadding: const EdgeInsets.only(left: 44, right: 8),
-      leading: _IntensityLpgmBadgeRow(
-        maxIntensity: station.intensity?.maxIntensity,
-        maxLpgm: station.intensity?.maxLpgmIntensity,
-        intensityIconSize: 18,
-        lpgmIconSize: 16,
-      ),
       title: Text(
         station.station.name.ja,
         style: TextStyle(
@@ -368,48 +352,4 @@ Widget? _buildTrailing({
       ),
     ],
   );
-}
-
-class _IntensityLpgmBadgeRow extends StatelessWidget {
-  const _IntensityLpgmBadgeRow({
-    required this.maxIntensity,
-    required this.maxLpgm,
-    required this.intensityIconSize,
-    this.lpgmIconSize,
-  });
-
-  final JmaIntensity? maxIntensity;
-  final JmaLpgmIntensity? maxLpgm;
-  final double intensityIconSize;
-  final double? lpgmIconSize;
-
-  @override
-  Widget build(BuildContext context) {
-    final children = <Widget>[];
-    if (maxIntensity != null) {
-      children.add(
-        IntensityValueIcon(
-          intensity: maxIntensity!,
-          type: IntensityIconType.filled,
-          size: intensityIconSize,
-        ),
-      );
-    }
-    if (maxLpgm != null) {
-      if (children.isNotEmpty) {
-        children.add(const SizedBox(width: 4));
-      }
-      children.add(
-        LpgmIntensityIcon(
-          intensity: maxLpgm!,
-          type: IntensityIconType.filled,
-          size: lpgmIconSize ?? intensityIconSize * 0.85,
-        ),
-      );
-    }
-    if (children.isEmpty) {
-      return SizedBox(width: intensityIconSize, height: intensityIconSize);
-    }
-    return Row(mainAxisSize: MainAxisSize.min, children: children);
-  }
 }

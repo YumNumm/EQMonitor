@@ -85,6 +85,15 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
             })
             .sorted((a, b) => b.$2.compareTo(a.$2))
             .first;
+        print(
+          'MAX: ${geometry.polygons.map((polygon) {
+            final area = polygon.area2D();
+            return (polygon, area);
+          }).sorted((a, b) => b.$2.compareTo(a.$2)).first.$2}, MIN: ${geometry.polygons.map((polygon) {
+            final area = polygon.area2D();
+            return (polygon, area);
+          }).sorted((a, b) => b.$2.compareTo(a.$2)).last.$2}',
+        );
         final polylabel = maxAreaPolygon.$1.polylabel2D(
           scheme: Geographic.scheme,
         );

@@ -108,15 +108,17 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        child: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              children: [
-                EarthquakeHypocenterInformationCard(item: item),
-                CurrentLocationIntensityCard(item: item),
-                EarthquakeIntensityWidget(item: item, eventId: item.eventId),
-                _TelegramListButton(eventId: item.eventId),
-              ],
+        child: Expanded(
+          child: SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  EarthquakeHypocenterInformationCard(item: item),
+                  CurrentLocationIntensityCard(item: item),
+                  EarthquakeIntensityWidget(item: item, eventId: item.eventId),
+                  _TelegramListButton(eventId: item.eventId),
+                ],
+              ),
             ),
           ),
         ),

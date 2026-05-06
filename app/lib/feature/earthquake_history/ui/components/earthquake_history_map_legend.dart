@@ -1,6 +1,5 @@
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,7 @@ class _JmaLegend extends StatelessWidget {
         for (final level in levels)
           JmaIntensityIcon(
             intensity: level,
-            type: IntensityIconType.filled,
+            type: .filled,
             size: 28,
           ),
       ],
@@ -85,9 +84,9 @@ class _LpgmLegend extends StatelessWidget {
       spacing: 4,
       children: [
         for (final level in levels)
-          LpgmIntensityIcon(
+          JmaLpgmIntensityIcon(
             intensity: level,
-            type: IntensityIconType.filled,
+            type: .filled,
             size: 28,
           ),
       ],

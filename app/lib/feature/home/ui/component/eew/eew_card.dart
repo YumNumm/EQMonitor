@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -174,49 +174,49 @@ class _EewMainCard extends StatelessWidget {
         side: BorderSide(color: color.outlineSoft),
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _EewCardHeader(
-              eew: eew,
-              isWarning: isWarning,
-              headerBackgroundColor: headerBackgroundColor,
-              secondsUntilArrival: secondsUntilArrival,
-              showArrived: showArrived,
-            ),
-            Padding(
-              padding: EdgeInsets.all(spacing.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      _EewMaxIntensitySection(maxIntensity: maxIntensity),
-                      SizedBox(width: spacing.sm),
-                      Expanded(
-                        child: _EewHypocenterSection(
-                          eew: eew,
-                          happenedTime: happenedTime,
-                        ),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _EewCardHeader(
+            eew: eew,
+            isWarning: isWarning,
+            headerBackgroundColor: headerBackgroundColor,
+            secondsUntilArrival: secondsUntilArrival,
+            showArrived: showArrived,
+          ),
+          Padding(
+            padding: EdgeInsets.all(spacing.xs),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _EewMaxIntensitySection(maxIntensity: maxIntensity),
+                    SizedBox(width: spacing.sm),
+                    Expanded(
+                      child: _EewHypocenterSection(
+                        eew: eew,
+                        happenedTime: happenedTime,
                       ),
-                      if (showLocalForecast) ...[
-                        SizedBox(width: spacing.sm),
-                        _EewLocalForecastSection(
-                          intensity: localForecastIntensity!,
-                          regionDisplayName: regionDisplayName!,
-                        ),
-                      ],
+                    ),
+                    if (showLocalForecast) ...[
+                      SizedBox(width: spacing.sm),
+                      _EewLocalForecastSection(
+                        intensity: localForecastIntensity!,
+                        regionDisplayName: regionDisplayName!,
+                      ),
                     ],
-                  ),
-                  if (maxLpgmIntensity != null &&
-                      maxLpgmIntensity != JmaLpgmIntensity.zero) ...[
-                    SizedBox(height: spacing.sm),
-                    _EewLpgmSection(intensity: maxLpgmIntensity),
                   ],
+                ),
+                if (maxLpgmIntensity != null &&
+                    maxLpgmIntensity != JmaLpgmIntensity.zero) ...[
+                  SizedBox(height: spacing.sm),
+                  _EewLpgmSection(intensity: maxLpgmIntensity),
                 ],
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -267,7 +267,7 @@ class _EewCardHeader extends StatelessWidget {
           Text(
             typeLabelWithSerial,
             style: typography.monoSmall.copyWith(
-              color: _secondaryTextColor,
+              color: Colors.white,
               letterSpacing: 0,
             ),
           ),
@@ -372,7 +372,7 @@ class _EewMaxIntensitySection extends StatelessWidget {
           style: typography.labelMedium.copyWith(color: textColor.secondary),
         ),
         const SizedBox(height: 2),
-        JmaForecastIntensityWidget(intensity: maxIntensity),
+        JmaIntensityIcon(intensity: maxIntensity, type: .filled),
       ],
     );
   }
@@ -490,9 +490,7 @@ class _EewLocalForecastSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 2),
-        JmaForecastIntensityWidget(
-          intensity: intensity,
-        ),
+        JmaIntensityIcon(intensity: intensity, type: .filled),
       ],
     );
   }

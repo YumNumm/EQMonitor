@@ -14,64 +14,30 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CurrentLocationIntensityDisplay {
 
- JmaIntensity get intensity;/// 市区町村ポリゴン（areaInformationCity）に一致するデータか。
-/// false のときは細分区域（areaForecastLocalE）フォールバック。
- bool get usedCityLevelData;
-/// Create a copy of CurrentLocationIntensityDisplay
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$CurrentLocationIntensityDisplayCopyWith<CurrentLocationIntensityDisplay> get copyWith => _$CurrentLocationIntensityDisplayCopyWithImpl<CurrentLocationIntensityDisplay>(this as CurrentLocationIntensityDisplay, _$identity);
+
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentLocationIntensityDisplay&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.usedCityLevelData, usedCityLevelData) || other.usedCityLevelData == usedCityLevelData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentLocationIntensityDisplay);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,intensity,usedCityLevelData);
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CurrentLocationIntensityDisplay(intensity: $intensity, usedCityLevelData: $usedCityLevelData)';
+  return 'CurrentLocationIntensityDisplay()';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $CurrentLocationIntensityDisplayCopyWith<$Res>  {
-  factory $CurrentLocationIntensityDisplayCopyWith(CurrentLocationIntensityDisplay value, $Res Function(CurrentLocationIntensityDisplay) _then) = _$CurrentLocationIntensityDisplayCopyWithImpl;
-@useResult
-$Res call({
- JmaIntensity intensity, bool usedCityLevelData
-});
-
-
-
-
-}
-/// @nodoc
-class _$CurrentLocationIntensityDisplayCopyWithImpl<$Res>
-    implements $CurrentLocationIntensityDisplayCopyWith<$Res> {
-  _$CurrentLocationIntensityDisplayCopyWithImpl(this._self, this._then);
-
-  final CurrentLocationIntensityDisplay _self;
-  final $Res Function(CurrentLocationIntensityDisplay) _then;
-
-/// Create a copy of CurrentLocationIntensityDisplay
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? intensity = null,Object? usedCityLevelData = null,}) {
-  return _then(_self.copyWith(
-intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,usedCityLevelData: null == usedCityLevelData ? _self.usedCityLevelData : usedCityLevelData // ignore: cast_nullable_to_non_nullable
-as bool,
-  ));
-}
-
+class $CurrentLocationIntensityDisplayCopyWith<$Res>  {
+$CurrentLocationIntensityDisplayCopyWith(CurrentLocationIntensityDisplay _, $Res Function(CurrentLocationIntensityDisplay) __);
 }
 
 
@@ -89,11 +55,13 @@ extension CurrentLocationIntensityDisplayPatterns on CurrentLocationIntensityDis
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CurrentLocationIntensityDisplay value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CurrentLocationIntensityDisplayQuick value)?  quick,TResult Function( CurrentLocationIntensityDisplayResult value)?  result,TResult Function( CurrentLocationIntensityDisplayNone value)?  none,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _CurrentLocationIntensityDisplay() when $default != null:
-return $default(_that);case _:
+case CurrentLocationIntensityDisplayQuick() when quick != null:
+return quick(_that);case CurrentLocationIntensityDisplayResult() when result != null:
+return result(_that);case CurrentLocationIntensityDisplayNone() when none != null:
+return none(_that);case _:
   return orElse();
 
 }
@@ -111,14 +79,13 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CurrentLocationIntensityDisplay value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CurrentLocationIntensityDisplayQuick value)  quick,required TResult Function( CurrentLocationIntensityDisplayResult value)  result,required TResult Function( CurrentLocationIntensityDisplayNone value)  none,}){
 final _that = this;
 switch (_that) {
-case _CurrentLocationIntensityDisplay():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+case CurrentLocationIntensityDisplayQuick():
+return quick(_that);case CurrentLocationIntensityDisplayResult():
+return result(_that);case CurrentLocationIntensityDisplayNone():
+return none(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -132,11 +99,13 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CurrentLocationIntensityDisplay value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CurrentLocationIntensityDisplayQuick value)?  quick,TResult? Function( CurrentLocationIntensityDisplayResult value)?  result,TResult? Function( CurrentLocationIntensityDisplayNone value)?  none,}){
 final _that = this;
 switch (_that) {
-case _CurrentLocationIntensityDisplay() when $default != null:
-return $default(_that);case _:
+case CurrentLocationIntensityDisplayQuick() when quick != null:
+return quick(_that);case CurrentLocationIntensityDisplayResult() when result != null:
+return result(_that);case CurrentLocationIntensityDisplayNone() when none != null:
+return none(_that);case _:
   return null;
 
 }
@@ -153,10 +122,12 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaIntensity intensity,  bool usedCityLevelData)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( JmaIntensity intensity)?  quick,TResult Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity)?  result,TResult Function()?  none,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _CurrentLocationIntensityDisplay() when $default != null:
-return $default(_that.intensity,_that.usedCityLevelData);case _:
+case CurrentLocationIntensityDisplayQuick() when quick != null:
+return quick(_that.intensity);case CurrentLocationIntensityDisplayResult() when result != null:
+return result(_that.intensity,_that.lpgmIntensity);case CurrentLocationIntensityDisplayNone() when none != null:
+return none();case _:
   return orElse();
 
 }
@@ -174,13 +145,12 @@ return $default(_that.intensity,_that.usedCityLevelData);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaIntensity intensity,  bool usedCityLevelData)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( JmaIntensity intensity)  quick,required TResult Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity)  result,required TResult Function()  none,}) {final _that = this;
 switch (_that) {
-case _CurrentLocationIntensityDisplay():
-return $default(_that.intensity,_that.usedCityLevelData);case _:
-  throw StateError('Unexpected subclass');
-
-}
+case CurrentLocationIntensityDisplayQuick():
+return quick(_that.intensity);case CurrentLocationIntensityDisplayResult():
+return result(_that.intensity,_that.lpgmIntensity);case CurrentLocationIntensityDisplayNone():
+return none();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -194,10 +164,12 @@ return $default(_that.intensity,_that.usedCityLevelData);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaIntensity intensity,  bool usedCityLevelData)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( JmaIntensity intensity)?  quick,TResult? Function( JmaIntensity intensity,  JmaLpgmIntensity? lpgmIntensity)?  result,TResult? Function()?  none,}) {final _that = this;
 switch (_that) {
-case _CurrentLocationIntensityDisplay() when $default != null:
-return $default(_that.intensity,_that.usedCityLevelData);case _:
+case CurrentLocationIntensityDisplayQuick() when quick != null:
+return quick(_that.intensity);case CurrentLocationIntensityDisplayResult() when result != null:
+return result(_that.intensity,_that.lpgmIntensity);case CurrentLocationIntensityDisplayNone() when none != null:
+return none();case _:
   return null;
 
 }
@@ -208,46 +180,43 @@ return $default(_that.intensity,_that.usedCityLevelData);case _:
 /// @nodoc
 
 
-class _CurrentLocationIntensityDisplay implements CurrentLocationIntensityDisplay {
-  const _CurrentLocationIntensityDisplay({required this.intensity, required this.usedCityLevelData});
+class CurrentLocationIntensityDisplayQuick implements CurrentLocationIntensityDisplay {
+  const CurrentLocationIntensityDisplayQuick({required this.intensity});
   
 
-@override final  JmaIntensity intensity;
-/// 市区町村ポリゴン（areaInformationCity）に一致するデータか。
-/// false のときは細分区域（areaForecastLocalE）フォールバック。
-@override final  bool usedCityLevelData;
+ final  JmaIntensity intensity;
 
 /// Create a copy of CurrentLocationIntensityDisplay
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$CurrentLocationIntensityDisplayCopyWith<_CurrentLocationIntensityDisplay> get copyWith => __$CurrentLocationIntensityDisplayCopyWithImpl<_CurrentLocationIntensityDisplay>(this, _$identity);
+$CurrentLocationIntensityDisplayQuickCopyWith<CurrentLocationIntensityDisplayQuick> get copyWith => _$CurrentLocationIntensityDisplayQuickCopyWithImpl<CurrentLocationIntensityDisplayQuick>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentLocationIntensityDisplay&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.usedCityLevelData, usedCityLevelData) || other.usedCityLevelData == usedCityLevelData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentLocationIntensityDisplayQuick&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,intensity,usedCityLevelData);
+int get hashCode => Object.hash(runtimeType,intensity);
 
 @override
 String toString() {
-  return 'CurrentLocationIntensityDisplay(intensity: $intensity, usedCityLevelData: $usedCityLevelData)';
+  return 'CurrentLocationIntensityDisplay.quick(intensity: $intensity)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$CurrentLocationIntensityDisplayCopyWith<$Res> implements $CurrentLocationIntensityDisplayCopyWith<$Res> {
-  factory _$CurrentLocationIntensityDisplayCopyWith(_CurrentLocationIntensityDisplay value, $Res Function(_CurrentLocationIntensityDisplay) _then) = __$CurrentLocationIntensityDisplayCopyWithImpl;
-@override @useResult
+abstract mixin class $CurrentLocationIntensityDisplayQuickCopyWith<$Res> implements $CurrentLocationIntensityDisplayCopyWith<$Res> {
+  factory $CurrentLocationIntensityDisplayQuickCopyWith(CurrentLocationIntensityDisplayQuick value, $Res Function(CurrentLocationIntensityDisplayQuick) _then) = _$CurrentLocationIntensityDisplayQuickCopyWithImpl;
+@useResult
 $Res call({
- JmaIntensity intensity, bool usedCityLevelData
+ JmaIntensity intensity
 });
 
 
@@ -255,24 +224,123 @@ $Res call({
 
 }
 /// @nodoc
-class __$CurrentLocationIntensityDisplayCopyWithImpl<$Res>
-    implements _$CurrentLocationIntensityDisplayCopyWith<$Res> {
-  __$CurrentLocationIntensityDisplayCopyWithImpl(this._self, this._then);
+class _$CurrentLocationIntensityDisplayQuickCopyWithImpl<$Res>
+    implements $CurrentLocationIntensityDisplayQuickCopyWith<$Res> {
+  _$CurrentLocationIntensityDisplayQuickCopyWithImpl(this._self, this._then);
 
-  final _CurrentLocationIntensityDisplay _self;
-  final $Res Function(_CurrentLocationIntensityDisplay) _then;
+  final CurrentLocationIntensityDisplayQuick _self;
+  final $Res Function(CurrentLocationIntensityDisplayQuick) _then;
 
 /// Create a copy of CurrentLocationIntensityDisplay
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? intensity = null,Object? usedCityLevelData = null,}) {
-  return _then(_CurrentLocationIntensityDisplay(
+@pragma('vm:prefer-inline') $Res call({Object? intensity = null,}) {
+  return _then(CurrentLocationIntensityDisplayQuick(
 intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,usedCityLevelData: null == usedCityLevelData ? _self.usedCityLevelData : usedCityLevelData // ignore: cast_nullable_to_non_nullable
-as bool,
+as JmaIntensity,
   ));
 }
 
 
 }
+
+/// @nodoc
+
+
+class CurrentLocationIntensityDisplayResult implements CurrentLocationIntensityDisplay {
+  const CurrentLocationIntensityDisplayResult({required this.intensity, required this.lpgmIntensity});
+  
+
+ final  JmaIntensity intensity;
+ final  JmaLpgmIntensity? lpgmIntensity;
+
+/// Create a copy of CurrentLocationIntensityDisplay
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CurrentLocationIntensityDisplayResultCopyWith<CurrentLocationIntensityDisplayResult> get copyWith => _$CurrentLocationIntensityDisplayResultCopyWithImpl<CurrentLocationIntensityDisplayResult>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentLocationIntensityDisplayResult&&(identical(other.intensity, intensity) || other.intensity == intensity)&&(identical(other.lpgmIntensity, lpgmIntensity) || other.lpgmIntensity == lpgmIntensity));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,intensity,lpgmIntensity);
+
+@override
+String toString() {
+  return 'CurrentLocationIntensityDisplay.result(intensity: $intensity, lpgmIntensity: $lpgmIntensity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CurrentLocationIntensityDisplayResultCopyWith<$Res> implements $CurrentLocationIntensityDisplayCopyWith<$Res> {
+  factory $CurrentLocationIntensityDisplayResultCopyWith(CurrentLocationIntensityDisplayResult value, $Res Function(CurrentLocationIntensityDisplayResult) _then) = _$CurrentLocationIntensityDisplayResultCopyWithImpl;
+@useResult
+$Res call({
+ JmaIntensity intensity, JmaLpgmIntensity? lpgmIntensity
+});
+
+
+
+
+}
+/// @nodoc
+class _$CurrentLocationIntensityDisplayResultCopyWithImpl<$Res>
+    implements $CurrentLocationIntensityDisplayResultCopyWith<$Res> {
+  _$CurrentLocationIntensityDisplayResultCopyWithImpl(this._self, this._then);
+
+  final CurrentLocationIntensityDisplayResult _self;
+  final $Res Function(CurrentLocationIntensityDisplayResult) _then;
+
+/// Create a copy of CurrentLocationIntensityDisplay
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? intensity = null,Object? lpgmIntensity = freezed,}) {
+  return _then(CurrentLocationIntensityDisplayResult(
+intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as JmaIntensity,lpgmIntensity: freezed == lpgmIntensity ? _self.lpgmIntensity : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class CurrentLocationIntensityDisplayNone implements CurrentLocationIntensityDisplay {
+  const CurrentLocationIntensityDisplayNone();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentLocationIntensityDisplayNone);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CurrentLocationIntensityDisplay.none()';
+}
+
+
+}
+
+
+
 
 // dart format on

@@ -1,5 +1,4 @@
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
@@ -81,8 +80,8 @@ class _MaxIntensityWidget extends StatelessWidget {
       children: [
         const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        IntensityValueIcon(
-          type: IntensityIconType.filled,
+        JmaIntensityIcon(
+          type: .filled,
           size: 60,
           intensity: intensity,
         ),

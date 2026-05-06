@@ -1,5 +1,4 @@
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_value_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
@@ -149,9 +148,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         ],
       ),
       leading: maxIntensity != null
-          ? IntensityValueIcon(
+          ? JmaIntensityIcon(
               intensity: maxIntensity,
-              type: IntensityIconType.filled,
+              type: .filled,
               size: intensityIconSize,
             )
           : null,

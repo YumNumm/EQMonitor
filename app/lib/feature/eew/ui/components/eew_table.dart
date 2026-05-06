@@ -84,7 +84,7 @@ class EewTable extends StatelessWidget {
 enum _EewTableColumn {
   serialNo(name: 'No.', isNumeric: true),
   type(name: '種別', isNumeric: false),
-  originTime(name: '発表時刻', isNumeric: true),
+  reportTime(name: '発表時刻', isNumeric: true),
   elapsedTime(
     name: '経過時間',
     isNumeric: true,
@@ -117,10 +117,8 @@ extension _EewTableColumnEx on _EewTableColumn {
       value: eew.serialNo.toString(),
       isNumeric: true,
     ),
-    _EewTableColumn.originTime => _EewTableColumnValue(
-      value: eew.originTime != null
-          ? DateFormat('yyyy/MM/dd HH:mm:ss').format(eew.originTime!.toLocal())
-          : '',
+    _EewTableColumn.reportTime => _EewTableColumnValue(
+      value: DateFormat('yyyy/MM/dd HH:mm:ss').format(eew.reportTime.toLocal()),
       isNumeric: false,
     ),
     _EewTableColumn.elapsedTime => _EewTableColumnValue(
@@ -165,9 +163,12 @@ extension _EewTableColumnEx on _EewTableColumn {
         if (intensity == null) {
           return '';
         }
-        // TODO(eqmonitor_api): maxIntensity は codegen バグにより常に unknown
-        const typeStr = '?';
-        return '震度 $typeStr${intensity.maxIntensityIsOver ? '以上' : ''}';
+        final maxIntensity = intensity.maxIntensity;
+        if (maxIntensity == null) {
+          return '-';
+        }
+        final typeStr = maxIntensity.label;
+        return '震度 $typeStr${intensity.maxIntensityIsOver ? '程度以上' : ''}';
       }(),
       isNumeric: false,
     ),

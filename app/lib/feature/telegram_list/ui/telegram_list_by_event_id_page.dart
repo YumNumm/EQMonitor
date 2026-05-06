@@ -41,7 +41,7 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
       appBar: AppBar(title: const Text('電文一覧')),
       body: RefreshIndicator(
         onRefresh: () async =>
-            ref.read(telegramListByEventIdProvider(eventId).notifier).refresh(),
+            ref.refresh(telegramListByEventIdProvider(eventId).notifier),
         child: switch (asyncState) {
           AsyncData(:final value) => _TelegramListView(
             items: value.items,
@@ -56,15 +56,13 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
               isLoading: false,
               scrollController: scrollController,
               error: error,
-              onReload: () async => ref
-                  .read(telegramListByEventIdProvider(eventId).notifier)
-                  .refresh(),
+              onReload: () async =>
+                  ref.refresh(telegramListByEventIdProvider(eventId)),
             ),
           AsyncError(:final error) => ErrorCard(
             error: error,
-            onReload: () async => ref
-                .read(telegramListByEventIdProvider(eventId).notifier)
-                .refresh(),
+            onReload: () async =>
+                ref.refresh(telegramListByEventIdProvider(eventId)),
           ),
           _ => const _TelegramListSkeleton(),
         },
@@ -104,9 +102,6 @@ class _TelegramListView extends StatelessWidget {
       itemCount: items.length + 1,
       separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
-        if (index == items.length) {
-          return _buildFooter(context);
-        }
         final telegram = items[index];
         return TelegramListTile(
           telegram: telegram,
@@ -129,33 +124,24 @@ class _TelegramListView extends StatelessWidget {
 
   Widget _buildFooter(BuildContext context) {
     if (isLoading) {
-      return const _TelegramListSkeleton(itemCount: 2);
+      return const _TelegramListSkeleton();
     }
     if (error != null) {
       return ErrorCard(error: error!, onReload: onReload);
     }
     if (hasNext) {
-      return const _TelegramListSkeleton(itemCount: 2);
+      return const _TelegramListSkeleton();
     }
-    return const Padding(
-      padding: EdgeInsets.all(16),
-      child: Center(
-        child: Text(
-          'すべての電文を取得しました',
-          style: TextStyle(color: Colors.grey),
-        ),
-      ),
-    );
+    return const SizedBox.shrink();
   }
 }
 
 class _TelegramListSkeleton extends StatelessWidget {
-  const _TelegramListSkeleton({this.itemCount = 5});
-
-  final int itemCount;
+  const _TelegramListSkeleton();
 
   @override
   Widget build(BuildContext context) {
+    const itemCount = 10;
     return Skeletonizer(
       child: Column(
         mainAxisSize: MainAxisSize.min,

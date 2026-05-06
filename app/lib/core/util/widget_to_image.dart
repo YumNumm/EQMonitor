@@ -28,14 +28,19 @@ Future<Uint8List?> renderWidgetToImageBytes({
   final rb = RepaintBoundary(
     child: MediaQuery(
       data: const MediaQueryData(),
-      child: Directionality(textDirection: TextDirection.ltr, child: widget),
+      child: Directionality(
+        textDirection: .ltr,
+        child: widget,
+      ),
     ),
   );
 
   final repaintBoundary = RenderRepaintBoundary();
   final renderView = RenderView(
     view: view,
-    child: RenderPositionedBox(child: repaintBoundary),
+    child: RenderPositionedBox(
+      child: repaintBoundary,
+    ),
     configuration: ViewConfiguration(
       physicalConstraints:
           BoxConstraints.tight(logicalSize) * view.devicePixelRatio,
@@ -45,7 +50,9 @@ Future<Uint8List?> renderWidgetToImageBytes({
   );
 
   final pipelineOwner = PipelineOwner();
-  final buildOwner = BuildOwner(focusManager: FocusManager());
+  final buildOwner = BuildOwner(
+    focusManager: FocusManager(),
+  );
 
   pipelineOwner.rootNode = renderView;
   renderView.prepareInitialFrame();
@@ -65,7 +72,9 @@ Future<Uint8List?> renderWidgetToImageBytes({
   final image = await repaintBoundary.toImage(
     pixelRatio: imageSize.width / logicalSize.width,
   );
-  final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+  final bytes = await image.toByteData(
+    format: .png,
+  );
   buildOwner.finalizeTree();
 
   return bytes?.buffer.asUint8List();

@@ -1,6 +1,5 @@
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/lpgm_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +80,7 @@ class _StationPopupBody extends StatelessWidget {
                 if (intensity != null) ...[
                   JmaIntensityIcon(
                     intensity: intensity!,
-                    type: IntensityIconType.filled,
+                    type: .filled,
                     size: 48,
                   ),
                   const SizedBox(width: 8),
@@ -93,9 +92,9 @@ class _StationPopupBody extends StatelessWidget {
                 if (lpgmIntensity != null &&
                     lpgmIntensity != JmaLpgmIntensity.zero) ...[
                   const SizedBox(width: 16),
-                  LpgmIntensityIcon(
+                  JmaLpgmIntensityIcon(
                     intensity: lpgmIntensity!,
-                    type: IntensityIconType.filled,
+                    type: .filled,
                     size: 48,
                   ),
                   const SizedBox(width: 8),
@@ -150,7 +149,7 @@ class _AreaPopupBody extends StatelessWidget {
                 children: [
                   JmaIntensityIcon(
                     intensity: maxIntensity!,
-                    type: IntensityIconType.filled,
+                    type: .filled,
                     size: 48,
                   ),
                   const SizedBox(width: 8),
