@@ -30,28 +30,57 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final intensityTree = intensity.intensityTree;
+    // TODO(YumNumm): 速報値の表示実装
+    final intensityTree =
+        // <JmaIntensity, List<PrefectureIntensityNode>>{};
+        intensity.intensityTree;
     if (intensityTree.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return BorderedContainer(
-      elevation: 1,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Column(
-        children: [
-          const SheetHeader(title: '各地の震度'),
-          ...intensityTree.entries.map(
-            (entry) => _IntensityLevelSection(
-              intensity: entry.key,
-              prefectures: entry.value,
-              eventId: item.eventId,
-              dividerColor: colorModel.fromJmaIntensity(entry.key).background,
+      return BorderedContainer(
+        elevation: 1,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: SheetHeader(
+                    title: '各地の震度',
+                  ),
+                ),
+                RawChip(
+                  label: const Text('速報'),
+                  color: WidgetStatePropertyAll(Colors.red.shade700),
+                  labelStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: .bold,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    } else {
+      return BorderedContainer(
+        elevation: 1,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Column(
+          children: [
+            const SheetHeader(
+              title: '各地の震度',
+            ),
+            ...intensityTree.entries.map(
+              (entry) => _IntensityLevelSection(
+                intensity: entry.key,
+                prefectures: entry.value,
+                eventId: item.eventId,
+                dividerColor: colorModel.fromJmaIntensity(entry.key).background,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 
