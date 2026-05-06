@@ -115,7 +115,9 @@ class _Sheet extends StatelessWidget {
                 children: [
                   EarthquakeHypocenterInformationCard(item: item),
                   CurrentLocationIntensityCard(item: item),
-                  EarthquakeIntensityWidget(item: item, eventId: item.eventId),
+                  EarthquakeIntensityWidget(
+                    item: item,
+                  ),
                   _TelegramListButton(eventId: item.eventId),
                 ],
               ),

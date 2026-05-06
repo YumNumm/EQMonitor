@@ -2,6 +2,8 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_map_focus.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree.dart';
@@ -11,18 +13,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EarthquakeIntensityWidget extends StatelessWidget {
+class EarthquakeIntensityWidget extends ConsumerWidget {
   const EarthquakeIntensityWidget({
     required this.item,
-    this.eventId,
     super.key,
   });
 
   final Earthquake item;
-  final String? eventId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorModel = ref.watch(intensityColorProvider);
     final intensity = item.intensity;
 
     if (intensity == null) {
@@ -44,7 +45,8 @@ class EarthquakeIntensityWidget extends StatelessWidget {
             (entry) => _IntensityLevelSection(
               intensity: entry.key,
               prefectures: entry.value,
-              eventId: eventId,
+              eventId: item.eventId,
+              dividerColor: colorModel.fromJmaIntensity(entry.key).background,
             ),
           ),
         ],
@@ -58,13 +60,15 @@ class EarthquakeIntensityWidget extends StatelessWidget {
 class _IntensityLevelSection extends HookWidget {
   const _IntensityLevelSection({
     required this.intensity,
+    required this.dividerColor,
     required this.prefectures,
     required this.eventId,
   });
 
   final JmaIntensity intensity;
+  final Color dividerColor;
   final List<PrefectureIntensityNode> prefectures;
-  final String? eventId;
+  final String eventId;
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +86,9 @@ class _IntensityLevelSection extends HookWidget {
         ListTile(
           dense: true,
           isThreeLine: true,
-          visualDensity: VisualDensity.compact,
-          titleAlignment: ListTileTitleAlignment.titleHeight,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+          visualDensity: .compact,
+          titleAlignment: .titleHeight,
+          contentPadding: const .symmetric(horizontal: 8),
           leading: JmaIntensityIcon(
             intensity: intensity,
             type: .filled,
@@ -92,12 +96,12 @@ class _IntensityLevelSection extends HookWidget {
           ),
           title: Text(
             '震度${intensity.mainText}',
-            style: theme.textTheme.titleMedium,
+            style: theme.textTheme.titleSmall,
           ),
           subtitle: Text(
             regionNames,
             maxLines: 4,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             style: const TextStyle(
               fontFamily: FontFamily.notoSansJP,
               fontSize: 13,
@@ -114,22 +118,36 @@ class _IntensityLevelSection extends HookWidget {
               ? () => isExpanded.value = !isExpanded.value
               : null,
         ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          alignment: Alignment.topCenter,
-          child: isExpanded.value
-              ? Column(
-                  children: [
-                    for (final prefecture in prefectures)
-                      _PrefectureTile(
-                        prefecture: prefecture,
-                        eventId: eventId,
-                      ),
-                  ],
-                )
-              : const SizedBox.shrink(),
-        ),
+        if (isExpanded.value)
+          Padding(
+            padding: const .only(left: 8),
+            child: IntrinsicHeight(
+              child: Row(
+                children: [
+                  VerticalDivider(
+                    color: dividerColor,
+                    thickness: 4,
+                    width: 4,
+                    radius: BorderRadiusGeometry.circular(2),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: prefectures
+                          .map(
+                            (prefecture) => _PrefectureTile(
+                              prefecture: prefecture,
+                              eventId: eventId,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          const SizedBox.shrink(),
       ],
     );
   }
@@ -144,22 +162,20 @@ class _PrefectureTile extends HookWidget {
   });
 
   final PrefectureIntensityNode prefecture;
-  final String? eventId;
+  final String eventId;
 
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
     final hasCities = prefecture.cities.isNotEmpty;
 
-    final mapButton = eventId != null
-        ? _MapFocusButton(
-            eventId: eventId!,
-            focus: EarthquakeIntensityMapFocus(
-              kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
-              code: prefecture.prefecture.prefecture.code,
-            ),
-          )
-        : null;
+    final mapButton = _MapFocusButton(
+      eventId: eventId,
+      focus: EarthquakeIntensityMapFocus(
+        kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
+        code: prefecture.prefecture.prefecture.code,
+      ),
+    );
 
     final trailing = _buildTrailing(
       hasChildren: hasCities,
@@ -172,7 +188,7 @@ class _PrefectureTile extends HookWidget {
         ListTile(
           visualDensity: .compact,
           dense: true,
-          contentPadding: const .only(left: 20, right: 8),
+          contentPadding: const .only(left: 8, right: 8),
           title: Text(
             prefecture.prefecture.prefecture.name.ja,
             style: const TextStyle(
@@ -182,19 +198,21 @@ class _PrefectureTile extends HookWidget {
           trailing: trailing,
           onTap: hasCities ? () => isExpanded.value = !isExpanded.value : null,
         ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          alignment: Alignment.topCenter,
-          child: isExpanded.value
-              ? Column(
-                  children: [
-                    for (final city in prefecture.cities)
-                      _CityTile(city: city, eventId: eventId),
-                  ],
-                )
-              : const SizedBox.shrink(),
-        ),
+        if (isExpanded.value)
+          Padding(
+            padding: const .only(left: 8),
+            child: Expanded(
+              child: Column(
+                children: prefecture.cities
+                    .map(
+                      (city) => _CityTile(city: city, eventId: eventId),
+                    )
+                    .toList(),
+              ),
+            ),
+          )
+        else
+          const SizedBox.shrink(),
       ],
     );
   }
@@ -232,11 +250,11 @@ class _CityTile extends HookWidget {
     );
 
     return Column(
+      crossAxisAlignment: .start,
       children: [
         ListTile(
           visualDensity: VisualDensity.compact,
           dense: true,
-          contentPadding: const EdgeInsets.only(left: 32, right: 8),
           title: Text(
             city.city.name.ja,
             style: const TextStyle(),
@@ -246,57 +264,23 @@ class _CityTile extends HookWidget {
               ? () => isExpanded.value = !isExpanded.value
               : null,
         ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          alignment: Alignment.topCenter,
-          child: isExpanded.value
-              ? Column(
-                  children: [
-                    for (final station in city.stations)
-                      _StationTile(station: station, eventId: eventId),
-                  ],
-                )
-              : const SizedBox.shrink(),
-        ),
-      ],
-    );
-  }
-}
-
-/// 観測点単位のタイル。
-class _StationTile extends StatelessWidget {
-  const _StationTile({
-    required this.station,
-    required this.eventId,
-  });
-
-  final StationIntensityNode station;
-  final String? eventId;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return ListTile(
-      visualDensity: VisualDensity.compact,
-      contentPadding: const EdgeInsets.only(left: 44, right: 8),
-      title: Text(
-        station.station.name.ja,
-        style: TextStyle(
-          fontSize: 13,
-          color: colorScheme.onSurfaceVariant,
-        ),
-      ),
-      trailing: eventId != null
-          ? _MapFocusButton(
-              eventId: eventId!,
-              focus: EarthquakeIntensityMapFocus(
-                kind: EarthquakeIntensityMapFocusKind.station,
-                code: station.station.code,
+        if (isExpanded.value)
+          Padding(
+            padding: const .only(left: 32),
+            child: Text(
+              city.stations
+                  .map(
+                    (station) => station.station.name.ja,
+                  )
+                  .join(', '),
+              style: const TextStyle(
+                fontSize: 12,
               ),
-            )
-          : null,
+            ),
+          )
+        else
+          const SizedBox.shrink(),
+      ],
     );
   }
 }

@@ -121,19 +121,6 @@ class _TelegramListView extends StatelessWidget {
       _ => null,
     };
   }
-
-  Widget _buildFooter(BuildContext context) {
-    if (isLoading) {
-      return const _TelegramListSkeleton();
-    }
-    if (error != null) {
-      return ErrorCard(error: error!, onReload: onReload);
-    }
-    if (hasNext) {
-      return const _TelegramListSkeleton();
-    }
-    return const SizedBox.shrink();
-  }
 }
 
 class _TelegramListSkeleton extends StatelessWidget {
