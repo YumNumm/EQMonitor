@@ -44,6 +44,7 @@ class CurrentLocationIntensityCard extends HookConsumerWidget {
           jmaMapAreaForecastLocalEInsideProvider(latLng).future,
         );
         return repository.resolveCurrentLocationIntensity(
+          regions: eqIntensity.regions,
           intensityTree: eqIntensity.intensityTree,
           cityAreaCode: cityItem?.property?.code,
           regionAreaCode: regionItem?.property?.code,

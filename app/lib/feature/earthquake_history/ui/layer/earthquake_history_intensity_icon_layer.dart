@@ -306,13 +306,13 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
         }
       }
     } else {
-      for (final entry in intensity.intensityTree.entries) {
+      for (final entry in intensity.regions.entries) {
         for (final region in entry.value) {
-          final maxIntensity = region.region.maxIntensity;
+          final maxIntensity = region.maxIntensity;
           if (maxIntensity == null) {
             continue;
           }
-          final polylabel = codeToPolylabel[region.region.region.code];
+          final polylabel = codeToPolylabel[region.region.code];
           if (polylabel == null) {
             continue;
           }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EarthquakeIntensity {
 
- JmaIntensity get maxIntensity; JmaLpgmIntensity? get maxLpgmIntensity; Map<JmaIntensity, List<PrefectureIntensityNode>> get intensityTree; Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> get lpgmIntensityTree;
+ JmaIntensity get maxIntensity; JmaLpgmIntensity? get maxLpgmIntensity; Map<JmaIntensity, List<IntensityRegion>> get regions; Map<JmaIntensity, List<PrefectureIntensityNode>> get intensityTree; Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> get lpgmIntensityTree;
 /// Create a copy of EarthquakeIntensity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EarthquakeIntensityCopyWith<EarthquakeIntensity> get copyWith => _$EarthquakeIn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeIntensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other.intensityTree, intensityTree)&&const DeepCollectionEquality().equals(other.lpgmIntensityTree, lpgmIntensityTree));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeIntensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other.regions, regions)&&const DeepCollectionEquality().equals(other.intensityTree, intensityTree)&&const DeepCollectionEquality().equals(other.lpgmIntensityTree, lpgmIntensityTree));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity,const DeepCollectionEquality().hash(intensityTree),const DeepCollectionEquality().hash(lpgmIntensityTree));
+int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity,const DeepCollectionEquality().hash(regions),const DeepCollectionEquality().hash(intensityTree),const DeepCollectionEquality().hash(lpgmIntensityTree));
 
 @override
 String toString() {
-  return 'EarthquakeIntensity(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, intensityTree: $intensityTree, lpgmIntensityTree: $lpgmIntensityTree)';
+  return 'EarthquakeIntensity(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, regions: $regions, intensityTree: $intensityTree, lpgmIntensityTree: $lpgmIntensityTree)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $EarthquakeIntensityCopyWith<$Res>  {
   factory $EarthquakeIntensityCopyWith(EarthquakeIntensity value, $Res Function(EarthquakeIntensity) _then) = _$EarthquakeIntensityCopyWithImpl;
 @useResult
 $Res call({
- JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree
+ JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<IntensityRegion>> regions, Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree
 });
 
 
@@ -65,11 +65,12 @@ class _$EarthquakeIntensityCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeIntensity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,Object? intensityTree = null,Object? lpgmIntensityTree = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,Object? regions = null,Object? intensityTree = null,Object? lpgmIntensityTree = null,}) {
   return _then(_self.copyWith(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,intensityTree: null == intensityTree ? _self.intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
+as Map<JmaIntensity, List<IntensityRegion>>,intensityTree: null == intensityTree ? _self.intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
 as Map<JmaIntensity, List<PrefectureIntensityNode>>,lpgmIntensityTree: null == lpgmIntensityTree ? _self.lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
 as Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>,
   ));
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<IntensityRegion>> regions,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeIntensity() when $default != null:
-return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_that.lpgmIntensityTree);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.regions,_that.intensityTree,_that.lpgmIntensityTree);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<IntensityRegion>> regions,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeIntensity():
-return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_that.lpgmIntensityTree);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.regions,_that.intensityTree,_that.lpgmIntensityTree);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( JmaIntensity maxIntensity,  JmaLpgmIntensity? maxLpgmIntensity,  Map<JmaIntensity, List<IntensityRegion>> regions,  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeIntensity() when $default != null:
-return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_that.lpgmIntensityTree);case _:
+return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.regions,_that.intensityTree,_that.lpgmIntensityTree);case _:
   return null;
 
 }
@@ -212,11 +213,18 @@ return $default(_that.maxIntensity,_that.maxLpgmIntensity,_that.intensityTree,_t
 @JsonSerializable()
 
 class _EarthquakeIntensity implements EarthquakeIntensity {
-  const _EarthquakeIntensity({required this.maxIntensity, required this.maxLpgmIntensity, required final  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required final  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree}): _intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
+  const _EarthquakeIntensity({required this.maxIntensity, required this.maxLpgmIntensity, required final  Map<JmaIntensity, List<IntensityRegion>> regions, required final  Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, required final  Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree}): _regions = regions,_intensityTree = intensityTree,_lpgmIntensityTree = lpgmIntensityTree;
   factory _EarthquakeIntensity.fromJson(Map<String, dynamic> json) => _$EarthquakeIntensityFromJson(json);
 
 @override final  JmaIntensity maxIntensity;
 @override final  JmaLpgmIntensity? maxLpgmIntensity;
+ final  Map<JmaIntensity, List<IntensityRegion>> _regions;
+@override Map<JmaIntensity, List<IntensityRegion>> get regions {
+  if (_regions is EqualUnmodifiableMapView) return _regions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_regions);
+}
+
  final  Map<JmaIntensity, List<PrefectureIntensityNode>> _intensityTree;
 @override Map<JmaIntensity, List<PrefectureIntensityNode>> get intensityTree {
   if (_intensityTree is EqualUnmodifiableMapView) return _intensityTree;
@@ -245,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeIntensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other._intensityTree, _intensityTree)&&const DeepCollectionEquality().equals(other._lpgmIntensityTree, _lpgmIntensityTree));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeIntensity&&(identical(other.maxIntensity, maxIntensity) || other.maxIntensity == maxIntensity)&&(identical(other.maxLpgmIntensity, maxLpgmIntensity) || other.maxLpgmIntensity == maxLpgmIntensity)&&const DeepCollectionEquality().equals(other._regions, _regions)&&const DeepCollectionEquality().equals(other._intensityTree, _intensityTree)&&const DeepCollectionEquality().equals(other._lpgmIntensityTree, _lpgmIntensityTree));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity,const DeepCollectionEquality().hash(_intensityTree),const DeepCollectionEquality().hash(_lpgmIntensityTree));
+int get hashCode => Object.hash(runtimeType,maxIntensity,maxLpgmIntensity,const DeepCollectionEquality().hash(_regions),const DeepCollectionEquality().hash(_intensityTree),const DeepCollectionEquality().hash(_lpgmIntensityTree));
 
 @override
 String toString() {
-  return 'EarthquakeIntensity(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, intensityTree: $intensityTree, lpgmIntensityTree: $lpgmIntensityTree)';
+  return 'EarthquakeIntensity(maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity, regions: $regions, intensityTree: $intensityTree, lpgmIntensityTree: $lpgmIntensityTree)';
 }
 
 
@@ -265,7 +273,7 @@ abstract mixin class _$EarthquakeIntensityCopyWith<$Res> implements $EarthquakeI
   factory _$EarthquakeIntensityCopyWith(_EarthquakeIntensity value, $Res Function(_EarthquakeIntensity) _then) = __$EarthquakeIntensityCopyWithImpl;
 @override @useResult
 $Res call({
- JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree
+ JmaIntensity maxIntensity, JmaLpgmIntensity? maxLpgmIntensity, Map<JmaIntensity, List<IntensityRegion>> regions, Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree, Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>> lpgmIntensityTree
 });
 
 
@@ -282,11 +290,12 @@ class __$EarthquakeIntensityCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeIntensity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,Object? intensityTree = null,Object? lpgmIntensityTree = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxIntensity = null,Object? maxLpgmIntensity = freezed,Object? regions = null,Object? intensityTree = null,Object? lpgmIntensityTree = null,}) {
   return _then(_EarthquakeIntensity(
 maxIntensity: null == maxIntensity ? _self.maxIntensity : maxIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,maxLpgmIntensity: freezed == maxLpgmIntensity ? _self.maxLpgmIntensity : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-as JmaLpgmIntensity?,intensityTree: null == intensityTree ? _self._intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
+as JmaLpgmIntensity?,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
+as Map<JmaIntensity, List<IntensityRegion>>,intensityTree: null == intensityTree ? _self._intensityTree : intensityTree // ignore: cast_nullable_to_non_nullable
 as Map<JmaIntensity, List<PrefectureIntensityNode>>,lpgmIntensityTree: null == lpgmIntensityTree ? _self._lpgmIntensityTree : lpgmIntensityTree // ignore: cast_nullable_to_non_nullable
 as Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>,
   ));

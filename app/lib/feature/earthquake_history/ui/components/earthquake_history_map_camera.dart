@@ -46,10 +46,9 @@ Geographic? geographicForEarthquakeIntensityFocus(
 
   for (final regions in intensity.intensityTree.values) {
     for (final regionNode in regions) {
-      final region = regionNode.region.region;
       switch (focus.kind) {
         case EarthquakeIntensityMapFocusKind.prefectureRegion:
-          if (region.code == focus.code) {
+          if (regionNode.prefecture.prefecture.code == focus.code) {
             return _representativeGeographicForRegion(regionNode);
           }
         case EarthquakeIntensityMapFocusKind.city:
@@ -76,7 +75,9 @@ Geographic? geographicForEarthquakeIntensityFocus(
   return null;
 }
 
-Geographic? _representativeGeographicForRegion(PrefectureIntensityNode regionNode) {
+Geographic? _representativeGeographicForRegion(
+  PrefectureIntensityNode regionNode,
+) {
   for (final city in regionNode.cities) {
     final g = _representativeGeographicForCity(city);
     if (g != null) {

@@ -12,9 +12,9 @@ _PrefectureIntensityNode _$PrefectureIntensityNodeFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_PrefectureIntensityNode', json, ($checkedConvert) {
   final val = _PrefectureIntensityNode(
-    region: $checkedConvert(
-      'region',
-      (v) => IntensityRegion.fromJson(v as Map<String, dynamic>),
+    prefecture: $checkedConvert(
+      'prefecture',
+      (v) => IntensityPrefecture.fromJson(v as Map<String, dynamic>),
     ),
     cities: $checkedConvert(
       'cities',
@@ -28,7 +28,49 @@ _PrefectureIntensityNode _$PrefectureIntensityNodeFromJson(
 
 Map<String, dynamic> _$PrefectureIntensityNodeToJson(
   _PrefectureIntensityNode instance,
-) => <String, dynamic>{'region': instance.region, 'cities': instance.cities};
+) => <String, dynamic>{
+  'prefecture': instance.prefecture,
+  'cities': instance.cities,
+};
+
+_IntensityPrefecture _$IntensityPrefectureFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_IntensityPrefecture', json, ($checkedConvert) {
+      final val = _IntensityPrefecture(
+        prefecture: $checkedConvert(
+          'prefecture',
+          (v) => EarthquakeParameterPrefectureItem.fromJson(
+            v as Map<String, dynamic>,
+          ),
+        ),
+        maxIntensity: $checkedConvert(
+          'max_intensity',
+          (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'maxIntensity': 'max_intensity'});
+
+Map<String, dynamic> _$IntensityPrefectureToJson(
+  _IntensityPrefecture instance,
+) => <String, dynamic>{
+  'prefecture': instance.prefecture,
+  'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
+};
+
+const _$JmaIntensityEnumMap = {
+  JmaIntensity.unknown: 'unknown',
+  JmaIntensity.zero: 'zero',
+  JmaIntensity.one: 'one',
+  JmaIntensity.two: 'two',
+  JmaIntensity.three: 'three',
+  JmaIntensity.four: 'four',
+  JmaIntensity.fiveUnknown: 'fiveUnknown',
+  JmaIntensity.fiveLower: 'fiveLower',
+  JmaIntensity.fiveUpper: 'fiveUpper',
+  JmaIntensity.sixLower: 'sixLower',
+  JmaIntensity.sixUpper: 'sixUpper',
+  JmaIntensity.seven: 'seven',
+};
 
 _IntensityRegion _$IntensityRegionFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_IntensityRegion', json, ($checkedConvert) {
@@ -51,21 +93,6 @@ Map<String, dynamic> _$IntensityRegionToJson(_IntensityRegion instance) =>
       'region': instance.region,
       'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
     };
-
-const _$JmaIntensityEnumMap = {
-  JmaIntensity.unknown: 'unknown',
-  JmaIntensity.zero: 'zero',
-  JmaIntensity.one: 'one',
-  JmaIntensity.two: 'two',
-  JmaIntensity.three: 'three',
-  JmaIntensity.four: 'four',
-  JmaIntensity.fiveUnknown: 'fiveUnknown',
-  JmaIntensity.fiveLower: 'fiveLower',
-  JmaIntensity.fiveUpper: 'fiveUpper',
-  JmaIntensity.sixLower: 'sixLower',
-  JmaIntensity.sixUpper: 'sixUpper',
-  JmaIntensity.seven: 'seven',
-};
 
 _CityIntensityNode _$CityIntensityNodeFromJson(Map<String, dynamic> json) =>
     $checkedCreate(

@@ -11,12 +11,23 @@ part 'intensity_tree.g.dart';
 @freezed
 abstract class PrefectureIntensityNode with _$PrefectureIntensityNode {
   const factory PrefectureIntensityNode({
-    required IntensityRegion region,
+    required IntensityPrefecture prefecture,
     required List<CityIntensityNode> cities,
   }) = _PrefectureIntensityNode;
 
   factory PrefectureIntensityNode.fromJson(Map<String, dynamic> json) =>
       _$PrefectureIntensityNodeFromJson(json);
+}
+
+@freezed
+abstract class IntensityPrefecture with _$IntensityPrefecture {
+  const factory IntensityPrefecture({
+    required EarthquakeParameterPrefectureItem prefecture,
+    required JmaIntensity? maxIntensity,
+  }) = _IntensityPrefecture;
+
+  factory IntensityPrefecture.fromJson(Map<String, dynamic> json) =>
+      _$IntensityPrefectureFromJson(json);
 }
 
 @freezed

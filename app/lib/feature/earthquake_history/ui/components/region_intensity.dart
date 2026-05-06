@@ -72,15 +72,18 @@ class _IntensityLevelSection extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = useState(false);
-    final theme = Theme.of(context);
-    // City以下の要素がひとつでもあれば展開可能
     final hasCityData = prefectures.any((p) => p.cities.isNotEmpty);
-    final regionNames = prefectures.map((e) => e.region.region.name).join('、');
+
+    final theme = Theme.of(context);
+    final regionNames = prefectures
+        .map((e) => e.prefecture.prefecture.name.ja)
+        .join('、');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
+          dense: true,
           isThreeLine: true,
           visualDensity: VisualDensity.compact,
           titleAlignment: ListTileTitleAlignment.titleHeight,
@@ -156,7 +159,7 @@ class _PrefectureTile extends HookWidget {
             eventId: eventId!,
             focus: EarthquakeIntensityMapFocus(
               kind: EarthquakeIntensityMapFocusKind.prefectureRegion,
-              code: prefecture.region.region.code,
+              code: prefecture.prefecture.prefecture.code,
             ),
           )
         : null;
@@ -173,12 +176,12 @@ class _PrefectureTile extends HookWidget {
           visualDensity: VisualDensity.compact,
           contentPadding: const EdgeInsets.only(left: 20, right: 8),
           leading: _IntensityLpgmBadgeRow(
-            maxIntensity: prefecture.region.maxIntensity,
+            maxIntensity: prefecture.prefecture.maxIntensity,
             maxLpgm: null,
             intensityIconSize: 28,
           ),
           title: Text(
-            prefecture.region.region.name.ja,
+            prefecture.prefecture.prefecture.name.ja,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: trailing,
@@ -249,7 +252,9 @@ class _CityTile extends HookWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: trailing,
-          onTap: hasStations ? () => isExpanded.value = !isExpanded.value : null,
+          onTap: hasStations
+              ? () => isExpanded.value = !isExpanded.value
+              : null,
         ),
         AnimatedSize(
           duration: const Duration(milliseconds: 200),

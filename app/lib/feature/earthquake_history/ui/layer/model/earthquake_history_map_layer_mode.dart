@@ -237,9 +237,9 @@ class EarthquakeHistoryMapLayerModeResolver {
     EarthquakeIntensity intensity,
   ) {
     return EarthquakeHistoryMapLayerAvailability(
-      region: intensity.intensityTree.values.any(
+      region: intensity.regions.values.any(
         (regions) => regions.any(
-          (region) => region.region.maxIntensity != null,
+          (region) => region.maxIntensity != null,
         ),
       ),
       city: intensity.intensityTree.values.any(

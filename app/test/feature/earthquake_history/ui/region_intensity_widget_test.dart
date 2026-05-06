@@ -67,17 +67,30 @@ void main() {
     kana: null,
     cities: [],
   );
+  const miyagiPrefecture = EarthquakeParameterPrefectureItem(
+    code: '04',
+    name: LocalizedName(ja: '宮城県'),
+    regions: [miyagiRegion],
+  );
 
   testWidgets('各地の震度セクションに震度タイルと地域名が出る', (tester) async {
     final item = itemWithIntensity(
       const EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
         maxLpgmIntensity: null,
+        regions: {
+          JmaIntensity.four: [
+            IntensityRegion(
+              region: miyagiRegion,
+              maxIntensity: JmaIntensity.four,
+            ),
+          ],
+        },
         intensityTree: {
           JmaIntensity.four: [
             PrefectureIntensityNode(
-              region: IntensityRegion(
-                region: miyagiRegion,
+              prefecture: IntensityPrefecture(
+                prefecture: miyagiPrefecture,
                 maxIntensity: JmaIntensity.four,
               ),
               cities: [
@@ -112,11 +125,19 @@ void main() {
       const EarthquakeIntensity(
         maxIntensity: JmaIntensity.four,
         maxLpgmIntensity: null,
+        regions: {
+          JmaIntensity.four: [
+            IntensityRegion(
+              region: miyagiRegion,
+              maxIntensity: JmaIntensity.four,
+            ),
+          ],
+        },
         intensityTree: {
           JmaIntensity.four: [
             PrefectureIntensityNode(
-              region: IntensityRegion(
-                region: miyagiRegion,
+              prefecture: IntensityPrefecture(
+                prefecture: miyagiPrefecture,
                 maxIntensity: JmaIntensity.four,
               ),
               cities: [

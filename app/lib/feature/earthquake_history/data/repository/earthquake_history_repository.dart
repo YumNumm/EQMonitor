@@ -92,7 +92,9 @@ class EarthquakeHistoryRepository {
       intensityGte: intensityGte?.toApiJmaIntensity,
       intensityLte: intensityLte?.toApiJmaIntensity,
     );
-    return response.data.toEarthquakeListResponse(parameter: earthquakeParameter);
+    return response.data.toEarthquakeListResponse(
+      parameter: earthquakeParameter,
+    );
   }
 
   Future<Earthquake> fetchEarthquakeDetail({
@@ -190,6 +192,7 @@ class EarthquakeHistoryRepository {
 
   /// [cityAreaCode] … areaInformationCity のコード、[regionAreaCode] … areaForecastLocalE のコード。
   CurrentLocationIntensityDisplay? resolveCurrentLocationIntensity({
+    required Map<JmaIntensity, List<IntensityRegion>> regions,
     required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     required String? cityAreaCode,
     required String? regionAreaCode,
@@ -207,8 +210,8 @@ class EarthquakeHistoryRepository {
       // （cityAreaCode は7桁、regionCode は2〜3桁で別体系のため直接比較不可）
       final regionCode = _regionCodeForCity(cityAreaCode);
       final prefJ = regionCode != null
-          ? _prefectureOnlyIntensity(intensityTree, regionCode)
-          : _prefectureOnlyIntensity(intensityTree, cityAreaCode);
+          ? _regionIntensity(regions, regionCode)
+          : _regionIntensity(regions, cityAreaCode);
       if (prefJ != null) {
         return CurrentLocationIntensityDisplay(
           intensity: prefJ,
@@ -225,7 +228,7 @@ class EarthquakeHistoryRepository {
           usedCityLevelData: false,
         );
       }
-      final prefJ = _prefectureOnlyIntensity(intensityTree, regionAreaCode);
+      final prefJ = _regionIntensity(regions, regionAreaCode);
       if (prefJ != null) {
         return CurrentLocationIntensityDisplay(
           intensity: prefJ,
@@ -252,15 +255,14 @@ class EarthquakeHistoryRepository {
     return null;
   }
 
-  JmaIntensity? _prefectureOnlyIntensity(
-    Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
+  JmaIntensity? _regionIntensity(
+    Map<JmaIntensity, List<IntensityRegion>> regions,
     String areaCode,
   ) {
-    for (final entry in intensityTree.entries) {
-      for (final regionNode in entry.value) {
-        if (regionNode.region.region.code == areaCode &&
-            regionNode.cities.isEmpty) {
-          return regionNode.region.maxIntensity ?? entry.key;
+    for (final entry in regions.entries) {
+      for (final region in entry.value) {
+        if (region.region.code == areaCode) {
+          return region.maxIntensity ?? entry.key;
         }
       }
     }

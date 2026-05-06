@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_tree_c
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:lat_lng/lat_lng.dart';
 import 'package:test/test.dart';
 
 const _testMetadata = ParameterMetadata(
@@ -21,7 +22,14 @@ EarthquakeParameter _param({
     ({
       String code,
       String name,
-      List<({String code, String name, List<({String code, String name})> stations})> cities,
+      List<
+        ({
+          String code,
+          String name,
+          List<({String code, String name})> stations,
+        })
+      >
+      cities,
     })
   >
   regions,
@@ -32,21 +40,38 @@ EarthquakeParameter _param({
       EarthquakeParameterPrefectureItem(
         code: 'test_pref',
         name: const LocalizedName(ja: 'テスト都道府県'),
-        regions: regions.map(
-          (r) => EarthquakeParameterRegionItem(
-            code: r.code,
-            name: LocalizedName(ja: r.name),
-            kana: null,
-            cities: r.cities.map(
-              (c) => EarthquakeParameterCityItem(
-                code: c.code,
-                name: LocalizedName(ja: c.name),
+        regions: regions
+            .map(
+              (r) => EarthquakeParameterRegionItem(
+                code: r.code,
+                name: LocalizedName(ja: r.name),
                 kana: null,
-                stations: const [],
+                cities: r.cities
+                    .map(
+                      (c) => EarthquakeParameterCityItem(
+                        code: c.code,
+                        name: LocalizedName(ja: c.name),
+                        kana: null,
+                        stations: c.stations
+                            .map(
+                              (s) => EarthquakeParameterStationItem(
+                                code: s.code,
+                                noCode: s.code,
+                                name: LocalizedName(ja: s.name),
+                                kana: null,
+                                status: EarthquakeStationStatus.operating,
+                                sourceStatus: '',
+                                owner: '',
+                                location: const LatLng(0, 0),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    )
+                    .toList(),
               ),
-            ).toList(),
-          ),
-        ).toList(),
+            )
+            .toList(),
       ),
     ],
   );
@@ -78,6 +103,7 @@ void main() {
           api.IntensityTree(
             intensity: api.JmaIntensity.value4,
             regions: ['0420100'],
+            stations: ['042010001'],
           ),
         ],
       );
@@ -86,14 +112,24 @@ void main() {
           (
             code: '040000',
             name: '宮城県',
-            cities: [(code: '0420100', name: '宮城県北部', stations: const [])],
+            cities: [
+              (
+                code: '0420100',
+                name: '宮城県北部',
+                stations: [(code: '042010001', name: '仙台観測点')],
+              ),
+            ],
           ),
         ],
       );
-      final tree = IntensityTreeConverter(parameter: parameter)
-          .convertToIntensityTree(intensity: intensity);
+      final converter = IntensityTreeConverter(parameter: parameter);
+      final regions = converter.convertToRegionIntensityTree(
+        intensity: intensity,
+      );
+      final tree = converter.convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
+        regions: regions,
         intensityTree: tree,
         cityAreaCode: '0420100',
         regionAreaCode: null,
@@ -117,16 +153,20 @@ void main() {
       final parameter = _param(
         regions: [
           (
-            code: '040000',
+            code: '0420100',
             name: '宮城県',
             cities: [(code: '0420100', name: '宮城県北部', stations: const [])],
           ),
         ],
       );
-      final tree = IntensityTreeConverter(parameter: parameter)
-          .convertToIntensityTree(intensity: intensity);
+      final converter = IntensityTreeConverter(parameter: parameter);
+      final regions = converter.convertToRegionIntensityTree(
+        intensity: intensity,
+      );
+      final tree = converter.convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
+        regions: regions,
         intensityTree: tree,
         cityAreaCode: '9999999',
         regionAreaCode: '0420100',
@@ -158,10 +198,14 @@ void main() {
           ),
         ],
       );
-      final tree = IntensityTreeConverter(parameter: parameter)
-          .convertToIntensityTree(intensity: intensity);
+      final converter = IntensityTreeConverter(parameter: parameter);
+      final regions = converter.convertToRegionIntensityTree(
+        intensity: intensity,
+      );
+      final tree = converter.convertToIntensityTree(intensity: intensity);
 
       final r = _repository(parameter).resolveCurrentLocationIntensity(
+        regions: regions,
         intensityTree: tree,
         cityAreaCode: '040000',
         regionAreaCode: null,

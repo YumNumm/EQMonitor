@@ -195,12 +195,16 @@ class EarthquakeHistoryMapLayerModeTestData {
 
   EarthquakeIntensity regionOnlyIntensity() {
     final region = regionNode(maxIntensity: JmaIntensity.four);
+    final prefecture = prefectureNode(maxIntensity: JmaIntensity.four);
     return EarthquakeIntensity(
       maxIntensity: JmaIntensity.four,
       maxLpgmIntensity: null,
+      regions: {
+        JmaIntensity.four: [region],
+      },
       intensityTree: {
         JmaIntensity.four: [
-          PrefectureIntensityNode(region: region, cities: const []),
+          PrefectureIntensityNode(prefecture: prefecture, cities: const []),
         ],
       },
       lpgmIntensityTree: const {},
@@ -209,6 +213,7 @@ class EarthquakeHistoryMapLayerModeTestData {
 
   EarthquakeIntensity fullIntensity() {
     final region = regionNode(maxIntensity: JmaIntensity.four);
+    final prefecture = prefectureNode(maxIntensity: JmaIntensity.four);
     final city = cityNode();
     final station = stationNode(
       maxIntensity: JmaIntensity.four,
@@ -219,10 +224,13 @@ class EarthquakeHistoryMapLayerModeTestData {
     return EarthquakeIntensity(
       maxIntensity: JmaIntensity.four,
       maxLpgmIntensity: JmaLpgmIntensity.two,
+      regions: {
+        JmaIntensity.four: [region],
+      },
       intensityTree: {
         JmaIntensity.four: [
           PrefectureIntensityNode(
-            region: region,
+            prefecture: prefecture,
             cities: [
               CityIntensityNode(
                 city: city,
@@ -259,6 +267,7 @@ class EarthquakeHistoryMapLayerModeTestData {
 
   EarthquakeIntensity lpgmFullJmaRegionOnly() {
     final region = regionNode(maxIntensity: JmaIntensity.four);
+    final prefecture = prefectureNode(maxIntensity: JmaIntensity.four);
     final station = stationNode(
       maxIntensity: null,
       maxLpgmIntensity: JmaLpgmIntensity.two,
@@ -268,9 +277,12 @@ class EarthquakeHistoryMapLayerModeTestData {
     return EarthquakeIntensity(
       maxIntensity: JmaIntensity.four,
       maxLpgmIntensity: JmaLpgmIntensity.two,
+      regions: {
+        JmaIntensity.four: [region],
+      },
       intensityTree: {
         JmaIntensity.four: [
-          PrefectureIntensityNode(region: region, cities: const []),
+          PrefectureIntensityNode(prefecture: prefecture, cities: const []),
         ],
       },
       lpgmIntensityTree: {
@@ -303,6 +315,17 @@ class EarthquakeHistoryMapLayerModeTestData {
         name: LocalizedName(ja: 'テスト地域'),
         kana: null,
         cities: [],
+      ),
+      maxIntensity: maxIntensity,
+    );
+  }
+
+  IntensityPrefecture prefectureNode({required JmaIntensity? maxIntensity}) {
+    return IntensityPrefecture(
+      prefecture: const EarthquakeParameterPrefectureItem(
+        code: '001',
+        name: LocalizedName(ja: 'テスト都道府県'),
+        regions: [],
       ),
       maxIntensity: maxIntensity,
     );

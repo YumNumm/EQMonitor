@@ -358,13 +358,17 @@ class EarthquakeHistoryFillLayerBuilder {
 
   List<JmaIntensity> sortedJmaLevels(EarthquakeIntensity intensity) {
     final levels = <JmaIntensity>{};
-    for (final entry in intensity.intensityTree.entries) {
+    for (final entry in intensity.regions.entries) {
       for (final region in entry.value) {
-        final maxIntensity = region.region.maxIntensity;
-        if (maxIntensity != null) {
-          levels.add(maxIntensity);
+        if (region.maxIntensity != null) {
+          levels.add(entry.key);
+          break;
         }
-        for (final city in region.cities) {
+      }
+    }
+    for (final entry in intensity.intensityTree.entries) {
+      for (final prefecture in entry.value) {
+        for (final city in prefecture.cities) {
           if (city.maxIntensity != null) {
             levels.add(entry.key);
             break;
@@ -381,13 +385,13 @@ class EarthquakeHistoryFillLayerBuilder {
     JmaIntensity intensityLevel,
   ) {
     final codes = <String>[];
-    final nodes = intensity.intensityTree[intensityLevel];
+    final nodes = intensity.regions[intensityLevel];
     if (nodes == null) {
       return codes;
     }
     for (final region in nodes) {
-      if (region.region.maxIntensity == intensityLevel) {
-        codes.add(region.region.region.code);
+      if (region.maxIntensity == intensityLevel) {
+        codes.add(region.region.code);
       }
     }
     return codes;

@@ -350,10 +350,10 @@ class _MapContent extends HookConsumerWidget {
     if (intensity == null) {
       return null;
     }
-    for (final entry in intensity.intensityTree.entries) {
-      for (final region in entry.value) {
-        if (region.region.region.code == code) {
-          return region.region;
+    for (final regions in intensity.regions.values) {
+      for (final region in regions) {
+        if (region.region.code == code) {
+          return region;
         }
       }
     }

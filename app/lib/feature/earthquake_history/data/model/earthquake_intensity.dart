@@ -15,6 +15,7 @@ abstract class EarthquakeIntensity with _$EarthquakeIntensity {
   const factory EarthquakeIntensity({
     required JmaIntensity maxIntensity,
     required JmaLpgmIntensity? maxLpgmIntensity,
+    required Map<JmaIntensity, List<IntensityRegion>> regions,
     required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
     required Map<JmaLpgmIntensity, List<PrefectureLpgmIntensityNode>>
     lpgmIntensityTree,
@@ -32,6 +33,9 @@ extension EarthquakeIntensityApiExtension on api.Intensity {
     return EarthquakeIntensity(
       maxIntensity: maxIntensity.toJmaIntensity,
       maxLpgmIntensity: maxLpgmIntensity?.toJmaLpgmIntensity,
+      regions: converter.convertToRegionIntensityTree(
+        intensity: this,
+      ),
       intensityTree: converter.convertToIntensityTree(
         intensity: this,
       ),
@@ -50,8 +54,8 @@ extension EarthquakeIntensityMapLayer on EarthquakeIntensity {
       final level = entry.key;
       for (final pref in entry.value) {
         if (pref.cities.isEmpty) {
-          final j = pref.region.maxIntensity ?? level;
-          yield (code: pref.region.region.code, intensity: j);
+          final j = pref.prefecture.maxIntensity ?? level;
+          yield (code: pref.prefecture.prefecture.code, intensity: j);
         } else {
           for (final city in pref.cities) {
             final j = city.maxIntensity;

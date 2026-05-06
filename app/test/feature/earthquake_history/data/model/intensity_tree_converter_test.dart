@@ -37,36 +37,49 @@ EarthquakeParameter _buildParameter({
     ({
       String code,
       String name,
-      List<({String code, String name, List<({String code, String name})> stations})> cities,
+      List<
+        ({
+          String code,
+          String name,
+          List<({String code, String name})> stations,
+        })
+      >
+      cities,
     })
   >
   regions,
 }) {
   return EarthquakeParameter(
     metadata: _testMetadata,
-    prefectures: [
-      EarthquakeParameterPrefectureItem(
-        code: 'test_pref',
-        name: const LocalizedName(ja: 'テスト都道府県'),
-        regions: regions.map(
-          (r) => EarthquakeParameterRegionItem(
+    prefectures: regions
+        .map(
+          (r) => EarthquakeParameterPrefectureItem(
             code: r.code,
             name: LocalizedName(ja: r.name),
-            kana: null,
-            cities: r.cities.map(
-              (c) => EarthquakeParameterCityItem(
-                code: c.code,
-                name: LocalizedName(ja: c.name),
+            regions: [
+              EarthquakeParameterRegionItem(
+                code: r.code,
+                name: LocalizedName(ja: r.name),
                 kana: null,
-                stations: c.stations
-                    .map((s) => _buildStation(code: s.code, name: s.name))
+                cities: r.cities
+                    .map(
+                      (c) => EarthquakeParameterCityItem(
+                        code: c.code,
+                        name: LocalizedName(ja: c.name),
+                        kana: null,
+                        stations: c.stations
+                            .map(
+                              (s) => _buildStation(code: s.code, name: s.name),
+                            )
+                            .toList(),
+                      ),
+                    )
                     .toList(),
               ),
-            ).toList(),
+            ],
           ),
-        ).toList(),
-      ),
-    ],
+        )
+        .toList(),
   );
 }
 
@@ -119,6 +132,7 @@ void main() {
           _jmaTree(
             intensity: api.JmaIntensity.value4,
             regions: ['0420100'],
+            stations: ['042010001'],
           ),
         ],
       );
@@ -127,7 +141,13 @@ void main() {
           (
             code: '040000',
             name: '宮城県',
-            cities: [(code: '0420100', name: '宮城県北部', stations: const [])],
+            cities: [
+              (
+                code: '0420100',
+                name: '宮城県北部',
+                stations: [(code: '042010001', name: '仙台観測点')],
+              ),
+            ],
           ),
         ],
       );
@@ -138,9 +158,12 @@ void main() {
 
       expect(result.keys.toList(), [JmaIntensity.four]);
       expect(result[JmaIntensity.four]!.length, 1);
-      expect(result[JmaIntensity.four]![0].region.region.name.ja, '宮城県');
       expect(
-        result[JmaIntensity.four]![0].region.maxIntensity,
+        result[JmaIntensity.four]![0].prefecture.prefecture.name.ja,
+        '宮城県',
+      );
+      expect(
+        result[JmaIntensity.four]![0].prefecture.maxIntensity,
         JmaIntensity.four,
       );
       expect(result[JmaIntensity.four]![0].cities.length, 1);
@@ -158,10 +181,12 @@ void main() {
           _jmaTree(
             intensity: api.JmaIntensity.value5plus,
             regions: ['0420100'],
+            stations: ['042010001'],
           ),
           _jmaTree(
             intensity: api.JmaIntensity.value4,
             regions: ['0420200'],
+            stations: ['042020001'],
           ),
         ],
       );
@@ -171,8 +196,16 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部', stations: const []),
-              (code: '0420200', name: '宮城県南部', stations: const []),
+              (
+                code: '0420100',
+                name: '宮城県北部',
+                stations: [(code: '042010001', name: '宮城県北部観測点')],
+              ),
+              (
+                code: '0420200',
+                name: '宮城県南部',
+                stations: [(code: '042020001', name: '宮城県南部観測点')],
+              ),
             ],
           ),
         ],
@@ -186,13 +219,13 @@ void main() {
 
       final group5Plus = result[JmaIntensity.fiveUpper]!;
       expect(group5Plus.length, 1);
-      expect(group5Plus[0].region.region.name.ja, '宮城県');
+      expect(group5Plus[0].prefecture.prefecture.name.ja, '宮城県');
       expect(group5Plus[0].cities.length, 1);
       expect(group5Plus[0].cities[0].city.name.ja, '宮城県北部');
 
       final group4 = result[JmaIntensity.four]!;
       expect(group4.length, 1);
-      expect(group4[0].region.region.name.ja, '宮城県');
+      expect(group4[0].prefecture.prefecture.name.ja, '宮城県');
       expect(group4[0].cities.length, 1);
       expect(group4[0].cities[0].city.name.ja, '宮城県南部');
     });
@@ -204,6 +237,7 @@ void main() {
           _jmaTree(
             intensity: api.JmaIntensity.value4,
             regions: ['0420100', '0720100'],
+            stations: ['042010001', '072010001'],
           ),
         ],
       );
@@ -212,12 +246,24 @@ void main() {
           (
             code: '040000',
             name: '宮城県',
-            cities: [(code: '0420100', name: '宮城県北部', stations: const [])],
+            cities: [
+              (
+                code: '0420100',
+                name: '宮城県北部',
+                stations: [(code: '042010001', name: '宮城県北部観測点')],
+              ),
+            ],
           ),
           (
             code: '070000',
             name: '福島県',
-            cities: [(code: '0720100', name: '中通り', stations: const [])],
+            cities: [
+              (
+                code: '0720100',
+                name: '中通り',
+                stations: [(code: '072010001', name: '中通り観測点')],
+              ),
+            ],
           ),
         ],
       );
@@ -230,7 +276,7 @@ void main() {
       expect(result[JmaIntensity.four]!.length, 2);
 
       final regionNames = result[JmaIntensity.four]!
-          .map((r) => r.region.region.name.ja)
+          .map((r) => r.prefecture.prefecture.name.ja)
           .toList();
       expect(regionNames, contains('宮城県'));
       expect(regionNames, contains('福島県'));
@@ -243,14 +289,17 @@ void main() {
           _jmaTree(
             intensity: api.JmaIntensity.value6minus,
             regions: ['0420100'],
+            stations: ['042010001'],
           ),
           _jmaTree(
             intensity: api.JmaIntensity.value4,
             regions: ['0420200'],
+            stations: ['042020001'],
           ),
           _jmaTree(
             intensity: api.JmaIntensity.value5minus,
             regions: ['0420300'],
+            stations: ['042030001'],
           ),
         ],
       );
@@ -260,9 +309,21 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部', stations: const []),
-              (code: '0420200', name: '宮城県南部', stations: const []),
-              (code: '0420300', name: '宮城県中部', stations: const []),
+              (
+                code: '0420100',
+                name: '宮城県北部',
+                stations: [(code: '042010001', name: '宮城県北部観測点')],
+              ),
+              (
+                code: '0420200',
+                name: '宮城県南部',
+                stations: [(code: '042020001', name: '宮城県南部観測点')],
+              ),
+              (
+                code: '0420300',
+                name: '宮城県中部',
+                stations: [(code: '042030001', name: '宮城県中部観測点')],
+              ),
             ],
           ),
         ],
@@ -287,6 +348,7 @@ void main() {
           _jmaTree(
             intensity: api.JmaIntensity.value4,
             regions: ['0420100'],
+            stations: ['042010001'],
           ),
         ],
       );
@@ -296,7 +358,11 @@ void main() {
             code: '040000',
             name: '宮城県',
             cities: [
-              (code: '0420100', name: '宮城県北部', stations: const []),
+              (
+                code: '0420100',
+                name: '宮城県北部',
+                stations: [(code: '042010001', name: '宮城県北部観測点')],
+              ),
               (code: '9999999', name: '存在しない地域', stations: const []),
             ],
           ),
@@ -311,7 +377,7 @@ void main() {
       expect(result[JmaIntensity.four]![0].cities[0].city.name.ja, '宮城県北部');
     });
 
-    test('regionsのみの場合はstationノードは空リスト', () {
+    test('regionsのみの場合は震度ツリーに含めない', () {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value3,
         intensityTree: [
@@ -335,7 +401,7 @@ void main() {
         parameter: parameter,
       ).convertToIntensityTree(intensity: intensity);
 
-      expect(result[JmaIntensity.three]![0].cities[0].stations, isEmpty);
+      expect(result, isEmpty);
     });
 
     test('観測点コードはパラメータで市区町村に紐づけられる', () {
@@ -365,15 +431,16 @@ void main() {
         ],
       );
 
-      final result = IntensityTreeConverter(parameter: parameter)
-          .convertToIntensityTree(intensity: intensity);
+      final result = IntensityTreeConverter(
+        parameter: parameter,
+      ).convertToIntensityTree(intensity: intensity);
 
       final stationNode = result[JmaIntensity.four]![0].cities[0].stations[0];
       expect(stationNode.station.name.ja, 'テスト観測点');
       expect(stationNode.intensity?.maxIntensity, JmaIntensity.four);
     });
 
-    test('都道府県コードのみのツリーでは都道府県ノードのみ', () {
+    test('都道府県コードのみのツリーでは震度ツリーに含めない', () {
       final intensity = _buildIntensity(
         maxIntensity: api.JmaIntensity.value4,
         intensityTree: [
@@ -397,9 +464,7 @@ void main() {
         parameter: parameter,
       ).convertToIntensityTree(intensity: intensity);
 
-      expect(result.keys.toList(), [JmaIntensity.four]);
-      expect(result[JmaIntensity.four]![0].region.region.name.ja, '宮城県');
-      expect(result[JmaIntensity.four]![0].cities, isEmpty);
+      expect(result, isEmpty);
     });
   });
 
