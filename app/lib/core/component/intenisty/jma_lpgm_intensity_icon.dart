@@ -1,13 +1,13 @@
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class LpgmIntensityIcon extends ConsumerWidget {
-  const LpgmIntensityIcon({
+class JmaLpgmIntensityIcon extends ConsumerWidget {
+  const JmaLpgmIntensityIcon({
     required this.intensity,
     required this.type,
     this.customText,
@@ -28,27 +28,30 @@ class LpgmIntensityIcon extends ConsumerWidget {
 
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
-      IntensityIconType.small => SizedBox(
+      .small => SizedBox(
         height: size,
         width: size,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
+            shape: .circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: .all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
           child: Center(
             child: FittedBox(
-              fit: BoxFit.scaleDown,
+              fit: .scaleDown,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
                     intensity.label,
                     style: TextStyle(
                       color: fg,
                       fontSize: 100,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: .bold,
                       fontFamily: FontFamily.notoSansMono,
                     ),
                   ),
@@ -58,35 +61,41 @@ class LpgmIntensityIcon extends ConsumerWidget {
           ),
         ),
       ),
-      IntensityIconType.smallWithoutText => SizedBox(
+      .smallWithoutText => SizedBox(
         height: size,
         width: size,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
+            shape: .circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: Border.all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
         ),
       ),
-      IntensityIconType.filled => SizedBox(
+      .filled => SizedBox(
         height: size,
         width: size,
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: bg,
-            borderRadius: BorderRadius.circular(size / 5),
+            // 角丸にする
+            borderRadius: .circular(
+              size / 5,
+            ),
           ),
           child: Center(
             child: FittedBox(
-              fit: BoxFit.scaleDown,
+              fit: .scaleDown,
               child: (customText != null)
                   ? Text(
                       customText!,
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: .bold,
                         fontFamily: FontFamily.notoSansMono,
                       ),
                     )
@@ -95,7 +104,7 @@ class LpgmIntensityIcon extends ConsumerWidget {
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: .bold,
                         fontFamily: FontFamily.notoSansMono,
                       ),
                     ),
