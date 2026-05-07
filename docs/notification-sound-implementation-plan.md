@@ -1,6 +1,7 @@
-# 通知音設定 実装計画書
+# 通知音設定 実装計画書 v2
 
 **作成日**: 2026-05-07  
+**更新日**: 2026-05-07  
 **対象ブランチ**: develop  
 **関連調査**: [docs/notification-sound-research.md](./notification-sound-research.md)
 
@@ -8,51 +9,501 @@
 
 ## 概要
 
-EQMonitor アプリで通知音をユーザーが設定できる機能を実装する。バックエンド API には既に `notification_tiers[].sound` フィールドが存在するため、主な作業は Flutter アプリ側 UI の実装と iOS/Android への音声ファイル同梱である。
+EQMonitor アプリでユーザーが通知音を自由に設定できる機能を実装する。
+
+**実現したいこと**
+
+- ユーザーが任意の音声ファイルをインポートして通知音として使用できる（HA iOS 方式）
+- iOS システムサウンドを通知音として利用できる
+- EEW の予想震度ごとに通知音・割り込みレベルを設定できる（複数ティア）
+- 現在地への EEW 警報 → Critical 通知（DND 突破）を自動適用できる
+- 予想震度 × 現在地マッチで音量・通知音を変えられる
+
+**T5（Critical Alerts Entitlement）は取得済み**のため、すぐにクリティカル通知が送信できる。
 
 ---
 
-## 対象スコープ
+## 現状の整理
 
-| 通知種別 | iOS 音設定 | Android 音設定 |
-|----------|-----------|---------------|
-| EEW（緊急地震速報） | ○ | △（制限あり、後述） |
-| 地震情報 | ○ | △ |
-| 津波・一般通知 | 将来対応 | 将来対応 |
+### バックエンドアーキテクチャ
+
+```
+デバイス設定 (device_eew_settings)
+  └─ notification_tiers: [{min_jma_intensity, sound, interruption_level}]
+           ↓
+notification-resolver
+  └─ resolveNotificationTier(tiers, matchedIntensity)
+           ↓ tier.sound / tier.interruption_level
+buildApnsAlertPayload()
+  └─ aps.sound = tier.sound (現状は文字列のみ)
+     aps.interruption-level = tier.interruption_level
+```
+
+- `notification_tiers` はすでに **複数ティア** のスキーマ（昇順ソート済み配列）
+- `resolveNotificationTier()` が対象震度で最上位のティアを選択する
+- `matchedSettings` に `isCurrentLocation: boolean` が含まれているが、**現状は現在地を特別扱いしていない**
+- APNs の `aps.sound` は現状**文字列のみ**（Critical alert の volume 対応なし）
+
+### Flutter 現状
+
+- `notification_tiers` のうち `interruption_level=critical` のティアを 1 つだけ送信（クリティカル閾値の on/off のみ）
+- 通知音はすべて `'default'` にハードコード
+- カスタム音声ファイルの同梱なし・インポート機能なし
 
 ---
 
-## 実装タスク一覧
-
-### T1: 通知音ファイルの同梱
-
-**優先度**: High  
-**担当**: アプリ側
-
-#### iOS
-
-1. 専用の通知音 WAV ファイルを作成・収集し `app/ios/Runner/Sounds/` に配置
-2. Xcode プロジェクト (`Runner.xcodeproj`) の Build Phase → Copy Bundle Resources に追加
-3. `FcmServiceExtension` ターゲットにも同じファイルを追加（Extension から参照するため）
+## 変更範囲の全体像
 
 ```
-app/ios/Runner/Sounds/
-  eqmonitor_eew_warning.wav     # EEW 警報（最重要、インパクトが大きい音）
-  eqmonitor_eew_forecast.wav    # EEW 予報
-  eqmonitor_earthquake.wav      # 地震情報
-  eqmonitor_default.wav         # 汎用（default の代替）
+[Flutter App]                [Backend]
+  UI: SoundManager             notification-common
+  UI: TierEditor           ←→  notification-tier.ts (volume 追加)
+  UI: EewSettings              database/schema.ts (current_location_tiers 追加)
+  Model: NotificationTier      api: EewSettingsRequest/Response (拡張)
+  Model: EewSettings       ←→  notification-resolver (現在地ロジック + critical sound)
+  iOS: ~/Library/Sounds/       apns.ts (critical sound オブジェクト形式対応)
+  Android: res/raw/
 ```
 
-- 形式: WAV, 48kHz, 32-bit（Apple 推奨）
-- 長さ: 30 秒以内（APNs 制限）
+---
+
+## タスク一覧
+
+### T1: バックエンド — 通知ティアに `volume` フィールドを追加
+
+**担当**: backend / 優先度: High
+
+#### `notification-common/src/types/notification-tier.ts`
+
+```typescript
+export const NotificationTierSchema = v.object({
+  min_jma_intensity: JmaIntensitySchema,
+  sound: v.string(),                          // ファイル名 or "default" or "none"
+  volume: v.optional(v.pipe(                  // 追加: 音量 (0.0 - 1.0)
+    v.number(), v.minValue(0), v.maxValue(1)
+  )),
+  interruption_level: InterruptionLevelSchema,
+});
+```
+
+---
+
+### T2: バックエンド — APNs Critical Alert を `sound` オブジェクト形式で送信
+
+**担当**: backend / 優先度: High（T5 取得済みのため即時対応可）
+
+#### `notification-resolver/src/resolver/payload-builder/apns.ts`
+
+`buildApnsAlertPayload` 内の `sound` の組み立てを変更：
+
+```typescript
+// 変更前
+sound: sound ?? 'default',
+
+// 変更後
+sound: buildApnsSound(sound, interruptionLevel, volume),
+```
+
+```typescript
+function buildApnsSound(
+  sound: string | undefined,
+  interruptionLevel: string,
+  volume?: number,
+): string | Record<string, unknown> {
+  const name = sound ?? 'default';
+  if (name === 'none') return undefined;    // サウンドなし（呼び出し側で undefined チェック）
+  if (interruptionLevel === 'critical') {
+    return { critical: 1, name, volume: volume ?? 1.0 };
+  }
+  return name;
+}
+```
+
+- `interruption_level === 'critical'` のときは APNs object 形式 `{critical: 1, name, volume}` で送信
+- それ以外は文字列形式のまま
+
+---
+
+### T3: バックエンド — 現在地マッチ時の別ティア対応
+
+**担当**: backend / 優先度: High
+
+EEW で「現在地が対象地域に含まれ、かつ警報（isWarning）」の場合に別のティア設定を適用できるようにする。
+
+#### DB スキーマ変更 (`database/src/schema/schema.ts`)
+
+`device_eew_settings` テーブルに列を追加：
+
+```typescript
+// EEW通知設定テーブル（追記分）
+currentLocationNotificationTiers: jsonb('current_location_notification_tiers')
+  .$type<NotificationTierRow[]>()
+  .default([])
+  .notNull(),
+```
+
+> DB マイグレーションが必要。`current_location_notification_tiers` が空配列の場合は通常の `notification_tiers` にフォールバック。
+
+#### API 変更 (`api/model/requests.ts` / `responses.ts`)
+
+```typescript
+// EewSettingsRequest
+export const EewSettingsRequest = v.pipe(
+  v.partial(v.object({
+    enabled: v.boolean(),
+    notification_tiers: NotificationTiersSchema,
+    current_location_notification_tiers: v.optional(NotificationTiersSchema),  // 追加
+    start_live_activity: v.boolean(),
+  })),
+  ...
+);
+
+// EewSettingsResponse
+export const EewSettingsResponse = v.object({
+  enabled: v.boolean(),
+  notification_tiers: NotificationTiersSchema,
+  current_location_notification_tiers: NotificationTiersSchema,  // 追加
+  start_live_activity: v.boolean(),
+});
+```
+
+#### notification-resolver の変更 (`repository/device.ts`)
+
+`EewMatchedDevice` に `currentLocationNotificationTiers` を追加し、`getEewMatchedDevices()` でフェッチ。
+
+#### 通知送信ロジックの変更 (`index.ts`)
+
+```typescript
+// ティア選択ロジック（修正後）
+const hasCurrentLocationMatch = device.matchedSettings.some(
+  s => s.isCurrentLocation,
+);
+const tiersToUse = (
+  hasCurrentLocationMatch &&
+  event.isWarning &&
+  device.currentLocationNotificationTiers.length > 0
+)
+  ? device.currentLocationNotificationTiers
+  : device.notificationTiers;
+
+const tier = resolveNotificationTier(tiersToUse, maxMatchedSetting.matchedIntensity);
+```
+
+---
+
+### T4: Flutter — 通知ティアのデータモデル拡張
+
+**担当**: app / 優先度: High
+
+#### アプリ側ティアモデル (`app/lib/feature/settings/features/notification_settings/data/model/`)
+
+```dart
+// notification_sound_tier.dart（新規）
+@freezed
+abstract class NotificationSoundTier with _$NotificationSoundTier {
+  const factory NotificationSoundTier({
+    required JmaIntensity minJmaIntensity,
+    required String sound,         // ファイル名 or "default" or "none"
+    required InterruptionLevel interruptionLevel,
+    double? volume,                // 0.0-1.0、critical 時のみ有効
+  }) = _NotificationSoundTier;
+}
+```
+
+#### EewNotificationSettings の変更
+
+```dart
+// eew_notification_settings.dart（修正）
+@freezed
+abstract class EewNotificationSettings with _$EewNotificationSettings {
+  const factory EewNotificationSettings({
+    required bool enabled,
+    required bool startLiveActivity,
+    required List<NotificationSoundTier> tiers,                  // 変更: 複数ティア
+    required List<NotificationSoundTier> currentLocationTiers,   // 追加
+    required List<NotificationRegion> regions,
+  }) = _EewNotificationSettings;
+}
+```
+
+#### EarthquakeNotificationSettings の変更
+
+```dart
+@freezed
+abstract class EarthquakeNotificationSettings with _$EarthquakeNotificationSettings {
+  const factory EarthquakeNotificationSettings({
+    required bool enabled,
+    required List<NotificationSoundTier> tiers,          // 変更: 複数ティア
+    required bool estimatedIntensityEnabled,
+    required List<NotificationRegion> regions,
+  }) = _EarthquakeNotificationSettings;
+}
+```
+
+#### eqmonitor_api パッケージの更新
+
+生成済みモデル (`packages/eqmonitor_api/`) を更新または OpenAPI 再生成：
+- `EewSettingsRequest` に `currentLocationNotificationTiers` 追加
+- `EewSettingsResponse` に `currentLocationNotificationTiers` 追加
+- `NotificationTiers3` / `NotificationTiers4` に `volume` フィールド追加
+
+---
+
+### T5: Flutter — repository 層の更新
+
+**担当**: app / 優先度: High
+
+`device_notification_settings_repository.dart` の変換ロジックを複数ティア対応に：
+
+```dart
+// EEW レスポンス → アプリモデル
+EewNotificationSettings _eewFromResponse(
+  api.EewSettingsResponse resp,
+  List<NotificationRegion> regions,
+) => EewNotificationSettings(
+  enabled: resp.enabled,
+  startLiveActivity: resp.startLiveActivity,
+  tiers: resp.notificationTiers.map(_tierFromApi).toList(),
+  currentLocationTiers:
+      resp.currentLocationNotificationTiers?.map(_tierFromApi).toList() ?? [],
+  regions: regions,
+);
+
+// ティア送信ロジック: ユーザー設定をそのまま送信（ハードコードを廃止）
+List<api.NotificationTiers4> _toEewApiTiers(
+  List<NotificationSoundTier> tiers,
+) => tiers.map((t) => api.NotificationTiers4(
+  minJmaIntensity: t.minJmaIntensity.toApiMinJmaIntensity!,
+  sound: t.sound,
+  volume: t.volume,
+  interruptionLevel: t.interruptionLevel.toApi(),
+)).toList();
+```
+
+---
+
+### T6: Flutter — カスタム通知音の管理 UI（HA iOS 方式）
+
+**担当**: app / 優先度: High
+
+`app/lib/feature/settings/features/notification_sound/` ディレクトリを新規作成。
+
+#### ファイル構成
+
+```
+notification_sound/
+  data/
+    model/
+      sound_category.dart        # bundled / imported / system
+      available_sound.dart       # {fileName, displayName, url, category}
+    repository/
+      notification_sound_repository.dart
+  ui/
+    page/
+      notification_sound_manager_page.dart   # サウンド管理ページ
+    component/
+      sound_list_tile.dart       # サウンド行（プレビュー再生 + コピー）
+      sound_picker_sheet.dart    # 通知音選択ボトムシート
+```
+
+#### サウンドカテゴリ
+
+```dart
+enum SoundCategory { bundled, imported, system }
+
+@freezed
+abstract class AvailableSound with _$AvailableSound {
+  const factory AvailableSound({
+    required String fileName,      // APNs に送るファイル名
+    required String displayName,   // UI 表示名
+    required Uri uri,              // 再生・コピー元 URI
+    required SoundCategory category,
+  }) = _AvailableSound;
+}
+```
+
+#### NotificationSoundRepository
+
+```dart
+class NotificationSoundRepository {
+  // bundled: Bundle 内 Assets に同梱した WAV ファイル一覧
+  List<AvailableSound> getBundledSounds();
+
+  // imported: iOS ~/Library/Sounds/*.wav
+  Future<List<AvailableSound>> getImportedSounds();
+
+  // system: /System/Library/Audio/UISounds 以下をコピーして提供 (iOS only)
+  Future<int> importSystemSounds();  // コピー済み件数を返す
+
+  // ファイルピッカーでインポート
+  Future<void> importFromFilePicker(List<Uri> uris);
+
+  // Files アプリ / File Sharing からインポート
+  Future<int> importFromFileSharing();
+
+  // 削除
+  Future<void> deleteImportedSound(String fileName);
+
+  // プレビュー再生
+  Future<void> play(AvailableSound sound);
+  void stopPlayback();
+}
+```
+
+#### iOS サウンドストレージ
+
+- インポートしたファイルは `~/Library/Sounds/` に WAV 形式で保存
+- `file_picker` パッケージでファイルを選択後、`AudioKit` 相当の変換は **Flutter 側では不要**（変換は Platform Channel 経由で Swift コードに委譲、または `.wav` のみ受付）
+- APNs は `~/Library/Sounds/` を優先してサウンドを解決するため、インポートしたファイル名をそのまま `sound` フィールドに指定すれば動作する
 
 #### Android
 
-Android の通知チャンネルは **初回作成後にサウンドを変更できない**制約がある。  
-対応方針：
+- プッシュ通知のカスタム音は **チャンネル作成時のみ設定可能**
+- 動的なカスタム音インポートは Android では対応しない
+- 代わりに「同梱済みサウンドのみ選択可能」として UI でも Android ではシステムサウンドセクションを非表示にする
 
-- **Phase 1（本実装）**: 重要度ごとに固定音をチャンネルに紐付け（`eew_warning` チャンネルには最大音量の専用 MP3/OGG を設定）
-- **Phase 2（将来）**: チャンネルを `_v2` サフィックスで新規作成しサウンド変更に対応
+#### UI: `NotificationSoundManagerPage`
+
+```
+┌────────────────────────────────────┐
+│ 通知音の管理                  [?]   │
+│ ─────────────────────────────────  │
+│ [同梱] [インポート済み] [システム]   │  ← SegmentedButton
+│                                    │
+│ 同梱セクション:                     │
+│  ▶ eqmonitor_eew_warning.wav       │  (再生 + コピー)
+│  ▶ eqmonitor_eew_forecast.wav      │
+│  ▶ eqmonitor_earthquake.wav        │
+│                                    │
+│ インポート済みセクション:           │
+│  ▶ my_alert.wav           [削除]   │
+│  + ファイルを選択してインポート     │
+│  + File Sharing からインポート      │
+│                                    │
+│ システムセクション (iOS):           │
+│  + iOS システムサウンドをインポート  │
+└────────────────────────────────────┘
+```
+
+---
+
+### T7: Flutter — 通知ティアエディタ UI
+
+**担当**: app / 優先度: High
+
+#### `NotificationSoundTierEditorPage`（新規）
+
+ティアの一覧編集・追加・削除ができるページ。EEW 設定ページ・地震設定ページからナビゲート。
+
+```
+┌────────────────────────────────────┐
+│ 通知ティアの設定                    │
+│ ─────────────────────────────────  │
+│ ティア 1                  [削除]   │
+│   震度: 震度1以上                   │
+│   通知音: eqmonitor_eew.wav  [>]   │
+│   割り込みレベル: 時間重要          │
+│                                    │
+│ ティア 2                  [削除]   │
+│   震度: 震度4以上                   │
+│   通知音: eqmonitor_eew_warn [>]   │
+│   割り込みレベル: クリティカル      │
+│   音量: ─────●──── 0.8            │ ← critical 時のみ表示
+│                                    │
+│ + ティアを追加                      │
+│                                    │
+│ ※ 複数ティアは震度の昇順に保持      │
+└────────────────────────────────────┘
+```
+
+#### 割り込みレベル表示名
+
+| 値 | 日本語表示 | 動作 |
+|----|-----------|------|
+| `passive` | 通常 | 通知バナーなし（通知センターのみ） |
+| `active` | アクティブ | 通常通知 |
+| `time_sensitive` | 時間重要 | 集中モードを突破 |
+| `critical` | クリティカル | DND・サイレントスイッチを突破、音量指定可 |
+
+---
+
+### T8: Flutter — EEW 設定ページの拡張
+
+**担当**: app / 優先度: High
+
+`eew_settings_page.dart` を以下の構成に拡張：
+
+```
+┌────────────────────────────────────┐
+│ 緊急地震速報の通知                  │
+│                                    │
+│ [通知の有効化]                      │
+│   緊急地震速報の通知    ○           │
+│                                    │
+│ [通知ティア]                        │
+│   ティア設定            [>]        │ ← NotificationSoundTierEditorPage へ
+│   震度1以上: eqmonitor_eew.wav      │
+│   震度5弱以上: eqmonitor_eew_w...   │
+│                                    │
+│ [現在地マッチ時の優先設定]          │ ← 新規セクション
+│   現在地で警報 → 別ティアを適用     │
+│   現在地ティア設定      [>]        │
+│   (未設定の場合は通常ティアを使用)  │
+│                                    │
+│ [通知地域]                          │
+│   ...                              │
+└────────────────────────────────────┘
+```
+
+- **通常ティア**: 地域設定で登録した全地域で使用
+- **現在地ティア** (`current_location_tiers`): 現在地が対象地域に含まれ、かつ警報の場合に優先使用
+
+例：現在地ティアに `{震度1以上, critical, eqmonitor_eew_warning.wav, volume:1.0}` を設定 → 現在地への EEW 警報は常に DND 突破の最大音量で通知
+
+---
+
+### T9: Flutter — 地震情報設定ページの拡張
+
+**担当**: app / 優先度: Medium
+
+`earthquake_settings_page.dart` に通知ティアセクションを追加：
+
+```
+┌────────────────────────────────────┐
+│ 地震情報の通知                      │
+│                                    │
+│ [通知の有効化] / [推計震度通知]     │
+│                                    │
+│ [通知ティア（予想震度別）]          │ ← 新規セクション
+│   ティア設定            [>]        │
+│   震度1以上: デフォルト             │
+│   震度4以上: eqmonitor_eq.wav       │
+│   震度5弱以上: critical, 音量0.9   │
+│                                    │
+│ [通知地域]                          │
+└────────────────────────────────────┘
+```
+
+---
+
+### T10: アプリへの通知音ファイル同梱
+
+**担当**: app / 優先度: High
+
+#### iOS
+
+```
+app/ios/Runner/Sounds/
+  eqmonitor_eew_warning.wav     # EEW 警報用（インパクト大）
+  eqmonitor_eew_forecast.wav    # EEW 予報用
+  eqmonitor_earthquake.wav      # 地震情報用
+```
+
+- Xcode: Build Phase → Copy Bundle Resources に追加
+- `FcmServiceExtension` ターゲットにも同じファイルを追加
+- 形式: WAV, 48kHz, 32-bit, mono, 最大 30 秒
+
+#### Android
 
 ```
 app/android/app/src/main/res/raw/
@@ -61,272 +512,155 @@ app/android/app/src/main/res/raw/
   eqmonitor_earthquake.mp3
 ```
 
----
+#### Flutter アセット登録
 
-### T2: Flutter データモデルの拡張
-
-**優先度**: High
-
-#### 2-1. アプリ内サウンド定義モデル
-
-`app/lib/feature/settings/features/notification_sound/` に新規作成：
-
-```dart
-// notification_sound.dart
-enum NotificationSound {
-  systemDefault('default', 'デフォルト'),
-  eewWarning('eqmonitor_eew_warning.wav', 'EEW警報'),
-  eewForecast('eqmonitor_eew_forecast.wav', 'EEW予報'),
-  earthquake('eqmonitor_earthquake.wav', '地震情報'),
-  none('none', 'なし');
-
-  const NotificationSound(this.soundFileName, this.label);
-  final String soundFileName;
-  final String label;
-}
-```
-
-#### 2-2. EEW / 地震 通知設定モデルへの sound 追加
-
-```dart
-// eew_notification_settings.dart（修正）
-@freezed
-abstract class EewNotificationSettings with _$EewNotificationSettings {
-  const factory EewNotificationSettings({
-    required bool enabled,
-    required JmaIntensity? criticalThreshold,
-    required String sound,              // 追加: 例 "eqmonitor_eew_warning.wav"
-    required String criticalSound,      // 追加: クリティカル通知の音
-    required List<NotificationRegion> regions,
-  }) = _EewNotificationSettings;
-}
-```
-
-同様に `EarthquakeNotificationSettings` にも `sound` / `criticalSound` を追加。
-
----
-
-### T3: バックエンド API 連携の修正
-
-**優先度**: High
-
-#### 3-1. `_toEewApiTiers` / `_toEarthquakeApiTiers` の修正
-
-`device_notification_settings_repository.dart` 内のハードコード `sound: 'default'` を、ユーザー設定値に置き換える：
-
-```dart
-List<api.NotificationTiers4> _toEewApiTiers({
-  required JmaIntensity? threshold,
-  required String normalSound,
-  required String criticalSound,
-}) {
-  final tiers = <api.NotificationTiers4>[];
-  // 通常通知ティア（interruption_level: active）
-  tiers.add(api.NotificationTiers4(
-    minJmaIntensity: api.MinJmaIntensity.value1,
-    sound: normalSound,
-    interruptionLevel: api.InterruptionLevel.active,
-  ));
-  // クリティカルティア（設定されている場合）
-  if (threshold != null) {
-    final apiIntensity = threshold.toApiMinJmaIntensity;
-    if (apiIntensity != null) {
-      tiers.add(api.NotificationTiers4(
-        minJmaIntensity: apiIntensity,
-        sound: criticalSound,
-        interruptionLevel: api.InterruptionLevel.critical,
-      ));
-    }
-  }
-  return tiers;
-}
-```
-
-#### 3-2. レスポンスからの sound 読み取り
-
-`_eewFromResponse` で `notificationTiers` から `sound` を復元：
-
-```dart
-EewNotificationSettings _eewFromResponse(
-  api.EewSettingsResponse resp,
-  List<NotificationRegion> regions,
-) {
-  final normalTier = resp.notificationTiers.firstWhereOrNull(
-    (t) => t.interruptionLevel == api.InterruptionLevel.active,
-  );
-  final criticalTier = resp.notificationTiers.firstWhereOrNull(
-    (t) => t.interruptionLevel == api.InterruptionLevel.critical,
-  );
-  return EewNotificationSettings(
-    enabled: resp.enabled,
-    criticalThreshold: _extractCriticalThresholdFromTiers3(resp.notificationTiers),
-    sound: normalTier?.sound ?? 'default',
-    criticalSound: criticalTier?.sound ?? 'default',
-    regions: regions,
-  );
-}
+```yaml
+# pubspec.yaml
+flutter:
+  assets:
+    - assets/sounds/eqmonitor_eew_warning.wav
+    - assets/sounds/eqmonitor_eew_forecast.wav
+    - assets/sounds/eqmonitor_earthquake.wav
 ```
 
 ---
 
-### T4: UI 実装
+### T11: Android 通知チャンネルの移行
 
-**優先度**: High
+**担当**: app / 優先度: Medium
 
-#### 4-1. 通知音選択ウィジェット
-
-`app/lib/feature/settings/features/notification_sound/ui/notification_sound_picker.dart`：
+既存チャンネルは作成済みのためサウンド変更不可。バージョン管理付きの新チャンネルを作成。
 
 ```dart
-// 通知音一覧を表示し、選択 + プレビュー再生ができる ListTile ウィジェット
-class NotificationSoundPickerTile extends StatelessWidget {
-  const NotificationSoundPickerTile({
-    super.key,
-    required this.label,
-    required this.currentSound,
-    required this.onChanged,
-    this.availableSounds = NotificationSound.values,
-  });
-  // ...
-}
-```
-
-機能：
-- 現在の選択サウンド名を表示
-- タップでボトムシートを開き、サウンド一覧を表示
-- 各サウンド項目にはプレビュー再生ボタン（`AudioPlayer` または `just_audio` パッケージ）
-- iOS: `~/Library/Sounds/` にある `.wav` ファイルも追加で表示（ユーザーインポート対応は Phase 2）
-
-#### 4-2. EEW 設定ページへの組み込み
-
-`eew_settings_page.dart` に以下のセクションを追加：
-
-```dart
-const SettingsSectionHeader(text: '通知音'),
-_SoundSection(settings: settings),
-```
-
-```dart
-class _SoundSection extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(children: [
-      NotificationSoundPickerTile(
-        label: '通常通知音',
-        currentSound: settings.sound,
-        onChanged: (sound) => /* patchEewSettings */,
-      ),
-      NotificationSoundPickerTile(
-        label: 'クリティカル通知音',
-        currentSound: settings.criticalSound,
-        onChanged: (sound) => /* patchEewSettings */,
-      ),
-    ]);
-  }
-}
-```
-
-同様に `earthquake_settings_page.dart` にも追加。
-
-#### 4-3. サウンドのプレビュー再生
-
-- `just_audio` パッケージ（既存依存関係に含まれていれば利用、なければ追加）
-- または Flutter 標準の `url_launcher` + `AudioPlayer`
-- Bundle 内ファイルへのアクセス: `rootBundle` 経由でアセットを一時ファイルに書き出して再生
-
----
-
-### T5: iOS Critical Alerts 対応（オプション）
-
-**優先度**: Medium（Apple 審査が必要）
-
-クリティカルアラートは DND（おやすみモード）やサイレントスイッチを無効化して通知音を鳴らす機能。EEW 警報には強く推奨される。
-
-#### 手順
-
-1. Apple Developer Portal で **Critical Alerts Entitlement** を申請
-2. `app/ios/Runner/Runner.entitlements` に追加：
-   ```xml
-   <key>com.apple.developer.usernotifications.critical-alerts</key>
-   <true/>
-   ```
-3. APNs ペイロードの `aps.sound` をオブジェクト形式で送信（バックエンド側対応が必要）：
-   ```json
-   { "critical": 1, "name": "eqmonitor_eew_warning.wav", "volume": 1.0 }
-   ```
-4. バックエンドで `interruption_level: critical` のティアを検知した場合、`sound` をオブジェクト形式に変換する処理を追加
-
----
-
-### T6: Android 通知チャンネルへのサウンド設定
-
-**優先度**: Medium
-
-`app/lib/core/fcm/channels.dart` の `AndroidNotificationChannel` に `sound` を追加：
-
-```dart
-AndroidNotificationChannel(
-  'eew_warning',
+// channels.dart
+const AndroidNotificationChannel(
+  'eew_warning_v2',           // 新チャンネル ID
   '緊急地震速報(警報)',
   sound: RawResourceAndroidNotificationSound('eqmonitor_eew_warning'),
   importance: Importance.max,
-  // ...
 ),
 ```
 
-> **注意**: すでにチャンネルが作成済みのデバイスでは変更が反映されない。  
-> 新チャンネル ID（例: `eew_warning_v2`）での移行が必要。移行ロジックを `main.dart` の初期化処理に追加する。
+- `main.dart` の初期化処理で旧チャンネル (`eew_warning`) を `deleteNotificationChannel()` してから新チャンネルを登録
+- バックエンドの `NotificationChannel.EEW_WARNING` の値も `eew_warning_v2` に更新が必要
 
 ---
 
 ## 実装の依存関係と順序
 
 ```
-T1（音声ファイル同梱）
+T1（tier に volume 追加）
   ↓
-T2（モデル拡張）  →  T3（API 連携修正）
+T2（APNs critical sound オブジェクト化）
+T3（DB: current_location_tiers 追加）
   ↓
-T4（UI 実装）
+T10（音声ファイル同梱）
   ↓
-T5（Critical Alerts）  ←  Apple 審査が必要（並行して申請）
-T6（Android チャンネル）  ← T1 と並行可能
+T4（Flutter モデル拡張）
+  ↓
+T5（repository 更新）
+  ↓
+T6（Sound Manager UI）
+T7（Tier Editor UI）
+  ↓
+T8（EEW 設定ページ拡張）
+T9（地震設定ページ拡張）
+  ↓
+T11（Android チャンネル移行）
+```
+
+バックエンド（T1-T3）と Flutter（T10-T11）は並行して進められる。
+
+---
+
+## API スキーマ変更まとめ
+
+### EewSettingsResponse（拡張後）
+
+```json
+{
+  "enabled": true,
+  "notification_tiers": [
+    {"min_jma_intensity": "1", "sound": "eqmonitor_eew_forecast.wav", "interruption_level": "time_sensitive"},
+    {"min_jma_intensity": "5-", "sound": "eqmonitor_eew_warning.wav", "volume": 0.8, "interruption_level": "critical"}
+  ],
+  "current_location_notification_tiers": [
+    {"min_jma_intensity": "1", "sound": "eqmonitor_eew_warning.wav", "volume": 1.0, "interruption_level": "critical"}
+  ],
+  "start_live_activity": true
+}
+```
+
+### APNs ペイロード（critical tier 時）
+
+```json
+{
+  "aps": {
+    "alert": { "title": "緊急地震速報（警報）", "body": "..." },
+    "sound": { "critical": 1, "name": "eqmonitor_eew_warning.wav", "volume": 1.0 },
+    "interruption-level": "critical"
+  }
+}
+```
+
+### APNs ペイロード（通常 tier 時）
+
+```json
+{
+  "aps": {
+    "alert": { "title": "緊急地震速報（予報）", "body": "..." },
+    "sound": "eqmonitor_eew_forecast.wav",
+    "interruption-level": "time-sensitive"
+  }
+}
 ```
 
 ---
 
 ## 技術的考慮事項
 
-### iOS APNs サウンドの解決ルール
+### iOS サウンド解決の優先順位
 
-APNs がサウンドを解決する優先順位：
-1. `~/Library/Sounds/` 内のファイル（ユーザーインポート）
-2. アプリ Bundle 内のファイル（同梱サウンド）
-3. システムサウンド
+APNs がサウンドを解決する順：
+1. `~/Library/Sounds/` 内（ユーザーインポート ← **今回対応**）
+2. アプリ Bundle 内（同梱サウンド ← **今回対応**）
+3. システムサウンド（インポートして `~/Library/Sounds/` にコピー ← **今回対応**）
 
-EQMonitor は Bundle 内ファイルで十分（Phase 1）。ユーザーインポートは Phase 2 で対応。
+### カスタム音ファイルとの通信
 
-### Android のチャンネル制限
+- ユーザーがインポートした音のファイル名（例: `my_alarm.wav`）をそのまま `sound` フィールドに設定
+- バックエンドはファイル名を検証せず、APNs に渡すだけ（既存の動作を維持）
+- 端末上に存在しないファイル名が `sound` に設定された場合、iOS はデフォルトサウンドで再生
 
-Android 8.0 以降、通知チャンネルの `sound` は **作成時にのみ設定可能**。  
-既存ユーザーへの移行には：
-- 旧チャンネルを `deleteNotificationChannel` で削除
-- 新チャンネルを作成
+### `notification_tiers` の昇順制約
 
-ただし、ユーザーがチャンネルごとに設定したカスタム設定（バイブ・LED 等）がリセットされる点に注意。
+バックエンドに既存のバリデーション:
+```typescript
+v.check(tiers => /* 昇順チェック */, 'must be sorted by ascending intensity')
+```
+Flutter 側の Tier Editor もこの制約を UI で強制する（同じ震度の重複を禁止、追加時に自動ソート）。
 
-### FCM と APNs の連携
+### Android の制限と UX
 
-EQMonitor は Firebase Cloud Messaging 経由で APNs に push している。FCM の `notification` オブジェクトではなく、`data` ペイロード経由で配信することで APNs の `aps.sound` を自由に制御できる（EQMonitor はすでにこの方式を採用済み）。
+- Android では通知チャンネルのサウンドをユーザーが事後変更できない（OS 仕様）
+- チャンネル移行（`v2` 接尾辞）でサウンドをリセットするが、ユーザーがカスタマイズしていた場合もリセットされる
+- Sound Manager UI で「Android はプッシュ通知の音を変更できません」と明示
 
 ---
 
 ## 完了条件
 
-- [ ] T1: iOS/Android に通知音ファイルが同梱されている
-- [ ] T2: `EewNotificationSettings` / `EarthquakeNotificationSettings` に `sound` フィールドが追加されている
-- [ ] T3: バックエンドへのリクエストで `sound` が正しく送信される
-- [ ] T4: EEW / 地震設定ページで通知音の選択・プレビューができる
-- [ ] T5: Critical Alerts entitlement が取得済みで EEW 警報に適用されている（オプション）
-- [ ] T6: Android 通知チャンネルに専用サウンドが設定されている
+- [ ] T1: `NotificationTierSchema` に `volume` フィールドが追加されている
+- [ ] T2: `interruption_level=critical` の APNs ペイロードが `sound` オブジェクト形式になっている
+- [ ] T3: `device_eew_settings` に `current_location_notification_tiers` カラムが追加され、API に公開されている
+- [ ] T4: Flutter モデルが複数ティアに対応している
+- [ ] T5: repository が全ティアを送受信できる
+- [ ] T6: 通知音管理ページ（インポート・プレビュー・削除）が実装されている
+- [ ] T7: ティアエディタ UI が実装されている
+- [ ] T8: EEW 設定ページに通常ティア + 現在地ティアのセクションが追加されている
+- [ ] T9: 地震情報設定ページにティアセクションが追加されている
+- [ ] T10: iOS/Android に通知音ファイルが同梱されている
+- [ ] T11: Android 通知チャンネルが `v2` で再作成されている
+- [ ] 現在地マッチ + EEW 警報で Critical Alert が届く（DND 突破・音量指定）
 - [ ] `dart analyze` がエラーなしで通過する
-- [ ] EEW・地震通知設定の UI で選択した音がバックエンドに保存・復元できる
+- [ ] `pnpm check-types` がエラーなしで通過する
