@@ -25,21 +25,18 @@ isProject: false
 
 # 今後実装機能ロードマップ
 
-## 最優先: EEW と推計震度の正確性
+## 最優先: EEW と推計震度の正確性（実装済み）
 
-- T01: `packages/eqmonitor_api` の codegen 問題を修正し、EEW 予報区の `intensity` / `maxIntensity` が `unknown` 固定になる状態を解消する。
-  - 関連: [docs/todo/083_eew_codegen_and_missing_features.md](docs/todo/083_eew_codegen_and_missing_features.md)
-  - 影響: [app/lib/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart](app/lib/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart), [app/lib/feature/eew/ui/screen/eew_details_screen.dart](app/lib/feature/eew/ui/screen/eew_details_screen.dart)
-- T02: EEW 予想震度レイヤーの `styleController.updateFilter` 更新処理を有効化し、EEW 更新に地図表示が追随するようにする。
-  - 関連: [app/lib/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart](app/lib/feature/home/ui/component/map/layer/eew_estimated_intensity_layer.dart)
-- T03: `earthquake_stations.json` に `arv_400` を追加するバックエンド/API 側対応と、クライアントの `_generateCalculationPoints` 復旧を進める。
-  - 関連: [docs/todo/800_estimated_intensity_arv400.md](docs/todo/800_estimated_intensity_arv400.md), [app/lib/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart](app/lib/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart)
+- ~~T01: `packages/eqmonitor_api` の codegen 問題を修正し、EEW 予報区の `intensity` / `maxIntensity` が `unknown` 固定になる状態を解消する。~~ **完了** — codegen は既に正常。ワークアラウンドを除去し実値表示に修正済み。
+- ~~T02: EEW 予想震度レイヤーの `styleController.updateFilter` 更新処理を有効化し、EEW 更新に地図表示が追随するようにする。~~ **完了** — `eew_estimated_intensity_layer.dart` に MapLibre フィルター式で実装済み。
+- T03: `earthquake_stations.json` に `arv_400` を追加するバックエンド/API 側対応と、クライアントの `_generateCalculationPoints` 復旧を進める。**クライアント側完了** — `EarthquakeParameterStationItem.arv400` を追加し `_generateCalculationPoints` を実装済み。バックエンドが `arv_400` を返せば自動的に有効化される。
+  - 関連: [app/lib/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart](app/lib/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart)
 
 ## 高優先: 通知・復帰・権限フロー
 
 - T04: オンボーディングで通知権限を実際に要求し、拒否時も完了できる説明と後から変更できる導線を用意する。
   - 関連: [docs/todo/076_onboarding_permission_flow.md](docs/todo/076_onboarding_permission_flow.md), [app/lib/feature/onboarding/ui/onboarding_page.dart](app/lib/feature/onboarding/ui/onboarding_page.dart)
-- T05: アプリ復帰時に EEW の REST 再取得を明示的に行い、WebSocket 停止中の鮮度落ちを抑える。
+- T05: アプリ復帰時に EEW の REST 再取得を明示的に行い、WebSocket 停止中の鮮度落ちを抑える。**周期的フォールバック（10 秒ごと）は実装済み**。AppLifecycleState.resumed 時の明示的再取得は `log()` のみでまだ未実装。
   - 関連: [app/lib/feature/eew/data/eew_telegram.dart](app/lib/feature/eew/data/eew_telegram.dart)
 - T06: FCM バックグラウンドメッセージと Live Activity 更新の役割を整理し、ログのみの状態から必要な同期処理へ拡張する。
   - 関連: [app/lib/main.dart](app/lib/main.dart), [app/lib/feature/live_activity/data/provider/live_activity_token_stream.dart](app/lib/feature/live_activity/data/provider/live_activity_token_stream.dart)
@@ -64,5 +61,5 @@ isProject: false
 
 ## 補足
 
-- [docs/todo/083_eew_codegen_and_missing_features.md](docs/todo/083_eew_codegen_and_missing_features.md) の「WebSocket 未接続時 API フォールバック」は、現在の `eew_telegram.dart` では対応済みに見えるため、TODO ドキュメントの更新候補です。
+- `eew_telegram.dart` の WebSocket 未接続時 API フォールバック（Timer.periodic 10 秒）は実装済み（T05 の一部）。
 - 実装順は、ユーザーの安全に直結する「正しい EEW/震度表示」と「通知到達性」を先に置くのが妥当です。
