@@ -13,13 +13,13 @@ todos:
     status: completed
   - id: implement-permission-onboarding
     content: オンボーディングで通知権限リクエストと拒否時説明を実装する
-    status: pending
+    status: completed
   - id: improve-location-error-ux
     content: 現在地・位置情報依存 UI のエラー表示と復旧導線を整える
     status: pending
   - id: complete-history-scope-flow
     content: ホーム地震履歴の指定地域設定と一覧遷移条件の整合を実装する
-    status: pending
+    status: completed
 isProject: false
 ---
 

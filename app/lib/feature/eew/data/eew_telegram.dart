@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
@@ -21,7 +20,7 @@ class Eew extends _$Eew {
 
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
-        log('AppLifecycleState.resumed: Refetch EEW');
+        ref.invalidate(_eewRestProvider);
       }
     });
 

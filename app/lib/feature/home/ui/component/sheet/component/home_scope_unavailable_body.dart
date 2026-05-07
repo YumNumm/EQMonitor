@@ -7,11 +7,13 @@ class HomeScopeUnavailableBody extends StatelessWidget {
   const HomeScopeUnavailableBody({
     required this.scope,
     required this.onRetry,
+    this.onConfigureRegion,
     super.key,
   });
 
   final HomeEarthquakeHistoryScope scope;
   final VoidCallback onRetry;
+  final VoidCallback? onConfigureRegion;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +74,14 @@ class HomeScopeUnavailableBody extends StatelessWidget {
                   onRetry();
                 },
                 child: const Text('位置情報の取得を許可する'),
+              ),
+            ],
+            if (scope == HomeEarthquakeHistoryScope.custom &&
+                onConfigureRegion != null) ...[
+              SizedBox(height: spacing.md),
+              FilledButton.tonal(
+                onPressed: onConfigureRegion,
+                child: const Text('地域を設定する'),
               ),
             ],
           ],

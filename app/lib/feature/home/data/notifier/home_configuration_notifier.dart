@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_data_source.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -50,6 +51,20 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
     await save(
       current.copyWith(
         common: current.common.copyWith(earthquakeHistoryScope: scope),
+      ),
+    );
+  }
+
+  Future<void> setCustomEarthquakeHistoryParameter(
+    EarthquakeHistoryParameter? parameter,
+  ) async {
+    final current = await future;
+    await save(
+      current.copyWith(
+        common: current.common.copyWith(
+          earthquakeHistoryScope: HomeEarthquakeHistoryScope.custom,
+          parameter: parameter,
+        ),
       ),
     );
   }

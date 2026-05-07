@@ -42,6 +42,6 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
             : null,
       );
     case HomeEarthquakeHistoryScope.custom:
-      return null;
+      return home.common.parameter;
   }
 }

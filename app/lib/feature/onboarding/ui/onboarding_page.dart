@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -63,6 +64,18 @@ class OnboardingPage extends HookConsumerWidget {
       );
     }
 
+    final isNotificationDenied =
+        steps[currentPage.value] == _OnboardingStep.notification &&
+        permissionStatus.value == _PermissionStatus.denied;
+    final String buttonLabel;
+    if (currentPage.value == steps.length - 1) {
+      buttonLabel = 'はじめる';
+    } else if (isNotificationDenied) {
+      buttonLabel = 'スキップ';
+    } else {
+      buttonLabel = '次へ';
+    }
+
     return Scaffold(
       backgroundColor: ds.color.backgroundDefault,
       body: SafeArea(
@@ -82,7 +95,7 @@ class OnboardingPage extends HookConsumerWidget {
             _BottomBar(
               currentPage: currentPage.value,
               totalPages: steps.length,
-              isLast: currentPage.value == steps.length - 1,
+              buttonLabel: buttonLabel,
               onNext: goToNext,
             ),
           ],
@@ -182,6 +195,12 @@ class _NotificationStepContent extends StatelessWidget {
               style: ds.typography.bodySmall.copyWith(
                 color: ds.textColor.tertiary,
               ),
+            ),
+            SizedBox(height: ds.spacing.sm),
+            OutlinedButton.icon(
+              onPressed: () async => Geolocator.openAppSettings(),
+              icon: const Icon(Icons.settings_outlined, size: 18),
+              label: const Text('設定アプリを開く'),
             ),
           ],
           const Spacer(),
@@ -360,13 +379,13 @@ class _BottomBar extends StatelessWidget {
   const _BottomBar({
     required this.currentPage,
     required this.totalPages,
-    required this.isLast,
+    required this.buttonLabel,
     required this.onNext,
   });
 
   final int currentPage;
   final int totalPages;
-  final bool isLast;
+  final String buttonLabel;
   final Future<void> Function() onNext;
 
   @override
@@ -406,7 +425,7 @@ class _BottomBar extends StatelessWidget {
                 ),
               ),
               child: Text(
-                isLast ? 'はじめる' : '次へ',
+                buttonLabel,
                 style: ds.typography.labelLarge,
               ),
             ),

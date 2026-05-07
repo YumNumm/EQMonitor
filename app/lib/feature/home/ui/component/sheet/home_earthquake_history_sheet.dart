@@ -1,8 +1,10 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/region_picker_map_page.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_earthquake_history_parameter_provider.dart';
@@ -27,12 +29,32 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
 
     return homeAsync.when(
       data: (home) {
-        final isCurrentLocation = home.common.earthquakeHistoryScope ==
-            HomeEarthquakeHistoryScope.currentLocation;
-        final locationName = isCurrentLocation
-            ? paramAsync.value?.regionName
-            : null;
-        final currentParam = isCurrentLocation ? paramAsync.value : null;
+        final scope = home.common.earthquakeHistoryScope;
+        final locationName = switch (scope) {
+          HomeEarthquakeHistoryScope.currentLocation =>
+            paramAsync.value?.regionName,
+          HomeEarthquakeHistoryScope.custom =>
+            home.common.parameter?.regionName,
+          HomeEarthquakeHistoryScope.nationwide => null,
+        };
+
+        Future<void> openRegionPicker() async {
+          final result = await RegionPickerMapPage.show(
+            context,
+            selectedType: 'city',
+          );
+          if (result != null) {
+            await ref
+                .read(homeConfigurationProvider.notifier)
+                .setCustomEarthquakeHistoryParameter(
+                  EarthquakeHistoryParameter(
+                    regionSearchType: RegionSearchType.city,
+                    regionCode: result.code,
+                    regionName: result.name,
+                  ),
+                );
+          }
+        }
 
         return Card.outlined(
           margin: EdgeInsets.zero,
@@ -48,20 +70,31 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               HomeScopeSelector(
-                scope: home.common.earthquakeHistoryScope,
-                onScopeChanged: (scope) async => ref
-                    .read(homeConfigurationProvider.notifier)
-                    .setEarthquakeHistoryScope(scope),
+                scope: scope,
+                onScopeChanged: (newScope) async {
+                  if (newScope == HomeEarthquakeHistoryScope.custom &&
+                      home.common.parameter == null) {
+                    await openRegionPicker();
+                  } else {
+                    await ref
+                        .read(homeConfigurationProvider.notifier)
+                        .setEarthquakeHistoryScope(newScope);
+                  }
+                },
                 locationName: locationName,
               ),
               paramAsync.when(
                 data: (param) {
                   if (param == null) {
                     return HomeScopeUnavailableBody(
-                      scope: home.common.earthquakeHistoryScope,
+                      scope: scope,
                       onRetry: () => ref.invalidate(
                         homeEarthquakeHistoryParameterProvider,
                       ),
+                      onConfigureRegion:
+                          scope == HomeEarthquakeHistoryScope.custom
+                          ? openRegionPicker
+                          : null,
                     );
                   }
                   final state = ref.watch(earthquakeHistoryProvider(param));
@@ -81,13 +114,6 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                     ),
                     _ => const _HomeEarthquakeHistorySheetSkeleton(),
                   };
-                  if (isCurrentLocation) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [listSection],
-                    );
-                  }
                   return listSection;
                 },
                 loading: () => const _HomeEarthquakeHistorySheetSkeleton(),
@@ -110,7 +136,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () async => EarthquakeHistoryRoute(
-                      $extra: currentParam,
+                      $extra: paramAsync.value,
                     ).push<void>(context),
                     child: const Text('さらに表示'),
                   ),
