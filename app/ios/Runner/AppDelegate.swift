@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import flutter_local_notifications
+import background_location_tracker
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -10,6 +11,11 @@ import flutter_local_notifications
   ) -> Bool {
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+    }
+
+    // killed状態からの位置情報起動を検知してHeadless Engineを起動する
+    if launchOptions?[.location] != nil {
+      LocationHeadlessRunner.shared.startFromLaunchOptions()
     }
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)

@@ -122,7 +122,10 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     }
   }
 
-  Future<void> addCurrentLocationRegion() async {
+  Future<void> addCurrentLocationRegion({
+    int regionCode = 0,
+    String? regionName,
+  }) async {
     final current = state.requireValue;
     talker.debug(
       '[EEW] addCurrentLocationRegion: regions=${current.regions.length}, '
@@ -137,9 +140,9 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     );
     final updated = [
       ...current.regions,
-      const NotificationRegion(
-        regionId: 0,
-        regionName: null,
+      NotificationRegion(
+        regionId: regionCode,
+        regionName: regionName,
         isCurrentLocation: true,
         minJmaIntensity: JmaIntensity.four,
       ),
@@ -155,6 +158,48 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
         state = AsyncData(current.copyWith(regions: value));
       case Failure(:final exception):
         talker.error('[EEW] putEewRegions failure', exception);
+        throw exception;
+    }
+  }
+
+  /// バックグラウンド位置更新時に現在地エントリのregionIdを更新する。
+  /// PK衝突を避けるため実際の細分区域コード（9011等）を使用する。
+  Future<void> updateCurrentLocationRegion({
+    required int regionCode,
+    String? regionName,
+  }) async {
+    final current = state.requireValue;
+    final existing = current.regions.firstWhere(
+      (r) => r.isCurrentLocation,
+      orElse: () => NotificationRegion(
+        regionId: regionCode,
+        regionName: regionName,
+        isCurrentLocation: true,
+        minJmaIntensity: JmaIntensity.four,
+      ),
+    );
+
+    if (existing.regionId == regionCode) {
+      return;
+    }
+
+    final deviceId = await ref.read(deviceIdProvider.future);
+    final repo = await ref.read(
+      deviceNotificationSettingsRepositoryProvider.future,
+    );
+    final updated = [
+      ...current.regions.where((r) => !r.isCurrentLocation),
+      existing.copyWith(regionId: regionCode, regionName: regionName),
+    ];
+    final result = await repo.putEewRegions(
+      deviceId: deviceId,
+      regions: updated,
+    );
+    switch (result) {
+      case Success(:final value):
+        state = AsyncData(current.copyWith(regions: value));
+      case Failure(:final exception):
+        talker.error('[EEW] updateCurrentLocationRegion failure', exception);
         throw exception;
     }
   }

@@ -1,0 +1,28 @@
+name: background_location_tracker
+description: Background location tracking plugin using significant location changes for iOS and Android.
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.11.0
+  flutter: ^3.41.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  pigeon: ^26.1.5
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: BackgroundLocationPlugin
+        sharedDarwinSource: false
+      android:
+        package: net.yumnumm.background_location_tracker
+        pluginClass: BackgroundLocationPlugin

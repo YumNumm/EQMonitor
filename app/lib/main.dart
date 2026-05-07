@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
@@ -40,6 +41,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await BackgroundLocationTracker.initialize();
 
   await SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge,

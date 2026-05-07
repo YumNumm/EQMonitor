@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.yumnumm.background_location_tracker">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application>
+        <receiver
+            android:name=".LocationUpdateReceiver"
+            android:exported="false" />
+    </application>
+</manifest>
