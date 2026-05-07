@@ -3,7 +3,8 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/background_location.g.dart',
-    swiftOut: 'ios/Classes/BackgroundLocationApi.g.swift',
+    swiftOut:
+        'ios/background_location_tracker/Sources/background_location_tracker/BackgroundLocationApi.g.swift',
     kotlinOut:
         'android/src/main/kotlin/net/yumnumm/background_location_tracker/BackgroundLocationApi.g.kt',
     kotlinOptions: KotlinOptions(

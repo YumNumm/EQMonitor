@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => '../LICENSE' }
   s.author           = { 'YumNumm' => 'yumnumm@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'background_location_tracker/Sources/background_location_tracker/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '14.0'
   s.swift_version = '5.0'

@@ -25,6 +25,32 @@ public final class BackgroundLocationPlugin: NSObject, FlutterPlugin,
                 )
             ) { _ in }
         }
+
+        // killed状態のheadless runnerが永続化した位置情報を、
+        // 通常起動時にDart側が読み出すための補助チャネル。
+        let persistenceChannel = FlutterMethodChannel(
+            name: "background_location_tracker/persistence",
+            binaryMessenger: registrar.messenger()
+        )
+        persistenceChannel.setMethodCallHandler { call, result in
+            switch call.method {
+            case "consumePending":
+                let defaults = UserDefaults.standard
+                let latObj = defaults.object(forKey: "blt_pending_lat")
+                let lonObj = defaults.object(forKey: "blt_pending_lon")
+                guard let lat = latObj as? Double, let lon = lonObj as? Double
+                else {
+                    result(nil)
+                    return
+                }
+                defaults.removeObject(forKey: "blt_pending_lat")
+                defaults.removeObject(forKey: "blt_pending_lon")
+                defaults.removeObject(forKey: "blt_pending_ts")
+                result(["latitude": lat, "longitude": lon])
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        }
     }
 
     public func initialize(callbackHandle: Int64) throws {

@@ -42,6 +42,13 @@ public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
     }
 
     public func start(latitude: Double, longitude: Double) {
+        // killed状態の場合はDart側にRiverpod等のリスナーが存在しないため、
+        // ネイティブ層で永続化しておき、次回通常起動時にDart側が読み出して反映する。
+        let defaults = UserDefaults.standard
+        defaults.set(latitude, forKey: "blt_pending_lat")
+        defaults.set(longitude, forKey: "blt_pending_lon")
+        defaults.set(Date().timeIntervalSince1970, forKey: "blt_pending_ts")
+
         pendingLocations.append((latitude, longitude))
         launchEngine()
     }
