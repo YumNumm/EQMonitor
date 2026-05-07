@@ -1190,7 +1190,7 @@ $LocalizedNameCopyWith<$Res> get name {
 /// @nodoc
 mixin _$EarthquakeParameterStationItem {
 
- String get code; String get noCode; LocalizedName get name; String? get kana; EarthquakeStationStatus get status; String get sourceStatus; String get owner; LatLng get location;
+ String get code; String get noCode; LocalizedName get name; String? get kana; EarthquakeStationStatus get status; String get sourceStatus; String get owner; LatLng get location;@JsonKey(name: 'arv_400') double? get arv400;
 /// Create a copy of EarthquakeParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1203,16 +1203,16 @@ $EarthquakeParameterStationItemCopyWith<EarthquakeParameterStationItem> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeParameterStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.noCode, noCode) || other.noCode == noCode)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceStatus, sourceStatus) || other.sourceStatus == sourceStatus)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.location, location) || other.location == location));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeParameterStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.noCode, noCode) || other.noCode == noCode)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceStatus, sourceStatus) || other.sourceStatus == sourceStatus)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.location, location) || other.location == location)&&(identical(other.arv400, arv400) || other.arv400 == arv400));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,noCode,name,kana,status,sourceStatus,owner,location);
+int get hashCode => Object.hash(runtimeType,code,noCode,name,kana,status,sourceStatus,owner,location,arv400);
 
 @override
 String toString() {
-  return 'EarthquakeParameterStationItem(code: $code, noCode: $noCode, name: $name, kana: $kana, status: $status, sourceStatus: $sourceStatus, owner: $owner, location: $location)';
+  return 'EarthquakeParameterStationItem(code: $code, noCode: $noCode, name: $name, kana: $kana, status: $status, sourceStatus: $sourceStatus, owner: $owner, location: $location, arv400: $arv400)';
 }
 
 
@@ -1223,7 +1223,7 @@ abstract mixin class $EarthquakeParameterStationItemCopyWith<$Res>  {
   factory $EarthquakeParameterStationItemCopyWith(EarthquakeParameterStationItem value, $Res Function(EarthquakeParameterStationItem) _then) = _$EarthquakeParameterStationItemCopyWithImpl;
 @useResult
 $Res call({
- String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location
+ String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location,@JsonKey(name: 'arv_400') double? arv400
 });
 
 
@@ -1240,7 +1240,7 @@ class _$EarthquakeParameterStationItemCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? noCode = null,Object? name = null,Object? kana = freezed,Object? status = null,Object? sourceStatus = null,Object? owner = null,Object? location = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? noCode = null,Object? name = null,Object? kana = freezed,Object? status = null,Object? sourceStatus = null,Object? owner = null,Object? location = null,Object? arv400 = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,noCode: null == noCode ? _self.noCode : noCode // ignore: cast_nullable_to_non_nullable
@@ -1250,7 +1250,8 @@ as String?,status: null == status ? _self.status : status // ignore: cast_nullab
 as EarthquakeStationStatus,sourceStatus: null == sourceStatus ? _self.sourceStatus : sourceStatus // ignore: cast_nullable_to_non_nullable
 as String,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as LatLng,
+as LatLng,arv400: freezed == arv400 ? _self.arv400 : arv400 // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 /// Create a copy of EarthquakeParameterStationItem
@@ -1344,10 +1345,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location, @JsonKey(name: 'arv_400')  double? arv400)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeParameterStationItem() when $default != null:
-return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location);case _:
+return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location,_that.arv400);case _:
   return orElse();
 
 }
@@ -1365,10 +1366,10 @@ return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location, @JsonKey(name: 'arv_400')  double? arv400)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeParameterStationItem():
-return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location);case _:
+return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location,_that.arv400);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1385,10 +1386,10 @@ return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String noCode,  LocalizedName name,  String? kana,  EarthquakeStationStatus status,  String sourceStatus,  String owner,  LatLng location, @JsonKey(name: 'arv_400')  double? arv400)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeParameterStationItem() when $default != null:
-return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location);case _:
+return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that.sourceStatus,_that.owner,_that.location,_that.arv400);case _:
   return null;
 
 }
@@ -1400,7 +1401,7 @@ return $default(_that.code,_that.noCode,_that.name,_that.kana,_that.status,_that
 
 @JsonSerializable(fieldRename: .snake)
 class _EarthquakeParameterStationItem implements EarthquakeParameterStationItem {
-  const _EarthquakeParameterStationItem({required this.code, required this.noCode, required this.name, required this.kana, required this.status, required this.sourceStatus, required this.owner, required this.location});
+  const _EarthquakeParameterStationItem({required this.code, required this.noCode, required this.name, required this.kana, required this.status, required this.sourceStatus, required this.owner, required this.location, @JsonKey(name: 'arv_400') this.arv400});
   factory _EarthquakeParameterStationItem.fromJson(Map<String, dynamic> json) => _$EarthquakeParameterStationItemFromJson(json);
 
 @override final  String code;
@@ -1411,6 +1412,7 @@ class _EarthquakeParameterStationItem implements EarthquakeParameterStationItem 
 @override final  String sourceStatus;
 @override final  String owner;
 @override final  LatLng location;
+@override@JsonKey(name: 'arv_400') final  double? arv400;
 
 /// Create a copy of EarthquakeParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
@@ -1425,16 +1427,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeParameterStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.noCode, noCode) || other.noCode == noCode)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceStatus, sourceStatus) || other.sourceStatus == sourceStatus)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.location, location) || other.location == location));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeParameterStationItem&&(identical(other.code, code) || other.code == code)&&(identical(other.noCode, noCode) || other.noCode == noCode)&&(identical(other.name, name) || other.name == name)&&(identical(other.kana, kana) || other.kana == kana)&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceStatus, sourceStatus) || other.sourceStatus == sourceStatus)&&(identical(other.owner, owner) || other.owner == owner)&&(identical(other.location, location) || other.location == location)&&(identical(other.arv400, arv400) || other.arv400 == arv400));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,noCode,name,kana,status,sourceStatus,owner,location);
+int get hashCode => Object.hash(runtimeType,code,noCode,name,kana,status,sourceStatus,owner,location,arv400);
 
 @override
 String toString() {
-  return 'EarthquakeParameterStationItem(code: $code, noCode: $noCode, name: $name, kana: $kana, status: $status, sourceStatus: $sourceStatus, owner: $owner, location: $location)';
+  return 'EarthquakeParameterStationItem(code: $code, noCode: $noCode, name: $name, kana: $kana, status: $status, sourceStatus: $sourceStatus, owner: $owner, location: $location, arv400: $arv400)';
 }
 
 
@@ -1445,7 +1447,7 @@ abstract mixin class _$EarthquakeParameterStationItemCopyWith<$Res> implements $
   factory _$EarthquakeParameterStationItemCopyWith(_EarthquakeParameterStationItem value, $Res Function(_EarthquakeParameterStationItem) _then) = __$EarthquakeParameterStationItemCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location
+ String code, String noCode, LocalizedName name, String? kana, EarthquakeStationStatus status, String sourceStatus, String owner, LatLng location,@JsonKey(name: 'arv_400') double? arv400
 });
 
 
@@ -1462,7 +1464,7 @@ class __$EarthquakeParameterStationItemCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeParameterStationItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? noCode = null,Object? name = null,Object? kana = freezed,Object? status = null,Object? sourceStatus = null,Object? owner = null,Object? location = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? noCode = null,Object? name = null,Object? kana = freezed,Object? status = null,Object? sourceStatus = null,Object? owner = null,Object? location = null,Object? arv400 = freezed,}) {
   return _then(_EarthquakeParameterStationItem(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,noCode: null == noCode ? _self.noCode : noCode // ignore: cast_nullable_to_non_nullable
@@ -1472,7 +1474,8 @@ as String?,status: null == status ? _self.status : status // ignore: cast_nullab
 as EarthquakeStationStatus,sourceStatus: null == sourceStatus ? _self.sourceStatus : sourceStatus // ignore: cast_nullable_to_non_nullable
 as String,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as LatLng,
+as LatLng,arv400: freezed == arv400 ? _self.arv400 : arv400 // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 

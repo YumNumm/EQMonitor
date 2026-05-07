@@ -4,13 +4,13 @@ overview: 既存 TODO、コード内 TODO、主要機能の実装状況から、
 todos:
   - id: fix-eew-intensity-codegen
     content: EEW 予報区の intensity / maxIntensity が unknown 固定になる codegen 問題を修正する
-    status: pending
+    status: completed
   - id: restore-eew-map-layer
     content: ホーム地図の EEW 予想震度レイヤー更新処理を有効化する
-    status: pending
+    status: completed
   - id: restore-estimated-intensity
     content: arv_400 を API/モデルに追加し推計震度計算点生成を復旧する
-    status: pending
+    status: completed
   - id: implement-permission-onboarding
     content: オンボーディングで通知権限リクエストと拒否時説明を実装する
     status: pending

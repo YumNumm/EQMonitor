@@ -71,6 +71,7 @@ abstract class EarthquakeParameterStationItem
     required String sourceStatus,
     required String owner,
     required LatLng location,
+    @JsonKey(name: 'arv_400') double? arv400,
   }) = _EarthquakeParameterStationItem;
 
   factory EarthquakeParameterStationItem.fromJson(Map<String, dynamic> json) =>

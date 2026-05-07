@@ -188,14 +188,13 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     return result;
   }
 
-  // TODO: earthquake_stations.json に arv_400 フィールドが含まれていないため、
-  // 現状この計算は機能しない。バックエンドが arv_400 を earthquake stations API
-  // レスポンスに追加するまで空リストを返す。
-  // 詳細: docs/todo/800_estimated_intensity_arv400.md
   List<CalculationPoint> _generateCalculationPoints(
     Iterable<_CachedPoint> points,
-  ) =>
-      [];
+  ) => [
+    for (final p in points)
+      if (p.station.arv400 case final arv400?)
+        (lat: p.station.location.lat, lon: p.station.location.lon, arv400: arv400),
+  ];
 
 }
 

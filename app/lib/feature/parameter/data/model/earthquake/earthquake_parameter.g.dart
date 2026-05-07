@@ -158,10 +158,15 @@ _EarthquakeParameterStationItem _$EarthquakeParameterStationItemFromJson(
         'location',
         (v) => LatLng.fromJson(v as Map<String, dynamic>),
       ),
+      arv400: $checkedConvert('arv_400', (v) => (v as num?)?.toDouble()),
     );
     return val;
   },
-  fieldKeyMap: const {'noCode': 'no_code', 'sourceStatus': 'source_status'},
+  fieldKeyMap: const {
+    'noCode': 'no_code',
+    'sourceStatus': 'source_status',
+    'arv400': 'arv_400',
+  },
 );
 
 Map<String, dynamic> _$EarthquakeParameterStationItemToJson(
@@ -175,6 +180,7 @@ Map<String, dynamic> _$EarthquakeParameterStationItemToJson(
   'source_status': instance.sourceStatus,
   'owner': instance.owner,
   'location': instance.location,
+  'arv_400': instance.arv400,
 };
 
 const _$EarthquakeStationStatusEnumMap = {
