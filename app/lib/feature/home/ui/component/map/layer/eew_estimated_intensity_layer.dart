@@ -29,12 +29,7 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           .map(
             (key, values) => MapEntry(
               key,
-              values
-                  .sortedBy(
-                    // TODO(eqmonitor_api): intensity は codegen バグにより常に unknown
-                    (e) => 0,
-                  )
-                  .last,
+              values.sortedBy((e) => e.intensity.orderIndex).last,
             ),
           )
           .values
@@ -49,30 +44,38 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
         }
 
         unawaited(() async {
-          await JmaIntensity.values.map((intensity) {
-            final layerId = _getLayerId(intensity);
-            final color = colorModel.fromJmaIntensity(intensity).background;
+          await JmaIntensity.values
+              .where((intensity) => intensity != JmaIntensity.unknown)
+              .map((intensity) {
+                final layerId = _getLayerId(intensity);
+                final color =
+                    colorModel.fromJmaIntensity(intensity).background;
 
-            return styleController.addLayer(
-              FillStyleLayer(
-                id: layerId,
-                sourceId: 'eqmonitor_map',
-                sourceLayerId: 'areaForecastLocalEew',
-                paint: {
-                  'fill-color': color.toHexString(),
-                  'fill-opacity': 0.0,
-                },
-              ),
-            );
-          }).wait;
+                return styleController.addLayer(
+                  FillStyleLayer(
+                    id: layerId,
+                    sourceId: 'eqmonitor_map',
+                    sourceLayerId: 'areaForecastLocalEew',
+                    filter: const ['==', '1', '2'],
+                    paint: {
+                      'fill-color': color.toHexString(),
+                      'fill-opacity': 0.7,
+                    },
+                  ),
+                );
+              })
+              .wait;
 
           isInitialized.value = true;
         }());
 
         return () async {
-          final futures = JmaIntensity.values.map(
-            (intensity) => styleController.removeLayer(_getLayerId(intensity)),
-          );
+          final futures = JmaIntensity.values
+              .where((intensity) => intensity != JmaIntensity.unknown)
+              .map(
+                (intensity) =>
+                    styleController.removeLayer(_getLayerId(intensity)),
+              );
           await Future.wait(futures);
         };
       },
@@ -86,32 +89,28 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
           return null;
         }
 
-        // TODO(YumNumm): 予想震度レイヤー
-        // unawaited(() async {
-        //   await JmaIntensity.values
-        //       .map(
-        //         (intensity) => styleController.updateFilter(
-        //           id: _getLayerId(intensity),
-        //           filter: [
-        //             'all',
-        //             [
-        //               'in',
-        //               'region',
-        //               regionMaxIntensities
-        //                   .where(
-        //                     (r) =>
-        //                         // TODO(eqmonitor_api): intensity は codegen バグにより常に unknown
-        //                         JmaIntensity.unknown ==
-        //                         intensity,
-        //                   )
-        //                   .map((r) => r.code)
-        //                   .toList(),
-        //             ],
-        //           ],
-        //         ),
-        //       )
-        //       .wait;
-        // }());
+        unawaited(() async {
+          await JmaIntensity.values
+              .where((intensity) => intensity != JmaIntensity.unknown)
+              .map((intensity) {
+                final codes = regionMaxIntensities
+                    .where((r) => r.intensity == intensity)
+                    .map((r) => r.code)
+                    .toList();
+                final filter = codes.isEmpty
+                    ? const <Object>['==', '1', '2']
+                    : <Object>[
+                        'in',
+                        ['get', 'code'],
+                        ['literal', codes],
+                      ];
+                return styleController.updateFilter(
+                  id: _getLayerId(intensity),
+                  filter: filter,
+                );
+              })
+              .wait;
+        }());
 
         return null;
       },

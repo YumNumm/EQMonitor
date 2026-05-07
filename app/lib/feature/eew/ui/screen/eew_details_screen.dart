@@ -109,9 +109,8 @@ class _EewCard extends StatelessWidget {
             Text('震源地: ${hypocenter?.name ?? "不明"}'),
             Text('深さ: ${hypocenter?.depth ?? "不明"}km'),
             Text('マグニチュード: ${hypocenter?.magnitude ?? "不明"}'),
-            const Text(
-              // TODO(eqmonitor_api): maxIntensity は codegen バグにより常に unknown
-              '最大予測震度: 不明',
+            Text(
+              '最大予測震度: ${eew.forecastIntensity?.maxIntensity?.label ?? '不明'}${eew.forecastIntensity?.maxIntensityIsOver ?? false ? '程度以上' : ''}',
             ),
             if (eew.isWarning ?? false)
               const Chip(
