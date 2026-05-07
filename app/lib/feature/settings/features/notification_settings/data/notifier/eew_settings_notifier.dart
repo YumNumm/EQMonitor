@@ -1,3 +1,4 @@
+import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -156,6 +157,14 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
       case Success(:final value):
         talker.debug('[EEW] putEewRegions success: regions=${value.length}');
         state = AsyncData(current.copyWith(regions: value));
+        // 現在地リージョンを追加した直後に、ネイティブ側の重大な位置変化監視を開始する。
+        // これがないとAndroidのPendingIntent/iOSのSLCが登録されず、
+        // 以降の位置更新が一切届かない。
+        try {
+          await BackgroundLocationTracker.startMonitoring();
+        } on Object catch (e, st) {
+          talker.error('[EEW] BackgroundLocationTracker.startMonitoring', e, st);
+        }
       case Failure(:final exception):
         talker.error('[EEW] putEewRegions failure', exception);
         throw exception;
@@ -262,6 +271,18 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     switch (result) {
       case Success(:final value):
         state = AsyncData(current.copyWith(regions: value));
+        // 現在地リージョンを取り除いた場合は重大な位置変化監視も停止する。
+        if (isCurrentLocation && !value.any((r) => r.isCurrentLocation)) {
+          try {
+            await BackgroundLocationTracker.stopMonitoring();
+          } on Object catch (e, st) {
+            talker.error(
+              '[EEW] BackgroundLocationTracker.stopMonitoring',
+              e,
+              st,
+            );
+          }
+        }
       case Failure(:final exception):
         throw exception;
     }

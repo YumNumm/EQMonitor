@@ -18,6 +18,15 @@ class LocationHeadlessRunner(private val context: Context) {
 
     fun start(latitude: Double, longitude: Double) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        // killed状態の場合はDart側にRiverpod等のリスナーが存在しないため、
+        // ネイティブ層で永続化しておき、次回通常起動時にDart側が読み出して反映する。
+        prefs.edit()
+            .putLong("pending_lat_bits", java.lang.Double.doubleToRawLongBits(latitude))
+            .putLong("pending_lon_bits", java.lang.Double.doubleToRawLongBits(longitude))
+            .putLong("pending_ts", System.currentTimeMillis())
+            .apply()
+
         val handle = prefs.getLong(KEY_CALLBACK_HANDLE, 0L)
         if (handle == 0L) return
 
