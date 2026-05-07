@@ -14,6 +14,7 @@ part 'eew_settings_notifier.g.dart';
 class EewSettingsNotifier extends _$EewSettingsNotifier {
   static final saveSettingsMutation = Mutation<void>();
   static final updateRegionsMutation = Mutation<void>();
+  static final saveLiveActivityMutation = Mutation<void>();
 
   @override
   Future<EewNotificationSettings> build() async {
@@ -46,6 +47,7 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
       deviceId: deviceId,
       enabled: enabled,
       criticalThreshold: current.criticalThreshold,
+      startLiveActivity: current.startLiveActivity,
     );
     switch (result) {
       case Success(:final value):
@@ -65,6 +67,27 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
       deviceId: deviceId,
       enabled: current.enabled,
       criticalThreshold: threshold,
+      startLiveActivity: current.startLiveActivity,
+    );
+    switch (result) {
+      case Success(:final value):
+        state = AsyncData(value.copyWith(regions: current.regions));
+      case Failure(:final exception):
+        throw exception;
+    }
+  }
+
+  Future<void> setStartLiveActivity({required bool startLiveActivity}) async {
+    final current = state.requireValue;
+    final deviceId = await ref.read(deviceIdProvider.future);
+    final repo = await ref.read(
+      deviceNotificationSettingsRepositoryProvider.future,
+    );
+    final result = await repo.patchEewSettings(
+      deviceId: deviceId,
+      enabled: current.enabled,
+      criticalThreshold: current.criticalThreshold,
+      startLiveActivity: startLiveActivity,
     );
     switch (result) {
       case Success(:final value):

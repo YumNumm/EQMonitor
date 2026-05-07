@@ -40,6 +40,7 @@ class _Body extends ConsumerWidget {
         const EewNotificationSettings(
           enabled: true,
           criticalThreshold: null,
+          startLiveActivity: true,
           regions: [],
         );
 
@@ -51,6 +52,8 @@ class _Body extends ConsumerWidget {
           _EnabledSection(settings: settings),
           const SettingsSectionHeader(text: 'クリティカル通知'),
           _ThresholdSection(settings: settings),
+          const SettingsSectionHeader(text: 'Live Activity'),
+          _LiveActivitySection(settings: settings),
           const SettingsSectionHeader(text: '通知地域'),
           _RegionsSection(settings: settings),
         ],
@@ -139,6 +142,35 @@ class _ThresholdSection extends ConsumerWidget {
                         picked == _kClearThreshold ? null : picked,
                       );
                 },
+              );
+            },
+    );
+  }
+}
+
+class _LiveActivitySection extends ConsumerWidget {
+  const _LiveActivitySection({required this.settings});
+
+  final EewNotificationSettings settings;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final saveState = ref.watch(EewSettingsNotifier.saveLiveActivityMutation);
+    final isSaving = saveState is MutationPending;
+
+    return AppSwitchListTile(
+      title: 'Live Activity を開始',
+      subtitle: 'EEW 発生時にダイナミックアイランド・ロック画面に情報を表示します（iOS のみ）',
+      value: settings.startLiveActivity,
+      onChanged: isSaving
+          ? null
+          : (value) {
+              unawaited(
+                EewSettingsNotifier.saveLiveActivityMutation.run(ref, (tsx) async {
+                  await tsx
+                      .get(eewSettingsProvider.notifier)
+                      .setStartLiveActivity(startLiveActivity: value);
+                }),
               );
             },
     );
