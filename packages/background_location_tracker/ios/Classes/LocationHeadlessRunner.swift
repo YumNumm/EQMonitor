@@ -2,10 +2,15 @@ import CoreLocation
 import Flutter
 import Foundation
 
+public typealias PluginRegistrantCallback = (FlutterEngine) -> Void
+
 /// アプリがkilled状態から位置情報で起動された時に
 /// Headless FlutterEngineを起動してDartコードを実行するクラス。
-final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
-    static let shared = LocationHeadlessRunner()
+public final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
+    public static let shared = LocationHeadlessRunner()
+
+    /// アプリのAppDelegateで設定するプラグイン登録コールバック。
+    public static var pluginRegistrantCallback: PluginRegistrantCallback?
 
     private var headlessEngine: FlutterEngine?
     private var channel: FlutterMethodChannel?
@@ -26,7 +31,7 @@ final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
 
     /// killed状態からの復帰時にAppDelegateから呼ぶ。
     /// CLLocationManagerを再生成して位置更新を待つ。
-    func startFromLaunchOptions() {
+    public func startFromLaunchOptions() {
         guard !hasStarted else { return }
         hasStarted = true
 
@@ -36,7 +41,7 @@ final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         manager.startMonitoringSignificantLocationChanges()
     }
 
-    func start(latitude: Double, longitude: Double) {
+    public func start(latitude: Double, longitude: Double) {
         pendingLocations.append((latitude, longitude))
         launchEngine()
     }
@@ -69,7 +74,8 @@ final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
             withEntrypoint: info.callbackName,
             libraryURI: info.callbackLibraryPath
         )
-        GeneratedPluginRegistrant.register(with: engine)
+        // アプリが設定したコールバックでプラグインを登録する
+        LocationHeadlessRunner.pluginRegistrantCallback?(engine)
 
         channel = FlutterMethodChannel(
             name: "background_location_tracker/headless",
@@ -98,7 +104,7 @@ final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
 
     // MARK: - CLLocationManagerDelegate (killed状態復帰時のみ使用)
 
-    func locationManager(
+    public func locationManager(
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
@@ -106,7 +112,7 @@ final class LocationHeadlessRunner: NSObject, CLLocationManagerDelegate {
         start(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
     }
 
-    func locationManager(
+    public func locationManager(
         _ manager: CLLocationManager,
         didFailWithError error: Error
     ) {

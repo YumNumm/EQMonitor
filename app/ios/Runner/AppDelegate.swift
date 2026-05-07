@@ -25,6 +25,9 @@ import background_location_tracker
     FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
       GeneratedPluginRegistrant.register(with: registry)
     }
+    LocationHeadlessRunner.pluginRegistrantCallback = { engine in
+      GeneratedPluginRegistrant.register(with: engine)
+    }
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
   }
 }
