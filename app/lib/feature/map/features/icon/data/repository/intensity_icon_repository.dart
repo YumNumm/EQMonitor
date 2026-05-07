@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/util/widget_to_image.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'intensity_icon_repository.g.dart';
@@ -24,9 +25,11 @@ final class IntensityIconRepository {
   }) async {
     final bytes = await renderWidgetToImageBytes(
       logicalSize: const Size(50, 50),
-      widget: JmaIntensityIcon(
-        intensity: intensity,
-        type: type,
+      widget: ProviderScope(
+        child: JmaIntensityIcon(
+          intensity: intensity,
+          type: type,
+        ),
       ),
     );
     if (bytes == null) {

@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/component/notification_region_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -271,14 +273,44 @@ class _RegionsSection extends ConsumerWidget {
               FilledButton.tonal(
                 onPressed: isBusy || hasCurrentLocation
                     ? null
-                    : () {
+                    : () async {
+                        final location =
+                            await _ensurePermissionAndGetLocation(context);
+                        if (location == null || !context.mounted) {
+                          return;
+                        }
+                        final resolver = await ref.read(
+                          jmaRegionResolverProvider.future,
+                        );
+                        final code = resolver.resolveRegionCode(
+                          location.lat,
+                          location.lon,
+                        );
+                        final name = resolver.resolveRegionName(
+                          location.lat,
+                          location.lon,
+                        );
+                        if (!context.mounted) {
+                          return;
+                        }
+                        if (code == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('現在地のJMA細分区域を解決できませんでした'),
+                            ),
+                          );
+                          return;
+                        }
                         unawaited(
                           EewSettingsNotifier.updateRegionsMutation.run(
                             ref,
                             (tsx) async {
                               await tsx
                                   .get(eewSettingsProvider.notifier)
-                                  .addCurrentLocationRegion();
+                                  .addCurrentLocationRegion(
+                                    regionCode: code,
+                                    regionName: name,
+                                  );
                             },
                           ),
                         );
@@ -326,6 +358,64 @@ class _RegionsSection extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+
+/// 現在地通知のために位置情報の常時許可を取得し、現在位置を返す。
+/// 権限が無い場合は設定アプリ誘導ダイアログを表示する。
+Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
+  BuildContext context,
+) async {
+  var permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+  }
+
+  if (permission == LocationPermission.denied ||
+      permission == LocationPermission.deniedForever) {
+    if (!context.mounted) {
+      return null;
+    }
+    final shouldOpen = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog.adaptive(
+        title: const Text('位置情報の許可が必要です'),
+        content: const Text(
+          'EEWの現在地通知には、位置情報の「常に許可」が必要です。\n'
+          '設定アプリで権限を変更してください。',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('キャンセル'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('設定を開く'),
+          ),
+        ],
+      ),
+    );
+    if (shouldOpen ?? false) {
+      await Geolocator.openAppSettings();
+    }
+    return null;
+  }
+
+  try {
+    final position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.medium,
+      ),
+    );
+    return (lat: position.latitude, lon: position.longitude);
+  } on Object {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('現在地の取得に失敗しました')),
+      );
+    }
+    return null;
   }
 }
 

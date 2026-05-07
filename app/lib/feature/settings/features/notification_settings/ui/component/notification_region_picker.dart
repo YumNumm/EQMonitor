@@ -147,15 +147,22 @@ class NotificationRegionListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String name;
+    final String? subtitleSuffix;
     if (region.isCurrentLocation) {
       name = '現在地';
+      subtitleSuffix = region.regionName;
     } else if (region.regionId == 0) {
       name = '全国';
+      subtitleSuffix = null;
     } else {
       name = region.regionName ?? '地域ID: ${region.regionId}';
+      subtitleSuffix = null;
     }
 
     final threshold = region.minJmaIntensity;
+    final subtitle = subtitleSuffix != null
+        ? '$subtitleSuffix・震度${threshold.mainText}${threshold.suffix}以上で通知'
+        : '震度${threshold.mainText}${threshold.suffix}以上で通知';
 
     return ListTile(
       leading: Icon(
@@ -166,7 +173,7 @@ class NotificationRegionListTile extends StatelessWidget {
             : Icons.location_on_outlined,
       ),
       title: Text(name),
-      subtitle: Text('震度${threshold.mainText}${threshold.suffix}以上で通知'),
+      subtitle: Text(subtitle),
       trailing: isBusy
           ? const SizedBox(
               width: 20,

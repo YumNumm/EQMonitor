@@ -151,7 +151,7 @@ struct EewLockScreenView: View {
                     VStack(spacing: 2) {
                         Text("最大震度")
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundColor(eewSecondaryTextColor)
                         SquareIntensityBadge(
                             intensity: intensity,
                             size: .normal
@@ -199,7 +199,7 @@ struct EewLockScreenView: View {
                     .eewLabelStyle()
                     Text(hypocenterName)
                         .font(.system(size: 16, weight: .heavy))
-                        .foregroundColor(.white)
+                        .foregroundColor(.primary)
                         .lineLimit(1)
                 }
             }
@@ -248,7 +248,7 @@ struct EewLockScreenView: View {
                                 design: .monospaced
                             )
                         )
-                        .foregroundColor(.white)
+                        .foregroundColor(.primary)
                         .tracking(-1)
                     Text(formatTime(date))
                         .font(
@@ -258,7 +258,7 @@ struct EewLockScreenView: View {
                                 design: .monospaced
                             )
                         )
-                        .foregroundColor(.white)
+                        .foregroundColor(.primary)
                         .tracking(-1)
                 }
             }
@@ -365,7 +365,6 @@ struct SquareIntensityBadge: View {
             }
         }
 
-        // HIG準拠: 連続的な角丸（continuous corner radius）
         var cornerRadius: CGFloat {
             switch self {
             case .normal: return 12

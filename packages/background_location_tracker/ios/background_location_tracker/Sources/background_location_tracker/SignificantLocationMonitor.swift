@@ -1,0 +1,43 @@
+import CoreLocation
+import Foundation
+
+/// CLLocationManagerのsignificantLocationChangesをラップする。
+/// 約1km以上の移動時にコールバックが呼ばれる。
+final class SignificantLocationMonitor: NSObject, CLLocationManagerDelegate {
+    var onLocationUpdate: ((Double, Double, Double) -> Void)?
+
+    private let manager: CLLocationManager
+
+    override init() {
+        manager = CLLocationManager()
+        super.init()
+        manager.delegate = self
+    }
+
+    func start() {
+        manager.startMonitoringSignificantLocationChanges()
+    }
+
+    func stop() {
+        manager.stopMonitoringSignificantLocationChanges()
+    }
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
+        guard let location = locations.last else { return }
+        onLocationUpdate?(
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+            location.horizontalAccuracy
+        )
+    }
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didFailWithError error: Error
+    ) {
+        // 位置情報取得失敗はサイレントに無視する
+    }
+}
