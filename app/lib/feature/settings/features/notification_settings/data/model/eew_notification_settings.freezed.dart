@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EewNotificationSettings {
 
- bool get enabled; JmaIntensity? get criticalThreshold; List<NotificationRegion> get regions;
+ bool get enabled; JmaIntensity? get criticalThreshold; bool get startLiveActivity; bool get onePointEnabled; List<NotificationRegion> get regions;
 /// Create a copy of EewNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $EewNotificationSettingsCopyWith<EewNotificationSettings> get copyWith => _$EewN
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.criticalThreshold, criticalThreshold) || other.criticalThreshold == criticalThreshold)&&const DeepCollectionEquality().equals(other.regions, regions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EewNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.criticalThreshold, criticalThreshold) || other.criticalThreshold == criticalThreshold)&&(identical(other.startLiveActivity, startLiveActivity) || other.startLiveActivity == startLiveActivity)&&(identical(other.onePointEnabled, onePointEnabled) || other.onePointEnabled == onePointEnabled)&&const DeepCollectionEquality().equals(other.regions, regions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,criticalThreshold,const DeepCollectionEquality().hash(regions));
+int get hashCode => Object.hash(runtimeType,enabled,criticalThreshold,startLiveActivity,onePointEnabled,const DeepCollectionEquality().hash(regions));
 
 @override
 String toString() {
-  return 'EewNotificationSettings(enabled: $enabled, criticalThreshold: $criticalThreshold, regions: $regions)';
+  return 'EewNotificationSettings(enabled: $enabled, criticalThreshold: $criticalThreshold, startLiveActivity: $startLiveActivity, onePointEnabled: $onePointEnabled, regions: $regions)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $EewNotificationSettingsCopyWith<$Res>  {
   factory $EewNotificationSettingsCopyWith(EewNotificationSettings value, $Res Function(EewNotificationSettings) _then) = _$EewNotificationSettingsCopyWithImpl;
 @useResult
 $Res call({
- bool enabled, JmaIntensity? criticalThreshold, List<NotificationRegion> regions
+ bool enabled, JmaIntensity? criticalThreshold, bool startLiveActivity, bool onePointEnabled, List<NotificationRegion> regions
 });
 
 
@@ -62,11 +62,13 @@ class _$EewNotificationSettingsCopyWithImpl<$Res>
 
 /// Create a copy of EewNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? criticalThreshold = freezed,Object? regions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? criticalThreshold = freezed,Object? startLiveActivity = null,Object? onePointEnabled = null,Object? regions = null,}) {
   return _then(_self.copyWith(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,criticalThreshold: freezed == criticalThreshold ? _self.criticalThreshold : criticalThreshold // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,startLiveActivity: null == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
+as bool,onePointEnabled: null == onePointEnabled ? _self.onePointEnabled : onePointEnabled // ignore: cast_nullable_to_non_nullable
+as bool,regions: null == regions ? _self.regions : regions // ignore: cast_nullable_to_non_nullable
 as List<NotificationRegion>,
   ));
 }
@@ -152,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  JmaIntensity? criticalThreshold,  List<NotificationRegion> regions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  JmaIntensity? criticalThreshold,  bool startLiveActivity,  bool onePointEnabled,  List<NotificationRegion> regions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EewNotificationSettings() when $default != null:
-return $default(_that.enabled,_that.criticalThreshold,_that.regions);case _:
+return $default(_that.enabled,_that.criticalThreshold,_that.startLiveActivity,_that.onePointEnabled,_that.regions);case _:
   return orElse();
 
 }
@@ -173,10 +175,10 @@ return $default(_that.enabled,_that.criticalThreshold,_that.regions);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  JmaIntensity? criticalThreshold,  List<NotificationRegion> regions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  JmaIntensity? criticalThreshold,  bool startLiveActivity,  bool onePointEnabled,  List<NotificationRegion> regions)  $default,) {final _that = this;
 switch (_that) {
 case _EewNotificationSettings():
-return $default(_that.enabled,_that.criticalThreshold,_that.regions);case _:
+return $default(_that.enabled,_that.criticalThreshold,_that.startLiveActivity,_that.onePointEnabled,_that.regions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +195,10 @@ return $default(_that.enabled,_that.criticalThreshold,_that.regions);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  JmaIntensity? criticalThreshold,  List<NotificationRegion> regions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  JmaIntensity? criticalThreshold,  bool startLiveActivity,  bool onePointEnabled,  List<NotificationRegion> regions)?  $default,) {final _that = this;
 switch (_that) {
 case _EewNotificationSettings() when $default != null:
-return $default(_that.enabled,_that.criticalThreshold,_that.regions);case _:
+return $default(_that.enabled,_that.criticalThreshold,_that.startLiveActivity,_that.onePointEnabled,_that.regions);case _:
   return null;
 
 }
@@ -208,11 +210,13 @@ return $default(_that.enabled,_that.criticalThreshold,_that.regions);case _:
 
 
 class _EewNotificationSettings implements EewNotificationSettings {
-  const _EewNotificationSettings({required this.enabled, required this.criticalThreshold, required final  List<NotificationRegion> regions}): _regions = regions;
+  const _EewNotificationSettings({required this.enabled, required this.criticalThreshold, required this.startLiveActivity, required this.onePointEnabled, required final  List<NotificationRegion> regions}): _regions = regions;
   
 
 @override final  bool enabled;
 @override final  JmaIntensity? criticalThreshold;
+@override final  bool startLiveActivity;
+@override final  bool onePointEnabled;
  final  List<NotificationRegion> _regions;
 @override List<NotificationRegion> get regions {
   if (_regions is EqualUnmodifiableListView) return _regions;
@@ -231,16 +235,16 @@ _$EewNotificationSettingsCopyWith<_EewNotificationSettings> get copyWith => __$E
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.criticalThreshold, criticalThreshold) || other.criticalThreshold == criticalThreshold)&&const DeepCollectionEquality().equals(other._regions, _regions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EewNotificationSettings&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.criticalThreshold, criticalThreshold) || other.criticalThreshold == criticalThreshold)&&(identical(other.startLiveActivity, startLiveActivity) || other.startLiveActivity == startLiveActivity)&&(identical(other.onePointEnabled, onePointEnabled) || other.onePointEnabled == onePointEnabled)&&const DeepCollectionEquality().equals(other._regions, _regions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,criticalThreshold,const DeepCollectionEquality().hash(_regions));
+int get hashCode => Object.hash(runtimeType,enabled,criticalThreshold,startLiveActivity,onePointEnabled,const DeepCollectionEquality().hash(_regions));
 
 @override
 String toString() {
-  return 'EewNotificationSettings(enabled: $enabled, criticalThreshold: $criticalThreshold, regions: $regions)';
+  return 'EewNotificationSettings(enabled: $enabled, criticalThreshold: $criticalThreshold, startLiveActivity: $startLiveActivity, onePointEnabled: $onePointEnabled, regions: $regions)';
 }
 
 
@@ -251,7 +255,7 @@ abstract mixin class _$EewNotificationSettingsCopyWith<$Res> implements $EewNoti
   factory _$EewNotificationSettingsCopyWith(_EewNotificationSettings value, $Res Function(_EewNotificationSettings) _then) = __$EewNotificationSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- bool enabled, JmaIntensity? criticalThreshold, List<NotificationRegion> regions
+ bool enabled, JmaIntensity? criticalThreshold, bool startLiveActivity, bool onePointEnabled, List<NotificationRegion> regions
 });
 
 
@@ -268,11 +272,13 @@ class __$EewNotificationSettingsCopyWithImpl<$Res>
 
 /// Create a copy of EewNotificationSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? criticalThreshold = freezed,Object? regions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? criticalThreshold = freezed,Object? startLiveActivity = null,Object? onePointEnabled = null,Object? regions = null,}) {
   return _then(_EewNotificationSettings(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,criticalThreshold: freezed == criticalThreshold ? _self.criticalThreshold : criticalThreshold // ignore: cast_nullable_to_non_nullable
-as JmaIntensity?,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
+as JmaIntensity?,startLiveActivity: null == startLiveActivity ? _self.startLiveActivity : startLiveActivity // ignore: cast_nullable_to_non_nullable
+as bool,onePointEnabled: null == onePointEnabled ? _self.onePointEnabled : onePointEnabled // ignore: cast_nullable_to_non_nullable
+as bool,regions: null == regions ? _self._regions : regions // ignore: cast_nullable_to_non_nullable
 as List<NotificationRegion>,
   ));
 }
