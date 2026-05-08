@@ -11,6 +11,8 @@ environment:
 resolution: workspace
 
 dependency_overrides:
+  # https://github.com/juliansteenbakker/flutter_secure_storage/issues/1119
+  flutter_secure_storage_darwin: 0.2.0
   flutter_inappwebview: 6.2.0-beta.3
   maplibre:
     git:
@@ -87,7 +89,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.5
-  flutter_secure_storage: ^10.0.0-beta.4
+  flutter_secure_storage: ^10.0.0
   flutter_sticky_header: ^0.8.0
   flutter_test:
     sdk: flutter
