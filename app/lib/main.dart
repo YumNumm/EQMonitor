@@ -8,6 +8,7 @@ import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
@@ -41,6 +42,31 @@ import 'package:shared_preferences/shared_preferences.dart'
 import 'package:talker_flutter/talker_flutter.dart';
 
 Future<void> main() async {
+  try {
+    await _main();
+  } catch (error, stackTrace) {
+    unawaited(
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+      ),
+    );
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: ErrorCard(
+              error: error,
+            ),
+          ),
+        ),
+      ),
+    );
+    rethrow;
+  }
+}
+
+Future<void> _main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await BackgroundLocationTracker.initialize();
 
