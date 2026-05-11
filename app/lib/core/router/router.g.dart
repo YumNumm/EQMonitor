@@ -438,6 +438,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'shake',
           factory: $ShakeDetectionSettingsRoute._fromState,
         ),
+        GoRouteData.$route(
+          path: 'history',
+          factory: $NotificationHistoryRoute._fromState,
+        ),
       ],
     ),
     GoRouteData.$route(
@@ -813,6 +817,28 @@ mixin $ShakeDetectionSettingsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/notification/shake');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $NotificationHistoryRoute on GoRouteData {
+  static NotificationHistoryRoute _fromState(GoRouterState state) =>
+      const NotificationHistoryRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/notification/history');
 
   @override
   void go(BuildContext context) => context.go(location);

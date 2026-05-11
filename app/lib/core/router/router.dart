@@ -284,6 +284,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<EewSettingsRoute>(path: 'eew'),
         TypedGoRoute<EarthquakeSettingsRoute>(path: 'earthquake'),
         TypedGoRoute<ShakeDetectionSettingsRoute>(path: 'shake'),
+        TypedGoRoute<NotificationHistoryRoute>(path: 'history'),
       ],
     ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
@@ -380,6 +381,15 @@ class ShakeDetectionSettingsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ShakeDetectionSettingsPage();
+}
+
+class NotificationHistoryRoute extends GoRouteData
+    with $NotificationHistoryRoute {
+  const NotificationHistoryRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebugNotificationDeliveryLogPage();
 }
 
 class DebugRoute extends GoRouteData with $DebugRoute {

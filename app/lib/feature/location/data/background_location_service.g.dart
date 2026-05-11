@@ -10,20 +10,29 @@ part of 'background_location_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Path A: エンジン稼働中（フォアグラウンド/バックグラウンド）での
-/// バックグラウンド位置更新をEEW設定に反映するサービス。
+/// エンジン稼働中（フォアグラウンド/バックグラウンド）での位置更新と、
+/// killed状態でheadless runnerが永続化した位置情報の両方をEEW設定に反映する。
+///
+/// 起動時に1度だけ pending 位置を取り出し、続けて live ストリームを listen する。
+/// `keepAlive: true` のため、boot 時に `ref.read` で1度だけ起動する想定。
 
 @ProviderFor(backgroundLocationService)
 final backgroundLocationServiceProvider = BackgroundLocationServiceProvider._();
 
-/// Path A: エンジン稼働中（フォアグラウンド/バックグラウンド）での
-/// バックグラウンド位置更新をEEW設定に反映するサービス。
+/// エンジン稼働中（フォアグラウンド/バックグラウンド）での位置更新と、
+/// killed状態でheadless runnerが永続化した位置情報の両方をEEW設定に反映する。
+///
+/// 起動時に1度だけ pending 位置を取り出し、続けて live ストリームを listen する。
+/// `keepAlive: true` のため、boot 時に `ref.read` で1度だけ起動する想定。
 
 final class BackgroundLocationServiceProvider
     extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
     with $FutureModifier<void>, $StreamProvider<void> {
-  /// Path A: エンジン稼働中（フォアグラウンド/バックグラウンド）での
-  /// バックグラウンド位置更新をEEW設定に反映するサービス。
+  /// エンジン稼働中（フォアグラウンド/バックグラウンド）での位置更新と、
+  /// killed状態でheadless runnerが永続化した位置情報の両方をEEW設定に反映する。
+  ///
+  /// 起動時に1度だけ pending 位置を取り出し、続けて live ストリームを listen する。
+  /// `keepAlive: true` のため、boot 時に `ref.read` で1度だけ起動する想定。
   BackgroundLocationServiceProvider._()
     : super(
         from: null,
@@ -50,4 +59,4 @@ final class BackgroundLocationServiceProvider
 }
 
 String _$backgroundLocationServiceHash() =>
-    r'679d5fa368420a8ae3d3147f73b22ed6ddaa5a23';
+    r'ac898481b27f0d2e7b5b939f9ea37d9591e5e92c';
