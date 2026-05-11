@@ -77,21 +77,21 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
                     earthquake.intensity?.regions[intensity]
                         ?.map((e) => e.region.code)
                         .toList() ??
-                    ['unknown'];
-                if (ids.isEmpty) {
-                  ids.add('unknown');
-                }
+                    const <String>[];
+                final filter = ids.isEmpty
+                    ? const ['==', '1', '2']
+                    : [
+                        'in',
+                        ['get', 'id'],
+                        ['literal', ids],
+                      ];
                 await styleController.addLayer(
                   SymbolStyleLayer(
                     id: _regionLayerId(intensity),
                     sourceLayerId: 'areaForecastLocalE',
                     sourceId: 'eqmonitor_map',
                     // idでフィルター
-                    filter: [
-                      '==',
-                      ['get', 'id'],
-                      ids,
-                    ],
+                    filter: filter,
                     layout: const {
                       'icon-image': ['get', 'icon'],
                       'icon-allow-overlap': false,
@@ -123,20 +123,20 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
                         ?.expand((e) => e.cities)
                         .map((e) => e.city.code)
                         .toList() ??
-                    ['unknown'];
-                if (ids.isEmpty) {
-                  ids.add('unknown');
-                }
+                    const <String>[];
+                final filter = ids.isEmpty
+                    ? const ['==', '1', '2']
+                    : [
+                        'in',
+                        ['get', 'id'],
+                        ['literal', ids],
+                      ];
                 await styleController.addLayer(
                   SymbolStyleLayer(
                     id: _cityLayerId(intensity),
                     sourceLayerId: 'areaInformationCityQuake',
                     sourceId: 'eqmonitor_map',
-                    filter: [
-                      '==',
-                      ['get', 'id'],
-                      ids,
-                    ],
+                    filter: filter,
                     layout: const {
                       'icon-image': ['get', 'icon'],
                       'icon-allow-overlap': false,
