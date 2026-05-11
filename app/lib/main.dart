@@ -44,25 +44,31 @@ import 'package:talker_flutter/talker_flutter.dart';
 Future<void> main() async {
   try {
     await _main();
-  } catch (error, stackTrace) {
-    unawaited(
-      FirebaseCrashlytics.instance.recordError(
-        error,
-        stackTrace,
-      ),
-    );
+  } on Object catch (error, stackTrace) {
+    WidgetsFlutterBinding.ensureInitialized();
+    unawaited(_recordStartupError(error, stackTrace));
     runApp(
       MaterialApp(
         home: Scaffold(
-          body: Center(
-            child: ErrorCard(
-              error: error,
-            ),
-          ),
+          body: Center(child: ErrorCard(error: error)),
         ),
       ),
     );
-    rethrow;
+  }
+}
+
+Future<void> _recordStartupError(Object error, StackTrace stackTrace) async {
+  if (kIsWeb || Firebase.apps.isEmpty) {
+    return;
+  }
+  try {
+    await FirebaseCrashlytics.instance.recordError(
+      error,
+      stackTrace,
+      fatal: true,
+    );
+  } on Object {
+    // 起動失敗時のフォールバック表示を優先する。
   }
 }
 
@@ -96,9 +102,7 @@ Future<void> _main() async {
       // ignore: avoid_redundant_argument_values
       useConsoleLogs: kDebugMode,
     ),
-    logger: TalkerLogger(
-      formatter: const ColoredLoggerFormatter(),
-    ),
+    logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
   );
   if (!kIsWeb) {
     talker.configure(observer: CrashlyticsTalkerObserver());
@@ -193,9 +197,7 @@ Future<void> _main() async {
       if (results.$2.$1 != null)
         kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
     ],
-    observers: [
-      if (kDebugMode) CustomProviderObserver(talker),
-    ],
+    observers: [if (kDebugMode) CustomProviderObserver(talker)],
     retry: (_, _) => null,
   );
 

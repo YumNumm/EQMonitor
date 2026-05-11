@@ -15,6 +15,7 @@ class BackgroundLocationTracker {
   );
   static final _locationController =
       StreamController<LocationUpdateMessage>.broadcast();
+  static LocationUpdateMessage? _pendingLiveLocation;
 
   /// アプリ起動時に必ず呼ぶ。killed状態復帰用コールバックハンドルをネイティブへ永続保存する。
   static Future<void> initialize() async {
@@ -30,8 +31,14 @@ class BackgroundLocationTracker {
   static Future<void> startMonitoring() => _hostApi.startMonitoring();
   static Future<void> stopMonitoring() => _hostApi.stopMonitoring();
 
-  static Stream<LocationUpdateMessage> get locationStream =>
-      _locationController.stream;
+  static Stream<LocationUpdateMessage> get locationStream async* {
+    final pending = _pendingLiveLocation;
+    if (pending != null) {
+      _pendingLiveLocation = null;
+      yield pending;
+    }
+    yield* _locationController.stream;
+  }
 
   /// killed状態でheadless runnerが永続化した位置情報を取り出して即時消費する。
   /// 通常起動直後に1度だけ呼び、戻り値があれば現在地リージョンへ反映すること。
@@ -54,6 +61,10 @@ class BackgroundLocationTracker {
 class _FlutterApiHandler implements BackgroundLocationFlutterApi {
   @override
   void onLocationUpdate(LocationUpdateMessage location) {
+    if (!BackgroundLocationTracker._locationController.hasListener) {
+      BackgroundLocationTracker._pendingLiveLocation = location;
+      return;
+    }
     BackgroundLocationTracker._locationController.add(location);
   }
 }

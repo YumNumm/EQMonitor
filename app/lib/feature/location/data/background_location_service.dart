@@ -40,6 +40,7 @@ Future<void> _ensureMonitoring(Ref ref) async {
 
 Future<void> _applyPendingLocation(Ref ref) async {
   try {
+    await ref.read(eewSettingsProvider.future);
     final pending = await BackgroundLocationTracker.consumePendingLocation();
     if (pending == null) {
       return;
@@ -52,6 +53,7 @@ Future<void> _applyPendingLocation(Ref ref) async {
 
 Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
   try {
+    await ref.read(eewSettingsProvider.future);
     final resolver = await ref.read(jmaRegionResolverProvider.future);
     final code = resolver.resolveRegionCode(latitude, longitude);
     if (code == null) {
