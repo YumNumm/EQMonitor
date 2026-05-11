@@ -13,8 +13,15 @@ class LocationUpdateReceiver : BroadcastReceiver() {
         val result = LocationResult.extractResult(intent) ?: return
         val location = result.lastLocation ?: return
 
-        // エンジン稼働中のコールバックは BackgroundLocationPlugin が処理するため、
-        // ここではkilled状態復帰用のHeadlessRunnerのみを起動する。
+        if (BackgroundLocationPlugin.dispatchLocationUpdate(
+                location.latitude,
+                location.longitude,
+                location.accuracy.toDouble()
+            )
+        ) {
+            return
+        }
+
         LocationHeadlessRunner(context).start(
             location.latitude,
             location.longitude
