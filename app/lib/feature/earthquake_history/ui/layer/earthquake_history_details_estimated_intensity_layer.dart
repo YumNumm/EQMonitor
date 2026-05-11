@@ -23,12 +23,11 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
 
-    if (styleController == null) {
-      return const SizedBox.shrink();
-    }
-
     useEffect(
       () {
+        if (styleController == null) {
+          return null;
+        }
         unawaited(() async {
           await styleController.addSource(
             VectorSource(

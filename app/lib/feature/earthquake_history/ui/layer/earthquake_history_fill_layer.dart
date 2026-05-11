@@ -79,12 +79,11 @@ class _ResolvedEarthquakeHistoryFillLayer extends HookConsumerWidget {
       () => EarthquakeHistoryFillLayerBuilder(modeResolver: modeResolver),
       [modeResolver],
     );
-    if (styleController == null) {
-      return const SizedBox.shrink();
-    }
-
     useEffect(
       () {
+        if (styleController == null) {
+          return null;
+        }
         final addedLayerIds = <String>[];
         var disposed = false;
 

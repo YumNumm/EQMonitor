@@ -56,12 +56,11 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
     final jmaMapAsync = ref.watch(jmaMapProvider);
     final cachedBytes = ref.watch(intensityIconProvider).value;
 
-    if (styleController == null) {
-      return const SizedBox.shrink();
-    }
-
     useEffect(
       () {
+        if (styleController == null) {
+          return null;
+        }
         final jmaMap = jmaMapAsync.value;
         if (jmaMap == null || cachedBytes == null) {
           return null;
