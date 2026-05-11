@@ -8,6 +8,7 @@ import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
@@ -41,6 +42,37 @@ import 'package:shared_preferences/shared_preferences.dart'
 import 'package:talker_flutter/talker_flutter.dart';
 
 Future<void> main() async {
+  try {
+    await _main();
+  } on Object catch (error, stackTrace) {
+    WidgetsFlutterBinding.ensureInitialized();
+    unawaited(_recordStartupError(error, stackTrace));
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(child: ErrorCard(error: error)),
+        ),
+      ),
+    );
+  }
+}
+
+Future<void> _recordStartupError(Object error, StackTrace stackTrace) async {
+  if (kIsWeb || Firebase.apps.isEmpty) {
+    return;
+  }
+  try {
+    await FirebaseCrashlytics.instance.recordError(
+      error,
+      stackTrace,
+      fatal: true,
+    );
+  } on Object {
+    // 起動失敗時のフォールバック表示を優先する。
+  }
+}
+
+Future<void> _main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await BackgroundLocationTracker.initialize();
 
@@ -62,7 +94,7 @@ Future<void> main() async {
     providerAndroid: kDebugMode
         ? const AndroidDebugProvider()
         : const AndroidPlayIntegrityProvider(),
-    providerApple:  const AppleAppAttestProvider(),
+    providerApple: const AppleAppAttestProvider(),
   );
 
   talker = TalkerFlutter.init(
@@ -70,9 +102,7 @@ Future<void> main() async {
       // ignore: avoid_redundant_argument_values
       useConsoleLogs: kDebugMode,
     ),
-    logger: TalkerLogger(
-      formatter: const ColoredLoggerFormatter(),
-    ),
+    logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
   );
   if (!kIsWeb) {
     talker.configure(observer: CrashlyticsTalkerObserver());
@@ -167,9 +197,7 @@ Future<void> main() async {
       if (results.$2.$1 != null)
         kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
     ],
-    observers: [
-      if (kDebugMode) CustomProviderObserver(talker),
-    ],
+    observers: [if (kDebugMode) CustomProviderObserver(talker)],
     retry: (_, _) => null,
   );
 

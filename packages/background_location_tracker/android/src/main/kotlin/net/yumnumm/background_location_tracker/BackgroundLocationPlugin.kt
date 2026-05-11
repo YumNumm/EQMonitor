@@ -5,6 +5,23 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodChannel
 
 class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
+    companion object {
+        @Volatile
+        private var activeFlutterApi: BackgroundLocationFlutterApi? = null
+
+        fun dispatchLocationUpdate(latitude: Double, longitude: Double, accuracy: Double): Boolean {
+            val api = activeFlutterApi ?: return false
+            api.onLocationUpdate(
+                LocationUpdateMessage(
+                    latitude = latitude,
+                    longitude = longitude,
+                    accuracy = accuracy
+                )
+            ) {}
+            return true
+        }
+    }
+
     private var flutterApi: BackgroundLocationFlutterApi? = null
     private var context: Context? = null
     private var monitor: SignificantLocationMonitor? = null
@@ -56,6 +73,9 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
         BackgroundLocationHostApi.setUp(binding.binaryMessenger, null)
         persistenceChannel?.setMethodCallHandler(null)
         persistenceChannel = null
+        if (activeFlutterApi === flutterApi) {
+            activeFlutterApi = null
+        }
         flutterApi = null
         monitor = null
         context = null
@@ -63,6 +83,7 @@ class BackgroundLocationPlugin : FlutterPlugin, BackgroundLocationHostApi {
 
     override fun initialize(callbackHandle: Long) {
         val ctx = context ?: return
+        activeFlutterApi = flutterApi
         ctx.getSharedPreferences("blt_prefs", Context.MODE_PRIVATE)
             .edit()
             .putLong("callback_handle", callbackHandle)
