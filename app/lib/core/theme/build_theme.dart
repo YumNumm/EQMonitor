@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extensio
 import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData buildTheme({
   required ColorScheme colorScheme,
@@ -52,7 +53,7 @@ ThemeData buildTheme({
       labelMedium: typography.labelMedium,
       labelSmall: typography.labelSmall,
     ),
-    fontFamily: primaryFontFamily,
+    fontFamily: GoogleFonts.googleSansFlex().fontFamily ?? primaryFontFamily,
     fontFamilyFallback: japaneseFontFamilyFallback,
     cupertinoOverrideTheme: CupertinoThemeData(
       brightness: colorScheme.brightness,
