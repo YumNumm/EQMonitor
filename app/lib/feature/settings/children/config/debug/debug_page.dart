@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
@@ -205,6 +206,8 @@ class _DebugWidget extends ConsumerWidget {
               context,
             ),
           ),
+          const Divider(),
+          const _BackgroundLocationDebugSection(),
           const Divider(),
           ListTile(
             title: const Text('FCM Token'),
@@ -423,6 +426,45 @@ class _ParameterDebugSectionState
             ],
           ),
         },
+      ],
+    );
+  }
+}
+
+class _BackgroundLocationDebugSection extends ConsumerWidget {
+  const _BackgroundLocationDebugSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(backgroundLocationDebugSettingsProvider);
+    final notifier = ref.read(backgroundLocationDebugSettingsProvider.notifier);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const ListTile(
+          title: Text('バックグラウンド位置情報デバッグ通知'),
+          leading: Icon(Icons.location_on_outlined),
+          subtitle: Text('位置情報の変化時にローカル通知を発行します'),
+        ),
+        AppSwitchListTile(
+          title: 'LatLng 変化通知',
+          subtitle: '位置更新のたびに通知',
+          value: settings.notifyLatLng,
+          onChanged: (v) => notifier.setNotifyLatLng(value: v),
+        ),
+        AppSwitchListTile(
+          title: '細分区域コード 変化通知',
+          subtitle: 'JMA細分区域が変わった時に通知',
+          value: settings.notifyRegion,
+          onChanged: (v) => notifier.setNotifyRegion(value: v),
+        ),
+        AppSwitchListTile(
+          title: '都道府県コード 変化通知',
+          subtitle: '都道府県（細分コード÷1000）が変わった時に通知',
+          value: settings.notifyPrefecture,
+          onChanged: (v) => notifier.setNotifyPrefecture(value: v),
+        ),
       ],
     );
   }

@@ -9,6 +9,12 @@ final notificationChannels = <AndroidNotificationChannel>[
     groupId: 'fromdev',
     importance: Importance.high,
   ),
+  const AndroidNotificationChannel(
+    'bgl_debug',
+    'バックグラウンド位置デバッグ',
+    description: 'バックグラウンド位置情報の変化デバッグ通知（開発者向け）',
+    importance: Importance.low,
+  ),
 
   //! EEW
   const AndroidNotificationChannel(
