@@ -30,15 +30,14 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    // TODO(YumNumm): 速報値の表示実装
-    final intensityTree =
-        // <JmaIntensity, List<PrefectureIntensityNode>>{};
-        intensity.intensityTree;
+    final intensityTree = intensity.intensityTree;
+    final regions = intensity.regions;
     if (intensityTree.isEmpty) {
       return BorderedContainer(
         elevation: 1,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -57,6 +56,27 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
                 ),
               ],
             ),
+            if (regions.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Text(
+                  '各地の詳細な震度情報はまだ発表されていません',
+                  style: TextStyle(
+                    fontFamily: FontFamily.notoSansJP,
+                    fontSize: 13,
+                  ),
+                ),
+              )
+            else
+              ...regions.entries.map(
+                (entry) => _PreliminaryIntensityLevelSection(
+                  intensity: entry.key,
+                  regions: entry.value,
+                  dividerColor: colorModel
+                      .fromJmaIntensity(entry.key)
+                      .background,
+                ),
+              ),
           ],
         ),
       );
@@ -81,6 +101,73 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
         ),
       );
     }
+  }
+}
+
+/// 速報値（細分区域単位）の震度レベル別セクション。
+/// 市区町村以下のデータがまだ無いため、震度速報の細分区域名を一覧表示する。
+class _PreliminaryIntensityLevelSection extends StatelessWidget {
+  const _PreliminaryIntensityLevelSection({
+    required this.intensity,
+    required this.regions,
+    required this.dividerColor,
+  });
+
+  final JmaIntensity intensity;
+  final List<IntensityRegion> regions;
+  final Color dividerColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final regionNames = regions.map((e) => e.region.name.ja).join('、');
+
+    return ListTile(
+      dense: true,
+      isThreeLine: true,
+      visualDensity: VisualDensity.compact,
+      titleAlignment: ListTileTitleAlignment.titleHeight,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+      leading: JmaIntensityIcon(
+        intensity: intensity,
+        type: .filled,
+        size: 40,
+      ),
+      title: Row(
+        children: [
+          Text(
+            '震度${intensity.mainText}',
+            style: theme.textTheme.titleSmall,
+          ),
+          const SizedBox(width: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            decoration: BoxDecoration(
+              color: dividerColor.withValues(alpha: 0.15),
+              border: Border.all(color: dividerColor),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: const Text(
+              '速報値',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                fontFamily: FontFamily.notoSansJP,
+              ),
+            ),
+          ),
+        ],
+      ),
+      subtitle: Text(
+        regionNames,
+        maxLines: 4,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+          fontFamily: FontFamily.notoSansJP,
+          fontSize: 13,
+        ),
+      ),
+    );
   }
 }
 
