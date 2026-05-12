@@ -158,12 +158,10 @@ class _PageContent extends HookConsumerWidget {
                 Geographic(lat: event.minLat, lon: event.minLng),
                 Geographic(lat: event.maxLat, lon: event.maxLng),
               ]);
-              unawaited(
-                controller.fitBounds(
-                  bounds: bounds,
-                  padding: const EdgeInsets.all(64),
-                  webMaxZoom: 10,
-                ),
+              await controller.fitBounds(
+                bounds: bounds,
+                padding: const EdgeInsets.all(64),
+                webMaxZoom: 10,
               );
             },
           ),

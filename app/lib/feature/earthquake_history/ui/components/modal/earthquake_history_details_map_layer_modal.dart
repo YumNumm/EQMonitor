@@ -56,9 +56,10 @@ class EarthquakeHistoryDetailsMapLayerModal extends HookConsumerWidget {
             backgroundColor: Colors.transparent,
             actions: [
               IconButton.filledTonal(
-                onPressed: () {
-                  unawaited(HapticFeedback.lightImpact());
-                  Navigator.of(context).pop();
+                onPressed: () async {
+                  final navigator = Navigator.of(context);
+                  await HapticFeedback.lightImpact();
+                  navigator.pop();
                 },
                 icon: const Icon(Icons.close),
               ),

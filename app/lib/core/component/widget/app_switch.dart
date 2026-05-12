@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cue/cue.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +58,8 @@ class AppSwitch extends HookWidget {
               radius: 28,
               borderRadius: BorderRadius.circular(shape.pill),
               onTap: isEnabled
-                  ? () {
-                      unawaited(HapticFeedback.selectionClick());
+                  ? () async {
+                      await HapticFeedback.selectionClick();
                       onChanged?.call(!value);
                     }
                   : null,

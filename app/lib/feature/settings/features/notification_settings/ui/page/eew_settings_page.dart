@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
@@ -83,13 +81,14 @@ class _EnabledSection extends ConsumerWidget {
       value: settings.enabled,
       onChanged: isSaving
           ? null
-          : (value) {
-              unawaited(
-                EewSettingsNotifier.saveSettingsMutation.run(ref, (tsx) async {
+          : (value) async {
+              await EewSettingsNotifier.saveSettingsMutation.run(
+                ref,
+                (tsx) async {
                   await tsx
                       .get(eewSettingsProvider.notifier)
                       .setEnabled(enabled: value);
-                }),
+                },
               );
             },
     );
@@ -169,13 +168,14 @@ class _LiveActivitySection extends ConsumerWidget {
       value: settings.startLiveActivity,
       onChanged: isSaving
           ? null
-          : (value) {
-              unawaited(
-                EewSettingsNotifier.saveLiveActivityMutation.run(ref, (tsx) async {
+          : (value) async {
+              await EewSettingsNotifier.saveLiveActivityMutation.run(
+                ref,
+                (tsx) async {
                   await tsx
                       .get(eewSettingsProvider.notifier)
                       .setStartLiveActivity(startLiveActivity: value);
-                }),
+                },
               );
             },
     );
@@ -198,13 +198,14 @@ class _OnePointSection extends ConsumerWidget {
       value: settings.onePointEnabled,
       onChanged: isSaving
           ? null
-          : (value) {
-              unawaited(
-                EewSettingsNotifier.saveOnePointMutation.run(ref, (tsx) async {
+          : (value) async {
+              await EewSettingsNotifier.saveOnePointMutation.run(
+                ref,
+                (tsx) async {
                   await tsx
                       .get(eewSettingsProvider.notifier)
                       .setOnePointEnabled(onePointEnabled: value);
-                }),
+                },
               );
             },
     );
@@ -253,14 +254,15 @@ class _RegionsSection extends ConsumerWidget {
           NotificationRegionListTile(
             region: region,
             isBusy: isBusy,
-            onDelete: () {
-              unawaited(
-                EewSettingsNotifier.updateRegionsMutation.run(ref, (tsx) async {
+            onDelete: () async {
+              await EewSettingsNotifier.updateRegionsMutation.run(
+                ref,
+                (tsx) async {
                   await tsx.get(eewSettingsProvider.notifier).removeRegion(
                     regionId: region.regionId,
                     isCurrentLocation: region.isCurrentLocation,
                   );
-                }),
+                },
               );
             },
           ),
@@ -301,18 +303,16 @@ class _RegionsSection extends ConsumerWidget {
                           );
                           return;
                         }
-                        unawaited(
-                          EewSettingsNotifier.updateRegionsMutation.run(
-                            ref,
-                            (tsx) async {
-                              await tsx
-                                  .get(eewSettingsProvider.notifier)
-                                  .addCurrentLocationRegion(
-                                    regionCode: code,
-                                    regionName: name,
-                                  );
-                            },
-                          ),
+                        await EewSettingsNotifier.updateRegionsMutation.run(
+                          ref,
+                          (tsx) async {
+                            await tsx
+                                .get(eewSettingsProvider.notifier)
+                                .addCurrentLocationRegion(
+                                  regionCode: code,
+                                  regionName: name,
+                                );
+                          },
                         );
                       },
                 child: isBusy
@@ -336,19 +336,17 @@ class _RegionsSection extends ConsumerWidget {
                         if (result == null || !context.mounted) {
                           return;
                         }
-                        unawaited(
-                          EewSettingsNotifier.updateRegionsMutation.run(
-                            ref,
-                            (tsx) async {
-                              await tsx
-                                  .get(eewSettingsProvider.notifier)
-                                  .addRegion(
-                                    regionId: result.regionId,
-                                    regionName: result.regionName,
-                                    minIntensity: result.minIntensity,
-                                  );
-                            },
-                          ),
+                        await EewSettingsNotifier.updateRegionsMutation.run(
+                          ref,
+                          (tsx) async {
+                            await tsx
+                                .get(eewSettingsProvider.notifier)
+                                .addRegion(
+                                  regionId: result.regionId,
+                                  regionName: result.regionName,
+                                  minIntensity: result.minIntensity,
+                                );
+                          },
                         );
                       },
                 child: const Text('地域を追加'),

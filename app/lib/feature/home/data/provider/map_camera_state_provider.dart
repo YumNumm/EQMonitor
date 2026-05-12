@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_map_bounds.dart';
@@ -18,12 +16,12 @@ class HomeMapCameraState extends _$HomeMapCameraState {
 
   @override
   MapCameraState build() {
-    ref.listen(eewAliveTelegramProvider, (previous, next) {
+    ref.listen(eewAliveTelegramProvider, (previous, next) async {
       final eews = next ?? [];
       if (eews.isNotEmpty) {
-        unawaited(_fitToEews(eews));
+        await _fitToEews(eews);
       } else if (previous != null && previous.isNotEmpty) {
-        unawaited(_returnToHome());
+        await _returnToHome();
       }
     });
 
