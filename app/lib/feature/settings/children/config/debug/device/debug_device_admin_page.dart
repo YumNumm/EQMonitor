@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -185,30 +186,23 @@ class _Body extends HookConsumerWidget {
 
     Future<void> deleteDevice() async {
       var confirmed = false;
-      await showAdaptiveDialog<void>(
+      await AdaptiveAlertDialog.show(
         context: context,
-        builder: (context) => AlertDialog.adaptive(
-          title: const Text('デバイスを削除'),
-          content: const Text(
+        title: 'デバイスを削除',
+        message:
             'この端末 ID に紐づくサーバー上のデバイスと関連データを削除します。よろしいですか？',
+        actions: [
+          AlertAction(
+            title: 'キャンセル',
+            style: AlertActionStyle.cancel,
+            onPressed: () {},
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('キャンセル'),
-            ),
-            TextButton(
-              onPressed: () {
-                confirmed = true;
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('削除'),
-            ),
-          ],
-        ),
+          AlertAction(
+            title: '削除',
+            style: AlertActionStyle.destructive,
+            onPressed: () => confirmed = true,
+          ),
+        ],
       );
       if (!confirmed || !context.mounted) {
         return;

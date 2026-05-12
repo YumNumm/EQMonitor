@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
@@ -376,27 +377,25 @@ Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
     if (!context.mounted) {
       return null;
     }
-    final shouldOpen = await showDialog<bool>(
+    var shouldOpen = false;
+    await AdaptiveAlertDialog.show(
       context: context,
-      builder: (dialogContext) => AlertDialog.adaptive(
-        title: const Text('位置情報の許可が必要です'),
-        content: const Text(
-          'EEWの現在地通知には、位置情報の「常に許可」が必要です。\n'
+      title: '位置情報の許可が必要です',
+      message: 'EEWの現在地通知には、位置情報の「常に許可」が必要です。\n'
           '設定アプリで権限を変更してください。',
+      actions: [
+        AlertAction(
+          title: 'キャンセル',
+          style: AlertActionStyle.cancel,
+          onPressed: () {},
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('キャンセル'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('設定を開く'),
-          ),
-        ],
-      ),
+        AlertAction(
+          title: '設定を開く',
+          onPressed: () => shouldOpen = true,
+        ),
+      ],
     );
-    if (shouldOpen ?? false) {
+    if (shouldOpen) {
       await Geolocator.openAppSettings();
     }
     return null;
@@ -408,28 +407,27 @@ Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
     if (!context.mounted) {
       return null;
     }
-    final shouldOpen = await showDialog<bool>(
+    var shouldOpenSettings = false;
+    await AdaptiveAlertDialog.show(
       context: context,
-      builder: (dialogContext) => AlertDialog.adaptive(
-        title: const Text('「常に許可」への変更をお願いします'),
-        content: const Text(
+      title: '「常に許可」への変更をお願いします',
+      message:
           'バックグラウンドでも位置情報を更新するには、'
           '位置情報の許可を「常に許可」に変更する必要があります。\n'
           '設定アプリで「位置情報」→「常に許可」を選択してください。',
+      actions: [
+        AlertAction(
+          title: '後で',
+          style: AlertActionStyle.cancel,
+          onPressed: () {},
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('後で'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('設定を開く'),
-          ),
-        ],
-      ),
+        AlertAction(
+          title: '設定を開く',
+          onPressed: () => shouldOpenSettings = true,
+        ),
+      ],
     );
-    if (shouldOpen ?? false) {
+    if (shouldOpenSettings) {
       await Geolocator.openAppSettings();
       // 設定アプリから戻るまで待つ（ユーザーが変更した場合に備えて）
       return null;

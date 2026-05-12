@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/provider/app_group_preferences.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/app_group_values_provider.dart';
@@ -14,34 +14,26 @@ DebugAppGroupAction debugAppGroupAction(Ref ref) => DebugAppGroupAction();
 class DebugAppGroupAction {
   Future<void> editApiServerUrl(WidgetRef ref, BuildContext context) async {
     final current = ref.read(appGroupValuesProvider).value?.apiServerUrl;
-    final controller = TextEditingController(text: current ?? '');
-    final result = await showDialog<String>(
+    final result = await AdaptiveAlertDialog.inputShow(
       context: context,
-      builder: (context) => AlertDialog.adaptive(
-        title: const Text('apiServerUrl を編集'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: const TextStyle(fontFamily: FontFamily.notoSansMono),
-          decoration: const InputDecoration(
-            hintText: 'https://v2.api.eqmonitor.app',
-            border: OutlineInputBorder(),
-          ),
-          keyboardType: TextInputType.url,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('キャンセル'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.of(context).pop(controller.text.trim());
-            },
-            child: const Text('保存'),
-          ),
-        ],
+      title: 'apiServerUrl を編集',
+      input: AdaptiveAlertDialogInput(
+        placeholder: 'https://v2.api.eqmonitor.app',
+        initialValue: current ?? '',
+        keyboardType: TextInputType.url,
       ),
+      actions: [
+        AlertAction(
+          title: 'キャンセル',
+          style: AlertActionStyle.cancel,
+          onPressed: () {},
+        ),
+        AlertAction(
+          title: '保存',
+          style: AlertActionStyle.primary,
+          onPressed: () {},
+        ),
+      ],
     );
     if (result == null) {
       return;

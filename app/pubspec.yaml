@@ -46,6 +46,7 @@ dependency_overrides:
       path: packages/maplibre_webview
 
 dependencies:
+  adaptive_platform_ui: ^0.1.107
   app_settings: ^7.0.0
   background_location_tracker:
     path: ../packages/background_location_tracker
