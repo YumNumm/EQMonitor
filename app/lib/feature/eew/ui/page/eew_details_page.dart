@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class EewDetailsScreen extends HookConsumerWidget {
-  const EewDetailsScreen({required this.eventId, super.key});
+class EewDetailsPage extends HookConsumerWidget {
+  const EewDetailsPage({required this.eventId, super.key});
 
   final String eventId;
 
@@ -19,7 +19,7 @@ class EewDetailsScreen extends HookConsumerWidget {
       appBar: AppBar(title: Text('緊急地震速報 詳細 ($eventId)')),
       body: eewsAsyncValue.when(
         data: _buildEewList,
-        loading: () => const _EewDetailsScreenSkeleton(),
+        loading: () => const _EewDetailsPageSkeleton(),
         error: (error, stack) => Center(child: Text('エラーが発生しました: $error')),
       ),
     );
@@ -43,8 +43,8 @@ class EewDetailsScreen extends HookConsumerWidget {
   }
 }
 
-class _EewDetailsScreenSkeleton extends StatelessWidget {
-  const _EewDetailsScreenSkeleton();
+class _EewDetailsPageSkeleton extends StatelessWidget {
+  const _EewDetailsPageSkeleton();
 
   @override
   Widget build(BuildContext context) {

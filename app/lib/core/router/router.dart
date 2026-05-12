@@ -25,8 +25,8 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_page.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
@@ -46,7 +46,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
-import 'package:eqmonitor/feature/settings/settings_screen.dart';
+import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_details_page.dart';
 import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_page.dart';
@@ -337,7 +337,7 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const SettingsScreen();
+      const SettingsPage();
 }
 
 class DisplayRoute extends GoRouteData with $DisplayRoute {
@@ -428,7 +428,7 @@ class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      TermOfServiceScreen(onResult: $extra, showAcceptButton: showAcceptButton);
+      TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
 class ColorSchemeConfigRoute extends GoRouteData with $ColorSchemeConfigRoute {
@@ -450,7 +450,7 @@ class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      PrivacyPolicyScreen(onResult: $extra, showAcceptButton: showAcceptButton);
+      PrivacyPolicyPage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
 class LicenseRoute extends GoRouteData with $LicenseRoute {
