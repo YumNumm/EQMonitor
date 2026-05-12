@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RealtimeTicketResponse {
 
- String get url;
+ String get url; DateTime get expiresAt; DateTime get issuedAt;
 /// Create a copy of RealtimeTicketResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RealtimeTicketResponseCopyWith<RealtimeTicketResponse> get copyWith => _$Realti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeTicketResponse&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RealtimeTicketResponse&&(identical(other.url, url) || other.url == url)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,url);
+int get hashCode => Object.hash(runtimeType,url,expiresAt,issuedAt);
 
 @override
 String toString() {
-  return 'RealtimeTicketResponse(url: $url)';
+  return 'RealtimeTicketResponse(url: $url, expiresAt: $expiresAt, issuedAt: $issuedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RealtimeTicketResponseCopyWith<$Res>  {
   factory $RealtimeTicketResponseCopyWith(RealtimeTicketResponse value, $Res Function(RealtimeTicketResponse) _then) = _$RealtimeTicketResponseCopyWithImpl;
 @useResult
 $Res call({
- String url
+ String url, DateTime expiresAt, DateTime issuedAt
 });
 
 
@@ -65,10 +65,12 @@ class _$RealtimeTicketResponseCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeTicketResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? url = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? url = null,Object? expiresAt = null,Object? issuedAt = null,}) {
   return _then(_self.copyWith(
 url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,
+as String,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,issuedAt: null == issuedAt ? _self.issuedAt : issuedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -153,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String url)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String url,  DateTime expiresAt,  DateTime issuedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RealtimeTicketResponse() when $default != null:
-return $default(_that.url);case _:
+return $default(_that.url,_that.expiresAt,_that.issuedAt);case _:
   return orElse();
 
 }
@@ -174,10 +176,10 @@ return $default(_that.url);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String url)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String url,  DateTime expiresAt,  DateTime issuedAt)  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeTicketResponse():
-return $default(_that.url);case _:
+return $default(_that.url,_that.expiresAt,_that.issuedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +196,10 @@ return $default(_that.url);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String url)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String url,  DateTime expiresAt,  DateTime issuedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _RealtimeTicketResponse() when $default != null:
-return $default(_that.url);case _:
+return $default(_that.url,_that.expiresAt,_that.issuedAt);case _:
   return null;
 
 }
@@ -209,10 +211,12 @@ return $default(_that.url);case _:
 @JsonSerializable()
 
 class _RealtimeTicketResponse implements RealtimeTicketResponse {
-  const _RealtimeTicketResponse({required this.url});
+  const _RealtimeTicketResponse({required this.url, required this.expiresAt, required this.issuedAt});
   factory _RealtimeTicketResponse.fromJson(Map<String, dynamic> json) => _$RealtimeTicketResponseFromJson(json);
 
 @override final  String url;
+@override final  DateTime expiresAt;
+@override final  DateTime issuedAt;
 
 /// Create a copy of RealtimeTicketResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RealtimeTicketResponse&&(identical(other.url, url) || other.url == url));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RealtimeTicketResponse&&(identical(other.url, url) || other.url == url)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,url);
+int get hashCode => Object.hash(runtimeType,url,expiresAt,issuedAt);
 
 @override
 String toString() {
-  return 'RealtimeTicketResponse(url: $url)';
+  return 'RealtimeTicketResponse(url: $url, expiresAt: $expiresAt, issuedAt: $issuedAt)';
 }
 
 
@@ -247,7 +251,7 @@ abstract mixin class _$RealtimeTicketResponseCopyWith<$Res> implements $Realtime
   factory _$RealtimeTicketResponseCopyWith(_RealtimeTicketResponse value, $Res Function(_RealtimeTicketResponse) _then) = __$RealtimeTicketResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String url
+ String url, DateTime expiresAt, DateTime issuedAt
 });
 
 
@@ -264,10 +268,12 @@ class __$RealtimeTicketResponseCopyWithImpl<$Res>
 
 /// Create a copy of RealtimeTicketResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? url = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? url = null,Object? expiresAt = null,Object? issuedAt = null,}) {
   return _then(_RealtimeTicketResponse(
 url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,
+as String,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,issuedAt: null == issuedAt ? _self.issuedAt : issuedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
