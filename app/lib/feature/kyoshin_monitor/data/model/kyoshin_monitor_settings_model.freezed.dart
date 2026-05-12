@@ -19,7 +19,8 @@ mixin _$KyoshinMonitorSettingsModel {
  double? get minRealtimeShindo;/// スケールを表示するかどうか
  bool get showScale;/// 強震モニタを使用するかどうか
  bool get useKmoni;/// 強震モニタ観測点のマーカーの種類
- KyoshinMonitorMarkerType get kmoniMarkerType;/// 強震モニタのリアルタイムデータの種類
+ KyoshinMonitorMarkerType get kmoniMarkerType;/// データソース (強震モニタ / 長周期地震動モニタ)
+@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) KyoshinMonitorSource get monitorSource;/// 強震モニタのリアルタイムデータの種類
  RealtimeDataType get realtimeDataType;/// 強震モニタのリアルタイムデータのレイヤー
  RealtimeLayer get realtimeLayer;/// 強震モニタ API関連の設定
  KyoshinMonitorSettingsApiModel get api;
@@ -35,16 +36,16 @@ $KyoshinMonitorSettingsModelCopyWith<KyoshinMonitorSettingsModel> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorSettingsModel&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.showScale, showScale) || other.showScale == showScale)&&(identical(other.useKmoni, useKmoni) || other.useKmoni == useKmoni)&&(identical(other.kmoniMarkerType, kmoniMarkerType) || other.kmoniMarkerType == kmoniMarkerType)&&(identical(other.realtimeDataType, realtimeDataType) || other.realtimeDataType == realtimeDataType)&&(identical(other.realtimeLayer, realtimeLayer) || other.realtimeLayer == realtimeLayer)&&(identical(other.api, api) || other.api == api));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KyoshinMonitorSettingsModel&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.showScale, showScale) || other.showScale == showScale)&&(identical(other.useKmoni, useKmoni) || other.useKmoni == useKmoni)&&(identical(other.kmoniMarkerType, kmoniMarkerType) || other.kmoniMarkerType == kmoniMarkerType)&&(identical(other.monitorSource, monitorSource) || other.monitorSource == monitorSource)&&(identical(other.realtimeDataType, realtimeDataType) || other.realtimeDataType == realtimeDataType)&&(identical(other.realtimeLayer, realtimeLayer) || other.realtimeLayer == realtimeLayer)&&(identical(other.api, api) || other.api == api));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,minRealtimeShindo,showScale,useKmoni,kmoniMarkerType,realtimeDataType,realtimeLayer,api);
+int get hashCode => Object.hash(runtimeType,minRealtimeShindo,showScale,useKmoni,kmoniMarkerType,monitorSource,realtimeDataType,realtimeLayer,api);
 
 @override
 String toString() {
-  return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showScale: $showScale, useKmoni: $useKmoni, kmoniMarkerType: $kmoniMarkerType, realtimeDataType: $realtimeDataType, realtimeLayer: $realtimeLayer, api: $api)';
+  return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showScale: $showScale, useKmoni: $useKmoni, kmoniMarkerType: $kmoniMarkerType, monitorSource: $monitorSource, realtimeDataType: $realtimeDataType, realtimeLayer: $realtimeLayer, api: $api)';
 }
 
 
@@ -55,7 +56,7 @@ abstract mixin class $KyoshinMonitorSettingsModelCopyWith<$Res>  {
   factory $KyoshinMonitorSettingsModelCopyWith(KyoshinMonitorSettingsModel value, $Res Function(KyoshinMonitorSettingsModel) _then) = _$KyoshinMonitorSettingsModelCopyWithImpl;
 @useResult
 $Res call({
- double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
+ double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType,@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) KyoshinMonitorSource monitorSource, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
 });
 
 
@@ -72,13 +73,14 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorSettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? minRealtimeShindo = freezed,Object? showScale = null,Object? useKmoni = null,Object? kmoniMarkerType = null,Object? realtimeDataType = null,Object? realtimeLayer = null,Object? api = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? minRealtimeShindo = freezed,Object? showScale = null,Object? useKmoni = null,Object? kmoniMarkerType = null,Object? monitorSource = null,Object? realtimeDataType = null,Object? realtimeLayer = null,Object? api = null,}) {
   return _then(_self.copyWith(
 minRealtimeShindo: freezed == minRealtimeShindo ? _self.minRealtimeShindo : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
 as double?,showScale: null == showScale ? _self.showScale : showScale // ignore: cast_nullable_to_non_nullable
 as bool,useKmoni: null == useKmoni ? _self.useKmoni : useKmoni // ignore: cast_nullable_to_non_nullable
 as bool,kmoniMarkerType: null == kmoniMarkerType ? _self.kmoniMarkerType : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
-as KyoshinMonitorMarkerType,realtimeDataType: null == realtimeDataType ? _self.realtimeDataType : realtimeDataType // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorMarkerType,monitorSource: null == monitorSource ? _self.monitorSource : monitorSource // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorSource,realtimeDataType: null == realtimeDataType ? _self.realtimeDataType : realtimeDataType // ignore: cast_nullable_to_non_nullable
 as RealtimeDataType,realtimeLayer: null == realtimeLayer ? _self.realtimeLayer : realtimeLayer // ignore: cast_nullable_to_non_nullable
 as RealtimeLayer,api: null == api ? _self.api : api // ignore: cast_nullable_to_non_nullable
 as KyoshinMonitorSettingsApiModel,
@@ -175,10 +177,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsModel() when $default != null:
-return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
+return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.monitorSource,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
   return orElse();
 
 }
@@ -196,10 +198,10 @@ return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsModel():
-return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
+return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.monitorSource,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -216,10 +218,10 @@ return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? minRealtimeShindo,  bool showScale,  bool useKmoni,  KyoshinMonitorMarkerType kmoniMarkerType, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)  KyoshinMonitorSource monitorSource,  RealtimeDataType realtimeDataType,  RealtimeLayer realtimeLayer,  KyoshinMonitorSettingsApiModel api)?  $default,) {final _that = this;
 switch (_that) {
 case _KyoshinMonitorSettingsModel() when $default != null:
-return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
+return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmoniMarkerType,_that.monitorSource,_that.realtimeDataType,_that.realtimeLayer,_that.api);case _:
   return null;
 
 }
@@ -231,7 +233,7 @@ return $default(_that.minRealtimeShindo,_that.showScale,_that.useKmoni,_that.kmo
 @JsonSerializable()
 
 class _KyoshinMonitorSettingsModel implements KyoshinMonitorSettingsModel {
-  const _KyoshinMonitorSettingsModel({this.minRealtimeShindo = null, this.showScale = true, this.useKmoni = true, this.kmoniMarkerType = KyoshinMonitorMarkerType.onlyEew, this.realtimeDataType = RealtimeDataType.shindo, this.realtimeLayer = RealtimeLayer.surface, this.api = const KyoshinMonitorSettingsApiModel()});
+  const _KyoshinMonitorSettingsModel({this.minRealtimeShindo = null, this.showScale = true, this.useKmoni = true, this.kmoniMarkerType = KyoshinMonitorMarkerType.onlyEew, @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) this.monitorSource = KyoshinMonitorSource.kmoni, this.realtimeDataType = RealtimeDataType.shindo, this.realtimeLayer = RealtimeLayer.surface, this.api = const KyoshinMonitorSettingsApiModel()});
   factory _KyoshinMonitorSettingsModel.fromJson(Map<String, dynamic> json) => _$KyoshinMonitorSettingsModelFromJson(json);
 
 /// 強震モニタの表示最低リアルタイム震度
@@ -242,6 +244,8 @@ class _KyoshinMonitorSettingsModel implements KyoshinMonitorSettingsModel {
 @override@JsonKey() final  bool useKmoni;
 /// 強震モニタ観測点のマーカーの種類
 @override@JsonKey() final  KyoshinMonitorMarkerType kmoniMarkerType;
+/// データソース (強震モニタ / 長周期地震動モニタ)
+@override@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) final  KyoshinMonitorSource monitorSource;
 /// 強震モニタのリアルタイムデータの種類
 @override@JsonKey() final  RealtimeDataType realtimeDataType;
 /// 強震モニタのリアルタイムデータのレイヤー
@@ -262,16 +266,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorSettingsModel&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.showScale, showScale) || other.showScale == showScale)&&(identical(other.useKmoni, useKmoni) || other.useKmoni == useKmoni)&&(identical(other.kmoniMarkerType, kmoniMarkerType) || other.kmoniMarkerType == kmoniMarkerType)&&(identical(other.realtimeDataType, realtimeDataType) || other.realtimeDataType == realtimeDataType)&&(identical(other.realtimeLayer, realtimeLayer) || other.realtimeLayer == realtimeLayer)&&(identical(other.api, api) || other.api == api));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KyoshinMonitorSettingsModel&&(identical(other.minRealtimeShindo, minRealtimeShindo) || other.minRealtimeShindo == minRealtimeShindo)&&(identical(other.showScale, showScale) || other.showScale == showScale)&&(identical(other.useKmoni, useKmoni) || other.useKmoni == useKmoni)&&(identical(other.kmoniMarkerType, kmoniMarkerType) || other.kmoniMarkerType == kmoniMarkerType)&&(identical(other.monitorSource, monitorSource) || other.monitorSource == monitorSource)&&(identical(other.realtimeDataType, realtimeDataType) || other.realtimeDataType == realtimeDataType)&&(identical(other.realtimeLayer, realtimeLayer) || other.realtimeLayer == realtimeLayer)&&(identical(other.api, api) || other.api == api));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,minRealtimeShindo,showScale,useKmoni,kmoniMarkerType,realtimeDataType,realtimeLayer,api);
+int get hashCode => Object.hash(runtimeType,minRealtimeShindo,showScale,useKmoni,kmoniMarkerType,monitorSource,realtimeDataType,realtimeLayer,api);
 
 @override
 String toString() {
-  return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showScale: $showScale, useKmoni: $useKmoni, kmoniMarkerType: $kmoniMarkerType, realtimeDataType: $realtimeDataType, realtimeLayer: $realtimeLayer, api: $api)';
+  return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showScale: $showScale, useKmoni: $useKmoni, kmoniMarkerType: $kmoniMarkerType, monitorSource: $monitorSource, realtimeDataType: $realtimeDataType, realtimeLayer: $realtimeLayer, api: $api)';
 }
 
 
@@ -282,7 +286,7 @@ abstract mixin class _$KyoshinMonitorSettingsModelCopyWith<$Res> implements $Kyo
   factory _$KyoshinMonitorSettingsModelCopyWith(_KyoshinMonitorSettingsModel value, $Res Function(_KyoshinMonitorSettingsModel) _then) = __$KyoshinMonitorSettingsModelCopyWithImpl;
 @override @useResult
 $Res call({
- double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
+ double? minRealtimeShindo, bool showScale, bool useKmoni, KyoshinMonitorMarkerType kmoniMarkerType,@JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni) KyoshinMonitorSource monitorSource, RealtimeDataType realtimeDataType, RealtimeLayer realtimeLayer, KyoshinMonitorSettingsApiModel api
 });
 
 
@@ -299,13 +303,14 @@ class __$KyoshinMonitorSettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of KyoshinMonitorSettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? minRealtimeShindo = freezed,Object? showScale = null,Object? useKmoni = null,Object? kmoniMarkerType = null,Object? realtimeDataType = null,Object? realtimeLayer = null,Object? api = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? minRealtimeShindo = freezed,Object? showScale = null,Object? useKmoni = null,Object? kmoniMarkerType = null,Object? monitorSource = null,Object? realtimeDataType = null,Object? realtimeLayer = null,Object? api = null,}) {
   return _then(_KyoshinMonitorSettingsModel(
 minRealtimeShindo: freezed == minRealtimeShindo ? _self.minRealtimeShindo : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
 as double?,showScale: null == showScale ? _self.showScale : showScale // ignore: cast_nullable_to_non_nullable
 as bool,useKmoni: null == useKmoni ? _self.useKmoni : useKmoni // ignore: cast_nullable_to_non_nullable
 as bool,kmoniMarkerType: null == kmoniMarkerType ? _self.kmoniMarkerType : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
-as KyoshinMonitorMarkerType,realtimeDataType: null == realtimeDataType ? _self.realtimeDataType : realtimeDataType // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorMarkerType,monitorSource: null == monitorSource ? _self.monitorSource : monitorSource // ignore: cast_nullable_to_non_nullable
+as KyoshinMonitorSource,realtimeDataType: null == realtimeDataType ? _self.realtimeDataType : realtimeDataType // ignore: cast_nullable_to_non_nullable
 as RealtimeDataType,realtimeLayer: null == realtimeLayer ? _self.realtimeLayer : realtimeLayer // ignore: cast_nullable_to_non_nullable
 as RealtimeLayer,api: null == api ? _self.api : api // ignore: cast_nullable_to_non_nullable
 as KyoshinMonitorSettingsApiModel,
