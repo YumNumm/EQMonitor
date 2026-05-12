@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -33,29 +34,28 @@ class _Body extends ConsumerWidget {
       );
     }
 
-    final state = stateAsync.value ??
+    final state =
+        stateAsync.value ??
         const (entries: <ShakeDetectionEntry>[], availableSubRegions: []);
 
     ref.listen(
       ShakeDetectionSettingsNotifier.addCurrentLocationMutation,
       (_, next) {
         if (next is MutationError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('現在地の追加に失敗しました: ${next.error}'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
+          AdaptiveSnackBar.show(
+            context,
+            message: '現在地の追加に失敗しました: ${next.error}',
+            type: AdaptiveSnackBarType.error,
           );
         }
       },
     );
     ref.listen(ShakeDetectionSettingsNotifier.removeEntryMutation, (_, next) {
       if (next is MutationError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('地域の削除に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AdaptiveSnackBar.show(
+          context,
+          message: '地域の削除に失敗しました: ${next.error}',
+          type: AdaptiveSnackBarType.error,
         );
       }
     });
@@ -68,7 +68,8 @@ class _Body extends ConsumerWidget {
     final updateState = ref.watch(
       ShakeDetectionSettingsNotifier.updateLevelMutation,
     );
-    final isBusy = addState is MutationPending ||
+    final isBusy =
+        addState is MutationPending ||
         removeState is MutationPending ||
         updateState is MutationPending;
 
@@ -129,18 +130,17 @@ class _Body extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: FilledButton.tonal(
-              onPressed: isBusy ||
-                      state.entries.any((e) => e.isCurrentLocation)
+              onPressed: isBusy || state.entries.any((e) => e.isCurrentLocation)
                   ? null
                   : () {
                       unawaited(
                         ShakeDetectionSettingsNotifier
                             .addCurrentLocationMutation
                             .run(ref, (tsx) async {
-                          await tsx
-                              .get(shakeDetectionSettingsProvider.notifier)
-                              .addCurrentLocation();
-                        }),
+                              await tsx
+                                  .get(shakeDetectionSettingsProvider.notifier)
+                                  .addCurrentLocation();
+                            }),
                       );
                     },
               child: isBusy

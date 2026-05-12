@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -152,7 +153,6 @@ class _Body extends HookConsumerWidget {
 
     Future<void> registerOrRefresh() async {
       await runWithBusy(() async {
-        final messenger = ScaffoldMessenger.of(context);
         final repo = await ref.read(deviceRepositoryProvider.future);
         final result = await repo.registerDevice(
           deviceId: deviceId,
@@ -168,16 +168,13 @@ class _Body extends HookConsumerWidget {
         }
         switch (result) {
           case Success():
-            messenger.showSnackBar(
-              const SnackBar(content: Text('サーバーにデバイスを登録しました')),
-            );
+            AdaptiveSnackBar.show(context, message: 'サーバーにデバイスを登録しました');
             await onReload();
           case Failure(:final exception):
-            messenger.showSnackBar(
-              SnackBar(
-                content: Text('登録に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
+            AdaptiveSnackBar.show(
+              context,
+              message: '登録に失敗しました: $exception',
+              type: AdaptiveSnackBarType.error,
             );
         }
       });
@@ -214,7 +211,6 @@ class _Body extends HookConsumerWidget {
         return;
       }
       await runWithBusy(() async {
-        final messenger = ScaffoldMessenger.of(context);
         final repo = await ref.read(deviceRepositoryProvider.future);
         final result = await repo.deleteDevice(deviceId);
         if (!context.mounted) {
@@ -222,16 +218,13 @@ class _Body extends HookConsumerWidget {
         }
         switch (result) {
           case Success():
-            messenger.showSnackBar(
-              const SnackBar(content: Text('サーバーからデバイスを削除しました')),
-            );
+            AdaptiveSnackBar.show(context, message: 'サーバーからデバイスを削除しました');
             await onReload();
           case Failure(:final exception):
-            messenger.showSnackBar(
-              SnackBar(
-                content: Text('削除に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
+            AdaptiveSnackBar.show(
+              context,
+              message: '削除に失敗しました: $exception',
+              type: AdaptiveSnackBarType.error,
             );
         }
       });
@@ -239,13 +232,10 @@ class _Body extends HookConsumerWidget {
 
     Future<void> saveNotificationSettings() async {
       if (device == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('先にデバイスを登録してください')),
-        );
+        AdaptiveSnackBar.show(context, message: '先にデバイスを登録してください');
         return;
       }
       await runWithBusy(() async {
-        final messenger = ScaffoldMessenger.of(context);
         final repo = await ref.read(pushNotificationRepositoryProvider.future);
         final result = await repo.patchNotificationSettings(
           deviceId: deviceId,
@@ -259,16 +249,13 @@ class _Body extends HookConsumerWidget {
         }
         switch (result) {
           case Success():
-            messenger.showSnackBar(
-              const SnackBar(content: Text('通知条件を更新しました')),
-            );
+            AdaptiveSnackBar.show(context, message: '通知条件を更新しました');
             await onReload();
           case Failure(:final exception):
-            messenger.showSnackBar(
-              SnackBar(
-                content: Text('更新に失敗しました: $exception'),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
+            AdaptiveSnackBar.show(
+              context,
+              message: '更新に失敗しました: $exception',
+              type: AdaptiveSnackBarType.error,
             );
         }
       });

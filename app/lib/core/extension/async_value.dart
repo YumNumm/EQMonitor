@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_positional_boolean_parameters
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -52,9 +53,7 @@ extension AsyncValueX<T> on AsyncValue<T> {
     String defaultMessage = 'エラーが発生しました',
   }) {
     if (!isLoading && hasError) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error!.toString())));
+      AdaptiveSnackBar.show(context, message: error!.toString());
     }
   }
 }

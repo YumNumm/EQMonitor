@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
@@ -139,14 +140,13 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
         if (permission == LocationPermission.denied ||
             permission == LocationPermission.deniedForever) {
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('位置情報の権限がありません')),
-            );
+            AdaptiveSnackBar.show(context, message: '位置情報の権限がありません');
           }
           return;
         }
 
-        final position = ref.read(locationStreamProvider).value ??
+        final position =
+            ref.read(locationStreamProvider).value ??
             await Geolocator.getCurrentPosition(
               locationSettings: const LocationSettings(
                 accuracy: LocationAccuracy.low,
@@ -168,8 +168,9 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
           );
           if (city?.property != null) {
             final cityCode = city!.property!.code;
-            final prefix =
-                cityCode.length >= 2 ? cityCode.substring(0, 2) : cityCode;
+            final prefix = cityCode.length >= 2
+                ? cityCode.substring(0, 2)
+                : cityCode;
             final jmaCodeTable = ref.read(jmaCodeTableProvider).value;
             final prefecture = jmaCodeTable
                 ?.codeTables
@@ -185,9 +186,7 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
         }
       } on Exception catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('現在地の取得に失敗しました')),
-          );
+          AdaptiveSnackBar.show(context, message: '現在地の取得に失敗しました');
         }
       } finally {
         isResolvingLocation.value = false;
@@ -239,47 +238,56 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                 onPressed: () {
                   unawaited(HapticFeedback.lightImpact());
                   final parameter = EarthquakeHistoryParameter(
-                    intensityGte: isIntensityEnabled.value &&
+                    intensityGte:
+                        isIntensityEnabled.value &&
                             intensityMin.value !=
                                 _IntensityRangeSelector.initialMin
                         ? intensityMin.value
                         : null,
-                    intensityLte: isIntensityEnabled.value &&
+                    intensityLte:
+                        isIntensityEnabled.value &&
                             intensityMax.value !=
                                 _IntensityRangeSelector.initialMax
                         ? intensityMax.value
                         : null,
-                    depthGte: isDepthEnabled.value &&
+                    depthGte:
+                        isDepthEnabled.value &&
                             depthMin.value != _DepthRangeSelector.initialMin
                         ? depthMin.value
                         : null,
-                    depthLte: isDepthEnabled.value &&
+                    depthLte:
+                        isDepthEnabled.value &&
                             depthMax.value != _DepthRangeSelector.initialMax
                         ? depthMax.value
                         : null,
-                    magnitudeGte: isMagnitudeEnabled.value &&
+                    magnitudeGte:
+                        isMagnitudeEnabled.value &&
                             magnitudeMin.value !=
                                 _MagnitudeRangeSelector.initialMin
                         ? magnitudeMin.value
                         : null,
-                    magnitudeLte: isMagnitudeEnabled.value &&
+                    magnitudeLte:
+                        isMagnitudeEnabled.value &&
                             magnitudeMax.value !=
                                 _MagnitudeRangeSelector.initialMax
                         ? magnitudeMax.value
                         : null,
-                    epicenterCode: isEpicenterEnabled.value &&
+                    epicenterCode:
+                        isEpicenterEnabled.value &&
                             selectedEpicenterCode.value != null
                         ? int.tryParse(selectedEpicenterCode.value!)
                         : null,
-                    epicenterName: isEpicenterEnabled.value &&
+                    epicenterName:
+                        isEpicenterEnabled.value &&
                             selectedEpicenterCode.value != null
                         ? selectedEpicenterName.value
                         : null,
-                    regionSearchType: isRegionIntensityEnabled.value &&
+                    regionSearchType:
+                        isRegionIntensityEnabled.value &&
                             selectedRegionCode.value != null
                         ? (selectedRegionType.value == 'prefecture'
-                            ? RegionSearchType.prefecture
-                            : RegionSearchType.city)
+                              ? RegionSearchType.prefecture
+                              : RegionSearchType.city)
                         : null,
                     regionCode: isRegionIntensityEnabled.value
                         ? selectedRegionCode.value
@@ -287,13 +295,15 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                     regionName: isRegionIntensityEnabled.value
                         ? selectedRegionName.value
                         : null,
-                    regionIntensityGte: isRegionIntensityEnabled.value &&
+                    regionIntensityGte:
+                        isRegionIntensityEnabled.value &&
                             selectedRegionCode.value != null &&
                             regionIntensityMin.value !=
                                 _IntensityRangeSelector.initialMin
                         ? regionIntensityMin.value
                         : null,
-                    regionIntensityLte: isRegionIntensityEnabled.value &&
+                    regionIntensityLte:
+                        isRegionIntensityEnabled.value &&
                             selectedRegionCode.value != null &&
                             regionIntensityMax.value !=
                                 _IntensityRangeSelector.initialMax
@@ -646,8 +656,7 @@ class _EpicenterSelector extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final epicenters =
-        ref.watch(jmaCodeTableProvider).value?.codeTables.areaEpicenter
-        ?? [];
+        ref.watch(jmaCodeTableProvider).value?.codeTables.areaEpicenter ?? [];
 
     return DropdownMenu<String>(
       expandedInsets: EdgeInsets.zero,
@@ -655,8 +664,7 @@ class _EpicenterSelector extends HookConsumerWidget {
       hintText: '震央地名を選択',
       onSelected: (code) {
         if (code != null && code.isNotEmpty) {
-          final epicenter = epicenters
-              .firstWhereOrNull((e) => e.code == code);
+          final epicenter = epicenters.firstWhereOrNull((e) => e.code == code);
           if (epicenter == null) {
             return;
           }

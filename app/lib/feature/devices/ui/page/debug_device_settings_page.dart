@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
@@ -37,10 +38,11 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
           slivers: [
             switch (sessionAsync) {
               AsyncData(:final value) => _DeviceSettingsSliverList(
-                  snapshot: value,
-                  historyAsync: historyAsync,
-                ),
-              AsyncError(:final error, :final stackTrace) => SliverFillRemaining(
+                snapshot: value,
+                historyAsync: historyAsync,
+              ),
+              AsyncError(:final error, :final stackTrace) =>
+                SliverFillRemaining(
                   child: _LoadErrorBody(
                     message: error.toString(),
                     stackTrace: stackTrace,
@@ -48,8 +50,8 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                   ),
                 ),
               _ => const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator.adaptive()),
-                ),
+                child: Center(child: CircularProgressIndicator.adaptive()),
+              ),
             },
           ],
         ),
@@ -97,9 +99,7 @@ class _LoadErrorBody extends StatelessWidget {
                 ClipboardData(text: '$message\n\n$stackTrace'),
               );
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('エラーをクリップボードにコピーしました')),
-                );
+                AdaptiveSnackBar.show(context, message: 'エラーをクリップボードにコピーしました');
               }
             },
             child: const Text('詳細をコピー'),
@@ -197,8 +197,9 @@ class _NotificationSettingsSection extends HookConsumerWidget {
         return;
       }
       isBusy.value = true;
-      final messenger = ScaffoldMessenger.of(context);
-      final notificationRepository = await ref.read(pushNotificationRepositoryProvider.future);
+      final notificationRepository = await ref.read(
+        pushNotificationRepositoryProvider.future,
+      );
       final result = await notificationRepository.patchNotificationSettings(
         deviceId: snapshot.deviceId,
         settings: GeneralNotificationSettings(
@@ -213,15 +214,12 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       switch (result) {
         case Success():
           ref.invalidate(debugDeviceSessionProvider);
-          messenger.showSnackBar(
-            const SnackBar(content: Text('通知設定を更新しました')),
-          );
+          AdaptiveSnackBar.show(context, message: '通知設定を更新しました');
         case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('更新に失敗しました: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
+          AdaptiveSnackBar.show(
+            context,
+            message: '更新に失敗しました: $exception',
+            type: AdaptiveSnackBarType.error,
           );
       }
     }
@@ -288,8 +286,9 @@ class _TestNotificationSection extends HookConsumerWidget {
 
     Future<void> send(TestNotificationKind kind) async {
       pendingKind.value = kind;
-      final messenger = ScaffoldMessenger.of(context);
-      final notificationRepository = await ref.read(pushNotificationRepositoryProvider.future);
+      final notificationRepository = await ref.read(
+        pushNotificationRepositoryProvider.future,
+      );
       final result = await notificationRepository.sendTestNotification(
         deviceId: deviceId,
         kind: kind,
@@ -300,19 +299,16 @@ class _TestNotificationSection extends HookConsumerWidget {
       }
       switch (result) {
         case Success(:final value):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(
+          AdaptiveSnackBar.show(
+            context,
+            message:
                 '送信しました（${value.framework.displayLabel}）: ${value.message}',
-              ),
-            ),
           );
         case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('送信に失敗: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
+          AdaptiveSnackBar.show(
+            context,
+            message: '送信に失敗: $exception',
+            type: AdaptiveSnackBarType.error,
           );
       }
     }
@@ -323,27 +319,30 @@ class _TestNotificationSection extends HookConsumerWidget {
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
-        children: [
-          TestNotificationKind.silent,
-          TestNotificationKind.normal,
-          TestNotificationKind.critical,
-        ].map((kind) {
-          final isPending = pendingKind.value == kind;
-          return FilledButton.tonal(
-            onPressed: pendingKind.value != null && !isPending
-                ? null
-                : () async {
-                    await send(kind);
-                  },
-            child: isPending
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-                  )
-                : Text(kind.displayLabel),
-          );
-        }).toList(),
+        children:
+            [
+              TestNotificationKind.silent,
+              TestNotificationKind.normal,
+              TestNotificationKind.critical,
+            ].map((kind) {
+              final isPending = pendingKind.value == kind;
+              return FilledButton.tonal(
+                onPressed: pendingKind.value != null && !isPending
+                    ? null
+                    : () async {
+                        await send(kind);
+                      },
+                child: isPending
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator.adaptive(
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(kind.displayLabel),
+              );
+            }).toList(),
       ),
     );
   }
@@ -367,31 +366,31 @@ class _HistorySection extends ConsumerWidget {
       ),
       child: switch (historyAsync) {
         AsyncData(:final value) when value.isEmpty => Text(
-            '履歴はまだありません',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+          '履歴はまだありません',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
+        ),
         AsyncData(:final value) => ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: value.length,
-            separatorBuilder: (_, _) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final item = value[index];
-              return _NotificationHistoryTile(item: item);
-            },
-          ),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: value.length,
+          separatorBuilder: (_, _) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            final item = value[index];
+            return _NotificationHistoryTile(item: item);
+          },
+        ),
         AsyncError(:final error) => Text(
-            '履歴の取得に失敗: $error',
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
+          '履歴の取得に失敗: $error',
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
         _ => const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: CircularProgressIndicator.adaptive(),
-            ),
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: CircularProgressIndicator.adaptive(),
           ),
+        ),
       },
     );
   }
@@ -523,8 +522,8 @@ class _KeyValueRow extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           Expanded(

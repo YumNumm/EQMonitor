@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
@@ -38,7 +39,8 @@ class _Body extends ConsumerWidget {
       );
     }
 
-    final settings = settingsAsync.value ??
+    final settings =
+        settingsAsync.value ??
         const EewNotificationSettings(
           enabled: true,
           criticalThreshold: null,
@@ -171,7 +173,9 @@ class _LiveActivitySection extends ConsumerWidget {
           ? null
           : (value) {
               unawaited(
-                EewSettingsNotifier.saveLiveActivityMutation.run(ref, (tsx) async {
+                EewSettingsNotifier.saveLiveActivityMutation.run(ref, (
+                  tsx,
+                ) async {
                   await tsx
                       .get(eewSettingsProvider.notifier)
                       .setStartLiveActivity(startLiveActivity: value);
@@ -220,11 +224,10 @@ class _RegionsSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(EewSettingsNotifier.updateRegionsMutation, (_, next) {
       if (next is MutationError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('地域の更新に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AdaptiveSnackBar.show(
+          context,
+          message: '地域の更新に失敗しました: ${next.error}',
+          type: AdaptiveSnackBarType.error,
         );
       }
     });
@@ -256,10 +259,12 @@ class _RegionsSection extends ConsumerWidget {
             onDelete: () {
               unawaited(
                 EewSettingsNotifier.updateRegionsMutation.run(ref, (tsx) async {
-                  await tsx.get(eewSettingsProvider.notifier).removeRegion(
-                    regionId: region.regionId,
-                    isCurrentLocation: region.isCurrentLocation,
-                  );
+                  await tsx
+                      .get(eewSettingsProvider.notifier)
+                      .removeRegion(
+                        regionId: region.regionId,
+                        isCurrentLocation: region.isCurrentLocation,
+                      );
                 }),
               );
             },
@@ -274,8 +279,9 @@ class _RegionsSection extends ConsumerWidget {
                 onPressed: isBusy || hasCurrentLocation
                     ? null
                     : () async {
-                        final location =
-                            await _ensurePermissionAndGetLocation(context);
+                        final location = await _ensurePermissionAndGetLocation(
+                          context,
+                        );
                         if (location == null || !context.mounted) {
                           return;
                         }
@@ -294,10 +300,9 @@ class _RegionsSection extends ConsumerWidget {
                           return;
                         }
                         if (code == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('現在地のJMA細分区域を解決できませんでした'),
-                            ),
+                          AdaptiveSnackBar.show(
+                            context,
+                            message: '現在地のJMA細分区域を解決できませんでした',
                           );
                           return;
                         }
@@ -446,9 +451,7 @@ Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
     return (lat: position.latitude, lon: position.longitude);
   } on Object {
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('現在地の取得に失敗しました')),
-      );
+      AdaptiveSnackBar.show(context, message: '現在地の取得に失敗しました');
     }
     return null;
   }

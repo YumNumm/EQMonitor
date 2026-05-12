@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -41,7 +42,8 @@ class _Body extends ConsumerWidget {
         children: [
           const SettingsSectionHeader(text: '全般'),
           _GeneralSettingsSection(
-            settings: settingsAsync.value ??
+            settings:
+                settingsAsync.value ??
                 const GeneralNotificationSettings(
                   tsunamiEnabled: true,
                   trainingEnabled: false,
@@ -169,7 +171,6 @@ class _TestNotificationTile extends HookConsumerWidget {
 
     Future<void> send(TestNotificationKind kind) async {
       pendingKind.value = kind;
-      final messenger = ScaffoldMessenger.of(context);
       final deviceId = await ref.read(deviceIdProvider.future);
       final repo = await ref.read(pushNotificationRepositoryProvider.future);
       final result = await repo.sendTestNotification(
@@ -182,19 +183,16 @@ class _TestNotificationTile extends HookConsumerWidget {
       pendingKind.value = null;
       switch (result) {
         case Success(:final value):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(
+          AdaptiveSnackBar.show(
+            context,
+            message:
                 '送信しました（${value.framework.displayLabel}）: ${value.message}',
-              ),
-            ),
           );
         case Failure(:final exception):
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('送信に失敗しました: $exception'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
+          AdaptiveSnackBar.show(
+            context,
+            message: '送信に失敗しました: $exception',
+            type: AdaptiveSnackBarType.error,
           );
       }
     }

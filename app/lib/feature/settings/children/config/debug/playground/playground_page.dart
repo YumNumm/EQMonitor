@@ -4,6 +4,7 @@
 
 import 'dart:math' as math;
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'; // 追加
 
@@ -263,8 +264,9 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
     void onConvert() {
       final val = double.tryParse(inputText.value);
       if (val == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('入力値が数値ではありません: ${inputText.value}')),
+        AdaptiveSnackBar.show(
+          context,
+          message: '入力値が数値ではありません: ${inputText.value}',
         );
         return;
       }

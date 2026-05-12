@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
@@ -65,7 +66,9 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('ビルド時刻'),
             leading: const Icon(Icons.schedule),
             subtitle: Text(
-              buildCfg.buildTimestamp.isEmpty ? '(not set)' : buildCfg.buildTimestamp,
+              buildCfg.buildTimestamp.isEmpty
+                  ? '(not set)'
+                  : buildCfg.buildTimestamp,
               style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
           ),
@@ -73,7 +76,9 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('ビルド時コミットメッセージ'),
             leading: const Icon(Icons.commit),
             subtitle: Text(
-              buildCfg.buildCommitMessage.isEmpty ? '(not set)' : buildCfg.buildCommitMessage,
+              buildCfg.buildCommitMessage.isEmpty
+                  ? '(not set)'
+                  : buildCfg.buildCommitMessage,
               style: const TextStyle(fontFamily: FontFamily.notoSansMono),
             ),
           ),
@@ -306,15 +311,11 @@ class _AppCheckSection extends ConsumerWidget {
               final token = await FirebaseAppCheck.instance
                   .getLimitedUseToken();
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Token: $token')),
-                );
+                AdaptiveSnackBar.show(context, message: 'Token: $token');
               }
             } on Exception catch (e) {
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('エラー: $e')),
-                );
+                AdaptiveSnackBar.show(context, message: 'エラー: $e');
               }
             }
           },
@@ -369,22 +370,20 @@ class _ParameterDebugSectionState
                   tooltip: '強制再取得',
                   onPressed: () async {
                     setState(() => _isRefreshing = true);
-                    final messenger = ScaffoldMessenger.of(context);
                     try {
                       final updated = await ref
                           .read(parameterSetProvider.notifier)
                           .refresh();
-                      messenger.showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            updated ? 'パラメータを更新しました' : 'パラメータは最新です',
-                          ),
-                        ),
-                      );
+                      if (context.mounted) {
+                        AdaptiveSnackBar.show(
+                          context,
+                          message: updated ? 'パラメータを更新しました' : 'パラメータは最新です',
+                        );
+                      }
                     } on Exception catch (e) {
-                      messenger.showSnackBar(
-                        SnackBar(content: Text('エラー: $e')),
-                      );
+                      if (context.mounted) {
+                        AdaptiveSnackBar.show(context, message: 'エラー: $e');
+                      }
                     } finally {
                       if (mounted) {
                         setState(() => _isRefreshing = false);

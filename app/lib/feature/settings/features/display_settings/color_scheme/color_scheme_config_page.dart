@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
@@ -19,21 +21,19 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(intensityColorProvider);
-    final messenger = ScaffoldMessenger.of(context);
 
     Future<void> importFromJsonText(String text) async {
       final result = await ref
           .read(intensityColorProvider.notifier)
           .importFromJsonString(text);
+      if (!context.mounted) {
+        return;
+      }
       switch (result) {
         case Success<void, IntensityColorImportException>():
-          messenger.showSnackBar(
-            const SnackBar(content: Text('震度配色をインポートしました')),
-          );
+          AdaptiveSnackBar.show(context, message: '震度配色をインポートしました');
         case Failure<void, IntensityColorImportException>():
-          messenger.showSnackBar(
-            SnackBar(content: Text(result.exception.message)),
-          );
+          AdaptiveSnackBar.show(context, message: result.exception.message);
       }
     }
 
@@ -136,10 +136,12 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                               .read(intensityColorProvider.notifier)
                               .exportAsJsonString();
                           await Clipboard.setData(ClipboardData(text: json));
-                          messenger.showSnackBar(
-                            const SnackBar(
-                              content: Text('JSONをクリップボードにコピーしました'),
-                            ),
+                          if (!context.mounted) {
+                            return;
+                          }
+                          AdaptiveSnackBar.show(
+                            context,
+                            message: 'JSONをクリップボードにコピーしました',
                           );
                         },
                         child: const Text('クリップボードへエクスポート'),
@@ -159,8 +161,12 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                               .read(intensityColorProvider.notifier)
                               .exportAsJsonString();
                           await File(path).writeAsString(json);
-                          messenger.showSnackBar(
-                            const SnackBar(content: Text('JSONを保存しました')),
+                          if (!context.mounted) {
+                            return;
+                          }
+                          AdaptiveSnackBar.show(
+                            context,
+                            message: 'JSONを保存しました',
                           );
                         },
                         child: const Text('ファイルへエクスポート'),
@@ -170,12 +176,14 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                           final data = await Clipboard.getData(
                             Clipboard.kTextPlain,
                           );
+                          if (!context.mounted) {
+                            return;
+                          }
                           final text = data?.text;
                           if (text == null || text.isEmpty) {
-                            messenger.showSnackBar(
-                              const SnackBar(
-                                content: Text('クリップボードにJSON文字列がありません'),
-                              ),
+                            AdaptiveSnackBar.show(
+                              context,
+                              message: 'クリップボードにJSON文字列がありません',
                             );
                             return;
                           }
@@ -190,6 +198,9 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                             allowedExtensions: const ['json'],
                             withData: true,
                           );
+                          if (!context.mounted) {
+                            return;
+                          }
                           final files = result?.files;
                           if (files == null || files.isEmpty) {
                             return;
@@ -202,10 +213,9 @@ class ColorSchemeConfigPage extends HookConsumerWidget {
                           }
                           final path = file.path;
                           if (path == null) {
-                            messenger.showSnackBar(
-                              const SnackBar(
-                                content: Text('ファイルの読み込みに失敗しました'),
-                              ),
+                            AdaptiveSnackBar.show(
+                              context,
+                              message: 'ファイルの読み込みに失敗しました',
                             );
                             return;
                           }

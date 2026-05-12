@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_controls.dart';
@@ -75,11 +76,7 @@ class EarthquakeReplayPage extends HookConsumerWidget {
       if (file.bytes == null) {
         isLoading.value = false;
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('ファイルの読み込みに失敗しました'),
-            ),
-          );
+          AdaptiveSnackBar.show(context, message: 'ファイルの読み込みに失敗しました');
         }
         return;
       }
@@ -92,9 +89,7 @@ class EarthquakeReplayPage extends HookConsumerWidget {
           );
     } on Exception catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('エラー: $e')),
-        );
+        AdaptiveSnackBar.show(context, message: 'エラー: $e');
       }
     } finally {
       isLoading.value = false;

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -203,11 +204,10 @@ class _RegionsSection extends ConsumerWidget {
       next,
     ) {
       if (next is MutationError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('地域の更新に失敗しました: ${next.error}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AdaptiveSnackBar.show(
+          context,
+          message: '地域の更新に失敗しました: ${next.error}',
+          type: AdaptiveSnackBarType.error,
         );
       }
     });
@@ -244,7 +244,9 @@ class _RegionsSection extends ConsumerWidget {
                       ref,
                       (tsx) async {
                         await tsx
-                            .get(earthquakeNotificationSettingsProvider.notifier)
+                            .get(
+                              earthquakeNotificationSettingsProvider.notifier,
+                            )
                             .removeRegion(
                               regionId: region.regionId,
                               isCurrentLocation: region.isCurrentLocation,
@@ -271,7 +273,10 @@ class _RegionsSection extends ConsumerWidget {
                                 ref,
                                 (tsx) async {
                                   await tsx
-                                      .get(earthquakeNotificationSettingsProvider.notifier)
+                                      .get(
+                                        earthquakeNotificationSettingsProvider
+                                            .notifier,
+                                      )
                                       .addCurrentLocationRegion();
                                 },
                               ),
@@ -305,7 +310,10 @@ class _RegionsSection extends ConsumerWidget {
                                 ref,
                                 (tsx) async {
                                   await tsx
-                                      .get(earthquakeNotificationSettingsProvider.notifier)
+                                      .get(
+                                        earthquakeNotificationSettingsProvider
+                                            .notifier,
+                                      )
                                       .addRegion(
                                         regionId: result.regionId,
                                         regionName: result.regionName,

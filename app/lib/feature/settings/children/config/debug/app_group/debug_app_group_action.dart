@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/provider/app_group_preferences.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
@@ -66,9 +67,7 @@ class DebugAppGroupAction {
     await ref.read(appGroupSettingsWriterProvider.future);
     ref.invalidate(appGroupValuesProvider);
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('App Groups を再同期しました')),
-      );
+      AdaptiveSnackBar.show(context, message: 'App Groups を再同期しました');
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_earthquake_nearest_observation_point.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -97,15 +98,11 @@ class DebugJmaMapPage extends HookConsumerWidget {
         final noResults =
             searchResult.value == null && observationPointResult.value == null;
         if (noResults && context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('検索結果がありません')));
+          AdaptiveSnackBar.show(context, message: '検索結果がありません');
         }
       } on Exception catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('エラー: $e')));
+          AdaptiveSnackBar.show(context, message: 'エラー: $e');
         }
       } finally {
         isLoading.value = false;
