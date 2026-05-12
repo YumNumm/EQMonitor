@@ -26,7 +26,7 @@ class JmaLpgmIntensityIcon extends ConsumerWidget {
     final colorScheme = intensityColorModel.fromJmaLpgmIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
 
-    final borderColor = Color.lerp(bg, fg, 0.3)!;
+    final borderColor = Color.lerp(bg, fg, 0.3) ?? bg;
     return switch (type) {
       .small => SizedBox(
         height: size,

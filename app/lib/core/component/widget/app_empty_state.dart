@@ -33,10 +33,10 @@ class AppEmptyState extends StatelessWidget {
               style: designSystem.typography.titleSmall,
               textAlign: TextAlign.center,
             ),
-            if (description != null) ...[
+            if (description case final description?) ...[
               SizedBox(height: designSystem.spacing.xs),
               Text(
-                description!,
+                description,
                 style: designSystem.typography.bodySmall.copyWith(
                   color: designSystem.textColor.secondary,
                 ),
