@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 class HomeEarthquakeList extends StatelessWidget {
   const HomeEarthquakeList({
     required this.earthquakes,
+    this.showCurrentLocationIntensity = false,
     super.key,
   });
 
   final List<EarthquakePartial> earthquakes;
+  final bool showCurrentLocationIntensity;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class HomeEarthquakeList extends StatelessWidget {
                   magnitudeTextColor: textColor.primary,
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  showCurrentLocationIntensity: showCurrentLocationIntensity,
                 ),
               ),
             ),
