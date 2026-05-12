@@ -362,7 +362,7 @@ class _RegionsSection extends ConsumerWidget {
 }
 
 /// 現在地通知のために位置情報の常時許可を取得し、現在位置を返す。
-/// 権限が無い場合は設定アプリ誘導ダイアログを表示する。
+/// 権限が無い場合や whileInUse の場合は設定アプリ誘導ダイアログを表示する。
 Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
   BuildContext context,
 ) async {
@@ -400,6 +400,41 @@ Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
       await Geolocator.openAppSettings();
     }
     return null;
+  }
+
+  // whileInUse のみ許可されている場合は「常に許可」への昇格を促す。
+  // 昇格しなくても現在地を追加し続けることはできるが、バックグラウンドでは動かない。
+  if (permission == LocationPermission.whileInUse) {
+    if (!context.mounted) {
+      return null;
+    }
+    final shouldOpen = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog.adaptive(
+        title: const Text('「常に許可」への変更をお願いします'),
+        content: const Text(
+          'バックグラウンドでも位置情報を更新するには、'
+          '位置情報の許可を「常に許可」に変更する必要があります。\n'
+          '設定アプリで「位置情報」→「常に許可」を選択してください。',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('後で'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('設定を開く'),
+          ),
+        ],
+      ),
+    );
+    if (shouldOpen ?? false) {
+      await Geolocator.openAppSettings();
+      // 設定アプリから戻るまで待つ（ユーザーが変更した場合に備えて）
+      return null;
+    }
+    // 「後で」を選択した場合はそのまま現在地を取得して追加する
   }
 
   try {
