@@ -68,8 +68,10 @@ class _MapContent extends HookConsumerWidget {
   final Earthquake earthquake;
 
   static const _stationLayerId = 'eq-history-station-intensity-circle';
-  static const _regionFillLayerId = 'eq-history-fill-region';
-  static const _cityFillLayerId = 'eq-history-fill-city';
+  // Fill layers are created per intensity level (e.g. 'eq-history-jma-one-region-fill'),
+  // so we detect taps by source layer ID instead of individual layer IDs.
+  static const _regionSourceLayerId = 'areaForecastLocalE';
+  static const _citySourceLayerId = 'areaInformationCityQuake';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -240,10 +242,8 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    final hitIds = hits.map((h) => h.layerId).toSet();
-
     // 観測点タップ
-    if (hitIds.contains(_stationLayerId)) {
+    if (hits.any((h) => h.layerId == _stationLayerId)) {
       final stationNode = _findNearestStation(event.point);
       if (stationNode == null) {
         return;
@@ -259,8 +259,8 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    final isCity = hitIds.contains(_cityFillLayerId);
-    final isRegion = hitIds.contains(_regionFillLayerId);
+    final isCity = hits.any((h) => h.sourceLayer == _citySourceLayerId);
+    final isRegion = hits.any((h) => h.sourceLayer == _regionSourceLayerId);
     if (!isCity && !isRegion) {
       return;
     }
