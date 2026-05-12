@@ -6,8 +6,8 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// K-NET CSV フォーマットパーサ
 ///
 /// K-NET CSV は物理値（gal）を直接記録した形式。
-/// ヘッダ部（震源情報・観測点情報・オフセット情報・カラムヘッダ）と
-/// データ部（時刻、相対時刻、各チャンネルの加速度）で構成される。
+/// `#` プレフィックスのコメント行でヘッダを記述し、
+/// `#` なしのデータ行に時刻・相対時刻・各チャンネルの加速度が格納される。
 class KnetCsvParser {
   const KnetCsvParser();
 
@@ -18,34 +18,82 @@ class KnetCsvParser {
     try {
       KnetEarthquakeInfo? earthquakeInfo;
       KnetStationInfo? stationInfo;
-      List<double>? offsets;
-      List<String>? columnNames;
+      var offsets = <double>[];
+      var channelDirections = <KnetChannelDirection>[];
+      double? samplingFreqHz;
+      double? durationSec;
       var dataStartLine = 0;
 
-      for (var i = 0; i < lines.length; i++) {
+      var i = 0;
+      while (i < lines.length) {
         final line = lines[i];
-        if (line.startsWith('OriginTime')) {
-          earthquakeInfo = _parseEarthquakeInfoBlock(lines, i);
-        } else if (line.startsWith('Code')) {
-          stationInfo = _parseStationInfoBlock(lines, i);
-        } else if (line.startsWith('Offset')) {
-          final parts = line.split(',');
-          offsets = parts.skip(1).map((p) => double.parse(p.trim())).toList();
-        } else if (line.startsWith('Time,')) {
-          columnNames = line.split(',').map((p) => p.trim()).toList();
+
+        if (line == '#Event') {
+          // 次の行: カラムヘッダ "#OriginTime,..."
+          // その次の行: 値 "#2011/03/11 14:46:00,..."
+          if (i + 2 < lines.length) {
+            final valueLine = lines[i + 2];
+            if (valueLine.startsWith('#')) {
+              earthquakeInfo = _parseEventLine(valueLine.substring(1).trim());
+            }
+          }
+        } else if (line == '#Station') {
+          // 次の行: カラムヘッダ "#Code,..."
+          // その次の行: 値 "#AIC001,..."
+          if (i + 2 < lines.length) {
+            final valueLine = lines[i + 2];
+            if (valueLine.startsWith('#')) {
+              stationInfo = _parseStationLine(valueLine.substring(1).trim());
+            }
+          }
+        } else if (line == '#SamplingFrequency(Hz)') {
+          if (i + 1 < lines.length) {
+            final valueLine = lines[i + 1];
+            if (valueLine.startsWith('#')) {
+              samplingFreqHz =
+                  double.tryParse(valueLine.substring(1).trim()) ?? 100.0;
+            }
+          }
+        } else if (line == '#DurationTime(s)') {
+          if (i + 1 < lines.length) {
+            final valueLine = lines[i + 1];
+            if (valueLine.startsWith('#')) {
+              durationSec = double.tryParse(valueLine.substring(1).trim());
+            }
+          }
+        } else if (line == '#Offset') {
+          // 次の行: チャンネル名 "#N-S(gal),E-W(gal),U-D(gal)"
+          // その次の行: オフセット値 "#0.00,0.00,0.00"
+          if (i + 2 < lines.length) {
+            final valueLine = lines[i + 2];
+            if (valueLine.startsWith('#')) {
+              offsets = valueLine
+                  .substring(1)
+                  .split(',')
+                  .map((p) => double.tryParse(p.trim()) ?? 0.0)
+                  .toList();
+            }
+          }
+        } else if (line.startsWith('#Time,')) {
+          // カラムヘッダ行: "#Time,RelativeTime(s),N-S(gal),E-W(gal),U-D(gal)"
+          final cols = line
+              .substring(1)
+              .split(',')
+              .map((c) => c.trim())
+              .toList();
+          channelDirections = _parseChannelDirections(cols.skip(2).toList());
           dataStartLine = i + 1;
           break;
         }
+
+        i++;
       }
 
-      if (columnNames == null) {
-        throw const KnetParseException('CSV header not found');
-      }
-
+      // データ部をパース
       final dataPoints = <KnetCsvDataPoint>[];
-      for (var i = dataStartLine; i < lines.length; i++) {
-        final line = lines[i];
-        if (line.isEmpty) {
+      for (var j = dataStartLine; j < lines.length; j++) {
+        final line = lines[j];
+        if (line.isEmpty || line.startsWith('#')) {
           continue;
         }
         final parts = line.split(',');
@@ -69,24 +117,8 @@ class KnetCsvParser {
         );
       }
 
-      final channels = columnNames.skip(2).map((name) {
-        switch (name.toUpperCase()) {
-          case 'NS(GAL)':
-          case 'NS':
-            return KnetChannelDirection.ns;
-          case 'EW(GAL)':
-          case 'EW':
-            return KnetChannelDirection.ew;
-          case 'UD(GAL)':
-          case 'UD':
-            return KnetChannelDirection.ud;
-          default:
-            return KnetChannelDirection.ns;
-        }
-      }).toList();
-
-      double? samplingFreqHz;
-      if (dataPoints.length >= 2) {
+      // サンプリング周波数の推定（明示されていない場合）
+      if (samplingFreqHz == null && dataPoints.length >= 2) {
         final dt =
             dataPoints[1].relativeTimeSec - dataPoints[0].relativeTimeSec;
         if (dt > 0) {
@@ -94,15 +126,16 @@ class KnetCsvParser {
         }
       }
 
-      final networkType = _detectNetworkType(channels.length);
+      final networkType = _detectNetworkType(channelDirections.length);
 
       return KnetCsvRecord(
         earthquakeInfo: earthquakeInfo,
         stationInfo: stationInfo,
-        offsets: offsets ?? [],
-        channelDirections: channels,
+        offsets: offsets,
+        channelDirections: channelDirections,
         dataPoints: dataPoints,
         samplingFrequencyHz: samplingFreqHz ?? 100.0,
+        durationTimeSec: durationSec,
         networkType: networkType,
       );
     } on KnetParseException {
@@ -112,114 +145,66 @@ class KnetCsvParser {
     }
   }
 
-  KnetEarthquakeInfo? _parseEarthquakeInfoBlock(
-    List<String> lines,
-    int start,
-  ) {
-    final values = <String, String>{};
-    for (var i = start; i < lines.length && i < start + 10; i++) {
-      final line = lines[i];
-      if (!line.contains(',')) {
-        break;
-      }
-      final idx = line.indexOf(',');
-      final key = line.substring(0, idx).trim();
-      final value = line.substring(idx + 1).trim();
-      values[key] = value;
-      if (key == 'Magnitude') {
-        break;
-      }
-    }
-
-    if (!values.containsKey('OriginTime')) {
+  /// イベント行をパース: "2011/03/11 14:46:00,38.103,142.860,24,9.0"
+  KnetEarthquakeInfo? _parseEventLine(String line) {
+    final parts = line.split(',');
+    if (parts.length < 5) {
       return null;
     }
-
     try {
-      final originTime = _parseCsvDateTime(values['OriginTime']!);
-      final lat = double.parse(values['Latitude'] ?? '0');
-      final lon = double.parse(values['Longitude'] ?? '0');
-      final depth = double.parse(
-        (values['Depth(km)'] ?? '0').split(' ').first,
-      );
-      final mag = double.parse(values['Magnitude'] ?? '0');
-
       return KnetEarthquakeInfo(
-        originTime: originTime,
-        latitude: lat,
-        longitude: lon,
-        depthKm: depth,
-        magnitude: mag,
+        originTime: _parseDateTime(parts[0].trim()),
+        latitude: double.parse(parts[1].trim()),
+        longitude: double.parse(parts[2].trim()),
+        depthKm: double.parse(parts[3].trim()),
+        magnitude: double.parse(parts[4].trim()),
       );
     } on FormatException {
       return null;
     }
   }
 
-  KnetStationInfo? _parseStationInfoBlock(List<String> lines, int start) {
-    final values = <String, String>{};
-    for (var i = start; i < lines.length && i < start + 10; i++) {
-      final line = lines[i];
-      if (!line.contains(',')) {
-        break;
-      }
-      final idx = line.indexOf(',');
-      final key = line.substring(0, idx).trim();
-      final value = line.substring(idx + 1).trim();
-      values[key] = value;
-      if (key.startsWith('Height')) {
-        break;
-      }
-    }
-
-    if (!values.containsKey('Code')) {
+  /// 観測点行をパース: "AIC001,35.2974,136.7505,5"
+  KnetStationInfo? _parseStationLine(String line) {
+    final parts = line.split(',');
+    if (parts.length < 4) {
       return null;
     }
-
     try {
-      final code = values['Code'] ?? '';
-      final lat = double.parse(values['Latitude'] ?? '0');
-      final lon = double.parse(values['Longitude'] ?? '0');
-      final heightKey = values.keys.firstWhere(
-        (k) => k.startsWith('Height'),
-        orElse: () => '',
-      );
-      final height = double.parse(values[heightKey] ?? '0');
-
       return KnetStationInfo(
-        stationCode: code,
-        latitude: lat,
-        longitude: lon,
-        heightM: height,
+        stationCode: parts[0].trim(),
+        latitude: double.parse(parts[1].trim()),
+        longitude: double.parse(parts[2].trim()),
+        heightM: double.parse(parts[3].trim()),
       );
     } on FormatException {
       return null;
     }
   }
 
-  /// "YYYY/MM/DD-HH:MM:SS" 形式をパース
-  DateTime _parseCsvDateTime(String s) {
-    final parts = s.split('-');
-    if (parts.length < 2) {
-      throw FormatException('Cannot parse CSV datetime: $s');
-    }
-    final dateParts = parts[0].split('/');
-    final timeParts = parts[1].split(':');
+  /// チャンネル方向をカラム名リストからパース
+  /// 例: ["N-S(gal)", "E-W(gal)", "U-D(gal)"] → [ns, ew, ud]
+  List<KnetChannelDirection> _parseChannelDirections(List<String> cols) =>
+      cols.map((name) {
+        final upper = name.toUpperCase();
+        if (upper.startsWith('N-S') || upper.startsWith('NS')) {
+          return upper.contains('2')
+              ? KnetChannelDirection.ns2
+              : KnetChannelDirection.ns;
+        } else if (upper.startsWith('E-W') || upper.startsWith('EW')) {
+          return upper.contains('2')
+              ? KnetChannelDirection.ew2
+              : KnetChannelDirection.ew;
+        } else if (upper.startsWith('U-D') || upper.startsWith('UD')) {
+          return upper.contains('2')
+              ? KnetChannelDirection.ud2
+              : KnetChannelDirection.ud;
+        }
+        return KnetChannelDirection.ns;
+      }).toList();
 
-    return DateTime(
-      int.parse(dateParts[0]),
-      int.parse(dateParts[1]),
-      int.parse(dateParts[2]),
-      int.parse(timeParts[0]),
-      int.parse(timeParts[1]),
-      int.parse(timeParts[2]),
-    );
-  }
-
+  /// "YYYY/MM/DD HH:MM:SS.ss" または "YYYY/MM/DD HH:MM:SS" 形式をパース
   DateTime _parseDateTime(String s) {
-    if (s.contains('-') && !s.contains(' ')) {
-      return _parseCsvDateTime(s);
-    }
     final parts = s.split(' ');
     if (parts.length < 2) {
       throw FormatException('Cannot parse datetime: $s');
@@ -227,13 +212,20 @@ class KnetCsvParser {
     final dateParts = parts[0].split('/');
     final timeParts = parts[1].split(':');
 
+    final secParts = timeParts[2].split('.');
+    final sec = int.parse(secParts[0]);
+    final ms = secParts.length > 1
+        ? (double.parse('0.${secParts[1]}') * 1000).round()
+        : 0;
+
     return DateTime(
       int.parse(dateParts[0]),
       int.parse(dateParts[1]),
       int.parse(dateParts[2]),
       int.parse(timeParts[0]),
       int.parse(timeParts[1]),
-      int.parse(timeParts[2]),
+      sec,
+      ms,
     );
   }
 
@@ -253,10 +245,10 @@ class KnetCsvDataPoint {
   /// 絶対時刻（JST）
   final DateTime time;
 
-  /// 記録開始からの相対時刻 (秒)
+  /// 記録開始からの相対時刻（秒）
   final double relativeTimeSec;
 
-  /// 各チャンネルの加速度 (gal)
+  /// 各チャンネルの加速度（gal）
   final List<double> accelerationsGal;
 }
 
@@ -269,6 +261,7 @@ class KnetCsvRecord {
     required this.channelDirections,
     required this.dataPoints,
     required this.samplingFrequencyHz,
+    required this.durationTimeSec,
     required this.networkType,
   });
 
@@ -278,5 +271,6 @@ class KnetCsvRecord {
   final List<KnetChannelDirection> channelDirections;
   final List<KnetCsvDataPoint> dataPoints;
   final double samplingFrequencyHz;
+  final double? durationTimeSec;
   final KnetNetworkType networkType;
 }

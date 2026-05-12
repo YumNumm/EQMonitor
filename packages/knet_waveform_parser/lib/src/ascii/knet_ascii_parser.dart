@@ -5,7 +5,8 @@ import 'package:knet_waveform_parser/src/model/knet_record.dart';
 /// K-NET ASCII フォーマットパーサ
 ///
 /// K-NET ASCII フォーマットは 17 行のヘッダと 18 行目以降のデータで構成される。
-/// 各ヘッダ行は「ラベル  [2文字以上のスペース]  値」の形式。
+/// 各ヘッダ行のラベルフィールドは固定幅（最大18文字）で、
+/// 19文字目以降（0-indexed では位置18以降）が値フィールドになる。
 class KnetAsciiParser {
   const KnetAsciiParser();
 
@@ -23,7 +24,6 @@ class KnetAsciiParser {
     }
 
     try {
-      // ヘッダ部をパース
       final originTimeStr = _extractValue(lines[0]);
       final latStr = _extractValue(lines[1]);
       final lonStr = _extractValue(lines[2]);
@@ -40,9 +40,8 @@ class KnetAsciiParser {
       final scaleFactorStr = _extractValue(lines[13]);
       final maxAccStr = _extractValue(lines[14]);
       final lastCorrectionStr = _extractValue(lines[15]);
-      final memo = lines[16].contains(RegExp(r'\s{2,}'))
-          ? _extractValue(lines[16])
-          : '';
+      // 17行目（index 16）はメモ行。値フィールドが空の場合もある
+      final memo = _extractValue(lines[16]);
 
       final earthquakeInfo = _parseEarthquakeInfo(
         originTimeStr,
@@ -66,13 +65,12 @@ class KnetAsciiParser {
         samplingFreqStr.trim().replaceAll(RegExp('[Hh][Zz]'), '').trim(),
       );
 
-      // "300" -> 300.0
       final duration = double.parse(durationStr.trim().split(' ').first);
 
       final direction = KnetChannelDirection.fromString(dirStr.trim());
 
       // スケールファクタ: "(gal)/6291456" -> (1.0, 6291456.0)
-      //                  "3920/6162781(gal)" -> (3920.0, 6162781.0)
+      //                  "3920(gal)/6182761" -> (3920.0, 6182761.0)
       final scaleFactor = _parseScaleFactor(scaleFactorStr.trim());
 
       final maxAcc = double.parse(maxAccStr.trim().split(' ').first);
@@ -129,15 +127,21 @@ class KnetAsciiParser {
 
   /// ヘッダ行からラベル以降の値を抽出する
   ///
-  /// K-NET ASCII の各ヘッダ行は "ラベル  [2文字以上のスペース]  値" の形式。
-  /// 例: "Origin Time             2011/03/11 14:46:00" -> "2011/03/11 14:46:00"
-  /// 例: "Station Lat.            36.1256" -> "36.1256"
+  /// K-NET ASCII の各ヘッダ行はラベルフィールド（最大18文字）+ 値フィールドの形式。
+  /// ラベルが17文字の場合はその後に1スペースで値が続く。
+  /// "Station Height(m) 5" → "5"
+  /// "Origin Time       2011/03/11 14:46:00" → "2011/03/11 14:46:00"
   String _extractValue(String line) {
+    const labelWidth = 18;
+    if (line.length > labelWidth) {
+      return line.substring(labelWidth).trim();
+    }
+    // フォールバック: 2スペース以上の区切りで分割
     final parts = line.split(RegExp(r'\s{2,}'));
     if (parts.length >= 2) {
       return parts.last;
     }
-    return line.trim();
+    return '';
   }
 
   KnetEarthquakeInfo? _parseEarthquakeInfo(
@@ -184,21 +188,29 @@ class KnetAsciiParser {
       throw FormatException('Cannot parse datetime: $s');
     }
 
+    // 秒に小数部がある場合を処理（"14:48:19.00" → 19秒 0ミリ秒）
+    final secParts = timeParts[2].split('.');
+    final sec = int.parse(secParts[0]);
+    final ms = secParts.length > 1
+        ? (double.parse('0.${secParts[1]}') * 1000).round()
+        : 0;
+
     return DateTime(
       int.parse(dateParts[0]),
       int.parse(dateParts[1]),
       int.parse(dateParts[2]),
       int.parse(timeParts[0]),
       int.parse(timeParts[1]),
-      int.parse(timeParts[2]),
+      sec,
+      ms,
     );
   }
 
   /// スケールファクタ文字列をパース
   ///
   /// - "(gal)/6291456" → (1.0, 6291456.0)  分子 (gal) = 1 として扱う
+  /// - "3920(gal)/6182761" → (3920.0, 6182761.0)
   /// - "3920/6162781(gal)" → (3920.0, 6162781.0)
-  /// - "3920/6162781" → (3920.0, 6162781.0)
   (double numerator, double denominator) _parseScaleFactor(String s) {
     // "(gal)" などの単位部分を除去
     final cleaned = s.replaceAll(RegExp(r'\(.*?\)'), '').trim();
