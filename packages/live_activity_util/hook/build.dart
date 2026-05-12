@@ -292,7 +292,7 @@ Future<void> main(List<String> args) => build(
     final objcSourcePath = libDir.uri.resolve('live_activity_util.dart.m');
     final cBuilder = CBuilder.library(
       name: 'live_activity_util',
-      assetName: 'live_activity_util.g.dart',
+      assetName: 'src/live_activity_util.dart',
       sources: [
         objcSourcePath.toFilePath(),
       ],
