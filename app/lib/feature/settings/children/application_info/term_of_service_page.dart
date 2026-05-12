@@ -5,8 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PrivacyPolicyScreen extends HookWidget {
-  const PrivacyPolicyScreen({
+class TermOfServicePage extends HookWidget {
+  const TermOfServicePage({
     required this.onResult,
     this.showAcceptButton = false,
     super.key,
@@ -18,19 +18,19 @@ class PrivacyPolicyScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('プライバシーポリシー')),
-      body: const _PrivacyPolicyScreenBody(),
+      appBar: AppBar(title: const Text('利用規約')),
+      body: const _TermOfServicePageBody(),
     );
   }
 }
 
-class _PrivacyPolicyScreenBody extends HookWidget {
-  const _PrivacyPolicyScreenBody();
+class _TermOfServicePageBody extends HookWidget {
+  const _TermOfServicePageBody();
 
   @override
   Widget build(BuildContext context) {
     final markdownBody = useFuture(
-      useMemoized(() async => rootBundle.loadString(Assets.docs.privacyPolicy)),
+      useMemoized(() async => rootBundle.loadString(Assets.docs.termOfService)),
       initialData: '',
     );
     final data = markdownBody.data;

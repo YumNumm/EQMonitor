@@ -8,8 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DisplaySettingsScreen extends StatelessWidget {
-  const DisplaySettingsScreen({super.key});
+class DisplaySettingsPage extends StatelessWidget {
+  const DisplaySettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
