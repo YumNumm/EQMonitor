@@ -183,6 +183,7 @@ flutter_gen:
 flutter:
   config:
     enable-swift-package-manager: true
+    enable-lldb-debugging: false
   uses-material-design: true
   assets:
     - assets/
