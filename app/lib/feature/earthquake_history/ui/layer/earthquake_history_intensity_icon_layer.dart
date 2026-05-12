@@ -166,13 +166,17 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
         }());
 
         return () async {
-          try {
-            for (final intensity in JmaIntensity.values) {
+          for (final intensity in JmaIntensity.values) {
+            try {
               await styleController.removeLayer(_cityLayerId(intensity));
-              await styleController.removeLayer(_regionLayerId(intensity));
+            } on Exception catch (e) {
+              talker.log(e);
             }
-          } on Exception catch (e) {
-            talker.log(e);
+            try {
+              await styleController.removeLayer(_regionLayerId(intensity));
+            } on Exception catch (e) {
+              talker.log(e);
+            }
           }
         };
       },
