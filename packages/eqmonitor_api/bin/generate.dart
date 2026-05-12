@@ -103,6 +103,12 @@ void main(List<String> args) async {
     _patchParameterDataResponseInApiClient(libDir);
   });
 
+  await _step('Union 型 fromJson を手動実装で置き換え', () async {
+    _patchFeedItemDataUnionFromJson(libDir);
+    _patchTargetUnionFromJson(libDir);
+    _patchParameterDataResponseUnionFromJson(libDir);
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
@@ -230,6 +236,123 @@ void _patchParameterDataResponseInApiClient(Directory libDir) {
     clientFile.writeAsStringSync(content);
     stdout.writeln('  Patched: ${clientFile.path}');
   }
+}
+
+/// swagger_parser は discriminator の無い oneOf/anyOf に対して
+/// `throw UnimplementedError();` 付きの fromJson を生成する。
+/// 各 union ファイルに対し、JSON の判別フィールドから variant を
+/// 選ぶ実装に書き換える。
+///
+/// 置換対象は次の形式の factory 本文（`=>` 以降〜セミコロン）:
+///   factory <Name>.fromJson(Map<String, Object?> json) =>
+///       // TODO: No discriminator ...
+///       ... throw UnimplementedError();
+void _patchUnionFromJson(
+  File file, {
+  required String className,
+  required String body,
+}) {
+  if (!file.existsSync()) return;
+
+  final original = file.readAsStringSync();
+  final pattern = RegExp(
+    r'factory\s+' +
+        RegExp.escape(className) +
+        r'\.fromJson\(Map<String, Object\?> json\)\s*=>'
+        r'[\s\S]*?throw UnimplementedError\(\);',
+  );
+
+  if (!pattern.hasMatch(original)) {
+    stdout.writeln('  Skip (no fromJson stub): ${file.path}');
+    return;
+  }
+
+  final replacement =
+      'factory $className.fromJson(Map<String, Object?> json) =>\n      $body;';
+  final patched = original.replaceFirst(pattern, replacement);
+
+  if (patched != original) {
+    file.writeAsStringSync(patched);
+    stdout.writeln('  Patched fromJson: ${file.path}');
+  }
+}
+
+/// FeedItem.data の `type` const 値で variant を判別する。
+///
+///   EARTHQUAKE_NOTICE       → variant1
+///   EARTHQUAKE_EXPLANATION  → variant2
+///   EARTHQUAKE_COUNTS       → variant3
+///   EARTHQUAKE_NANKAI       → variant4
+///   APP_UPDATE              → variant5
+///   INCIDENT                → variant6
+///   DEVELOPER_MESSAGE       → variant7
+void _patchFeedItemDataUnionFromJson(Directory libDir) {
+  final file = File('${libDir.path}/models/feed_item_data_union.dart');
+  const body = '''switch (json['type']) {
+        'EARTHQUAKE_NOTICE' => FeedItemDataUnionVariant1.fromJson(json),
+        'EARTHQUAKE_EXPLANATION' => FeedItemDataUnionVariant2.fromJson(json),
+        'EARTHQUAKE_COUNTS' => FeedItemDataUnionVariant3.fromJson(json),
+        'EARTHQUAKE_NANKAI' => FeedItemDataUnionVariant4.fromJson(json),
+        'APP_UPDATE' => FeedItemDataUnionVariant5.fromJson(json),
+        'INCIDENT' => FeedItemDataUnionVariant6.fromJson(json),
+        'DEVELOPER_MESSAGE' => FeedItemDataUnionVariant7.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'type',
+          'Unknown FeedItemDataUnion type',
+        ),
+      }''';
+  _patchUnionFromJson(file, className: 'FeedItemDataUnion', body: body);
+}
+
+/// Target の `type` const 値で variant を判別する。
+///
+///   device_id            → variant1 (deviceId)
+///   push_to_start_token  → variant2 (token + environment)
+void _patchTargetUnionFromJson(Directory libDir) {
+  final file = File('${libDir.path}/models/target_union.dart');
+  const body = '''switch (json['type']) {
+        'device_id' => TargetUnionVariant1.fromJson(json),
+        'push_to_start_token' => TargetUnionVariant2.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'type',
+          'Unknown TargetUnion type',
+        ),
+      }''';
+  _patchUnionFromJson(file, className: 'TargetUnion', body: body);
+}
+
+/// metadata.type で variant を判別する。
+///
+///   jma_code_table              → jmaCodeTableParameter
+///   kyoshin_observation_points  → kyoshinObservationPointsParameter
+///   earthquake_stations         → earthquakeStationsParameter
+///   tsunami_stations            → tsunamiStationsParameter
+///
+/// `prefectures` フィールドが earthquake/tsunami variant で重複するため、
+/// ユニークフィールドではなく metadata.type を必ず参照する。
+void _patchParameterDataResponseUnionFromJson(Directory libDir) {
+  final file = File('${libDir.path}/models/parameter_data_response_union.dart');
+  const body =
+      '''switch ((json['metadata'] as Map<String, Object?>?)?['type']) {
+        'jma_code_table' =>
+          ParameterDataResponseUnionJmaCodeTableParameter.fromJson(json),
+        'kyoshin_observation_points' =>
+          ParameterDataResponseUnionKyoshinObservationPointsParameter.fromJson(
+            json,
+          ),
+        'earthquake_stations' =>
+          ParameterDataResponseUnionEarthquakeStationsParameter.fromJson(json),
+        'tsunami_stations' =>
+          ParameterDataResponseUnionTsunamiStationsParameter.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'metadata.type',
+          'Unknown ParameterDataResponseUnion type',
+        ),
+      }''';
+  _patchUnionFromJson(file, className: 'ParameterDataResponseUnion', body: body);
 }
 
 Future<void> _run(String exe, List<String> args, String cwd) async {

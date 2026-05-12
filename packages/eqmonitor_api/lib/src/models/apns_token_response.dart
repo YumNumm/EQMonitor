@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'apns_environment.dart';
 import 'apns_token_type.dart';
+import 'environment.dart';
 
 part 'apns_token_response.freezed.dart';
 part 'apns_token_response.g.dart';
@@ -15,7 +15,7 @@ abstract class ApnsTokenResponse with _$ApnsTokenResponse {
   const factory ApnsTokenResponse({
     required ApnsTokenType type,
     required String token,
-    required ApnsEnvironment environment,
+    required Environment environment,
   }) = _ApnsTokenResponse;
   
   factory ApnsTokenResponse.fromJson(Map<String, Object?> json) => _$ApnsTokenResponseFromJson(json);

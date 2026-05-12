@@ -5,7 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum TestNotificationType {
+enum Type2 {
   @JsonValue('silent')
   silent('silent'),
   @JsonValue('normal')
@@ -13,14 +13,14 @@ enum TestNotificationType {
   @JsonValue('critical')
   critical('critical');
 
-  const TestNotificationType(this.json);
+  const Type2(this.json);
 
   final String? json;
   String toJson() {
     final value = json;
     if (value == null) {
       throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \$unknown or @JsonValue(null) entries.');
+          'This usually happens for \\$unknown or @JsonValue(null) entries.');
     }
     return value as String;
   }

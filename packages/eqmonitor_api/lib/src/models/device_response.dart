@@ -5,7 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'device_locale.dart';
-import 'device_type.dart';
+import 'type.dart';
 
 part 'device_response.freezed.dart';
 part 'device_response.g.dart';
@@ -14,7 +14,7 @@ part 'device_response.g.dart';
 abstract class DeviceResponse with _$DeviceResponse {
   const factory DeviceResponse({
     required String id,
-    required DeviceType type,
+    required Type type,
     @JsonKey(includeIfNull: true,name: 'user_id')
     required String? userId,
     required DeviceLocale locale,

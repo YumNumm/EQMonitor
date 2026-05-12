@@ -4,8 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'telegram_status.dart';
-import 'telegram_type.dart';
+import 'status.dart';
+import 'telegram_types.dart';
 import 'tsunami_warning_kind.dart';
 
 part 'tsunami_list_item.freezed.dart';
@@ -24,7 +24,7 @@ abstract class TsunamiListItem with _$TsunamiListItem {
     @JsonKey(name: 'telegram_count')
     required num telegramCount,
     @JsonKey(name: 'telegram_types')
-    required List<TelegramType> telegramTypes,
+    required List<TelegramTypes> telegramTypes,
     @JsonKey(includeIfNull: false)
     String? headline,
     @JsonKey(includeIfNull: false,name: 'latest_created_at')
@@ -32,7 +32,7 @@ abstract class TsunamiListItem with _$TsunamiListItem {
     @JsonKey(includeIfNull: false,name: 'latest_press_at')
     String? latestPressAt,
     @JsonKey(includeIfNull: false)
-    TelegramStatus? status,
+    Status? status,
     @JsonKey(includeIfNull: false,name: 'max_forecast_grade')
     TsunamiWarningKind? maxForecastGrade,
     @JsonKey(includeIfNull: false,name: 'earthquake_hypocenter_name')
