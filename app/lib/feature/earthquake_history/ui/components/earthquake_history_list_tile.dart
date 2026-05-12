@@ -1,15 +1,22 @@
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/current_location_intensity_provider.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
+import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 class EarthquakeHistoryListTile extends HookConsumerWidget {
   const EarthquakeHistoryListTile({
@@ -23,6 +30,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     this.visualDensity,
     this.dense = false,
     this.contentPadding,
+    this.showCurrentLocationIntensity = false,
     super.key,
   });
 
@@ -36,6 +44,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
   final VisualDensity? visualDensity;
   final bool dense;
   final EdgeInsets? contentPadding;
+  final bool showCurrentLocationIntensity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,12 +119,101 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       null => '',
     };
 
+    // 現在地情報（スコープが現在地の場合のみ取得）
+    final position = showCurrentLocationIntensity
+        ? ref.watch(locationStreamProvider).value
+        : null;
+    final latLng = position != null
+        ? LatLng(position.latitude, position.longitude)
+        : null;
+
+    final city = latLng != null
+        ? ref.watch(jmaMapAreaInformationCityInsideProvider(latLng)).value
+        : null;
+    final region = latLng != null
+        ? ref.watch(jmaMapAreaForecastLocalEInsideProvider(latLng)).value
+        : null;
+
+    final cityCode = city?.property?.code;
+    final cityParam = showCurrentLocationIntensity && cityCode != null
+        ? ref.watch(
+            parameterSetProvider.select(
+              (v) => v.value?.earthquake.prefectures
+                  .expand(
+                    (p) => p.regions.expand(
+                      (r) => r.cities.map((c) => (prefecture: p, city: c)),
+                    ),
+                  )
+                  .firstWhereOrNull((e) => e.city.code == cityCode),
+            ),
+          )
+        : null;
+
+    final regionCode = region?.property?.code;
+    final regionParam = showCurrentLocationIntensity && regionCode != null
+        ? ref.watch(
+            parameterSetProvider.select(
+              (v) => v.value?.earthquake.prefectures
+                  .expand((p) => p.regions.map((r) => (prefecture: p, region: r)))
+                  .firstWhereOrNull((e) => e.region.code == regionCode),
+            ),
+          )
+        : null;
+
+    final currentLocationIntensityAsync = showCurrentLocationIntensity
+        ? ref.watch(
+            currentLocationIntensityProvider(
+              eventId: item.eventId,
+              cityAreaCode: cityCode,
+              regionAreaCode: regionCode,
+            ),
+          )
+        : null;
+
+    // 現在地の地名を解決
+    String? currentLocationName;
+    if (cityParam != null) {
+      currentLocationName =
+          '${cityParam.prefecture.name.ja}${cityParam.city.name.ja}';
+    } else if (regionParam != null) {
+      currentLocationName =
+          '${regionParam.prefecture.name.ja}${regionParam.region.name.ja}';
+    }
+
+    // 現在地の震度チップテキストを解決
+    String? currentLocationChipLabel;
+    switch (currentLocationIntensityAsync?.value) {
+      case CurrentLocationIntensityDisplayQuick(:final intensity):
+        currentLocationChipLabel =
+            '${currentLocationName != null ? "$currentLocationName " : ""}現在地で震度${intensity.label}を観測(速報)';
+      case CurrentLocationIntensityDisplayResult(:final intensity):
+        currentLocationChipLabel =
+            '${currentLocationName != null ? "$currentLocationName " : ""}現在地で震度${intensity.label}を観測';
+      case CurrentLocationIntensityDisplayNone():
+      case null:
+        if (currentLocationName != null) {
+          currentLocationChipLabel = currentLocationName;
+        }
+    }
+
+    // 現在地チップを構築
+    Widget? currentLocationChip;
+    if (showCurrentLocationIntensity && currentLocationChipLabel != null) {
+      currentLocationChip = Chip(
+        label: Text(currentLocationChipLabel),
+        padding: EdgeInsets.zero,
+        visualDensity: VisualDensity.compact,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      );
+    }
+
     final chips = <Widget>[
       if (maxLpgmIntensity != null && maxLpgmIntensity != JmaLpgmIntensity.zero)
         Chip(
           label: Text('最大長周期地震動階級 ${maxLpgmIntensity.label}'),
           padding: EdgeInsets.zero,
         ),
+      ?currentLocationChip,
     ];
 
     return ListTile(
