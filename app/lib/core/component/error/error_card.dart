@@ -69,7 +69,7 @@ class ErrorCard extends StatelessWidget {
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
-                  fontFamily: GoogleFonts.notoSansMono().fontFamily,
+                  fontFamily: GoogleFonts.googleSansCode().fontFamily,
                 ),
               ),
               if (suffixMessage != null) ...[
@@ -78,7 +78,7 @@ class ErrorCard extends StatelessWidget {
                   suffixMessage!,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onErrorContainer,
-                    fontFamily: GoogleFonts.notoSansMono().fontFamily,
+                    fontFamily: GoogleFonts.googleSansCode().fontFamily,
                   ),
                 ),
               ],
