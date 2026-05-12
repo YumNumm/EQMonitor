@@ -132,7 +132,7 @@ class _EventTile extends StatelessWidget {
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                       fontSize: 7,
-                      fontFamily: FontFamily.notoSansMono,
+                      fontFamily: FontFamily.googleSansCode,
                     ),
                   ),
               ],

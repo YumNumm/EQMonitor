@@ -236,7 +236,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           Text(
             subTitle,
             style: TextStyle(
-              fontFamily: FontFamily.notoSansMono,
+              fontFamily: FontFamily.googleSansCode,
               fontFamilyFallback: const [FontFamily.notoSansJP],
               letterSpacing: -0.2,
               color: descriptionTextColor,
@@ -257,7 +257,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         style: theme.textTheme.labelLarge!.copyWith(
           fontWeight: FontWeight.bold,
           color: magnitudeTextColor,
-          fontFamily: FontFamily.notoSansMono,
+          fontFamily: FontFamily.googleSansCode,
           letterSpacing: -0.5,
         ),
       ),

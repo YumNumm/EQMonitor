@@ -55,7 +55,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
               style: designSystem.typography.monoSmall.copyWith(
                 textBaseline: TextBaseline.alphabetic,
                 fontWeight: FontWeight.w700,
-                fontFamily: FontFamily.notoSansMono,
+                fontFamily: FontFamily.googleSansCode,
                 fontFamilyFallback: [
                   FontFamily.notoSansJP,
                 ],
@@ -73,7 +73,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
               textStyle: designSystem.typography.monoSmall.copyWith(
                 textBaseline: TextBaseline.alphabetic,
                 fontSize: 10,
-                fontFamily: FontFamily.notoSansMono,
+                fontFamily: FontFamily.googleSansCode,
                 fontFamilyFallback: [
                   FontFamily.notoSansJP,
                 ],

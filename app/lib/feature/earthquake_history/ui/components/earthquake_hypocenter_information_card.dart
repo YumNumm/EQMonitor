@@ -349,7 +349,7 @@ class _UnknownInfoWidget extends StatelessWidget {
           value,
           style: textTheme.displaySmall!.copyWith(
             fontWeight: FontWeight.bold,
-            fontFamily: FontFamily.notoSansMono,
+            fontFamily: FontFamily.googleSansCode,
             fontFamilyFallback: [FontFamily.notoSansJP],
           ),
         ),

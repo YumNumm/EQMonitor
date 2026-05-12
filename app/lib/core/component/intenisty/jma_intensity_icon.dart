@@ -61,7 +61,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                               color: fg,
                               fontSize: 100,
                               fontWeight: .bold,
-                              fontFamily: FontFamily.notoSansMono,
+                              fontFamily: FontFamily.googleSansCode,
                             ),
                           ),
                           Text(
@@ -69,7 +69,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                             style: TextStyle(
                               color: fg,
                               fontSize: 80,
-                              fontFamily: FontFamily.notoSansMono,
+                              fontFamily: FontFamily.googleSansCode,
                               fontFamilyFallback: const [
                                 FontFamily.notoSansJP,
                               ],
@@ -115,7 +115,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: .bold,
-                        fontFamily: FontFamily.notoSansMono,
+                        fontFamily: FontFamily.googleSansCode,
                       ),
                     )
                   else ...[
@@ -125,7 +125,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: .bold,
-                        fontFamily: FontFamily.notoSansMono,
+                        fontFamily: FontFamily.googleSansCode,
                       ),
                     ),
                     if (showSuffix)
@@ -135,7 +135,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                           color: fg,
                           fontSize: 50,
                           fontWeight: .bold,
-                          fontFamily: FontFamily.notoSansMono,
+                          fontFamily: FontFamily.googleSansCode,
                           fontFamilyFallback: const [FontFamily.notoSansJP],
                         ),
                       ),

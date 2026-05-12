@@ -52,7 +52,7 @@ class JmaLpgmIntensityIcon extends ConsumerWidget {
                       color: fg,
                       fontSize: 100,
                       fontWeight: .bold,
-                      fontFamily: FontFamily.notoSansMono,
+                      fontFamily: FontFamily.googleSansCode,
                     ),
                   ),
                 ],
@@ -96,7 +96,7 @@ class JmaLpgmIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: .bold,
-                        fontFamily: FontFamily.notoSansMono,
+                        fontFamily: FontFamily.googleSansCode,
                       ),
                     )
                   : Text(
@@ -105,7 +105,7 @@ class JmaLpgmIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: .bold,
-                        fontFamily: FontFamily.notoSansMono,
+                        fontFamily: FontFamily.googleSansCode,
                       ),
                     ),
             ),

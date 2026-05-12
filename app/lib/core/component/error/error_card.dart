@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ErrorCard extends StatelessWidget {
   const ErrorCard({
@@ -69,7 +69,7 @@ class ErrorCard extends StatelessWidget {
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
-                  fontFamily: GoogleFonts.googleSansCode().fontFamily,
+                  fontFamily: FontFamily.googleSansCode,
                 ),
               ),
               if (suffixMessage != null) ...[
@@ -78,7 +78,7 @@ class ErrorCard extends StatelessWidget {
                   suffixMessage!,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onErrorContainer,
-                    fontFamily: GoogleFonts.googleSansCode().fontFamily,
+                    fontFamily: FontFamily.googleSansCode,
                   ),
                 ),
               ],

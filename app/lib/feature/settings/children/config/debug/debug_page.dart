@@ -66,7 +66,7 @@ class _DebugWidget extends ConsumerWidget {
             leading: const Icon(Icons.schedule),
             subtitle: Text(
               buildCfg.buildTimestamp.isEmpty ? '(not set)' : buildCfg.buildTimestamp,
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
           ),
           ListTile(
@@ -74,7 +74,7 @@ class _DebugWidget extends ConsumerWidget {
             leading: const Icon(Icons.commit),
             subtitle: Text(
               buildCfg.buildCommitMessage.isEmpty ? '(not set)' : buildCfg.buildCommitMessage,
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
           ),
           ListTile(
@@ -213,7 +213,7 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('FCM Token'),
             subtitle: Text(
               notificationToken?.fcmToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
             onTap: () async => Clipboard.setData(
               ClipboardData(text: notificationToken?.fcmToken ?? ''),
@@ -223,7 +223,7 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('APNS Token'),
             subtitle: Text(
               notificationToken?.apnsToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
             onTap: () async => Clipboard.setData(
               ClipboardData(text: notificationToken?.apnsToken ?? ''),
@@ -233,7 +233,7 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('Push To Start Token'),
             subtitle: Text(
               notificationToken?.apnsPushToStartToken?.toString() ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
             onTap: () async => Clipboard.setData(
               ClipboardData(
@@ -268,7 +268,7 @@ class _AppCheckSection extends ConsumerWidget {
           title: const Text('Provider'),
           subtitle: Text(
             providerType,
-            style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+            style: const TextStyle(fontFamily: FontFamily.googleSansCode),
           ),
         ),
         ListTile(
@@ -281,7 +281,7 @@ class _AppCheckSection extends ConsumerWidget {
             ),
             AsyncData(:final value) => Text(
               value ?? 'null',
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -419,7 +419,7 @@ class _ParameterDebugSectionState
                   subtitle: Text(
                     'ver: ${item.sourceVersion}  generated: ${item.generatedAt}\n'
                     'sha256: ${item.sha256.substring(0, 8)}…',
-                    style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+                    style: const TextStyle(fontFamily: FontFamily.googleSansCode),
                   ),
                   isThreeLine: true,
                 ),

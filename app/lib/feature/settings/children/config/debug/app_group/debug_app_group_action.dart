@@ -22,7 +22,7 @@ class DebugAppGroupAction {
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+          style: const TextStyle(fontFamily: FontFamily.googleSansCode),
           decoration: const InputDecoration(
             hintText: 'https://v2.api.eqmonitor.app',
             border: OutlineInputBorder(),

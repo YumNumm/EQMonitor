@@ -114,7 +114,7 @@ class _WsStatusCard extends HookWidget {
             SelectableText(
               wsStatus.currentUrl!,
               style: theme.textTheme.bodySmall?.copyWith(
-                fontFamily: FontFamily.notoSansMono,
+                fontFamily: FontFamily.googleSansCode,
               ),
             ),
           ],
@@ -199,7 +199,7 @@ class _WsEventCard extends StatelessWidget {
                     Text(
                       detail,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: FontFamily.notoSansMono,
+                        fontFamily: FontFamily.googleSansCode,
                       ),
                     ),
                   ],
@@ -208,7 +208,7 @@ class _WsEventCard extends StatelessWidget {
               Text(
                 timeStr,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  fontFamily: FontFamily.notoSansMono,
+                  fontFamily: FontFamily.googleSansCode,
                 ),
               ),
             ],

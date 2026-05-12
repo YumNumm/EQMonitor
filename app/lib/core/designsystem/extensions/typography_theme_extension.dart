@@ -3,13 +3,12 @@
 import 'package:eqmonitor/core/designsystem/extensions/text_color_theme_extension.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'typography_theme_extension.tailor.dart';
 
-const primaryFontFamily = 'Google Sans Flex';
-const codeFontFamily = 'Google Sans Code';
+const String primaryFontFamily = FontFamily.googleSansFlex;
+const String codeFontFamily = FontFamily.googleSansCode;
 const japaneseFontFamilyFallback = <String>[FontFamily.notoSansJP];
 
 @tailorMixinComponent
@@ -42,13 +41,9 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
       TypographyThemeExtension._base(textColor);
 
   factory TypographyThemeExtension._base(TextColorThemeExtension textColor) {
-    final primaryFamily =
-        GoogleFonts.googleSansFlex().fontFamily ?? primaryFontFamily;
-    final codeFamily =
-        GoogleFonts.googleSansCode().fontFamily ?? codeFontFamily;
     return TypographyThemeExtension(
       displayLarge: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 40,
         height: 48 / 40,
@@ -56,7 +51,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       displayMedium: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 36,
         height: 44 / 36,
@@ -64,7 +59,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       headlineLarge: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 32,
         height: 40 / 32,
@@ -72,7 +67,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       headlineMedium: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 28,
         height: 36 / 28,
@@ -80,7 +75,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       headlineSmall: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 24,
         height: 30 / 24,
@@ -88,7 +83,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       titleLarge: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 22,
         height: 28 / 22,
@@ -96,7 +91,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       titleMedium: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 18,
         height: 24 / 18,
@@ -104,7 +99,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       titleSmall: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 16,
         height: 22 / 16,
@@ -112,7 +107,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       bodyLarge: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 16,
         height: 24 / 16,
@@ -120,7 +115,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       bodyMedium: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 14,
         height: 20 / 14,
@@ -128,7 +123,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.secondary,
       ),
       bodySmall: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 13,
         height: 18 / 13,
@@ -136,7 +131,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.secondary,
       ),
       labelLarge: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 14,
         height: 20 / 14,
@@ -144,7 +139,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       labelMedium: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 12,
         height: 16 / 12,
@@ -153,7 +148,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.secondary,
       ),
       labelSmall: TextStyle(
-        fontFamily: primaryFamily,
+        fontFamily: primaryFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 11,
         height: 14 / 11,
@@ -162,7 +157,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.tertiary,
       ),
       monoLarge: TextStyle(
-        fontFamily: codeFamily,
+        fontFamily: codeFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 16,
         height: 22 / 16,
@@ -170,7 +165,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       monoMedium: TextStyle(
-        fontFamily: codeFamily,
+        fontFamily: codeFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 14,
         height: 20 / 14,
@@ -178,7 +173,7 @@ class TypographyThemeExtension extends ThemeExtension<TypographyThemeExtension>
         color: textColor.primary,
       ),
       monoSmall: TextStyle(
-        fontFamily: codeFamily,
+        fontFamily: codeFontFamily,
         fontFamilyFallback: japaneseFontFamilyFallback,
         fontSize: 12,
         height: 16 / 12,

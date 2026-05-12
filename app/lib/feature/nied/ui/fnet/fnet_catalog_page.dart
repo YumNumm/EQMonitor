@@ -120,7 +120,7 @@ class _FnetCatalogList extends HookConsumerWidget {
                         style: theme.textTheme.titleSmall!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: colorScheme.onSurface,
-                          fontFamily: FontFamily.notoSansMono,
+                          fontFamily: FontFamily.googleSansCode,
                         ),
                       ),
                     ),
@@ -328,7 +328,7 @@ class _EventCard extends HookWidget {
             const SizedBox(height: 8),
             DefaultTextStyle(
               style: theme.textTheme.bodyMedium!.copyWith(
-                fontFamily: FontFamily.notoSansMono,
+                fontFamily: FontFamily.googleSansCode,
                 fontFamilyFallback: [FontFamily.notoSansJP],
               ),
               child: Column(
