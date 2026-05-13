@@ -23,7 +23,9 @@ void main() {
       final earthquake = testData.earthquake(
         intensity: testData.fullIntensity(),
       );
-      const config = EarthquakeHistoryDetailConfig();
+      const config = EarthquakeHistoryDetailConfig(
+        fillMode: EarthquakeHistoryFillMode.none,
+      );
 
       final mode = resolver.resolveFillLayerMode(
         earthquake: earthquake,
@@ -43,10 +45,7 @@ void main() {
         EarthquakeHistoryIconMode.station,
         EarthquakeHistoryIconMode.auto,
       ]) {
-        final config = EarthquakeHistoryDetailConfig(
-          fillMode: EarthquakeHistoryFillMode.matchIcon,
-          iconMode: iconMode,
-        );
+        final config = EarthquakeHistoryDetailConfig(iconMode: iconMode);
 
         expect(
           resolver.resolveFillLayerMode(
@@ -116,9 +115,7 @@ void main() {
 
     test('intensityがない不正な地震データはnoneを返す', () {
       final earthquake = testData.earthquake();
-      const config = EarthquakeHistoryDetailConfig(
-        fillMode: EarthquakeHistoryFillMode.matchIcon,
-      );
+      const config = EarthquakeHistoryDetailConfig();
 
       expect(
         resolver.resolveMapLayerMode(
