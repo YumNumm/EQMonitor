@@ -99,6 +99,40 @@ extension JmaIntensityToApi on JmaIntensity {
   };
 }
 
+extension JmaIntensityFromRawKnetInt on JmaIntensity {
+  /// K-NET 計測震度の小数値（rawInt）から JmaIntensity に変換する
+  static JmaIntensity fromRawKnetInt(double rawInt) {
+    if (rawInt < 0.5) {
+      return JmaIntensity.zero;
+    }
+    if (rawInt < 1.5) {
+      return JmaIntensity.one;
+    }
+    if (rawInt < 2.5) {
+      return JmaIntensity.two;
+    }
+    if (rawInt < 3.5) {
+      return JmaIntensity.three;
+    }
+    if (rawInt < 4.5) {
+      return JmaIntensity.four;
+    }
+    if (rawInt < 5.0) {
+      return JmaIntensity.fiveLower;
+    }
+    if (rawInt < 5.5) {
+      return JmaIntensity.fiveUpper;
+    }
+    if (rawInt < 6.0) {
+      return JmaIntensity.sixLower;
+    }
+    if (rawInt < 6.5) {
+      return JmaIntensity.sixUpper;
+    }
+    return JmaIntensity.seven;
+  }
+}
+
 extension ApiMinJmaIntensityConverter on api.MinJmaIntensity {
   JmaIntensity get toJmaIntensity => switch (this) {
     api.MinJmaIntensity.value0 => JmaIntensity.zero,

@@ -1,7 +1,9 @@
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
+import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_directory_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class KnetWaveformPage extends ConsumerWidget {
   const KnetWaveformPage({super.key});
@@ -81,38 +83,6 @@ class _ConfiguredView extends StatelessWidget {
 
   final String userId;
 
-  Future<void> _openMediaPage(BuildContext context) async {
-    // Step 1: pick date
-    final now = DateTime.now();
-    final date = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: DateTime(2000),
-      lastDate: now,
-      helpText: '地震発生日を選択',
-    );
-    if (date == null || !context.mounted) {
-      return;
-    }
-    // Step 2: pick time
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      helpText: '地震発生時刻を選択',
-    );
-    if (time == null || !context.mounted) {
-      return;
-    }
-    final eventTime = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time.hour,
-      time.minute,
-    );
-    await KnetMediaRoute($extra: eventTime).push<void>(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -138,9 +108,15 @@ class _ConfiguredView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
-              onPressed: () => _openMediaPage(context),
+              onPressed: () => _openYearPicker(context),
               icon: const Icon(Icons.image_search),
               label: const Text('PNG図・MP4動画を表示'),
+            ),
+            const SizedBox(height: 12),
+            FilledButton.tonalIcon(
+              onPressed: () => _openYearPickerForRecords(context),
+              icon: const Icon(Icons.sensors),
+              label: const Text('観測点一覧・波形を表示'),
             ),
             const SizedBox(height: 12),
             OutlinedButton.icon(
@@ -152,6 +128,233 @@ class _ConfiguredView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _openYearPickerForRecords(BuildContext context) async {
+    final year = await showDialog<int>(
+      context: context,
+      builder: (_) => const _YearPickerDialog(),
+    );
+    if (year == null || !context.mounted) {
+      return;
+    }
+
+    final month = await showDialog<int>(
+      context: context,
+      builder: (_) => _MonthPickerDialog(year: year),
+    );
+    if (month == null || !context.mounted) {
+      return;
+    }
+
+    final eventTime = await showDialog<DateTime>(
+      context: context,
+      builder: (_) => _RecordPickerDialog(year: year, month: month),
+    );
+    if (eventTime == null || !context.mounted) {
+      return;
+    }
+
+    await KnetRecordListRoute($extra: eventTime).push<void>(context);
+  }
+
+  Future<void> _openYearPicker(BuildContext context) async {
+    final year = await showDialog<int>(
+      context: context,
+      builder: (_) => const _YearPickerDialog(),
+    );
+    if (year == null || !context.mounted) {
+      return;
+    }
+
+    final month = await showDialog<int>(
+      context: context,
+      builder: (_) => _MonthPickerDialog(year: year),
+    );
+    if (month == null || !context.mounted) {
+      return;
+    }
+
+    final eventTime = await showDialog<DateTime>(
+      context: context,
+      builder: (_) => _RecordPickerDialog(year: year, month: month),
+    );
+    if (eventTime == null || !context.mounted) {
+      return;
+    }
+
+    await KnetMediaRoute($extra: eventTime).push<void>(context);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Year picker dialog
+// ---------------------------------------------------------------------------
+
+class _YearPickerDialog extends ConsumerWidget {
+  const _YearPickerDialog();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final yearsAsync = ref.watch(knetYearsProvider);
+    return AlertDialog(
+      title: const Text('年を選択'),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: yearsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('エラー: $e')),
+          data: (years) {
+            final reversed = years.reversed.toList();
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: reversed.length,
+              itemBuilder: (context, i) {
+                final y = reversed[i];
+                return ListTile(
+                  title: Text('$y年'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).pop(y),
+                );
+              },
+            );
+          },
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('キャンセル'),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Month picker dialog
+// ---------------------------------------------------------------------------
+
+class _MonthPickerDialog extends ConsumerWidget {
+  const _MonthPickerDialog({required this.year});
+
+  final int year;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final monthsAsync = ref.watch(knetMonthsProvider(year));
+    return AlertDialog(
+      title: Text('$year年 — 月を選択'),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: monthsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('エラー: $e')),
+          data: (months) {
+            final reversed = months.reversed.toList();
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: reversed.length,
+              itemBuilder: (context, i) {
+                final m = reversed[i];
+                return ListTile(
+                  title: Text('$m月'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).pop(m),
+                );
+              },
+            );
+          },
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('キャンセル'),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Record picker dialog (searchable)
+// ---------------------------------------------------------------------------
+
+class _RecordPickerDialog extends ConsumerStatefulWidget {
+  const _RecordPickerDialog({required this.year, required this.month});
+
+  final int year;
+  final int month;
+
+  @override
+  ConsumerState<_RecordPickerDialog> createState() =>
+      _RecordPickerDialogState();
+}
+
+class _RecordPickerDialogState extends ConsumerState<_RecordPickerDialog> {
+  final _formatter = DateFormat('MM/dd HH:mm:ss');
+  var _query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final recordsAsync =
+        ref.watch(knetRecordsProvider(widget.year, widget.month));
+    return AlertDialog(
+      title: Text('${widget.year}年${widget.month}月 — 記録を選択'),
+      contentPadding: const EdgeInsets.only(top: 8),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: recordsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('エラー: $e')),
+          data: (records) {
+            final filtered = _query.isEmpty
+                ? records
+                : records.where((dt) {
+                    return _formatter.format(dt).contains(_query);
+                  }).toList();
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: '時刻で絞り込む',
+                      prefixIcon: Icon(Icons.search),
+                      isDense: true,
+                    ),
+                    onChanged: (v) => setState(() => _query = v),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filtered.length,
+                    itemBuilder: (context, i) {
+                      final dt = filtered[i];
+                      return ListTile(
+                        dense: true,
+                        title: Text(_formatter.format(dt)),
+                        onTap: () => Navigator.of(context).pop(dt),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('キャンセル'),
+        ),
+      ],
     );
   }
 }

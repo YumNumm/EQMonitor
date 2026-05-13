@@ -14,8 +14,11 @@ import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_media_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_record_list_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
@@ -336,6 +339,12 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
                 ),
                 TypedGoRoute<KnetMediaRoute>(
                   path: 'media',
+                ),
+                TypedGoRoute<KnetRecordListRoute>(
+                  path: 'records',
+                ),
+                TypedGoRoute<KnetStationWaveformRoute>(
+                  path: 'waveform',
                 ),
               ],
             ),
@@ -687,6 +696,28 @@ class KnetMediaRoute extends GoRouteData with $KnetMediaRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       KnetMediaPage(eventTime: $extra);
+}
+
+class KnetRecordListRoute extends GoRouteData with $KnetRecordListRoute {
+  const KnetRecordListRoute({required this.$extra});
+
+  /// 地震発生時刻（JST）
+  final DateTime $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetRecordListPage(eventTime: $extra);
+}
+
+class KnetStationWaveformRoute extends GoRouteData
+    with $KnetStationWaveformRoute {
+  const KnetStationWaveformRoute({required this.$extra});
+
+  final KnetStationResult $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetStationWaveformPage(result: $extra);
 }
 
 class KyoshinMonitorAboutRoute extends GoRouteData
