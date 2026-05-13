@@ -14,8 +14,12 @@ import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/earthquake/knet_earthquake_list_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/station/knet_header_edit_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/station/knet_station_detail_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/station/knet_station_list_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
@@ -108,8 +112,7 @@ class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SplashPage();
+  Widget build(BuildContext context, GoRouterState state) => const SplashPage();
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')
@@ -333,6 +336,24 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
               routes: [
                 TypedGoRoute<KnetCredentialsSettingsRoute>(
                   path: 'settings',
+                ),
+                TypedGoRoute<KnetEarthquakeListRoute>(
+                  path: 'earthquakes',
+                  routes: [
+                    TypedGoRoute<KnetStationListRoute>(
+                      path: ':eventTimeMs/stations',
+                      routes: [
+                        TypedGoRoute<KnetStationDetailRoute>(
+                          path: ':stationCode',
+                          routes: [
+                            TypedGoRoute<KnetHeaderEditRoute>(
+                              path: 'edit',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -673,6 +694,58 @@ class KnetCredentialsSettingsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const KnetCredentialsSettingsPage();
+}
+
+class KnetEarthquakeListRoute extends GoRouteData
+    with $KnetEarthquakeListRoute {
+  const KnetEarthquakeListRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const KnetEarthquakeListPage();
+}
+
+class KnetStationListRoute extends GoRouteData with $KnetStationListRoute {
+  const KnetStationListRoute({required this.eventTimeMs});
+
+  final int eventTimeMs;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetStationListPage(eventTimeMs: eventTimeMs);
+}
+
+class KnetStationDetailRoute extends GoRouteData with $KnetStationDetailRoute {
+  const KnetStationDetailRoute({
+    required this.eventTimeMs,
+    required this.stationCode,
+  });
+
+  final int eventTimeMs;
+  final String stationCode;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetStationDetailPage(
+        eventTimeMs: eventTimeMs,
+        stationCode: stationCode,
+      );
+}
+
+class KnetHeaderEditRoute extends GoRouteData with $KnetHeaderEditRoute {
+  const KnetHeaderEditRoute({
+    required this.eventTimeMs,
+    required this.stationCode,
+  });
+
+  final int eventTimeMs;
+  final String stationCode;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => KnetHeaderEditPage(
+    eventTimeMs: eventTimeMs,
+    stationCode: stationCode,
+  );
 }
 
 class KyoshinMonitorAboutRoute extends GoRouteData

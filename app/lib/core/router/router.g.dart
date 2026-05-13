@@ -540,6 +540,28 @@ RouteBase get $settingsRoute => GoRouteData.$route(
                   path: 'settings',
                   factory: $KnetCredentialsSettingsRoute._fromState,
                 ),
+                GoRouteData.$route(
+                  path: 'earthquakes',
+                  factory: $KnetEarthquakeListRoute._fromState,
+                  routes: [
+                    GoRouteData.$route(
+                      path: ':eventTimeMs/stations',
+                      factory: $KnetStationListRoute._fromState,
+                      routes: [
+                        GoRouteData.$route(
+                          path: ':stationCode',
+                          factory: $KnetStationDetailRoute._fromState,
+                          routes: [
+                            GoRouteData.$route(
+                              path: 'edit',
+                              factory: $KnetHeaderEditRoute._fromState,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
@@ -1337,6 +1359,111 @@ mixin $KnetCredentialsSettingsRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/nied/knet/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetEarthquakeListRoute on GoRouteData {
+  static KnetEarthquakeListRoute _fromState(GoRouterState state) =>
+      const KnetEarthquakeListRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/knet/earthquakes');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetStationListRoute on GoRouteData {
+  static KnetStationListRoute _fromState(GoRouterState state) =>
+      KnetStationListRoute(
+        eventTimeMs: int.parse(state.pathParameters['eventTimeMs']!),
+      );
+
+  KnetStationListRoute get _self => this as KnetStationListRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/nied/knet/earthquakes/${Uri.encodeComponent(_self.eventTimeMs.toString())}/stations',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetStationDetailRoute on GoRouteData {
+  static KnetStationDetailRoute _fromState(GoRouterState state) =>
+      KnetStationDetailRoute(
+        eventTimeMs: int.parse(state.pathParameters['eventTimeMs']!),
+        stationCode: state.pathParameters['stationCode']!,
+      );
+
+  KnetStationDetailRoute get _self => this as KnetStationDetailRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/nied/knet/earthquakes/${Uri.encodeComponent(_self.eventTimeMs.toString())}/stations/${Uri.encodeComponent(_self.stationCode)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetHeaderEditRoute on GoRouteData {
+  static KnetHeaderEditRoute _fromState(GoRouterState state) =>
+      KnetHeaderEditRoute(
+        eventTimeMs: int.parse(state.pathParameters['eventTimeMs']!),
+        stationCode: state.pathParameters['stationCode']!,
+      );
+
+  KnetHeaderEditRoute get _self => this as KnetHeaderEditRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/settings/debug/nied/knet/earthquakes/${Uri.encodeComponent(_self.eventTimeMs.toString())}/stations/${Uri.encodeComponent(_self.stationCode)}/edit',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
