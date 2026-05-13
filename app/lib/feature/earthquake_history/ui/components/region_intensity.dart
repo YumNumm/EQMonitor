@@ -317,14 +317,12 @@ class _PrefectureTile extends HookWidget {
         if (isExpanded.value)
           Padding(
             padding: const .only(left: 8),
-            child: Expanded(
-              child: Column(
-                children: prefecture.cities
-                    .map(
-                      (city) => _CityTile(city: city, eventId: eventId),
-                    )
-                    .toList(),
-              ),
+            child: Column(
+              children: prefecture.cities
+                  .map(
+                    (city) => _CityTile(city: city, eventId: eventId),
+                  )
+                  .toList(),
             ),
           )
         else
