@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_waveform_download_provider.dart';
@@ -53,7 +54,13 @@ class KnetStationDetailPage extends HookConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('エラー: $e')),
+        error: (e, st) {
+          final msg = e is KnetWaveformDownloadException
+              ? e.message
+              : 'データの取得に失敗しました';
+          debugPrint('K-NET station detail error: $e\n$st');
+          return Center(child: Text(msg));
+        },
         data: (stationMap) {
           final records = stationMap[stationCode];
           if (records == null) {
@@ -225,10 +232,10 @@ class _WaveformChart extends StatelessWidget {
 
     // データ点が多い場合は間引く（最大 2000 点）
     const maxPoints = 2000;
-    final step = acc.length > maxPoints ? acc.length ~/ maxPoints : 1;
+    final step = math.max(1, (acc.length / maxPoints).ceil());
 
     final spots = <FlSpot>[];
-    for (var i = 0; i < acc.length; i += step) {
+    for (var i = 0; i < acc.length && spots.length < maxPoints; i += step) {
       spots.add(FlSpot(i * dt, acc[i]));
     }
 
@@ -237,7 +244,8 @@ class _WaveformChart extends StatelessWidget {
     }
 
     final maxY = acc.reduce((a, b) => a.abs() > b.abs() ? a : b).abs();
-    final yLimit = maxY * 1.1;
+    // maxY が 0 の場合は 1.0 をデフォルト値として使用し、ゼロ除算・ゼロスケールを防ぐ
+    final yLimit = maxY == 0 ? 1.0 : maxY * 1.1;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 16, 16, 8),

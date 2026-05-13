@@ -6,6 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_waveform_parser/knet_waveform_parser.dart';
 
+/// 観測点の各チャンネルを横断した最大加速度 (gal) を返す。
+double _maxAcceleration(Map<KnetChannelDirection, KnetRecord> records) {
+  if (records.isEmpty) {
+    return 0;
+  }
+  return records.values
+      .map((r) => r.maxAccelerationGal)
+      .reduce((a, b) => a > b ? a : b);
+}
+
 /// K-NET 観測点一覧画面
 ///
 /// 指定した地震の ZIP をダウンロード・解凍・パースし、
@@ -34,12 +44,18 @@ class KnetStationListPage extends ConsumerWidget {
             ],
           ),
         ),
-        error: (e, _) => _ErrorView(
-          message: e.toString(),
-          onRetry: () => ref.invalidate(
-            knetWaveformDownloadProvider(eventTimeMs),
-          ),
-        ),
+        error: (e, st) {
+          final msg = e is KnetWaveformDownloadException
+              ? e.message
+              : 'データの取得に失敗しました';
+          debugPrint('K-NET waveform download error: $e\n$st');
+          return _ErrorView(
+            message: msg,
+            onRetry: () => ref.invalidate(
+              knetWaveformDownloadProvider(eventTimeMs),
+            ),
+          );
+        },
         data: (stationMap) => _StationListView(
           stationMap: stationMap,
           eventTimeMs: eventTimeMs,
@@ -103,22 +119,32 @@ class _StationListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stations = stationMap.entries.toList()
-      ..sort((a, b) => _maxAcc(b.value).compareTo(_maxAcc(a.value)));
+    // maxAcc をソート前に一度だけ計算してキャッシュする
+    final sorted =
+        stationMap.entries
+            .map(
+              (e) => (
+                stationCode: e.key,
+                records: e.value,
+                maxAcc: _maxAcceleration(e.value),
+              ),
+            )
+            .toList()
+          ..sort((a, b) => b.maxAcc.compareTo(a.maxAcc));
 
     return ListView.separated(
-      itemCount: stations.length,
+      itemCount: sorted.length,
       separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, index) {
-        final entry = stations[index];
-        final stationCode = entry.key;
-        final records = entry.value;
+        final entry = sorted[index];
+        final stationCode = entry.stationCode;
+        final records = entry.records;
+        final maxAcc = entry.maxAcc;
 
         // 代表レコード（NS 優先、無ければ最初の成分）
         final representative =
             records[KnetChannelDirection.ns] ?? records.values.first;
         final info = representative.stationInfo;
-        final maxAcc = _maxAcc(records);
 
         return ListTile(
           leading: const Icon(Icons.sensors),
@@ -139,14 +165,5 @@ class _StationListView extends StatelessWidget {
         );
       },
     );
-  }
-
-  double _maxAcc(Map<KnetChannelDirection, KnetRecord> records) {
-    if (records.isEmpty) {
-      return 0;
-    }
-    return records.values
-        .map((r) => r.maxAccelerationGal)
-        .reduce((a, b) => a > b ? a : b);
   }
 }

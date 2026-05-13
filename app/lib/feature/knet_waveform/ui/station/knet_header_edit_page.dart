@@ -28,7 +28,13 @@ class KnetHeaderEditPage extends HookConsumerWidget {
       ),
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('エラー: $e')),
+        error: (e, st) {
+          final msg = e is KnetWaveformDownloadException
+              ? e.message
+              : 'データの取得に失敗しました';
+          debugPrint('K-NET header edit error: $e\n$st');
+          return Center(child: Text(msg));
+        },
         data: (stationMap) {
           final records = stationMap[stationCode];
           if (records == null) {
@@ -69,11 +75,14 @@ class _EditForm extends HookWidget {
 
     void onSave() {
       if (formKey.currentState?.validate() ?? false) {
-        // 現時点ではメモリ内保持のみ。
-        // 将来的に SharedPreferences や Hive への永続化を実装する想定。
+        // TODO(#1201): 編集内容の永続化は未実装。
+        // 将来的に StateProvider<Map<String, KnetHeaderOverride>> などで
+        // セッション内保持 → SharedPreferences/Hive への永続化を実装する。
         isSaved.value = true;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('保存しました（セッション内一時保存）')),
+          const SnackBar(
+            content: Text('入力内容を確認しました（保存機能は未実装です）'),
+          ),
         );
       }
     }
@@ -85,25 +94,25 @@ class _EditForm extends HookWidget {
         children: [
           if (isSaved.value)
             Card(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.secondaryContainer,
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Row(
                   children: [
                     Icon(
                       Icons.info_outline,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                       size: 18,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'セッション内一時保存済み。アプリ再起動時はリセットされます。',
+                        '保存機能は未実装です。入力内容はアプリ再起動時にリセットされます。',
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(
                             context,
-                          ).colorScheme.onPrimaryContainer,
+                          ).colorScheme.onSecondaryContainer,
                         ),
                       ),
                     ),
@@ -151,7 +160,7 @@ class _EditForm extends HookWidget {
           FilledButton.icon(
             onPressed: onSave,
             icon: const Icon(Icons.save),
-            label: const Text('保存'),
+            label: const Text('確認（保存は次回実装）'),
           ),
         ],
       ),
