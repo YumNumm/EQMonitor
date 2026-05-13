@@ -48,7 +48,6 @@ class _MovieContent extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final downloadState = useState(_DownloadState.idle);
-    final downloadProgress = useState<double>(0);
     final errorMessage = useState<String?>(null);
     final localFile = useState<File?>(null);
     final controller = useState<VideoPlayerController?>(null);
@@ -56,7 +55,6 @@ class _MovieContent extends HookWidget {
 
     Future<void> download() async {
       downloadState.value = _DownloadState.downloading;
-      downloadProgress.value = 0;
       errorMessage.value = null;
       localFile.value = null;
 
@@ -123,10 +121,6 @@ class _MovieContent extends HookWidget {
                 'ダウンロード中...',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              if (downloadProgress.value > 0) ...[
-                const SizedBox(height: 8),
-                LinearProgressIndicator(value: downloadProgress.value),
-              ],
             ],
           ),
         ),
