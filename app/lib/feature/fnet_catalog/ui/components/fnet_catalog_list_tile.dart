@@ -231,89 +231,86 @@ class _DetailSheet extends StatelessWidget {
                   style: theme.textTheme.bodyMedium,
                 ),
                 const Divider(height: 32),
-                _buildSection(
-                  context,
-                  '基本情報',
-                  [
-                    _buildRow('緯度', '${event.latitude.toStringAsFixed(4)}°'),
-                    _buildRow('経度', '${event.longitude.toStringAsFixed(4)}°'),
-                    _buildRow(
-                      'JMA震源深さ',
-                      '${event.jmaDepth.toStringAsFixed(2)} km',
+                _Section(
+                  title: '基本情報',
+                  children: [
+                    _InfoRow(label: '緯度', value: '${event.latitude.toStringAsFixed(4)}°'),
+                    _InfoRow(label: '経度', value: '${event.longitude.toStringAsFixed(4)}°'),
+                    _InfoRow(
+                      label: 'JMA震源深さ',
+                      value: '${event.jmaDepth.toStringAsFixed(2)} km',
                     ),
-                    _buildRow(
-                      'JMAマグニチュード',
-                      event.jmaMagnitude.toStringAsFixed(1),
+                    _InfoRow(
+                      label: 'JMAマグニチュード',
+                      value: event.jmaMagnitude.toStringAsFixed(1),
                     ),
-                    _buildRow(
-                      'MT震源深さ',
-                      '${event.mtDepth.toStringAsFixed(2)} km',
+                    _InfoRow(
+                      label: 'MT震源深さ',
+                      value: '${event.mtDepth.toStringAsFixed(2)} km',
                     ),
-                    _buildRow(
-                      'モーメントマグニチュード',
-                      event.momentMagnitude.toStringAsFixed(1),
+                    _InfoRow(
+                      label: 'モーメントマグニチュード',
+                      value: event.momentMagnitude.toStringAsFixed(1),
                     ),
-                    _buildRow(
-                      '地震モーメント',
-                      '${event.seismicMoment.toStringAsExponential(2)} Nm',
+                    _InfoRow(
+                      label: '地震モーメント',
+                      value: '${event.seismicMoment.toStringAsExponential(2)} Nm',
                     ),
-                    _buildRow(
-                      'バリアンス・リダクション',
-                      '${event.varianceReduction.toStringAsFixed(2)}%',
+                    _InfoRow(
+                      label: 'バリアンス・リダクション',
+                      value: '${event.varianceReduction.toStringAsFixed(2)}%',
                     ),
-                    _buildRow(
-                      '使用観測点数',
-                      '${event.numberOfStations}',
-                    ),
-                  ],
-                ),
-                const Divider(height: 32),
-                _buildSection(
-                  context,
-                  '断層パラメータ',
-                  [
-                    _buildRow(
-                      '走向 (Strike)',
-                      '${event.strike.plane1.toStringAsFixed(0)}° / ${event.strike.plane2.toStringAsFixed(0)}°',
-                    ),
-                    _buildRow(
-                      '傾斜角 (Dip)',
-                      '${event.dip.plane1.toStringAsFixed(0)}° / ${event.dip.plane2.toStringAsFixed(0)}°',
-                    ),
-                    _buildRow(
-                      'すべり角 (Rake)',
-                      '${event.rake.plane1.toStringAsFixed(0)}° / ${event.rake.plane2.toStringAsFixed(0)}°',
+                    _InfoRow(
+                      label: '使用観測点数',
+                      value: '${event.numberOfStations}',
                     ),
                   ],
                 ),
                 const Divider(height: 32),
-                _buildSection(
-                  context,
-                  'モーメントテンソル成分',
-                  [
-                    _buildRow(
-                      'Mxx',
-                      '${event.momentTensor.mxx.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                _Section(
+                  title: '断層パラメータ',
+                  children: [
+                    _InfoRow(
+                      label: '走向 (Strike)',
+                      value: '${event.strike.plane1.toStringAsFixed(0)}° / ${event.strike.plane2.toStringAsFixed(0)}°',
                     ),
-                    _buildRow(
-                      'Mxy',
-                      '${event.momentTensor.mxy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                    _InfoRow(
+                      label: '傾斜角 (Dip)',
+                      value: '${event.dip.plane1.toStringAsFixed(0)}° / ${event.dip.plane2.toStringAsFixed(0)}°',
                     ),
-                    _buildRow(
-                      'Mxz',
-                      '${event.momentTensor.mxz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                    _InfoRow(
+                      label: 'すべり角 (Rake)',
+                      value: '${event.rake.plane1.toStringAsFixed(0)}° / ${event.rake.plane2.toStringAsFixed(0)}°',
                     ),
-                    _buildRow(
-                      'Myy',
-                      '${event.momentTensor.myy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                  ],
+                ),
+                const Divider(height: 32),
+                _Section(
+                  title: 'モーメントテンソル成分',
+                  children: [
+                    _InfoRow(
+                      label: 'Mxx',
+                      value: '${event.momentTensor.mxx.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
-                    _buildRow(
-                      'Myz',
-                      '${event.momentTensor.myz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                    _InfoRow(
+                      label: 'Mxy',
+                      value: '${event.momentTensor.mxy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
-                    _buildRow(
-                      'Mzz',
-                      '${event.momentTensor.mzz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                    _InfoRow(
+                      label: 'Mxz',
+                      value: '${event.momentTensor.mxz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                    ),
+                    _InfoRow(
+                      label: 'Myy',
+                      value: '${event.momentTensor.myy.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                    ),
+                    _InfoRow(
+                      label: 'Myz',
+                      value: '${event.momentTensor.myz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
+                    ),
+                    _InfoRow(
+                      label: 'Mzz',
+                      value: '${event.momentTensor.mzz.toStringAsFixed(4)} × ${event.unit.toStringAsExponential(0)} Nm',
                     ),
                   ],
                 ),
@@ -324,12 +321,19 @@ class _DetailSheet extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSection(
-    BuildContext context,
-    String title,
-    List<Widget> children,
-  ) {
+class _Section extends StatelessWidget {
+  const _Section({
+    required this.title,
+    required this.children,
+  });
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,8 +349,19 @@ class _DetailSheet extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildRow(String label, String value) {
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({
+    required this.label,
+    required this.value,
+  });
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
