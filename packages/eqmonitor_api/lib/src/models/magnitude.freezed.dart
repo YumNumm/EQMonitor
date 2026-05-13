@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Magnitude {
 
- MagnitudeType get type;/// typeがNORMALのときのみ出現する
+ Type3 get type;/// typeがNORMALのときのみ出現する
 @JsonKey(includeIfNull: false) num? get value;
 /// Create a copy of Magnitude
 /// with the given fields replaced by the non-null parameter values.
@@ -49,7 +49,7 @@ abstract mixin class $MagnitudeCopyWith<$Res>  {
   factory $MagnitudeCopyWith(Magnitude value, $Res Function(Magnitude) _then) = _$MagnitudeCopyWithImpl;
 @useResult
 $Res call({
- MagnitudeType type,@JsonKey(includeIfNull: false) num? value
+ Type3 type,@JsonKey(includeIfNull: false) num? value
 });
 
 
@@ -69,7 +69,7 @@ class _$MagnitudeCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? value = freezed,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as MagnitudeType,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as Type3,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as num?,
   ));
 }
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MagnitudeType type, @JsonKey(includeIfNull: false)  num? value)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type3 type, @JsonKey(includeIfNull: false)  num? value)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Magnitude() when $default != null:
 return $default(_that.type,_that.value);case _:
@@ -176,7 +176,7 @@ return $default(_that.type,_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MagnitudeType type, @JsonKey(includeIfNull: false)  num? value)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type3 type, @JsonKey(includeIfNull: false)  num? value)  $default,) {final _that = this;
 switch (_that) {
 case _Magnitude():
 return $default(_that.type,_that.value);case _:
@@ -196,7 +196,7 @@ return $default(_that.type,_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MagnitudeType type, @JsonKey(includeIfNull: false)  num? value)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type3 type, @JsonKey(includeIfNull: false)  num? value)?  $default,) {final _that = this;
 switch (_that) {
 case _Magnitude() when $default != null:
 return $default(_that.type,_that.value);case _:
@@ -214,7 +214,7 @@ class _Magnitude implements Magnitude {
   const _Magnitude({required this.type, @JsonKey(includeIfNull: false) this.value});
   factory _Magnitude.fromJson(Map<String, dynamic> json) => _$MagnitudeFromJson(json);
 
-@override final  MagnitudeType type;
+@override final  Type3 type;
 /// typeがNORMALのときのみ出現する
 @override@JsonKey(includeIfNull: false) final  num? value;
 
@@ -251,7 +251,7 @@ abstract mixin class _$MagnitudeCopyWith<$Res> implements $MagnitudeCopyWith<$Re
   factory _$MagnitudeCopyWith(_Magnitude value, $Res Function(_Magnitude) _then) = __$MagnitudeCopyWithImpl;
 @override @useResult
 $Res call({
- MagnitudeType type,@JsonKey(includeIfNull: false) num? value
+ Type3 type,@JsonKey(includeIfNull: false) num? value
 });
 
 
@@ -271,7 +271,7 @@ class __$MagnitudeCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? value = freezed,}) {
   return _then(_Magnitude(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as MagnitudeType,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as Type3,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as num?,
   ));
 }

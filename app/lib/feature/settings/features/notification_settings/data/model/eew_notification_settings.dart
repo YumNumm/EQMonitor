@@ -10,7 +10,6 @@ abstract class EewNotificationSettings with _$EewNotificationSettings {
     required bool enabled,
     required JmaIntensity? criticalThreshold,
     required bool startLiveActivity,
-    required bool onePointEnabled,
     required List<NotificationRegion> regions,
   }) = _EewNotificationSettings;
 }

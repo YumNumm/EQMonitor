@@ -27,18 +27,14 @@ sealed class TargetUnion with _$TargetUnion {
   
 
   factory TargetUnion.fromJson(Map<String, Object?> json) =>
-      // TODO: No discriminator in OpenAPI spec - you must implement this manually.
-      //
-      // Inspect the JSON and return the matching variant. Each variant has a fromJson:
-      //   TargetUnionVariantName.fromJson(json)
-      //
-      // Example pattern (check for unique fields):
-      //   json.containsKey('uniqueFieldA') ? TargetUnionTypeA.fromJson(json) :
-      //   json.containsKey('uniqueFieldB') ? TargetUnionTypeB.fromJson(json) :
-      //   TargetUnionDefault.fromJson(json);
-      //
-      // IMPORTANT: Keep the => arrow syntax. Converting to a { } body will cause
-      // freezed to skip generating toJson/fromJson for this class.
-      throw UnimplementedError();
+      switch (json['type']) {
+        'device_id' => TargetUnionVariant1.fromJson(json),
+        'push_to_start_token' => TargetUnionVariant2.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'type',
+          'Unknown TargetUnion type',
+        ),
+      };
 
 }

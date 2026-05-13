@@ -41,7 +41,6 @@ class _Body extends ConsumerWidget {
           enabled: true,
           criticalThreshold: null,
           startLiveActivity: true,
-          onePointEnabled: true,
           regions: [],
         );
 
@@ -55,8 +54,6 @@ class _Body extends ConsumerWidget {
           _ThresholdSection(settings: settings),
           const SettingsSectionHeader(text: 'Live Activity'),
           _LiveActivitySection(settings: settings),
-          const SettingsSectionHeader(text: '一点観測EEW'),
-          _OnePointSection(settings: settings),
           const SettingsSectionHeader(text: '通知地域'),
           _RegionsSection(settings: settings),
         ],
@@ -182,35 +179,6 @@ class _LiveActivitySection extends ConsumerWidget {
   }
 }
 
-class _OnePointSection extends ConsumerWidget {
-  const _OnePointSection({required this.settings});
-
-  final EewNotificationSettings settings;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final saveState = ref.watch(EewSettingsNotifier.saveOnePointMutation);
-    final isSaving = saveState is MutationPending;
-
-    return AppSwitchListTile(
-      title: '一点観測EEWの通知',
-      subtitle: '単一の観測点のみで検出された速報（精度が低い場合があります）を受け取ります',
-      value: settings.onePointEnabled,
-      onChanged: isSaving
-          ? null
-          : (value) async {
-              await EewSettingsNotifier.saveOnePointMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewSettingsProvider.notifier)
-                      .setOnePointEnabled(onePointEnabled: value);
-                },
-              );
-            },
-    );
-  }
-}
 
 class _RegionsSection extends ConsumerWidget {
   const _RegionsSection({required this.settings});

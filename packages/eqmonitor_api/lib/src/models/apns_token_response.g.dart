@@ -18,7 +18,7 @@ _ApnsTokenResponse _$ApnsTokenResponseFromJson(Map<String, dynamic> json) =>
         token: $checkedConvert('token', (v) => v as String),
         environment: $checkedConvert(
           'environment',
-          (v) => $enumDecode(_$ApnsEnvironmentEnumMap, v),
+          (v) => $enumDecode(_$EnvironmentEnumMap, v),
         ),
       );
       return val;
@@ -36,7 +36,7 @@ const _$ApnsTokenTypeEnumMap = {
   ApnsTokenType.liveActivityStart: 'LIVE_ACTIVITY_START',
 };
 
-const _$ApnsEnvironmentEnumMap = {
-  ApnsEnvironment.development: 'development',
-  ApnsEnvironment.production: 'production',
+const _$EnvironmentEnumMap = {
+  Environment.development: 'development',
+  Environment.production: 'production',
 };

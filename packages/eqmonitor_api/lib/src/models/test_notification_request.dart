@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'test_notification_type.dart';
+import 'type2.dart';
 
 part 'test_notification_request.freezed.dart';
 part 'test_notification_request.g.dart';
@@ -12,7 +12,7 @@ part 'test_notification_request.g.dart';
 @Freezed()
 abstract class TestNotificationRequest with _$TestNotificationRequest {
   const factory TestNotificationRequest({
-    required TestNotificationType type,
+    required Type2 type,
   }) = _TestNotificationRequest;
   
   factory TestNotificationRequest.fromJson(Map<String, Object?> json) => _$TestNotificationRequestFromJson(json);

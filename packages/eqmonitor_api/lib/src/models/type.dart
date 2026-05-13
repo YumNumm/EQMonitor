@@ -5,13 +5,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum EewIntensityRegionArrivalTimeType {
-  @JsonValue('TIME')
-  time('TIME'),
-  @JsonValue('ARRIVED')
-  arrived('ARRIVED');
+enum Type {
+  @JsonValue('IOS')
+  ios('IOS'),
+  @JsonValue('ANDROID')
+  android('ANDROID');
 
-  const EewIntensityRegionArrivalTimeType(this.json);
+  const Type(this.json);
 
   final String? json;
   String toJson() {

@@ -50,7 +50,6 @@ class DeviceNotificationSettingsRepository {
     required bool enabled,
     required JmaIntensity? criticalThreshold,
     required bool startLiveActivity,
-    required bool onePointEnabled,
   }) => Result.capture(() async {
     final response = await _api.device.patchV2DeviceDeviceIdSettingsEew(
       deviceId: deviceId,
@@ -58,7 +57,6 @@ class DeviceNotificationSettingsRepository {
         enabled: enabled,
         notificationTiers: _toEewApiTiers(criticalThreshold),
         startLiveActivity: startLiveActivity,
-        onePointEnabled: onePointEnabled,
       ),
     );
     final regionsResult = await _api.device
@@ -196,7 +194,6 @@ class DeviceNotificationSettingsRepository {
       resp.notificationTiers,
     ),
     startLiveActivity: resp.startLiveActivity,
-    onePointEnabled: resp.onePointEnabled,
     regions: regions,
   );
 

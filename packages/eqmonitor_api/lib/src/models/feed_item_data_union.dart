@@ -85,18 +85,19 @@ sealed class FeedItemDataUnion with _$FeedItemDataUnion {
   
 
   factory FeedItemDataUnion.fromJson(Map<String, Object?> json) =>
-      // TODO: No discriminator in OpenAPI spec - you must implement this manually.
-      //
-      // Inspect the JSON and return the matching variant. Each variant has a fromJson:
-      //   FeedItemDataUnionVariantName.fromJson(json)
-      //
-      // Example pattern (check for unique fields):
-      //   json.containsKey('uniqueFieldA') ? FeedItemDataUnionTypeA.fromJson(json) :
-      //   json.containsKey('uniqueFieldB') ? FeedItemDataUnionTypeB.fromJson(json) :
-      //   FeedItemDataUnionDefault.fromJson(json);
-      //
-      // IMPORTANT: Keep the => arrow syntax. Converting to a { } body will cause
-      // freezed to skip generating toJson/fromJson for this class.
-      throw UnimplementedError();
+      switch (json['type']) {
+        'EARTHQUAKE_NOTICE' => FeedItemDataUnionVariant1.fromJson(json),
+        'EARTHQUAKE_EXPLANATION' => FeedItemDataUnionVariant2.fromJson(json),
+        'EARTHQUAKE_COUNTS' => FeedItemDataUnionVariant3.fromJson(json),
+        'EARTHQUAKE_NANKAI' => FeedItemDataUnionVariant4.fromJson(json),
+        'APP_UPDATE' => FeedItemDataUnionVariant5.fromJson(json),
+        'INCIDENT' => FeedItemDataUnionVariant6.fromJson(json),
+        'DEVELOPER_MESSAGE' => FeedItemDataUnionVariant7.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'type',
+          'Unknown FeedItemDataUnion type',
+        ),
+      };
 
 }
