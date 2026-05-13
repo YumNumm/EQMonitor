@@ -132,15 +132,20 @@ Future<void> _step(String label, Future<void> Function() action) async {
 
 /// swagger_parser が生成するenumの toJson() 内の文字列リテラルで
 /// `$unknown` が補間として解釈されるのを修正する。
+///
+/// 既にエスケープ済みの `\$unknown` には触らないように、`$` の直前が
+/// バックスラッシュでない場合のみ置換する。これにより再実行しても
+/// バックスラッシュが増えない（冪等）。
 Future<void> _patchGeneratedFiles(Directory libDir) async {
   final dartFiles = libDir
       .listSync(recursive: true)
       .whereType<File>()
       .where((f) => f.path.endsWith('.dart'));
 
+  final pattern = RegExp(r'(?<!\\)\$unknown');
   for (final file in dartFiles) {
     final original = file.readAsStringSync();
-    var patched = original.replaceAll(r'$unknown', r'\$unknown');
+    final patched = original.replaceAll(pattern, r'\$unknown');
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  Patched: ${file.path}');
