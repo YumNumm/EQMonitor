@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:knet_api_client/knet_api_client.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
-/// K-NET all/movie MP4 をダウンロード・再生するビュー
+/// K-NET all/movie MP4 をストリーミング再生するビュー
 class KnetMovieView extends HookConsumerWidget {
   const KnetMovieView({required this.eventTime, super.key});
 
@@ -27,17 +26,13 @@ class KnetMovieView extends HookConsumerWidget {
       ),
       data: (client) {
         if (client == null) {
-          return const Center(
-            child: Text('認証情報が設定されていません'),
-          );
+          return const Center(child: Text('認証情報が設定されていません'));
         }
         return _MovieContent(eventTime: eventTime, client: client);
       },
     );
   }
 }
-
-enum _DownloadState { idle, downloading, ready, error }
 
 class _MovieContent extends HookWidget {
   const _MovieContent({required this.eventTime, required this.client});
@@ -47,100 +42,94 @@ class _MovieContent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final downloadState = useState(_DownloadState.idle);
-    final downloadProgress = useState<double>(0);
-    final errorMessage = useState<String?>(null);
-    final localFile = useState<File?>(null);
+    final selectedType = useState(KnetMovieType.values.first);
     final controller = useState<VideoPlayerController?>(null);
-    final isControllerInit = useState(false);
+    final isInitialized = useState(false);
+    final errorMessage = useState<String?>(null);
 
-    Future<void> download() async {
-      downloadState.value = _DownloadState.downloading;
-      downloadProgress.value = 0;
-      errorMessage.value = null;
-      localFile.value = null;
-
-      // Dispose old controller if any
+    Future<void> loadVideo(KnetMovieType type) async {
+      // dispose old controller
       final oldCtrl = controller.value;
       controller.value = null;
-      isControllerInit.value = false;
+      isInitialized.value = false;
+      errorMessage.value = null;
       await oldCtrl?.dispose();
 
       try {
-        final url = knetAllMovieUrl(eventTime);
-        final bytes = await client.fetchBytes(url);
-        final dir = await getTemporaryDirectory();
-        final fileName = '${eventTime.millisecondsSinceEpoch}_knet.mp4';
-        final file = File('${dir.path}/$fileName');
-        await file.writeAsBytes(bytes);
-        localFile.value = file;
-        downloadState.value = _DownloadState.ready;
+        final url = knetAllMovieUrl(eventTime, type);
+        final ctrl = VideoPlayerController.networkUrl(
+          url,
+          httpHeaders: {HttpHeaders.authorizationHeader: client.authorizationHeader},
+        );
+        controller.value = ctrl;
+        await ctrl.initialize();
+        isInitialized.value = true;
       } on Exception catch (e) {
         errorMessage.value = e.toString();
-        downloadState.value = _DownloadState.error;
       }
     }
 
-    // Initialize video controller when file is ready
+    // 動画タイプが変わったら再ロード
     useEffect(
       () {
-        final file = localFile.value;
-        if (file == null) {
-          return null;
-        }
-        final ctrl = VideoPlayerController.file(file);
-        controller.value = ctrl;
-        isControllerInit.value = false;
-
-        unawaited(
-          ctrl.initialize().then((_) {
-            isControllerInit.value = true;
-          }),
-        );
-
-        return ctrl.dispose;
+        unawaited(loadVideo(selectedType.value));
+        return null;
       },
-      [localFile.value],
+      [selectedType.value],
     );
 
-    return switch (downloadState.value) {
-      _DownloadState.idle => Center(
-        child: FilledButton.icon(
-          onPressed: download,
-          icon: const Icon(Icons.download),
-          label: const Text('MP4 をダウンロード'),
+    // ページ離脱時にコントローラーを解放
+    useEffect(
+      () => () {
+        unawaited(controller.value?.dispose());
+      },
+      const [],
+    );
+
+    return Column(
+      children: [
+        _MovieTypeSelector(
+          selected: selectedType.value,
+          onChanged: (type) => selectedType.value = type,
         ),
-      ),
-      _DownloadState.downloading => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              Text(
-                'ダウンロード中...',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              if (downloadProgress.value > 0) ...[
-                const SizedBox(height: 8),
-                LinearProgressIndicator(value: downloadProgress.value),
-              ],
-            ],
+        Expanded(
+          child: _VideoArea(
+            controller: controller.value,
+            isInitialized: isInitialized.value,
+            errorMessage: errorMessage.value,
+            onRetry: () => loadVideo(selectedType.value),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _MovieTypeSelector extends StatelessWidget {
+  const _MovieTypeSelector({
+    required this.selected,
+    required this.onChanged,
+  });
+
+  final KnetMovieType selected;
+  final ValueChanged<KnetMovieType> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: DropdownMenu<KnetMovieType>(
+        initialSelection: selected,
+        onSelected: (value) {
+          if (value != null) {
+            onChanged(value);
+          }
+        },
+        dropdownMenuEntries: KnetMovieType.values
+            .map((t) => DropdownMenuEntry(value: t, label: t.label))
+            .toList(),
       ),
-      _DownloadState.error => _ErrorView(
-        message: errorMessage.value ?? '不明なエラー',
-        onRetry: download,
-      ),
-      _DownloadState.ready => _VideoArea(
-        controller: controller.value,
-        isInitialized: isControllerInit.value,
-        onRedownload: download,
-      ),
-    };
+    );
   }
 }
 
@@ -148,35 +137,38 @@ class _VideoArea extends HookWidget {
   const _VideoArea({
     required this.controller,
     required this.isInitialized,
-    required this.onRedownload,
+    required this.onRetry,
+    this.errorMessage,
   });
 
   final VideoPlayerController? controller;
   final bool isInitialized;
-  final VoidCallback onRedownload;
+  final String? errorMessage;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = controller;
+    if (errorMessage != null) {
+      return _ErrorView(message: errorMessage!, onRetry: onRetry);
+    }
 
+    final ctrl = controller;
     if (ctrl == null || !isInitialized) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    // Rebuild when playback state changes
     useListenable(ctrl);
+
+    if (ctrl.value.hasError) {
+      return _ErrorView(
+        message: ctrl.value.errorDescription ?? '再生エラー',
+        onRetry: onRetry,
+      );
+    }
 
     final isPlaying = ctrl.value.isPlaying;
     final duration = ctrl.value.duration;
     final position = ctrl.value.position;
-    final hasError = ctrl.value.hasError;
-
-    if (hasError) {
-      return _ErrorView(
-        message: ctrl.value.errorDescription ?? '再生エラー',
-        onRetry: onRedownload,
-      );
-    }
 
     return Column(
       children: [
@@ -193,7 +185,7 @@ class _VideoArea extends HookWidget {
           isPlaying: isPlaying,
           duration: duration,
           position: position,
-          onRedownload: onRedownload,
+          onRetry: onRetry,
         ),
       ],
     );
@@ -206,19 +198,19 @@ class _VideoControls extends StatelessWidget {
     required this.isPlaying,
     required this.duration,
     required this.position,
-    required this.onRedownload,
+    required this.onRetry,
   });
 
   final VideoPlayerController controller;
   final bool isPlaying;
   final Duration duration;
   final Duration position;
-  final VoidCallback onRedownload;
+  final VoidCallback onRetry;
 
-  String _formatDuration(Duration d) {
-    final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
+  String _fmt(Duration d) {
+    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$m:$s';
   }
 
   @override
@@ -235,7 +227,7 @@ class _VideoControls extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(_formatDuration(position)),
+                Text(_fmt(position)),
                 Expanded(
                   child: Slider(
                     value: sliderValue,
@@ -247,7 +239,7 @@ class _VideoControls extends StatelessWidget {
                     },
                   ),
                 ),
-                Text(_formatDuration(duration)),
+                Text(_fmt(duration)),
               ],
             ),
             Row(
@@ -271,9 +263,9 @@ class _VideoControls extends StatelessWidget {
                   tooltip: isPlaying ? '一時停止' : '再生',
                 ),
                 IconButton(
-                  onPressed: onRedownload,
+                  onPressed: onRetry,
                   icon: const Icon(Icons.refresh),
-                  tooltip: '再ダウンロード',
+                  tooltip: '再読み込み',
                 ),
               ],
             ),

@@ -41,15 +41,9 @@ class _FigContent extends HookWidget {
   final DateTime eventTime;
   final KnetDownloadClient client;
 
-  static const _stationTypes = [
-    _StationType('all', 'ALL'),
-    _StationType('knet', 'K-NET'),
-    _StationType('kik', 'KiK-net'),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final selectedType = useState(_stationTypes[0]);
+    final selectedType = useState(KnetFigType.values.first);
     final imageBytes = useState<Uint8List?>(null);
     final isLoading = useState(false);
     final errorMessage = useState<String?>(null);
@@ -59,7 +53,7 @@ class _FigContent extends HookWidget {
       errorMessage.value = null;
       imageBytes.value = null;
       try {
-        final url = knetAllFigUrl(eventTime, selectedType.value.key);
+        final url = knetAllFigUrl(eventTime, selectedType.value);
         final bytes = await client.fetchBytes(url);
         imageBytes.value = Uint8List.fromList(bytes);
       } on Exception catch (e) {
@@ -79,8 +73,7 @@ class _FigContent extends HookWidget {
 
     return Column(
       children: [
-        _StationTypeSelector(
-          stationTypes: _stationTypes,
+        _FigTypeSelector(
           selected: selectedType.value,
           onChanged: (type) => selectedType.value = type,
         ),
@@ -97,36 +90,29 @@ class _FigContent extends HookWidget {
   }
 }
 
-class _StationTypeSelector extends StatelessWidget {
-  const _StationTypeSelector({
-    required this.stationTypes,
+class _FigTypeSelector extends StatelessWidget {
+  const _FigTypeSelector({
     required this.selected,
     required this.onChanged,
   });
 
-  final List<_StationType> stationTypes;
-  final _StationType selected;
-  final ValueChanged<_StationType> onChanged;
+  final KnetFigType selected;
+  final ValueChanged<KnetFigType> onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: SegmentedButton<_StationType>(
-        segments: stationTypes
-            .map(
-              (t) => ButtonSegment(
-                value: t,
-                label: Text(t.label),
-              ),
-            )
-            .toList(),
-        selected: {selected},
-        onSelectionChanged: (set) {
-          if (set.isNotEmpty) {
-            onChanged(set.first);
+      child: DropdownMenu<KnetFigType>(
+        initialSelection: selected,
+        onSelected: (value) {
+          if (value != null) {
+            onChanged(value);
           }
         },
+        dropdownMenuEntries: KnetFigType.values
+            .map((t) => DropdownMenuEntry(value: t, label: t.label))
+            .toList(),
       ),
     );
   }
@@ -206,11 +192,4 @@ class _ErrorView extends StatelessWidget {
       ),
     );
   }
-}
-
-class _StationType {
-  const _StationType(this.key, this.label);
-
-  final String key;
-  final String label;
 }
