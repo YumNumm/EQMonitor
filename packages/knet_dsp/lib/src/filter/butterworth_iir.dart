@@ -27,11 +27,8 @@ class ButterworthDesigner {
   ///
   /// cutoffHz はカットオフ周波数 (Hz)、sampleRate はサンプリングレート (Hz) です。
   static IirCoefficients lpf(double cutoffHz, double sampleRate) {
-    final wc = 2.0 * math.pi * cutoffHz;
-    // プリウォーピング
-    final wcT = 2.0 * sampleRate * math.tan(wc / (2.0 * sampleRate));
-
-    final k = wcT / sampleRate;
+    // 双線形変換プリウォーピング: k = tan(π·fc/fs)
+    final k = math.tan(math.pi * cutoffHz / sampleRate);
     final k2 = k * k;
     final sqrt2 = math.sqrt(2.0);
     final denom = 1.0 + sqrt2 * k + k2;
@@ -47,10 +44,8 @@ class ButterworthDesigner {
 
   /// 2次ハイパス Butterworth フィルタ係数を計算します（双線形変換）。
   static IirCoefficients hpf(double cutoffHz, double sampleRate) {
-    final wc = 2.0 * math.pi * cutoffHz;
-    final wcT = 2.0 * sampleRate * math.tan(wc / (2.0 * sampleRate));
-
-    final k = wcT / sampleRate;
+    // 双線形変換プリウォーピング: k = tan(π·fc/fs)
+    final k = math.tan(math.pi * cutoffHz / sampleRate);
     final k2 = k * k;
     final sqrt2 = math.sqrt(2.0);
     final denom = 1.0 + sqrt2 * k + k2;

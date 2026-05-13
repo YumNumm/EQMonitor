@@ -130,11 +130,17 @@ class JmaIntensityCalculator {
   }
 
   /// JMA フィルタの伝達関数振幅 H(f)
+  ///
+  /// 気象庁計測震度フィルタ（2003年改訂版）:
+  ///   H(f) = (1/sqrt(f)) * Fhi(f) * Flo(f)
+  ///   Fhi(f) = 1/sqrt(1+(f/10)^12)  12次高域遮断
+  ///   Flo(f) = sqrt(1-exp(-(f/0.5)^3))  低域遮断
   double _jmaH(double f) {
-    return 1.0 /
-        (f *
-            math.sqrt(1.0 + (f / 10.0) * (f / 10.0)) *
-            math.sqrt(1.0 + (0.5 / f) * (0.5 / f)));
+    final periodWeight = 1.0 / math.sqrt(f);
+    final hiCut =
+        1.0 / math.sqrt(1.0 + math.pow(f / 10.0, 12).toDouble());
+    final loCut = math.sqrt(1.0 - math.exp(-math.pow(f / 0.5, 3).toDouble()));
+    return periodWeight * hiCut * loCut;
   }
 
   /// 0.3 秒以上継続する最大加速度を求めます。
@@ -156,7 +162,7 @@ class JmaIntensityCalculator {
       return sorted.last;
     }
 
-    // k 番目（0-indexed）の値が a0.3
-    return sorted[kThreshold];
+    // kThreshold 個のサンプルが超える値 = sorted[kThreshold-1]
+    return sorted[kThreshold - 1];
   }
 }
