@@ -24,7 +24,10 @@ class KnetWaveformPage extends ConsumerWidget {
                   const KnetCredentialsSettingsRoute().push<void>(context),
             );
           }
-          return _ConfiguredView(userId: data.userId);
+          return _ConfiguredView(
+            userId: data.userId,
+            onBrowse: () => const KnetEarthquakeListRoute().push<void>(context),
+          );
         },
       ),
     );
@@ -77,9 +80,13 @@ class _UnconfiguredView extends StatelessWidget {
 }
 
 class _ConfiguredView extends StatelessWidget {
-  const _ConfiguredView({required this.userId});
+  const _ConfiguredView({
+    required this.userId,
+    required this.onBrowse,
+  });
 
   final String userId;
+  final VoidCallback onBrowse;
 
   @override
   Widget build(BuildContext context) {
@@ -104,14 +111,13 @@ class _ConfiguredView extends StatelessWidget {
               'ユーザー: $userId',
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            const SizedBox(height: 8),
-            Text(
-              '波形データのダウンロード・'
-              '表示機能は準備中です。',
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
             const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: onBrowse,
+              icon: const Icon(Icons.list_alt),
+              label: const Text('地震データを閲覧'),
+            ),
+            const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: () =>
                   const KnetCredentialsSettingsRoute().push<void>(context),

@@ -46,6 +46,7 @@ dependency_overrides:
       path: packages/maplibre_webview
 
 dependencies:
+  archive: ^4.0.7
   app_settings: ^7.0.0
   background_location_tracker:
     path: ../packages/background_location_tracker
@@ -71,6 +72,7 @@ dependencies:
   extensions:
     path: ../packages/extensions
   file_picker: ^11.0.2
+  fl_chart: ^0.70.2
   firebase_analytics: ^12.0.0
   firebase_app_check: ^0.4.2
   firebase_app_installations: ^0.4.0
