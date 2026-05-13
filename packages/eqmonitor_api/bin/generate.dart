@@ -140,7 +140,10 @@ Future<void> _patchGeneratedFiles(Directory libDir) async {
 
   for (final file in dartFiles) {
     final original = file.readAsStringSync();
-    var patched = original.replaceAll(r'$unknown', r'\$unknown');
+    // Normalize \\$unknown→\$unknown first, then escape bare $unknown (avoids double-escaping)
+    var patched = original
+        .replaceAll(r'\\$unknown', r'\$unknown')
+        .replaceAll(RegExp(r'(?<!\\)\$unknown'), r'\$unknown');
     if (patched != original) {
       file.writeAsStringSync(patched);
       stdout.writeln('  Patched: ${file.path}');
