@@ -49,10 +49,10 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
             isLoading: asyncState.isLoading,
             scrollController: scrollController,
           ),
-          AsyncError(:final error) when asyncState.hasValue =>
+          AsyncError(:final error, :final value?) =>
             _TelegramListView(
-              items: asyncState.value!.items,
-              hasNext: asyncState.value!.hasNext,
+              items: value.items,
+              hasNext: value.hasNext,
               isLoading: false,
               scrollController: scrollController,
               error: error,
