@@ -42,7 +42,7 @@ abstract class EarthquakeHistoryDetailConfig
 
     /// 塗りつぶしの表示モード
     @JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.none)
-    @Default(EarthquakeHistoryFillMode.none)
+    @Default(EarthquakeHistoryFillMode.matchIcon)
     EarthquakeHistoryFillMode fillMode,
 
     /// 観測点の表示方法
