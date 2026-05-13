@@ -81,6 +81,38 @@ class _ConfiguredView extends StatelessWidget {
 
   final String userId;
 
+  Future<void> _openMediaPage(BuildContext context) async {
+    // Step 1: pick date
+    final now = DateTime.now();
+    final date = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(2000),
+      lastDate: now,
+      helpText: '地震発生日を選択',
+    );
+    if (date == null || !context.mounted) {
+      return;
+    }
+    // Step 2: pick time
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      helpText: '地震発生時刻を選択',
+    );
+    if (time == null || !context.mounted) {
+      return;
+    }
+    final eventTime = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+    await KnetMediaRoute($extra: eventTime).push<void>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -104,14 +136,13 @@ class _ConfiguredView extends StatelessWidget {
               'ユーザー: $userId',
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            const SizedBox(height: 8),
-            Text(
-              '波形データのダウンロード・'
-              '表示機能は準備中です。',
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
             const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () => _openMediaPage(context),
+              icon: const Icon(Icons.image_search),
+              label: const Text('PNG図・MP4動画を表示'),
+            ),
+            const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: () =>
                   const KnetCredentialsSettingsRoute().push<void>(context),

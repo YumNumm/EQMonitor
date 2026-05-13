@@ -15,6 +15,7 @@ import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_media_page.dart';
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
@@ -108,8 +109,7 @@ class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SplashPage();
+  Widget build(BuildContext context, GoRouterState state) => const SplashPage();
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')
@@ -333,6 +333,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
               routes: [
                 TypedGoRoute<KnetCredentialsSettingsRoute>(
                   path: 'settings',
+                ),
+                TypedGoRoute<KnetMediaRoute>(
+                  path: 'media',
                 ),
               ],
             ),
@@ -673,6 +676,17 @@ class KnetCredentialsSettingsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const KnetCredentialsSettingsPage();
+}
+
+class KnetMediaRoute extends GoRouteData with $KnetMediaRoute {
+  const KnetMediaRoute({required this.$extra});
+
+  /// 地震発生時刻（JST）
+  final DateTime $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetMediaPage(eventTime: $extra);
 }
 
 class KyoshinMonitorAboutRoute extends GoRouteData

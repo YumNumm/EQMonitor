@@ -540,6 +540,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
                   path: 'settings',
                   factory: $KnetCredentialsSettingsRoute._fromState,
                 ),
+                GoRouteData.$route(
+                  path: 'media',
+                  factory: $KnetMediaRoute._fromState,
+                ),
               ],
             ),
           ],
@@ -1350,6 +1354,32 @@ mixin $KnetCredentialsSettingsRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetMediaRoute on GoRouteData {
+  static KnetMediaRoute _fromState(GoRouterState state) =>
+      KnetMediaRoute($extra: state.extra as DateTime);
+
+  KnetMediaRoute get _self => this as KnetMediaRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/knet/media');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 T? _$convertMapValue<T>(

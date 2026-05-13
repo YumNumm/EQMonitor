@@ -157,6 +157,7 @@ dependencies:
   url_launcher: ^6.3.1
   uuid: ^4.5.1
   version: ^3.0.2
+  video_player: ^2.11.1
   web_socket: ^1.0.1
   web_socket_client: ^0.2.1
   workflows:
