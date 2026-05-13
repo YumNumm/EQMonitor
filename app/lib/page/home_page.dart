@@ -53,7 +53,8 @@ class _SheetBody extends ConsumerWidget {
       ),
     );
     final permission = ref.watch(backgroundLocationPermissionProvider).value;
-    final showPermissionBanner = hasCurrentLocationRegion &&
+    final showPermissionBanner =
+        hasCurrentLocationRegion &&
         permission != null &&
         permission != LocationPermission.always;
 
@@ -183,14 +184,14 @@ class _BackgroundLocationPermissionBanner extends StatelessWidget {
                       Text(
                         '位置情報の「常に許可」が必要です',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: colorScheme.onErrorContainer,
-                            ),
+                          color: colorScheme.onErrorContainer,
+                        ),
                       ),
                       Text(
                         'バックグラウンド位置更新が無効のため、通知は過去の位置情報を使用しています',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onErrorContainer,
-                            ),
+                          color: colorScheme.onErrorContainer,
+                        ),
                       ),
                     ],
                   ),
