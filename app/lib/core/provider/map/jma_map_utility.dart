@@ -28,7 +28,7 @@ class JmaMapUtility {
           case JmaMap_JmaMapData_DataType.LINE_STRING:
             final lineString = LineString.decode(bytes);
             final distanceDeg = lineString.distanceTo2D(referencePoint);
-            final distanceKm = _minDistanceToChainKm(
+            final distanceKm = minDistanceToChainKm(
               latLng.lat,
               latLng.lng,
               lineString.chain,
@@ -40,7 +40,7 @@ class JmaMapUtility {
             final distanceKm = multiLineString.chains.fold(
               double.infinity,
               (minDist, chain) {
-                final d = _minDistanceToChainKm(latLng.lat, latLng.lng, chain);
+                final d = minDistanceToChainKm(latLng.lat, latLng.lng, chain);
                 return d < minDist ? d : minDist;
               },
             );
@@ -78,36 +78,36 @@ class JmaMapUtility {
 
     return (item: null, distanceKm: null);
   }
-}
 
-/// [chain] 上の全頂点と基準点（[refLat], [refLon]）との Haversine 距離（km）の最小値を返す。
-double _minDistanceToChainKm(
-  double refLat,
-  double refLon,
-  PositionSeries chain,
-) {
-  var minDist = double.infinity;
-  for (var i = 0; i < chain.positionCount; i++) {
-    final d = _haversineKm(refLat, refLon, chain.y(i), chain.x(i));
-    if (d < minDist) {
-      minDist = d;
+  /// [chain] 上の全頂点と基準点（[refLat], [refLon]）との Haversine 距離（km）の最小値を返す。
+  static double minDistanceToChainKm(
+    double refLat,
+    double refLon,
+    PositionSeries chain,
+  ) {
+    var minDist = double.infinity;
+    for (var i = 0; i < chain.positionCount; i++) {
+      final d = haversineKm(refLat, refLon, chain.y(i), chain.x(i));
+      if (d < minDist) {
+        minDist = d;
+      }
     }
+    return minDist;
   }
-  return minDist;
-}
 
-/// Haversine 公式による2点間の大円距離（km）。
-double _haversineKm(
-  double lat1,
-  double lon1,
-  double lat2,
-  double lon2,
-) {
-  const r = 6371.0;
-  final dLat = (lat2 - lat1) * pi / 180;
-  final dLon = (lon2 - lon1) * pi / 180;
-  final a = sin(dLat / 2) * sin(dLat / 2) +
-      cos(lat1 * pi / 180) * cos(lat2 * pi / 180) *
-          sin(dLon / 2) * sin(dLon / 2);
-  return r * 2 * atan2(sqrt(a), sqrt(1 - a));
+  /// Haversine 公式による2点間の大円距離（km）。
+  static double haversineKm(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
+    const r = 6371.0;
+    final dLat = (lat2 - lat1) * pi / 180;
+    final dLon = (lon2 - lon1) * pi / 180;
+    final a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1 * pi / 180) * cos(lat2 * pi / 180) *
+            sin(dLon / 2) * sin(dLon / 2);
+    return r * 2 * atan2(sqrt(a), sqrt(1 - a));
+  }
 }
