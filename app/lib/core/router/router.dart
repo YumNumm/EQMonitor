@@ -37,6 +37,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_se
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_device_admin_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
@@ -302,6 +303,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
         TypedGoRoute<DebugEewCardRoute>(path: 'eew-card'),
+        TypedGoRoute<DebugEarthquakeHistoryCardRoute>(
+          path: 'earthquake-history-card',
+        ),
         TypedGoRoute<DebugShakeDetectionCardRoute>(
           path: 'shake-detection-card',
         ),
@@ -519,6 +523,16 @@ class DebugEewCardRoute extends GoRouteData with $DebugEewCardRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugEewCardPage();
+  }
+}
+
+class DebugEarthquakeHistoryCardRoute extends GoRouteData
+    with $DebugEarthquakeHistoryCardRoute {
+  const DebugEarthquakeHistoryCardRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugEarthquakeHistoryCardPage();
   }
 }
 

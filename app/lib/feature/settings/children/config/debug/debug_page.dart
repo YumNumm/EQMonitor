@@ -132,6 +132,16 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const DebugEewCardRoute().push(context),
           ),
           ListTile(
+            title: const Text('地震履歴 Card'),
+            subtitle: Text(
+              '各地の震度表示（速報値・確定値）をパラメータ検証',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.history_edu_outlined),
+            onTap: () async =>
+                const DebugEarthquakeHistoryCardRoute().push(context),
+          ),
+          ListTile(
             title: const Text('揺れ検知 Card'),
             subtitle: Text(
               'ホームと同じ揺れ検知カードの見た目をパラメータ検証',
