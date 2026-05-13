@@ -52,7 +52,8 @@ class JmaMapUtility {
       });
 
       // degree 距離で最近傍を選択し、km 距離を返す
-      final nearest = minBy(dataList, (e) => e?.$2)!;
+      final nearest = minBy(dataList, (e) => e?.$2);
+      if (nearest == null) return (item: null, distanceKm: null);
       return (item: nearest.$1, distanceKm: nearest.$3);
     }
 
