@@ -103,12 +103,20 @@ class EewForecastRegionLayer extends HookConsumerWidget {
             }
             final color = colorModel.fromJmaIntensity(intensity).background;
             final layerId = _intensityLayerId(intensity);
+            final codes = intensityCodes[intensity] ?? const [];
+            final initialFilter = codes.isEmpty
+                ? _emptyFilter
+                : <Object>[
+                    'in',
+                    ['get', 'code'],
+                    ['literal', codes],
+                  ];
             await styleController.addLayer(
               FillStyleLayer(
                 id: layerId,
                 sourceId: _sourceId,
                 sourceLayerId: _sourceLayerId,
-                filter: _emptyFilter,
+                filter: initialFilter,
                 paint: {
                   'fill-color': color.toHexString(),
                   'fill-opacity': 0.7,
@@ -147,13 +155,20 @@ class EewForecastRegionLayer extends HookConsumerWidget {
         var disposed = false;
 
         unawaited(() async {
+          final initialWarningFilter = warningCodes.isEmpty
+              ? _emptyFilter
+              : <Object>[
+                  'in',
+                  ['get', 'code'],
+                  ['literal', warningCodes],
+                ];
           await styleController.addLayer(
-            const FillStyleLayer(
+            FillStyleLayer(
               id: _warningLayerId,
               sourceId: _sourceId,
               sourceLayerId: _sourceLayerId,
-              filter: _emptyFilter,
-              paint: {
+              filter: initialWarningFilter,
+              paint: const {
                 'fill-color': '#FF0000',
                 'fill-opacity': 0.4,
               },
