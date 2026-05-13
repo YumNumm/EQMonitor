@@ -49,9 +49,11 @@ Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     unawaited(_recordStartupError(error, stackTrace));
     runApp(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(child: ErrorCard(error: error)),
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(child: ErrorCard(error: error)),
+          ),
         ),
       ),
     );
@@ -75,7 +77,9 @@ Future<void> _recordStartupError(Object error, StackTrace stackTrace) async {
 
 Future<void> _main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await BackgroundLocationTracker.initialize();
+  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    await BackgroundLocationTracker.initialize();
+  }
 
   await SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge,
