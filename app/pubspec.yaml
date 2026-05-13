@@ -111,6 +111,10 @@ dependencies:
   jma_map:
     path: ../packages/jma_map
   json_annotation: ^4.11.0
+  knet_api_client:
+    path: ../packages/knet_api_client
+  knet_waveform_parser:
+    path: ../packages/knet_waveform_parser
   kyoshin_monitor_api:
     path: ../packages/kyoshin_monitor_api
   kyoshin_monitor_image_parser:
@@ -152,6 +156,7 @@ dependencies:
   url_launcher: ^6.3.1
   uuid: ^4.5.1
   version: ^3.0.2
+  video_player: ^2.11.1
   web_socket: ^1.0.1
   web_socket_client: ^0.2.1
   workflows:

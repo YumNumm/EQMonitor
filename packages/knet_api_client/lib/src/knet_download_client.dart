@@ -57,7 +57,7 @@ class KnetDownloadClient {
   Future<bool> verifyAuthentication() async {
     try {
       final response = await _dio.get<dynamic>(
-        '/knet/',
+        'knet/',
         options: Options(responseType: ResponseType.stream),
       );
       return response.statusCode == 200;
