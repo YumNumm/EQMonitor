@@ -54,7 +54,7 @@ extension AsyncValueX<T> on AsyncValue<T> {
     if (!isLoading && hasError) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(error!.toString())));
+      ).showSnackBar(SnackBar(content: Text(error?.toString() ?? 'エラーが発生しました')));
     }
   }
 }

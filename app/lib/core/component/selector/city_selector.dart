@@ -93,8 +93,8 @@ class _CitySelectionBody extends HookWidget {
             ),
           ],
         ),
-        if (selectedPrefectureCode.value != null &&
-            selectedPrefectureCode.value!.isNotEmpty) ...[
+        if (selectedPrefectureCode.value case final prefCode?
+            when prefCode.isNotEmpty) ...[
           const SizedBox(height: 12),
           Text(
             '市区町村',
@@ -104,7 +104,7 @@ class _CitySelectionBody extends HookWidget {
           ),
           const SizedBox(height: 4),
           _CityDropdown(
-            prefectureCode: selectedPrefectureCode.value!,
+            prefectureCode: prefCode,
             selectedCode: selectedCode,
             regions: allRegions,
             prefectures: prefectures,
