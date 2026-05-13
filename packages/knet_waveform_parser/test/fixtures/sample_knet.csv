@@ -1,0 +1,21 @@
+#K-NET CSV
+#Event
+#OriginTime,Latitude,Longitude,Depth(km),Magnitude
+#2011/03/11 14:46:00,38.103,142.860,24,9.0
+#Station
+#Code,Latitude,Longitude,Height(m)
+#IBR011,36.1256,140.0901,27
+#Record
+#SamplingFrequency(Hz)
+#100
+#DurationTime(s)
+#300
+#Offset
+#N-S(gal),E-W(gal),U-D(gal)
+#0.00,0.00,0.00
+#Time,RelativeTime(s),N-S(gal),E-W(gal),U-D(gal)
+2011/03/11 14:46:00.00,0.00,-0.73,0.61,-0.61
+2011/03/11 14:46:00.01,0.01,-0.73,0.61,-0.61
+2011/03/11 14:46:00.02,0.02,-0.73,0.61,-0.73
+2011/03/11 14:46:00.03,0.03,-0.61,0.73,-0.61
+2011/03/11 14:46:00.04,0.04,-0.61,0.73,-0.61

@@ -177,6 +177,7 @@ class HomeMapLayerPage extends HookConsumerWidget {
                     },
                     children: const [
                       _KyoshinMonitorEnabledTile(),
+                      _KyoshinMonitorSourceTile(),
                       _KyoshinMonitorAboutTile(),
                       _KyoshinRealtimeDataTypeTile(),
                       _KyoshinRealtimeLayerTile(),
@@ -373,20 +374,12 @@ class _SettingSwitchTile extends StatelessWidget {
       subtitle: Text(subtitle, style: typography.bodySmall),
       trailing: AppSwitch(
         value: value,
-        onChanged: (next) {
-          unawaited(
-            Future<void>.sync(() async {
-              await onChanged(next);
-            }),
-          );
+        onChanged: (next) async {
+          await onChanged(next);
         },
       ),
-      onTap: () {
-        unawaited(
-          Future<void>.sync(() async {
-            await onChanged(!value);
-          }),
-        );
+      onTap: () async {
+        await onChanged(!value);
       },
     );
   }
@@ -454,13 +447,9 @@ class _SettingDropdownField<T> extends StatelessWidget {
           DropdownMenu<T>(
             width: double.infinity,
             initialSelection: value,
-            onSelected: (next) {
+            onSelected: (next) async {
               if (next != null) {
-                unawaited(
-                  Future<void>.sync(() async {
-                    await onChanged(next);
-                  }),
-                );
+                await onChanged(next);
               }
             },
             dropdownMenuEntries: entries,
@@ -513,12 +502,8 @@ class _SettingSegmentedField<T> extends StatelessWidget {
           SegmentedButton<T>(
             segments: segments,
             selected: selected,
-            onSelectionChanged: (next) {
-              unawaited(
-                Future<void>.sync(() async {
-                  await onSelectionChanged(next);
-                }),
-              );
+            onSelectionChanged: (next) async {
+              await onSelectionChanged(next);
             },
           ),
         ],
@@ -570,12 +555,8 @@ class _SettingActionTile extends StatelessWidget {
           ),
           SizedBox(height: spacing.md),
           FilledButton.tonal(
-            onPressed: () {
-              unawaited(
-                Future<void>.sync(() async {
-                  await onPressed();
-                }),
-              );
+            onPressed: () async {
+              await onPressed();
             },
             style: FilledButton.styleFrom(
               backgroundColor: color.surfaceEmphasis,
@@ -796,6 +777,53 @@ class _KyoshinMonitorEnabledTile extends ConsumerWidget {
   }
 }
 
+class _KyoshinMonitorSourceTile extends ConsumerWidget {
+  const _KyoshinMonitorSourceTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final setting = ref.watch(kyoshinMonitorSettingsProvider).requireValue;
+    if (!setting.useKmoni) {
+      return const SizedBox.shrink();
+    }
+    return _SettingSegmentedField<KyoshinMonitorSource>(
+      title: 'データソース',
+      subtitle: '強震モニタ(KMoni)か長周期地震動モニタ(LMoni)を選択します。\n'
+          'LMoniでは長周期地震動階級などの追加データ種別が利用できます。',
+      segments: const [
+        ButtonSegment(
+          value: KyoshinMonitorSource.kmoni,
+          label: Text('強震モニタ'),
+          tooltip: 'KMoni',
+        ),
+        ButtonSegment(
+          value: KyoshinMonitorSource.lmoni,
+          label: Text('長周期地震動'),
+          tooltip: 'LMoni',
+        ),
+      ],
+      selected: {setting.monitorSource},
+      onSelectionChanged: (next) async {
+        final newSource = next.first;
+        var newDataType = setting.realtimeDataType;
+        // kmoniに切り替えた場合、LPGMデータ種別が選択されていたらshindoにリセット
+        if (newSource == KyoshinMonitorSource.kmoni &&
+            newDataType.isLpgm) {
+          newDataType = RealtimeDataType.shindo;
+        }
+        await ref
+            .read(kyoshinMonitorSettingsProvider.notifier)
+            .save(
+              setting.copyWith(
+                monitorSource: newSource,
+                realtimeDataType: newDataType,
+              ),
+            );
+      },
+    );
+  }
+}
+
 class _KyoshinMonitorAboutTile extends StatelessWidget {
   const _KyoshinMonitorAboutTile();
 
@@ -821,6 +849,12 @@ class _KyoshinRealtimeDataTypeTile extends ConsumerWidget {
     if (!setting.useKmoni) {
       return const SizedBox.shrink();
     }
+    // LMoniのときはLPGMデータ種別も含む全種別を表示
+    final isLmoni = setting.monitorSource == KyoshinMonitorSource.lmoni;
+    final availableTypes = RealtimeDataType.values
+        .where((value) => isLmoni || !value.isLpgm)
+        .toList();
+
     return _SettingDropdownField<RealtimeDataType>(
       title: 'リアルタイムデータの種類',
       subtitle: '観測点が示す値を切り替えます。',
@@ -829,8 +863,7 @@ class _KyoshinRealtimeDataTypeTile extends ConsumerWidget {
         onPressed: () async => RealtimeDataTypeInfoDialog.show(context),
         icon: const Icon(Icons.info_outline_rounded),
       ),
-      entries: RealtimeDataType.values
-          .where((value) => !value.isLpgm)
+      entries: availableTypes
           .map(
             (value) => DropdownMenuEntry<RealtimeDataType>(
               value: value,

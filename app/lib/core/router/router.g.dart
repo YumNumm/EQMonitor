@@ -532,6 +532,28 @@ RouteBase get $settingsRoute => GoRouteData.$route(
                 ),
               ],
             ),
+            GoRouteData.$route(
+              path: 'knet',
+              factory: $KnetWaveformRoute._fromState,
+              routes: [
+                GoRouteData.$route(
+                  path: 'settings',
+                  factory: $KnetCredentialsSettingsRoute._fromState,
+                ),
+                GoRouteData.$route(
+                  path: 'media',
+                  factory: $KnetMediaRoute._fromState,
+                ),
+                GoRouteData.$route(
+                  path: 'records',
+                  factory: $KnetRecordListRoute._fromState,
+                ),
+                GoRouteData.$route(
+                  path: 'waveform',
+                  factory: $KnetStationWaveformRoute._fromState,
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -1297,6 +1319,127 @@ mixin $FnetCatalogRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetWaveformRoute on GoRouteData {
+  static KnetWaveformRoute _fromState(GoRouterState state) =>
+      const KnetWaveformRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/debug/nied/knet');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetCredentialsSettingsRoute on GoRouteData {
+  static KnetCredentialsSettingsRoute _fromState(GoRouterState state) =>
+      const KnetCredentialsSettingsRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/knet/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $KnetMediaRoute on GoRouteData {
+  static KnetMediaRoute _fromState(GoRouterState state) =>
+      KnetMediaRoute($extra: state.extra as DateTime);
+
+  KnetMediaRoute get _self => this as KnetMediaRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/knet/media');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
+}
+
+mixin $KnetRecordListRoute on GoRouteData {
+  static KnetRecordListRoute _fromState(GoRouterState state) =>
+      KnetRecordListRoute($extra: state.extra as DateTime);
+
+  KnetRecordListRoute get _self => this as KnetRecordListRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/knet/records');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
+}
+
+mixin $KnetStationWaveformRoute on GoRouteData {
+  static KnetStationWaveformRoute _fromState(GoRouterState state) =>
+      KnetStationWaveformRoute($extra: state.extra as KnetStationResult);
+
+  KnetStationWaveformRoute get _self => this as KnetStationWaveformRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/nied/knet/waveform');
+
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+
+  @override
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: _self.$extra);
+
+  @override
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 T? _$convertMapValue<T>(

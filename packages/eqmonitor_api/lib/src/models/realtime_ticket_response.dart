@@ -11,6 +11,8 @@ part 'realtime_ticket_response.g.dart';
 abstract class RealtimeTicketResponse with _$RealtimeTicketResponse {
   const factory RealtimeTicketResponse({
     required String url,
+    required DateTime expiresAt,
+    required DateTime issuedAt,
   }) = _RealtimeTicketResponse;
   
   factory RealtimeTicketResponse.fromJson(Map<String, Object?> json) => _$RealtimeTicketResponseFromJson(json);

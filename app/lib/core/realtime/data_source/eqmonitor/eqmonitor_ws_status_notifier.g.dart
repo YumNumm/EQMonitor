@@ -10,12 +10,27 @@ part of 'eqmonitor_ws_status_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
+///
+/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
+/// [WsPingMessage] 受信時に pong を返送し、サーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
+/// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
 
 @ProviderFor(EqMonitorWsStatus)
 final eqMonitorWsStatusProvider = EqMonitorWsStatusProvider._();
 
+/// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
+///
+/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
+/// [WsPingMessage] 受信時に pong を返送し、サーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
+/// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
 final class EqMonitorWsStatusProvider
     extends $NotifierProvider<EqMonitorWsStatus, EqMonitorWsStatusState> {
+  /// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
+  ///
+  /// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
+  /// [WsPingMessage] 受信時に pong を返送し、サーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
+  /// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
   EqMonitorWsStatusProvider._()
     : super(
         from: null,
@@ -43,7 +58,13 @@ final class EqMonitorWsStatusProvider
   }
 }
 
-String _$eqMonitorWsStatusHash() => r'ae905b6379b565060d4fb5a6386add3397fbb7ee';
+String _$eqMonitorWsStatusHash() => r'9d588019d3d23a3ce9b44a03d247dde182feb581';
+
+/// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
+///
+/// phase は [eqmonitorWebSocketProvider] の AsyncValue から導出する。
+/// [WsPingMessage] 受信時に pong を返送し、サーバーの ping 送出間隔を [EqMonitorWsStatusState.pingRtt] に記録する。
+/// なお pingRtt はネットワーク RTT ではなくサーバーからの ping 受信間隔である点に注意。
 
 abstract class _$EqMonitorWsStatus extends $Notifier<EqMonitorWsStatusState> {
   EqMonitorWsStatusState build();

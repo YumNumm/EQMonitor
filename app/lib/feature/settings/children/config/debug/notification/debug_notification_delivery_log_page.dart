@@ -95,105 +95,105 @@ class DebugNotificationDeliveryLogPage extends HookConsumerWidget {
       ),
       body: switch (ref.watch(deviceIdProvider)) {
         AsyncError(:final error) => Center(child: Text('端末 ID 取得エラー: $error')),
-        AsyncLoading() => const Center(child: CircularProgressIndicator.adaptive()),
+        AsyncLoading() => const Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
         AsyncData<String>(:final value) => Builder(
-            builder: (context) {
-              if (loading.value && items.value.isEmpty && error.value == null) {
-                return const Center(child: CircularProgressIndicator.adaptive());
-              }
-              if (error.value != null && items.value.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          error.value.toString(),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        FilledButton.icon(
-                          onPressed: () {
-                            refreshTick.value++;
-                          },
-                          icon: const Icon(Icons.refresh),
-                          label: const Text('再試行'),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-              if (items.value.isEmpty) {
-                return RefreshIndicator(
-                  onRefresh: loadFirstPage,
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
+          builder: (context) {
+            if (loading.value && items.value.isEmpty && error.value == null) {
+              return const Center(child: CircularProgressIndicator.adaptive());
+            }
+            if (error.value != null && items.value.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.3,
+                      Text(
+                        error.value.toString(),
+                        textAlign: TextAlign.center,
                       ),
-                      Center(
-                        child: Text(
-                          '配信ログはまだありません',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                              ),
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        title: const Text('対象端末 ID'),
-                        subtitle: SelectableText(value),
+                      const SizedBox(height: 16),
+                      FilledButton.icon(
+                        onPressed: () {
+                          refreshTick.value++;
+                        },
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('再試行'),
                       ),
                     ],
                   ),
-                );
-              }
-              return RefreshIndicator(
-                onRefresh: loadFirstPage,
-                child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 24),
-                  itemCount:
-                      items.value.length + (nextCursor.value != null ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == items.value.length) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Center(
-                          child: loadingMore.value
-                              ? const CircularProgressIndicator.adaptive()
-                              : TextButton.icon(
-                                  onPressed: () async {
-                                    await loadMore();
-                                  },
-                                  icon: const Icon(Icons.expand_more),
-                                  label: const Text('さらに読み込む'),
-                                ),
-                        ),
-                      );
-                    }
-                    final item = items.value[index];
-                    return _NotificationLogTile(
-                      item: item,
-                      onTap: () async {
-                        await showModalBottomSheet<void>(
-                          context: context,
-                          showDragHandle: true,
-                          isScrollControlled: true,
-                          builder: (context) => _LogDetailSheet(item: item),
-                        );
-                      },
-                    );
-                  },
                 ),
               );
-            },
-          ),
+            }
+            if (items.value.isEmpty) {
+              return RefreshIndicator(
+                onRefresh: loadFirstPage,
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.3,
+                    ),
+                    Center(
+                      child: Text(
+                        '配信ログはまだありません',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      dense: true,
+                      title: const Text('対象端末 ID'),
+                      subtitle: SelectableText(value),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return RefreshIndicator(
+              onRefresh: loadFirstPage,
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 24),
+                itemCount:
+                    items.value.length + (nextCursor.value != null ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == items.value.length) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Center(
+                        child: loadingMore.value
+                            ? const CircularProgressIndicator.adaptive()
+                            : TextButton.icon(
+                                onPressed: () async {
+                                  await loadMore();
+                                },
+                                icon: const Icon(Icons.expand_more),
+                                label: const Text('さらに読み込む'),
+                              ),
+                      ),
+                    );
+                  }
+                  final item = items.value[index];
+                  return _NotificationLogTile(
+                    item: item,
+                    onTap: () async {
+                      await showModalBottomSheet<void>(
+                        context: context,
+                        showDragHandle: true,
+                        isScrollControlled: true,
+                        builder: (context) => _LogDetailSheet(item: item),
+                      );
+                    },
+                  );
+                },
+              ),
+            );
+          },
+        ),
       },
     );
   }
@@ -238,6 +238,16 @@ class _NotificationLogTile extends StatelessWidget {
       ),
       onTap: onTap,
     );
+  }
+
+  String _formatCreatedAt(String raw) {
+    final parsed = DateTime.tryParse(raw);
+    if (parsed == null) {
+      return raw;
+    }
+    final local = parsed.toLocal();
+    return '${local.year}/${local.month.toString().padLeft(2, '0')}/${local.day.toString().padLeft(2, '0')} '
+        '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
   }
 }
 
@@ -324,9 +334,9 @@ class _LogDetailSheet extends StatelessWidget {
                               e.$1,
                               style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
                                   ),
                             ),
                             const SizedBox(height: 4),
@@ -345,14 +355,4 @@ class _LogDetailSheet extends StatelessWidget {
       },
     );
   }
-}
-
-String _formatCreatedAt(String raw) {
-  final parsed = DateTime.tryParse(raw);
-  if (parsed == null) {
-    return raw;
-  }
-  final local = parsed.toLocal();
-  return '${local.year}/${local.month.toString().padLeft(2, '0')}/${local.day.toString().padLeft(2, '0')} '
-      '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
 }

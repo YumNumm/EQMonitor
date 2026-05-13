@@ -215,10 +215,10 @@ class EarthquakeHistoryMapLayerModeResolver {
         EarthquakeHistoryMapLayerMode.none,
       EarthquakeHistoryIconMode.station when availability.station =>
         EarthquakeHistoryMapLayerMode.station,
-      EarthquakeHistoryIconMode.station when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
       EarthquakeHistoryIconMode.station when availability.city =>
         EarthquakeHistoryMapLayerMode.city,
+      EarthquakeHistoryIconMode.station when availability.region =>
+        EarthquakeHistoryMapLayerMode.region,
       EarthquakeHistoryIconMode.station => EarthquakeHistoryMapLayerMode.none,
       EarthquakeHistoryIconMode.auto
           when availability.region && availability.city =>

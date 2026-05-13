@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -236,8 +235,9 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
             backgroundColor: Colors.transparent,
             actions: [
               IconButton.filledTonal(
-                onPressed: () {
-                  unawaited(HapticFeedback.lightImpact());
+                onPressed: () async {
+                  final navigator = Navigator.of(context);
+                  await HapticFeedback.lightImpact();
                   final parameter = EarthquakeHistoryParameter(
                     intensityGte: isIntensityEnabled.value &&
                             intensityMin.value !=
@@ -300,7 +300,7 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                         ? regionIntensityMax.value
                         : null,
                   );
-                  Navigator.of(context).pop(parameter);
+                  navigator.pop(parameter);
                 },
                 icon: const Icon(Icons.check),
               ),
@@ -370,10 +370,10 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                     },
                     onCurrentLocationPressed: isResolvingLocation.value
                         ? null
-                        : () => unawaited(resolveCurrentLocation()),
+                        : resolveCurrentLocation,
                     onSelectFromMapPressed: isResolvingLocation.value
                         ? null
-                        : () => unawaited(selectFromMap()),
+                        : selectFromMap,
                   ),
                 ),
                 _SettingSection(

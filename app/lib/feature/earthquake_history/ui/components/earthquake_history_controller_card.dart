@@ -25,7 +25,7 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
       child: Divider(height: 0),
     );
 
-    void hapticFeedback() => unawaited(HapticFeedback.lightImpact());
+    Future<void> hapticFeedback() async => HapticFeedback.lightImpact();
 
     return Card(
       color: colorScheme.surfaceContainerHighest,
@@ -43,7 +43,7 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
                         child: Icon(Icons.layers_rounded),
                       ),
                       onTap: () async {
-                        hapticFeedback();
+                        await hapticFeedback();
                         onLayerButtonTap?.call();
                       },
                     ),
@@ -52,8 +52,8 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
                         padding: EdgeInsets.all(8),
                         child: Icon(Icons.home_rounded),
                       ),
-                      onTap: () {
-                        hapticFeedback();
+                      onTap: () async {
+                        await hapticFeedback();
                         onLocationButtonTap?.call();
                       },
                     ),
@@ -63,7 +63,10 @@ class EarthquakeHistoryControllerCard extends StatelessWidget {
                         child: Icon(Icons.folder_copy_outlined),
                       ),
                       onTap: () async {
-                        hapticFeedback();
+                        await hapticFeedback();
+                        if (!context.mounted) {
+                          return;
+                        }
                         await showEarthquakeHistoryDetailConfigDialog(
                           context,
                           hasLpgmIntensity: false,

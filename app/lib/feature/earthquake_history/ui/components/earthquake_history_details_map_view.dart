@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/core/component/error/error_card.dart';
@@ -68,8 +67,10 @@ class _MapContent extends HookConsumerWidget {
   final Earthquake earthquake;
 
   static const _stationLayerId = 'eq-history-station-intensity-circle';
-  static const _regionFillLayerId = 'eq-history-fill-region';
-  static const _cityFillLayerId = 'eq-history-fill-city';
+  // Fill layers are created per intensity level (e.g. 'eq-history-jma-one-region-fill'),
+  // so we detect taps by source layer ID instead of individual layer IDs.
+  static const _regionSourceLayerId = 'areaForecastLocalE';
+  static const _citySourceLayerId = 'areaInformationCityQuake';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,7 +82,7 @@ class _MapContent extends HookConsumerWidget {
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
       _,
       next,
-    ) {
+    ) async {
       if (next == null) {
         return;
       }
@@ -96,11 +97,9 @@ class _MapContent extends HookConsumerWidget {
       if (geo == null) {
         return;
       }
-      unawaited(
-        controller.animateCamera(
-          center: geo,
-          zoom: kEarthquakeHistoryMapFocusZoom,
-        ),
+      await controller.animateCamera(
+        center: geo,
+        zoom: kEarthquakeHistoryMapFocusZoom,
       );
       ref
           .read(earthquakeHistoryMapFocusProvider(earthquake.eventId).notifier)
@@ -122,24 +121,14 @@ class _MapContent extends HookConsumerWidget {
     );
     const debugDialogAction = EarthquakeHistoryMapLayerDebugDialogAction();
 
-    void openModal(BuildContext ctx) {
-      unawaited(
-        EarthquakeHistoryMapDisplayModeModal.show(
-          context: ctx,
-          hasLpgmIntensity: earthquake.intensity?.maxLpgmIntensity != null,
-          hasTileUrl: tileUrl != null,
-        ),
-      );
-    }
-
     return Stack(
       children: [
         MapLibreMap(
           options: mapOptions,
-          onEvent: (event) {
+          onEvent: (event) async {
             MapLibreEventProvider.of(context).emit(event);
             if (event is MapEventClick) {
-              _handleTap(
+              await _handleTap(
                 context: context,
                 event: event,
                 config: config,
@@ -193,16 +182,25 @@ class _MapContent extends HookConsumerWidget {
           right: 8,
           child: SafeArea(
             child: _MapControllerCard(
-              onLayersTap: () => openModal(context),
-              onFitBoundsTap: () => _fitBounds(context),
+              onLayersTap: () async {
+                await EarthquakeHistoryMapDisplayModeModal.show(
+                  context: context,
+                  hasLpgmIntensity:
+                      earthquake.intensity?.maxLpgmIntensity != null,
+                  hasTileUrl: tileUrl != null,
+                );
+              },
+              onFitBoundsTap: () async {
+                await _fitBounds(context);
+              },
               onDebugTap: kDebugMode
-                  ? () => unawaited(
-                      debugDialogAction.show(
+                  ? () async {
+                      await debugDialogAction.show(
                         context: context,
                         earthquake: earthquake,
                         config: config,
-                      ),
-                    )
+                      );
+                    }
                   : null,
             ),
           ),
@@ -224,12 +222,12 @@ class _MapContent extends HookConsumerWidget {
     );
   }
 
-  void _handleTap({
+  Future<void> _handleTap({
     required BuildContext context,
     required MapEventClick event,
     required EarthquakeHistoryDetailConfig config,
     required Map<JmaMapType, JmaMap_JmaMapData> jmaMap,
-  }) {
+  }) async {
     final controller = MapController.maybeOf(context);
     if (controller == null) {
       return;
@@ -240,27 +238,23 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    final hitIds = hits.map((h) => h.layerId).toSet();
-
     // 観測点タップ
-    if (hitIds.contains(_stationLayerId)) {
+    if (hits.any((h) => h.layerId == _stationLayerId)) {
       final stationNode = _findNearestStation(event.point);
       if (stationNode == null) {
         return;
       }
-      unawaited(
-        showStationPopup(
-          context,
-          stationName: stationNode.station.name.ja,
-          intensity: stationNode.intensity?.maxIntensity,
-          lpgmIntensity: stationNode.intensity?.maxLpgmIntensity,
-        ),
+      await showStationPopup(
+        context,
+        stationName: stationNode.station.name.ja,
+        intensity: stationNode.intensity?.maxIntensity,
+        lpgmIntensity: stationNode.intensity?.maxLpgmIntensity,
       );
       return;
     }
 
-    final isCity = hitIds.contains(_cityFillLayerId);
-    final isRegion = hitIds.contains(_regionFillLayerId);
+    final isCity = hits.any((h) => h.sourceLayer == _citySourceLayerId);
+    final isRegion = hits.any((h) => h.sourceLayer == _regionSourceLayerId);
     if (!isCity && !isRegion) {
       return;
     }
@@ -280,21 +274,17 @@ class _MapContent extends HookConsumerWidget {
 
     if (isCity) {
       final cityNode = _findCityByCode(code);
-      unawaited(
-        showAreaPopup(
-          context,
-          areaName: name,
-          maxIntensity: cityNode?.maxIntensity,
-        ),
+      await showAreaPopup(
+        context,
+        areaName: name,
+        maxIntensity: cityNode?.maxIntensity,
       );
     } else {
       final region = _findRegionByCode(code);
-      unawaited(
-        showAreaPopup(
-          context,
-          areaName: name,
-          maxIntensity: region?.maxIntensity,
-        ),
+      await showAreaPopup(
+        context,
+        areaName: name,
+        maxIntensity: region?.maxIntensity,
       );
     }
   }
@@ -360,7 +350,7 @@ class _MapContent extends HookConsumerWidget {
     return null;
   }
 
-  void _fitBounds(BuildContext context) {
+  Future<void> _fitBounds(BuildContext context) async {
     final controller = MapController.maybeOf(context);
     if (controller == null) {
       return;
@@ -391,12 +381,10 @@ class _MapContent extends HookConsumerWidget {
       return;
     }
 
-    unawaited(
-      controller.fitBounds(
-        bounds: LngLatBounds.fromPoints(points),
-        padding: const EdgeInsets.all(48),
-        webMaxZoom: 10,
-      ),
+    await controller.fitBounds(
+      bounds: LngLatBounds.fromPoints(points),
+      padding: const EdgeInsets.all(48),
+      webMaxZoom: 10,
     );
   }
 }
@@ -409,9 +397,9 @@ class _MapControllerCard extends StatelessWidget {
     required this.onDebugTap,
   });
 
-  final VoidCallback onLayersTap;
-  final VoidCallback onFitBoundsTap;
-  final VoidCallback? onDebugTap;
+  final Future<void> Function() onLayersTap;
+  final Future<void> Function() onFitBoundsTap;
+  final Future<void> Function()? onDebugTap;
 
   @override
   Widget build(BuildContext context) {
@@ -419,10 +407,6 @@ class _MapControllerCard extends StatelessWidget {
     const divider = Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
       child: Divider(height: 0),
-    );
-
-    void haptic() => unawaited(
-      HapticFeedback.lightImpact(),
     );
 
     return Card(
@@ -435,9 +419,9 @@ class _MapControllerCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             InkWell(
-              onTap: () {
-                haptic();
-                onLayersTap();
+              onTap: () async {
+                await HapticFeedback.lightImpact();
+                await onLayersTap();
               },
               child: const Padding(
                 padding: EdgeInsets.all(8),
@@ -446,9 +430,9 @@ class _MapControllerCard extends StatelessWidget {
             ),
             divider,
             InkWell(
-              onTap: () {
-                haptic();
-                onFitBoundsTap();
+              onTap: () async {
+                await HapticFeedback.lightImpact();
+                await onFitBoundsTap();
               },
               child: const Padding(
                 padding: EdgeInsets.all(8),
@@ -458,9 +442,9 @@ class _MapControllerCard extends StatelessWidget {
             if (onDebugTap != null) ...[
               divider,
               InkWell(
-                onTap: () {
-                  haptic();
-                  onDebugTap?.call();
+                onTap: () async {
+                  await HapticFeedback.lightImpact();
+                  await onDebugTap?.call();
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8),

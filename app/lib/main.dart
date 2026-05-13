@@ -19,7 +19,8 @@ import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/core/realtime/realtime_event_bootstrap_provider.dart';
+import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
+import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
@@ -48,9 +49,11 @@ Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     unawaited(_recordStartupError(error, stackTrace));
     runApp(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(child: ErrorCard(error: error)),
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(child: ErrorCard(error: error)),
+          ),
         ),
       ),
     );
@@ -74,7 +77,9 @@ Future<void> _recordStartupError(Object error, StackTrace stackTrace) async {
 
 Future<void> _main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await BackgroundLocationTracker.initialize();
+  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    await BackgroundLocationTracker.initialize();
+  }
 
   await SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge,
@@ -189,19 +194,21 @@ Future<void> _main() async {
         SharedPreferencesAsync(results.$1.$1),
       ),
       packageInfoProvider.overrideWithValue(results.$1.$2),
-      if (results.$1.$3 != null)
-        androidDeviceInfoProvider.overrideWithValue(results.$1.$3!),
-      if (results.$1.$4 != null)
-        iosDeviceInfoProvider.overrideWithValue(results.$1.$4!),
-      applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$6!),
-      if (results.$2.$1 != null)
-        kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
+      if (results.$1.$3 case final androidInfo?)
+        androidDeviceInfoProvider.overrideWithValue(androidInfo),
+      if (results.$1.$4 case final iosInfo?)
+        iosDeviceInfoProvider.overrideWithValue(iosInfo),
+      if (results.$1.$6 case final appDir?)
+        applicationDocumentsDirectoryProvider.overrideWithValue(appDir),
+      if (results.$2.$1 case final colorMap?)
+        kyoshinColorMapProvider.overrideWithValue(colorMap),
     ],
     observers: [if (kDebugMode) CustomProviderObserver(talker)],
     retry: (_, _) => null,
   );
 
-  container.read(realtimeEventBootstrapProvider);
+  container.read(eqMonitorWsStatusProvider);
+  container.read(realtimeEventsProvider);
   // killed状態で永続化された位置情報の反映と、live位置更新の購読を開始する。
   // backgroundLocationServiceProvider は keepAlive: true で常駐させる。
   container.listen(backgroundLocationServiceProvider, (_, _) {});

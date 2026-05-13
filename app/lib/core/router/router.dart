@@ -12,8 +12,14 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.
 import 'package:eqmonitor/feature/earthquake_replay/ui/earthquake_replay_page.dart';
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
-import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
+import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_layer_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/data/model/knet_station_result.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/knet_waveform_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/media/knet_media_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_record_list_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_page.dart';
+import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
@@ -25,8 +31,8 @@ import 'package:eqmonitor/feature/onboarding/data/notifier/onboarding_notifier.d
 import 'package:eqmonitor/feature/onboarding/ui/onboarding_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
-import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_page.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug_app_group_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
@@ -46,7 +52,7 @@ import 'package:eqmonitor/feature/settings/features/notification_settings/ui/pag
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/eew_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/ui/page/shake_detection_settings_page.dart';
-import 'package:eqmonitor/feature/settings/settings_screen.dart';
+import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_details_page.dart';
 import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_page.dart';
@@ -106,8 +112,7 @@ class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SplashPage();
+  Widget build(BuildContext context, GoRouterState state) => const SplashPage();
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')
@@ -326,6 +331,23 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
                 TypedGoRoute<FnetCatalogRoute>(path: 'catalog'),
               ],
             ),
+            TypedGoRoute<KnetWaveformRoute>(
+              path: 'knet',
+              routes: [
+                TypedGoRoute<KnetCredentialsSettingsRoute>(
+                  path: 'settings',
+                ),
+                TypedGoRoute<KnetMediaRoute>(
+                  path: 'media',
+                ),
+                TypedGoRoute<KnetRecordListRoute>(
+                  path: 'records',
+                ),
+                TypedGoRoute<KnetStationWaveformRoute>(
+                  path: 'waveform',
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -337,7 +359,7 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const SettingsScreen();
+      const SettingsPage();
 }
 
 class DisplayRoute extends GoRouteData with $DisplayRoute {
@@ -345,7 +367,7 @@ class DisplayRoute extends GoRouteData with $DisplayRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const DisplaySettingsScreen();
+      const DisplaySettingsPage();
 }
 
 class NotificationSettingsRoute extends GoRouteData
@@ -428,7 +450,7 @@ class TermOfServiceRoute extends GoRouteData with $TermOfServiceRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      TermOfServiceScreen(onResult: $extra, showAcceptButton: showAcceptButton);
+      TermOfServicePage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
 class ColorSchemeConfigRoute extends GoRouteData with $ColorSchemeConfigRoute {
@@ -450,7 +472,7 @@ class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      PrivacyPolicyScreen(onResult: $extra, showAcceptButton: showAcceptButton);
+      PrivacyPolicyPage(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
 class LicenseRoute extends GoRouteData with $LicenseRoute {
@@ -646,6 +668,56 @@ class FnetCatalogRoute extends GoRouteData with $FnetCatalogRoute {
   Widget build(BuildContext context, GoRouterState state) {
     return const FnetCatalogPage();
   }
+}
+
+class KnetWaveformRoute extends GoRouteData with $KnetWaveformRoute {
+  const KnetWaveformRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const KnetWaveformPage();
+}
+
+class KnetCredentialsSettingsRoute extends GoRouteData
+    with $KnetCredentialsSettingsRoute {
+  const KnetCredentialsSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const KnetCredentialsSettingsPage();
+}
+
+class KnetMediaRoute extends GoRouteData with $KnetMediaRoute {
+  const KnetMediaRoute({required this.$extra});
+
+  /// 地震発生時刻（JST）
+  final DateTime $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetMediaPage(eventTime: $extra);
+}
+
+class KnetRecordListRoute extends GoRouteData with $KnetRecordListRoute {
+  const KnetRecordListRoute({required this.$extra});
+
+  /// 地震発生時刻（JST）
+  final DateTime $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetRecordListPage(eventTime: $extra);
+}
+
+class KnetStationWaveformRoute extends GoRouteData
+    with $KnetStationWaveformRoute {
+  const KnetStationWaveformRoute({required this.$extra});
+
+  final KnetStationResult $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      KnetStationWaveformPage(result: $extra);
 }
 
 class KyoshinMonitorAboutRoute extends GoRouteData

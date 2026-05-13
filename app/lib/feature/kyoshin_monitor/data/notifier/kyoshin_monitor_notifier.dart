@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
@@ -46,7 +47,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
               next.requireValue.realtimeDataType ||
           previous.requireValue.realtimeLayer !=
               next.requireValue.realtimeLayer ||
-          previous.requireValue.useKmoni != next.requireValue.useKmoni) {
+          previous.requireValue.useKmoni != next.requireValue.useKmoni ||
+          previous.requireValue.monitorSource !=
+              next.requireValue.monitorSource) {
         onSettingsChanged();
       }
     });
@@ -71,29 +74,45 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     final stopwatch = Stopwatch()..start();
     state = const AsyncLoading<KyoshinMonitorState>();
     state = await AsyncValue.guard(() async {
-      final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
+      final settings = ref.read(kyoshinMonitorSettingsProvider).requireValue;
+      final realtimeDataType = settings.realtimeDataType;
+      final realtimeLayer = settings.realtimeLayer;
+      final monitorSource = settings.monitorSource;
+
       final analyzer = await ref.read(
         kyoshinMonitorAnalyzerIsolateProvider.future,
       );
-      // 画像を取得
-      final realtimeDataType = ref
-          .read(kyoshinMonitorSettingsProvider)
-          .requireValue
-          .realtimeDataType;
-      final realtimeLayer = ref
-          .read(kyoshinMonitorSettingsProvider)
-          .requireValue
-          .realtimeLayer;
 
       final fetchSw = Stopwatch()..start();
-      final image = await Timeline.timeSync(
-        'kmoni.fetchImage',
-        () async => dataSource.getRealtimeImageData(
-          type: realtimeDataType,
-          layer: realtimeLayer,
-          dateTime: targetTime,
-        ),
-      );
+      final List<int> image;
+
+      // LMoniデータソースを使うケース:
+      // 1. ソースがlmoniに設定されている
+      // 2. LPGMデータ種別が選択されている (LMoni専用)
+      if (monitorSource == KyoshinMonitorSource.lmoni ||
+          realtimeDataType.isLpgm) {
+        final lpgmDataSource = ref.read(
+          lpgmKyoshinMonitorWebApiDataSourceProvider,
+        );
+        image = await Timeline.timeSync(
+          'lmoni.fetchImage',
+          () async => lpgmDataSource.getRealtimeImageData(
+            realtimeDataType,
+            realtimeLayer,
+            targetTime,
+          ),
+        );
+      } else {
+        final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
+        image = await Timeline.timeSync(
+          'kmoni.fetchImage',
+          () async => dataSource.getRealtimeImageData(
+            type: realtimeDataType,
+            layer: realtimeLayer,
+            dateTime: targetTime,
+          ),
+        );
+      }
       fetchSw.stop();
 
       final workerSw = Stopwatch()..start();

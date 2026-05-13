@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
@@ -80,13 +78,14 @@ class _EnabledSection extends ConsumerWidget {
       value: settings.enabled,
       onChanged: isSaving
           ? null
-          : (value) {
-              unawaited(
-                EewSettingsNotifier.saveSettingsMutation.run(ref, (tsx) async {
+          : (value) async {
+              await EewSettingsNotifier.saveSettingsMutation.run(
+                ref,
+                (tsx) async {
                   await tsx
                       .get(eewSettingsProvider.notifier)
                       .setEnabled(enabled: value);
-                }),
+                },
               );
             },
     );
@@ -166,18 +165,20 @@ class _LiveActivitySection extends ConsumerWidget {
       value: settings.startLiveActivity,
       onChanged: isSaving
           ? null
-          : (value) {
-              unawaited(
-                EewSettingsNotifier.saveLiveActivityMutation.run(ref, (tsx) async {
+          : (value) async {
+              await EewSettingsNotifier.saveLiveActivityMutation.run(
+                ref,
+                (tsx) async {
                   await tsx
                       .get(eewSettingsProvider.notifier)
                       .setStartLiveActivity(startLiveActivity: value);
-                }),
+                },
               );
             },
     );
   }
 }
+
 
 class _RegionsSection extends ConsumerWidget {
   const _RegionsSection({required this.settings});
@@ -221,14 +222,15 @@ class _RegionsSection extends ConsumerWidget {
           NotificationRegionListTile(
             region: region,
             isBusy: isBusy,
-            onDelete: () {
-              unawaited(
-                EewSettingsNotifier.updateRegionsMutation.run(ref, (tsx) async {
+            onDelete: () async {
+              await EewSettingsNotifier.updateRegionsMutation.run(
+                ref,
+                (tsx) async {
                   await tsx.get(eewSettingsProvider.notifier).removeRegion(
                     regionId: region.regionId,
                     isCurrentLocation: region.isCurrentLocation,
                   );
-                }),
+                },
               );
             },
           ),
@@ -269,18 +271,16 @@ class _RegionsSection extends ConsumerWidget {
                           );
                           return;
                         }
-                        unawaited(
-                          EewSettingsNotifier.updateRegionsMutation.run(
-                            ref,
-                            (tsx) async {
-                              await tsx
-                                  .get(eewSettingsProvider.notifier)
-                                  .addCurrentLocationRegion(
-                                    regionCode: code,
-                                    regionName: name,
-                                  );
-                            },
-                          ),
+                        await EewSettingsNotifier.updateRegionsMutation.run(
+                          ref,
+                          (tsx) async {
+                            await tsx
+                                .get(eewSettingsProvider.notifier)
+                                .addCurrentLocationRegion(
+                                  regionCode: code,
+                                  regionName: name,
+                                );
+                          },
                         );
                       },
                 child: isBusy
@@ -304,19 +304,17 @@ class _RegionsSection extends ConsumerWidget {
                         if (result == null || !context.mounted) {
                           return;
                         }
-                        unawaited(
-                          EewSettingsNotifier.updateRegionsMutation.run(
-                            ref,
-                            (tsx) async {
-                              await tsx
-                                  .get(eewSettingsProvider.notifier)
-                                  .addRegion(
-                                    regionId: result.regionId,
-                                    regionName: result.regionName,
-                                    minIntensity: result.minIntensity,
-                                  );
-                            },
-                          ),
+                        await EewSettingsNotifier.updateRegionsMutation.run(
+                          ref,
+                          (tsx) async {
+                            await tsx
+                                .get(eewSettingsProvider.notifier)
+                                .addRegion(
+                                  regionId: result.regionId,
+                                  regionName: result.regionName,
+                                  minIntensity: result.minIntensity,
+                                );
+                          },
                         );
                       },
                 child: const Text('地域を追加'),
@@ -330,7 +328,7 @@ class _RegionsSection extends ConsumerWidget {
 }
 
 /// 現在地通知のために位置情報の常時許可を取得し、現在位置を返す。
-/// 権限が無い場合は設定アプリ誘導ダイアログを表示する。
+/// 権限が無い場合や whileInUse の場合は設定アプリ誘導ダイアログを表示する。
 Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
   BuildContext context,
 ) async {
@@ -368,6 +366,41 @@ Future<({double lat, double lon})?> _ensurePermissionAndGetLocation(
       await Geolocator.openAppSettings();
     }
     return null;
+  }
+
+  // whileInUse のみ許可されている場合は「常に許可」への昇格を促す。
+  // 昇格しなくても現在地を追加し続けることはできるが、バックグラウンドでは動かない。
+  if (permission == LocationPermission.whileInUse) {
+    if (!context.mounted) {
+      return null;
+    }
+    final shouldOpen = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog.adaptive(
+        title: const Text('「常に許可」への変更をお願いします'),
+        content: const Text(
+          'バックグラウンドでも位置情報を更新するには、'
+          '位置情報の許可を「常に許可」に変更する必要があります。\n'
+          '設定アプリで「位置情報」→「常に許可」を選択してください。',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('後で'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('設定を開く'),
+          ),
+        ],
+      ),
+    );
+    if (shouldOpen ?? false) {
+      await Geolocator.openAppSettings();
+      // 設定アプリから戻るまで待つ（ユーザーが変更した場合に備えて）
+      return null;
+    }
+    // 「後で」を選択した場合はそのまま現在地を取得して追加する
   }
 
   try {

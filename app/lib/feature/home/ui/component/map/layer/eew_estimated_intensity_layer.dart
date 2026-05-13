@@ -51,12 +51,24 @@ class EewEstimatedIntensityLayer extends HookConsumerWidget {
                 final color =
                     colorModel.fromJmaIntensity(intensity).background;
 
+                final codes = regionMaxIntensities
+                    .where((r) => r.intensity == intensity)
+                    .map((r) => r.code)
+                    .toList();
+                final initialFilter = codes.isEmpty
+                    ? const <Object>['==', '1', '2']
+                    : <Object>[
+                        'in',
+                        ['get', 'code'],
+                        ['literal', codes],
+                      ];
+
                 return styleController.addLayer(
                   FillStyleLayer(
                     id: layerId,
                     sourceId: 'eqmonitor_map',
                     sourceLayerId: 'areaForecastLocalEew',
-                    filter: const ['==', '1', '2'],
+                    filter: initialFilter,
                     paint: {
                       'fill-color': color.toHexString(),
                       'fill-opacity': 0.7,

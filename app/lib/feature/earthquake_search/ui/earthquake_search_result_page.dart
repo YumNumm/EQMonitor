@@ -320,7 +320,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
       subtitle: Text(
         subTitle,
         style: const TextStyle(
-          fontFamily: FontFamily.notoSansMono,
+          fontFamily: FontFamily.googleSansCode,
           fontFamilyFallback: [FontFamily.notoSansJP],
           letterSpacing: -0.2,
         ),
@@ -336,7 +336,7 @@ class _EarthquakeSearchResultListTile extends HookConsumerWidget {
         text: magnitudeText,
         style: theme.textTheme.labelLarge!.copyWith(
           fontWeight: .bold,
-          fontFamily: FontFamily.notoSansMono,
+          fontFamily: FontFamily.googleSansCode,
         ),
       ),
     );

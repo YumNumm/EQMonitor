@@ -158,12 +158,10 @@ class _PageContent extends HookConsumerWidget {
                 Geographic(lat: event.minLat, lon: event.minLng),
                 Geographic(lat: event.maxLat, lon: event.maxLng),
               ]);
-              unawaited(
-                controller.fitBounds(
-                  bounds: bounds,
-                  padding: const EdgeInsets.all(64),
-                  webMaxZoom: 10,
-                ),
+              await controller.fitBounds(
+                bounds: bounds,
+                padding: const EdgeInsets.all(64),
+                webMaxZoom: 10,
               );
             },
           ),
@@ -408,7 +406,7 @@ class _InfoRow extends StatelessWidget {
               value,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: ds.textColor.primary,
-                fontFamily: mono ? FontFamily.notoSansMono : null,
+                fontFamily: mono ? FontFamily.googleSansCode : null,
               ),
             ),
           ),

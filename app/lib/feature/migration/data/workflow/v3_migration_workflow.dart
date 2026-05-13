@@ -41,7 +41,10 @@ Future<void> runV3MigrationWorkflow({
           final result = await repository.getDevice(deviceId);
           return switch (result) {
             Success() => true,
-            Failure(:final exception) when _isNotFound(exception) => false,
+            Failure(:final exception)
+                when exception is DioException &&
+                    exception.response?.statusCode == 404 =>
+              false,
             Failure(:final exception, :final stackTrace) =>
               Error.throwWithStackTrace(
                 exception,
@@ -112,6 +115,3 @@ Future<bool> isV3MigrationComplete(WorkflowPersistence persistence) async {
   );
   return completed;
 }
-
-bool _isNotFound(Exception e) =>
-    e is DioException && e.response?.statusCode == 404;

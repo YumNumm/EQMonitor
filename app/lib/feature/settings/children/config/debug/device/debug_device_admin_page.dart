@@ -60,7 +60,8 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
           };
           return (device: value, settings: settings);
         case Failure(:final exception):
-          if (_isNotFound(exception)) {
+          if (exception is DioException &&
+              exception.response?.statusCode == 404) {
             return (device: null, settings: null);
           }
           throw exception;
@@ -274,7 +275,7 @@ class _Body extends HookConsumerWidget {
       });
     }
 
-    const mono = TextStyle(fontFamily: FontFamily.notoSansMono);
+    const mono = TextStyle(fontFamily: FontFamily.googleSansCode);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -436,7 +437,7 @@ class _InfoRow extends StatelessWidget {
           Expanded(
             child: SelectableText(
               value,
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
           ),
         ],
@@ -463,6 +464,3 @@ class _ErrorBody extends StatelessWidget {
     );
   }
 }
-
-bool _isNotFound(Object e) =>
-    e is DioException && e.response?.statusCode == 404;

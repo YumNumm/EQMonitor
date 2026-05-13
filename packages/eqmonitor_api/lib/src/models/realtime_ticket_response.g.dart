@@ -13,10 +13,16 @@ _RealtimeTicketResponse _$RealtimeTicketResponseFromJson(
 ) => $checkedCreate('_RealtimeTicketResponse', json, ($checkedConvert) {
   final val = _RealtimeTicketResponse(
     url: $checkedConvert('url', (v) => v as String),
+    expiresAt: $checkedConvert('expiresAt', (v) => DateTime.parse(v as String)),
+    issuedAt: $checkedConvert('issuedAt', (v) => DateTime.parse(v as String)),
   );
   return val;
 });
 
 Map<String, dynamic> _$RealtimeTicketResponseToJson(
   _RealtimeTicketResponse instance,
-) => <String, dynamic>{'url': instance.url};
+) => <String, dynamic>{
+  'url': instance.url,
+  'expiresAt': instance.expiresAt.toIso8601String(),
+  'issuedAt': instance.issuedAt.toIso8601String(),
+};

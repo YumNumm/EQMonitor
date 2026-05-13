@@ -139,6 +139,9 @@ class DeviceRepository {
     );
   });
 
+  static bool _isNotFound(Exception e) =>
+      e is DioException && e.response?.statusCode == 404;
+
   Future<Result<void, Exception>> syncPushTokens({
     required String deviceId,
     required NotificationToken token,
@@ -201,6 +204,3 @@ class DeviceRepository {
     return const Success(null);
   }
 }
-
-bool _isNotFound(Exception e) =>
-    e is DioException && e.response?.statusCode == 404;

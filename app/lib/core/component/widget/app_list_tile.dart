@@ -68,7 +68,7 @@ class AppListTile extends StatelessWidget {
         tileColor: backgroundColor,
         title: title,
         subtitle: subtitle,
-        value: value!,
+        value: value ?? false,
         onChanged: onChanged,
         trailing: trailing,
       ),

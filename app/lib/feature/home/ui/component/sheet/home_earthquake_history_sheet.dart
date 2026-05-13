@@ -102,7 +102,11 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                     AsyncData(:final value) =>
                       value.items.isEmpty
                           ? const EarthquakeHistoryNotFound()
-                          : HomeEarthquakeList(earthquakes: value.items),
+                          : HomeEarthquakeList(
+                              earthquakes: value.items,
+                              showCurrentLocationIntensity: scope ==
+                                  HomeEarthquakeHistoryScope.currentLocation,
+                            ),
                     AsyncError(:final error) => ErrorCard(
                       error: error,
                       margin: EdgeInsets.zero,

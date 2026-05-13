@@ -44,7 +44,7 @@ class SplashPage extends HookConsumerWidget {
       body: SafeArea(
         child: hasError
             ? ErrorCard(
-                error: error!,
+                error: error ?? Exception('Unknown error'),
                 onReload: () async {
                   ref.invalidate(parameterSetProvider);
                   ref.invalidate(travelTimeInternalProvider);

@@ -228,7 +228,16 @@ class DebugJmaMapPage extends HookConsumerWidget {
                         items: JmaMapType.values.map((type) {
                           return DropdownMenuItem(
                             value: type,
-                            child: Text(_getMapTypeName(type)),
+                            child: Text(
+                              switch (type) {
+                                JmaMapType.areaForecastLocalEew =>
+                                  '地震情報／緊急地震速報',
+                                JmaMapType.areaForecastLocalE => '地震情報',
+                                JmaMapType.areaInformationCity => '市区町村等',
+                                JmaMapType.areaTsunami => '津波予報区',
+                                JmaMapType.observationPoint => '地震観測点',
+                              },
+                            ),
                           );
                         }).toList(),
                         onChanged: (value) {
@@ -263,7 +272,7 @@ class DebugJmaMapPage extends HookConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildResultInfo(searchResult.value!),
+                        _ResultInfo(item: searchResult.value!),
                       ],
                     ),
                   ),
@@ -286,13 +295,13 @@ class DebugJmaMapPage extends HookConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildObservationPointInfo(
-                          observationPointResult.value!,
+                        _ObservationPointInfo(
+                          item: observationPointResult.value!,
                         ),
                         if (distance.value != null)
-                          _buildInfoRow(
-                            '距離',
-                            '${distance.value!.toStringAsFixed(2)} km',
+                          _InfoRow(
+                            label: '距離',
+                            value: '${distance.value!.toStringAsFixed(2)} km',
                           ),
                       ],
                     ),
@@ -305,51 +314,73 @@ class DebugJmaMapPage extends HookConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildResultInfo(MapDataItem item) {
+class _ResultInfo extends StatelessWidget {
+  const _ResultInfo({required this.item});
+
+  final MapDataItem item;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (item.property != null) ...[
           if (item.property!.code.isNotEmpty)
-            _buildInfoRow('コード', item.property!.code),
+            _InfoRow(label: 'コード', value: item.property!.code),
           if (item.property!.name.isNotEmpty)
-            _buildInfoRow('名前', item.property!.name),
+            _InfoRow(label: '名前', value: item.property!.name),
           if (item.property!.nameKana.isNotEmpty)
-            _buildInfoRow('名前（カナ）', item.property!.nameKana),
+            _InfoRow(label: '名前（カナ）', value: item.property!.nameKana),
         ],
         if (item.polylabel != null) ...[
-          _buildInfoRow('緯度', item.polylabel!.lat.toString()),
-          _buildInfoRow('経度', item.polylabel!.lng.toString()),
+          _InfoRow(label: '緯度', value: item.polylabel!.lat.toString()),
+          _InfoRow(label: '経度', value: item.polylabel!.lng.toString()),
         ],
         if (item.bounds != null) ...[
-          _buildInfoRow('南西緯度', item.bounds!.southWest.lat.toString()),
-          _buildInfoRow('南西経度', item.bounds!.southWest.lng.toString()),
-          _buildInfoRow('北東緯度', item.bounds!.northEast.lat.toString()),
-          _buildInfoRow('北東経度', item.bounds!.northEast.lng.toString()),
+          _InfoRow(label: '南西緯度', value: item.bounds!.southWest.lat.toString()),
+          _InfoRow(label: '南西経度', value: item.bounds!.southWest.lng.toString()),
+          _InfoRow(label: '北東緯度', value: item.bounds!.northEast.lat.toString()),
+          _InfoRow(label: '北東経度', value: item.bounds!.northEast.lng.toString()),
         ],
         if (item.distanceToCoastlineKm != null)
-          _buildInfoRow(
-            '海岸線までの距離',
-            '${item.distanceToCoastlineKm!.toStringAsFixed(1)} km',
+          _InfoRow(
+            label: '海岸線までの距離',
+            value: '${item.distanceToCoastlineKm!.toStringAsFixed(1)} km',
           ),
       ],
     );
   }
+}
 
-  Widget _buildObservationPointInfo(EarthquakeParameterStationItem item) {
+class _ObservationPointInfo extends StatelessWidget {
+  const _ObservationPointInfo({required this.item});
+
+  final EarthquakeParameterStationItem item;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoRow('コード', item.code),
-        _buildInfoRow('名前', item.name.ja),
-        _buildInfoRow('緯度', item.location.lat.toString()),
-        _buildInfoRow('経度', item.location.lon.toString()),
+        _InfoRow(label: 'コード', value: item.code),
+        _InfoRow(label: '名前', value: item.name.ja),
+        _InfoRow(label: '緯度', value: item.location.lat.toString()),
+        _InfoRow(label: '経度', value: item.location.lon.toString()),
       ],
     );
   }
+}
 
-  Widget _buildInfoRow(String label, String value) {
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -366,16 +397,6 @@ class DebugJmaMapPage extends HookConsumerWidget {
         ],
       ),
     );
-  }
-
-  String _getMapTypeName(JmaMapType type) {
-    return switch (type) {
-      JmaMapType.areaForecastLocalEew => '地震情報／緊急地震速報',
-      JmaMapType.areaForecastLocalE => '地震情報',
-      JmaMapType.areaInformationCity => '市区町村等',
-      JmaMapType.areaTsunami => '津波予報区',
-      JmaMapType.observationPoint => '地震観測点',
-    };
   }
 }
 

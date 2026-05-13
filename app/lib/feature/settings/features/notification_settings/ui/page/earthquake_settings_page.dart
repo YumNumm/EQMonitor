@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
@@ -81,16 +79,15 @@ class _EnabledSection extends ConsumerWidget {
       value: settings.enabled,
       onChanged: isSaving
           ? null
-          : (value) {
-              unawaited(
-                EarthquakeNotificationSettingsNotifier.saveSettingsMutation.run(
-                  ref,
-                  (tsx) async {
-                    await tsx
-                        .get(earthquakeNotificationSettingsProvider.notifier)
-                        .setEnabled(enabled: value);
-                  },
-                ),
+          : (value) async {
+              await EarthquakeNotificationSettingsNotifier.saveSettingsMutation
+                  .run(
+                ref,
+                (tsx) async {
+                  await tsx
+                      .get(earthquakeNotificationSettingsProvider.notifier)
+                      .setEnabled(enabled: value);
+                },
               );
             },
     );
@@ -175,16 +172,15 @@ class _EstimatedIntensitySection extends ConsumerWidget {
       value: settings.estimatedIntensityEnabled,
       onChanged: isSaving
           ? null
-          : (value) {
-              unawaited(
-                EarthquakeNotificationSettingsNotifier.saveSettingsMutation.run(
-                  ref,
-                  (tsx) async {
-                    await tsx
-                        .get(earthquakeNotificationSettingsProvider.notifier)
-                        .setEstimatedIntensityEnabled(enabled: value);
-                  },
-                ),
+          : (value) async {
+              await EarthquakeNotificationSettingsNotifier.saveSettingsMutation
+                  .run(
+                ref,
+                (tsx) async {
+                  await tsx
+                      .get(earthquakeNotificationSettingsProvider.notifier)
+                      .setEstimatedIntensityEnabled(enabled: value);
+                },
               );
             },
     );
@@ -237,21 +233,19 @@ class _RegionsSection extends ConsumerWidget {
           NotificationRegionListTile(
             region: region,
             isBusy: isBusy,
-            onDelete: () {
-              unawaited(
-                EarthquakeNotificationSettingsNotifier.updateRegionsMutation
-                    .run(
-                      ref,
-                      (tsx) async {
-                        await tsx
-                            .get(earthquakeNotificationSettingsProvider.notifier)
-                            .removeRegion(
-                              regionId: region.regionId,
-                              isCurrentLocation: region.isCurrentLocation,
-                            );
-                      },
-                    ),
-              );
+            onDelete: () async {
+              await EarthquakeNotificationSettingsNotifier.updateRegionsMutation
+                  .run(
+                    ref,
+                    (tsx) async {
+                      await tsx
+                          .get(earthquakeNotificationSettingsProvider.notifier)
+                          .removeRegion(
+                            regionId: region.regionId,
+                            isCurrentLocation: region.isCurrentLocation,
+                          );
+                    },
+                  );
             },
           ),
         Padding(
@@ -263,19 +257,20 @@ class _RegionsSection extends ConsumerWidget {
               FilledButton.tonal(
                 onPressed: isBusy || hasCurrentLocation
                     ? null
-                    : () {
-                        unawaited(
-                          EarthquakeNotificationSettingsNotifier
-                              .updateRegionsMutation
-                              .run(
-                                ref,
-                                (tsx) async {
-                                  await tsx
-                                      .get(earthquakeNotificationSettingsProvider.notifier)
-                                      .addCurrentLocationRegion();
-                                },
-                              ),
-                        );
+                    : () async {
+                        await EarthquakeNotificationSettingsNotifier
+                            .updateRegionsMutation
+                            .run(
+                              ref,
+                              (tsx) async {
+                                await tsx
+                                    .get(
+                                      earthquakeNotificationSettingsProvider
+                                          .notifier,
+                                    )
+                                    .addCurrentLocationRegion();
+                              },
+                            );
                       },
                 child: isBusy
                     ? const SizedBox(
@@ -298,22 +293,23 @@ class _RegionsSection extends ConsumerWidget {
                         if (result == null || !context.mounted) {
                           return;
                         }
-                        unawaited(
-                          EarthquakeNotificationSettingsNotifier
-                              .updateRegionsMutation
-                              .run(
-                                ref,
-                                (tsx) async {
-                                  await tsx
-                                      .get(earthquakeNotificationSettingsProvider.notifier)
-                                      .addRegion(
-                                        regionId: result.regionId,
-                                        regionName: result.regionName,
-                                        minIntensity: result.minIntensity,
-                                      );
-                                },
-                              ),
-                        );
+                        await EarthquakeNotificationSettingsNotifier
+                            .updateRegionsMutation
+                            .run(
+                              ref,
+                              (tsx) async {
+                                await tsx
+                                    .get(
+                                      earthquakeNotificationSettingsProvider
+                                          .notifier,
+                                    )
+                                    .addRegion(
+                                      regionId: result.regionId,
+                                      regionName: result.regionName,
+                                      minIntensity: result.minIntensity,
+                                    );
+                              },
+                            );
                       },
                 child: const Text('地域を追加'),
               ),

@@ -29,7 +29,7 @@ class HomeMapControllerCard extends StatelessWidget {
       child: Divider(height: 0, color: color.outlineSoft),
     );
 
-    void hapticFeedback() => unawaited(HapticFeedback.lightImpact());
+    Future<void> hapticFeedback() async => HapticFeedback.lightImpact();
 
     return Card(
       color: color.surfaceCard.withValues(alpha: 0.92),
@@ -50,7 +50,7 @@ class HomeMapControllerCard extends StatelessWidget {
                         child: const Icon(Icons.layers_rounded),
                       ),
                       onTap: () async {
-                        hapticFeedback();
+                        await hapticFeedback();
                         onLayerButtonTap?.call();
                       },
                     ),
@@ -59,8 +59,8 @@ class HomeMapControllerCard extends StatelessWidget {
                         padding: EdgeInsets.all(spacing.sm),
                         child: const Icon(Icons.home_rounded),
                       ),
-                      onTap: () {
-                        hapticFeedback();
+                      onTap: () async {
+                        await hapticFeedback();
                         onLocationButtonTap?.call();
                       },
                     ),
@@ -70,8 +70,8 @@ class HomeMapControllerCard extends StatelessWidget {
                           padding: EdgeInsets.all(spacing.sm),
                           child: const Icon(Icons.bug_report_rounded),
                         ),
-                        onTap: () {
-                          hapticFeedback();
+                        onTap: () async {
+                          await hapticFeedback();
                           onDebugButtonTap?.call();
                         },
                       ),

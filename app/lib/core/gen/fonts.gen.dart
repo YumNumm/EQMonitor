@@ -11,9 +11,12 @@
 class FontFamily {
   FontFamily._();
 
+  /// Font family: GoogleSansCode
+  static const String googleSansCode = 'GoogleSansCode';
+
+  /// Font family: GoogleSansFlex
+  static const String googleSansFlex = 'GoogleSansFlex';
+
   /// Font family: NotoSansJP
   static const String notoSansJP = 'NotoSansJP';
-
-  /// Font family: NotoSansMono
-  static const String notoSansMono = 'NotoSansMono';
 }

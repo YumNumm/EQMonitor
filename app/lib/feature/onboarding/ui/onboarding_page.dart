@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
@@ -56,11 +54,9 @@ class OnboardingPage extends HookConsumerWidget {
         return;
       }
 
-      unawaited(
-        pageController.nextPage(
-          duration: const Duration(milliseconds: 280),
-          curve: Curves.easeOutCubic,
-        ),
+      await pageController.nextPage(
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOutCubic,
       );
     }
 
@@ -416,7 +412,7 @@ class _BottomBar extends StatelessWidget {
             width: double.infinity,
             height: 52,
             child: FilledButton(
-              onPressed: () => unawaited(onNext()),
+              onPressed: onNext,
               style: FilledButton.styleFrom(
                 backgroundColor: ds.palette.brandPrimary,
                 foregroundColor: ds.textColor.inverse,

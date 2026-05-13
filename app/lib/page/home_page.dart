@@ -7,8 +7,11 @@ import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/ui/component/shake_detection/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
+import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -43,6 +46,17 @@ class _SheetBody extends ConsumerWidget {
     final color = designSystem.color;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
+
+    final hasCurrentLocationRegion = ref.watch(
+      eewSettingsProvider.select(
+        (s) => s.value?.regions.any((r) => r.isCurrentLocation) ?? false,
+      ),
+    );
+    final permission = ref.watch(backgroundLocationPermissionProvider).value;
+    final showPermissionBanner =
+        hasCurrentLocationRegion &&
+        permission != null &&
+        permission != LocationPermission.always;
 
     final eewCards = Column(
       children: state.reversed
@@ -104,6 +118,11 @@ class _SheetBody extends ConsumerWidget {
                 children: [
                   SizedBox(height: spacing.xs),
                   if (state.isNotEmpty) eewCards,
+                  if (showPermissionBanner) ...[
+                    _BackgroundLocationPermissionBanner(
+                      bottomSpacing: spacing.md,
+                    ),
+                  ],
                   if (shakeEvents.isNotEmpty)
                     Column(
                       children: shakeEvents
@@ -126,6 +145,65 @@ class _SheetBody extends ConsumerWidget {
                 height: spacing.sm,
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BackgroundLocationPermissionBanner extends StatelessWidget {
+  const _BackgroundLocationPermissionBanner({required this.bottomSpacing});
+
+  final double bottomSpacing;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomSpacing),
+      child: Material(
+        color: colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () async => Geolocator.openAppSettings(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.location_off_outlined,
+                  color: colorScheme.onErrorContainer,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '位置情報の「常に許可」が必要です',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: colorScheme.onErrorContainer,
+                        ),
+                      ),
+                      Text(
+                        'バックグラウンド位置更新が無効のため、通知は過去の位置情報を使用しています',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onErrorContainer,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: colorScheme.onErrorContainer,
+                  size: 14,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cue/cue.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +58,8 @@ class AppSwitch extends HookWidget {
               radius: 28,
               borderRadius: BorderRadius.circular(shape.pill),
               onTap: isEnabled
-                  ? () {
-                      unawaited(HapticFeedback.selectionClick());
+                  ? () async {
+                      await HapticFeedback.selectionClick();
                       onChanged?.call(!value);
                     }
                   : null,
@@ -218,7 +216,10 @@ class AppSwitchListTile extends StatelessWidget {
       textColor: textColor,
       visualDensity: visualDensity,
       title: Text(title),
-      subtitle: subtitle == null ? null : Text(subtitle!),
+      subtitle: switch (subtitle) {
+        final s? => Text(s),
+        null => null,
+      },
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

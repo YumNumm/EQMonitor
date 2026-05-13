@@ -38,13 +38,13 @@ class _Body extends ConsumerWidget {
 
     final titleTextStyle = textTheme.titleMedium!.copyWith(
       fontWeight: FontWeight.bold,
-      fontFamily: FontFamily.notoSansMono,
+      fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
     final bodyTextStyle = textTheme.bodySmall!.copyWith(
       fontWeight: FontWeight.w400,
-      fontFamily: FontFamily.notoSansMono,
+      fontFamily: FontFamily.googleSansCode,
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 

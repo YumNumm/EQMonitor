@@ -102,7 +102,7 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
               v,
               unknownValue: EarthquakeHistoryFillMode.none,
             ) ??
-            EarthquakeHistoryFillMode.none,
+            EarthquakeHistoryFillMode.matchIcon,
       ),
       stationDisplayMode: $checkedConvert(
         'station_display_mode',
