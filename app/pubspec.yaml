@@ -112,6 +112,10 @@ dependencies:
   jma_map:
     path: ../packages/jma_map
   json_annotation: ^4.11.0
+  knet_api_client:
+    path: ../packages/knet_api_client
+  knet_waveform_parser:
+    path: ../packages/knet_waveform_parser
   kyoshin_monitor_api:
     path: ../packages/kyoshin_monitor_api
   kyoshin_monitor_image_parser:
