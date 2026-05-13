@@ -18,14 +18,21 @@ class EewDetailsPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text('緊急地震速報 詳細 ($eventId)')),
       body: eewsAsyncValue.when(
-        data: _buildEewList,
+        data: (eews) => _EewList(eews: eews),
         loading: () => const _EewDetailsPageSkeleton(),
         error: (error, stack) => Center(child: Text('エラーが発生しました: $error')),
       ),
     );
   }
+}
 
-  Widget _buildEewList(List<EewTelegramItem> eews) {
+class _EewList extends StatelessWidget {
+  const _EewList({required this.eews});
+
+  final List<EewTelegramItem> eews;
+
+  @override
+  Widget build(BuildContext context) {
     if (eews.isEmpty) {
       return const AppEmptyState(
         message: 'EEW情報はありません',
