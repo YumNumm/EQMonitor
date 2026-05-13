@@ -1,0 +1,16 @@
+name: knet_dsp
+description: K-NET/KiK-net 強震波形のデジタル信号処理ライブラリ（フィルタ・スペクトル解析・JMA計測震度）
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.11.0
+
+resolution: workspace
+
+dev_dependencies:
+  altive_lints: ^2.1.0
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
+  test: ^1.29.0
