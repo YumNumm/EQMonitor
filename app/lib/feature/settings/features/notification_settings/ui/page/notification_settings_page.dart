@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
@@ -117,19 +115,17 @@ class _GeneralSettingsSection extends ConsumerWidget {
           value: settings.tsunamiEnabled,
           onChanged: isSaving
               ? null
-              : (value) {
-                  unawaited(
-                    GeneralNotificationSettingsNotifier.saveMutation.run(
-                      ref,
-                      (tsx) async {
-                        await tsx
-                            .get(generalNotificationSettingsProvider.notifier)
-                            .save(
-                              tsunamiEnabled: value,
-                              trainingEnabled: settings.trainingEnabled,
-                            );
-                      },
-                    ),
+              : (value) async {
+                  await GeneralNotificationSettingsNotifier.saveMutation.run(
+                    ref,
+                    (tsx) async {
+                      await tsx
+                          .get(generalNotificationSettingsProvider.notifier)
+                          .save(
+                            tsunamiEnabled: value,
+                            trainingEnabled: settings.trainingEnabled,
+                          );
+                    },
                   );
                 },
         ),
@@ -139,19 +135,17 @@ class _GeneralSettingsSection extends ConsumerWidget {
           value: settings.trainingEnabled,
           onChanged: isSaving
               ? null
-              : (value) {
-                  unawaited(
-                    GeneralNotificationSettingsNotifier.saveMutation.run(
-                      ref,
-                      (tsx) async {
-                        await tsx
-                            .get(generalNotificationSettingsProvider.notifier)
-                            .save(
-                              tsunamiEnabled: settings.tsunamiEnabled,
-                              trainingEnabled: value,
-                            );
-                      },
-                    ),
+              : (value) async {
+                  await GeneralNotificationSettingsNotifier.saveMutation.run(
+                    ref,
+                    (tsx) async {
+                      await tsx
+                          .get(generalNotificationSettingsProvider.notifier)
+                          .save(
+                            tsunamiEnabled: settings.tsunamiEnabled,
+                            trainingEnabled: value,
+                          );
+                    },
                   );
                 },
         ),
@@ -233,9 +227,9 @@ class _TestNotificationTile extends HookConsumerWidget {
                           runSpacing: 8,
                           children: TestNotificationKind.values.map((kind) {
                             return FilledButton.tonal(
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.of(context).pop();
-                                unawaited(send(kind));
+                                await send(kind);
                               },
                               child: Text(kind.displayLabel),
                             );

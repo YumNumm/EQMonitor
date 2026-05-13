@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
@@ -103,14 +101,12 @@ class _MapContent extends ConsumerWidget {
           final mapWidget = MapLibreMap(
             key: ValueKey(mapKey),
             options: mapOptions,
-            onMapCreated: (controller) {
+            onMapCreated: (controller) async {
               ref
                   .read(homeMapCameraStateProvider.notifier)
                   .setController(controller);
               if (showLocation) {
-                unawaited(
-                  controller.enableLocation(),
-                );
+                await controller.enableLocation();
               }
             },
             onEvent: (event) =>

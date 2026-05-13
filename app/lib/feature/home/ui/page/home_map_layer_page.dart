@@ -374,20 +374,12 @@ class _SettingSwitchTile extends StatelessWidget {
       subtitle: Text(subtitle, style: typography.bodySmall),
       trailing: AppSwitch(
         value: value,
-        onChanged: (next) {
-          unawaited(
-            Future<void>.sync(() async {
-              await onChanged(next);
-            }),
-          );
+        onChanged: (next) async {
+          await onChanged(next);
         },
       ),
-      onTap: () {
-        unawaited(
-          Future<void>.sync(() async {
-            await onChanged(!value);
-          }),
-        );
+      onTap: () async {
+        await onChanged(!value);
       },
     );
   }
@@ -455,13 +447,9 @@ class _SettingDropdownField<T> extends StatelessWidget {
           DropdownMenu<T>(
             width: double.infinity,
             initialSelection: value,
-            onSelected: (next) {
+            onSelected: (next) async {
               if (next != null) {
-                unawaited(
-                  Future<void>.sync(() async {
-                    await onChanged(next);
-                  }),
-                );
+                await onChanged(next);
               }
             },
             dropdownMenuEntries: entries,
@@ -514,12 +502,8 @@ class _SettingSegmentedField<T> extends StatelessWidget {
           SegmentedButton<T>(
             segments: segments,
             selected: selected,
-            onSelectionChanged: (next) {
-              unawaited(
-                Future<void>.sync(() async {
-                  await onSelectionChanged(next);
-                }),
-              );
+            onSelectionChanged: (next) async {
+              await onSelectionChanged(next);
             },
           ),
         ],
@@ -571,12 +555,8 @@ class _SettingActionTile extends StatelessWidget {
           ),
           SizedBox(height: spacing.md),
           FilledButton.tonal(
-            onPressed: () {
-              unawaited(
-                Future<void>.sync(() async {
-                  await onPressed();
-                }),
-              );
+            onPressed: () async {
+              await onPressed();
             },
             style: FilledButton.styleFrom(
               backgroundColor: color.surfaceEmphasis,

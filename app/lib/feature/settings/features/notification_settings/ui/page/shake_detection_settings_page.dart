@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -101,28 +99,24 @@ class _Body extends ConsumerWidget {
             _ShakeEntryCard(
               entry: entry,
               isBusy: isBusy,
-              onDelete: () {
-                unawaited(
-                  ShakeDetectionSettingsNotifier.removeEntryMutation.run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(shakeDetectionSettingsProvider.notifier)
-                          .removeEntry(entry.id);
-                    },
-                  ),
+              onDelete: () async {
+                await ShakeDetectionSettingsNotifier.removeEntryMutation.run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(shakeDetectionSettingsProvider.notifier)
+                        .removeEntry(entry.id);
+                  },
                 );
               },
-              onLevelChanged: (level) {
-                unawaited(
-                  ShakeDetectionSettingsNotifier.updateLevelMutation.run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(shakeDetectionSettingsProvider.notifier)
-                          .updateLevel(entry.id, level);
-                    },
-                  ),
+              onLevelChanged: (level) async {
+                await ShakeDetectionSettingsNotifier.updateLevelMutation.run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(shakeDetectionSettingsProvider.notifier)
+                        .updateLevel(entry.id, level);
+                  },
                 );
               },
             ),
@@ -132,16 +126,14 @@ class _Body extends ConsumerWidget {
               onPressed: isBusy ||
                       state.entries.any((e) => e.isCurrentLocation)
                   ? null
-                  : () {
-                      unawaited(
-                        ShakeDetectionSettingsNotifier
-                            .addCurrentLocationMutation
-                            .run(ref, (tsx) async {
-                          await tsx
-                              .get(shakeDetectionSettingsProvider.notifier)
-                              .addCurrentLocation();
-                        }),
-                      );
+                  : () async {
+                      await ShakeDetectionSettingsNotifier
+                          .addCurrentLocationMutation
+                          .run(ref, (tsx) async {
+                        await tsx
+                            .get(shakeDetectionSettingsProvider.notifier)
+                            .addCurrentLocation();
+                      });
                     },
               child: isBusy
                   ? const SizedBox(
