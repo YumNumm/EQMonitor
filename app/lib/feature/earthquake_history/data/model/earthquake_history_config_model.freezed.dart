@@ -806,7 +806,7 @@ return $default(_that.iconMode,_that.fillMode,_that.stationDisplayMode,_that.hyp
 @JsonSerializable()
 
 class _EarthquakeHistoryDetailConfig implements EarthquakeHistoryDetailConfig {
-  const _EarthquakeHistoryDetailConfig({@JsonKey(unknownEnumValue: EarthquakeHistoryIconMode.auto) this.iconMode = EarthquakeHistoryIconMode.auto, @JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.none) this.fillMode = EarthquakeHistoryFillMode.none, this.stationDisplayMode = StationDisplayMode.maxFocused, this.hypocenterDisplayMode = HypocenterDisplayMode.zoomFade, this.showHypocenterError = false, this.showStationLabel = false, this.useEstimatedIntensityWhenAvailable = true, this.showLegend = true, this.showingLpgmIntensity = false, this.showStation = true});
+  const _EarthquakeHistoryDetailConfig({@JsonKey(unknownEnumValue: EarthquakeHistoryIconMode.auto) this.iconMode = EarthquakeHistoryIconMode.auto, @JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.none) this.fillMode = EarthquakeHistoryFillMode.matchIcon, this.stationDisplayMode = StationDisplayMode.maxFocused, this.hypocenterDisplayMode = HypocenterDisplayMode.zoomFade, this.showHypocenterError = false, this.showStationLabel = false, this.useEstimatedIntensityWhenAvailable = true, this.showLegend = true, this.showingLpgmIntensity = false, this.showStation = true});
   factory _EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryDetailConfigFromJson(json);
 
 /// アイコンの表示モード
