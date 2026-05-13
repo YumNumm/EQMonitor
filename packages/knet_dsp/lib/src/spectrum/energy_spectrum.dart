@@ -25,6 +25,7 @@ class EnergySpectrum {
 /// エネルギースペクトルを計算するクラス
 ///
 /// Parseval の定理に基づき、E(f) = |X(f)|² * dt として定義します。
+/// 片側スペクトルでは DC と Nyquist 以外のビンを 2 倍して両側分を合算します。
 class EnergySpectrumAnalyzer {
   EnergySpectrumAnalyzer({FourierSpectrumAnalyzer? analyzer})
       : _analyzer = analyzer ?? const FourierSpectrumAnalyzer();
@@ -43,7 +44,7 @@ class EnergySpectrumAnalyzer {
     final energy = List<double>.generate(halfLen, (i) {
       final ampSq = fs.amplitudes[i] * fs.amplitudes[i];
       final factor = (i == 0 || i == n ~/ 2) ? 1.0 : 2.0;
-      return factor * ampSq * dt / n;
+      return factor * ampSq * dt;
     });
 
     return EnergySpectrum(

@@ -26,7 +26,9 @@ class Fft {
   /// X は複素スペクトル、返り値は時間領域複素列（正規化済み）です。
   List<Complex> inverse(List<Complex> X) {
     final n = X.length;
-    assert(n > 0 && (n & (n - 1)) == 0, 'IFFT length must be a power of 2');
+    if (n <= 0 || (n & (n - 1)) != 0) {
+      throw ArgumentError('IFFT length must be a positive power of 2, got $n');
+    }
     final result = _fft(X, inverse: true);
     return result.map((c) => c / n.toDouble()).toList();
   }

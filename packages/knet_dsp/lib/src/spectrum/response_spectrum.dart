@@ -116,6 +116,8 @@ class ResponseSpectrumAnalyzer {
       var disp = 0.0;
       var vel = 0.0;
       var maxAbsSa = 0.0;
+      var maxAbsSv = 0.0;
+      var maxAbsSd = 0.0;
 
       for (var i = 0; i < nTime - 1; i++) {
         final ag0 = accel[i];
@@ -127,20 +129,24 @@ class ResponseSpectrumAnalyzer {
         disp = newDisp;
         vel = newVel;
 
-        // 絶対加速度応答 = 地動加速度 + 相対加速度
-        final absAccel =
-            (accel[i + 1] + 2.0 * h * omega * vel + omega * omega * disp).abs();
+        // 絶対加速度応答 ag + ü = -(2hω·u̇ + ω²·u)
+        final absAccel = (2.0 * h * omega * vel + omega * omega * disp).abs();
         if (absAccel > maxAbsSa) {
           maxAbsSa = absAccel;
         }
+        final absVel = vel.abs();
+        if (absVel > maxAbsSv) {
+          maxAbsSv = absVel;
+        }
+        final absDisp = disp.abs();
+        if (absDisp > maxAbsSd) {
+          maxAbsSd = absDisp;
+        }
       }
 
-      final svVal = maxAbsSa / omega;
-      final sdVal = maxAbsSa / (omega * omega);
-
       saList.add(maxAbsSa);
-      svList.add(svVal);
-      sdList.add(sdVal);
+      svList.add(maxAbsSv);
+      sdList.add(maxAbsSd);
     }
 
     return ResponseSpectrum(

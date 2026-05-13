@@ -73,8 +73,8 @@ class ZeroPhaseIirFilter {
       return List<double>.from(x);
     }
 
-    // パディング長（フィルタの次数 × 3）
-    const padLen = 6;
+    // パディング長（フィルタの次数 × 3、ただし入力長 - 1 でクリップ）
+    final padLen = math.min(6, x.length - 1);
     final padded = _mirrorPad(x, padLen);
 
     // 前向きフィルタリング

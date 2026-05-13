@@ -122,7 +122,7 @@ class JmaIntensityCalculator {
         return const Complex(0, 0);
       } else {
         final hf = _jmaH(f);
-        return spectrum[i] * hf;
+        return spectrum[i].scale(hf);
       }
     });
 

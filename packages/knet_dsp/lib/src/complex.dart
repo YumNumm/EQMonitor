@@ -25,16 +25,12 @@ class Complex {
   Complex operator +(Complex other) => Complex(re + other.re, im + other.im);
   Complex operator -(Complex other) => Complex(re - other.re, im - other.im);
 
-  /// 複素数または実数スカラーとの乗算
-  Complex operator *(Object other) {
-    if (other is Complex) {
-      return Complex(re * other.re - im * other.im, re * other.im + im * other.re);
-    } else if (other is num) {
-      final s = other.toDouble();
-      return Complex(re * s, im * s);
-    }
-    throw ArgumentError('Unsupported type: ${other.runtimeType}');
-  }
+  /// 複素数との乗算
+  Complex operator *(Complex other) =>
+      Complex(re * other.re - im * other.im, re * other.im + im * other.re);
+
+  /// 実数スカラー倍
+  Complex scale(double factor) => Complex(re * factor, im * factor);
 
   Complex operator /(double scalar) => Complex(re / scalar, im / scalar);
 
