@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-/// サンプル地震イベント（発生日時 JST）
+/// サンプル地震イベント（UTC で定義。download_provider が UTC+9h = JST に変換する）
 final _sampleEvents = <_EqEvent>[
   _EqEvent(
-    dateTime: DateTime(2011, 3, 11, 14, 46, 18),
+    dateTime: DateTime.utc(2011, 3, 11, 5, 46, 18),
     description: '東北地方太平洋沖地震 M9.0',
   ),
   _EqEvent(
-    dateTime: DateTime(2016, 4, 16, 1, 25, 5),
+    dateTime: DateTime.utc(2016, 4, 15, 16, 25, 5),
     description: '熊本地震（本震）M7.3',
   ),
   _EqEvent(
-    dateTime: DateTime(2024, 1, 1, 16, 10, 9),
+    dateTime: DateTime.utc(2024, 1, 1, 7, 10, 9),
     description: '令和6年能登半島地震 M7.6',
   ),
 ];
