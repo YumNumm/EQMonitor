@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/debug/replay/debug_replay_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +8,11 @@ const _kNotoScenarioPath = 'assets/debug/eew/noto_peninsula_20240101';
 class DebugReplayModal extends ConsumerWidget {
   const DebugReplayModal({super.key});
 
-  static void show(BuildContext context) {
-    unawaited(
-      showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        builder: (_) => const DebugReplayModal(),
-      ),
+  static Future<void> show(BuildContext context) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => const DebugReplayModal(),
     );
   }
 
