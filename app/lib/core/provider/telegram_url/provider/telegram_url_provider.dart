@@ -53,7 +53,8 @@ class TelegramUrl extends _$TelegramUrl {
 
   Future<void> updateRestUrl(String url) async {
     final current = state.value ?? _defaultTelegramUrl();
-    state = AsyncValue.data(current.copyWith(restApiUrl: url));
-    await _save(state.value!);
+    final updated = current.copyWith(restApiUrl: url);
+    state = AsyncValue.data(updated);
+    await _save(updated);
   }
 }

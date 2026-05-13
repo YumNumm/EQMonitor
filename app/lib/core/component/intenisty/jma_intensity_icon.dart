@@ -108,9 +108,9 @@ class JmaIntensityIcon extends ConsumerWidget {
                 crossAxisAlignment: .baseline,
                 textBaseline: .alphabetic,
                 children: [
-                  if (customText != null)
+                  if (customText case final ct?)
                     Text(
-                      customText!,
+                      ct,
                       style: TextStyle(
                         color: fg,
                         fontSize: 100,

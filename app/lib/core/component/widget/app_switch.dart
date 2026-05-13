@@ -216,7 +216,10 @@ class AppSwitchListTile extends StatelessWidget {
       textColor: textColor,
       visualDensity: visualDensity,
       title: Text(title),
-      subtitle: subtitle == null ? null : Text(subtitle!),
+      subtitle: switch (subtitle) {
+        final s? => Text(s),
+        null => null,
+      },
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -190,13 +190,14 @@ Future<void> _main() async {
         SharedPreferencesAsync(results.$1.$1),
       ),
       packageInfoProvider.overrideWithValue(results.$1.$2),
-      if (results.$1.$3 != null)
-        androidDeviceInfoProvider.overrideWithValue(results.$1.$3!),
-      if (results.$1.$4 != null)
-        iosDeviceInfoProvider.overrideWithValue(results.$1.$4!),
-      applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$6!),
-      if (results.$2.$1 != null)
-        kyoshinColorMapProvider.overrideWithValue(results.$2.$1!),
+      if (results.$1.$3 case final androidInfo?)
+        androidDeviceInfoProvider.overrideWithValue(androidInfo),
+      if (results.$1.$4 case final iosInfo?)
+        iosDeviceInfoProvider.overrideWithValue(iosInfo),
+      if (results.$1.$6 case final appDir?)
+        applicationDocumentsDirectoryProvider.overrideWithValue(appDir),
+      if (results.$2.$1 case final colorMap?)
+        kyoshinColorMapProvider.overrideWithValue(colorMap),
     ],
     observers: [if (kDebugMode) CustomProviderObserver(talker)],
     retry: (_, _) => null,
