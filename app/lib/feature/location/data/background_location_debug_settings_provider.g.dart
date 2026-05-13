@@ -56,7 +56,7 @@ final class BackgroundLocationDebugSettingsProvider
 }
 
 String _$backgroundLocationDebugSettingsHash() =>
-    r'3d90d11c73aba618878b81e0a89bd3e318e4be0f';
+    r'793e5d0fe78bfab48d0e6fc393fd8b68a7bd9013';
 
 /// バックグラウンド位置更新のデバッグ通知設定。
 /// デバッグ画面から ON/OFF できる。

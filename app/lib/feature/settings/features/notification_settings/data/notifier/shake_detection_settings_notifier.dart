@@ -40,6 +40,57 @@ class ShakeDetectionSettingsNotifier
     );
   }
 
+  /// バックグラウンド位置更新時に現在地エントリのsub_region_idを更新する。
+  /// 現在地エントリが存在しない場合は何もしない（追加はユーザー操作で行う）。
+  /// [cityCode] は market区町村コード（areaInformationCity）。対応するサブ地域が
+  /// availableSubRegions に見つからない場合は null のまま維持する。
+  /// 更新が実行された場合は true、変化なしまたはスキップの場合は false を返す。
+  Future<bool> updateCurrentLocationSubRegion(String? cityCode) async {
+    final current = state.requireValue;
+    final existing =
+        current.entries.where((e) => e.isCurrentLocation).firstOrNull;
+    if (existing == null) {
+      return false;
+    }
+
+    final newSubRegionId = cityCode == null
+        ? null
+        : current.availableSubRegions
+              .where((s) => s.code == cityCode)
+              .map((s) => s.id)
+              .firstOrNull;
+
+    if (existing.subRegionId == newSubRegionId) {
+      return false;
+    }
+
+    final deviceId = await ref.read(deviceIdProvider.future);
+    final repo = await ref.read(
+      deviceNotificationSettingsRepositoryProvider.future,
+    );
+    final updated = current.entries.map((e) {
+      return e.isCurrentLocation ? e.copyWith(subRegionId: newSubRegionId) : e;
+    }).toList();
+    final result = await repo.putShakeDetectionSettings(
+      deviceId: deviceId,
+      entries: updated,
+    );
+    switch (result) {
+      case Success(:final value):
+        state = AsyncData((
+          entries: _resolveNames(value, current.availableSubRegions),
+          availableSubRegions: current.availableSubRegions,
+        ));
+        return true;
+      case Failure(:final exception):
+        talker.error(
+          '[ShakeDetection] updateCurrentLocationSubRegion failure',
+          exception,
+        );
+        throw exception;
+    }
+  }
+
   Future<void> addCurrentLocation({
     api.ShakeDetectionLevel level = api.ShakeDetectionLevel.medium,
   }) async {

@@ -148,7 +148,8 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
 
   /// バックグラウンド位置更新時に現在地エントリのregionIdを更新する。
   /// PK衝突を避けるため実際の細分区域コード（9011等）を使用する。
-  Future<void> updateCurrentLocationRegion({
+  /// 更新が実行された場合は true、変化なしでスキップした場合は false を返す。
+  Future<bool> updateCurrentLocationRegion({
     required int regionCode,
     String? regionName,
   }) async {
@@ -164,7 +165,7 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     );
 
     if (existing.regionId == regionCode) {
-      return;
+      return false;
     }
 
     final deviceId = await ref.read(deviceIdProvider.future);
@@ -182,6 +183,7 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     switch (result) {
       case Success(:final value):
         state = AsyncData(current.copyWith(regions: value));
+        return true;
       case Failure(:final exception):
         talker.error('[EEW] updateCurrentLocationRegion failure', exception);
         throw exception;

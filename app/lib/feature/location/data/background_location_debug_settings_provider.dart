@@ -6,11 +6,13 @@ part 'background_location_debug_settings_provider.g.dart';
 const _keyNotifyLatLng = 'bgl_debug_latlng';
 const _keyNotifyRegion = 'bgl_debug_region';
 const _keyNotifyPrefecture = 'bgl_debug_prefecture';
+const _keyNotifyApiUpdate = 'bgl_debug_api_update';
 
 typedef BackgroundLocationDebugSettingsState = ({
   bool notifyLatLng,
   bool notifyRegion,
   bool notifyPrefecture,
+  bool notifyApiUpdate,
 });
 
 /// バックグラウンド位置更新のデバッグ通知設定。
@@ -25,6 +27,7 @@ class BackgroundLocationDebugSettings
       notifyLatLng: prefs.getBool(_keyNotifyLatLng) ?? false,
       notifyRegion: prefs.getBool(_keyNotifyRegion) ?? false,
       notifyPrefecture: prefs.getBool(_keyNotifyPrefecture) ?? false,
+      notifyApiUpdate: prefs.getBool(_keyNotifyApiUpdate) ?? false,
     );
   }
 
@@ -34,6 +37,7 @@ class BackgroundLocationDebugSettings
       notifyLatLng: value,
       notifyRegion: state.notifyRegion,
       notifyPrefecture: state.notifyPrefecture,
+      notifyApiUpdate: state.notifyApiUpdate,
     );
   }
 
@@ -43,6 +47,7 @@ class BackgroundLocationDebugSettings
       notifyLatLng: state.notifyLatLng,
       notifyRegion: value,
       notifyPrefecture: state.notifyPrefecture,
+      notifyApiUpdate: state.notifyApiUpdate,
     );
   }
 
@@ -54,6 +59,19 @@ class BackgroundLocationDebugSettings
       notifyLatLng: state.notifyLatLng,
       notifyRegion: state.notifyRegion,
       notifyPrefecture: value,
+      notifyApiUpdate: state.notifyApiUpdate,
+    );
+  }
+
+  Future<void> setNotifyApiUpdate({required bool value}) async {
+    await ref
+        .read(sharedPreferencesProvider)
+        .setBool(_keyNotifyApiUpdate, value);
+    state = (
+      notifyLatLng: state.notifyLatLng,
+      notifyRegion: state.notifyRegion,
+      notifyPrefecture: state.notifyPrefecture,
+      notifyApiUpdate: value,
     );
   }
 }
