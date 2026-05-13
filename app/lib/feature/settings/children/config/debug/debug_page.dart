@@ -465,6 +465,12 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
           value: settings.notifyPrefecture,
           onChanged: (v) => notifier.setNotifyPrefecture(value: v),
         ),
+        AppSwitchListTile(
+          title: '通知API 更新通知',
+          subtitle: '通知APIへ送信した際に送信パラメータと結果を通知',
+          value: settings.notifyApiUpdate,
+          onChanged: (v) => notifier.setNotifyApiUpdate(value: v),
+        ),
       ],
     );
   }

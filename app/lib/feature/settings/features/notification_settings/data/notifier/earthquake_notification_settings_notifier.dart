@@ -97,6 +97,45 @@ class EarthquakeNotificationSettingsNotifier
     }
   }
 
+  /// バックグラウンド位置更新時に現在地エントリのregionIdを更新する。
+  /// 現在地エントリが存在しない場合は何もしない（追加はユーザー操作で行う）。
+  /// 更新が実行された場合は true、変化なしまたはスキップの場合は false を返す。
+  Future<bool> updateCurrentLocationRegion({
+    required int regionCode,
+    String? regionName,
+  }) async {
+    final current = state.requireValue;
+    final existing =
+        current.regions.where((r) => r.isCurrentLocation).firstOrNull;
+    if (existing == null || existing.regionId == regionCode) {
+      return false;
+    }
+
+    final deviceId = await ref.read(deviceIdProvider.future);
+    final repo = await ref.read(
+      deviceNotificationSettingsRepositoryProvider.future,
+    );
+    final updated = [
+      ...current.regions.where((r) => !r.isCurrentLocation),
+      existing.copyWith(regionId: regionCode, regionName: regionName),
+    ];
+    final result = await repo.putEarthquakeRegions(
+      deviceId: deviceId,
+      regions: updated,
+    );
+    switch (result) {
+      case Success(:final value):
+        state = AsyncData(current.copyWith(regions: value));
+        return true;
+      case Failure(:final exception):
+        talker.error(
+          '[Earthquake] updateCurrentLocationRegion failure',
+          exception,
+        );
+        throw exception;
+    }
+  }
+
   Future<void> addCurrentLocationRegion() async {
     final current = state.requireValue;
     talker.debug(

@@ -1,7 +1,9 @@
 import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -65,9 +67,40 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       return;
     }
     final name = resolver.resolveRegionName(latitude, longitude);
-    await ref
-        .read(eewSettingsProvider.notifier)
-        .updateCurrentLocationRegion(regionCode: code, regionName: name);
+    final cityCode = resolver.resolveCityCode(latitude, longitude);
+
+    // EEW リージョン更新
+    var didUpdateEew = false;
+    String? eewError;
+    try {
+      didUpdateEew = await ref
+          .read(eewSettingsProvider.notifier)
+          .updateCurrentLocationRegion(regionCode: code, regionName: name);
+    } on Object catch (e) {
+      eewError = e.toString();
+    }
+
+    // 地震通知リージョン更新
+    var didUpdateEarthquake = false;
+    String? earthquakeError;
+    try {
+      didUpdateEarthquake = await ref
+          .read(earthquakeNotificationSettingsProvider.notifier)
+          .updateCurrentLocationRegion(regionCode: code, regionName: name);
+    } on Object catch (e) {
+      earthquakeError = e.toString();
+    }
+
+    // 揺れ検知 sub_region 更新
+    var didUpdateShake = false;
+    String? shakeError;
+    try {
+      didUpdateShake = await ref
+          .read(shakeDetectionSettingsProvider.notifier)
+          .updateCurrentLocationSubRegion(cityCode);
+    } on Object catch (e) {
+      shakeError = e.toString();
+    }
 
     // デバッグ通知
     await _fireDebugNotifications(
@@ -76,6 +109,13 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       longitude: longitude,
       prevRegionCode: prevRegionCode,
       newRegionCode: code,
+      cityCode: cityCode,
+      didUpdateEew: didUpdateEew,
+      didUpdateEarthquake: didUpdateEarthquake,
+      didUpdateShake: didUpdateShake,
+      eewError: eewError,
+      earthquakeError: earthquakeError,
+      shakeError: shakeError,
     );
   } on Object {
     // バックグラウンドサービスのエラーはサイレントに無視する
@@ -88,12 +128,20 @@ Future<void> _fireDebugNotifications(
   required double longitude,
   required int? prevRegionCode,
   required int newRegionCode,
+  required String? cityCode,
+  required bool didUpdateEew,
+  required bool didUpdateEarthquake,
+  required bool didUpdateShake,
+  required String? eewError,
+  required String? earthquakeError,
+  required String? shakeError,
 }) async {
   try {
     final debugSettings = ref.read(backgroundLocationDebugSettingsProvider);
     if (!debugSettings.notifyLatLng &&
         !debugSettings.notifyRegion &&
-        !debugSettings.notifyPrefecture) {
+        !debugSettings.notifyPrefecture &&
+        !debugSettings.notifyApiUpdate) {
       return;
     }
 
@@ -137,12 +185,26 @@ Future<void> _fireDebugNotifications(
       final newPref = newRegionCode ~/ 1000;
       if (prevPref != newPref) {
         await plugin.show(
-          id: notifId,
+          id: notifId++,
           title: '[Debug] 都道府県コード 変化',
           body: '$prevPref → $newPref',
           notificationDetails: details,
         );
       }
+    }
+
+    if (debugSettings.notifyApiUpdate &&
+        (didUpdateEew || didUpdateEarthquake || didUpdateShake)) {
+      final eewStatus = eewError != null ? '✗($eewError)' : (didUpdateEew ? '✓' : '-');
+      final eqStatus = earthquakeError != null ? '✗($earthquakeError)' : (didUpdateEarthquake ? '✓' : '-');
+      final shakeStatus = shakeError != null ? '✗($shakeError)' : (didUpdateShake ? '✓' : '-');
+      await plugin.show(
+        id: notifId,
+        title: '[Debug] 通知API 更新',
+        body: 'region=$newRegionCode, city=${cityCode ?? 'null'}\n'
+            'EEW:$eewStatus 地震:$eqStatus 揺れ:$shakeStatus',
+        notificationDetails: details,
+      );
     }
   } on Object {
     // デバッグ通知失敗はサイレントに無視する
