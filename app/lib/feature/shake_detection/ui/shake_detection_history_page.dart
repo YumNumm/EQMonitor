@@ -120,7 +120,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                             _timeFormat.format(event.createdAt.toLocal()),
                             style: theme.textTheme.titleSmall?.copyWith(
                               color: ds.textColor.primary,
-                              fontFamily: FontFamily.notoSansMono,
+                              fontFamily: FontFamily.googleSansCode,
                             ),
                           ),
                           if (event.isReplay) ...[
@@ -143,7 +143,7 @@ class _ShakeDetectionHistoryTile extends StatelessWidget {
                         '${event.minLng.toStringAsFixed(2)}–${event.maxLng.toStringAsFixed(2)}°E',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: ds.textColor.tertiary,
-                          fontFamily: FontFamily.notoSansMono,
+                          fontFamily: FontFamily.googleSansCode,
                         ),
                       ),
                     ],

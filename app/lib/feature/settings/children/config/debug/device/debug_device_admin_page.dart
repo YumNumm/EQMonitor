@@ -274,7 +274,7 @@ class _Body extends HookConsumerWidget {
       });
     }
 
-    const mono = TextStyle(fontFamily: FontFamily.notoSansMono);
+    const mono = TextStyle(fontFamily: FontFamily.googleSansCode);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -436,7 +436,7 @@ class _InfoRow extends StatelessWidget {
           Expanded(
             child: SelectableText(
               value,
-              style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+              style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
           ),
         ],

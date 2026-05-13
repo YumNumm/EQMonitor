@@ -132,7 +132,7 @@ class _AquaCatalogList extends HookConsumerWidget {
                         style: theme.textTheme.titleSmall!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: colorScheme.onSurface,
-                          fontFamily: FontFamily.notoSansMono,
+                          fontFamily: FontFamily.googleSansCode,
                         ),
                       ),
                     ),
@@ -359,7 +359,7 @@ class _EventCard extends HookWidget {
       title: Text(event.region),
       subtitle: DefaultTextStyle(
         style: theme.textTheme.bodyMedium!.copyWith(
-          fontFamily: FontFamily.notoSansMono,
+          fontFamily: FontFamily.googleSansCode,
           fontFamilyFallback: [FontFamily.notoSansJP],
         ),
         child: Column(

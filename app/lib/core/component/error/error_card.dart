@@ -1,11 +1,10 @@
-import 'dart:async';
-
-import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/component/error/error_message_builder.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ErrorCard extends StatelessWidget {
+class ErrorCard extends ConsumerWidget {
   const ErrorCard({
     required this.error,
     super.key,
@@ -32,10 +31,12 @@ class ErrorCard extends StatelessWidget {
   final Future<void> Function()? onReload;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final message = _buildErrorMessage();
-
+    final message = ref.read(errorMessageBuilderProvider).build(
+      error: error,
+      onDioExceptionStatusOverride: onDioExceptionStatusOverride,
+    );
     final colorScheme = theme.colorScheme;
 
     return Center(
@@ -69,7 +70,7 @@ class ErrorCard extends StatelessWidget {
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
-                  fontFamily: GoogleFonts.notoSansMono().fontFamily,
+                  fontFamily: FontFamily.googleSansCode,
                 ),
               ),
               if (suffixMessage != null) ...[
@@ -78,7 +79,7 @@ class ErrorCard extends StatelessWidget {
                   suffixMessage!,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onErrorContainer,
-                    fontFamily: GoogleFonts.notoSansMono().fontFamily,
+                    fontFamily: FontFamily.googleSansCode,
                   ),
                 ),
               ],
@@ -104,62 +105,5 @@ class ErrorCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _buildErrorMessage() {
-    if (error is DioException) {
-      if (error case DioException(:final response) when response != null) {
-        final advancedErrorMessage = switch (response.data) {
-          {'error': final String errorMsg} => errorMsg,
-          {'code': final String code, 'details': final String details} =>
-            '$code: $details',
-          _ =>
-            '少し時間をおいて再度お試しください。\n'
-                '解消されない場合は、この画面のスクリーンショットを開発者へ送信してください',
-        };
-        final statusCode = response.statusCode;
-        if (statusCode != null) {
-          final baseMessage =
-              onDioExceptionStatusOverride?.call(statusCode) ??
-              switch (statusCode) {
-                400 => '不正なリクエストです',
-                403 => 'アクセスが拒否されました',
-                404 => 'リソースが見つかりません',
-                500 => 'サーバーエラーが発生しました',
-                503 => 'サービスが利用できません',
-                _ => 'エラーが発生しました',
-              };
-          final data = response.data;
-          if (data is Map<String, dynamic>) {
-            return '$baseMessage\n'
-                '$advancedErrorMessage';
-          }
-          return '$baseMessage\n'
-              '$advancedErrorMessage\n'
-              '${response.data}';
-        }
-        return advancedErrorMessage;
-      } else {
-        final message = switch (error) {
-          DioException(:final type) => switch (type) {
-            DioExceptionType.badCertificate => 'SSL証明書が不正です',
-            DioExceptionType.badResponse => 'サーバーからのレスポンスが不正です',
-            DioExceptionType.connectionTimeout => 'サーバーとの接続がタイムアウトしました',
-            DioExceptionType.receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
-            DioExceptionType.sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
-            DioExceptionType.connectionError =>
-              'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
-            DioExceptionType.unknown => '不明なエラーが発生しました',
-            DioExceptionType.cancel => 'キャンセルされました',
-          },
-          _ => 'エラーが発生しました',
-        };
-        return message;
-      }
-    }
-    return 'エラーが発生しました\n'
-        '少し時間をおいて再度お試しください。\n'
-        '解消されない場合は、この画面のスクリーンショットを開発者へ送信してください'
-        '\n($error)';
   }
 }

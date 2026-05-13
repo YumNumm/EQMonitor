@@ -408,7 +408,7 @@ class _InfoRow extends StatelessWidget {
               value,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: ds.textColor.primary,
-                fontFamily: mono ? FontFamily.notoSansMono : null,
+                fontFamily: mono ? FontFamily.googleSansCode : null,
               ),
             ),
           ),

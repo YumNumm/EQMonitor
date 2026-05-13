@@ -51,7 +51,7 @@ class _Body extends ConsumerWidget {
           title: const Text('apiServerUrl'),
           subtitle: Text(
             values.apiServerUrl ?? '(未設定)',
-            style: const TextStyle(fontFamily: FontFamily.notoSansMono),
+            style: const TextStyle(fontFamily: FontFamily.googleSansCode),
           ),
           trailing: switch (values.apiServerUrl) {
             final url? => IconButton(
