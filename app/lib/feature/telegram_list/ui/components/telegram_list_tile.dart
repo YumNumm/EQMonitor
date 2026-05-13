@@ -19,7 +19,10 @@ class TelegramListTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
 
-    final isEew = _isEewTelegram(telegram.type);
+    final isEew = switch (telegram.type) {
+      TelegramType.vxse43 || TelegramType.vxse44 || TelegramType.vxse45 => true,
+      _ => false,
+    };
     final serialNo = telegram.serialNo;
 
     return ListTile(
@@ -117,11 +120,4 @@ class _InfoRow extends StatelessWidget {
       ],
     );
   }
-}
-
-bool _isEewTelegram(TelegramType type) {
-  return switch (type) {
-    TelegramType.vxse43 || TelegramType.vxse44 || TelegramType.vxse45 => true,
-    _ => false,
-  };
 }

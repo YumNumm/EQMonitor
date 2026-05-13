@@ -16,16 +16,19 @@ class StatusFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentStatuses = statuses;
     final isDefault =
-        statuses == null ||
-        (statuses!.length == 1 && statuses!.first == TelegramStatus.normal);
+        currentStatuses == null ||
+        (currentStatuses.length == 1 &&
+            currentStatuses.first == TelegramStatus.normal);
 
     return RawChip(
       onSelected: (_) async {
         final result = await showModalBottomSheet<List<TelegramStatus>?>(
           clipBehavior: Clip.antiAlias,
           context: context,
-          builder: (context) => _StatusFilterModal(currentStatuses: statuses),
+          builder: (context) =>
+              _StatusFilterModal(currentStatuses: currentStatuses),
         );
         if (result != null) {
           onChanged?.call(result);
@@ -34,7 +37,9 @@ class StatusFilterChip extends StatelessWidget {
       label: isDefault
           ? const Text('ステータス')
           : Text(
-              _statusesToString(statuses!),
+              currentStatuses.length == TelegramStatus.values.length
+                  ? '全て'
+                  : currentStatuses.map((s) => s.label).join(', '),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
       onDeleted: isDefault ? null : () => onChanged?.call(initialStatuses),
@@ -42,29 +47,6 @@ class StatusFilterChip extends StatelessWidget {
       selectedColor: Theme.of(context).colorScheme.secondaryContainer,
     );
   }
-}
-
-String _statusesToString(List<TelegramStatus> statuses) {
-  if (statuses.length == TelegramStatus.values.length) {
-    return '全て';
-  }
-  return statuses.map(_statusToJapanese).join(', ');
-}
-
-String _statusToJapanese(TelegramStatus status) {
-  return switch (status) {
-    TelegramStatus.normal => '通常',
-    TelegramStatus.training => '訓練',
-    TelegramStatus.test => '試験',
-  };
-}
-
-String _statusDescription(TelegramStatus status) {
-  return switch (status) {
-    TelegramStatus.normal => '通常発表された地震情報',
-    TelegramStatus.training => '訓練用の地震情報',
-    TelegramStatus.test => '試験用の地震情報',
-  };
 }
 
 class _StatusFilterModal extends HookWidget {
@@ -111,8 +93,8 @@ class _StatusFilterModal extends HookWidget {
           const SizedBox(height: 8),
           ...TelegramStatus.values.map(
             (status) => CheckboxListTile(
-              title: Text(_statusToJapanese(status)),
-              subtitle: Text(_statusDescription(status)),
+              title: Text(status.label),
+              subtitle: Text(status.description),
               value: selectedStatuses.value.contains(status),
               onChanged: (checked) {
                 final newSet = Set<TelegramStatus>.from(selectedStatuses.value);
@@ -149,4 +131,18 @@ class _StatusFilterModal extends HookWidget {
       ),
     );
   }
+}
+
+extension on TelegramStatus {
+  String get label => switch (this) {
+    TelegramStatus.normal => '通常',
+    TelegramStatus.training => '訓練',
+    TelegramStatus.test => '試験',
+  };
+
+  String get description => switch (this) {
+    TelegramStatus.normal => '通常発表された地震情報',
+    TelegramStatus.training => '訓練用の地震情報',
+    TelegramStatus.test => '試験用の地震情報',
+  };
 }
