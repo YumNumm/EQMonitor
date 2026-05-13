@@ -4,6 +4,9 @@
 /// 波形データ（ASCII・CSV・Binary）をパースするためのライブラリです。
 library;
 
+export 'src/analysis/knet_fourier_spectrum.dart';
+export 'src/analysis/knet_response_spectrum.dart';
+export 'src/analysis/knet_waveform_integration.dart';
 export 'src/ascii/knet_ascii_parser.dart';
 export 'src/binary/knet_binary_parser.dart';
 export 'src/csv/knet_csv_parser.dart';
