@@ -46,10 +46,10 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             (a, b) => a.serialNo.compareTo(b.serialNo),
           );
 
+          final idx = selectedIndex.value;
           final selectedEew =
-              selectedIndex.value != null &&
-                  selectedIndex.value! < sortedEews.length
-              ? sortedEews[selectedIndex.value!]
+              (idx != null && idx < sortedEews.length)
+              ? sortedEews[idx]
               : null;
 
           return _ResponsiveLayout(

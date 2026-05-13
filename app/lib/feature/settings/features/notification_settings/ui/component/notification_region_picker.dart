@@ -117,13 +117,20 @@ class _RegionPickerDialog extends HookConsumerWidget {
         ),
         FilledButton(
           onPressed: canSubmit
-              ? () => Navigator.of(context).pop(
+              ? () {
+                  final code = selectedCode.value;
+                  final name = selectedName.value;
+                  if (!isAllMode && code == null) {
+                    return;
+                  }
+                  Navigator.of(context).pop(
                     (
-                      regionId: isAllMode ? 0 : int.parse(selectedCode.value!),
-                      regionName: isAllMode ? '全国' : selectedName.value!,
+                      regionId: isAllMode ? 0 : int.parse(code!),
+                      regionName: isAllMode ? '全国' : (name ?? ''),
                       minIntensity: intensity.value,
                     ),
-                  )
+                  );
+                }
               : null,
           child: const Text('追加'),
         ),
