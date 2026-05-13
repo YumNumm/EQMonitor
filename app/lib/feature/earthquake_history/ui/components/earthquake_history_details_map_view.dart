@@ -524,7 +524,7 @@ class _MapLayerModeDebugDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return AlertDialog.adaptive(
       title: const Text('Map Layer Mode Debug'),
       content: SingleChildScrollView(
         child: _MapLayerModeDebugContent(

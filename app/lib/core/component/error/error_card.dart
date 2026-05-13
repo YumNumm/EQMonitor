@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:eqmonitor/core/gen/fonts.gen.dart';
 
 class ErrorCard extends StatelessWidget {
   const ErrorCard({
@@ -69,26 +69,26 @@ class ErrorCard extends StatelessWidget {
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
-                  fontFamily: GoogleFonts.notoSansMono().fontFamily,
+                  fontFamily: FontFamily.notoSansMono,
                 ),
               ),
-              if (suffixMessage != null) ...[
+              if (suffixMessage case final suffix?) ...[
                 const SizedBox(height: 8),
                 Text(
-                  suffixMessage!,
+                  suffix,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onErrorContainer,
-                    fontFamily: GoogleFonts.notoSansMono().fontFamily,
+                    fontFamily: FontFamily.notoSansMono,
                   ),
                 ),
               ],
-              if (onReload != null) ...[
+              if (onReload case final reload?) ...[
                 const SizedBox(height: 8),
                 FilledButton.tonalIcon(
                   onPressed: () =>
                       FullScreenCircularProgressIndicator.showUntil(
                         context,
-                        onReload!,
+                        reload,
                       ),
                   icon: const Icon(Icons.refresh),
                   label: const Text('再読み込み'),
