@@ -21,6 +21,6 @@ class CustomColors extends ThemeExtension<CustomColors> {
   }
 
   CustomColors harmonized(ColorScheme dynamic) {
-    return copyWith(danger: danger!.harmonizeWith(dynamic.primary));
+    return copyWith(danger: danger?.harmonizeWith(dynamic.primary));
   }
 }

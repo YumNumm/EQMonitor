@@ -72,23 +72,23 @@ class ErrorCard extends StatelessWidget {
                   fontFamily: GoogleFonts.notoSansMono().fontFamily,
                 ),
               ),
-              if (suffixMessage != null) ...[
+              if (suffixMessage case final msg?) ...[
                 const SizedBox(height: 8),
                 Text(
-                  suffixMessage!,
+                  msg,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onErrorContainer,
                     fontFamily: GoogleFonts.notoSansMono().fontFamily,
                   ),
                 ),
               ],
-              if (onReload != null) ...[
+              if (onReload case final reload?) ...[
                 const SizedBox(height: 8),
                 FilledButton.tonalIcon(
                   onPressed: () =>
                       FullScreenCircularProgressIndicator.showUntil(
                         context,
-                        onReload!,
+                        reload,
                       ),
                   icon: const Icon(Icons.refresh),
                   label: const Text('再読み込み'),

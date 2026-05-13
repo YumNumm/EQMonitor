@@ -45,11 +45,12 @@ class ActionButton extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: 1.1,
-          ),
+          style: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
+              .copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 1.1,
+              ),
         ),
       ),
     ),
@@ -68,11 +69,12 @@ class ActionButton extends StatelessWidget {
     child: Center(
       child: Text(
         text,
-        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: textColor,
-          letterSpacing: 1.1,
-        ),
+        style: (Theme.of(context).textTheme.titleMedium ?? const TextStyle())
+            .copyWith(
+              fontWeight: FontWeight.bold,
+              color: textColor,
+              letterSpacing: 1.1,
+            ),
       ),
     ),
   );

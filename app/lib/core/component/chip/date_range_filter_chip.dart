@@ -63,20 +63,22 @@ extension MinMaxDateTime on (DateTime?, DateTime?) {
     if (isAllSelected) {
       return '全て';
     }
+    final effectiveMin = min ?? DateRangeFilterChip.initialMin;
+    final effectiveMax = max ?? DateRangeFilterChip.initialMax;
     // どちらも同じの時
-    if (min == max) {
-      return DateRangeFilterChip.format.format(min!);
+    if (effectiveMin == effectiveMax) {
+      return DateRangeFilterChip.format.format(effectiveMin);
     }
     // 下限値のみ指定している時
     if (isMaxSelected) {
-      return '${DateRangeFilterChip.format.format(min!)} 以降';
+      return '${DateRangeFilterChip.format.format(effectiveMin)} 以降';
     }
     // 上限値のみ指定している時
     if (isMinSelected) {
-      return '${DateRangeFilterChip.format.format(max!)} 以前';
+      return '${DateRangeFilterChip.format.format(effectiveMax)} 以前';
     }
     // それ以外
-    return '${DateRangeFilterChip.format.format(min!)} ~ '
-        '${DateRangeFilterChip.format.format(max!)}';
+    return '${DateRangeFilterChip.format.format(effectiveMin)} ~ '
+        '${DateRangeFilterChip.format.format(effectiveMax)}';
   }
 }
