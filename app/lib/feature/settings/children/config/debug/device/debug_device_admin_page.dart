@@ -60,7 +60,8 @@ class _DebugDeviceAdminBody extends HookConsumerWidget {
           };
           return (device: value, settings: settings);
         case Failure(:final exception):
-          if (_isNotFound(exception)) {
+          if (exception is DioException &&
+              exception.response?.statusCode == 404) {
             return (device: null, settings: null);
           }
           throw exception;
@@ -463,6 +464,3 @@ class _ErrorBody extends StatelessWidget {
     );
   }
 }
-
-bool _isNotFound(Object e) =>
-    e is DioException && e.response?.statusCode == 404;
