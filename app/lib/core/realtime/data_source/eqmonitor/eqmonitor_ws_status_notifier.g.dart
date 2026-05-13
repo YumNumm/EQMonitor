@@ -58,7 +58,7 @@ final class EqMonitorWsStatusProvider
   }
 }
 
-String _$eqMonitorWsStatusHash() => r'82c1a2269e1bb5c0cbf316255b589c6c648930fb';
+String _$eqMonitorWsStatusHash() => r'9d588019d3d23a3ce9b44a03d247dde182feb581';
 
 /// WebSocket の接続状態・ping 情報を保持する keepAlive Notifier。
 ///
