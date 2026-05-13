@@ -12,15 +12,27 @@ class TravelTimeDataSource {
   Future<List<TravelTimeTable>> loadTables() async {
     const path = 'assets/tjma2001.csv';
     final data = await rootBundle.loadString(path);
-    final csv = data.split('\n').where((element) => element != '');
+    final rows = data
+        .split('\n')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
     final travelTimeTable = <TravelTimeTable>[];
-    for (final row in csv) {
-      final list = row.split(',');
+    for (var i = 0; i < rows.length; i++) {
+      final list = rows[i].split(',');
       try {
         travelTimeTable.add(TravelTimeTable.fromList(list));
       } on Exception catch (e) {
-        talker.error(e.toString());
+        // 先頭行(ヘッダー)・末尾行のパース失敗は許容してスキップ
+        if (i == 0 || i == rows.length - 1) {
+          talker.warning('走時表: スキップ行[$i]: $e');
+          continue;
+        }
+        throw Exception('走時表のパースに失敗しました (行$i): $e');
       }
+    }
+    if (travelTimeTable.isEmpty) {
+      throw Exception('走時表が空です');
     }
     return travelTimeTable;
   }
