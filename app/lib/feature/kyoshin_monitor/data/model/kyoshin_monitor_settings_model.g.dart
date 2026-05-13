@@ -27,6 +27,16 @@ _KyoshinMonitorSettingsModel _$KyoshinMonitorSettingsModelFromJson(
             $enumDecodeNullable(_$KyoshinMonitorMarkerTypeEnumMap, v) ??
             KyoshinMonitorMarkerType.onlyEew,
       ),
+      monitorSource: $checkedConvert(
+        'monitor_source',
+        (v) =>
+            $enumDecodeNullable(
+              _$KyoshinMonitorSourceEnumMap,
+              v,
+              unknownValue: KyoshinMonitorSource.kmoni,
+            ) ??
+            KyoshinMonitorSource.kmoni,
+      ),
       realtimeDataType: $checkedConvert(
         'realtime_data_type',
         (v) =>
@@ -55,6 +65,7 @@ _KyoshinMonitorSettingsModel _$KyoshinMonitorSettingsModelFromJson(
     'showScale': 'show_scale',
     'useKmoni': 'use_kmoni',
     'kmoniMarkerType': 'kmoni_marker_type',
+    'monitorSource': 'monitor_source',
     'realtimeDataType': 'realtime_data_type',
     'realtimeLayer': 'realtime_layer',
   },
@@ -68,6 +79,7 @@ Map<String, dynamic> _$KyoshinMonitorSettingsModelToJson(
   'use_kmoni': instance.useKmoni,
   'kmoni_marker_type':
       _$KyoshinMonitorMarkerTypeEnumMap[instance.kmoniMarkerType]!,
+  'monitor_source': _$KyoshinMonitorSourceEnumMap[instance.monitorSource]!,
   'realtime_data_type': _$RealtimeDataTypeEnumMap[instance.realtimeDataType]!,
   'realtime_layer': _$RealtimeLayerEnumMap[instance.realtimeLayer]!,
   'api': instance.api,
@@ -77,6 +89,11 @@ const _$KyoshinMonitorMarkerTypeEnumMap = {
   KyoshinMonitorMarkerType.always: 'always',
   KyoshinMonitorMarkerType.onlyEew: 'onlyEew',
   KyoshinMonitorMarkerType.never: 'never',
+};
+
+const _$KyoshinMonitorSourceEnumMap = {
+  KyoshinMonitorSource.kmoni: 'kmoni',
+  KyoshinMonitorSource.lmoni: 'lmoni',
 };
 
 const _$RealtimeDataTypeEnumMap = {

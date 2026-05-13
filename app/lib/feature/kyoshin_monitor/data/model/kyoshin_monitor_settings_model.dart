@@ -20,6 +20,11 @@ abstract class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
     @Default(KyoshinMonitorMarkerType.onlyEew)
     KyoshinMonitorMarkerType kmoniMarkerType,
 
+    /// データソース (強震モニタ / 長周期地震動モニタ)
+    @Default(KyoshinMonitorSource.kmoni)
+    @JsonKey(unknownEnumValue: KyoshinMonitorSource.kmoni)
+    KyoshinMonitorSource monitorSource,
+
     /// 強震モニタのリアルタイムデータの種類
     @Default(RealtimeDataType.shindo) RealtimeDataType realtimeDataType,
 
@@ -69,6 +74,15 @@ enum KyoshinMonitorEndpoint {
   const KyoshinMonitorEndpoint(this.url);
 
   final String url;
+}
+
+/// データソースの種類
+enum KyoshinMonitorSource {
+  /// 強震モニタ (K-NET / KiK-net)
+  kmoni,
+
+  /// 長周期地震動モニタ (長周期地震動階級など追加データ種別あり)
+  lmoni,
 }
 
 enum KyoshinMonitorMarkerType {
