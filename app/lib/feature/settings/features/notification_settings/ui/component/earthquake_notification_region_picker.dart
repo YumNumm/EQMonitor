@@ -400,7 +400,8 @@ class _RegionPicker extends StatelessWidget {
       expandedInsets: EdgeInsets.zero,
       initialSelection: selectedCode,
       label: const Text('一次細分化地域'),
-      hintText: '地域を選択',
+      hintText: '地域を検索',
+      enableFilter: true,
       onSelected: (code) {
         if (code == null) {
           onChanged(null);
@@ -410,12 +411,7 @@ class _RegionPicker extends StatelessWidget {
         onChanged(entry);
       },
       dropdownMenuEntries: regions
-          .map(
-            (e) => DropdownMenuEntry<int>(
-              value: e.code,
-              label: e.name,
-            ),
-          )
+          .map((e) => DropdownMenuEntry<int>(value: e.code, label: e.name))
           .toList(),
     );
   }
