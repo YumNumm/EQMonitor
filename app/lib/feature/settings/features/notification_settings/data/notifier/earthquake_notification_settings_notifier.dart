@@ -97,17 +97,24 @@ class EarthquakeNotificationSettingsNotifier
     }
   }
 
-  /// バックグラウンド位置更新時に現在地エントリのregionIdを更新する。
+  /// バックグラウンド位置更新時に現在地エントリの region/city を更新する。
   /// 現在地エントリが存在しない場合は何もしない（追加はユーザー操作で行う）。
   /// 更新が実行された場合は true、変化なしまたはスキップの場合は false を返す。
+  ///
+  /// 地震通知は一次細分化地域コード (`area_information_city` の親 region) と
+  /// 市区町村コードの両方で配信制御するため、両者を更新する。
   Future<bool> updateCurrentLocationRegion({
     required int regionCode,
     String? regionName,
+    String? cityCode,
+    String? cityName,
   }) async {
     final current = await future;
-    final existing =
-        current.regions.where((r) => r.isCurrentLocation).firstOrNull;
-    if (existing == null || existing.regionId == regionCode) {
+    final existing = current.regions
+        .where((r) => r.isCurrentLocation)
+        .firstOrNull;
+    if (existing == null ||
+        (existing.regionId == regionCode && existing.cityCode == cityCode)) {
       return false;
     }
 
@@ -117,7 +124,12 @@ class EarthquakeNotificationSettingsNotifier
     );
     final updated = [
       ...current.regions.where((r) => !r.isCurrentLocation),
-      existing.copyWith(regionId: regionCode, regionName: regionName),
+      existing.copyWith(
+        regionId: regionCode,
+        regionName: regionName,
+        cityCode: cityCode,
+        cityName: cityName,
+      ),
     ];
     final result = await repo.putEarthquakeRegions(
       deviceId: deviceId,
@@ -136,11 +148,22 @@ class EarthquakeNotificationSettingsNotifier
     }
   }
 
-  Future<void> addCurrentLocationRegion() async {
+  /// 現在地エントリを新規追加する。
+  ///
+  /// 呼び出し側 (picker) が `resolveEarthquakeRegion` で region+city を解決済の
+  /// 前提。引数省略時は region=0 (全国フォールバック) で追加する。
+  Future<void> addCurrentLocationRegion({
+    int regionCode = 0,
+    String? regionName,
+    String? cityCode,
+    String? cityName,
+    JmaIntensity minIntensity = JmaIntensity.four,
+  }) async {
     final current = state.requireValue;
     talker.debug(
       '[Earthquake] addCurrentLocationRegion: regions=${current.regions.length}, '
-      'hasCurrentLocation=${current.regions.any((r) => r.isCurrentLocation)}',
+      'hasCurrentLocation=${current.regions.any((r) => r.isCurrentLocation)}, '
+      'regionCode=$regionCode, cityCode=$cityCode',
     );
     if (current.regions.any((r) => r.isCurrentLocation)) {
       return;
@@ -151,11 +174,13 @@ class EarthquakeNotificationSettingsNotifier
     );
     final updated = [
       ...current.regions,
-      const NotificationRegion(
-        regionId: 0,
-        regionName: null,
+      NotificationRegion(
+        regionId: regionCode,
+        regionName: regionName,
+        cityCode: cityCode,
+        cityName: cityName,
         isCurrentLocation: true,
-        minJmaIntensity: JmaIntensity.four,
+        minJmaIntensity: minIntensity,
       ),
     ];
     final result = await repo.putEarthquakeRegions(
@@ -179,10 +204,17 @@ class EarthquakeNotificationSettingsNotifier
     required int regionId,
     required String regionName,
     required JmaIntensity minIntensity,
+    String? cityCode,
+    String? cityName,
   }) async {
     final current = state.requireValue;
+    // 同一 (regionId, cityCode) の重複を防ぐ。cityCode が NULL の region 単位
+    // 設定と、cityCode 指定の city 単位設定は別エントリとして扱う。
     if (current.regions.any(
-      (r) => !r.isCurrentLocation && r.regionId == regionId,
+      (r) =>
+          !r.isCurrentLocation &&
+          r.regionId == regionId &&
+          r.cityCode == cityCode,
     )) {
       return;
     }
@@ -195,6 +227,8 @@ class EarthquakeNotificationSettingsNotifier
       NotificationRegion(
         regionId: regionId,
         regionName: regionName,
+        cityCode: cityCode,
+        cityName: cityName,
         isCurrentLocation: false,
         minJmaIntensity: minIntensity,
       ),
@@ -214,6 +248,7 @@ class EarthquakeNotificationSettingsNotifier
   Future<void> removeRegion({
     required int regionId,
     required bool isCurrentLocation,
+    String? cityCode,
   }) async {
     final current = state.requireValue;
     final deviceId = await ref.read(deviceIdProvider.future);
@@ -222,8 +257,10 @@ class EarthquakeNotificationSettingsNotifier
     );
     final updated = current.regions
         .where(
-          (r) => !(r.regionId == regionId &&
-              r.isCurrentLocation == isCurrentLocation),
+          (r) =>
+              !(r.regionId == regionId &&
+                  r.isCurrentLocation == isCurrentLocation &&
+                  r.cityCode == cityCode),
         )
         .toList();
     final result = await repo.putEarthquakeRegions(

@@ -60,16 +60,24 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     final settings = await ref.read(eewSettingsProvider.future);
     await ref.read(earthquakeNotificationSettingsProvider.future);
     await ref.read(shakeDetectionSettingsProvider.future);
-    final prevRegionCode =
-        settings.regions.where((r) => r.isCurrentLocation).firstOrNull?.regionId;
+    final prevRegionCode = settings.regions
+        .where((r) => r.isCurrentLocation)
+        .firstOrNull
+        ?.regionId;
 
     final resolver = await ref.read(jmaRegionResolverProvider.future);
+    // EEW 用の area_forecast_local_eew コード
     final code = resolver.resolveRegionCode(latitude, longitude);
     if (code == null) {
       return;
     }
     final name = resolver.resolveRegionName(latitude, longitude);
-    final cityCode = resolver.resolveCityCode(latitude, longitude);
+    // 地震 (VXSE53) 用の市区町村 + 親一次細分化地域コード
+    final earthquakeResolution = resolver.resolveEarthquakeRegion(
+      latitude,
+      longitude,
+    );
+    final cityCode = earthquakeResolution?.cityCode;
 
     // EEW リージョン更新
     var didUpdateEew = false;
@@ -82,13 +90,20 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       eewError = e.toString();
     }
 
-    // 地震通知リージョン更新
+    // 地震通知リージョン更新 (city まで解決できた場合のみ)
     var didUpdateEarthquake = false;
     String? earthquakeError;
     try {
-      didUpdateEarthquake = await ref
-          .read(earthquakeNotificationSettingsProvider.notifier)
-          .updateCurrentLocationRegion(regionCode: code, regionName: name);
+      if (earthquakeResolution != null) {
+        didUpdateEarthquake = await ref
+            .read(earthquakeNotificationSettingsProvider.notifier)
+            .updateCurrentLocationRegion(
+              regionCode: earthquakeResolution.regionCode,
+              regionName: earthquakeResolution.regionName,
+              cityCode: earthquakeResolution.cityCode,
+              cityName: earthquakeResolution.cityName,
+            );
+      }
     } on Object catch (e) {
       earthquakeError = e.toString();
     }
@@ -196,13 +211,20 @@ Future<void> _fireDebugNotifications(
     }
 
     if (debugSettings.notifyApiUpdate) {
-      final eewStatus = eewError != null ? '✗($eewError)' : (didUpdateEew ? '✓' : '-');
-      final eqStatus = earthquakeError != null ? '✗($earthquakeError)' : (didUpdateEarthquake ? '✓' : '-');
-      final shakeStatus = shakeError != null ? '✗($shakeError)' : (didUpdateShake ? '✓' : '-');
+      final eewStatus = eewError != null
+          ? '✗($eewError)'
+          : (didUpdateEew ? '✓' : '-');
+      final eqStatus = earthquakeError != null
+          ? '✗($earthquakeError)'
+          : (didUpdateEarthquake ? '✓' : '-');
+      final shakeStatus = shakeError != null
+          ? '✗($shakeError)'
+          : (didUpdateShake ? '✓' : '-');
       await plugin.show(
         id: notifId,
         title: '[Debug] 通知API 更新',
-        body: 'region=$newRegionCode, city=${cityCode ?? 'null'}\n'
+        body:
+            'region=$newRegionCode, city=${cityCode ?? 'null'}\n'
             'EEW:$eewStatus 地震:$eqStatus 揺れ:$shakeStatus',
         notificationDetails: details,
       );
