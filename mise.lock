@@ -79,81 +79,79 @@ url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.15/tfcmt
 provenance = "github-attestations"
 
 [[tools.claude]]
-version = "2.1.139"
+version = "2.1.141"
 backend = "aqua:anthropics/claude-code"
 
 [tools.claude."platforms.linux-arm64"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.139/linux-arm64/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.141/linux-arm64/claude"
 
 [tools.claude."platforms.linux-arm64-musl"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.139/linux-arm64-musl/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.141/linux-arm64-musl/claude"
 
 [tools.claude."platforms.linux-x64"]
-checksum = "blake3:9d3d3182045917b266299fe46bb24f42b78b7b583af4cc8322073450dacc5080"
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.139/linux-x64/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.141/linux-x64/claude"
 
 [tools.claude."platforms.linux-x64-musl"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.139/linux-x64-musl/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.141/linux-x64-musl/claude"
 
 [tools.claude."platforms.macos-arm64"]
-checksum = "blake3:e4798f0e2cffb6d9f380735799d30e695ae9574d7607f0b9502d5eb7011ca045"
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.139/darwin-arm64/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.141/darwin-arm64/claude"
 
 [tools.claude."platforms.macos-x64"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.139/darwin-x64/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.141/darwin-x64/claude"
 
 [[tools.firebase]]
-version = "15.16.0"
+version = "15.18.0"
 backend = "aqua:firebase/firebase-tools"
 
 [tools.firebase."platforms.linux-x64"]
-checksum = "sha256:03dcca8652f4825d6820d8a5925c06f24e81dc49632c5c11bd5ce4f511264070"
-url = "https://github.com/firebase/firebase-tools/releases/download/v15.16.0/firebase-tools-linux"
+checksum = "sha256:a445bb1ab6175ebf20c79f71a372cc828dadcf39aa2287454c3b9757914a785a"
+url = "https://github.com/firebase/firebase-tools/releases/download/v15.18.0/firebase-tools-linux"
 
 [tools.firebase."platforms.linux-x64-musl"]
-checksum = "sha256:03dcca8652f4825d6820d8a5925c06f24e81dc49632c5c11bd5ce4f511264070"
-url = "https://github.com/firebase/firebase-tools/releases/download/v15.16.0/firebase-tools-linux"
+checksum = "sha256:a445bb1ab6175ebf20c79f71a372cc828dadcf39aa2287454c3b9757914a785a"
+url = "https://github.com/firebase/firebase-tools/releases/download/v15.18.0/firebase-tools-linux"
 
 [tools.firebase."platforms.macos-arm64"]
-checksum = "sha256:c366d413e5c05fed75e8940f1a76a12135727445a5c760df64f4097736d2578b"
-url = "https://github.com/firebase/firebase-tools/releases/download/v15.16.0/firebase-tools-macos"
+checksum = "sha256:a9b97b1a28d09905907d573a2761dad248fed767a6abfa8bc485fe554db7f5e5"
+url = "https://github.com/firebase/firebase-tools/releases/download/v15.18.0/firebase-tools-macos"
 
 [tools.firebase."platforms.macos-x64"]
-checksum = "sha256:c366d413e5c05fed75e8940f1a76a12135727445a5c760df64f4097736d2578b"
-url = "https://github.com/firebase/firebase-tools/releases/download/v15.16.0/firebase-tools-macos"
+checksum = "sha256:a9b97b1a28d09905907d573a2761dad248fed767a6abfa8bc485fe554db7f5e5"
+url = "https://github.com/firebase/firebase-tools/releases/download/v15.18.0/firebase-tools-macos"
 
 [tools.firebase."platforms.windows-x64"]
-checksum = "sha256:0d36c0d1115531ccaf22fd1dcfe5cd86b121d2b7fb02888fefc7c72a1523ca3c"
-url = "https://github.com/firebase/firebase-tools/releases/download/v15.16.0/firebase-tools-win.exe"
+checksum = "sha256:423c18774488ad5476cefef2a36b91014672ab81e4bead8d7d623f519ffaca61"
+url = "https://github.com/firebase/firebase-tools/releases/download/v15.18.0/firebase-tools-win.exe"
 
 [[tools.flutter]]
 version = "3.41.9-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
-version = "567.0.0"
+version = "568.0.0"
 backend = "asdf:gcloud"
 
 [tools.gcloud."platforms.linux-arm64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-567.0.0-linux-arm.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-arm.tar.gz"
 
 [tools.gcloud."platforms.linux-arm64-musl"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-567.0.0-linux-arm.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-arm.tar.gz"
 
 [tools.gcloud."platforms.linux-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-567.0.0-linux-x86_64.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-x86_64.tar.gz"
 
 [tools.gcloud."platforms.linux-x64-musl"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-567.0.0-linux-x86_64.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-x86_64.tar.gz"
 
 [tools.gcloud."platforms.macos-arm64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-567.0.0-darwin-arm.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-darwin-arm.tar.gz"
 
 [tools.gcloud."platforms.macos-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-567.0.0-darwin-x86_64.tar.gz"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-darwin-x86_64.tar.gz"
 
 [tools.gcloud."platforms.windows-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-567.0.0-windows-x86_64.zip"
+url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-windows-x86_64.zip"
 
 [[tools.ghalint]]
 version = "1.5.6"
@@ -473,36 +471,36 @@ url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/Swif
 url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406642521"
 
 [[tools.terraform]]
-version = "1.15.1"
+version = "1.15.3"
 backend = "aqua:hashicorp/terraform"
 
 [tools.terraform."platforms.linux-arm64"]
-checksum = "sha256:d0e5707a2ef8ff05dc546b8c0acee5b6f6968ba83c1208230364187a56480b42"
-url = "https://releases.hashicorp.com/terraform/1.15.1/terraform_1.15.1_linux_arm64.zip"
+checksum = "sha256:9824eb010b835b2c872440a337a69acfa1782d36c24d3c09fe5defe75defc511"
+url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_arm64.zip"
 
 [tools.terraform."platforms.linux-arm64-musl"]
-checksum = "sha256:d0e5707a2ef8ff05dc546b8c0acee5b6f6968ba83c1208230364187a56480b42"
-url = "https://releases.hashicorp.com/terraform/1.15.1/terraform_1.15.1_linux_arm64.zip"
+checksum = "sha256:9824eb010b835b2c872440a337a69acfa1782d36c24d3c09fe5defe75defc511"
+url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_arm64.zip"
 
 [tools.terraform."platforms.linux-x64"]
-checksum = "sha256:0921fee8c8435253ca49390a02109e906042e611a4e17f69e922261f5176c74f"
-url = "https://releases.hashicorp.com/terraform/1.15.1/terraform_1.15.1_linux_amd64.zip"
+checksum = "sha256:c3d4b579064745a5f7e918125db23b12ba52a8a7287adb9f32c49d637e02e3bf"
+url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_amd64.zip"
 
 [tools.terraform."platforms.linux-x64-musl"]
-checksum = "sha256:0921fee8c8435253ca49390a02109e906042e611a4e17f69e922261f5176c74f"
-url = "https://releases.hashicorp.com/terraform/1.15.1/terraform_1.15.1_linux_amd64.zip"
+checksum = "sha256:c3d4b579064745a5f7e918125db23b12ba52a8a7287adb9f32c49d637e02e3bf"
+url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_amd64.zip"
 
 [tools.terraform."platforms.macos-arm64"]
-checksum = "sha256:01535b614be222dbd1344a8eb9162c3b54cc3b65c4212e8d4d9a2be72666ccff"
-url = "https://releases.hashicorp.com/terraform/1.15.1/terraform_1.15.1_darwin_arm64.zip"
+checksum = "sha256:b97101c62c11eebd176e83cd42a313336200d54fdd18ce7770f65a5bfb0ab098"
+url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_darwin_arm64.zip"
 
 [tools.terraform."platforms.macos-x64"]
-checksum = "sha256:182fcb3d94e52daf904e412541d92cbe2a86bf28c0fb442da15ede2aa8c3fe76"
-url = "https://releases.hashicorp.com/terraform/1.15.1/terraform_1.15.1_darwin_amd64.zip"
+checksum = "sha256:448e89a455e854941bd7e1396ba6ca46e92dd7e0ed1cc11d4da4cab637606d8a"
+url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_darwin_amd64.zip"
 
 [tools.terraform."platforms.windows-x64"]
-checksum = "sha256:3890c08de67ebef2a3f8948b8b0afe53e28ed2f4eb84d1d2246f5b61d8ebd393"
-url = "https://releases.hashicorp.com/terraform/1.15.1/terraform_1.15.1_windows_amd64.zip"
+checksum = "sha256:b9da8df3d92402551c86b8956be30fb87f600245321d2b31751afcf37218018c"
+url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_windows_amd64.zip"
 
 [[tools.tflint]]
 version = "0.62.0"
