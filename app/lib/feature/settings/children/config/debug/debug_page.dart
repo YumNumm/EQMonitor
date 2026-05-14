@@ -111,6 +111,14 @@ class _DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.widgets_outlined),
               onTap: () => const DebugAppGroupRoute().push<void>(context),
             ),
+          if (Platform.isIOS)
+            ListTile(
+              title: const Text('Live Activity デバッグ'),
+              subtitle: const Text('EEW / 揺れ検知の 4 報シナリオを APNs 経由でテスト'),
+              leading: const Icon(Icons.lightbulb),
+              onTap: () async =>
+                  const DebugLiveActivityTestRoute().push<void>(context),
+            ),
           ListTile(
             title: const Text('WebSocket'),
             leading: const Icon(Icons.cable),

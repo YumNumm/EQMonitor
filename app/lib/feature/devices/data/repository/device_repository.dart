@@ -139,6 +139,23 @@ class DeviceRepository {
     );
   });
 
+  Future<Result<api.LiveActivityTestScenarioResponse, Exception>>
+  triggerLiveActivityTestScenario({
+    required String deviceId,
+    required api.LiveActivityStartTrigger eventType,
+    required api.Scenario? scenario,
+  }) => Result.capture(() async {
+    final response = await _api.device
+        .postV2DeviceDeviceIdLiveActivityTestScenario(
+          deviceId: deviceId,
+          body: api.LiveActivityTestScenarioRequest(
+            eventType: eventType,
+            scenario: scenario,
+          ),
+        );
+    return response.data;
+  });
+
   static bool _isNotFound(Exception e) =>
       e is DioException && e.response?.statusCode == 404;
 

@@ -15,7 +15,6 @@ part 'eew_hypocenter.g.dart';
 abstract class EewHypocenter with _$EewHypocenter {
   const factory EewHypocenter({
     required CodeName value,
-    required Coordinate coordinates,
     @JsonKey(includeIfNull: true)
     required num? magnitude,
 
@@ -24,6 +23,8 @@ abstract class EewHypocenter with _$EewHypocenter {
     required num? depth,
     @JsonKey(includeIfNull: false)
     CodeName? detailed,
+    @JsonKey(includeIfNull: false)
+    Coordinate? coordinates,
   }) = _EewHypocenter;
   
   factory EewHypocenter.fromJson(Map<String, Object?> json) => _$EewHypocenterFromJson(json);

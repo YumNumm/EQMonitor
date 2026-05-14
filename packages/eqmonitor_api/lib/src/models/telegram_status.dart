@@ -21,7 +21,7 @@ enum TelegramStatus {
     final value = json;
     if (value == null) {
       throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \\\$unknown or @JsonValue(null) entries.');
+          'This usually happens for \$unknown or @JsonValue(null) entries.');
     }
     return value as String;
   }

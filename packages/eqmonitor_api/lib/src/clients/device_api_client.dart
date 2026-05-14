@@ -16,6 +16,8 @@ import '../models/eew_settings_request.dart';
 import '../models/eew_settings_response.dart';
 import '../models/fcm_token_request.dart';
 import '../models/fcm_token_response.dart';
+import '../models/live_activity_test_scenario_request.dart';
+import '../models/live_activity_test_scenario_response.dart';
 import '../models/live_activity_token_request.dart';
 import '../models/live_activity_token_response.dart';
 import '../models/migrate_request.dart';
@@ -120,6 +122,13 @@ abstract class DeviceApiClient {
   Future<HttpResponse<void>> deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
     @Path('liveActivityId') required String liveActivityId,
     @Path('deviceId') required String deviceId,
+  });
+
+  /// デバッグ用: Live Activity の 4 報シーケンス（start + 3 updates）を再生する
+  @POST(DeviceApiClientUrls.postV2DeviceDeviceIdLiveActivityTestScenario)
+  Future<HttpResponse<LiveActivityTestScenarioResponse>> postV2DeviceDeviceIdLiveActivityTestScenario({
+    @Path('deviceId') required String deviceId,
+    @Body() required LiveActivityTestScenarioRequest body,
   });
 
   /// 全般通知設定を取得
@@ -286,6 +295,8 @@ abstract class DeviceApiClientUrls {
 	static const putV2DeviceDeviceIdLiveActivityLiveActivityIdToken = "/v2/device/{deviceId}/live-activity/{liveActivityId}/token";
 	/// /v2/device/{deviceId}/live-activity/{liveActivityId}/token
 	static const deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken = "/v2/device/{deviceId}/live-activity/{liveActivityId}/token";
+	/// /v2/device/{deviceId}/live-activity/test-scenario
+	static const postV2DeviceDeviceIdLiveActivityTestScenario = "/v2/device/{deviceId}/live-activity/test-scenario";
 	/// /v2/device/{deviceId}/settings/notification
 	static const getV2DeviceDeviceIdSettingsNotification = "/v2/device/{deviceId}/settings/notification";
 	/// /v2/device/{deviceId}/settings/notification

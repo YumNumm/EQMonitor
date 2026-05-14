@@ -513,6 +513,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugAppGroupRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'live-activity-test',
+          factory: $DebugLiveActivityTestRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'nied',
           factory: $NiedRoute._fromState,
           routes: [
@@ -1228,6 +1232,28 @@ mixin $DebugAppGroupRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/debug/app-group');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugLiveActivityTestRoute on GoRouteData {
+  static DebugLiveActivityTestRoute _fromState(GoRouterState state) =>
+      const DebugLiveActivityTestRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/live-activity-test');
 
   @override
   void go(BuildContext context) => context.go(location);

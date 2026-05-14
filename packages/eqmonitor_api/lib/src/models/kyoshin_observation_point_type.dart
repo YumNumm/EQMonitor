@@ -5,22 +5,22 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum Status {
-  @JsonValue('NORMAL')
-  normal('NORMAL'),
-  @JsonValue('TRAINING')
-  training('TRAINING'),
-  @JsonValue('TEST')
-  test('TEST');
+enum KyoshinObservationPointType {
+  @JsonValue('k_net')
+  kNet('k_net'),
+  @JsonValue('kik_net')
+  kikNet('kik_net'),
+  @JsonValue('unknown')
+  unknown('unknown');
 
-  const Status(this.json);
+  const KyoshinObservationPointType(this.json);
 
   final String? json;
   String toJson() {
     final value = json;
     if (value == null) {
       throw StateError('Cannot convert enum value with null JSON representation to String. '
-          'This usually happens for \\\$unknown or @JsonValue(null) entries.');
+          'This usually happens for \$unknown or @JsonValue(null) entries.');
     }
     return value as String;
   }
