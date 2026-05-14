@@ -99,9 +99,15 @@ class _TelegramListView extends StatelessWidget {
 
     return ListView.separated(
       controller: scrollController,
-      itemCount: items.length + 1,
+      itemCount: items.length + (hasNext || isLoading ? 1 : 0),
       separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
+        if (index >= items.length) {
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
         final telegram = items[index];
         return TelegramListTile(
           telegram: telegram,
