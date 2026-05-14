@@ -1,0 +1,104 @@
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_common.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_metadata.dart';
+import 'package:eqmonitor/feature/parameter/data/model/common/parameter_type.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+EarthquakeParameter _buildParameter() {
+  const fukushimaNakadori = EarthquakeParameterRegionItem(
+    code: '250',
+    name: LocalizedName(ja: '福島県中通り'),
+    kana: null,
+    cities: [
+      EarthquakeParameterCityItem(
+        code: '0720100',
+        name: LocalizedName(ja: '福島市'),
+        kana: null,
+        stations: [],
+      ),
+      EarthquakeParameterCityItem(
+        code: '0720500',
+        name: LocalizedName(ja: '伊達市'),
+        kana: null,
+        stations: [],
+      ),
+    ],
+  );
+  const fukushimaHamadori = EarthquakeParameterRegionItem(
+    code: '251',
+    name: LocalizedName(ja: '福島県浜通り'),
+    kana: null,
+    cities: [
+      EarthquakeParameterCityItem(
+        code: '0720300',
+        name: LocalizedName(ja: 'いわき市'),
+        kana: null,
+        stations: [],
+      ),
+    ],
+  );
+  const fukushima = EarthquakeParameterPrefectureItem(
+    code: '07',
+    name: LocalizedName(ja: '福島県'),
+    regions: [fukushimaNakadori, fukushimaHamadori],
+  );
+
+  // 不正な region.code (パース失敗) はスキップされることを検証するためのデータ
+  const invalid = EarthquakeParameterPrefectureItem(
+    code: '99',
+    name: LocalizedName(ja: 'INVALID'),
+    regions: [
+      EarthquakeParameterRegionItem(
+        code: 'NaN',
+        name: LocalizedName(ja: 'INVALID-REGION'),
+        kana: null,
+        cities: [
+          EarthquakeParameterCityItem(
+            code: '9999999',
+            name: LocalizedName(ja: '架空市'),
+            kana: null,
+            stations: [],
+          ),
+        ],
+      ),
+    ],
+  );
+
+  return const EarthquakeParameter(
+    metadata: ParameterMetadata(
+      type: ParameterType.earthquakeStations,
+      schemaVersion: 1,
+      sourceVersion: '1.0',
+      sourceUpdatedAt: null,
+      generatedAt: '2024-01-01T00:00:00Z',
+      sourceUrls: [],
+      sha256: '',
+    ),
+    prefectures: [fukushima, invalid],
+  );
+}
+
+void main() {
+  group('buildCityToRegionLookup', () {
+    test('cityCode を親 region コード・名にマップする', () {
+      final lookup = buildCityToRegionLookup(_buildParameter());
+
+      expect(lookup['0720100']?.code, 250);
+      expect(lookup['0720100']?.name, '福島県中通り');
+      expect(lookup['0720500']?.code, 250);
+      expect(lookup['0720300']?.code, 251);
+      expect(lookup['0720300']?.name, '福島県浜通り');
+    });
+
+    test('region.code がパースできない場合は city も含めてスキップされる', () {
+      final lookup = buildCityToRegionLookup(_buildParameter());
+      expect(lookup.containsKey('9999999'), isFalse);
+    });
+
+    test('未登録 cityCode は null を返す', () {
+      final lookup = buildCityToRegionLookup(_buildParameter());
+      expect(lookup['0000000'], isNull);
+    });
+  });
+}
