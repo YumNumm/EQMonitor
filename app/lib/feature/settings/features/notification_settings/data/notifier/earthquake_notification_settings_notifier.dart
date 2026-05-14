@@ -104,7 +104,7 @@ class EarthquakeNotificationSettingsNotifier
     required int regionCode,
     String? regionName,
   }) async {
-    final current = state.requireValue;
+    final current = await future;
     final existing =
         current.regions.where((r) => r.isCurrentLocation).firstOrNull;
     if (existing == null || existing.regionId == regionCode) {

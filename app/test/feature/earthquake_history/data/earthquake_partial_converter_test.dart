@@ -55,7 +55,7 @@ void main() {
 
   group('EarthquakeMagnitudeApiExtension', () {
     test('NORMAL かつ value 設定済みなら EarthquakeMagnitude.value', () {
-      const m = api.Magnitude(type: api.Type3.normal, value: 6.5);
+      const m = api.Magnitude(type: api.MagnitudeType.normal, value: 6.5);
       expect(m.toEarthquakeMagnitude, isA<EarthquakeMagnitudeValue>());
       expect(
         (m.toEarthquakeMagnitude as EarthquakeMagnitudeValue).value,
@@ -64,7 +64,7 @@ void main() {
     });
 
     test('NORMAL で value が null だと CheckedFromJsonException', () {
-      const m = api.Magnitude(type: api.Type3.normal);
+      const m = api.Magnitude(type: api.MagnitudeType.normal);
       expect(
         () => m.toEarthquakeMagnitude,
         throwsA(isA<CheckedFromJsonException>()),
@@ -72,12 +72,12 @@ void main() {
     });
 
     test('UNKNOWN は EarthquakeMagnitude.unknown', () {
-      const m = api.Magnitude(type: api.Type3.unknown);
+      const m = api.Magnitude(type: api.MagnitudeType.unknown);
       expect(m.toEarthquakeMagnitude, isA<EarthquakeMagnitudeUnknown>());
     });
 
     test('OVER_M8 は EarthquakeMagnitude.overM8', () {
-      const m = api.Magnitude(type: api.Type3.overM8);
+      const m = api.Magnitude(type: api.MagnitudeType.overM8);
       expect(m.toEarthquakeMagnitude, isA<EarthquakeMagnitudeOverM8>());
     });
   });

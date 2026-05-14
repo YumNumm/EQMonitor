@@ -22,6 +22,7 @@ import 'package:eqmonitor/feature/knet_waveform/ui/record/knet_station_waveform_
 import 'package:eqmonitor/feature/knet_waveform/ui/settings/knet_credentials_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
+import 'package:eqmonitor/feature/live_activity/ui/page/live_activity_test_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_catalog_page.dart';
 import 'package:eqmonitor/feature/nied/ui/aqua/aqua_page.dart';
 import 'package:eqmonitor/feature/nied/ui/fnet/fnet_catalog_page.dart';
@@ -320,6 +321,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
+        TypedGoRoute<DebugLiveActivityTestRoute>(path: 'live-activity-test'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -636,6 +638,16 @@ class DebugAppGroupRoute extends GoRouteData with $DebugAppGroupRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugAppGroupPage();
+  }
+}
+
+class DebugLiveActivityTestRoute extends GoRouteData
+    with $DebugLiveActivityTestRoute {
+  const DebugLiveActivityTestRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const LiveActivityTestPage();
   }
 }
 

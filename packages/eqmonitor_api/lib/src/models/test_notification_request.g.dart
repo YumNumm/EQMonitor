@@ -12,7 +12,10 @@ _TestNotificationRequest _$TestNotificationRequestFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('_TestNotificationRequest', json, ($checkedConvert) {
   final val = _TestNotificationRequest(
-    type: $checkedConvert('type', (v) => $enumDecode(_$Type2EnumMap, v)),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$TestNotificationTypeEnumMap, v),
+    ),
   );
   return val;
 });
@@ -21,8 +24,8 @@ Map<String, dynamic> _$TestNotificationRequestToJson(
   _TestNotificationRequest instance,
 ) => <String, dynamic>{'type': instance.type};
 
-const _$Type2EnumMap = {
-  Type2.silent: 'silent',
-  Type2.normal: 'normal',
-  Type2.critical: 'critical',
+const _$TestNotificationTypeEnumMap = {
+  TestNotificationType.silent: 'silent',
+  TestNotificationType.normal: 'normal',
+  TestNotificationType.critical: 'critical',
 };

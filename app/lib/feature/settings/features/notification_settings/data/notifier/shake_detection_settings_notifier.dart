@@ -46,7 +46,7 @@ class ShakeDetectionSettingsNotifier
   /// availableSubRegions に見つからない場合は null のまま維持する。
   /// 更新が実行された場合は true、変化なしまたはスキップの場合は false を返す。
   Future<bool> updateCurrentLocationSubRegion(String? cityCode) async {
-    final current = state.requireValue;
+    final current = await future;
     final existing =
         current.entries.where((e) => e.isCurrentLocation).firstOrNull;
     if (existing == null) {

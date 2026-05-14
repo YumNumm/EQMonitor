@@ -153,7 +153,7 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     required int regionCode,
     String? regionName,
   }) async {
-    final current = state.requireValue;
+    final current = await future;
     final existing = current.regions.firstWhere(
       (r) => r.isCurrentLocation,
       orElse: () => NotificationRegion(

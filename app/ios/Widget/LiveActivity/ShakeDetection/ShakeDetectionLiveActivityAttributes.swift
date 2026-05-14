@@ -26,7 +26,11 @@ struct ShakeDetectionContentState: Codable, Hashable {
 
     var detectedDate: Date? {
         guard let detectedAt = detectedAt else { return nil }
-        return ISO8601DateFormatter().date(from: detectedAt)
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: detectedAt) { return date }
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: detectedAt)
     }
 }
 

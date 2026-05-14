@@ -193,8 +193,7 @@ Future<void> _fireDebugNotifications(
       }
     }
 
-    if (debugSettings.notifyApiUpdate &&
-        (didUpdateEew || didUpdateEarthquake || didUpdateShake)) {
+    if (debugSettings.notifyApiUpdate) {
       final eewStatus = eewError != null ? '✗($eewError)' : (didUpdateEew ? '✓' : '-');
       final eqStatus = earthquakeError != null ? '✗($earthquakeError)' : (didUpdateEarthquake ? '✓' : '-');
       final shakeStatus = shakeError != null ? '✗($shakeError)' : (didUpdateShake ? '✓' : '-');

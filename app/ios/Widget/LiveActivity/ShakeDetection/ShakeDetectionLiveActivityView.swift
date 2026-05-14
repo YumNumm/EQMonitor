@@ -80,6 +80,7 @@ struct ShakeDetectionHeaderContainer: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss"
         formatter.locale = Locale(identifier: "ja_JP")
+        formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
         return formatter.string(from: date)
     }
 }

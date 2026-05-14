@@ -11,7 +11,10 @@ part of 'magnitude.dart';
 _Magnitude _$MagnitudeFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_Magnitude', json, ($checkedConvert) {
       final val = _Magnitude(
-        type: $checkedConvert('type', (v) => $enumDecode(_$Type3EnumMap, v)),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$MagnitudeTypeEnumMap, v),
+        ),
         value: $checkedConvert('value', (v) => v as num?),
       );
       return val;
@@ -20,8 +23,8 @@ _Magnitude _$MagnitudeFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MagnitudeToJson(_Magnitude instance) =>
     <String, dynamic>{'type': instance.type, 'value': ?instance.value};
 
-const _$Type3EnumMap = {
-  Type3.normal: 'NORMAL',
-  Type3.unknown: 'UNKNOWN',
-  Type3.overM8: 'OVER_M8',
+const _$MagnitudeTypeEnumMap = {
+  MagnitudeType.normal: 'NORMAL',
+  MagnitudeType.unknown: 'UNKNOWN',
+  MagnitudeType.overM8: 'OVER_M8',
 };

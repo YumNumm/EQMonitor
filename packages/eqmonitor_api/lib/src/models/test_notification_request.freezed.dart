@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TestNotificationRequest {
 
- Type2 get type;
+ TestNotificationType get type;
 /// Create a copy of TestNotificationRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TestNotificationRequestCopyWith<$Res>  {
   factory $TestNotificationRequestCopyWith(TestNotificationRequest value, $Res Function(TestNotificationRequest) _then) = _$TestNotificationRequestCopyWithImpl;
 @useResult
 $Res call({
- Type2 type
+ TestNotificationType type
 });
 
 
@@ -68,7 +68,7 @@ class _$TestNotificationRequestCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type2,
+as TestNotificationType,
   ));
 }
 
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Type2 type)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TestNotificationType type)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TestNotificationRequest() when $default != null:
 return $default(_that.type);case _:
@@ -174,7 +174,7 @@ return $default(_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Type2 type)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TestNotificationType type)  $default,) {final _that = this;
 switch (_that) {
 case _TestNotificationRequest():
 return $default(_that.type);case _:
@@ -194,7 +194,7 @@ return $default(_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Type2 type)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TestNotificationType type)?  $default,) {final _that = this;
 switch (_that) {
 case _TestNotificationRequest() when $default != null:
 return $default(_that.type);case _:
@@ -212,7 +212,7 @@ class _TestNotificationRequest implements TestNotificationRequest {
   const _TestNotificationRequest({required this.type});
   factory _TestNotificationRequest.fromJson(Map<String, dynamic> json) => _$TestNotificationRequestFromJson(json);
 
-@override final  Type2 type;
+@override final  TestNotificationType type;
 
 /// Create a copy of TestNotificationRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -247,7 +247,7 @@ abstract mixin class _$TestNotificationRequestCopyWith<$Res> implements $TestNot
   factory _$TestNotificationRequestCopyWith(_TestNotificationRequest value, $Res Function(_TestNotificationRequest) _then) = __$TestNotificationRequestCopyWithImpl;
 @override @useResult
 $Res call({
- Type2 type
+ TestNotificationType type
 });
 
 
@@ -267,7 +267,7 @@ class __$TestNotificationRequestCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? type = null,}) {
   return _then(_TestNotificationRequest(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as Type2,
+as TestNotificationType,
   ));
 }
 
