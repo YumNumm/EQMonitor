@@ -14,6 +14,10 @@ abstract class RegionSettingPatchRequest with _$RegionSettingPatchRequest {
   const factory RegionSettingPatchRequest({
     @JsonKey(includeIfNull: false,name: 'region_name')
     String? regionName,
+    @JsonKey(includeIfNull: false,name: 'city_code')
+    String? cityCode,
+    @JsonKey(includeIfNull: false,name: 'city_name')
+    String? cityName,
     @JsonKey(includeIfNull: false,name: 'is_current_location')
     bool? isCurrentLocation,
     @JsonKey(includeIfNull: false,name: 'min_jma_intensity')

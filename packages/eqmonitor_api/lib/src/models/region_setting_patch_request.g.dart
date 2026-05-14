@@ -16,6 +16,8 @@ _RegionSettingPatchRequest _$RegionSettingPatchRequestFromJson(
   ($checkedConvert) {
     final val = _RegionSettingPatchRequest(
       regionName: $checkedConvert('region_name', (v) => v as String?),
+      cityCode: $checkedConvert('city_code', (v) => v as String?),
+      cityName: $checkedConvert('city_name', (v) => v as String?),
       isCurrentLocation: $checkedConvert(
         'is_current_location',
         (v) => v as bool?,
@@ -29,6 +31,8 @@ _RegionSettingPatchRequest _$RegionSettingPatchRequestFromJson(
   },
   fieldKeyMap: const {
     'regionName': 'region_name',
+    'cityCode': 'city_code',
+    'cityName': 'city_name',
     'isCurrentLocation': 'is_current_location',
     'minJmaIntensity': 'min_jma_intensity',
   },
@@ -38,6 +42,8 @@ Map<String, dynamic> _$RegionSettingPatchRequestToJson(
   _RegionSettingPatchRequest instance,
 ) => <String, dynamic>{
   'region_name': ?instance.regionName,
+  'city_code': ?instance.cityCode,
+  'city_name': ?instance.cityName,
   'is_current_location': ?instance.isCurrentLocation,
   'min_jma_intensity': ?instance.minJmaIntensity,
 };

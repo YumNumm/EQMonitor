@@ -16,6 +16,10 @@ abstract class RegionSettingResponse with _$RegionSettingResponse {
     required num regionId,
     @JsonKey(includeIfNull: true,name: 'region_name')
     required String? regionName,
+    @JsonKey(includeIfNull: true,name: 'city_code')
+    required String? cityCode,
+    @JsonKey(includeIfNull: true,name: 'city_name')
+    required String? cityName,
     @JsonKey(name: 'is_current_location')
     required bool isCurrentLocation,
     @JsonKey(name: 'min_jma_intensity')

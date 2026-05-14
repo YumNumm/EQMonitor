@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegionSettingRequest {
 
-@JsonKey(name: 'region_id') num get regionId;@JsonKey(name: 'is_current_location') bool get isCurrentLocation;@JsonKey(name: 'min_jma_intensity') JmaIntensity get minJmaIntensity;@JsonKey(includeIfNull: false, name: 'region_name') String? get regionName;
+@JsonKey(name: 'region_id') num get regionId;@JsonKey(name: 'is_current_location') bool get isCurrentLocation;@JsonKey(name: 'min_jma_intensity') JmaIntensity get minJmaIntensity;@JsonKey(includeIfNull: false, name: 'region_name') String? get regionName;@JsonKey(includeIfNull: false, name: 'city_code') String? get cityCode;@JsonKey(includeIfNull: false, name: 'city_name') String? get cityName;
 /// Create a copy of RegionSettingRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RegionSettingRequestCopyWith<RegionSettingRequest> get copyWith => _$RegionSett
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegionSettingRequest&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionName, regionName) || other.regionName == regionName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegionSettingRequest&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.cityName, cityName) || other.cityName == cityName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionId,isCurrentLocation,minJmaIntensity,regionName);
+int get hashCode => Object.hash(runtimeType,regionId,isCurrentLocation,minJmaIntensity,regionName,cityCode,cityName);
 
 @override
 String toString() {
-  return 'RegionSettingRequest(regionId: $regionId, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity, regionName: $regionName)';
+  return 'RegionSettingRequest(regionId: $regionId, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity, regionName: $regionName, cityCode: $cityCode, cityName: $cityName)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RegionSettingRequestCopyWith<$Res>  {
   factory $RegionSettingRequestCopyWith(RegionSettingRequest value, $Res Function(RegionSettingRequest) _then) = _$RegionSettingRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') JmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName
+@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') JmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName,@JsonKey(includeIfNull: false, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: false, name: 'city_name') String? cityName
 });
 
 
@@ -65,12 +65,14 @@ class _$RegionSettingRequestCopyWithImpl<$Res>
 
 /// Create a copy of RegionSettingRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionId = null,Object? isCurrentLocation = null,Object? minJmaIntensity = null,Object? regionName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionId = null,Object? isCurrentLocation = null,Object? minJmaIntensity = null,Object? regionName = freezed,Object? cityCode = freezed,Object? cityName = freezed,}) {
   return _then(_self.copyWith(
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
 as num,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -156,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegionSettingRequest() when $default != null:
-return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName);case _:
+return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName,_that.cityCode,_that.cityName);case _:
   return orElse();
 
 }
@@ -177,10 +179,10 @@ return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName)  $default,) {final _that = this;
 switch (_that) {
 case _RegionSettingRequest():
-return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName);case _:
+return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName,_that.cityCode,_that.cityName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +199,10 @@ return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'region_id')  num regionId, @JsonKey(name: 'is_current_location')  bool isCurrentLocation, @JsonKey(name: 'min_jma_intensity')  JmaIntensity minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name')  String? regionName, @JsonKey(includeIfNull: false, name: 'city_code')  String? cityCode, @JsonKey(includeIfNull: false, name: 'city_name')  String? cityName)?  $default,) {final _that = this;
 switch (_that) {
 case _RegionSettingRequest() when $default != null:
-return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName);case _:
+return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_that.regionName,_that.cityCode,_that.cityName);case _:
   return null;
 
 }
@@ -212,13 +214,15 @@ return $default(_that.regionId,_that.isCurrentLocation,_that.minJmaIntensity,_th
 @JsonSerializable()
 
 class _RegionSettingRequest implements RegionSettingRequest {
-  const _RegionSettingRequest({@JsonKey(name: 'region_id') required this.regionId, @JsonKey(name: 'is_current_location') required this.isCurrentLocation, @JsonKey(name: 'min_jma_intensity') required this.minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name') this.regionName});
+  const _RegionSettingRequest({@JsonKey(name: 'region_id') required this.regionId, @JsonKey(name: 'is_current_location') required this.isCurrentLocation, @JsonKey(name: 'min_jma_intensity') required this.minJmaIntensity, @JsonKey(includeIfNull: false, name: 'region_name') this.regionName, @JsonKey(includeIfNull: false, name: 'city_code') this.cityCode, @JsonKey(includeIfNull: false, name: 'city_name') this.cityName});
   factory _RegionSettingRequest.fromJson(Map<String, dynamic> json) => _$RegionSettingRequestFromJson(json);
 
 @override@JsonKey(name: 'region_id') final  num regionId;
 @override@JsonKey(name: 'is_current_location') final  bool isCurrentLocation;
 @override@JsonKey(name: 'min_jma_intensity') final  JmaIntensity minJmaIntensity;
 @override@JsonKey(includeIfNull: false, name: 'region_name') final  String? regionName;
+@override@JsonKey(includeIfNull: false, name: 'city_code') final  String? cityCode;
+@override@JsonKey(includeIfNull: false, name: 'city_name') final  String? cityName;
 
 /// Create a copy of RegionSettingRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegionSettingRequest&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionName, regionName) || other.regionName == regionName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegionSettingRequest&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.cityName, cityName) || other.cityName == cityName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionId,isCurrentLocation,minJmaIntensity,regionName);
+int get hashCode => Object.hash(runtimeType,regionId,isCurrentLocation,minJmaIntensity,regionName,cityCode,cityName);
 
 @override
 String toString() {
-  return 'RegionSettingRequest(regionId: $regionId, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity, regionName: $regionName)';
+  return 'RegionSettingRequest(regionId: $regionId, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity, regionName: $regionName, cityCode: $cityCode, cityName: $cityName)';
 }
 
 
@@ -253,7 +257,7 @@ abstract mixin class _$RegionSettingRequestCopyWith<$Res> implements $RegionSett
   factory _$RegionSettingRequestCopyWith(_RegionSettingRequest value, $Res Function(_RegionSettingRequest) _then) = __$RegionSettingRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') JmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName
+@JsonKey(name: 'region_id') num regionId,@JsonKey(name: 'is_current_location') bool isCurrentLocation,@JsonKey(name: 'min_jma_intensity') JmaIntensity minJmaIntensity,@JsonKey(includeIfNull: false, name: 'region_name') String? regionName,@JsonKey(includeIfNull: false, name: 'city_code') String? cityCode,@JsonKey(includeIfNull: false, name: 'city_name') String? cityName
 });
 
 
@@ -270,12 +274,14 @@ class __$RegionSettingRequestCopyWithImpl<$Res>
 
 /// Create a copy of RegionSettingRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionId = null,Object? isCurrentLocation = null,Object? minJmaIntensity = null,Object? regionName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionId = null,Object? isCurrentLocation = null,Object? minJmaIntensity = null,Object? regionName = freezed,Object? cityCode = freezed,Object? cityName = freezed,}) {
   return _then(_RegionSettingRequest(
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
 as num,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
 as JmaIntensity,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as String?,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

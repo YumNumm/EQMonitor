@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationRegion {
 
- int get regionId; String? get regionName; bool get isCurrentLocation; JmaIntensity get minJmaIntensity;
+ int get regionId; String? get regionName; bool get isCurrentLocation; JmaIntensity get minJmaIntensity;// 市区町村コード (NULL = region 単位の通知設定)。
+// EEW 設定では常に NULL (EEW は area_forecast_local_eew コード単位のみ対応)。
+ String? get cityCode; String? get cityName;
 /// Create a copy of NotificationRegion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +27,16 @@ $NotificationRegionCopyWith<NotificationRegion> get copyWith => _$NotificationRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationRegion&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationRegion&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.cityName, cityName) || other.cityName == cityName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,regionId,regionName,isCurrentLocation,minJmaIntensity);
+int get hashCode => Object.hash(runtimeType,regionId,regionName,isCurrentLocation,minJmaIntensity,cityCode,cityName);
 
 @override
 String toString() {
-  return 'NotificationRegion(regionId: $regionId, regionName: $regionName, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity)';
+  return 'NotificationRegion(regionId: $regionId, regionName: $regionName, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity, cityCode: $cityCode, cityName: $cityName)';
 }
 
 
@@ -45,7 +47,7 @@ abstract mixin class $NotificationRegionCopyWith<$Res>  {
   factory $NotificationRegionCopyWith(NotificationRegion value, $Res Function(NotificationRegion) _then) = _$NotificationRegionCopyWithImpl;
 @useResult
 $Res call({
- int regionId, String? regionName, bool isCurrentLocation, JmaIntensity minJmaIntensity
+ int regionId, String? regionName, bool isCurrentLocation, JmaIntensity minJmaIntensity, String? cityCode, String? cityName
 });
 
 
@@ -62,13 +64,15 @@ class _$NotificationRegionCopyWithImpl<$Res>
 
 /// Create a copy of NotificationRegion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionId = null,Object? regionName = freezed,Object? isCurrentLocation = null,Object? minJmaIntensity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionId = null,Object? regionName = freezed,Object? isCurrentLocation = null,Object? minJmaIntensity = null,Object? cityCode = freezed,Object? cityName = freezed,}) {
   return _then(_self.copyWith(
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
 as int,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,
+as JmaIntensity,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -153,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int regionId,  String? regionName,  bool isCurrentLocation,  JmaIntensity minJmaIntensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int regionId,  String? regionName,  bool isCurrentLocation,  JmaIntensity minJmaIntensity,  String? cityCode,  String? cityName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationRegion() when $default != null:
-return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.minJmaIntensity);case _:
+return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.minJmaIntensity,_that.cityCode,_that.cityName);case _:
   return orElse();
 
 }
@@ -174,10 +178,10 @@ return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.mi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int regionId,  String? regionName,  bool isCurrentLocation,  JmaIntensity minJmaIntensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int regionId,  String? regionName,  bool isCurrentLocation,  JmaIntensity minJmaIntensity,  String? cityCode,  String? cityName)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationRegion():
-return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.minJmaIntensity);case _:
+return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.minJmaIntensity,_that.cityCode,_that.cityName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +198,10 @@ return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.mi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int regionId,  String? regionName,  bool isCurrentLocation,  JmaIntensity minJmaIntensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int regionId,  String? regionName,  bool isCurrentLocation,  JmaIntensity minJmaIntensity,  String? cityCode,  String? cityName)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationRegion() when $default != null:
-return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.minJmaIntensity);case _:
+return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.minJmaIntensity,_that.cityCode,_that.cityName);case _:
   return null;
 
 }
@@ -209,13 +213,17 @@ return $default(_that.regionId,_that.regionName,_that.isCurrentLocation,_that.mi
 
 
 class _NotificationRegion implements NotificationRegion {
-  const _NotificationRegion({required this.regionId, required this.regionName, required this.isCurrentLocation, required this.minJmaIntensity});
+  const _NotificationRegion({required this.regionId, required this.regionName, required this.isCurrentLocation, required this.minJmaIntensity, this.cityCode = null, this.cityName = null});
   
 
 @override final  int regionId;
 @override final  String? regionName;
 @override final  bool isCurrentLocation;
 @override final  JmaIntensity minJmaIntensity;
+// 市区町村コード (NULL = region 単位の通知設定)。
+// EEW 設定では常に NULL (EEW は area_forecast_local_eew コード単位のみ対応)。
+@override@JsonKey() final  String? cityCode;
+@override@JsonKey() final  String? cityName;
 
 /// Create a copy of NotificationRegion
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +235,16 @@ _$NotificationRegionCopyWith<_NotificationRegion> get copyWith => __$Notificatio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationRegion&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationRegion&&(identical(other.regionId, regionId) || other.regionId == regionId)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.isCurrentLocation, isCurrentLocation) || other.isCurrentLocation == isCurrentLocation)&&(identical(other.minJmaIntensity, minJmaIntensity) || other.minJmaIntensity == minJmaIntensity)&&(identical(other.cityCode, cityCode) || other.cityCode == cityCode)&&(identical(other.cityName, cityName) || other.cityName == cityName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,regionId,regionName,isCurrentLocation,minJmaIntensity);
+int get hashCode => Object.hash(runtimeType,regionId,regionName,isCurrentLocation,minJmaIntensity,cityCode,cityName);
 
 @override
 String toString() {
-  return 'NotificationRegion(regionId: $regionId, regionName: $regionName, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity)';
+  return 'NotificationRegion(regionId: $regionId, regionName: $regionName, isCurrentLocation: $isCurrentLocation, minJmaIntensity: $minJmaIntensity, cityCode: $cityCode, cityName: $cityName)';
 }
 
 
@@ -247,7 +255,7 @@ abstract mixin class _$NotificationRegionCopyWith<$Res> implements $Notification
   factory _$NotificationRegionCopyWith(_NotificationRegion value, $Res Function(_NotificationRegion) _then) = __$NotificationRegionCopyWithImpl;
 @override @useResult
 $Res call({
- int regionId, String? regionName, bool isCurrentLocation, JmaIntensity minJmaIntensity
+ int regionId, String? regionName, bool isCurrentLocation, JmaIntensity minJmaIntensity, String? cityCode, String? cityName
 });
 
 
@@ -264,13 +272,15 @@ class __$NotificationRegionCopyWithImpl<$Res>
 
 /// Create a copy of NotificationRegion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionId = null,Object? regionName = freezed,Object? isCurrentLocation = null,Object? minJmaIntensity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionId = null,Object? regionName = freezed,Object? isCurrentLocation = null,Object? minJmaIntensity = null,Object? cityCode = freezed,Object? cityName = freezed,}) {
   return _then(_NotificationRegion(
 regionId: null == regionId ? _self.regionId : regionId // ignore: cast_nullable_to_non_nullable
 as int,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
 as String?,isCurrentLocation: null == isCurrentLocation ? _self.isCurrentLocation : isCurrentLocation // ignore: cast_nullable_to_non_nullable
 as bool,minJmaIntensity: null == minJmaIntensity ? _self.minJmaIntensity : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-as JmaIntensity,
+as JmaIntensity,cityCode: freezed == cityCode ? _self.cityCode : cityCode // ignore: cast_nullable_to_non_nullable
+as String?,cityName: freezed == cityName ? _self.cityName : cityName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
