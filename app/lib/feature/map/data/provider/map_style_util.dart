@@ -32,18 +32,6 @@ class MapStyleUtil {
       'version': 8,
       'name': 'EQMonitor Style',
       'sources': {
-        'world': {
-          'type': 'vector',
-          'url': 'pmtiles://https://v2.map.eqmonitor.app/world.pmtiles',
-        },
-        'japan': {
-          'type': 'vector',
-          'url': 'pmtiles://https://v2.map.eqmonitor.app/japan.pmtiles',
-        },
-        'overview': {
-          'type': 'vector',
-          'url': 'pmtiles://https://v2.map.eqmonitor.app/overview.pmtiles',
-        },
         'eqmonitor_map': {
           'type': 'vector',
           'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
