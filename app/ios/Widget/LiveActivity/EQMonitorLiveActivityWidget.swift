@@ -99,15 +99,14 @@ struct EewCompactTrailingView: View {
     let state: EewContentState
 
     var body: some View {
-        if let isWarning = state.isWarning, isWarning {
-            Text("警報")
-                .font(.system(size: 11, weight: .heavy))
-                .foregroundColor(.red)
-        } else {
-            Text("予報")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(.orange)
-        }
+        let isWarning = state.isWarning ?? false
+        Text(isWarning ? "警報" : "予報")
+            .font(.system(size: 10, weight: .heavy))
+            .foregroundColor(.white)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 2)
+            .background(isWarning ? Color.red : Color.orange)
+            .clipShape(Capsule())
     }
 }
 
@@ -138,14 +137,14 @@ struct EewExpandedLeadingView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("予想震度")
                     .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.eqTextSecondary)
                 ExpandedIntensityBadge(intensity: intensity)
             }
         } else if let intensity = state.intensityValue {
             VStack(alignment: .leading, spacing: 2) {
                 Text("最大震度")
                     .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.eqTextSecondary)
                 ExpandedIntensityBadge(intensity: intensity)
             }
         }
@@ -157,27 +156,27 @@ struct EewExpandedTrailingView: View {
     let state: EewContentState
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: 2) {
+        VStack(alignment: .trailing, spacing: 4) {
             if let isWarning = state.isWarning {
                 Text(isWarning ? "警報" : "予報")
-                    .font(.system(size: 13, weight: .heavy))
-                    .foregroundColor(isWarning ? .red : .orange)
+                    .font(.system(size: 11, weight: .heavy))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(isWarning ? Color.red : Color.orange)
+                    .clipShape(Capsule())
             }
-            HStack(spacing: 4) {
-                if let serialNo = state.serialNo {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("#")
-                            .font(.system(size: 10, weight: .medium, design: .monospaced))
-                            .foregroundColor(.secondary)
-                        Text("\(serialNo)")
-                            .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    }
+            if let serialNo = state.serialNo {
+                HStack(alignment: .firstTextBaseline, spacing: 0) {
+                    Text("第")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundColor(.eqTextTertiary)
+                    Text("\(serialNo)")
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    Text(state.isFinal == true ? "報(最終)" : "報")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundColor(.eqTextTertiary)
                 }
-                Image("AppIconForeground")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
             }
         }
     }
@@ -189,9 +188,9 @@ struct EewExpandedCenterView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text("震源地")
+            Text(state.isPlum == true || state.isLevel == true ? "検知観測点" : "震源地")
                 .font(.system(size: 9, weight: .medium))
-                .foregroundColor(.secondary)
+                .foregroundColor(.eqTextSecondary)
             if let hypocenterName = state.hypocenterName {
                 Text(hypocenterName)
                     .font(.system(size: 16, weight: .bold))
@@ -212,7 +211,7 @@ struct EewExpandedBottomView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 1) {
                         Text("M")
                             .font(.system(size: 11, weight: .semibold))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.eqTextSecondary)
                         Text(String(format: "%.1f", magnitude))
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .tracking(-2)
@@ -222,12 +221,12 @@ struct EewExpandedBottomView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 1) {
                         Text("深さ")
                             .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.eqTextSecondary)
                         Text("\(depth)")
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                         Text("km")
                             .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.eqTextSecondary)
                     }
                 }
             }
@@ -291,7 +290,7 @@ struct ShakeExpandedLeadingView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("揺れ")
                     .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.eqTextSecondary)
                 Text(level.shortDisplayString)
                     .font(.system(size: 24, weight: .black, design: .monospaced))
                     .foregroundColor(level.textColor)
@@ -312,7 +311,7 @@ struct ShakeExpandedTrailingView: View {
             VStack(alignment: .trailing, spacing: 2) {
                 Text("検知")
                     .font(.system(size: 9, weight: .medium))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.eqTextSecondary)
                 Text(date, style: .time)
                     .font(.system(size: 13, weight: .bold, design: .monospaced))
             }
@@ -328,7 +327,7 @@ struct ShakeExpandedCenterView: View {
         VStack(alignment: .leading, spacing: 1) {
             Text("観測地点")
                 .font(.system(size: 9, weight: .medium))
-                .foregroundColor(.secondary)
+                .foregroundColor(.eqTextSecondary)
             Text(locationText)
                 .font(.system(size: 15, weight: .bold))
                 .lineLimit(1)
@@ -363,7 +362,7 @@ struct ShakeExpandedBottomView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 2) {
                     Text("計測震度")
                         .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.eqTextSecondary)
                     Text(String(format: "%.1f", intensity))
                         .font(.system(size: 14, weight: .bold, design: .monospaced))
                         .monospacedDigit()
@@ -447,7 +446,7 @@ struct ArrivalInfoView: View {
         HStack(spacing: 4) {
             Text(location.regionName)
                 .font(.system(size: 11, weight: .medium))
-                .foregroundColor(.secondary)
+                .foregroundColor(.eqTextSecondary)
                 .lineLimit(1)
 
             if let arrivalDate = location.arrivalDate {
