@@ -254,13 +254,13 @@ class DeviceNotificationSettingsRepository {
     ];
   }
 
-  List<api.NotificationTiers2> _toEarthquakeApiTiers(JmaIntensity? threshold) {
+  List<api.NotificationTiers2>? _toEarthquakeApiTiers(JmaIntensity? threshold) {
     if (threshold == null) {
-      return [];
+      return null;
     }
     final apiIntensity = threshold.toApiMinJmaIntensity;
     if (apiIntensity == null) {
-      return [];
+      return null;
     }
     return [
       api.NotificationTiers2(
