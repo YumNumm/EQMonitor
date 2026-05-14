@@ -1,0 +1,65 @@
+---
+description: SharedPreferences / SecureStorage のキー管理規約
+globs: app/lib/**/*.dart,packages/*/lib/**/*.dart
+alwaysApply: false
+---
+
+# Preferences キー管理規約
+
+## 原則
+
+ストレージのキー文字列を**コード中にハードコードすることを禁止**する。
+キーは必ず専用の enum で一元管理すること。
+
+## SharedPreferences
+
+キーは `app/lib/core/data/preferences/shared/shared_preferences_key.dart` の `SharedPreferencesKey` enum に追加する。
+
+```dart
+// ❌ 悪い例: ハードコードや局所的な const
+const kMyKey = 'my_key';
+prefs.getString('my_key');
+
+// ✅ 良い例: enum を参照
+// shared_preferences_key.dart に追加
+enum SharedPreferencesKey {
+  myKey('my_key'),
+  ;
+  const SharedPreferencesKey(this.key);
+  final String key;
+}
+
+// 利用側
+prefs.getString(SharedPreferencesKey.myKey.key);
+```
+
+## SecureStorage
+
+キーは `app/lib/core/data/preferences/secure/secure_storage_key.dart` の `SecureStorageKey` enum に追加する。
+アクセスは必ず `SecurePreferencesDataSource` 経由で行う（`FlutterSecureStorage` を直接呼ばない）。
+
+```dart
+// ❌ 悪い例
+secureStorage.read(key: 'my_secret');
+
+// ✅ 良い例
+// secure_storage_key.dart に追加
+enum SecureStorageKey {
+  mySecret('my_secret'),
+  ;
+  const SecureStorageKey(this.key);
+  final String key;
+}
+
+// 利用側（SecurePreferencesDataSource 経由）
+final ds = await ref.read(securePreferencesDataSourceProvider.future);
+ds.getString(key: SecureStorageKey.mySecret);
+```
+
+## チェックリスト
+
+新たなキーを追加・参照するときは以下を確認する：
+
+- [ ] 同じ用途のキーが既に enum に存在しないか確認する
+- [ ] キー文字列は既存のスタイルに合わせる（`snake_case`）
+- [ ] v2.x からの移行用など「レガシーキー」の場合はコメントでその旨を明記する
