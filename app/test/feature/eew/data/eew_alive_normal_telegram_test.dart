@@ -49,9 +49,9 @@ void main() {
 
     test('isPlum=true のEEWは除外されること', () {
       final container = _containerWithAlive([
-        _makeEew(eventId: 'a', isPlum: false),
+        _makeEew(eventId: 'a'),
         _makeEew(eventId: 'b', isPlum: true),
-        _makeEew(eventId: 'c', isPlum: false),
+        _makeEew(eventId: 'c'),
       ]);
       final result = container.read(eewAliveNormalTelegramProvider);
       expect(result.map((e) => e.eventId).toList(), ['a', 'c']);

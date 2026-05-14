@@ -94,9 +94,9 @@ void main() {
 
     test('hypocenter の code/name/magnitude/depth が引き渡ること', () {
       final apiEew = _makeApiEew(
-        hypocenter: api.EewHypocenter(
-          value: const api.CodeName(code: '350', name: '岐阜県美濃中西部'),
-          coordinates: const api.Coordinate(latitude: 35.5, longitude: 137.5),
+        hypocenter: const api.EewHypocenter(
+          value: api.CodeName(code: '350', name: '岐阜県美濃中西部'),
+          coordinates: api.Coordinate(latitude: 35.5, longitude: 137.5),
           magnitude: 6.5,
           depth: 10,
         ),
@@ -111,12 +111,12 @@ void main() {
 
     test('hypocenter の coordinates が設定済みのとき hasLatLng=true で値が引き渡る', () {
       final apiEew = _makeApiEew(
-        hypocenter: api.EewHypocenter(
-          value: const api.CodeName(code: '350', name: '岐阜県美濃中西部'),
-          coordinates: const api.Coordinate(latitude: 35.5, longitude: 137.5),
+        hypocenter: const api.EewHypocenter(
+          value: api.CodeName(code: '350', name: '岐阜県美濃中西部'),
+          coordinates: api.Coordinate(latitude: 35.5, longitude: 137.5),
           magnitude: 5,
           depth: 30,
-          detailed: const api.CodeName(code: '350a', name: '美濃中西部詳細'),
+          detailed: api.CodeName(code: '350a', name: '美濃中西部詳細'),
         ),
       );
       final converted = apiEew.toEewTelegramItem();
@@ -129,9 +129,9 @@ void main() {
 
     test('hypocenter の magnitude/depth が null でも例外にならず null で引き渡る', () {
       final apiEew = _makeApiEew(
-        hypocenter: api.EewHypocenter(
-          value: const api.CodeName(code: '350', name: '岐阜県美濃中西部'),
-          coordinates: const api.Coordinate(latitude: 35.5, longitude: 137.5),
+        hypocenter: const api.EewHypocenter(
+          value: api.CodeName(code: '350', name: '岐阜県美濃中西部'),
+          coordinates: api.Coordinate(latitude: 35.5, longitude: 137.5),
           magnitude: null,
           depth: null,
         ),
@@ -162,17 +162,17 @@ void main() {
 
     test('forecastIntensity.regions の arrivalTime.type=ARRIVED で isArrived=true', () {
       final apiEew = _makeApiEew(
-        forecastIntensity: api.EewIntensity(
+        forecastIntensity: const api.EewIntensity(
           regions: [
             api.EewIntensityItem(
-              value: const api.CodeName(code: '900', name: '岩手県'),
+              value: api.CodeName(code: '900', name: '岩手県'),
               isPlum: false,
               isWarning: true,
-              intensity: const api.EewIntensityValue(
+              intensity: api.EewIntensityValue(
                 value: api.JmaIntensity.value5minus,
                 isOver: false,
               ),
-              arrivalTime: const api.EewIntensityRegionArrivalTimeTime(
+              arrivalTime: api.EewIntensityRegionArrivalTimeTime(
                 type: api.EewIntensityRegionArrivalTimeType.arrived,
               ),
             ),
