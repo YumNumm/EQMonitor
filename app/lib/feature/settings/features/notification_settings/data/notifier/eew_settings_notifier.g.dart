@@ -37,7 +37,7 @@ final class EewSettingsNotifierProvider
 }
 
 String _$eewSettingsNotifierHash() =>
-    r'44b0db668feec6db72ea53e22796e2d926d696f8';
+    r'4279c2c17e693b47f8cba621b44a92b306f559ee';
 
 abstract class _$EewSettingsNotifier
     extends $AsyncNotifier<EewNotificationSettings> {

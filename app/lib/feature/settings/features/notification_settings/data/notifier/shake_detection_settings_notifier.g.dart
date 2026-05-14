@@ -27,7 +27,7 @@ final class ShakeDetectionSettingsNotifierProvider
         argument: null,
         retry: null,
         name: r'shakeDetectionSettingsProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -41,7 +41,7 @@ final class ShakeDetectionSettingsNotifierProvider
 }
 
 String _$shakeDetectionSettingsNotifierHash() =>
-    r'0fdf9627fc6827e3d721f971bfdb5b10fe68513c';
+    r'5634171f11753005ac08d9e7c50157de187df082';
 
 abstract class _$ShakeDetectionSettingsNotifier
     extends $AsyncNotifier<ShakeDetectionState> {

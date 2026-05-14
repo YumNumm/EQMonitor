@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_notification_settings_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class EarthquakeNotificationSettingsNotifier
     extends _$EarthquakeNotificationSettingsNotifier {
   static final saveSettingsMutation = Mutation<void>();

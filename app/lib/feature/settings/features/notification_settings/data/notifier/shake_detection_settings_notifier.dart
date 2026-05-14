@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_settings_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ShakeDetectionSettingsNotifier
     extends _$ShakeDetectionSettingsNotifier {
   static final addCurrentLocationMutation = Mutation<void>();

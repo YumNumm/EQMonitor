@@ -58,6 +58,8 @@ Future<void> _applyPendingLocation(Ref ref) async {
 Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
   try {
     final settings = await ref.read(eewSettingsProvider.future);
+    await ref.read(earthquakeNotificationSettingsProvider.future);
+    await ref.read(shakeDetectionSettingsProvider.future);
     final prevRegionCode =
         settings.regions.where((r) => r.isCurrentLocation).firstOrNull?.regionId;
 
