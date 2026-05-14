@@ -40,7 +40,7 @@ import Foundation
       Task {
         for await activity in Activity<EewLiveActivityAttributes>.activityUpdates {
           Task {
-            let activityId = activity.id
+            let activityId = activity.attributes.id.uuidString.lowercased()
             for await tokenData in activity.pushTokenUpdates {
               let token = tokenData.map { String(format: "%02x", $0) }.joined()
               onUpdate(activityId as NSString, token as NSString)
@@ -58,7 +58,7 @@ import Foundation
       Task {
         for await activity in Activity<ShakeDetectionLiveActivityAttributes>.activityUpdates {
           Task {
-            let activityId = activity.id
+            let activityId = activity.attributes.id.uuidString.lowercased()
             for await tokenData in activity.pushTokenUpdates {
               let token = tokenData.map { String(format: "%02x", $0) }.joined()
               onUpdate(activityId as NSString, token as NSString)
