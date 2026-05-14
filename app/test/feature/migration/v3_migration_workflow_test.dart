@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
-import 'package:eqmonitor/feature/migration/data/workflow/v3_migration_workflow.dart';
+import 'package:eqmonitor/feature/devices/data/workflow/device_migration_workflow.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:workflows/workflows.dart';

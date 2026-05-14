@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:eqmonitor/feature/settings/features/notification/data/provider/eqm_live_activity_util.dart';
+import 'package:eqmonitor/feature/live_activity/data/provider/eqm_live_activity_util.dart';
 import 'package:live_activity_util/live_activity_util.dart';
 import 'package:objective_c/objective_c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

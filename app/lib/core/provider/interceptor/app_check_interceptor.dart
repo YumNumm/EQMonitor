@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/feature/devices/data/exception/app_check_rejection.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 class AppCheckInterceptor extends Interceptor {
@@ -32,12 +33,12 @@ class AppCheckInterceptor extends Interceptor {
       }
       handler.next(options);
     } on FirebaseException catch (exception, stackTrace) {
+      // reason が DioException.error フィールドになる。
+      // AppCheckRejection を乗せることでマッパー側が文字列マッチなしに判別できる。
       handler.reject(
         DioException.requestCancelled(
           requestOptions: options,
-          reason:
-              'Failed to get AppCheck Token: '
-              '${exception.message ?? 'Unknown error'}',
+          reason: AppCheckRejection(exception),
           stackTrace: stackTrace,
         ),
       );

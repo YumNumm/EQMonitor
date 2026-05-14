@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
+import 'package:eqmonitor/feature/devices/ui/component/device_provisioning_banner.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/ui/component/eew/eew_card.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
@@ -13,6 +18,7 @@ import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -46,6 +52,34 @@ class _SheetBody extends ConsumerWidget {
     final color = designSystem.color;
     final spacing = designSystem.spacing;
     final typography = designSystem.typography;
+
+    // プロビジョニング未完了なら自動開始
+    ref.listen(deviceProvisioningProvider, (_, next) {
+      if (next.value == DeviceProvisioningStatus.required) {
+        final mutation = DeviceProvisioningNotifier.provisionMutation;
+        if (ref.read(mutation) is! MutationPending) {
+          unawaited(mutation.run(
+            ref,
+            (tsx) async =>
+                tsx.get(deviceProvisioningProvider.notifier).provision(),
+          ));
+        }
+      }
+    });
+
+    // プロビジョニング完了後にトークン同期を自動開始
+    ref.listen(deviceProvisioningProvider, (_, next) {
+      if (next.value == DeviceProvisioningStatus.notRequired) {
+        final mutation = PushTokenSyncNotifier.syncMutation;
+        if (ref.read(mutation) is! MutationPending) {
+          unawaited(mutation.run(
+            ref,
+            (tsx) async =>
+                tsx.get(pushTokenSyncProvider.notifier).sync(),
+          ));
+        }
+      }
+    });
 
     final hasCurrentLocationRegion = ref.watch(
       eewSettingsProvider.select(
@@ -118,6 +152,7 @@ class _SheetBody extends ConsumerWidget {
                 children: [
                   SizedBox(height: spacing.xs),
                   if (state.isNotEmpty) eewCards,
+                  DeviceProvisioningBanner(bottomSpacing: spacing.md),
                   if (showPermissionBanner) ...[
                     _BackgroundLocationPermissionBanner(
                       bottomSpacing: spacing.md,

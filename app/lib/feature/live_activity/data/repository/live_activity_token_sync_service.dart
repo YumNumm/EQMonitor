@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/live_activity/data/provider/live_activity_token_stream.dart';
 import 'package:flutter/foundation.dart';
@@ -24,6 +25,15 @@ Future<void> liveActivityTokenSyncWiring(Ref ref) async {
   if (kIsWeb || !Platform.isIOS) {
     return;
   }
+
+  // プロビジョニング完了後のみ Live Activity トークン同期を開始する
+  final provisionStatus = await ref.watch(
+    deviceProvisioningProvider.future,
+  );
+  if (provisionStatus != DeviceProvisioningStatus.notRequired) {
+    return;
+  }
+
   final service = await ref.watch(liveActivityTokenSyncServiceProvider.future);
   final deviceId = await ref.watch(deviceIdProvider.future);
 

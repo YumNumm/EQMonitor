@@ -85,7 +85,7 @@ void main() {
 
       final stub =
           container.read(shakeDetectionProvider.notifier) as _StubShakeDetection;
-      stub.publish([_ev('e1', pointCount: 3)]);
+      stub.publish([_ev('e1')]);
       // 同じ eventId だが pointCount が変わる
       stub.publish([_ev('e1', pointCount: 10)]);
 

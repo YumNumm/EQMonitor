@@ -1,57 +1,87 @@
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
-import 'package:eqmonitor/feature/devices/data/provider/debug_device_settings_providers.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
-import 'package:eqmonitor/feature/settings/features/notification/data/provider/notification_token_stream.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'debug_device_settings_page.g.dart';
 
 class DebugDeviceSettingsPage extends HookConsumerWidget {
   const DebugDeviceSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sessionAsync = ref.watch(debugDeviceSessionProvider);
-    final historyAsync = ref.watch(debugNotificationHistoryProvider);
+    final deviceIdAsync = ref.watch(deviceIdProvider);
+    final provisionStatus = ref.watch(deviceProvisioningProvider);
+    final syncSnapshot = ref.watch(pushTokenSyncProvider);
 
     Future<void> onRefresh() async {
-      ref.invalidate(debugDeviceSessionProvider);
-      ref.invalidate(debugNotificationHistoryProvider);
-      await ref.read(debugDeviceSessionProvider.future);
+      ref.invalidate(deviceProvisioningProvider);
+      ref.invalidate(pushTokenSyncProvider);
+      await ref.read(deviceProvisioningProvider.future);
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('デバイス・通知'),
-      ),
+      appBar: AppBar(title: const Text('デバイス・通知')),
       body: RefreshIndicator(
         onRefresh: onRefresh,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            switch (sessionAsync) {
-              AsyncData(:final value) => _DeviceSettingsSliverList(
-                snapshot: value,
-                historyAsync: historyAsync,
-              ),
-              AsyncError(:final error, :final stackTrace) =>
-                SliverFillRemaining(
-                  child: _LoadErrorBody(
-                    message: error.toString(),
-                    stackTrace: stackTrace,
-                    onRetry: onRefresh,
+            SliverList.list(
+              children: [
+                const SizedBox(height: 8),
+                _SectionCard(
+                  title: 'プロビジョニング',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _KeyValueRow(
+                        label: 'Device ID',
+                        value: deviceIdAsync.value ?? '…',
+                      ),
+                      _KeyValueRow(
+                        label: '状態',
+                        value: switch (provisionStatus) {
+                          AsyncData(:final value) => value ==
+                                  DeviceProvisioningStatus.notRequired
+                              ? '登録済み'
+                              : '未登録',
+                          AsyncError(:final error) => 'エラー: $error',
+                          _ => '…',
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              _ => const SliverFillRemaining(
-                child: Center(child: CircularProgressIndicator.adaptive()),
-              ),
-            },
+                _DeviceInfoSection(
+                  deviceIdAsync: deviceIdAsync,
+                ),
+                _TokenSection(syncSnapshot: syncSnapshot),
+                if (deviceIdAsync.hasValue)
+                  _NotificationSettingsSection(
+                    deviceId: deviceIdAsync.requireValue,
+                  ),
+                if (deviceIdAsync.hasValue)
+                  _TestNotificationSection(
+                    deviceId: deviceIdAsync.requireValue,
+                  ),
+                if (deviceIdAsync.hasValue)
+                  _HistorySection(deviceId: deviceIdAsync.requireValue),
+                const SizedBox(height: 32),
+              ],
+            ),
           ],
         ),
       ),
@@ -59,51 +89,83 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
   }
 }
 
-class _LoadErrorBody extends StatelessWidget {
-  const _LoadErrorBody({
-    required this.message,
-    required this.stackTrace,
-    required this.onRetry,
-  });
+class _DeviceInfoSection extends ConsumerWidget {
+  const _DeviceInfoSection({required this.deviceIdAsync});
 
-  final String message;
-  final StackTrace stackTrace;
-  final Future<void> Function() onRetry;
+  final AsyncValue<String> deviceIdAsync;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deviceAsync = ref.watch(
+      _deviceInfoProvider(deviceIdAsync.value ?? ''),
+    );
+
+    return _SectionCard(
+      title: 'デバイス（サーバー情報）',
+      child: switch (deviceAsync) {
+        AsyncData(:final value) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _KeyValueRow(label: 'サーバー上の ID', value: value.id),
+            _KeyValueRow(label: 'ユーザー', value: value.userId ?? '未登録'),
+            _KeyValueRow(label: '種別', value: value.platform.displayLabel),
+          ],
+        ),
+        AsyncError(:final error) => Text(
+          'デバイス情報の取得に失敗: $error',
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
+        _ => const Center(
+          child: Padding(
+            padding: EdgeInsets.all(8),
+            child: CircularProgressIndicator.adaptive(),
+          ),
+        ),
+      },
+    );
+  }
+}
+
+@riverpod
+Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
+  if (deviceId.isEmpty) {
+    throw ArgumentError('deviceId is empty');
+  }
+  final repo = await ref.watch(deviceRepositoryProvider.future);
+  final result = await repo.getDevice(deviceId);
+  return switch (result) {
+    Success(:final value) => value,
+    Failure(:final exception) => throw exception,
+  };
+}
+
+class _TokenSection extends StatelessWidget {
+  const _TokenSection({required this.syncSnapshot});
+
+  final AsyncValue<PushTokenSyncSnapshot> syncSnapshot;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.all(24),
+    final snapshot = syncSnapshot.value;
+
+    return _SectionCard(
+      title: 'プッシュトークン同期',
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.error_outline, size: 48, color: scheme.error),
-          const SizedBox(height: 16),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: scheme.onSurface),
+          _TokenStatusRow(
+            label: 'FCM',
+            kindState: snapshot?.fcm,
           ),
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            onPressed: () async => onRetry(),
-            icon: const Icon(Icons.refresh),
-            label: const Text('再試行'),
+          const SizedBox(height: 6),
+          _TokenStatusRow(
+            label: 'APNs（通知）',
+            kindState: snapshot?.apnsNotification,
           ),
-          const SizedBox(height: 12),
-          TextButton(
-            onPressed: () async {
-              await Clipboard.setData(
-                ClipboardData(text: '$message\n\n$stackTrace'),
-              );
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('エラーをクリップボードにコピーしました')),
-                );
-              }
-            },
-            child: const Text('詳細をコピー'),
+          const SizedBox(height: 6),
+          _TokenStatusRow(
+            label: 'Push to Start',
+            kindState: snapshot?.apnsPushToStart,
           ),
         ],
       ),
@@ -111,87 +173,73 @@ class _LoadErrorBody extends StatelessWidget {
   }
 }
 
-class _DeviceSettingsSliverList extends ConsumerWidget {
-  const _DeviceSettingsSliverList({
-    required this.snapshot,
-    required this.historyAsync,
-  });
+class _TokenStatusRow extends StatelessWidget {
+  const _TokenStatusRow({required this.label, required this.kindState});
 
-  final DebugDeviceSessionSnapshot snapshot;
-  final AsyncValue<List<PushNotificationLogEntry>> historyAsync;
+  final String label;
+  final PushTokenKindState? kindState;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final tokenAsync = ref.watch(notificationTokenStreamProvider);
-    final token = tokenAsync.value;
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final (icon, color, statusText) = switch (kindState) {
+      SyncedTokenState() => (Icons.check_circle, scheme.primary, '同期済み'),
+      PendingTokenState() => (Icons.sync, scheme.secondary, '同期待ち'),
+      FailedTokenState(:final error) => (
+        Icons.error_outline,
+        scheme.error,
+        'エラー: ${error.userMessage}',
+      ),
+      AbsentTokenState() => (
+        Icons.radio_button_unchecked,
+        scheme.outline,
+        '未取得',
+      ),
+      NotApplicableTokenState() => (
+        Icons.remove_circle_outline,
+        scheme.outline,
+        '非対応',
+      ),
+      null => (Icons.hourglass_empty, scheme.outline, '…'),
+    };
 
-    return SliverList.list(
+    return Row(
       children: [
-        const SizedBox(height: 8),
-        _SectionCard(
-          title: 'デバイス',
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _KeyValueRow(label: 'Device ID', value: snapshot.deviceId),
-              const Divider(height: 24),
-              _KeyValueRow(
-                label: 'サーバー上の ID',
-                value: snapshot.device.id,
-              ),
-              _KeyValueRow(
-                label: 'ユーザー',
-                value: snapshot.device.userId ?? '未登録',
-              ),
-              _KeyValueRow(
-                label: '種別',
-                value: snapshot.device.platform.displayLabel,
-              ),
-            ],
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            '$label: $statusText',
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
-        _SectionCard(
-          title: 'ローカルのプッシュトークン',
-          subtitle: '表示されているトークンはサーバーへ同期済みです（画面表示時）',
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _TokenChip(
-                label: 'FCM',
-                isPresent: (token?.fcmToken ?? '').isNotEmpty,
-              ),
-              const SizedBox(height: 8),
-              _TokenChip(
-                label: 'APNs（通知）',
-                isPresent: (token?.apnsToken ?? '').isNotEmpty,
-              ),
-              const SizedBox(height: 8),
-              _TokenChip(
-                label: 'Push to Start',
-                isPresent: (token?.apnsPushToStartToken ?? '').isNotEmpty,
-              ),
-            ],
-          ),
-        ),
-        _NotificationSettingsSection(snapshot: snapshot),
-        _TestNotificationSection(deviceId: snapshot.deviceId),
-        _HistorySection(historyAsync: historyAsync),
-        const SizedBox(height: 32),
       ],
     );
   }
 }
 
 class _NotificationSettingsSection extends HookConsumerWidget {
-  const _NotificationSettingsSection({required this.snapshot});
+  const _NotificationSettingsSection({required this.deviceId});
 
-  final DebugDeviceSessionSnapshot snapshot;
+  final String deviceId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final settingsAsync = ref.watch(
+      _notificationSettingsProvider(deviceId),
+    );
+    final settings = settingsAsync.value;
     final isBusy = useState(false);
-    final tsunami = useState(snapshot.notificationSettings.tsunamiEnabled);
-    final training = useState(snapshot.notificationSettings.trainingEnabled);
+    final tsunami = useState(settings?.tsunamiEnabled ?? false);
+    final training = useState(settings?.trainingEnabled ?? false);
+
+    // 設定取得完了後に初期値を反映
+    ref.listen(_notificationSettingsProvider(deviceId), (_, next) {
+      if (next.value != null) {
+        tsunami.value = next.requireValue.tsunamiEnabled;
+        training.value = next.requireValue.trainingEnabled;
+      }
+    });
 
     Future<void> submit() async {
       if (isBusy.value) {
@@ -203,7 +251,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
         pushNotificationRepositoryProvider.future,
       );
       final result = await notificationRepository.patchNotificationSettings(
-        deviceId: snapshot.deviceId,
+        deviceId: deviceId,
         settings: GeneralNotificationSettings(
           tsunamiEnabled: tsunami.value,
           trainingEnabled: training.value,
@@ -215,7 +263,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       }
       switch (result) {
         case Success():
-          ref.invalidate(debugDeviceSessionProvider);
+          ref.invalidate(_notificationSettingsProvider(deviceId));
           messenger.showSnackBar(
             const SnackBar(content: Text('通知設定を更新しました')),
           );
@@ -231,53 +279,59 @@ class _NotificationSettingsSection extends HookConsumerWidget {
 
     return _SectionCard(
       title: '全般通知設定',
-      child: Column(
-        children: [
-          AppSwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: '津波情報の通知',
-            subtitle: 'training / 訓練報とは別の津波関連通知',
-            value: tsunami.value,
-            onChanged: isBusy.value
-                ? null
-                : (v) {
-                    tsunami.value = v;
-                  },
-          ),
-          AppSwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: '訓練報・試験報の通知',
-            value: training.value,
-            onChanged: isBusy.value
-                ? null
-                : (v) {
-                    training.value = v;
-                  },
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: isBusy.value
-                  ? null
-                  : () async {
-                      await submit();
-                    },
-              child: isBusy.value
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator.adaptive(
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Text('設定をサーバーに反映'),
+      child: settings == null
+          ? const Center(child: CircularProgressIndicator.adaptive())
+          : Column(
+              children: [
+                AppSwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: '津波情報の通知',
+                  subtitle: 'training / 訓練報とは別の津波関連通知',
+                  value: tsunami.value,
+                  onChanged: isBusy.value ? null : (v) => tsunami.value = v,
+                ),
+                AppSwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: '訓練報・試験報の通知',
+                  value: training.value,
+                  onChanged: isBusy.value ? null : (v) => training.value = v,
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton(
+                    onPressed: isBusy.value ? null : submit,
+                    child: isBusy.value
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator.adaptive(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text('設定をサーバーに反映'),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
+}
+
+@riverpod
+Future<GeneralNotificationSettings> _notificationSettings(
+  Ref ref,
+  String deviceId,
+) async {
+  if (deviceId.isEmpty) {
+    throw ArgumentError('deviceId is empty');
+  }
+  final repo = await ref.watch(pushNotificationRepositoryProvider.future);
+  final result = await repo.getNotificationSettings(deviceId);
+  return switch (result) {
+    Success(:final value) => value,
+    Failure(:final exception) => throw exception,
+  };
 }
 
 class _TestNotificationSection extends HookConsumerWidget {
@@ -338,9 +392,7 @@ class _TestNotificationSection extends HookConsumerWidget {
               return FilledButton.tonal(
                 onPressed: pendingKind.value != null && !isPending
                     ? null
-                    : () async {
-                        await send(kind);
-                      },
+                    : () async => send(kind),
                 child: isPending
                     ? const SizedBox(
                         width: 18,
@@ -358,19 +410,19 @@ class _TestNotificationSection extends HookConsumerWidget {
 }
 
 class _HistorySection extends ConsumerWidget {
-  const _HistorySection({required this.historyAsync});
+  const _HistorySection({required this.deviceId});
 
-  final AsyncValue<List<PushNotificationLogEntry>> historyAsync;
+  final String deviceId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final historyAsync = ref.watch(_notificationHistoryProvider(deviceId));
+
     return _SectionCard(
       title: '通知履歴',
       trailing: IconButton(
         tooltip: '更新',
-        onPressed: () {
-          ref.invalidate(debugNotificationHistoryProvider);
-        },
+        onPressed: () => ref.invalidate(_notificationHistoryProvider(deviceId)),
         icon: const Icon(Icons.refresh),
       ),
       child: switch (historyAsync) {
@@ -385,10 +437,8 @@ class _HistorySection extends ConsumerWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: value.length,
           separatorBuilder: (_, _) => const Divider(height: 1),
-          itemBuilder: (context, index) {
-            final item = value[index];
-            return _NotificationHistoryTile(item: item);
-          },
+          itemBuilder: (context, index) =>
+              _NotificationHistoryTile(item: value[index]),
         ),
         AsyncError(:final error) => Text(
           '履歴の取得に失敗: $error',
@@ -403,6 +453,22 @@ class _HistorySection extends ConsumerWidget {
       },
     );
   }
+}
+
+@riverpod
+Future<List<PushNotificationLogEntry>> _notificationHistory(
+  Ref ref,
+  String deviceId,
+) async {
+  if (deviceId.isEmpty) {
+    throw ArgumentError('deviceId is empty');
+  }
+  final repo = await ref.watch(pushNotificationRepositoryProvider.future);
+  final result = await repo.getNotificationHistory(deviceId: deviceId, limit: 50);
+  return switch (result) {
+    Success(:final value) => value.items,
+    Failure(:final exception) => throw exception,
+  };
 }
 
 class _NotificationHistoryTile extends StatelessWidget {
@@ -429,11 +495,7 @@ class _NotificationHistoryTile extends StatelessWidget {
         _formatCreatedAt(item.createdAtIso),
         style: Theme.of(context).textTheme.titleSmall,
       ),
-      subtitle: Text(
-        subtitle,
-        maxLines: 4,
-        overflow: TextOverflow.ellipsis,
-      ),
+      subtitle: Text(subtitle, maxLines: 4, overflow: TextOverflow.ellipsis),
       trailing: Icon(
         ok ? Icons.check_circle_outline : Icons.error_outline,
         color: resultColor,
@@ -493,8 +555,11 @@ class _SectionCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             subtitle!,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: scheme.onSurfaceVariant),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ],
@@ -543,34 +608,6 @@ class _KeyValueRow extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _TokenChip extends StatelessWidget {
-  const _TokenChip({required this.label, required this.isPresent});
-
-  final String label;
-  final bool isPresent;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Row(
-      children: [
-        Icon(
-          isPresent ? Icons.check_circle : Icons.radio_button_unchecked,
-          size: 20,
-          color: isPresent ? scheme.primary : scheme.outline,
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            isPresent ? '$label: 取得済み' : '$label: 未取得',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ),
-      ],
     );
   }
 }
