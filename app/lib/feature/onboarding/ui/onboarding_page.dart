@@ -9,9 +9,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum _OnboardingStep { welcome, notification, complete }
+enum _OnboardingStep { welcome, notification, location, complete }
 
 enum _PermissionStatus { notRequested, granted, denied }
+
+enum _LocationPermissionStatus { notRequested, granted, denied, deniedForever }
 
 class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
@@ -21,11 +23,14 @@ class OnboardingPage extends HookConsumerWidget {
     final pageController = usePageController();
     final currentPage = useState(0);
     final permissionStatus = useState(_PermissionStatus.notRequested);
+    final locationPermissionStatus =
+        useState(_LocationPermissionStatus.notRequested);
     final ds = Theme.of(context).designSystemThemeExtension;
 
     const steps = [
       _OnboardingStep.welcome,
       _OnboardingStep.notification,
+      _OnboardingStep.location,
       _OnboardingStep.complete,
     ];
 
@@ -42,6 +47,25 @@ class OnboardingPage extends HookConsumerWidget {
           permissionStatus.value = _PermissionStatus.granted;
         } else {
           permissionStatus.value = _PermissionStatus.denied;
+          return;
+        }
+      }
+
+      if (step == _OnboardingStep.location &&
+          locationPermissionStatus.value ==
+              _LocationPermissionStatus.notRequested) {
+        var permission = await Geolocator.checkPermission();
+        if (permission == LocationPermission.denied) {
+          permission = await Geolocator.requestPermission();
+        }
+        if (permission == LocationPermission.whileInUse ||
+            permission == LocationPermission.always) {
+          locationPermissionStatus.value = _LocationPermissionStatus.granted;
+        } else {
+          locationPermissionStatus.value =
+              permission == LocationPermission.deniedForever
+                  ? _LocationPermissionStatus.deniedForever
+                  : _LocationPermissionStatus.denied;
           return;
         }
       }
@@ -63,10 +87,15 @@ class OnboardingPage extends HookConsumerWidget {
     final isNotificationDenied =
         steps[currentPage.value] == _OnboardingStep.notification &&
         permissionStatus.value == _PermissionStatus.denied;
+    final isLocationDenied =
+        steps[currentPage.value] == _OnboardingStep.location &&
+        (locationPermissionStatus.value == _LocationPermissionStatus.denied ||
+            locationPermissionStatus.value ==
+                _LocationPermissionStatus.deniedForever);
     final String buttonLabel;
     if (currentPage.value == steps.length - 1) {
       buttonLabel = 'はじめる';
-    } else if (isNotificationDenied) {
+    } else if (isNotificationDenied || isLocationDenied) {
       buttonLabel = 'スキップ';
     } else {
       buttonLabel = '次へ';
@@ -85,6 +114,7 @@ class OnboardingPage extends HookConsumerWidget {
                 itemBuilder: (context, index) => _StepPage(
                   step: steps[index],
                   permissionStatus: permissionStatus.value,
+                  locationPermissionStatus: locationPermissionStatus.value,
                 ),
               ),
             ),
@@ -105,10 +135,12 @@ class _StepPage extends StatelessWidget {
   const _StepPage({
     required this.step,
     required this.permissionStatus,
+    required this.locationPermissionStatus,
   });
 
   final _OnboardingStep step;
   final _PermissionStatus permissionStatus;
+  final _LocationPermissionStatus locationPermissionStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +148,9 @@ class _StepPage extends StatelessWidget {
       _OnboardingStep.welcome => const _WelcomeStepContent(),
       _OnboardingStep.notification => _NotificationStepContent(
         permissionStatus: permissionStatus,
+      ),
+      _OnboardingStep.location => _LocationStepContent(
+        permissionStatus: locationPermissionStatus,
       ),
       _OnboardingStep.complete => const _CompleteStepContent(),
     };
@@ -205,6 +240,65 @@ class _NotificationStepContent extends StatelessWidget {
               color: ds.palette.brandPrimary,
               backgroundColor: ds.color.surfaceRaised,
               containerColor: ds.color.surfaceCard,
+            ),
+          ),
+          const Spacer(flex: 2),
+        ],
+      ),
+    );
+  }
+}
+
+class _LocationStepContent extends StatelessWidget {
+  const _LocationStepContent({required this.permissionStatus});
+
+  final _LocationPermissionStatus permissionStatus;
+
+  @override
+  Widget build(BuildContext context) {
+    final ds = Theme.of(context).designSystemThemeExtension;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: ds.spacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(height: ds.spacing.xxxxl),
+          Text(
+            '現在地の\n揺れを確認',
+            style: ds.typography.displayMedium,
+          ),
+          SizedBox(height: ds.spacing.sm),
+          Text(
+            '位置情報を使って、現在地付近の揺れをリアルタイムに表示します',
+            style: ds.typography.bodyLarge.copyWith(
+              color: ds.textColor.secondary,
+            ),
+          ),
+          if (permissionStatus == _LocationPermissionStatus.denied ||
+              permissionStatus ==
+                  _LocationPermissionStatus.deniedForever) ...[
+            SizedBox(height: ds.spacing.sm),
+            Text(
+              '位置情報は設定アプリからいつでも変更できます',
+              style: ds.typography.bodySmall.copyWith(
+                color: ds.textColor.tertiary,
+              ),
+            ),
+            if (permissionStatus ==
+                _LocationPermissionStatus.deniedForever) ...[
+              SizedBox(height: ds.spacing.sm),
+              OutlinedButton.icon(
+                onPressed: () async => Geolocator.openAppSettings(),
+                icon: const Icon(Icons.settings_outlined, size: 18),
+                label: const Text('設定アプリを開く'),
+              ),
+            ],
+          ],
+          const Spacer(),
+          Center(
+            child: _LocationHero(
+              color: ds.palette.brandPrimary,
+              backgroundColor: ds.color.surfaceRaised,
             ),
           ),
           const Spacer(flex: 2),
@@ -310,6 +404,44 @@ class _NotificationHero extends StatelessWidget {
             ),
             child: Icon(
               Icons.notifications_active_rounded,
+              color: color,
+              size: 52,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LocationHero extends StatelessWidget {
+  const _LocationHero({
+    required this.color,
+    required this.backgroundColor,
+  });
+
+  final Color color;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          _PulseRing(color: color, radius: 90, opacity: 0.08),
+          _PulseRing(color: color, radius: 70, opacity: 0.12),
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.location_on_rounded,
               color: color,
               size: 52,
             ),
