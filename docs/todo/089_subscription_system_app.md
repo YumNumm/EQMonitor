@@ -656,6 +656,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 購入完了 → RC 側でレシート検証 → RC からサーバーに webhook → サーバーで `subscriptions` 更新 → アプリで `subscriptionNotifier.refresh()` を呼ぶ。
 
 タイミングのギャップを埋めるため:
+
 - 購入完了直後にアプリ側で 2-3 秒待ってから `refresh()` を呼ぶ
 - それでも反映されなければ「数秒後にもう一度確認してください」表示
 
@@ -851,9 +852,9 @@ packages/eqmonitor_api/lib/src/
 ## 参考リンク
 
 - バックエンド仕様: `docs/todo/088_subscription_system_backend.md`
-- 既存 device 設計: `docs/todo/086_device_provisioning_system.md`
+- 既存 device 設計: `app/lib/feature/devices/`（プロビジョニング・トークン同期）
 - 既存オンボーディング: `docs/todo/076_onboarding_permission_flow.md`
 - 既存 `device_repository.dart`: `app/lib/feature/devices/data/repository/device_repository.dart`
 - 既存 AppCheck Interceptor: `app/lib/core/provider/interceptor/app_check_interceptor.dart`
-- `flutter_secure_storage`: https://pub.dev/packages/flutter_secure_storage
-- `purchases_flutter`: https://www.revenuecat.com/docs/getting-started/installation/flutter
+- `flutter_secure_storage`: <https://pub.dev/packages/flutter_secure_storage>
+- `purchases_flutter`: <https://www.revenuecat.com/docs/getting-started/installation/flutter>

@@ -3,7 +3,7 @@
 **作成日**: 2026-05-15
 **対象ブランチ**: develop
 **ステータス**: 設計完了 / 実装未着手
-**関連**: [088_start_api.md](088_start_api.md) / [089_changelog_api.md](089_changelog_api.md)
+**関連**: Start API / Changelog API はバックエンド・Flutter ともに実装済み（`backend/api/api/src/features/start/`、`feature/start/`、`feature/changelog/`）。
 
 ---
 
@@ -723,7 +723,7 @@ await Purchases.configure(
 
 #### 端末移行・device_id 変更時の扱い
 
-[086 デバイスプロビジョニング](086_device_provisioning_system.md) の v3 移行で device_id が変わるケース、およびアプリ再インストールで device_id が変わるケースが存在する。
+デバイスプロビジョニング（`app/lib/feature/devices/`）の v3 移行で device_id が変わるケース、およびアプリ再インストールで device_id が変わるケースが存在する。
 
 - **v3 移行**: 旧 device_id で購入したユーザーが新 device_id になる場合、RevenueCat の **AppUserID alias 機能** で旧→新を紐付ける
 
@@ -835,7 +835,7 @@ class EntitlementNotifier extends _$EntitlementNotifier {
 | **P6. Flutter Limit 反映** | `NotificationLimits` provider + 既存通知設定UIへの組み込み（上限到達時のアップグレード誘導） | P5 |
 | **P7. Paywall UI** | `paywall_page.dart` 実装、価格表示、利用規約・プライバシー導線 | P5 |
 | **P8. AdMob 統合** | パッケージ追加、AdUnitId 登録、ATT、UMP（必要なら） | なし |
-| **P9. Ads 表示判定** | `ShouldShowAdsProvider` + `AdBanner` + 各画面組み込み | P5, P8, [088](088_start_api.md) P7 |
+| **P9. Ads 表示判定** | `ShouldShowAdsProvider` + `AdBanner` + 各画面組み込み | P5, P8, Start API（`ads_enabled`、Flutter `feature/start/`）連携 |
 | **P10. Ads オプトアウト** | `AdsOptOutNotifier` + 販促ボトムシート + 設定画面項目 | P9 |
 | **P11. 管理画面** | 設定 → サブスクリプション管理画面（プラン確認・解約導線・購入復元） | P5 |
 | **P12. プライバシー対応** | プライバシーポリシー更新、App Store / Play Console 申告、利用規約 | P1, P8 |
