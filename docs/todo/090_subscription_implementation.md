@@ -726,9 +726,11 @@ await Purchases.configure(
 [086 デバイスプロビジョニング](086_device_provisioning_system.md) の v3 移行で device_id が変わるケース、およびアプリ再インストールで device_id が変わるケースが存在する。
 
 - **v3 移行**: 旧 device_id で購入したユーザーが新 device_id になる場合、RevenueCat の **AppUserID alias 機能** で旧→新を紐付ける
+
   ```dart
   await Purchases.logIn(newDeviceId); // 旧 AppUserID と alias される
   ```
+
 - **再インストール**: Apple ID / Google Account 単位で購入履歴が残るため、`Purchases.restorePurchases()` で復元可能
 - **EntitlementNotifier 側**: device_id 変化を `deviceIdProvider` で watch し、変化したら `Purchases.logIn(newDeviceId)` を呼ぶ + Entitlement を再取得
 
@@ -900,11 +902,11 @@ if (isPro) {
 
 ## 参考リンク
 
-- RevenueCat Flutter SDK: https://www.revenuecat.com/docs/getting-started/installation/flutter
-- Google Mobile Ads Flutter: https://pub.dev/packages/google_mobile_ads
-- AppTrackingTransparency: https://pub.dev/packages/app_tracking_transparency
-- App Store Auto-Renewable Subscription: https://developer.apple.com/app-store/subscriptions/
-- Google Play Billing: https://developer.android.com/google/play/billing
+- RevenueCat Flutter SDK: <https://www.revenuecat.com/docs/getting-started/installation/flutter>
+- Google Mobile Ads Flutter: <https://pub.dev/packages/google_mobile_ads>
+- AppTrackingTransparency: <https://pub.dev/packages/app_tracking_transparency>
+- App Store Auto-Renewable Subscription: <https://developer.apple.com/app-store/subscriptions/>
+- Google Play Billing: <https://developer.android.com/google/play/billing>
 - 既存の通知設定モデル: `app/lib/feature/settings/features/notification_settings/data/model/`
 - 既存の地点API: `api/api/src/features/device/routes/device.ts`
 - AGENTS.md 設計規約: 本リポジトリの `AGENTS.md`
