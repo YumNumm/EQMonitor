@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +21,9 @@ class EarthquakeHistoryConfigPage extends StatelessWidget {
       appBar: AppBar(title: const Text('地震履歴設定')),
       body: ListView(
         children: const [
+          SettingsSectionHeader(text: 'ホーム地震履歴カード'),
+          _HomeDesignatedRegionConfigTile(),
+          Divider(),
           SettingsSectionHeader(text: '地震履歴一覧'),
           _EarthquakeHistoryListConfigWidget(),
           Divider(),
@@ -25,6 +31,45 @@ class EarthquakeHistoryConfigPage extends StatelessWidget {
           _EarthquakeHistoryDetailConfigWidget(),
         ],
       ),
+    );
+  }
+}
+
+class _HomeDesignatedRegionConfigTile extends ConsumerWidget {
+  const _HomeDesignatedRegionConfigTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final homeAsync = ref.watch(homeConfigurationProvider);
+    final parameter = homeAsync.value?.common.parameter;
+    final regionName = parameter?.regionName;
+    final searchTypeLabel = switch (parameter?.regionSearchType) {
+      RegionSearchType.prefecture => '都道府県',
+      RegionSearchType.city => '市区町村',
+      null => null,
+    };
+
+    return ListTile(
+      title: const Text('指定地域'),
+      subtitle: regionName != null
+          ? Text('$searchTypeLabel: $regionName')
+          : const Text('未設定（タップして設定）'),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () async {
+        final result = await HomeDesignatedRegionPickerPage.show(
+          context,
+          initialParameter: parameter,
+        );
+        if (result == null) {
+          return;
+        }
+        final notifier = ref.read(homeConfigurationProvider.notifier);
+        if (result.regionCode == null) {
+          await notifier.clearCustomEarthquakeHistoryParameter();
+        } else {
+          await notifier.setCustomEarthquakeHistoryParameter(result);
+        }
+      },
     );
   }
 }
@@ -110,29 +155,30 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
           title: const Text('アイコンの表示'),
           trailing: Text(state.iconMode.displayName),
           onTap: () async {
-            final result = await showModalBottomSheet<EarthquakeHistoryIconMode>(
-              context: context,
-              clipBehavior: Clip.antiAlias,
-              builder: (context) {
-                return SafeArea(
-                  child: RadioGroup(
-                    onChanged: (value) => Navigator.pop(context, value),
-                    groupValue: state.iconMode,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        sheetBar,
-                        for (final mode in EarthquakeHistoryIconMode.values)
-                          RadioListTile.adaptive(
-                            title: Text(mode.displayName),
-                            value: mode,
-                          ),
-                      ],
-                    ),
-                  ),
+            final result =
+                await showModalBottomSheet<EarthquakeHistoryIconMode>(
+                  context: context,
+                  clipBehavior: Clip.antiAlias,
+                  builder: (context) {
+                    return SafeArea(
+                      child: RadioGroup(
+                        onChanged: (value) => Navigator.pop(context, value),
+                        groupValue: state.iconMode,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            sheetBar,
+                            for (final mode in EarthquakeHistoryIconMode.values)
+                              RadioListTile.adaptive(
+                                title: Text(mode.displayName),
+                                value: mode,
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
-              },
-            );
             if (result != null) {
               await saveDetail(state.copyWith(iconMode: result));
             }
@@ -145,28 +191,28 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
           onTap: () async {
             final result =
                 await showModalBottomSheet<EarthquakeHistoryFillMode>(
-              context: context,
-              clipBehavior: Clip.antiAlias,
-              builder: (context) {
-                return SafeArea(
-                  child: RadioGroup(
-                    onChanged: (value) => Navigator.pop(context, value),
-                    groupValue: state.fillMode,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        sheetBar,
-                        for (final mode in EarthquakeHistoryFillMode.values)
-                          RadioListTile.adaptive(
-                            title: Text(mode.displayName),
-                            value: mode,
-                          ),
-                      ],
-                    ),
-                  ),
+                  context: context,
+                  clipBehavior: Clip.antiAlias,
+                  builder: (context) {
+                    return SafeArea(
+                      child: RadioGroup(
+                        onChanged: (value) => Navigator.pop(context, value),
+                        groupValue: state.fillMode,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            sheetBar,
+                            for (final mode in EarthquakeHistoryFillMode.values)
+                              RadioListTile.adaptive(
+                                title: Text(mode.displayName),
+                                value: mode,
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
-              },
-            );
             if (result != null) {
               await saveDetail(state.copyWith(fillMode: result));
             }
@@ -325,8 +371,7 @@ class __IconModeSegmentedControlState
         },
         onValueChanged: (value) async {
           if (value != null) {
-            final full =
-                ref.read(earthquakeHistoryConfigProvider).requireValue;
+            final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
             await ref
                 .read(earthquakeHistoryConfigProvider.notifier)
                 .save(full.copyWith.detail(iconMode: value));
@@ -396,8 +441,7 @@ class __FillModeSegmentedControlState
         },
         onValueChanged: (value) async {
           if (value != null) {
-            final full =
-                ref.read(earthquakeHistoryConfigProvider).requireValue;
+            final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
             await ref
                 .read(earthquakeHistoryConfigProvider.notifier)
                 .save(full.copyWith.detail(fillMode: value));
@@ -432,7 +476,8 @@ class __FillModeSegmentedControlState
 
 enum _IntensityMode {
   intensity('震度'),
-  lpgm('長周期地震動階級');
+  lpgm('長周期地震動階級')
+  ;
 
   const _IntensityMode(this.name);
   final String name;

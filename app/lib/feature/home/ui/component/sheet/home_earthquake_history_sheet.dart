@@ -1,16 +1,15 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/components/region_picker_map_page.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/home/data/provider/home_earthquake_history_parameter_provider.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_earthquake_list.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_selector.dart';
 import 'package:eqmonitor/feature/home/ui/component/sheet/component/home_scope_unavailable_body.dart';
+import 'package:eqmonitor/feature/home/ui/page/home_designated_region_picker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -39,20 +38,19 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
         };
 
         Future<void> openRegionPicker() async {
-          final result = await RegionPickerMapPage.show(
+          final result = await HomeDesignatedRegionPickerPage.show(
             context,
-            selectedType: 'city',
+            initialParameter: home.common.parameter,
           );
-          if (result != null) {
-            await ref
-                .read(homeConfigurationProvider.notifier)
-                .setCustomEarthquakeHistoryParameter(
-                  EarthquakeHistoryParameter(
-                    regionSearchType: RegionSearchType.city,
-                    regionCode: result.code,
-                    regionName: result.name,
-                  ),
-                );
+          if (result == null) {
+            return;
+          }
+          final notifier = ref.read(homeConfigurationProvider.notifier);
+          if (result.regionCode == null) {
+            // クリアされた場合は parameter のみ消し、スコープは保持する
+            await notifier.clearCustomEarthquakeHistoryParameter();
+          } else {
+            await notifier.setCustomEarthquakeHistoryParameter(result);
           }
         }
 
@@ -104,7 +102,8 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                           ? const EarthquakeHistoryNotFound()
                           : HomeEarthquakeList(
                               earthquakes: value.items,
-                              showCurrentLocationIntensity: scope ==
+                              showCurrentLocationIntensity:
+                                  scope ==
                                   HomeEarthquakeHistoryScope.currentLocation,
                             ),
                     AsyncError(:final error) => ErrorCard(

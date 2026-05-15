@@ -69,6 +69,17 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
     );
   }
 
+  /// 指定地域の設定値だけをクリアする。
+  /// スコープ自体は変更しない（呼び出し側で必要に応じて切り替える）。
+  Future<void> clearCustomEarthquakeHistoryParameter() async {
+    final current = await future;
+    await save(
+      current.copyWith(
+        common: current.common.copyWith(parameter: null),
+      ),
+    );
+  }
+
   Future<void> updateEew(HomeEewSettings eew) async {
     final current = await future;
     await save(current.copyWith(eew: eew));
