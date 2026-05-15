@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:core/core.dart' as core;
 import 'package:device_info_plus/device_info_plus.dart';
@@ -95,7 +94,9 @@ Future<void> _main() async {
     ),
   );
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
     unawaited(MobileAds.instance.initialize());
@@ -224,16 +225,6 @@ Future<void> _main() async {
   if (!kIsWeb && Platform.isIOS) {
     unawaited(container.read(appGroupSettingsWriterProvider.future));
     unawaited(container.read(liveActivityTokenSyncWiringProvider.future));
-    unawaited(_requestAttIfNeeded());
-  }
-}
-
-Future<void> _requestAttIfNeeded() async {
-  // UIが描画されてからダイアログを表示するため1フレーム待機する
-  await Future<void>.delayed(Duration.zero);
-  final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-  if (status == TrackingStatus.notDetermined) {
-    await AppTrackingTransparency.requestTrackingAuthorization();
   }
 }
 
