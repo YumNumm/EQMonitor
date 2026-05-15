@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
+import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
 import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
@@ -296,6 +297,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
     ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
     TypedGoRoute<AboutThisAppRoute>(path: 'about-this-app'),
+    TypedGoRoute<ChangelogRoute>(path: 'changelog'),
     TypedGoRoute<DebugRoute>(
       path: 'debug',
       routes: [
@@ -754,6 +756,14 @@ class KyoshinMonitorAboutRoute extends GoRouteData
   Widget build(BuildContext context, GoRouterState state) {
     return const KyoshinMonitorAboutPage();
   }
+}
+
+class ChangelogRoute extends GoRouteData with $ChangelogRoute {
+  const ChangelogRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ChangelogPage();
 }
 
 class _NavigatorObserver extends NavigatorObserver {

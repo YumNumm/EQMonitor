@@ -60,6 +60,11 @@ class SettingsPage extends ConsumerWidget {
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
+            title: const Text('変更履歴'),
+            leading: const Icon(Icons.history_edu_outlined),
+            onTap: () async => const ChangelogRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('このアプリケーションについて'),
             subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
             leading: const Icon(Icons.description),

@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier
 import 'package:eqmonitor/feature/settings/children/config/debug/app_check/app_check_debug_provider.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -261,6 +262,8 @@ class _DebugWidget extends ConsumerWidget {
           ),
           const _ParameterDebugSection(),
           const Divider(),
+          const _StartApiDebugSection(),
+          const Divider(),
           const _AppCheckSection(),
         ],
       ),
@@ -489,6 +492,94 @@ class _BackgroundLocationDebugSection extends ConsumerWidget {
           value: settings.notifyApiUpdate,
           onChanged: (v) => notifier.setNotifyApiUpdate(value: v),
         ),
+      ],
+    );
+  }
+}
+
+class _StartApiDebugSection extends ConsumerWidget {
+  const _StartApiDebugSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final startAsync = ref.watch(startProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          title: const Text('Start API'),
+          leading: const Icon(Icons.rocket_launch_outlined),
+          subtitle: const Text('アプリ起動フラグ・バージョン情報'),
+          trailing: IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: '強制再取得',
+            onPressed: () =>
+                ref.read(startProvider.notifier).refresh(),
+          ),
+        ),
+        switch (startAsync) {
+          AsyncLoading() => const ListTile(
+            leading: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            title: Text('取得中...'),
+          ),
+          AsyncError(:final error) => ListTile(
+            leading: const Icon(Icons.error_outline),
+            title: const Text('エラー'),
+            subtitle: Text(error.toString()),
+          ),
+          AsyncData(:final value) when value == null => const ListTile(
+            leading: Icon(Icons.hourglass_empty),
+            title: Text('未取得'),
+          ),
+          AsyncData(:final value) => Column(
+            children: [
+              ListTile(
+                dense: true,
+                title: const Text('maintenance.enabled'),
+                trailing: Text(value!.flags.maintenance.enabled.toString()),
+              ),
+              if (value.flags.maintenance.message != null)
+                ListTile(
+                  dense: true,
+                  title: const Text('maintenance.message'),
+                  subtitle: Text(value.flags.maintenance.message!),
+                ),
+              ListTile(
+                dense: true,
+                title: const Text('latest.version'),
+                trailing: Text(
+                  value.app.version.latest?.version ?? '(なし)',
+                ),
+              ),
+              ListTile(
+                dense: true,
+                title: const Text('latest.showWhatsNew'),
+                trailing: Text(
+                  value.app.version.latest?.showWhatsNew.toString() ?? '-',
+                ),
+              ),
+              ListTile(
+                dense: true,
+                title: const Text('requiredVersions'),
+                subtitle: Text(
+                  value.app.version.requiredVersions
+                      .map((r) => r.version)
+                      .join(', ')
+                      .isNotEmpty
+                      ? value.app.version.requiredVersions
+                          .map((r) => r.version)
+                          .join(', ')
+                      : '(なし)',
+                ),
+              ),
+            ],
+          ),
+        },
       ],
     );
   }

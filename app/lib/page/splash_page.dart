@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_config_notifier.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
+import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -31,6 +34,10 @@ class SplashPage extends HookConsumerWidget {
     useEffect(
       () {
         if (allLoaded) {
+          // バックグラウンドで Start API を取得（ブロックしない）
+          unawaited(
+            ref.read(startProvider.notifier).fetchInBackground(),
+          );
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.go(const HomeRoute().location);
           });
