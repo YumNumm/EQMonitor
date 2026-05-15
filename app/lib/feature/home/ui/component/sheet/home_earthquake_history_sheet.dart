@@ -138,9 +138,15 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () async => EarthquakeHistoryRoute(
-                      $extra: paramAsync.value,
-                    ).push<void>(context),
+                    // スコープに対応する検索パラメータが解決できないときは
+                    // 「全国」が開いてしまい一覧の表示条件と一致しないため、
+                    // 一覧ボタン自体を無効化する（未設定/未解決の案内は
+                    // 上の HomeScopeUnavailableBody が担当する）。
+                    onPressed: paramAsync.value == null
+                        ? null
+                        : () async => EarthquakeHistoryRoute(
+                            $extra: paramAsync.value,
+                          ).push<void>(context),
                     child: const Text('さらに表示'),
                   ),
                 ),
