@@ -1,44 +1,146 @@
+import 'dart:io';
+
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/model/subscription_status.dart';
+import 'package:flutter/services.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'subscription_notifier.g.dart';
 
-/// サブスクリプション状態を保持する AsyncNotifier の **スタブ**。
+/// RevenueCat の Entitlement ID。
+/// バックエンド (`/v2/subscription/me`) およびダッシュボード設定と一致する必要がある。
+const _entitlementId = 'pro';
+
+/// iOS の月額プラン Product ID (App Store Connect 登録値)。
+const _iosMonthlyProductId = 'net.yumnumm.eqmontior.pro.monthly';
+
+/// Android の月額プラン Product ID (Play Console 登録値)。
+const _androidMonthlyProductId = 'eqmonitor.pro.monthly:eqmonitor-pro-monthly';
+
+/// サブスクリプション状態を保持する AsyncNotifier。
 ///
-/// 後続 PR (#12) で RevenueCat (`purchases_flutter`) 統合により
-/// 本実装に差し替えられる。差し替え時にはこの signature を維持し、
-/// UI 側 (`PaywallPage` / `SubscriptionSettingsPage` / `isProProvider`) を
-/// 変更しなくて済むようにする。
-///
-/// 現状の挙動:
-/// - `build()` は常に [SubscriptionStatus.inactive] を返す
-/// - [refresh] は no-op
-/// - [purchaseMonthly] は [PurchaseResult.unavailable] を返す
-/// - [restorePurchases] は [PurchaseResult.unavailable] を返す
+/// `Purchases.getCustomerInfo()` で取得した `CustomerInfo` から
+/// active な `pro` Entitlement を判定し [SubscriptionStatus] を返す。
 @Riverpod(keepAlive: true)
 class SubscriptionNotifier extends _$SubscriptionNotifier {
   @override
   Future<SubscriptionStatus> build() async {
-    // TODO(#12): RevenueCat の `Purchases.getCustomerInfo()` を呼んで
-    // active なエンタイトルメントから [SubscriptionStatus] を組み立てる。
-    return const SubscriptionStatus.inactive();
+    if (!_isPurchasesAvailable) {
+      return const SubscriptionStatus.inactive();
+    }
+    try {
+      final info = await rc.Purchases.getCustomerInfo();
+      return info.toSubscriptionStatus();
+    } on PlatformException catch (e, st) {
+      talker.handle(e, st, 'subscription.build: getCustomerInfo failed');
+      return const SubscriptionStatus.inactive();
+    }
   }
 
-  /// サブスク状態を再取得する。stub では何もしない。
+  /// サブスク状態を再取得する。RC ダッシュボード変更や webhook 反映後に呼ぶ。
   Future<void> refresh() async {
-    // TODO(#12): RevenueCat から再取得し state を更新する。
+    if (!_isPurchasesAvailable) {
+      return;
+    }
+    state = const AsyncLoading<SubscriptionStatus>();
+    state = await AsyncValue.guard(() async {
+      final info = await rc.Purchases.getCustomerInfo();
+      return info.toSubscriptionStatus();
+    });
   }
 
-  /// 月額プラン購入フローを開始する。stub では常に unavailable を返す。
+  /// 月額プランの購入フローを開始する。
+  /// 結果は UI 側 (PaywallFlow) でスナックバー / ダイアログ表示に使う。
   Future<PurchaseResult> purchaseMonthly() async {
-    // TODO(#12): RevenueCat の `Purchases.purchasePackage(...)` を呼ぶ。
-    return const PurchaseResult.unavailable('SDK 未統合');
+    if (!_isPurchasesAvailable) {
+      return const PurchaseResult.unavailable('このプラットフォームでは購入できません');
+    }
+    try {
+      final package = await _findMonthlyPackage();
+      if (package == null) {
+        return const PurchaseResult.failed('プラン情報を取得できませんでした');
+      }
+      final result = await rc.Purchases.purchase(
+        rc.PurchaseParams.package(package),
+      );
+      final status = result.customerInfo.toSubscriptionStatus();
+      state = AsyncData(status);
+      return status is SubscriptionStatusActive
+          ? const PurchaseResult.success()
+          : const PurchaseResult.failed(
+              '購入は完了しましたが、Pro プランの有効化を確認できませんでした',
+            );
+    } on PlatformException catch (e, st) {
+      final errorCode = rc.PurchasesErrorHelper.getErrorCode(e);
+      if (errorCode == rc.PurchasesErrorCode.purchaseCancelledError) {
+        return const PurchaseResult.cancelled();
+      }
+      talker.handle(e, st, 'subscription.purchaseMonthly failed');
+      return PurchaseResult.failed(e.message ?? '購入に失敗しました');
+    }
   }
 
-  /// 購入を復元する。stub では unavailable を返す。
+  /// 過去の購入を復元する。別端末・再インストール後に利用。
   Future<PurchaseResult> restorePurchases() async {
-    // TODO(#12): RevenueCat の `Purchases.restorePurchases()` を呼ぶ。
-    return const PurchaseResult.unavailable('SDK 未統合');
+    if (!_isPurchasesAvailable) {
+      return const PurchaseResult.unavailable('このプラットフォームでは復元できません');
+    }
+    try {
+      final info = await rc.Purchases.restorePurchases();
+      final status = info.toSubscriptionStatus();
+      state = AsyncData(status);
+      return status is SubscriptionStatusActive
+          ? const PurchaseResult.success()
+          : const PurchaseResult.failed('復元できる購入が見つかりませんでした');
+    } on PlatformException catch (e, st) {
+      talker.handle(e, st, 'subscription.restorePurchases failed');
+      return PurchaseResult.failed(e.message ?? '購入の復元に失敗しました');
+    }
+  }
+
+  Future<rc.Package?> _findMonthlyPackage() async {
+    final offerings = await rc.Purchases.getOfferings();
+    final current = offerings.current;
+    if (current == null) {
+      return null;
+    }
+    final productId = Platform.isIOS || Platform.isMacOS
+        ? _iosMonthlyProductId
+        : _androidMonthlyProductId;
+    for (final pkg in current.availablePackages) {
+      if (pkg.storeProduct.identifier == productId) {
+        return pkg;
+      }
+    }
+    return current.monthly;
+  }
+}
+
+/// `purchases_flutter` は iOS / Android のみ対応。
+/// それ以外のプラットフォームでは Notifier を inactive 固定で動作させる。
+bool get _isPurchasesAvailable {
+  if (Platform.isIOS || Platform.isAndroid) {
+    return true;
+  }
+  return false;
+}
+
+/// `CustomerInfo` から [SubscriptionStatus] へ変換する extension。
+/// クラス内 private method 禁止ポリシーのため、共通ロジックをここに集約する。
+extension CustomerInfoToSubscriptionStatus on rc.CustomerInfo {
+  SubscriptionStatus toSubscriptionStatus() {
+    final entitlement = entitlements.active[_entitlementId];
+    if (entitlement == null) {
+      return const SubscriptionStatus.inactive();
+    }
+    final expiresIso = entitlement.expirationDate;
+    final expiresAt = expiresIso == null ? null : DateTime.tryParse(expiresIso);
+    return SubscriptionStatus.active(
+      productId: entitlement.productIdentifier,
+      expiresAt: expiresAt,
+      willRenew: entitlement.willRenew,
+    );
   }
 }
