@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -73,27 +74,28 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
 
             if (modeResolver.showsRegionIcon(mode)) {
               for (final intensity in JmaIntensity.values) {
-                final ids =
+                final codes =
                     earthquake.intensity?.regions[intensity]
                         ?.map((e) => e.region.code)
                         .toList() ??
                     const <String>[];
-                final filter = ids.isEmpty
+                final filter = codes.isEmpty
                     ? const ['==', '1', '2']
                     : [
                         'in',
-                        ['get', 'id'],
-                        ['literal', ids],
+                        ['get', 'code'],
+                        ['literal', codes],
                       ];
+                final iconImage =
+                    'JmaIntensity.${IntensityIconType.filled.name}.${intensity.name}';
                 await styleController.addLayer(
                   SymbolStyleLayer(
                     id: _regionLayerId(intensity),
                     sourceLayerId: 'areaForecastLocalE',
                     sourceId: 'eqmonitor_map',
-                    // idでフィルター
                     filter: filter,
-                    layout: const {
-                      'icon-image': ['get', 'icon'],
+                    layout: {
+                      'icon-image': iconImage,
                       'icon-allow-overlap': false,
                       'icon-size': [
                         'interpolate',
@@ -118,27 +120,29 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
 
             if (modeResolver.showsCityIcon(mode)) {
               for (final intensity in JmaIntensity.values) {
-                final ids =
+                final codes =
                     earthquake.intensity?.intensityTree[intensity]
                         ?.expand((e) => e.cities)
                         .map((e) => e.city.code)
                         .toList() ??
                     const <String>[];
-                final filter = ids.isEmpty
+                final filter = codes.isEmpty
                     ? const ['==', '1', '2']
                     : [
                         'in',
-                        ['get', 'id'],
-                        ['literal', ids],
+                        ['get', 'regioncode'],
+                        ['literal', codes],
                       ];
+                final iconImage =
+                    'JmaIntensity.${IntensityIconType.filled.name}.${intensity.name}';
                 await styleController.addLayer(
                   SymbolStyleLayer(
                     id: _cityLayerId(intensity),
                     sourceLayerId: 'areaInformationCityQuake',
                     sourceId: 'eqmonitor_map',
                     filter: filter,
-                    layout: const {
-                      'icon-image': ['get', 'icon'],
+                    layout: {
+                      'icon-image': iconImage,
                       'icon-allow-overlap': false,
                       'icon-size': [
                         'interpolate',

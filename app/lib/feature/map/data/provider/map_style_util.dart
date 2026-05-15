@@ -50,7 +50,7 @@ class MapStyleUtil {
         {
           'id': BaseLayer.countriesFill.name,
           'type': 'fill',
-          'source': 'world',
+          'source': 'eqmonitor_map',
           'source-layer': 'countries',
           'layout': {'visibility': 'visible'},
           'paint': {
@@ -61,7 +61,7 @@ class MapStyleUtil {
         {
           'id': BaseLayer.countriesLine.name,
           'type': 'line',
-          'source': 'world',
+          'source': 'eqmonitor_map',
           'source-layer': 'countries',
           'layout': {'visibility': 'visible'},
           'paint': {
@@ -81,7 +81,7 @@ class MapStyleUtil {
         {
           'id': BaseLayer.areaForecastLocalEFill.name,
           'type': 'fill',
-          'source': 'japan',
+          'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'paint': {
             'fill-color': colorScheme.japanLandColor.toHexStringRGB(),
@@ -91,7 +91,7 @@ class MapStyleUtil {
         {
           'id': BaseLayer.areaForecastLocalEewLine.name,
           'type': 'line',
-          'source': 'japan',
+          'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalEew',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
@@ -111,7 +111,7 @@ class MapStyleUtil {
         {
           'id': BaseLayer.areaForecastLocalELine.name,
           'type': 'line',
-          'source': 'japan',
+          'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
@@ -134,7 +134,7 @@ class MapStyleUtil {
         {
           'id': BaseLayer.areaInformationCityQuakeLine.name,
           'type': 'line',
-          'source': 'japan',
+          'source': 'eqmonitor_map',
           'source-layer': 'areaInformationCityQuake',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {

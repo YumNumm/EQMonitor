@@ -293,11 +293,11 @@ class EarthquakeHistoryFillLayerBuilder {
   }) {
     final fillId = '$idPrefix-region-fill';
     final lineId = '$idPrefix-region-line';
-    final filter = codeFilter(codes);
+    final filter = regionCodeFilter(codes);
     return [
       FillStyleLayer(
         id: fillId,
-        sourceId: 'japan',
+        sourceId: 'eqmonitor_map',
         sourceLayerId: _regionSourceLayerId,
         filter: filter,
         paint: {
@@ -311,7 +311,7 @@ class EarthquakeHistoryFillLayerBuilder {
       ),
       LineStyleLayer(
         id: lineId,
-        sourceId: 'japan',
+        sourceId: 'eqmonitor_map',
         sourceLayerId: _regionSourceLayerId,
         filter: filter,
         paint: {
@@ -336,9 +336,9 @@ class EarthquakeHistoryFillLayerBuilder {
   }) {
     return FillStyleLayer(
       id: '$idPrefix-city-fill',
-      sourceId: 'japan',
+      sourceId: 'eqmonitor_map',
       sourceLayerId: _citySourceLayerId,
-      filter: codeFilter(codes),
+      filter: cityCodeFilter(codes),
       paint: {
         'fill-color': color,
         'fill-opacity': modeResolver.cityFillOpacity(
@@ -350,9 +350,17 @@ class EarthquakeHistoryFillLayerBuilder {
     );
   }
 
-  List<Object> codeFilter(List<String> codes) => [
+  // areaForecastLocalE は `code` フィールドでフィルター
+  List<Object> regionCodeFilter(List<String> codes) => [
     'in',
     ['get', 'code'],
+    ['literal', codes],
+  ];
+
+  // areaInformationCityQuake は `regioncode` フィールドでフィルター
+  List<Object> cityCodeFilter(List<String> codes) => [
+    'in',
+    ['get', 'regioncode'],
     ['literal', codes],
   ];
 
