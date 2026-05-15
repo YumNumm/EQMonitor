@@ -20,6 +20,10 @@ abstract class RegionSettingRequest with _$RegionSettingRequest {
     required JmaIntensity minJmaIntensity,
     @JsonKey(includeIfNull: false,name: 'region_name')
     String? regionName,
+    @JsonKey(includeIfNull: false,name: 'city_code')
+    String? cityCode,
+    @JsonKey(includeIfNull: false,name: 'city_name')
+    String? cityName,
   }) = _RegionSettingRequest;
   
   factory RegionSettingRequest.fromJson(Map<String, Object?> json) => _$RegionSettingRequestFromJson(json);

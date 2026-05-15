@@ -25,6 +25,8 @@ _RegionSettingRequest _$RegionSettingRequestFromJson(
         (v) => $enumDecode(_$JmaIntensityEnumMap, v),
       ),
       regionName: $checkedConvert('region_name', (v) => v as String?),
+      cityCode: $checkedConvert('city_code', (v) => v as String?),
+      cityName: $checkedConvert('city_name', (v) => v as String?),
     );
     return val;
   },
@@ -33,6 +35,8 @@ _RegionSettingRequest _$RegionSettingRequestFromJson(
     'isCurrentLocation': 'is_current_location',
     'minJmaIntensity': 'min_jma_intensity',
     'regionName': 'region_name',
+    'cityCode': 'city_code',
+    'cityName': 'city_name',
   },
 );
 
@@ -43,6 +47,8 @@ Map<String, dynamic> _$RegionSettingRequestToJson(
   'is_current_location': instance.isCurrentLocation,
   'min_jma_intensity': instance.minJmaIntensity,
   'region_name': ?instance.regionName,
+  'city_code': ?instance.cityCode,
+  'city_name': ?instance.cityName,
 };
 
 const _$JmaIntensityEnumMap = {
