@@ -35,6 +35,14 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
         'build_commit_message',
         (v) => v as String,
       ),
+      revenueCatApiKeyIos: $checkedConvert(
+        'revenue_cat_api_key_ios',
+        (v) => v as String,
+      ),
+      revenueCatApiKeyAndroid: $checkedConvert(
+        'revenue_cat_api_key_android',
+        (v) => v as String,
+      ),
     );
     return val;
   },
@@ -48,6 +56,8 @@ _BuildConfig _$BuildConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
     'googleAndroidClientId': 'google_android_client_id',
     'buildTimestamp': 'build_timestamp',
     'buildCommitMessage': 'build_commit_message',
+    'revenueCatApiKeyIos': 'revenue_cat_api_key_ios',
+    'revenueCatApiKeyAndroid': 'revenue_cat_api_key_android',
   },
 );
 
@@ -63,6 +73,8 @@ Map<String, dynamic> _$BuildConfigToJson(_BuildConfig instance) =>
       'google_android_client_id': instance.googleAndroidClientId,
       'build_timestamp': instance.buildTimestamp,
       'build_commit_message': instance.buildCommitMessage,
+      'revenue_cat_api_key_ios': instance.revenueCatApiKeyIos,
+      'revenue_cat_api_key_android': instance.revenueCatApiKeyAndroid,
     };
 
 const _$FlavorEnumMap = {Flavor.dev: 'dev', Flavor.prod: 'prod'};
