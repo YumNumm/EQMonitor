@@ -15,11 +15,11 @@ Future<NotificationRegionPickerResult?> showNotificationRegionPickerDialog(
   BuildContext context, {
   bool allRegionAlreadyAdded = false,
 }) => showAdaptiveDialog<NotificationRegionPickerResult>(
-      context: context,
-      builder: (_) => _RegionPickerDialog(
-        allRegionAlreadyAdded: allRegionAlreadyAdded,
-      ),
-    );
+  context: context,
+  builder: (_) => _RegionPickerDialog(
+    allRegionAlreadyAdded: allRegionAlreadyAdded,
+  ),
+);
 
 enum _RegionMode { all, prefecture }
 
@@ -157,10 +157,17 @@ class NotificationRegionListTile extends StatelessWidget {
     final String? subtitleSuffix;
     if (region.isCurrentLocation) {
       name = '現在地';
-      subtitleSuffix = region.regionName;
+      final locationLabel = region.cityName ?? region.regionName;
+      subtitleSuffix = locationLabel;
     } else if (region.regionId == 0) {
       name = '全国';
       subtitleSuffix = null;
+    } else if (region.cityCode != null) {
+      // 市区町村単位の地震通知設定 (VXSE53 マッチ)
+      final cityName = region.cityName;
+      final regionName = region.regionName;
+      name = cityName ?? '市区町村コード: ${region.cityCode}';
+      subtitleSuffix = regionName;
     } else {
       name = region.regionName ?? '地域ID: ${region.regionId}';
       subtitleSuffix = null;
@@ -177,6 +184,8 @@ class NotificationRegionListTile extends StatelessWidget {
             ? Icons.my_location_outlined
             : region.regionId == 0
             ? Icons.public_outlined
+            : region.cityCode != null
+            ? Icons.location_city_outlined
             : Icons.location_on_outlined,
       ),
       title: Text(name),
