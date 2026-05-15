@@ -21,6 +21,8 @@ List<RouteBase> get $appRoutes => [
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
+  $paywallRoute,
+  $subscriptionSettingsRoute,
 ];
 
 RouteBase get $splashRoute =>
@@ -1534,6 +1536,57 @@ bool _$boolConverter(String value) {
     default:
       throw UnsupportedError('Cannot convert "$value" into a bool.');
   }
+}
+
+RouteBase get $paywallRoute => GoRouteData.$route(
+  path: '/subscription/paywall',
+  factory: $PaywallRoute._fromState,
+);
+
+mixin $PaywallRoute on GoRouteData {
+  static PaywallRoute _fromState(GoRouterState state) => const PaywallRoute();
+
+  @override
+  String get location => GoRouteData.$location('/subscription/paywall');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $subscriptionSettingsRoute => GoRouteData.$route(
+  path: '/subscription/settings',
+  factory: $SubscriptionSettingsRoute._fromState,
+);
+
+mixin $SubscriptionSettingsRoute on GoRouteData {
+  static SubscriptionSettingsRoute _fromState(GoRouterState state) =>
+      const SubscriptionSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/subscription/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 // **************************************************************************

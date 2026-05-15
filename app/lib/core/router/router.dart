@@ -59,6 +59,8 @@ import 'package:eqmonitor/feature/settings/settings_page.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_details_page.dart';
 import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_page.dart';
+import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
+import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/splash_page.dart';
@@ -764,6 +766,25 @@ class ChangelogRoute extends GoRouteData with $ChangelogRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ChangelogPage();
+}
+
+@TypedGoRoute<PaywallRoute>(path: '/subscription/paywall')
+class PaywallRoute extends GoRouteData with $PaywallRoute {
+  const PaywallRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const PaywallPage();
+}
+
+@TypedGoRoute<SubscriptionSettingsRoute>(path: '/subscription/settings')
+class SubscriptionSettingsRoute extends GoRouteData
+    with $SubscriptionSettingsRoute {
+  const SubscriptionSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SubscriptionSettingsPage();
 }
 
 class _NavigatorObserver extends NavigatorObserver {

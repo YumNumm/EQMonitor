@@ -20,4 +20,10 @@ class AdsOptOutNotifier extends _$AdsOptOutNotifier {
     await prefs.setBool(_key.key, next);
     state = next;
   }
+
+  Future<void> setOptOut({required bool value}) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setBool(_key.key, value);
+    state = value;
+  }
 }
