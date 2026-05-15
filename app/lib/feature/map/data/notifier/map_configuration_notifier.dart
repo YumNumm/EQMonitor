@@ -30,7 +30,7 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
           switch (savedState.theme) {
             MapTheme.light => MapColorScheme.light(),
             MapTheme.dark => MapColorScheme.dark(),
-            _ => throw UnimplementedError(),
+            MapTheme.system => MapColorScheme.light(),
           },
     );
 
