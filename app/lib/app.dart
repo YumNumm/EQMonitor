@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
+import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -79,7 +80,7 @@ class App extends HookConsumerWidget {
       },
     );
     final buildCfg = ref.read(buildConfigProvider);
-    Widget result = app;
+    Widget result = ForcedUpdateWrapper(child: app);
 
     if (buildCfg.isBetaTesting) {
       final packageInfo = ref.watch(packageInfoProvider);

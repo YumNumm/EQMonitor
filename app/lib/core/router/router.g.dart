@@ -452,6 +452,7 @@ RouteBase get $settingsRoute => GoRouteData.$route(
       path: 'about-this-app',
       factory: $AboutThisAppRoute._fromState,
     ),
+    GoRouteData.$route(path: 'changelog', factory: $ChangelogRoute._fromState),
     GoRouteData.$route(
       path: 'debug',
       factory: $DebugRoute._fromState,
@@ -911,6 +912,27 @@ mixin $AboutThisAppRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings/about-this-app');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ChangelogRoute on GoRouteData {
+  static ChangelogRoute _fromState(GoRouterState state) =>
+      const ChangelogRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/changelog');
 
   @override
   void go(BuildContext context) => context.go(location);

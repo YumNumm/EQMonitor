@@ -15,6 +15,8 @@ import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_histor
 import 'package:eqmonitor/feature/location/data/background_location_permission_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/provider/shake_detection_merge_provider.dart';
+import 'package:eqmonitor/feature/start/ui/component/maintenance_banner.dart';
+import 'package:eqmonitor/feature/start/ui/component/whats_new_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -152,6 +154,8 @@ class _SheetBody extends ConsumerWidget {
                 children: [
                   SizedBox(height: spacing.xs),
                   if (state.isNotEmpty) eewCards,
+                  MaintenanceBanner(bottomSpacing: spacing.md),
+                  WhatsNewBanner(bottomSpacing: spacing.md),
                   DeviceProvisioningBanner(bottomSpacing: spacing.md),
                   if (showPermissionBanner) ...[
                     _BackgroundLocationPermissionBanner(
