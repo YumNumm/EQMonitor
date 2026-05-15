@@ -50,4 +50,4 @@ final class JmaRegionResolverProvider
   }
 }
 
-String _$jmaRegionResolverHash() => r'520d5a515fd9953bd5181abfda2740d8d5aa3896';
+String _$jmaRegionResolverHash() => r'6d8298ff6cce7f048e884199a057f05fa44de918';
