@@ -18,43 +18,38 @@ abstract class NotificationApiClient {
   factory NotificationApiClient(Dio dio, {String? baseUrl}) = _NotificationApiClient;
 
   /// デバイスの通知履歴を取得
-  @GET(NotificationApiClientUrls.getV2DeviceDeviceIdNotificationHistory)
-  Future<HttpResponse<NotificationHistoryResponse>> getV2DeviceDeviceIdNotificationHistory({
-    @Path('deviceId') required String deviceId,
+  @GET(NotificationApiClientUrls.getV2DeviceMeNotificationHistory)
+  Future<HttpResponse<NotificationHistoryResponse>> getV2DeviceMeNotificationHistory({
     @Query('cursor') String? cursor,
     @Query('limit') int? limit = 100,
   });
 
   /// 配信サマリー一覧（admin）
-  @GET(NotificationApiClientUrls.getV2DeviceDeviceIdNotificationDispatches)
-  Future<HttpResponse<DispatchSummaryListResponse>> getV2DeviceDeviceIdNotificationDispatches({
-    @Path('deviceId') required String deviceId,
-  });
+  @GET(NotificationApiClientUrls.getV2DeviceMeNotificationDispatches)
+  Future<HttpResponse<DispatchSummaryListResponse>> getV2DeviceMeNotificationDispatches();
 
   /// 配信サマリー詳細（admin）
-  @GET(NotificationApiClientUrls.getV2DeviceDeviceIdNotificationDispatchesCorrelationKey)
-  Future<HttpResponse<DispatchSummaryDetailResponse>> getV2DeviceDeviceIdNotificationDispatchesCorrelationKey({
-    @Path('deviceId') required String deviceId,
+  @GET(NotificationApiClientUrls.getV2DeviceMeNotificationDispatchesCorrelationKey)
+  Future<HttpResponse<DispatchSummaryDetailResponse>> getV2DeviceMeNotificationDispatchesCorrelationKey({
     @Path('correlationKey') required String correlationKey,
   });
 
   /// テスト通知を送信
-  @POST(NotificationApiClientUrls.postV2DeviceDeviceIdNotificationTest)
-  Future<HttpResponse<TestNotificationResponse>> postV2DeviceDeviceIdNotificationTest({
-    @Path('deviceId') required String deviceId,
+  @POST(NotificationApiClientUrls.postV2DeviceMeNotificationTest)
+  Future<HttpResponse<TestNotificationResponse>> postV2DeviceMeNotificationTest({
     @Body() required TestNotificationRequest body,
   });
 }
 
 
 abstract class NotificationApiClientUrls {
-	/// /v2/device/{deviceId}/notification/history
-	static const getV2DeviceDeviceIdNotificationHistory = "/v2/device/{deviceId}/notification/history";
-	/// /v2/device/{deviceId}/notification/dispatches
-	static const getV2DeviceDeviceIdNotificationDispatches = "/v2/device/{deviceId}/notification/dispatches";
-	/// /v2/device/{deviceId}/notification/dispatches/{correlationKey}
-	static const getV2DeviceDeviceIdNotificationDispatchesCorrelationKey = "/v2/device/{deviceId}/notification/dispatches/{correlationKey}";
-	/// /v2/device/{deviceId}/notification/test
-	static const postV2DeviceDeviceIdNotificationTest = "/v2/device/{deviceId}/notification/test";
+	/// /v2/device/me/notification/history
+	static const getV2DeviceMeNotificationHistory = "/v2/device/me/notification/history";
+	/// /v2/device/me/notification/dispatches
+	static const getV2DeviceMeNotificationDispatches = "/v2/device/me/notification/dispatches";
+	/// /v2/device/me/notification/dispatches/{correlationKey}
+	static const getV2DeviceMeNotificationDispatchesCorrelationKey = "/v2/device/me/notification/dispatches/{correlationKey}";
+	/// /v2/device/me/notification/test
+	static const postV2DeviceMeNotificationTest = "/v2/device/me/notification/test";
 }
 

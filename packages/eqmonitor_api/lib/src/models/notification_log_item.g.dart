@@ -39,6 +39,16 @@ _NotificationLogItem _$NotificationLogItemFromJson(
         'interruption_level',
         (v) => v as String?,
       ),
+      liveActivityEvent: $checkedConvert(
+        'live_activity_event',
+        (v) => $enumDecodeNullable(_$LiveActivityEventEnumMap, v),
+      ),
+      startTrigger: $checkedConvert(
+        'start_trigger',
+        (v) => $enumDecodeNullable(_$StartTriggerEnumMap, v),
+      ),
+      serialNo: $checkedConvert('serial_no', (v) => v as num?),
+      eventType: $checkedConvert('event_type', (v) => v as String?),
     );
     return val;
   },
@@ -54,6 +64,10 @@ _NotificationLogItem _$NotificationLogItemFromJson(
     'channelId': 'channel_id',
     'apnsPriority': 'apns_priority',
     'interruptionLevel': 'interruption_level',
+    'liveActivityEvent': 'live_activity_event',
+    'startTrigger': 'start_trigger',
+    'serialNo': 'serial_no',
+    'eventType': 'event_type',
   },
 );
 
@@ -75,8 +89,23 @@ Map<String, dynamic> _$NotificationLogItemToJson(
   'channel_id': ?instance.channelId,
   'apns_priority': ?instance.apnsPriority,
   'interruption_level': ?instance.interruptionLevel,
+  'live_activity_event': ?instance.liveActivityEvent,
+  'start_trigger': ?instance.startTrigger,
+  'serial_no': ?instance.serialNo,
+  'event_type': ?instance.eventType,
 };
 
 const _$FrameworkEnumMap = {Framework.fcm: 'FCM', Framework.apns: 'APNS'};
 
 const _$ResultEnumMap = {Result.ok: 'OK', Result.ng: 'NG'};
+
+const _$LiveActivityEventEnumMap = {
+  LiveActivityEvent.start: 'start',
+  LiveActivityEvent.update: 'update',
+  LiveActivityEvent.end: 'end',
+};
+
+const _$StartTriggerEnumMap = {
+  StartTrigger.eew: 'eew',
+  StartTrigger.shakeDetection: 'shake_detection',
+};

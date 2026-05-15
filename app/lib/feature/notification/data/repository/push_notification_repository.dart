@@ -19,9 +19,8 @@ class PushNotificationRepository {
 
   Future<Result<GeneralNotificationSettings, Exception>>
   getNotificationSettings(String deviceId) => Result.capture(() async {
-    final response = await _api.device.getV2DeviceDeviceIdSettingsNotification(
-      deviceId: deviceId,
-    );
+    final response =
+        await _api.device.getV2DeviceMeSettingsNotification();
     return response.data.toGeneralNotificationSettings;
   });
 
@@ -30,14 +29,12 @@ class PushNotificationRepository {
     required String deviceId,
     required GeneralNotificationSettings settings,
   }) => Result.capture(() async {
-    final response = await _api.device
-        .patchV2DeviceDeviceIdSettingsNotification(
-          deviceId: deviceId,
-          body: api.NotificationSettingsRequest(
-            tsunamiEnabled: settings.tsunamiEnabled,
-            trainingEnabled: settings.trainingEnabled,
-          ),
-        );
+    final response = await _api.device.patchV2DeviceMeSettingsNotification(
+      body: api.NotificationSettingsRequest(
+        tsunamiEnabled: settings.tsunamiEnabled,
+        trainingEnabled: settings.trainingEnabled,
+      ),
+    );
     return response.data.toGeneralNotificationSettings;
   });
 
@@ -46,12 +43,10 @@ class PushNotificationRepository {
     int? limit,
     String? cursor,
   }) => Result.capture(() async {
-    final response = await _api.notification
-        .getV2DeviceDeviceIdNotificationHistory(
-          deviceId: deviceId,
-          limit: limit,
-          cursor: cursor,
-        );
+    final response = await _api.notification.getV2DeviceMeNotificationHistory(
+      limit: limit,
+      cursor: cursor,
+    );
     return response.data.toPushNotificationHistory;
   });
 
@@ -60,11 +55,9 @@ class PushNotificationRepository {
     required String deviceId,
     required TestNotificationKind kind,
   }) => Result.capture(() async {
-    final response = await _api.notification
-        .postV2DeviceDeviceIdNotificationTest(
-          deviceId: deviceId,
-          body: kind.toApiRequest,
-        );
+    final response = await _api.notification.postV2DeviceMeNotificationTest(
+      body: kind.toApiRequest,
+    );
     return response.data.toTestNotificationDeliveryResult;
   });
 }

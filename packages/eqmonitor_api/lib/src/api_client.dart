@@ -4,6 +4,8 @@
 
 import 'package:dio/dio.dart';
 
+import 'clients/changelog_api_client.dart';
+import 'clients/start_api_client.dart';
 import 'clients/admin_api_client.dart';
 import 'clients/device_api_client.dart';
 import 'clients/notification_api_client.dart';
@@ -11,10 +13,12 @@ import 'clients/earthquake_api_client.dart';
 import 'clients/eew_api_client.dart';
 import 'clients/feed_api_client.dart';
 import 'clients/parameters_api_client.dart';
+import 'clients/subscription_api_client.dart';
 import 'clients/telegram_api_client.dart';
 import 'clients/tsunami_api_client.dart';
 import 'clients/user_api_client.dart';
 import 'clients/realtime_api_client.dart';
+import 'clients/webhooks_api_client.dart';
 
 /// EQMonitor Backend API `v2.0.0`.
 ///
@@ -31,6 +35,8 @@ class ApiClient {
 
   static String get version => '2.0.0';
 
+  ChangelogApiClient? _changelog;
+  StartApiClient? _start;
   AdminApiClient? _admin;
   DeviceApiClient? _device;
   NotificationApiClient? _notification;
@@ -38,10 +44,16 @@ class ApiClient {
   EewApiClient? _eew;
   FeedApiClient? _feed;
   ParametersApiClient? _parameters;
+  SubscriptionApiClient? _subscription;
   TelegramApiClient? _telegram;
   TsunamiApiClient? _tsunami;
   UserApiClient? _user;
   RealtimeApiClient? _realtime;
+  WebhooksApiClient? _webhooks;
+
+  ChangelogApiClient get changelog => _changelog ??= ChangelogApiClient(_dio, baseUrl: _baseUrl);
+
+  StartApiClient get start => _start ??= StartApiClient(_dio, baseUrl: _baseUrl);
 
   AdminApiClient get admin => _admin ??= AdminApiClient(_dio, baseUrl: _baseUrl);
 
@@ -57,6 +69,8 @@ class ApiClient {
 
   ParametersApiClient get parameters => _parameters ??= ParametersApiClient(_dio, baseUrl: _baseUrl);
 
+  SubscriptionApiClient get subscription => _subscription ??= SubscriptionApiClient(_dio, baseUrl: _baseUrl);
+
   TelegramApiClient get telegram => _telegram ??= TelegramApiClient(_dio, baseUrl: _baseUrl);
 
   TsunamiApiClient get tsunami => _tsunami ??= TsunamiApiClient(_dio, baseUrl: _baseUrl);
@@ -64,4 +78,6 @@ class ApiClient {
   UserApiClient get user => _user ??= UserApiClient(_dio, baseUrl: _baseUrl);
 
   RealtimeApiClient get realtime => _realtime ??= RealtimeApiClient(_dio, baseUrl: _baseUrl);
+
+  WebhooksApiClient get webhooks => _webhooks ??= WebhooksApiClient(_dio, baseUrl: _baseUrl);
 }

@@ -23,11 +23,7 @@ class _NotificationApiClient implements NotificationApiClient {
 
   @override
   Future<HttpResponse<NotificationHistoryResponse>>
-  getV2DeviceDeviceIdNotificationHistory({
-    required String deviceId,
-    String? cursor,
-    int? limit = 100,
-  }) async {
+  getV2DeviceMeNotificationHistory({String? cursor, int? limit = 100}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'cursor': cursor,
@@ -40,7 +36,7 @@ class _NotificationApiClient implements NotificationApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/notification/history',
+            '/v2/device/me/notification/history',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -60,7 +56,7 @@ class _NotificationApiClient implements NotificationApiClient {
 
   @override
   Future<HttpResponse<DispatchSummaryListResponse>>
-  getV2DeviceDeviceIdNotificationDispatches({required String deviceId}) async {
+  getV2DeviceMeNotificationDispatches() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -69,7 +65,7 @@ class _NotificationApiClient implements NotificationApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/notification/dispatches',
+            '/v2/device/me/notification/dispatches',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -89,24 +85,26 @@ class _NotificationApiClient implements NotificationApiClient {
 
   @override
   Future<HttpResponse<DispatchSummaryDetailResponse>>
-  getV2DeviceDeviceIdNotificationDispatchesCorrelationKey({
-    required String deviceId,
+  getV2DeviceMeNotificationDispatchesCorrelationKey({
     required String correlationKey,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<DispatchSummaryDetailResponse>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/notification/dispatches/${correlationKey}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options =
+        _setStreamType<HttpResponse<DispatchSummaryDetailResponse>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/device/me/notification/dispatches/${correlationKey}',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
     final _result = await _dio.fetch<Map<String, Object?>>(_options);
     late DispatchSummaryDetailResponse _value;
     try {
@@ -121,8 +119,7 @@ class _NotificationApiClient implements NotificationApiClient {
 
   @override
   Future<HttpResponse<TestNotificationResponse>>
-  postV2DeviceDeviceIdNotificationTest({
-    required String deviceId,
+  postV2DeviceMeNotificationTest({
     required TestNotificationRequest body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -134,7 +131,7 @@ class _NotificationApiClient implements NotificationApiClient {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/notification/test',
+            '/v2/device/me/notification/test',
             queryParameters: queryParameters,
             data: _data,
           )

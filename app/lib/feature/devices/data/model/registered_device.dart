@@ -33,21 +33,18 @@ extension DevicePlatformDisplay on DevicePlatform {
   };
 }
 
-extension DeviceApiExtension on api.DeviceResponse {
+extension DeviceApiExtension on api.DeviceMeResponse {
   RegisteredDevice get toRegisteredDevice => RegisteredDevice(
     id: id,
-    platform: switch (type) {
-      .ios => .ios,
-      .android => .android,
-    },
+    platform: type?.toString() == 'ANDROID' ? .android : .ios,
     userId: userId,
-    locale: switch (locale) {
-      .ja => .ja,
-      .en => .en,
-      .zh => .zh,
+    locale: switch (locale?.toString()) {
+      'en' => DeviceLocale.en,
+      'zh' => DeviceLocale.zh,
+      _ => DeviceLocale.ja,
     },
-    createdAtIso: createdAt,
-    updatedAtIso: updatedAt,
+    createdAtIso: createdAt.toIso8601String(),
+    updatedAtIso: updatedAt.toIso8601String(),
   );
 }
 
