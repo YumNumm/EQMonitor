@@ -23,6 +23,21 @@ class EewHypocenterLayer extends HookConsumerWidget {
     lowPrecise: 'eew-hypocenter-low-precise',
   );
 
+  static Map<String, dynamic> _convertEew(EewTelegramItem eew) {
+    final hypo = eew.hypocenter!;
+    return {
+      'type': 'Feature',
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [hypo.longitude, hypo.latitude],
+      },
+      'properties': {
+        'magnitude': hypo.magnitude,
+        'depth': hypo.depth,
+      },
+    };
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styleController = MapController.maybeOf(context)?.style;
@@ -117,9 +132,27 @@ class EewHypocenterLayer extends HookConsumerWidget {
             ),
           ).wait;
           isInitialized.value = true;
+          // 初期化完了後、既に届いていた EEW データをソースに反映する
+          await (
+            styleController.updateGeoJsonSource(
+              id: sourceId.normal,
+              data: jsonEncode({
+                'type': 'FeatureCollection',
+                'features': normalEews.map(_convertEew).toList(),
+              }),
+            ),
+            styleController.updateGeoJsonSource(
+              id: sourceId.lowPrecise,
+              data: jsonEncode({
+                'type': 'FeatureCollection',
+                'features': lowPreciseEews.map(_convertEew).toList(),
+              }),
+            ),
+          ).wait;
         }());
 
         return () async {
+          isInitialized.value = false;
           await styleController.removeLayer(layerId.normal);
           await styleController.removeLayer(layerId.lowPrecise);
           await styleController.removeSource(sourceId.normal);
@@ -131,41 +164,26 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (styleController == null) {
+        if (styleController == null || !isInitialized.value) {
           return null;
         }
 
         unawaited(
           () async {
-            Map<String, dynamic> convert(EewTelegramItem eew) {
-              final hypo = eew.hypocenter!;
-              return {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': [hypo.longitude, hypo.latitude],
-                },
-                'properties': {
-                  'magnitude': hypo.magnitude,
-                  'depth': hypo.depth,
-                },
-              };
-            }
-
             try {
               await (
                 styleController.updateGeoJsonSource(
                   id: sourceId.normal,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features': normalEews.map(convert).toList(),
+                    'features': normalEews.map(_convertEew).toList(),
                   }),
                 ),
                 styleController.updateGeoJsonSource(
                   id: sourceId.lowPrecise,
                   data: jsonEncode({
                     'type': 'FeatureCollection',
-                    'features': lowPreciseEews.map(convert).toList(),
+                    'features': lowPreciseEews.map(_convertEew).toList(),
                   }),
                 ),
               ).wait;
