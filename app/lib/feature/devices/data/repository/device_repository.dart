@@ -34,8 +34,8 @@ class DeviceRepository {
   }) => Result.capture(() async {
     await _api.device.postV2Device(
       body: api.DeviceRegisterBody(
-        type: devicePlatform.toDeviceType.toJson(),
-        locale: deviceLocale.toDeviceLocale.toJson(),
+        type: devicePlatform.toDeviceType,
+        locale: deviceLocale.toDeviceLocale,
       ),
     );
     final getResponse = await _api.device.getV2DeviceMe();

@@ -36,12 +36,12 @@ extension DevicePlatformDisplay on DevicePlatform {
 extension DeviceApiExtension on api.DeviceMeResponse {
   RegisteredDevice get toRegisteredDevice => RegisteredDevice(
     id: id,
-    platform: type?.toString() == 'ANDROID' ? .android : .ios,
+    platform: type == api.DeviceType.android ? .android : .ios,
     userId: userId,
-    locale: switch (locale?.toString()) {
-      'en' => DeviceLocale.en,
-      'zh' => DeviceLocale.zh,
-      _ => DeviceLocale.ja,
+    locale: switch (locale) {
+      api.DeviceLocale.en => DeviceLocale.en,
+      api.DeviceLocale.zh => DeviceLocale.zh,
+      api.DeviceLocale.ja => DeviceLocale.ja,
     },
     createdAtIso: createdAt.toIso8601String(),
     updatedAtIso: updatedAt.toIso8601String(),
