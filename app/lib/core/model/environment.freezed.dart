@@ -13,9 +13,9 @@ part of 'environment.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$BuildConfig {
+mixin _$BuildConfig implements DiagnosticableTreeMixin {
 
- String get restApiUrl; String get appIdSuffix; String get appName; String get commitInformation; Flavor get flavor; String get wsApiUrl; String get googleIosClientId; String get googleAndroidClientId; String get buildTimestamp; String get buildCommitMessage;
+ String get restApiUrl; String get appIdSuffix; String get appName; String get commitInformation; Flavor get flavor; String get wsApiUrl; String get googleIosClientId; String get googleAndroidClientId; String get buildTimestamp; String get buildCommitMessage; String get revenueCatApiKeyIos; String get revenueCatApiKeyAndroid;
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,19 +25,25 @@ $BuildConfigCopyWith<BuildConfig> get copyWith => _$BuildConfigCopyWithImpl<Buil
   /// Serializes this BuildConfig to a JSON map.
   Map<String, dynamic> toJson();
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'BuildConfig'))
+    ..add(DiagnosticsProperty('restApiUrl', restApiUrl))..add(DiagnosticsProperty('appIdSuffix', appIdSuffix))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('commitInformation', commitInformation))..add(DiagnosticsProperty('flavor', flavor))..add(DiagnosticsProperty('wsApiUrl', wsApiUrl))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('googleAndroidClientId', googleAndroidClientId))..add(DiagnosticsProperty('buildTimestamp', buildTimestamp))..add(DiagnosticsProperty('buildCommitMessage', buildCommitMessage))..add(DiagnosticsProperty('revenueCatApiKeyIos', revenueCatApiKeyIos))..add(DiagnosticsProperty('revenueCatApiKeyAndroid', revenueCatApiKeyAndroid));
+}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage)&&(identical(other.revenueCatApiKeyIos, revenueCatApiKeyIos) || other.revenueCatApiKeyIos == revenueCatApiKeyIos)&&(identical(other.revenueCatApiKeyAndroid, revenueCatApiKeyAndroid) || other.revenueCatApiKeyAndroid == revenueCatApiKeyAndroid));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage);
+int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage,revenueCatApiKeyIos,revenueCatApiKeyAndroid);
 
 @override
-String toString() {
-  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage)';
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage, revenueCatApiKeyIos: $revenueCatApiKeyIos, revenueCatApiKeyAndroid: $revenueCatApiKeyAndroid)';
 }
 
 
@@ -48,7 +54,7 @@ abstract mixin class $BuildConfigCopyWith<$Res>  {
   factory $BuildConfigCopyWith(BuildConfig value, $Res Function(BuildConfig) _then) = _$BuildConfigCopyWithImpl;
 @useResult
 $Res call({
- String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage
+ String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage, String revenueCatApiKeyIos, String revenueCatApiKeyAndroid
 });
 
 
@@ -65,7 +71,7 @@ class _$BuildConfigCopyWithImpl<$Res>
 
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,Object? revenueCatApiKeyIos = null,Object? revenueCatApiKeyAndroid = null,}) {
   return _then(_self.copyWith(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
 as String,appIdSuffix: null == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
@@ -77,6 +83,8 @@ as String,googleIosClientId: null == googleIosClientId ? _self.googleIosClientId
 as String,googleAndroidClientId: null == googleAndroidClientId ? _self.googleAndroidClientId : googleAndroidClientId // ignore: cast_nullable_to_non_nullable
 as String,buildTimestamp: null == buildTimestamp ? _self.buildTimestamp : buildTimestamp // ignore: cast_nullable_to_non_nullable
 as String,buildCommitMessage: null == buildCommitMessage ? _self.buildCommitMessage : buildCommitMessage // ignore: cast_nullable_to_non_nullable
+as String,revenueCatApiKeyIos: null == revenueCatApiKeyIos ? _self.revenueCatApiKeyIos : revenueCatApiKeyIos // ignore: cast_nullable_to_non_nullable
+as String,revenueCatApiKeyAndroid: null == revenueCatApiKeyAndroid ? _self.revenueCatApiKeyAndroid : revenueCatApiKeyAndroid // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -162,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BuildConfig() when $default != null:
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid);case _:
   return orElse();
 
 }
@@ -183,10 +191,10 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid)  $default,) {final _that = this;
 switch (_that) {
 case _BuildConfig():
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +211,10 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String restApiUrl,  String appIdSuffix,  String appName,  String commitInformation,  Flavor flavor,  String wsApiUrl,  String googleIosClientId,  String googleAndroidClientId,  String buildTimestamp,  String buildCommitMessage,  String revenueCatApiKeyIos,  String revenueCatApiKeyAndroid)?  $default,) {final _that = this;
 switch (_that) {
 case _BuildConfig() when $default != null:
-return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage);case _:
+return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInformation,_that.flavor,_that.wsApiUrl,_that.googleIosClientId,_that.googleAndroidClientId,_that.buildTimestamp,_that.buildCommitMessage,_that.revenueCatApiKeyIos,_that.revenueCatApiKeyAndroid);case _:
   return null;
 
 }
@@ -217,8 +225,8 @@ return $default(_that.restApiUrl,_that.appIdSuffix,_that.appName,_that.commitInf
 /// @nodoc
 @JsonSerializable()
 
-class _BuildConfig extends BuildConfig {
-  const _BuildConfig({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation, required this.flavor, required this.wsApiUrl, required this.googleIosClientId, required this.googleAndroidClientId, required this.buildTimestamp, required this.buildCommitMessage}): super._();
+class _BuildConfig extends BuildConfig with DiagnosticableTreeMixin {
+  const _BuildConfig({required this.restApiUrl, required this.appIdSuffix, required this.appName, required this.commitInformation, required this.flavor, required this.wsApiUrl, required this.googleIosClientId, required this.googleAndroidClientId, required this.buildTimestamp, required this.buildCommitMessage, required this.revenueCatApiKeyIos, required this.revenueCatApiKeyAndroid}): super._();
   factory _BuildConfig.fromJson(Map<String, dynamic> json) => _$BuildConfigFromJson(json);
 
 @override final  String restApiUrl;
@@ -231,6 +239,8 @@ class _BuildConfig extends BuildConfig {
 @override final  String googleAndroidClientId;
 @override final  String buildTimestamp;
 @override final  String buildCommitMessage;
+@override final  String revenueCatApiKeyIos;
+@override final  String revenueCatApiKeyAndroid;
 
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -242,19 +252,25 @@ _$BuildConfigCopyWith<_BuildConfig> get copyWith => __$BuildConfigCopyWithImpl<_
 Map<String, dynamic> toJson() {
   return _$BuildConfigToJson(this, );
 }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'BuildConfig'))
+    ..add(DiagnosticsProperty('restApiUrl', restApiUrl))..add(DiagnosticsProperty('appIdSuffix', appIdSuffix))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('commitInformation', commitInformation))..add(DiagnosticsProperty('flavor', flavor))..add(DiagnosticsProperty('wsApiUrl', wsApiUrl))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('googleAndroidClientId', googleAndroidClientId))..add(DiagnosticsProperty('buildTimestamp', buildTimestamp))..add(DiagnosticsProperty('buildCommitMessage', buildCommitMessage))..add(DiagnosticsProperty('revenueCatApiKeyIos', revenueCatApiKeyIos))..add(DiagnosticsProperty('revenueCatApiKeyAndroid', revenueCatApiKeyAndroid));
+}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuildConfig&&(identical(other.restApiUrl, restApiUrl) || other.restApiUrl == restApiUrl)&&(identical(other.appIdSuffix, appIdSuffix) || other.appIdSuffix == appIdSuffix)&&(identical(other.appName, appName) || other.appName == appName)&&(identical(other.commitInformation, commitInformation) || other.commitInformation == commitInformation)&&(identical(other.flavor, flavor) || other.flavor == flavor)&&(identical(other.wsApiUrl, wsApiUrl) || other.wsApiUrl == wsApiUrl)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.googleAndroidClientId, googleAndroidClientId) || other.googleAndroidClientId == googleAndroidClientId)&&(identical(other.buildTimestamp, buildTimestamp) || other.buildTimestamp == buildTimestamp)&&(identical(other.buildCommitMessage, buildCommitMessage) || other.buildCommitMessage == buildCommitMessage)&&(identical(other.revenueCatApiKeyIos, revenueCatApiKeyIos) || other.revenueCatApiKeyIos == revenueCatApiKeyIos)&&(identical(other.revenueCatApiKeyAndroid, revenueCatApiKeyAndroid) || other.revenueCatApiKeyAndroid == revenueCatApiKeyAndroid));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage);
+int get hashCode => Object.hash(runtimeType,restApiUrl,appIdSuffix,appName,commitInformation,flavor,wsApiUrl,googleIosClientId,googleAndroidClientId,buildTimestamp,buildCommitMessage,revenueCatApiKeyIos,revenueCatApiKeyAndroid);
 
 @override
-String toString() {
-  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage)';
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'BuildConfig(restApiUrl: $restApiUrl, appIdSuffix: $appIdSuffix, appName: $appName, commitInformation: $commitInformation, flavor: $flavor, wsApiUrl: $wsApiUrl, googleIosClientId: $googleIosClientId, googleAndroidClientId: $googleAndroidClientId, buildTimestamp: $buildTimestamp, buildCommitMessage: $buildCommitMessage, revenueCatApiKeyIos: $revenueCatApiKeyIos, revenueCatApiKeyAndroid: $revenueCatApiKeyAndroid)';
 }
 
 
@@ -265,7 +281,7 @@ abstract mixin class _$BuildConfigCopyWith<$Res> implements $BuildConfigCopyWith
   factory _$BuildConfigCopyWith(_BuildConfig value, $Res Function(_BuildConfig) _then) = __$BuildConfigCopyWithImpl;
 @override @useResult
 $Res call({
- String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage
+ String restApiUrl, String appIdSuffix, String appName, String commitInformation, Flavor flavor, String wsApiUrl, String googleIosClientId, String googleAndroidClientId, String buildTimestamp, String buildCommitMessage, String revenueCatApiKeyIos, String revenueCatApiKeyAndroid
 });
 
 
@@ -282,7 +298,7 @@ class __$BuildConfigCopyWithImpl<$Res>
 
 /// Create a copy of BuildConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? restApiUrl = null,Object? appIdSuffix = null,Object? appName = null,Object? commitInformation = null,Object? flavor = null,Object? wsApiUrl = null,Object? googleIosClientId = null,Object? googleAndroidClientId = null,Object? buildTimestamp = null,Object? buildCommitMessage = null,Object? revenueCatApiKeyIos = null,Object? revenueCatApiKeyAndroid = null,}) {
   return _then(_BuildConfig(
 restApiUrl: null == restApiUrl ? _self.restApiUrl : restApiUrl // ignore: cast_nullable_to_non_nullable
 as String,appIdSuffix: null == appIdSuffix ? _self.appIdSuffix : appIdSuffix // ignore: cast_nullable_to_non_nullable
@@ -294,6 +310,8 @@ as String,googleIosClientId: null == googleIosClientId ? _self.googleIosClientId
 as String,googleAndroidClientId: null == googleAndroidClientId ? _self.googleAndroidClientId : googleAndroidClientId // ignore: cast_nullable_to_non_nullable
 as String,buildTimestamp: null == buildTimestamp ? _self.buildTimestamp : buildTimestamp // ignore: cast_nullable_to_non_nullable
 as String,buildCommitMessage: null == buildCommitMessage ? _self.buildCommitMessage : buildCommitMessage // ignore: cast_nullable_to_non_nullable
+as String,revenueCatApiKeyIos: null == revenueCatApiKeyIos ? _self.revenueCatApiKeyIos : revenueCatApiKeyIos // ignore: cast_nullable_to_non_nullable
+as String,revenueCatApiKeyAndroid: null == revenueCatApiKeyAndroid ? _self.revenueCatApiKeyAndroid : revenueCatApiKeyAndroid // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

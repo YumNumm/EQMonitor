@@ -1,5 +1,8 @@
 // ignore_for_file: do_not_use_environment
 
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'environment.freezed.dart';
@@ -21,6 +24,8 @@ abstract class BuildConfig with _$BuildConfig {
     required String googleAndroidClientId,
     required String buildTimestamp,
     required String buildCommitMessage,
+    required String revenueCatApiKeyIos,
+    required String revenueCatApiKeyAndroid,
   }) = _BuildConfig;
 
   factory BuildConfig.fromJson(Map<String, dynamic> json) =>
@@ -41,9 +46,28 @@ abstract class BuildConfig with _$BuildConfig {
     ),
     buildTimestamp: const String.fromEnvironment('BUILD_TIMESTAMP'),
     buildCommitMessage: const String.fromEnvironment('BUILD_COMMIT_MESSAGE'),
+    revenueCatApiKeyIos: const String.fromEnvironment('REVENUECAT_API_KEY_IOS'),
+    revenueCatApiKeyAndroid: const String.fromEnvironment(
+      'REVENUECAT_API_KEY_ANDROID',
+    ),
   );
 
   const BuildConfig._();
 
   bool get isBetaTesting => const bool.fromEnvironment('IS_BETA_TESTING');
+
+  /// プラットフォームに応じた RevenueCat の API キーを返す。
+  /// 後続 PR の Paywall / サブスク状態取得実装で利用する想定。
+  String? get revenueCatApiKey {
+    if (kIsWeb) {
+      return null;
+    }
+    if (Platform.isIOS || Platform.isMacOS) {
+      return revenueCatApiKeyIos.isEmpty ? null : revenueCatApiKeyIos;
+    }
+    if (Platform.isAndroid) {
+      return revenueCatApiKeyAndroid.isEmpty ? null : revenueCatApiKeyAndroid;
+    }
+    return null;
+  }
 }
