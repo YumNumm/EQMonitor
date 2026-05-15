@@ -43,7 +43,7 @@ class EarthquakeHistoryRegionIntensityLayer extends HookConsumerWidget {
             await styleController.addLayer(
               FillStyleLayer(
                 id: _fillLayerId,
-                sourceId: 'japan',
+                sourceId: 'eqmonitor_map',
                 sourceLayerId: 'areaForecastLocalE',
                 paint: {
                   'fill-color': fillColor,
@@ -55,7 +55,7 @@ class EarthquakeHistoryRegionIntensityLayer extends HookConsumerWidget {
             await styleController.addLayer(
               const LineStyleLayer(
                 id: _lineLayerId,
-                sourceId: 'japan',
+                sourceId: 'eqmonitor_map',
                 sourceLayerId: 'areaForecastLocalE',
                 paint: {
                   'line-color': '#ffffff',

@@ -77,6 +77,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         }
 
         var disposed = false;
+        var iconLayerAdded = false;
 
         unawaited(() async {
           try {
@@ -90,6 +91,15 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             await styleController.addSource(
               GeoJsonSource(id: _sourceId, data: geoJson),
             );
+
+            if (disposed) {
+              return;
+            }
+
+            // アイコン画像が揃っている場合はレイヤー追加前に登録する
+            if (cachedBytes != null) {
+              await styleController.addImages(cachedBytes);
+            }
 
             if (disposed) {
               return;
@@ -160,7 +170,8 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             if (disposed) {
               return;
             }
-            if (modeResolver.showsStationIcon(mode)) {
+            // アイコン画像が揃っているときのみアイコンレイヤーを追加する
+            if (cachedBytes != null && modeResolver.showsStationIcon(mode)) {
               await styleController.addLayer(
                 SymbolStyleLayer(
                   id: _iconLayerId,
@@ -191,6 +202,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                   },
                 ),
               );
+              iconLayerAdded = true;
             }
 
             if (disposed) {
@@ -230,7 +242,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               if (config.showStationLabel) {
                 await styleController.removeLayer(_labelLayerId);
               }
-              if (modeResolver.showsStationIcon(mode)) {
+              if (iconLayerAdded) {
                 await styleController.removeLayer(_iconLayerId);
               }
               await styleController.removeLayer(_circleLayerId);
@@ -251,26 +263,10 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         mode,
         zoomThresholds,
         modeResolver,
+        cachedBytes,
         pixelRatio,
       ],
     );
-
-    // cachedBytes を別 effect で監視し、画像が揃ったタイミングで追加する。
-    // メインの effect とは分離することで、アイコンキャッシュの更新が
-    // source/layer の再構築を引き起こす race condition を防ぐ。
-    useEffect(() {
-      if (styleController == null || cachedBytes == null) {
-        return null;
-      }
-      unawaited(() async {
-        try {
-          await styleController.addImages(cachedBytes);
-        } on Exception catch (e) {
-          talker.log(e);
-        }
-      }());
-      return null;
-    }, [styleController, cachedBytes]);
 
     return const SizedBox.shrink();
   }
