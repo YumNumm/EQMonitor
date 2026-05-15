@@ -249,3 +249,126 @@ final class _NotificationHistoryFamily extends $Family
   @override
   String toString() => r'_notificationHistoryProvider';
 }
+
+@ProviderFor(_isProvisioned)
+final _isProvisionedProvider = _IsProvisionedProvider._();
+
+final class _IsProvisionedProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  _IsProvisionedProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'_isProvisionedProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$_isProvisionedHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return _isProvisioned(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$_isProvisionedHash() => r'2f8d126c3bc56972a9eda138053d417c165ef26c';
+
+@ProviderFor(_legacyDeviceId)
+final _legacyDeviceIdProvider = _LegacyDeviceIdProvider._();
+
+final class _LegacyDeviceIdProvider
+    extends $FunctionalProvider<String?, String?, String?>
+    with $Provider<String?> {
+  _LegacyDeviceIdProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'_legacyDeviceIdProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$_legacyDeviceIdHash();
+
+  @$internal
+  @override
+  $ProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String? create(Ref ref) {
+    return _legacyDeviceId(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
+String _$_legacyDeviceIdHash() => r'e44ebb20404a38ef6e434b9767ddd6549de18eab';
+
+@ProviderFor(_osNotificationPermission)
+final _osNotificationPermissionProvider = _OsNotificationPermissionProvider._();
+
+final class _OsNotificationPermissionProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<NotificationSettings>,
+          NotificationSettings,
+          FutureOr<NotificationSettings>
+        >
+    with
+        $FutureModifier<NotificationSettings>,
+        $FutureProvider<NotificationSettings> {
+  _OsNotificationPermissionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'_osNotificationPermissionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$_osNotificationPermissionHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<NotificationSettings> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<NotificationSettings> create(Ref ref) {
+    return _osNotificationPermission(ref);
+  }
+}
+
+String _$_osNotificationPermissionHash() =>
+    r'e5a08176ccf64f87859bf32f4970fa11b36fd19d';

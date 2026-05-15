@@ -1,18 +1,27 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
+import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_device_settings_page.g.dart';
@@ -23,7 +32,6 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceIdAsync = ref.watch(deviceIdProvider);
-    final provisionStatus = ref.watch(deviceProvisioningProvider);
     final syncSnapshot = ref.watch(pushTokenSyncProvider);
 
     Future<void> onRefresh() async {
@@ -42,32 +50,9 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
             SliverList.list(
               children: [
                 const SizedBox(height: 8),
-                _SectionCard(
-                  title: 'プロビジョニング',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _KeyValueRow(
-                        label: 'Device ID',
-                        value: deviceIdAsync.value ?? '…',
-                      ),
-                      _KeyValueRow(
-                        label: '状態',
-                        value: switch (provisionStatus) {
-                          AsyncData(:final value) => value ==
-                                  DeviceProvisioningStatus.notRequired
-                              ? '登録済み'
-                              : '未登録',
-                          AsyncError(:final error) => 'エラー: $error',
-                          _ => '…',
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                _DeviceInfoSection(
-                  deviceIdAsync: deviceIdAsync,
-                ),
+                _ProvisioningStartupSection(deviceIdAsync: deviceIdAsync),
+                _DeviceInfoSection(deviceIdAsync: deviceIdAsync),
+                const _NotificationPermissionSection(),
                 _TokenSection(syncSnapshot: syncSnapshot),
                 if (deviceIdAsync.hasValue)
                   _NotificationSettingsSection(
@@ -88,6 +73,302 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
     );
   }
 }
+
+// ── プロビジョニング起動状態セクション ──────────────────────────────────────
+
+class _ProvisioningStartupSection extends ConsumerStatefulWidget {
+  const _ProvisioningStartupSection({required this.deviceIdAsync});
+
+  final AsyncValue<String> deviceIdAsync;
+
+  @override
+  ConsumerState<_ProvisioningStartupSection> createState() =>
+      _ProvisioningStartupSectionState();
+}
+
+class _ProvisioningStartupSectionState
+    extends ConsumerState<_ProvisioningStartupSection> {
+  Timer? _timer;
+  RetryControllerState _retryState = const RetryIdle();
+  Duration _waitRemaining = Duration.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    _tick();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) {
+        _tick();
+      }
+    });
+  }
+
+  void _tick() {
+    final rs = ref.read(deviceProvisioningProvider.notifier).retryState;
+    setState(() {
+      _retryState = rs;
+      if (rs is RetryWaiting) {
+        final diff = rs.resumeAt.difference(DateTime.now());
+        _waitRemaining = diff.isNegative ? Duration.zero : diff;
+      } else {
+        _waitRemaining = Duration.zero;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final provisionStatus = ref.watch(deviceProvisioningProvider);
+    final provisionMutation =
+        ref.watch(DeviceProvisioningNotifier.provisionMutation);
+    final isProvisioned = ref.watch(_isProvisionedProvider);
+    final legacyId = ref.watch(_legacyDeviceIdProvider);
+
+    final isLoading = provisionMutation is MutationPending;
+    final scheme = Theme.of(context).colorScheme;
+
+    final statusText = switch (provisionStatus) {
+      AsyncData(:final value) =>
+        value == DeviceProvisioningStatus.notRequired ? '登録済み' : '未登録',
+      AsyncError(:final error) => 'エラー: $error',
+      _ => '取得中…',
+    };
+
+    final retryChip = switch (_retryState) {
+      RetryIdle() => _StatusChip(
+        label: 'アイドル',
+        color: scheme.secondaryContainer,
+        textColor: scheme.onSecondaryContainer,
+      ),
+      RetryRunning(:final attempt) => _StatusChip(
+        label: '実行中 (試行 ${attempt + 1})',
+        color: scheme.tertiaryContainer,
+        textColor: scheme.onTertiaryContainer,
+        icon: Icons.sync,
+      ),
+      RetryWaiting(:final attempt) => _StatusChip(
+        label: '待機中 (試行 ${attempt + 1}, ${_waitRemaining.inSeconds}s後)',
+        color: scheme.secondaryContainer,
+        textColor: scheme.onSecondaryContainer,
+        icon: Icons.schedule,
+      ),
+      RetryExhausted(:final lastError) => _StatusChip(
+        label: '失敗: ${lastError.userMessage}',
+        color: scheme.errorContainer,
+        textColor: scheme.onErrorContainer,
+        icon: Icons.error_outline,
+      ),
+    };
+
+    final needsProvision =
+        provisionStatus.value == DeviceProvisioningStatus.required ||
+        _retryState is RetryExhausted;
+
+    return _SectionCard(
+      title: '起動時プロビジョニング',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _KeyValueRow(
+            label: 'Device ID',
+            value: widget.deviceIdAsync.value ?? '…',
+          ),
+          _KeyValueRow(
+            label: '保存済みフラグ',
+            value: isProvisioned ? '登録済み (true)' : '未登録 (false)',
+          ),
+          _KeyValueRow(label: 'サーバー状態', value: statusText),
+          _KeyValueRow(
+            label: 'レガシーID',
+            value: legacyId != null ? '存在 → 移行対象' : 'なし',
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Text(
+                'リトライ状態: ',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(width: 4),
+              retryChip,
+            ],
+          ),
+          if (_retryState is RetryWaiting) ...[
+            const SizedBox(height: 4),
+            Text(
+              (_retryState as RetryWaiting).lastError.userMessage,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+          if (isLoading) ...[
+            const SizedBox(height: 12),
+            const Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                ),
+                SizedBox(width: 8),
+                Text('プロビジョニング中…'),
+              ],
+            ),
+          ] else if (needsProvision) ...[
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              onPressed: () {
+                ref.read(deviceProvisioningProvider.notifier).reset();
+                unawaited(
+                  DeviceProvisioningNotifier.provisionMutation.run(
+                    ref,
+                    (tsx) async =>
+                        tsx.get(deviceProvisioningProvider.notifier).provision(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.cloud_upload_outlined, size: 18),
+              label: const Text('プロビジョニング実行'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  const _StatusChip({
+    required this.label,
+    required this.color,
+    required this.textColor,
+    this.icon,
+  });
+
+  final String label;
+  final Color color;
+  final Color textColor;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 12, color: textColor),
+            const SizedBox(width: 4),
+          ],
+          Flexible(
+            child: Text(
+              label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: textColor,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── OS通知許可セクション ──────────────────────────────────────────────────────
+
+class _NotificationPermissionSection extends ConsumerWidget {
+  const _NotificationPermissionSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final permAsync = ref.watch(_osNotificationPermissionProvider);
+    final scheme = Theme.of(context).colorScheme;
+
+    return _SectionCard(
+      title: '通知許可状態（OS）',
+      trailing: IconButton(
+        tooltip: '再取得',
+        icon: const Icon(Icons.refresh),
+        onPressed: () => ref.invalidate(_osNotificationPermissionProvider),
+      ),
+      child: switch (permAsync) {
+        AsyncData(:final value) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _KeyValueRow(
+              label: '許可状態',
+              value: _authLabel(value.authorizationStatus),
+            ),
+            _KeyValueRow(
+              label: 'アラート',
+              value: _appleLabel(value.alert),
+            ),
+            _KeyValueRow(label: 'バッジ', value: _appleLabel(value.badge)),
+            _KeyValueRow(label: 'サウンド', value: _appleLabel(value.sound)),
+            if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) ...[
+              _KeyValueRow(
+                label: '通知センター',
+                value: _appleLabel(value.notificationCenter),
+              ),
+              _KeyValueRow(
+                label: 'ロック画面',
+                value: _appleLabel(value.lockScreen),
+              ),
+              _KeyValueRow(
+                label: 'クリティカル',
+                value: _appleLabel(value.criticalAlert),
+              ),
+              _KeyValueRow(
+                label: '時間依存',
+                value: _appleLabel(value.timeSensitive),
+              ),
+            ],
+          ],
+        ),
+        AsyncError(:final error) => Text(
+          'エラー: $error',
+          style: TextStyle(color: scheme.error),
+        ),
+        _ => const Center(
+          child: Padding(
+            padding: EdgeInsets.all(8),
+            child: CircularProgressIndicator.adaptive(),
+          ),
+        ),
+      },
+    );
+  }
+
+  String _authLabel(AuthorizationStatus s) => switch (s) {
+    AuthorizationStatus.authorized => '許可済み',
+    AuthorizationStatus.denied => '拒否',
+    AuthorizationStatus.notDetermined => '未確認',
+    AuthorizationStatus.provisional => '仮承認（サイレント通知のみ）',
+  };
+
+  String _appleLabel(AppleNotificationSetting s) => switch (s) {
+    AppleNotificationSetting.enabled => '有効',
+    AppleNotificationSetting.disabled => '無効',
+    AppleNotificationSetting.notSupported => '非対応',
+  };
+}
+
+// ── デバイス情報（サーバー取得）────────────────────────────────────────────
 
 class _DeviceInfoSection extends ConsumerWidget {
   const _DeviceInfoSection({required this.deviceIdAsync});
@@ -139,6 +420,8 @@ Future<RegisteredDevice> _deviceInfo(Ref ref, String deviceId) async {
   };
 }
 
+// ── プッシュトークン同期 ────────────────────────────────────────────────────
+
 class _TokenSection extends StatelessWidget {
   const _TokenSection({required this.syncSnapshot});
 
@@ -153,10 +436,7 @@ class _TokenSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TokenStatusRow(
-            label: 'FCM',
-            kindState: snapshot?.fcm,
-          ),
+          _TokenStatusRow(label: 'FCM', kindState: snapshot?.fcm),
           const SizedBox(height: 6),
           _TokenStatusRow(
             label: 'APNs（通知）',
@@ -218,6 +498,8 @@ class _TokenStatusRow extends StatelessWidget {
   }
 }
 
+// ── 全般通知設定 ────────────────────────────────────────────────────────────
+
 class _NotificationSettingsSection extends HookConsumerWidget {
   const _NotificationSettingsSection({required this.deviceId});
 
@@ -233,7 +515,6 @@ class _NotificationSettingsSection extends HookConsumerWidget {
     final tsunami = useState(settings?.tsunamiEnabled ?? false);
     final training = useState(settings?.trainingEnabled ?? false);
 
-    // 設定取得完了後に初期値を反映
     ref.listen(_notificationSettingsProvider(deviceId), (_, next) {
       if (next.value != null) {
         tsunami.value = next.requireValue.tsunamiEnabled;
@@ -334,6 +615,8 @@ Future<GeneralNotificationSettings> _notificationSettings(
   };
 }
 
+// ── テスト通知 ───────────────────────────────────────────────────────────────
+
 class _TestNotificationSection extends HookConsumerWidget {
   const _TestNotificationSection({required this.deviceId});
 
@@ -408,6 +691,8 @@ class _TestNotificationSection extends HookConsumerWidget {
     );
   }
 }
+
+// ── 通知履歴 ─────────────────────────────────────────────────────────────────
 
 class _HistorySection extends ConsumerWidget {
   const _HistorySection({required this.deviceId});
@@ -513,6 +798,28 @@ class _NotificationHistoryTile extends StatelessWidget {
         '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
   }
 }
+
+// ── Riverpod プロバイダー ──────────────────────────────────────────────────
+
+@riverpod
+bool _isProvisioned(Ref ref) {
+  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+  return repo.isProvisioned();
+}
+
+@riverpod
+String? _legacyDeviceId(Ref ref) {
+  final repo = ref.watch(deviceProvisioningRepositoryProvider);
+  return repo.readLegacyDeviceId();
+}
+
+@riverpod
+Future<NotificationSettings> _osNotificationPermission(Ref ref) async {
+  final messaging = ref.watch(firebaseMessagingProvider);
+  return messaging.getNotificationSettings();
+}
+
+// ── 共通ウィジェット ───────────────────────────────────────────────────────
 
 class _SectionCard extends StatelessWidget {
   const _SectionCard({

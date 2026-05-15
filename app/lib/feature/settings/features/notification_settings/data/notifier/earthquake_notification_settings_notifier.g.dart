@@ -43,7 +43,7 @@ final class EarthquakeNotificationSettingsNotifierProvider
 }
 
 String _$earthquakeNotificationSettingsNotifierHash() =>
-    r'09432616af0954137c149e07ee7d923fb2b3eabd';
+    r'237c6f57524b56ddb586136dca684f40497fb8eb';
 
 abstract class _$EarthquakeNotificationSettingsNotifier
     extends $AsyncNotifier<EarthquakeNotificationSettings> {
