@@ -11,11 +11,29 @@ part of 'device_register_body.dart';
 _DeviceRegisterBody _$DeviceRegisterBodyFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_DeviceRegisterBody', json, ($checkedConvert) {
       final val = _DeviceRegisterBody(
-        type: $checkedConvert('type', (v) => v),
-        locale: $checkedConvert('locale', (v) => v ?? ja),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$DeviceTypeEnumMap, v),
+        ),
+        locale: $checkedConvert(
+          'locale',
+          (v) =>
+              $enumDecodeNullable(_$DeviceLocaleEnumMap, v) ?? DeviceLocale.ja,
+        ),
       );
       return val;
     });
 
 Map<String, dynamic> _$DeviceRegisterBodyToJson(_DeviceRegisterBody instance) =>
     <String, dynamic>{'type': instance.type, 'locale': instance.locale};
+
+const _$DeviceTypeEnumMap = {
+  DeviceType.ios: 'IOS',
+  DeviceType.android: 'ANDROID',
+};
+
+const _$DeviceLocaleEnumMap = {
+  DeviceLocale.ja: 'ja',
+  DeviceLocale.en: 'en',
+  DeviceLocale.zh: 'zh',
+};
