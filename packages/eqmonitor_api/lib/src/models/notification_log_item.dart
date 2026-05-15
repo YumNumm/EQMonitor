@@ -5,7 +5,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'framework.dart';
+import 'live_activity_event.dart';
 import 'result.dart';
+import 'start_trigger.dart';
 
 part 'notification_log_item.freezed.dart';
 part 'notification_log_item.g.dart';
@@ -41,6 +43,14 @@ abstract class NotificationLogItem with _$NotificationLogItem {
     String? apnsPriority,
     @JsonKey(includeIfNull: false,name: 'interruption_level')
     String? interruptionLevel,
+    @JsonKey(includeIfNull: false,name: 'live_activity_event')
+    LiveActivityEvent? liveActivityEvent,
+    @JsonKey(includeIfNull: false,name: 'start_trigger')
+    StartTrigger? startTrigger,
+    @JsonKey(includeIfNull: false,name: 'serial_no')
+    num? serialNo,
+    @JsonKey(includeIfNull: false,name: 'event_type')
+    String? eventType,
   }) = _NotificationLogItem;
   
   factory NotificationLogItem.fromJson(Map<String, Object?> json) => _$NotificationLogItemFromJson(json);

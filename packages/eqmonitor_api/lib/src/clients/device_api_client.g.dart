@@ -22,29 +22,56 @@ class _DeviceApiClient implements DeviceApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<DeviceResponse>> putV2DeviceDeviceId({
-    required String deviceId,
-    required DeviceUpsertRequest body,
+  Future<HttpResponse<ChallengeResponse>> postV2DeviceChallenge() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<ChallengeResponse>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/device/challenge',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late ChallengeResponse _value;
+    try {
+      _value = ChallengeResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<DeviceRegisterResponse>> postV2Device({
+    required DeviceRegisterBody body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<HttpResponse<DeviceResponse>>(
-      Options(method: 'PUT', headers: _headers, extra: _extra)
+    final _options = _setStreamType<HttpResponse<DeviceRegisterResponse>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}',
+            '/v2/device',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late DeviceResponse _value;
+    late DeviceRegisterResponse _value;
     try {
-      _value = DeviceResponse.fromJson(_result.data!);
+      _value = DeviceRegisterResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -54,27 +81,25 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<DeviceResponse>> getV2DeviceDeviceId({
-    required String deviceId,
-  }) async {
+  Future<HttpResponse<DeviceMeResponse>> getV2DeviceMe() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<DeviceResponse>>(
+    final _options = _setStreamType<HttpResponse<DeviceMeResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}',
+            '/v2/device/me',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late DeviceResponse _value;
+    late DeviceMeResponse _value;
     try {
-      _value = DeviceResponse.fromJson(_result.data!);
+      _value = DeviceMeResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -84,9 +109,7 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<void>> deleteV2DeviceDeviceId({
-    required String deviceId,
-  }) async {
+  Future<HttpResponse<void>> deleteV2DeviceMe() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -95,7 +118,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}',
+            '/v2/device/me',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -107,118 +130,19 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<List<ApnsTokenResponse>>> getV2DeviceDeviceIdApns({
-    required String deviceId,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<List<ApnsTokenResponse>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/apns',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<ApnsTokenResponse> _value;
-    try {
-      _value = _result.data!
-          .map(
-            (dynamic i) =>
-                ApnsTokenResponse.fromJson(i as Map<String, dynamic>),
-          )
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ApnsTokenResponse>> getV2DeviceDeviceIdApnsType({
-    required ApnsTokenType type,
-    required String deviceId,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ApnsTokenResponse>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/apns/${type.toJson()}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late ApnsTokenResponse _value;
-    try {
-      _value = ApnsTokenResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ApnsTokenResponse>> patchV2DeviceDeviceIdApnsType({
-    required ApnsTokenType type,
-    required String deviceId,
-    required ApnsTokenRequest body,
+  Future<HttpResponse<void>> patchV2DeviceMeFcm({
+    required V2DeviceMeFcmRequestBody body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<HttpResponse<ApnsTokenResponse>>(
+    final _options = _setStreamType<HttpResponse<void>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/apns/${type.toJson()}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late ApnsTokenResponse _value;
-    try {
-      _value = ApnsTokenResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<void>> deleteV2DeviceDeviceIdApnsType({
-    required ApnsTokenType type,
-    required String deviceId,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<void>>(
-      Options(method: 'DELETE', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/apns/${type.toJson()}',
+            '/v2/device/me/fcm',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -230,84 +154,20 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<FcmTokenResponse?>> getV2DeviceDeviceIdFcm({
-    required String deviceId,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<FcmTokenResponse?>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/fcm',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>?>(_options);
-    late FcmTokenResponse? _value;
-    try {
-      _value = _result.data == null
-          ? null
-          : FcmTokenResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<FcmTokenResponse?>> patchV2DeviceDeviceIdFcm({
-    required String deviceId,
-    required FcmTokenRequest body,
+  Future<HttpResponse<void>> patchV2DeviceMeApnsKind({
+    required dynamic kind,
+    required V2DeviceMeApnsKindRequestBody body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<HttpResponse<FcmTokenResponse?>>(
+    final _options = _setStreamType<HttpResponse<void>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/fcm',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>?>(_options);
-    late FcmTokenResponse? _value;
-    try {
-      _value = _result.data == null
-          ? null
-          : FcmTokenResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<void>> deleteV2DeviceDeviceIdFcm({
-    required String deviceId,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<void>>(
-      Options(method: 'DELETE', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/fcm',
+            '/v2/device/me/apns/${kind}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -315,144 +175,12 @@ class _DeviceApiClient implements DeviceApiClient {
     );
     final _result = await _dio.fetch<void>(_options);
     final httpResponse = HttpResponse(null, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<List<LiveActivityTokenResponse>>>
-  getV2DeviceDeviceIdLiveActivity({required String deviceId}) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options =
-        _setStreamType<HttpResponse<List<LiveActivityTokenResponse>>>(
-          Options(method: 'GET', headers: _headers, extra: _extra)
-              .compose(
-                _dio.options,
-                '/v2/device/${deviceId}/live-activity',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
-              ),
-        );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<LiveActivityTokenResponse> _value;
-    try {
-      _value = _result.data!
-          .map(
-            (dynamic i) =>
-                LiveActivityTokenResponse.fromJson(i as Map<String, dynamic>),
-          )
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<LiveActivityTokenResponse>>
-  putV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
-    required String liveActivityId,
-    required String deviceId,
-    required LiveActivityTokenRequest body,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
-    final _options = _setStreamType<HttpResponse<LiveActivityTokenResponse>>(
-      Options(method: 'PUT', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/live-activity/${liveActivityId}/token',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late LiveActivityTokenResponse _value;
-    try {
-      _value = LiveActivityTokenResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<void>>
-  deleteV2DeviceDeviceIdLiveActivityLiveActivityIdToken({
-    required String liveActivityId,
-    required String deviceId,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<void>>(
-      Options(method: 'DELETE', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/device/${deviceId}/live-activity/${liveActivityId}/token',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<void>(_options);
-    final httpResponse = HttpResponse(null, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<LiveActivityTestScenarioResponse>>
-  postV2DeviceDeviceIdLiveActivityTestScenario({
-    required String deviceId,
-    required LiveActivityTestScenarioRequest body,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
-    final _options =
-        _setStreamType<HttpResponse<LiveActivityTestScenarioResponse>>(
-          Options(method: 'POST', headers: _headers, extra: _extra)
-              .compose(
-                _dio.options,
-                '/v2/device/${deviceId}/live-activity/test-scenario',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
-              ),
-        );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late LiveActivityTestScenarioResponse _value;
-    try {
-      _value = LiveActivityTestScenarioResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
   @override
   Future<HttpResponse<NotificationSettingsResponse>>
-  getV2DeviceDeviceIdSettingsNotification({required String deviceId}) async {
+  getV2DeviceMeSettingsNotification() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -461,7 +189,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/notification',
+            '/v2/device/me/settings/notification',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -481,8 +209,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<NotificationSettingsResponse>>
-  patchV2DeviceDeviceIdSettingsNotification({
-    required String deviceId,
+  patchV2DeviceMeSettingsNotification({
     required NotificationSettingsRequest body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -494,7 +221,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/notification',
+            '/v2/device/me/settings/notification',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -514,7 +241,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<EarthquakeSettingsResponse>>
-  getV2DeviceDeviceIdSettingsEarthquake({required String deviceId}) async {
+  getV2DeviceMeSettingsEarthquake() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -523,7 +250,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/earthquake',
+            '/v2/device/me/settings/earthquake',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -543,8 +270,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<EarthquakeSettingsResponse>>
-  patchV2DeviceDeviceIdSettingsEarthquake({
-    required String deviceId,
+  patchV2DeviceMeSettingsEarthquake({
     required EarthquakeSettingsRequest body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -556,7 +282,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/earthquake',
+            '/v2/device/me/settings/earthquake',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -576,9 +302,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<List<RegionSettingResponse>>>
-  getV2DeviceDeviceIdSettingsEarthquakeRegions({
-    required String deviceId,
-  }) async {
+  getV2DeviceMeSettingsEarthquakeRegions() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -587,7 +311,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/earthquake/regions',
+            '/v2/device/me/settings/earthquake/regions',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -612,8 +336,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<List<RegionSettingResponse>>>
-  putV2DeviceDeviceIdSettingsEarthquakeRegions({
-    required String deviceId,
+  putV2DeviceMeSettingsEarthquakeRegions({
     required List<RegionSettingRequest> body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -624,7 +347,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/earthquake/regions',
+            '/v2/device/me/settings/earthquake/regions',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -649,9 +372,8 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<RegionSettingResponse>>
-  getV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
+  getV2DeviceMeSettingsEarthquakeRegionsRegionId({
     required num regionId,
-    required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -661,7 +383,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/earthquake/regions/${regionId}',
+            '/v2/device/me/settings/earthquake/regions/${regionId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -681,9 +403,8 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<RegionSettingResponse>>
-  patchV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
+  patchV2DeviceMeSettingsEarthquakeRegionsRegionId({
     required num regionId,
-    required String deviceId,
     required RegionSettingPatchRequest body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -695,7 +416,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/earthquake/regions/${regionId}',
+            '/v2/device/me/settings/earthquake/regions/${regionId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -714,10 +435,8 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<void>>
-  deleteV2DeviceDeviceIdSettingsEarthquakeRegionsRegionId({
+  Future<HttpResponse<void>> deleteV2DeviceMeSettingsEarthquakeRegionsRegionId({
     required num regionId,
-    required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -727,7 +446,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/earthquake/regions/${regionId}',
+            '/v2/device/me/settings/earthquake/regions/${regionId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -739,9 +458,7 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<EewSettingsResponse>> getV2DeviceDeviceIdSettingsEew({
-    required String deviceId,
-  }) async {
+  Future<HttpResponse<EewSettingsResponse>> getV2DeviceMeSettingsEew() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -750,7 +467,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/eew',
+            '/v2/device/me/settings/eew',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -769,8 +486,7 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<EewSettingsResponse>> patchV2DeviceDeviceIdSettingsEew({
-    required String deviceId,
+  Future<HttpResponse<EewSettingsResponse>> patchV2DeviceMeSettingsEew({
     required EewSettingsRequest body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -782,7 +498,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/eew',
+            '/v2/device/me/settings/eew',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -802,7 +518,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<List<RegionSettingResponse>>>
-  getV2DeviceDeviceIdSettingsEewRegions({required String deviceId}) async {
+  getV2DeviceMeSettingsEewRegions() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -811,7 +527,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/eew/regions',
+            '/v2/device/me/settings/eew/regions',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -836,8 +552,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<List<RegionSettingResponse>>>
-  putV2DeviceDeviceIdSettingsEewRegions({
-    required String deviceId,
+  putV2DeviceMeSettingsEewRegions({
     required List<RegionSettingRequest> body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -848,7 +563,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/eew/regions',
+            '/v2/device/me/settings/eew/regions',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -873,10 +588,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<RegionSettingResponse>>
-  getV2DeviceDeviceIdSettingsEewRegionsRegionId({
-    required num regionId,
-    required String deviceId,
-  }) async {
+  getV2DeviceMeSettingsEewRegionsRegionId({required num regionId}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -885,7 +597,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/eew/regions/${regionId}',
+            '/v2/device/me/settings/eew/regions/${regionId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -905,9 +617,8 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<RegionSettingResponse>>
-  patchV2DeviceDeviceIdSettingsEewRegionsRegionId({
+  patchV2DeviceMeSettingsEewRegionsRegionId({
     required num regionId,
-    required String deviceId,
     required RegionSettingPatchRequest body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -919,7 +630,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/eew/regions/${regionId}',
+            '/v2/device/me/settings/eew/regions/${regionId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -938,9 +649,8 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<void>> deleteV2DeviceDeviceIdSettingsEewRegionsRegionId({
+  Future<HttpResponse<void>> deleteV2DeviceMeSettingsEewRegionsRegionId({
     required num regionId,
-    required String deviceId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -950,7 +660,7 @@ class _DeviceApiClient implements DeviceApiClient {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/settings/eew/regions/${regionId}',
+            '/v2/device/me/settings/eew/regions/${regionId}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -963,7 +673,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<List<ShakeDetectionSettingResponse>>>
-  getV2DeviceDeviceIdSettingsShakeDetection({required String deviceId}) async {
+  getV2DeviceMeSettingsShakeDetection() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -973,7 +683,7 @@ class _DeviceApiClient implements DeviceApiClient {
           Options(method: 'GET', headers: _headers, extra: _extra)
               .compose(
                 _dio.options,
-                '/v2/device/${deviceId}/settings/shake-detection',
+                '/v2/device/me/settings/shake-detection',
                 queryParameters: queryParameters,
                 data: _data,
               )
@@ -1001,8 +711,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<List<ShakeDetectionSettingResponse>>>
-  putV2DeviceDeviceIdSettingsShakeDetection({
-    required String deviceId,
+  putV2DeviceMeSettingsShakeDetection({
     required List<ShakeDetectionSettingRequest> body,
   }) async {
     final _extra = <String, dynamic>{};
@@ -1014,7 +723,7 @@ class _DeviceApiClient implements DeviceApiClient {
           Options(method: 'PUT', headers: _headers, extra: _extra)
               .compose(
                 _dio.options,
-                '/v2/device/${deviceId}/settings/shake-detection',
+                '/v2/device/me/settings/shake-detection',
                 queryParameters: queryParameters,
                 data: _data,
               )
@@ -1042,9 +751,7 @@ class _DeviceApiClient implements DeviceApiClient {
 
   @override
   Future<HttpResponse<List<ShakeDetectionSubRegionResponse>>>
-  getV2DeviceDeviceIdSettingsShakeDetectionSubRegions({
-    required String deviceId,
-  }) async {
+  getV2DeviceMeSettingsShakeDetectionSubRegions() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -1054,7 +761,7 @@ class _DeviceApiClient implements DeviceApiClient {
           Options(method: 'GET', headers: _headers, extra: _extra)
               .compose(
                 _dio.options,
-                '/v2/device/${deviceId}/settings/shake-detection/sub-regions',
+                '/v2/device/me/settings/shake-detection/sub-regions',
                 queryParameters: queryParameters,
                 data: _data,
               )
@@ -1081,29 +788,125 @@ class _DeviceApiClient implements DeviceApiClient {
   }
 
   @override
-  Future<HttpResponse<MigrationResponse>> postV2DeviceDeviceIdMigrate({
-    required String deviceId,
-    required MigrateRequest body,
+  Future<HttpResponse<List<LiveActivityTokenResponse>>>
+  getV2DeviceMeLiveActivity() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<HttpResponse<List<LiveActivityTokenResponse>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/device/me/live-activity',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<LiveActivityTokenResponse> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) =>
+                LiveActivityTokenResponse.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<LiveActivityTokenResponse>>
+  putV2DeviceMeLiveActivityLiveActivityIdToken({
+    required String liveActivityId,
+    required LiveActivityTokenRequest body,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<HttpResponse<MigrationResponse>>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+    final _options = _setStreamType<HttpResponse<LiveActivityTokenResponse>>(
+      Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/device/${deviceId}/migrate',
+            '/v2/device/me/live-activity/${liveActivityId}/token',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late MigrationResponse _value;
+    late LiveActivityTokenResponse _value;
     try {
-      _value = MigrationResponse.fromJson(_result.data!);
+      _value = LiveActivityTokenResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<void>> deleteV2DeviceMeLiveActivityLiveActivityIdToken({
+    required String liveActivityId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<void>>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v2/device/me/live-activity/${liveActivityId}/token',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<void>(_options);
+    final httpResponse = HttpResponse(null, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<LiveActivityTestScenarioResponse>>
+  postV2DeviceMeLiveActivityTestScenario({
+    required LiveActivityTestScenarioRequest body,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _options =
+        _setStreamType<HttpResponse<LiveActivityTestScenarioResponse>>(
+          Options(method: 'POST', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v2/device/me/live-activity/test-scenario',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<Map<String, Object?>>(_options);
+    late LiveActivityTestScenarioResponse _value;
+    try {
+      _value = LiveActivityTestScenarioResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
