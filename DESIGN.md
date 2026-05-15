@@ -252,7 +252,7 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - アプリ内の ON/OFF は、ブランドに沿ったピル型トラックと円形サム（ON はチェック、OFF はクローズアイコン）を `AppSwitch` で表現する。
 - モーションは [`cue`](https://pub.dev/packages/cue) を用い、ON/OFF の切り替えやサム移動はスムーズ／スナップ系のプリセットで宣言的に定義する。
 - **押下中**はサムをわずかに拡大し、タッチ位置がスイッチ上にあることが分かるフィードバックを付ける（`Listener` で押下を追跡し、`Cue.onToggle` + `Act.scale` で表現する）。
-- Material の `Switch` / `Switch.adaptive` を設定画面で直接使うのは新規では避け、上記コンポーネントに寄せる。
+- Material の `Switch` を設定画面で直接使うのは新規では避け、上記コンポーネントに寄せる。
 
 ## Accordion sections
 
@@ -268,26 +268,25 @@ EQMonitor は、日本国内向けの地震・防災情報を扱う Flutter モ�
 - 二次 CTA は `FilledButton.tonal` または `OutlinedButton` を使う。
 - 破壊的操作は赤い塗りボタンを乱用せず、通常はトーナルまたはテキストボタンで確認導線を挟む。
 - ボタン内文字は `labelLarge` を使う。
-- プラットフォーム差を自然に吸収したい操作部品では [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) を優先し、`AdaptiveButton` を第一候補とする。
+- ボタン部品は Material 3 の `FilledButton` / `FilledButton.tonal` / `OutlinedButton` / `TextButton` を素直に使い、プラットフォーム別のラッパは導入しない。
 
 ## Segmented controls and chips
 
 - モード切り替え、表示種別切り替え、フィルタ切り替えにはセグメント UI を使う。
 - 最大 3 から 4 選択肢までを推奨する。それ以上はメニューや別画面に分離する。
 - 選択中は背景と文字色の両方で状態を示す。
-- セグメント UI は `SegmentedButton` や `CupertinoSlidingSegmentedControl` を個別に直接使い分けるのではなく、原則として [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) の `AdaptiveSegmentedControl` を利用する。
+- セグメント UI は Material 3 の `SegmentedButton` を標準として用い、プラットフォーム別の実装を切り替えるラッパは導入しない。
 
-## Dialogs, feedback, and platform-adaptive controls
+## Dialogs, feedback, and inputs
 
-- すべての `AlertDialog` / `CupertinoAlertDialog` 相当の確認ダイアログは、原則として [`adaptive_platform_ui`](https://pub.dev/packages/adaptive_platform_ui) の `AdaptiveAlertDialog` を利用する。
-- 一時的な通知は `SnackBar` を直接使わず、原則として `AdaptiveSnackBar` を利用する。
-- 長押しメニューや文脈依存アクションは `AdaptiveContextMenu` を優先する。
-- 日付選択は `AdaptiveDatePicker`、時刻選択は `AdaptiveTimePicker` を標準とする。
-- チェックボックス、スライダー、ラジオ、セグメントなど、プラットフォーム差が体験に影響しやすい入力部品は `AdaptiveCheckbox`, `AdaptiveSlider`, `AdaptiveRadio`, `AdaptiveSegmentedControl` を優先する。
-- **スイッチ**は上記「Toggles (AppSwitch)」に従い、通常は `AppSwitch` を使う。OS 標準のトグル見た目を最優先したい特殊ケースのみ `AdaptiveSwitch` を検討する。
-- テキスト入力は `TextField` / `CupertinoTextField` / `TextFormField` を直接使い分けるのではなく、原則として `AdaptiveTextField` と `AdaptiveTextFormField` を利用する。
-- フォームのグルーピングには `AdaptiveFormSection` を使い、iOS では `CupertinoFormSection` らしいまとまり、Android では Material 的なカードグループとして見せる。
-- 例外的に純正 Material / Cupertino ウィジェットを直接使う場合は、`adaptive_platform_ui` で満たせない要件があるときに限る。
+- 確認ダイアログは Material 3 の `AlertDialog`（必要に応じて `showDialog`）を素直に用いる。iOS スタイルの `CupertinoAlertDialog` をプラットフォーム別に出し分けることはしない。
+- 一時的な通知は `SnackBar` を `ScaffoldMessenger` 経由で表示する。重要なフィードバックはダイアログや画面内表示に格上げし、`SnackBar` に依存しすぎない。
+- 長押しメニューや文脈依存アクションは Material の `MenuAnchor` / `PopupMenuButton` を基本とする。
+- 日付選択は `showDatePicker`、時刻選択は `showTimePicker` を標準とする。
+- チェックボックス、スライダー、ラジオは Material 3 の `Checkbox`, `Slider`, `Radio` を素直に使う。セグメントは前節の通り `SegmentedButton` を用いる。
+- **スイッチ**は上記「Toggles (AppSwitch)」に従い、原則として `AppSwitch` を使う。
+- テキスト入力は `TextField` / `TextFormField` を直接使う。プラットフォーム別の入力ウィジェット切り替えは行わない。
+- フォームのグルーピングは、見出し付きの `Card` やセクション区切りで Material 的なまとまりとして見せる。
 
 ## Onboarding and welcome screens
 
