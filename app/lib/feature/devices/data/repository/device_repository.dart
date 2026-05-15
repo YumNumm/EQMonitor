@@ -11,8 +11,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_repository.g.dart';
 
-// 409: already migrated — treat as idempotent success
-const _kMigratedStatus = 409;
 
 @Riverpod(keepAlive: true)
 Future<DeviceRepository> deviceRepository(Ref ref) async =>
@@ -25,9 +23,7 @@ class DeviceRepository {
 
   Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
       Result.capture(() async {
-        final response = await _api.device.getV2DeviceDeviceId(
-          deviceId: deviceId,
-        );
+        final response = await _api.device.getV2DeviceMe();
         return response.data.toRegisteredDevice;
       });
 
@@ -36,19 +32,19 @@ class DeviceRepository {
     required DevicePlatform devicePlatform,
     required DeviceLocale deviceLocale,
   }) => Result.capture(() async {
-    final response = await _api.device.putV2DeviceDeviceId(
-      deviceId: deviceId,
-      body: api.DeviceUpsertRequest(
-        type: devicePlatform.toDeviceType,
-        locale: deviceLocale.toDeviceLocale,
+    await _api.device.postV2Device(
+      body: api.DeviceRegisterBody(
+        type: devicePlatform.toDeviceType.toJson(),
+        locale: deviceLocale.toDeviceLocale.toJson(),
       ),
     );
-    return response.data.toRegisteredDevice;
+    final getResponse = await _api.device.getV2DeviceMe();
+    return getResponse.data.toRegisteredDevice;
   });
 
   Future<Result<void, Exception>> deleteDevice(String deviceId) =>
       Result.capture(() async {
-        await _api.device.deleteV2DeviceDeviceId(deviceId: deviceId);
+        await _api.device.deleteV2DeviceMe();
       });
 
   Future<Result<RegisteredDevice, Exception>> fetchOrRegister({
@@ -111,20 +107,8 @@ class DeviceRepository {
       }
     }
 
-    // Step 3 — migrate legacy settings
-    return Result.capture(() async {
-      try {
-        await _api.device.postV2DeviceDeviceIdMigrate(
-          deviceId: deviceId,
-          body: api.MigrateRequest(oldDeviceId: oldDeviceId),
-        );
-      } on DioException catch (e) {
-        if (e.response?.statusCode == _kMigratedStatus) {
-          return; // idempotent
-        }
-        rethrow;
-      }
-    });
+    // Step 3 — migrate endpoint removed; treat as success
+    return const Success(null);
   }
 
   Future<Result<void, Exception>> syncLiveActivityUpdateToken({
@@ -132,8 +116,7 @@ class DeviceRepository {
     required String liveActivityId,
     required String token,
   }) => Result.capture(() async {
-    await _api.device.putV2DeviceDeviceIdLiveActivityLiveActivityIdToken(
-      deviceId: deviceId,
+    await _api.device.putV2DeviceMeLiveActivityLiveActivityIdToken(
       liveActivityId: liveActivityId,
       body: api.LiveActivityTokenRequest(token: token),
     );
@@ -145,14 +128,12 @@ class DeviceRepository {
     required api.LiveActivityStartTrigger eventType,
     required api.Scenario? scenario,
   }) => Result.capture(() async {
-    final response = await _api.device
-        .postV2DeviceDeviceIdLiveActivityTestScenario(
-          deviceId: deviceId,
-          body: api.LiveActivityTestScenarioRequest(
-            eventType: eventType,
-            scenario: scenario,
-          ),
-        );
+    final response = await _api.device.postV2DeviceMeLiveActivityTestScenario(
+      body: api.LiveActivityTestScenarioRequest(
+        eventType: eventType,
+        scenario: scenario,
+      ),
+    );
     return response.data;
   });
 
@@ -166,9 +147,8 @@ class DeviceRepository {
     final fcm = token.fcmToken;
     if (fcm != null && fcm.isNotEmpty) {
       final r = await Result.capture(() async {
-        await _api.device.patchV2DeviceDeviceIdFcm(
-          deviceId: deviceId,
-          body: api.FcmTokenRequest(token: fcm),
+        await _api.device.patchV2DeviceMeFcm(
+          body: api.V2DeviceMeFcmRequestBody(token: fcm),
         );
       });
       if (r is Failure<void, Exception>) {
@@ -183,15 +163,9 @@ class DeviceRepository {
     final apns = token.apnsToken;
     if (apns != null && apns.isNotEmpty) {
       final r = await Result.capture(() async {
-        await _api.device.patchV2DeviceDeviceIdApnsType(
-          type: api.ApnsTokenType.notification,
-          deviceId: deviceId,
-          body: api.ApnsTokenRequest(
-            token: apns,
-            environment: kDebugMode
-                ? api.ApnsEnvironment.development
-                : api.ApnsEnvironment.production,
-          ),
+        await _api.device.patchV2DeviceMeApnsKind(
+          kind: 'notification',
+          body: api.V2DeviceMeApnsKindRequestBody(token: apns),
         );
       });
       if (r is Failure<void, Exception>) {
@@ -202,15 +176,9 @@ class DeviceRepository {
     final pushToStart = token.apnsPushToStartToken;
     if (pushToStart != null && pushToStart.isNotEmpty) {
       final r = await Result.capture(() async {
-        await _api.device.patchV2DeviceDeviceIdApnsType(
-          type: api.ApnsTokenType.liveActivityStart,
-          deviceId: deviceId,
-          body: api.ApnsTokenRequest(
-            token: pushToStart,
-            environment: kDebugMode
-                ? api.ApnsEnvironment.development
-                : api.ApnsEnvironment.production,
-          ),
+        await _api.device.patchV2DeviceMeApnsKind(
+          kind: 'liveActivityStart',
+          body: api.V2DeviceMeApnsKindRequestBody(token: pushToStart),
         );
       });
       if (r is Failure<void, Exception>) {

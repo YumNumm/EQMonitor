@@ -30,18 +30,14 @@ class DeviceNotificationSettingsRepository {
   Future<Result<EewNotificationSettings, Exception>> getEewSettings(
     String deviceId,
   ) => Result.capture(() async {
-    final response = await _api.device.getV2DeviceDeviceIdSettingsEew(
-      deviceId: deviceId,
-    );
+    final response = await _api.device.getV2DeviceMeSettingsEew();
     return _eewFromResponse(response.data, []);
   });
 
   Future<Result<List<NotificationRegion>, Exception>> getEewRegions(
     String deviceId,
   ) => Result.capture(() async {
-    final response = await _api.device.getV2DeviceDeviceIdSettingsEewRegions(
-      deviceId: deviceId,
-    );
+    final response = await _api.device.getV2DeviceMeSettingsEewRegions();
     return response.data.map((r) => r.toNotificationRegion).toList();
   });
 
@@ -51,16 +47,14 @@ class DeviceNotificationSettingsRepository {
     required JmaIntensity? criticalThreshold,
     required bool startLiveActivity,
   }) => Result.capture(() async {
-    final response = await _api.device.patchV2DeviceDeviceIdSettingsEew(
-      deviceId: deviceId,
+    final response = await _api.device.patchV2DeviceMeSettingsEew(
       body: api.EewSettingsRequest(
         enabled: enabled,
         notificationTiers: _toEewApiTiers(criticalThreshold),
         startLiveActivity: startLiveActivity,
       ),
     );
-    final regionsResult = await _api.device
-        .getV2DeviceDeviceIdSettingsEewRegions(deviceId: deviceId);
+    final regionsResult = await _api.device.getV2DeviceMeSettingsEewRegions();
     return _eewFromResponse(
       response.data,
       regionsResult.data.map((r) => r.toNotificationRegion).toList(),
@@ -71,8 +65,7 @@ class DeviceNotificationSettingsRepository {
     required String deviceId,
     required List<NotificationRegion> regions,
   }) => Result.capture(() async {
-    final response = await _api.device.putV2DeviceDeviceIdSettingsEewRegions(
-      deviceId: deviceId,
+    final response = await _api.device.putV2DeviceMeSettingsEewRegions(
       body: regions.map((r) => r.toApiRequest).toList(),
     );
     return response.data.map((r) => r.toNotificationRegion).toList();
@@ -84,17 +77,15 @@ class DeviceNotificationSettingsRepository {
 
   Future<Result<EarthquakeNotificationSettings, Exception>>
   getEarthquakeSettings(String deviceId) => Result.capture(() async {
-    final response = await _api.device.getV2DeviceDeviceIdSettingsEarthquake(
-      deviceId: deviceId,
-    );
+    final response = await _api.device.getV2DeviceMeSettingsEarthquake();
     return _earthquakeFromResponse(response.data, []);
   });
 
   Future<Result<List<NotificationRegion>, Exception>> getEarthquakeRegions(
     String deviceId,
   ) => Result.capture(() async {
-    final response = await _api.device
-        .getV2DeviceDeviceIdSettingsEarthquakeRegions(deviceId: deviceId);
+    final response =
+        await _api.device.getV2DeviceMeSettingsEarthquakeRegions();
     return response.data.map((r) => r.toNotificationRegion).toList();
   });
 
@@ -105,17 +96,15 @@ class DeviceNotificationSettingsRepository {
     required JmaIntensity? criticalThreshold,
     required bool estimatedIntensityEnabled,
   }) => Result.capture(() async {
-    final response =
-        await _api.device.patchV2DeviceDeviceIdSettingsEarthquake(
-          deviceId: deviceId,
-          body: api.EarthquakeSettingsRequest(
-            enabled: enabled,
-            notificationTiers: _toEarthquakeApiTiers(criticalThreshold),
-            estimatedIntensityEnabled: estimatedIntensityEnabled,
-          ),
-        );
-    final regionsResult = await _api.device
-        .getV2DeviceDeviceIdSettingsEarthquakeRegions(deviceId: deviceId);
+    final response = await _api.device.patchV2DeviceMeSettingsEarthquake(
+      body: api.EarthquakeSettingsRequest(
+        enabled: enabled,
+        notificationTiers: _toEarthquakeApiTiers(criticalThreshold),
+        estimatedIntensityEnabled: estimatedIntensityEnabled,
+      ),
+    );
+    final regionsResult =
+        await _api.device.getV2DeviceMeSettingsEarthquakeRegions();
     return _earthquakeFromResponse(
       response.data,
       regionsResult.data.map((r) => r.toNotificationRegion).toList(),
@@ -126,11 +115,9 @@ class DeviceNotificationSettingsRepository {
     required String deviceId,
     required List<NotificationRegion> regions,
   }) => Result.capture(() async {
-    final response = await _api.device
-        .putV2DeviceDeviceIdSettingsEarthquakeRegions(
-          deviceId: deviceId,
-          body: regions.map((r) => r.toApiRequest).toList(),
-        );
+    final response = await _api.device.putV2DeviceMeSettingsEarthquakeRegions(
+      body: regions.map((r) => r.toApiRequest).toList(),
+    );
     return response.data.map((r) => r.toNotificationRegion).toList();
   });
 
@@ -140,9 +127,7 @@ class DeviceNotificationSettingsRepository {
 
   Future<Result<List<ShakeDetectionEntry>, Exception>>
   getShakeDetectionSettings(String deviceId) => Result.capture(() async {
-    final response = await _api.device.getV2DeviceDeviceIdSettingsShakeDetection(
-      deviceId: deviceId,
-    );
+    final response = await _api.device.getV2DeviceMeSettingsShakeDetection();
     return response.data.map(_shakeEntryFromResponse).toList();
   });
 
@@ -151,28 +136,24 @@ class DeviceNotificationSettingsRepository {
     required String deviceId,
     required List<ShakeDetectionEntry> entries,
   }) => Result.capture(() async {
-    final response =
-        await _api.device.putV2DeviceDeviceIdSettingsShakeDetection(
-          deviceId: deviceId,
-          body: entries
-              .map(
-                (e) => api.ShakeDetectionSettingRequest(
-                  subRegionId: e.subRegionId,
-                  minLevel: e.minLevel,
-                  isCurrentLocation: e.isCurrentLocation,
-                ),
-              )
-              .toList(),
-        );
+    final response = await _api.device.putV2DeviceMeSettingsShakeDetection(
+      body: entries
+          .map(
+            (e) => api.ShakeDetectionSettingRequest(
+              subRegionId: e.subRegionId,
+              minLevel: e.minLevel,
+              isCurrentLocation: e.isCurrentLocation,
+            ),
+          )
+          .toList(),
+    );
     return response.data.map(_shakeEntryFromResponse).toList();
   });
 
   Future<Result<List<ShakeDetectionSubRegion>, Exception>>
   getShakeDetectionSubRegions(String deviceId) => Result.capture(() async {
-    final response = await _api.device
-        .getV2DeviceDeviceIdSettingsShakeDetectionSubRegions(
-          deviceId: deviceId,
-        );
+    final response =
+        await _api.device.getV2DeviceMeSettingsShakeDetectionSubRegions();
     return response.data
         .map(
           (r) =>
