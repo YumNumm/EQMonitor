@@ -12,12 +12,14 @@ enum SharedPreferencesKey {
   homeConfiguration('home_configuration'),
   onboardingCompleted('onboarding_completed'),
   betaTestingAgreed('beta_testing_agreed'),
+
   /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
   legacyDeviceId('device_id'),
   deviceProvisioned('device_provisioned'),
   lastFcmTokenHash('last_fcm_token_hash'),
   lastApnsTokenHash('last_apns_token_hash'),
   lastApnsPushToStartTokenHash('last_apns_push_to_start_token_hash'),
+  adsOptOut('ads_opt_out'),
   ;
 
   const SharedPreferencesKey(this.key);

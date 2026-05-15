@@ -66,7 +66,7 @@ final class _DeviceInfoProvider
   }
 }
 
-String _$_deviceInfoHash() => r'438a6364267c70d8ff70ba1f9712fd2447a20dfe';
+String _$_deviceInfoHash() => r'ee2acd4f0440b61dfea0d82b15347af70ba51313';
 
 final class _DeviceInfoFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<RegisteredDevice>, String> {
@@ -144,7 +144,7 @@ final class _NotificationSettingsProvider
 }
 
 String _$_notificationSettingsHash() =>
-    r'e1835805ae76364aed1fb0ba812b4d71a694590f';
+    r'1acb74708543e0b4b4049a0fc3a22fda1d8df4ac';
 
 final class _NotificationSettingsFamily extends $Family
     with
@@ -226,7 +226,7 @@ final class _NotificationHistoryProvider
 }
 
 String _$_notificationHistoryHash() =>
-    r'2d6650a29bb881ae0f360d290049a0231edbc704';
+    r'a2505d29bdaf75b761863edf1d78eda7f7c3eadf';
 
 final class _NotificationHistoryFamily extends $Family
     with

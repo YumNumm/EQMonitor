@@ -95,4 +95,4 @@ final class LiveActivityTokenSyncWiringProvider
 }
 
 String _$liveActivityTokenSyncWiringHash() =>
-    r'e23d56281b7262a132cdbd524cb938262ec64044';
+    r'1e2b0b5123d42286267d8b21570098338414ccf6';

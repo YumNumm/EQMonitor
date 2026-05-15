@@ -1,7 +1,10 @@
+import 'package:eqmonitor/core/component/widget/app_switch.dart';
 import 'package:eqmonitor/core/gen/assets.gen.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/ads/data/notifier/ads_opt_out_notifier.dart';
+import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +74,12 @@ class SettingsPage extends ConsumerWidget {
               mode: LaunchMode.externalApplication,
             ),
           ),
+          AppSwitchListTile(
+            title: '広告を非表示',
+            value: ref.watch(adsOptOutProvider),
+            onChanged: (_) => ref.read(adsOptOutProvider.notifier).toggle(),
+          ),
+          const AdBanner(),
           Center(
             child: Text(
               'Powered by Flutter',

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
@@ -141,6 +142,7 @@ class _PagingBody extends StatelessWidget {
             ),
             emptyWidget: const EarthquakeHistoryNotFound(),
           ),
+          const SliverToBoxAdapter(child: AdBanner()),
           SliverToBoxAdapter(
             child: AppendLoadStateBuilder(
               dataSource: dataSource,
@@ -156,7 +158,10 @@ class _PagingBody extends StatelessWidget {
 }
 
 class _EarthquakeHistorySkeleton extends StatelessWidget {
-  const _EarthquakeHistorySkeleton({this.itemCount = 5, this.scrollable = true});
+  const _EarthquakeHistorySkeleton({
+    this.itemCount = 5,
+    this.scrollable = true,
+  });
 
   final int itemCount;
   final bool scrollable;

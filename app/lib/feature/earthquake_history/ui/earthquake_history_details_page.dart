@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
@@ -118,6 +119,11 @@ class _Sheet extends StatelessWidget {
                   EarthquakeIntensityWidget(
                     item: item,
                   ),
+                  // 発生から24時間以上経過した地震の詳細にのみ広告を表示する
+                  if (item.originTime != null &&
+                      DateTime.now().difference(item.originTime!) >
+                          const Duration(hours: 24))
+                    const AdBanner(),
                   _TelegramListButton(eventId: item.eventId),
                 ],
               ),
