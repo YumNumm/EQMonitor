@@ -40,6 +40,14 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
           const _AppVersionInformation(),
+          const SettingsSectionHeader(text: 'EQMonitor Pro'),
+          ListTile(
+            title: const Text('EQMonitor Pro'),
+            subtitle: const Text('プラン確認・アップグレード・購入の復元'),
+            leading: const Icon(Icons.workspace_premium_outlined),
+            onTap: () async =>
+                const SubscriptionSettingsRoute().push<void>(context),
+          ),
           const SettingsSectionHeader(text: '各種設定'),
           ListTile(
             title: const Text('通知設定'),

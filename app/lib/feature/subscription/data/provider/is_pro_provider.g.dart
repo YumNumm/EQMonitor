@@ -10,16 +10,28 @@ part of 'is_pro_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// P5実装前のスタブ。RevenueCat連携後にProユーザー判定に置き換える。
+/// Pro ユーザーかどうかを返す。
+///
+/// [subscriptionNotifierProvider] を watch し、active なら true。
+/// SDK 未統合段階では Stub の Notifier が常に [SubscriptionStatus.inactive] を
+/// 返すため false。後続 PR (#12) で RevenueCat 統合後は実際の購読状態を反映する。
 
 @ProviderFor(isPro)
 final isProProvider = IsProProvider._();
 
-/// P5実装前のスタブ。RevenueCat連携後にProユーザー判定に置き換える。
+/// Pro ユーザーかどうかを返す。
+///
+/// [subscriptionNotifierProvider] を watch し、active なら true。
+/// SDK 未統合段階では Stub の Notifier が常に [SubscriptionStatus.inactive] を
+/// 返すため false。後続 PR (#12) で RevenueCat 統合後は実際の購読状態を反映する。
 
 final class IsProProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  /// P5実装前のスタブ。RevenueCat連携後にProユーザー判定に置き換える。
+  /// Pro ユーザーかどうかを返す。
+  ///
+  /// [subscriptionNotifierProvider] を watch し、active なら true。
+  /// SDK 未統合段階では Stub の Notifier が常に [SubscriptionStatus.inactive] を
+  /// 返すため false。後続 PR (#12) で RevenueCat 統合後は実際の購読状態を反映する。
   IsProProvider._()
     : super(
         from: null,
@@ -53,4 +65,4 @@ final class IsProProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isProHash() => r'9126025efc06867fc0949744acfb88c941280888';
+String _$isProHash() => r'd800ad9f47e825157685189e98050df7d0cee142';
