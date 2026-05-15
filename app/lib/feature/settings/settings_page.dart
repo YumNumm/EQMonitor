@@ -79,7 +79,6 @@ class SettingsPage extends ConsumerWidget {
             value: ref.watch(adsOptOutProvider),
             onChanged: (_) => ref.read(adsOptOutProvider.notifier).toggle(),
           ),
-          const AdBanner(),
           Center(
             child: Text(
               'Powered by Flutter',
@@ -106,6 +105,7 @@ class SettingsPage extends ConsumerWidget {
           ],
         ],
       ),
+      bottomNavigationBar: const AdBanner(),
     );
   }
 }

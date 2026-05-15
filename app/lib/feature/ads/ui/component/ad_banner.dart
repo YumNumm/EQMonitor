@@ -45,14 +45,16 @@ class _BannerAdWidget extends HookConsumerWidget {
           adUnitId: adUnitIdBanner,
           listener: BannerAdListener(
             onAdLoaded: (_) => isLoaded.value = true,
-            onAdFailedToLoad: (ad, error) {
-              unawaited(ad.dispose());
+            onAdFailedToLoad: (ad, error) async {
               adState.value = null;
+              await ad.dispose();
             },
           ),
           request: const AdRequest(),
         );
-        unawaited(ad.load());
+        unawaited(
+          ad.load(),
+        );
         adState.value = ad;
         return ad.dispose;
       },
@@ -66,7 +68,9 @@ class _BannerAdWidget extends HookConsumerWidget {
 
     return SizedBox(
       height: ad.size.height.toDouble(),
-      child: AdWidget(ad: ad),
+      child: AdWidget(
+        ad: ad,
+      ),
     );
   }
 }

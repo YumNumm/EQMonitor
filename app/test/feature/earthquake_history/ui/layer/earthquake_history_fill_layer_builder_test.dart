@@ -7,13 +7,12 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/lpgm_intensity_t
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
-import 'package:lat_lng/lat_lng.dart';
 import 'package:maplibre/maplibre.dart';
 import 'package:test/test.dart';
 
 void main() {
   const resolver = EarthquakeHistoryMapLayerModeResolver();
-  final builder = EarthquakeHistoryFillLayerBuilder(modeResolver: resolver);
+  const builder = EarthquakeHistoryFillLayerBuilder(modeResolver: resolver);
   final colorModel = IntensityColorModel.jma();
   const thresholds = defaultEarthquakeHistoryMapLayerZoomThresholds;
 
@@ -28,7 +27,10 @@ void main() {
         [
           'in',
           ['get', 'code'],
-          ['literal', ['001', '002', '003']],
+          [
+            'literal',
+            ['001', '002', '003'],
+          ],
         ],
       );
     });
@@ -50,7 +52,10 @@ void main() {
         [
           'in',
           ['get', 'regioncode'],
-          ['literal', ['1010001', '1310000']],
+          [
+            'literal',
+            ['1010001', '1310000'],
+          ],
         ],
       );
     });
@@ -132,7 +137,10 @@ void main() {
       expect(fill.filter, [
         'in',
         ['get', 'code'],
-        ['literal', ['001', '002']],
+        [
+          'literal',
+          ['001', '002'],
+        ],
       ]);
     });
 
@@ -178,24 +186,28 @@ void main() {
     });
 
     test('sourceId は eqmonitor_map', () {
-      final layer = builder.buildCityLayer(
-        idPrefix: 'test',
-        codes: ['1010001'],
-        color: '#FF0000',
-        mode: mode,
-        zoomThresholds: thresholds,
-      ) as FillStyleLayer;
+      final layer =
+          builder.buildCityLayer(
+                idPrefix: 'test',
+                codes: ['1010001'],
+                color: '#FF0000',
+                mode: mode,
+                zoomThresholds: thresholds,
+              )
+              as FillStyleLayer;
       expect(layer.sourceId, 'eqmonitor_map');
     });
 
     test('sourceLayerId は areaInformationCityQuake', () {
-      final layer = builder.buildCityLayer(
-        idPrefix: 'test',
-        codes: ['1010001'],
-        color: '#FF0000',
-        mode: mode,
-        zoomThresholds: thresholds,
-      ) as FillStyleLayer;
+      final layer =
+          builder.buildCityLayer(
+                idPrefix: 'test',
+                codes: ['1010001'],
+                color: '#FF0000',
+                mode: mode,
+                zoomThresholds: thresholds,
+              )
+              as FillStyleLayer;
       expect(layer.sourceLayerId, 'areaInformationCityQuake');
     });
 
@@ -211,28 +223,35 @@ void main() {
     });
 
     test('filter に regioncode フィールドを使う', () {
-      final layer = builder.buildCityLayer(
-        idPrefix: 'test',
-        codes: ['1010001', '1310000'],
-        color: '#FF0000',
-        mode: mode,
-        zoomThresholds: thresholds,
-      ) as FillStyleLayer;
+      final layer =
+          builder.buildCityLayer(
+                idPrefix: 'test',
+                codes: ['1010001', '1310000'],
+                color: '#FF0000',
+                mode: mode,
+                zoomThresholds: thresholds,
+              )
+              as FillStyleLayer;
       expect(layer.filter, [
         'in',
         ['get', 'regioncode'],
-        ['literal', ['1010001', '1310000']],
+        [
+          'literal',
+          ['1010001', '1310000'],
+        ],
       ]);
     });
 
     test('fill-color に指定した色が入る', () {
-      final layer = builder.buildCityLayer(
-        idPrefix: 'test',
-        codes: ['1010001'],
-        color: '#ABCDEF',
-        mode: mode,
-        zoomThresholds: thresholds,
-      ) as FillStyleLayer;
+      final layer =
+          builder.buildCityLayer(
+                idPrefix: 'test',
+                codes: ['1010001'],
+                color: '#ABCDEF',
+                mode: mode,
+                zoomThresholds: thresholds,
+              )
+              as FillStyleLayer;
       expect(layer.paint['fill-color'], '#ABCDEF');
     });
   });
@@ -342,7 +361,11 @@ void main() {
       final fills = layers.whereType<FillStyleLayer>().toList();
       for (final fill in fills) {
         final filterField = (fill.filter![1] as List<Object>)[1] as String;
-        expect(filterField, 'regioncode', reason: 'city filter は regioncode フィールドを使う');
+        expect(
+          filterField,
+          'regioncode',
+          reason: 'city filter は regioncode フィールドを使う',
+        );
       }
     });
   });
@@ -420,7 +443,6 @@ class _FillLayerTestData {
   static const _regionCode = '210';
   static const _regionCode2 = '220';
   static const _cityCode = '2110001';
-  static const _cityCode2 = '2120001';
 
   EarthquakeIntensity regionOnlyIntensity() {
     return EarthquakeIntensity(
@@ -456,7 +478,6 @@ class _FillLayerTestData {
               CityIntensityNode(
                 city: _city(_cityCode),
                 maxIntensity: JmaIntensity.four,
-                maxLpgmIntensity: null,
                 stations: const [],
               ),
             ],
@@ -559,4 +580,3 @@ class _FillLayerTestData {
     );
   }
 }
-

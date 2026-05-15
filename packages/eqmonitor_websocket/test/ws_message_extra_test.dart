@@ -1,9 +1,4 @@
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
-import 'package:eqmonitor_websocket/src/realtime_event_envelope.dart';
-import 'package:eqmonitor_websocket/src/ws_message.dart';
-import 'package:eqmonitor_websocket/src/ws_pong_message.dart';
-import 'package:eqmonitor_websocket/src/ws_realtime_operation.dart';
-import 'package:eqmonitor_websocket/src/ws_snapshot_data.dart';
 import 'package:test/test.dart';
 
 Map<String, dynamic> _baseEewItem() => <String, dynamic>{
@@ -113,10 +108,7 @@ void main() {
 
   group('RealtimeEventEnvelope — EEW / EARTHQUAKE broadcast', () {
     test('EEW realtime event を WsEewRealtimeEvent としてパースできること', () {
-      final json = <String, dynamic>{
-        'type': 'EEW',
-        'item': _baseEewItem(),
-      };
+      final json = <String, dynamic>{'type': 'EEW', 'item': _baseEewItem()};
       final result = RealtimeEventEnvelope.fromJson(json);
       expect(result, isA<WsEewRealtimeEvent>());
       final eew = result as WsEewRealtimeEvent;
