@@ -18,9 +18,10 @@ Stream<NotificationToken> notificationTokenStream(Ref ref) async* {
 
   final fcmToken = ref.watch(_firebaseMessagingTokenStreamProvider).value;
   final apnsToken = ref.watch(_apnsTokenStreamProvider).value;
-  final apnsPushToStartToken = ref
-      .watch(_apnsPushToStartTokenStreamProvider)
-      .value;
+  final apnsPushToStartToken =
+      (!kIsWeb && (Platform.isIOS || Platform.isMacOS))
+          ? ref.watch(_apnsPushToStartTokenStreamProvider).value
+          : null;
 
   yield NotificationToken(
     fcmToken: fcmToken,
@@ -66,11 +67,10 @@ Stream<String> _apnsTokenStream(Ref ref) async* {
 
 @Riverpod(keepAlive: true)
 Stream<String> _apnsPushToStartTokenStream(Ref ref) async* {
+  if (kIsWeb || !(Platform.isIOS || Platform.isMacOS)) {
+    return;
+  }
   final eqmLiveActivityUtil = ref.watch(eqmLiveActivityUtilProvider);
-  assert(
-    kIsWeb || (Platform.isIOS || Platform.isMacOS),
-    'APNs Token is only supported on iOS and macOS',
-  );
 
   final initialToken = eqmLiveActivityUtil.pushToStartToken()?.toDartString();
   if (initialToken != null) {

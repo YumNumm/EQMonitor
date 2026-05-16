@@ -77,6 +77,10 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
       if (errorCode == rc.PurchasesErrorCode.purchaseCancelledError) {
         return const PurchaseResult.cancelled();
       }
+      if (errorCode == rc.PurchasesErrorCode.configurationError) {
+        talker.warning('subscription.purchaseMonthly: RC configuration error (no products in dashboard)');
+        return const PurchaseResult.failed('現在この機能はご利用いただけません');
+      }
       talker.handle(e, st, 'subscription.purchaseMonthly failed');
       return PurchaseResult.failed(e.message ?? '購入に失敗しました');
     }

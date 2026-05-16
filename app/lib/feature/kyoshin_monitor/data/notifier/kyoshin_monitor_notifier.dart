@@ -27,13 +27,16 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       }
     });
 
-    ref.listen(appLifecycleProvider, (previous, next) {
-      if (next == AppLifecycleState.resumed &&
-          previous != null &&
-          previous != AppLifecycleState.resumed) {
-        ref.invalidate(kyoshinMonitorProvider);
-      }
-    });
+    ref.listen(
+      appLifecycleProvider,
+      (previous, next) {
+        if (next == AppLifecycleState.resumed &&
+            previous != null &&
+            previous != AppLifecycleState.resumed) {
+          ref.invalidate(kyoshinMonitorProvider);
+        }
+      },
+    );
 
     // 設定変更を監視
     ref.listen(kyoshinMonitorSettingsProvider, (previous, next) {

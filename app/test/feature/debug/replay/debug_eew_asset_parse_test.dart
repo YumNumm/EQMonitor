@@ -8,8 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// assets/debug/eew/noto_peninsula_20240101/ 以下の変換済み JSON ファイルが
 /// EewItemWithRelations としてパースでき、EewTelegramItem に変換できることを確認する。
 void main() {
-  const scenarioDir =
-      'assets/debug/eew/noto_peninsula_20240101';
+  const scenarioDir = 'assets/debug/eew/noto_peninsula_20240101';
 
   late List<String> fileNames;
 
@@ -62,7 +61,7 @@ void main() {
       final item = EewItemWithRelations.fromJson(raw);
 
       // EewTelegramItem に変換できること
-      final telegram = item.toEewTelegramItem();
+      final telegram = item.toEewTelegramItem;
       expect(telegram.eventId, equals(item.eventId));
       expect(telegram.serialNo, equals(item.serialNo.toInt()));
       expect(telegram.isCanceled, equals(item.isCanceled));
@@ -71,9 +70,11 @@ void main() {
 
   test('reportTime が昇順に並んでいる (index.json の files 順)', () {
     final items = fileNames.map((name) {
-      final raw = jsonDecode(
-        File('$scenarioDir/$name').readAsStringSync(),
-      ) as Map<String, dynamic>;
+      final raw =
+          jsonDecode(
+                File('$scenarioDir/$name').readAsStringSync(),
+              )
+              as Map<String, dynamic>;
       return EewItemWithRelations.fromJson(raw);
     }).toList();
 
@@ -92,16 +93,19 @@ void main() {
   test('最終電文の isLastInfo が true である', () {
     final lastItem = EewItemWithRelations.fromJson(
       jsonDecode(
-        File('$scenarioDir/${fileNames.last}').readAsStringSync(),
-      ) as Map<String, dynamic>,
+            File('$scenarioDir/${fileNames.last}').readAsStringSync(),
+          )
+          as Map<String, dynamic>,
     );
     expect(lastItem.isLastInfo, isTrue);
   });
 
   test('時刻オフセット適用後も正常に EewTelegramItem に変換できる', () {
-    final raw = jsonDecode(
-      File('$scenarioDir/${fileNames.first}').readAsStringSync(),
-    ) as Map<String, dynamic>;
+    final raw =
+        jsonDecode(
+              File('$scenarioDir/${fileNames.first}').readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     final item = EewItemWithRelations.fromJson(raw);
 
     const offset = Duration(hours: 5, minutes: 30);

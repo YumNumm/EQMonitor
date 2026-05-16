@@ -106,7 +106,7 @@ abstract class EewAccuracyInfo with _$EewAccuracyInfo {
 // --- Conversion Extensions ---
 
 extension EewItemWithRelationsConverter on api.EewItemWithRelations {
-  EewTelegramItem toEewTelegramItem() => EewTelegramItem(
+  EewTelegramItem get toEewTelegramItem => EewTelegramItem(
     eventId: eventId,
     status: status.toTelegramStatus,
     infoType: infoType.toTelegramInfoType,

@@ -51,7 +51,7 @@ void main() {
   group('EewItemWithRelationsConverter.toEewTelegramItem', () {
     test('最小限のフィールドが正しく変換されること', () {
       final apiEew = _makeApiEew();
-      final converted = apiEew.toEewTelegramItem();
+      final converted = apiEew.toEewTelegramItem;
 
       expect(converted.eventId, '20250101120000');
       expect(converted.status, TelegramStatus.normal);
@@ -74,7 +74,7 @@ void main() {
         api.TelegramStatus.training: TelegramStatus.training,
         api.TelegramStatus.test: TelegramStatus.test,
       }.entries) {
-        final converted = _makeApiEew(status: entry.key).toEewTelegramItem();
+        final converted = _makeApiEew(status: entry.key).toEewTelegramItem;
         expect(converted.status, entry.value, reason: 'status ${entry.key}');
       }
       for (final entry in <api.InfoType, TelegramInfoType>{
@@ -83,7 +83,7 @@ void main() {
         api.InfoType.delay: TelegramInfoType.delay,
         api.InfoType.cancellation: TelegramInfoType.cancellation,
       }.entries) {
-        final converted = _makeApiEew(infoType: entry.key).toEewTelegramItem();
+        final converted = _makeApiEew(infoType: entry.key).toEewTelegramItem;
         expect(
           converted.infoType,
           entry.value,
@@ -101,7 +101,7 @@ void main() {
           depth: 10,
         ),
       );
-      final converted = apiEew.toEewTelegramItem();
+      final converted = apiEew.toEewTelegramItem;
       expect(converted.hypocenter, isNotNull);
       expect(converted.hypocenter!.code, '350');
       expect(converted.hypocenter!.name, '岐阜県美濃中西部');
@@ -119,7 +119,7 @@ void main() {
           detailed: api.CodeName(code: '350a', name: '美濃中西部詳細'),
         ),
       );
-      final converted = apiEew.toEewTelegramItem();
+      final converted = apiEew.toEewTelegramItem;
       expect(converted.hypocenter!.hasLatLng, isTrue);
       expect(converted.hypocenter!.latitude, 35.5);
       expect(converted.hypocenter!.longitude, 137.5);
@@ -136,7 +136,7 @@ void main() {
           depth: null,
         ),
       );
-      final converted = apiEew.toEewTelegramItem();
+      final converted = apiEew.toEewTelegramItem;
       expect(converted.hypocenter!.magnitude, isNull);
       expect(converted.hypocenter!.depth, isNull);
     });
@@ -151,7 +151,7 @@ void main() {
           ),
         ),
       );
-      final converted = apiEew.toEewTelegramItem();
+      final converted = apiEew.toEewTelegramItem;
       expect(converted.forecastIntensity, isNotNull);
       expect(converted.forecastIntensity!.maxIntensity, JmaIntensity.fiveUpper);
       expect(converted.forecastIntensity!.maxIntensityIsOver, isTrue);
@@ -160,61 +160,67 @@ void main() {
       expect(converted.forecastIntensity!.regions, isEmpty);
     });
 
-    test('forecastIntensity.regions の arrivalTime.type=ARRIVED で isArrived=true', () {
-      final apiEew = _makeApiEew(
-        forecastIntensity: const api.EewIntensity(
-          regions: [
-            api.EewIntensityItem(
-              value: api.CodeName(code: '900', name: '岩手県'),
-              isPlum: false,
-              isWarning: true,
-              intensity: api.EewIntensityValue(
-                value: api.JmaIntensity.value5minus,
-                isOver: false,
+    test(
+      'forecastIntensity.regions の arrivalTime.type=ARRIVED で isArrived=true',
+      () {
+        final apiEew = _makeApiEew(
+          forecastIntensity: const api.EewIntensity(
+            regions: [
+              api.EewIntensityItem(
+                value: api.CodeName(code: '900', name: '岩手県'),
+                isPlum: false,
+                isWarning: true,
+                intensity: api.EewIntensityValue(
+                  value: api.JmaIntensity.value5minus,
+                  isOver: false,
+                ),
+                arrivalTime: api.EewIntensityRegionArrivalTimeTime(
+                  type: api.EewIntensityRegionArrivalTimeType.arrived,
+                ),
               ),
-              arrivalTime: api.EewIntensityRegionArrivalTimeTime(
-                type: api.EewIntensityRegionArrivalTimeType.arrived,
-              ),
-            ),
-          ],
-        ),
-      );
-      final region = apiEew.toEewTelegramItem().forecastIntensity!.regions
-          .single;
-      expect(region.code, '900');
-      expect(region.name, '岩手県');
-      expect(region.isWarning, isTrue);
-      expect(region.intensity, JmaIntensity.fiveLower);
-      expect(region.isArrived, isTrue);
-      expect(region.arrivalTime, isNull);
-    });
+            ],
+          ),
+        );
+        final region =
+            apiEew.toEewTelegramItem.forecastIntensity!.regions.single;
+        expect(region.code, '900');
+        expect(region.name, '岩手県');
+        expect(region.isWarning, isTrue);
+        expect(region.intensity, JmaIntensity.fiveLower);
+        expect(region.isArrived, isTrue);
+        expect(region.arrivalTime, isNull);
+      },
+    );
 
-    test('forecastIntensity.regions の arrivalTime.type=TIME で arrivalTime が引き渡る', () {
-      final t = DateTime.utc(2025, 1, 1, 12, 0, 30);
-      final apiEew = _makeApiEew(
-        forecastIntensity: api.EewIntensity(
-          regions: [
-            api.EewIntensityItem(
-              value: const api.CodeName(code: '900', name: '岩手県'),
-              isPlum: false,
-              isWarning: false,
-              intensity: const api.EewIntensityValue(
-                value: api.JmaIntensity.value4,
-                isOver: false,
+    test(
+      'forecastIntensity.regions の arrivalTime.type=TIME で arrivalTime が引き渡る',
+      () {
+        final t = DateTime.utc(2025, 1, 1, 12, 0, 30);
+        final apiEew = _makeApiEew(
+          forecastIntensity: api.EewIntensity(
+            regions: [
+              api.EewIntensityItem(
+                value: const api.CodeName(code: '900', name: '岩手県'),
+                isPlum: false,
+                isWarning: false,
+                intensity: const api.EewIntensityValue(
+                  value: api.JmaIntensity.value4,
+                  isOver: false,
+                ),
+                arrivalTime: api.EewIntensityRegionArrivalTimeTime(
+                  type: api.EewIntensityRegionArrivalTimeType.time,
+                  value: t,
+                ),
               ),
-              arrivalTime: api.EewIntensityRegionArrivalTimeTime(
-                type: api.EewIntensityRegionArrivalTimeType.time,
-                value: t,
-              ),
-            ),
-          ],
-        ),
-      );
-      final region = apiEew.toEewTelegramItem().forecastIntensity!.regions
-          .single;
-      expect(region.arrivalTime, t);
-      expect(region.isArrived, isFalse);
-    });
+            ],
+          ),
+        );
+        final region =
+            apiEew.toEewTelegramItem.forecastIntensity!.regions.single;
+        expect(region.arrivalTime, t);
+        expect(region.isArrived, isFalse);
+      },
+    );
 
     test('warning の zones / prefectures / regions が変換されること', () {
       final apiEew = _makeApiEew(
@@ -239,7 +245,7 @@ void main() {
           ],
         ),
       );
-      final w = apiEew.toEewTelegramItem().warning!;
+      final w = apiEew.toEewTelegramItem.warning!;
       expect(w.zones, hasLength(1));
       expect(w.zones.single.code, '900');
       expect(w.zones.single.hadWarning, isTrue);
@@ -259,7 +265,7 @@ void main() {
           numberOfMagnitudeCalculation: 5,
         ),
       );
-      final converted = apiEew.toEewTelegramItem();
+      final converted = apiEew.toEewTelegramItem;
       expect(converted.accuracy, isNotNull);
       expect(converted.accuracy!.epicenter, 1);
       expect(converted.accuracy!.hypocenter, 2);
@@ -270,7 +276,7 @@ void main() {
 
     test('serialNo が num でも int に変換されること', () {
       final apiEew = _makeApiEew(serialNo: 3.0);
-      expect(apiEew.toEewTelegramItem().serialNo, 3);
+      expect(apiEew.toEewTelegramItem.serialNo, 3);
     });
 
     test('originTime / arrivalTime / reportTime / editorialOffice が引き渡ること', () {
@@ -285,7 +291,7 @@ void main() {
         headline: '震度4以上が予想されます',
         isWarning: true,
       );
-      final converted = apiEew.toEewTelegramItem();
+      final converted = apiEew.toEewTelegramItem;
       expect(converted.originTime, origin);
       expect(converted.arrivalTime, arrival);
       expect(converted.reportTime, report);
@@ -306,7 +312,7 @@ void main() {
           ),
         ),
       );
-      final f = apiEew.toEewTelegramItem().forecastIntensity!;
+      final f = apiEew.toEewTelegramItem.forecastIntensity!;
       expect(f.maxLpgmIntensity, JmaLpgmIntensity.three);
       expect(f.maxLpgmIntensityIsOver, isTrue);
     });

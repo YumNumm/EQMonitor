@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
-import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
+import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,6 +30,6 @@ class EewsByEventId extends _$EewsByEventId {
       }
     });
 
-    return response.data.items.map((e) => e.toEewTelegramItem()).toList();
+    return response.data.items.map((e) => e.toEewTelegramItem).toList();
   }
 }

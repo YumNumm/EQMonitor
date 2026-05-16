@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, type=warning, duplicate_ignore, unused_element_parameter
 
-part of 'eew_telegram.dart';
+part of 'eew.dart';
 
 // **************************************************************************
 // RiverpodGenerator

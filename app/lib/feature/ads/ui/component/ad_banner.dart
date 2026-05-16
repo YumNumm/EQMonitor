@@ -41,7 +41,7 @@ class _BannerAdWidget extends HookConsumerWidget {
     useEffect(
       () {
         final ad = BannerAd(
-          size: AdSize.banner,
+          size: .banner,
           adUnitId: adUnitIdBanner,
           listener: BannerAdListener(
             onAdLoaded: (_) => isLoaded.value = true,
@@ -66,10 +66,12 @@ class _BannerAdWidget extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return SizedBox(
-      height: ad.size.height.toDouble(),
-      child: AdWidget(
-        ad: ad,
+    return SafeArea(
+      child: SizedBox(
+        height: ad.size.height.toDouble(),
+        child: AdWidget(
+          ad: ad,
+        ),
       ),
     );
   }

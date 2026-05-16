@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
+import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter/services.dart';
@@ -103,7 +103,7 @@ class DebugReplay extends _$DebugReplay {
       forecastIntensity: replayShiftedForecastIntensity,
       hypocenter: replayShiftedHypocenter,
     );
-    ref.read(eewProvider.notifier).upsert(shifted.toEewTelegramItem());
+    ref.read(eewProvider.notifier).upsert(shifted.toEewTelegramItem);
 
     final next = state.currentIndex + 1;
     state = state.copyWith(

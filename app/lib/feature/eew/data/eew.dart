@@ -28,9 +28,9 @@ class Eew extends _$Eew {
       next.whenData((event) {
         switch (event) {
           case RealtimeSnapshotEvent(:final eews):
-            state = AsyncData(eews.map((e) => e.toEewTelegramItem()).toList());
+            state = AsyncData(eews.map((e) => e.toEewTelegramItem).toList());
           case RealtimeEewUpsertEvent(:final item):
-            _upsert(item.toEewTelegramItem());
+            _upsert(item.toEewTelegramItem);
           default:
             return;
         }
@@ -75,5 +75,9 @@ class Eew extends _$Eew {
 Future<List<EewTelegramItem>> _eewRest(Ref ref) async {
   final api = await ref.watch(apiClientProvider.future);
   final response = await api.eew.getV2EewLatest();
-  return response.data.items.map((e) => e.toEewTelegramItem()).toList();
+  return response.data.items
+      .map(
+        (e) => e.toEewTelegramItem,
+      )
+      .toList();
 }
