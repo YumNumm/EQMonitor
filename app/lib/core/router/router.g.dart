@@ -520,6 +520,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugLiveActivityTestRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'intensity-icon',
+          factory: $DebugIntensityIconRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'nied',
           factory: $NiedRoute._fromState,
           routes: [
@@ -1278,6 +1282,28 @@ mixin $DebugLiveActivityTestRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/live-activity-test');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugIntensityIconRoute on GoRouteData {
+  static DebugIntensityIconRoute _fromState(GoRouterState state) =>
+      const DebugIntensityIconRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/intensity-icon');
 
   @override
   void go(BuildContext context) => context.go(location);

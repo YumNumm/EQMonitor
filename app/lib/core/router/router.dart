@@ -41,6 +41,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart
 import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_device_admin_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navigation_debug_page.dart';
@@ -326,6 +327,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugLiveActivityTestRoute>(path: 'live-activity-test'),
+        TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -652,6 +654,15 @@ class DebugLiveActivityTestRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const LiveActivityTestPage();
+  }
+}
+
+class DebugIntensityIconRoute extends GoRouteData with $DebugIntensityIconRoute {
+  const DebugIntensityIconRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const IntensityIconDebugPage();
   }
 }
 

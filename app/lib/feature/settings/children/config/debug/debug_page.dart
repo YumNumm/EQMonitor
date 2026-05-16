@@ -194,6 +194,16 @@ class _DebugWidget extends ConsumerWidget {
                 const ShakeDetectionHistoryRoute().push<void>(context),
           ),
           ListTile(
+            title: const Text('震度アイコン確認'),
+            subtitle: Text(
+              '全震度・全タイプのアイコンをプレビュー',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.format_list_numbered),
+            onTap: () async =>
+                const DebugIntensityIconRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('震源アイコン生成'),
             leading: const Icon(Icons.place),
             onTap: () async => Navigator.of(context).push(
