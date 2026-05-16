@@ -57,33 +57,11 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
 
-    const maxIntensityPrefectures = <String>[];
-    final title = switch ((
-      hypoName,
-      hypoDetailName,
-      maxIntensity,
-      maxIntensityPrefectures,
-    )) {
-      (final String hypoName, final String hypoDetailName, _, _) =>
+    final title = switch ((hypoName, hypoDetailName, maxIntensity)) {
+      (final String hypoName, final String hypoDetailName, _) =>
         '$hypoName($hypoDetailName)',
-      (final String hypoName, _, _, _) => hypoName,
-      (
-        _,
-        _,
-        final JmaIntensity maxInt,
-        final List<String> regionNames,
-      )
-          when regionNames.length >= 2 =>
-        '最大震度${maxInt.label}を${regionNames.first}などで観測',
-      (
-        _,
-        _,
-        final JmaIntensity maxInt,
-        final List<String> regionNames,
-      )
-          when regionNames.isNotEmpty =>
-        '最大震度${maxInt.label}を${regionNames.first}で観測',
-      (_, _, final JmaIntensity maxInt, _) => '最大震度${maxInt.label}を観測',
+      (final String hypoName, _, _) => hypoName,
+      (_, _, final JmaIntensity maxInt) => '最大震度${maxInt.label}を観測',
       _ => '',
     };
 

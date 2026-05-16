@@ -27,6 +27,12 @@ Stream<WsMessage> eqmonitorWsPayloadStream(Ref ref) async* {
             controller.add(message);
           } on FormatException catch (exception) {
             talker.error('Invalid JSON: $text', exception);
+          } on Object catch (exception, stackTrace) {
+            talker.error(
+              'Failed to parse WsMessage: $text',
+              exception,
+              stackTrace,
+            );
           }
         case _:
           return;
