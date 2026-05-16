@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:eqmonitor/core/theme/theme_provider.dart';
+import 'package:eqmonitor/feature/debug/launcher/debug_launcher.dart';
 import 'package:eqmonitor/feature/start/ui/component/forced_update_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,8 @@ class App extends HookConsumerWidget {
           title: 'EQMonitor',
           themeMode: theme.value,
           routerConfig: routerConfig,
+          builder: (context, child) =>
+              DebugLauncher(child: child ?? const SizedBox.shrink()),
           theme: buildTheme(
             colorScheme: lightColorScheme,
             customColors: lightCustomColors,
