@@ -6,6 +6,14 @@ import 'package:eqmonitor/feature/map/utils/map_zoom_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre/maplibre.dart';
 
+/// ホーム設定から全マップ共通の maxZoom と gestures を取り出す
+({double maxZoom, MapGestures gestures}) sharedMapOptionsFromSettings(
+  HomeMapSettings map,
+) {
+  final maxZ = (map.maxZoom ?? 22).clamp(0.0, 24.0);
+  return (maxZoom: maxZ, gestures: MapGestures.all(rotate: !map.lockBearing));
+}
+
 /// ホーム設定に基づく初期 [MapOptions]（最大ズーム・方位ロック・表示範囲プリセット）
 MapOptions homeMapOptionsFromSettings({
   required BuildContext context,

@@ -3,6 +3,9 @@ import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifie
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_controls.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_data_overlay.dart';
 import 'package:eqmonitor/feature/earthquake_replay/ui/components/replay_map_layer.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -191,11 +194,19 @@ class _MapContent extends HookConsumerWidget {
     final replayState = ref.watch(replayProvider);
     final showOverlay = replayState?.showDataOverlay ?? false;
     final recentEvents = replayState?.recentEvents ?? [];
+    final mapSettings = ref.watch(
+      homeConfigurationProvider.select(
+        (v) => v.value?.map ?? const HomeMapSettings(),
+      ),
+    );
+    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
 
     final mapOptions = MapOptions(
       initCenter: const Geographic(lon: 138, lat: 36.5),
       initZoom: 4.5,
       initStyle: styleString,
+      maxZoom: maxZoom,
+      gestures: gestures,
     );
 
     return Stack(
