@@ -20,6 +20,9 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_intensity_icon_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/maplibre_event_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -78,6 +81,11 @@ class _MapContent extends HookConsumerWidget {
       earthquakeHistoryConfigProvider.select((v) => v.requireValue.detail),
     );
     final jmaMap = ref.watch(jmaMapProvider).requireValue;
+    final mapSettings = ref.watch(
+      homeConfigurationProvider.select(
+        (v) => v.value?.map ?? const HomeMapSettings(),
+      ),
+    );
 
     ref.listen(earthquakeHistoryMapFocusProvider(earthquake.eventId), (
       _,
@@ -110,10 +118,13 @@ class _MapContent extends HookConsumerWidget {
 
     final center = initialGeographicForEarthquake(earthquake);
     final zoom = initialZoomForEarthquake(earthquake);
+    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: zoom,
       initStyle: styleString,
+      maxZoom: maxZoom,
+      gestures: gestures,
     );
     final hypocenterLayer = EarthquakeHistoryHypocenterLayer(
       earthquake: earthquake,

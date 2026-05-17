@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/shake_detection/data/model/shake_detection_event.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
@@ -101,11 +104,19 @@ class _PageContent extends HookConsumerWidget {
       lat: (event.minLat + event.maxLat) / 2,
       lon: (event.minLng + event.maxLng) / 2,
     );
+    final mapSettings = ref.watch(
+      homeConfigurationProvider.select(
+        (v) => v.value?.map ?? const HomeMapSettings(),
+      ),
+    );
+    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
 
     final mapOptions = MapOptions(
       initCenter: center,
       initZoom: 5,
       initStyle: styleString,
+      maxZoom: maxZoom,
+      gestures: gestures,
     );
 
     final isInitialized = useRef(false);
