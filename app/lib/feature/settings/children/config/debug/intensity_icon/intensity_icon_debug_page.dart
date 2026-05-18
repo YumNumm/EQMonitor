@@ -1,8 +1,8 @@
-import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_lpgm_intensity_icon.dart';
+import 'dart:typed_data';
+
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/feature/map/features/icon/data/model/intensity_icon.dart';
+import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,11 +23,15 @@ class IntensityIconDebugPage extends HookConsumerWidget {
           const SizedBox(height: 16),
           _Section(
             title: '震度アイコン (JmaIntensity)',
+            providerName: 'intensityIconProvider',
+            onInvalidate: () => ref.invalidate(intensityIconProvider),
             child: _JmaIntensityGrid(size: size.value),
           ),
           const SizedBox(height: 16),
           _Section(
             title: '長周期地震動アイコン (JmaLpgmIntensity)',
+            providerName: 'intensityIconProvider',
+            onInvalidate: () => ref.invalidate(intensityIconProvider),
             child: _JmaLpgmIntensityGrid(size: size.value),
           ),
         ],
@@ -71,9 +75,16 @@ class _SizeSlider extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.child});
+  const _Section({
+    required this.title,
+    required this.providerName,
+    required this.onInvalidate,
+    required this.child,
+  });
 
   final String title;
+  final String providerName;
+  final VoidCallback onInvalidate;
   final Widget child;
 
   @override
@@ -88,6 +99,28 @@ class _Section extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '参照Provider: $providerName',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontFamily: 'monospace',
+                ),
+              ),
+            ),
+            OutlinedButton.icon(
+              onPressed: onInvalidate,
+              icon: const Icon(Icons.refresh, size: 16),
+              label: const Text('再レンダリング'),
+              style: OutlinedButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
         child,
       ],
     );
@@ -101,58 +134,62 @@ class _JmaIntensityGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Table(
-      defaultColumnWidth: const IntrinsicColumnWidth(),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          ),
-          children: const [
-            _HeaderCell('震度'),
-            _HeaderCell('filled'),
-            _HeaderCell('small'),
-            _HeaderCell('smallWithoutText'),
-          ],
-        ),
-        for (final intensity in JmaIntensity.values)
+    final asyncData = ref.watch(intensityIconProvider);
+
+    return asyncData.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, st) =>
+          Text('エラー: $e', style: const TextStyle(color: Colors.red)),
+      data: (data) => Table(
+        defaultColumnWidth: const IntrinsicColumnWidth(),
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
           TableRow(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                child: Text(
-                  intensity.label,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-              _IconCell(
-                child: JmaIntensityIcon(
-                  intensity: intensity,
-                  type: IntensityIconType.filled,
-                  size: size,
-                ),
-              ),
-              _IconCell(
-                child: JmaIntensityIcon(
-                  intensity: intensity,
-                  type: IntensityIconType.small,
-                  size: size,
-                ),
-              ),
-              _IconCell(
-                child: JmaIntensityIcon(
-                  intensity: intensity,
-                  type: IntensityIconType.smallWithoutText,
-                  size: size,
-                ),
-              ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            ),
+            children: const [
+              _HeaderCell('震度'),
+              _HeaderCell('filled'),
+              _HeaderCell('small'),
+              _HeaderCell('smallWithoutText'),
             ],
           ),
-      ],
+          for (final intensity in JmaIntensity.values)
+            TableRow(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  child: Text(
+                    intensity.label,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                _IconCell(
+                  child: _RenderedImage(
+                    bytes: data.jmaIntensity.filled[intensity],
+                    size: size,
+                  ),
+                ),
+                _IconCell(
+                  child: _RenderedImage(
+                    bytes: data.jmaIntensity.small[intensity],
+                    size: size,
+                  ),
+                ),
+                _IconCell(
+                  child: _RenderedImage(
+                    bytes: data.jmaIntensity.smallWithoutText[intensity],
+                    size: size,
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }
@@ -164,59 +201,83 @@ class _JmaLpgmIntensityGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Table(
-      defaultColumnWidth: const IntrinsicColumnWidth(),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          ),
-          children: const [
-            _HeaderCell('階級'),
-            _HeaderCell('filled'),
-            _HeaderCell('small'),
-            _HeaderCell('smallWithoutText'),
-          ],
-        ),
-        for (final intensity in JmaLpgmIntensity.values)
+    final asyncData = ref.watch(intensityIconProvider);
+
+    return asyncData.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, st) =>
+          Text('エラー: $e', style: const TextStyle(color: Colors.red)),
+      data: (data) => Table(
+        defaultColumnWidth: const IntrinsicColumnWidth(),
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
           TableRow(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                child: Text(
-                  intensity.label,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-              _IconCell(
-                child: JmaLpgmIntensityIcon(
-                  intensity: intensity,
-                  type: IntensityIconType.filled,
-                  size: size,
-                ),
-              ),
-              _IconCell(
-                child: JmaLpgmIntensityIcon(
-                  intensity: intensity,
-                  type: IntensityIconType.small,
-                  size: size,
-                ),
-              ),
-              _IconCell(
-                child: JmaLpgmIntensityIcon(
-                  intensity: intensity,
-                  type: IntensityIconType.smallWithoutText,
-                  size: size,
-                ),
-              ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            ),
+            children: const [
+              _HeaderCell('階級'),
+              _HeaderCell('filled'),
+              _HeaderCell('small'),
+              _HeaderCell('smallWithoutText'),
             ],
           ),
-      ],
+          for (final intensity in JmaLpgmIntensity.values)
+            TableRow(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  child: Text(
+                    intensity.label,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                _IconCell(
+                  child: _RenderedImage(
+                    bytes: data.lpgmIntensity.filled[intensity],
+                    size: size,
+                  ),
+                ),
+                _IconCell(
+                  child: _RenderedImage(
+                    bytes: data.lpgmIntensity.small[intensity],
+                    size: size,
+                  ),
+                ),
+                _IconCell(
+                  child: _RenderedImage(
+                    bytes: data.lpgmIntensity.smallWithoutText[intensity],
+                    size: size,
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
+  }
+}
+
+class _RenderedImage extends StatelessWidget {
+  const _RenderedImage({required this.bytes, required this.size});
+
+  final Uint8List? bytes;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final b = bytes;
+    if (b == null) {
+      return SizedBox(
+        width: size,
+        height: size,
+        child: const Icon(Icons.error_outline, size: 16),
+      );
+    }
+    return Image.memory(b, width: size, height: size, fit: BoxFit.contain);
   }
 }
 
