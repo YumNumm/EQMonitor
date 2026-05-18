@@ -96,21 +96,7 @@ Future<void> _main() async {
     ),
   );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    unawaited(MobileAds.instance.initialize());
-    unawaited(_configureRevenueCat());
-  }
-
-  await FirebaseAppCheck.instance.activate(
-    providerAndroid: kDebugMode
-        ? const AndroidDebugProvider()
-        : const AndroidPlayIntegrityProvider(),
-    providerApple: const AppleAppAttestProvider(),
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   talker = TalkerFlutter.init(
     settings: TalkerSettings(
@@ -150,6 +136,18 @@ Future<void> _main() async {
     }
     return true;
   };
+
+  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    unawaited(MobileAds.instance.initialize());
+    await _configureRevenueCat();
+  }
+
+  await FirebaseAppCheck.instance.activate(
+    providerAndroid: kDebugMode
+        ? const AndroidDebugProvider()
+        : const AndroidPlayIntegrityProvider(),
+    providerApple: const AppleAppAttestProvider(),
+  );
 
   final deviceInfo = DeviceInfoPlugin();
 

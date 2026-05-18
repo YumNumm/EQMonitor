@@ -14,7 +14,7 @@ part 'subscription_notifier.g.dart';
 const _entitlementId = 'pro';
 
 /// iOS の月額プラン Product ID (App Store Connect 登録値)。
-const _iosMonthlyProductId = 'net.yumnumm.eqmontior.pro.monthly';
+const _iosMonthlyProductId = 'net.yumnumm.eqmonitor.pro.monthly';
 
 /// Android の月額プラン Product ID (Play Console 登録値)。
 const _androidMonthlyProductId = 'eqmonitor.pro.monthly:eqmonitor-pro-monthly';
@@ -69,9 +69,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
       state = AsyncData(status);
       return status is SubscriptionStatusActive
           ? const PurchaseResult.success()
-          : const PurchaseResult.failed(
-              '購入は完了しましたが、Pro プランの有効化を確認できませんでした',
-            );
+          : const PurchaseResult.failed('購入は完了しましたが、Pro プランの有効化を確認できませんでした');
     } on PlatformException catch (e, st) {
       final errorCode = rc.PurchasesErrorHelper.getErrorCode(e);
       if (errorCode == rc.PurchasesErrorCode.purchaseCancelledError) {
