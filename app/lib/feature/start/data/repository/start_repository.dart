@@ -68,7 +68,7 @@ class StartRepository {
       return api.StartResponse.fromJson(
         jsonDecode(body) as Map<String, Object?>,
       );
-    } on FormatException {
+    } on Object {
       return null;
     }
   }

@@ -38,7 +38,7 @@ class SecurePreferencesDataSource
   @override
   Future<int?> getInt({required SecureStorageKey key}) => _secureStorage
       .read(key: key.key)
-      .then((value) => value != null ? int.parse(value) : null);
+      .then((value) => value != null ? int.tryParse(value) : null);
 
   @override
   Future<void> setDouble({
@@ -49,7 +49,7 @@ class SecurePreferencesDataSource
   @override
   Future<double?> getDouble({required SecureStorageKey key}) => _secureStorage
       .read(key: key.key)
-      .then((value) => value != null ? double.parse(value) : null);
+      .then((value) => value != null ? double.tryParse(value) : null);
 
   @override
   Future<void> setBool({

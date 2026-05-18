@@ -67,7 +67,7 @@ class ReplayNotifier extends _$ReplayNotifier {
 
   /// シーク（フレームインデックスを直接設定）
   Future<void> seekToIndex(int index) async {
-    if (state == null) {
+    if (state == null || state!.totalFrames == 0) {
       return;
     }
     final clampedIndex = index.clamp(0, state!.totalFrames - 1);
@@ -77,7 +77,7 @@ class ReplayNotifier extends _$ReplayNotifier {
 
   /// シーク（進捗率で設定: 0.0 ~ 1.0）
   Future<void> seekToProgress(double progress) async {
-    if (state == null) {
+    if (state == null || state!.totalFrames == 0) {
       return;
     }
     final index = (progress * (state!.totalFrames - 1)).round();

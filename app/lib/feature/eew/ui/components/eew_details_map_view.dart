@@ -3,6 +3,9 @@ import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_forecast_region_layer.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_static_ps_wave_layer.dart';
+import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
+import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_options.dart';
 import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +44,7 @@ class EewDetailsMapView extends HookConsumerWidget {
   }
 }
 
-class _MapContent extends StatelessWidget {
+class _MapContent extends ConsumerWidget {
   const _MapContent({
     required this.styleString,
     required this.selectedEew,
@@ -57,11 +60,19 @@ class _MapContent extends StatelessWidget {
   final EewDisplayMode displayMode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mapSettings = ref.watch(
+      homeConfigurationProvider.select(
+        (v) => v.value?.map ?? const HomeMapSettings(),
+      ),
+    );
+    final (:maxZoom, :gestures) = sharedMapOptionsFromSettings(mapSettings);
     final mapOptions = MapOptions(
       initCenter: initialCenter,
       initZoom: initZoom,
       initStyle: styleString,
+      maxZoom: maxZoom,
+      gestures: gestures,
     );
 
     return MapLibreMap(

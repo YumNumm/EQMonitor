@@ -204,7 +204,8 @@ class _DebugWidget extends ConsumerWidget {
                 const DebugIntensityIconRoute().push<void>(context),
           ),
           ListTile(
-            title: const Text('震源アイコン生成'),
+            title: const Text('地震履歴詳細アイコン一覧'),
+            subtitle: const Text('震源・JMA震度・長周期地震動階級アイコンのプレビュー'),
             leading: const Icon(Icons.place),
             onTap: () async => Navigator.of(context).push(
               MaterialPageRoute<void>(
