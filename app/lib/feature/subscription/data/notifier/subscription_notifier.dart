@@ -14,7 +14,7 @@ part 'subscription_notifier.g.dart';
 const _entitlementId = 'pro';
 
 /// iOS の月額プラン Product ID (App Store Connect 登録値)。
-const _iosMonthlyProductId = 'net.yumnumm.eqmontior.pro.monthly';
+const _iosMonthlyProductId = 'net.yumnumm.eqmonitor.pro.monthly';
 
 /// Android の月額プラン Product ID (Play Console 登録値)。
 const _androidMonthlyProductId = 'eqmonitor.pro.monthly:eqmonitor-pro-monthly';
