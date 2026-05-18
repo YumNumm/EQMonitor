@@ -334,18 +334,11 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
   }
 }
 
-class _IconModeSegmentedControl extends ConsumerStatefulWidget {
+class _IconModeSegmentedControl extends ConsumerWidget {
   const _IconModeSegmentedControl();
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      __IconModeSegmentedControlState();
-}
-
-class __IconModeSegmentedControlState
-    extends ConsumerState<_IconModeSegmentedControl> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
       earthquakeHistoryConfigProvider.select(
         (value) => value.requireValue.detail,
@@ -407,18 +400,11 @@ class __IconModeSegmentedControlState
   }
 }
 
-class _FillModeSegmentedControl extends ConsumerStatefulWidget {
+class _FillModeSegmentedControl extends ConsumerWidget {
   const _FillModeSegmentedControl();
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      __FillModeSegmentedControlState();
-}
-
-class __FillModeSegmentedControlState
-    extends ConsumerState<_FillModeSegmentedControl> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
       earthquakeHistoryConfigProvider.select(
         (value) => value.requireValue.detail,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 
 /// スコープに対する検索パラメータが取れない（未設定 / 未解決）ときに
@@ -95,39 +96,27 @@ class _UnavailableContainer extends StatelessWidget {
   }
 }
 
-class _CurrentLocationUnavailable extends StatefulWidget {
+class _CurrentLocationUnavailable extends HookWidget {
   const _CurrentLocationUnavailable({required this.onRetry});
 
   final VoidCallback onRetry;
 
   @override
-  State<_CurrentLocationUnavailable> createState() =>
-      _CurrentLocationUnavailableState();
-}
-
-class _CurrentLocationUnavailableState
-    extends State<_CurrentLocationUnavailable> {
-  LocationPermission? _permission;
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(_refreshPermission());
-  }
-
-  Future<void> _refreshPermission() async {
-    final p = await Geolocator.checkPermission();
-    if (mounted) {
-      setState(() => _permission = p);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final permission = _permission;
+    final permission = useState<LocationPermission?>(null);
+
+    Future<void> refreshPermission() async {
+      final p = await Geolocator.checkPermission();
+      permission.value = p;
+    }
+
+    useEffect(() {
+      unawaited(Future.microtask(refreshPermission));
+      return null;
+    }, const []);
 
     // 権限取得中はスケルトンを避けて軽量プレースホルダ
-    if (permission == null) {
+    if (permission.value == null) {
       return const _UnavailableContainer(
         icon: Icons.location_searching_outlined,
         message: '現在地を取得しています…',
@@ -136,7 +125,7 @@ class _CurrentLocationUnavailableState
 
     // 権限がない / 永続拒否 / それでも取れない、それぞれに合わせて文言と
     // アクションを切り替える。
-    return switch (permission) {
+    return switch (permission.value!) {
       LocationPermission.denied => _UnavailableContainer(
         icon: Icons.location_off_outlined,
         message: '位置情報の利用が許可されていません。許可すると現在地周辺の地震を表示できます。',
@@ -144,8 +133,8 @@ class _CurrentLocationUnavailableState
           FilledButton.tonal(
             onPressed: () async {
               await Geolocator.requestPermission();
-              await _refreshPermission();
-              widget.onRetry();
+              await refreshPermission();
+              onRetry();
             },
             child: const Text('位置情報を許可する'),
           ),
@@ -158,8 +147,8 @@ class _CurrentLocationUnavailableState
           FilledButton.tonal(
             onPressed: () async {
               await Geolocator.openAppSettings();
-              await _refreshPermission();
-              widget.onRetry();
+              await refreshPermission();
+              onRetry();
             },
             child: const Text('設定を開く'),
           ),
@@ -172,8 +161,8 @@ class _CurrentLocationUnavailableState
         actions: [
           OutlinedButton.icon(
             onPressed: () {
-              widget.onRetry();
-              unawaited(_refreshPermission());
+              onRetry();
+              unawaited(Future.microtask(refreshPermission));
             },
             icon: const Icon(Icons.refresh),
             label: const Text('再試行'),

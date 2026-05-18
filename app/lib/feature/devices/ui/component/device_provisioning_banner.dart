@@ -5,25 +5,19 @@ import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_noti
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/experimental/mutation.dart';
 
 /// デバイスプロビジョニング / トークン同期の進行状況バナー。
 /// 正常完了・アイドル状態では高さゼロの SizedBox.shrink() を返す。
-class DeviceProvisioningBanner extends ConsumerStatefulWidget {
+class DeviceProvisioningBanner extends ConsumerWidget {
   const DeviceProvisioningBanner({required this.bottomSpacing, super.key});
 
   final double bottomSpacing;
 
   @override
-  ConsumerState<DeviceProvisioningBanner> createState() =>
-      _DeviceProvisioningBannerState();
-}
-
-class _DeviceProvisioningBannerState
-    extends ConsumerState<DeviceProvisioningBanner> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final provisionStatus = ref.watch(deviceProvisioningProvider);
     final provisionMutation = ref.watch(
       DeviceProvisioningNotifier.provisionMutation,
@@ -55,7 +49,7 @@ class _DeviceProvisioningBannerState
     }
 
     return _DeviceProvisioningBannerContent(
-      bottomSpacing: widget.bottomSpacing,
+      bottomSpacing: bottomSpacing,
       activeRetry: activeRetry,
       isLoading: isLoading,
       onRetry: () {
@@ -143,49 +137,30 @@ class _DeviceProvisioningBannerContent extends StatelessWidget {
   }
 }
 
-class _WaitingBanner extends StatefulWidget {
+class _WaitingBanner extends HookWidget {
   const _WaitingBanner({required this.resumeAt, required this.error});
 
   final DateTime resumeAt;
   final DeviceProvisioningException error;
 
   @override
-  State<_WaitingBanner> createState() => _WaitingBannerState();
-}
-
-class _WaitingBannerState extends State<_WaitingBanner> {
-  Timer? _timer;
-  Duration _remaining = Duration.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    final now = DateTime.now();
-    _remaining = widget.resumeAt.isAfter(now)
-        ? widget.resumeAt.difference(now)
-        : Duration.zero;
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) {
-        final now = DateTime.now();
-        setState(() {
-          _remaining = widget.resumeAt.isAfter(now)
-              ? widget.resumeAt.difference(now)
-              : Duration.zero;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Duration calcRemaining() {
+      final now = DateTime.now();
+      return resumeAt.isAfter(now) ? resumeAt.difference(now) : Duration.zero;
+    }
+
+    final remaining = useState(calcRemaining());
+
+    useEffect(() {
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        remaining.value = calcRemaining();
+      });
+      return timer.cancel;
+    }, [resumeAt]);
+
     final colorScheme = Theme.of(context).colorScheme;
-    final seconds = _remaining.inSeconds;
+    final seconds = remaining.value.inSeconds;
     return _BannerTile(
       icon: Icons.schedule,
       backgroundColor: colorScheme.tertiaryContainer,

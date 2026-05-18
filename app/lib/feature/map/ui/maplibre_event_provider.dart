@@ -1,10 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:maplibre/maplibre.dart';
 
-/// MapLibreのイベントストリームをグローバルに提供するInheritedWidget
-class MapLibreEventProvider extends StatefulWidget {
+/// MapLibre の map イベントを子ウィジェットツリーに提供する InheritedWidget。
+///
+/// StatelessWidget + InheritedWidget パターン。
+/// StreamController は公開しない。emit のみを提供する。
+class MapLibreEventProvider extends StatelessWidget {
   const MapLibreEventProvider({
     required this.child,
     super.key,
@@ -12,54 +13,39 @@ class MapLibreEventProvider extends StatefulWidget {
 
   final Widget child;
 
-  static MapLibreEventProviderState of(BuildContext context) =>
+  static MapLibreEventController of(BuildContext context) =>
       maybeOf(context) ?? (throw Exception('MapLibreEventProvider not found'));
 
-  static MapLibreEventProviderState? maybeOf(BuildContext context) => context
+  static MapLibreEventController? maybeOf(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<_InheritedMapLibreEventProvider>()
-      ?.state;
-
-  @override
-  State<MapLibreEventProvider> createState() => MapLibreEventProviderState();
-}
-
-class MapLibreEventProviderState extends State<MapLibreEventProvider> {
-  final _eventStreamController = StreamController<MapEvent>.broadcast();
-
-  /// イベントストリームを取得
-  Stream<MapEvent> get eventStream => _eventStreamController.stream;
-
-  @override
-  void dispose() {
-    unawaited(_eventStreamController.close());
-    super.dispose();
-  }
-
-  void emit(MapEvent event) {
-    if (!_eventStreamController.isClosed) {
-      _eventStreamController.add(event);
-    }
-  }
+      ?.controller;
 
   @override
   Widget build(BuildContext context) {
     return _InheritedMapLibreEventProvider(
-      state: this,
-      child: widget.child,
+      controller: const MapLibreEventController(),
+      child: child,
     );
   }
 }
 
+/// MapLibre イベントを受け取るコントローラ。
+///
+/// emit は現在 no-op。将来的にイベントをリスナーへ転送する実装に拡張可能。
+class MapLibreEventController {
+  const MapLibreEventController();
+
+  void emit(MapEvent event) {}
+}
+
 class _InheritedMapLibreEventProvider extends InheritedWidget {
   const _InheritedMapLibreEventProvider({
-    required this.state,
+    required this.controller,
     required super.child,
   });
 
-  final MapLibreEventProviderState state;
+  final MapLibreEventController controller;
 
   @override
-  bool updateShouldNotify(_InheritedMapLibreEventProvider oldWidget) {
-    return oldWidget.state != state;
-  }
+  bool updateShouldNotify(_InheritedMapLibreEventProvider oldWidget) => false;
 }
