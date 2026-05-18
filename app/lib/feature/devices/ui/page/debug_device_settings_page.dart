@@ -76,54 +76,33 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
 
 // ── プロビジョニング起動状態セクション ──────────────────────────────────────
 
-class _ProvisioningStartupSection extends ConsumerStatefulWidget {
+class _ProvisioningStartupSection extends HookConsumerWidget {
   const _ProvisioningStartupSection({required this.deviceIdAsync});
 
   final AsyncValue<String> deviceIdAsync;
 
   @override
-  ConsumerState<_ProvisioningStartupSection> createState() =>
-      _ProvisioningStartupSectionState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final retryState = useState<RetryControllerState>(const RetryIdle());
+    final waitRemaining = useState(Duration.zero);
 
-class _ProvisioningStartupSectionState
-    extends ConsumerState<_ProvisioningStartupSection> {
-  Timer? _timer;
-  RetryControllerState _retryState = const RetryIdle();
-  Duration _waitRemaining = Duration.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    _tick();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) {
-        _tick();
-      }
-    });
-  }
-
-  void _tick() {
-    final rs = ref.read(deviceProvisioningProvider.notifier).retryState;
-    setState(() {
-      _retryState = rs;
+    void tick() {
+      final rs = ref.read(deviceProvisioningProvider.notifier).retryState;
+      retryState.value = rs;
       if (rs is RetryWaiting) {
         final diff = rs.resumeAt.difference(DateTime.now());
-        _waitRemaining = diff.isNegative ? Duration.zero : diff;
+        waitRemaining.value = diff.isNegative ? Duration.zero : diff;
       } else {
-        _waitRemaining = Duration.zero;
+        waitRemaining.value = Duration.zero;
       }
-    });
-  }
+    }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+    useEffect(() {
+      tick();
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) => tick());
+      return timer.cancel;
+    }, const []);
 
-  @override
-  Widget build(BuildContext context) {
     final provisionStatus = ref.watch(deviceProvisioningProvider);
     final provisionMutation =
         ref.watch(DeviceProvisioningNotifier.provisionMutation);
@@ -140,7 +119,7 @@ class _ProvisioningStartupSectionState
       _ => '取得中…',
     };
 
-    final retryChip = switch (_retryState) {
+    final retryChip = switch (retryState.value) {
       RetryIdle() => _StatusChip(
         label: 'アイドル',
         color: scheme.secondaryContainer,
@@ -153,7 +132,7 @@ class _ProvisioningStartupSectionState
         icon: Icons.sync,
       ),
       RetryWaiting(:final attempt) => _StatusChip(
-        label: '待機中 (試行 ${attempt + 1}, ${_waitRemaining.inSeconds}s後)',
+        label: '待機中 (試行 ${attempt + 1}, ${waitRemaining.value.inSeconds}s後)',
         color: scheme.secondaryContainer,
         textColor: scheme.onSecondaryContainer,
         icon: Icons.schedule,
@@ -168,7 +147,7 @@ class _ProvisioningStartupSectionState
 
     final needsProvision =
         provisionStatus.value == DeviceProvisioningStatus.required ||
-        _retryState is RetryExhausted;
+        retryState.value is RetryExhausted;
 
     return _SectionCard(
       title: '起動時プロビジョニング',
@@ -177,7 +156,7 @@ class _ProvisioningStartupSectionState
         children: [
           _KeyValueRow(
             label: 'Device ID',
-            value: widget.deviceIdAsync.value ?? '…',
+            value: deviceIdAsync.value ?? '…',
           ),
           _KeyValueRow(
             label: '保存済みフラグ',
@@ -201,10 +180,10 @@ class _ProvisioningStartupSectionState
               retryChip,
             ],
           ),
-          if (_retryState is RetryWaiting) ...[
+          if (retryState.value is RetryWaiting) ...[
             const SizedBox(height: 4),
             Text(
-              (_retryState as RetryWaiting).lastError.userMessage,
+              (retryState.value as RetryWaiting).lastError.userMessage,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: scheme.onSurfaceVariant,
               ),

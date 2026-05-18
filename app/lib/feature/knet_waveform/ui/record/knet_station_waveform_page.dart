@@ -457,23 +457,17 @@ class _SpectrumView extends StatelessWidget {
   }
 }
 
-class _SpectrumChart extends StatefulWidget {
+class _SpectrumChart extends HookWidget {
   const _SpectrumChart({required this.spectrum});
 
   final ResponseSpectrumResult spectrum;
 
   @override
-  State<_SpectrumChart> createState() => _SpectrumChartState();
-}
-
-class _SpectrumChartState extends State<_SpectrumChart> {
-  var _selected = 0; // 0=Sa 1=Sv 2=Sd
-
-  @override
   Widget build(BuildContext context) {
+    final selected = useState(0); // 0=Sa 1=Sv 2=Sd
     final cs = Theme.of(context).colorScheme;
-    final sp = widget.spectrum;
-    final (vals, unit, label) = switch (_selected) {
+    final sp = spectrum;
+    final (vals, unit, label) = switch (selected.value) {
       1 => (sp.sv, 'cm/s', '速度応答スペクトル Sv (h=5%)'),
       2 => (sp.sd, 'cm', '変位応答スペクトル Sd (h=5%)'),
       _ => (sp.sa, 'gal', '加速度応答スペクトル Sa (h=5%)'),
@@ -502,8 +496,8 @@ class _SpectrumChartState extends State<_SpectrumChart> {
               ButtonSegment(value: 1, label: Text('Sv (cm/s)')),
               ButtonSegment(value: 2, label: Text('Sd (cm)')),
             ],
-            selected: {_selected},
-            onSelectionChanged: (s) => setState(() => _selected = s.first),
+            selected: {selected.value},
+            onSelectionChanged: (s) => selected.value = s.first,
             style: const ButtonStyle(visualDensity: VisualDensity.compact),
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_credentials_provider.dart';
 import 'package:eqmonitor/feature/knet_waveform/data/provider/knet_directory_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -284,27 +285,19 @@ class _MonthPickerDialog extends ConsumerWidget {
 // Record picker dialog (searchable)
 // ---------------------------------------------------------------------------
 
-class _RecordPickerDialog extends ConsumerStatefulWidget {
+class _RecordPickerDialog extends HookConsumerWidget {
   const _RecordPickerDialog({required this.year, required this.month});
 
   final int year;
   final int month;
 
   @override
-  ConsumerState<_RecordPickerDialog> createState() =>
-      _RecordPickerDialogState();
-}
-
-class _RecordPickerDialogState extends ConsumerState<_RecordPickerDialog> {
-  final _formatter = DateFormat('MM/dd HH:mm:ss');
-  var _query = '';
-
-  @override
-  Widget build(BuildContext context) {
-    final recordsAsync =
-        ref.watch(knetRecordsProvider(widget.year, widget.month));
+  Widget build(BuildContext context, WidgetRef ref) {
+    final query = useState('');
+    final formatter = useMemoized(() => DateFormat('MM/dd HH:mm:ss'));
+    final recordsAsync = ref.watch(knetRecordsProvider(year, month));
     return AlertDialog(
-      title: Text('${widget.year}年${widget.month}月 — 記録を選択'),
+      title: Text('$year年$month月 — 記録を選択'),
       contentPadding: const EdgeInsets.only(top: 8),
       content: SizedBox(
         width: double.maxFinite,
@@ -313,10 +306,10 @@ class _RecordPickerDialogState extends ConsumerState<_RecordPickerDialog> {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('エラー: $e')),
           data: (records) {
-            final filtered = _query.isEmpty
+            final filtered = query.value.isEmpty
                 ? records
                 : records.where((dt) {
-                    return _formatter.format(dt).contains(_query);
+                    return formatter.format(dt).contains(query.value);
                   }).toList();
             return Column(
               children: [
@@ -328,7 +321,7 @@ class _RecordPickerDialogState extends ConsumerState<_RecordPickerDialog> {
                       prefixIcon: Icon(Icons.search),
                       isDense: true,
                     ),
-                    onChanged: (v) => setState(() => _query = v),
+                    onChanged: (v) => query.value = v,
                   ),
                 ),
                 Expanded(
@@ -338,7 +331,7 @@ class _RecordPickerDialogState extends ConsumerState<_RecordPickerDialog> {
                       final dt = filtered[i];
                       return ListTile(
                         dense: true,
-                        title: Text(_formatter.format(dt)),
+                        title: Text(formatter.format(dt)),
                         onTap: () => Navigator.of(context).pop(dt),
                       );
                     },

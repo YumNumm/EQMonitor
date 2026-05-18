@@ -1,0 +1,26 @@
+import 'dart:async';
+
+import 'package:analysis_server_plugin/plugin.dart';
+import 'package:analysis_server_plugin/registry.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:eqmonitor_lints/src/rules/avoid_null_assertion_operator.dart';
+import 'package:eqmonitor_lints/src/rules/avoid_print_call.dart';
+import 'package:eqmonitor_lints/src/rules/avoid_stateful_widget.dart';
+import 'package:eqmonitor_lints/src/rules/avoid_top_level_functions.dart';
+
+final plugin = _EqmonitorLintsPlugin();
+
+class _EqmonitorLintsPlugin extends Plugin {
+  @override
+  String get name => 'eqmonitor_lints';
+
+  @override
+  Future<void> register(PluginRegistry registry) async {
+    <AnalysisRule>[
+      AvoidStatefulWidget(),
+      AvoidNullAssertionOperator(),
+      AvoidTopLevelFunctions(),
+      AvoidPrintCall(),
+    ].forEach(registry.registerLintRule);
+  }
+}
