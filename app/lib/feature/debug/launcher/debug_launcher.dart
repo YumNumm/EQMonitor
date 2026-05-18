@@ -50,10 +50,9 @@ class _DebugLauncherState extends ConsumerState<DebugLauncher> {
     if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) {
       return;
     }
-    _accelSubscription =
-        userAccelerometerEventStream(
-          samplingPeriod: SensorInterval.gameInterval,
-        ).listen(_onAccel, onError: (_) {});
+    _accelSubscription = userAccelerometerEventStream(
+      samplingPeriod: SensorInterval.gameInterval,
+    ).listen(_onAccel, onError: (_) {});
   }
 
   void _onAccel(UserAccelerometerEvent event) {
@@ -100,8 +99,8 @@ class _DebugLauncherState extends ConsumerState<DebugLauncher> {
     }
     _lastOpen = now;
     final router = ref.read(goRouterProvider);
-    final currentLocation =
-        router.routerDelegate.currentConfiguration.uri.toString();
+    final currentLocation = router.routerDelegate.currentConfiguration.uri
+        .toString();
     if (currentLocation.startsWith(const DebugRoute().location)) {
       return;
     }
