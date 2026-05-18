@@ -8,3 +8,11 @@ analyzer:
     unnecessary_async: ignore
   enable-experiment:
     - dot-shorthands
+
+plugins:
+  eqmonitor_lints:
+    diagnostics:
+      avoid_stateful_widget: true
+      avoid_null_assertion_operator: true
+      avoid_top_level_functions: true
+      avoid_print: true

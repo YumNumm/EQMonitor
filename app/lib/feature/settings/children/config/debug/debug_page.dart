@@ -18,6 +18,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugPage extends ConsumerWidget {
@@ -368,20 +369,12 @@ class _AppCheckSection extends ConsumerWidget {
   }
 }
 
-class _ParameterDebugSection extends ConsumerStatefulWidget {
+class _ParameterDebugSection extends HookConsumerWidget {
   const _ParameterDebugSection();
 
   @override
-  ConsumerState<_ParameterDebugSection> createState() =>
-      _ParameterDebugSectionState();
-}
-
-class _ParameterDebugSectionState
-    extends ConsumerState<_ParameterDebugSection> {
-  var _isRefreshing = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isRefreshing = useState(false);
     final paramAsync = ref.watch(parameterSetProvider);
 
     return Column(
@@ -390,7 +383,7 @@ class _ParameterDebugSectionState
         ListTile(
           title: const Text('パラメータ'),
           leading: const Icon(Icons.data_object),
-          trailing: _isRefreshing
+          trailing: isRefreshing.value
               ? const SizedBox(
                   width: 24,
                   height: 24,
@@ -400,7 +393,7 @@ class _ParameterDebugSectionState
                   icon: const Icon(Icons.refresh),
                   tooltip: '強制再取得',
                   onPressed: () async {
-                    setState(() => _isRefreshing = true);
+                    isRefreshing.value = true;
                     final messenger = ScaffoldMessenger.of(context);
                     try {
                       final updated = await ref
@@ -418,9 +411,7 @@ class _ParameterDebugSectionState
                         SnackBar(content: Text('エラー: $e')),
                       );
                     } finally {
-                      if (mounted) {
-                        setState(() => _isRefreshing = false);
-                      }
+                      isRefreshing.value = false;
                     }
                   },
                 ),
