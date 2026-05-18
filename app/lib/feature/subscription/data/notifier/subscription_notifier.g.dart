@@ -10,48 +10,24 @@ part of 'subscription_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// サブスクリプション状態を保持する AsyncNotifier の **スタブ**。
+/// サブスクリプション状態を保持する AsyncNotifier。
 ///
-/// 後続 PR (#12) で RevenueCat (`purchases_flutter`) 統合により
-/// 本実装に差し替えられる。差し替え時にはこの signature を維持し、
-/// UI 側 (`PaywallPage` / `SubscriptionSettingsPage` / `isProProvider`) を
-/// 変更しなくて済むようにする。
-///
-/// 現状の挙動:
-/// - `build()` は常に [SubscriptionStatus.inactive] を返す
-/// - [refresh] は no-op
-/// - [purchaseMonthly] は [PurchaseResult.unavailable] を返す
-/// - [restorePurchases] は [PurchaseResult.unavailable] を返す
+/// `Purchases.getCustomerInfo()` で取得した `CustomerInfo` から
+/// active な `pro` Entitlement を判定し [SubscriptionStatus] を返す。
 
 @ProviderFor(SubscriptionNotifier)
 final subscriptionProvider = SubscriptionNotifierProvider._();
 
-/// サブスクリプション状態を保持する AsyncNotifier の **スタブ**。
+/// サブスクリプション状態を保持する AsyncNotifier。
 ///
-/// 後続 PR (#12) で RevenueCat (`purchases_flutter`) 統合により
-/// 本実装に差し替えられる。差し替え時にはこの signature を維持し、
-/// UI 側 (`PaywallPage` / `SubscriptionSettingsPage` / `isProProvider`) を
-/// 変更しなくて済むようにする。
-///
-/// 現状の挙動:
-/// - `build()` は常に [SubscriptionStatus.inactive] を返す
-/// - [refresh] は no-op
-/// - [purchaseMonthly] は [PurchaseResult.unavailable] を返す
-/// - [restorePurchases] は [PurchaseResult.unavailable] を返す
+/// `Purchases.getCustomerInfo()` で取得した `CustomerInfo` から
+/// active な `pro` Entitlement を判定し [SubscriptionStatus] を返す。
 final class SubscriptionNotifierProvider
     extends $AsyncNotifierProvider<SubscriptionNotifier, SubscriptionStatus> {
-  /// サブスクリプション状態を保持する AsyncNotifier の **スタブ**。
+  /// サブスクリプション状態を保持する AsyncNotifier。
   ///
-  /// 後続 PR (#12) で RevenueCat (`purchases_flutter`) 統合により
-  /// 本実装に差し替えられる。差し替え時にはこの signature を維持し、
-  /// UI 側 (`PaywallPage` / `SubscriptionSettingsPage` / `isProProvider`) を
-  /// 変更しなくて済むようにする。
-  ///
-  /// 現状の挙動:
-  /// - `build()` は常に [SubscriptionStatus.inactive] を返す
-  /// - [refresh] は no-op
-  /// - [purchaseMonthly] は [PurchaseResult.unavailable] を返す
-  /// - [restorePurchases] は [PurchaseResult.unavailable] を返す
+  /// `Purchases.getCustomerInfo()` で取得した `CustomerInfo` から
+  /// active な `pro` Entitlement を判定し [SubscriptionStatus] を返す。
   SubscriptionNotifierProvider._()
     : super(
         from: null,
@@ -72,20 +48,12 @@ final class SubscriptionNotifierProvider
 }
 
 String _$subscriptionNotifierHash() =>
-    r'b58bb9c060cf5eac765ed860c5440852a76b64ad';
+    r'779ff27bb329e3466ab40977e12eaefdb5d9a6dd';
 
-/// サブスクリプション状態を保持する AsyncNotifier の **スタブ**。
+/// サブスクリプション状態を保持する AsyncNotifier。
 ///
-/// 後続 PR (#12) で RevenueCat (`purchases_flutter`) 統合により
-/// 本実装に差し替えられる。差し替え時にはこの signature を維持し、
-/// UI 側 (`PaywallPage` / `SubscriptionSettingsPage` / `isProProvider`) を
-/// 変更しなくて済むようにする。
-///
-/// 現状の挙動:
-/// - `build()` は常に [SubscriptionStatus.inactive] を返す
-/// - [refresh] は no-op
-/// - [purchaseMonthly] は [PurchaseResult.unavailable] を返す
-/// - [restorePurchases] は [PurchaseResult.unavailable] を返す
+/// `Purchases.getCustomerInfo()` で取得した `CustomerInfo` から
+/// active な `pro` Entitlement を判定し [SubscriptionStatus] を返す。
 
 abstract class _$SubscriptionNotifier
     extends $AsyncNotifier<SubscriptionStatus> {

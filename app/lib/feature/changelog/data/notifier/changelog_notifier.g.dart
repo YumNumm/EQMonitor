@@ -49,7 +49,7 @@ final class ChangelogNotifierProvider
   }
 }
 
-String _$changelogNotifierHash() => r'146f55848c7eef545a7cbdf7ac20206dc6ade83b';
+String _$changelogNotifierHash() => r'2b1d2de7ddca621221542b36ee4eec4b29e89e27';
 
 abstract class _$ChangelogNotifier
     extends $Notifier<AsyncValue<api.ChangelogResponse?>> {

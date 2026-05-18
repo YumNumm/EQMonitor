@@ -154,7 +154,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         ? ref.watch(
             parameterSetProvider.select(
               (v) => v.value?.earthquake.prefectures
-                  .expand((p) => p.regions.map((r) => (prefecture: p, region: r)))
+                  .expand(
+                    (p) => p.regions.map((r) => (prefecture: p, region: r)),
+                  )
                   .firstWhereOrNull((e) => e.region.code == regionCode),
             ),
           )
@@ -171,50 +173,21 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         : null;
 
     // 現在地の地名を解決
-    String? currentLocationName;
-    if (cityParam != null) {
-      currentLocationName =
-          '${cityParam.prefecture.name.ja}${cityParam.city.name.ja}';
-    } else if (regionParam != null) {
-      currentLocationName =
-          '${regionParam.prefecture.name.ja}${regionParam.region.name.ja}';
-    }
+    final currentLocationName = switch ((cityParam, regionParam)) {
+      (final c?, _) => '${c.prefecture.name.ja}${c.city.name.ja}',
+      (_, final r?) => '${r.prefecture.name.ja}${r.region.name.ja}',
+      _ => null,
+    };
 
     // 現在地の震度チップテキストを解決
-    String? currentLocationChipLabel;
-    switch (currentLocationIntensityAsync?.value) {
-      case CurrentLocationIntensityDisplayQuick(:final intensity):
-        currentLocationChipLabel =
-            '${currentLocationName != null ? "$currentLocationName " : ""}現在地で震度${intensity.label}を観測(速報)';
-      case CurrentLocationIntensityDisplayResult(:final intensity):
-        currentLocationChipLabel =
-            '${currentLocationName != null ? "$currentLocationName " : ""}現在地で震度${intensity.label}を観測';
-      case CurrentLocationIntensityDisplayNone():
-      case null:
-        if (currentLocationName != null) {
-          currentLocationChipLabel = currentLocationName;
-        }
-    }
-
-    // 現在地チップを構築
-    Widget? currentLocationChip;
-    if (showCurrentLocationIntensity && currentLocationChipLabel != null) {
-      currentLocationChip = Chip(
-        label: Text(currentLocationChipLabel),
-        padding: EdgeInsets.zero,
-        visualDensity: VisualDensity.compact,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      );
-    }
-
-    final chips = <Widget>[
-      if (maxLpgmIntensity != null && maxLpgmIntensity != JmaLpgmIntensity.zero)
-        Chip(
-          label: Text('最大長周期地震動階級 ${maxLpgmIntensity.label}'),
-          padding: EdgeInsets.zero,
-        ),
-      ?currentLocationChip,
-    ];
+    final currentLocationChipLabel = switch (currentLocationIntensityAsync
+        ?.value) {
+      CurrentLocationIntensityDisplayQuick(:final intensity) =>
+        '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label} (速報)',
+      CurrentLocationIntensityDisplayResult(:final intensity) =>
+        '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label}',
+      CurrentLocationIntensityDisplayNone() || null => currentLocationName,
+    };
 
     return ListTile(
       visualDensity: visualDensity,
@@ -229,21 +202,26 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           color: titleTextColor,
         ),
       ),
-      subtitle: Wrap(
-        spacing: 4,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          Text(
-            subTitle,
-            style: TextStyle(
-              fontFamily: FontFamily.googleSansCode,
-              fontFamilyFallback: const [FontFamily.notoSansJP],
-              letterSpacing: -0.2,
-              color: descriptionTextColor,
+      subtitle: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: subTitle,
+              style: TextStyle(
+                fontFamily: FontFamily.googleSansCode,
+                fontFamilyFallback: const [FontFamily.notoSansJP],
+                letterSpacing: -0.2,
+                color: descriptionTextColor,
+              ),
             ),
-          ),
-          ...chips,
-        ],
+
+            if (maxLpgmIntensity != null &&
+                maxLpgmIntensity != JmaLpgmIntensity.zero)
+              TextSpan(text: '最大長周期地震動階級 ${maxLpgmIntensity.label}'),
+            if (currentLocationChipLabel != null)
+              TextSpan(text: '\n$currentLocationChipLabel'),
+          ],
+        ),
       ),
       leading: maxIntensity != null
           ? JmaIntensityIcon(

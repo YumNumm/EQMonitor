@@ -19,6 +19,10 @@ Future<CurrentLocationIntensityDisplay> currentLocationIntensity(
   final earthquake = await ref.watch(
     earthquakeHistoryDetailsProvider(eventId).future,
   );
+  if (!ref.mounted) {
+    return const CurrentLocationIntensityDisplay.none();
+  }
+
   final intensity = earthquake.intensity;
   if (intensity == null) {
     return const CurrentLocationIntensityDisplay.none();
@@ -27,6 +31,10 @@ Future<CurrentLocationIntensityDisplay> currentLocationIntensity(
   final repository = await ref.watch(
     earthquakeHistoryRepositoryProvider.future,
   );
+  if (!ref.mounted) {
+    return const CurrentLocationIntensityDisplay.none();
+  }
+
   return repository.resolveCurrentLocationIntensity(
     regions: intensity.regions,
     intensityTree: intensity.intensityTree,

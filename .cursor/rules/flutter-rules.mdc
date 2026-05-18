@@ -185,6 +185,25 @@ Future<void> doSomething() async {
 }
 ```
 
+- **変数宣言と代入の分離を禁止する**。`final` による即時代入を必ず使用する。switch 式・条件式・三項演算子などを活用して一行で完結させる
+
+```dart
+// ❌ 悪い例
+String? label;
+switch (value) {
+  case Foo(:final x):
+    label = 'foo $x';
+  case null:
+    label = defaultLabel;
+}
+
+// ✅ 良い例
+final label = switch (value) {
+  Foo(:final x) => 'foo $x',
+  null => defaultLabel,
+};
+```
+
 - コメントはコード上明らかな部分には不要。複雑な処理や実装意図が読み取りにくい箇所にのみ書く
 - 重い処理（JSON パース等）には `compute()` で Isolate を活用する
 - enum等でdartのdot shorthandを利用できる場合は利用する

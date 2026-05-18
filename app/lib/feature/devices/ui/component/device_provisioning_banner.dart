@@ -54,13 +54,11 @@ class _DeviceProvisioningBannerState
       return const SizedBox.shrink();
     }
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: widget.bottomSpacing),
-      child: _buildContent(
-        context: context,
-        activeRetry: activeRetry,
-        isLoading: isLoading,
-        onRetry: () {
+    return _DeviceProvisioningBannerContent(
+      bottomSpacing: widget.bottomSpacing,
+      activeRetry: activeRetry,
+      isLoading: isLoading,
+      onRetry: () {
           if (provisionStatus.value == DeviceProvisioningStatus.required) {
             notifier.reset();
             unawaited(DeviceProvisioningNotifier.provisionMutation.run(
@@ -72,24 +70,32 @@ class _DeviceProvisioningBannerState
             syncNotifier.reset();
             unawaited(PushTokenSyncNotifier.syncMutation.run(
               ref,
-              (tsx) async =>
-                  tsx.get(pushTokenSyncProvider.notifier).sync(),
+              (tsx) async => tsx.get(pushTokenSyncProvider.notifier).sync(),
             ));
           }
         },
-      ),
     );
   }
+}
 
-  Widget _buildContent({
-    required BuildContext context,
-    required RetryControllerState activeRetry,
-    required bool isLoading,
-    required VoidCallback onRetry,
-  }) {
+class _DeviceProvisioningBannerContent extends StatelessWidget {
+  const _DeviceProvisioningBannerContent({
+    required this.bottomSpacing,
+    required this.activeRetry,
+    required this.isLoading,
+    required this.onRetry,
+  });
+
+  final double bottomSpacing;
+  final RetryControllerState activeRetry;
+  final bool isLoading;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return switch (activeRetry) {
+    final content = switch (activeRetry) {
       RetryExhausted(:final lastError) => _BannerTile(
         icon: Icons.error_outline,
         backgroundColor: colorScheme.errorContainer,
@@ -124,8 +130,16 @@ class _DeviceProvisioningBannerState
           child: CircularProgressIndicator.adaptive(strokeWidth: 2),
         ),
       ),
-      _ => const SizedBox.shrink(),
+      _ => null,
     };
+
+    if (content == null) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomSpacing),
+      child: content,
+    );
   }
 }
 
@@ -146,20 +160,19 @@ class _WaitingBannerState extends State<_WaitingBanner> {
   @override
   void initState() {
     super.initState();
-    _updateRemaining();
+    final now = DateTime.now();
+    _remaining = widget.resumeAt.isAfter(now)
+        ? widget.resumeAt.difference(now)
+        : Duration.zero;
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) {
-        _updateRemaining();
+        final now = DateTime.now();
+        setState(() {
+          _remaining = widget.resumeAt.isAfter(now)
+              ? widget.resumeAt.difference(now)
+              : Duration.zero;
+        });
       }
-    });
-  }
-
-  void _updateRemaining() {
-    final now = DateTime.now();
-    setState(() {
-      _remaining = widget.resumeAt.isAfter(now)
-          ? widget.resumeAt.difference(now)
-          : Duration.zero;
     });
   }
 

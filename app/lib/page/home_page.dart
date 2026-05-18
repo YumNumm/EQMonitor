@@ -60,11 +60,13 @@ class _SheetBody extends ConsumerWidget {
       if (next.value == DeviceProvisioningStatus.required) {
         final mutation = DeviceProvisioningNotifier.provisionMutation;
         if (ref.read(mutation) is! MutationPending) {
-          unawaited(mutation.run(
-            ref,
-            (tsx) async =>
-                tsx.get(deviceProvisioningProvider.notifier).provision(),
-          ));
+          unawaited(
+            mutation.run(
+              ref,
+              (tsx) async =>
+                  tsx.get(deviceProvisioningProvider.notifier).provision(),
+            ),
+          );
         }
       }
     });
@@ -74,11 +76,12 @@ class _SheetBody extends ConsumerWidget {
       if (next.value == DeviceProvisioningStatus.notRequired) {
         final mutation = PushTokenSyncNotifier.syncMutation;
         if (ref.read(mutation) is! MutationPending) {
-          unawaited(mutation.run(
-            ref,
-            (tsx) async =>
-                tsx.get(pushTokenSyncProvider.notifier).sync(),
-          ));
+          unawaited(
+            mutation.run(
+              ref,
+              (tsx) async => tsx.get(pushTokenSyncProvider.notifier).sync(),
+            ),
+          );
         }
       }
     });
@@ -152,7 +155,6 @@ class _SheetBody extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: spacing.xs),
                   if (state.isNotEmpty) eewCards,
                   MaintenanceBanner(bottomSpacing: spacing.md),
                   WhatsNewBanner(bottomSpacing: spacing.md),
