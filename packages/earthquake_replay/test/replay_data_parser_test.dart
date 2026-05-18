@@ -23,7 +23,7 @@ final _emptyReplayFileBytes = Uint8List.fromList([
   0x90,
 ]);
 
-const List<int> _headerBytes = [
+const _headerBytes = <int>[
   0x95,
   0x00,
   0xa4,
@@ -36,4 +36,4 @@ const List<int> _headerBytes = [
   0x00,
 ];
 
-const List<int> _timestampBytes = [0xd6, 0xff, 0x00, 0x00, 0x00, 0x00];
+const _timestampBytes = <int>[0xd6, 0xff, 0x00, 0x00, 0x00, 0x00];
