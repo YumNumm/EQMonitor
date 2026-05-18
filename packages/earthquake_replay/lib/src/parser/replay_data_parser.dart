@@ -64,7 +64,9 @@ class ReplayDataParser {
     final deserializer = Deserializer(data, extDecoder: ExtTimeStampDecoder());
     final replayData = deserializer.decode() as List<dynamic>;
     if (replayData.isEmpty) {
-      throw const FormatException('Replay data must contain at least one frame');
+      throw const FormatException(
+        'Replay data must contain at least one frame',
+      );
     }
     for (final data in replayData) {
       if (data is List<dynamic>) {

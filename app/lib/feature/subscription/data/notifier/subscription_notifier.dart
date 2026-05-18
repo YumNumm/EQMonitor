@@ -69,9 +69,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
       state = AsyncData(status);
       return status is SubscriptionStatusActive
           ? const PurchaseResult.success()
-          : const PurchaseResult.failed(
-              '購入は完了しましたが、Pro プランの有効化を確認できませんでした',
-            );
+          : const PurchaseResult.failed('購入は完了しましたが、Pro プランの有効化を確認できませんでした');
     } on PlatformException catch (e, st) {
       final errorCode = rc.PurchasesErrorHelper.getErrorCode(e);
       if (errorCode == rc.PurchasesErrorCode.purchaseCancelledError) {

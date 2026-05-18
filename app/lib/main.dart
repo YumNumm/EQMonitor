@@ -96,9 +96,7 @@ Future<void> _main() async {
     ),
   );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   talker = TalkerFlutter.init(
     settings: TalkerSettings(
