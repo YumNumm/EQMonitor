@@ -57,4 +57,19 @@ class TelegramUrl extends _$TelegramUrl {
     state = AsyncValue.data(updated);
     await _save(updated);
   }
+
+  Future<void> updateServer({
+    required String restApiUrl,
+    required String wsApiUrl,
+  }) async {
+    final updated = TelegramUrlModel(restApiUrl: restApiUrl, wsApiUrl: wsApiUrl);
+    state = AsyncValue.data(updated);
+    await _save(updated);
+  }
+
+  Future<void> resetToDefault() async {
+    final updated = _defaultTelegramUrl();
+    state = AsyncValue.data(updated);
+    await _save(updated);
+  }
 }

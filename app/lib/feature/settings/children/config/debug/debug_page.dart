@@ -98,8 +98,8 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const TalkerRoute().push<void>(context),
           ),
           ListTile(
-            title: const Text('REST APIエンドポイント'),
-            leading: const Icon(Icons.http),
+            title: const Text('サーバ選択'),
+            leading: const Icon(Icons.dns),
             subtitle: Text(
               ref.watch(telegramUrlProvider).requireValue.restApiUrl,
             ),
