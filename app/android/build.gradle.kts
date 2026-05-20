@@ -16,6 +16,17 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// Workaround: extractXxxAnnotations tasks are only needed for AAR publishing,
+// not for app builds. With Flutter 3.44's built-in Kotlin, having KGP in the
+// build classpath causes a classloader conflict that breaks these tasks.
+subprojects {
+    afterEvaluate {
+        tasks.matching { it.name.startsWith("extract") && it.name.endsWith("Annotations") }.configureEach {
+            enabled = false
+        }
+    }
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
