@@ -1,13 +1,17 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/feature/ai_chat/data/provider/ai_credentials_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/current_location_intensity_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_details_map_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hypocenter_information_card.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/region_intensity.dart';
+import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -96,7 +100,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   }
 }
 
-class _Sheet extends StatelessWidget {
+class _Sheet extends ConsumerWidget {
   const _Sheet({
     required this.item,
   });
@@ -104,7 +108,10 @@ class _Sheet extends StatelessWidget {
   final Earthquake item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDebugEnabled = ref.watch(debugProvider).value ?? false;
+    final isBeta = ref.watch(buildConfigProvider).isBetaTesting;
+    final aiEnabled = kDebugMode || isBeta || isDebugEnabled;
     return SafeArea(
       bottom: false,
       child: BasicModalSheet(
@@ -124,11 +131,45 @@ class _Sheet extends StatelessWidget {
                       DateTime.now().difference(item.originTime!) >
                           const Duration(hours: 24))
                     const AdBanner(),
+                  if (aiEnabled) _AiChatButton(item: item),
                   _TelegramListButton(eventId: item.eventId),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AiChatButton extends ConsumerWidget {
+  const _AiChatButton({required this.item});
+
+  final Earthquake item;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final storeAsync = ref.watch(aiCredentialsProvider);
+    final theme = Theme.of(context);
+    final epicenterName = item.hypocenter?.name;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: FilledButton.tonalIcon(
+        onPressed: () => AiChatRoute(
+          eventId: item.eventId,
+          epicenterName: epicenterName,
+        ).push<void>(context),
+        icon: const Icon(Icons.auto_awesome),
+        label: Text(
+          storeAsync.value?.hasUsableCredentials ?? false
+              ? 'AI に質問する (実験)'
+              : 'AI 機能を試す (API キー要設定)',
+        ),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(double.infinity, 48),
+          backgroundColor: theme.colorScheme.tertiaryContainer,
+          foregroundColor: theme.colorScheme.onTertiaryContainer,
         ),
       ),
     );

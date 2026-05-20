@@ -100,6 +100,11 @@ dependencies:
       url: https://github.com/YumNumm/flutter_udid.git
       ref: d8f72a1e9e09a9f76f4e5051f167b31c5e2af52e
   freezed_annotation: ^3.0.0
+  genkit: ^0.13.2
+  genkit_anthropic: ^0.2.7
+  genkit_google_genai: ^0.2.7
+  genkit_openai: ^0.3.0
+  genui: ^0.9.0
   geobase: ^1.5.0
   geodata: ^1.3.0
   geolocator: ^14.0.1
@@ -138,6 +143,7 @@ dependencies:
   purchases_flutter: ^10.0.1
   riverpod: ^3.2.1
   riverpod_annotation: ^4.0.0
+  schemantic: ^0.1.3
   screenshot: 3.0.0
   sensors_plus: ^7.0.0
   share_plus: ^12.0.0

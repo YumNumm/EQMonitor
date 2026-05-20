@@ -9,6 +9,16 @@ workspace:
   - packages/*
 dependencies:
   melos: ^7.4.0
+
+# Genkit Dart (schemantic) は analyzer >=10 を要求するが、
+# altive_lints/yumemi_lints/eqmonitor_lints は ^9 を要求する。
+# AI チャット機能のため一時的に analyzer 系を強制的に新しいバージョンへ揃える。
+# カスタムリントは実行時に互換性が壊れる可能性があるため、
+# 影響を受けたら lint 設定の見直しが必要。
+dependency_overrides:
+  analyzer: ">=10.0.0 <10.0.2"
+  analyzer_plugin: ^0.14.1
+  dart_style: ">=3.1.4 <3.1.7"
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   command:
