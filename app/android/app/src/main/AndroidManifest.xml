@@ -72,6 +72,10 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3081840463138357~7301133452" />
+
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableHCPP"
+            android:value="true" />
     </application>
 
 </manifest>
