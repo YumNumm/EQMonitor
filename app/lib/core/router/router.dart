@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/environment/environment.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/ai_chat/ui/ai_chat_page.dart';
+import 'package:eqmonitor/feature/ai_chat/ui/ai_chat_settings_page.dart';
 import 'package:eqmonitor/feature/beta_testing/data/notifier/beta_testing_notifier.dart';
 import 'package:eqmonitor/feature/beta_testing/ui/page/beta_testing_warning_page.dart';
 import 'package:eqmonitor/feature/changelog/ui/page/changelog_page.dart';
@@ -328,6 +330,8 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugLiveActivityTestRoute>(path: 'live-activity-test'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
+        TypedGoRoute<AiChatRoute>(path: 'ai-chat'),
+        TypedGoRoute<AiChatSettingsRoute>(path: 'ai-chat/settings'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -657,12 +661,37 @@ class DebugLiveActivityTestRoute extends GoRouteData
   }
 }
 
-class DebugIntensityIconRoute extends GoRouteData with $DebugIntensityIconRoute {
+class DebugIntensityIconRoute extends GoRouteData
+    with $DebugIntensityIconRoute {
   const DebugIntensityIconRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const IntensityIconDebugPage();
+  }
+}
+
+class AiChatRoute extends GoRouteData with $AiChatRoute {
+  const AiChatRoute({this.eventId, this.epicenterName});
+
+  final String? eventId;
+  final String? epicenterName;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AiChatPage(
+      eventId: eventId,
+      epicenterName: epicenterName,
+    );
+  }
+}
+
+class AiChatSettingsRoute extends GoRouteData with $AiChatSettingsRoute {
+  const AiChatSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AiChatSettingsPage();
   }
 }
 
