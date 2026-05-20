@@ -124,7 +124,7 @@ Managed by `mise.toml`:
 
 | Tool    | Version     |
 |---------|-------------|
-| Flutter | 3.41.4      |
+| Flutter | 3.44.0      |
 | Dart    | ^3.11.0     |
 | Java    | 17          |
 | Node    | LTS         |

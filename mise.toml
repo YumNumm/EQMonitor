@@ -3,7 +3,7 @@ experimental_monorepo_root = true
 
 [tools]
 "aqua:suzuki-shunsuke/tfcmt" = "latest"
-flutter = "3.41.9-stable"
+flutter = "3.44.0-stable"
 java = "17"
 node = "lts"
 "pipx:codemagic-cli-tools" = "latest"

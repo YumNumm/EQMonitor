@@ -89,6 +89,7 @@ url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/linux-arm64-musl/claude"
 
 [tools.claude."platforms.linux-x64"]
+checksum = "blake3:5615771a35e3fb5634db3f4d92650a5ad038f8957e1d30064e1c3dd0ed932305"
 url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/linux-x64/claude"
 
 [tools.claude."platforms.linux-x64-musl"]
@@ -125,7 +126,7 @@ checksum = "sha256:423c18774488ad5476cefef2a36b91014672ab81e4bead8d7d623f519ffac
 url = "https://github.com/firebase/firebase-tools/releases/download/v15.18.0/firebase-tools-win.exe"
 
 [[tools.flutter]]
-version = "3.41.9-stable"
+version = "3.44.0-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
