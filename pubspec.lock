@@ -349,10 +349,10 @@ packages:
     dependency: transitive
     description:
       name: cue
-      sha256: "4afd93d6a1d352d6509816cd0a45d71a06be3107b84c3f85259e73afde3cff2c"
+      sha256: c98b4a3fffcc1726113d0b4d94d70fa2f9c8061382bddb2e456726392053eb4c
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.3.1"
   dart_style:
     dependency: transitive
     description:
@@ -1163,10 +1163,10 @@ packages:
     dependency: transitive
     description:
       name: in_app_review
-      sha256: ab26ac54dbd802896af78c670b265eaeab7ecddd6af4d0751e9604b60574817f
+      sha256: "364db0c160b37fe7fad9cdaa18f968473924b17368869010af902760421b6bf8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.11"
+    version: "2.0.12"
   in_app_review_platform_interface:
     dependency: transitive
     description:
@@ -1385,10 +1385,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: "23f08335362185a5ea2ad3a4e597f1375e78bce8a040df5c600c8d3552ef2394"
+      sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"
       url: "https://pub.dev"
     source: hosted
-    version: "1.17.0"
+    version: "1.18.0"
   mgrs_dart:
     dependency: transitive
     description:
@@ -2023,10 +2023,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: f8a08a13fb8f0f8c590df89d745000bed44a673ed94bac846739e1a016875c21
+      sha256: "1581ffbf7a0e333b380d6a30737d78516b826cb35beb7fb0bf8a3ea0c678b465"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.7"
+    version: "2.5.8"
   sqflite_darwin:
     dependency: transitive
     description:
@@ -2143,26 +2143,26 @@ packages:
     dependency: transitive
     description:
       name: test
-      sha256: "280d6d890011ca966ad08df7e8a4ddfab0fb3aa49f96ed6de56e3521347a9ae7"
+      sha256: "8d9ceddbab833f180fbefed08afa76d7c03513dfdba87ffcec2718b02bbcbf20"
       url: "https://pub.dev"
     source: hosted
-    version: "1.30.0"
+    version: "1.31.0"
   test_api:
     dependency: transitive
     description:
       name: test_api
-      sha256: "8161c84903fd860b26bfdefb7963b3f0b68fee7adea0f59ef805ecca346f0c7a"
+      sha256: "949a932224383300f01be9221c39180316445ecb8e7547f70a41a35bf421fb9e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.10"
+    version: "0.7.11"
   test_core:
     dependency: transitive
     description:
       name: test_core
-      sha256: "0381bd1585d1a924763c308100f2138205252fb90c9d4eeaf28489ee65ccde51"
+      sha256: "1991d4cfe85d5043241acac92962c3977c8d2f2add1ee73130c7b286417d1d34"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.16"
+    version: "0.6.17"
   theme_tailor:
     dependency: transitive
     description:
@@ -2215,10 +2215,10 @@ packages:
     dependency: transitive
     description:
       name: upgrader
-      sha256: a9ab8cabe01c98c12b3c381a3bc8693413cb64a2a3ec7395ce0f53844ef30a2f
+      sha256: e05ddce3799a73b76470d8d239951038f5759f116e89fe0c909e30ac2856310b
       url: "https://pub.dev"
     source: hosted
-    version: "13.2.0"
+    version: "13.3.0"
   url_launcher:
     dependency: transitive
     description:
@@ -2231,10 +2231,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "3bb000251e55d4a209aa0e2e563309dc9bb2befea2295fd0cec1f51760aac572"
+      sha256: "17bc677f0b301615530dd1d67e0a9828cafa2d0b6b6eae4cd3679b7eac4a273c"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.29"
+    version: "6.3.30"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -2311,10 +2311,10 @@ packages:
     dependency: transitive
     description:
       name: vector_graphics_compiler
-      sha256: "98e7e94de127b46a86ef46197fff84ff99f3d3b80a708390d717ad731efef598"
+      sha256: b9b3f391857781aa96acacef96066f2f49b4cd03cf9fce3ca4d8da2ef5ea129e
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.3"
   vector_math:
     dependency: transitive
     description:
@@ -2351,10 +2351,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_avfoundation
-      sha256: a39d6f28f8069564d8cc17396472f958dd9eaddf2d5c8e90aad4d793ac369bf3
+      sha256: "9338f3ec22774f88146b22f13273a446719b1da010fd200c4d1d97802156ac58"
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.6"
+    version: "2.9.7"
   video_player_platform_interface:
     dependency: transitive
     description:
@@ -2525,4 +2525,4 @@ packages:
     version: "4.4.0"
 sdks:
   dart: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.0 <4.0.0"
+  flutter: ">=3.44.0 <4.0.0"

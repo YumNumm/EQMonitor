@@ -1,4 +1,4 @@
-include: package:yumemi_lints/flutter/3.41/recommended.yaml
+include: package:yumemi_lints/flutter/3.44/recommended.yaml
 
 formatter:
   trailing_commas: preserve

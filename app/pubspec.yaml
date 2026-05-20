@@ -6,7 +6,7 @@ version: 3.0.0
 
 environment:
   sdk: ^3.11.0
-  flutter: ^3.41.0
+  flutter: ^3.44.0
 
 resolution: workspace
 
@@ -56,7 +56,7 @@ dependencies:
   core:
     path: ../packages/core
   crypto: ^3.0.6
-  cue: ^0.2.1
+  cue: ^0.3.1
   dart_azarashi:
     path: ../packages/dart_azarashi
   device_info_plus: ^12.1.0
