@@ -6,3 +6,6 @@ analyzer:
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
     unnecessary_async: ignore
+  exclude:
+    - "**/DerivedData/**"
+    - "**/build/**"
