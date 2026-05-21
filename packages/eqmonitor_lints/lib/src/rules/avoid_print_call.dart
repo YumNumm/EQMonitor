@@ -9,7 +9,7 @@ import 'package:analyzer/error/error.dart';
 class AvoidPrintCall extends AnalysisRule {
   AvoidPrintCall()
     : super(
-        name: _code.name,
+        name: _code.lowerCaseName,
         description: _code.problemMessage,
       );
 
@@ -29,9 +29,7 @@ class AvoidPrintCall extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) {
-    registry.addMethodInvocation(this, _Visitor(this));
-  }
+  ) => registry.addMethodInvocation(this, _Visitor(this));
 }
 
 class _Visitor extends SimpleAstVisitor<void> {

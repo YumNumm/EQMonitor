@@ -8,7 +8,7 @@ import 'package:analyzer/error/error.dart';
 class AvoidStatefulWidget extends AnalysisRule {
   AvoidStatefulWidget()
     : super(
-        name: _code.name,
+        name: _code.lowerCaseName,
         description: _code.problemMessage,
       );
 
@@ -29,9 +29,7 @@ class AvoidStatefulWidget extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) {
-    registry.addClassDeclaration(this, _Visitor(this));
-  }
+  ) => registry.addClassDeclaration(this, _Visitor(this));
 }
 
 class _Visitor extends SimpleAstVisitor<void> {

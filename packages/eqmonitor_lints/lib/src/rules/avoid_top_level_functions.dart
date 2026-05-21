@@ -8,7 +8,7 @@ import 'package:analyzer/error/error.dart';
 class AvoidTopLevelFunctions extends AnalysisRule {
   AvoidTopLevelFunctions()
     : super(
-        name: _code.name,
+        name: _code.lowerCaseName,
         description: _code.problemMessage,
       );
 
@@ -30,9 +30,7 @@ class AvoidTopLevelFunctions extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) {
-    registry.addFunctionDeclaration(this, _Visitor(this));
-  }
+  ) => registry.addFunctionDeclaration(this, _Visitor(this));
 }
 
 class _Visitor extends SimpleAstVisitor<void> {

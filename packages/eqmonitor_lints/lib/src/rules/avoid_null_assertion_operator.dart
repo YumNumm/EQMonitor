@@ -9,7 +9,7 @@ import 'package:analyzer/error/error.dart';
 class AvoidNullAssertionOperator extends AnalysisRule {
   AvoidNullAssertionOperator()
     : super(
-        name: _code.name,
+        name: _code.lowerCaseName,
         description: _code.problemMessage,
       );
 
@@ -30,9 +30,7 @@ class AvoidNullAssertionOperator extends AnalysisRule {
   void registerNodeProcessors(
     RuleVisitorRegistry registry,
     RuleContext context,
-  ) {
-    registry.addPostfixExpression(this, _Visitor(this));
-  }
+  ) => registry.addPostfixExpression(this, _Visitor(this));
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
