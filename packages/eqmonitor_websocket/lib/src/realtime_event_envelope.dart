@@ -45,10 +45,7 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
     required String eventId,
     required DateTime createdAt,
     required String level,
-    @Default([]) List<String> changeReasons,
-    required bool isReplay,
-    required int pointCount,
-    required WsShakeRegionPayload region,
+    required bool isReplay, required int pointCount, required WsShakeRegionPayload region, @Default([]) List<String> changeReasons,
   }) = WsShakeDetectedRealtimeEvent;
 
   /// 推計震度

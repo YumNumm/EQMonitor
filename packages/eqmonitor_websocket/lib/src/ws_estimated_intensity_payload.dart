@@ -22,8 +22,7 @@ abstract class WsEstimatedIntensityHypocenter
     with _$WsEstimatedIntensityHypocenter {
   const factory WsEstimatedIntensityHypocenter({
     required int regionCode,
-    String? regionName,
-    required DateTime originTime,
+    required DateTime originTime, String? regionName,
     double? magnitude,
     double? depthKm,
   }) = _WsEstimatedIntensityHypocenter;

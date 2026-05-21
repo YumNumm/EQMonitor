@@ -141,7 +141,7 @@ void main() {
           'eventId': 'shake-1',
           'createdAt': '2025-01-15T12:00:00.000Z',
           'level': 'Weak',
-          if (changeReasons != null) 'changeReasons': changeReasons,
+          'changeReasons': ?changeReasons,
           'isReplay': false,
           'pointCount': 4,
           'region': {

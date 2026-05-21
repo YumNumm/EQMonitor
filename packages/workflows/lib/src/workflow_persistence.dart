@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-/// Stores completed step results keyed by [instanceId] + step name.
+/// Stores completed step results keyed by `instanceId` + step name.
 ///
 /// Results are wrapped as `{"v": <result>}` so that null results can be
 /// distinguished from "step not yet run" (absent key).
@@ -8,10 +8,10 @@ abstract interface class WorkflowPersistence {
   /// Returns the raw JSON string `{"v": ...}` if the step completed, or null.
   Future<String?> getRaw(String instanceId, String stepName);
 
-  /// Persists [result] wrapped as `{"v": result}`.
+  /// Persists `result` wrapped as `{"v": result}`.
   Future<void> saveRaw(String instanceId, String stepName, String raw);
 
-  /// Removes all persisted state for [instanceId].
+  /// Removes all persisted state for `instanceId`.
   Future<void> clearInstance(String instanceId);
 }
 
@@ -21,7 +21,9 @@ extension WorkflowPersistenceX on WorkflowPersistence {
     String stepName,
   ) async {
     final raw = await getRaw(instanceId, stepName);
-    if (raw == null) return (completed: false, value: null);
+    if (raw == null) {
+      return (completed: false, value: null);
+    }
     final map = jsonDecode(raw) as Map<String, Object?>;
     return (completed: true, value: map['v']);
   }

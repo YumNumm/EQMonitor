@@ -1,4 +1,3 @@
-library background_location_tracker;
 
 export 'src/background_location.g.dart'
     show

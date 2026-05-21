@@ -8,7 +8,7 @@ import 'package:analyzer/error/error.dart';
 class AvoidTopLevelFunctions extends AnalysisRule {
   AvoidTopLevelFunctions()
     : super(
-        name: _code.lowerCaseName,
+        name: _code.name,
         description: _code.problemMessage,
       );
 

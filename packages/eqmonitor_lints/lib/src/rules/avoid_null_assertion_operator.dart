@@ -9,7 +9,7 @@ import 'package:analyzer/error/error.dart';
 class AvoidNullAssertionOperator extends AnalysisRule {
   AvoidNullAssertionOperator()
     : super(
-        name: _code.lowerCaseName,
+        name: _code.name,
         description: _code.problemMessage,
       );
 

@@ -1,3 +1,5 @@
+// ignore_for_file: parameter_assignments, unnecessary_ignore, omit_local_variable_types, prefer_single_quotes, sort_constructors_first, omit_obvious_property_types, prefer_const_constructors, use_string_in_part_of_directives, strict_raw_type
+
 part of msgpack_dart;
 
 abstract class ExtDecoder {
@@ -179,7 +181,7 @@ class Deserializer {
   String _readString(int length) {
     final list = _readBuffer(length);
     final len = list.length;
-    for (int i = 0; i < len; ++i) {
+    for (var i = 0; i < len; ++i) {
       if (list[i] > 127) {
         return codec.decode(list);
       }
@@ -188,15 +190,15 @@ class Deserializer {
   }
 
   List _readArray(int length) {
-    final res = List<dynamic>.filled(length, null, growable: false);
-    for (int i = 0; i < length; ++i) {
+    final res = List<dynamic>.filled(length, null);
+    for (var i = 0; i < length; ++i) {
       res[i] = decode();
     }
     return res;
   }
 
   Map _readMap(int length) {
-    final res = Map();
+    final res = <dynamic, dynamic>{};
     while (length > 0) {
       res[decode()] = decode();
       --length;

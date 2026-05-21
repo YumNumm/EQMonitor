@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_library_name
+
 library msgpack_dart;
 
 import 'dart:convert';

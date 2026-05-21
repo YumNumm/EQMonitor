@@ -8,7 +8,7 @@ import 'package:analyzer/error/error.dart';
 class AvoidStatefulWidget extends AnalysisRule {
   AvoidStatefulWidget()
     : super(
-        name: _code.lowerCaseName,
+        name: _code.name,
         description: _code.problemMessage,
       );
 

@@ -12,10 +12,7 @@ abstract class WsSnapshotShakeEntry with _$WsSnapshotShakeEntry {
     required String eventId,
     required DateTime createdAt,
     required String level,
-    @Default([]) List<String> changeReasons,
-    required bool isReplay,
-    required int pointCount,
-    required WsShakeRegionPayload region,
+    required bool isReplay, required int pointCount, required WsShakeRegionPayload region, @Default([]) List<String> changeReasons,
   }) = _WsSnapshotShakeEntry;
 
   factory WsSnapshotShakeEntry.fromJson(Map<String, dynamic> json) =>

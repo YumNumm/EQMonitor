@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -17,5 +19,7 @@ void locationUpdateCallbackDispatcher() {
     // ネイティブ側で永続化済みのため、Dart 側では何もしない。
   });
 
-  channel.invokeMethod<void>('ready');
+  unawaited(
+    channel.invokeMethod<void>('ready'),
+  );
 }

@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'workflow_persistence.dart';
-import 'workflow_step.dart';
+import 'package:workflows/src/workflow_persistence.dart';
+import 'package:workflows/src/workflow_step.dart';
 
 /// Runs a workflow function with durable step execution.
 ///
-/// Pass an [instanceId] that is stable across app restarts for the same
+/// Pass an `instanceId` that is stable across app restarts for the same
 /// logical workflow execution. If the app dies mid-run, calling [run] again
-/// with the same [instanceId] resumes from the last completed step.
+/// with the same `instanceId` resumes from the last completed step.
 final class WorkflowRunner {
   WorkflowRunner({required WorkflowPersistence persistence})
-      : _persistence = persistence;
+    : _persistence = persistence;
 
   final WorkflowPersistence _persistence;
 

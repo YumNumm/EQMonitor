@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:background_location_tracker/src/background_location.g.dart';
+import 'package:background_location_tracker/src/callback_dispatcher.dart';
 import 'package:flutter/services.dart';
-
-import 'background_location.g.dart';
-import 'callback_dispatcher.dart';
 
 class BackgroundLocationTracker {
   BackgroundLocationTracker._();
@@ -13,6 +12,8 @@ class BackgroundLocationTracker {
   static const _persistenceChannel = MethodChannel(
     'background_location_tracker/persistence',
   );
+  // アプリ全体のライフタイムで生存する singleton 用 controller のため close 不要。
+  // ignore: close_sinks
   static final _locationController =
       StreamController<LocationUpdateMessage>.broadcast();
   static LocationUpdateMessage? _pendingLiveLocation;
