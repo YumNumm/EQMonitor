@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "Asia/Tokyo",
+  "dependencyDashboard": true,
+  "kubernetes": {
+    "managerFilePatterns": [
+      "/(^|/)manifests/.+\\.yaml$/"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": "patch バージョンは自動マージ（直接 push）",
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true,
+      "automergeType": "branch"
+    },
+    {
+      "description": "minor / major はレビュー必須 PR",
+      "matchUpdateTypes": [
+        "minor",
+        "major"
+      ],
+      "automerge": false
+    }
+  ],
+  "reviewers": [
+    "YumNumm"
+  ],
+  "minimumReleaseAge": "3 days",
+  "labels": [
+    "renovate",
+    "dependencies"
+  ],
+  "configMigration": true,
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0
+}
