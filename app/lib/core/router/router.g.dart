@@ -523,11 +523,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           path: 'intensity-icon',
           factory: $DebugIntensityIconRoute._fromState,
         ),
-        GoRouteData.$route(path: 'ai-chat', factory: $AiChatRoute._fromState),
-        GoRouteData.$route(
-          path: 'ai-chat/settings',
-          factory: $AiChatSettingsRoute._fromState,
-        ),
         GoRouteData.$route(
           path: 'nied',
           factory: $NiedRoute._fromState,
@@ -1309,59 +1304,6 @@ mixin $DebugIntensityIconRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/intensity-icon');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $AiChatRoute on GoRouteData {
-  static AiChatRoute _fromState(GoRouterState state) => AiChatRoute(
-    eventId: state.uri.queryParameters['event-id'],
-    epicenterName: state.uri.queryParameters['epicenter-name'],
-  );
-
-  AiChatRoute get _self => this as AiChatRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/settings/debug/ai-chat',
-    queryParams: {
-      if (_self.eventId != null) 'event-id': _self.eventId,
-      if (_self.epicenterName != null) 'epicenter-name': _self.epicenterName,
-    },
-  );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $AiChatSettingsRoute on GoRouteData {
-  static AiChatSettingsRoute _fromState(GoRouterState state) =>
-      const AiChatSettingsRoute();
-
-  @override
-  String get location =>
-      GoRouteData.$location('/settings/debug/ai-chat/settings');
 
   @override
   void go(BuildContext context) => context.go(location);

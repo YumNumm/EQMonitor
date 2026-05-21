@@ -78,7 +78,7 @@ final class CurrentLocationIntensityProvider
 }
 
 String _$currentLocationIntensityHash() =>
-    r'7009c0001eb587192959df037260b0f61c21b11d';
+    r'a6219e5b9521e563641f4760e499e9b846d4fd40';
 
 final class CurrentLocationIntensityFamily extends $Family
     with

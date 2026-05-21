@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: "8d7ff3948166b8ec5da0fbb5962000926b8e02f2ed9b3e51d1738905fbd4c98d"
+      sha256: "5b7468c326d2f8a4f630056404ca0d291ade42918f4a3c6233618e724f39da8e"
       url: "https://pub.dev"
     source: hosted
-    version: "93.0.0"
+    version: "92.0.0"
   _flutterfire_internals:
     dependency: transitive
     description:
@@ -34,13 +34,13 @@ packages:
     source: hosted
     version: "0.3.4"
   analyzer:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: analyzer
-      sha256: de7148ed2fcec579b19f122c1800933dfa028f6d9fd38a152b04b1516cec120b
+      sha256: "70e4b1ef8003c64793a9e268a551a82869a8a96f39deb73dea28084b0e8bf75e"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.1"
+    version: "9.0.0"
   analyzer_buffer:
     dependency: transitive
     description:
@@ -50,13 +50,13 @@ packages:
     source: hosted
     version: "0.3.0"
   analyzer_plugin:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: analyzer_plugin
-      sha256: "9a81dc36f7f71890d7cf83960a3a7df1e6c9a24035f98eb848e91ad48b1d21c6"
+      sha256: "6645a029da947ffd823d98118f385d4bd26b54eb069c006b22e0b94e451814b5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.9"
+    version: "0.13.11"
   ansi_styles:
     dependency: transitive
     description:
@@ -73,14 +73,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  anthropic_sdk_dart:
-    dependency: transitive
-    description:
-      name: anthropic_sdk_dart
-      sha256: c6156e106927eea40b75c4a97f193ea93e12adb033c41d51742b61b7ea122f17
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
   app_settings:
     dependency: transitive
     description:
@@ -113,62 +105,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.13.1"
-  audioplayers:
-    dependency: transitive
-    description:
-      name: audioplayers
-      sha256: a72dd459d1a48f61a6fb9c0134dba26597c9236af40639ff0eb70eb4e0baab70
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.6.0"
-  audioplayers_android:
-    dependency: transitive
-    description:
-      name: audioplayers_android
-      sha256: "60a6728277228413a85755bd3ffd6fab98f6555608923813ce383b190a360605"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.1"
-  audioplayers_darwin:
-    dependency: transitive
-    description:
-      name: audioplayers_darwin
-      sha256: c994b3bb3a921e4904ac40e013fbc94488e824fd7c1de6326f549943b0b44a91
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.4.0"
-  audioplayers_linux:
-    dependency: transitive
-    description:
-      name: audioplayers_linux
-      sha256: f75bce1ce864170ef5e6a2c6a61cd3339e1a17ce11e99a25bae4474ea491d001
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.1"
-  audioplayers_platform_interface:
-    dependency: transitive
-    description:
-      name: audioplayers_platform_interface
-      sha256: "0e2f6a919ab56d0fec272e801abc07b26ae7f31980f912f24af4748763e5a656"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.1.1"
-  audioplayers_web:
-    dependency: transitive
-    description:
-      name: audioplayers_web
-      sha256: faa8fa6587f996a6f604433b53af44c57a1407d4fe8dff5766cf63d6875e8de9
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.0"
-  audioplayers_windows:
-    dependency: transitive
-    description:
-      name: audioplayers_windows
-      sha256: bafff2b38b6f6d331887558ba6e0a01c9c208d9dbb3ad0005234db065122a734
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -418,13 +354,13 @@ packages:
     source: hosted
     version: "0.3.1"
   dart_style:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: dart_style
-      sha256: "6f6b30cba0301e7b38f32bdc9a6bdae6f5921a55f0a1eb9450e1e6515645dbb2"
+      sha256: a9c30492da18ff84efe2422ba2d319a89942d93e58eb0b73d32abe822ef54b7b
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.6"
+    version: "3.1.3"
   dartx:
     dependency: transitive
     description:
@@ -441,14 +377,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.12"
-  decimal:
-    dependency: transitive
-    description:
-      name: decimal
-      sha256: fc706a5618b81e5b367b01dd62621def37abc096f2b46a9bd9068b64c1fa36d0
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.4"
   device_info_plus:
     dependency: transitive
     description:
@@ -489,14 +417,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.1"
-  email_validator:
-    dependency: transitive
-    description:
-      name: email_validator
-      sha256: b19aa5d92fdd76fbc65112060c94d45ba855105a28bb6e462de7ff03b12fa1fb
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   equatable:
     dependency: transitive
     description:
@@ -876,14 +796,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.7+1"
-  flutter_markdown_plus:
-    dependency: transitive
-    description:
-      name: flutter_markdown_plus
-      sha256: "039177906850278e8fb1cd364115ee0a46281135932fa8ecea8455522166d2de"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.7"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1007,54 +919,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
-  genai_primitives:
-    dependency: transitive
-    description:
-      name: genai_primitives
-      sha256: "2468ecd2984f32232ab199315e384821c61a198e356828e34b9a5bcf0fda863e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.3"
-  genkit:
-    dependency: transitive
-    description:
-      name: genkit
-      sha256: b55e406a0feacc25510fa1486ec2af0b9f7b6cacb786a2bf8672d2d00a562740
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.13.2"
-  genkit_anthropic:
-    dependency: transitive
-    description:
-      name: genkit_anthropic
-      sha256: "2dcd6aeb6c92135eed3d78f319a4275d28ffa05f20d30ee4c04f1654d3cd5fbe"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.7"
-  genkit_google_genai:
-    dependency: transitive
-    description:
-      name: genkit_google_genai
-      sha256: e5cb3a3764650d2ef05a8c0b33385e0deab2376d57046f1adaa2ba2c6d3ee8d9
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.7"
-  genkit_openai:
-    dependency: transitive
-    description:
-      name: genkit_openai
-      sha256: "76ccca99358c750635ab5f8cba049b78fd88eebaf490949b80d2d39f617bf69c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2"
-  genui:
-    dependency: transitive
-    description:
-      name: genui
-      sha256: be0d9d689e15991c43ef6f1f6aa45a3bdea1ffe2a2259ac0ab38881cf8f346dd
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.0"
   geobase:
     dependency: transitive
     description:
@@ -1351,14 +1215,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.11.0"
-  json_schema_builder:
-    dependency: transitive
-    description:
-      name: json_schema_builder
-      sha256: "65035d48d028401ad0ffc8c2f173209c7b1441e465a942a0f909070fae33170c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.3"
   json_serializable:
     dependency: transitive
     description:
@@ -1621,22 +1477,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  openai_dart:
-    dependency: transitive
-    description:
-      name: openai_dart
-      sha256: "96f86ce316c92e5198550168235782ba84695808d85d8b971592c43826d65fba"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.0"
-  opentelemetry:
-    dependency: transitive
-    description:
-      name: opentelemetry
-      sha256: "92d63a2e0731d34a7548add82420b8f3819ccda569f9bdfdcc4b25e00fe88da4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.18.11"
   os_detect:
     dependency: transitive
     description:
@@ -1893,14 +1733,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.2"
-  rational:
-    dependency: transitive
-    description:
-      name: rational
-      sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.3"
   record_use:
     dependency: transitive
     description:
@@ -1973,14 +1805,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
-  schemantic:
-    dependency: transitive
-    description:
-      name: schemantic
-      sha256: b593e339f89658b68ebaac3151379c65da487364512a6269daeddbce2407a70d
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.3"
   screenshot:
     dependency: transitive
     description:
@@ -2547,14 +2371,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  video_player_win:
-    dependency: transitive
-    description:
-      name: video_player_win
-      sha256: a4caca55ead1eb469d10060592e7ecdcbcd4493c6e2b63e4e666ff5446c790f1
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.2"
   vm_service:
     dependency: transitive
     description:

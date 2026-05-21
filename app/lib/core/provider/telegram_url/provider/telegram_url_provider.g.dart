@@ -35,7 +35,7 @@ final class TelegramUrlProvider
   TelegramUrl create() => TelegramUrl();
 }
 
-String _$telegramUrlHash() => r'66332136514094a5ff7a5aee0f0e82e299971941';
+String _$telegramUrlHash() => r'259150017f138297d0eb2334a4fd2dee3fab802a';
 
 abstract class _$TelegramUrl extends $AsyncNotifier<TelegramUrlModel> {
   FutureOr<TelegramUrlModel> build();

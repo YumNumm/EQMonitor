@@ -44,4 +44,4 @@ final class EqmonitorWsPayloadStreamProvider
 }
 
 String _$eqmonitorWsPayloadStreamHash() =>
-    r'c07fd8248ba4802579008f116a5a963f9fe138e3';
+    r'd711623abbc83ab007a21570ab66e995bddeb93b';
