@@ -9,7 +9,7 @@ resolution: workspace
 dependencies:
   altive_lints: ^2.1.0
   analysis_server_plugin: ^0.3.4
-  analyzer: ^9.0.0
+  analyzer: ^13.0.0
   analyzer_plugin: ^0.13.11
   flutter:
     sdk: flutter
