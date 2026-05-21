@@ -132,7 +132,7 @@ dependencies:
     path: ../packages/nied_api_client
   ntp: ^2.0.0
   objective_c: ^9.2.2
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.0.0
   paging_view: ^2.8.1
   path_provider: ^2.1.5
   purchases_flutter: ^10.0.1
