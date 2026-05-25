@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_realtime_event_mapper.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:eqmonitor_websocket/eqmonitor_websocket.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -64,6 +65,27 @@ void main() {
       final delete = event as RealtimeEarthquakeDeleteEvent;
       expect(delete.eventId, '20260501090000');
       expect(delete.source, RealtimeSource.eqmonitor);
+    });
+
+    test('EARTHQUAKE broadcast を地震 upsert イベントに変換できること', () {
+      const record = EarthquakePartial(
+        eventId: '20260501090000',
+        status: .normal,
+        originTimePrecision: .second,
+        datasource: .jmaDisasterInformationXml,
+      );
+      final result = mapper.map(
+        const WsMessage.realtime(
+          data: RealtimeEventEnvelope.earthquakeBroadcast(item: record),
+        ),
+      );
+
+      expect(result, hasLength(1));
+      final event = result.single;
+      expect(event, isA<RealtimeEarthquakeUpsertEvent>());
+      final upsert = event as RealtimeEarthquakeUpsertEvent;
+      expect(upsert.record, record);
+      expect(upsert.source, RealtimeSource.eqmonitor);
     });
 
     test('推計震度イベントのタイル URL を構築できること', () {
