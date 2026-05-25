@@ -27,6 +27,12 @@ class EqMonitorRealtimeEventMapper {
       WsEewRealtimeEvent(:final item) => [
         RealtimeEvent.eewUpsert(item: item, source: RealtimeSource.eqmonitor),
       ],
+      WsEarthquakeBroadcastEvent(:final item) => [
+        RealtimeEvent.earthquakeUpsert(
+          record: item,
+          source: RealtimeSource.eqmonitor,
+        ),
+      ],
       WsEarthquakeRealtimeEvent(
         :final operation,
         :final eventId,
