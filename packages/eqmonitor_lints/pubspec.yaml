@@ -10,7 +10,7 @@ dependencies:
   altive_lints: ^2.1.0
   analysis_server_plugin: ^0.3.4
   analyzer: ^9.0.0
-  analyzer_plugin: ^0.13.11
+  analyzer_plugin: ^0.14.0
   flutter:
     sdk: flutter
   yumemi_lints: ^4.1.1
