@@ -99,7 +99,7 @@ final class EewAliveTelegramProvider
   }
 }
 
-String _$eewAliveTelegramHash() => r'7d72c0d999cda7d674197badd1696b8147475718';
+String _$eewAliveTelegramHash() => r'23b0e0d991a98b0891af5fdb9a22ffcf71d6d2b5';
 
 /// イベント終了していないEEW
 

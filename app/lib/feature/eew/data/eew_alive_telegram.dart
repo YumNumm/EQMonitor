@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -30,7 +31,9 @@ class EewAliveTelegram extends _$EewAliveTelegram {
     if (value == null) {
       return null;
     }
-    final now = (tickerTime.value ?? DateTime.now()).toUtc();
+    final now =
+        (tickerTime.value ?? ref.read(appClockProvider.notifier).now())
+            .toUtc();
 
     return value
         .where((e) => !checker.checkMarkAsEventEnded(eew: e, now: now))

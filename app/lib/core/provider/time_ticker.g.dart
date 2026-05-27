@@ -10,14 +10,27 @@ part of 'time_ticker.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// [duration] 周期で現在時刻を配信するティッカー。
+///
+/// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
+/// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
 
 @ProviderFor(timeTicker)
 final timeTickerProvider = TimeTickerFamily._();
+
+/// [duration] 周期で現在時刻を配信するティッカー。
+///
+/// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
+/// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
 
 final class TimeTickerProvider
     extends
         $FunctionalProvider<AsyncValue<DateTime>, DateTime, Stream<DateTime>>
     with $FutureModifier<DateTime>, $StreamProvider<DateTime> {
+  /// [duration] 周期で現在時刻を配信するティッカー。
+  ///
+  /// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
+  /// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
   TimeTickerProvider._({
     required TimeTickerFamily super.from,
     required Duration super.argument,
@@ -61,7 +74,12 @@ final class TimeTickerProvider
   }
 }
 
-String _$timeTickerHash() => r'b6558f45ff8da20b7a1b356a6b43ccd6c0d6d89f';
+String _$timeTickerHash() => r'a3193d2c43a5d0925907de84e2b921e61347dae4';
+
+/// [duration] 周期で現在時刻を配信するティッカー。
+///
+/// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
+/// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
 
 final class TimeTickerFamily extends $Family
     with $FunctionalFamilyOverride<Stream<DateTime>, Duration> {
@@ -73,6 +91,11 @@ final class TimeTickerFamily extends $Family
         $allTransitiveDependencies: null,
         isAutoDispose: false,
       );
+
+  /// [duration] 周期で現在時刻を配信するティッカー。
+  ///
+  /// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
+  /// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
 
   TimeTickerProvider call([Duration duration = const Duration(seconds: 1)]) =>
       TimeTickerProvider._(argument: duration, from: this);
