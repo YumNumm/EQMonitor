@@ -75,9 +75,12 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         .api
         .imageFetchInterval;
     final delay = imageFetchInterval + const Duration(seconds: 5);
-    final isDelayed =
-        targetTime.difference(ref.read(appClockProvider.notifier).now()) >
-        delay;
+    final now = ref.read(appClockProvider.notifier).now();
+    final isDelayed = isImageDelayed(
+      now: now,
+      targetTime: targetTime,
+      delay: delay,
+    );
 
     if (state.isLoading) {
       return;
@@ -163,4 +166,16 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       ),
     );
   }
+
+  /// 画像が遅延しているかどうかを判定する。
+  ///
+  /// [targetTime] は取得対象の時刻で、常に現在時刻([now])より過去になる。
+  /// データが [delay] 以上遅れている (= `now - targetTime > delay`) 場合に
+  /// 遅延とみなす。
+  @visibleForTesting
+  static bool isImageDelayed({
+    required DateTime now,
+    required DateTime targetTime,
+    required Duration delay,
+  }) => now.difference(targetTime) > delay;
 }
