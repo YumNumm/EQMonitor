@@ -44,3 +44,12 @@ class AppClock extends _$AppClock {
     }
   }
 }
+
+/// リプレイ再生中かどうか。
+///
+/// 値が bool のため、再生位置更新（[AppClock.updateReplayTime] による
+/// 毎フレームの [TimeMode] 再生成）では通知されず、リプレイの開始/終了という
+/// モード遷移時のみ購読側へ通知される。
+@Riverpod(keepAlive: true)
+bool isReplayMode(Ref ref) =>
+    ref.watch(appClockProvider) is ReplayTimeMode;

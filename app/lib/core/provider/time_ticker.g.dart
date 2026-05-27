@@ -13,7 +13,9 @@ part of 'time_ticker.dart';
 /// [duration] 周期で現在時刻を配信するティッカー。
 ///
 /// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
-/// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
+/// NTP 補正に追従する。各 tick で [AppClock] の現在時刻を読むため、
+/// リプレイ中の再生位置更新では張り直さず、リプレイ開始/終了と NTP 同期時のみ
+/// ストリームを張り直す（毎フレーム張り直しによる周期停止を防ぐ）。
 
 @ProviderFor(timeTicker)
 final timeTickerProvider = TimeTickerFamily._();
@@ -21,7 +23,9 @@ final timeTickerProvider = TimeTickerFamily._();
 /// [duration] 周期で現在時刻を配信するティッカー。
 ///
 /// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
-/// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
+/// NTP 補正に追従する。各 tick で [AppClock] の現在時刻を読むため、
+/// リプレイ中の再生位置更新では張り直さず、リプレイ開始/終了と NTP 同期時のみ
+/// ストリームを張り直す（毎フレーム張り直しによる周期停止を防ぐ）。
 
 final class TimeTickerProvider
     extends
@@ -30,7 +34,9 @@ final class TimeTickerProvider
   /// [duration] 周期で現在時刻を配信するティッカー。
   ///
   /// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
-  /// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
+  /// NTP 補正に追従する。各 tick で [AppClock] の現在時刻を読むため、
+  /// リプレイ中の再生位置更新では張り直さず、リプレイ開始/終了と NTP 同期時のみ
+  /// ストリームを張り直す（毎フレーム張り直しによる周期停止を防ぐ）。
   TimeTickerProvider._({
     required TimeTickerFamily super.from,
     required Duration super.argument,
@@ -74,12 +80,14 @@ final class TimeTickerProvider
   }
 }
 
-String _$timeTickerHash() => r'a3193d2c43a5d0925907de84e2b921e61347dae4';
+String _$timeTickerHash() => r'3a0f645f3e86df31a145fad4d20be52845feb2ac';
 
 /// [duration] 周期で現在時刻を配信するティッカー。
 ///
 /// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
-/// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
+/// NTP 補正に追従する。各 tick で [AppClock] の現在時刻を読むため、
+/// リプレイ中の再生位置更新では張り直さず、リプレイ開始/終了と NTP 同期時のみ
+/// ストリームを張り直す（毎フレーム張り直しによる周期停止を防ぐ）。
 
 final class TimeTickerFamily extends $Family
     with $FunctionalFamilyOverride<Stream<DateTime>, Duration> {
@@ -95,7 +103,9 @@ final class TimeTickerFamily extends $Family
   /// [duration] 周期で現在時刻を配信するティッカー。
   ///
   /// 時刻は [AppClock] を経由するため、再生モード（通常/タイムシフト/リプレイ）と
-  /// NTP 補正に追従する。モードや NTP offset が変化した場合はストリームを張り直す。
+  /// NTP 補正に追従する。各 tick で [AppClock] の現在時刻を読むため、
+  /// リプレイ中の再生位置更新では張り直さず、リプレイ開始/終了と NTP 同期時のみ
+  /// ストリームを張り直す（毎フレーム張り直しによる周期停止を防ぐ）。
 
   TimeTickerProvider call([Duration duration = const Duration(seconds: 1)]) =>
       TimeTickerProvider._(argument: duration, from: this);
