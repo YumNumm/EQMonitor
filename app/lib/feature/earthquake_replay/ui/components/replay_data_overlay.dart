@@ -175,6 +175,11 @@ class _EventTile extends StatelessWidget {
         'AXIS',
         json,
       ),
+      EqMonitorEewReplayData(:final json) => (
+        Icons.warning_amber,
+        'EQMonitor EEW',
+        json,
+      ),
       KyoshinMonitorImageReplayData() => (
         Icons.image,
         '強震モニタ画像',

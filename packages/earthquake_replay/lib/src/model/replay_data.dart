@@ -27,6 +27,7 @@ sealed class ReplayData {
       ReplayDataType.keviJson => KeviJsonReplayData.fromMsgPack(body),
       ReplayDataType.snpLogEntry => SnpLogEntryReplayData.fromMsgPack(body),
       ReplayDataType.axisJson => AxisJsonReplayData.fromMsgPack(body),
+      ReplayDataType.eqMonitorEew => EqMonitorEewReplayData.fromMsgPack(body),
     };
   }
 
@@ -241,6 +242,38 @@ abstract class AxisJsonReplayData
       'AxisJsonReplayData(time: $time, json: ${json.substring(0, 10)}...)';
 }
 
+/// EQMonitor の EventMessage JSON（EEW）を保持するリプレイフレーム (Union 1003)。
+///
+/// [json] はアプリ側で `EewItemWithRelations` にデコードして本物の EEW
+/// パイプラインへ流し込む。msgpack body は他の JSON フレーム (101/1002) と同様に
+/// `[time, json]` の並び。
+@freezed
+abstract class EqMonitorEewReplayData
+    with _$EqMonitorEewReplayData
+    implements ReplayData {
+  const factory EqMonitorEewReplayData({
+    required ReplayDataType type,
+    required DateTime time,
+    required String json,
+  }) = _EqMonitorEewReplayData;
+  const EqMonitorEewReplayData._();
+
+  factory EqMonitorEewReplayData.fromJson(Map<String, dynamic> json) =>
+      _$EqMonitorEewReplayDataFromJson(json);
+
+  factory EqMonitorEewReplayData.fromMsgPack(List<dynamic> data) {
+    return EqMonitorEewReplayData(
+      type: ReplayDataType.eqMonitorEew,
+      time: data[0] as DateTime,
+      json: data[1] as String,
+    );
+  }
+
+  @override
+  String toString() =>
+      'EqMonitorEewReplayData(time: $time, json: ${json.substring(0, 10)}...)';
+}
+
 @JsonEnum(valueField: 'value')
 enum ReplayDataType {
   jmaXmlTelegram(0),
@@ -249,7 +282,8 @@ enum ReplayDataType {
   kyoshinMonitorEewJson(101),
   keviJson(1000),
   snpLogEntry(1001),
-  axisJson(1002)
+  axisJson(1002),
+  eqMonitorEew(1003)
   ;
 
   const ReplayDataType(this.value);
