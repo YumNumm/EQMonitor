@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
@@ -69,7 +70,9 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         .api
         .imageFetchInterval;
     final delay = imageFetchInterval + const Duration(seconds: 5);
-    final isDelayed = targetTime.difference(DateTime.now()) > delay;
+    final isDelayed =
+        targetTime.difference(ref.read(appClockProvider.notifier).now()) >
+        delay;
 
     if (state.isLoading) {
       return;
