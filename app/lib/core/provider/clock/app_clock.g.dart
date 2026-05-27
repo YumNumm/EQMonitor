@@ -86,3 +86,60 @@ abstract class _$AppClock extends $Notifier<TimeMode> {
     element.handleCreate(ref, build);
   }
 }
+
+/// リプレイ再生中かどうか。
+///
+/// 値が bool のため、再生位置更新（[AppClock.updateReplayTime] による
+/// 毎フレームの [TimeMode] 再生成）では通知されず、リプレイの開始/終了という
+/// モード遷移時のみ購読側へ通知される。
+
+@ProviderFor(isReplayMode)
+final isReplayModeProvider = IsReplayModeProvider._();
+
+/// リプレイ再生中かどうか。
+///
+/// 値が bool のため、再生位置更新（[AppClock.updateReplayTime] による
+/// 毎フレームの [TimeMode] 再生成）では通知されず、リプレイの開始/終了という
+/// モード遷移時のみ購読側へ通知される。
+
+final class IsReplayModeProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// リプレイ再生中かどうか。
+  ///
+  /// 値が bool のため、再生位置更新（[AppClock.updateReplayTime] による
+  /// 毎フレームの [TimeMode] 再生成）では通知されず、リプレイの開始/終了という
+  /// モード遷移時のみ購読側へ通知される。
+  IsReplayModeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isReplayModeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isReplayModeHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isReplayMode(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isReplayModeHash() => r'ffd3de0c6622ab10c56b7687418b48812d8f2285';

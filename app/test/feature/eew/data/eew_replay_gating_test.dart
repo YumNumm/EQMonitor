@@ -44,5 +44,23 @@ void main() {
       expect(state, hasLength(1));
       expect(state.single.eventId, '20240101161010');
     });
+
+    test('再生位置の更新(updateReplayTime)で upsert 済みEEWが消えないこと', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final clock = container.read(appClockProvider.notifier)
+        ..enterReplay(DateTime.utc(2024, 1, 1, 7, 10, 8));
+      container.read(eewProvider.notifier).upsert(_eew('20240101161010'));
+
+      // フレームが進むたびに updateReplayTime が呼ばれる状況を再現
+      clock
+        ..updateReplayTime(DateTime.utc(2024, 1, 1, 7, 10, 9))
+        ..updateReplayTime(DateTime.utc(2024, 1, 1, 7, 10, 10));
+
+      final state = container.read(eewProvider).value!;
+      expect(state, hasLength(1));
+      expect(state.single.eventId, '20240101161010');
+    });
   });
 }
