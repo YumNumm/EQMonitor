@@ -183,11 +183,6 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const PlaygroundRoute().push(context),
           ),
           ListTile(
-            title: const Text('地震リプレイ'),
-            leading: const Icon(Icons.play_circle),
-            onTap: () async => const EarthquakeReplayRoute().push(context),
-          ),
-          ListTile(
             title: const Text('揺れ検知履歴'),
             subtitle: const Text('このセッション中の揺れ検知イベント一覧'),
             leading: const Icon(Icons.sensors_rounded),

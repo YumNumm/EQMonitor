@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
@@ -16,6 +18,12 @@ part 'eew_telegram.g.dart';
 class Eew extends _$Eew {
   @override
   AsyncValue<List<EewTelegramItem>> build() {
+    // リプレイ再生中はライブ受信を切り離し、リプレイ由来のEEWのみを保持する。
+    // モードが通常/タイムシフトへ戻ると build が再実行されライブへ復帰する。
+    if (ref.watch(appClockProvider) is ReplayTimeMode) {
+      return const AsyncData([]);
+    }
+
     final restResult = ref.watch(_eewRestProvider);
 
     ref.listen(appLifecycleProvider, (_, next) {

@@ -203,7 +203,6 @@ flutter:
     - assets/parameter/
     - assets/parameters/
     - assets/debug/
-    - assets/debug/eew/noto_peninsula_20240101/
 
   fonts:
     - family: NotoSansJP

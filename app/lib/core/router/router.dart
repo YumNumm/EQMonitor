@@ -10,7 +10,6 @@ import 'package:eqmonitor/feature/devices/ui/page/debug_device_settings_page.dar
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_details_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_page.dart';
-import 'package:eqmonitor/feature/earthquake_replay/ui/earthquake_replay_page.dart';
 import 'package:eqmonitor/feature/earthquake_search/data/model/earthquake_search_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_search/ui/earthquake_search_result_page.dart';
 import 'package:eqmonitor/feature/eew/ui/page/eew_details_by_event_id_page.dart';
@@ -323,7 +322,6 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         ),
         TypedGoRoute<DebugDeviceAdminRoute>(path: 'device-admin'),
         TypedGoRoute<DebugDeviceSettingsRoute>(path: 'device-settings'),
-        TypedGoRoute<EarthquakeReplayRoute>(path: 'earthquake-replay'),
         TypedGoRoute<DebugNavigationRoute>(path: 'navigation'),
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugLiveActivityTestRoute>(path: 'live-activity-test'),
@@ -617,15 +615,6 @@ class DebugDeviceSettingsRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DebugDeviceSettingsPage();
-  }
-}
-
-class EarthquakeReplayRoute extends GoRouteData with $EarthquakeReplayRoute {
-  const EarthquakeReplayRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const EarthquakeReplayPage();
   }
 }
 

@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReplayState {
 
- ReplayFile get file; String get fileName; int get currentIndex; bool get isPlaying; double get playbackSpeed; bool get showDataOverlay;/// Worker Isolate で生成した強震モニタ観測点 GeoJSON
- String? get kyoshinMonitorGeoJson;
+ ReplayFile get file; String get fileName; int get currentIndex; bool get isPlaying; double get playbackSpeed;
 /// Create a copy of ReplayState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +25,16 @@ $ReplayStateCopyWith<ReplayState> get copyWith => _$ReplayStateCopyWithImpl<Repl
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReplayState&&(identical(other.file, file) || other.file == file)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.isPlaying, isPlaying) || other.isPlaying == isPlaying)&&(identical(other.playbackSpeed, playbackSpeed) || other.playbackSpeed == playbackSpeed)&&(identical(other.showDataOverlay, showDataOverlay) || other.showDataOverlay == showDataOverlay)&&(identical(other.kyoshinMonitorGeoJson, kyoshinMonitorGeoJson) || other.kyoshinMonitorGeoJson == kyoshinMonitorGeoJson));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReplayState&&(identical(other.file, file) || other.file == file)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.isPlaying, isPlaying) || other.isPlaying == isPlaying)&&(identical(other.playbackSpeed, playbackSpeed) || other.playbackSpeed == playbackSpeed));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,file,fileName,currentIndex,isPlaying,playbackSpeed,showDataOverlay,kyoshinMonitorGeoJson);
+int get hashCode => Object.hash(runtimeType,file,fileName,currentIndex,isPlaying,playbackSpeed);
 
 @override
 String toString() {
-  return 'ReplayState(file: $file, fileName: $fileName, currentIndex: $currentIndex, isPlaying: $isPlaying, playbackSpeed: $playbackSpeed, showDataOverlay: $showDataOverlay, kyoshinMonitorGeoJson: $kyoshinMonitorGeoJson)';
+  return 'ReplayState(file: $file, fileName: $fileName, currentIndex: $currentIndex, isPlaying: $isPlaying, playbackSpeed: $playbackSpeed)';
 }
 
 
@@ -46,7 +45,7 @@ abstract mixin class $ReplayStateCopyWith<$Res>  {
   factory $ReplayStateCopyWith(ReplayState value, $Res Function(ReplayState) _then) = _$ReplayStateCopyWithImpl;
 @useResult
 $Res call({
- ReplayFile file, String fileName, int currentIndex, bool isPlaying, double playbackSpeed, bool showDataOverlay, String? kyoshinMonitorGeoJson
+ ReplayFile file, String fileName, int currentIndex, bool isPlaying, double playbackSpeed
 });
 
 
@@ -63,16 +62,14 @@ class _$ReplayStateCopyWithImpl<$Res>
 
 /// Create a copy of ReplayState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? file = null,Object? fileName = null,Object? currentIndex = null,Object? isPlaying = null,Object? playbackSpeed = null,Object? showDataOverlay = null,Object? kyoshinMonitorGeoJson = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? file = null,Object? fileName = null,Object? currentIndex = null,Object? isPlaying = null,Object? playbackSpeed = null,}) {
   return _then(_self.copyWith(
 file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
 as ReplayFile,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
 as String,currentIndex: null == currentIndex ? _self.currentIndex : currentIndex // ignore: cast_nullable_to_non_nullable
 as int,isPlaying: null == isPlaying ? _self.isPlaying : isPlaying // ignore: cast_nullable_to_non_nullable
 as bool,playbackSpeed: null == playbackSpeed ? _self.playbackSpeed : playbackSpeed // ignore: cast_nullable_to_non_nullable
-as double,showDataOverlay: null == showDataOverlay ? _self.showDataOverlay : showDataOverlay // ignore: cast_nullable_to_non_nullable
-as bool,kyoshinMonitorGeoJson: freezed == kyoshinMonitorGeoJson ? _self.kyoshinMonitorGeoJson : kyoshinMonitorGeoJson // ignore: cast_nullable_to_non_nullable
-as String?,
+as double,
   ));
 }
 
@@ -157,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ReplayFile file,  String fileName,  int currentIndex,  bool isPlaying,  double playbackSpeed,  bool showDataOverlay,  String? kyoshinMonitorGeoJson)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ReplayFile file,  String fileName,  int currentIndex,  bool isPlaying,  double playbackSpeed)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReplayState() when $default != null:
-return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_that.playbackSpeed,_that.showDataOverlay,_that.kyoshinMonitorGeoJson);case _:
+return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_that.playbackSpeed);case _:
   return orElse();
 
 }
@@ -178,10 +175,10 @@ return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ReplayFile file,  String fileName,  int currentIndex,  bool isPlaying,  double playbackSpeed,  bool showDataOverlay,  String? kyoshinMonitorGeoJson)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ReplayFile file,  String fileName,  int currentIndex,  bool isPlaying,  double playbackSpeed)  $default,) {final _that = this;
 switch (_that) {
 case _ReplayState():
-return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_that.playbackSpeed,_that.showDataOverlay,_that.kyoshinMonitorGeoJson);case _:
+return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_that.playbackSpeed);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +195,10 @@ return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ReplayFile file,  String fileName,  int currentIndex,  bool isPlaying,  double playbackSpeed,  bool showDataOverlay,  String? kyoshinMonitorGeoJson)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ReplayFile file,  String fileName,  int currentIndex,  bool isPlaying,  double playbackSpeed)?  $default,) {final _that = this;
 switch (_that) {
 case _ReplayState() when $default != null:
-return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_that.playbackSpeed,_that.showDataOverlay,_that.kyoshinMonitorGeoJson);case _:
+return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_that.playbackSpeed);case _:
   return null;
 
 }
@@ -213,7 +210,7 @@ return $default(_that.file,_that.fileName,_that.currentIndex,_that.isPlaying,_th
 
 
 class _ReplayState extends ReplayState {
-  const _ReplayState({required this.file, required this.fileName, required this.currentIndex, required this.isPlaying, required this.playbackSpeed, this.showDataOverlay = false, this.kyoshinMonitorGeoJson}): super._();
+  const _ReplayState({required this.file, required this.fileName, required this.currentIndex, required this.isPlaying, required this.playbackSpeed}): super._();
   
 
 @override final  ReplayFile file;
@@ -221,9 +218,6 @@ class _ReplayState extends ReplayState {
 @override final  int currentIndex;
 @override final  bool isPlaying;
 @override final  double playbackSpeed;
-@override@JsonKey() final  bool showDataOverlay;
-/// Worker Isolate で生成した強震モニタ観測点 GeoJSON
-@override final  String? kyoshinMonitorGeoJson;
 
 /// Create a copy of ReplayState
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +229,16 @@ _$ReplayStateCopyWith<_ReplayState> get copyWith => __$ReplayStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReplayState&&(identical(other.file, file) || other.file == file)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.isPlaying, isPlaying) || other.isPlaying == isPlaying)&&(identical(other.playbackSpeed, playbackSpeed) || other.playbackSpeed == playbackSpeed)&&(identical(other.showDataOverlay, showDataOverlay) || other.showDataOverlay == showDataOverlay)&&(identical(other.kyoshinMonitorGeoJson, kyoshinMonitorGeoJson) || other.kyoshinMonitorGeoJson == kyoshinMonitorGeoJson));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReplayState&&(identical(other.file, file) || other.file == file)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.isPlaying, isPlaying) || other.isPlaying == isPlaying)&&(identical(other.playbackSpeed, playbackSpeed) || other.playbackSpeed == playbackSpeed));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,file,fileName,currentIndex,isPlaying,playbackSpeed,showDataOverlay,kyoshinMonitorGeoJson);
+int get hashCode => Object.hash(runtimeType,file,fileName,currentIndex,isPlaying,playbackSpeed);
 
 @override
 String toString() {
-  return 'ReplayState(file: $file, fileName: $fileName, currentIndex: $currentIndex, isPlaying: $isPlaying, playbackSpeed: $playbackSpeed, showDataOverlay: $showDataOverlay, kyoshinMonitorGeoJson: $kyoshinMonitorGeoJson)';
+  return 'ReplayState(file: $file, fileName: $fileName, currentIndex: $currentIndex, isPlaying: $isPlaying, playbackSpeed: $playbackSpeed)';
 }
 
 
@@ -255,7 +249,7 @@ abstract mixin class _$ReplayStateCopyWith<$Res> implements $ReplayStateCopyWith
   factory _$ReplayStateCopyWith(_ReplayState value, $Res Function(_ReplayState) _then) = __$ReplayStateCopyWithImpl;
 @override @useResult
 $Res call({
- ReplayFile file, String fileName, int currentIndex, bool isPlaying, double playbackSpeed, bool showDataOverlay, String? kyoshinMonitorGeoJson
+ ReplayFile file, String fileName, int currentIndex, bool isPlaying, double playbackSpeed
 });
 
 
@@ -272,16 +266,14 @@ class __$ReplayStateCopyWithImpl<$Res>
 
 /// Create a copy of ReplayState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? file = null,Object? fileName = null,Object? currentIndex = null,Object? isPlaying = null,Object? playbackSpeed = null,Object? showDataOverlay = null,Object? kyoshinMonitorGeoJson = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? file = null,Object? fileName = null,Object? currentIndex = null,Object? isPlaying = null,Object? playbackSpeed = null,}) {
   return _then(_ReplayState(
 file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
 as ReplayFile,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
 as String,currentIndex: null == currentIndex ? _self.currentIndex : currentIndex // ignore: cast_nullable_to_non_nullable
 as int,isPlaying: null == isPlaying ? _self.isPlaying : isPlaying // ignore: cast_nullable_to_non_nullable
 as bool,playbackSpeed: null == playbackSpeed ? _self.playbackSpeed : playbackSpeed // ignore: cast_nullable_to_non_nullable
-as double,showDataOverlay: null == showDataOverlay ? _self.showDataOverlay : showDataOverlay // ignore: cast_nullable_to_non_nullable
-as bool,kyoshinMonitorGeoJson: freezed == kyoshinMonitorGeoJson ? _self.kyoshinMonitorGeoJson : kyoshinMonitorGeoJson // ignore: cast_nullable_to_non_nullable
-as String?,
+as double,
   ));
 }
 

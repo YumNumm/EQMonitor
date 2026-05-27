@@ -10,19 +10,28 @@ part of 'replay_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+/// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
+/// へ流し込むコントローラ。
 
 @ProviderFor(ReplayNotifier)
 final replayProvider = ReplayNotifierProvider._();
 
+/// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+/// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
+/// へ流し込むコントローラ。
 final class ReplayNotifierProvider
     extends $NotifierProvider<ReplayNotifier, ReplayState?> {
+  /// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+  /// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
+  /// へ流し込むコントローラ。
   ReplayNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'replayProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -43,7 +52,11 @@ final class ReplayNotifierProvider
   }
 }
 
-String _$replayNotifierHash() => r'd1261eacf321da78b8f4601f426c0f3afa53fe99';
+String _$replayNotifierHash() => r'bd5db4fb02ecee877cf6ae8a97ca2e4c7689efed';
+
+/// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+/// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
+/// へ流し込むコントローラ。
 
 abstract class _$ReplayNotifier extends $Notifier<ReplayState?> {
   ReplayState? build();
