@@ -1859,4 +1859,265 @@ as String,
 
 }
 
+
+/// @nodoc
+mixin _$EqMonitorEewReplayData {
+
+ ReplayDataType get type; DateTime get time; String get json;
+/// Create a copy of EqMonitorEewReplayData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EqMonitorEewReplayDataCopyWith<EqMonitorEewReplayData> get copyWith => _$EqMonitorEewReplayDataCopyWithImpl<EqMonitorEewReplayData>(this as EqMonitorEewReplayData, _$identity);
+
+  /// Serializes this EqMonitorEewReplayData to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EqMonitorEewReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.json, json) || other.json == json));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,json);
+
+
+
+}
+
+/// @nodoc
+abstract mixin class $EqMonitorEewReplayDataCopyWith<$Res>  {
+  factory $EqMonitorEewReplayDataCopyWith(EqMonitorEewReplayData value, $Res Function(EqMonitorEewReplayData) _then) = _$EqMonitorEewReplayDataCopyWithImpl;
+@useResult
+$Res call({
+ ReplayDataType type, DateTime time, String json
+});
+
+
+
+
+}
+/// @nodoc
+class _$EqMonitorEewReplayDataCopyWithImpl<$Res>
+    implements $EqMonitorEewReplayDataCopyWith<$Res> {
+  _$EqMonitorEewReplayDataCopyWithImpl(this._self, this._then);
+
+  final EqMonitorEewReplayData _self;
+  final $Res Function(EqMonitorEewReplayData) _then;
+
+/// Create a copy of EqMonitorEewReplayData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [EqMonitorEewReplayData].
+extension EqMonitorEewReplayDataPatterns on EqMonitorEewReplayData {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EqMonitorEewReplayData value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EqMonitorEewReplayData() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EqMonitorEewReplayData value)  $default,){
+final _that = this;
+switch (_that) {
+case _EqMonitorEewReplayData():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EqMonitorEewReplayData value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EqMonitorEewReplayData() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ReplayDataType type,  DateTime time,  String json)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EqMonitorEewReplayData() when $default != null:
+return $default(_that.type,_that.time,_that.json);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ReplayDataType type,  DateTime time,  String json)  $default,) {final _that = this;
+switch (_that) {
+case _EqMonitorEewReplayData():
+return $default(_that.type,_that.time,_that.json);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ReplayDataType type,  DateTime time,  String json)?  $default,) {final _that = this;
+switch (_that) {
+case _EqMonitorEewReplayData() when $default != null:
+return $default(_that.type,_that.time,_that.json);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _EqMonitorEewReplayData extends EqMonitorEewReplayData {
+  const _EqMonitorEewReplayData({required this.type, required this.time, required this.json}): super._();
+  factory _EqMonitorEewReplayData.fromJson(Map<String, dynamic> json) => _$EqMonitorEewReplayDataFromJson(json);
+
+@override final  ReplayDataType type;
+@override final  DateTime time;
+@override final  String json;
+
+/// Create a copy of EqMonitorEewReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EqMonitorEewReplayDataCopyWith<_EqMonitorEewReplayData> get copyWith => __$EqMonitorEewReplayDataCopyWithImpl<_EqMonitorEewReplayData>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EqMonitorEewReplayDataToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EqMonitorEewReplayData&&(identical(other.type, type) || other.type == type)&&(identical(other.time, time) || other.time == time)&&(identical(other.json, json) || other.json == json));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,time,json);
+
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EqMonitorEewReplayDataCopyWith<$Res> implements $EqMonitorEewReplayDataCopyWith<$Res> {
+  factory _$EqMonitorEewReplayDataCopyWith(_EqMonitorEewReplayData value, $Res Function(_EqMonitorEewReplayData) _then) = __$EqMonitorEewReplayDataCopyWithImpl;
+@override @useResult
+$Res call({
+ ReplayDataType type, DateTime time, String json
+});
+
+
+
+
+}
+/// @nodoc
+class __$EqMonitorEewReplayDataCopyWithImpl<$Res>
+    implements _$EqMonitorEewReplayDataCopyWith<$Res> {
+  __$EqMonitorEewReplayDataCopyWithImpl(this._self, this._then);
+
+  final _EqMonitorEewReplayData _self;
+  final $Res Function(_EqMonitorEewReplayData) _then;
+
+/// Create a copy of EqMonitorEewReplayData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? time = null,Object? json = null,}) {
+  return _then(_EqMonitorEewReplayData(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ReplayDataType,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as DateTime,json: null == json ? _self.json : json // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 // dart format on

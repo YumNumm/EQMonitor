@@ -40,6 +40,7 @@ const _$ReplayDataTypeEnumMap = {
   ReplayDataType.keviJson: 1000,
   ReplayDataType.snpLogEntry: 1001,
   ReplayDataType.axisJson: 1002,
+  ReplayDataType.eqMonitorEew: 1003,
 };
 
 _JmaBinaryTelegramReplayData _$JmaBinaryTelegramReplayDataFromJson(
@@ -206,3 +207,25 @@ Map<String, dynamic> _$AxisJsonReplayDataToJson(_AxisJsonReplayData instance) =>
       'time': instance.time.toIso8601String(),
       'json': instance.json,
     };
+
+_EqMonitorEewReplayData _$EqMonitorEewReplayDataFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_EqMonitorEewReplayData', json, ($checkedConvert) {
+  final val = _EqMonitorEewReplayData(
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$ReplayDataTypeEnumMap, v),
+    ),
+    time: $checkedConvert('time', (v) => DateTime.parse(v as String)),
+    json: $checkedConvert('json', (v) => v as String),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$EqMonitorEewReplayDataToJson(
+  _EqMonitorEewReplayData instance,
+) => <String, dynamic>{
+  'type': _$ReplayDataTypeEnumMap[instance.type]!,
+  'time': instance.time.toIso8601String(),
+  'json': instance.json,
+};
