@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
@@ -22,6 +23,10 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
     // タイマーストリームを監視
     ref.listen(kyoshinMonitorTimerStreamProvider, (_, next) async {
       if (next case AsyncData(:final value)) {
+        // リプレイ再生中はライブ取得を停止し、リプレイ由来のデータを表示する
+        if (ref.read(appClockProvider) is ReplayTimeMode) {
+          return;
+        }
         if (ref.read(kyoshinMonitorSettingsProvider).requireValue.useKmoni) {
           await _fetchAndAnalyzeImage(value);
         }
@@ -140,5 +145,22 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         currentImageRaw: image,
       );
     });
+  }
+
+  /// リプレイ再生で解析済みの観測点 GeoJSON を表示状態へ反映する。
+  void setReplay({
+    required String geoJson,
+    required DateTime targetTime,
+    int? analyzedPointsCount,
+  }) {
+    state = AsyncData(
+      KyoshinMonitorState(
+        status: KyoshinMonitorStatus.playback,
+        lastUpdatedAt: targetTime,
+        lastImageFetchTargetTime: targetTime,
+        geoJson: geoJson,
+        analyzedPointsCount: analyzedPointsCount,
+      ),
+    );
   }
 }

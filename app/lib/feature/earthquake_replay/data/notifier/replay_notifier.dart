@@ -1,14 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:earthquake_replay/earthquake_replay.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/model/replay_state.dart';
+import 'package:eqmonitor/feature/eew/data/eew.dart';
+import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_analyzer_isolate_provider.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replay_notifier.g.dart';
 
-@riverpod
+/// EQRP リプレイファイルの再生を司り、再生時刻と各フレームを
+/// 本物の表示パイプライン（appClock / [eewProvider] / [kyoshinMonitorProvider]）
+/// へ流し込むコントローラ。
+@Riverpod(keepAlive: true)
 class ReplayNotifier extends _$ReplayNotifier {
   Timer? _playbackTimer;
 
@@ -18,13 +27,12 @@ class ReplayNotifier extends _$ReplayNotifier {
     return null;
   }
 
-  /// リプレイファイルを読み込む
+  /// リプレイファイルを読み込み、再生モードへ入る。
   Future<void> loadFile({
     required Uint8List bytes,
     required String fileName,
   }) async {
-    final parser = ReplayDataParser();
-    final file = parser.parse(bytes);
+    final file = ReplayDataParser().parse(bytes);
     state = ReplayState(
       file: file,
       fileName: fileName,
@@ -32,134 +40,118 @@ class ReplayNotifier extends _$ReplayNotifier {
       isPlaying: false,
       playbackSpeed: 1,
     );
-    await _parseCurrentFrame();
+    ref.read(appClockProvider.notifier).enterReplay(file.data.first.time);
+    await _rebuildTo(0);
+    play();
   }
 
-  /// 再生開始
   void play() {
-    if (state == null) {
+    final current = state;
+    if (current == null) {
       return;
     }
-    state = state!.copyWith(isPlaying: true);
+    state = current.copyWith(isPlaying: true);
     _startPlaybackTimer();
   }
 
-  /// 一時停止
   void pause() {
-    if (state == null) {
+    final current = state;
+    if (current == null) {
       return;
     }
     _stopPlaybackTimer();
-    state = state!.copyWith(isPlaying: false);
+    state = current.copyWith(isPlaying: false);
   }
 
-  /// 再生/一時停止を切り替え
   void togglePlayPause() {
-    if (state == null) {
+    final current = state;
+    if (current == null) {
       return;
     }
-    if (state!.isPlaying) {
+    if (current.isPlaying) {
       pause();
     } else {
       play();
     }
   }
 
-  /// シーク（フレームインデックスを直接設定）
+  /// リプレイを終了し、通常再生（ライブ）へ戻す。
+  void exit() {
+    _stopPlaybackTimer();
+    state = null;
+    ref.read(appClockProvider.notifier).returnToRealtime();
+    // リプレイ由来のデータを破棄し、ライブ取得を再開させる。
+    ref
+      ..invalidate(eewProvider)
+      ..invalidate(kyoshinMonitorProvider);
+  }
+
   Future<void> seekToIndex(int index) async {
-    if (state == null || state!.totalFrames == 0) {
+    final current = state;
+    if (current == null || current.totalFrames == 0) {
       return;
     }
-    final clampedIndex = index.clamp(0, state!.totalFrames - 1);
-    state = state!.copyWith(currentIndex: clampedIndex);
-    await _parseCurrentFrame();
+    final clamped = index.clamp(0, current.totalFrames - 1);
+    state = current.copyWith(currentIndex: clamped);
+    await _rebuildTo(clamped);
   }
 
-  /// シーク（進捗率で設定: 0.0 ~ 1.0）
   Future<void> seekToProgress(double progress) async {
-    if (state == null || state!.totalFrames == 0) {
+    final current = state;
+    if (current == null || current.totalFrames == 0) {
       return;
     }
-    final index = (progress * (state!.totalFrames - 1)).round();
-    await seekToIndex(index);
+    await seekToIndex((progress * (current.totalFrames - 1)).round());
   }
 
-  /// 再生速度を変更
   void setPlaybackSpeed(double speed) {
-    if (state == null) {
+    final current = state;
+    if (current == null) {
       return;
     }
-    state = state!.copyWith(playbackSpeed: speed);
-    if (state!.isPlaying) {
+    state = current.copyWith(playbackSpeed: speed);
+    if (current.isPlaying) {
       _stopPlaybackTimer();
       _startPlaybackTimer();
     }
   }
 
-  /// データオーバーレイの表示を切り替え
-  void toggleDataOverlay() {
-    if (state == null) {
+  Future<void> _advanceToNextFrame() async {
+    final current = state;
+    if (current == null) {
       return;
     }
-    state = state!.copyWith(showDataOverlay: !state!.showDataOverlay);
-  }
-
-  /// 次のフレームに進む
-  Future<void> nextFrame() async {
-    if (state == null) {
-      return;
-    }
-    if (state!.currentIndex >= state!.totalFrames - 1) {
+    if (current.currentIndex >= current.totalFrames - 1) {
       pause();
       return;
     }
-    state = state!.copyWith(currentIndex: state!.currentIndex + 1);
-    await _parseCurrentFrame();
-  }
-
-  /// 前のフレームに戻る
-  Future<void> previousFrame() async {
-    if (state == null) {
-      return;
-    }
-    if (state!.currentIndex <= 0) {
-      return;
-    }
-    state = state!.copyWith(currentIndex: state!.currentIndex - 1);
-    await _parseCurrentFrame();
+    final nextIndex = current.currentIndex + 1;
+    state = current.copyWith(currentIndex: nextIndex);
+    await _applyFrame(nextIndex);
   }
 
   void _startPlaybackTimer() {
     _stopPlaybackTimer();
-    if (state == null) {
-      return;
-    }
-
-    // 次のフレームまでの時間を計算
-    final interval = _calculateNextFrameInterval();
+    final interval = _nextFrameInterval();
     if (interval == null) {
       return;
     }
-
     _playbackTimer = Timer(interval, () async {
-      await nextFrame();
+      await _advanceToNextFrame();
       if (state?.isPlaying ?? false) {
         _startPlaybackTimer();
       }
     });
   }
 
-  Duration? _calculateNextFrameInterval() {
-    if (state == null || state!.currentIndex >= state!.totalFrames - 1) {
+  Duration? _nextFrameInterval() {
+    final current = state;
+    if (current == null || current.currentIndex >= current.totalFrames - 1) {
       return null;
     }
-
-    final currentTime = state!.file.data[state!.currentIndex].time;
-    final nextTime = state!.file.data[state!.currentIndex + 1].time;
-    final diff = nextTime.difference(currentTime);
-
-    // 再生速度を適用
-    final adjustedMs = (diff.inMilliseconds / state!.playbackSpeed).round();
+    final diff = current.file.data[current.currentIndex + 1].time
+        .difference(current.file.data[current.currentIndex].time);
+    final adjustedMs = (diff.inMilliseconds / current.playbackSpeed).round();
     return Duration(milliseconds: adjustedMs.clamp(16, 10000));
   }
 
@@ -168,36 +160,75 @@ class ReplayNotifier extends _$ReplayNotifier {
     _playbackTimer = null;
   }
 
-  /// 現在のフレームを解析
-  Future<void> _parseCurrentFrame() async {
-    if (state == null) {
+  /// 単一フレームを適用する（順次再生用）。
+  Future<void> _applyFrame(int index) async {
+    final current = state;
+    if (current == null) {
       return;
     }
-
-    final currentData = state!.file.data[state!.currentIndex];
-
-    // KyoshinMonitorImageReplayDataの場合のみ解析
-    if (currentData is KyoshinMonitorImageReplayData) {
-      final geoJson = await _parseKyoshinImage(currentData);
-      state = state!.copyWith(kyoshinMonitorGeoJson: geoJson);
-    } else {
-      state = state!.copyWith(kyoshinMonitorGeoJson: null);
+    final data = current.file.data[index];
+    ref.read(appClockProvider.notifier).updateReplayTime(data.time);
+    switch (data) {
+      case KyoshinMonitorImageReplayData():
+        await _applyKyoshinImage(data);
+      case EqMonitorEewReplayData():
+        _applyEew(data);
+      case _:
+        break;
     }
   }
 
-  Future<String?> _parseKyoshinImage(
-    KyoshinMonitorImageReplayData data,
-  ) async {
-    // 震度(shindo)画像を優先して取得
+  /// 指定位置まで状態を再構築する（シーク用）。
+  /// EEW は累積更新のため先頭から再適用し、強震モニタ画像は直近 1 枚のみ適用する。
+  Future<void> _rebuildTo(int index) async {
+    final current = state;
+    if (current == null) {
+      return;
+    }
+    ref
+      ..read(appClockProvider.notifier).updateReplayTime(
+        current.file.data[index].time,
+      )
+      ..invalidate(eewProvider);
+
+    final frames = current.file.data;
+    for (var i = 0; i <= index; i++) {
+      final data = frames[i];
+      if (data is EqMonitorEewReplayData) {
+        _applyEew(data);
+      }
+    }
+    final latestImage = frames
+        .sublist(0, index + 1)
+        .whereType<KyoshinMonitorImageReplayData>()
+        .lastOrNull;
+    if (latestImage != null) {
+      await _applyKyoshinImage(latestImage);
+    }
+  }
+
+  Future<void> _applyKyoshinImage(KyoshinMonitorImageReplayData data) async {
     final imageData = data.images[ImageType.shindo];
     if (imageData == null) {
-      return null;
+      return;
     }
-
     final analyzer = await ref.read(
       kyoshinMonitorAnalyzerIsolateProvider.future,
     );
     final result = await analyzer.analyze(Uint8List.fromList(imageData));
-    return result.geoJson;
+    ref
+        .read(kyoshinMonitorProvider.notifier)
+        .setReplay(
+          geoJson: result.geoJson,
+          targetTime: data.time,
+          analyzedPointsCount: result.featureCount,
+        );
+  }
+
+  void _applyEew(EqMonitorEewReplayData data) {
+    final item = EewItemWithRelations.fromJson(
+      jsonDecode(data.json) as Map<String, dynamic>,
+    );
+    ref.read(eewProvider.notifier).upsert(item.toEewTelegramItem);
   }
 }
