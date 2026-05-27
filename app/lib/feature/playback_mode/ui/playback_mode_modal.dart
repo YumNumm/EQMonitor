@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/clock/time_mode.dart';
 import 'package:eqmonitor/feature/earthquake_replay/data/notifier/replay_notifier.dart';
+import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_to_realtime_notifier.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -65,6 +66,9 @@ class PlaybackModeModal extends ConsumerWidget {
               const _OpenReplayFileButton(),
             ],
             SizedBox(height: spacing.sm),
+            const Divider(),
+            const _AutoReturnToggle(),
+            SizedBox(height: spacing.sm),
           ],
         ),
       ),
@@ -116,6 +120,24 @@ class _TimeShiftSection extends ConsumerWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _AutoReturnToggle extends ConsumerWidget {
+  const _AutoReturnToggle();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final enabled = ref.watch(autoReturnToRealtimeProvider);
+    return SwitchListTile(
+      contentPadding: EdgeInsets.zero,
+      title: const Text('リアルタイムイベントで通常再生に戻る'),
+      subtitle: const Text('再生中にEEW・揺れ検知が発生したら自動で現在へ復帰します'),
+      value: enabled,
+      onChanged: (value) async => ref
+          .read(autoReturnToRealtimeProvider.notifier)
+          .set(value: value),
     );
   }
 }

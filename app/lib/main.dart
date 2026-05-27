@@ -27,6 +27,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_so
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
 import 'package:eqmonitor/feature/location/data/background_location_service.dart';
+import 'package:eqmonitor/feature/playback_mode/data/notifier/auto_return_watcher.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -217,6 +218,8 @@ Future<void> _main() async {
 
   container.read(eqMonitorWsStatusProvider);
   container.read(realtimeEventsProvider);
+  // リプレイ/タイムシフト中にライブイベントが来たら通常再生へ戻すウォッチャを常駐させる。
+  container.read(autoReturnWatcherProvider);
   // killed状態で永続化された位置情報の反映と、live位置更新の購読を開始する。
   // backgroundLocationServiceProvider は keepAlive: true で常駐させる。
   container.listen(backgroundLocationServiceProvider, (_, _) {});
