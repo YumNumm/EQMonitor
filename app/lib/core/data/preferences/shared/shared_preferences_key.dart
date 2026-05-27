@@ -20,6 +20,7 @@ enum SharedPreferencesKey {
   lastApnsTokenHash('last_apns_token_hash'),
   lastApnsPushToStartTokenHash('last_apns_push_to_start_token_hash'),
   adsOptOut('ads_opt_out'),
+  autoReturnToRealtime('auto_return_to_realtime'),
   ;
 
   const SharedPreferencesKey(this.key);
