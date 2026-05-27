@@ -20,6 +20,22 @@ void main() {
       expect(rawInt, lessThan(4.5));
     });
 
+    // 回帰テスト: 100Hz fixture の計測震度値が修正前後で変化しないことを担保する。
+    // 100Hz では floor(0.3×100)=30 となり、修正前の `composites[29]`（30番目）と
+    // 一致するため、本テストの固定値は変わってはならない。
+    test('AIC001 100Hz fixture の計測震度値が修正後も不変（回帰テスト）', () {
+      final csvText = _loadFixture('AIC0011103111446.csv');
+      final record = const KnetCsvParser().parse(csvText);
+
+      expect(record.samplingFrequencyHz, 100);
+
+      final calc = KnetIntensityCalculator(
+        samplingFrequencyHz: record.samplingFrequencyHz,
+      );
+
+      expect(calc.calculate(record), closeTo(3.4, 1e-9));
+    });
+
     test('震度ラベル変換が正しい', () {
       expect(KnetIntensityCalculator.toJmaLabel(0), '0');
       expect(KnetIntensityCalculator.toJmaLabel(0.4), '0');
@@ -67,6 +83,53 @@ void main() {
       );
 
       final calc = KnetIntensityCalculator();
+      expect(calc.calculate(record), equals(0.0));
+    });
+
+    group('durationSampleCount (0.3秒窓のサンプル数)', () {
+      test('floor(0.3 × サンプリング周波数) を返す', () {
+        // 100Hz: floor(0.3×100)=30（従来挙動と一致）
+        expect(KnetIntensityCalculator.durationSampleCount(100), 30);
+        // 200Hz (KiK-net 等): floor(0.3×200)=60
+        expect(KnetIntensityCalculator.durationSampleCount(200), 60);
+        // 50Hz: floor(0.3×50)=15
+        expect(KnetIntensityCalculator.durationSampleCount(50), 15);
+      });
+
+      test('秒数を明示しても 100Hz では 30 になる', () {
+        // 秒数を明示的に指定しても既定値と同じ結果になることを確認する。
+        // ignore: avoid_redundant_argument_values
+        expect(KnetIntensityCalculator.durationSampleCount(100, 0.3), 30);
+      });
+    });
+
+    test('200Hz でサンプル数が窓サイズ(60)未満なら 0.0 を返す（境界）', () {
+      // 200Hz では 0.3秒窓 = 60サンプル必要。
+      // 40サンプルしか無い場合、合成波形長は 60 未満となりデータ不足扱い。
+      // 修正前は窓サイズが 30 固定だったため値を返していた箇所。
+      final record = KnetCsvRecord(
+        earthquakeInfo: null,
+        stationInfo: null,
+        offsets: [],
+        channelDirections: const [
+          KnetChannelDirection.ns,
+          KnetChannelDirection.ew,
+          KnetChannelDirection.ud,
+        ],
+        dataPoints: List.generate(
+          40,
+          (i) => KnetCsvDataPoint(
+            time: DateTime(2024),
+            relativeTimeSec: i * 0.005,
+            accelerationsGal: [100.0, 100.0, 100.0],
+          ),
+        ),
+        samplingFrequencyHz: 200,
+        durationTimeSec: 0.2,
+        networkType: KnetNetworkType.knet,
+      );
+
+      final calc = KnetIntensityCalculator(samplingFrequencyHz: 200);
       expect(calc.calculate(record), equals(0.0));
     });
 

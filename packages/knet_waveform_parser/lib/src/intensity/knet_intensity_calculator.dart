@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:knet_waveform_parser/src/csv/knet_csv_parser.dart';
 import 'package:knet_waveform_parser/src/model/knet_channel_direction.dart';
+import 'package:meta/meta.dart';
 
 /// JMA計測震度算出クラス（特許第5946067号の実装）
 ///
@@ -127,6 +128,16 @@ class KnetIntensityCalculator {
     return yd[0];
   }
 
+  /// 0.3秒に相当するサンプル数を算出する。
+  ///
+  /// 気象庁の計測震度算出方法に従い `floor(seconds × サンプリング周波数)`
+  /// を返す。100Hz では 30、200Hz（KiK-net 等）では 60 となる。
+  @visibleForTesting
+  static int durationSampleCount(
+    double samplingFrequencyHz, [
+    double seconds = 0.3,
+  ]) => (samplingFrequencyHz * seconds).floor();
+
   /// CSVレコードからJMA計測震度（小数値）を算出する
   ///
   /// 戻り値は小数第1位まで (0.1 刻み)。
@@ -175,13 +186,17 @@ class KnetIntensityCalculator {
       );
     }
 
-    if (composites.length < 30) {
+    // 気象庁仕様: 3成分合成波形を降順ソートし、大きい方から
+    // floor(0.3 × サンプリング周波数) 番目の加速度値を a0 とする。
+    // サンプリング周波数を固定せず _fs から窓サンプル数を算出する。
+    final n = durationSampleCount(_fs);
+    if (composites.length < n) {
       return 0;
     }
 
-    // 降順ソートして30番目の値を取得（0.3秒相当の最大値）
+    // 降順ソートして floor(0.3×fs) 番目の値を取得（0.3秒相当の値）
     composites.sort((x, y) => y.compareTo(x));
-    final v = composites[29];
+    final v = composites[n - 1];
     if (v <= 0) {
       return 0;
     }

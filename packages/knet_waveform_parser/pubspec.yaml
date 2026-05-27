@@ -12,6 +12,7 @@ resolution: workspace
 dependencies:
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
+  meta: ^1.12.0
 
 dev_dependencies:
   altive_lints: ^2.1.0
