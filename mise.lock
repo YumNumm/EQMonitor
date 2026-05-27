@@ -79,27 +79,27 @@ url = "https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.14.15/tfcmt
 provenance = "github-attestations"
 
 [[tools.claude]]
-version = "2.1.143"
+version = "2.1.152"
 backend = "aqua:anthropics/claude-code"
 
 [tools.claude."platforms.linux-arm64"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/linux-arm64/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.152/linux-arm64/claude"
 
 [tools.claude."platforms.linux-arm64-musl"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/linux-arm64-musl/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.152/linux-arm64-musl/claude"
 
 [tools.claude."platforms.linux-x64"]
-checksum = "blake3:5615771a35e3fb5634db3f4d92650a5ad038f8957e1d30064e1c3dd0ed932305"
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/linux-x64/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.152/linux-x64/claude"
 
 [tools.claude."platforms.linux-x64-musl"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/linux-x64-musl/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.152/linux-x64-musl/claude"
 
 [tools.claude."platforms.macos-arm64"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/darwin-arm64/claude"
+checksum = "blake3:85fd7590da246fcfee0a97ea78eb4a71db2a59594eb38be58843c47768d841f0"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.152/darwin-arm64/claude"
 
 [tools.claude."platforms.macos-x64"]
-url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.143/darwin-x64/claude"
+url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.152/darwin-x64/claude"
 
 [[tools.firebase]]
 version = "15.18.0"
@@ -130,29 +130,8 @@ version = "3.44.0-stable"
 backend = "asdf:flutter"
 
 [[tools.gcloud]]
-version = "568.0.0"
+version = "569.0.0"
 backend = "asdf:gcloud"
-
-[tools.gcloud."platforms.linux-arm64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-arm.tar.gz"
-
-[tools.gcloud."platforms.linux-arm64-musl"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-arm.tar.gz"
-
-[tools.gcloud."platforms.linux-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-x86_64.tar.gz"
-
-[tools.gcloud."platforms.linux-x64-musl"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-linux-x86_64.tar.gz"
-
-[tools.gcloud."platforms.macos-arm64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-darwin-arm.tar.gz"
-
-[tools.gcloud."platforms.macos-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-darwin-x86_64.tar.gz"
-
-[tools.gcloud."platforms.windows-x64"]
-url = "https://storage.googleapis.com/cloud-sdk-release/google-cloud-sdk-568.0.0-windows-x86_64.zip"
 
 [[tools.ghalint]]
 version = "1.5.6"
@@ -283,78 +262,78 @@ version = "17.0.2"
 backend = "core:java"
 
 [[tools.node]]
-version = "24.15.0"
+version = "24.16.0"
 backend = "core:node"
 
 [tools.node."platforms.linux-arm64"]
-checksum = "sha256:73afc234d558c24919875f51c2d1ea002a2ada4ea6f83601a383869fefa64eed"
-url = "https://nodejs.org/dist/v24.15.0/node-v24.15.0-linux-arm64.tar.gz"
+checksum = "sha256:589f5b6dd4fcfee4dfda73013903c966abaa8abd93dbc9d436544e472b4f0e74"
+url = "https://nodejs.org/dist/v24.16.0/node-v24.16.0-linux-arm64.tar.gz"
 
 [tools.node."platforms.linux-arm64-musl"]
-checksum = "sha256:31e98aa960a067da91edffd5d93bc46657b5d2a8029612c359f5f2ac0060152a"
-url = "https://unofficial-builds.nodejs.org/download/release/v24.15.0/node-v24.15.0-linux-arm64-musl.tar.gz"
+checksum = "sha256:85dde27aa73503b03dadfa0410a800067b4e3f702fb7fcaa3beaf284dfcc69e9"
+url = "https://unofficial-builds.nodejs.org/download/release/v24.16.0/node-v24.16.0-linux-arm64-musl.tar.gz"
 
 [tools.node."platforms.linux-x64"]
-checksum = "sha256:44836872d9aec49f1e6b52a9a922872db9a2b02d235a616a5681b6a85fec8d89"
-url = "https://nodejs.org/dist/v24.15.0/node-v24.15.0-linux-x64.tar.gz"
+checksum = "sha256:2faf6a387e9b62b888e21c54f01249fb27537ffecf1842f29f4c919d0a59a0ff"
+url = "https://nodejs.org/dist/v24.16.0/node-v24.16.0-linux-x64.tar.gz"
 
 [tools.node."platforms.linux-x64-musl"]
-checksum = "sha256:f55af5bd489c5347b113ca6594cae00a54b30ba57ac5875324311bfc6f4762e3"
-url = "https://unofficial-builds.nodejs.org/download/release/v24.15.0/node-v24.15.0-linux-x64-musl.tar.gz"
+checksum = "sha256:50df5d8d474892d4f7b906167df36f77f5b93908f63dc532dc568219cab65841"
+url = "https://unofficial-builds.nodejs.org/download/release/v24.16.0/node-v24.16.0-linux-x64-musl.tar.gz"
 
 [tools.node."platforms.macos-arm64"]
-checksum = "sha256:372331b969779ab5d15b949884fc6eaf88d5afe87bde8ba881d6400b9100ffc4"
-url = "https://nodejs.org/dist/v24.15.0/node-v24.15.0-darwin-arm64.tar.gz"
+checksum = "sha256:39189dab4eeb15706c424af0ac08a3044c9e48f7db12a7d77f6b7aafc7dd5df6"
+url = "https://nodejs.org/dist/v24.16.0/node-v24.16.0-darwin-arm64.tar.gz"
 
 [tools.node."platforms.macos-x64"]
-checksum = "sha256:ffd5ee293467927f3ee731a553eb88fd1f48cf74eebc2d74a6babe4af228673b"
-url = "https://nodejs.org/dist/v24.15.0/node-v24.15.0-darwin-x64.tar.gz"
+checksum = "sha256:298b4c7b3cb80765c8703e42b90324a4ece3b6634947b89e769c3c980ab55185"
+url = "https://nodejs.org/dist/v24.16.0/node-v24.16.0-darwin-x64.tar.gz"
 
 [tools.node."platforms.windows-x64"]
-checksum = "sha256:cc5149eabd53779ce1e7bdc5401643622d0c7e6800ade18928a767e940bb0e62"
-url = "https://nodejs.org/dist/v24.15.0/node-v24.15.0-win-x64.zip"
+checksum = "sha256:edaca9bd58ec8e92037dac4e877d52f6b8f430b81c18b57e264b4e2fb111cd56"
+url = "https://nodejs.org/dist/v24.16.0/node-v24.16.0-win-x64.zip"
 
 [[tools.pinact]]
-version = "3.9.2"
+version = "4.0.0"
 backend = "aqua:suzuki-shunsuke/pinact"
 
 [tools.pinact."platforms.linux-arm64"]
-checksum = "sha256:468bf7afd0f22b30ecb17fcf02f76d8b5c3bca59bb85a29017d7daebde96b33f"
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.9.2/pinact_linux_arm64.tar.gz"
+checksum = "sha256:c5d8ef4b253a749b754ad04f484d93c78fade5470bb549d58df6a8aeca9b18bf"
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v4.0.0/pinact_linux_arm64.tar.gz"
 provenance = "github-attestations"
 
 [tools.pinact."platforms.linux-arm64-musl"]
-checksum = "sha256:468bf7afd0f22b30ecb17fcf02f76d8b5c3bca59bb85a29017d7daebde96b33f"
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.9.2/pinact_linux_arm64.tar.gz"
+checksum = "sha256:c5d8ef4b253a749b754ad04f484d93c78fade5470bb549d58df6a8aeca9b18bf"
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v4.0.0/pinact_linux_arm64.tar.gz"
 provenance = "github-attestations"
 
 [tools.pinact."platforms.linux-x64"]
-checksum = "sha256:6adcc8a2217e4114e0841f8bca0cddf9958a9c52e3e89760c35b791cdba1a916"
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.9.2/pinact_linux_amd64.tar.gz"
+checksum = "sha256:cc220902615325b10bd3bc52ed3de27488f79adaec52adcd12bd2194c2d2c592"
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v4.0.0/pinact_linux_amd64.tar.gz"
 provenance = "github-attestations"
 
 [tools.pinact."platforms.linux-x64-musl"]
-checksum = "sha256:6adcc8a2217e4114e0841f8bca0cddf9958a9c52e3e89760c35b791cdba1a916"
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.9.2/pinact_linux_amd64.tar.gz"
+checksum = "sha256:cc220902615325b10bd3bc52ed3de27488f79adaec52adcd12bd2194c2d2c592"
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v4.0.0/pinact_linux_amd64.tar.gz"
 provenance = "github-attestations"
 
 [tools.pinact."platforms.macos-arm64"]
-checksum = "sha256:4a6b481b16b7bb67153f96aaf60cbe61d3a739bdce35b1cb3fd3de5372f58c31"
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.9.2/pinact_darwin_arm64.tar.gz"
+checksum = "sha256:3260e0d6fa7d89e4b9a7cc6c120345db9217c4e0571742e9a76db2ba3ff63650"
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v4.0.0/pinact_darwin_arm64.tar.gz"
 provenance = "github-attestations"
 
 [tools.pinact."platforms.macos-x64"]
-checksum = "sha256:5facbcd8cd4e20fb88c4ef3ace9c54b7d295735563634ef4373694cd286be67a"
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.9.2/pinact_darwin_amd64.tar.gz"
+checksum = "sha256:242d0697152d31bf04f3759ec5c55cf8ccbf47b6e2680dd24531e63a6d890468"
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v4.0.0/pinact_darwin_amd64.tar.gz"
 provenance = "github-attestations"
 
 [tools.pinact."platforms.windows-x64"]
-checksum = "sha256:a7f82e352eb4f706addfb864a7c4853f34bdcfc604ebef8733adecbbbacaaeef"
-url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v3.9.2/pinact_windows_amd64.zip"
+checksum = "sha256:800554b9f87c5136e9469ec9075a1f51fbea5ac402914d99f8afc4ec98a87901"
+url = "https://github.com/suzuki-shunsuke/pinact/releases/download/v4.0.0/pinact_windows_amd64.zip"
 provenance = "github-attestations"
 
 [[tools."pipx:codemagic-cli-tools"]]
-version = "0.66.0"
+version = "0.67.0"
 backend = "pipx:codemagic-cli-tools"
 
 [[tools.pkl]]
@@ -362,33 +341,38 @@ version = "0.31.1"
 backend = "aqua:apple/pkl"
 
 [[tools.pnpm]]
-version = "11.0.6"
+version = "11.3.0"
 backend = "aqua:pnpm/pnpm"
 
 [tools.pnpm."platforms.linux-arm64"]
-checksum = "sha256:8cff0a79557ffabcd9b25d40e70d9d859a160f05b5405b483142237460ea850d"
-url = "https://github.com/pnpm/pnpm/releases/download/v11.0.6/pnpm-linux-arm64.tar.gz"
+checksum = "sha256:383f644f50667e9c1752791173d274ba414117262b09c1b027c2d297bf520662"
+url = "https://github.com/pnpm/pnpm/releases/download/v11.3.0/pnpm-linux-arm64.tar.gz"
+provenance = "github-attestations"
 
 [tools.pnpm."platforms.linux-arm64-musl"]
-checksum = "sha256:3c2ba745a621e1fd6937675a7609eeddcfbbcf3d737ed90667bc56ec1f300052"
-url = "https://github.com/pnpm/pnpm/releases/download/v11.0.6/pnpm-linux-arm64-musl.tar.gz"
+checksum = "sha256:b489128f5e9a6ef56c1c5ff02c03118635bef7726ef9bb2d44e0ccd16d191883"
+url = "https://github.com/pnpm/pnpm/releases/download/v11.3.0/pnpm-linux-arm64-musl.tar.gz"
+provenance = "github-attestations"
 
 [tools.pnpm."platforms.linux-x64"]
-checksum = "sha256:f2781f9e250a7505bfaa6b80fed79f2a967885677c01a09dfadd024f8dce92c9"
-url = "https://github.com/pnpm/pnpm/releases/download/v11.0.6/pnpm-linux-x64.tar.gz"
+checksum = "sha256:6eb506b53297eb1186ba0cbff1577bb26d17713835a01a5342dcafae550827ce"
+url = "https://github.com/pnpm/pnpm/releases/download/v11.3.0/pnpm-linux-x64.tar.gz"
+provenance = "github-attestations"
 
 [tools.pnpm."platforms.linux-x64-musl"]
-checksum = "sha256:ca4ba0c69d6c5c36134d866bbb998825dabab6599b5ddb2a63744d1702e668e5"
-url = "https://github.com/pnpm/pnpm/releases/download/v11.0.6/pnpm-linux-x64-musl.tar.gz"
+checksum = "sha256:d728c510e04ac218091ce5dc591b28706bb154a14bd9741a146a0defd3ad466b"
+url = "https://github.com/pnpm/pnpm/releases/download/v11.3.0/pnpm-linux-x64-musl.tar.gz"
+provenance = "github-attestations"
 
 [tools.pnpm."platforms.macos-arm64"]
-checksum = "sha256:ae419c3a40f02988840e9424ba1a97eb88c5bdb2135056cb754c6fb4f4f0f6a7"
-url = "https://github.com/pnpm/pnpm/releases/download/v11.0.6/pnpm-darwin-arm64.tar.gz"
+checksum = "sha256:788958f77b44d7ac05f05f08ccdd520f1b2253d834df2a5eb0cf5ab9b84d40f6"
+url = "https://github.com/pnpm/pnpm/releases/download/v11.3.0/pnpm-darwin-arm64.tar.gz"
 provenance = "github-attestations"
 
 [tools.pnpm."platforms.windows-x64"]
-checksum = "sha256:ebb3ccdb8dc5d67db4e5e72b558b3db646b3ba623904f889bbdc81e1dff2704a"
-url = "https://github.com/pnpm/pnpm/releases/download/v11.0.6/pnpm-win32-x64.zip"
+checksum = "sha256:1264caa0dcad06849cfd04b939f19a64c5349d5dd49f14dadbc06703c6e42653"
+url = "https://github.com/pnpm/pnpm/releases/download/v11.3.0/pnpm-win32-x64.zip"
+provenance = "github-attestations"
 
 [[tools.shellcheck]]
 version = "0.11.0"
@@ -472,106 +456,106 @@ url = "https://github.com/nicklockwood/SwiftFormat/releases/download/0.61.1/Swif
 url_api = "https://api.github.com/repos/nicklockwood/SwiftFormat/releases/assets/406642521"
 
 [[tools.terraform]]
-version = "1.15.3"
+version = "1.15.4"
 backend = "aqua:hashicorp/terraform"
 
 [tools.terraform."platforms.linux-arm64"]
-checksum = "sha256:9824eb010b835b2c872440a337a69acfa1782d36c24d3c09fe5defe75defc511"
-url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_arm64.zip"
+checksum = "sha256:87da14c6700fee1bdaffedc943c4aca7bb078aad1f3eeccbdaae0484f90e1bec"
+url = "https://releases.hashicorp.com/terraform/1.15.4/terraform_1.15.4_linux_arm64.zip"
 
 [tools.terraform."platforms.linux-arm64-musl"]
-checksum = "sha256:9824eb010b835b2c872440a337a69acfa1782d36c24d3c09fe5defe75defc511"
-url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_arm64.zip"
+checksum = "sha256:87da14c6700fee1bdaffedc943c4aca7bb078aad1f3eeccbdaae0484f90e1bec"
+url = "https://releases.hashicorp.com/terraform/1.15.4/terraform_1.15.4_linux_arm64.zip"
 
 [tools.terraform."platforms.linux-x64"]
-checksum = "sha256:c3d4b579064745a5f7e918125db23b12ba52a8a7287adb9f32c49d637e02e3bf"
-url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_amd64.zip"
+checksum = "sha256:a71695fa6db9344db02ff1adb69cce891c1b2b4dc31c08df0dd4a12101a33b26"
+url = "https://releases.hashicorp.com/terraform/1.15.4/terraform_1.15.4_linux_amd64.zip"
 
 [tools.terraform."platforms.linux-x64-musl"]
-checksum = "sha256:c3d4b579064745a5f7e918125db23b12ba52a8a7287adb9f32c49d637e02e3bf"
-url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_linux_amd64.zip"
+checksum = "sha256:a71695fa6db9344db02ff1adb69cce891c1b2b4dc31c08df0dd4a12101a33b26"
+url = "https://releases.hashicorp.com/terraform/1.15.4/terraform_1.15.4_linux_amd64.zip"
 
 [tools.terraform."platforms.macos-arm64"]
-checksum = "sha256:b97101c62c11eebd176e83cd42a313336200d54fdd18ce7770f65a5bfb0ab098"
-url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_darwin_arm64.zip"
+checksum = "sha256:d6b99521a436bfc0e44b18ca47e2c8fec37a74039bf3b529ecc3c71d3e5a9fbf"
+url = "https://releases.hashicorp.com/terraform/1.15.4/terraform_1.15.4_darwin_arm64.zip"
 
 [tools.terraform."platforms.macos-x64"]
-checksum = "sha256:448e89a455e854941bd7e1396ba6ca46e92dd7e0ed1cc11d4da4cab637606d8a"
-url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_darwin_amd64.zip"
+checksum = "sha256:5d9d58855d08934fb79e8db04332ff89d5e2218a6a3559f6e596b47ec2f74ecd"
+url = "https://releases.hashicorp.com/terraform/1.15.4/terraform_1.15.4_darwin_amd64.zip"
 
 [tools.terraform."platforms.windows-x64"]
-checksum = "sha256:b9da8df3d92402551c86b8956be30fb87f600245321d2b31751afcf37218018c"
-url = "https://releases.hashicorp.com/terraform/1.15.3/terraform_1.15.3_windows_amd64.zip"
+checksum = "sha256:159169a73fcbdfb1b0ff3e2b7abf4ec94f9ebbb314ae3a0e19e494b357ef1488"
+url = "https://releases.hashicorp.com/terraform/1.15.4/terraform_1.15.4_windows_amd64.zip"
 
 [[tools.tflint]]
-version = "0.62.0"
+version = "0.62.1"
 backend = "aqua:terraform-linters/tflint"
 
 [tools.tflint."platforms.linux-arm64"]
-checksum = "sha256:064206ec85adaf90f637c880eb3cd5a8e07ddce09e4da7c813eb362cb794f95f"
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.0/tflint_linux_arm64.zip"
+checksum = "sha256:9f3bce43f7f58f05ddcf193f0bf1f7e7a9c7a79d7f46f72dd38e97f96fcaf14c"
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.1/tflint_linux_arm64.zip"
 
 [tools.tflint."platforms.linux-arm64-musl"]
-checksum = "sha256:064206ec85adaf90f637c880eb3cd5a8e07ddce09e4da7c813eb362cb794f95f"
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.0/tflint_linux_arm64.zip"
+checksum = "sha256:9f3bce43f7f58f05ddcf193f0bf1f7e7a9c7a79d7f46f72dd38e97f96fcaf14c"
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.1/tflint_linux_arm64.zip"
 
 [tools.tflint."platforms.linux-x64"]
-checksum = "sha256:000400d7f4c2236d9ed4b35fec3ee95617c3747571593cc6138169fc78cc226a"
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.0/tflint_linux_amd64.zip"
+checksum = "sha256:c004ec45ade3caf87cd4089feb1d2af9f7df57b13140a36df8a63c0a8cc69f14"
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.1/tflint_linux_amd64.zip"
 
 [tools.tflint."platforms.linux-x64-musl"]
-checksum = "sha256:000400d7f4c2236d9ed4b35fec3ee95617c3747571593cc6138169fc78cc226a"
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.0/tflint_linux_amd64.zip"
+checksum = "sha256:c004ec45ade3caf87cd4089feb1d2af9f7df57b13140a36df8a63c0a8cc69f14"
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.1/tflint_linux_amd64.zip"
 
 [tools.tflint."platforms.macos-arm64"]
-checksum = "sha256:56064a392e688f51c893a0d3bc1470fdf523f8d579080c718d026f1692613419"
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.0/tflint_darwin_arm64.zip"
+checksum = "sha256:927866fef68382138b8fed038721a03c0928ce9486e1616b18bd3dd11e7cdacb"
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.1/tflint_darwin_arm64.zip"
 
 [tools.tflint."platforms.macos-x64"]
-checksum = "sha256:6aa1defaac89eab227008301af399225afd9ee6f124d13e570323cf588491b8a"
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.0/tflint_darwin_amd64.zip"
+checksum = "sha256:7f55df3a25deb610c267f600eb4247657e3ff776d0322916ceecd7b58142a73a"
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.1/tflint_darwin_amd64.zip"
 
 [tools.tflint."platforms.windows-x64"]
-checksum = "sha256:d2b28caf4f312805edd06c7aede494135d1babb301db32e9b68994d2038936e4"
-url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.0/tflint_windows_amd64.zip"
+checksum = "sha256:bef472fd62dcbdb616bbdf67800f1bcf8db64598529c09610154686555180edd"
+url = "https://github.com/terraform-linters/tflint/releases/download/v0.62.1/tflint_windows_amd64.zip"
 
 [[tools.uv]]
-version = "0.11.10"
+version = "0.11.16"
 backend = "aqua:astral-sh/uv"
 
 [tools.uv."platforms.linux-arm64"]
-checksum = "sha256:14c21bef6b54d268c6583d851095a543e6cb03a8e4bdca9a44ab91532b14cbc2"
-url = "https://github.com/astral-sh/uv/releases/download/0.11.10/uv-aarch64-unknown-linux-musl.tar.gz"
+checksum = "sha256:ac022d96411143b9a2dd75ea711fa8dd4cd14538bf248f2e5df3c10a80f7f6a4"
+url = "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-aarch64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.uv."platforms.linux-arm64-musl"]
-checksum = "sha256:14c21bef6b54d268c6583d851095a543e6cb03a8e4bdca9a44ab91532b14cbc2"
-url = "https://github.com/astral-sh/uv/releases/download/0.11.10/uv-aarch64-unknown-linux-musl.tar.gz"
+checksum = "sha256:ac022d96411143b9a2dd75ea711fa8dd4cd14538bf248f2e5df3c10a80f7f6a4"
+url = "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-aarch64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.uv."platforms.linux-x64"]
-checksum = "sha256:e3e78e7698d72c133c5ce851a6d60ee83afdc4c0edced382af9fd1f8e11d0105"
-url = "https://github.com/astral-sh/uv/releases/download/0.11.10/uv-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:1bc4be1be0a000f893b0d1db97906cf392b63fa22fda9a0ecf33d0d4bbb4bc9a"
+url = "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-x86_64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.uv."platforms.linux-x64-musl"]
-checksum = "sha256:e3e78e7698d72c133c5ce851a6d60ee83afdc4c0edced382af9fd1f8e11d0105"
-url = "https://github.com/astral-sh/uv/releases/download/0.11.10/uv-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:1bc4be1be0a000f893b0d1db97906cf392b63fa22fda9a0ecf33d0d4bbb4bc9a"
+url = "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-x86_64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.uv."platforms.macos-arm64"]
-checksum = "sha256:e93d6af7dfff7071edd16342ba9eeccfc28d8a7deaa5707efeecf63a63a74453"
-url = "https://github.com/astral-sh/uv/releases/download/0.11.10/uv-aarch64-apple-darwin.tar.gz"
+checksum = "sha256:2b25be1af546be330b340b0a76b99f989daa6d92678fdffb87438e661e9d88fb"
+url = "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-aarch64-apple-darwin.tar.gz"
 provenance = "github-attestations"
 
 [tools.uv."platforms.macos-x64"]
-checksum = "sha256:8fd091211089973f528e147166e3af683ab4ecebd4312a55d0d17d87adbde67a"
-url = "https://github.com/astral-sh/uv/releases/download/0.11.10/uv-x86_64-apple-darwin.tar.gz"
+checksum = "sha256:6b91ae3de155f51bd1f5b74814821c79f016a176561f252cd9ddfb976939af2e"
+url = "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-x86_64-apple-darwin.tar.gz"
 provenance = "github-attestations"
 
 [tools.uv."platforms.windows-x64"]
-checksum = "sha256:7a0c424c7bc55a74751f13592235953ebbe182fa00355f7ae3fb7ab734a51638"
-url = "https://github.com/astral-sh/uv/releases/download/0.11.10/uv-x86_64-pc-windows-msvc.zip"
+checksum = "sha256:dd9d6d6554bfab265bfa98aa8e8a406c5c3a7b97582f93de1f4d48d9154a0395"
+url = "https://github.com/astral-sh/uv/releases/download/0.11.16/uv-x86_64-pc-windows-msvc.zip"
 provenance = "github-attestations"
 
 [[tools.xcbeautify]]
@@ -627,26 +611,36 @@ checksum = "sha256:2aee32f1de46a20672f48c25df3018839798bd509143f2ce05fdab1550ff5
 url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_windows_amd64.exe"
 
 [[tools.zizmor]]
-version = "1.24.1"
+version = "1.25.2"
 backend = "aqua:zizmorcore/zizmor"
 
 [tools.zizmor."platforms.linux-arm64"]
+checksum = "sha256:4b4b9491112c2a09b318101c0d3349b73af1c4f532e097dd6d0164f2abda760d"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.25.2/zizmor-aarch64-unknown-linux-gnu.tar.gz"
 provenance = "github-attestations"
 
 [tools.zizmor."platforms.linux-arm64-musl"]
 provenance = "github-attestations"
 
 [tools.zizmor."platforms.linux-x64"]
+checksum = "sha256:aa1facd105f0d83fe5c55b1adcd9d7417de5d83aa27471f91dc0b66cf3803577"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.25.2/zizmor-x86_64-unknown-linux-gnu.tar.gz"
 provenance = "github-attestations"
 
 [tools.zizmor."platforms.linux-x64-musl"]
 provenance = "github-attestations"
 
 [tools.zizmor."platforms.macos-arm64"]
+checksum = "sha256:624ef0e09521aecd862126be0f6d7754669af2646750d68ac48a114be33c3146"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.25.2/zizmor-aarch64-apple-darwin.tar.gz"
 provenance = "github-attestations"
 
 [tools.zizmor."platforms.macos-x64"]
+checksum = "sha256:353271b9ec301dd4ba158af481323c831c6e9b494d5ac3f5aa58cf4b207699cc"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.25.2/zizmor-x86_64-apple-darwin.tar.gz"
 provenance = "github-attestations"
 
 [tools.zizmor."platforms.windows-x64"]
+checksum = "sha256:65d46a8144f701200621b580f632076d80d082d60856de9f88793a95fb5882d7"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.25.2/zizmor-x86_64-pc-windows-msvc.zip"
 provenance = "github-attestations"

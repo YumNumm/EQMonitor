@@ -1,4 +1,4 @@
-import 'package:clock/clock.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -15,7 +15,7 @@ List<ShakeDetectionEvent> shakeDetectionMerged(Ref ref) {
   final shakes = ref.watch(shakeDetectionProvider);
   final eews = ref.watch(eewAliveTelegramProvider) ?? [];
   final travelTimeMap = ref.watch(travelTimeDepthMapProvider);
-  final now = clock.now().toUtc();
+  final now = ref.read(appClockProvider.notifier).now().toUtc();
 
   return shakes.map((shake) {
     final mergedId = _findMergedEew(shake, eews, travelTimeMap, now);

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_shake_data.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
@@ -69,7 +70,7 @@ class ShakeDetection extends _$ShakeDetection {
   }
 
   void _cleanup() {
-    final now = DateTime.now().toUtc();
+    final now = ref.read(appClockProvider.notifier).now().toUtc();
     state = state
         .where((e) => now.difference(e.createdAt.toUtc()) < _eventTtl)
         .toList();
