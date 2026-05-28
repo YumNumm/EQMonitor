@@ -55,14 +55,13 @@ extension PurchaseResultPatterns on PurchaseResult {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PurchaseResultSuccess value)?  success,TResult Function( PurchaseResultCancelled value)?  cancelled,TResult Function( PurchaseResultFailed value)?  failed,TResult Function( PurchaseResultUnavailable value)?  unavailable,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( PurchaseResultSuccess value)?  success,TResult Function( PurchaseResultCancelled value)?  cancelled,TResult Function( PurchaseResultFailed value)?  failed,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
 return success(_that);case PurchaseResultCancelled() when cancelled != null:
 return cancelled(_that);case PurchaseResultFailed() when failed != null:
-return failed(_that);case PurchaseResultUnavailable() when unavailable != null:
-return unavailable(_that);case _:
+return failed(_that);case _:
   return orElse();
 
 }
@@ -80,14 +79,13 @@ return unavailable(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PurchaseResultSuccess value)  success,required TResult Function( PurchaseResultCancelled value)  cancelled,required TResult Function( PurchaseResultFailed value)  failed,required TResult Function( PurchaseResultUnavailable value)  unavailable,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( PurchaseResultSuccess value)  success,required TResult Function( PurchaseResultCancelled value)  cancelled,required TResult Function( PurchaseResultFailed value)  failed,}){
 final _that = this;
 switch (_that) {
 case PurchaseResultSuccess():
 return success(_that);case PurchaseResultCancelled():
 return cancelled(_that);case PurchaseResultFailed():
-return failed(_that);case PurchaseResultUnavailable():
-return unavailable(_that);}
+return failed(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -101,14 +99,13 @@ return unavailable(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PurchaseResultSuccess value)?  success,TResult? Function( PurchaseResultCancelled value)?  cancelled,TResult? Function( PurchaseResultFailed value)?  failed,TResult? Function( PurchaseResultUnavailable value)?  unavailable,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( PurchaseResultSuccess value)?  success,TResult? Function( PurchaseResultCancelled value)?  cancelled,TResult? Function( PurchaseResultFailed value)?  failed,}){
 final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
 return success(_that);case PurchaseResultCancelled() when cancelled != null:
 return cancelled(_that);case PurchaseResultFailed() when failed != null:
-return failed(_that);case PurchaseResultUnavailable() when unavailable != null:
-return unavailable(_that);case _:
+return failed(_that);case _:
   return null;
 
 }
@@ -125,13 +122,12 @@ return unavailable(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  success,TResult Function()?  cancelled,TResult Function( String message)?  failed,TResult Function( String reason)?  unavailable,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  success,TResult Function()?  cancelled,TResult Function( PurchaseFailureReason reason)?  failed,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
 return success();case PurchaseResultCancelled() when cancelled != null:
 return cancelled();case PurchaseResultFailed() when failed != null:
-return failed(_that.message);case PurchaseResultUnavailable() when unavailable != null:
-return unavailable(_that.reason);case _:
+return failed(_that.reason);case _:
   return orElse();
 
 }
@@ -149,13 +145,12 @@ return unavailable(_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  success,required TResult Function()  cancelled,required TResult Function( String message)  failed,required TResult Function( String reason)  unavailable,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  success,required TResult Function()  cancelled,required TResult Function( PurchaseFailureReason reason)  failed,}) {final _that = this;
 switch (_that) {
 case PurchaseResultSuccess():
 return success();case PurchaseResultCancelled():
 return cancelled();case PurchaseResultFailed():
-return failed(_that.message);case PurchaseResultUnavailable():
-return unavailable(_that.reason);}
+return failed(_that.reason);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -169,13 +164,12 @@ return unavailable(_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  success,TResult? Function()?  cancelled,TResult? Function( String message)?  failed,TResult? Function( String reason)?  unavailable,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  success,TResult? Function()?  cancelled,TResult? Function( PurchaseFailureReason reason)?  failed,}) {final _that = this;
 switch (_that) {
 case PurchaseResultSuccess() when success != null:
 return success();case PurchaseResultCancelled() when cancelled != null:
 return cancelled();case PurchaseResultFailed() when failed != null:
-return failed(_that.message);case PurchaseResultUnavailable() when unavailable != null:
-return unavailable(_that.reason);case _:
+return failed(_that.reason);case _:
   return null;
 
 }
@@ -251,10 +245,10 @@ String toString() {
 
 
 class PurchaseResultFailed implements PurchaseResult {
-  const PurchaseResultFailed(this.message);
+  const PurchaseResultFailed(this.reason);
   
 
- final  String message;
+ final  PurchaseFailureReason reason;
 
 /// Create a copy of PurchaseResult
 /// with the given fields replaced by the non-null parameter values.
@@ -266,16 +260,16 @@ $PurchaseResultFailedCopyWith<PurchaseResultFailed> get copyWith => _$PurchaseRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseResultFailed&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseResultFailed&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode => Object.hash(runtimeType,reason);
 
 @override
 String toString() {
-  return 'PurchaseResult.failed(message: $message)';
+  return 'PurchaseResult.failed(reason: $reason)';
 }
 
 
@@ -286,7 +280,7 @@ abstract mixin class $PurchaseResultFailedCopyWith<$Res> implements $PurchaseRes
   factory $PurchaseResultFailedCopyWith(PurchaseResultFailed value, $Res Function(PurchaseResultFailed) _then) = _$PurchaseResultFailedCopyWithImpl;
 @useResult
 $Res call({
- String message
+ PurchaseFailureReason reason
 });
 
 
@@ -303,76 +297,10 @@ class _$PurchaseResultFailedCopyWithImpl<$Res>
 
 /// Create a copy of PurchaseResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(PurchaseResultFailed(
-null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class PurchaseResultUnavailable implements PurchaseResult {
-  const PurchaseResultUnavailable(this.reason);
-  
-
- final  String reason;
-
-/// Create a copy of PurchaseResult
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$PurchaseResultUnavailableCopyWith<PurchaseResultUnavailable> get copyWith => _$PurchaseResultUnavailableCopyWithImpl<PurchaseResultUnavailable>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PurchaseResultUnavailable&&(identical(other.reason, reason) || other.reason == reason));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,reason);
-
-@override
-String toString() {
-  return 'PurchaseResult.unavailable(reason: $reason)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $PurchaseResultUnavailableCopyWith<$Res> implements $PurchaseResultCopyWith<$Res> {
-  factory $PurchaseResultUnavailableCopyWith(PurchaseResultUnavailable value, $Res Function(PurchaseResultUnavailable) _then) = _$PurchaseResultUnavailableCopyWithImpl;
-@useResult
-$Res call({
- String reason
-});
-
-
-
-
-}
-/// @nodoc
-class _$PurchaseResultUnavailableCopyWithImpl<$Res>
-    implements $PurchaseResultUnavailableCopyWith<$Res> {
-  _$PurchaseResultUnavailableCopyWithImpl(this._self, this._then);
-
-  final PurchaseResultUnavailable _self;
-  final $Res Function(PurchaseResultUnavailable) _then;
-
-/// Create a copy of PurchaseResult
-/// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? reason = null,}) {
-  return _then(PurchaseResultUnavailable(
+  return _then(PurchaseResultFailed(
 null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
-as String,
+as PurchaseFailureReason,
   ));
 }
 
