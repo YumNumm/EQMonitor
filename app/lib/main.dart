@@ -41,7 +41,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:purchases_flutter/purchases_flutter.dart' as rc;
 import 'package:shared_preferences/shared_preferences.dart'
     hide SharedPreferencesAsync;
 import 'package:talker_flutter/talker_flutter.dart';
@@ -139,8 +138,7 @@ Future<void> _main() async {
   };
 
   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    unawaited(MobileAds.instance.initialize());
-    await _configureRevenueCat();
+    await MobileAds.instance.initialize();
   }
 
   await FirebaseAppCheck.instance.activate(
@@ -251,22 +249,4 @@ Future<void> _registerNotificationChannelIfNeeded() async {
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessage(RemoteMessage message) async {
   log('onBackgroundMessage: $message');
-}
-
-/// RevenueCat の SDK を初期化する。
-///
-/// appUserID は本 PR では未バインド（anonymous）のままにし、
-/// 後続 PR で deviceId へバインドする。
-Future<void> _configureRevenueCat() async {
-  final apiKey = BuildConfig.fromEnvironment().revenueCatApiKey;
-  if (apiKey == null || apiKey.isEmpty) {
-    log('RevenueCat API key is not configured; skipping configure.');
-    return;
-  }
-  try {
-    await rc.Purchases.setLogLevel(rc.LogLevel.info);
-    await rc.Purchases.configure(rc.PurchasesConfiguration(apiKey));
-  } on Object catch (error, stackTrace) {
-    talker.handle(error, stackTrace, 'Failed to configure RevenueCat');
-  }
 }
