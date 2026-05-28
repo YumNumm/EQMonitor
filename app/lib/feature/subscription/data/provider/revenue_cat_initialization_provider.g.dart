@@ -43,4 +43,4 @@ final class RevenueCatInitializationProvider
 }
 
 String _$revenueCatInitializationHash() =>
-    r'7d9989e3e47f70c6c2f63ecb7f8b91ecb88b523e';
+    r'f6fade67a88e26b5d9ca1f530d11e4aecf26385d';
