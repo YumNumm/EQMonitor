@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/subscription/data/model/subscription_status.da
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
 
 /// サブスクリプションの状態確認 / 管理画面。
 class SubscriptionSettingsPage extends ConsumerWidget {
@@ -45,6 +46,10 @@ class _ActiveSection extends ConsumerWidget {
     final textTheme = theme.textTheme;
     final color = context.designSystem.color;
     final flow = ref.watch(paywallFlowProvider);
+    final restoreState = ref.watch(
+      SubscriptionNotifier.restorePurchasesMutation,
+    );
+    final isRestoring = restoreState is MutationPending;
 
     final expiresAt = status.expiresAt;
     final expiresLabel = expiresAt == null
@@ -102,7 +107,9 @@ class _ActiveSection extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         TextButton(
-          onPressed: () async => flow.restorePurchases(ref, context),
+          onPressed: isRestoring
+              ? null
+              : () async => flow.restorePurchases(ref, context),
           child: const Text('購入を復元'),
         ),
       ],
@@ -119,6 +126,10 @@ class _InactiveSection extends ConsumerWidget {
     final textTheme = theme.textTheme;
     final color = context.designSystem.color;
     final flow = ref.watch(paywallFlowProvider);
+    final restoreState = ref.watch(
+      SubscriptionNotifier.restorePurchasesMutation,
+    );
+    final isRestoring = restoreState is MutationPending;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
@@ -158,7 +169,9 @@ class _InactiveSection extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         TextButton(
-          onPressed: () async => flow.restorePurchases(ref, context),
+          onPressed: isRestoring
+              ? null
+              : () async => flow.restorePurchases(ref, context),
           child: const Text('購入を復元'),
         ),
       ],

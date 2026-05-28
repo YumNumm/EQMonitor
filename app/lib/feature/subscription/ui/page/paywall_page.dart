@@ -1,7 +1,9 @@
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/feature/subscription/data/flow/paywall_flow.dart';
+import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
 
 /// EQMonitor Pro へアップグレードするための Paywall 画面。
 class PaywallPage extends ConsumerWidget {
@@ -14,6 +16,15 @@ class PaywallPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flow = ref.watch(paywallFlowProvider);
+    final purchaseState = ref.watch(
+      SubscriptionNotifier.purchaseMonthlyMutation,
+    );
+    final restoreState = ref.watch(
+      SubscriptionNotifier.restorePurchasesMutation,
+    );
+    final isPurchasing = purchaseState is MutationPending;
+    final isRestoring = restoreState is MutationPending;
+    final isBusy = isPurchasing || isRestoring;
     final color = context.designSystem.color;
 
     return Scaffold(
@@ -39,12 +50,21 @@ class PaywallPage extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            onPressed: () async => flow.purchaseMonthly(ref, context),
-            child: const Text('Pro にアップグレード'),
+            onPressed: isBusy
+                ? null
+                : () async => flow.purchaseMonthly(ref, context),
+            child: isPurchasing
+                ? const SizedBox.square(
+                    dimension: 20,
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  )
+                : const Text('Pro にアップグレード'),
           ),
           const SizedBox(height: 8),
           TextButton(
-            onPressed: () async => flow.restorePurchases(ref, context),
+            onPressed: isBusy
+                ? null
+                : () async => flow.restorePurchases(ref, context),
             child: const Text('購入を復元する'),
           ),
           const SizedBox(height: 16),
