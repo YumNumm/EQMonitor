@@ -27,7 +27,7 @@ const _androidMonthlyProductId = 'eqmonitor.pro.monthly:eqmonitor-pro-monthly';
 class SubscriptionNotifier extends _$SubscriptionNotifier {
   @override
   Future<SubscriptionStatus> build() async {
-    if (!_isPurchasesAvailable) {
+    if (!await _isPurchasesAvailable) {
       return const SubscriptionStatus.inactive();
     }
     try {
@@ -41,7 +41,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 
   /// サブスク状態を再取得する。RC ダッシュボード変更や webhook 反映後に呼ぶ。
   Future<void> refresh() async {
-    if (!_isPurchasesAvailable) {
+    if (!await _isPurchasesAvailable) {
       return;
     }
     state = const AsyncLoading<SubscriptionStatus>();
@@ -54,7 +54,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   /// 月額プランの購入フローを開始する。
   /// 結果は UI 側 (PaywallFlow) でスナックバー / ダイアログ表示に使う。
   Future<PurchaseResult> purchaseMonthly() async {
-    if (!_isPurchasesAvailable) {
+    if (!await _isPurchasesAvailable) {
       return const PurchaseResult.unavailable('このプラットフォームでは購入できません');
     }
     try {
@@ -86,7 +86,7 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
 
   /// 過去の購入を復元する。別端末・再インストール後に利用。
   Future<PurchaseResult> restorePurchases() async {
-    if (!_isPurchasesAvailable) {
+    if (!await _isPurchasesAvailable) {
       return const PurchaseResult.unavailable('このプラットフォームでは復元できません');
     }
     try {
@@ -120,13 +120,13 @@ class SubscriptionNotifier extends _$SubscriptionNotifier {
   }
 }
 
-/// `purchases_flutter` は iOS / Android のみ対応。
-/// それ以外のプラットフォームでは Notifier を inactive 固定で動作させる。
-bool get _isPurchasesAvailable {
-  if (Platform.isIOS || Platform.isAndroid) {
-    return true;
+/// `purchases_flutter` は iOS / Android のみ対応、かつ `Purchases.configure()` 済みであること。
+/// プラットフォームが対象外か configure 未実行の場合は false を返す。
+Future<bool> get _isPurchasesAvailable async {
+  if (!Platform.isIOS && !Platform.isAndroid) {
+    return false;
   }
-  return false;
+  return rc.Purchases.isConfigured;
 }
 
 /// `CustomerInfo` から [SubscriptionStatus] へ変換する extension。
