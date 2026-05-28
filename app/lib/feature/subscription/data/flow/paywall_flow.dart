@@ -7,7 +7,6 @@ import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifi
 import 'package:eqmonitor/feature/subscription/ui/component/thank_you_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

@@ -17,7 +17,7 @@ class FakeSubscriptionRepository extends SubscriptionRepository {
   SubscriptionStatus initialStatus;
   PurchaseOutcome purchaseOutcome;
   PurchaseOutcome restoreOutcome;
-  int fetchCount = 0;
+  var fetchCount = 0;
 
   @override
   Future<SubscriptionStatus> fetchStatus() async {
