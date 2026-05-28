@@ -17,11 +17,11 @@ class FakeSubscriptionRepository extends SubscriptionRepository {
   SubscriptionStatus initialStatus;
   PurchaseOutcome purchaseOutcome;
   PurchaseOutcome restoreOutcome;
-  var fetchCount = 0;
+  var _fetchCount = 0;
 
   @override
   Future<SubscriptionStatus> fetchStatus() async {
-    fetchCount += 1;
+    _fetchCount += 1;
     return initialStatus;
   }
 
@@ -56,7 +56,7 @@ void main() {
       final status = await container.read(subscriptionProvider.future);
 
       expect(status, const SubscriptionStatus.inactive());
-      expect(repository.fetchCount, 1);
+      expect(repository._fetchCount, 1);
     });
 
     test(
