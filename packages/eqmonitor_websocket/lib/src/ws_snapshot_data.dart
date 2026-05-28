@@ -1,4 +1,5 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:eqmonitor_websocket/src/ws_shake_observation_point.dart';
 import 'package:eqmonitor_websocket/src/ws_shake_payload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,7 +13,11 @@ abstract class WsSnapshotShakeEntry with _$WsSnapshotShakeEntry {
     required String eventId,
     required DateTime createdAt,
     required String level,
-    required bool isReplay, required int pointCount, required WsShakeRegionPayload region, @Default([]) List<String> changeReasons,
+    required bool isReplay,
+    required int pointCount,
+    required WsShakeRegionPayload region,
+    @Default([]) List<String> changeReasons,
+    @Default([]) List<WsShakeObservationPoint> points,
   }) = _WsSnapshotShakeEntry;
 
   factory WsSnapshotShakeEntry.fromJson(Map<String, dynamic> json) =>

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WsSnapshotShakeEntry {
 
- String get eventId; DateTime get createdAt; String get level; List<String> get changeReasons; bool get isReplay; int get pointCount; WsShakeRegionPayload get region;
+ String get eventId; DateTime get createdAt; String get level; bool get isReplay; int get pointCount; WsShakeRegionPayload get region; List<String> get changeReasons; List<WsShakeObservationPoint> get points;
 /// Create a copy of WsSnapshotShakeEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $WsSnapshotShakeEntryCopyWith<WsSnapshotShakeEntry> get copyWith => _$WsSnapshot
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsSnapshotShakeEntry&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&const DeepCollectionEquality().equals(other.changeReasons, changeReasons)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsSnapshotShakeEntry&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region)&&const DeepCollectionEquality().equals(other.changeReasons, changeReasons)&&const DeepCollectionEquality().equals(other.points, points));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,const DeepCollectionEquality().hash(changeReasons),isReplay,pointCount,region);
+int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,isReplay,pointCount,region,const DeepCollectionEquality().hash(changeReasons),const DeepCollectionEquality().hash(points));
 
 @override
 String toString() {
-  return 'WsSnapshotShakeEntry(eventId: $eventId, createdAt: $createdAt, level: $level, changeReasons: $changeReasons, isReplay: $isReplay, pointCount: $pointCount, region: $region)';
+  return 'WsSnapshotShakeEntry(eventId: $eventId, createdAt: $createdAt, level: $level, isReplay: $isReplay, pointCount: $pointCount, region: $region, changeReasons: $changeReasons, points: $points)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $WsSnapshotShakeEntryCopyWith<$Res>  {
   factory $WsSnapshotShakeEntryCopyWith(WsSnapshotShakeEntry value, $Res Function(WsSnapshotShakeEntry) _then) = _$WsSnapshotShakeEntryCopyWithImpl;
 @useResult
 $Res call({
- String eventId, DateTime createdAt, String level, List<String> changeReasons, bool isReplay, int pointCount, WsShakeRegionPayload region
+ String eventId, DateTime createdAt, String level, bool isReplay, int pointCount, WsShakeRegionPayload region, List<String> changeReasons, List<WsShakeObservationPoint> points
 });
 
 
@@ -65,16 +65,17 @@ class _$WsSnapshotShakeEntryCopyWithImpl<$Res>
 
 /// Create a copy of WsSnapshotShakeEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? changeReasons = null,Object? isReplay = null,Object? pointCount = null,Object? region = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? isReplay = null,Object? pointCount = null,Object? region = null,Object? changeReasons = null,Object? points = null,}) {
   return _then(_self.copyWith(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
-as String,changeReasons: null == changeReasons ? _self.changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
-as List<String>,isReplay: null == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
+as String,isReplay: null == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
 as bool,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
-as WsShakeRegionPayload,
+as WsShakeRegionPayload,changeReasons: null == changeReasons ? _self.changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
+as List<String>,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
+as List<WsShakeObservationPoint>,
   ));
 }
 /// Create a copy of WsSnapshotShakeEntry
@@ -168,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  DateTime createdAt,  String level,  List<String> changeReasons,  bool isReplay,  int pointCount,  WsShakeRegionPayload region)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String eventId,  DateTime createdAt,  String level,  bool isReplay,  int pointCount,  WsShakeRegionPayload region,  List<String> changeReasons,  List<WsShakeObservationPoint> points)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WsSnapshotShakeEntry() when $default != null:
-return $default(_that.eventId,_that.createdAt,_that.level,_that.changeReasons,_that.isReplay,_that.pointCount,_that.region);case _:
+return $default(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount,_that.region,_that.changeReasons,_that.points);case _:
   return orElse();
 
 }
@@ -189,10 +190,10 @@ return $default(_that.eventId,_that.createdAt,_that.level,_that.changeReasons,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  DateTime createdAt,  String level,  List<String> changeReasons,  bool isReplay,  int pointCount,  WsShakeRegionPayload region)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String eventId,  DateTime createdAt,  String level,  bool isReplay,  int pointCount,  WsShakeRegionPayload region,  List<String> changeReasons,  List<WsShakeObservationPoint> points)  $default,) {final _that = this;
 switch (_that) {
 case _WsSnapshotShakeEntry():
-return $default(_that.eventId,_that.createdAt,_that.level,_that.changeReasons,_that.isReplay,_that.pointCount,_that.region);case _:
+return $default(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount,_that.region,_that.changeReasons,_that.points);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +210,10 @@ return $default(_that.eventId,_that.createdAt,_that.level,_that.changeReasons,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  DateTime createdAt,  String level,  List<String> changeReasons,  bool isReplay,  int pointCount,  WsShakeRegionPayload region)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String eventId,  DateTime createdAt,  String level,  bool isReplay,  int pointCount,  WsShakeRegionPayload region,  List<String> changeReasons,  List<WsShakeObservationPoint> points)?  $default,) {final _that = this;
 switch (_that) {
 case _WsSnapshotShakeEntry() when $default != null:
-return $default(_that.eventId,_that.createdAt,_that.level,_that.changeReasons,_that.isReplay,_that.pointCount,_that.region);case _:
+return $default(_that.eventId,_that.createdAt,_that.level,_that.isReplay,_that.pointCount,_that.region,_that.changeReasons,_that.points);case _:
   return null;
 
 }
@@ -224,12 +225,15 @@ return $default(_that.eventId,_that.createdAt,_that.level,_that.changeReasons,_t
 @JsonSerializable()
 
 class _WsSnapshotShakeEntry implements WsSnapshotShakeEntry {
-  const _WsSnapshotShakeEntry({required this.eventId, required this.createdAt, required this.level, final  List<String> changeReasons = const [], required this.isReplay, required this.pointCount, required this.region}): _changeReasons = changeReasons;
+  const _WsSnapshotShakeEntry({required this.eventId, required this.createdAt, required this.level, required this.isReplay, required this.pointCount, required this.region, final  List<String> changeReasons = const [], final  List<WsShakeObservationPoint> points = const []}): _changeReasons = changeReasons,_points = points;
   factory _WsSnapshotShakeEntry.fromJson(Map<String, dynamic> json) => _$WsSnapshotShakeEntryFromJson(json);
 
 @override final  String eventId;
 @override final  DateTime createdAt;
 @override final  String level;
+@override final  bool isReplay;
+@override final  int pointCount;
+@override final  WsShakeRegionPayload region;
  final  List<String> _changeReasons;
 @override@JsonKey() List<String> get changeReasons {
   if (_changeReasons is EqualUnmodifiableListView) return _changeReasons;
@@ -237,9 +241,13 @@ class _WsSnapshotShakeEntry implements WsSnapshotShakeEntry {
   return EqualUnmodifiableListView(_changeReasons);
 }
 
-@override final  bool isReplay;
-@override final  int pointCount;
-@override final  WsShakeRegionPayload region;
+ final  List<WsShakeObservationPoint> _points;
+@override@JsonKey() List<WsShakeObservationPoint> get points {
+  if (_points is EqualUnmodifiableListView) return _points;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_points);
+}
+
 
 /// Create a copy of WsSnapshotShakeEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -254,16 +262,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WsSnapshotShakeEntry&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&const DeepCollectionEquality().equals(other._changeReasons, _changeReasons)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WsSnapshotShakeEntry&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.level, level) || other.level == level)&&(identical(other.isReplay, isReplay) || other.isReplay == isReplay)&&(identical(other.pointCount, pointCount) || other.pointCount == pointCount)&&(identical(other.region, region) || other.region == region)&&const DeepCollectionEquality().equals(other._changeReasons, _changeReasons)&&const DeepCollectionEquality().equals(other._points, _points));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,const DeepCollectionEquality().hash(_changeReasons),isReplay,pointCount,region);
+int get hashCode => Object.hash(runtimeType,eventId,createdAt,level,isReplay,pointCount,region,const DeepCollectionEquality().hash(_changeReasons),const DeepCollectionEquality().hash(_points));
 
 @override
 String toString() {
-  return 'WsSnapshotShakeEntry(eventId: $eventId, createdAt: $createdAt, level: $level, changeReasons: $changeReasons, isReplay: $isReplay, pointCount: $pointCount, region: $region)';
+  return 'WsSnapshotShakeEntry(eventId: $eventId, createdAt: $createdAt, level: $level, isReplay: $isReplay, pointCount: $pointCount, region: $region, changeReasons: $changeReasons, points: $points)';
 }
 
 
@@ -274,7 +282,7 @@ abstract mixin class _$WsSnapshotShakeEntryCopyWith<$Res> implements $WsSnapshot
   factory _$WsSnapshotShakeEntryCopyWith(_WsSnapshotShakeEntry value, $Res Function(_WsSnapshotShakeEntry) _then) = __$WsSnapshotShakeEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String eventId, DateTime createdAt, String level, List<String> changeReasons, bool isReplay, int pointCount, WsShakeRegionPayload region
+ String eventId, DateTime createdAt, String level, bool isReplay, int pointCount, WsShakeRegionPayload region, List<String> changeReasons, List<WsShakeObservationPoint> points
 });
 
 
@@ -291,16 +299,17 @@ class __$WsSnapshotShakeEntryCopyWithImpl<$Res>
 
 /// Create a copy of WsSnapshotShakeEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? changeReasons = null,Object? isReplay = null,Object? pointCount = null,Object? region = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? createdAt = null,Object? level = null,Object? isReplay = null,Object? pointCount = null,Object? region = null,Object? changeReasons = null,Object? points = null,}) {
   return _then(_WsSnapshotShakeEntry(
 eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
-as String,changeReasons: null == changeReasons ? _self._changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
-as List<String>,isReplay: null == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
+as String,isReplay: null == isReplay ? _self.isReplay : isReplay // ignore: cast_nullable_to_non_nullable
 as bool,pointCount: null == pointCount ? _self.pointCount : pointCount // ignore: cast_nullable_to_non_nullable
 as int,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
-as WsShakeRegionPayload,
+as WsShakeRegionPayload,changeReasons: null == changeReasons ? _self._changeReasons : changeReasons // ignore: cast_nullable_to_non_nullable
+as List<String>,points: null == points ? _self._points : points // ignore: cast_nullable_to_non_nullable
+as List<WsShakeObservationPoint>,
   ));
 }
 

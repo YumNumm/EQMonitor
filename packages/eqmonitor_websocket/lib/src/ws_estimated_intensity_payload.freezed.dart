@@ -311,7 +311,7 @@ $WsEstimatedIntensityHypocenterCopyWith<$Res>? get hypocenter {
 /// @nodoc
 mixin _$WsEstimatedIntensityHypocenter {
 
- int get regionCode; String? get regionName; DateTime get originTime; double? get magnitude; double? get depthKm;
+ int get regionCode; DateTime get originTime; String? get regionName; double? get magnitude; double? get depthKm;
 /// Create a copy of WsEstimatedIntensityHypocenter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -324,16 +324,16 @@ $WsEstimatedIntensityHypocenterCopyWith<WsEstimatedIntensityHypocenter> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsEstimatedIntensityHypocenter&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depthKm, depthKm) || other.depthKm == depthKm));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WsEstimatedIntensityHypocenter&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depthKm, depthKm) || other.depthKm == depthKm));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionCode,regionName,originTime,magnitude,depthKm);
+int get hashCode => Object.hash(runtimeType,regionCode,originTime,regionName,magnitude,depthKm);
 
 @override
 String toString() {
-  return 'WsEstimatedIntensityHypocenter(regionCode: $regionCode, regionName: $regionName, originTime: $originTime, magnitude: $magnitude, depthKm: $depthKm)';
+  return 'WsEstimatedIntensityHypocenter(regionCode: $regionCode, originTime: $originTime, regionName: $regionName, magnitude: $magnitude, depthKm: $depthKm)';
 }
 
 
@@ -344,7 +344,7 @@ abstract mixin class $WsEstimatedIntensityHypocenterCopyWith<$Res>  {
   factory $WsEstimatedIntensityHypocenterCopyWith(WsEstimatedIntensityHypocenter value, $Res Function(WsEstimatedIntensityHypocenter) _then) = _$WsEstimatedIntensityHypocenterCopyWithImpl;
 @useResult
 $Res call({
- int regionCode, String? regionName, DateTime originTime, double? magnitude, double? depthKm
+ int regionCode, DateTime originTime, String? regionName, double? magnitude, double? depthKm
 });
 
 
@@ -361,12 +361,12 @@ class _$WsEstimatedIntensityHypocenterCopyWithImpl<$Res>
 
 /// Create a copy of WsEstimatedIntensityHypocenter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionCode = null,Object? regionName = freezed,Object? originTime = null,Object? magnitude = freezed,Object? depthKm = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionCode = null,Object? originTime = null,Object? regionName = freezed,Object? magnitude = freezed,Object? depthKm = freezed,}) {
   return _then(_self.copyWith(
 regionCode: null == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
-as int,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
-as String?,originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
-as DateTime,magnitude: freezed == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
+as int,originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
+as DateTime,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as String?,magnitude: freezed == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as double?,depthKm: freezed == depthKm ? _self.depthKm : depthKm // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
@@ -453,10 +453,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int regionCode,  String? regionName,  DateTime originTime,  double? magnitude,  double? depthKm)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int regionCode,  DateTime originTime,  String? regionName,  double? magnitude,  double? depthKm)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WsEstimatedIntensityHypocenter() when $default != null:
-return $default(_that.regionCode,_that.regionName,_that.originTime,_that.magnitude,_that.depthKm);case _:
+return $default(_that.regionCode,_that.originTime,_that.regionName,_that.magnitude,_that.depthKm);case _:
   return orElse();
 
 }
@@ -474,10 +474,10 @@ return $default(_that.regionCode,_that.regionName,_that.originTime,_that.magnitu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int regionCode,  String? regionName,  DateTime originTime,  double? magnitude,  double? depthKm)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int regionCode,  DateTime originTime,  String? regionName,  double? magnitude,  double? depthKm)  $default,) {final _that = this;
 switch (_that) {
 case _WsEstimatedIntensityHypocenter():
-return $default(_that.regionCode,_that.regionName,_that.originTime,_that.magnitude,_that.depthKm);case _:
+return $default(_that.regionCode,_that.originTime,_that.regionName,_that.magnitude,_that.depthKm);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -494,10 +494,10 @@ return $default(_that.regionCode,_that.regionName,_that.originTime,_that.magnitu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int regionCode,  String? regionName,  DateTime originTime,  double? magnitude,  double? depthKm)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int regionCode,  DateTime originTime,  String? regionName,  double? magnitude,  double? depthKm)?  $default,) {final _that = this;
 switch (_that) {
 case _WsEstimatedIntensityHypocenter() when $default != null:
-return $default(_that.regionCode,_that.regionName,_that.originTime,_that.magnitude,_that.depthKm);case _:
+return $default(_that.regionCode,_that.originTime,_that.regionName,_that.magnitude,_that.depthKm);case _:
   return null;
 
 }
@@ -509,12 +509,12 @@ return $default(_that.regionCode,_that.regionName,_that.originTime,_that.magnitu
 @JsonSerializable()
 
 class _WsEstimatedIntensityHypocenter implements WsEstimatedIntensityHypocenter {
-  const _WsEstimatedIntensityHypocenter({required this.regionCode, this.regionName, required this.originTime, this.magnitude, this.depthKm});
+  const _WsEstimatedIntensityHypocenter({required this.regionCode, required this.originTime, this.regionName, this.magnitude, this.depthKm});
   factory _WsEstimatedIntensityHypocenter.fromJson(Map<String, dynamic> json) => _$WsEstimatedIntensityHypocenterFromJson(json);
 
 @override final  int regionCode;
-@override final  String? regionName;
 @override final  DateTime originTime;
+@override final  String? regionName;
 @override final  double? magnitude;
 @override final  double? depthKm;
 
@@ -531,16 +531,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WsEstimatedIntensityHypocenter&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depthKm, depthKm) || other.depthKm == depthKm));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WsEstimatedIntensityHypocenter&&(identical(other.regionCode, regionCode) || other.regionCode == regionCode)&&(identical(other.originTime, originTime) || other.originTime == originTime)&&(identical(other.regionName, regionName) || other.regionName == regionName)&&(identical(other.magnitude, magnitude) || other.magnitude == magnitude)&&(identical(other.depthKm, depthKm) || other.depthKm == depthKm));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionCode,regionName,originTime,magnitude,depthKm);
+int get hashCode => Object.hash(runtimeType,regionCode,originTime,regionName,magnitude,depthKm);
 
 @override
 String toString() {
-  return 'WsEstimatedIntensityHypocenter(regionCode: $regionCode, regionName: $regionName, originTime: $originTime, magnitude: $magnitude, depthKm: $depthKm)';
+  return 'WsEstimatedIntensityHypocenter(regionCode: $regionCode, originTime: $originTime, regionName: $regionName, magnitude: $magnitude, depthKm: $depthKm)';
 }
 
 
@@ -551,7 +551,7 @@ abstract mixin class _$WsEstimatedIntensityHypocenterCopyWith<$Res> implements $
   factory _$WsEstimatedIntensityHypocenterCopyWith(_WsEstimatedIntensityHypocenter value, $Res Function(_WsEstimatedIntensityHypocenter) _then) = __$WsEstimatedIntensityHypocenterCopyWithImpl;
 @override @useResult
 $Res call({
- int regionCode, String? regionName, DateTime originTime, double? magnitude, double? depthKm
+ int regionCode, DateTime originTime, String? regionName, double? magnitude, double? depthKm
 });
 
 
@@ -568,12 +568,12 @@ class __$WsEstimatedIntensityHypocenterCopyWithImpl<$Res>
 
 /// Create a copy of WsEstimatedIntensityHypocenter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionCode = null,Object? regionName = freezed,Object? originTime = null,Object? magnitude = freezed,Object? depthKm = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionCode = null,Object? originTime = null,Object? regionName = freezed,Object? magnitude = freezed,Object? depthKm = freezed,}) {
   return _then(_WsEstimatedIntensityHypocenter(
 regionCode: null == regionCode ? _self.regionCode : regionCode // ignore: cast_nullable_to_non_nullable
-as int,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
-as String?,originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
-as DateTime,magnitude: freezed == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
+as int,originTime: null == originTime ? _self.originTime : originTime // ignore: cast_nullable_to_non_nullable
+as DateTime,regionName: freezed == regionName ? _self.regionName : regionName // ignore: cast_nullable_to_non_nullable
+as String?,magnitude: freezed == magnitude ? _self.magnitude : magnitude // ignore: cast_nullable_to_non_nullable
 as double?,depthKm: freezed == depthKm ? _self.depthKm : depthKm // ignore: cast_nullable_to_non_nullable
 as double?,
   ));

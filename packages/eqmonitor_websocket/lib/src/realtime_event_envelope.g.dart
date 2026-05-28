@@ -115,16 +115,27 @@ WsShakeDetectedRealtimeEvent _$WsShakeDetectedRealtimeEventFromJson(
     eventId: $checkedConvert('eventId', (v) => v as String),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     level: $checkedConvert('level', (v) => v as String),
-    changeReasons: $checkedConvert(
-      'changeReasons',
-      (v) =>
-          (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
-    ),
     isReplay: $checkedConvert('isReplay', (v) => v as bool),
     pointCount: $checkedConvert('pointCount', (v) => (v as num).toInt()),
     region: $checkedConvert(
       'region',
       (v) => WsShakeRegionPayload.fromJson(v as Map<String, dynamic>),
+    ),
+    changeReasons: $checkedConvert(
+      'changeReasons',
+      (v) =>
+          (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
+    ),
+    points: $checkedConvert(
+      'points',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    WsShakeObservationPoint.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const [],
     ),
     $type: $checkedConvert('type', (v) => v as String?),
   );
@@ -137,10 +148,11 @@ Map<String, dynamic> _$WsShakeDetectedRealtimeEventToJson(
   'eventId': instance.eventId,
   'createdAt': instance.createdAt.toIso8601String(),
   'level': instance.level,
-  'changeReasons': instance.changeReasons,
   'isReplay': instance.isReplay,
   'pointCount': instance.pointCount,
   'region': instance.region,
+  'changeReasons': instance.changeReasons,
+  'points': instance.points,
   'type': instance.$type,
 };
 

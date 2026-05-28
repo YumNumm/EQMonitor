@@ -42,11 +42,11 @@ _WsEstimatedIntensityHypocenter _$WsEstimatedIntensityHypocenterFromJson(
 ) => $checkedCreate('_WsEstimatedIntensityHypocenter', json, ($checkedConvert) {
   final val = _WsEstimatedIntensityHypocenter(
     regionCode: $checkedConvert('regionCode', (v) => (v as num).toInt()),
-    regionName: $checkedConvert('regionName', (v) => v as String?),
     originTime: $checkedConvert(
       'originTime',
       (v) => DateTime.parse(v as String),
     ),
+    regionName: $checkedConvert('regionName', (v) => v as String?),
     magnitude: $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
     depthKm: $checkedConvert('depthKm', (v) => (v as num?)?.toDouble()),
   );
@@ -57,8 +57,8 @@ Map<String, dynamic> _$WsEstimatedIntensityHypocenterToJson(
   _WsEstimatedIntensityHypocenter instance,
 ) => <String, dynamic>{
   'regionCode': instance.regionCode,
-  'regionName': instance.regionName,
   'originTime': instance.originTime.toIso8601String(),
+  'regionName': instance.regionName,
   'magnitude': instance.magnitude,
   'depthKm': instance.depthKm,
 };
