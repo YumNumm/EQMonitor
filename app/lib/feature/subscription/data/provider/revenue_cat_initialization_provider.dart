@@ -26,7 +26,7 @@ Future<void> revenueCatInitialization(Ref ref) async {
     );
   }
 
-  if (rc.Purchases.isConfigured) {
+  if (await rc.Purchases.isConfigured) {
     return;
   }
 
