@@ -1,0 +1,34 @@
+---
+description: Dart data layer, provider, repository, and mutation architecture rules
+globs: app/lib/**/*.dart,packages/*/lib/**/*.dart
+alwaysApply: false
+---
+
+# Data Layer Architecture Rules
+
+## Provider / Model
+
+- `data/provider/*.dart` には Provider 宣言だけを置き、enum / sealed class / model / business logic を定義しない。
+- data model は `data/model/` に置き、原則 Freezed で定義する。
+- 失敗理由や状態種別は表示文字列ではなく enum / Freezed model で表現し、UI 文言への変換は extension などで一元化する。
+- API キー、Product ID、プラットフォーム別 ID などの環境・プラットフォーム分岐値は Provider に隠蔽し、Repository / Notifier / UI に直書きしない。
+
+## Repository
+
+- 外部 SDK / API / 永続化ストレージへの直接アクセスは Repository または DataSource に集約し、Notifier / Flow / UI から直接呼ばない。
+- 実体のない client model や wrapper model は作らない。SDK が static API しか提供しない場合は、初期化 Provider と Repository で責務を分離する。
+- 業務結果は Freezed model で返し、前提条件の不成立や環境未設定など処理を継続できない状態は domain exception で表現する。
+- `abstract interface class` は、複数実装・公開境界・テスト上の明確な必要性がある場合のみ導入する。
+
+## Initialization
+
+- 外部 SDK の初期化は、アプリ起動時に不要なものまで `main.dart` で行わない。
+- 機能アクセス時に必要になる SDK 初期化は、Riverpod の keepAlive FutureProvider に分離して遅延初期化する。
+- 初期化 Provider は初期化責務に集中し、アプリ固有の model を返すための Provider にしない。
+
+## Notifier / Mutation
+
+- Notifier は Repository のみ参照し、SDK・Platform・環境変数・Product ID などの詳細を意識しない。
+- Notifier の非同期副作用（購入・保存・復元・同期など）は Riverpod 3 の `Mutation` で呼び出す。
+- Mutation の static 宣言は、対応する関数宣言の直前に置く。
+- 明確な利用箇所がない再取得・再同期メソッドは追加しない。
