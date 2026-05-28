@@ -12,7 +12,6 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/data/preferences/shared/shared_preferences.dart'
     as data_prefs;
 import 'package:eqmonitor/core/fcm/channels.dart';
-import 'package:eqmonitor/core/model/environment.dart';
 import 'package:eqmonitor/core/provider/app_group_settings_writer.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
