@@ -1,10 +1,13 @@
 import 'dart:io' show Platform;
 
+import 'package:eqmonitor/feature/subscription/data/exception/revenue_cat_unavailable_exception.dart';
+import 'package:eqmonitor/feature/subscription/data/model/purchase_failure_reason.dart';
 import 'package:eqmonitor/feature/subscription/data/model/purchase_result.dart';
 import 'package:eqmonitor/feature/subscription/data/notifier/subscription_notifier.dart';
 import 'package:eqmonitor/feature/subscription/ui/component/thank_you_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -17,32 +20,60 @@ PaywallFlow paywallFlow(Ref ref) => PaywallFlow();
 class PaywallFlow {
   /// 月額プランの購入フロー。結果に応じてダイアログ / SnackBar を出す。
   Future<void> purchaseMonthly(WidgetRef ref, BuildContext context) async {
-    final result = await ref
-        .read(subscriptionProvider.notifier)
-        .purchaseMonthly();
-    if (!context.mounted) {
-      return;
+    try {
+      final result = await SubscriptionNotifier.purchaseMonthlyMutation.run(
+        ref,
+        (transaction) async {
+          return transaction
+              .get(subscriptionProvider.notifier)
+              .purchaseMonthly();
+        },
+      );
+      if (!context.mounted) {
+        return;
+      }
+      await handlePurchaseResult(
+        context,
+        result: result,
+        popOnSuccess: true,
+      );
+    } on RevenueCatUnavailableException catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.userMessage)),
+      );
     }
-    await handlePurchaseResult(
-      context,
-      result: result,
-      popOnSuccess: true,
-    );
   }
 
   /// 購入を復元する。
   Future<void> restorePurchases(WidgetRef ref, BuildContext context) async {
-    final result = await ref
-        .read(subscriptionProvider.notifier)
-        .restorePurchases();
-    if (!context.mounted) {
-      return;
+    try {
+      final result = await SubscriptionNotifier.restorePurchasesMutation.run(
+        ref,
+        (transaction) async {
+          return transaction
+              .get(subscriptionProvider.notifier)
+              .restorePurchases();
+        },
+      );
+      if (!context.mounted) {
+        return;
+      }
+      await handlePurchaseResult(
+        context,
+        result: result,
+        popOnSuccess: false,
+      );
+    } on RevenueCatUnavailableException catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.userMessage)),
+      );
     }
-    await handlePurchaseResult(
-      context,
-      result: result,
-      popOnSuccess: false,
-    );
   }
 
   Future<void> handlePurchaseResult(
@@ -64,15 +95,9 @@ class PaywallFlow {
         }
       case PurchaseResultCancelled():
         return;
-      case PurchaseResultFailed(:final message):
+      case PurchaseResultFailed(:final reason):
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('購入に失敗しました: $message')),
-        );
-      case PurchaseResultUnavailable():
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('アップグレード機能は近日公開予定です'),
-          ),
+          SnackBar(content: Text('購入に失敗しました: ${reason.message}')),
         );
     }
   }
