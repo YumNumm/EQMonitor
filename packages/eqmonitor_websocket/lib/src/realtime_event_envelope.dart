@@ -1,6 +1,7 @@
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:eqmonitor_websocket/src/ws_estimated_intensity_payload.dart';
 import 'package:eqmonitor_websocket/src/ws_realtime_operation.dart';
+import 'package:eqmonitor_websocket/src/ws_shake_observation_point.dart';
 import 'package:eqmonitor_websocket/src/ws_shake_payload.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -45,7 +46,11 @@ sealed class RealtimeEventEnvelope with _$RealtimeEventEnvelope {
     required String eventId,
     required DateTime createdAt,
     required String level,
-    required bool isReplay, required int pointCount, required WsShakeRegionPayload region, @Default([]) List<String> changeReasons,
+    required bool isReplay,
+    required int pointCount,
+    required WsShakeRegionPayload region,
+    @Default([]) List<String> changeReasons,
+    @Default([]) List<WsShakeObservationPoint> points,
   }) = WsShakeDetectedRealtimeEvent;
 
   /// 推計震度
