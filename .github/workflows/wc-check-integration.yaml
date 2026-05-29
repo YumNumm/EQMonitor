@@ -1,0 +1,92 @@
+name: Integration Test
+
+# Spec ② Dartクライアント↔api-stub 結合テスト。
+# private backend submodule を GitHub App トークンで checkout し、api-stub を node で起動して
+# eqmonitor_api の integration タグ付きテストを実行する。
+#
+# 前提: GitHub App (vars.EQMONITOR_GITHUB_APP_ID) が YumNumm/eqmonitor-backend に
+#       contents:read で install 済みであること。未 install の場合は submodule checkout が失敗する。
+
+on:
+  workflow_call:
+    secrets:
+      EQMONITOR_GITHUB_APP_PRIVATE_KEY:
+        description: backend submodule にアクセスする GitHub App の秘密鍵
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  integration-test:
+    name: Integration Test (Dart client ↔ api-stub)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      # private backend submodule にアクセスするためのトークンを発行
+      # https://github.com/actions/create-github-app-token
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.EQMONITOR_GITHUB_APP_ID }}
+          private-key: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
+          owner: YumNumm
+          repositories: |
+            EQMonitor
+            eqmonitor-backend
+          # 最小権限: submodule checkout に必要な contents:read のみ
+          permission-contents: read
+
+      # https://github.com/actions/checkout
+      - name: Checkout repository (with backend submodule)
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          submodules: recursive
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
+
+      # https://github.com/jdx/mise-action
+      - name: Install Mise dependencies (flutter + node + pnpm)
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+        with:
+          install_args: "flutter node pnpm"
+
+      - name: Install libatomic1
+        run: sudo apt-get install -y libatomic1
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pnpm install --frozen-lockfile
+
+      - name: Build & start api-stub
+        working-directory: backend/api/api-stub
+        run: |
+          pnpm build
+          node dist/index.mjs &
+          echo "STUB_PID=$!" >> "$GITHUB_ENV"
+
+      - name: Wait for api-stub health
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8790/health >/dev/null; then
+              echo "api-stub ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::api-stub が 60s 以内に起動しませんでした"
+          exit 1
+
+      - name: Resolve Flutter/Dart dependencies
+        run: dart pub get --enforce-lockfile
+
+      - name: Run integration tests
+        working-directory: packages/eqmonitor_api
+        env:
+          STUB_BASE_URL: http://localhost:8790
+        run: dart test --run-skipped --tags integration
+
+      - name: Stop api-stub
+        if: always()
+        run: kill "${STUB_PID}" 2>/dev/null || true

@@ -38,6 +38,15 @@ jobs:
       checks: write
     uses: ./.github/workflows/wc-check-dart-test.yaml
 
+  integration-test:
+    needs: changes
+    if: needs.changes.outputs.flutter == 'true'
+    permissions:
+      contents: read
+    secrets:
+      EQMONITOR_GITHUB_APP_PRIVATE_KEY: ${{ secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY }}
+    uses: ./.github/workflows/wc-check-integration.yaml
+
   status-check:
     name: Flutter Status Check
     runs-on: ubuntu-slim
@@ -45,6 +54,7 @@ jobs:
     needs:
       - flutter-analyze
       - flutter-test
+      - integration-test
     permissions: {}
     if: always()
     steps:
