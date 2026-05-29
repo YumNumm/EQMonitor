@@ -212,6 +212,7 @@ struct ShakeDetectionLockScreenView: View {
 #Preview("Shake Detection - Stronger") {
     ShakeDetectionLockScreenView(state: ShakeDetectionContentState(
         eventId: "shake-event-uuid",
+        type: "shake_detection",
         level: "Stronger",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
@@ -228,6 +229,7 @@ struct ShakeDetectionLockScreenView: View {
 #Preview("Shake Detection - Strong") {
     ShakeDetectionLockScreenView(state: ShakeDetectionContentState(
         eventId: "shake-event-uuid",
+        type: "shake_detection",
         level: "Strong",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
@@ -244,6 +246,7 @@ struct ShakeDetectionLockScreenView: View {
 #Preview("Shake Detection - Medium") {
     ShakeDetectionLockScreenView(state: ShakeDetectionContentState(
         eventId: "shake-event-uuid",
+        type: "shake_detection",
         level: "Medium",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
@@ -260,6 +263,7 @@ struct ShakeDetectionLockScreenView: View {
 #Preview("Shake Detection - Weak") {
     ShakeDetectionLockScreenView(state: ShakeDetectionContentState(
         eventId: "shake-event-uuid",
+        type: "shake_detection",
         level: "Weak",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(
@@ -276,6 +280,7 @@ struct ShakeDetectionLockScreenView: View {
 #Preview("Shake Detection - Weaker") {
     ShakeDetectionLockScreenView(state: ShakeDetectionContentState(
         eventId: "shake-event-uuid",
+        type: "shake_detection",
         level: "Weaker",
         detectedAt: ISO8601DateFormatter().string(from: Date()),
         location: LocationInfo(

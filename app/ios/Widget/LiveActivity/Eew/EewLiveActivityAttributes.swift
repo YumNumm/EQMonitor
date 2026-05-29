@@ -15,6 +15,8 @@ struct EewLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct EewContentState: Codable, Hashable {
     let eventId: String
+    /// イベント種別（backendは常に "eew" を送る）
+    let type: String
     let hypocenterName: String?
     let magnitude: Double?
     let depth: Int?
@@ -59,6 +61,7 @@ extension EewLiveActivityAttributes {
 extension EewContentState {
     static let noto32 = EewContentState(
         eventId: "20240101123456",
+        type: "eew",
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
         depth: 10,
@@ -84,6 +87,7 @@ extension EewContentState {
 
     static let notoFinal = EewContentState(
         eventId: "20240101123456",
+        type: "eew",
         hypocenterName: "石川県能登地方",
         magnitude: 7.6,
         depth: 16,
@@ -103,6 +107,7 @@ extension EewContentState {
 
     static let ibarakiForecast = EewContentState(
         eventId: "20240102123456",
+        type: "eew",
         hypocenterName: "茨城県沖",
         magnitude: 4.2,
         depth: 40,
@@ -122,6 +127,7 @@ extension EewContentState {
 
     static let plum = EewContentState(
         eventId: "20240103123456",
+        type: "eew",
         hypocenterName: "関東地方",
         magnitude: nil,
         depth: nil,
@@ -147,6 +153,7 @@ extension EewContentState {
 
     static let levelMethod = EewContentState(
         eventId: "20240104123456",
+        type: "eew",
         hypocenterName: "仮定震源",
         magnitude: nil,
         depth: nil,
@@ -172,6 +179,7 @@ extension EewContentState {
 
     static let onePoint = EewContentState(
         eventId: "20240105123456",
+        type: "eew",
         hypocenterName: "茨城県沖",
         magnitude: 4.0,
         depth: 30,

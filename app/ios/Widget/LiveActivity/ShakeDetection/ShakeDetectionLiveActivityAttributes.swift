@@ -15,6 +15,8 @@ struct ShakeDetectionLiveActivityAttributes: ActivityAttributes, Identifiable {
 
 struct ShakeDetectionContentState: Codable, Hashable {
     let eventId: String
+    /// イベント種別（backendは常に "shake_detection" を送る）
+    let type: String
     let level: String?
     let detectedAt: String?
     let location: LocationInfo?
