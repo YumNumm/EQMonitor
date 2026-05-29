@@ -1,0 +1,3 @@
+[
+  { "key": "GET /v2/earthquake", "file": "get__v2_earthquake.json" }
+]

@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "event_id": "20251215120000",
+      "status": "NORMAL",
+      "origin_time": "2023-11-14T22:03:20.000Z",
+      "origin_time_precision": "SECOND",
+      "hypocenter": {
+        "value": {
+          "code": "311",
+          "name": "茨城県北部"
+        },
+        "coordinates": {
+          "latitude": 36.7,
+          "longitude": 140.7
+        },
+        "magnitude": {
+          "type": "NORMAL",
+          "value": 4.5
+        },
+        "depth": {
+          "type": "NORMAL",
+          "value": 10
+        }
+      },
+      "intensity": {
+        "max_intensity": "4"
+      },
+      "datasource": "JMA_DISASTER_INFORMATION_XML"
+    }
+  ]
+}
