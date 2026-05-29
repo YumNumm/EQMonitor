@@ -3,7 +3,21 @@
 - 日付: 2026-05-30
 - 層: L1（テストピラミッド最下層）
 - 親: [app-server-integration-testing-overview](./2026-05-30-app-server-integration-testing-overview.md)
-- ステータス: 設計（ユーザーレビュー待ち）
+- ステータス: 実装済み（backend submodule の push / pin 更新待ち）
+- 実装結果: 86 fixtures 中 **74 を gate（回帰ロック）**、**12 を quarantine**（既知の乖離）。
+  Valibot 検証済み 14 default は全てパス。詳細は
+  [findings](./2026-05-30-spec1-contract-drift-findings.md)。
+
+### オラクルの信頼境界（正直な明示）
+
+- **信頼できる drift オラクル** = `contract.test.ts` が Valibot 検証する 14 default。
+  これらが Dart でパースできれば、backend スキーマとアプリモデルが一致している保証。
+- **それ以外（named fixtures / 未検証エンドポイントの default）** = 回帰ロック + quarantine。
+  Valibot 未検証のため、失敗が「アプリ drift」か「stub fixture の不正確さ」か自動判別できない。
+  現状パスする ~60 件は回帰ロックの価値があるため gate に含め、既知失敗 12 件は quarantine。
+- **オラクルを広げる本質的な方法**（follow-up）: `contract.test.ts` を named fixtures /
+  他エンドポイントにも拡張して Valibot 検証する。これらが信頼できるオラクルになれば
+  本テストでも gate に昇格できる。
 
 ## 目的
 
