@@ -33,6 +33,14 @@ final notificationChannels = <AndroidNotificationChannel>[
     ledColor: Color.fromARGB(255, 190, 0, 0),
     importance: Importance.high,
   ),
+  const AndroidNotificationChannel(
+    'eew_low_accuracy',
+    '緊急地震速報(予報・低精度)',
+    groupId: 'eew',
+    description: '1点検知による精度の低い緊急地震速報(予報)通知',
+    ledColor: Color.fromARGB(255, 190, 0, 0),
+    importance: Importance.high,
+  ),
 
   //! 地震通知
   const AndroidNotificationChannel(
