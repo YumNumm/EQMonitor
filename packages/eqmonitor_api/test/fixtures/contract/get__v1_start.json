@@ -1,0 +1,20 @@
+{
+  "flags": {
+    "ads_enabled": true,
+    "maintenance": {
+      "enabled": false
+    }
+  },
+  "app": {
+    "version": {
+      "required_versions": {
+        "ios": "0.0.0",
+        "android": "0.0.0"
+      }
+    },
+    "store_url": {
+      "ios": "https://apps.apple.com",
+      "android": "https://play.google.com"
+    }
+  }
+}

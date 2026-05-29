@@ -1,0 +1,80 @@
+{
+  "earthquake": {
+    "event_id": "20251215120000",
+    "status": "NORMAL",
+    "origin_time_precision": "SECOND",
+    "intensity": {
+      "max_intensity": "5+",
+      "intensity_tree": [
+        {
+          "intensity": "5+",
+          "regions": [
+            "3410"
+          ],
+          "stations": [
+            "6311101",
+            "6311102"
+          ]
+        },
+        {
+          "intensity": "5-",
+          "regions": [
+            "3420",
+            "3430"
+          ]
+        },
+        {
+          "intensity": "4",
+          "regions": [
+            "3440",
+            "3450",
+            "3110"
+          ]
+        },
+        {
+          "intensity": "3",
+          "regions": [
+            "3120",
+            "3130",
+            "3210",
+            "3220"
+          ]
+        },
+        {
+          "intensity": "2",
+          "regions": [
+            "3310",
+            "3320",
+            "3330",
+            "3410"
+          ]
+        }
+      ]
+    },
+    "datasource": "JMA_DISASTER_INFORMATION_XML",
+    "telegrams": [
+      {
+        "telegram": {
+          "id": "stub-telegram-vxse51",
+          "event_id": "20251215120000",
+          "serial_no": 1,
+          "type": "VXSE51",
+          "title": "震度速報",
+          "status": "NORMAL",
+          "info_type": "PUBLICATION",
+          "editorial_office": "気象庁",
+          "publishing_office": [
+            "気象庁"
+          ],
+          "press_at": "2025-12-15T12:01:00.000Z",
+          "report_at": "2025-12-15T12:01:02.000Z",
+          "info_kind": "震度速報",
+          "info_kind_version": "1.0_0",
+          "hash": "stub-hash-vxse51",
+          "created_at": "2025-12-15T12:01:05.000Z"
+        },
+        "comments": null
+      }
+    ]
+  }
+}

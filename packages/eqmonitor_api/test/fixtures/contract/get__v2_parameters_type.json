@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "type": "jma_code_table",
+    "schema_version": 1,
+    "source_version": "2025-01-01",
+    "source_updated_at": "2025-01-01T00:00:00.000Z",
+    "generated_at": "2025-01-01T00:00:00.000Z",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "code_tables": {
+    "area_forecast_local_eew": [],
+    "area_information_prefecture_earthquake": [],
+    "area_epicenter": [],
+    "area_epicenter_abbreviation": [],
+    "area_epicenter_detail": []
+  }
+}

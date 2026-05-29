@@ -1,0 +1,39 @@
+{
+  "earthquake": {
+    "event_id": "20251215120000",
+    "status": "NORMAL",
+    "origin_time": "2023-11-14T20:13:20.000Z",
+    "origin_time_precision": "SECOND",
+    "hypocenter": {
+      "value": {
+        "code": "999",
+        "name": "インドネシア付近"
+      },
+      "coordinates": {
+        "latitude": -3.5,
+        "longitude": 126.8
+      },
+      "magnitude": {
+        "type": "NORMAL",
+        "value": 7.8
+      },
+      "depth": {
+        "type": "NORMAL",
+        "value": 30
+      }
+    },
+    "intensity": {
+      "max_intensity": "1",
+      "intensity_tree": [
+        {
+          "intensity": "1",
+          "regions": [
+            "9910"
+          ]
+        }
+      ]
+    },
+    "datasource": "JMA_INTENSITY_DATABASE",
+    "telegrams": []
+  }
+}

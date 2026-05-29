@@ -1,3 +1,408 @@
 [
-  { "key": "GET /v2/earthquake", "file": "get__v2_earthquake.json" }
+  {
+    "key": "GET /health",
+    "file": "get__health.json"
+  },
+  {
+    "key": "GET /v1/changelog",
+    "file": "get__v1_changelog__with-entries.json",
+    "fixture": "with-entries"
+  },
+  {
+    "key": "GET /v1/changelog",
+    "file": "get__v1_changelog.json"
+  },
+  {
+    "key": "GET /v1/start",
+    "file": "get__v1_start__force-update.json",
+    "fixture": "force-update"
+  },
+  {
+    "key": "GET /v1/start",
+    "file": "get__v1_start__maintenance.json",
+    "fixture": "maintenance"
+  },
+  {
+    "key": "GET /v1/start",
+    "file": "get__v1_start.json"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__epicenter-only.json",
+    "fixture": "epicenter-only"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__full-info.json",
+    "fixture": "full-info"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__intensity-report-only.json",
+    "fixture": "intensity-report-only"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__major-earthquake.json",
+    "fixture": "major-earthquake"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__minor-earthquake.json",
+    "fixture": "minor-earthquake"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__multiple-items.json",
+    "fixture": "multiple-items"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake__tohoku-type.json",
+    "fixture": "tohoku-type"
+  },
+  {
+    "key": "GET /v2/earthquake/epicenter/:code",
+    "file": "get__v2_earthquake_epicenter_code__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake/epicenter/:code",
+    "file": "get__v2_earthquake_epicenter_code.json"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__canceled.json",
+    "fixture": "canceled"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__distant-earthquake.json",
+    "fixture": "distant-earthquake"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__intensity-report-only.json",
+    "fixture": "intensity-report-only"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__major-earthquake.json",
+    "fixture": "major-earthquake"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__vxse51-53.json",
+    "fixture": "vxse51-53"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId__with-lpgm.json",
+    "fixture": "with-lpgm"
+  },
+  {
+    "key": "GET /v2/earthquake/:eventId",
+    "file": "get__v2_earthquake_eventId.json"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/city/:code",
+    "file": "get__v2_earthquake_intensity_city_code__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/city/:code",
+    "file": "get__v2_earthquake_intensity_city_code.json"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/prefecture/:code",
+    "file": "get__v2_earthquake_intensity_prefecture_code__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/prefecture/:code",
+    "file": "get__v2_earthquake_intensity_prefecture_code__multiple-events.json",
+    "fixture": "multiple-events"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/prefecture/:code",
+    "file": "get__v2_earthquake_intensity_prefecture_code.json"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/region/:code",
+    "file": "get__v2_earthquake_intensity_region_code__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/region/:code",
+    "file": "get__v2_earthquake_intensity_region_code__multiple-events.json",
+    "fixture": "multiple-events"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/region/:code",
+    "file": "get__v2_earthquake_intensity_region_code.json"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/station/:code",
+    "file": "get__v2_earthquake_intensity_station_code__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/earthquake/intensity/station/:code",
+    "file": "get__v2_earthquake_intensity_station_code.json"
+  },
+  {
+    "key": "GET /v2/earthquake",
+    "file": "get__v2_earthquake.json"
+  },
+  {
+    "key": "GET /v2/eew",
+    "file": "get__v2_eew__canceled.json",
+    "fixture": "canceled"
+  },
+  {
+    "key": "GET /v2/eew",
+    "file": "get__v2_eew__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/eew",
+    "file": "get__v2_eew__multiple-events.json",
+    "fixture": "multiple-events"
+  },
+  {
+    "key": "GET /v2/eew",
+    "file": "get__v2_eew__warning.json",
+    "fixture": "warning"
+  },
+  {
+    "key": "GET /v2/eew/:eventId",
+    "file": "get__v2_eew_eventId__canceled.json",
+    "fixture": "canceled"
+  },
+  {
+    "key": "GET /v2/eew/:eventId",
+    "file": "get__v2_eew_eventId__warning-sequence.json",
+    "fixture": "warning-sequence"
+  },
+  {
+    "key": "GET /v2/eew/:eventId/:serialNo",
+    "file": "get__v2_eew_eventId_serialNo__canceled.json",
+    "fixture": "canceled"
+  },
+  {
+    "key": "GET /v2/eew/:eventId/:serialNo",
+    "file": "get__v2_eew_eventId_serialNo__plum.json",
+    "fixture": "plum"
+  },
+  {
+    "key": "GET /v2/eew/:eventId/:serialNo",
+    "file": "get__v2_eew_eventId_serialNo__warning.json",
+    "fixture": "warning"
+  },
+  {
+    "key": "GET /v2/eew/:eventId/:serialNo",
+    "file": "get__v2_eew_eventId_serialNo.json"
+  },
+  {
+    "key": "GET /v2/eew/:eventId",
+    "file": "get__v2_eew_eventId.json"
+  },
+  {
+    "key": "GET /v2/eew/latest",
+    "file": "get__v2_eew_latest__active-forecast.json",
+    "fixture": "active-forecast"
+  },
+  {
+    "key": "GET /v2/eew/latest",
+    "file": "get__v2_eew_latest__active-warning.json",
+    "fixture": "active-warning"
+  },
+  {
+    "key": "GET /v2/eew/latest",
+    "file": "get__v2_eew_latest.json"
+  },
+  {
+    "key": "GET /v2/eew",
+    "file": "get__v2_eew.json"
+  },
+  {
+    "key": "GET /v2/parameters/manifest",
+    "file": "get__v2_parameters_manifest__with-parameters.json",
+    "fixture": "with-parameters"
+  },
+  {
+    "key": "GET /v2/parameters/manifest",
+    "file": "get__v2_parameters_manifest.json"
+  },
+  {
+    "key": "GET /v2/parameters/:type",
+    "file": "get__v2_parameters_type.json"
+  },
+  {
+    "key": "GET /v2/telegram",
+    "file": "get__v2_telegram__earthquake-sequence.json",
+    "fixture": "earthquake-sequence"
+  },
+  {
+    "key": "GET /v2/telegram",
+    "file": "get__v2_telegram__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/telegram",
+    "file": "get__v2_telegram__tsunami.json",
+    "fixture": "tsunami"
+  },
+  {
+    "key": "GET /v2/telegram",
+    "file": "get__v2_telegram__with-eew.json",
+    "fixture": "with-eew"
+  },
+  {
+    "key": "GET /v2/telegram",
+    "file": "get__v2_telegram__with-lpgm.json",
+    "fixture": "with-lpgm"
+  },
+  {
+    "key": "GET /v2/telegram/eventId/:eventId",
+    "file": "get__v2_telegram_eventId_eventId__earthquake-sequence.json",
+    "fixture": "earthquake-sequence"
+  },
+  {
+    "key": "GET /v2/telegram/eventId/:eventId",
+    "file": "get__v2_telegram_eventId_eventId__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/telegram/eventId/:eventId",
+    "file": "get__v2_telegram_eventId_eventId__tsunami.json",
+    "fixture": "tsunami"
+  },
+  {
+    "key": "GET /v2/telegram/eventId/:eventId",
+    "file": "get__v2_telegram_eventId_eventId__with-eew.json",
+    "fixture": "with-eew"
+  },
+  {
+    "key": "GET /v2/telegram/eventId/:eventId",
+    "file": "get__v2_telegram_eventId_eventId__with-lpgm.json",
+    "fixture": "with-lpgm"
+  },
+  {
+    "key": "GET /v2/telegram/eventId/:eventId",
+    "file": "get__v2_telegram_eventId_eventId.json"
+  },
+  {
+    "key": "GET /v2/telegram/:id",
+    "file": "get__v2_telegram_id__vtse41.json",
+    "fixture": "vtse41"
+  },
+  {
+    "key": "GET /v2/telegram/:id",
+    "file": "get__v2_telegram_id__vxse51.json",
+    "fixture": "vxse51"
+  },
+  {
+    "key": "GET /v2/telegram/:id",
+    "file": "get__v2_telegram_id__vxse56.json",
+    "fixture": "vxse56"
+  },
+  {
+    "key": "GET /v2/telegram/:id",
+    "file": "get__v2_telegram_id__vzse40.json",
+    "fixture": "vzse40"
+  },
+  {
+    "key": "GET /v2/telegram/:id",
+    "file": "get__v2_telegram_id__with-comments.json",
+    "fixture": "with-comments"
+  },
+  {
+    "key": "GET /v2/telegram/:id",
+    "file": "get__v2_telegram_id.json"
+  },
+  {
+    "key": "GET /v2/telegram/type/:type",
+    "file": "get__v2_telegram_type_type__earthquake-sequence.json",
+    "fixture": "earthquake-sequence"
+  },
+  {
+    "key": "GET /v2/telegram/type/:type",
+    "file": "get__v2_telegram_type_type__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/telegram/type/:type",
+    "file": "get__v2_telegram_type_type__tsunami.json",
+    "fixture": "tsunami"
+  },
+  {
+    "key": "GET /v2/telegram/type/:type",
+    "file": "get__v2_telegram_type_type__with-eew.json",
+    "fixture": "with-eew"
+  },
+  {
+    "key": "GET /v2/telegram/type/:type",
+    "file": "get__v2_telegram_type_type__with-lpgm.json",
+    "fixture": "with-lpgm"
+  },
+  {
+    "key": "GET /v2/telegram/type/:type",
+    "file": "get__v2_telegram_type_type.json"
+  },
+  {
+    "key": "GET /v2/telegram",
+    "file": "get__v2_telegram.json"
+  },
+  {
+    "key": "GET /v2/tsunami",
+    "file": "get__v2_tsunami__active-warning.json",
+    "fixture": "active-warning"
+  },
+  {
+    "key": "GET /v2/tsunami",
+    "file": "get__v2_tsunami__canceled.json",
+    "fixture": "canceled"
+  },
+  {
+    "key": "GET /v2/tsunami",
+    "file": "get__v2_tsunami__empty.json",
+    "fixture": "empty"
+  },
+  {
+    "key": "GET /v2/tsunami/active",
+    "file": "get__v2_tsunami_active__active-warning.json",
+    "fixture": "active-warning"
+  },
+  {
+    "key": "GET /v2/tsunami/active",
+    "file": "get__v2_tsunami_active.json"
+  },
+  {
+    "key": "GET /v2/tsunami/by-event-id/:eventId",
+    "file": "get__v2_tsunami_byeventid_eventId__with-telegrams.json",
+    "fixture": "with-telegrams"
+  },
+  {
+    "key": "GET /v2/tsunami/by-event-id/:eventId",
+    "file": "get__v2_tsunami_byeventid_eventId.json"
+  },
+  {
+    "key": "GET /v2/tsunami/:tsunamiId",
+    "file": "get__v2_tsunami_tsunamiId__with-telegrams.json",
+    "fixture": "with-telegrams"
+  },
+  {
+    "key": "GET /v2/tsunami/:tsunamiId",
+    "file": "get__v2_tsunami_tsunamiId.json"
+  },
+  {
+    "key": "GET /v2/tsunami",
+    "file": "get__v2_tsunami.json"
+  }
 ]

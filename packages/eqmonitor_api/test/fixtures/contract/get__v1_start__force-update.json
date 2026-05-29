@@ -1,0 +1,21 @@
+{
+  "flags": {
+    "ads_enabled": true,
+    "maintenance": {
+      "enabled": false
+    }
+  },
+  "app": {
+    "version": {
+      "latest": "2.0.0",
+      "required_versions": {
+        "ios": "2.0.0",
+        "android": "2.0.0"
+      }
+    },
+    "store_url": {
+      "ios": "https://apps.apple.com/jp/app/eqmonitor/id123456789",
+      "android": "https://play.google.com/store/apps/details?id=app.eqmonitor"
+    }
+  }
+}

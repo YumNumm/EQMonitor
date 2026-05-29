@@ -1,0 +1,80 @@
+{
+  "items": [
+    {
+      "id": "stub-telegram-vxse56",
+      "event_id": "20240101161000",
+      "serial_no": 1,
+      "type": "VXSE56",
+      "title": "長周期地震動に関する観測情報",
+      "status": "NORMAL",
+      "info_type": "PUBLICATION",
+      "editorial_office": "気象庁",
+      "publishing_office": [
+        "気象庁"
+      ],
+      "press_at": "2024-01-01T07:15:00.000Z",
+      "report_at": "2024-01-01T07:15:02.000Z",
+      "info_kind": "長周期地震動に関する観測情報",
+      "info_kind_version": "1.0_0",
+      "hash": "stub-hash-vxse56",
+      "created_at": "2024-01-01T07:15:05.000Z"
+    },
+    {
+      "id": "stub-telegram-vxse53",
+      "event_id": "20251215120000",
+      "serial_no": 1,
+      "type": "VXSE53",
+      "title": "震源・震度情報",
+      "status": "NORMAL",
+      "info_type": "PUBLICATION",
+      "editorial_office": "気象庁",
+      "publishing_office": [
+        "気象庁"
+      ],
+      "press_at": "2025-12-15T12:03:00.000Z",
+      "report_at": "2025-12-15T12:03:02.000Z",
+      "info_kind": "震源・震度に関する情報",
+      "info_kind_version": "1.0_0",
+      "hash": "stub-hash-vxse53",
+      "created_at": "2025-12-15T12:03:05.000Z"
+    },
+    {
+      "id": "stub-telegram-vxse52",
+      "event_id": "20251215120000",
+      "serial_no": 1,
+      "type": "VXSE52",
+      "title": "震源に関する情報",
+      "status": "NORMAL",
+      "info_type": "PUBLICATION",
+      "editorial_office": "気象庁",
+      "publishing_office": [
+        "気象庁"
+      ],
+      "press_at": "2025-12-15T12:02:00.000Z",
+      "report_at": "2025-12-15T12:02:02.000Z",
+      "info_kind": "震源に関する情報",
+      "info_kind_version": "1.0_0",
+      "hash": "stub-hash-vxse52",
+      "created_at": "2025-12-15T12:02:05.000Z"
+    },
+    {
+      "id": "stub-telegram-vxse51",
+      "event_id": "20251215120000",
+      "serial_no": 1,
+      "type": "VXSE51",
+      "title": "震度速報",
+      "status": "NORMAL",
+      "info_type": "PUBLICATION",
+      "editorial_office": "気象庁",
+      "publishing_office": [
+        "気象庁"
+      ],
+      "press_at": "2025-12-15T12:01:00.000Z",
+      "report_at": "2025-12-15T12:01:02.000Z",
+      "info_kind": "震度速報",
+      "info_kind_version": "1.0_0",
+      "hash": "stub-hash-vxse51",
+      "created_at": "2025-12-15T12:01:05.000Z"
+    }
+  ]
+}

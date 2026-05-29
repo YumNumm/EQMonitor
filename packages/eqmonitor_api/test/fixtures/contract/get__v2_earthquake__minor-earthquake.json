@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "event_id": "20251215120000",
+      "status": "NORMAL",
+      "origin_time": "2023-11-14T22:11:20.000Z",
+      "origin_time_precision": "SECOND",
+      "hypocenter": {
+        "value": {
+          "code": "401",
+          "name": "宮城県北部"
+        },
+        "coordinates": {
+          "latitude": 38.7,
+          "longitude": 141
+        },
+        "magnitude": {
+          "type": "NORMAL",
+          "value": 2.8
+        },
+        "depth": {
+          "type": "NORMAL",
+          "value": 15
+        }
+      },
+      "intensity": {
+        "max_intensity": "3"
+      },
+      "datasource": "JMA_DISASTER_INFORMATION_XML"
+    }
+  ]
+}

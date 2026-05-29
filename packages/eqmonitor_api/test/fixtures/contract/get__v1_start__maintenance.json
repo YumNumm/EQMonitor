@@ -1,0 +1,22 @@
+{
+  "flags": {
+    "ads_enabled": false,
+    "maintenance": {
+      "enabled": true,
+      "message": "システムメンテナンスのため、サービスを一時停止しています。終了予定: 2025-12-15 15:00 JST"
+    }
+  },
+  "app": {
+    "version": {
+      "latest": "2.0.0",
+      "required_versions": {
+        "ios": "1.0.0",
+        "android": "1.0.0"
+      }
+    },
+    "store_url": {
+      "ios": "https://apps.apple.com",
+      "android": "https://play.google.com"
+    }
+  }
+}

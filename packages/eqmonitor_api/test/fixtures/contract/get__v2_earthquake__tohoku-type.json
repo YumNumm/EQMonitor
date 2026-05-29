@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "event_id": "20211213230800",
+      "status": "NORMAL",
+      "origin_time": "2023-11-14T21:53:20.000Z",
+      "origin_time_precision": "SECOND",
+      "hypocenter": {
+        "value": {
+          "code": "424",
+          "name": "福島県沖"
+        },
+        "detailed": {
+          "code": "4241",
+          "name": "福島県沖（陸寄り）"
+        },
+        "coordinates": {
+          "latitude": 37.2,
+          "longitude": 141.2
+        },
+        "magnitude": {
+          "type": "NORMAL",
+          "value": 7.3
+        },
+        "depth": {
+          "type": "NORMAL",
+          "value": 60
+        }
+      },
+      "intensity": {
+        "max_intensity": "5+"
+      },
+      "datasource": "JMA_DISASTER_INFORMATION_XML"
+    }
+  ]
+}

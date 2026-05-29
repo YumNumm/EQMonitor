@@ -1,0 +1,54 @@
+{
+  "tsunami": {
+    "id": "00000000-0000-0000-0000-000000000002",
+    "event_ids": [
+      "20110311144600"
+    ],
+    "telegrams": [
+      {
+        "telegram": {
+          "id": "stub-telegram-vtse41",
+          "event_id": "20110311144600",
+          "serial_no": 1,
+          "type": "VTSE41",
+          "title": "大津波警報・津波警報・津波注意報",
+          "status": "NORMAL",
+          "info_type": "PUBLICATION",
+          "editorial_office": "気象庁本庁",
+          "publishing_office": [
+            "気象庁"
+          ],
+          "press_at": "2011-03-11T05:49:00.000Z",
+          "report_at": "2011-03-11T05:49:02.000Z",
+          "info_kind": "津波警報・注意報・予報a",
+          "info_kind_version": "1.0_0",
+          "hash": "stub-hash-vtse41",
+          "created_at": "2011-03-11T05:49:05.000Z"
+        },
+        "comments": null
+      },
+      {
+        "telegram": {
+          "id": "stub-telegram-vtse51",
+          "event_id": "20110311144600",
+          "serial_no": 1,
+          "type": "VTSE51",
+          "title": "津波予報（沿岸)",
+          "status": "NORMAL",
+          "info_type": "PUBLICATION",
+          "editorial_office": "気象庁本庁",
+          "publishing_office": [
+            "気象庁"
+          ],
+          "press_at": "2011-03-11T06:00:00.000Z",
+          "report_at": "2011-03-11T06:00:02.000Z",
+          "info_kind": "津波情報a",
+          "info_kind_version": "1.0_0",
+          "hash": "stub-hash-vtse51",
+          "created_at": "2011-03-11T06:00:05.000Z"
+        },
+        "comments": null
+      }
+    ]
+  }
+}

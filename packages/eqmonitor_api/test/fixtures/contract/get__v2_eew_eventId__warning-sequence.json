@@ -1,0 +1,275 @@
+{
+  "items": [
+    {
+      "event_id": "20240101161000",
+      "type": "VXSE45",
+      "status": "NORMAL",
+      "info_type": "PUBLICATION",
+      "headline": null,
+      "is_canceled": false,
+      "is_plum": false,
+      "editorial_office": null,
+      "serial_no": 1,
+      "is_warning": false,
+      "is_last_info": false,
+      "origin_time": "2023-11-14T21:58:20.000Z",
+      "arrival_time": null,
+      "hypocenter": {
+        "value": {
+          "code": "531",
+          "name": "石川県能登地方"
+        },
+        "coordinates": {
+          "latitude": 37.5,
+          "longitude": 137.2
+        },
+        "magnitude": 6.8,
+        "depth": 0
+      },
+      "forecast_intensity": {
+        "max_intensity": {
+          "value": "5+",
+          "is_over": false
+        },
+        "regions": [
+          {
+            "value": {
+              "code": "5310",
+              "name": "能登"
+            },
+            "is_plum": false,
+            "is_warning": false,
+            "intensity": {
+              "value": "5+",
+              "is_over": false
+            },
+            "arrival_time": {
+              "type": "TIME",
+              "value": "2024-01-01T07:10:20.000Z"
+            }
+          }
+        ]
+      },
+      "accuracy": {
+        "epicenter": 3,
+        "hypocenter": 3,
+        "depth": 3,
+        "magnitude_calculation": 2,
+        "number_of_magnitude_calculation": 5
+      },
+      "report_time": "2023-11-14T21:59:20.000Z"
+    },
+    {
+      "event_id": "20240101161000",
+      "type": "VXSE45",
+      "status": "NORMAL",
+      "info_type": "PUBLICATION",
+      "headline": null,
+      "is_canceled": false,
+      "is_plum": false,
+      "editorial_office": null,
+      "serial_no": 3,
+      "is_warning": true,
+      "is_last_info": false,
+      "origin_time": "2023-11-14T21:58:20.000Z",
+      "arrival_time": null,
+      "hypocenter": {
+        "value": {
+          "code": "531",
+          "name": "石川県能登地方"
+        },
+        "coordinates": {
+          "latitude": 37.5,
+          "longitude": 137.2
+        },
+        "magnitude": 7.6,
+        "depth": 0
+      },
+      "forecast_intensity": {
+        "max_intensity": {
+          "value": "6+",
+          "is_over": true
+        },
+        "regions": [
+          {
+            "value": {
+              "code": "5310",
+              "name": "能登"
+            },
+            "is_plum": false,
+            "is_warning": true,
+            "intensity": {
+              "value": "6+",
+              "is_over": true
+            },
+            "arrival_time": {
+              "type": "ARRIVED"
+            }
+          },
+          {
+            "value": {
+              "code": "5320",
+              "name": "加賀"
+            },
+            "is_plum": false,
+            "is_warning": true,
+            "intensity": {
+              "value": "6-",
+              "is_over": false
+            },
+            "arrival_time": {
+              "type": "TIME",
+              "value": "2024-01-01T07:10:25.000Z"
+            }
+          },
+          {
+            "value": {
+              "code": "5110",
+              "name": "富山"
+            },
+            "is_plum": false,
+            "is_warning": false,
+            "intensity": {
+              "value": "5+",
+              "is_over": false
+            },
+            "arrival_time": {
+              "type": "TIME",
+              "value": "2024-01-01T07:10:30.000Z"
+            }
+          },
+          {
+            "value": {
+              "code": "5210",
+              "name": "福井"
+            },
+            "is_plum": false,
+            "is_warning": false,
+            "intensity": {
+              "value": "4",
+              "is_over": false
+            },
+            "arrival_time": {
+              "type": "TIME",
+              "value": "2024-01-01T07:10:40.000Z"
+            }
+          }
+        ]
+      },
+      "accuracy": {
+        "epicenter": 3,
+        "hypocenter": 3,
+        "depth": 3,
+        "magnitude_calculation": 5,
+        "number_of_magnitude_calculation": 11
+      },
+      "report_time": "2023-11-14T22:00:20.000Z"
+    },
+    {
+      "event_id": "20240101161000",
+      "type": "VXSE45",
+      "status": "NORMAL",
+      "info_type": "PUBLICATION",
+      "headline": null,
+      "is_canceled": false,
+      "is_plum": false,
+      "editorial_office": null,
+      "serial_no": 8,
+      "is_warning": true,
+      "is_last_info": true,
+      "origin_time": "2023-11-14T21:58:20.000Z",
+      "arrival_time": null,
+      "hypocenter": {
+        "value": {
+          "code": "531",
+          "name": "石川県能登地方"
+        },
+        "coordinates": {
+          "latitude": 37.5,
+          "longitude": 137.2
+        },
+        "magnitude": 7.6,
+        "depth": 0
+      },
+      "forecast_intensity": {
+        "max_intensity": {
+          "value": "6+",
+          "is_over": true
+        },
+        "regions": [
+          {
+            "value": {
+              "code": "5310",
+              "name": "能登"
+            },
+            "is_plum": false,
+            "is_warning": true,
+            "intensity": {
+              "value": "6+",
+              "is_over": true
+            },
+            "arrival_time": {
+              "type": "ARRIVED"
+            }
+          },
+          {
+            "value": {
+              "code": "5320",
+              "name": "加賀"
+            },
+            "is_plum": false,
+            "is_warning": true,
+            "intensity": {
+              "value": "6-",
+              "is_over": false
+            },
+            "arrival_time": {
+              "type": "TIME",
+              "value": "2024-01-01T07:10:25.000Z"
+            }
+          },
+          {
+            "value": {
+              "code": "5110",
+              "name": "富山"
+            },
+            "is_plum": false,
+            "is_warning": false,
+            "intensity": {
+              "value": "5+",
+              "is_over": false
+            },
+            "arrival_time": {
+              "type": "TIME",
+              "value": "2024-01-01T07:10:30.000Z"
+            }
+          },
+          {
+            "value": {
+              "code": "5210",
+              "name": "福井"
+            },
+            "is_plum": false,
+            "is_warning": false,
+            "intensity": {
+              "value": "4",
+              "is_over": false
+            },
+            "arrival_time": {
+              "type": "TIME",
+              "value": "2024-01-01T07:10:40.000Z"
+            }
+          }
+        ]
+      },
+      "accuracy": {
+        "epicenter": 3,
+        "hypocenter": 3,
+        "depth": 3,
+        "magnitude_calculation": 5,
+        "number_of_magnitude_calculation": 11
+      },
+      "report_time": "2023-11-14T22:01:20.000Z"
+    }
+  ]
+}

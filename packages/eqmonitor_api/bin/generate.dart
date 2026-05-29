@@ -118,6 +118,37 @@ void main(List<String> args) async {
     ], packageDir.path);
   });
 
+  /// 契約 drift テスト用の fixtures を backend submodule からコピーする。
+  ///
+  /// backend 側 `pnpm generate:fixtures` が `api/api-stub/generated/contract-fixtures/`
+  /// に出力した JSON（decision論的・Valibot 検証済みの形）を、テストが読む
+  /// `test/fixtures/contract/` へ取り込む。openapi.json と同じ「submodule 生成物を
+  /// メインリポに取り込む」流儀（app CI は submodule を checkout しないため必須）。
+  await _step('契約 fixtures を submodule からコピー', () async {
+    final srcDir = Directory(
+      '../../backend/api/api-stub/generated/contract-fixtures',
+    );
+    final dstDir = Directory('${packageDir.path}/test/fixtures/contract');
+    if (!srcDir.existsSync()) {
+      stderr.writeln('  contract-fixtures が見つかりません: ${srcDir.path}');
+      return;
+    }
+    if (dstDir.existsSync()) {
+      dstDir.deleteSync(recursive: true);
+    }
+    dstDir.createSync(recursive: true);
+    var count = 0;
+    for (final f in srcDir.listSync().whereType<File>()) {
+      if (!f.path.endsWith('.json')) {
+        continue;
+      }
+      final name = f.uri.pathSegments.last;
+      f.copySync('${dstDir.path}/$name');
+      count++;
+    }
+    stdout.writeln('  copied $count fixtures → ${dstDir.path}');
+  });
+
   stdout.writeln('\n✅ コード生成が完了しました');
 }
 
