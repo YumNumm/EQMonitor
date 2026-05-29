@@ -3,8 +3,18 @@
 - 日付: 2026-05-30
 - 層: L2
 - 親: [app-server-integration-testing-overview](./2026-05-30-app-server-integration-testing-overview.md)
-- ステータス: 設計（ユーザーレビュー待ち）
+- ステータス: 実装済み（メインリポ `develop` ローカルコミット・CI 実走検証待ち）
 - 前提: Spec ①（契約/drift）完了。fixtures エクスポータ・api-stub を流用。
+- 実装結果:
+  - Dart 結合テスト7件（default往復4・error→DioException・query2）が**ローカルで green**
+    （`backend/api/api-stub` を `node dist/index.mjs` 起動 → `dart test --run-skipped --tags integration`）。
+  - `dart_test.yaml` の tag skip で通常 `dart test`/`melos test:dart` は integration を除外
+    （stub 停止状態でも default run が green を確認済み）。
+  - CI: `wc-check-integration.yaml` を新設し `pr-flutter-check.yaml` に配線。GitHub App
+    (`vars.EQMONITOR_GITHUB_APP_ID` / `secrets.EQMONITOR_GITHUB_APP_PRIVATE_KEY`) で private
+    backend submodule を checkout（`contents:read` 最小権限）。
+  - **CI 実走の前提**: GitHub App が `YumNumm/eqmonitor-backend` に install 済みであること。
+    未 install の場合 submodule checkout が失敗するため、最初の PR で要確認。
 
 ## 目的
 
