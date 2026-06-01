@@ -63,4 +63,17 @@ void main() {
       expect(state.single.eventId, '20240101161010');
     });
   });
+
+  group('eewProvider のタイムシフト連携', () {
+    test('タイムシフトモードに入ると空でライブ受信を遮断すること', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      container
+          .read(appClockProvider.notifier)
+          .enterTimeShift(const Duration(minutes: -3));
+
+      expect(container.read(eewProvider).value, isEmpty);
+    });
+  });
 }
