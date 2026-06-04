@@ -11,6 +11,16 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsDebugGen {
+  const $AssetsDebugGen();
+
+  /// File path: assets/debug/.gitkeep
+  String get aGitkeep => 'assets/debug/.gitkeep';
+
+  /// List of all assets
+  List<String> get values => [aGitkeep];
+}
+
 class $AssetsDocsGen {
   const $AssetsDocsGen();
 
@@ -134,6 +144,7 @@ class Assets {
 
   static const String kyoshinShindoColorMap =
       'assets/KyoshinShindoColorMap.json';
+  static const $AssetsDebugGen debug = $AssetsDebugGen();
   static const $AssetsDocsGen docs = $AssetsDocsGen();
   static const AssetGenImage header = AssetGenImage('assets/header.png');
   static const $AssetsImagesGen images = $AssetsImagesGen();

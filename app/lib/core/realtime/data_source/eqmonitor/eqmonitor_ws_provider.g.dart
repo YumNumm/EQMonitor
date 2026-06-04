@@ -130,4 +130,4 @@ final class EqmonitorWebSocketTicketProvider
 }
 
 String _$eqmonitorWebSocketTicketHash() =>
-    r'925989740b0907f7d5726b944a642bc903369cbd';
+    r'4bd7254baad2946739458c1e5f08eceaebec1dbc';
