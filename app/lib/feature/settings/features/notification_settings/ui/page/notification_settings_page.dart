@@ -31,6 +31,16 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(GeneralNotificationSettingsNotifier.saveMutation, (_, next) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('設定の保存に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
     final settingsAsync = ref.watch(generalNotificationSettingsProvider);
 
     return Skeletonizer(
@@ -39,7 +49,8 @@ class _Body extends ConsumerWidget {
         children: [
           const SettingsSectionHeader(text: '全般'),
           _GeneralSettingsSection(
-            settings: settingsAsync.value ??
+            settings:
+                settingsAsync.value ??
                 const GeneralNotificationSettings(
                   tsunamiEnabled: true,
                   trainingEnabled: false,
@@ -116,17 +127,21 @@ class _GeneralSettingsSection extends ConsumerWidget {
           onChanged: isSaving
               ? null
               : (value) async {
-                  await GeneralNotificationSettingsNotifier.saveMutation.run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(generalNotificationSettingsProvider.notifier)
-                          .save(
-                            tsunamiEnabled: value,
-                            trainingEnabled: settings.trainingEnabled,
-                          );
-                    },
-                  );
+                  try {
+                    await GeneralNotificationSettingsNotifier.saveMutation.run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(generalNotificationSettingsProvider.notifier)
+                            .save(
+                              tsunamiEnabled: value,
+                              trainingEnabled: settings.trainingEnabled,
+                            );
+                      },
+                    );
+                  } on Object {
+                    return;
+                  }
                 },
         ),
         AppSwitchListTile(
@@ -136,17 +151,21 @@ class _GeneralSettingsSection extends ConsumerWidget {
           onChanged: isSaving
               ? null
               : (value) async {
-                  await GeneralNotificationSettingsNotifier.saveMutation.run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(generalNotificationSettingsProvider.notifier)
-                          .save(
-                            tsunamiEnabled: settings.tsunamiEnabled,
-                            trainingEnabled: value,
-                          );
-                    },
-                  );
+                  try {
+                    await GeneralNotificationSettingsNotifier.saveMutation.run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(generalNotificationSettingsProvider.notifier)
+                            .save(
+                              tsunamiEnabled: settings.tsunamiEnabled,
+                              trainingEnabled: value,
+                            );
+                      },
+                    );
+                  } on Object {
+                    return;
+                  }
                 },
         ),
       ],

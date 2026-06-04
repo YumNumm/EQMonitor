@@ -1,9 +1,13 @@
+import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/earthquake_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/device_notification_settings_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -194,6 +198,15 @@ class EarthquakeNotificationSettingsNotifier
           '[Earthquake] putEarthquakeRegions success: regions=${value.length}',
         );
         state = AsyncData(current.copyWith(regions: value));
+        try {
+          await BackgroundLocationTracker.startMonitoring();
+        } on Object catch (e, st) {
+          talker.error(
+            '[Earthquake] BackgroundLocationTracker.startMonitoring',
+            e,
+            st,
+          );
+        }
       case Failure(:final exception):
         talker.error('[Earthquake] putEarthquakeRegions failure', exception);
         throw exception;
@@ -269,7 +282,36 @@ class EarthquakeNotificationSettingsNotifier
     );
     switch (result) {
       case Success(:final value):
-        state = AsyncData(current.copyWith(regions: value));
+        final nextSettings = current.copyWith(regions: value);
+        state = AsyncData(nextSettings);
+        if (isCurrentLocation && !value.any((r) => r.isCurrentLocation)) {
+          final eewSettings = await (() async {
+            try {
+              return await ref.read(eewSettingsProvider.future);
+            } on Object catch (e, st) {
+              talker.error('[Earthquake] read EEW settings failed', e, st);
+              return null;
+            }
+          })();
+          final shakeDetectionState = await (() async {
+            try {
+              return await ref.read(shakeDetectionSettingsProvider.future);
+            } on Object catch (e, st) {
+              talker.error(
+                '[Earthquake] read shake detection settings failed',
+                e,
+                st,
+              );
+              return null;
+            }
+          })();
+          const lifecycle = BackgroundLocationMonitoringLifecycle();
+          await lifecycle.stopIfUnused(
+            eewSettings: eewSettings,
+            earthquakeSettings: nextSettings,
+            shakeDetectionState: shakeDetectionState,
+          );
+        }
       case Failure(:final exception):
         throw exception;
     }

@@ -31,7 +31,8 @@ class _Body extends ConsumerWidget {
       );
     }
 
-    final state = stateAsync.value ??
+    final state =
+        stateAsync.value ??
         const (entries: <ShakeDetectionEntry>[], availableSubRegions: []);
 
     ref.listen(
@@ -57,6 +58,16 @@ class _Body extends ConsumerWidget {
         );
       }
     });
+    ref.listen(ShakeDetectionSettingsNotifier.updateLevelMutation, (_, next) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('震度レベルの更新に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
     final addState = ref.watch(
       ShakeDetectionSettingsNotifier.addCurrentLocationMutation,
     );
@@ -66,7 +77,8 @@ class _Body extends ConsumerWidget {
     final updateState = ref.watch(
       ShakeDetectionSettingsNotifier.updateLevelMutation,
     );
-    final isBusy = addState is MutationPending ||
+    final isBusy =
+        addState is MutationPending ||
         removeState is MutationPending ||
         updateState is MutationPending;
 
@@ -100,40 +112,51 @@ class _Body extends ConsumerWidget {
               entry: entry,
               isBusy: isBusy,
               onDelete: () async {
-                await ShakeDetectionSettingsNotifier.removeEntryMutation.run(
-                  ref,
-                  (tsx) async {
-                    await tsx
-                        .get(shakeDetectionSettingsProvider.notifier)
-                        .removeEntry(entry.id);
-                  },
-                );
+                try {
+                  await ShakeDetectionSettingsNotifier.removeEntryMutation.run(
+                    ref,
+                    (tsx) async {
+                      await tsx
+                          .get(shakeDetectionSettingsProvider.notifier)
+                          .removeEntry(entry.id);
+                    },
+                  );
+                } on Object {
+                  return;
+                }
               },
               onLevelChanged: (level) async {
-                await ShakeDetectionSettingsNotifier.updateLevelMutation.run(
-                  ref,
-                  (tsx) async {
-                    await tsx
-                        .get(shakeDetectionSettingsProvider.notifier)
-                        .updateLevel(entry.id, level);
-                  },
-                );
+                try {
+                  await ShakeDetectionSettingsNotifier.updateLevelMutation.run(
+                    ref,
+                    (tsx) async {
+                      await tsx
+                          .get(shakeDetectionSettingsProvider.notifier)
+                          .updateLevel(entry.id, level);
+                    },
+                  );
+                } on Object {
+                  return;
+                }
               },
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: FilledButton.tonal(
-              onPressed: isBusy ||
-                      state.entries.any((e) => e.isCurrentLocation)
+              onPressed: isBusy || state.entries.any((e) => e.isCurrentLocation)
                   ? null
                   : () async {
-                      await ShakeDetectionSettingsNotifier
-                          .addCurrentLocationMutation
-                          .run(ref, (tsx) async {
-                        await tsx
-                            .get(shakeDetectionSettingsProvider.notifier)
-                            .addCurrentLocation();
-                      });
+                      try {
+                        await ShakeDetectionSettingsNotifier
+                            .addCurrentLocationMutation
+                            .run(ref, (tsx) async {
+                              await tsx
+                                  .get(shakeDetectionSettingsProvider.notifier)
+                                  .addCurrentLocation();
+                            });
+                      } on Object {
+                        return;
+                      }
                     },
               child: isBusy
                   ? const SizedBox(
@@ -183,7 +206,13 @@ class _ShakeEntryCard extends StatelessWidget {
                     .map(
                       (level) => DropdownMenuItem(
                         value: level,
-                        child: Text(_levelLabel(level)),
+                        child: Text(switch (level) {
+                          api.ShakeDetectionLevel.weaker => '最小（Weaker）',
+                          api.ShakeDetectionLevel.weak => '小（Weak）',
+                          api.ShakeDetectionLevel.medium => '中（Medium）',
+                          api.ShakeDetectionLevel.strong => '大（Strong）',
+                          api.ShakeDetectionLevel.stronger => '最大（Stronger）',
+                        }),
                       ),
                     )
                     .toList(),
@@ -209,14 +238,6 @@ class _ShakeEntryCard extends StatelessWidget {
             ),
     );
   }
-
-  String _levelLabel(api.ShakeDetectionLevel level) => switch (level) {
-    api.ShakeDetectionLevel.weaker => '最小（Weaker）',
-    api.ShakeDetectionLevel.weak => '小（Weak）',
-    api.ShakeDetectionLevel.medium => '中（Medium）',
-    api.ShakeDetectionLevel.strong => '大（Strong）',
-    api.ShakeDetectionLevel.stronger => '最大（Stronger）',
-  };
 }
 
 class _ErrorBody extends StatelessWidget {

@@ -1,7 +1,11 @@
+import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/device_notification_settings_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:riverpod/experimental/mutation.dart';
@@ -10,8 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'shake_detection_settings_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class ShakeDetectionSettingsNotifier
-    extends _$ShakeDetectionSettingsNotifier {
+class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
   static final addCurrentLocationMutation = Mutation<void>();
   static final removeEntryMutation = Mutation<void>();
   static final updateLevelMutation = Mutation<void>();
@@ -47,8 +50,9 @@ class ShakeDetectionSettingsNotifier
   /// 更新が実行された場合は true、変化なしまたはスキップの場合は false を返す。
   Future<bool> updateCurrentLocationSubRegion(String? cityCode) async {
     final current = await future;
-    final existing =
-        current.entries.where((e) => e.isCurrentLocation).firstOrNull;
+    final existing = current.entries
+        .where((e) => e.isCurrentLocation)
+        .firstOrNull;
     if (existing == null) {
       return false;
     }
@@ -130,14 +134,29 @@ class ShakeDetectionSettingsNotifier
           entries: _resolveNames(value, current.availableSubRegions),
           availableSubRegions: current.availableSubRegions,
         ));
+        try {
+          await BackgroundLocationTracker.startMonitoring();
+        } on Object catch (e, st) {
+          talker.error(
+            '[ShakeDetection] BackgroundLocationTracker.startMonitoring',
+            e,
+            st,
+          );
+        }
       case Failure(:final exception):
-        talker.error('[ShakeDetection] putShakeDetectionSettings failure', exception);
+        talker.error(
+          '[ShakeDetection] putShakeDetectionSettings failure',
+          exception,
+        );
         throw exception;
     }
   }
 
   Future<void> removeEntry(String entryId) async {
     final current = state.requireValue;
+    final removesCurrentLocation = current.entries.any(
+      (e) => e.id == entryId && e.isCurrentLocation,
+    );
     final deviceId = await ref.read(deviceIdProvider.future);
     final repo = await ref.read(
       deviceNotificationSettingsRepositoryProvider.future,
@@ -149,10 +168,41 @@ class ShakeDetectionSettingsNotifier
     );
     switch (result) {
       case Success(:final value):
-        state = AsyncData((
+        final nextState = (
           entries: _resolveNames(value, current.availableSubRegions),
           availableSubRegions: current.availableSubRegions,
-        ));
+        );
+        state = AsyncData(nextState);
+        if (removesCurrentLocation && !value.any((e) => e.isCurrentLocation)) {
+          final eewSettings = await (() async {
+            try {
+              return await ref.read(eewSettingsProvider.future);
+            } on Object catch (e, st) {
+              talker.error('[ShakeDetection] read EEW settings failed', e, st);
+              return null;
+            }
+          })();
+          final earthquakeSettings = await (() async {
+            try {
+              return await ref.read(
+                earthquakeNotificationSettingsProvider.future,
+              );
+            } on Object catch (e, st) {
+              talker.error(
+                '[ShakeDetection] read earthquake settings failed',
+                e,
+                st,
+              );
+              return null;
+            }
+          })();
+          const lifecycle = BackgroundLocationMonitoringLifecycle();
+          await lifecycle.stopIfUnused(
+            eewSettings: eewSettings,
+            earthquakeSettings: earthquakeSettings,
+            shakeDetectionState: nextState,
+          );
+        }
       case Failure(:final exception):
         throw exception;
     }

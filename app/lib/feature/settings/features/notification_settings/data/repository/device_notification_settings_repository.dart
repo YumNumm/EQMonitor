@@ -46,12 +46,14 @@ class DeviceNotificationSettingsRepository {
     required bool enabled,
     required JmaIntensity? criticalThreshold,
     required bool startLiveActivity,
+    required bool onePointEnabled,
   }) => Result.capture(() async {
     final response = await _api.device.patchV2DeviceMeSettingsEew(
       body: api.EewSettingsRequest(
         enabled: enabled,
         notificationTiers: _toEewApiTiers(criticalThreshold),
         startLiveActivity: startLiveActivity,
+        onePointEnabled: onePointEnabled,
       ),
     );
     final regionsResult = await _api.device.getV2DeviceMeSettingsEewRegions();
@@ -84,8 +86,7 @@ class DeviceNotificationSettingsRepository {
   Future<Result<List<NotificationRegion>, Exception>> getEarthquakeRegions(
     String deviceId,
   ) => Result.capture(() async {
-    final response =
-        await _api.device.getV2DeviceMeSettingsEarthquakeRegions();
+    final response = await _api.device.getV2DeviceMeSettingsEarthquakeRegions();
     return response.data.map((r) => r.toNotificationRegion).toList();
   });
 
@@ -103,8 +104,8 @@ class DeviceNotificationSettingsRepository {
         estimatedIntensityEnabled: estimatedIntensityEnabled,
       ),
     );
-    final regionsResult =
-        await _api.device.getV2DeviceMeSettingsEarthquakeRegions();
+    final regionsResult = await _api.device
+        .getV2DeviceMeSettingsEarthquakeRegions();
     return _earthquakeFromResponse(
       response.data,
       regionsResult.data.map((r) => r.toNotificationRegion).toList(),
@@ -152,12 +153,11 @@ class DeviceNotificationSettingsRepository {
 
   Future<Result<List<ShakeDetectionSubRegion>, Exception>>
   getShakeDetectionSubRegions(String deviceId) => Result.capture(() async {
-    final response =
-        await _api.device.getV2DeviceMeSettingsShakeDetectionSubRegions();
+    final response = await _api.device
+        .getV2DeviceMeSettingsShakeDetectionSubRegions();
     return response.data
         .map(
-          (r) =>
-              ShakeDetectionSubRegion(id: r.id, code: r.code, name: r.name),
+          (r) => ShakeDetectionSubRegion(id: r.id, code: r.code, name: r.name),
         )
         .toList();
   });
@@ -175,6 +175,7 @@ class DeviceNotificationSettingsRepository {
       resp.notificationTiers,
     ),
     startLiveActivity: resp.startLiveActivity,
+    onePointEnabled: resp.onePointEnabled,
     regions: regions,
   );
 
@@ -218,13 +219,13 @@ class DeviceNotificationSettingsRepository {
     return tier?.minJmaIntensity.toJmaIntensity;
   }
 
-  List<api.NotificationTiers4> _toEewApiTiers(JmaIntensity? threshold) {
+  List<api.NotificationTiers4>? _toEewApiTiers(JmaIntensity? threshold) {
     if (threshold == null) {
-      return [];
+      return null;
     }
     final apiIntensity = threshold.toApiMinJmaIntensity;
     if (apiIntensity == null) {
-      return [];
+      return null;
     }
     return [
       api.NotificationTiers4(

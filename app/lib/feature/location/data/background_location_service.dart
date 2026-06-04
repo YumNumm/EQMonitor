@@ -1,5 +1,7 @@
 import 'package:background_location_tracker/background_location_tracker.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/location/data/background_location_debug_settings_provider.dart';
+import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/location/data/jma_region_resolver.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
@@ -32,35 +34,75 @@ Stream<void> backgroundLocationService(Ref ref) async* {
 
 Future<void> _ensureMonitoring(Ref ref) async {
   try {
-    final settings = await ref.read(eewSettingsProvider.future);
-    if (!settings.regions.any((r) => r.isCurrentLocation)) {
+    final eewSettings = await (() async {
+      try {
+        return await ref.read(eewSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error('[BackgroundLocation] read EEW settings failed', e, st);
+        return null;
+      }
+    })();
+    final earthquakeSettings = await (() async {
+      try {
+        return await ref.read(earthquakeNotificationSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error(
+          '[BackgroundLocation] read earthquake settings failed',
+          e,
+          st,
+        );
+        return null;
+      }
+    })();
+    final shakeDetectionState = await (() async {
+      try {
+        return await ref.read(shakeDetectionSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error(
+          '[BackgroundLocation] read shake detection settings failed',
+          e,
+          st,
+        );
+        return null;
+      }
+    })();
+    const policy = BackgroundLocationMonitoringPolicy();
+    if (!policy.shouldMonitor(
+      eewSettings: eewSettings,
+      earthquakeSettings: earthquakeSettings,
+      shakeDetectionState: shakeDetectionState,
+    )) {
       return;
     }
     await BackgroundLocationTracker.startMonitoring();
-  } on Object {
-    // バックグラウンドサービスのエラーはサイレントに無視する
+  } on Object catch (e, st) {
+    talker.error('[BackgroundLocation] ensureMonitoring failed', e, st);
   }
 }
 
 Future<void> _applyPendingLocation(Ref ref) async {
   try {
-    await ref.read(eewSettingsProvider.future);
     final pending = await BackgroundLocationTracker.consumePendingLocation();
     if (pending == null) {
       return;
     }
     await _applyLocation(ref, pending.latitude, pending.longitude);
-  } on Object {
-    // バックグラウンドサービスのエラーはサイレントに無視する
+  } on Object catch (e, st) {
+    talker.error('[BackgroundLocation] applyPendingLocation failed', e, st);
   }
 }
 
 Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
   try {
-    final settings = await ref.read(eewSettingsProvider.future);
-    await ref.read(earthquakeNotificationSettingsProvider.future);
-    await ref.read(shakeDetectionSettingsProvider.future);
-    final prevRegionCode = settings.regions
+    final settings = await (() async {
+      try {
+        return await ref.read(eewSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error('[BackgroundLocation] read EEW settings failed', e, st);
+        return null;
+      }
+    })();
+    final prevRegionCode = settings?.regions
         .where((r) => r.isCurrentLocation)
         .firstOrNull
         ?.regionId;
@@ -72,6 +114,7 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       return;
     }
     final name = resolver.resolveRegionName(latitude, longitude);
+    const retry = BackgroundLocationUpdateRetry();
     // 地震 (VXSE53) 用の市区町村 + 親一次細分化地域コード
     final earthquakeResolution = resolver.resolveEarthquakeRegion(
       latitude,
@@ -83,10 +126,13 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     var didUpdateEew = false;
     String? eewError;
     try {
-      didUpdateEew = await ref
-          .read(eewSettingsProvider.notifier)
-          .updateCurrentLocationRegion(regionCode: code, regionName: name);
-    } on Object catch (e) {
+      didUpdateEew = await retry.run(
+        action: () => ref
+            .read(eewSettingsProvider.notifier)
+            .updateCurrentLocationRegion(regionCode: code, regionName: name),
+      );
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] update EEW location failed', e, st);
       eewError = e.toString();
     }
 
@@ -95,16 +141,23 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     String? earthquakeError;
     try {
       if (earthquakeResolution != null) {
-        didUpdateEarthquake = await ref
-            .read(earthquakeNotificationSettingsProvider.notifier)
-            .updateCurrentLocationRegion(
-              regionCode: earthquakeResolution.regionCode,
-              regionName: earthquakeResolution.regionName,
-              cityCode: earthquakeResolution.cityCode,
-              cityName: earthquakeResolution.cityName,
-            );
+        didUpdateEarthquake = await retry.run(
+          action: () => ref
+              .read(earthquakeNotificationSettingsProvider.notifier)
+              .updateCurrentLocationRegion(
+                regionCode: earthquakeResolution.regionCode,
+                regionName: earthquakeResolution.regionName,
+                cityCode: earthquakeResolution.cityCode,
+                cityName: earthquakeResolution.cityName,
+              ),
+        );
       }
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      talker.error(
+        '[BackgroundLocation] update earthquake location failed',
+        e,
+        st,
+      );
       earthquakeError = e.toString();
     }
 
@@ -112,10 +165,13 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
     var didUpdateShake = false;
     String? shakeError;
     try {
-      didUpdateShake = await ref
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion(cityCode);
-    } on Object catch (e) {
+      didUpdateShake = await retry.run(
+        action: () => ref
+            .read(shakeDetectionSettingsProvider.notifier)
+            .updateCurrentLocationSubRegion(cityCode),
+      );
+    } on Object catch (e, st) {
+      talker.error('[BackgroundLocation] update shake location failed', e, st);
       shakeError = e.toString();
     }
 
@@ -134,8 +190,8 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       earthquakeError: earthquakeError,
       shakeError: shakeError,
     );
-  } on Object {
-    // バックグラウンドサービスのエラーはサイレントに無視する
+  } on Object catch (e, st) {
+    talker.error('[BackgroundLocation] applyLocation failed', e, st);
   }
 }
 
@@ -229,7 +285,7 @@ Future<void> _fireDebugNotifications(
         notificationDetails: details,
       );
     }
-  } on Object {
-    // デバッグ通知失敗はサイレントに無視する
+  } on Object catch (e, st) {
+    talker.error('[BackgroundLocation] fireDebugNotifications failed', e, st);
   }
 }

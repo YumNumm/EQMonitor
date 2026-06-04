@@ -27,6 +27,19 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(EarthquakeNotificationSettingsNotifier.saveSettingsMutation, (
+      _,
+      next,
+    ) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('設定の保存に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
     final settingsAsync = ref.watch(earthquakeNotificationSettingsProvider);
 
     if (settingsAsync.hasError && !settingsAsync.isLoading) {
@@ -81,15 +94,22 @@ class _EnabledSection extends ConsumerWidget {
       onChanged: isSaving
           ? null
           : (value) async {
-              await EarthquakeNotificationSettingsNotifier.saveSettingsMutation
-                  .run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(earthquakeNotificationSettingsProvider.notifier)
-                          .setEnabled(enabled: value);
-                    },
-                  );
+              try {
+                await EarthquakeNotificationSettingsNotifier
+                    .saveSettingsMutation
+                    .run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(
+                              earthquakeNotificationSettingsProvider.notifier,
+                            )
+                            .setEnabled(enabled: value);
+                      },
+                    );
+              } on Object {
+                return;
+              }
             },
     );
   }
@@ -139,17 +159,24 @@ class _ThresholdSection extends ConsumerWidget {
               if (!context.mounted) {
                 return;
               }
-              await EarthquakeNotificationSettingsNotifier.saveSettingsMutation
-                  .run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(earthquakeNotificationSettingsProvider.notifier)
-                          .setCriticalThreshold(
-                            picked == _kClearThreshold ? null : picked,
-                          );
-                    },
-                  );
+              try {
+                await EarthquakeNotificationSettingsNotifier
+                    .saveSettingsMutation
+                    .run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(
+                              earthquakeNotificationSettingsProvider.notifier,
+                            )
+                            .setCriticalThreshold(
+                              picked == _kClearThreshold ? null : picked,
+                            );
+                      },
+                    );
+              } on Object {
+                return;
+              }
             },
     );
   }
@@ -174,15 +201,22 @@ class _EstimatedIntensitySection extends ConsumerWidget {
       onChanged: isSaving
           ? null
           : (value) async {
-              await EarthquakeNotificationSettingsNotifier.saveSettingsMutation
-                  .run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(earthquakeNotificationSettingsProvider.notifier)
-                          .setEstimatedIntensityEnabled(enabled: value);
-                    },
-                  );
+              try {
+                await EarthquakeNotificationSettingsNotifier
+                    .saveSettingsMutation
+                    .run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(
+                              earthquakeNotificationSettingsProvider.notifier,
+                            )
+                            .setEstimatedIntensityEnabled(enabled: value);
+                      },
+                    );
+              } on Object {
+                return;
+              }
             },
     );
   }
@@ -235,19 +269,26 @@ class _RegionsSection extends ConsumerWidget {
             region: region,
             isBusy: isBusy,
             onDelete: () async {
-              await EarthquakeNotificationSettingsNotifier.updateRegionsMutation
-                  .run(
-                    ref,
-                    (tsx) async {
-                      await tsx
-                          .get(earthquakeNotificationSettingsProvider.notifier)
-                          .removeRegion(
-                            regionId: region.regionId,
-                            isCurrentLocation: region.isCurrentLocation,
-                            cityCode: region.cityCode,
-                          );
-                    },
-                  );
+              try {
+                await EarthquakeNotificationSettingsNotifier
+                    .updateRegionsMutation
+                    .run(
+                      ref,
+                      (tsx) async {
+                        await tsx
+                            .get(
+                              earthquakeNotificationSettingsProvider.notifier,
+                            )
+                            .removeRegion(
+                              regionId: region.regionId,
+                              isCurrentLocation: region.isCurrentLocation,
+                              cityCode: region.cityCode,
+                            );
+                      },
+                    );
+              } on Object {
+                return;
+              }
             },
           ),
         Padding(
@@ -265,30 +306,34 @@ class _RegionsSection extends ConsumerWidget {
                     if (result == null || !context.mounted) {
                       return;
                     }
-                    await EarthquakeNotificationSettingsNotifier
-                        .updateRegionsMutation
-                        .run(ref, (tsx) async {
-                          final notifier = tsx.get(
-                            earthquakeNotificationSettingsProvider.notifier,
-                          );
-                          if (result.isCurrentLocation) {
-                            await notifier.addCurrentLocationRegion(
-                              regionCode: result.regionId,
-                              regionName: result.regionName,
-                              cityCode: result.cityCode,
-                              cityName: result.cityName,
-                              minIntensity: result.minIntensity,
+                    try {
+                      await EarthquakeNotificationSettingsNotifier
+                          .updateRegionsMutation
+                          .run(ref, (tsx) async {
+                            final notifier = tsx.get(
+                              earthquakeNotificationSettingsProvider.notifier,
                             );
-                          } else {
-                            await notifier.addRegion(
-                              regionId: result.regionId,
-                              regionName: result.regionName,
-                              minIntensity: result.minIntensity,
-                              cityCode: result.cityCode,
-                              cityName: result.cityName,
-                            );
-                          }
-                        });
+                            if (result.isCurrentLocation) {
+                              await notifier.addCurrentLocationRegion(
+                                regionCode: result.regionId,
+                                regionName: result.regionName,
+                                cityCode: result.cityCode,
+                                cityName: result.cityName,
+                                minIntensity: result.minIntensity,
+                              );
+                            } else {
+                              await notifier.addRegion(
+                                regionId: result.regionId,
+                                regionName: result.regionName,
+                                minIntensity: result.minIntensity,
+                                cityCode: result.cityCode,
+                                cityName: result.cityName,
+                              );
+                            }
+                          });
+                    } on Object {
+                      return;
+                    }
                   },
             child: isBusy
                 ? const SizedBox(

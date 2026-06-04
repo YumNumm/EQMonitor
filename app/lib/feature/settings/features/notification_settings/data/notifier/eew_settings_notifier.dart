@@ -3,8 +3,11 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/eew_notification_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/notification_region.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/repository/device_notification_settings_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -49,6 +52,7 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
       enabled: enabled,
       criticalThreshold: current.criticalThreshold,
       startLiveActivity: current.startLiveActivity,
+      onePointEnabled: current.onePointEnabled,
     );
     switch (result) {
       case Success(:final value):
@@ -69,6 +73,7 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
       enabled: current.enabled,
       criticalThreshold: threshold,
       startLiveActivity: current.startLiveActivity,
+      onePointEnabled: current.onePointEnabled,
     );
     switch (result) {
       case Success(:final value):
@@ -89,6 +94,7 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
       enabled: current.enabled,
       criticalThreshold: current.criticalThreshold,
       startLiveActivity: startLiveActivity,
+      onePointEnabled: current.onePointEnabled,
     );
     switch (result) {
       case Success(:final value):
@@ -138,7 +144,11 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
         try {
           await BackgroundLocationTracker.startMonitoring();
         } on Object catch (e, st) {
-          talker.error('[EEW] BackgroundLocationTracker.startMonitoring', e, st);
+          talker.error(
+            '[EEW] BackgroundLocationTracker.startMonitoring',
+            e,
+            st,
+          );
         }
       case Failure(:final exception):
         talker.error('[EEW] putEewRegions failure', exception);
@@ -237,8 +247,9 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     );
     final updated = current.regions
         .where(
-          (r) => !(r.regionId == regionId &&
-              r.isCurrentLocation == isCurrentLocation),
+          (r) =>
+              !(r.regionId == regionId &&
+                  r.isCurrentLocation == isCurrentLocation),
         )
         .toList();
     final result = await repo.putEewRegions(
@@ -247,18 +258,33 @@ class EewSettingsNotifier extends _$EewSettingsNotifier {
     );
     switch (result) {
       case Success(:final value):
-        state = AsyncData(current.copyWith(regions: value));
-        // 現在地リージョンを取り除いた場合は重大な位置変化監視も停止する。
+        final nextSettings = current.copyWith(regions: value);
+        state = AsyncData(nextSettings);
         if (isCurrentLocation && !value.any((r) => r.isCurrentLocation)) {
-          try {
-            await BackgroundLocationTracker.stopMonitoring();
-          } on Object catch (e, st) {
-            talker.error(
-              '[EEW] BackgroundLocationTracker.stopMonitoring',
-              e,
-              st,
-            );
-          }
+          final earthquakeSettings = await (() async {
+            try {
+              return await ref.read(
+                earthquakeNotificationSettingsProvider.future,
+              );
+            } on Object catch (e, st) {
+              talker.error('[EEW] read earthquake settings failed', e, st);
+              return null;
+            }
+          })();
+          final shakeDetectionState = await (() async {
+            try {
+              return await ref.read(shakeDetectionSettingsProvider.future);
+            } on Object catch (e, st) {
+              talker.error('[EEW] read shake detection settings failed', e, st);
+              return null;
+            }
+          })();
+          const lifecycle = BackgroundLocationMonitoringLifecycle();
+          await lifecycle.stopIfUnused(
+            eewSettings: nextSettings,
+            earthquakeSettings: earthquakeSettings,
+            shakeDetectionState: shakeDetectionState,
+          );
         }
       case Failure(:final exception):
         throw exception;

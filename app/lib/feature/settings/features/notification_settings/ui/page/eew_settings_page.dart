@@ -28,6 +28,26 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(EewSettingsNotifier.saveSettingsMutation, (_, next) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('設定の保存に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
+    ref.listen(EewSettingsNotifier.saveLiveActivityMutation, (_, next) {
+      if (next is MutationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Live Activity設定の保存に失敗しました: ${next.error}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    });
     final settingsAsync = ref.watch(eewSettingsProvider);
 
     if (settingsAsync.hasError && !settingsAsync.isLoading) {
@@ -36,11 +56,13 @@ class _Body extends ConsumerWidget {
       );
     }
 
-    final settings = settingsAsync.value ??
+    final settings =
+        settingsAsync.value ??
         const EewNotificationSettings(
           enabled: true,
           criticalThreshold: null,
           startLiveActivity: true,
+          onePointEnabled: true,
           regions: [],
         );
 
@@ -79,14 +101,18 @@ class _EnabledSection extends ConsumerWidget {
       onChanged: isSaving
           ? null
           : (value) async {
-              await EewSettingsNotifier.saveSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewSettingsProvider.notifier)
-                      .setEnabled(enabled: value);
-                },
-              );
+              try {
+                await EewSettingsNotifier.saveSettingsMutation.run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(eewSettingsProvider.notifier)
+                        .setEnabled(enabled: value);
+                  },
+                );
+              } on Object {
+                return;
+              }
             },
     );
   }
@@ -134,16 +160,20 @@ class _ThresholdSection extends ConsumerWidget {
               if (!context.mounted) {
                 return;
               }
-              await EewSettingsNotifier.saveSettingsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewSettingsProvider.notifier)
-                      .setCriticalThreshold(
-                        picked == _kClearThreshold ? null : picked,
-                      );
-                },
-              );
+              try {
+                await EewSettingsNotifier.saveSettingsMutation.run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(eewSettingsProvider.notifier)
+                        .setCriticalThreshold(
+                          picked == _kClearThreshold ? null : picked,
+                        );
+                  },
+                );
+              } on Object {
+                return;
+              }
             },
     );
   }
@@ -166,19 +196,22 @@ class _LiveActivitySection extends ConsumerWidget {
       onChanged: isSaving
           ? null
           : (value) async {
-              await EewSettingsNotifier.saveLiveActivityMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx
-                      .get(eewSettingsProvider.notifier)
-                      .setStartLiveActivity(startLiveActivity: value);
-                },
-              );
+              try {
+                await EewSettingsNotifier.saveLiveActivityMutation.run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(eewSettingsProvider.notifier)
+                        .setStartLiveActivity(startLiveActivity: value);
+                  },
+                );
+              } on Object {
+                return;
+              }
             },
     );
   }
 }
-
 
 class _RegionsSection extends ConsumerWidget {
   const _RegionsSection({required this.settings});
@@ -223,15 +256,21 @@ class _RegionsSection extends ConsumerWidget {
             region: region,
             isBusy: isBusy,
             onDelete: () async {
-              await EewSettingsNotifier.updateRegionsMutation.run(
-                ref,
-                (tsx) async {
-                  await tsx.get(eewSettingsProvider.notifier).removeRegion(
-                    regionId: region.regionId,
-                    isCurrentLocation: region.isCurrentLocation,
-                  );
-                },
-              );
+              try {
+                await EewSettingsNotifier.updateRegionsMutation.run(
+                  ref,
+                  (tsx) async {
+                    await tsx
+                        .get(eewSettingsProvider.notifier)
+                        .removeRegion(
+                          regionId: region.regionId,
+                          isCurrentLocation: region.isCurrentLocation,
+                        );
+                  },
+                );
+              } on Object {
+                return;
+              }
             },
           ),
         Padding(
@@ -244,8 +283,9 @@ class _RegionsSection extends ConsumerWidget {
                 onPressed: isBusy || hasCurrentLocation
                     ? null
                     : () async {
-                        final location =
-                            await _ensurePermissionAndGetLocation(context);
+                        final location = await _ensurePermissionAndGetLocation(
+                          context,
+                        );
                         if (location == null || !context.mounted) {
                           return;
                         }
@@ -271,17 +311,21 @@ class _RegionsSection extends ConsumerWidget {
                           );
                           return;
                         }
-                        await EewSettingsNotifier.updateRegionsMutation.run(
-                          ref,
-                          (tsx) async {
-                            await tsx
-                                .get(eewSettingsProvider.notifier)
-                                .addCurrentLocationRegion(
-                                  regionCode: code,
-                                  regionName: name,
-                                );
-                          },
-                        );
+                        try {
+                          await EewSettingsNotifier.updateRegionsMutation.run(
+                            ref,
+                            (tsx) async {
+                              await tsx
+                                  .get(eewSettingsProvider.notifier)
+                                  .addCurrentLocationRegion(
+                                    regionCode: code,
+                                    regionName: name,
+                                  );
+                            },
+                          );
+                        } on Object {
+                          return;
+                        }
                       },
                 child: isBusy
                     ? const SizedBox(
@@ -304,18 +348,22 @@ class _RegionsSection extends ConsumerWidget {
                         if (result == null || !context.mounted) {
                           return;
                         }
-                        await EewSettingsNotifier.updateRegionsMutation.run(
-                          ref,
-                          (tsx) async {
-                            await tsx
-                                .get(eewSettingsProvider.notifier)
-                                .addRegion(
-                                  regionId: result.regionId,
-                                  regionName: result.regionName,
-                                  minIntensity: result.minIntensity,
-                                );
-                          },
-                        );
+                        try {
+                          await EewSettingsNotifier.updateRegionsMutation.run(
+                            ref,
+                            (tsx) async {
+                              await tsx
+                                  .get(eewSettingsProvider.notifier)
+                                  .addRegion(
+                                    regionId: result.regionId,
+                                    regionName: result.regionName,
+                                    minIntensity: result.minIntensity,
+                                  );
+                            },
+                          );
+                        } on Object {
+                          return;
+                        }
                       },
                 child: const Text('地域を追加'),
               ),
