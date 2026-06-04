@@ -26,12 +26,14 @@ void main() {
     });
     final prefs = await SharedPreferences.getInstance();
     final tokenController = StreamController<NotificationToken>();
+    final authRepository = _MemoryDeviceAuthRepository();
     final deviceRepository = _RecordingDeviceRepository();
     final container = ProviderContainer(
       overrides: [
         app_prefs.sharedPreferencesProvider.overrideWithValue(
           app_prefs.SharedPreferencesAsync(prefs),
         ),
+        deviceAuthRepositoryProvider.overrideWith((ref) async => authRepository),
         deviceIdProvider.overrideWith((ref) async => 'device-id'),
         notificationTokenStreamProvider.overrideWith(
           (ref) => tokenController.stream,
@@ -86,7 +88,7 @@ final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
   }) async {}
 
   @override
-  Future<String?> readToken() async => null;
+  Future<String?> readToken() async => 'auth-token';
 
   @override
   Future<void> clearToken() async {}
