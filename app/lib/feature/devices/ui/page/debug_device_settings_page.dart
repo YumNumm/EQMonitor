@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.da
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/notifier/push_token_sync_notifier.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
@@ -16,6 +17,10 @@ import 'package:eqmonitor/feature/notification/data/model/general_notification_s
 import 'package:eqmonitor/feature/notification/data/model/push_notification_log.dart';
 import 'package:eqmonitor/feature/notification/data/model/test_notification_delivery.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/eew_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/general_notification_settings_notifier.dart';
+import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/shake_detection_settings_notifier.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +59,7 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
                 _DeviceInfoSection(deviceIdAsync: deviceIdAsync),
                 const _NotificationPermissionSection(),
                 _TokenSection(syncSnapshot: syncSnapshot),
+                const _SettingsProviderStatusSection(),
                 if (deviceIdAsync.hasValue)
                   _NotificationSettingsSection(
                     deviceId: deviceIdAsync.requireValue,
@@ -108,6 +114,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
         ref.watch(DeviceProvisioningNotifier.provisionMutation);
     final isProvisioned = ref.watch(_isProvisionedProvider);
     final legacyId = ref.watch(_legacyDeviceIdProvider);
+    final tokenPresent = ref.watch(_deviceTokenPresentProvider);
 
     final isLoading = provisionMutation is MutationPending;
     final scheme = Theme.of(context).colorScheme;
@@ -161,6 +168,16 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
           _KeyValueRow(
             label: '保存済みフラグ',
             value: isProvisioned ? '登録済み (true)' : '未登録 (false)',
+          ),
+          _KeyValueRow(
+            label: 'Bearerトークン',
+            value: switch (tokenPresent) {
+              AsyncData(:final value) => value
+                  ? '存在'
+                  : '不在（再プロビジョニング必要）',
+              AsyncError(:final error) => 'エラー: $error',
+              _ => '確認中…',
+            },
           ),
           _KeyValueRow(label: 'サーバー状態', value: statusText),
           _KeyValueRow(
@@ -477,6 +494,74 @@ class _TokenStatusRow extends StatelessWidget {
   }
 }
 
+// ── 設定プロバイダー状態 ──────────────────────────────────────────────────────
+
+class _SettingsProviderStatusSection extends ConsumerWidget {
+  const _SettingsProviderStatusSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eew = ref.watch(eewSettingsProvider);
+    final earthquake = ref.watch(earthquakeNotificationSettingsProvider);
+    final general = ref.watch(generalNotificationSettingsProvider);
+    final shakeDetection = ref.watch(shakeDetectionSettingsProvider);
+
+    return _SectionCard(
+      title: '設定プロバイダー状態',
+      subtitle: 'プロビジョニング完了後にロードされる',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ProviderStatusRow(label: 'EEW設定', state: eew),
+          _ProviderStatusRow(label: '地震通知設定', state: earthquake),
+          _ProviderStatusRow(label: '全般通知設定', state: general),
+          _ProviderStatusRow(label: '揺れ検知設定', state: shakeDetection),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProviderStatusRow extends StatelessWidget {
+  const _ProviderStatusRow({
+    required this.label,
+    required this.state,
+  });
+
+  final String label;
+  final AsyncValue<Object?> state;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final (icon, color, statusText) = switch (state) {
+      AsyncData() => (Icons.check_circle, scheme.primary, 'ロード済み'),
+      AsyncError(:final error) => (
+        Icons.error_outline,
+        scheme.error,
+        'エラー: ${error.runtimeType}',
+      ),
+      _ => (Icons.hourglass_empty, scheme.outline, 'ロード中…'),
+    };
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: color),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '$label: $statusText',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ── 全般通知設定 ────────────────────────────────────────────────────────────
 
 class _NotificationSettingsSection extends HookConsumerWidget {
@@ -784,6 +869,13 @@ class _NotificationHistoryTile extends StatelessWidget {
 bool _isProvisioned(Ref ref) {
   final repo = ref.watch(deviceProvisioningRepositoryProvider);
   return repo.isProvisioned();
+}
+
+@riverpod
+Future<bool> _deviceTokenPresent(Ref ref) async {
+  final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
+  final token = await authRepo.readToken();
+  return token != null && token.isNotEmpty;
 }
 
 @riverpod

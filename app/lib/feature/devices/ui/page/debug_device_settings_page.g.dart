@@ -290,6 +290,40 @@ final class _IsProvisionedProvider extends $FunctionalProvider<bool, bool, bool>
 
 String _$_isProvisionedHash() => r'2f8d126c3bc56972a9eda138053d417c165ef26c';
 
+@ProviderFor(_deviceTokenPresent)
+final _deviceTokenPresentProvider = _DeviceTokenPresentProvider._();
+
+final class _DeviceTokenPresentProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  _DeviceTokenPresentProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'_deviceTokenPresentProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$_deviceTokenPresentHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return _deviceTokenPresent(ref);
+  }
+}
+
+String _$_deviceTokenPresentHash() =>
+    r'c951fda194d9cd7635a10fb9f8371b7e6e92e097';
+
 @ProviderFor(_legacyDeviceId)
 final _legacyDeviceIdProvider = _LegacyDeviceIdProvider._();
 
