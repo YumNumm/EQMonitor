@@ -14,11 +14,13 @@ void main() {
 
     await client.device.patchV2DeviceMeApnsKind(
       kind: ApnsTokenKind.notification.json,
-      body: api.V2DeviceMeApnsKindRequestBody(token: 'apns-token'),
+      body: const api.V2DeviceMeApnsKindRequestBody(token: 'apns-token'),
     );
     await client.device.patchV2DeviceMeApnsKind(
       kind: ApnsTokenKind.liveActivityStart.json,
-      body: api.V2DeviceMeApnsKindRequestBody(token: 'push-to-start-token'),
+      body: const api.V2DeviceMeApnsKindRequestBody(
+        token: 'push-to-start-token',
+      ),
     );
 
     expect(adapter.requests.map((request) => request.path), [

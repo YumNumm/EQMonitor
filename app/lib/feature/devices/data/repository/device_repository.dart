@@ -12,7 +12,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_repository.g.dart';
 
-
 @Riverpod(keepAlive: true)
 Future<DeviceRepository> deviceRepository(Ref ref) async =>
     DeviceRepository(await ref.watch(apiClientProvider.future));
