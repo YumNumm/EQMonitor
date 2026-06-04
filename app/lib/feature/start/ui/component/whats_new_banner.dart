@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/data/preferences/shared/shared_preferences_key.dart';
 import 'package:eqmonitor/feature/start/data/notifier/start_notifier.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
@@ -7,8 +8,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-const _kSeenKey = 'whats_new_seen_version';
 
 /// ホームシートに表示する「What's New」バナー。
 /// 未閲覧の最新バージョンがある場合のみ表示する。
@@ -47,19 +46,26 @@ class _WhatsNewBannerContent extends HookWidget {
     final dismissed = useState(false);
 
     useEffect(() {
-      unawaited(Future.microtask(() async {
-        final prefs = await SharedPreferences.getInstance();
-        final seen = prefs.getString(_kSeenKey);
-        if (seen == latest.version) {
-          dismissed.value = true;
-        }
-      }));
+      unawaited(
+        Future.microtask(() async {
+          final prefs = await SharedPreferences.getInstance();
+          final seen = prefs.getString(
+            SharedPreferencesKey.whatsNewSeenVersion.key,
+          );
+          if (seen == latest.version) {
+            dismissed.value = true;
+          }
+        }),
+      );
       return null;
     }, const []);
 
     Future<void> markSeen() async {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_kSeenKey, latest.version);
+      await prefs.setString(
+        SharedPreferencesKey.whatsNewSeenVersion.key,
+        latest.version,
+      );
       dismissed.value = true;
     }
 

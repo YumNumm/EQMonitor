@@ -12,6 +12,11 @@ enum SharedPreferencesKey {
   homeConfiguration('home_configuration'),
   onboardingCompleted('onboarding_completed'),
   betaTestingAgreed('beta_testing_agreed'),
+  startEtag('start_etag'),
+  startBody('start_body'),
+  changelogEtag('changelog_etag'),
+  changelogBody('changelog_body'),
+  whatsNewSeenVersion('whats_new_seen_version'),
 
   /// v2.6アプリがSupabase device IDの保存に使用していたキー（移行用）
   legacyDeviceId('device_id'),
