@@ -30,6 +30,9 @@ class DeviceProvisioningRepository {
   Future<void> markProvisioned() =>
       _prefs.setBool(SharedPreferencesKey.deviceProvisioned.key, true);
 
+  Future<void> clearProvisioned() =>
+      _prefs.setBool(SharedPreferencesKey.deviceProvisioned.key, false);
+
   String? readLegacyDeviceId() =>
       _prefs.getString(SharedPreferencesKey.legacyDeviceId.key);
 
@@ -83,7 +86,8 @@ class DeviceProvisioningRepository {
 
   String _hashKey(PushTokenKind kind) => switch (kind) {
     PushTokenKind.fcm => SharedPreferencesKey.lastFcmTokenHash.key,
-    PushTokenKind.apnsNotification => SharedPreferencesKey.lastApnsTokenHash.key,
+    PushTokenKind.apnsNotification =>
+      SharedPreferencesKey.lastApnsTokenHash.key,
     PushTokenKind.apnsPushToStart =>
       SharedPreferencesKey.lastApnsPushToStartTokenHash.key,
   };

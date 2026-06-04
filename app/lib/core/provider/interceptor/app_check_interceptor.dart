@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/feature/devices/data/exception/app_check_rejection.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 typedef AppCheckTokenGetter = Future<String?> Function();
@@ -12,10 +13,6 @@ class AppCheckInterceptor extends Interceptor {
        _getLimitedUseToken =
            getLimitedUseToken ?? FirebaseAppCheck.instance.getLimitedUseToken;
 
-  static const _headerName = 'X-Firebase-AppCheck';
-  static const _deviceRegistrationPath = '/v2/device';
-  static const _realtimeTicketPath = '/v2/realtime/ticket';
-
   final AppCheckTokenGetter _getToken;
   final AppCheckTokenGetter _getLimitedUseToken;
 
@@ -25,15 +22,19 @@ class AppCheckInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     try {
+      const deviceRegistrationPath = api.DeviceApiClientUrls.postV2Device;
+      const realtimeTicketPath = api.RealtimeApiClientUrls.getV2RealtimeTicket;
+      const getMethod = 'GET';
+      const postMethod = 'POST';
       final isDeviceRegistration =
-          options.method == 'POST' && options.path == _deviceRegistrationPath;
+          options.method == postMethod &&
+          options.path == deviceRegistrationPath;
       final String? appCheckToken;
 
       if (isDeviceRegistration) {
-        // Replay Protection: 毎回新しいトークンを取得
         appCheckToken = await _getLimitedUseToken();
-      } else if (options.path.contains(_realtimeTicketPath) &&
-          options.method == 'GET') {
+      } else if (options.path == realtimeTicketPath &&
+          options.method == getMethod) {
         appCheckToken = await _getToken();
       } else {
         handler.next(options);
@@ -41,12 +42,10 @@ class AppCheckInterceptor extends Interceptor {
       }
 
       if (appCheckToken != null) {
-        options.headers[_headerName] = appCheckToken;
+        options.headers['X-Firebase-AppCheck'] = appCheckToken;
       }
       handler.next(options);
     } on FirebaseException catch (exception, stackTrace) {
-      // reason が DioException.error フィールドになる。
-      // AppCheckRejection を乗せることでマッパー側が文字列マッチなしに判別できる。
       handler.reject(
         DioException.requestCancelled(
           requestOptions: options,

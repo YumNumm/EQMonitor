@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exc
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/push_token_sync_snapshot.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/devices/data/provider/notification_token_stream.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
@@ -25,6 +26,12 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
   RetryControllerState get retryState => _retryController.state;
 
   void reset() => _retryController.reset();
+
+  Future<void> handleAuthenticationFailure() async {
+    final repo = ref.read(deviceProvisioningRepositoryProvider);
+    await repo.clearProvisioned();
+    ref.invalidate(deviceProvisioningProvider);
+  }
 
   @override
   Future<PushTokenSyncSnapshot> build() async {
@@ -47,7 +54,9 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     final repo = ref.read(deviceProvisioningRepositoryProvider);
     final deviceRepo = await ref.read(deviceRepositoryProvider.future);
     final deviceId = await ref.read(deviceIdProvider.future);
-    final currentState = await ref.read(pushTokenSyncProvider.future);
+    final currentState =
+        state.value ??
+        repo.computeSnapshot(ref.read(notificationTokenStreamProvider).value);
 
     await _retryController.run(() async {
       final results = <PushTokenKind, PushTokenKindState>{};
@@ -57,7 +66,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
         final kind = entry.key;
         final kindState = entry.value;
 
-        if (kindState is! PendingTokenState) {
+        if (kindState is! PendingTokenState && kindState is! FailedTokenState) {
           results[kind] = kindState;
           continue;
         }
@@ -79,28 +88,41 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
           await repo.saveTokenHash(kind, tokenValue);
           results[kind] = const SyncedTokenState();
         } on DeviceProvisioningException catch (e) {
+          if (e is AuthorizationException &&
+              e.reason == AuthorizationFailureReason.unauthenticated) {
+            await handleAuthenticationFailure();
+          }
           results[kind] = FailedTokenState(error: e);
           lastError = e;
         } on DioException catch (e, st) {
           final mapped = mapDioToProvisioningException(e, st);
+          if (mapped is AuthorizationException &&
+              mapped.reason == AuthorizationFailureReason.unauthenticated) {
+            await handleAuthenticationFailure();
+          }
           results[kind] = FailedTokenState(error: mapped);
           lastError = mapped;
         } on Object catch (e, st) {
-          final mapped = UnexpectedProvisioningException(cause: e, stackTrace: st);
+          final mapped = UnexpectedProvisioningException(
+            cause: e,
+            stackTrace: st,
+          );
           results[kind] = FailedTokenState(error: mapped);
           lastError = mapped;
         }
       }
 
-      state = AsyncData(PushTokenSyncSnapshot(
-        fcm: results[PushTokenKind.fcm] ?? currentState.fcm,
-        apnsNotification:
-            results[PushTokenKind.apnsNotification] ??
-            currentState.apnsNotification,
-        apnsPushToStart:
-            results[PushTokenKind.apnsPushToStart] ??
-            currentState.apnsPushToStart,
-      ));
+      state = AsyncData(
+        PushTokenSyncSnapshot(
+          fcm: results[PushTokenKind.fcm] ?? currentState.fcm,
+          apnsNotification:
+              results[PushTokenKind.apnsNotification] ??
+              currentState.apnsNotification,
+          apnsPushToStart:
+              results[PushTokenKind.apnsPushToStart] ??
+              currentState.apnsPushToStart,
+        ),
+      );
 
       if (lastError != null) {
         throw lastError;
@@ -122,8 +144,9 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
     final notificationToken = switch (kind) {
       PushTokenKind.fcm => NotificationToken(fcmToken: token),
       PushTokenKind.apnsNotification => NotificationToken(apnsToken: token),
-      PushTokenKind.apnsPushToStart =>
-        NotificationToken(apnsPushToStartToken: token),
+      PushTokenKind.apnsPushToStart => NotificationToken(
+        apnsPushToStartToken: token,
+      ),
     };
 
     final r = await deviceRepo.syncPushTokens(

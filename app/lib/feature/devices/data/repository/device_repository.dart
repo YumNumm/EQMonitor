@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/model/apns_token_kind.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,13 +14,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'device_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<DeviceRepository> deviceRepository(Ref ref) async =>
-    DeviceRepository(await ref.watch(apiClientProvider.future));
+Future<DeviceRepository> deviceRepository(Ref ref) async => DeviceRepository(
+  await ref.watch(apiClientProvider.future),
+  await ref.watch(deviceAuthRepositoryProvider.future),
+);
 
 class DeviceRepository {
-  DeviceRepository(this._api);
+  DeviceRepository(this._api, this._authRepository);
 
   final api.ApiClient _api;
+  final DeviceAuthRepository _authRepository;
 
   Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
       Result.capture(() async {
@@ -32,11 +36,27 @@ class DeviceRepository {
     required DevicePlatform devicePlatform,
     required DeviceLocale deviceLocale,
   }) => Result.capture(() async {
-    await _api.device.postV2Device(
+    final savedToken = await _authRepository.readToken();
+    if (savedToken != null && savedToken.isNotEmpty) {
+      try {
+        final getResponse = await _api.device.getV2DeviceMe();
+        return getResponse.data.toRegisteredDevice;
+      } on DioException catch (e) {
+        if (!_shouldRegisterAfterGetFailure(e)) {
+          rethrow;
+        }
+        await _authRepository.clearToken();
+      }
+    }
+
+    final registerResponse = await _api.device.postV2Device(
       body: api.DeviceRegisterBody(
         type: devicePlatform.toDeviceType,
         locale: deviceLocale.toDeviceLocale,
       ),
+    );
+    await _authRepository.saveToken(
+      token: registerResponse.data.deviceToken,
     );
     final getResponse = await _api.device.getV2DeviceMe();
     return getResponse.data.toRegisteredDevice;
@@ -45,6 +65,7 @@ class DeviceRepository {
   Future<Result<void, Exception>> deleteDevice(String deviceId) =>
       Result.capture(() async {
         await _api.device.deleteV2DeviceMe();
+        await _authRepository.clearToken();
       });
 
   Future<Result<RegisteredDevice, Exception>> fetchOrRegister({
@@ -57,7 +78,7 @@ class DeviceRepository {
       case Success(:final value):
         return Success(value);
       case Failure(:final exception, :final stackTrace):
-        if (_isNotFound(exception)) {
+        if (_shouldRegisterAfterGetFailure(exception)) {
           return registerDevice(
             deviceId: deviceId,
             devicePlatform: devicePlatform,
@@ -139,6 +160,9 @@ class DeviceRepository {
 
   static bool _isNotFound(Exception e) =>
       e is DioException && e.response?.statusCode == 404;
+
+  static bool _shouldRegisterAfterGetFailure(Exception e) =>
+      e is DioException && (e.response?.statusCode == 401 || _isNotFound(e));
 
   Future<Result<void, Exception>> syncPushTokens({
     required String deviceId,

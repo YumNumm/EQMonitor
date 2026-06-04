@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/data/preferences/preferences_data_source.dart';
+import 'package:eqmonitor/core/data/preferences/secure/secure_storage_key.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/workflow/device_migration_workflow.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -39,6 +43,21 @@ Result<RegisteredDevice, Exception> _serverError() => Failure(
     ),
     type: DioExceptionType.badResponse,
   ),
+);
+
+Result<RegisteredDevice, Exception> _unauthorized() => Failure(
+  DioException(
+    requestOptions: RequestOptions(path: '/v2/device/me'),
+    response: Response(
+      requestOptions: RequestOptions(path: '/v2/device/me'),
+      statusCode: 401,
+    ),
+    type: DioExceptionType.badResponse,
+  ),
+);
+
+Result<RegisteredDevice, Exception> _unauthenticated() => const Failure(
+  AuthorizationException(reason: AuthorizationFailureReason.unauthenticated),
 );
 
 void main() {
@@ -111,6 +130,36 @@ void main() {
     expect(repo.getCalls, 1);
     expect(repo.putCalls, 0);
     expect(repo.migrateCalls, 1);
+  });
+
+  test('GETが401のとき未登録扱いで PUT と migrate を呼ぶ', () async {
+    final repo = FakeDeviceRepository(
+      getResult: _unauthorized,
+      putResult: () => const Success(_fakeDevice),
+      migrateResult: () => const Success(null),
+    );
+
+    await run(repo);
+
+    expect(repo.getCalls, 1);
+    expect(repo.putCalls, 1);
+    expect(repo.migrateCalls, 1);
+    expect(await isV3MigrationComplete(persistence), isTrue);
+  });
+
+  test('GETがunauthenticatedのとき未登録扱いで PUT と migrate を呼ぶ', () async {
+    final repo = FakeDeviceRepository(
+      getResult: _unauthenticated,
+      putResult: () => const Success(_fakeDevice),
+      migrateResult: () => const Success(null),
+    );
+
+    await run(repo);
+
+    expect(repo.getCalls, 1);
+    expect(repo.putCalls, 1);
+    expect(repo.migrateCalls, 1);
+    expect(await isV3MigrationComplete(persistence), isTrue);
   });
 
   // ── resume: registerDevice failure ─────────────────────────────────────
@@ -202,7 +251,7 @@ class FakeDeviceRepository extends DeviceRepository {
   }) : _getResult = getResult,
        _putResult = putResult,
        _migrateResult = migrateResult,
-       super(api.ApiClient(Dio()));
+       super(api.ApiClient(Dio()), _MemoryDeviceAuthRepository());
 
   final Result<RegisteredDevice, Exception> Function() _getResult;
   final Result<RegisteredDevice, Exception> Function() _putResult;
@@ -238,5 +287,95 @@ class FakeDeviceRepository extends DeviceRepository {
   }) async {
     migrateCalls++;
     return _migrateResult();
+  }
+}
+
+final class _MemoryDeviceAuthRepository extends DeviceAuthRepository {
+  _MemoryDeviceAuthRepository() : super(_MemorySecurePreferencesDataSource());
+
+  String? savedToken;
+
+  @override
+  Future<void> saveToken({
+    required String token,
+  }) async {
+    savedToken = token;
+  }
+
+  @override
+  Future<String?> readToken() async => savedToken;
+
+  @override
+  Future<void> clearToken() async {
+    savedToken = null;
+  }
+}
+
+final class _MemorySecurePreferencesDataSource
+    implements PreferencesDataSource<SecureStorageKey> {
+  final values = <SecureStorageKey, String>{};
+
+  @override
+  Future<void> setString({
+    required SecureStorageKey key,
+    required String value,
+  }) async {
+    values[key] = value;
+  }
+
+  @override
+  Future<String?> getString({required SecureStorageKey key}) async =>
+      values[key];
+
+  @override
+  Future<void> setInt({
+    required SecureStorageKey key,
+    required int value,
+  }) async {
+    values[key] = value.toString();
+  }
+
+  @override
+  Future<int?> getInt({required SecureStorageKey key}) async {
+    final value = values[key];
+    return value == null ? null : int.tryParse(value);
+  }
+
+  @override
+  Future<void> setDouble({
+    required SecureStorageKey key,
+    required double value,
+  }) async {
+    values[key] = value.toString();
+  }
+
+  @override
+  Future<double?> getDouble({required SecureStorageKey key}) async {
+    final value = values[key];
+    return value == null ? null : double.tryParse(value);
+  }
+
+  @override
+  Future<void> setBool({
+    required SecureStorageKey key,
+    required bool value,
+  }) async {
+    values[key] = value.toString();
+  }
+
+  @override
+  Future<bool?> getBool({required SecureStorageKey key}) async {
+    final value = values[key];
+    return value == null ? null : bool.tryParse(value);
+  }
+
+  @override
+  Future<void> remove({required SecureStorageKey key}) async {
+    values.remove(key);
+  }
+
+  @override
+  Future<void> clear() async {
+    values.clear();
   }
 }

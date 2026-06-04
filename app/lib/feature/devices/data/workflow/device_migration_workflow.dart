@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:workflows/workflows.dart';
@@ -44,6 +45,15 @@ Future<void> runV3MigrationWorkflow({
             Failure(:final exception)
                 when exception is DioException &&
                     exception.response?.statusCode == 404 =>
+              false,
+            Failure(:final exception)
+                when exception is DioException &&
+                    exception.response?.statusCode == 401 =>
+              false,
+            Failure(:final exception)
+                when exception is AuthorizationException &&
+                    exception.reason ==
+                        AuthorizationFailureReason.unauthenticated =>
               false,
             Failure(:final exception, :final stackTrace) =>
               Error.throwWithStackTrace(
