@@ -1,27 +1,26 @@
 import 'package:dio/dio.dart';
 
-/// Attaches `X-eqmonitor-device-id` to all `/v2/device/` requests
-/// **except** `PUT /v2/device/{deviceId}` (device registration).
+/// Attaches `X-eqmonitor-device-id` to authenticated device requests.
 ///
-/// The PUT endpoint uses Firebase App Check for auth and must not carry
-/// the device-id header before the device exists in the DB.
+/// `POST /v2/device` is registration and must not carry the device-id header
+/// before the server has accepted the device.
 class DeviceIdInterceptor extends Interceptor {
   DeviceIdInterceptor({required this.deviceId});
 
   final String deviceId;
 
   static const _headerName = 'x-eqmonitor-device-id';
-  static final _devicePathPattern = RegExp('^/v2/device/[^/]');
-  // Matches PUT /v2/device/{id} exactly — no sub-paths (device registration).
-  static final _deviceRegistrationPattern = RegExp(r'^/v2/device/[^/]+$');
+  static const _deviceRegistrationPath = '/v2/device';
   static const _realtimeTicketPath = '/v2/realtime/ticket';
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final isPutRegistration = options.method == 'PUT' &&
-        _deviceRegistrationPattern.hasMatch(options.path);
+    final isDeviceRegistration =
+        options.method == 'POST' && options.path == _deviceRegistrationPath;
+    final isDeviceRequest = options.path == _deviceRegistrationPath ||
+        options.path.startsWith('$_deviceRegistrationPath/');
 
-    if (!isPutRegistration && _devicePathPattern.hasMatch(options.path)) {
+    if (isDeviceRequest && !isDeviceRegistration) {
       options.headers[_headerName] = deviceId;
     }
     if (options.path.contains(_realtimeTicketPath)) {
