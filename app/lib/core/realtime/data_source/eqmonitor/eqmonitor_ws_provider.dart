@@ -8,6 +8,19 @@ import 'package:web_socket/web_socket.dart';
 
 part 'eqmonitor_ws_provider.g.dart';
 
+final class EqmonitorWebSocketTicketRefreshDelayCalculator {
+  const EqmonitorWebSocketTicketRefreshDelayCalculator();
+
+  Duration calculate({
+    required DateTime now,
+    required DateTime expiresAt,
+  }) {
+    const buffer = Duration(seconds: 30);
+    final rawDelay = expiresAt.difference(now) - buffer;
+    return rawDelay.isNegative ? Duration.zero : rawDelay;
+  }
+}
+
 @Riverpod(keepAlive: true)
 Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
   final ticket = await ref.read(eqmonitorWebSocketTicketProvider.future);
@@ -44,10 +57,10 @@ Future<RealtimeTicketResponse> eqmonitorWebSocketTicket(Ref ref) async {
   final now = DateTime.now();
   final expiresAt = ticket.expiresAt;
 
-  const buffer = Duration(seconds: 30);
-  final diff = expiresAt.difference(now);
+  const calculator = EqmonitorWebSocketTicketRefreshDelayCalculator();
+  final refreshDelay = calculator.calculate(now: now, expiresAt: expiresAt);
   final invalidateTimer = Timer(
-    diff - buffer,
+    refreshDelay,
     () => ref.invalidateSelf(asReload: true),
   );
   ref.onDispose(invalidateTimer.cancel);
