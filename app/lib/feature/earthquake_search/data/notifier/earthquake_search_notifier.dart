@@ -23,6 +23,7 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
 
   Future<EarthquakeSearchNotifierState> _fetchData({
     required int limit,
+    String? cursor,
   }) async {
     final repository =
         await ref.read(earthquakeHistoryRepositoryProvider.future);
@@ -33,6 +34,8 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByRegion(
           code: param.code,
           limit: limit,
+          cursor: cursor,
+          statuses: param.statuses,
         );
         return (
           items: result.items
@@ -51,6 +54,8 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByPrefecture(
           code: param.code,
           limit: limit,
+          cursor: cursor,
+          statuses: param.statuses,
         );
         return (
           items: result.items
@@ -69,6 +74,8 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByCity(
           code: param.code,
           limit: limit,
+          cursor: cursor,
+          statuses: param.statuses,
         );
         return (
           items: result.items
@@ -87,6 +94,8 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
         final result = await repository.searchByStation(
           code: param.code,
           limit: limit,
+          cursor: cursor,
+          statuses: param.statuses,
         );
         return (
           items: result.items
@@ -121,7 +130,10 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
     }
 
     state = await state.guardPlus(() async {
-      final result = await _fetchData(limit: 50);
+      final result = await _fetchData(
+        limit: 50,
+        cursor: currentState.nextToken,
+      );
 
       final mergedItems = <EarthquakeSearchResultItem>[
         ...currentState.items,

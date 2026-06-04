@@ -83,10 +83,12 @@ class EarthquakeHistoryRepository {
     int? depthLte,
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
+    List<api.TelegramStatus>? statuses,
   }) async {
     final response = await _api.earthquake.getV2Earthquake(
       limit: limit?.toString(),
       cursor: cursor,
+      statuses: statuses ?? const [api.TelegramStatus.normal],
       magnitudeGte: magnitudeGte?.toString(),
       magnitudeLte: magnitudeLte?.toString(),
       depthGte: depthGte?.toString(),
@@ -114,11 +116,13 @@ class EarthquakeHistoryRepository {
     required String code,
     int? limit,
     String? cursor,
+    List<api.TelegramStatus>? statuses,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityRegionCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
+      statuses: statuses ?? const [api.TelegramStatus.normal],
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -131,12 +135,14 @@ class EarthquakeHistoryRepository {
     required String code,
     int? limit,
     String? cursor,
+    List<api.TelegramStatus>? statuses,
   }) async {
     final response = await _api.earthquake
         .getV2EarthquakeIntensityPrefectureCode(
           code: code,
           limit: limit?.toString(),
           cursor: cursor,
+          statuses: statuses ?? const [api.TelegramStatus.normal],
         );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -149,11 +155,13 @@ class EarthquakeHistoryRepository {
     required String code,
     int? limit,
     String? cursor,
+    List<api.TelegramStatus>? statuses,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityCityCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
+      statuses: statuses ?? const [api.TelegramStatus.normal],
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -166,11 +174,13 @@ class EarthquakeHistoryRepository {
     required String code,
     int? limit,
     String? cursor,
+    List<api.TelegramStatus>? statuses,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityStationCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
+      statuses: statuses ?? const [api.TelegramStatus.normal],
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -183,11 +193,13 @@ class EarthquakeHistoryRepository {
     required int code,
     int? limit,
     String? cursor,
+    List<api.TelegramStatus>? statuses,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeEpicenterCode(
       code: code.toString(),
       limit: limit?.toString(),
       cursor: cursor,
+      statuses: statuses ?? const [api.TelegramStatus.normal],
     );
     return response.data.toAppResponse(parameter: earthquakeParameter);
   }

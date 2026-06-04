@@ -76,6 +76,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         code: param.epicenterCode!,
         limit: limit,
         cursor: cursor,
+        statuses: param.statuses,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -90,6 +91,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         code: param.regionCode!,
         limit: limit,
         cursor: cursor,
+        statuses: param.statuses,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -104,6 +106,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         code: param.regionCode!,
         limit: limit,
         cursor: cursor,
+        statuses: param.statuses,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -114,6 +117,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     final result = await repository.fetchEarthquakeList(
       limit: limit,
       cursor: cursor,
+      statuses: param.statuses,
     );
     return (
       items: result.items,
