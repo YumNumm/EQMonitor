@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:eqmonitor/feature/devices/data/model/apns_token_kind.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
@@ -164,7 +165,7 @@ class DeviceRepository {
     if (apns != null && apns.isNotEmpty) {
       final r = await Result.capture(() async {
         await _api.device.patchV2DeviceMeApnsKind(
-          kind: 'notification',
+          kind: ApnsTokenKind.notification.json,
           body: api.V2DeviceMeApnsKindRequestBody(token: apns),
         );
       });
@@ -177,7 +178,7 @@ class DeviceRepository {
     if (pushToStart != null && pushToStart.isNotEmpty) {
       final r = await Result.capture(() async {
         await _api.device.patchV2DeviceMeApnsKind(
-          kind: 'liveActivityStart',
+          kind: ApnsTokenKind.liveActivityStart.json,
           body: api.V2DeviceMeApnsKindRequestBody(token: pushToStart),
         );
       });
