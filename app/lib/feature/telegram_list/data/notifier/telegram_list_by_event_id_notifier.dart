@@ -50,6 +50,7 @@ class TelegramListByEventId extends _$TelegramListByEventId {
       final response = await client.telegram.getV2TelegramEventIdEventId(
         eventId: eventId,
         limit: '50',
+        cursor: currentState.nextToken,
       );
       final data = response.data;
       final mergedItems = <TelegramItem>[
