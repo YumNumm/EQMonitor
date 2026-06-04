@@ -166,7 +166,11 @@ void main() {
 
 final class _UnauthenticatedDeviceRepository extends DeviceRepository {
   _UnauthenticatedDeviceRepository()
-    : super(api.ApiClient(Dio()), _MemoryDeviceAuthRepository());
+    : super(
+        api.ApiClient(Dio()),
+        _MemoryDeviceAuthRepository(),
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
   var _syncPushTokensCalls = 0;
 
@@ -186,7 +190,11 @@ final class _UnauthenticatedDeviceRepository extends DeviceRepository {
 
 final class _RecoveringDeviceRepository extends DeviceRepository {
   _RecoveringDeviceRepository()
-    : super(api.ApiClient(Dio()), _MemoryDeviceAuthRepository());
+    : super(
+        api.ApiClient(Dio()),
+        _MemoryDeviceAuthRepository(),
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
   var _syncPushTokensCalls = 0;
 

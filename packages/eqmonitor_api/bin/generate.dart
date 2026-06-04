@@ -103,6 +103,14 @@ void main(List<String> args) async {
     _patchParameterDataResponseInApiClient(libDir);
   });
 
+  await _step('EEW settings request の nullable PATCH をパッチ', () async {
+    _patchEewSettingsRequestNullablePatch(libDir);
+  });
+
+  await _step('APNs environment enum の不要 cast をパッチ', () async {
+    _patchApnsEnvironmentEnum(libDir);
+  });
+
   await _step('Union 型 fromJson を手動実装で置き換え', () async {
     _patchFeedItemDataUnionFromJson(libDir);
     _patchTargetUnionFromJson(libDir);
@@ -357,6 +365,35 @@ void _patchTargetUnionFromJson(Directory libDir) {
         ),
       }''';
   _patchUnionFromJson(file, className: 'TargetUnion', body: body);
+}
+
+void _patchEewSettingsRequestNullablePatch(Directory libDir) {
+  final file = File('${libDir.path}/models/eew_settings_request.dart');
+  if (!file.existsSync()) {
+    return;
+  }
+  final content = file.readAsStringSync();
+  final patched = content.replaceAll(
+    "@JsonKey(includeIfNull: false,name: 'notification_tiers')",
+    "@JsonKey(name: 'notification_tiers')",
+  );
+  if (patched != content) {
+    file.writeAsStringSync(patched);
+    stdout.writeln('  patched: ${file.path}');
+  }
+}
+
+void _patchApnsEnvironmentEnum(Directory libDir) {
+  final file = File('${libDir.path}/models/apns_environment.dart');
+  if (!file.existsSync()) {
+    return;
+  }
+  final content = file.readAsStringSync();
+  final patched = content.replaceAll('return value as String;', 'return value;');
+  if (patched != content) {
+    file.writeAsStringSync(patched);
+    stdout.writeln('  patched: ${file.path}');
+  }
 }
 
 /// metadata.type で variant を判別する。

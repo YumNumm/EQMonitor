@@ -23,7 +23,11 @@ void main() {
           DeviceAuthTokenInterceptor(readToken: authRepository.readToken),
         )
         ..httpClientAdapter = adapter;
-      final repository = DeviceRepository(api.ApiClient(dio), authRepository);
+      final repository = DeviceRepository(
+        api.ApiClient(dio),
+        authRepository,
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
       final result = await repository.registerDevice(
         deviceId: 'local-device-id',
@@ -48,7 +52,11 @@ void main() {
           DeviceAuthTokenInterceptor(readToken: authRepository.readToken),
         )
         ..httpClientAdapter = adapter;
-      final repository = DeviceRepository(api.ApiClient(dio), authRepository);
+      final repository = DeviceRepository(
+        api.ApiClient(dio),
+        authRepository,
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
       final first = await repository.registerDevice(
         deviceId: 'local-device-id',
@@ -84,7 +92,11 @@ void main() {
           DeviceAuthTokenInterceptor(readToken: authRepository.readToken),
         )
         ..httpClientAdapter = adapter;
-      final repository = DeviceRepository(api.ApiClient(dio), authRepository);
+      final repository = DeviceRepository(
+        api.ApiClient(dio),
+        authRepository,
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
       final result = await repository.registerDevice(
         deviceId: 'local-device-id',
@@ -114,7 +126,11 @@ void main() {
           DeviceAuthTokenInterceptor(readToken: authRepository.readToken),
         )
         ..httpClientAdapter = adapter;
-      final repository = DeviceRepository(api.ApiClient(dio), authRepository);
+      final repository = DeviceRepository(
+        api.ApiClient(dio),
+        authRepository,
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
       final result = await repository.fetchOrRegister(
         deviceId: 'local-device-id',
@@ -141,7 +157,11 @@ void main() {
         ..httpClientAdapter = adapter;
       final authRepository = _MemoryDeviceAuthRepository()
         ..savedToken = 'jwt-1';
-      final repository = DeviceRepository(api.ApiClient(dio), authRepository);
+      final repository = DeviceRepository(
+        api.ApiClient(dio),
+        authRepository,
+        apnsEnvironment: api.ApnsEnvironment.development,
+      );
 
       final result = await repository.deleteDevice('local-device-id');
 

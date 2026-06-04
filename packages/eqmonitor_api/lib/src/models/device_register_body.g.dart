@@ -17,15 +17,14 @@ _DeviceRegisterBody _$DeviceRegisterBodyFromJson(Map<String, dynamic> json) =>
         ),
         locale: $checkedConvert(
           'locale',
-          (v) =>
-              $enumDecodeNullable(_$DeviceLocaleEnumMap, v) ?? DeviceLocale.ja,
+          (v) => $enumDecodeNullable(_$DeviceLocaleEnumMap, v),
         ),
       );
       return val;
     });
 
 Map<String, dynamic> _$DeviceRegisterBodyToJson(_DeviceRegisterBody instance) =>
-    <String, dynamic>{'type': instance.type, 'locale': instance.locale};
+    <String, dynamic>{'type': instance.type, 'locale': ?instance.locale};
 
 const _$DeviceTypeEnumMap = {
   DeviceType.ios: 'IOS',

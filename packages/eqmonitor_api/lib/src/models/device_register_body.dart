@@ -14,9 +14,8 @@ part 'device_register_body.g.dart';
 abstract class DeviceRegisterBody with _$DeviceRegisterBody {
   const factory DeviceRegisterBody({
     required DeviceType type,
-    @JsonKey(includeIfNull: true)
-    @Default(DeviceLocale.ja)
-    DeviceLocale locale,
+    @JsonKey(includeIfNull: false)
+    DeviceLocale? locale,
   }) = _DeviceRegisterBody;
   
   factory DeviceRegisterBody.fromJson(Map<String, Object?> json) => _$DeviceRegisterBodyFromJson(json);

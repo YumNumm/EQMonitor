@@ -13,10 +13,22 @@ _V2DeviceMeApnsKindRequestBody _$V2DeviceMeApnsKindRequestBodyFromJson(
 ) => $checkedCreate('_V2DeviceMeApnsKindRequestBody', json, ($checkedConvert) {
   final val = _V2DeviceMeApnsKindRequestBody(
     token: $checkedConvert('token', (v) => v as String),
+    environment: $checkedConvert(
+      'environment',
+      (v) => $enumDecodeNullable(_$ApnsEnvironmentEnumMap, v),
+    ),
   );
   return val;
 });
 
 Map<String, dynamic> _$V2DeviceMeApnsKindRequestBodyToJson(
   _V2DeviceMeApnsKindRequestBody instance,
-) => <String, dynamic>{'token': instance.token};
+) => <String, dynamic>{
+  'token': instance.token,
+  'environment': ?instance.environment,
+};
+
+const _$ApnsEnvironmentEnumMap = {
+  ApnsEnvironment.development: 'development',
+  ApnsEnvironment.production: 'production',
+};

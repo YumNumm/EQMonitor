@@ -22,6 +22,7 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
+import 'package:eqmonitor/feature/devices/data/provider/push_token_sync_wiring.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/live_activity/data/repository/live_activity_token_sync_service.dart';
@@ -220,6 +221,7 @@ Future<void> _main() async {
   // killed状態で永続化された位置情報の反映と、live位置更新の購読を開始する。
   // backgroundLocationServiceProvider は keepAlive: true で常駐させる。
   container.listen(backgroundLocationServiceProvider, (_, _) {});
+  unawaited(container.read(pushTokenSyncWiringProvider.future));
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));
 

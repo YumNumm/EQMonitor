@@ -12,10 +12,14 @@ final class PushTokenSyncSnapshot {
   final PushTokenKindState apnsNotification;
   final PushTokenKindState apnsPushToStart;
 
-  bool get allSynced =>
-      fcm is SyncedTokenState &&
-      apnsNotification is SyncedTokenState &&
-      apnsPushToStart is SyncedTokenState;
+  bool get allSynced => kindEntries.every(
+    (entry) => switch (entry.value) {
+      SyncedTokenState() ||
+      NotApplicableTokenState() ||
+      AbsentTokenState() => true,
+      PendingTokenState() || FailedTokenState() => false,
+    },
+  );
 
   bool get hasPending =>
       fcm is PendingTokenState ||

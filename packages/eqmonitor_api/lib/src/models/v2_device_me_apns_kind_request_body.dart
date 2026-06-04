@@ -4,6 +4,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'apns_environment.dart';
+
 part 'v2_device_me_apns_kind_request_body.freezed.dart';
 part 'v2_device_me_apns_kind_request_body.g.dart';
 
@@ -11,6 +13,8 @@ part 'v2_device_me_apns_kind_request_body.g.dart';
 abstract class V2DeviceMeApnsKindRequestBody with _$V2DeviceMeApnsKindRequestBody {
   const factory V2DeviceMeApnsKindRequestBody({
     required String token,
+    @JsonKey(includeIfNull: false)
+    ApnsEnvironment? environment,
   }) = _V2DeviceMeApnsKindRequestBody;
   
   factory V2DeviceMeApnsKindRequestBody.fromJson(Map<String, Object?> json) => _$V2DeviceMeApnsKindRequestBodyFromJson(json);

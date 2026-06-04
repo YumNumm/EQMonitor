@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/feature/devices/data/model/apns_token_kind.dart';
 import 'package:eqmonitor/feature/devices/data/model/notification_token.dart';
 import 'package:eqmonitor/feature/devices/data/model/registered_device.dart';
+import 'package:eqmonitor/feature/devices/data/provider/apns_environment.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/foundation.dart';
@@ -17,13 +18,19 @@ part 'device_repository.g.dart';
 Future<DeviceRepository> deviceRepository(Ref ref) async => DeviceRepository(
   await ref.watch(apiClientProvider.future),
   await ref.watch(deviceAuthRepositoryProvider.future),
+  apnsEnvironment: ref.watch(apnsEnvironmentProvider),
 );
 
 class DeviceRepository {
-  DeviceRepository(this._api, this._authRepository);
+  DeviceRepository(
+    this._api,
+    this._authRepository, {
+    required api.ApnsEnvironment apnsEnvironment,
+  }) : _apnsEnvironment = apnsEnvironment;
 
   final api.ApiClient _api;
   final DeviceAuthRepository _authRepository;
+  final api.ApnsEnvironment _apnsEnvironment;
 
   Future<Result<RegisteredDevice, Exception>> getDevice(String deviceId) =>
       Result.capture(() async {
@@ -189,7 +196,10 @@ class DeviceRepository {
       final r = await Result.capture(() async {
         await _api.device.patchV2DeviceMeApnsKind(
           kind: ApnsTokenKind.notification.json,
-          body: api.V2DeviceMeApnsKindRequestBody(token: apns),
+          body: api.V2DeviceMeApnsKindRequestBody(
+            token: apns,
+            environment: _apnsEnvironment,
+          ),
         );
       });
       if (r is Failure<void, Exception>) {
@@ -202,7 +212,10 @@ class DeviceRepository {
       final r = await Result.capture(() async {
         await _api.device.patchV2DeviceMeApnsKind(
           kind: ApnsTokenKind.liveActivityStart.json,
-          body: api.V2DeviceMeApnsKindRequestBody(token: pushToStart),
+          body: api.V2DeviceMeApnsKindRequestBody(
+            token: pushToStart,
+            environment: _apnsEnvironment,
+          ),
         );
       });
       if (r is Failure<void, Exception>) {
