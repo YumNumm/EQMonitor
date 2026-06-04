@@ -2,6 +2,7 @@ import 'package:background_location_tracker/background_location_tracker.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/location/data/background_location_monitoring_lifecycle.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/model/shake_detection_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_settings/data/notifier/earthquake_notification_settings_notifier.dart';
@@ -21,6 +22,10 @@ class ShakeDetectionSettingsNotifier extends _$ShakeDetectionSettingsNotifier {
 
   @override
   Future<ShakeDetectionState> build() async {
+    final status = await ref.watch(deviceProvisioningProvider.future);
+    if (status != DeviceProvisioningStatus.notRequired) {
+      throw StateError('Device not provisioned');
+    }
     final deviceId = await ref.watch(deviceIdProvider.future);
     final repo = await ref.watch(
       deviceNotificationSettingsRepositoryProvider.future,

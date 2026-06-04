@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
+import 'package:eqmonitor/feature/devices/data/notifier/device_provisioning_notifier.dart';
 import 'package:eqmonitor/feature/notification/data/model/general_notification_settings.dart';
 import 'package:eqmonitor/feature/notification/data/repository/push_notification_repository.dart';
 import 'package:riverpod/experimental/mutation.dart';
@@ -14,6 +15,10 @@ class GeneralNotificationSettingsNotifier
 
   @override
   Future<GeneralNotificationSettings> build() async {
+    final status = await ref.watch(deviceProvisioningProvider.future);
+    if (status != DeviceProvisioningStatus.notRequired) {
+      throw StateError('Device not provisioned');
+    }
     final deviceId = await ref.watch(deviceIdProvider.future);
     final repo = await ref.watch(pushNotificationRepositoryProvider.future);
     final result = await repo.getNotificationSettings(deviceId);

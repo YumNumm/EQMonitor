@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
 import 'package:eqmonitor/feature/devices/data/exception/device_provisioning_exception.dart';
 import 'package:eqmonitor/feature/devices/data/exception/dio_exception_mapper.dart';
+import 'package:eqmonitor/feature/devices/data/repository/device_auth_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_provisioning_repository.dart';
 import 'package:eqmonitor/feature/devices/data/repository/device_repository.dart';
 import 'package:eqmonitor/feature/devices/data/retry/retry_controller.dart';
@@ -29,9 +30,16 @@ class DeviceProvisioningNotifier extends _$DeviceProvisioningNotifier {
   @override
   Future<DeviceProvisioningStatus> build() async {
     final repo = ref.watch(deviceProvisioningRepositoryProvider);
-    return repo.isProvisioned()
-        ? DeviceProvisioningStatus.notRequired
-        : DeviceProvisioningStatus.required;
+    if (!repo.isProvisioned()) {
+      return DeviceProvisioningStatus.required;
+    }
+    final authRepo = await ref.watch(deviceAuthRepositoryProvider.future);
+    final token = await authRepo.readToken();
+    if (token == null || token.isEmpty) {
+      await repo.clearProvisioned();
+      return DeviceProvisioningStatus.required;
+    }
+    return DeviceProvisioningStatus.notRequired;
   }
 
   Future<void> provision() async {

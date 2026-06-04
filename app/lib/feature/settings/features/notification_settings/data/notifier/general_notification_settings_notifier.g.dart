@@ -43,7 +43,7 @@ final class GeneralNotificationSettingsNotifierProvider
 }
 
 String _$generalNotificationSettingsNotifierHash() =>
-    r'ec0a768c1e22f08c5f25bd091cc79aee1beab118';
+    r'd67c91a401b1d9fa4f9556b288c4c193a7b61a37';
 
 abstract class _$GeneralNotificationSettingsNotifier
     extends $AsyncNotifier<GeneralNotificationSettings> {
