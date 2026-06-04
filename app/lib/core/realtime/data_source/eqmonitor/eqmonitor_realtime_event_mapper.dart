@@ -53,6 +53,7 @@ class EqMonitorRealtimeEventMapper {
           ],
           _ => const <RealtimeEvent>[],
         },
+      WsTsunamiRealtimeEvent() => const <RealtimeEvent>[],
       WsShakeDetectedRealtimeEvent(
         :final eventId,
         :final createdAt,
@@ -87,7 +88,6 @@ class EqMonitorRealtimeEventMapper {
           source: RealtimeSource.eqmonitor,
         ),
       ],
-      _ => const <RealtimeEvent>[],
     },
     WsPingMessage() => const <RealtimeEvent>[],
   };

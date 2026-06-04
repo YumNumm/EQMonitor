@@ -111,5 +111,18 @@ void main() {
         'https://tiles.eqmonitor.app/20260501090100/1.json',
       );
     });
+
+    test('津波 realtime event は現状未対応として明示的に破棄すること', () {
+      final result = mapper.map(
+        const WsMessage.realtime(
+          data: RealtimeEventEnvelope.tsunami(
+            operation: .upsert,
+            eventId: 'tsunami-1',
+          ),
+        ),
+      );
+
+      expect(result, isEmpty);
+    });
   });
 }
