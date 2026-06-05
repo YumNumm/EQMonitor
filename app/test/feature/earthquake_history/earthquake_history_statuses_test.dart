@@ -37,7 +37,8 @@ void main() {
   });
 }
 
-final class _FakeEarthquakeHistoryRepository extends EarthquakeHistoryRepository {
+final class _FakeEarthquakeHistoryRepository
+    extends EarthquakeHistoryRepository {
   _FakeEarthquakeHistoryRepository()
     : super(api: api.ApiClient(Dio()), earthquakeParameter: _parameter);
 
@@ -64,17 +65,17 @@ final class _FakeEarthquakeHistoryRepository extends EarthquakeHistoryRepository
   }
 }
 
-final _parameter = EarthquakeParameter(
+const _parameter = EarthquakeParameter(
   metadata: ParameterMetadata(
     type: ParameterType.jmaCodeTable,
     schemaVersion: 1,
     sourceVersion: 'test',
     sourceUpdatedAt: null,
     generatedAt: '2026-06-04T00:00:00Z',
-    sourceUrls: const [],
+    sourceUrls: [],
     sha256: 'test',
   ),
-  prefectures: const [],
+  prefectures: [],
 );
 
 EarthquakePartial _earthquake(String eventId) => EarthquakePartial(
