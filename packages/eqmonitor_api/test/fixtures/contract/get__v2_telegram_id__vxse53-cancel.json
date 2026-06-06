@@ -1,0 +1,28 @@
+{
+  "telegram": {
+    "id": "stub-telegram-vxse53-cancel",
+    "event_id": "20251215120000",
+    "serial_no": 1,
+    "type": "VXSE53",
+    "title": "震源・震度情報",
+    "status": "NORMAL",
+    "info_type": "CANCELLATION",
+    "editorial_office": "気象庁",
+    "publishing_office": [
+      "気象庁"
+    ],
+    "press_at": "2025-12-15T12:03:00.000Z",
+    "report_at": "2025-12-15T12:03:02.000Z",
+    "info_kind": "震源・震度に関する情報",
+    "info_kind_version": "1.0_0",
+    "hash": "stub-hash-vxse53",
+    "created_at": "2025-12-15T12:03:05.000Z",
+    "body": {
+      "type": "EARTHQUAKE",
+      "earthquake": {
+        "eventId": "20251215120000"
+      }
+    }
+  },
+  "comments": null
+}
