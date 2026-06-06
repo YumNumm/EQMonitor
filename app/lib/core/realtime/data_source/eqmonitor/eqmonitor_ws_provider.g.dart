@@ -48,7 +48,7 @@ final class EqmonitorWebSocketProvider
 }
 
 String _$eqmonitorWebSocketHash() =>
-    r'bb214bb74e5d680e4d59ecf9c5ecbf815da812ae';
+    r'd604e71545aae0f39cb2bdeb36b6f19783960284';
 
 @ProviderFor(eqmonitorWsEventStream)
 final eqmonitorWsEventStreamProvider = EqmonitorWsEventStreamProvider._();
@@ -88,7 +88,7 @@ final class EqmonitorWsEventStreamProvider
 }
 
 String _$eqmonitorWsEventStreamHash() =>
-    r'b664af2727103929fdd06f8075ca44149bb8c689';
+    r'b98526debe804e6b0c87e1c6343db5fe099124f3';
 
 @ProviderFor(eqmonitorWebSocketTicket)
 final eqmonitorWebSocketTicketProvider = EqmonitorWebSocketTicketProvider._();
@@ -130,4 +130,4 @@ final class EqmonitorWebSocketTicketProvider
 }
 
 String _$eqmonitorWebSocketTicketHash() =>
-    r'4bd7254baad2946739458c1e5f08eceaebec1dbc';
+    r'bcde890bcab8766a787ed78a3aac6f2f1220b09b';

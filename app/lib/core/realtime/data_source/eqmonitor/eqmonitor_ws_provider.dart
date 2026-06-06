@@ -23,12 +23,13 @@ final class EqmonitorWebSocketTicketRefreshDelayCalculator {
 
 @Riverpod(keepAlive: true)
 Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
+  // MEMO(YumNumm): WebSocket接続時にticketがあればよく、追従する必要はないので、read
   final ticket = await ref.read(eqmonitorWebSocketTicketProvider.future);
 
   final ws = await WebSocket.connect(
     Uri.parse(ticket.url),
   );
-  ref.onDispose(ws.close);
+  ref.onDispose(() => ws.close().ignore());
   return ws;
 }
 
@@ -45,25 +46,32 @@ Stream<WebSocketEvent> eqmonitorWsEventStream(Ref ref) async* {
         'EQMonitor WebSocket: closed with code $code and reason $reason',
       );
       ref.invalidate(eqmonitorWebSocketProvider);
+      return;
     }
   }
+  ref.invalidate(eqmonitorWebSocketProvider);
 }
 
 @riverpod
 Future<RealtimeTicketResponse> eqmonitorWebSocketTicket(Ref ref) async {
-  final api = await ref.read(apiClientProvider.future);
-  final response = await api.realtime.getV2RealtimeTicket();
-  final ticket = response.data;
-  final now = DateTime.now();
-  final expiresAt = ticket.expiresAt;
+  try {
+    final api = await ref.read(apiClientProvider.future);
+    final response = await api.realtime.getV2RealtimeTicket();
+    final ticket = response.data;
+    final now = DateTime.now();
+    final expiresAt = ticket.expiresAt;
 
-  const calculator = EqmonitorWebSocketTicketRefreshDelayCalculator();
-  final refreshDelay = calculator.calculate(now: now, expiresAt: expiresAt);
-  final invalidateTimer = Timer(
-    refreshDelay,
-    () => ref.invalidateSelf(asReload: true),
-  );
-  ref.onDispose(invalidateTimer.cancel);
+    const calculator = EqmonitorWebSocketTicketRefreshDelayCalculator();
+    final refreshDelay = calculator.calculate(now: now, expiresAt: expiresAt);
+    final invalidateTimer = Timer(
+      refreshDelay,
+      () => ref.invalidateSelf(asReload: true),
+    );
+    ref.onDispose(invalidateTimer.cancel);
 
-  return ticket;
+    return ticket;
+  } on Exception catch (e) {
+    talker.error('Failed to get WebSocket ticket', e);
+    rethrow;
+  }
 }

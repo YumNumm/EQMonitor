@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/feature/parameter/data/data_source/parameter_asset_data_source.dart';
