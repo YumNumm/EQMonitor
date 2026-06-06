@@ -17,7 +17,73 @@
     "info_kind_version": "1.0_0",
     "hash": "stub-hash-vxse53",
     "created_at": "2025-12-15T12:03:05.000Z",
-    "body": null
+    "body": {
+      "type": "EARTHQUAKE",
+      "earthquake": {
+        "eventId": "20251215120000",
+        "status": "NORMAL",
+        "magnitude": "4.5",
+        "maxIntensity": "4",
+        "depth": 10,
+        "latitude": "36.700",
+        "longitude": "140.700",
+        "epicenterCode": 311,
+        "epicenterName": "茨城県北部",
+        "arrivalTime": "2025-12-15T12:00:05.000Z",
+        "originTime": "2025-12-15T12:00:00.000Z",
+        "originTimePrecision": "SECOND",
+        "datasource": "JMA_DISASTER_INFORMATION_XML"
+      },
+      "intensityRegions": [
+        {
+          "eventId": "20251215120000",
+          "code": "2200",
+          "name": "茨城県",
+          "intensity": "4",
+          "lpgmIntensity": null,
+          "datasource": "JMA_DISASTER_INFORMATION_XML"
+        },
+        {
+          "eventId": "20251215120000",
+          "code": "2210",
+          "name": "栃木県",
+          "intensity": "3",
+          "lpgmIntensity": null,
+          "datasource": "JMA_DISASTER_INFORMATION_XML"
+        }
+      ],
+      "intensityPrefectures": [
+        {
+          "eventId": "20251215120000",
+          "code": "08",
+          "name": "茨城県",
+          "intensity": "4",
+          "lpgmIntensity": null,
+          "datasource": "JMA_DISASTER_INFORMATION_XML"
+        }
+      ],
+      "intensityCities": [
+        {
+          "eventId": "20251215120000",
+          "code": "0820100",
+          "name": "日立市",
+          "intensity": "4",
+          "lpgmIntensity": null,
+          "datasource": "JMA_DISASTER_INFORMATION_XML"
+        }
+      ],
+      "intensityStations": [
+        {
+          "eventId": "20251215120000",
+          "code": "0820131",
+          "name": "日立市助川小学校",
+          "intensity": "4",
+          "lpgmIntensity": null,
+          "sva": null,
+          "prePeriods": null
+        }
+      ]
+    }
   },
   "comments": null
 }

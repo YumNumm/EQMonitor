@@ -107,6 +107,15 @@ void main(List<String> args) async {
     _patchFeedItemDataUnionFromJson(libDir);
     _patchTargetUnionFromJson(libDir);
     _patchParameterDataResponseUnionFromJson(libDir);
+    _patchTelegramBodyUnionFromJson(libDir);
+  });
+
+  await _step('TelegramBody 参照を TelegramBodyUnion に修正', () async {
+    _patchTelegramBodyReference(libDir);
+  });
+
+  await _step('DeviceLocale デフォルト値パッチ', () async {
+    _patchDeviceLocaleDefault(libDir);
   });
 
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
@@ -389,6 +398,89 @@ void _patchParameterDataResponseUnionFromJson(Directory libDir) {
         ),
       }''';
   _patchUnionFromJson(file, className: 'ParameterDataResponseUnion', body: body);
+}
+
+/// swagger_parser が `@Default(ja)` のようにenum値をリテラルなしで生成する問題を修正。
+void _patchDeviceLocaleDefault(Directory libDir) {
+  final modelsDir = Directory('${libDir.path}/models');
+  if (!modelsDir.existsSync()) return;
+
+  for (final entity in modelsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('.dart')) continue;
+    if (entity.path.endsWith('.g.dart') ||
+        entity.path.endsWith('.freezed.dart')) {
+      continue;
+    }
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAll(
+      "@Default(ja)\n    dynamic locale,",
+      "@Default('ja')\n    String? locale,",
+    );
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched locale default: ${entity.path}');
+    }
+  }
+}
+
+/// TelegramBodyUnion の `type` 値で variant を判別する。
+void _patchTelegramBodyUnionFromJson(Directory libDir) {
+  final file = File('${libDir.path}/models/telegram_body_union.dart');
+  const body = '''switch (json['type']) {
+        'EARTHQUAKE' =>
+          TelegramBodyUnionEarthquakeTelegramBody.fromJson(json),
+        'EEW' => TelegramBodyUnionEewTelegramBody.fromJson(json),
+        'EARTHQUAKE_NOTICE' =>
+          TelegramBodyUnionEarthquakeNoticeTelegramBody.fromJson(json),
+        'EARTHQUAKE_EXPLANATION' =>
+          TelegramBodyUnionEarthquakeExplanationTelegramBody.fromJson(json),
+        'EARTHQUAKE_COUNTS' =>
+          TelegramBodyUnionEarthquakeCountsTelegramBody.fromJson(json),
+        'EARTHQUAKE_NANKAI' =>
+          TelegramBodyUnionEarthquakeNankaiTelegramBody.fromJson(json),
+        final value => throw ArgumentError.value(
+          value,
+          'type',
+          'Unknown TelegramBodyUnion type',
+        ),
+      }''';
+  _patchUnionFromJson(file, className: 'TelegramBodyUnion', body: body);
+}
+
+/// swagger_parser は `TelegramBody` (oneOf ref) を `TelegramBodyUnion`
+/// というクラス名で `telegram_body_union.dart` に生成するが、
+/// `TelegramDetail` 等の参照先は `TelegramBody` / `telegram_body.dart` のまま。
+/// import パスとクラス名を統一する。
+void _patchTelegramBodyReference(Directory libDir) {
+  final modelsDir = Directory('${libDir.path}/models');
+  if (!modelsDir.existsSync()) return;
+
+  for (final entity in modelsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('.dart')) continue;
+    // skip generated files
+    if (entity.path.endsWith('.g.dart') ||
+        entity.path.endsWith('.freezed.dart')) {
+      continue;
+    }
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAll(
+      "import 'telegram_body.dart';",
+      "import 'telegram_body_union.dart';",
+    );
+    content = content.replaceAll('TelegramBody?', 'TelegramBodyUnion?');
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched TelegramBody ref: ${entity.path}');
+    }
+  }
 }
 
 Future<void> _run(String exe, List<String> args, String cwd) async {

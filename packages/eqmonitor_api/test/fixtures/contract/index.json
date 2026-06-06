@@ -309,6 +309,11 @@
   },
   {
     "key": "GET /v2/telegram/:id",
+    "file": "get__v2_telegram_id__vxse53-cancel.json",
+    "fixture": "vxse53-cancel"
+  },
+  {
+    "key": "GET /v2/telegram/:id",
     "file": "get__v2_telegram_id__vxse56.json",
     "fixture": "vxse56"
   },

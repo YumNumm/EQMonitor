@@ -13,15 +13,12 @@ _DeviceMeResponse _$DeviceMeResponseFromJson(
 ) => $checkedCreate('_DeviceMeResponse', json, ($checkedConvert) {
   final val = _DeviceMeResponse(
     id: $checkedConvert('id', (v) => v as String),
-    type: $checkedConvert('type', (v) => $enumDecode(_$DeviceTypeEnumMap, v)),
-    registrationType: $checkedConvert('registrationType', (v) => v as String),
+    type: $checkedConvert('type', (v) => v),
+    registrationType: $checkedConvert('registrationType', (v) => v),
     userId: $checkedConvert('userId', (v) => v as String?),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-    locale: $checkedConvert(
-      'locale',
-      (v) => $enumDecodeNullable(_$DeviceLocaleEnumMap, v) ?? DeviceLocale.ja,
-    ),
+    locale: $checkedConvert('locale', (v) => v as String? ?? 'ja'),
   );
   return val;
 });
@@ -36,14 +33,3 @@ Map<String, dynamic> _$DeviceMeResponseToJson(_DeviceMeResponse instance) =>
       'updatedAt': instance.updatedAt.toIso8601String(),
       'locale': instance.locale,
     };
-
-const _$DeviceTypeEnumMap = {
-  DeviceType.ios: 'IOS',
-  DeviceType.android: 'ANDROID',
-};
-
-const _$DeviceLocaleEnumMap = {
-  DeviceLocale.ja: 'ja',
-  DeviceLocale.en: 'en',
-  DeviceLocale.zh: 'zh',
-};

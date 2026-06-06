@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeviceRegisterBody {
 
- DeviceType get type;@JsonKey(includeIfNull: true) DeviceLocale get locale;
+ dynamic get type;@JsonKey(includeIfNull: true) String? get locale;
 /// Create a copy of DeviceRegisterBody
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $DeviceRegisterBodyCopyWith<DeviceRegisterBody> get copyWith => _$DeviceRegister
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceRegisterBody&&(identical(other.type, type) || other.type == type)&&(identical(other.locale, locale) || other.locale == locale));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceRegisterBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.locale, locale) || other.locale == locale));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,locale);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),locale);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $DeviceRegisterBodyCopyWith<$Res>  {
   factory $DeviceRegisterBodyCopyWith(DeviceRegisterBody value, $Res Function(DeviceRegisterBody) _then) = _$DeviceRegisterBodyCopyWithImpl;
 @useResult
 $Res call({
- DeviceType type,@JsonKey(includeIfNull: true) DeviceLocale locale
+ dynamic type,@JsonKey(includeIfNull: true) String? locale
 });
 
 
@@ -65,11 +65,11 @@ class _$DeviceRegisterBodyCopyWithImpl<$Res>
 
 /// Create a copy of DeviceRegisterBody
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? locale = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = freezed,Object? locale = freezed,}) {
   return _then(_self.copyWith(
-type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as DeviceLocale,
+type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as dynamic,locale: freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DeviceType type, @JsonKey(includeIfNull: true)  DeviceLocale locale)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic type, @JsonKey(includeIfNull: true)  String? locale)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeviceRegisterBody() when $default != null:
 return $default(_that.type,_that.locale);case _:
@@ -175,7 +175,7 @@ return $default(_that.type,_that.locale);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DeviceType type, @JsonKey(includeIfNull: true)  DeviceLocale locale)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic type, @JsonKey(includeIfNull: true)  String? locale)  $default,) {final _that = this;
 switch (_that) {
 case _DeviceRegisterBody():
 return $default(_that.type,_that.locale);case _:
@@ -195,7 +195,7 @@ return $default(_that.type,_that.locale);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DeviceType type, @JsonKey(includeIfNull: true)  DeviceLocale locale)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic type, @JsonKey(includeIfNull: true)  String? locale)?  $default,) {final _that = this;
 switch (_that) {
 case _DeviceRegisterBody() when $default != null:
 return $default(_that.type,_that.locale);case _:
@@ -210,11 +210,11 @@ return $default(_that.type,_that.locale);case _:
 @JsonSerializable()
 
 class _DeviceRegisterBody implements DeviceRegisterBody {
-  const _DeviceRegisterBody({required this.type, @JsonKey(includeIfNull: true) this.locale = DeviceLocale.ja});
+  const _DeviceRegisterBody({required this.type, @JsonKey(includeIfNull: true) this.locale = 'ja'});
   factory _DeviceRegisterBody.fromJson(Map<String, dynamic> json) => _$DeviceRegisterBodyFromJson(json);
 
-@override final  DeviceType type;
-@override@JsonKey(includeIfNull: true) final  DeviceLocale locale;
+@override final  dynamic type;
+@override@JsonKey(includeIfNull: true) final  String? locale;
 
 /// Create a copy of DeviceRegisterBody
 /// with the given fields replaced by the non-null parameter values.
@@ -229,12 +229,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceRegisterBody&&(identical(other.type, type) || other.type == type)&&(identical(other.locale, locale) || other.locale == locale));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceRegisterBody&&const DeepCollectionEquality().equals(other.type, type)&&(identical(other.locale, locale) || other.locale == locale));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,locale);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(type),locale);
 
 @override
 String toString() {
@@ -249,7 +249,7 @@ abstract mixin class _$DeviceRegisterBodyCopyWith<$Res> implements $DeviceRegist
   factory _$DeviceRegisterBodyCopyWith(_DeviceRegisterBody value, $Res Function(_DeviceRegisterBody) _then) = __$DeviceRegisterBodyCopyWithImpl;
 @override @useResult
 $Res call({
- DeviceType type,@JsonKey(includeIfNull: true) DeviceLocale locale
+ dynamic type,@JsonKey(includeIfNull: true) String? locale
 });
 
 
@@ -266,11 +266,11 @@ class __$DeviceRegisterBodyCopyWithImpl<$Res>
 
 /// Create a copy of DeviceRegisterBody
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? locale = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = freezed,Object? locale = freezed,}) {
   return _then(_DeviceRegisterBody(
-type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as DeviceType,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
-as DeviceLocale,
+type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as dynamic,locale: freezed == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
