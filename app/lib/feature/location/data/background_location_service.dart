@@ -102,10 +102,11 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
         return null;
       }
     })();
-    final prevRegionCode = settings?.regions
+    final prevEewRegion = settings?.regions
         .where((r) => r.isCurrentLocation)
-        .firstOrNull
-        ?.regionId;
+        .firstOrNull;
+    final prevRegionCode = prevEewRegion?.regionId;
+    final prevRegionName = prevEewRegion?.regionName;
 
     final earthquakeSettings = await (() async {
       try {
@@ -119,10 +120,11 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
         return null;
       }
     })();
-    final prevCityCode = earthquakeSettings?.regions
+    final prevEqRegion = earthquakeSettings?.regions
         .where((r) => r.isCurrentLocation)
-        .firstOrNull
-        ?.cityCode;
+        .firstOrNull;
+    final prevCityCode = prevEqRegion?.cityCode;
+    final prevCityName = prevEqRegion?.cityName;
 
     final resolver = await ref.read(jmaRegionResolverProvider.future);
     // EEW 用の area_forecast_local_eew コード
@@ -198,9 +200,11 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       latitude: latitude,
       longitude: longitude,
       prevRegionCode: prevRegionCode,
+      prevRegionName: prevRegionName,
       newRegionCode: code,
       newRegionName: name,
       prevCityCode: prevCityCode,
+      prevCityName: prevCityName,
       cityCode: cityCode,
       cityName: earthquakeResolution?.cityName,
       didUpdateEew: didUpdateEew,
@@ -220,9 +224,11 @@ Future<void> _fireDebugNotifications(
   required double latitude,
   required double longitude,
   required int? prevRegionCode,
+  required String? prevRegionName,
   required int newRegionCode,
   required String? newRegionName,
   required String? prevCityCode,
+  required String? prevCityName,
   required String? cityCode,
   required String? cityName,
   required bool didUpdateEew,
@@ -272,7 +278,9 @@ Future<void> _fireDebugNotifications(
         await plugin.show(
           id: notifId++,
           title: '[Debug] 細分区域 変化',
-          body: '$prevRegionCode → $newRegionCode ($newRegionName)',
+          body:
+              '$prevRegionCode ($prevRegionName)\n'
+              '→ $newRegionCode ($newRegionName)',
           notificationDetails: details,
         );
       }
@@ -280,7 +288,9 @@ Future<void> _fireDebugNotifications(
         await plugin.show(
           id: notifId++,
           title: '[Debug] 市区町村 変化',
-          body: '$prevCityCode → $cityCode ($cityName)',
+          body:
+              '$prevCityCode ($prevCityName)\n'
+              '→ $cityCode ($cityName)',
           notificationDetails: details,
         );
       }
