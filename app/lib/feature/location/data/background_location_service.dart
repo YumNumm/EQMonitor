@@ -267,21 +267,24 @@ Future<void> _fireDebugNotifications(
     }
 
     if (debugSettings.notifyApiUpdate) {
-      final eewStatus = eewError != null
-          ? '✗($eewError)'
-          : (didUpdateEew ? '✓' : '-');
-      final eqStatus = earthquakeError != null
-          ? '✗($earthquakeError)'
-          : (didUpdateEarthquake ? '✓' : '-');
-      final shakeStatus = shakeError != null
-          ? '✗($shakeError)'
-          : (didUpdateShake ? '✓' : '-');
+      String statusMark({required bool didUpdate, String? error}) =>
+          error != null ? '✗' : (didUpdate ? '✓' : '-');
+      final summary =
+          'EEW:${statusMark(didUpdate: didUpdateEew, error: eewError)} '
+          '地震:${statusMark(didUpdate: didUpdateEarthquake, error: earthquakeError)} '
+          '揺れ:${statusMark(didUpdate: didUpdateShake, error: shakeError)}';
+      final errors = [
+        if (eewError != null) 'EEW: $eewError',
+        if (earthquakeError != null) '地震: $earthquakeError',
+        if (shakeError != null) '揺れ: $shakeError',
+      ];
       await plugin.show(
         id: notifId,
         title: '[Debug] 通知API 更新',
         body:
             'region=$newRegionCode, city=${cityCode ?? 'null'}\n'
-            'EEW:$eewStatus 地震:$eqStatus 揺れ:$shakeStatus',
+            '$summary'
+            '${errors.isNotEmpty ? '\n${errors.join('\n')}' : ''}',
         notificationDetails: details,
       );
     }

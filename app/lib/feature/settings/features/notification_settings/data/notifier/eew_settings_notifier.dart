@@ -15,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_settings_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class EewSettingsNotifier extends _$EewSettingsNotifier {
   static final saveSettingsMutation = Mutation<void>();
   static final updateRegionsMutation = Mutation<void>();
