@@ -63,12 +63,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
     );
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
-    final cachedBytes = ref
-        .watch(intensityIconProvider)
-        .value
-        ?.toMapStyleImages;
-
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final iconData = ref.watch(intensityIconProvider).value;
 
     useEffect(
       () {
@@ -97,6 +92,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             }
 
             // アイコン画像が揃っている場合はレイヤー追加前に登録する
+            final cachedBytes = iconData?.toMapStyleImages;
             if (cachedBytes != null) {
               await styleController.addImages(cachedBytes);
             }
@@ -171,7 +167,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
               return;
             }
             // アイコン画像が揃っているときのみアイコンレイヤーを追加する
-            if (cachedBytes != null && modeResolver.showsStationIcon(mode)) {
+            if (iconData != null && modeResolver.showsStationIcon(mode)) {
               await styleController.addLayer(
                 SymbolStyleLayer(
                   id: _iconLayerId,
@@ -187,11 +183,11 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                       ['linear'],
                       ['zoom'],
                       3,
-                      0.04,
+                      0.025,
                       7,
-                      0.3,
+                      0.18,
                       20,
-                      1.0,
+                      0.6,
                     ],
                   },
                   paint: {
@@ -263,8 +259,7 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         mode,
         zoomThresholds,
         modeResolver,
-        cachedBytes,
-        pixelRatio,
+        iconData,
       ],
     );
 

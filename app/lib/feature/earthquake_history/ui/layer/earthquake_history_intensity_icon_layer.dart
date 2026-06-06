@@ -102,9 +102,9 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
                         ['linear'],
                         ['zoom'],
                         4,
-                        0.3,
+                        0.18,
                         8,
-                        0.6,
+                        0.35,
                       ],
                     },
                     paint: {
@@ -149,9 +149,9 @@ class EarthquakeHistoryIntensityIconLayer extends HookConsumerWidget {
                         ['linear'],
                         ['zoom'],
                         8,
-                        0.2,
+                        0.12,
                         12,
-                        0.8,
+                        0.5,
                       ],
                     },
                     paint: {
