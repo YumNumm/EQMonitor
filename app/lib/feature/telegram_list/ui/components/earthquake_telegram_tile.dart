@@ -134,6 +134,17 @@ class EarthquakeTelegramTile extends StatelessWidget {
     );
   }
 
+  /// VXSE53用: intensityPrefectures から都道府県コード→名前のマップを構築
+  Map<String, String>? get _prefectureMap {
+    final prefs = body.intensityPrefectures;
+    if (prefs == null || prefs.isEmpty) {
+      return null;
+    }
+    return {
+      for (final p in prefs) p.code: p.name,
+    };
+  }
+
   /// 電文タイプに応じたコンテンツ部分を構築する
   Widget _buildContent(
     List<IntensityRegionDiffEntry>? regionDiff,
@@ -153,7 +164,7 @@ class EarthquakeTelegramTile extends StatelessWidget {
             )
           : const SizedBox.shrink(),
 
-      // VXSE53: 震源・震度情報（両方）
+      // VXSE53: 震源・震度情報（両方、市区町村は県グループ化）
       TelegramType.vxse53 => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -164,7 +175,11 @@ class EarthquakeTelegramTile extends StatelessWidget {
               ),
             if (body.earthquake != null && regionDiff != null)
               const SizedBox(height: 8),
-            if (regionDiff != null) IntensityRegionList(entries: regionDiff),
+            if (regionDiff != null)
+              IntensityRegionList(
+                entries: regionDiff,
+                prefectureMap: _prefectureMap,
+              ),
           ],
         ),
 

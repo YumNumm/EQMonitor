@@ -232,18 +232,18 @@ HypocenterDiff? computeHypocenterDiff({
   required api.EarthquakeTelegramBodyQuake? current,
   api.EarthquakeTelegramBodyQuake? previous,
 }) {
-  if (current == null) {
+  if (current == null || previous == null) {
     return null;
   }
 
   final diff = HypocenterDiff(
-    oldMagnitude: previous?.magnitude,
+    oldMagnitude: previous.magnitude,
     newMagnitude: current.magnitude,
-    oldDepth: previous?.depth,
+    oldDepth: previous.depth,
     newDepth: current.depth,
-    oldEpicenterName: previous?.epicenterName,
+    oldEpicenterName: previous.epicenterName,
     newEpicenterName: current.epicenterName,
-    oldMaxIntensity: previous?.maxIntensity,
+    oldMaxIntensity: previous.maxIntensity,
     newMaxIntensity: current.maxIntensity,
   );
 

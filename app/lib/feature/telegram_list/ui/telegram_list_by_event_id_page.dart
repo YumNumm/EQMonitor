@@ -153,16 +153,14 @@ class _SectionedList extends StatelessWidget {
 
     if (eewItems.isNotEmpty) {
       widgets.add(const _SectionHeader(title: '緊急地震速報'));
-      for (final telegram in eewItems) {
-        widgets.add(
-          TelegramListTile(
-            telegram: telegram,
-            onTap: () => EewDetailsByEventIdRoute(
-              eventId: telegram.eventId,
-            ).push<void>(context),
-          ),
-        );
-      }
+      widgets.add(
+        _EewNavigationCard(
+          count: eewItems.length,
+          onTap: () => EewDetailsByEventIdRoute(
+            eventId: eewItems.first.eventId,
+          ).push<void>(context),
+        ),
+      );
     }
 
     if (earthquakeItems.isNotEmpty) {
@@ -294,6 +292,41 @@ class _SectionHeader extends StatelessWidget {
           color: theme.colorScheme.primary,
           fontWeight: FontWeight.bold,
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// EEW navigation card
+// ---------------------------------------------------------------------------
+
+class _EewNavigationCard extends StatelessWidget {
+  const _EewNavigationCard({
+    required this.count,
+    required this.onTap,
+  });
+
+  final int count;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: ListTile(
+        leading: Icon(Icons.warning_amber_rounded, color: colorScheme.error),
+        title: Text(
+          '緊急地震速報（$count報）',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: onTap,
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/telegram_detail_response.dart';
+import '../models/telegram_event_details_response.dart';
 import '../models/telegram_list_response.dart';
 import '../models/telegram_type.dart';
 
@@ -49,6 +50,13 @@ abstract class TelegramApiClient {
     @Query('cursor') String? cursor,
   });
 
+  @GET(TelegramApiClientUrls.getV2TelegramEventIdEventIdDetails)
+  Future<HttpResponse<TelegramEventDetailsResponse>>
+      getV2TelegramEventIdEventIdDetails({
+    @Path('eventId') required String eventId,
+    @Query('statuses') List<TelegramStatus> statuses = const [.normal],
+  });
+
   @GET(TelegramApiClientUrls.getV2TelegramId)
   Future<HttpResponse<TelegramDetailResponse>> getV2TelegramId({
     @Path('id') required String id,
@@ -63,6 +71,8 @@ abstract class TelegramApiClientUrls {
 	static const getV2TelegramTypeType = "/v2/telegram/type/{type}";
 	/// /v2/telegram/eventId/{eventId}
 	static const getV2TelegramEventIdEventId = "/v2/telegram/eventId/{eventId}";
+	/// /v2/telegram/eventId/{eventId}/details
+	static const getV2TelegramEventIdEventIdDetails = "/v2/telegram/eventId/{eventId}/details";
 	/// /v2/telegram/{id}
 	static const getV2TelegramId = "/v2/telegram/{id}";
 }

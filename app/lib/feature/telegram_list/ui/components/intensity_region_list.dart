@@ -11,10 +11,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class IntensityRegionList extends ConsumerWidget {
   const IntensityRegionList({
     required this.entries,
+    this.prefectureMap,
     super.key,
   });
 
   final List<IntensityRegionDiffEntry> entries;
+
+  /// 市区町村コード先頭2桁 → 都道府県名 のマップ（VXSE53用）
+  final Map<String, String>? prefectureMap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,6 +49,7 @@ class IntensityRegionList extends ConsumerWidget {
             apiIntensity: apiIntensity,
             entries: grouped[apiIntensity]!,
             intensityColor: intensityColor,
+            prefectureMap: prefectureMap,
           ),
       ],
     );
@@ -56,16 +61,19 @@ class _IntensityRow extends StatelessWidget {
     required this.apiIntensity,
     required this.entries,
     required this.intensityColor,
+    this.prefectureMap,
   });
 
   final api.JmaIntensity apiIntensity;
   final List<IntensityRegionDiffEntry> entries;
   final IntensityColorModel intensityColor;
+  final Map<String, String>? prefectureMap;
 
   @override
   Widget build(BuildContext context) {
     final appIntensity = apiIntensity.toJmaIntensity;
     final color = intensityColor.fromJmaIntensity(appIntensity);
+    final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -94,16 +102,48 @@ class _IntensityRow extends StatelessWidget {
           const SizedBox(width: 8),
           // 地域名リスト
           Expanded(
-            child: Wrap(
-              spacing: 4,
-              runSpacing: 2,
-              children: [
-                for (final entry in entries) _RegionChip(entry: entry),
-              ],
-            ),
+            child: prefectureMap != null
+                ? _buildPrefectureGrouped(theme)
+                : Wrap(
+                    spacing: 4,
+                    runSpacing: 2,
+                    children: [
+                      for (final entry in entries) _RegionChip(entry: entry),
+                    ],
+                  ),
           ),
         ],
       ),
+    );
+  }
+
+  /// 都道府県でグループ化して表示
+  Widget _buildPrefectureGrouped(ThemeData theme) {
+    final byPrefecture = <String, List<IntensityRegionDiffEntry>>{};
+    for (final entry in entries) {
+      final prefCode =
+          entry.code.length >= 2 ? entry.code.substring(0, 2) : '';
+      (byPrefecture[prefCode] ??= []).add(entry);
+    }
+
+    // 都道府県コード順にソート
+    final sortedPrefCodes = byPrefecture.keys.toList()..sort();
+
+    return Wrap(
+      spacing: 4,
+      runSpacing: 2,
+      children: [
+        for (final prefCode in sortedPrefCodes) ...[
+          Text(
+            prefectureMap![prefCode] ?? prefCode,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          for (final entry in byPrefecture[prefCode]!)
+            _RegionChip(entry: entry),
+        ],
+      ],
     );
   }
 }
@@ -118,6 +158,7 @@ class _RegionChip extends StatelessWidget {
     final theme = Theme.of(context);
     final baseStyle =
         theme.textTheme.bodySmall ?? const TextStyle(fontSize: 12);
+    final boldStyle = baseStyle.copyWith(fontWeight: FontWeight.bold);
 
     return switch (entry.diffType) {
       IntensityDiffType.same => Text(
@@ -127,40 +168,37 @@ class _RegionChip extends StatelessWidget {
       IntensityDiffType.added => Text.rich(
           TextSpan(
             children: [
-              TextSpan(text: entry.name),
+              TextSpan(text: entry.name, style: boldStyle),
               TextSpan(
                 text: '(追加)',
-                style: TextStyle(color: Colors.blue.shade700),
+                style: boldStyle.copyWith(color: Colors.blue.shade700),
               ),
             ],
           ),
-          style: baseStyle,
         ),
       IntensityDiffType.upgraded => Text.rich(
           TextSpan(
             children: [
-              TextSpan(text: entry.name),
+              TextSpan(text: entry.name, style: boldStyle),
               TextSpan(
                 text:
-                    '(震度${entry.previousIntensity?.toJmaIntensity.label ?? ""}から上方修正)',
-                style: TextStyle(color: Colors.orange.shade800),
+                    '(震度${entry.previousIntensity?.toJmaIntensity.label ?? ""}↑)',
+                style: boldStyle.copyWith(color: Colors.orange.shade800),
               ),
             ],
           ),
-          style: baseStyle,
         ),
       IntensityDiffType.downgraded => Text.rich(
           TextSpan(
             children: [
-              TextSpan(text: entry.name),
+              TextSpan(text: entry.name, style: boldStyle),
               TextSpan(
                 text:
-                    '(震度${entry.previousIntensity?.toJmaIntensity.label ?? ""}から下方修正)',
-                style: TextStyle(color: Colors.orange.shade800),
+                    '(震度${entry.previousIntensity?.toJmaIntensity.label ?? ""}↓)',
+                style: boldStyle.copyWith(color: Colors.orange.shade800),
               ),
             ],
           ),
-          style: baseStyle,
         ),
     };
   }
