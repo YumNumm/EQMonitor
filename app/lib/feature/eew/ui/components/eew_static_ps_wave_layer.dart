@@ -47,19 +47,6 @@ class EewStaticPsWaveLayer extends HookConsumerWidget {
       [styleController, eew, travelTimeMap],
     );
 
-    useEffect(
-      () {
-        if (styleController == null || !isInitialized.value) {
-          return null;
-        }
-
-        unawaited(_updateLayers(styleController, eew, travelTimeMap));
-
-        return null;
-      },
-      [styleController, eew, travelTimeMap],
-    );
-
     return const SizedBox.shrink();
   }
 

@@ -192,8 +192,10 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           return null;
         }
 
+        var disposed = false;
+
         void listener() {
-          if (!isInitialized.value) {
+          if (disposed || !isInitialized.value) {
             return;
           }
           final travelTimeMap = ref.read(travelTimeDepthMapProvider);
@@ -225,6 +227,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
         }
 
         return () {
+          disposed = true;
           timer?.cancel();
           animationController.removeListener(listener);
         };
