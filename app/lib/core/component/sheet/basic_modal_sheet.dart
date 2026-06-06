@@ -55,7 +55,7 @@ class BasicModalSheet extends HookWidget {
                     color: textColor.tertiary.withValues(alpha: 0.48),
                   ),
                 ),
-                child,
+                Expanded(child: child),
               ],
             ),
           );

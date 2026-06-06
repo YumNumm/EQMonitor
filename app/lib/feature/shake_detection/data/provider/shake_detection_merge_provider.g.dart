@@ -63,12 +63,12 @@ final class ShakeDetectionMergedProvider
 String _$shakeDetectionMergedHash() =>
     r'3ce6403a2fd5f77a2a67a6a3c05334b0248e8c11';
 
-/// 未結合（表示対象）の揺れ検知イベントのみを返す
+/// 未結合かつ表示期間内の揺れ検知イベントのみを返す
 
 @ProviderFor(shakeDetectionVisible)
 final shakeDetectionVisibleProvider = ShakeDetectionVisibleProvider._();
 
-/// 未結合（表示対象）の揺れ検知イベントのみを返す
+/// 未結合かつ表示期間内の揺れ検知イベントのみを返す
 
 final class ShakeDetectionVisibleProvider
     extends
@@ -78,7 +78,7 @@ final class ShakeDetectionVisibleProvider
           List<ShakeDetectionEvent>
         >
     with $Provider<List<ShakeDetectionEvent>> {
-  /// 未結合（表示対象）の揺れ検知イベントのみを返す
+  /// 未結合かつ表示期間内の揺れ検知イベントのみを返す
   ShakeDetectionVisibleProvider._()
     : super(
         from: null,

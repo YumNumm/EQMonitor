@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/provider/clock/app_clock.dart';
+import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
@@ -8,6 +9,9 @@ import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_merge_provider.g.dart';
+
+/// 揺れ検知を表示する最大時間
+const _shakeDisplayTtl = Duration(minutes: 3);
 
 /// EEW 結合済みフラグを付与した揺れ検知イベント一覧
 @Riverpod(keepAlive: true)
@@ -71,10 +75,19 @@ String? _findMergedEew(
   return null;
 }
 
-/// 未結合（表示対象）の揺れ検知イベントのみを返す
+/// 未結合かつ表示期間内の揺れ検知イベントのみを返す
 @Riverpod(keepAlive: true)
-List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) =>
-    ref
-        .watch(shakeDetectionMergedProvider)
-        .where((e) => e.mergedEewEventId == null)
-        .toList();
+List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
+  final tickerTime = ref.watch(timeTickerProvider());
+  final now =
+      (tickerTime.value ?? ref.read(appClockProvider.notifier).now()).toUtc();
+
+  return ref
+      .watch(shakeDetectionMergedProvider)
+      .where(
+        (e) =>
+            e.mergedEewEventId == null &&
+            now.difference(e.createdAt.toUtc()) < _shakeDisplayTtl,
+      )
+      .toList();
+}
