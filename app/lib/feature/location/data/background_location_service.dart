@@ -107,6 +107,23 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
         .firstOrNull
         ?.regionId;
 
+    final earthquakeSettings = await (() async {
+      try {
+        return await ref.read(earthquakeNotificationSettingsProvider.future);
+      } on Object catch (e, st) {
+        talker.error(
+          '[BackgroundLocation] read earthquake settings failed',
+          e,
+          st,
+        );
+        return null;
+      }
+    })();
+    final prevCityCode = earthquakeSettings?.regions
+        .where((r) => r.isCurrentLocation)
+        .firstOrNull
+        ?.cityCode;
+
     final resolver = await ref.read(jmaRegionResolverProvider.future);
     // EEW 用の area_forecast_local_eew コード
     final code = resolver.resolveRegionCode(latitude, longitude);
@@ -182,7 +199,10 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       longitude: longitude,
       prevRegionCode: prevRegionCode,
       newRegionCode: code,
+      newRegionName: name,
+      prevCityCode: prevCityCode,
       cityCode: cityCode,
+      cityName: earthquakeResolution?.cityName,
       didUpdateEew: didUpdateEew,
       didUpdateEarthquake: didUpdateEarthquake,
       didUpdateShake: didUpdateShake,
@@ -201,7 +221,10 @@ Future<void> _fireDebugNotifications(
   required double longitude,
   required int? prevRegionCode,
   required int newRegionCode,
+  required String? newRegionName,
+  required String? prevCityCode,
   required String? cityCode,
+  required String? cityName,
   required bool didUpdateEew,
   required bool didUpdateEarthquake,
   required bool didUpdateShake,
@@ -244,13 +267,23 @@ Future<void> _fireDebugNotifications(
       );
     }
 
-    if (debugSettings.notifyRegion && prevRegionCode != newRegionCode) {
-      await plugin.show(
-        id: notifId++,
-        title: '[Debug] 細分区域 変化',
-        body: '$prevRegionCode → $newRegionCode',
-        notificationDetails: details,
-      );
+    if (debugSettings.notifyRegion) {
+      if (prevRegionCode != newRegionCode) {
+        await plugin.show(
+          id: notifId++,
+          title: '[Debug] 細分区域 変化',
+          body: '$prevRegionCode → $newRegionCode ($newRegionName)',
+          notificationDetails: details,
+        );
+      }
+      if (prevCityCode != cityCode) {
+        await plugin.show(
+          id: notifId++,
+          title: '[Debug] 市区町村 変化',
+          body: '$prevCityCode → $cityCode ($cityName)',
+          notificationDetails: details,
+        );
+      }
     }
 
     if (debugSettings.notifyPrefecture) {
@@ -282,7 +315,8 @@ Future<void> _fireDebugNotifications(
         id: notifId,
         title: '[Debug] 通知API 更新',
         body:
-            'region=$newRegionCode, city=${cityCode ?? 'null'}\n'
+            'region=$newRegionCode ($newRegionName)\n'
+            'city=${cityCode ?? 'null'} (${cityName ?? ''})\n'
             '$summary'
             '${errors.isNotEmpty ? '\n${errors.join('\n')}' : ''}',
         notificationDetails: details,
