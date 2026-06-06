@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_statu
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
 import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
@@ -81,7 +82,7 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
 }
 
 class EarthquakeHistoryDataSource
-    extends GroupedDataSource<String?, String, EarthquakePartial> {
+    extends GroupedDataSource<String?, String, EarthquakeHistoryItem> {
   EarthquakeHistoryDataSource({
     required EarthquakeHistoryRepository repository,
     required EarthquakeHistoryParameter parameter,
@@ -101,13 +102,14 @@ class EarthquakeHistoryDataSource
   static final _dateFormatter = DateFormat('yyyy/MM/dd');
 
   @override
-  String groupBy(EarthquakePartial value) {
-    final dateTime = value.originTime ?? value.arrivalTime;
+  String groupBy(EarthquakeHistoryItem value) {
+    final dateTime =
+        value.earthquake.originTime ?? value.earthquake.arrivalTime;
     return dateTime != null ? _dateFormatter.format(dateTime.toLocal()) : '不明';
   }
 
   @override
-  Future<LoadResult<String?, EarthquakePartial>> load(
+  Future<LoadResult<String?, EarthquakeHistoryItem>> load(
     LoadAction<String?> action,
   ) async => switch (action) {
     Refresh() => await _fetch(null),
@@ -115,7 +117,7 @@ class EarthquakeHistoryDataSource
     Prepend() => const None(),
   };
 
-  Future<LoadResult<String?, EarthquakePartial>> _fetch(
+  Future<LoadResult<String?, EarthquakeHistoryItem>> _fetch(
     String? cursor,
   ) async {
     try {
@@ -133,14 +135,17 @@ class EarthquakeHistoryDataSource
         );
         return Success(
           page: PageData(
-            data: result.items.map((e) => e.earthquake).toList(),
+            data: result.items
+                .map(
+                  (e) => EarthquakeHistoryItem(earthquake: e.earthquake),
+                )
+                .toList(),
             appendKey: result.nextToken,
           ),
         );
       }
 
       if (_parameter.regionCode != null &&
-          _parameter.regionCode != null &&
           _parameter.regionSearchType == RegionSearchType.prefecture) {
         final result = await _repository.searchByPrefecture(
           code: _parameter.regionCode!,
@@ -149,14 +154,20 @@ class EarthquakeHistoryDataSource
         );
         return Success(
           page: PageData(
-            data: result.items.map((e) => e.earthquake).toList(),
+            data: result.items
+                .map(
+                  (e) => EarthquakeHistoryItem(
+                    earthquake: e.earthquake,
+                    areaInfo: e.area,
+                  ),
+                )
+                .toList(),
             appendKey: result.nextToken,
           ),
         );
       }
 
       if (_parameter.regionCode != null &&
-          _parameter.regionCode != null &&
           _parameter.regionSearchType == RegionSearchType.city) {
         final result = await _repository.searchByCity(
           code: _parameter.regionCode!,
@@ -165,7 +176,14 @@ class EarthquakeHistoryDataSource
         );
         return Success(
           page: PageData(
-            data: result.items.map((e) => e.earthquake).toList(),
+            data: result.items
+                .map(
+                  (e) => EarthquakeHistoryItem(
+                    earthquake: e.earthquake,
+                    areaInfo: e.area,
+                  ),
+                )
+                .toList(),
             appendKey: result.nextToken,
           ),
         );
@@ -183,7 +201,11 @@ class EarthquakeHistoryDataSource
       );
       return Success(
         page: PageData(
-          data: result.items,
+          data: result.items
+              .map(
+                (e) => EarthquakeHistoryItem(earthquake: e),
+              )
+              .toList(),
           appendKey: result.nextToken,
         ),
       );
@@ -196,19 +218,30 @@ class EarthquakeHistoryDataSource
   void upsertItems(List<EarthquakePartial> newItems) {
     final currentItems = [...notifier.values];
     for (final item in newItems) {
-      final index = currentItems.indexWhere((e) => e.eventId == item.eventId);
+      final index = currentItems.indexWhere(
+        (e) => e.earthquake.eventId == item.eventId,
+      );
       if (index == -1) {
-        insertItem(0, item);
-        currentItems.insert(0, item);
+        insertItem(0, EarthquakeHistoryItem(earthquake: item));
+        currentItems.insert(0, EarthquakeHistoryItem(earthquake: item));
       } else {
-        updateItem(index, (_) => item);
-        currentItems[index] = item;
+        updateItem(
+          index,
+          (prev) => EarthquakeHistoryItem(
+            earthquake: item,
+            areaInfo: prev.areaInfo,
+          ),
+        );
+        currentItems[index] = EarthquakeHistoryItem(
+          earthquake: item,
+          areaInfo: currentItems[index].areaInfo,
+        );
       }
     }
   }
 
   /// WebSocketの earthquake delete イベントで地震情報をリストから削除する。
   void removeItemByEventId(String eventId) {
-    removeItems((_, item) => item.eventId == eventId);
+    removeItems((_, item) => item.earthquake.eventId == eventId);
   }
 }

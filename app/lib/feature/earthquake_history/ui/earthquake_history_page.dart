@@ -1,8 +1,8 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -108,7 +108,7 @@ class _PagingBody extends StatelessWidget {
               onChanged: onParameterChanged,
             ),
           ),
-          SliverGroupedPagingList<String?, String, EarthquakePartial>(
+          SliverGroupedPagingList<String?, String, EarthquakeHistoryItem>(
             dataSource: dataSource,
             stickyHeader: true,
             headerBuilder: (context, date, index) => _DateHeader(date: date),
@@ -116,9 +116,10 @@ class _PagingBody extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 EarthquakeHistoryListTile(
-                  item: item,
+                  item: item.earthquake,
+                  areaInfo: item.areaInfo,
                   onTap: () async => EarthquakeHistoryDetailsRoute(
-                    eventId: item.eventId,
+                    eventId: item.earthquake.eventId,
                   ).push<void>(context),
                   visualDensity: VisualDensity.compact,
                 ),
