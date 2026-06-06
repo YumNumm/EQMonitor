@@ -4,16 +4,18 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'device_locale.dart';
+import 'device_type.dart';
+
 part 'device_register_body.freezed.dart';
 part 'device_register_body.g.dart';
 
 @Freezed()
 abstract class DeviceRegisterBody with _$DeviceRegisterBody {
   const factory DeviceRegisterBody({
-    required dynamic type,
-    @JsonKey(includeIfNull: true)
-    @Default('ja')
-    String? locale,
+    required DeviceType type,
+    @JsonKey(includeIfNull: false)
+    DeviceLocale? locale,
   }) = _DeviceRegisterBody;
   
   factory DeviceRegisterBody.fromJson(Map<String, Object?> json) => _$DeviceRegisterBodyFromJson(json);

@@ -36,7 +36,10 @@ extension DevicePlatformDisplay on DevicePlatform {
 extension DeviceApiExtension on api.DeviceMeResponse {
   RegisteredDevice get toRegisteredDevice => RegisteredDevice(
     id: id,
-    platform: type == api.DeviceType.android ? .android : .ios,
+    platform: switch (type) {
+      api.DeviceType.android => DevicePlatform.android,
+      api.DeviceType.ios => DevicePlatform.ios,
+    },
     userId: userId,
     locale: switch (locale) {
       api.DeviceLocale.en => DeviceLocale.en,
