@@ -48,7 +48,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
 
           final idx = selectedIndex.value;
           final selectedEew =
-              (idx != null && idx < sortedEews.length)
+              (idx != null && idx >= 0 && idx < sortedEews.length)
               ? sortedEews[idx]
               : null;
 
