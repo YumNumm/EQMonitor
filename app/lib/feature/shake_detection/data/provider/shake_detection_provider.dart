@@ -17,6 +17,10 @@ const _eventTtl = Duration(minutes: 5);
 class ShakeDetection extends _$ShakeDetection {
   @override
   List<ShakeDetectionEvent> build() {
+    if (!ref.watch(isRealtimeModeProvider)) {
+      return [];
+    }
+
     ref.listen(realtimeEventsProvider, (_, next) {
       next.whenData(_onRealtimeEvent);
     });
@@ -32,7 +36,17 @@ class ShakeDetection extends _$ShakeDetection {
   void _onRealtimeEvent(RealtimeEvent event) {
     switch (event) {
       case RealtimeSnapshotEvent(:final shakes):
-        state = shakes.map(_fromShakeData).toList();
+        final snapshotEvents = shakes.map(_fromShakeData).toList();
+        final snapshotEventIds = snapshotEvents
+            .map((event) => event.eventId)
+            .toSet();
+        state = [
+          ...state.where(
+            (event) => !snapshotEventIds.contains(event.eventId),
+          ),
+          ...snapshotEvents,
+        ];
+        _cleanup();
       case RealtimeShakeDetectedEvent(:final data):
         _upsert(_fromShakeData(data));
       default:
