@@ -28,25 +28,25 @@ Future<WebSocket> eqmonitorWebSocket(Ref ref) async {
   final ws = await WebSocket.connect(
     Uri.parse(ticket.url),
   );
-  ws.events.listen(
-    (event) {
-      if (event case CloseReceived(:final code, :final reason)) {
-        talker.warning(
-          'EQMonitor WebSocket: closed with code $code and reason $reason',
-        );
-        ref.invalidateSelf();
-      }
-    },
-  );
   ref.onDispose(ws.close);
   return ws;
 }
 
-
+/// WebSocket イベントストリーム。
+/// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
+/// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
 @riverpod
 Stream<WebSocketEvent> eqmonitorWsEventStream(Ref ref) async* {
   final websocket = await ref.watch(eqmonitorWebSocketProvider.future);
-  yield* websocket.events;
+  await for (final event in websocket.events) {
+    yield event;
+    if (event case CloseReceived(:final code, :final reason)) {
+      talker.warning(
+        'EQMonitor WebSocket: closed with code $code and reason $reason',
+      );
+      ref.invalidate(eqmonitorWebSocketProvider);
+    }
+  }
 }
 
 @riverpod
