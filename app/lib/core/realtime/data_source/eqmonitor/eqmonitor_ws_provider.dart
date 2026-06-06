@@ -45,11 +45,11 @@ Stream<WebSocketEvent> eqmonitorWsEventStream(Ref ref) async* {
       talker.warning(
         'EQMonitor WebSocket: closed with code $code and reason $reason',
       );
-      ref.invalidate(eqmonitorWebSocketProvider);
+      ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
       return;
     }
   }
-  ref.invalidate(eqmonitorWebSocketProvider);
+  ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
 }
 
 @riverpod

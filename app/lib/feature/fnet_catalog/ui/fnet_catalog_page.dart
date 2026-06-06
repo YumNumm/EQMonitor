@@ -45,6 +45,7 @@ class FnetCatalogPage extends HookConsumerWidget {
               year: selectedYear.value,
               month: selectedMonth.value,
             ),
+            asReload: true,
           );
         },
         child: switch (state) {
@@ -75,6 +76,7 @@ class FnetCatalogPage extends HookConsumerWidget {
                         year: selectedYear.value,
                         month: selectedMonth.value,
                       ),
+                      asReload: true,
                     );
                   },
                   child: const Text('再読み込み'),

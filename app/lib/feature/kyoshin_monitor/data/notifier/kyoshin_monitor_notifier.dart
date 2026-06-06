@@ -39,7 +39,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         if (next == AppLifecycleState.resumed &&
             previous != null &&
             previous != AppLifecycleState.resumed) {
-          ref.invalidate(kyoshinMonitorProvider);
+          ref.invalidate(kyoshinMonitorProvider, asReload: true);
         }
       },
     );

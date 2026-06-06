@@ -322,7 +322,7 @@ class _AppCheckSection extends ConsumerWidget {
           },
           trailing: IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => ref.invalidate(appCheckTokenProvider),
+            onPressed: () => ref.invalidate(appCheckTokenProvider, asReload: true),
           ),
         ),
         ListTile(

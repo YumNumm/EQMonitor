@@ -30,7 +30,7 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
   final dataSource = EarthquakeHistoryDataSource(
     repository: repository,
     parameter: parameter,
-    onRefreshStarted: () => ref.invalidate(earthquakeHistoryDetailsProvider),
+    onRefreshStarted: () => ref.invalidate(earthquakeHistoryDetailsProvider, asReload: true),
   );
 
   ref.onDispose(dataSource.dispose);

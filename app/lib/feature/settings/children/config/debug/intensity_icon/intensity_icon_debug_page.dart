@@ -24,14 +24,14 @@ class IntensityIconDebugPage extends HookConsumerWidget {
           _Section(
             title: '震度アイコン (JmaIntensity)',
             providerName: 'intensityIconProvider',
-            onInvalidate: () => ref.invalidate(intensityIconProvider),
+            onInvalidate: () => ref.invalidate(intensityIconProvider, asReload: true),
             child: _JmaIntensityGrid(size: size.value),
           ),
           const SizedBox(height: 16),
           _Section(
             title: '長周期地震動アイコン (JmaLpgmIntensity)',
             providerName: 'intensityIconProvider',
-            onInvalidate: () => ref.invalidate(intensityIconProvider),
+            onInvalidate: () => ref.invalidate(intensityIconProvider, asReload: true),
             child: _JmaLpgmIntensityGrid(size: size.value),
           ),
         ],

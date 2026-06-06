@@ -53,9 +53,9 @@ class SplashPage extends HookConsumerWidget {
             ? ErrorCard(
                 error: error ?? Exception('Unknown error'),
                 onReload: () async {
-                  ref.invalidate(parameterSetProvider);
-                  ref.invalidate(travelTimeInternalProvider);
-                  ref.invalidate(earthquakeHistoryConfigProvider);
+                  ref.invalidate(parameterSetProvider, asReload: true);
+                  ref.invalidate(travelTimeInternalProvider, asReload: true);
+                  ref.invalidate(earthquakeHistoryConfigProvider, asReload: true);
                 },
               )
             : const Center(child: CircularProgressIndicator.adaptive()),

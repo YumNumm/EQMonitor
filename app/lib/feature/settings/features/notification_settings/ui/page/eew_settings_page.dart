@@ -52,7 +52,7 @@ class _Body extends ConsumerWidget {
 
     if (settingsAsync.hasError && !settingsAsync.isLoading) {
       return _ErrorBody(
-        onRetry: () => ref.invalidate(eewSettingsProvider),
+        onRetry: () => ref.invalidate(eewSettingsProvider, asReload: true),
       );
     }
 
