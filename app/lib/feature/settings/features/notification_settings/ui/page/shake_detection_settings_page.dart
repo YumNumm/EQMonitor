@@ -27,7 +27,7 @@ class _Body extends ConsumerWidget {
 
     if (stateAsync.hasError && !stateAsync.isLoading) {
       return _ErrorBody(
-        onRetry: () => ref.invalidate(shakeDetectionSettingsProvider),
+        onRetry: () => ref.invalidate(shakeDetectionSettingsProvider, asReload: true),
       );
     }
 

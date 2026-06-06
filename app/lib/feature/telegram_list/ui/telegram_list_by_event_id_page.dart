@@ -68,8 +68,8 @@ class TelegramListByEventIdPage extends HookConsumerWidget {
       appBar: AppBar(title: const Text('電文一覧')),
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(telegramListByEventIdProvider(eventId));
-          ref.invalidate(telegramDetailsProvider(eventId));
+          ref.invalidate(telegramListByEventIdProvider(eventId), asReload: true);
+          ref.invalidate(telegramDetailsProvider(eventId), asReload: true);
         },
         child: switch (asyncState) {
           AsyncData(:final value) => _SectionedList(

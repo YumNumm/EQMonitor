@@ -88,6 +88,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                       scope: scope,
                       onRetry: () => ref.invalidate(
                         homeEarthquakeHistoryParameterProvider,
+                        asReload: true,
                       ),
                       onConfigureRegion:
                           scope == HomeEarthquakeHistoryScope.custom
@@ -110,8 +111,8 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                       error: error,
                       margin: EdgeInsets.zero,
                       onReload: () async {
-                        ref.invalidate(homeEarthquakeHistoryParameterProvider);
-                        ref.invalidate(earthquakeHistoryProvider(param));
+                        ref.invalidate(homeEarthquakeHistoryParameterProvider, asReload: true);
+                        ref.invalidate(earthquakeHistoryProvider(param), asReload: true);
                       },
                       padding: const EdgeInsets.all(8),
                     ),
@@ -124,7 +125,7 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                   error: error,
                   margin: EdgeInsets.zero,
                   onReload: () async =>
-                      ref.invalidate(homeEarthquakeHistoryParameterProvider),
+                      ref.invalidate(homeEarthquakeHistoryParameterProvider, asReload: true),
                   padding: const EdgeInsets.all(8),
                 ),
               ),

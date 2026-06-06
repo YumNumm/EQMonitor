@@ -40,8 +40,8 @@ class DebugDeviceSettingsPage extends HookConsumerWidget {
     final syncSnapshot = ref.watch(pushTokenSyncProvider);
 
     Future<void> onRefresh() async {
-      ref.invalidate(deviceProvisioningProvider);
-      ref.invalidate(pushTokenSyncProvider);
+      ref.invalidate(deviceProvisioningProvider, asReload: true);
+      ref.invalidate(pushTokenSyncProvider, asReload: true);
       await ref.read(deviceProvisioningProvider.future);
     }
 
@@ -300,7 +300,7 @@ class _NotificationPermissionSection extends ConsumerWidget {
       trailing: IconButton(
         tooltip: '再取得',
         icon: const Icon(Icons.refresh),
-        onPressed: () => ref.invalidate(_osNotificationPermissionProvider),
+        onPressed: () => ref.invalidate(_osNotificationPermissionProvider, asReload: true),
       ),
       child: switch (permAsync) {
         AsyncData(:final value) => Column(
@@ -608,7 +608,7 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       }
       switch (result) {
         case Success():
-          ref.invalidate(_notificationSettingsProvider(deviceId));
+          ref.invalidate(_notificationSettingsProvider(deviceId), asReload: true);
           messenger.showSnackBar(
             const SnackBar(content: Text('通知設定を更新しました')),
           );
@@ -771,7 +771,7 @@ class _HistorySection extends ConsumerWidget {
       title: '通知履歴',
       trailing: IconButton(
         tooltip: '更新',
-        onPressed: () => ref.invalidate(_notificationHistoryProvider(deviceId)),
+        onPressed: () => ref.invalidate(_notificationHistoryProvider(deviceId), asReload: true),
         icon: const Icon(Icons.refresh),
       ),
       child: switch (historyAsync) {

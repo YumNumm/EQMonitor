@@ -29,7 +29,7 @@ class Eew extends _$Eew {
 
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
-        ref.invalidate(_eewRestProvider);
+        ref.invalidate(_eewRestProvider, asReload: true);
       }
     });
 
@@ -51,7 +51,7 @@ class Eew extends _$Eew {
       (_) {
         final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
         if (wsPhase != WsPhase.connected) {
-          ref.invalidate(_eewRestProvider);
+          ref.invalidate(_eewRestProvider, asReload: true);
         }
       },
     );
