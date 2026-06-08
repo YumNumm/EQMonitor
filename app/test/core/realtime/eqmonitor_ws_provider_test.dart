@@ -100,8 +100,7 @@ void main() {
       fakeWs.emitText('hello');
 
       container.listen(eqmonitorWsEventStreamProvider, (_, _) {});
-      final value =
-          await container.read(eqmonitorWsEventStreamProvider.future);
+      final value = await container.read(eqmonitorWsEventStreamProvider.future);
 
       expect(value, isA<TextDataReceived>());
       expect((value as TextDataReceived).text, 'hello');
@@ -137,8 +136,7 @@ void main() {
       fakeWs.emitText('init');
       container.listen(eqmonitorWsEventStreamProvider, (_, _) {});
 
-      final value =
-          await container.read(eqmonitorWsEventStreamProvider.future);
+      final value = await container.read(eqmonitorWsEventStreamProvider.future);
       expect(value, isA<TextDataReceived>());
     });
   });
