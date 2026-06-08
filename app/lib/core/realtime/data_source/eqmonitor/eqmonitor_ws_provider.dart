@@ -16,8 +16,9 @@ final class EqmonitorWebSocketTicketRefreshDelayCalculator {
     required DateTime expiresAt,
   }) {
     const buffer = Duration(seconds: 30);
+    const minimumDelay = Duration(seconds: 5);
     final rawDelay = expiresAt.difference(now) - buffer;
-    return rawDelay.isNegative ? Duration.zero : rawDelay;
+    return rawDelay <= minimumDelay ? minimumDelay : rawDelay;
   }
 }
 
