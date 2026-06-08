@@ -29,6 +29,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		AABB00032F30A00100000003 /* EQMonitorAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AABB00022F30A00100000002 /* EQMonitorAPI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +141,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABB00032F30A00100000003 /* EQMonitorAPI in Frameworks */,
 				85C54CFD2E96C7E800BFBBAB /* SwiftUI.framework in Frameworks */,
 				85C54CFB2E96C7E800BFBBAB /* WidgetKit.framework in Frameworks */,
 			);
@@ -272,6 +274,9 @@
 				85C54CFE2E96C7E800BFBBAB /* Widget */,
 			);
 			name = WidgetExtension;
+			packageProductDependencies = (
+				AABB00022F30A00100000002 /* EQMonitorAPI */,
+			);
 			productName = WidgetExtension;
 			productReference = 85C54CF92E96C7E700BFBBAB /* WidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -357,6 +362,7 @@
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
 				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
+				AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */,
 				85B405182C08E73300EB3835 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 				85C9C3ED2D9F053700F047DF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 			);
@@ -1116,6 +1122,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
 		};
+		AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/eqmonitor_api_swift;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -1151,6 +1161,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 85C9C3ED2D9F053700F047DF /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
+		};
+		AABB00022F30A00100000002 /* EQMonitorAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EQMonitorAPI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
