@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "event_id": "20240101161000",
+      "status": "NORMAL",
+      "origin_time": "2026-06-06T01:53:33.007Z",
+      "origin_time_precision": "SECOND",
+      "hypocenter": {
+        "value": {
+          "code": "531",
+          "name": "石川県能登地方"
+        },
+        "coordinates": {
+          "latitude": 37.5,
+          "longitude": 137.2
+        },
+        "magnitude": {
+          "type": "NORMAL",
+          "value": 7.6
+        },
+        "depth": {
+          "type": "SHALLOW"
+        }
+      },
+      "intensity": {
+        "max_intensity": "7"
+      },
+      "datasource": "JMA_DISASTER_INFORMATION_XML"
+    }
+  ]
+}

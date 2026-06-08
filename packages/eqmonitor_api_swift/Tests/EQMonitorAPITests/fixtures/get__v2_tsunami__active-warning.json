@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "event_ids": [
+        "20110311144600"
+      ],
+      "is_canceled": false,
+      "forecast_region_count": 8,
+      "telegram_count": 3,
+      "telegram_types": [
+        "VTSE41",
+        "VTSE51",
+        "VTSE52"
+      ]
+    }
+  ]
+}
