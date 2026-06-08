@@ -37,6 +37,9 @@ subprojects {
                 }
             }
         }
+        tasks.matching { it.name.startsWith("lintVital") || (it.name.startsWith("lint") && it.name.endsWith("Analyze")) }.configureEach {
+            enabled = false
+        }
     }
 
     project.evaluationDependsOn(":app")

@@ -19,6 +19,7 @@ class ShakeDetectionLayer extends ConsumerWidget {
   static const sourceId = 'shake-detection';
   static const _fillLayerId = 'shake-detection-fill';
   static const _lineLayerId = 'shake-detection-line';
+  static const _centerLayerId = 'shake-detection-center';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,41 +59,67 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
         }
 
         unawaited(() async {
-          await styleController.addSource(
-            const GeoJsonSource(
-              id: ShakeDetectionLayer.sourceId,
-              data: _emptyGeoJson,
-            ),
-          );
-
-          await (
-            styleController.addLayer(
-              const FillStyleLayer(
-                id: ShakeDetectionLayer._fillLayerId,
-                sourceId: ShakeDetectionLayer.sourceId,
-                paint: {
-                  'fill-color': ['get', 'fillColor'],
-                  'fill-opacity': ['get', 'fillOpacity'],
-                },
+          try {
+            await styleController.addSource(
+              const GeoJsonSource(
+                id: ShakeDetectionLayer.sourceId,
+                data: _emptyGeoJson,
               ),
-            ),
-            styleController.addLayer(
-              const LineStyleLayer(
-                id: ShakeDetectionLayer._lineLayerId,
-                sourceId: ShakeDetectionLayer.sourceId,
-                paint: {
-                  'line-color': ['get', 'lineColor'],
-                  'line-width': 2,
-                  'line-opacity': ['get', 'lineOpacity'],
-                },
-              ),
-            ),
-          ).wait;
+            );
 
-          isInitialized.value = true;
+            await (
+              styleController.addLayer(
+                const FillStyleLayer(
+                  id: ShakeDetectionLayer._fillLayerId,
+                  sourceId: ShakeDetectionLayer.sourceId,
+                  paint: {
+                    'fill-color': ['get', 'fillColor'],
+                    'fill-opacity': 1,
+                  },
+                ),
+              ),
+              styleController.addLayer(
+                const LineStyleLayer(
+                  id: ShakeDetectionLayer._lineLayerId,
+                  sourceId: ShakeDetectionLayer.sourceId,
+                  paint: {
+                    'line-color': ['get', 'lineColor'],
+                    'line-width': 2,
+                    'line-opacity': 1,
+                  },
+                ),
+              ),
+              styleController.addLayer(
+                const CircleStyleLayer(
+                  id: ShakeDetectionLayer._centerLayerId,
+                  sourceId: ShakeDetectionLayer.sourceId,
+                  paint: {
+                    'circle-radius': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      3, 5,
+                      7, 10,
+                      10, 14,
+                    ],
+                    'circle-color': ['get', 'centerColor'],
+                    'circle-opacity': 1,
+                    'circle-stroke-color': ['get', 'strokeColor'],
+                    'circle-stroke-width': 2,
+                    'circle-stroke-opacity': 1,
+                  },
+                ),
+              ),
+            ).wait;
+
+            isInitialized.value = true;
+          } on Exception catch (e) {
+            debugPrint('ShakeDetectionLayer: failed to init layers: $e');
+          }
         }());
 
         return () async {
+          await styleController.removeLayer(ShakeDetectionLayer._centerLayerId);
           await styleController.removeLayer(ShakeDetectionLayer._fillLayerId);
           await styleController.removeLayer(ShakeDetectionLayer._lineLayerId);
           await styleController.removeSource(ShakeDetectionLayer.sourceId);
@@ -227,7 +254,11 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
   ) {
     final features = <Map<String, dynamic>>[];
     for (final event in events) {
-      final color = _colorForLevel(event.level);
+      final (r, g, b) = _rgbForLevel(event.level);
+      final fillColor =
+          'rgba($r, $g, $b, ${(opacity * 0.3).toStringAsFixed(3)})';
+      final lineColor =
+          'rgba($r, $g, $b, ${opacity.toStringAsFixed(3)})';
       final polygons = switch (displayMode) {
         HomeShakeDetectionDisplayMode.boundingBox => [
           _boundingBoxPolygon(event),
@@ -242,13 +273,26 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
             'coordinates': [coords],
           },
           'properties': {
-            'lineColor': color,
-            'fillColor': color,
-            'fillOpacity': opacity * 0.25,
-            'lineOpacity': opacity,
+            'fillColor': fillColor,
+            'lineColor': lineColor,
           },
         });
       }
+      final centerLat = (event.minLat + event.maxLat) / 2;
+      final centerLng = (event.minLng + event.maxLng) / 2;
+      features.add({
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [centerLng, centerLat],
+        },
+        'properties': {
+          'centerColor':
+              'rgba($r, $g, $b, ${(opacity * 0.8).toStringAsFixed(3)})',
+          'strokeColor':
+              'rgba(255, 255, 255, ${opacity.toStringAsFixed(3)})',
+        },
+      });
     }
     return jsonEncode({'type': 'FeatureCollection', 'features': features});
   }
@@ -280,15 +324,13 @@ class _ShakeDetectionLayerBody extends HookConsumerWidget {
     return polygons;
   }
 
-  String _colorForLevel(ShakeDetectionLevel level) {
-    return switch (level) {
-      ShakeDetectionLevel.weaker => '#88CCFF',
-      ShakeDetectionLevel.weak => '#44AAFF',
-      ShakeDetectionLevel.medium => '#FFDD44',
-      ShakeDetectionLevel.strong => '#FF8800',
-      ShakeDetectionLevel.stronger => '#FF2200',
-    };
-  }
+  (int, int, int) _rgbForLevel(ShakeDetectionLevel level) => switch (level) {
+    ShakeDetectionLevel.weaker => (136, 204, 255),
+    ShakeDetectionLevel.weak => (68, 170, 255),
+    ShakeDetectionLevel.medium => (255, 221, 68),
+    ShakeDetectionLevel.strong => (255, 136, 0),
+    ShakeDetectionLevel.stronger => (255, 34, 0),
+  };
 }
 
 const _emptyGeoJson = '{"type":"FeatureCollection","features":[]}';

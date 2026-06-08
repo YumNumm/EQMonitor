@@ -139,7 +139,10 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       latitude,
       longitude,
     );
-    final cityCode = earthquakeResolution?.cityCode;
+    // 揺れ検知は市区町村コード (area_information_city) のみ必要。
+    // earthquakeResolution は親 region 解決に失敗すると null になるため、
+    // 揺れ検知用の cityCode は resolver から直接取得する。
+    final shakeCityCode = resolver.resolveCityCode(latitude, longitude);
 
     // EEW リージョン更新
     var didUpdateEew = false;
@@ -187,7 +190,7 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       didUpdateShake = await retry.run(
         action: () => ref
             .read(shakeDetectionSettingsProvider.notifier)
-            .updateCurrentLocationSubRegion(cityCode),
+            .updateCurrentLocationSubRegion(shakeCityCode),
       );
     } on Object catch (e, st) {
       talker.error('[BackgroundLocation] update shake location failed', e, st);
@@ -205,7 +208,7 @@ Future<void> _applyLocation(Ref ref, double latitude, double longitude) async {
       newRegionName: name,
       prevCityCode: prevCityCode,
       prevCityName: prevCityName,
-      cityCode: cityCode,
+      cityCode: earthquakeResolution?.cityCode,
       cityName: earthquakeResolution?.cityName,
       didUpdateEew: didUpdateEew,
       didUpdateEarthquake: didUpdateEarthquake,

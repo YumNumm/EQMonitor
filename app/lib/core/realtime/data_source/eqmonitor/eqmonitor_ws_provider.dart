@@ -16,8 +16,9 @@ final class EqmonitorWebSocketTicketRefreshDelayCalculator {
     required DateTime expiresAt,
   }) {
     const buffer = Duration(seconds: 30);
+    const minimumDelay = Duration(seconds: 5);
     final rawDelay = expiresAt.difference(now) - buffer;
-    return rawDelay.isNegative ? Duration.zero : rawDelay;
+    return rawDelay <= minimumDelay ? minimumDelay : rawDelay;
   }
 }
 
@@ -45,11 +46,11 @@ Stream<WebSocketEvent> eqmonitorWsEventStream(Ref ref) async* {
       talker.warning(
         'EQMonitor WebSocket: closed with code $code and reason $reason',
       );
-      ref.invalidate(eqmonitorWebSocketProvider);
+      ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
       return;
     }
   }
-  ref.invalidate(eqmonitorWebSocketProvider);
+  ref.invalidate(eqmonitorWebSocketProvider, asReload: true);
 }
 
 @riverpod

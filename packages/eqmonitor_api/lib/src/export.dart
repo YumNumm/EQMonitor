@@ -180,6 +180,7 @@ export 'models/earthquake_nankai_telegram_body.dart';
 export 'models/telegram_body_union.dart';
 export 'models/telegram_detail.dart';
 export 'models/telegram_detail_response.dart';
+export 'models/telegram_event_details_response.dart';
 export 'models/tsunami_warning_kind.dart';
 export 'models/tsunami_list_item.dart';
 export 'models/tsunami_list_response.dart';

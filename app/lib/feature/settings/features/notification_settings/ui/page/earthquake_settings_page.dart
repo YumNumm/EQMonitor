@@ -44,7 +44,7 @@ class _Body extends ConsumerWidget {
 
     if (settingsAsync.hasError && !settingsAsync.isLoading) {
       return _ErrorBody(
-        onRetry: () => ref.invalidate(earthquakeNotificationSettingsProvider),
+        onRetry: () => ref.invalidate(earthquakeNotificationSettingsProvider, asReload: true),
       );
     }
 

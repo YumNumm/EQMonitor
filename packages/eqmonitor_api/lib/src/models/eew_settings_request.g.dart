@@ -40,7 +40,7 @@ _EewSettingsRequest _$EewSettingsRequestFromJson(
 Map<String, dynamic> _$EewSettingsRequestToJson(_EewSettingsRequest instance) =>
     <String, dynamic>{
       'enabled': ?instance.enabled,
-      'notification_tiers': ?instance.notificationTiers,
+      'notification_tiers': instance.notificationTiers,
       'start_live_activity': ?instance.startLiveActivity,
       'one_point_enabled': ?instance.onePointEnabled,
     };

@@ -30,7 +30,7 @@ class PushTokenSyncNotifier extends _$PushTokenSyncNotifier {
   Future<void> handleAuthenticationFailure() async {
     final repo = ref.read(deviceProvisioningRepositoryProvider);
     await repo.clearProvisioned();
-    ref.invalidate(deviceProvisioningProvider);
+    ref.invalidate(deviceProvisioningProvider, asReload: true);
   }
 
   @override

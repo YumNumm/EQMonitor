@@ -17,11 +17,9 @@ part 'eew_telegram.g.dart';
 class Eew extends _$Eew {
   @override
   AsyncValue<List<EewTelegramItem>> build() {
-    // リプレイ再生中はライブ受信を切り離し、リプレイ由来のEEWのみを保持する。
-    // モードが通常/タイムシフトへ戻ると build が再実行されライブへ復帰する。
-    // isReplayModeProvider は bool のため、再生位置更新では再ビルドされず
-    // upsert 済みEEWが毎フレーム消えることを防ぐ。
-    if (ref.watch(isReplayModeProvider)) {
+    // 非リアルタイム再生中はライブ受信を切り離し、再生中の時刻基準と
+    // 現在発生しているEEWが混在することを防ぐ。
+    if (!ref.watch(isRealtimeModeProvider)) {
       return const AsyncData([]);
     }
 
@@ -29,7 +27,7 @@ class Eew extends _$Eew {
 
     ref.listen(appLifecycleProvider, (_, next) {
       if (next == AppLifecycleState.resumed) {
-        ref.invalidate(_eewRestProvider);
+        ref.invalidate(_eewRestProvider, asReload: true);
       }
     });
 
@@ -51,7 +49,7 @@ class Eew extends _$Eew {
       (_) {
         final wsPhase = ref.read(eqMonitorWsStatusProvider).phase;
         if (wsPhase != WsPhase.connected) {
-          ref.invalidate(_eewRestProvider);
+          ref.invalidate(_eewRestProvider, asReload: true);
         }
       },
     );

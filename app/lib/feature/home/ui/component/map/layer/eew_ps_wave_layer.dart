@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:clock/clock.dart';
+import 'package:eqmonitor/core/provider/clock/app_clock.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -192,12 +192,14 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
           return null;
         }
 
+        var disposed = false;
+
         void listener() {
-          if (!isInitialized.value) {
+          if (disposed || !isInitialized.value) {
             return;
           }
           final travelTimeMap = ref.read(travelTimeDepthMapProvider);
-          final now = clock.now();
+          final now = ref.read(appClockProvider.notifier).now();
 
           final (pWaveGeojson, sWaveGeojson) = _calculateGeoJson(
             showEews,
@@ -225,6 +227,7 @@ class _EewPsWaveLayerBody extends HookConsumerWidget {
         }
 
         return () {
+          disposed = true;
           timer?.cancel();
           animationController.removeListener(listener);
         };

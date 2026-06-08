@@ -58,7 +58,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     required EarthquakeHistoryParameter param,
     required int limit,
   }) async {
-    ref.invalidate(earthquakeHistoryDetailsProvider);
+    ref.invalidate(earthquakeHistoryDetailsProvider, asReload: true);
     return _fetchData(param: param, limit: limit, cursor: null);
   }
 

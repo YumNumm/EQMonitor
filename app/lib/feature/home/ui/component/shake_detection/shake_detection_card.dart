@@ -22,14 +22,6 @@ class ShakeDetectionCard extends ConsumerWidget {
     final spacing = designSystem.spacing;
     final shape = designSystem.shape;
 
-    final regionBody = switch (regionsAsync) {
-      AsyncLoading() => const LinearProgressIndicator(minHeight: 2),
-      AsyncError() => const SizedBox.shrink(),
-      AsyncData(:final value) when value.isNotEmpty =>
-        _ShakeDetectionRegionBody(regions: value),
-      _ => const SizedBox.shrink(),
-    };
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: spacing.lg),
       child: Card(
@@ -45,7 +37,10 @@ class ShakeDetectionCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _ShakeDetectionCardHeader(event: event),
-            regionBody,
+            _ShakeDetectionCardBody(
+              event: event,
+              regionsAsync: regionsAsync,
+            ),
           ],
         ),
       ),
@@ -66,7 +61,7 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
 
     final bgColor = _headerColorForLevel(event.level);
     final title = _titleForLevel(event.level);
-    final timeStr = DateFormat('HH:mm').format(event.createdAt.toLocal());
+    final timeStr = DateFormat('HH:mm:ss').format(event.createdAt.toLocal());
 
     return DecoratedBox(
       decoration: BoxDecoration(color: bgColor),
@@ -117,10 +112,14 @@ class _ShakeDetectionCardHeader extends StatelessWidget {
       };
 }
 
-class _ShakeDetectionRegionBody extends StatelessWidget {
-  const _ShakeDetectionRegionBody({required this.regions});
+class _ShakeDetectionCardBody extends StatelessWidget {
+  const _ShakeDetectionCardBody({
+    required this.event,
+    required this.regionsAsync,
+  });
 
-  final Map<String, List<String>> regions;
+  final ShakeDetectionEvent event;
+  final AsyncValue<Map<String, List<String>>> regionsAsync;
 
   @override
   Widget build(BuildContext context) {
@@ -129,25 +128,43 @@ class _ShakeDetectionRegionBody extends StatelessWidget {
     final textColor = designSystem.textColor;
     final spacing = designSystem.spacing;
 
+    final regions = regionsAsync.asData?.value ?? {};
+
     return Padding(
-      padding: EdgeInsets.all(spacing.sm),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.sm,
+        vertical: spacing.sm,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final entry in regions.entries) ...[
-            Text(
-              entry.key,
-              style: typography.titleSmall,
+          Text(
+            '${event.pointCount}地点で検知',
+            style: typography.labelMedium.copyWith(
+              color: textColor.secondary,
             ),
-            Padding(
-              padding: EdgeInsets.only(left: spacing.sm),
-              child: Text(
-                entry.value.join(' '),
-                style: typography.bodySmall.copyWith(
-                  color: textColor.secondary,
+          ),
+          if (regionsAsync.isLoading) ...[
+            SizedBox(height: spacing.xs),
+            const LinearProgressIndicator(minHeight: 2),
+          ],
+          if (regions.isNotEmpty) ...[
+            SizedBox(height: spacing.xs),
+            for (final entry in regions.entries) ...[
+              Text(
+                entry.key,
+                style: typography.titleSmall,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: spacing.sm),
+                child: Text(
+                  entry.value.join(' '),
+                  style: typography.bodySmall.copyWith(
+                    color: textColor.secondary,
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ],
       ),

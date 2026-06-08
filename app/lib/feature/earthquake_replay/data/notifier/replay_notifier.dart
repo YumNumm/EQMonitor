@@ -82,8 +82,8 @@ class ReplayNotifier extends _$ReplayNotifier {
     ref.read(appClockProvider.notifier).returnToRealtime();
     // リプレイ由来のデータを破棄し、ライブ取得を再開させる。
     ref
-      ..invalidate(eewProvider)
-      ..invalidate(kyoshinMonitorProvider);
+      ..invalidate(eewProvider, asReload: true)
+      ..invalidate(kyoshinMonitorProvider, asReload: true);
   }
 
   Future<void> seekToIndex(int index) async {
@@ -189,7 +189,7 @@ class ReplayNotifier extends _$ReplayNotifier {
       ..read(appClockProvider.notifier).updateReplayTime(
         current.file.data[index].time,
       )
-      ..invalidate(eewProvider);
+      ..invalidate(eewProvider, asReload: true);
 
     final frames = current.file.data;
     for (var i = 0; i <= index; i++) {

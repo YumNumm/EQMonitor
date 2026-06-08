@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/widget/app_empty_state.dart';
 import 'package:eqmonitor/core/extension/let_ex.dart';
 import 'package:eqmonitor/feature/eew/data/eew_by_event_id.dart';
+import 'package:eqmonitor/feature/eew/data/eew_simulation_notifier.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_display_mode.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/eew/ui/components/eew_details_map_view.dart';
@@ -20,18 +21,60 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
+    final simulation = ref.watch(eewSimulationProvider);
     final selectedIndex = useState<int?>(null);
     final displayMode = useState(EewDisplayMode.intensity);
+
+    // Auto-select the latest report during simulation
+    useEffect(
+      () {
+        if (simulation != null && simulation.isPlaying) {
+          selectedIndex.value = simulation.currentIndex;
+        }
+        return null;
+      },
+      [simulation?.currentIndex],
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('緊急地震速報の履歴'),
         actions: [
-          _DisplayModeSelector(
-            displayMode: displayMode.value,
-            onChanged: (mode) => displayMode.value = mode,
-          ),
+          if (simulation != null) ...[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  '第${simulation.currentIndex + 1}報 / '
+                  '${simulation.totalReports}報',
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                simulation.isPlaying ? Icons.pause : Icons.play_arrow,
+              ),
+              onPressed: () {
+                if (simulation.isPlaying) {
+                  ref.read(eewSimulationProvider.notifier).pause();
+                } else {
+                  ref.read(eewSimulationProvider.notifier).resume();
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.stop),
+              onPressed: () =>
+                  ref.read(eewSimulationProvider.notifier).stop(),
+            ),
+          ] else
+            _DisplayModeSelector(
+              displayMode: displayMode.value,
+              onChanged: (mode) => displayMode.value = mode,
+            ),
         ],
       ),
       body: eewsAsyncValue.when(
@@ -46,32 +89,50 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
             (a, b) => a.serialNo.compareTo(b.serialNo),
           );
 
+          final displayedEews = simulation != null
+              ? sortedEews
+                    .take(simulation.currentIndex + 1)
+                    .toList()
+              : sortedEews;
+
           final idx = selectedIndex.value;
           final selectedEew =
-              (idx != null && idx < sortedEews.length)
-              ? sortedEews[idx]
+              (idx != null && idx >= 0 && idx < displayedEews.length)
+              ? displayedEews[idx]
               : null;
 
-          return _ResponsiveLayout(
-            eews: sortedEews,
-            selectedIndex: selectedIndex.value,
-            onSelect: (index) => selectedIndex.value = index,
-            selectedEew: selectedEew,
-            displayMode: displayMode.value,
-            initialCenter:
-                eews
-                    .map((eew) => eew.hypocenter)
-                    .nonNulls
-                    .where((h) => h.hasLatLng)
-                    .firstOrNull
-                    ?.let(
-                      (h) => Geographic(
-                        lat: h.latitude!,
-                        lon: h.longitude!,
-                      ),
-                    ) ??
-                const Geographic(lat: 35.6895, lon: 139.6917),
-            initZoom: 5,
+          return Column(
+            children: [
+              if (simulation == null && sortedEews.length > 1)
+                _SimulationStartBanner(
+                  onStart: () => ref
+                      .read(eewSimulationProvider.notifier)
+                      .start(sortedEews),
+                ),
+              Expanded(
+                child: _ResponsiveLayout(
+                  eews: displayedEews,
+                  selectedIndex: selectedIndex.value,
+                  onSelect: (index) => selectedIndex.value = index,
+                  selectedEew: selectedEew,
+                  displayMode: displayMode.value,
+                  initialCenter:
+                      eews
+                          .map((eew) => eew.hypocenter)
+                          .nonNulls
+                          .where((h) => h.hasLatLng)
+                          .firstOrNull
+                          ?.let(
+                            (h) => Geographic(
+                              lat: h.latitude!,
+                              lon: h.longitude!,
+                            ),
+                          ) ??
+                      const Geographic(lat: 35.6895, lon: 139.6917),
+                  initZoom: 5,
+                ),
+              ),
+            ],
           );
         },
         loading: () => const _EewDetailsByEventIdSkeleton(),
@@ -190,6 +251,47 @@ class _ResponsiveLayout extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _SimulationStartBanner extends StatelessWidget {
+  const _SimulationStartBanner({required this.onStart});
+
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: theme.colorScheme.primaryContainer,
+      child: InkWell(
+        onTap: onStart,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              Icon(
+                Icons.play_circle_outline,
+                color: theme.colorScheme.onPrimaryContainer,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'シミュレーション再生: 各報を実際の時間間隔で再生します',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: theme.colorScheme.onPrimaryContainer,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

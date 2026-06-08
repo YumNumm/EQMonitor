@@ -60,14 +60,14 @@ void main() {
   });
 
   group('EqmonitorWebSocketTicketRefreshDelayCalculator', () {
-    test('ticket refresh delay never becomes negative', () {
+    test('short-lived ticket refresh is delayed to avoid retry loops', () {
       const calculator = EqmonitorWebSocketTicketRefreshDelayCalculator();
       final now = DateTime.utc(2026, 6, 4, 12);
       final expiresAt = now.add(const Duration(seconds: 10));
 
       final delay = calculator.calculate(now: now, expiresAt: expiresAt);
 
-      expect(delay, Duration.zero);
+      expect(delay, const Duration(seconds: 5));
     });
 
     test('returns (expiresAt - now - 30s) when positive', () {

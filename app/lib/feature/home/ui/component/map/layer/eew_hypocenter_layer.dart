@@ -195,7 +195,7 @@ class EewHypocenterLayer extends HookConsumerWidget {
 
         return null;
       },
-      [styleController, normalEews],
+      [styleController, normalEews, lowPreciseEews],
     );
 
     return const SizedBox.shrink();

@@ -11,11 +11,12 @@ import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 /// 現在地に対応する震度を表示する。
-class CurrentLocationIntensityCard extends ConsumerWidget {
+class CurrentLocationIntensityCard extends HookConsumerWidget {
   const CurrentLocationIntensityCard({required this.item, super.key});
 
   final Earthquake item;
@@ -27,20 +28,43 @@ class CurrentLocationIntensityCard extends ConsumerWidget {
     }
 
     final position = ref.watch(locationStreamProvider).value;
-    final latLng = position != null
-        ? LatLng(position.latitude, position.longitude)
-        : null;
+    final latLng = useMemoized(
+      () => position != null
+          ? LatLng(position.latitude, position.longitude)
+          : null,
+      [position?.latitude, position?.longitude],
+    );
 
     if (latLng == null) {
       return const SizedBox.shrink();
     }
 
-    final city = ref
+    final cityCode = ref
         .watch(
           jmaMapAreaInformationCityInsideProvider(latLng),
         )
-        .value;
-    final cityCode = city?.property?.code;
+        .value
+        ?.property
+        ?.code;
+    final regionCode = ref
+        .watch(
+          jmaMapAreaForecastLocalEInsideProvider(latLng),
+        )
+        .value
+        ?.property
+        ?.code;
+
+    final cachedCityCode = useRef<String?>(null);
+    final cachedRegionCode = useRef<String?>(null);
+    if (cityCode != null) {
+      cachedCityCode.value = cityCode;
+    }
+    if (regionCode != null) {
+      cachedRegionCode.value = regionCode;
+    }
+    final effectiveCityCode = cityCode ?? cachedCityCode.value;
+    final effectiveRegionCode = regionCode ?? cachedRegionCode.value;
+
     final cityParameter = ref.watch(
       parameterSetProvider.select(
         (v) => v.value?.earthquake.prefectures
@@ -51,45 +75,30 @@ class CurrentLocationIntensityCard extends ConsumerWidget {
                 ),
               ),
             )
-            .firstWhereOrNull((e) => e.city.code == cityCode),
+            .firstWhereOrNull((e) => e.city.code == effectiveCityCode),
       ),
     );
     final cityParameterName = cityParameter != null
         ? '${cityParameter.prefecture.name.ja}${cityParameter.city.name.ja}'
         : null;
-    final region = ref
-        .watch(
-          jmaMapAreaForecastLocalEInsideProvider(latLng),
-        )
-        .value;
-    final regionCode = region?.property?.code;
     final regionParameter = ref.watch(
       parameterSetProvider.select(
         (v) => v.value?.earthquake.prefectures
             .expand((p) => p.regions)
-            .firstWhereOrNull((r) => r.code == regionCode),
+            .firstWhereOrNull((r) => r.code == effectiveRegionCode),
       ),
     );
 
     final state = ref.watch(
       currentLocationIntensityProvider(
         eventId: item.eventId,
-        cityAreaCode: city?.property?.code,
-        regionAreaCode: region?.property?.code,
+        cityAreaCode: effectiveCityCode,
+        regionAreaCode: effectiveRegionCode,
       ),
     );
 
     return state.when(
-      loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Center(
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-          ),
-        ),
-      ),
+      loading: () => const SizedBox.shrink(),
       error: (error, stackTrace) => const SizedBox.shrink(),
       data: (value) => switch (value) {
         CurrentLocationIntensityDisplayNone() => const SizedBox.shrink(),

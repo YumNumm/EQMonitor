@@ -49,22 +49,22 @@ class DebugAppGroupAction {
     final prefs = await ref.read(appGroupPreferencesProvider.future);
     await prefs.setString('apiServerUrl', result);
     ref
-      ..invalidate(appGroupValuesProvider)
-      ..invalidate(appGroupSettingsWriterProvider);
+      ..invalidate(appGroupValuesProvider, asReload: true)
+      ..invalidate(appGroupSettingsWriterProvider, asReload: true);
   }
 
   Future<void> setDebugMode(WidgetRef ref, {required bool value}) async {
     final prefs = await ref.read(appGroupPreferencesProvider.future);
     await prefs.setBool('debugMode', value);
     ref
-      ..invalidate(appGroupValuesProvider)
-      ..invalidate(appGroupSettingsWriterProvider);
+      ..invalidate(appGroupValuesProvider, asReload: true)
+      ..invalidate(appGroupSettingsWriterProvider, asReload: true);
   }
 
   Future<void> syncFromProvider(WidgetRef ref, BuildContext context) async {
-    ref.invalidate(appGroupSettingsWriterProvider);
+    ref.invalidate(appGroupSettingsWriterProvider, asReload: true);
     await ref.read(appGroupSettingsWriterProvider.future);
-    ref.invalidate(appGroupValuesProvider);
+    ref.invalidate(appGroupValuesProvider, asReload: true);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('App Groups を再同期しました')),

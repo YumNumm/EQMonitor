@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/current_location
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/provider/current_location_intensity_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
@@ -21,6 +22,7 @@ import 'package:lat_lng/lat_lng.dart';
 class EarthquakeHistoryListTile extends HookConsumerWidget {
   const EarthquakeHistoryListTile({
     required this.item,
+    this.areaInfo,
     this.onTap,
     this.showBackgroundColor = true,
     this.intensityIconSize = 40.0,
@@ -35,6 +37,10 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
   });
 
   final EarthquakePartial item;
+
+  /// 地域検索時にレスポンスに含まれる、検索対象地域の震度情報。
+  final IntensityAreaInfo? areaInfo;
+
   final void Function()? onTap;
   final bool showBackgroundColor;
   final double intensityIconSize;
@@ -97,8 +103,15 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       null => '',
     };
 
-    // 現在地情報（スコープが現在地の場合のみ取得）
-    final position = showCurrentLocationIntensity
+    // 地域検索時のエリア震度（レスポンスに含まれる情報をそのまま使用）
+    final areaChipLabel = areaInfo != null && areaInfo!.intensity != null
+        ? '${areaInfo!.name} 震度${areaInfo!.intensity!.label}'
+        : null;
+
+    // 現在地情報（areaInfo がない場合のみ取得）
+    final needsCurrentLocation =
+        showCurrentLocationIntensity && areaInfo == null;
+    final position = needsCurrentLocation
         ? ref.watch(locationStreamProvider).value
         : null;
     final latLng = position != null
@@ -113,7 +126,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         : null;
 
     final cityCode = city?.property?.code;
-    final cityParam = showCurrentLocationIntensity && cityCode != null
+    final cityParam = needsCurrentLocation && cityCode != null
         ? ref.watch(
             parameterSetProvider.select(
               (v) => v.value?.earthquake.prefectures
@@ -128,7 +141,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         : null;
 
     final regionCode = region?.property?.code;
-    final regionParam = showCurrentLocationIntensity && regionCode != null
+    final regionParam = needsCurrentLocation && regionCode != null
         ? ref.watch(
             parameterSetProvider.select(
               (v) => v.value?.earthquake.prefectures
@@ -140,7 +153,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           )
         : null;
 
-    final currentLocationIntensityAsync = showCurrentLocationIntensity
+    final currentLocationIntensityAsync = needsCurrentLocation
         ? ref.watch(
             currentLocationIntensityProvider(
               eventId: item.eventId,
@@ -157,15 +170,15 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       _ => null,
     };
 
-    // 現在地の震度チップテキストを解決
-    final currentLocationChipLabel = switch (currentLocationIntensityAsync
-        ?.value) {
-      CurrentLocationIntensityDisplayQuick(:final intensity) =>
-        '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label} (速報)',
-      CurrentLocationIntensityDisplayResult(:final intensity) =>
-        '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label}',
-      CurrentLocationIntensityDisplayNone() || null => currentLocationName,
-    };
+    // 表示ラベルの解決: areaInfo > currentLocationIntensity の優先順位
+    final currentLocationChipLabel = areaChipLabel ??
+        switch (currentLocationIntensityAsync?.value) {
+          CurrentLocationIntensityDisplayQuick(:final intensity) =>
+            '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label} (速報)',
+          CurrentLocationIntensityDisplayResult(:final intensity) =>
+            '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label}',
+          CurrentLocationIntensityDisplayNone() || null => currentLocationName,
+        };
 
     return ListTile(
       visualDensity: visualDensity,

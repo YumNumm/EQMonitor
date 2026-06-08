@@ -10,6 +10,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -111,7 +112,13 @@ class _ResolvedEarthquakeHistoryFillLayer extends HookConsumerWidget {
               if (disposed) {
                 return;
               }
-              await styleController.addLayer(layer);
+              final belowLayerId = layer.id.contains('-city-')
+                  ? BaseLayer.areaInformationCityQuakeLine.name
+                  : BaseLayer.areaForecastLocalELine.name;
+              await styleController.addLayer(
+                layer,
+                belowLayerId: belowLayerId,
+              );
               addedLayerIds.add(layer.id);
             }
           } on Exception catch (e) {
