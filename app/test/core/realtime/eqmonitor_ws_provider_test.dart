@@ -12,6 +12,7 @@ final class FakeWebSocket implements WebSocket {
   FakeWebSocket();
 
   final _controller = StreamController<WebSocketEvent>();
+  // ignore: omit_obvious_property_types
   bool closeCalled = false;
 
   @override

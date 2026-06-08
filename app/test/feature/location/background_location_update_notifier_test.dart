@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element_parameter
+
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/device_id.dart';
@@ -83,17 +85,16 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
 
   @override
   Future<Result<List<ShakeDetectionEntry>, Exception>>
-      getShakeDetectionSettings(String deviceId) async =>
-          Success(shakeEntries);
+  getShakeDetectionSettings(String deviceId) async => Success(shakeEntries);
 
   @override
   Future<Result<List<ShakeDetectionSubRegion>, Exception>>
-      getShakeDetectionSubRegions(String deviceId) async =>
-          Success(availableSubRegions);
+  getShakeDetectionSubRegions(String deviceId) async =>
+      Success(availableSubRegions);
 
   @override
   Future<Result<List<ShakeDetectionEntry>, Exception>>
-      putShakeDetectionSettings({
+  putShakeDetectionSettings({
     required String deviceId,
     required List<ShakeDetectionEntry> entries,
   }) async {
@@ -117,14 +118,12 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
   @override
   Future<Result<EewNotificationSettings, Exception>> getEewSettings(
     String deviceId,
-  ) async =>
-      Success(eewSettings);
+  ) async => Success(eewSettings);
 
   @override
   Future<Result<List<NotificationRegion>, Exception>> getEewRegions(
     String deviceId,
-  ) async =>
-      Success(eewRegions);
+  ) async => Success(eewRegions);
 
   @override
   Future<Result<List<NotificationRegion>, Exception>> putEewRegions({
@@ -138,14 +137,12 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
 
   @override
   Future<Result<EarthquakeNotificationSettings, Exception>>
-      getEarthquakeSettings(String deviceId) async =>
-          Success(earthquakeSettings);
+  getEarthquakeSettings(String deviceId) async => Success(earthquakeSettings);
 
   @override
   Future<Result<List<NotificationRegion>, Exception>> getEarthquakeRegions(
     String deviceId,
-  ) async =>
-      Success(earthquakeRegions);
+  ) async => Success(earthquakeRegions);
 
   @override
   Future<Result<List<NotificationRegion>, Exception>> putEarthquakeRegions({
@@ -164,18 +161,16 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
     required JmaIntensity? criticalThreshold,
     required bool startLiveActivity,
     required bool onePointEnabled,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 
   @override
   Future<Result<EarthquakeNotificationSettings, Exception>>
-      patchEarthquakeSettings({
+  patchEarthquakeSettings({
     required String deviceId,
     required bool enabled,
     required JmaIntensity? criticalThreshold,
     required bool estimatedIntensityEnabled,
-  }) =>
-          throw UnimplementedError();
+  }) => throw UnimplementedError();
 }
 
 // ---------------------------------------------------------------------------
@@ -183,18 +178,21 @@ class _FakeRepo implements DeviceNotificationSettingsRepository {
 // ---------------------------------------------------------------------------
 
 ProviderContainer _createContainer(_FakeRepo repo) => ProviderContainer(
-      overrides: [
-        deviceProvisioningProvider
-            .overrideWith(() => _FakeDeviceProvisioningNotifier()),
-        deviceIdProvider.overrideWith((ref) async => 'test-device'),
-        deviceNotificationSettingsRepositoryProvider
-            .overrideWith((ref) async => repo),
-        // Prevent cross-notifier reads from blowing up during removeEntry etc.
-        eewSettingsProvider.overrideWith(() => _FakeEewSettingsNotifier()),
-        earthquakeNotificationSettingsProvider
-            .overrideWith(() => _FakeEarthquakeNotificationSettingsNotifier()),
-      ],
-    );
+  overrides: [
+    deviceProvisioningProvider.overrideWith(
+      _FakeDeviceProvisioningNotifier.new,
+    ),
+    deviceIdProvider.overrideWith((ref) async => 'test-device'),
+    deviceNotificationSettingsRepositoryProvider.overrideWith(
+      (ref) async => repo,
+    ),
+    // Prevent cross-notifier reads from blowing up during removeEntry etc.
+    eewSettingsProvider.overrideWith(_FakeEewSettingsNotifier.new),
+    earthquakeNotificationSettingsProvider.overrideWith(
+      _FakeEarthquakeNotificationSettingsNotifier.new,
+    ),
+  ],
+);
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -205,8 +203,7 @@ void main() {
   // ShakeDetectionSettingsNotifier.updateCurrentLocationSubRegion
   // ==========================================================================
   group('ShakeDetectionSettingsNotifier.updateCurrentLocationSubRegion', () {
-    test('cityCode に一致する availableSubRegion があれば subRegionId を更新する',
-        () async {
+    test('cityCode に一致する availableSubRegion があれば subRegionId を更新する', () async {
       final repo = _FakeRepo(
         shakeEntries: const [
           ShakeDetectionEntry(
@@ -295,36 +292,38 @@ void main() {
       expect(repo.putShakeDetectionCalls, isEmpty);
     });
 
-    test('cityCode が availableSubRegions に存在しない場合は subRegionId を null にする',
-        () async {
-      final repo = _FakeRepo(
-        shakeEntries: const [
-          ShakeDetectionEntry(
-            id: 'entry-1',
-            subRegionId: 'sr-1',
-            subRegionName: null,
-            minLevel: api.ShakeDetectionLevel.medium,
-            isCurrentLocation: true,
-          ),
-        ],
-        availableSubRegions: const [
-          ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
-        ],
-      );
-      final container = _createContainer(repo);
-      addTeardownToContainer(container);
+    test(
+      'cityCode が availableSubRegions に存在しない場合は subRegionId を null にする',
+      () async {
+        final repo = _FakeRepo(
+          shakeEntries: const [
+            ShakeDetectionEntry(
+              id: 'entry-1',
+              subRegionId: 'sr-1',
+              subRegionName: null,
+              minLevel: api.ShakeDetectionLevel.medium,
+              isCurrentLocation: true,
+            ),
+          ],
+          availableSubRegions: const [
+            ShakeDetectionSubRegion(id: 'sr-1', code: '0720100', name: '福島市'),
+          ],
+        );
+        final container = _createContainer(repo);
+        addTeardownToContainer(container);
 
-      await container.read(shakeDetectionSettingsProvider.future);
+        await container.read(shakeDetectionSettingsProvider.future);
 
-      // 存在しない cityCode を渡す
-      final result = await container
-          .read(shakeDetectionSettingsProvider.notifier)
-          .updateCurrentLocationSubRegion('9999999');
+        // 存在しない cityCode を渡す
+        final result = await container
+            .read(shakeDetectionSettingsProvider.notifier)
+            .updateCurrentLocationSubRegion('9999999');
 
-      expect(result, isTrue);
-      expect(repo.putShakeDetectionCalls, hasLength(1));
-      expect(repo.putShakeDetectionCalls.first.first.subRegionId, isNull);
-    });
+        expect(result, isTrue);
+        expect(repo.putShakeDetectionCalls, hasLength(1));
+        expect(repo.putShakeDetectionCalls.first.first.subRegionId, isNull);
+      },
+    );
 
     test('cityCode が null の場合は subRegionId を null にする', () async {
       final repo = _FakeRepo(
@@ -420,8 +419,7 @@ void main() {
       addTeardownToContainer(container);
 
       await container.read(shakeDetectionSettingsProvider.future);
-      final notifier =
-          container.read(shakeDetectionSettingsProvider.notifier);
+      final notifier = container.read(shakeDetectionSettingsProvider.notifier);
 
       // 1st update: null → sr-1
       expect(await notifier.updateCurrentLocationSubRegion('0720100'), isTrue);
@@ -451,16 +449,18 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
+          deviceProvisioningProvider.overrideWith(
+            _FakeDeviceProvisioningNotifier.new,
+          ),
           deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
+          deviceNotificationSettingsRepositoryProvider.overrideWith(
+            (ref) async => repo,
+          ),
           shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
+            _FakeShakeDetectionSettingsNotifier.new,
           ),
           earthquakeNotificationSettingsProvider.overrideWith(
-            () => _FakeEarthquakeNotificationSettingsNotifier(),
+            _FakeEarthquakeNotificationSettingsNotifier.new,
           ),
         ],
       );
@@ -493,16 +493,18 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
+          deviceProvisioningProvider.overrideWith(
+            _FakeDeviceProvisioningNotifier.new,
+          ),
           deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
+          deviceNotificationSettingsRepositoryProvider.overrideWith(
+            (ref) async => repo,
+          ),
           shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
+            _FakeShakeDetectionSettingsNotifier.new,
           ),
           earthquakeNotificationSettingsProvider.overrideWith(
-            () => _FakeEarthquakeNotificationSettingsNotifier(),
+            _FakeEarthquakeNotificationSettingsNotifier.new,
           ),
         ],
       );
@@ -534,16 +536,18 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
+          deviceProvisioningProvider.overrideWith(
+            _FakeDeviceProvisioningNotifier.new,
+          ),
           deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
+          deviceNotificationSettingsRepositoryProvider.overrideWith(
+            (ref) async => repo,
+          ),
           shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
+            _FakeShakeDetectionSettingsNotifier.new,
           ),
           earthquakeNotificationSettingsProvider.overrideWith(
-            () => _FakeEarthquakeNotificationSettingsNotifier(),
+            _FakeEarthquakeNotificationSettingsNotifier.new,
           ),
         ],
       );
@@ -580,16 +584,18 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
+          deviceProvisioningProvider.overrideWith(
+            _FakeDeviceProvisioningNotifier.new,
+          ),
           deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
+          deviceNotificationSettingsRepositoryProvider.overrideWith(
+            (ref) async => repo,
+          ),
           shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
+            _FakeShakeDetectionSettingsNotifier.new,
           ),
           earthquakeNotificationSettingsProvider.overrideWith(
-            () => _FakeEarthquakeNotificationSettingsNotifier(),
+            _FakeEarthquakeNotificationSettingsNotifier.new,
           ),
         ],
       );
@@ -619,189 +625,195 @@ void main() {
   // EarthquakeNotificationSettingsNotifier.updateCurrentLocationRegion
   // ==========================================================================
   group(
-      'EarthquakeNotificationSettingsNotifier.updateCurrentLocationRegion', () {
-    test('regionCode と cityCode の両方が変化した場合に更新する', () async {
-      final repo = _FakeRepo(
-        earthquakeRegions: const [
-          NotificationRegion(
-            regionId: 250,
-            regionName: '福島県中通り',
-            cityCode: '0720100',
-            cityName: '福島市',
-            isCurrentLocation: true,
-            minJmaIntensity: JmaIntensity.four,
-          ),
-        ],
-      );
-      final container = ProviderContainer(
-        overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
-          deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
-          eewSettingsProvider.overrideWith(() => _FakeEewSettingsNotifier()),
-          shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
-          ),
-        ],
-      );
-      addTeardownToContainer(container);
+    'EarthquakeNotificationSettingsNotifier.updateCurrentLocationRegion',
+    () {
+      test('regionCode と cityCode の両方が変化した場合に更新する', () async {
+        final repo = _FakeRepo(
+          earthquakeRegions: const [
+            NotificationRegion(
+              regionId: 250,
+              regionName: '福島県中通り',
+              cityCode: '0720100',
+              cityName: '福島市',
+              isCurrentLocation: true,
+              minJmaIntensity: JmaIntensity.four,
+            ),
+          ],
+        );
+        final container = ProviderContainer(
+          overrides: [
+            deviceProvisioningProvider.overrideWith(
+              _FakeDeviceProvisioningNotifier.new,
+            ),
+            deviceIdProvider.overrideWith((ref) async => 'test-device'),
+            deviceNotificationSettingsRepositoryProvider.overrideWith(
+              (ref) async => repo,
+            ),
+            eewSettingsProvider.overrideWith(_FakeEewSettingsNotifier.new),
+            shakeDetectionSettingsProvider.overrideWith(
+              _FakeShakeDetectionSettingsNotifier.new,
+            ),
+          ],
+        );
+        addTeardownToContainer(container);
 
-      await container
-          .read(earthquakeNotificationSettingsProvider.future);
+        await container.read(earthquakeNotificationSettingsProvider.future);
 
-      final result = await container
-          .read(earthquakeNotificationSettingsProvider.notifier)
-          .updateCurrentLocationRegion(
-            regionCode: 251,
-            regionName: '福島県浜通り',
-            cityCode: '0720300',
-            cityName: 'いわき市',
-          );
+        final result = await container
+            .read(earthquakeNotificationSettingsProvider.notifier)
+            .updateCurrentLocationRegion(
+              regionCode: 251,
+              regionName: '福島県浜通り',
+              cityCode: '0720300',
+              cityName: 'いわき市',
+            );
 
-      expect(result, isTrue);
-      expect(repo.putEarthquakeRegionsCalls, hasLength(1));
-      final region = repo.putEarthquakeRegionsCalls.first.first;
-      expect(region.regionId, 251);
-      expect(region.cityCode, '0720300');
-    });
+        expect(result, isTrue);
+        expect(repo.putEarthquakeRegionsCalls, hasLength(1));
+        final region = repo.putEarthquakeRegionsCalls.first.first;
+        expect(region.regionId, 251);
+        expect(region.cityCode, '0720300');
+      });
 
-    test('cityCode のみ変化した場合でも更新する', () async {
-      final repo = _FakeRepo(
-        earthquakeRegions: const [
-          NotificationRegion(
-            regionId: 250,
-            regionName: '福島県中通り',
-            cityCode: '0720100',
-            cityName: '福島市',
-            isCurrentLocation: true,
-            minJmaIntensity: JmaIntensity.four,
-          ),
-        ],
-      );
-      final container = ProviderContainer(
-        overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
-          deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
-          eewSettingsProvider.overrideWith(() => _FakeEewSettingsNotifier()),
-          shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
-          ),
-        ],
-      );
-      addTeardownToContainer(container);
+      test('cityCode のみ変化した場合でも更新する', () async {
+        final repo = _FakeRepo(
+          earthquakeRegions: const [
+            NotificationRegion(
+              regionId: 250,
+              regionName: '福島県中通り',
+              cityCode: '0720100',
+              cityName: '福島市',
+              isCurrentLocation: true,
+              minJmaIntensity: JmaIntensity.four,
+            ),
+          ],
+        );
+        final container = ProviderContainer(
+          overrides: [
+            deviceProvisioningProvider.overrideWith(
+              _FakeDeviceProvisioningNotifier.new,
+            ),
+            deviceIdProvider.overrideWith((ref) async => 'test-device'),
+            deviceNotificationSettingsRepositoryProvider.overrideWith(
+              (ref) async => repo,
+            ),
+            eewSettingsProvider.overrideWith(_FakeEewSettingsNotifier.new),
+            shakeDetectionSettingsProvider.overrideWith(
+              _FakeShakeDetectionSettingsNotifier.new,
+            ),
+          ],
+        );
+        addTeardownToContainer(container);
 
-      await container
-          .read(earthquakeNotificationSettingsProvider.future);
+        await container.read(earthquakeNotificationSettingsProvider.future);
 
-      // regionCode は同じだが cityCode が異なる
-      final result = await container
-          .read(earthquakeNotificationSettingsProvider.notifier)
-          .updateCurrentLocationRegion(
-            regionCode: 250,
-            regionName: '福島県中通り',
-            cityCode: '0720500',
-            cityName: '伊達市',
-          );
+        // regionCode は同じだが cityCode が異なる
+        final result = await container
+            .read(earthquakeNotificationSettingsProvider.notifier)
+            .updateCurrentLocationRegion(
+              regionCode: 250,
+              regionName: '福島県中通り',
+              cityCode: '0720500',
+              cityName: '伊達市',
+            );
 
-      expect(result, isTrue);
-      expect(repo.putEarthquakeRegionsCalls, hasLength(1));
-      final region = repo.putEarthquakeRegionsCalls.first.first;
-      expect(region.regionId, 250);
-      expect(region.cityCode, '0720500');
-      expect(region.cityName, '伊達市');
-    });
+        expect(result, isTrue);
+        expect(repo.putEarthquakeRegionsCalls, hasLength(1));
+        final region = repo.putEarthquakeRegionsCalls.first.first;
+        expect(region.regionId, 250);
+        expect(region.cityCode, '0720500');
+        expect(region.cityName, '伊達市');
+      });
 
-    test('regionCode と cityCode がどちらも同一なら false', () async {
-      final repo = _FakeRepo(
-        earthquakeRegions: const [
-          NotificationRegion(
-            regionId: 250,
-            regionName: '福島県中通り',
-            cityCode: '0720100',
-            cityName: '福島市',
-            isCurrentLocation: true,
-            minJmaIntensity: JmaIntensity.four,
-          ),
-        ],
-      );
-      final container = ProviderContainer(
-        overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
-          deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
-          eewSettingsProvider.overrideWith(() => _FakeEewSettingsNotifier()),
-          shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
-          ),
-        ],
-      );
-      addTeardownToContainer(container);
+      test('regionCode と cityCode がどちらも同一なら false', () async {
+        final repo = _FakeRepo(
+          earthquakeRegions: const [
+            NotificationRegion(
+              regionId: 250,
+              regionName: '福島県中通り',
+              cityCode: '0720100',
+              cityName: '福島市',
+              isCurrentLocation: true,
+              minJmaIntensity: JmaIntensity.four,
+            ),
+          ],
+        );
+        final container = ProviderContainer(
+          overrides: [
+            deviceProvisioningProvider.overrideWith(
+              _FakeDeviceProvisioningNotifier.new,
+            ),
+            deviceIdProvider.overrideWith((ref) async => 'test-device'),
+            deviceNotificationSettingsRepositoryProvider.overrideWith(
+              (ref) async => repo,
+            ),
+            eewSettingsProvider.overrideWith(_FakeEewSettingsNotifier.new),
+            shakeDetectionSettingsProvider.overrideWith(
+              _FakeShakeDetectionSettingsNotifier.new,
+            ),
+          ],
+        );
+        addTeardownToContainer(container);
 
-      await container
-          .read(earthquakeNotificationSettingsProvider.future);
+        await container.read(earthquakeNotificationSettingsProvider.future);
 
-      final result = await container
-          .read(earthquakeNotificationSettingsProvider.notifier)
-          .updateCurrentLocationRegion(
-            regionCode: 250,
-            regionName: '福島県中通り',
-            cityCode: '0720100',
-            cityName: '福島市',
-          );
+        final result = await container
+            .read(earthquakeNotificationSettingsProvider.notifier)
+            .updateCurrentLocationRegion(
+              regionCode: 250,
+              regionName: '福島県中通り',
+              cityCode: '0720100',
+              cityName: '福島市',
+            );
 
-      expect(result, isFalse);
-      expect(repo.putEarthquakeRegionsCalls, isEmpty);
-    });
+        expect(result, isFalse);
+        expect(repo.putEarthquakeRegionsCalls, isEmpty);
+      });
 
-    test('現在地エントリがない場合は false を返す', () async {
-      final repo = _FakeRepo(
-        earthquakeRegions: const [
-          NotificationRegion(
-            regionId: 250,
-            regionName: '福島県中通り',
-            isCurrentLocation: false,
-            minJmaIntensity: JmaIntensity.four,
-          ),
-        ],
-      );
-      final container = ProviderContainer(
-        overrides: [
-          deviceProvisioningProvider
-              .overrideWith(() => _FakeDeviceProvisioningNotifier()),
-          deviceIdProvider.overrideWith((ref) async => 'test-device'),
-          deviceNotificationSettingsRepositoryProvider
-              .overrideWith((ref) async => repo),
-          eewSettingsProvider.overrideWith(() => _FakeEewSettingsNotifier()),
-          shakeDetectionSettingsProvider.overrideWith(
-            () => _FakeShakeDetectionSettingsNotifier(),
-          ),
-        ],
-      );
-      addTeardownToContainer(container);
+      test('現在地エントリがない場合は false を返す', () async {
+        final repo = _FakeRepo(
+          earthquakeRegions: const [
+            NotificationRegion(
+              regionId: 250,
+              regionName: '福島県中通り',
+              isCurrentLocation: false,
+              minJmaIntensity: JmaIntensity.four,
+            ),
+          ],
+        );
+        final container = ProviderContainer(
+          overrides: [
+            deviceProvisioningProvider.overrideWith(
+              _FakeDeviceProvisioningNotifier.new,
+            ),
+            deviceIdProvider.overrideWith((ref) async => 'test-device'),
+            deviceNotificationSettingsRepositoryProvider.overrideWith(
+              (ref) async => repo,
+            ),
+            eewSettingsProvider.overrideWith(_FakeEewSettingsNotifier.new),
+            shakeDetectionSettingsProvider.overrideWith(
+              _FakeShakeDetectionSettingsNotifier.new,
+            ),
+          ],
+        );
+        addTeardownToContainer(container);
 
-      await container
-          .read(earthquakeNotificationSettingsProvider.future);
+        await container.read(earthquakeNotificationSettingsProvider.future);
 
-      final result = await container
-          .read(earthquakeNotificationSettingsProvider.notifier)
-          .updateCurrentLocationRegion(
-            regionCode: 251,
-            regionName: '福島県浜通り',
-            cityCode: '0720300',
-            cityName: 'いわき市',
-          );
+        final result = await container
+            .read(earthquakeNotificationSettingsProvider.notifier)
+            .updateCurrentLocationRegion(
+              regionCode: 251,
+              regionName: '福島県浜通り',
+              cityCode: '0720300',
+              cityName: 'いわき市',
+            );
 
-      expect(result, isFalse);
-      expect(repo.putEarthquakeRegionsCalls, isEmpty);
-    });
-  });
+        expect(result, isFalse);
+        expect(repo.putEarthquakeRegionsCalls, isEmpty);
+      });
+    },
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -818,6 +830,8 @@ void addTeardownToContainer(ProviderContainer container) {
 class _FakeShakeDetectionSettingsNotifier
     extends ShakeDetectionSettingsNotifier {
   @override
-  Future<ShakeDetectionState> build() async =>
-      (entries: <ShakeDetectionEntry>[], availableSubRegions: <ShakeDetectionSubRegion>[]);
+  Future<ShakeDetectionState> build() async => (
+    entries: <ShakeDetectionEntry>[],
+    availableSubRegions: <ShakeDetectionSubRegion>[],
+  );
 }

@@ -2,8 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/feature/telegram_list/domain/earthquake_body_diff.dart';
-import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -29,7 +28,7 @@ class IntensityRegionList extends ConsumerWidget {
     final intensityColor = ref.watch(intensityColorProvider);
 
     // 震度階級ごとにグループ化
-    final grouped = groupBy<IntensityRegionDiffEntry, api.JmaIntensity>(
+    final grouped = groupBy<IntensityRegionDiffEntry, JmaIntensity>(
       entries,
       (e) => e.intensity,
     );
@@ -37,20 +36,20 @@ class IntensityRegionList extends ConsumerWidget {
     // 震度降順でソート
     final sortedKeys = grouped.keys.toList()
       ..sort(
-        (a, b) => b.toJmaIntensity.orderIndex
-            .compareTo(a.toJmaIntensity.orderIndex),
+        (a, b) => b.orderIndex.compareTo(a.orderIndex),
       );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final apiIntensity in sortedKeys)
-          _IntensityRow(
-            apiIntensity: apiIntensity,
-            entries: grouped[apiIntensity]!,
-            intensityColor: intensityColor,
-            prefectureMap: prefectureMap,
-          ),
+        for (final intensity in sortedKeys)
+          if (grouped[intensity] case final entries?)
+            _IntensityRow(
+              intensity: intensity,
+              entries: entries,
+              intensityColor: intensityColor,
+              prefectureMap: prefectureMap,
+            ),
       ],
     );
   }
@@ -58,21 +57,20 @@ class IntensityRegionList extends ConsumerWidget {
 
 class _IntensityRow extends StatelessWidget {
   const _IntensityRow({
-    required this.apiIntensity,
+    required this.intensity,
     required this.entries,
     required this.intensityColor,
     this.prefectureMap,
   });
 
-  final api.JmaIntensity apiIntensity;
+  final JmaIntensity intensity;
   final List<IntensityRegionDiffEntry> entries;
   final IntensityColorModel intensityColor;
   final Map<String, String>? prefectureMap;
 
   @override
   Widget build(BuildContext context) {
-    final appIntensity = apiIntensity.toJmaIntensity;
-    final color = intensityColor.fromJmaIntensity(appIntensity);
+    final color = intensityColor.fromJmaIntensity(intensity);
     final theme = Theme.of(context);
 
     return Padding(
@@ -90,7 +88,7 @@ class _IntensityRow extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text(
-              '${appIntensity.mainText}${appIntensity.suffix}',
+              '${intensity.mainText}${intensity.suffix}',
               style: TextStyle(
                 color: color.foreground,
                 fontSize: 12,
@@ -121,8 +119,7 @@ class _IntensityRow extends StatelessWidget {
   Widget _buildPrefectureGrouped(ThemeData theme) {
     final byPrefecture = <String, List<IntensityRegionDiffEntry>>{};
     for (final entry in entries) {
-      final prefCode =
-          entry.code.length >= 2 ? entry.code.substring(0, 2) : '';
+      final prefCode = entry.code.length >= 2 ? entry.code.substring(0, 2) : '';
       (byPrefecture[prefCode] ??= []).add(entry);
     }
 
@@ -162,44 +159,42 @@ class _RegionChip extends StatelessWidget {
 
     return switch (entry.diffType) {
       IntensityDiffType.same => Text(
-          entry.name,
-          style: baseStyle,
-        ),
+        entry.name,
+        style: baseStyle,
+      ),
       IntensityDiffType.added => Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(text: entry.name, style: boldStyle),
-              TextSpan(
-                text: '(追加)',
-                style: boldStyle.copyWith(color: Colors.blue.shade700),
-              ),
-            ],
-          ),
+        TextSpan(
+          children: [
+            TextSpan(text: entry.name, style: boldStyle),
+            TextSpan(
+              text: '(追加)',
+              style: boldStyle.copyWith(color: Colors.blue.shade700),
+            ),
+          ],
         ),
+      ),
       IntensityDiffType.upgraded => Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(text: entry.name, style: boldStyle),
-              TextSpan(
-                text:
-                    '(震度${entry.previousIntensity?.toJmaIntensity.label ?? ""}↑)',
-                style: boldStyle.copyWith(color: Colors.orange.shade800),
-              ),
-            ],
-          ),
+        TextSpan(
+          children: [
+            TextSpan(text: entry.name, style: boldStyle),
+            TextSpan(
+              text: '(震度${entry.previousIntensity?.label ?? ""}↑)',
+              style: boldStyle.copyWith(color: Colors.orange.shade800),
+            ),
+          ],
         ),
+      ),
       IntensityDiffType.downgraded => Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(text: entry.name, style: boldStyle),
-              TextSpan(
-                text:
-                    '(震度${entry.previousIntensity?.toJmaIntensity.label ?? ""}↓)',
-                style: boldStyle.copyWith(color: Colors.orange.shade800),
-              ),
-            ],
-          ),
+        TextSpan(
+          children: [
+            TextSpan(text: entry.name, style: boldStyle),
+            TextSpan(
+              text: '(震度${entry.previousIntensity?.label ?? ""}↓)',
+              style: boldStyle.copyWith(color: Colors.orange.shade800),
+            ),
+          ],
         ),
+      ),
     };
   }
 }

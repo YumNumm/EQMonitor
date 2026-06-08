@@ -1,17 +1,19 @@
 import 'package:eqmonitor/core/model/telegram/telegram_type.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:eqmonitor/feature/telegram_list/data/model/telegram_item.dart';
-import 'package:eqmonitor/feature/telegram_list/domain/earthquake_body_diff.dart';
+import 'package:eqmonitor/feature/telegram_list/data/repository/earthquake_body_diff_calculator.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/hypocenter_summary.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/intensity_region_list.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 /// 電文タイプ別地震情報リッチタイル
 ///
 /// VXSE51〜53, VXSE61, VXSE62 の電文タイプに応じて
 /// 震源サマリや震度地域リストの表示を切り替える。
-class EarthquakeTelegramTile extends StatelessWidget {
+class EarthquakeTelegramTile extends ConsumerWidget {
   const EarthquakeTelegramTile({
     required this.telegram,
     required this.body,
@@ -32,45 +34,43 @@ class EarthquakeTelegramTile extends StatelessWidget {
   /// 前報の本文（差分表示用、初報の場合は null）
   final api.TelegramBodyUnionEarthquakeTelegramBody? previousBody;
 
-  // ---------------------------------------------------------------------------
-  // 震度地域リスト用ヘルパー
-  // ---------------------------------------------------------------------------
-
-  /// 現報の震度地域リスト（タイプ別に参照先を切り替え）
-  List<api.EarthquakeTelegramBodyIntensityRegion>? get _currentRegions =>
-      switch (telegram.type) {
-        TelegramType.vxse51 => body.intensityRegions,
-        TelegramType.vxse53 => body.intensityCities ?? body.intensityRegions,
-        TelegramType.vxse62 => body.intensityRegions,
-        _ => null,
-      };
-
-  /// 前報の震度地域リスト
-  List<api.EarthquakeTelegramBodyIntensityRegion>? get _previousRegions =>
-      switch (telegram.type) {
-        TelegramType.vxse51 => previousBody?.intensityRegions,
-        TelegramType.vxse53 =>
-          previousBody?.intensityCities ?? previousBody?.intensityRegions,
-        TelegramType.vxse62 => previousBody?.intensityRegions,
-        _ => null,
-      };
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
+    final diffCalculator = ref.watch(earthquakeBodyDiffCalculatorProvider);
 
-    // 差分計算
-    final regions = _currentRegions;
-    final regionDiff = regions == null
+    final currentRegions = switch (telegram.type) {
+      TelegramType.vxse51 => body.intensityRegions,
+      TelegramType.vxse53 => body.intensityCities ?? body.intensityRegions,
+      TelegramType.vxse62 => body.intensityRegions,
+      _ => null,
+    };
+    final previousRegions = switch (telegram.type) {
+      TelegramType.vxse51 => previousBody?.intensityRegions,
+      TelegramType.vxse53 =>
+        previousBody?.intensityCities ?? previousBody?.intensityRegions,
+      TelegramType.vxse62 => previousBody?.intensityRegions,
+      _ => null,
+    };
+    final intensityPrefectures = body.intensityPrefectures;
+    final prefectureMap =
+        intensityPrefectures == null || intensityPrefectures.isEmpty
         ? null
-        : computeIntensityRegionDiff(
-            current: regions,
-            previous: _previousRegions,
+        : {
+            for (final prefecture in intensityPrefectures)
+              prefecture.code: prefecture.name,
+          };
+
+    final regionDiff = currentRegions == null
+        ? null
+        : diffCalculator.computeIntensityRegionDiff(
+            current: currentRegions,
+            previous: previousRegions,
           );
 
-    final hypocenterDiff = computeHypocenterDiff(
+    final hypocenterDiff = diffCalculator.computeHypocenterDiff(
       current: body.earthquake,
       previous: previousBody?.earthquake,
     );
@@ -82,7 +82,6 @@ class EarthquakeTelegramTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header row ──────────────────────────────────────────────
             Row(
               children: [
                 Expanded(
@@ -116,7 +115,6 @@ class EarthquakeTelegramTile extends StatelessWidget {
               ],
             ),
 
-            // ── Timestamp ───────────────────────────────────────────────
             const SizedBox(height: 4),
             Text(
               dateFormat.format(telegram.pressAt.toLocal()),
@@ -125,88 +123,76 @@ class EarthquakeTelegramTile extends StatelessWidget {
               ),
             ),
 
-            // ── Content（タイプ別）───────────────────────────────────────
             const SizedBox(height: 8),
-            _buildContent(regionDiff, hypocenterDiff),
+            _EarthquakeTelegramTileContent(
+              telegramType: telegram.type,
+              body: body,
+              regionDiff: regionDiff,
+              hypocenterDiff: hypocenterDiff,
+              prefectureMap: prefectureMap,
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  /// VXSE53用: intensityPrefectures から都道府県コード→名前のマップを構築
-  Map<String, String>? get _prefectureMap {
-    final prefs = body.intensityPrefectures;
-    if (prefs == null || prefs.isEmpty) {
-      return null;
-    }
-    return {
-      for (final p in prefs) p.code: p.name,
-    };
-  }
+class _EarthquakeTelegramTileContent extends StatelessWidget {
+  const _EarthquakeTelegramTileContent({
+    required this.telegramType,
+    required this.body,
+    required this.regionDiff,
+    required this.hypocenterDiff,
+    required this.prefectureMap,
+  });
 
-  /// 電文タイプに応じたコンテンツ部分を構築する
-  Widget _buildContent(
-    List<IntensityRegionDiffEntry>? regionDiff,
-    HypocenterDiff? hypocenterDiff,
-  ) {
-    return switch (telegram.type) {
-      // VXSE51: 震度速報（震度のみ）
-      TelegramType.vxse51 => regionDiff != null
-          ? IntensityRegionList(entries: regionDiff)
-          : const SizedBox.shrink(),
+  final TelegramType telegramType;
+  final api.TelegramBodyUnionEarthquakeTelegramBody body;
+  final List<IntensityRegionDiffEntry>? regionDiff;
+  final HypocenterDiff? hypocenterDiff;
+  final Map<String, String>? prefectureMap;
 
-      // VXSE52: 震源速報（震源のみ）
-      TelegramType.vxse52 => body.earthquake != null
-          ? HypocenterSummary(
-              quake: body.earthquake!,
-              diff: hypocenterDiff,
-            )
-          : const SizedBox.shrink(),
+  @override
+  Widget build(BuildContext context) {
+    final quake = body.earthquake;
 
-      // VXSE53: 震源・震度情報（両方、市区町村は県グループ化）
+    return switch (telegramType) {
+      TelegramType.vxse51 => switch (regionDiff) {
+        final entries? => IntensityRegionList(entries: entries),
+        null => const SizedBox.shrink(),
+      },
+      TelegramType.vxse52 =>
+        quake != null
+            ? HypocenterSummary(quake: quake, diff: hypocenterDiff)
+            : const SizedBox.shrink(),
       TelegramType.vxse53 => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (body.earthquake != null)
-              HypocenterSummary(
-                quake: body.earthquake!,
-                diff: hypocenterDiff,
-              ),
-            if (body.earthquake != null && regionDiff != null)
-              const SizedBox(height: 8),
-            if (regionDiff != null)
-              IntensityRegionList(
-                entries: regionDiff,
-                prefectureMap: _prefectureMap,
-              ),
-          ],
-        ),
-
-      // VXSE61: 地震解説報（震源のみ）
-      TelegramType.vxse61 => body.earthquake != null
-          ? HypocenterSummary(
-              quake: body.earthquake!,
-              diff: hypocenterDiff,
-            )
-          : const SizedBox.shrink(),
-
-      // VXSE62: 長周期地震動（震源 + 震度地域）
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (quake != null)
+            HypocenterSummary(quake: quake, diff: hypocenterDiff),
+          if (quake != null && regionDiff != null) const SizedBox(height: 8),
+          if (regionDiff case final entries?)
+            IntensityRegionList(
+              entries: entries,
+              prefectureMap: prefectureMap,
+            ),
+        ],
+      ),
+      TelegramType.vxse61 =>
+        quake != null
+            ? HypocenterSummary(quake: quake, diff: hypocenterDiff)
+            : const SizedBox.shrink(),
       TelegramType.vxse62 => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (body.earthquake != null)
-              HypocenterSummary(
-                quake: body.earthquake!,
-                diff: hypocenterDiff,
-              ),
-            if (body.earthquake != null && regionDiff != null)
-              const SizedBox(height: 8),
-            if (regionDiff != null) IntensityRegionList(entries: regionDiff),
-          ],
-        ),
-
-      // その他のタイプは空
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (quake != null)
+            HypocenterSummary(quake: quake, diff: hypocenterDiff),
+          if (quake != null && regionDiff != null) const SizedBox(height: 8),
+          if (regionDiff case final entries?)
+            IntensityRegionList(entries: entries),
+        ],
+      ),
       _ => const SizedBox.shrink(),
     };
   }

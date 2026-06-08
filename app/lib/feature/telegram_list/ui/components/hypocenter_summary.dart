@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/telegram_list/domain/earthquake_body_diff.dart';
+import 'package:eqmonitor/feature/telegram_list/data/model/earthquake_body_diff.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,21 +22,27 @@ class HypocenterSummary extends StatelessWidget {
     final theme = Theme.of(context);
 
     final epicenterName = quake.epicenterName ?? '震源不明';
-    final magnitudeText =
-        quake.magnitude != null ? ' M${quake.magnitude}' : '';
+    final magnitudeText = quake.magnitude != null ? ' M${quake.magnitude}' : '';
     final depthText = quake.depth != null ? ' 深さ${quake.depth}km' : '';
+
+    final oldMagnitudeText = diff?.oldMagnitude ?? '不明';
+    final newMagnitudeText = diff?.newMagnitude ?? '不明';
+    final oldDepthText = diff?.oldDepth?.toString() ?? '不明';
+    final newDepthText = diff?.newDepth?.toString() ?? '不明';
+    final oldEpicenterNameText = diff?.oldEpicenterName ?? '不明';
+    final newEpicenterNameText = diff?.newEpicenterName ?? '不明';
 
     // 差分チップを構築
     final diffChips = <Widget>[
-      if (diff != null && diff!.hasMagnitudeChange)
-        _DiffChip(text: 'M${diff!.oldMagnitude}→M${diff!.newMagnitude}'),
-      if (diff != null && diff!.hasDepthChange)
+      if (diff case final value? when value.hasMagnitudeChange())
+        _DiffChip(text: 'M$oldMagnitudeText→M$newMagnitudeText'),
+      if (diff case final value? when value.hasDepthChange())
         _DiffChip(
-          text: '深さ${diff!.oldDepth}km→${diff!.newDepth}km',
+          text: '深さ${oldDepthText}km→${newDepthText}km',
         ),
-      if (diff != null && diff!.hasEpicenterNameChange)
+      if (diff case final value? when value.hasEpicenterNameChange())
         _DiffChip(
-          text: '${diff!.oldEpicenterName}→${diff!.newEpicenterName}',
+          text: '$oldEpicenterNameText→$newEpicenterNameText',
         ),
     ];
 
