@@ -32,7 +32,6 @@ import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,7 +144,9 @@ Future<void> _main() async {
     providerAndroid: kDebugMode
         ? const AndroidDebugProvider()
         : const AndroidPlayIntegrityProvider(),
-    providerApple: const AppleAppAttestProvider(),
+    providerApple: kDebugMode
+        ? const AppleDebugProvider()
+        : const AppleAppAttestProvider(),
   );
 
   final deviceInfo = DeviceInfoPlugin();
@@ -185,7 +186,6 @@ Future<void> _main() async {
   ).wait;
   initLicenses();
 
-  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
   if (!kIsWeb) {
     unawaited(
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
@@ -223,11 +223,20 @@ Future<void> _main() async {
   container.listen(backgroundLocationServiceProvider, (_, _) {});
   unawaited(container.read(pushTokenSyncWiringProvider.future));
 
-  runApp(UncontrolledProviderScope(container: container, child: const App()));
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: const App(),
+    ),
+  );
 
   if (!kIsWeb && Platform.isIOS) {
-    unawaited(container.read(appGroupSettingsWriterProvider.future));
-    unawaited(container.read(liveActivityTokenSyncWiringProvider.future));
+    unawaited(
+      container.read(appGroupSettingsWriterProvider.future),
+    );
+    unawaited(
+      container.read(liveActivityTokenSyncWiringProvider.future),
+    );
   }
 }
 
@@ -245,9 +254,4 @@ Future<void> _registerNotificationChannelIfNeeded() async {
   for (final channel in notificationChannels) {
     await androidNotificationPlugin.createNotificationChannel(channel);
   }
-}
-
-@pragma('vm:entry-point')
-Future<void> onBackgroundMessage(RemoteMessage message) async {
-  log('onBackgroundMessage: $message');
 }
