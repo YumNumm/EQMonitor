@@ -18,7 +18,7 @@ struct MapEarthquakeWidget: Widget {
             provider: EarthquakeTimelineProvider()
         ) { entry in
             MapEarthquakeWidgetView(entry: entry)
-                .containerBackground(Color.eqBg, for: .widget)
+                .containerBackground(.eqSurfaceGradient, for: .widget)
         }
         .configurationDisplayName("地震情報マップ")
         .description("最新の地震を地図で表示します")

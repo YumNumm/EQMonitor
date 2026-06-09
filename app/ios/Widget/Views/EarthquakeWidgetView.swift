@@ -55,7 +55,16 @@ struct LargeWidgetView: View {
                             )
                         }
                     }
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Color.eqSurface.opacity(0.6))
+                    )
+                    .padding(.horizontal, 12)
+                    .padding(.top, 2)
                 }
+
+                Spacer(minLength: 0)
             }
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
         }
@@ -93,8 +102,9 @@ struct SmallWidgetView: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 6) {
                     Image(systemName: "waveform.path.ecg")
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(.system(size: 11, weight: .bold))
                         .foregroundStyle(Color.eqBrand)
+                        .widgetAccentable()
 
                     Text(headerTitle)
                         .font(.system(size: 11, weight: .semibold))
@@ -175,13 +185,20 @@ private struct WidgetHeader: View {
         HStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .fill(Color.eqBrandContainer)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.eqBrand, Color.eqBrand.opacity(0.7)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .frame(width: 30, height: 30)
 
                 Image(systemName: "waveform.path.ecg")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Color.eqBrand)
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.white)
             }
+            .widgetAccentable()
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(title)
@@ -201,16 +218,15 @@ private struct WidgetHeader: View {
                 Image(systemName: "arrow.clockwise")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Color.eqBrand)
-                    .padding(7)
-                    .background(Color.eqBrandContainer)
-                    .clipShape(Circle())
+                    .frame(width: 30, height: 30)
+                    .eqGlass(cornerRadius: 15)
             }
             .buttonStyle(.plain)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.top, 12)
+        .padding(.bottom, 10)
         .frame(width: width)
-        .background(Color.eqSurface)
     }
 
     private var formattedTime: String {
@@ -334,22 +350,31 @@ struct IntensityBadge: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(backgroundColor)
+            RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [backgroundColor.opacity(0.88), backgroundColor],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
+                        .strokeBorder(.white.opacity(0.18), lineWidth: 0.5)
+                )
                 .frame(width: size, height: size)
+                .shadow(color: backgroundColor.opacity(0.35), radius: size * 0.1, y: size * 0.04)
 
-            VStack(spacing: 0) {
-                HStack(alignment: .lastTextBaseline, spacing: 1) {
-                    Text(intensity.main)
-                        .font(.system(size: size * 0.48, weight: .bold).monospaced())
+            HStack(alignment: .lastTextBaseline, spacing: 1) {
+                Text(intensity.main)
+                    .font(.system(size: size * 0.5, weight: .heavy).monospacedDigit())
+                    .foregroundStyle(textColor)
+
+                if let sub = intensity.sub {
+                    Text(sub)
+                        .font(.system(size: size * 0.27, weight: .bold))
                         .foregroundStyle(textColor)
-
-                    if let sub = intensity.sub {
-                        Text(sub)
-                            .font(.system(size: size * 0.27))
-                            .foregroundStyle(textColor)
-                            .baselineOffset(-1)
-                    }
+                        .baselineOffset(-1)
                 }
             }
         }

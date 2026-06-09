@@ -114,7 +114,7 @@ struct EarthquakeWidget: Widget {
             provider: EarthquakeTimelineProvider()
         ) { entry in
             EarthquakeWidgetView(entry: entry)
-                .containerBackground(Color.eqBg, for: .widget)
+                .containerBackground(.eqSurfaceGradient, for: .widget)
         }
         .configurationDisplayName("地震履歴")
         .description("最近の地震情報を表示します")

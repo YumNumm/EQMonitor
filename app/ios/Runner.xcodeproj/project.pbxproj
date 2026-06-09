@@ -307,6 +307,7 @@
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
 				9740EEB61CF901F6004384FC /* Run Script */,
+				AABB00042F40A00100000004 /* Patch purchases-ios-spm */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				85145B192B1F59D100784C85 /* Embed Foundation Extensions */,
@@ -365,6 +366,7 @@
 				AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */,
 				85B405182C08E73300EB3835 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 				85C9C3ED2D9F053700F047DF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				AABB00052F40B00100000005 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -441,6 +443,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
+		};
+		AABB00042F40A00100000004 /* Patch purchases-ios-spm */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Patch purchases-ios-spm";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"${SRCROOT}/scripts/patch_purchases_paywall_color.sh\" \"${SRCROOT}/../build/ios/SourcePackages/checkouts/purchases-ios-spm/Sources/Paywalls/PaywallColor.swift\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1143,6 +1160,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.29.0;
+			};
+		};
+		AABB00052F40B00100000005 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.5.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
