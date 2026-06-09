@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_map_bounds.dart';
@@ -34,6 +32,7 @@ HomeMapCameraUpdateAction resolveHomeMapCameraUpdateAction({
 @Riverpod(keepAlive: true)
 class HomeMapCameraState extends _$HomeMapCameraState {
   MapController? _controller;
+  var _cameraTransitionId = 0;
 
   @override
   MapCameraState build() {
@@ -44,13 +43,11 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     return MapCameraState.home();
   }
 
-  void setController(MapController controller) {
+  Future<void> setController(MapController controller) async {
     _controller = controller;
-    unawaited(
-      _handleEewTransition(
-        previous: null,
-        next: ref.read(eewAliveTelegramProvider) ?? [],
-      ),
+    await _handleEewTransition(
+      previous: null,
+      next: ref.read(eewAliveTelegramProvider) ?? [],
     );
   }
 
@@ -58,39 +55,57 @@ class HomeMapCameraState extends _$HomeMapCameraState {
     required List<EewTelegramItem>? previous,
     required List<EewTelegramItem> next,
   }) async {
+    final transitionId = ++_cameraTransitionId;
     switch (resolveHomeMapCameraUpdateAction(previous: previous, next: next)) {
       case HomeMapCameraUpdateAction.fitToEews:
-        await _fitToEews(next);
+        await _fitToEews(next, transitionId: transitionId);
         return;
       case HomeMapCameraUpdateAction.returnToHome:
-        await _returnToHome();
+        await _returnToHome(transitionId: transitionId);
         return;
       case HomeMapCameraUpdateAction.none:
         return;
     }
   }
 
-  Future<void> _fitToEews(List<EewTelegramItem> eews) async {
+  bool _isStaleTransition(int transitionId) =>
+      transitionId != _cameraTransitionId;
+
+  Future<void> _fitToEews(
+    List<EewTelegramItem> eews, {
+    required int transitionId,
+  }) async {
     if (_controller == null) {
       return;
     }
 
     final home = await ref.read(homeConfigurationProvider.future);
+    if (_isStaleTransition(transitionId) || _controller == null) {
+      return;
+    }
     if (!home.eew.autoZoom) {
       return;
     }
 
     final bounds = _calculateBounds(eews);
     await _controller?.fitBounds(bounds: bounds);
+    if (_isStaleTransition(transitionId) || _controller == null) {
+      return;
+    }
     state = state.copyWith(isAtHome: false);
   }
 
-  Future<void> _returnToHome() async {
+  Future<void> _returnToHome({
+    required int transitionId,
+  }) async {
     if (_controller == null) {
       return;
     }
 
     final home = await ref.read(homeConfigurationProvider.future);
+    if (_isStaleTransition(transitionId) || _controller == null) {
+      return;
+    }
     final bounds = lngLatBoundsForHomeMapSettings(home.map);
 
     await _controller?.fitBounds(
@@ -102,6 +117,9 @@ class HomeMapCameraState extends _$HomeMapCameraState {
       pitch: 0,
       padding: const EdgeInsets.all(4),
     );
+    if (_isStaleTransition(transitionId) || _controller == null) {
+      return;
+    }
     state = state.copyWith(isAtHome: true);
   }
 
@@ -154,6 +172,6 @@ class HomeMapCameraState extends _$HomeMapCameraState {
   }
 
   Future<void> returnToHome() async {
-    await _returnToHome();
+    await _returnToHome(transitionId: ++_cameraTransitionId);
   }
 }
