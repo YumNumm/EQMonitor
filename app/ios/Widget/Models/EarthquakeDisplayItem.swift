@@ -3,11 +3,12 @@
 //  Widget
 //
 //  Widget表示用の変換済みモデル
-//  EarthquakePartialをWidget表示に最適化した形式に変換
+//  Components.Schemas.EarthquakePartial をWidget表示に最適化した形式に変換
 //
 
 import Foundation
 import SwiftUI
+import EQMonitorAPI
 
 /// Widget表示用の地震情報
 struct EarthquakeDisplayItem: Identifiable, Equatable {
@@ -58,22 +59,25 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         return status.isNormal
     }
 
-    // MARK: - Initialization from EarthquakePartial
+    // MARK: - Initialization from Generated EarthquakePartial
 
-    /// EarthquakePartialからの変換初期化
-    init(from partial: EarthquakePartial) {
-        self.id = partial.eventId
-        self.hypocenterName = partial.hypocenterName
-        self.magnitude = partial.magnitudeDisplayString
-        self.magnitudeValue = partial.magnitudeValue
-        self.maxIntensity = partial.maxIntensity
-        self.depth = partial.depthDisplayString
-        self.latitude = partial.latitude
-        self.longitude = partial.longitude
-        self.status = partial.status
+    /// Components.Schemas.EarthquakePartial からの変換初期化
+    init(from partial: Components.Schemas.EarthquakePartial) {
+        self.id = partial.event_id
+        self.hypocenterName = partial.hypocenter?.value1.detailed?.value1.name
+            ?? partial.hypocenter?.value1.value.name
+            ?? "震源地不明"
+        self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
+        self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
+        self.maxIntensity = IntensityValue(from: partial.intensity?.value1.max_intensity)
+        self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
+        self.latitude = partial.hypocenter?.value1.coordinates.latitude
+        self.longitude = partial.hypocenter?.value1.coordinates.longitude
+        self.status = TelegramStatus(from: partial.status)
 
         // 発生時刻の処理
-        if let time = partial.effectiveTime {
+        let effectiveTime = partial.origin_time ?? partial.arrival_time
+        if let time = effectiveTime {
             self.originTime = time
             self.formattedTime = Self.formatTime(time)
         } else {
@@ -82,23 +86,27 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         }
     }
 
-    /// IntensityRegionSearchItemからの変換初期化
-    init(from searchItem: IntensityRegionSearchItem) {
+    /// Components.Schemas.IntensityRegionSearchItem からの変換初期化
+    init(from searchItem: Components.Schemas.IntensityRegionSearchItem) {
         let partial = searchItem.earthquake
-        self.id = partial.eventId
-        self.hypocenterName = partial.hypocenterName
-        self.magnitude = partial.magnitudeDisplayString
-        self.magnitudeValue = partial.magnitudeValue
-        self.depth = partial.depthDisplayString
-        self.latitude = partial.latitude
-        self.longitude = partial.longitude
-        self.status = partial.status
+        self.id = partial.event_id
+        self.hypocenterName = partial.hypocenter?.value1.detailed?.value1.name
+            ?? partial.hypocenter?.value1.value.name
+            ?? "震源地不明"
+        self.magnitude = Self.formatMagnitude(partial.hypocenter?.value1.magnitude)
+        self.magnitudeValue = partial.hypocenter?.value1.magnitude.value
+        self.depth = Self.formatDepth(partial.hypocenter?.value1.depth)
+        self.latitude = partial.hypocenter?.value1.coordinates.latitude
+        self.longitude = partial.hypocenter?.value1.coordinates.longitude
+        self.status = TelegramStatus(from: partial.status)
 
         // 地域の震度情報を優先（検索結果の場合）
-        self.maxIntensity = searchItem.region.intensity ?? partial.maxIntensity
+        self.maxIntensity = IntensityValue(from: searchItem.intensity)
+            ?? IntensityValue(from: partial.intensity?.value1.max_intensity)
 
         // 発生時刻の処理
-        if let time = partial.effectiveTime {
+        let effectiveTime = partial.origin_time ?? partial.arrival_time
+        if let time = effectiveTime {
             self.originTime = time
             self.formattedTime = Self.formatTime(time)
         } else {
@@ -141,6 +149,40 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
         formatter.locale = Locale(identifier: "ja_JP")
         formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
         return formatter.string(from: date) + "頃"
+    }
+
+    /// マグニチュードの表示文字列を生成
+    private static func formatMagnitude(_ magnitude: Components.Schemas.Magnitude?) -> String {
+        guard let mag = magnitude else { return "M不明" }
+        switch mag._type {
+        case .NORMAL:
+            if let value = mag.value {
+                return String(format: "M%.1f", value)
+            }
+            return "M不明"
+        case .UNKNOWN:
+            return "M不明"
+        case .OVER_M8:
+            return "M8以上"
+        }
+    }
+
+    /// 深さの表示文字列を生成
+    private static func formatDepth(_ depth: Components.Schemas.Depth?) -> String {
+        guard let d = depth else { return "不明" }
+        switch d._type {
+        case .SHALLOW:
+            return "ごく浅い"
+        case .NORMAL:
+            if let value = d.value {
+                return "\(Int(value))km"
+            }
+            return "不明"
+        case .OVER_700:
+            return "700km以上"
+        case .UNKNOWN:
+            return "不明"
+        }
     }
 
     // MARK: - Mock Data for Preview
@@ -195,21 +237,5 @@ struct EarthquakeDisplayItem: Identifiable, Equatable {
             latitude: 37.5,
             longitude: 141.5
         )
-    }
-}
-
-// MARK: - Array Extension for Batch Conversion
-
-extension Array where Element == EarthquakePartial {
-    /// EarthquakePartialの配列をEarthquakeDisplayItemの配列に変換
-    func toDisplayItems() -> [EarthquakeDisplayItem] {
-        return map { EarthquakeDisplayItem(from: $0) }
-    }
-}
-
-extension Array where Element == IntensityRegionSearchItem {
-    /// IntensityRegionSearchItemの配列をEarthquakeDisplayItemの配列に変換
-    func toDisplayItems() -> [EarthquakeDisplayItem] {
-        return map { EarthquakeDisplayItem(from: $0) }
     }
 }

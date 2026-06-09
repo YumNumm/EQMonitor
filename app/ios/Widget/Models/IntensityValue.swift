@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import EQMonitorAPI
 
 /// 震度階級
 enum IntensityValue: String, Codable, CaseIterable, Comparable {
@@ -138,6 +139,26 @@ enum IntensityValue: String, Codable, CaseIterable, Comparable {
         case .four, .fiveLowerNoInput, .fiveLower: return 2
         case .fiveUpper, .sixLower: return 3
         case .sixUpper, .seven: return 4
+        }
+    }
+
+    // MARK: - Conversion from Generated JmaIntensity
+
+    /// 生成された JmaIntensity 列挙型からの変換
+    init?(from jmaIntensity: Components.Schemas.JmaIntensity?) {
+        guard let jma = jmaIntensity else { return nil }
+        switch jma {
+        case ._0: self = .zero
+        case ._1: self = .one
+        case ._2: self = .two
+        case ._3: self = .three
+        case ._4: self = .four
+        case ._excl_5_hyphen_: self = .fiveLowerNoInput
+        case ._5_hyphen_: self = .fiveLower
+        case ._5_plus_: self = .fiveUpper
+        case ._6_hyphen_: self = .sixLower
+        case ._6_plus_: self = .sixUpper
+        case ._7: self = .seven
         }
     }
 }
