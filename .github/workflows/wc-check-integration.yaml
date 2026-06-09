@@ -4,7 +4,7 @@ name: Integration Test
 # private backend submodule を GitHub App トークンで checkout し、api-stub を node で起動して
 # eqmonitor_api の integration タグ付きテストを実行する。
 #
-# 前提: GitHub App (vars.EQMONITOR_GITHUB_APP_ID) が YumNumm/eqmonitor-backend, YumNumm/home8s に
+# 前提: GitHub App (vars.EQMONITOR_GITHUB_APP_ID) が YumNumm/eqmonitor-backend に
 #       contents:read で install 済みであること。未 install の場合は submodule checkout が失敗する。
 
 on:
@@ -35,7 +35,6 @@ jobs:
           repositories: |
             EQMonitor
             eqmonitor-backend
-            home8s
           # 最小権限: submodule checkout に必要な contents:read のみ
           permission-contents: read
 
