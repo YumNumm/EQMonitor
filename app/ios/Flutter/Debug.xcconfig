@@ -1,2 +1,3 @@
 #include "Generated.xcconfig"
 #include "Environment.xcconfig"
+SWIFT_ENABLE_EXPLICIT_MODULES = NO

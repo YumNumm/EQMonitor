@@ -366,7 +366,6 @@
 				AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */,
 				85B405182C08E73300EB3835 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 				85C9C3ED2D9F053700F047DF /* XCRemoteSwiftPackageReference "swift-protobuf" */,
-				AABB00052F40B00100000005 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -1160,14 +1159,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.29.0;
-			};
-		};
-		AABB00052F40B00100000005 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-collections";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 1.5.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
