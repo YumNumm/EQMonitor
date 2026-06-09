@@ -1721,10 +1721,10 @@ packages:
     dependency: transitive
     description:
       name: purchases_flutter
-      sha256: e0034abc9b4412da1dcf3c4d9df04bf3256998d4982846f9c9952212e5619751
+      sha256: be377ba740a650b64ecbb418ea24cc36a91bf13d61db2f9552c8d2b20ca3d670
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.1"
+    version: "10.2.2"
   quiver:
     dependency: transitive
     description:
