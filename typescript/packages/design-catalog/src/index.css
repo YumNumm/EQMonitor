@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background-default: #0f141a;
+  --color-background-subtle: #131a21;
+
+  --color-surface-default: #171e26;
+  --color-surface-raised: #1d2630;
+  --color-surface-card: #232d38;
+  --color-surface-emphasis: #2b3744;
+
+  --color-outline-soft: #3a4654;
+  --color-outline-strong: #506073;
+
+  --color-brand-primary: #4d8dff;
+  --color-brand-primary-container: #24344a;
+  --color-brand-secondary: #8fb7ff;
+  --color-brand-tertiary: #91d4c8;
+
+  --color-status-success: #63d39b;
+  --color-status-warning: #f4c75e;
+  --color-status-danger: #ff7a7a;
+  --color-status-info: #78b8ff;
+
+  --color-text-primary: #f3f6fa;
+  --color-text-secondary: #c4ccd7;
+  --color-text-tertiary: #98a5b5;
+  --color-text-inverse: #0f141a;
+
+  --radius-card: 24px;
+  --radius-card-emphasis: 28px;
+  --radius-button: 24px;
+  --radius-sheet: 28px;
+
+  --font-sans: "Google Sans Flex", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    "Google Sans Code", "Noto Sans JP", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 28px;
+  --spacing-4xl: 32px;
+}
