@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/layer/eew_area_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -35,6 +36,8 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
     }, [eews]);
 
     final isInitialized = useRef(false);
+    final latestCodes = useRef<List<String>>(codes);
+    latestCodes.value = codes;
 
     useEffect(
       () {
@@ -42,18 +45,13 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
           return null;
         }
 
-        // レイヤー追加時点の codes でフィルターを設定し、フィルターなし全件表示を防ぐ
-        final initialFilter = codes.isEmpty
-            ? const <Object>['==', '1', '2']
-            : <Object>['in', ['get', 'code'], ['literal', codes]];
-
         unawaited(() async {
           await styleController.addLayer(
             FillStyleLayer(
               id: _layerId,
               sourceId: 'eqmonitor_map',
               sourceLayerId: 'areaForecastLocalEew',
-              filter: initialFilter,
+              filter: buildEewAreaCodeFilter(codes),
               paint: const {
                 'fill-color': '#FF0000',
                 'fill-opacity': 0.25,
@@ -61,6 +59,10 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
             ),
           );
           isInitialized.value = true;
+          await styleController.updateFilter(
+            id: _layerId,
+            filter: buildEewAreaCodeFilter(latestCodes.value),
+          );
         }());
 
         return () async {
@@ -75,14 +77,12 @@ class EewWarningRegionsLayer extends HookConsumerWidget {
         if (styleController == null || !isInitialized.value) {
           return null;
         }
-        final filter = codes.isEmpty
-            ? const <Object>['==', '1', '2']
-            : <Object>[
-                'in',
-                ['get', 'code'],
-                ['literal', codes],
-              ];
-        unawaited(styleController.updateFilter(id: _layerId, filter: filter));
+        unawaited(
+          styleController.updateFilter(
+            id: _layerId,
+            filter: buildEewAreaCodeFilter(codes),
+          ),
+        );
         return null;
       },
       [styleController, codes],

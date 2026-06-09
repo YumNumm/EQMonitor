@@ -146,11 +146,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            pinact run --check --review --pr "${{ github.event.pull_request.number }}"
-          else
-            pinact run --check
-          fi
+          pinact run --check
 
   zizmor:
     name: zizmor

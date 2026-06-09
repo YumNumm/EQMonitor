@@ -102,7 +102,7 @@ class _MapContent extends ConsumerWidget {
             key: ValueKey(mapKey),
             options: mapOptions,
             onMapCreated: (controller) async {
-              ref
+              await ref
                   .read(homeMapCameraStateProvider.notifier)
                   .setController(controller);
               if (showLocation) {
