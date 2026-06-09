@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/eew/data/model/eew_telegram_item.dart';
 import 'package:eqmonitor/feature/home/data/model/home_map_bounds.dart';
@@ -10,6 +12,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_camera_state_provider.g.dart';
 
+enum HomeMapCameraUpdateAction {
+  fitToEews,
+  returnToHome,
+  none,
+}
+
+HomeMapCameraUpdateAction resolveHomeMapCameraUpdateAction({
+  required List<EewTelegramItem>? previous,
+  required List<EewTelegramItem> next,
+}) {
+  if (next.isNotEmpty) {
+    return HomeMapCameraUpdateAction.fitToEews;
+  }
+  if (previous != null && previous.isNotEmpty) {
+    return HomeMapCameraUpdateAction.returnToHome;
+  }
+  return HomeMapCameraUpdateAction.none;
+}
+
 @Riverpod(keepAlive: true)
 class HomeMapCameraState extends _$HomeMapCameraState {
   MapController? _controller;
@@ -17,12 +38,7 @@ class HomeMapCameraState extends _$HomeMapCameraState {
   @override
   MapCameraState build() {
     ref.listen(eewAliveTelegramProvider, (previous, next) async {
-      final eews = next ?? [];
-      if (eews.isNotEmpty) {
-        await _fitToEews(eews);
-      } else if (previous != null && previous.isNotEmpty) {
-        await _returnToHome();
-      }
+      await _handleEewTransition(previous: previous, next: next ?? []);
     });
 
     return MapCameraState.home();
@@ -30,6 +46,28 @@ class HomeMapCameraState extends _$HomeMapCameraState {
 
   void setController(MapController controller) {
     _controller = controller;
+    unawaited(
+      _handleEewTransition(
+        previous: null,
+        next: ref.read(eewAliveTelegramProvider) ?? [],
+      ),
+    );
+  }
+
+  Future<void> _handleEewTransition({
+    required List<EewTelegramItem>? previous,
+    required List<EewTelegramItem> next,
+  }) async {
+    switch (resolveHomeMapCameraUpdateAction(previous: previous, next: next)) {
+      case HomeMapCameraUpdateAction.fitToEews:
+        await _fitToEews(next);
+        return;
+      case HomeMapCameraUpdateAction.returnToHome:
+        await _returnToHome();
+        return;
+      case HomeMapCameraUpdateAction.none:
+        return;
+    }
   }
 
   Future<void> _fitToEews(List<EewTelegramItem> eews) async {
