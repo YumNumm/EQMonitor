@@ -1140,7 +1140,7 @@
 		};
 		AABB00012F30A00100000001 /* XCLocalSwiftPackageReference "EQMonitorAPI" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../packages/eqmonitor_api_swift;
+			relativePath = Packages/EQMonitorAPI;
 		};
 /* End XCLocalSwiftPackageReference section */
 

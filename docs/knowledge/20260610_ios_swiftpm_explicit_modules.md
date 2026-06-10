@@ -13,12 +13,12 @@ Swift Compiler Error (Xcode): Unable to resolve module dependency: 'InternalColl
 .../SourcePackages/checkouts/swift-collections/Sources/DequeModule/Deque+Collection.swift
 ```
 
-`swift-openapi-generator` を build-tool plugin として iOS build 時に実行すると、同じ問題を踏みやすい。`packages/eqmonitor_api_swift` では OpenAPI 生成物を事前生成して commit し、アプリの iOS build では generator plugin を走らせない。
+`swift-openapi-generator` を build-tool plugin として iOS build 時に実行すると、同じ問題を踏みやすい。`app/ios/Packages/EQMonitorAPI` では OpenAPI 生成物を事前生成して commit し、アプリの iOS build では generator plugin を走らせない。
 
 生成物を更新する場合:
 
 ```bash
-cd packages/eqmonitor_api_swift
+cd app/ios/Packages/EQMonitorAPI
 mise exec -- swift package plugin --allow-writing-to-package-directory generate-code-from-openapi
 ```
 
