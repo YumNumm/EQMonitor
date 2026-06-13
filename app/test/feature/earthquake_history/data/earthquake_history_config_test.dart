@@ -13,8 +13,7 @@ void main() {
       );
       expect(config.list.isFillBackground, isTrue);
       expect(config.list.designatedRegionSearchType, isNull);
-      expect(config.detail.iconMode, EarthquakeHistoryIconMode.auto);
-      expect(config.detail.fillMode, EarthquakeHistoryFillMode.matchIcon);
+      expect(config.detail.fillMode, EarthquakeHistoryFillMode.auto);
       expect(
         config.detail.stationDisplayMode,
         StationDisplayMode.maxFocused,
@@ -56,7 +55,6 @@ void main() {
           designatedRegionName: '千代田区',
         ),
         detail: EarthquakeHistoryDetailConfig(
-          iconMode: EarthquakeHistoryIconMode.station,
           fillMode: EarthquakeHistoryFillMode.none,
           stationDisplayMode: StationDisplayMode.allMinimized,
           hypocenterDisplayMode: HypocenterDisplayMode.alwaysOpaque,
@@ -71,20 +69,8 @@ void main() {
       expect(roundTrip(original), original);
     });
 
-    test('不明な enum 値 (iconMode) は @JsonKey の unknownEnumValue で auto に fallback', () {
-      const defaults = EarthquakeHistoryConfig(
-        list: EarthquakeHistoryListConfig(),
-        detail: EarthquakeHistoryDetailConfig(),
-      );
-      final json = jsonDecode(jsonEncode(defaults.toJson()))
-          as Map<String, dynamic>;
-      // 既存 JSON の detail.icon_mode を未知値で上書き（@JsonKey で snake_case 化される）
-      (json['detail'] as Map<String, dynamic>)['icon_mode'] = 'unknownValue';
-      final decoded = EarthquakeHistoryConfig.fromJson(json);
-      expect(decoded.detail.iconMode, EarthquakeHistoryIconMode.auto);
-    });
-
-    test('不明な enum 値 (fillMode) は @JsonKey の unknownEnumValue で none に fallback', () {
+    test('不明な enum 値 (fillMode) は @JsonKey の unknownEnumValue で auto に fallback',
+        () {
       const defaults = EarthquakeHistoryConfig(
         list: EarthquakeHistoryListConfig(),
         detail: EarthquakeHistoryDetailConfig(),
@@ -93,7 +79,19 @@ void main() {
           as Map<String, dynamic>;
       (json['detail'] as Map<String, dynamic>)['fill_mode'] = 'unknownValue';
       final decoded = EarthquakeHistoryConfig.fromJson(json);
-      expect(decoded.detail.fillMode, EarthquakeHistoryFillMode.none);
+      expect(decoded.detail.fillMode, EarthquakeHistoryFillMode.auto);
+    });
+
+    test('旧 matchIcon 値は unknownEnumValue で auto にマッピングされる', () {
+      const defaults = EarthquakeHistoryConfig(
+        list: EarthquakeHistoryListConfig(),
+        detail: EarthquakeHistoryDetailConfig(),
+      );
+      final json = jsonDecode(jsonEncode(defaults.toJson()))
+          as Map<String, dynamic>;
+      (json['detail'] as Map<String, dynamic>)['fill_mode'] = 'matchIcon';
+      final decoded = EarthquakeHistoryConfig.fromJson(json);
+      expect(decoded.detail.fillMode, EarthquakeHistoryFillMode.auto);
     });
   });
 
@@ -107,14 +105,13 @@ void main() {
     });
   });
 
-  group('EarthquakeHistoryIconMode enum', () {
+  group('EarthquakeHistoryFillMode enum', () {
     test('全列挙値', () {
-      expect(EarthquakeHistoryIconMode.values, [
-        EarthquakeHistoryIconMode.auto,
-        EarthquakeHistoryIconMode.station,
-        EarthquakeHistoryIconMode.municipality,
-        EarthquakeHistoryIconMode.region,
-        EarthquakeHistoryIconMode.none,
+      expect(EarthquakeHistoryFillMode.values, [
+        EarthquakeHistoryFillMode.none,
+        EarthquakeHistoryFillMode.auto,
+        EarthquakeHistoryFillMode.region,
+        EarthquakeHistoryFillMode.city,
       ]);
     });
   });

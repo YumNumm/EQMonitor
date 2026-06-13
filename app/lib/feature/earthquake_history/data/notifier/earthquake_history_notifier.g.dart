@@ -58,7 +58,7 @@ final class EarthquakeHistoryNotifierProvider
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'8a649453998ff185fcc1c877ae3e686035998c57';
+    r'5fae8bd8e9c6e19ec59c6f3fa06b00a387ae5850';
 
 final class EarthquakeHistoryNotifierFamily extends $Family
     with

@@ -284,7 +284,7 @@ as bool,
 /// @nodoc
 mixin _$EarthquakeHistoryMapLayerZoomThresholds {
 
- double get regionToCity; double get cityToStation;
+ double get regionToCity;
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +297,16 @@ $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<EarthquakeHistoryMapLayerZoomTh
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.cityToStation, cityToStation) || other.cityToStation == cityToStation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionToCity,cityToStation);
+int get hashCode => Object.hash(runtimeType,regionToCity);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity, cityToStation: $cityToStation)';
+  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity)';
 }
 
 
@@ -317,7 +317,7 @@ abstract mixin class $EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res>  {
   factory $EarthquakeHistoryMapLayerZoomThresholdsCopyWith(EarthquakeHistoryMapLayerZoomThresholds value, $Res Function(EarthquakeHistoryMapLayerZoomThresholds) _then) = _$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl;
 @useResult
 $Res call({
- double regionToCity, double cityToStation
+ double regionToCity
 });
 
 
@@ -334,10 +334,9 @@ class _$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? regionToCity = null,Object? cityToStation = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? regionToCity = null,}) {
   return _then(_self.copyWith(
 regionToCity: null == regionToCity ? _self.regionToCity : regionToCity // ignore: cast_nullable_to_non_nullable
-as double,cityToStation: null == cityToStation ? _self.cityToStation : cityToStation // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
@@ -423,10 +422,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double regionToCity,  double cityToStation)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double regionToCity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerZoomThresholds() when $default != null:
-return $default(_that.regionToCity,_that.cityToStation);case _:
+return $default(_that.regionToCity);case _:
   return orElse();
 
 }
@@ -444,10 +443,10 @@ return $default(_that.regionToCity,_that.cityToStation);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double regionToCity,  double cityToStation)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double regionToCity)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerZoomThresholds():
-return $default(_that.regionToCity,_that.cityToStation);case _:
+return $default(_that.regionToCity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -464,10 +463,10 @@ return $default(_that.regionToCity,_that.cityToStation);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double regionToCity,  double cityToStation)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double regionToCity)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryMapLayerZoomThresholds() when $default != null:
-return $default(_that.regionToCity,_that.cityToStation);case _:
+return $default(_that.regionToCity);case _:
   return null;
 
 }
@@ -479,11 +478,10 @@ return $default(_that.regionToCity,_that.cityToStation);case _:
 @JsonSerializable()
 
 class _EarthquakeHistoryMapLayerZoomThresholds implements EarthquakeHistoryMapLayerZoomThresholds {
-  const _EarthquakeHistoryMapLayerZoomThresholds({required this.regionToCity, required this.cityToStation});
+  const _EarthquakeHistoryMapLayerZoomThresholds({required this.regionToCity});
   factory _EarthquakeHistoryMapLayerZoomThresholds.fromJson(Map<String, dynamic> json) => _$EarthquakeHistoryMapLayerZoomThresholdsFromJson(json);
 
 @override final  double regionToCity;
-@override final  double cityToStation;
 
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
@@ -498,16 +496,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity)&&(identical(other.cityToStation, cityToStation) || other.cityToStation == cityToStation));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarthquakeHistoryMapLayerZoomThresholds&&(identical(other.regionToCity, regionToCity) || other.regionToCity == regionToCity));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,regionToCity,cityToStation);
+int get hashCode => Object.hash(runtimeType,regionToCity);
 
 @override
 String toString() {
-  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity, cityToStation: $cityToStation)';
+  return 'EarthquakeHistoryMapLayerZoomThresholds(regionToCity: $regionToCity)';
 }
 
 
@@ -518,7 +516,7 @@ abstract mixin class _$EarthquakeHistoryMapLayerZoomThresholdsCopyWith<$Res> imp
   factory _$EarthquakeHistoryMapLayerZoomThresholdsCopyWith(_EarthquakeHistoryMapLayerZoomThresholds value, $Res Function(_EarthquakeHistoryMapLayerZoomThresholds) _then) = __$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl;
 @override @useResult
 $Res call({
- double regionToCity, double cityToStation
+ double regionToCity
 });
 
 
@@ -535,10 +533,9 @@ class __$EarthquakeHistoryMapLayerZoomThresholdsCopyWithImpl<$Res>
 
 /// Create a copy of EarthquakeHistoryMapLayerZoomThresholds
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? regionToCity = null,Object? cityToStation = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? regionToCity = null,}) {
   return _then(_EarthquakeHistoryMapLayerZoomThresholds(
 regionToCity: null == regionToCity ? _self.regionToCity : regionToCity // ignore: cast_nullable_to_non_nullable
-as double,cityToStation: null == cityToStation ? _self.cityToStation : cityToStation // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }

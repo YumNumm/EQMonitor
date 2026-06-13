@@ -84,25 +84,15 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
   json,
   ($checkedConvert) {
     final val = _EarthquakeHistoryDetailConfig(
-      iconMode: $checkedConvert(
-        'icon_mode',
-        (v) =>
-            $enumDecodeNullable(
-              _$EarthquakeHistoryIconModeEnumMap,
-              v,
-              unknownValue: EarthquakeHistoryIconMode.auto,
-            ) ??
-            EarthquakeHistoryIconMode.auto,
-      ),
       fillMode: $checkedConvert(
         'fill_mode',
         (v) =>
             $enumDecodeNullable(
               _$EarthquakeHistoryFillModeEnumMap,
               v,
-              unknownValue: EarthquakeHistoryFillMode.none,
+              unknownValue: EarthquakeHistoryFillMode.auto,
             ) ??
-            EarthquakeHistoryFillMode.matchIcon,
+            EarthquakeHistoryFillMode.auto,
       ),
       stationDisplayMode: $checkedConvert(
         'station_display_mode',
@@ -138,7 +128,6 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
     return val;
   },
   fieldKeyMap: const {
-    'iconMode': 'icon_mode',
     'fillMode': 'fill_mode',
     'stationDisplayMode': 'station_display_mode',
     'hypocenterDisplayMode': 'hypocenter_display_mode',
@@ -155,7 +144,6 @@ _EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
 Map<String, dynamic> _$EarthquakeHistoryDetailConfigToJson(
   _EarthquakeHistoryDetailConfig instance,
 ) => <String, dynamic>{
-  'icon_mode': _$EarthquakeHistoryIconModeEnumMap[instance.iconMode]!,
   'fill_mode': _$EarthquakeHistoryFillModeEnumMap[instance.fillMode]!,
   'station_display_mode':
       _$StationDisplayModeEnumMap[instance.stationDisplayMode]!,
@@ -170,17 +158,11 @@ Map<String, dynamic> _$EarthquakeHistoryDetailConfigToJson(
   'show_station': instance.showStation,
 };
 
-const _$EarthquakeHistoryIconModeEnumMap = {
-  EarthquakeHistoryIconMode.auto: 'auto',
-  EarthquakeHistoryIconMode.station: 'station',
-  EarthquakeHistoryIconMode.municipality: 'municipality',
-  EarthquakeHistoryIconMode.region: 'region',
-  EarthquakeHistoryIconMode.none: 'none',
-};
-
 const _$EarthquakeHistoryFillModeEnumMap = {
   EarthquakeHistoryFillMode.none: 'none',
-  EarthquakeHistoryFillMode.matchIcon: 'matchIcon',
+  EarthquakeHistoryFillMode.auto: 'auto',
+  EarthquakeHistoryFillMode.region: 'region',
+  EarthquakeHistoryFillMode.city: 'city',
 };
 
 const _$StationDisplayModeEnumMap = {

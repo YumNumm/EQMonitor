@@ -48,10 +48,18 @@ final class EqmonitorWebSocketProvider
 }
 
 String _$eqmonitorWebSocketHash() =>
-    r'd604e71545aae0f39cb2bdeb36b6f19783960284';
+    r'a2ec95ca93dd52b41d6b11bf833eb20780645400';
+
+/// WebSocket イベントストリーム。
+/// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
+/// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
 
 @ProviderFor(eqmonitorWsEventStream)
 final eqmonitorWsEventStreamProvider = EqmonitorWsEventStreamProvider._();
+
+/// WebSocket イベントストリーム。
+/// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
+/// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
 
 final class EqmonitorWsEventStreamProvider
     extends
@@ -61,6 +69,9 @@ final class EqmonitorWsEventStreamProvider
           Stream<WebSocketEvent>
         >
     with $FutureModifier<WebSocketEvent>, $StreamProvider<WebSocketEvent> {
+  /// WebSocket イベントストリーム。
+  /// ws.events は単一サブスクリプションのため、ここが唯一の subscriber。
+  /// CloseReceived 検知時に eqmonitorWebSocket を invalidate して再接続をトリガーする。
   EqmonitorWsEventStreamProvider._()
     : super(
         from: null,
@@ -88,7 +99,7 @@ final class EqmonitorWsEventStreamProvider
 }
 
 String _$eqmonitorWsEventStreamHash() =>
-    r'b98526debe804e6b0c87e1c6343db5fe099124f3';
+    r'25b58f12d853328d9ba3d189d1e747cba9dc4dcb';
 
 @ProviderFor(eqmonitorWebSocketTicket)
 final eqmonitorWebSocketTicketProvider = EqmonitorWebSocketTicketProvider._();

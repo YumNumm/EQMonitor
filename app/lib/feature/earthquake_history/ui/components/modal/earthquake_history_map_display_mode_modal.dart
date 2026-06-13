@@ -103,35 +103,6 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                   ),
                 ),
 
-                // アイコン表示モード
-                const _SectionHeader(title: 'アイコンの表示'),
-                RadioGroup<EarthquakeHistoryIconMode>(
-                  groupValue: value.detail.iconMode,
-                  onChanged: (m) async {
-                    if (m != null) {
-                      await notifier.save(
-                        value.copyWith.detail(iconMode: m),
-                      );
-                    }
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (final m in EarthquakeHistoryIconMode.values)
-                        RadioListTile<EarthquakeHistoryIconMode>.adaptive(
-                          title: Text(switch (m) {
-                            EarthquakeHistoryIconMode.auto => '自動（地域→市区町村→観測点）',
-                            EarthquakeHistoryIconMode.station => '観測点',
-                            EarthquakeHistoryIconMode.municipality => '市区町村',
-                            EarthquakeHistoryIconMode.region => '細分化地域',
-                            EarthquakeHistoryIconMode.none => 'なし',
-                          }),
-                          value: m,
-                        ),
-                    ],
-                  ),
-                ),
-
                 // 塗りつぶし表示モード
                 const _SectionHeader(title: '塗りつぶし'),
                 RadioGroup<EarthquakeHistoryFillMode>(
@@ -150,8 +121,9 @@ class EarthquakeHistoryMapDisplayModeModal extends ConsumerWidget {
                         RadioListTile<EarthquakeHistoryFillMode>.adaptive(
                           title: Text(switch (m) {
                             EarthquakeHistoryFillMode.none => 'なし',
-                            EarthquakeHistoryFillMode.matchIcon =>
-                              'アイコンに合わせて塗りつぶし',
+                            EarthquakeHistoryFillMode.auto => '自動（地域→市区町村）',
+                            EarthquakeHistoryFillMode.region => '細分化地域のみ',
+                            EarthquakeHistoryFillMode.city => '市区町村のみ',
                           }),
                           value: m,
                         ),

@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/util/converter/color_converter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/map/features/icon/data/provider/intensity_icon_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -20,21 +19,15 @@ import 'package:maplibre/maplibre.dart';
 /// stationDisplayMode に応じて観測点サイズを変更する。
 /// showingLpgmIntensity が true の場合は長周期地震動階級で色分けする。
 /// showStationLabel が true の場合は観測点名ラベルを表示する。
-/// mode に応じて観測点アイコンの表示方法を制御する。
-/// - auto: zoomThresholds.cityToStation から表示
-/// - station: minZoom 8 から常時表示
-/// - それ以外: アイコン非表示（ドットのみ）
 class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
   const EarthquakeHistoryStationIntensityLayer({
     required this.earthquake,
     required this.config,
-    this.zoomThresholds = defaultEarthquakeHistoryMapLayerZoomThresholds,
     super.key,
   });
 
   final Earthquake earthquake;
   final EarthquakeHistoryDetailConfig config;
-  final EarthquakeHistoryMapLayerZoomThresholds zoomThresholds;
 
   static const _sourceId = 'eq-history-station-intensity';
   static const _circleLayerId = 'eq-history-station-intensity-circle';
@@ -54,13 +47,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final modeResolver = useMemoized(
-      () => const EarthquakeHistoryMapLayerModeResolver(),
-    );
-    final mode = modeResolver.resolveMapLayerMode(
-      earthquake: earthquake,
-      config: config,
-    );
     final styleController = MapController.maybeOf(context)?.style;
     final colorModel = ref.watch(intensityColorProvider);
     final iconData = ref.watch(intensityIconProvider).value;
@@ -166,14 +152,13 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
             if (disposed) {
               return;
             }
-            // アイコン画像が揃っているときのみアイコンレイヤーを追加する
-            if (iconData != null && modeResolver.showsStationIcon(mode)) {
+            if (iconData != null) {
               await styleController.addLayer(
-                SymbolStyleLayer(
+                const SymbolStyleLayer(
                   id: _iconLayerId,
                   sourceId: _sourceId,
                   minZoom: 8,
-                  layout: const {
+                  layout: {
                     'icon-image': ['get', 'iconId'],
                     'icon-allow-overlap': true,
                     'icon-ignore-placement': true,
@@ -189,12 +174,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
                       20,
                       0.6,
                     ],
-                  },
-                  paint: {
-                    'icon-opacity': modeResolver.stationIconOpacity(
-                      mode: mode,
-                      zoomThresholds: zoomThresholds,
-                    ),
                   },
                 ),
               );
@@ -256,9 +235,6 @@ class EarthquakeHistoryStationIntensityLayer extends HookConsumerWidget {
         config.stationDisplayMode,
         config.showStationLabel,
         config.showingLpgmIntensity,
-        mode,
-        zoomThresholds,
-        modeResolver,
         iconData,
       ],
     );
