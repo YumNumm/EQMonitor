@@ -150,40 +150,6 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
 
     return Column(
       children: [
-        // アイコン表示モード
-        ListTile(
-          title: const Text('アイコンの表示'),
-          trailing: Text(state.iconMode.displayName),
-          onTap: () async {
-            final result =
-                await showModalBottomSheet<EarthquakeHistoryIconMode>(
-                  context: context,
-                  clipBehavior: Clip.antiAlias,
-                  builder: (context) {
-                    return SafeArea(
-                      child: RadioGroup(
-                        onChanged: (value) => Navigator.pop(context, value),
-                        groupValue: state.iconMode,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            sheetBar,
-                            for (final mode in EarthquakeHistoryIconMode.values)
-                              RadioListTile.adaptive(
-                                title: Text(mode.displayName),
-                                value: mode,
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-            if (result != null) {
-              await saveDetail(state.copyWith(iconMode: result));
-            }
-          },
-        ),
         // 塗りつぶし表示モード
         ListTile(
           title: const Text('塗りつぶし'),
@@ -223,20 +189,12 @@ class _EarthquakeHistoryDetailConfigWidget extends ConsumerWidget {
   }
 }
 
-extension _IconModeEx on EarthquakeHistoryIconMode {
-  String get displayName => switch (this) {
-    EarthquakeHistoryIconMode.auto => '自動',
-    EarthquakeHistoryIconMode.station => '観測点',
-    EarthquakeHistoryIconMode.municipality => '市区町村',
-    EarthquakeHistoryIconMode.region => '細分化地域',
-    EarthquakeHistoryIconMode.none => 'なし',
-  };
-}
-
 extension _FillModeEx on EarthquakeHistoryFillMode {
   String get displayName => switch (this) {
     EarthquakeHistoryFillMode.none => 'なし',
-    EarthquakeHistoryFillMode.matchIcon => 'アイコンに合わせて塗りつぶし',
+    EarthquakeHistoryFillMode.auto => '自動（地域→市区町村）',
+    EarthquakeHistoryFillMode.region => '細分化地域のみ',
+    EarthquakeHistoryFillMode.city => '市区町村のみ',
   };
 }
 
@@ -291,13 +249,6 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: SettingsSectionHeader(
-              text: showingLpgmIntensity ? '長周期地震動階級のアイコン' : '震度のアイコン',
-            ),
-          ),
-          const Center(child: _IconModeSegmentedControl()),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: SettingsSectionHeader(
               text: showingLpgmIntensity ? '長周期地震動階級の塗りつぶし' : '震度の塗りつぶし',
             ),
           ),
@@ -334,72 +285,6 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
   }
 }
 
-class _IconModeSegmentedControl extends ConsumerWidget {
-  const _IconModeSegmentedControl();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(
-      earthquakeHistoryConfigProvider.select(
-        (value) => value.requireValue.detail,
-      ),
-    );
-    const choices = EarthquakeHistoryIconMode.values;
-
-    if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
-      return CupertinoSlidingSegmentedControl(
-        groupValue: state.iconMode,
-        padding: const EdgeInsets.all(4),
-        children: {
-          for (final mode in choices)
-            mode: Text(
-              switch (mode) {
-                EarthquakeHistoryIconMode.auto => '自動',
-                EarthquakeHistoryIconMode.station => '観測点',
-                EarthquakeHistoryIconMode.municipality => '市区町村',
-                EarthquakeHistoryIconMode.region => '地域',
-                EarthquakeHistoryIconMode.none => 'なし',
-              },
-            ),
-        },
-        onValueChanged: (value) async {
-          if (value != null) {
-            final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
-            await ref
-                .read(earthquakeHistoryConfigProvider.notifier)
-                .save(full.copyWith.detail(iconMode: value));
-          }
-        },
-      );
-    } else {
-      return SegmentedButton(
-        selected: {state.iconMode},
-        onSelectionChanged: (p0) async {
-          final full = ref.read(earthquakeHistoryConfigProvider).requireValue;
-          await ref
-              .read(earthquakeHistoryConfigProvider.notifier)
-              .save(full.copyWith.detail(iconMode: p0.first));
-        },
-        segments: [
-          for (final mode in choices)
-            ButtonSegment(
-              label: Text(
-                switch (mode) {
-                  EarthquakeHistoryIconMode.auto => '自動',
-                  EarthquakeHistoryIconMode.station => '観測点',
-                  EarthquakeHistoryIconMode.municipality => '市区町村',
-                  EarthquakeHistoryIconMode.region => '地域',
-                  EarthquakeHistoryIconMode.none => 'なし',
-                },
-              ),
-              value: mode,
-            ),
-        ],
-      );
-    }
-  }
-}
-
 class _FillModeSegmentedControl extends ConsumerWidget {
   const _FillModeSegmentedControl();
 
@@ -418,12 +303,7 @@ class _FillModeSegmentedControl extends ConsumerWidget {
         padding: const EdgeInsets.all(4),
         children: {
           for (final mode in choices)
-            mode: Text(
-              switch (mode) {
-                EarthquakeHistoryFillMode.none => 'なし',
-                EarthquakeHistoryFillMode.matchIcon => 'アイコンに合わせる',
-              },
-            ),
+            mode: Text(mode.displayName),
         },
         onValueChanged: (value) async {
           if (value != null) {
@@ -446,12 +326,7 @@ class _FillModeSegmentedControl extends ConsumerWidget {
         segments: [
           for (final mode in choices)
             ButtonSegment(
-              label: Text(
-                switch (mode) {
-                  EarthquakeHistoryFillMode.none => 'なし',
-                  EarthquakeHistoryFillMode.matchIcon => 'アイコンに合わせる',
-                },
-              ),
+              label: Text(mode.displayName),
               value: mode,
             ),
         ],

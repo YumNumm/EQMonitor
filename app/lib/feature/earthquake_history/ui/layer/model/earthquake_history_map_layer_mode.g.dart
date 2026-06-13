@@ -40,22 +40,12 @@ _$EarthquakeHistoryMapLayerZoomThresholdsFromJson(Map<String, dynamic> json) =>
             'region_to_city',
             (v) => (v as num).toDouble(),
           ),
-          cityToStation: $checkedConvert(
-            'city_to_station',
-            (v) => (v as num).toDouble(),
-          ),
         );
         return val;
       },
-      fieldKeyMap: const {
-        'regionToCity': 'region_to_city',
-        'cityToStation': 'city_to_station',
-      },
+      fieldKeyMap: const {'regionToCity': 'region_to_city'},
     );
 
 Map<String, dynamic> _$EarthquakeHistoryMapLayerZoomThresholdsToJson(
   _EarthquakeHistoryMapLayerZoomThresholds instance,
-) => <String, dynamic>{
-  'region_to_city': instance.regionToCity,
-  'city_to_station': instance.cityToStation,
-};
+) => <String, dynamic>{'region_to_city': instance.regionToCity};

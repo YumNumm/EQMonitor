@@ -17,7 +17,6 @@ import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_fill_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_error_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_hypocenter_layer.dart';
-import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_intensity_icon_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/earthquake_history_station_intensity_layer.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/layer/model/earthquake_history_map_layer_mode.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
@@ -153,12 +152,6 @@ class _MapContent extends HookConsumerWidget {
           children: [
             EarthquakeHistoryFillLayer(
               key: const ValueKey('fill'),
-              earthquake: earthquake,
-              config: config,
-            ),
-            // 地域・市区町村アイコン（塗りつぶしの上）
-            EarthquakeHistoryIntensityIconLayer(
-              key: const ValueKey('area-icon'),
               earthquake: earthquake,
               config: config,
             ),
@@ -486,10 +479,6 @@ class EarthquakeHistoryMapLayerDebugDialogAction {
       earthquake: earthquake,
       showingLpgmIntensity: config.showingLpgmIntensity,
     );
-    final iconLayerMode = modeResolver.resolveMapLayerMode(
-      earthquake: earthquake,
-      config: config,
-    );
     final fillLayerMode = modeResolver.resolveFillLayerMode(
       earthquake: earthquake,
       config: config,
@@ -500,7 +489,6 @@ class EarthquakeHistoryMapLayerDebugDialogAction {
       builder: (context) => _MapLayerModeDebugDialog(
         availability: availability,
         config: config,
-        iconLayerMode: iconLayerMode,
         fillLayerMode: fillLayerMode,
       ),
     );
@@ -511,13 +499,11 @@ class _MapLayerModeDebugDialog extends StatelessWidget {
   const _MapLayerModeDebugDialog({
     required this.availability,
     required this.config,
-    required this.iconLayerMode,
     required this.fillLayerMode,
   });
 
   final EarthquakeHistoryMapLayerAvailability availability;
   final EarthquakeHistoryDetailConfig config;
-  final EarthquakeHistoryMapLayerMode iconLayerMode;
   final EarthquakeHistoryMapLayerMode fillLayerMode;
 
   @override
@@ -528,7 +514,6 @@ class _MapLayerModeDebugDialog extends StatelessWidget {
         child: _MapLayerModeDebugContent(
           availability: availability,
           config: config,
-          iconLayerMode: iconLayerMode,
           fillLayerMode: fillLayerMode,
         ),
       ),
@@ -546,13 +531,11 @@ class _MapLayerModeDebugContent extends StatelessWidget {
   const _MapLayerModeDebugContent({
     required this.availability,
     required this.config,
-    required this.iconLayerMode,
     required this.fillLayerMode,
   });
 
   final EarthquakeHistoryMapLayerAvailability availability;
   final EarthquakeHistoryDetailConfig config;
-  final EarthquakeHistoryMapLayerMode iconLayerMode;
   final EarthquakeHistoryMapLayerMode fillLayerMode;
 
   @override
@@ -567,25 +550,12 @@ class _MapLayerModeDebugContent extends StatelessWidget {
         _DebugSection(
           title: 'Resolved',
           children: [
-            _DebugRow(label: 'iconLayerMode', value: iconLayerMode.name),
             _DebugRow(label: 'fillLayerMode', value: fillLayerMode.name),
           ],
         ),
         _DebugSection(
           title: 'Layer Visibility',
           children: [
-            _DebugRow(
-              label: 'regionIcon',
-              value: modeResolver.showsRegionIcon(iconLayerMode).toString(),
-            ),
-            _DebugRow(
-              label: 'cityIcon',
-              value: modeResolver.showsCityIcon(iconLayerMode).toString(),
-            ),
-            _DebugRow(
-              label: 'stationIcon',
-              value: modeResolver.showsStationIcon(iconLayerMode).toString(),
-            ),
             _DebugRow(
               label: 'regionFill',
               value: modeResolver.showsRegionFill(fillLayerMode).toString(),
@@ -613,7 +583,6 @@ class _MapLayerModeDebugContent extends StatelessWidget {
         _DebugSection(
           title: 'Config',
           children: [
-            _DebugRow(label: 'iconMode', value: config.iconMode.name),
             _DebugRow(label: 'fillMode', value: config.fillMode.name),
             _DebugRow(
               label: 'showingLpgmIntensity',
@@ -639,10 +608,6 @@ class _MapLayerModeDebugContent extends StatelessWidget {
             _DebugRow(
               label: 'regionToCity',
               value: zoomThresholds.regionToCity.toString(),
-            ),
-            _DebugRow(
-              label: 'cityToStation',
-              value: zoomThresholds.cityToStation.toString(),
             ),
           ],
         ),

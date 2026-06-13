@@ -23,13 +23,12 @@ abstract class EarthquakeHistoryMapLayerAvailability
   ) => _$EarthquakeHistoryMapLayerAvailabilityFromJson(json);
 }
 
-/// 自動表示で地域・市区町村・観測点を切り替えるズーム境界。
+/// 自動表示で地域・市区町村を切り替えるズーム境界。
 @freezed
 abstract class EarthquakeHistoryMapLayerZoomThresholds
     with _$EarthquakeHistoryMapLayerZoomThresholds {
   const factory EarthquakeHistoryMapLayerZoomThresholds({
     required double regionToCity,
-    required double cityToStation,
   }) = _EarthquakeHistoryMapLayerZoomThresholds;
 
   factory EarthquakeHistoryMapLayerZoomThresholds.fromJson(
@@ -38,15 +37,12 @@ abstract class EarthquakeHistoryMapLayerZoomThresholds
 }
 
 const defaultEarthquakeHistoryMapLayerZoomThresholds =
-    EarthquakeHistoryMapLayerZoomThresholds(
-      regionToCity: 8,
-      cityToStation: 10,
-    );
+    EarthquakeHistoryMapLayerZoomThresholds(regionToCity: 8);
 
 class EarthquakeHistoryMapLayerModeResolver {
   const EarthquakeHistoryMapLayerModeResolver();
 
-  EarthquakeHistoryMapLayerMode resolveMapLayerMode({
+  EarthquakeHistoryMapLayerMode resolveFillLayerMode({
     required Earthquake earthquake,
     required EarthquakeHistoryDetailConfig config,
   }) {
@@ -54,23 +50,25 @@ class EarthquakeHistoryMapLayerModeResolver {
       earthquake: earthquake,
       showingLpgmIntensity: config.showingLpgmIntensity,
     );
-    return resolvePreferredMapLayerMode(
-      preferredMode: config.iconMode,
-      availability: availability,
-    );
-  }
-
-  EarthquakeHistoryMapLayerMode resolveFillLayerMode({
-    required Earthquake earthquake,
-    required EarthquakeHistoryDetailConfig config,
-  }) {
-    if (config.fillMode == EarthquakeHistoryFillMode.none) {
-      return EarthquakeHistoryMapLayerMode.none;
-    }
-    return resolveMapLayerMode(
-      earthquake: earthquake,
-      config: config,
-    );
+    return switch (config.fillMode) {
+      EarthquakeHistoryFillMode.none => EarthquakeHistoryMapLayerMode.none,
+      EarthquakeHistoryFillMode.auto
+          when availability.region && availability.city =>
+        EarthquakeHistoryMapLayerMode.auto,
+      EarthquakeHistoryFillMode.auto when availability.region =>
+        EarthquakeHistoryMapLayerMode.region,
+      EarthquakeHistoryFillMode.auto when availability.city =>
+        EarthquakeHistoryMapLayerMode.city,
+      EarthquakeHistoryFillMode.auto => EarthquakeHistoryMapLayerMode.none,
+      EarthquakeHistoryFillMode.region when availability.region =>
+        EarthquakeHistoryMapLayerMode.region,
+      EarthquakeHistoryFillMode.region => EarthquakeHistoryMapLayerMode.none,
+      EarthquakeHistoryFillMode.city when availability.city =>
+        EarthquakeHistoryMapLayerMode.city,
+      EarthquakeHistoryFillMode.city when availability.region =>
+        EarthquakeHistoryMapLayerMode.region,
+      EarthquakeHistoryFillMode.city => EarthquakeHistoryMapLayerMode.none,
+    };
   }
 
   EarthquakeHistoryMapLayerAvailability resolveAvailability({
@@ -123,58 +121,6 @@ class EarthquakeHistoryMapLayerModeResolver {
       0.0,
       zoomThresholds.regionToCity,
       visibleOpacity,
-      zoomThresholds.cityToStation,
-      0.0,
-    ];
-  }
-
-  Object regionIconOpacity({
-    required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
-  }) {
-    if (mode != EarthquakeHistoryMapLayerMode.auto) {
-      return 1.0;
-    }
-    return [
-      'step',
-      ['zoom'],
-      1.0,
-      zoomThresholds.regionToCity,
-      0.0,
-    ];
-  }
-
-  Object cityIconOpacity({
-    required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
-  }) {
-    if (mode != EarthquakeHistoryMapLayerMode.auto) {
-      return 1.0;
-    }
-    return [
-      'step',
-      ['zoom'],
-      0.0,
-      zoomThresholds.regionToCity,
-      1.0,
-      zoomThresholds.cityToStation,
-      0.0,
-    ];
-  }
-
-  Object stationIconOpacity({
-    required EarthquakeHistoryMapLayerMode mode,
-    required EarthquakeHistoryMapLayerZoomThresholds zoomThresholds,
-  }) {
-    if (mode != EarthquakeHistoryMapLayerMode.auto) {
-      return 1.0;
-    }
-    return [
-      'step',
-      ['zoom'],
-      0.0,
-      zoomThresholds.cityToStation,
-      1.0,
     ];
   }
 
@@ -185,53 +131,6 @@ class EarthquakeHistoryMapLayerModeResolver {
   bool showsCityFill(EarthquakeHistoryMapLayerMode mode) =>
       mode == EarthquakeHistoryMapLayerMode.auto ||
       mode == EarthquakeHistoryMapLayerMode.city;
-
-  bool showsRegionIcon(EarthquakeHistoryMapLayerMode mode) =>
-      mode == EarthquakeHistoryMapLayerMode.auto ||
-      mode == EarthquakeHistoryMapLayerMode.region;
-
-  bool showsCityIcon(EarthquakeHistoryMapLayerMode mode) =>
-      mode == EarthquakeHistoryMapLayerMode.auto ||
-      mode == EarthquakeHistoryMapLayerMode.city;
-
-  bool showsStationIcon(EarthquakeHistoryMapLayerMode mode) =>
-      mode == EarthquakeHistoryMapLayerMode.auto ||
-      mode == EarthquakeHistoryMapLayerMode.station;
-
-  EarthquakeHistoryMapLayerMode resolvePreferredMapLayerMode({
-    required EarthquakeHistoryIconMode preferredMode,
-    required EarthquakeHistoryMapLayerAvailability availability,
-  }) {
-    return switch (preferredMode) {
-      EarthquakeHistoryIconMode.none => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryIconMode.region when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryIconMode.region => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryIconMode.municipality when availability.city =>
-        EarthquakeHistoryMapLayerMode.city,
-      EarthquakeHistoryIconMode.municipality when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryIconMode.municipality =>
-        EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryIconMode.station when availability.station =>
-        EarthquakeHistoryMapLayerMode.station,
-      EarthquakeHistoryIconMode.station when availability.city =>
-        EarthquakeHistoryMapLayerMode.city,
-      EarthquakeHistoryIconMode.station when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryIconMode.station => EarthquakeHistoryMapLayerMode.none,
-      EarthquakeHistoryIconMode.auto
-          when availability.region && availability.city =>
-        EarthquakeHistoryMapLayerMode.auto,
-      EarthquakeHistoryIconMode.auto when availability.region =>
-        EarthquakeHistoryMapLayerMode.region,
-      EarthquakeHistoryIconMode.auto when availability.city =>
-        EarthquakeHistoryMapLayerMode.city,
-      EarthquakeHistoryIconMode.auto when availability.station =>
-        EarthquakeHistoryMapLayerMode.station,
-      EarthquakeHistoryIconMode.auto => EarthquakeHistoryMapLayerMode.none,
-    };
-  }
 
   EarthquakeHistoryMapLayerAvailability resolveJmaAvailability(
     EarthquakeIntensity intensity,

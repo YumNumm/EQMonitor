@@ -35,14 +35,9 @@ abstract class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
 abstract class EarthquakeHistoryDetailConfig
     with _$EarthquakeHistoryDetailConfig {
   const factory EarthquakeHistoryDetailConfig({
-    /// アイコンの表示モード
-    @JsonKey(unknownEnumValue: EarthquakeHistoryIconMode.auto)
-    @Default(EarthquakeHistoryIconMode.auto)
-    EarthquakeHistoryIconMode iconMode,
-
     /// 塗りつぶしの表示モード
-    @JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.none)
-    @Default(EarthquakeHistoryFillMode.matchIcon)
+    @JsonKey(unknownEnumValue: EarthquakeHistoryFillMode.auto)
+    @Default(EarthquakeHistoryFillMode.auto)
     EarthquakeHistoryFillMode fillMode,
 
     /// 観測点の表示方法
@@ -76,31 +71,19 @@ abstract class EarthquakeHistoryDetailConfig
       _$EarthquakeHistoryDetailConfigFromJson(json);
 }
 
-/// 地震履歴詳細画面におけるアイコン表示モード
-enum EarthquakeHistoryIconMode {
-  /// 自動（細分化地域→市区町村→観測点をズームに応じて段階表示）
-  auto,
-
-  /// 観測点アイコンのみ（データなければ細分化地域にフォールバック）
-  station,
-
-  /// 市区町村アイコンのみ（データなければ細分化地域にフォールバック）
-  municipality,
-
-  /// 細分化地域アイコンのみ
-  region,
-
-  /// アイコン非表示
-  none,
-}
-
 /// 地震履歴詳細画面における塗りつぶし表示モード
 enum EarthquakeHistoryFillMode {
   /// 塗りつぶしなし
   none,
 
-  /// アイコン表示モードに合わせて塗りつぶし
-  matchIcon,
+  /// 自動（広域: region → ズームイン: city。city は最大ズームまで維持）
+  auto,
+
+  /// 細分化地域のみ（全ズームレベル）
+  region,
+
+  /// 市区町村のみ（全ズームレベル。データなければ region にフォールバック）
+  city,
 }
 
 /// 観測点の表示方法
