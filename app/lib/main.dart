@@ -45,16 +45,33 @@ import 'package:shared_preferences/shared_preferences.dart'
 import 'package:talker_flutter/talker_flutter.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   try {
     await _main();
   } on Object catch (error, stackTrace) {
-    WidgetsFlutterBinding.ensureInitialized();
-    unawaited(_recordStartupError(error, stackTrace));
+    unawaited(() async {
+      if (kIsWeb || Firebase.apps.isEmpty) {
+        return;
+      }
+      try {
+        await FirebaseCrashlytics.instance.recordError(
+          error,
+          stackTrace,
+          fatal: true,
+        );
+      } on Object {
+        // 起動失敗時のフォールバック表示を優先する。
+      }
+    }());
     runApp(
       ProviderScope(
         child: MaterialApp(
           home: Scaffold(
-            body: Center(child: ErrorCard(error: error)),
+            body: Center(
+              child: ErrorCard(
+                error: error,
+              ),
+            ),
           ),
         ),
       ),
@@ -62,23 +79,7 @@ Future<void> main() async {
   }
 }
 
-Future<void> _recordStartupError(Object error, StackTrace stackTrace) async {
-  if (kIsWeb || Firebase.apps.isEmpty) {
-    return;
-  }
-  try {
-    await FirebaseCrashlytics.instance.recordError(
-      error,
-      stackTrace,
-      fatal: true,
-    );
-  } on Object {
-    // 起動失敗時のフォールバック表示を優先する。
-  }
-}
-
 Future<void> _main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
     await BackgroundLocationTracker.initialize();
   }
@@ -95,17 +96,23 @@ Future<void> _main() async {
     ),
   );
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   talker = TalkerFlutter.init(
     settings: TalkerSettings(
       // ignore: avoid_redundant_argument_values
       useConsoleLogs: kDebugMode,
     ),
-    logger: TalkerLogger(formatter: const ColoredLoggerFormatter()),
+    logger: TalkerLogger(
+      formatter: const ColoredLoggerFormatter(),
+    ),
   );
   if (!kIsWeb) {
-    talker.configure(observer: CrashlyticsTalkerObserver());
+    talker.configure(
+      observer: CrashlyticsTalkerObserver(),
+    );
   }
 
   FlutterError.onError = (error) {
@@ -119,11 +126,18 @@ Future<void> _main() async {
         talker.log(stackTrace.toString());
       }
     }
-    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
+    talker.handle(
+      error.exception,
+      error.stack,
+      'Uncaught fatal exception',
+    );
   };
-  PlatformDispatcher.instance.onError = (error, stack) {
-    talker.handle(error, stack, 'Uncaught async exception');
-    final exception = error;
+  PlatformDispatcher.instance.onError = (exception, stackTrace) {
+    talker.handle(
+      exception,
+      stackTrace,
+      'Uncaught async exception',
+    );
     log(
       'Uncaught async exception: ${exception.runtimeType} $exception',
       name: 'main',
@@ -210,7 +224,9 @@ Future<void> _main() async {
       if (results.$2.$1 case final colorMap?)
         kyoshinColorMapProvider.overrideWithValue(colorMap),
     ],
-    observers: [if (kDebugMode) CustomProviderObserver(talker)],
+    observers: [
+      if (kDebugMode) CustomProviderObserver(talker),
+    ],
     retry: (_, _) => null,
   );
 

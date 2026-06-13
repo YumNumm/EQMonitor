@@ -1,4 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_item.dart';
@@ -10,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_search_parameter_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paging_view/paging_view.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -22,7 +26,9 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: _SliverListBody(initialParameter: initialParameter),
+      body: _SliverListBody(
+        initialParameter: initialParameter,
+      ),
     );
   }
 }
@@ -50,6 +56,7 @@ class _SliverListBody extends HookConsumerWidget {
         ),
       ),
       data: (dataSource) => _PagingBody(
+        intensityColor: ref.watch(intensityColorProvider),
         dataSource: dataSource,
         parameter: parameter,
         onParameterChanged: (result) => parameter.value = result,
@@ -65,12 +72,14 @@ class _PagingBody extends StatelessWidget {
     required this.parameter,
     required this.onParameterChanged,
     required this.onRefresh,
+    required this.intensityColor,
   });
 
   final EarthquakeHistoryDataSource dataSource;
   final ValueNotifier<EarthquakeHistoryParameter> parameter;
   final ValueChanged<EarthquakeHistoryParameter> onParameterChanged;
   final Future<void> Function() onRefresh;
+  final IntensityColorModel intensityColor;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +87,7 @@ class _PagingBody extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: onRefresh,
+
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -100,6 +110,10 @@ class _PagingBody extends StatelessWidget {
                 },
               ),
             ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(AdSize.banner.height.toDouble()),
+              child: const AdBanner(),
+            ),
           ),
           SliverPersistentHeader(
             pinned: true,
@@ -111,13 +125,17 @@ class _PagingBody extends StatelessWidget {
           SliverGroupedPagingList<String?, String, EarthquakeHistoryItem>(
             dataSource: dataSource,
             stickyHeader: true,
-            headerBuilder: (context, date, index) => _DateHeader(date: date),
+            headerBuilder: (_, date, _) => _DateHeader(
+              date: date,
+            ),
             itemBuilder: (context, item, globalIndex, localIndex) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 EarthquakeHistoryListTile(
                   item: item.earthquake,
                   areaInfo: item.areaInfo,
+                  areaName: item.areaInfo?.name,
+                  intensityColor: intensityColor,
                   onTap: () async => EarthquakeHistoryDetailsRoute(
                     eventId: item.earthquake.eventId,
                   ).push<void>(context),
@@ -143,7 +161,6 @@ class _PagingBody extends StatelessWidget {
             ),
             emptyWidget: const EarthquakeHistoryNotFound(),
           ),
-          const SliverToBoxAdapter(child: AdBanner()),
           SliverToBoxAdapter(
             child: AppendLoadStateBuilder(
               dataSource: dataSource,
@@ -182,27 +199,35 @@ class _EarthquakeHistorySkeleton extends StatelessWidget {
     return Skeletonizer(
       child: scrollable
           ? ListView(children: tiles)
-          : Column(mainAxisSize: MainAxisSize.min, children: tiles),
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: tiles,
+            ),
     );
   }
 }
 
 class _DateHeader extends StatelessWidget {
-  const _DateHeader({required this.date});
+  const _DateHeader({
+    required this.date,
+  });
 
   final String date;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final spacing = theme.designSystemThemeExtension.spacing;
     return Container(
-      color: theme.colorScheme.surfaceContainerHighest,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: theme.colorScheme.surfaceContainer,
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.lg,
+        vertical: spacing.xs,
+      ),
       child: Text(
         date,
         style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: theme.colorScheme.onSurfaceVariant,
+          color: theme.colorScheme.onSurface,
         ),
       ),
     );

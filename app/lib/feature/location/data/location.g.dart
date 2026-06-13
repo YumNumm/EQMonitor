@@ -43,7 +43,41 @@ final class LocationStreamProvider
   }
 }
 
-String _$locationStreamHash() => r'0f1636bf1583f78551f435c90fbad18f74f6f5ee';
+String _$locationStreamHash() => r'3b82e685f5d4fc16644468fba1cb52101fbc6544';
+
+@ProviderFor(_locationStream)
+final _locationStreamProvider = _LocationStreamProvider._();
+
+final class _LocationStreamProvider
+    extends
+        $FunctionalProvider<AsyncValue<Position>, Position, Stream<Position>>
+    with $FutureModifier<Position>, $StreamProvider<Position> {
+  _LocationStreamProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'_locationStreamProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$_locationStreamHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Position> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<Position> create(Ref ref) {
+    return _locationStream(ref);
+  }
+}
+
+String _$_locationStreamHash() => r'e925d8ad4ec47b6993679647dc9e69d1200c1a99';
 
 /// 近隣の強震観測点
 

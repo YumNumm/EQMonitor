@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_not_found.dart';
@@ -104,15 +105,21 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                           : HomeEarthquakeList(
                               earthquakes: value.items,
                               showCurrentLocationIntensity:
-                                  scope ==
-                                  HomeEarthquakeHistoryScope.currentLocation,
+                                  scope == .currentLocation,
+                              intensityColor: ref.watch(intensityColorProvider),
                             ),
                     AsyncError(:final error) => ErrorCard(
                       error: error,
                       margin: EdgeInsets.zero,
                       onReload: () async {
-                        ref.invalidate(homeEarthquakeHistoryParameterProvider, asReload: true);
-                        ref.invalidate(earthquakeHistoryProvider(param), asReload: true);
+                        ref.invalidate(
+                          homeEarthquakeHistoryParameterProvider,
+                          asReload: true,
+                        );
+                        ref.invalidate(
+                          earthquakeHistoryProvider(param),
+                          asReload: true,
+                        );
                       },
                       padding: const EdgeInsets.all(8),
                     ),
@@ -124,8 +131,10 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
                 error: (error, _) => ErrorCard(
                   error: error,
                   margin: EdgeInsets.zero,
-                  onReload: () async =>
-                      ref.invalidate(homeEarthquakeHistoryParameterProvider, asReload: true),
+                  onReload: () async => ref.invalidate(
+                    homeEarthquakeHistoryParameterProvider,
+                    asReload: true,
+                  ),
                   padding: const EdgeInsets.all(8),
                 ),
               ),

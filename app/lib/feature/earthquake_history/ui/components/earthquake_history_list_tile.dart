@@ -1,28 +1,20 @@
-import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
-import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/provider/current_location_intensity_provider.dart';
-import 'package:eqmonitor/feature/location/data/location.dart';
-import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:eqmonitor/feature/parameter/data/notifier/parameter_set_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:lat_lng/lat_lng.dart';
 
-class EarthquakeHistoryListTile extends HookConsumerWidget {
+class EarthquakeHistoryListTile extends StatelessWidget {
   const EarthquakeHistoryListTile({
     required this.item,
+    required this.intensityColor,
     this.areaInfo,
+    this.areaName,
     this.onTap,
     this.showBackgroundColor = true,
     this.intensityIconSize = 40.0,
@@ -39,7 +31,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
   final EarthquakePartial item;
 
   /// 地域検索時にレスポンスに含まれる、検索対象地域の震度情報。
+  /// `areaInfo`と`areaName`はどちらもnot-null もしくは null である必要がある
   final IntensityAreaInfo? areaInfo;
+  final String? areaName;
 
   final void Function()? onTap;
   final bool showBackgroundColor;
@@ -51,9 +45,15 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
   final bool dense;
   final EdgeInsets? contentPadding;
   final bool showCurrentLocationIntensity;
+  final IntensityColorModel intensityColor;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    assert(
+      areaInfo != null && areaName != null ||
+          areaInfo == null && areaName == null,
+      'areaInfoとareaNameはどちらもnot-null もしくは null である必要がある',
+    );
     final theme = Theme.of(context);
 
     final hypocenter = item.hypocenter;
@@ -79,7 +79,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
             '${dateFormatter.format(originTime.toLocal())}頃発生 ',
           (_, final DateTime arrivalTime) =>
             '${dateFormatter.format(arrivalTime.toLocal())}頃検知 ',
-          _ => '',
+          _ => '震源要素 調査中',
         } +
         switch (depth) {
           EarthquakeDepthOver700km() => '深さ 700km以上',
@@ -89,101 +89,16 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           null => '',
         };
 
-    final intensityColorState = ref.watch(intensityColorProvider);
-    final intensityColor = maxIntensity != null
-        ? intensityColorState.fromJmaIntensity(maxIntensity).background
+    final maxIntensityColor = maxIntensity != null
+        ? intensityColor.fromJmaIntensity(maxIntensity).background
         : null;
-    final maxLpgmIntensity = intensity?.maxLpgmIntensity;
 
     final magnitude = hypocenter?.magnitude;
-    final trailingText = switch (magnitude) {
-      EarthquakeMagnitudeValue(:final value) => 'M$value',
-      EarthquakeMagnitudeUnknown() => 'M不明',
-      EarthquakeMagnitudeOverM8() => 'M8超',
-      null => '',
-    };
-
-    // 地域検索時のエリア震度（レスポンスに含まれる情報をそのまま使用）
-    final areaChipLabel = areaInfo != null && areaInfo!.intensity != null
-        ? '${areaInfo!.name} 震度${areaInfo!.intensity!.label}'
-        : null;
-
-    // 現在地情報（areaInfo がない場合のみ取得）
-    final needsCurrentLocation =
-        showCurrentLocationIntensity && areaInfo == null;
-    final position = needsCurrentLocation
-        ? ref.watch(locationStreamProvider).value
-        : null;
-    final latLng = position != null
-        ? LatLng(position.latitude, position.longitude)
-        : null;
-
-    final city = latLng != null
-        ? ref.watch(jmaMapAreaInformationCityInsideProvider(latLng)).value
-        : null;
-    final region = latLng != null
-        ? ref.watch(jmaMapAreaForecastLocalEInsideProvider(latLng)).value
-        : null;
-
-    final cityCode = city?.property?.code;
-    final cityParam = needsCurrentLocation && cityCode != null
-        ? ref.watch(
-            parameterSetProvider.select(
-              (v) => v.value?.earthquake.prefectures
-                  .expand(
-                    (p) => p.regions.expand(
-                      (r) => r.cities.map((c) => (prefecture: p, city: c)),
-                    ),
-                  )
-                  .firstWhereOrNull((e) => e.city.code == cityCode),
-            ),
-          )
-        : null;
-
-    final regionCode = region?.property?.code;
-    final regionParam = needsCurrentLocation && regionCode != null
-        ? ref.watch(
-            parameterSetProvider.select(
-              (v) => v.value?.earthquake.prefectures
-                  .expand(
-                    (p) => p.regions.map((r) => (prefecture: p, region: r)),
-                  )
-                  .firstWhereOrNull((e) => e.region.code == regionCode),
-            ),
-          )
-        : null;
-
-    final currentLocationIntensityAsync = needsCurrentLocation
-        ? ref.watch(
-            currentLocationIntensityProvider(
-              eventId: item.eventId,
-              cityAreaCode: cityCode,
-              regionAreaCode: regionCode,
-            ),
-          )
-        : null;
-
-    // 現在地の地名を解決
-    final currentLocationName = switch ((cityParam, regionParam)) {
-      (final c?, _) => '${c.prefecture.name.ja}${c.city.name.ja}',
-      (_, final r?) => '${r.prefecture.name.ja}${r.region.name.ja}',
-      _ => null,
-    };
-
-    // 表示ラベルの解決: areaInfo > currentLocationIntensity の優先順位
-    final currentLocationChipLabel = areaChipLabel ??
-        switch (currentLocationIntensityAsync?.value) {
-          CurrentLocationIntensityDisplayQuick(:final intensity) =>
-            '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label} (速報)',
-          CurrentLocationIntensityDisplayResult(:final intensity) =>
-            '${currentLocationName != null ? "$currentLocationName " : ""}震度${intensity.label}',
-          CurrentLocationIntensityDisplayNone() || null => currentLocationName,
-        };
 
     return ListTile(
       visualDensity: visualDensity,
       tileColor: showBackgroundColor
-          ? intensityColor?.withValues(alpha: 0.4)
+          ? maxIntensityColor?.withValues(alpha: 0.4)
           : null,
       onTap: onTap,
       title: Text(
@@ -205,12 +120,6 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
                 color: descriptionTextColor,
               ),
             ),
-
-            if (maxLpgmIntensity != null &&
-                maxLpgmIntensity != JmaLpgmIntensity.zero)
-              TextSpan(text: '最大長周期地震動階級 ${maxLpgmIntensity.label}'),
-            if (currentLocationChipLabel != null)
-              TextSpan(text: '\n$currentLocationChipLabel'),
           ],
         ),
       ),
@@ -221,15 +130,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
               size: intensityIconSize,
             )
           : null,
-      trailing: Text(
-        trailingText,
-        style: theme.textTheme.labelLarge!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: magnitudeTextColor,
-          fontFamily: FontFamily.googleSansCode,
-          letterSpacing: -0.5,
-        ),
-      ),
+      trailing: MagnitudeText(magnitude: magnitude, color: magnitudeTextColor),
       dense: dense,
       contentPadding: contentPadding,
     );

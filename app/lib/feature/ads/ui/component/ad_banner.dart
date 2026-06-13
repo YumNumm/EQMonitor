@@ -13,7 +13,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// shouldShowAdsProvider が false の場合は何も表示しない。
 /// Web・デスクトップでは表示しない。
 class AdBanner extends HookConsumerWidget {
-  const AdBanner({super.key});
+  const AdBanner({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,6 +32,29 @@ class AdBanner extends HookConsumerWidget {
   }
 }
 
+class AdBannerPersistentDelegate extends SliverPersistentHeaderDelegate {
+  const AdBannerPersistentDelegate();
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return const AdBanner();
+  }
+
+  @override
+  double get maxExtent => AdSize.banner.height.toDouble();
+
+  @override
+  double get minExtent => AdSize.banner.height.toDouble();
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
+}
+
 class _BannerAdWidget extends HookConsumerWidget {
   const _BannerAdWidget();
 
@@ -38,10 +63,12 @@ class _BannerAdWidget extends HookConsumerWidget {
     final adState = useState<BannerAd?>(null);
     final isLoaded = useState(false);
 
+    const adSize = AdSize.banner;
+
     useEffect(
       () {
         final ad = BannerAd(
-          size: .banner,
+          size: adSize,
           adUnitId: adUnitIdBanner,
           listener: BannerAdListener(
             onAdLoaded: (_) => isLoaded.value = true,
@@ -63,12 +90,14 @@ class _BannerAdWidget extends HookConsumerWidget {
 
     final ad = adState.value;
     if (ad == null || !isLoaded.value) {
-      return const SizedBox.shrink();
+      return SizedBox(
+        height: adSize.height.toDouble(),
+      );
     }
 
     return SafeArea(
       child: SizedBox(
-        height: ad.size.height.toDouble(),
+        height: adSize.height.toDouble(),
         child: AdWidget(
           ad: ad,
         ),

@@ -14,14 +14,14 @@ class HomeScopeSelector extends StatelessWidget {
   final ValueChanged<HomeEarthquakeHistoryScope> onScopeChanged;
   final String? locationName;
 
-  static String _scopeLabel(HomeEarthquakeHistoryScope scope) => switch (scope) {
-    .nationwide => '全国',
-    .currentLocation => '現在地',
-    .custom => '指定地域',
-  };
-
   @override
   Widget build(BuildContext context) {
+    String scopeLabel(HomeEarthquakeHistoryScope scope) => switch (scope) {
+      .nationwide => '全国',
+      .currentLocation => '現在地',
+      .custom => '指定地域',
+    };
+
     final designSystem = context.designSystem;
     final color = designSystem.color;
     final shape = designSystem.shape;
@@ -29,22 +29,26 @@ class HomeScopeSelector extends StatelessWidget {
     final typography = designSystem.typography;
 
     return Padding(
-      padding: EdgeInsets.all(spacing.xs),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.lg,
+      ),
       child: Row(
         spacing: spacing.sm,
         children: [
-          Text(
-            _scopeLabel(scope),
-            style: typography.bodyLarge,
-          ),
           MenuAnchor(
             style: MenuStyle(
-              padding: WidgetStateProperty.all(EdgeInsets.zero),
-              backgroundColor: WidgetStatePropertyAll(color.surfaceRaised),
+              padding: WidgetStateProperty.all(
+                .zero,
+              ),
+              backgroundColor: WidgetStatePropertyAll(
+                color.surfaceRaised,
+              ),
               shape: WidgetStateProperty.all(
                 RoundedSuperellipseBorder(
                   borderRadius: BorderRadius.circular(shape.md),
-                  side: BorderSide(color: color.outlineSoft),
+                  side: BorderSide(
+                    color: color.outlineSoft,
+                  ),
                 ),
               ),
             ),
@@ -53,21 +57,39 @@ class HomeScopeSelector extends StatelessWidget {
                 MenuItemButton(
                   onPressed: () => onScopeChanged(s),
                   child: Text(
-                    _scopeLabel(s),
+                    scopeLabel(s),
                     style: typography.bodyLarge,
                   ),
                 ),
             ],
-            builder: (context, controller, child) => IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              iconSize: 20,
-              onPressed: () {
-                if (controller.isOpen) {
-                  controller.close();
-                } else {
-                  controller.open();
-                }
-              },
+            builder: (context, controller, child) => Row(
+              spacing: spacing.sm,
+              children: [
+                GestureDetector(
+                  child: Text(
+                    scopeLabel(scope),
+                    style: typography.bodyLarge,
+                  ),
+                  onTap: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined),
+                  iconSize: 20,
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                ),
+              ],
             ),
           ),
           if (locationName != null)

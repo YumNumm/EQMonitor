@@ -23,6 +23,7 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final colorModel = ref.watch(intensityColorProvider);
     final intensity = item.intensity;
 
@@ -46,12 +47,26 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
                     title: '各地の震度',
                   ),
                 ),
-                RawChip(
-                  label: const Text('速報'),
-                  color: WidgetStatePropertyAll(Colors.red.shade700),
-                  labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: .bold,
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.errorContainer,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: theme.colorScheme.onErrorContainer,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    child: Text(
+                      '速報',
+                      style: TextStyle(
+                        color: theme.colorScheme.onErrorContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],

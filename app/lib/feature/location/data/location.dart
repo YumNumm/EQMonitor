@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,9 +10,44 @@ part 'location.g.dart';
 
 @riverpod
 Stream<Position> locationStream(Ref ref) async* {
+  final controller = StreamController<Position>();
+  ref.onDispose(controller.close);
+
+  ref.listen(
+    _locationStreamProvider,
+    (_, next) {
+      next.whenData((position) {
+        // Round to 3 decimal places (~110m) to avoid re-fetching on tiny GPS fluctuations.
+        final lat = (position.latitude * 1000).round() / 1000;
+        final lng = (position.longitude * 1000).round() / 1000;
+        controller.add(
+          Position(
+            latitude: lat,
+            longitude: lng,
+            timestamp: position.timestamp,
+            accuracy: position.accuracy,
+            altitude: position.altitude,
+            altitudeAccuracy: position.altitudeAccuracy,
+            heading: position.heading,
+            headingAccuracy: position.headingAccuracy,
+            speed: position.speed,
+            speedAccuracy: position.speedAccuracy,
+            floor: position.floor,
+            isMocked: position.isMocked,
+          ),
+        );
+      });
+    },
+  );
+
+  yield* controller.stream;
+}
+
+@riverpod
+Stream<Position> _locationStream(Ref ref) async* {
   final stream = Geolocator.getPositionStream(
     locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.low,
+      accuracy: .low,
     ),
   );
 
@@ -21,7 +58,7 @@ Stream<Position> locationStream(Ref ref) async* {
 
   final currentPosition = await Geolocator.getCurrentPosition(
     locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.low,
+      accuracy: .low,
       distanceFilter: 100,
     ),
   );
@@ -43,7 +80,10 @@ Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
 
   final currentPosition = ref.watch(locationStreamProvider);
   if (currentPosition case AsyncData(:final value)) {
-    final currentPosition = LatLng(value.latitude, value.longitude);
+    final currentPosition = LatLng(
+      value.latitude,
+      value.longitude,
+    );
     final closest = kmoniObservationPoints.points
         .map(
           (e) => (

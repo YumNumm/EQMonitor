@@ -32,6 +32,7 @@ final class CustomProviderObserver extends ProviderObserver {
     'eewAliveTelegramProvider' ||
     'kyoshinMonitorObservationGeoJsonProvider' ||
     'kyoshinMonitorAnalyzerIsolateProvider' ||
+    'shakeDetectionVisibleProvider' ||
     'homeKyoshinMonitorObservationGeoJsonProvider' => null,
     _
         when context.provider.name?.contains('LayerControllerProvider') ??
@@ -52,6 +53,7 @@ final class CustomProviderObserver extends ProviderObserver {
     'kyoshinMonitorTimerStreamProvider' ||
     'kyoshinMonitorTimerProvider' ||
     'kyoshinMonitorProvider' ||
+    'shakeDetectionVisibleProvider' ||
     'kyoshinMonitorObservationGeoJsonProvider' ||
     'eewProvider' ||
     'homeKyoshinMonitorObservationGeoJsonProvider' => null,

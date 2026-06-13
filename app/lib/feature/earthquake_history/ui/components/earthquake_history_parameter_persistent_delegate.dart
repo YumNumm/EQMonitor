@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
+import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +22,12 @@ class EarthquakeHistoryParameterPersistentDelegate
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return _SearchParameter(
-      parameter: parameter,
-      onChanged: onChanged,
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surface,
+      child: _SearchParameter(
+        parameter: parameter,
+        onChanged: onChanged,
+      ),
     );
   }
 
@@ -35,7 +39,7 @@ class EarthquakeHistoryParameterPersistentDelegate
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      true;
+      false;
 }
 
 class _SearchParameter extends StatelessWidget {
@@ -46,46 +50,42 @@ class _SearchParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = Theme.of(context).designSystemThemeExtension.spacing;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Row(
-          children:
-              [
-                    IntensityFilterChip(
-                      min: parameter.intensityGte,
-                      max: parameter.intensityLte,
-                      onChanged: (min, max) =>
-                          onChanged(parameter.updateIntensity(min, max)),
-                    ),
-                    MagnitudeFilterChip(
-                      min: parameter.magnitudeGte,
-                      max: parameter.magnitudeLte,
-                      onChanged: (min, max) =>
-                          onChanged(parameter.updateMagnitude(min, max)),
-                    ),
-                    DepthFilterChip(
-                      min: parameter.depthGte,
-                      max: parameter.depthLte,
-                      onChanged: (min, max) => onChanged(
-                        parameter.updateDepth(min, max),
-                      ),
-                    ),
-                    StatusFilterChip(
-                      statuses: parameter.statuses,
-                      onChanged: (statuses) => onChanged(
-                        parameter.updateStatuses(statuses),
-                      ),
-                    ),
-                  ]
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: e,
-                    ),
-                  )
-                  .toList(),
+          spacing: spacing.sm,
+          children: [
+            IntensityFilterChip(
+              min: parameter.intensityGte,
+              max: parameter.intensityLte,
+              onChanged: (min, max) => onChanged(
+                parameter.updateIntensity(min, max),
+              ),
+            ),
+            MagnitudeFilterChip(
+              min: parameter.magnitudeGte,
+              max: parameter.magnitudeLte,
+              onChanged: (min, max) => onChanged(
+                parameter.updateMagnitude(min, max),
+              ),
+            ),
+            DepthFilterChip(
+              min: parameter.depthGte,
+              max: parameter.depthLte,
+              onChanged: (min, max) => onChanged(
+                parameter.updateDepth(min, max),
+              ),
+            ),
+            StatusFilterChip(
+              statuses: parameter.statuses,
+              onChanged: (statuses) => onChanged(
+                parameter.updateStatuses(statuses),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -25,7 +25,7 @@ pkl = "latest"
 zizmor = "latest"
 ghalint = "latest"
 gitleaks = "latest"
-claude = "2.1.158"
+claude = "2.1.170"
 swift = "latest"
 
 [settings]

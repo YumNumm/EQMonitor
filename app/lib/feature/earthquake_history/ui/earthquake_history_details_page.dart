@@ -109,24 +109,22 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: SafeArea(
-              child: Column(
-                children: [
-                  EarthquakeHypocenterInformationCard(item: item),
-                  CurrentLocationIntensityCard(item: item),
-                  EarthquakeIntensityWidget(
-                    item: item,
-                  ),
-                  // 発生から24時間以上経過した地震の詳細にのみ広告を表示する
-                  if (item.originTime != null &&
-                      DateTime.now().difference(item.originTime!) >
-                          const Duration(hours: 24))
-                    const AdBanner(),
-                  _TelegramListButton(eventId: item.eventId),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              children: [
+                EarthquakeHypocenterInformationCard(item: item),
+                CurrentLocationIntensityCard(item: item),
+                EarthquakeIntensityWidget(
+                  item: item,
+                ),
+                // 発生から24時間以上経過した地震の詳細にのみ広告を表示する
+                if (item.originTime != null &&
+                    DateTime.now().difference(item.originTime!) >
+                        const Duration(hours: 24))
+                  const AdBanner(),
+                _TelegramListButton(eventId: item.eventId),
+              ],
             ),
           ),
         ),

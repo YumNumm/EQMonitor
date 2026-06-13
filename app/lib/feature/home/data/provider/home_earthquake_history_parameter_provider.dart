@@ -1,9 +1,9 @@
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,7 +20,14 @@ Future<EarthquakeHistoryParameter?> homeEarthquakeHistoryParameter(
     case HomeEarthquakeHistoryScope.nationwide:
       return const EarthquakeHistoryParameter();
     case HomeEarthquakeHistoryScope.currentLocation:
-      final position = ref.watch(locationStreamProvider.select((v) => v.value));
+      final position = await () async {
+        try {
+          return await ref.watch(locationStreamProvider.future);
+        } on Exception catch (exception) {
+          talker.error('Failed to get location', exception);
+          return null;
+        }
+      }();
       if (position == null) {
         return null;
       }

@@ -80,7 +80,6 @@ class _MapContent extends HookConsumerWidget {
     final config = ref.watch(
       earthquakeHistoryConfigProvider.select((v) => v.requireValue.detail),
     );
-    final jmaMap = ref.watch(jmaMapProvider).requireValue;
     final mapSettings = ref.watch(
       homeConfigurationProvider.select(
         (v) => v.value?.map ?? const HomeMapSettings(),
@@ -139,12 +138,16 @@ class _MapContent extends HookConsumerWidget {
           onEvent: (event) async {
             MapLibreEventProvider.of(context).emit(event);
             if (event is MapEventClick) {
-              await _handleTap(
-                context: context,
-                event: event,
-                config: config,
-                jmaMap: jmaMap,
-              );
+              final jmaMap = await ref.read(jmaMapProvider.future);
+
+              if (context.mounted) {
+                await _handleTap(
+                  context: context,
+                  event: event,
+                  config: config,
+                  jmaMap: jmaMap,
+                );
+              }
             }
           },
           children: [

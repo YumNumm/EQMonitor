@@ -7,6 +7,9 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake.dart'
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/depth_text.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_info_text_style.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -132,8 +135,11 @@ class _EarthquakeInformationBody extends StatelessWidget {
             epicenterDetailName: epicenterDetailName,
           ),
         ] else ...[
-          _MagnitudeWidget(magnitude: hypocenter?.magnitude),
-          _DepthWidget(depth: hypocenter?.depth),
+          MagnitudeText(
+            magnitude: hypocenter?.magnitude,
+            variant: MagnitudeTextVariant.display,
+          ),
+          DepthText(depth: hypocenter?.depth),
           const SizedBox(width: double.infinity),
           _HypocenterWidget(
             epicenterName: epicenterName,
@@ -165,22 +171,6 @@ class _EarthquakeInformationBody extends StatelessWidget {
         '検知時刻: ${dateFormat.format(arrivalTime.toLocal())}',
       _ => null,
     };
-  }
-}
-
-extension _TextStyleExtension on TextTheme {
-  TextStyle labelStyle(TextStyle base) {
-    return base.copyWith(
-      color: base.color!.withValues(alpha: 0.8),
-      fontWeight: FontWeight.bold,
-    );
-  }
-
-  TextStyle valueStyle(TextStyle base) {
-    return base.copyWith(
-      fontWeight: FontWeight.bold,
-      fontFamily: FontFamily.notoSansJP,
-    );
   }
 }
 
@@ -228,78 +218,6 @@ class _HypocenterWidget extends StatelessWidget {
   }
 }
 
-class _MagnitudeWidget extends StatelessWidget {
-  const _MagnitudeWidget({required this.magnitude});
-
-  final EarthquakeMagnitude? magnitude;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    final (text, showM) = switch (magnitude) {
-      EarthquakeMagnitudeValue(:final value) => (
-        value.toStringAsFixed(1),
-        true,
-      ),
-      EarthquakeMagnitudeUnknown() => ('不明', false),
-      EarthquakeMagnitudeOverM8() => ('8超', true),
-      null => ('調査中', false),
-    };
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        if (showM)
-          Text('M', style: textTheme.labelStyle(textTheme.titleSmall!)),
-        Flexible(
-          child: Text(
-            text,
-            style: textTheme.valueStyle(
-              showM ? textTheme.headlineLarge! : textTheme.headlineMedium!,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _DepthWidget extends StatelessWidget {
-  const _DepthWidget({required this.depth});
-
-  final EarthquakeDepth? depth;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    final (text, isSpecial) = switch (depth) {
-      EarthquakeDepthShallow() => ('ごく浅い', true),
-      EarthquakeDepthValue(:final value) => ('${value}km', false),
-      EarthquakeDepthOver700km() => ('700km以上', true),
-      EarthquakeDepthUnknown() || null => ('調査中', true),
-    };
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        Text('深さ', style: textTheme.labelStyle(textTheme.titleSmall!)),
-        Text(
-          text,
-          style: textTheme.valueStyle(
-            isSpecial ? textTheme.headlineMedium! : textTheme.headlineLarge!,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _MagnitudeDepthUnknownWidget extends StatelessWidget {
   const _MagnitudeDepthUnknownWidget({required this.hasIntensityDetails});
 
@@ -322,7 +240,7 @@ class _EarthquakeNullWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _UnknownInfoWidget(
-      label: 'M・深さ・震源地',
+      label: '震源要素',
       value: hasIntensityDetails ? '不明' : '調査中',
     );
   }
@@ -343,11 +261,16 @@ class _UnknownInfoWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        Text(label, style: textTheme.labelStyle(textTheme.titleMedium!)),
+        Text(
+          label,
+          style: textTheme.labelStyle(
+            textTheme.titleSmall!,
+          ),
+        ),
         const SizedBox(width: 4),
         Text(
           value,
-          style: textTheme.displaySmall!.copyWith(
+          style: textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.bold,
             fontFamily: FontFamily.googleSansCode,
             fontFamilyFallback: [FontFamily.notoSansJP],
