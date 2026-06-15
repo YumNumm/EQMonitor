@@ -150,6 +150,7 @@ jobs:
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
+            -clonedSourcePackagesDirPath build/ios/SourcePackages \
             -archivePath build/ios/Runner.xcarchive \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \

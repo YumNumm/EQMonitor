@@ -22,7 +22,7 @@ cd app/ios/Packages/EQMonitorAPI
 mise exec -- swift package plugin --allow-writing-to-package-directory generate-code-from-openapi
 ```
 
-iOS 側では `app/ios/Flutter/*.xcconfig` で explicit modules を無効化する。
+iOS 側では `app/ios/Flutter/*.xcconfig` で explicit modules を無効化する。`WidgetExtension` のように `Flutter/*.xcconfig` を base configuration にしていない target が SwiftPM dependency を持つ場合は、その target の build settings にも `SWIFT_ENABLE_EXPLICIT_MODULES = NO` を明示する。
 
 ```xcconfig
 SWIFT_ENABLE_EXPLICIT_MODULES = NO
@@ -34,3 +34,5 @@ release build の確認コマンド:
 cd app
 mise exec -- flutter build ios --release --dart-define-from-file=../environment/.env.prod
 ```
+
+`xcodebuild archive` で SwiftPM checkout を `app/build/ios/SourcePackages` に固定する場合は、必ず `-clonedSourcePackagesDirPath build/ios/SourcePackages` を渡す。Xcode project の build phase で checkout 内のファイルに workaround patch を当てる場合、CI の checkout 先と build phase の参照先がずれると patch が成功扱いでスキップされる。
