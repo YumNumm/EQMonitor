@@ -16,27 +16,32 @@ Stream<Position> locationStream(Ref ref) async* {
   ref.listen(
     _locationStreamProvider,
     (_, next) {
-      next.whenData((position) {
-        // Round to 3 decimal places (~110m) to avoid re-fetching on tiny GPS fluctuations.
-        final lat = (position.latitude * 1000).round() / 1000;
-        final lng = (position.longitude * 1000).round() / 1000;
-        controller.add(
-          Position(
-            latitude: lat,
-            longitude: lng,
-            timestamp: position.timestamp,
-            accuracy: position.accuracy,
-            altitude: position.altitude,
-            altitudeAccuracy: position.altitudeAccuracy,
-            heading: position.heading,
-            headingAccuracy: position.headingAccuracy,
-            speed: position.speed,
-            speedAccuracy: position.speedAccuracy,
-            floor: position.floor,
-            isMocked: position.isMocked,
-          ),
-        );
-      });
+      switch (next) {
+        case AsyncData(:final value):
+          // Round to 3 decimal places (~110m) to avoid re-fetching on tiny GPS fluctuations.
+          final lat = (value.latitude * 1000).round() / 1000;
+          final lng = (value.longitude * 1000).round() / 1000;
+          controller.add(
+            Position(
+              latitude: lat,
+              longitude: lng,
+              timestamp: value.timestamp,
+              accuracy: value.accuracy,
+              altitude: value.altitude,
+              altitudeAccuracy: value.altitudeAccuracy,
+              heading: value.heading,
+              headingAccuracy: value.headingAccuracy,
+              speed: value.speed,
+              speedAccuracy: value.speedAccuracy,
+              floor: value.floor,
+              isMocked: value.isMocked,
+            ),
+          );
+        case AsyncError(:final error, :final stackTrace):
+          controller.addError(error, stackTrace);
+        case AsyncLoading():
+          break;
+      }
     },
   );
 

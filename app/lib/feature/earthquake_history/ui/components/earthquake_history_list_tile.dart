@@ -2,14 +2,20 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/current_location_intensity_display.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/provider/current_location_intensity_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/nearest_jma_feature.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:lat_lng/lat_lng.dart';
 
-class EarthquakeHistoryListTile extends StatelessWidget {
+class EarthquakeHistoryListTile extends ConsumerWidget {
   const EarthquakeHistoryListTile({
     required this.item,
     required this.intensityColor,
@@ -48,7 +54,7 @@ class EarthquakeHistoryListTile extends StatelessWidget {
   final IntensityColorModel intensityColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     assert(
       areaInfo != null && areaName != null ||
           areaInfo == null && areaName == null,
@@ -94,6 +100,45 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         : null;
 
     final magnitude = hypocenter?.magnitude;
+    final areaChipLabel = switch ((areaName, areaInfo?.intensity)) {
+      (final String name, final JmaIntensity intensity) =>
+        '$name 震度${intensity.label}',
+      _ => null,
+    };
+    final needsCurrentLocation =
+        showCurrentLocationIntensity && areaInfo == null;
+    final position = needsCurrentLocation
+        ? ref.watch(locationStreamProvider).value
+        : null;
+    final latLng = position != null
+        ? LatLng(position.latitude, position.longitude)
+        : null;
+    final city = latLng != null
+        ? ref.watch(jmaMapAreaInformationCityInsideProvider(latLng)).value
+        : null;
+    final region = latLng != null
+        ? ref.watch(jmaMapAreaForecastLocalEInsideProvider(latLng)).value
+        : null;
+    final currentLocationIntensity = needsCurrentLocation
+        ? ref
+              .watch(
+                currentLocationIntensityProvider(
+                  eventId: item.eventId,
+                  cityAreaCode: city?.property?.code,
+                  regionAreaCode: region?.property?.code,
+                ),
+              )
+              .value
+        : null;
+    final currentLocationChipLabel =
+        areaChipLabel ??
+        switch (currentLocationIntensity) {
+          CurrentLocationIntensityDisplayQuick(:final intensity) =>
+            '現在地 震度${intensity.label} (速報)',
+          CurrentLocationIntensityDisplayResult(:final intensity) =>
+            '現在地 震度${intensity.label}',
+          CurrentLocationIntensityDisplayNone() || null => null,
+        };
 
     return ListTile(
       visualDensity: visualDensity,
@@ -120,6 +165,8 @@ class EarthquakeHistoryListTile extends StatelessWidget {
                 color: descriptionTextColor,
               ),
             ),
+            if (currentLocationChipLabel != null)
+              TextSpan(text: '\n$currentLocationChipLabel'),
           ],
         ),
       ),
