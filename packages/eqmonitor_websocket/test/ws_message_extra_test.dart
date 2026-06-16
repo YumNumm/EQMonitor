@@ -24,6 +24,8 @@ Map<String, dynamic> _baseEarthquakePartial() => <String, dynamic>{
   'status': 'NORMAL',
   'origin_time_precision': 'SECOND',
   'datasource': 'JMA_DISASTER_INFORMATION_XML',
+  'telegram_types': <String>[],
+  'earthquake_type': 'NORMAL',
 };
 
 void main() {

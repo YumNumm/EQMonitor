@@ -49,6 +49,10 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
                     v as Map<String, dynamic>,
                   ),
           ),
+          earthquakeType: $checkedConvert(
+            'earthquake_type',
+            (v) => $enumDecode(_$EarthquakeTypeEnumMap, v),
+          ),
           estimatedIntensityTileUrl: $checkedConvert(
             'estimated_intensity_tile_url',
             (v) => v as String?,
@@ -62,6 +66,7 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
         'originTimePrecision': 'origin_time_precision',
         'arrivalTime': 'arrival_time',
         'dataSource': 'data_source',
+        'earthquakeType': 'earthquake_type',
         'estimatedIntensityTileUrl': 'estimated_intensity_tile_url',
       },
     );
@@ -77,6 +82,7 @@ Map<String, dynamic> _$EarthquakePartialToJson(_EarthquakePartial instance) =>
       'data_source': _$EarthquakeDataSourceEnumMap[instance.dataSource]!,
       'hypocenter': instance.hypocenter,
       'intensity': instance.intensity,
+      'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType]!,
       'estimated_intensity_tile_url': instance.estimatedIntensityTileUrl,
     };
 
@@ -99,4 +105,10 @@ const _$EarthquakeDataSourceEnumMap = {
   EarthquakeDataSource.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
   EarthquakeDataSource.jmaDisasterInformationXml:
       'JMA_DISASTER_INFORMATION_XML',
+};
+
+const _$EarthquakeTypeEnumMap = {
+  EarthquakeType.normal: 'NORMAL',
+  EarthquakeType.distant: 'DISTANT',
+  EarthquakeType.volcano: 'VOLCANO',
 };

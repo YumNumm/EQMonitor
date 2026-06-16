@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart' as app;
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_search_response.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
@@ -97,5 +98,6 @@ EarthquakePartial _earthquake(String eventId) => EarthquakePartial(
   dataSource: EarthquakeDataSource.jmaDisasterInformationXml,
   hypocenter: null,
   intensity: null,
+  earthquakeType: EarthquakeType.normal,
   estimatedIntensityTileUrl: null,
 );

@@ -73,6 +73,8 @@ void main() {
         status: .normal,
         originTimePrecision: .second,
         datasource: .jmaDisasterInformationXml,
+        telegramTypes: [],
+        earthquakeType: .normal,
       );
       final result = mapper.map(
         const WsMessage.realtime(

@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_depth.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/magnitude_text.dart';
 import 'package:flutter/material.dart';
@@ -60,13 +61,8 @@ class EarthquakeHistoryListTile extends StatelessWidget {
     final intensity = item.intensity;
     final maxIntensity = intensity?.maxIntensity;
 
-    // 海外地震情報(遠地地震・海外の大規模な火山の噴火)かどうか。
-    // APIには遠地地震を示すフラグが無いため、国内震度が無く かつ
-    // 震央地名コードが海外領域(930以上。遠地999・その他1000を含む)である
-    // ことで判定する。
-    final isForeign =
-        maxIntensity == null &&
-        (int.tryParse(hypocenter?.code ?? '') ?? 0) >= 930;
+    // 地震種別はサーバ(earthquake_type)から取得する。
+    final earthquakeType = item.earthquakeType;
 
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
@@ -101,7 +97,11 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         ? intensityColor.fromJmaIntensity(maxIntensity).background
         : null;
 
-    final tileBaseColor = isForeign ? _foreignColor : maxIntensityColor;
+    final tileBaseColor = switch (earthquakeType) {
+      EarthquakeType.distant => _distantColor,
+      EarthquakeType.volcano => _volcanoColor,
+      EarthquakeType.normal => maxIntensityColor,
+    };
 
     // 地域検索時に、検索対象地域の震度情報をレスポンスからそのまま表示する。
     final areaIntensity = areaInfo?.intensity;
@@ -151,15 +151,24 @@ class EarthquakeHistoryListTile extends StatelessWidget {
             ),
         ],
       ),
-      leading: isForeign
-          ? _ForeignEarthquakeIcon(size: intensityIconSize)
-          : maxIntensity != null
-          ? JmaIntensityIcon(
-              intensity: maxIntensity,
-              type: .filled,
-              size: intensityIconSize,
-            )
-          : null,
+      leading: switch (earthquakeType) {
+        EarthquakeType.distant => _ForeignEarthquakeIcon(
+          size: intensityIconSize,
+          color: _distantColor,
+          icon: Icons.public,
+        ),
+        EarthquakeType.volcano => _ForeignEarthquakeIcon(
+          size: intensityIconSize,
+          color: _volcanoColor,
+          icon: Icons.volcano,
+        ),
+        EarthquakeType.normal when maxIntensity != null => JmaIntensityIcon(
+          intensity: maxIntensity,
+          type: .filled,
+          size: intensityIconSize,
+        ),
+        EarthquakeType.normal => null,
+      },
       trailing: MagnitudeText(magnitude: magnitude, color: magnitudeTextColor),
       dense: dense,
       contentPadding: contentPadding,
@@ -201,16 +210,25 @@ class _AreaIntensityChip extends StatelessWidget {
   }
 }
 
-/// 海外地震情報のベースカラー(青)。
-const _foreignColor = Color(0xFF1976D2);
+/// 遠地地震 (海外地震情報) のベースカラー(青)。
+const _distantColor = Color(0xFF1976D2);
 
-/// 海外地震情報用のアイコン。
+/// 火山噴火 (海外の大規模な噴火) のベースカラー(赤)。
+const _volcanoColor = Color(0xFFD32F2F);
+
+/// 海外地震情報・火山噴火用のアイコン。
 /// 震度アイコン([JmaIntensityIcon]の`.filled`)と同じ角丸矩形の見た目に揃え、
-/// 青ベースの中に世界([Icons.public])を白で表示する。
+/// ベースカラーの中にアイコンを白で表示する。
 class _ForeignEarthquakeIcon extends StatelessWidget {
-  const _ForeignEarthquakeIcon({required this.size});
+  const _ForeignEarthquakeIcon({
+    required this.size,
+    required this.color,
+    required this.icon,
+  });
 
   final double size;
+  final Color color;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -219,12 +237,12 @@ class _ForeignEarthquakeIcon extends StatelessWidget {
       width: size,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: _foreignColor,
+          color: color,
           borderRadius: BorderRadius.circular(size / 5),
         ),
         child: Center(
           child: Icon(
-            Icons.public,
+            icon,
             color: Colors.white,
             size: size * 0.7,
           ),

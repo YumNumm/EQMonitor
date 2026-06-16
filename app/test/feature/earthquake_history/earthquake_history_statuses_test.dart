@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_list_response.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
@@ -87,5 +88,6 @@ EarthquakePartial _earthquake(String eventId) => EarthquakePartial(
   dataSource: EarthquakeDataSource.jmaDisasterInformationXml,
   hypocenter: null,
   intensity: null,
+  earthquakeType: EarthquakeType.normal,
   estimatedIntensityTileUrl: null,
 );

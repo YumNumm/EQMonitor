@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypoc
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_magnitude.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
@@ -66,6 +67,7 @@ class DebugEarthquakeHistoryListTilePage extends ConsumerWidget {
                 detailedName: null,
               ),
               intensity: null,
+              earthquakeType: .distant,
               estimatedIntensityTileUrl: null,
             ),
             intensityColor: intensityColor,
@@ -118,6 +120,7 @@ EarthquakePartial _domesticEarthquake({required JmaIntensity maxIntensity}) {
       maxIntensity: maxIntensity,
       maxLpgmIntensity: null,
     ),
+    earthquakeType: EarthquakeType.normal,
     estimatedIntensityTileUrl: null,
   );
 }
@@ -164,6 +167,7 @@ EarthquakePartial _foreignVolcanoEruption() {
       detailedName: null,
     ),
     intensity: null,
+    earthquakeType: EarthquakeType.volcano,
     estimatedIntensityTileUrl: null,
   );
 }
