@@ -624,3 +624,7 @@ ASC API へのリアル通信を伴うため、ローカル単体テストでは
 - spec §4（外部グループ追加・審査提出）→ Task 2（`addToGroup` / `submitReview`）。
 - spec §5（ランナー・タイムアウト・node/pnpm・frozen-lockfile）→ Task 1 Step 3/5 ＋ Task 3 Step 4-5。
 - 型/名称整合: `buildToken` / `capText` / `buildWhatsNewFromGit` / `AscClient`（`findBuild`/`getJaLocalizationId`/`setWhatsNew`/`addToGroup`/`submitReview`）はテスト・本体・呼び出し（main）で一致。
+
+## 実装後の補足（重要）
+
+Task 3 の実装時に判明: アップロード（`xcrun altool`）と ASC キー展開は `build-ios` ではなく **`deploy-ios` ジョブ**にあった。したがって本プランの Task 3 Step 4-5 で `build-ios` と記した編集対象はすべて **`deploy-ios` ジョブ**に適用した（timeout 10→60、`install_args` への `node pnpm` 追加、`needs` への `define-matrix` 追加、Distribute ステップ配置）。`build-ios` は変更していない。`deploy-ios` は元から `fetch-depth: 0`。

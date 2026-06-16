@@ -70,3 +70,11 @@
 
 - コミットメッセージに `[external]` を含む push で、TestFlight 上の該当ビルドが外部グループに追加され、What to Test がコミット件名一覧で埋まり、ベータ審査が提出された状態になる。
 - `[external]` を含まない push では従来どおりアップロードのみで完了し、追加 API 呼び出しが発生しない。
+
+## 実装後の補足（重要）
+
+実装時に判明: IPA のアップロード（`xcrun altool --upload-app`）と App Store Connect API キー展開は `build-ios` ではなく **`deploy-ios` ジョブ**（`build-ios` がアーティファクト化した IPA を download して処理する後続ジョブ）で行われている。そのため:
+
+- 外部配布ステップ（`Distribute to TestFlight external group`）は **`deploy-ios` ジョブ**の `Upload Ipa to App Store Connect` 直後に追加した。
+- 処理完了ポーリング（最大 ~30分）を行うのは `deploy-ios` のため、**`deploy-ios` の `timeout-minutes` を 10 → 60** に引き上げた（`build-ios` は変更なし=30）。
+- mise `install_args` への `node pnpm` 追加・`needs` への `define-matrix` 追加も **`deploy-ios`** 側に適用。`deploy-ios` は元から `fetch-depth: 0` で checkout 済み。
