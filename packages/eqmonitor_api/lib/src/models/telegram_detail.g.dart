@@ -47,7 +47,10 @@ _TelegramDetail _$TelegramDetailFromJson(
         'created_at',
         (v) => DateTime.parse(v as String),
       ),
-      body: $checkedConvert('body', (v) => v),
+      body: $checkedConvert(
+        'body',
+        (v) => TelegramBodyUnion.fromJson(v as Map<String, dynamic>),
+      ),
       serialNo: $checkedConvert('serial_no', (v) => v as num?),
       targetAt: $checkedConvert(
         'target_at',

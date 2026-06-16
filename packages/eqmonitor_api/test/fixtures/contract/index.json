@@ -394,8 +394,17 @@
   },
   {
     "key": "GET /v2/tsunami/:tsunamiId",
-    "file": "get__v2_tsunami_tsunamiId__with-telegrams.json",
+    "file": "get__v2_tsunami_tsunamiId__active-warning.json",
+    "fixture": "active-warning"
+  },
+  {
+    "key": "GET /v2/tsunami/:tsunamiId/telegrams",
+    "file": "get__v2_tsunami_tsunamiId_telegrams__with-telegrams.json",
     "fixture": "with-telegrams"
+  },
+  {
+    "key": "GET /v2/tsunami/:tsunamiId/telegrams",
+    "file": "get__v2_tsunami_tsunamiId_telegrams.json"
   },
   {
     "key": "GET /v2/tsunami/:tsunamiId",

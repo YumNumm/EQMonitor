@@ -8,7 +8,9 @@
     "status": "NORMAL",
     "info_type": "PUBLICATION",
     "editorial_office": "気象庁",
-    "publishing_office": ["気象庁"],
+    "publishing_office": [
+      "気象庁"
+    ],
     "press_at": "2024-01-01T07:15:00.000Z",
     "report_at": "2024-01-01T07:15:02.000Z",
     "info_kind": "長周期地震動に関する観測情報",

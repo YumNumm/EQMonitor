@@ -15,8 +15,7 @@ api.EarthquakeTelegramBodyIntensityRegion _region(
     code: code,
     name: name,
     intensity: intensity,
-    lpgmIntensity: null,
-    datasource: 'test',
+    datasource: .jmaDisasterInformationXml,
   );
 }
 

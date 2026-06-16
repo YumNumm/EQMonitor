@@ -511,7 +511,13 @@ void _patchTelegramBodyReference(Directory libDir) {
       "import 'telegram_body.dart';",
       "import 'telegram_body_union.dart';",
     );
-    content = content.replaceAll('TelegramBody?', 'TelegramBodyUnion?');
+    // 単独の `TelegramBody` 参照のみ `TelegramBodyUnion` に置換する。
+    // `EarthquakeTelegramBody` / `TsunamiTelegramBody` / 既に `TelegramBodyUnion`
+    // のものは単語境界で除外される（nullable / 非 nullable いずれも対象）。
+    content = content.replaceAll(
+      RegExp(r'\bTelegramBody\b'),
+      'TelegramBodyUnion',
+    );
 
     if (content != original) {
       entity.writeAsStringSync(content);

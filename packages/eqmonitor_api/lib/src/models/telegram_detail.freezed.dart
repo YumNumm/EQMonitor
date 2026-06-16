@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TelegramDetail {
 
- String get id;@JsonKey(name: 'event_id') String get eventId; TelegramType get type; String get title; TelegramStatus get status;@JsonKey(name: 'info_type') InfoType get infoType;@JsonKey(name: 'editorial_office') String get editorialOffice;@JsonKey(name: 'publishing_office') List<String> get publishingOffice;@JsonKey(name: 'press_at') DateTime get pressAt;@JsonKey(name: 'report_at') DateTime get reportAt;@JsonKey(name: 'info_kind') String get infoKind;@JsonKey(name: 'info_kind_version') String get infoKindVersion; String get hash;@JsonKey(name: 'created_at') DateTime get createdAt; dynamic get body;@JsonKey(includeIfNull: false, name: 'serial_no') num? get serialNo;@JsonKey(includeIfNull: false, name: 'target_at') DateTime? get targetAt;@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? get revokeAt;@JsonKey(includeIfNull: false) String? get headline;
+ String get id;@JsonKey(name: 'event_id') String get eventId; TelegramType get type; String get title; TelegramStatus get status;@JsonKey(name: 'info_type') InfoType get infoType;@JsonKey(name: 'editorial_office') String get editorialOffice;@JsonKey(name: 'publishing_office') List<String> get publishingOffice;@JsonKey(name: 'press_at') DateTime get pressAt;@JsonKey(name: 'report_at') DateTime get reportAt;@JsonKey(name: 'info_kind') String get infoKind;@JsonKey(name: 'info_kind_version') String get infoKindVersion; String get hash;@JsonKey(name: 'created_at') DateTime get createdAt; TelegramBodyUnion get body;@JsonKey(includeIfNull: false, name: 'serial_no') num? get serialNo;@JsonKey(includeIfNull: false, name: 'target_at') DateTime? get targetAt;@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? get revokeAt;@JsonKey(includeIfNull: false) String? get headline;
 /// Create a copy of TelegramDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $TelegramDetailCopyWith<TelegramDetail> get copyWith => _$TelegramDetailCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&const DeepCollectionEquality().equals(other.publishingOffice, publishingOffice)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind)&&(identical(other.infoKindVersion, infoKindVersion) || other.infoKindVersion == infoKindVersion)&&(identical(other.hash, hash) || other.hash == hash)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.body, body)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.targetAt, targetAt) || other.targetAt == targetAt)&&(identical(other.revokeAt, revokeAt) || other.revokeAt == revokeAt)&&(identical(other.headline, headline) || other.headline == headline));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TelegramDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&const DeepCollectionEquality().equals(other.publishingOffice, publishingOffice)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind)&&(identical(other.infoKindVersion, infoKindVersion) || other.infoKindVersion == infoKindVersion)&&(identical(other.hash, hash) || other.hash == hash)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.body, body) || other.body == body)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.targetAt, targetAt) || other.targetAt == targetAt)&&(identical(other.revokeAt, revokeAt) || other.revokeAt == revokeAt)&&(identical(other.headline, headline) || other.headline == headline));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,eventId,type,title,status,infoType,editorialOffice,const DeepCollectionEquality().hash(publishingOffice),pressAt,reportAt,infoKind,infoKindVersion,hash,createdAt,const DeepCollectionEquality().hash(body),serialNo,targetAt,revokeAt,headline]);
+int get hashCode => Object.hashAll([runtimeType,id,eventId,type,title,status,infoType,editorialOffice,const DeepCollectionEquality().hash(publishingOffice),pressAt,reportAt,infoKind,infoKindVersion,hash,createdAt,body,serialNo,targetAt,revokeAt,headline]);
 
 @override
 String toString() {
@@ -48,11 +48,11 @@ abstract mixin class $TelegramDetailCopyWith<$Res>  {
   factory $TelegramDetailCopyWith(TelegramDetail value, $Res Function(TelegramDetail) _then) = _$TelegramDetailCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'press_at') DateTime pressAt,@JsonKey(name: 'report_at') DateTime reportAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt, dynamic body,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'target_at') DateTime? targetAt,@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? revokeAt,@JsonKey(includeIfNull: false) String? headline
+ String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'press_at') DateTime pressAt,@JsonKey(name: 'report_at') DateTime reportAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt, TelegramBodyUnion body,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'target_at') DateTime? targetAt,@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? revokeAt,@JsonKey(includeIfNull: false) String? headline
 });
 
 
-
+$TelegramBodyUnionCopyWith<$Res> get body;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$TelegramDetailCopyWithImpl<$Res>
 
 /// Create a copy of TelegramDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventId = null,Object? type = null,Object? title = null,Object? status = null,Object? infoType = null,Object? editorialOffice = null,Object? publishingOffice = null,Object? pressAt = null,Object? reportAt = null,Object? infoKind = null,Object? infoKindVersion = null,Object? hash = null,Object? createdAt = null,Object? body = freezed,Object? serialNo = freezed,Object? targetAt = freezed,Object? revokeAt = freezed,Object? headline = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventId = null,Object? type = null,Object? title = null,Object? status = null,Object? infoType = null,Object? editorialOffice = null,Object? publishingOffice = null,Object? pressAt = null,Object? reportAt = null,Object? infoKind = null,Object? infoKindVersion = null,Object? hash = null,Object? createdAt = null,Object? body = null,Object? serialNo = freezed,Object? targetAt = freezed,Object? revokeAt = freezed,Object? headline = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
@@ -81,15 +81,24 @@ as DateTime,infoKind: null == infoKind ? _self.infoKind : infoKind // ignore: ca
 as String,infoKindVersion: null == infoKindVersion ? _self.infoKindVersion : infoKindVersion // ignore: cast_nullable_to_non_nullable
 as String,hash: null == hash ? _self.hash : hash // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as dynamic,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as DateTime,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as TelegramBodyUnion,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
 as num?,targetAt: freezed == targetAt ? _self.targetAt : targetAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,revokeAt: freezed == revokeAt ? _self.revokeAt : revokeAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
-
+/// Create a copy of TelegramDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$TelegramBodyUnionCopyWith<$Res> get body {
+  
+  return $TelegramBodyUnionCopyWith<$Res>(_self.body, (value) {
+    return _then(_self.copyWith(body: value));
+  });
+}
 }
 
 
@@ -171,7 +180,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt,  dynamic body, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt,  TelegramBodyUnion body, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TelegramDetail() when $default != null:
 return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressAt,_that.reportAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.body,_that.serialNo,_that.targetAt,_that.revokeAt,_that.headline);case _:
@@ -192,7 +201,7 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt,  dynamic body, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt,  TelegramBodyUnion body, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)  $default,) {final _that = this;
 switch (_that) {
 case _TelegramDetail():
 return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressAt,_that.reportAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.body,_that.serialNo,_that.targetAt,_that.revokeAt,_that.headline);case _:
@@ -212,7 +221,7 @@ return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt,  dynamic body, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'event_id')  String eventId,  TelegramType type,  String title,  TelegramStatus status, @JsonKey(name: 'info_type')  InfoType infoType, @JsonKey(name: 'editorial_office')  String editorialOffice, @JsonKey(name: 'publishing_office')  List<String> publishingOffice, @JsonKey(name: 'press_at')  DateTime pressAt, @JsonKey(name: 'report_at')  DateTime reportAt, @JsonKey(name: 'info_kind')  String infoKind, @JsonKey(name: 'info_kind_version')  String infoKindVersion,  String hash, @JsonKey(name: 'created_at')  DateTime createdAt,  TelegramBodyUnion body, @JsonKey(includeIfNull: false, name: 'serial_no')  num? serialNo, @JsonKey(includeIfNull: false, name: 'target_at')  DateTime? targetAt, @JsonKey(includeIfNull: false, name: 'revoke_at')  DateTime? revokeAt, @JsonKey(includeIfNull: false)  String? headline)?  $default,) {final _that = this;
 switch (_that) {
 case _TelegramDetail() when $default != null:
 return $default(_that.id,_that.eventId,_that.type,_that.title,_that.status,_that.infoType,_that.editorialOffice,_that.publishingOffice,_that.pressAt,_that.reportAt,_that.infoKind,_that.infoKindVersion,_that.hash,_that.createdAt,_that.body,_that.serialNo,_that.targetAt,_that.revokeAt,_that.headline);case _:
@@ -250,7 +259,7 @@ class _TelegramDetail implements TelegramDetail {
 @override@JsonKey(name: 'info_kind_version') final  String infoKindVersion;
 @override final  String hash;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
-@override final  dynamic body;
+@override final  TelegramBodyUnion body;
 @override@JsonKey(includeIfNull: false, name: 'serial_no') final  num? serialNo;
 @override@JsonKey(includeIfNull: false, name: 'target_at') final  DateTime? targetAt;
 @override@JsonKey(includeIfNull: false, name: 'revoke_at') final  DateTime? revokeAt;
@@ -269,12 +278,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TelegramDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&const DeepCollectionEquality().equals(other._publishingOffice, _publishingOffice)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind)&&(identical(other.infoKindVersion, infoKindVersion) || other.infoKindVersion == infoKindVersion)&&(identical(other.hash, hash) || other.hash == hash)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.body, body)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.targetAt, targetAt) || other.targetAt == targetAt)&&(identical(other.revokeAt, revokeAt) || other.revokeAt == revokeAt)&&(identical(other.headline, headline) || other.headline == headline));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TelegramDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.infoType, infoType) || other.infoType == infoType)&&(identical(other.editorialOffice, editorialOffice) || other.editorialOffice == editorialOffice)&&const DeepCollectionEquality().equals(other._publishingOffice, _publishingOffice)&&(identical(other.pressAt, pressAt) || other.pressAt == pressAt)&&(identical(other.reportAt, reportAt) || other.reportAt == reportAt)&&(identical(other.infoKind, infoKind) || other.infoKind == infoKind)&&(identical(other.infoKindVersion, infoKindVersion) || other.infoKindVersion == infoKindVersion)&&(identical(other.hash, hash) || other.hash == hash)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.body, body) || other.body == body)&&(identical(other.serialNo, serialNo) || other.serialNo == serialNo)&&(identical(other.targetAt, targetAt) || other.targetAt == targetAt)&&(identical(other.revokeAt, revokeAt) || other.revokeAt == revokeAt)&&(identical(other.headline, headline) || other.headline == headline));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,eventId,type,title,status,infoType,editorialOffice,const DeepCollectionEquality().hash(_publishingOffice),pressAt,reportAt,infoKind,infoKindVersion,hash,createdAt,const DeepCollectionEquality().hash(body),serialNo,targetAt,revokeAt,headline]);
+int get hashCode => Object.hashAll([runtimeType,id,eventId,type,title,status,infoType,editorialOffice,const DeepCollectionEquality().hash(_publishingOffice),pressAt,reportAt,infoKind,infoKindVersion,hash,createdAt,body,serialNo,targetAt,revokeAt,headline]);
 
 @override
 String toString() {
@@ -289,11 +298,11 @@ abstract mixin class _$TelegramDetailCopyWith<$Res> implements $TelegramDetailCo
   factory _$TelegramDetailCopyWith(_TelegramDetail value, $Res Function(_TelegramDetail) _then) = __$TelegramDetailCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'press_at') DateTime pressAt,@JsonKey(name: 'report_at') DateTime reportAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt, dynamic body,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'target_at') DateTime? targetAt,@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? revokeAt,@JsonKey(includeIfNull: false) String? headline
+ String id,@JsonKey(name: 'event_id') String eventId, TelegramType type, String title, TelegramStatus status,@JsonKey(name: 'info_type') InfoType infoType,@JsonKey(name: 'editorial_office') String editorialOffice,@JsonKey(name: 'publishing_office') List<String> publishingOffice,@JsonKey(name: 'press_at') DateTime pressAt,@JsonKey(name: 'report_at') DateTime reportAt,@JsonKey(name: 'info_kind') String infoKind,@JsonKey(name: 'info_kind_version') String infoKindVersion, String hash,@JsonKey(name: 'created_at') DateTime createdAt, TelegramBodyUnion body,@JsonKey(includeIfNull: false, name: 'serial_no') num? serialNo,@JsonKey(includeIfNull: false, name: 'target_at') DateTime? targetAt,@JsonKey(includeIfNull: false, name: 'revoke_at') DateTime? revokeAt,@JsonKey(includeIfNull: false) String? headline
 });
 
 
-
+@override $TelegramBodyUnionCopyWith<$Res> get body;
 
 }
 /// @nodoc
@@ -306,7 +315,7 @@ class __$TelegramDetailCopyWithImpl<$Res>
 
 /// Create a copy of TelegramDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventId = null,Object? type = null,Object? title = null,Object? status = null,Object? infoType = null,Object? editorialOffice = null,Object? publishingOffice = null,Object? pressAt = null,Object? reportAt = null,Object? infoKind = null,Object? infoKindVersion = null,Object? hash = null,Object? createdAt = null,Object? body = freezed,Object? serialNo = freezed,Object? targetAt = freezed,Object? revokeAt = freezed,Object? headline = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventId = null,Object? type = null,Object? title = null,Object? status = null,Object? infoType = null,Object? editorialOffice = null,Object? publishingOffice = null,Object? pressAt = null,Object? reportAt = null,Object? infoKind = null,Object? infoKindVersion = null,Object? hash = null,Object? createdAt = null,Object? body = null,Object? serialNo = freezed,Object? targetAt = freezed,Object? revokeAt = freezed,Object? headline = freezed,}) {
   return _then(_TelegramDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
@@ -322,8 +331,8 @@ as DateTime,infoKind: null == infoKind ? _self.infoKind : infoKind // ignore: ca
 as String,infoKindVersion: null == infoKindVersion ? _self.infoKindVersion : infoKindVersion // ignore: cast_nullable_to_non_nullable
 as String,hash: null == hash ? _self.hash : hash // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,body: freezed == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as dynamic,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
+as DateTime,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
+as TelegramBodyUnion,serialNo: freezed == serialNo ? _self.serialNo : serialNo // ignore: cast_nullable_to_non_nullable
 as num?,targetAt: freezed == targetAt ? _self.targetAt : targetAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,revokeAt: freezed == revokeAt ? _self.revokeAt : revokeAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,headline: freezed == headline ? _self.headline : headline // ignore: cast_nullable_to_non_nullable
@@ -331,7 +340,16 @@ as String?,
   ));
 }
 
-
+/// Create a copy of TelegramDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$TelegramBodyUnionCopyWith<$Res> get body {
+  
+  return $TelegramBodyUnionCopyWith<$Res>(_self.body, (value) {
+    return _then(_self.copyWith(body: value));
+  });
+}
 }
 
 // dart format on
