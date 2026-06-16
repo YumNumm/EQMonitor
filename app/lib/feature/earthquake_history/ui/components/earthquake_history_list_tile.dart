@@ -60,12 +60,20 @@ class EarthquakeHistoryListTile extends StatelessWidget {
     final intensity = item.intensity;
     final maxIntensity = intensity?.maxIntensity;
 
+    // 海外地震情報(遠地地震・海外の大規模な火山の噴火)かどうか。
+    // APIには遠地地震を示すフラグが無いため、国内震度が無く かつ
+    // 震央地名コードが海外領域(930以上。遠地999・その他1000を含む)である
+    // ことで判定する。
+    final isForeign =
+        maxIntensity == null &&
+        (int.tryParse(hypocenter?.code ?? '') ?? 0) >= 930;
+
     final hypoName = hypocenter?.name;
     final hypoDetailName = hypocenter?.detailedName;
 
     final title = switch ((hypoName, hypoDetailName, maxIntensity)) {
       (final String hypoName, final String hypoDetailName, _) =>
-        '$hypoName($hypoDetailName)',
+        '$hypoName($hypoDetailName)'.replaceAll('、', ' '),
       (final String hypoName, _, _) => hypoName,
       (_, _, final JmaIntensity maxInt) => '最大震度${maxInt.label}を観測',
       _ => '',
@@ -93,12 +101,17 @@ class EarthquakeHistoryListTile extends StatelessWidget {
         ? intensityColor.fromJmaIntensity(maxIntensity).background
         : null;
 
+    final tileBaseColor = isForeign ? _foreignColor : maxIntensityColor;
+
+    // 地域検索時に、検索対象地域の震度情報をレスポンスからそのまま表示する。
+    final areaIntensity = areaInfo?.intensity;
+
     final magnitude = hypocenter?.magnitude;
 
     return ListTile(
       visualDensity: visualDensity,
       tileColor: showBackgroundColor
-          ? maxIntensityColor?.withValues(alpha: 0.4)
+          ? tileBaseColor?.withValues(alpha: 0.4)
           : null,
       onTap: onTap,
       title: Text(
@@ -108,22 +121,39 @@ class EarthquakeHistoryListTile extends StatelessWidget {
           color: titleTextColor,
         ),
       ),
-      subtitle: Text.rich(
-        TextSpan(
-          children: [
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text.rich(
             TextSpan(
-              text: subTitle,
-              style: TextStyle(
-                fontFamily: FontFamily.googleSansCode,
-                fontFamilyFallback: const [FontFamily.notoSansJP],
-                letterSpacing: -0.2,
-                color: descriptionTextColor,
+              children: [
+                TextSpan(
+                  text: subTitle,
+                  style: TextStyle(
+                    fontFamily: FontFamily.googleSansCode,
+                    fontFamilyFallback: const [FontFamily.notoSansJP],
+                    letterSpacing: -0.2,
+                    color: descriptionTextColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (areaName != null && areaIntensity != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: _AreaIntensityChip(
+                areaName: areaName!,
+                intensity: areaIntensity,
+                intensityColor: intensityColor,
               ),
             ),
-          ],
-        ),
+        ],
       ),
-      leading: maxIntensity != null
+      leading: isForeign
+          ? _ForeignEarthquakeIcon(size: intensityIconSize)
+          : maxIntensity != null
           ? JmaIntensityIcon(
               intensity: maxIntensity,
               type: .filled,
@@ -133,6 +163,73 @@ class EarthquakeHistoryListTile extends StatelessWidget {
       trailing: MagnitudeText(magnitude: magnitude, color: magnitudeTextColor),
       dense: dense,
       contentPadding: contentPadding,
+    );
+  }
+}
+
+/// 検索対象地域の震度情報を表示する小さなチップ。
+/// 「(地域名) 震度N」を、その震度の色で塗りつぶして表示する。
+class _AreaIntensityChip extends StatelessWidget {
+  const _AreaIntensityChip({
+    required this.areaName,
+    required this.intensity,
+    required this.intensityColor,
+  });
+
+  final String areaName;
+  final JmaIntensity intensity;
+  final IntensityColorModel intensityColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = intensityColor.fromJmaIntensity(intensity);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: scheme.background,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        '$areaName 震度${intensity.label}',
+        style: TextStyle(
+          color: scheme.foreground,
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+}
+
+/// 海外地震情報のベースカラー(青)。
+const _foreignColor = Color(0xFF1976D2);
+
+/// 海外地震情報用のアイコン。
+/// 震度アイコン([JmaIntensityIcon]の`.filled`)と同じ角丸矩形の見た目に揃え、
+/// 青ベースの中に世界([Icons.public])を白で表示する。
+class _ForeignEarthquakeIcon extends StatelessWidget {
+  const _ForeignEarthquakeIcon({required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: size,
+      width: size,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: _foreignColor,
+          borderRadius: BorderRadius.circular(size / 5),
+        ),
+        child: Center(
+          child: Icon(
+            Icons.public,
+            color: Colors.white,
+            size: size * 0.7,
+          ),
+        ),
+      ),
     );
   }
 }

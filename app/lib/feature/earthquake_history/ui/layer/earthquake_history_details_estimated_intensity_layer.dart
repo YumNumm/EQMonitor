@@ -44,11 +44,31 @@ class EarthquakeHistoryDetailsEstimatedIntensityLayer
               sourceId: _sourceId,
               sourceLayerId: 'seismic_intensity',
               paint: {
-                'fill-opacity': 0.65,
+                'fill-opacity': 1,
                 'fill-color': ['get', 'fill'],
               },
             ),
             belowLayerId: BaseLayer.areaForecastLocalELine.name,
+          );
+          await styleController.addLayer(
+            const LineStyleLayer(
+              id: _layerId,
+              sourceId: _sourceId,
+              sourceLayerId: 'seismic_intensity',
+              paint: {
+                'line-opacity': 1,
+                'line-color': ['get', 'fill'],
+                'line-blur': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  3,
+                  0,
+                  5,
+                  100,
+                ],
+              },
+            ),
           );
         }());
 

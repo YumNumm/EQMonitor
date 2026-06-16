@@ -15,7 +15,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
-  const EarthquakeHypocenterInformationCard({required this.item, super.key});
+  const EarthquakeHypocenterInformationCard({
+    required this.item,
+    super.key,
+  });
 
   final Earthquake item;
 
@@ -72,7 +75,9 @@ class EarthquakeHypocenterInformationCard extends HookConsumerWidget {
 }
 
 class _MaxIntensityWidget extends StatelessWidget {
-  const _MaxIntensityWidget({required this.intensity});
+  const _MaxIntensityWidget({
+    required this.intensity,
+  });
 
   final JmaIntensity intensity;
 
@@ -81,7 +86,12 @@ class _MaxIntensityWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text(
+          '最大震度',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 4),
         JmaIntensityIcon(
           type: .filled,
@@ -107,15 +117,33 @@ class _EarthquakeInformationBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final epicenterName = hypocenter?.name;
-    final epicenterDetailName = hypocenter?.detailedName;
+    final epicenterDetailName = hypocenter?.detailedName?.replaceAll('、', ' ');
 
-    final isMagnitudeAndDepthUnknown =
-        _isMagnitudeUnknown() && _isDepthUnknown();
+    final magnitude = hypocenter?.magnitude;
+    final depth = hypocenter?.depth;
+    final isMagnitudeUnknown =
+        magnitude == null || magnitude is EarthquakeMagnitudeUnknown;
+    final isDepthUnknown = depth == null || depth is EarthquakeDepthUnknown;
+    final isMagnitudeAndDepthUnknown = isMagnitudeUnknown && isDepthUnknown;
+
     final isEarthquakeNull = isMagnitudeAndDepthUnknown && hypocenter == null;
 
-    final timeText = _getTimeText();
+    final dateFormat = DateFormat('yyyy/MM/dd HH:mm頃');
+    final timeText = switch ((item.originTime, item.arrivalTime)) {
+      (final DateTime originTime, _) =>
+        '発生時刻: ${dateFormat.format(originTime.toLocal())}',
+      (_, final DateTime arrivalTime) =>
+        '検知時刻: ${dateFormat.format(arrivalTime.toLocal())}',
+      _ => null,
+    };
     final timeWidget = timeText != null
-        ? Wrap(children: [Text(timeText)])
+        ? Wrap(
+            children: [
+              Text(
+                timeText,
+              ),
+            ],
+          )
         : null;
 
     return Wrap(
@@ -125,7 +153,9 @@ class _EarthquakeInformationBody extends StatelessWidget {
       children: [
         const Row(),
         if (isEarthquakeNull)
-          _EarthquakeNullWidget(hasIntensityDetails: hasIntensityDetails)
+          _EarthquakeNullWidget(
+            hasIntensityDetails: hasIntensityDetails,
+          )
         else if (isMagnitudeAndDepthUnknown) ...[
           _MagnitudeDepthUnknownWidget(
             hasIntensityDetails: hasIntensityDetails,
@@ -150,27 +180,6 @@ class _EarthquakeInformationBody extends StatelessWidget {
         ?timeWidget,
       ],
     );
-  }
-
-  bool _isMagnitudeUnknown() {
-    final magnitude = hypocenter?.magnitude;
-    return magnitude == null || magnitude is EarthquakeMagnitudeUnknown;
-  }
-
-  bool _isDepthUnknown() {
-    final depth = hypocenter?.depth;
-    return depth == null || depth is EarthquakeDepthUnknown;
-  }
-
-  String? _getTimeText() {
-    final dateFormat = DateFormat('yyyy/MM/dd HH:mm頃');
-    return switch ((item.originTime, item.arrivalTime)) {
-      (final DateTime originTime, _) =>
-        '発生時刻: ${dateFormat.format(originTime.toLocal())}',
-      (_, final DateTime arrivalTime) =>
-        '検知時刻: ${dateFormat.format(arrivalTime.toLocal())}',
-      _ => null,
-    };
   }
 }
 

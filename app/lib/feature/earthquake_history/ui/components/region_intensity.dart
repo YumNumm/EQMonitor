@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/extension/jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/gen/fonts.gen.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EarthquakeIntensityWidget extends ConsumerWidget {
+class EarthquakeIntensityWidget extends HookConsumerWidget {
   const EarthquakeIntensityWidget({
     required this.item,
     super.key,
@@ -31,8 +32,27 @@ class EarthquakeIntensityWidget extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final intensityTree = intensity.intensityTree;
-    final regions = intensity.regions;
+    final intensityTree = useMemoized(() {
+      // sorted
+      final entries = intensity.intensityTree.entries.toList()
+        ..sort(
+          (a, b) => b.key.orderIndex.compareTo(
+            a.key.orderIndex,
+          ),
+        );
+      return Map.fromEntries(entries);
+    }, [intensity.intensityTree]);
+
+    final regions = useMemoized(() {
+      final entries = intensity.regions.entries.toList()
+        ..sort(
+          (a, b) => b.key.orderIndex.compareTo(
+            a.key.orderIndex,
+          ),
+        );
+      return Map.fromEntries(entries);
+    }, [intensity.regions]);
+
     if (intensityTree.isEmpty) {
       return BorderedContainer(
         elevation: 1,
@@ -135,13 +155,17 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final regionNames = regions.map((e) => e.region.name.ja).join('、');
+    final regionNames = regions
+        .map(
+          (e) => e.region.name.ja,
+        )
+        .join(' ');
 
     return ListTile(
       dense: true,
       isThreeLine: true,
-      visualDensity: VisualDensity.compact,
-      titleAlignment: ListTileTitleAlignment.titleHeight,
+      visualDensity: .compact,
+      titleAlignment: .titleHeight,
       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
       leading: JmaIntensityIcon(
         intensity: intensity,
@@ -151,25 +175,11 @@ class _PreliminaryIntensityLevelSection extends StatelessWidget {
       title: Row(
         children: [
           Text(
-            '震度${intensity.mainText}',
+            '震度${switch (intensity) {
+              .fiveUnknown => "5弱以上 未入電",
+              _ => intensity.label.fromPlusMinus,
+            }}',
             style: theme.textTheme.titleSmall,
-          ),
-          const SizedBox(width: 6),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-            decoration: BoxDecoration(
-              color: dividerColor.withValues(alpha: 0.15),
-              border: Border.all(color: dividerColor),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Text(
-              '速報値',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                fontFamily: FontFamily.notoSansJP,
-              ),
-            ),
           ),
         ],
       ),
@@ -209,7 +219,7 @@ class _IntensityLevelSection extends HookWidget {
     final theme = Theme.of(context);
     final regionNames = prefectures
         .map((e) => e.prefecture.prefecture.name.ja)
-        .join('、');
+        .join(' ');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +236,10 @@ class _IntensityLevelSection extends HookWidget {
             size: 40,
           ),
           title: Text(
-            '震度${intensity.mainText}',
+            '震度${switch (intensity) {
+              .fiveUnknown => "5弱以上 未入電",
+              _ => intensity.label.fromPlusMinus,
+            }}',
             style: theme.textTheme.titleSmall,
           ),
           subtitle: Text(

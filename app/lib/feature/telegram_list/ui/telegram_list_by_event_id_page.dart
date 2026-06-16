@@ -184,6 +184,7 @@ class _SectionedList extends StatelessWidget {
           widgets.add(
             EarthquakeTelegramTile(
               telegram: telegram,
+              comments: detail?.comments,
               body: body,
               sequenceNumber: info?.sequenceNumber ?? 1,
               previousBody: previousBody,

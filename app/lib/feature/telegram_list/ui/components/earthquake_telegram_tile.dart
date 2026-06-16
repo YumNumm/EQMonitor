@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/telegram_list/data/repository/earthquake_body_
 import 'package:eqmonitor/feature/telegram_list/ui/components/hypocenter_summary.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/components/intensity_region_list.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -19,11 +20,15 @@ class EarthquakeTelegramTile extends ConsumerWidget {
     required this.body,
     required this.sequenceNumber,
     this.previousBody,
+    this.comments,
     super.key,
   });
 
   /// 電文メタ情報
   final TelegramItem telegram;
+
+  /// 電文コメント
+  final api.TelegramComments? comments;
 
   /// 地震情報本文（EARTHQUAKE 型）
   final api.TelegramBodyUnionEarthquakeTelegramBody body;
@@ -42,16 +47,16 @@ class EarthquakeTelegramTile extends ConsumerWidget {
     final diffCalculator = ref.watch(earthquakeBodyDiffCalculatorProvider);
 
     final currentRegions = switch (telegram.type) {
-      TelegramType.vxse51 => body.intensityRegions,
-      TelegramType.vxse53 => body.intensityCities ?? body.intensityRegions,
-      TelegramType.vxse62 => body.intensityRegions,
+      .vxse51 => body.intensityRegions,
+      .vxse53 => body.intensityCities ?? body.intensityRegions,
+      .vxse62 => body.intensityRegions,
       _ => null,
     };
     final previousRegions = switch (telegram.type) {
-      TelegramType.vxse51 => previousBody?.intensityRegions,
-      TelegramType.vxse53 =>
+      .vxse51 => previousBody?.intensityRegions,
+      .vxse53 =>
         previousBody?.intensityCities ?? previousBody?.intensityRegions,
-      TelegramType.vxse62 => previousBody?.intensityRegions,
+      .vxse62 => previousBody?.intensityRegions,
       _ => null,
     };
     final intensityPrefectures = body.intensityPrefectures;
@@ -80,7 +85,8 @@ class EarthquakeTelegramTile extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
+          spacing: 4,
           children: [
             Row(
               children: [
@@ -104,7 +110,7 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '第$sequenceNumber報',
+                      '#$sequenceNumber',
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: colorScheme.onPrimaryContainer,
                         fontWeight: FontWeight.bold,
@@ -114,22 +120,40 @@ class EarthquakeTelegramTile extends ConsumerWidget {
                 ],
               ],
             ),
-
-            const SizedBox(height: 4),
             Text(
-              dateFormat.format(telegram.pressAt.toLocal()),
+              telegram.headline?.toHalfWidth ?? '',
+            ),
+            Text(
+              '発表: ${dateFormat.format(
+                telegram.pressAt.toLocal(),
+              )}',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-
-            const SizedBox(height: 8),
             _EarthquakeTelegramTileContent(
               telegramType: telegram.type,
               body: body,
               regionDiff: regionDiff,
               hypocenterDiff: hypocenterDiff,
               prefectureMap: prefectureMap,
+            ),
+            Text(
+              {
+                    'text': comments?.text,
+                    'free': comments?.free,
+                    'warning': comments?.warning,
+                    'forecast': comments?.forecast,
+                    'additional': comments?.additional,
+                  }.entries
+                  .where((entry) => entry.value != null)
+                  .map((entry) => '${entry.key}: ${entry.value}')
+                  .join('\n')
+                  .toHalfWidth,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 12,
+              ),
             ),
           ],
         ),
@@ -158,15 +182,15 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
     final quake = body.earthquake;
 
     return switch (telegramType) {
-      TelegramType.vxse51 => switch (regionDiff) {
+      .vxse51 => switch (regionDiff) {
         final entries? => IntensityRegionList(entries: entries),
         null => const SizedBox.shrink(),
       },
-      TelegramType.vxse52 =>
+      .vxse52 =>
         quake != null
             ? HypocenterSummary(quake: quake, diff: hypocenterDiff)
             : const SizedBox.shrink(),
-      TelegramType.vxse53 => Column(
+      .vxse53 => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (quake != null)
@@ -179,11 +203,11 @@ class _EarthquakeTelegramTileContent extends StatelessWidget {
             ),
         ],
       ),
-      TelegramType.vxse61 =>
+      .vxse61 =>
         quake != null
             ? HypocenterSummary(quake: quake, diff: hypocenterDiff)
             : const SizedBox.shrink(),
-      TelegramType.vxse62 => Column(
+      .vxse62 => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (quake != null)

@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/data/model/home_configuration_model.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
-import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_hero_illustration.dart';
 import 'package:eqmonitor/feature/home/ui/page/home_map_bounds_selector_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
@@ -25,9 +24,8 @@ class HomeMapLayerPage extends HookConsumerWidget {
     final designSystem = context.designSystem;
     final color = designSystem.color;
     final spacing = designSystem.spacing;
-    final shape = designSystem.shape;
     final typography = designSystem.typography;
-    final expandedSection = useState<_MapLayerSection?>(_MapLayerSection.eew);
+    final expandedSection = useState<_MapLayerSection?>(null);
 
     return Scaffold(
       backgroundColor: color.backgroundDefault,
@@ -56,53 +54,6 @@ class HomeMapLayerPage extends HookConsumerWidget {
               ),
               sliver: SliverList.list(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(spacing.xl),
-                    decoration: BoxDecoration(
-                      color: color.surfaceRaised,
-                      borderRadius: BorderRadius.circular(shape.sheet),
-                      border: Border.all(color: color.outlineSoft),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: spacing.md,
-                            vertical: spacing.xs + 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: color.surfaceEmphasis,
-                            borderRadius: BorderRadius.circular(shape.pill),
-                          ),
-                          child: Text(
-                            'Map style',
-                            style: typography.labelMedium.copyWith(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onPrimaryContainer,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: spacing.lg),
-                        Text(
-                          '見たい情報だけを\n素早く切り替える',
-                          style: typography.headlineSmall.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: spacing.sm),
-                        Text(
-                          '緊急地震速報、現在地、強震モニタ、地図の表示範囲をひとつのページで調整できます。',
-                          style: typography.bodyMedium,
-                        ),
-                        SizedBox(height: spacing.xl),
-                        const HomeMapLayerHeroIllustration(),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: spacing.lg),
                   _SettingsSection(
                     icon: Icons.emergency_rounded,
                     title: '緊急地震速報',
@@ -788,18 +739,17 @@ class _KyoshinMonitorSourceTile extends ConsumerWidget {
     }
     return _SettingSegmentedField<KyoshinMonitorSource>(
       title: 'データソース',
-      subtitle: '強震モニタ(KMoni)か長周期地震動モニタ(LMoni)を選択します。\n'
-          'LMoniでは長周期地震動階級などの追加データ種別が利用できます。',
+      subtitle:
+          '強震モニタか長周期地震動モニタを選択します。\n'
+          '長周期地震動モニタでは長周期地震動階級などの追加データ種別が利用できます。',
       segments: const [
         ButtonSegment(
-          value: KyoshinMonitorSource.kmoni,
+          value: .kmoni,
           label: Text('強震モニタ'),
-          tooltip: 'KMoni',
         ),
         ButtonSegment(
-          value: KyoshinMonitorSource.lmoni,
+          value: .lmoni,
           label: Text('長周期地震動'),
-          tooltip: 'LMoni',
         ),
       ],
       selected: {setting.monitorSource},
@@ -807,9 +757,8 @@ class _KyoshinMonitorSourceTile extends ConsumerWidget {
         final newSource = next.first;
         var newDataType = setting.realtimeDataType;
         // kmoniに切り替えた場合、LPGMデータ種別が選択されていたらshindoにリセット
-        if (newSource == KyoshinMonitorSource.kmoni &&
-            newDataType.isLpgm) {
-          newDataType = RealtimeDataType.shindo;
+        if (newSource == .kmoni && newDataType.isLpgm) {
+          newDataType = .shindo;
         }
         await ref
             .read(kyoshinMonitorSettingsProvider.notifier)

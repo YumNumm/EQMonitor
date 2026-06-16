@@ -39,6 +39,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/app_group/debug
 import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/device/debug_device_admin_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/earthquake_history/debug_earthquake_history_list_tile_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/eew/debug_eew_card_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/intensity_icon/intensity_icon_debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/jma_map/debug_jma_map_page.dart';
@@ -311,6 +312,9 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugEarthquakeHistoryCardRoute>(
           path: 'earthquake-history-card',
         ),
+        TypedGoRoute<DebugEarthquakeHistoryListTileRoute>(
+          path: 'earthquake-history-list-tile',
+        ),
         TypedGoRoute<DebugShakeDetectionCardRoute>(
           path: 'shake-detection-card',
         ),
@@ -542,6 +546,16 @@ class DebugEarthquakeHistoryCardRoute extends GoRouteData
   }
 }
 
+class DebugEarthquakeHistoryListTileRoute extends GoRouteData
+    with $DebugEarthquakeHistoryListTileRoute {
+  const DebugEarthquakeHistoryListTileRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugEarthquakeHistoryListTilePage();
+  }
+}
+
 class DebugShakeDetectionCardRoute extends GoRouteData
     with $DebugShakeDetectionCardRoute {
   const DebugShakeDetectionCardRoute();
@@ -646,7 +660,8 @@ class DebugLiveActivityTestRoute extends GoRouteData
   }
 }
 
-class DebugIntensityIconRoute extends GoRouteData with $DebugIntensityIconRoute {
+class DebugIntensityIconRoute extends GoRouteData
+    with $DebugIntensityIconRoute {
   const DebugIntensityIconRoute();
 
   @override

@@ -67,7 +67,9 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('ビルド時刻'),
             leading: const Icon(Icons.schedule),
             subtitle: Text(
-              buildCfg.buildTimestamp.isEmpty ? '(not set)' : buildCfg.buildTimestamp,
+              buildCfg.buildTimestamp.isEmpty
+                  ? '(not set)'
+                  : buildCfg.buildTimestamp,
               style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
           ),
@@ -75,7 +77,9 @@ class _DebugWidget extends ConsumerWidget {
             title: const Text('ビルド時コミットメッセージ'),
             leading: const Icon(Icons.commit),
             subtitle: Text(
-              buildCfg.buildCommitMessage.isEmpty ? '(not set)' : buildCfg.buildCommitMessage,
+              buildCfg.buildCommitMessage.isEmpty
+                  ? '(not set)'
+                  : buildCfg.buildCommitMessage,
               style: const TextStyle(fontFamily: FontFamily.googleSansCode),
             ),
           ),
@@ -150,6 +154,16 @@ class _DebugWidget extends ConsumerWidget {
             leading: const Icon(Icons.history_edu_outlined),
             onTap: () async =>
                 const DebugEarthquakeHistoryCardRoute().push(context),
+          ),
+          ListTile(
+            title: const Text('地震履歴 ListTile'),
+            subtitle: Text(
+              '各種地震・検索対象地域の震度・海外遠地地震・海外噴火の見た目を確認',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            leading: const Icon(Icons.list_alt_outlined),
+            onTap: () async =>
+                const DebugEarthquakeHistoryListTileRoute().push(context),
           ),
           ListTile(
             title: const Text('揺れ検知 Card'),
@@ -322,7 +336,8 @@ class _AppCheckSection extends ConsumerWidget {
           },
           trailing: IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => ref.invalidate(appCheckTokenProvider, asReload: true),
+            onPressed: () =>
+                ref.invalidate(appCheckTokenProvider, asReload: true),
           ),
         ),
         ListTile(
@@ -437,7 +452,9 @@ class _ParameterDebugSection extends HookConsumerWidget {
                   subtitle: Text(
                     'ver: ${item.sourceVersion}  generated: ${item.generatedAt}\n'
                     'sha256: ${item.sha256.substring(0, 8)}…',
-                    style: const TextStyle(fontFamily: FontFamily.googleSansCode),
+                    style: const TextStyle(
+                      fontFamily: FontFamily.googleSansCode,
+                    ),
                   ),
                   isThreeLine: true,
                 ),
@@ -511,8 +528,7 @@ class _StartApiDebugSection extends ConsumerWidget {
           trailing: IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: '強制再取得',
-            onPressed: () =>
-                ref.read(startProvider.notifier).refresh(),
+            onPressed: () => ref.read(startProvider.notifier).refresh(),
           ),
         ),
         switch (startAsync) {
@@ -565,12 +581,12 @@ class _StartApiDebugSection extends ConsumerWidget {
                 title: const Text('requiredVersions'),
                 subtitle: Text(
                   value.app.version.requiredVersions
-                      .map((r) => r.version)
-                      .join(', ')
-                      .isNotEmpty
-                      ? value.app.version.requiredVersions
                           .map((r) => r.version)
                           .join(', ')
+                          .isNotEmpty
+                      ? value.app.version.requiredVersions
+                            .map((r) => r.version)
+                            .join(', ')
                       : '(なし)',
                 ),
               ),

@@ -42,6 +42,8 @@ extension EarthquakePartialApiExtension on api.EarthquakePartial {
     dataSource: datasource.toEarthquakeDataSource,
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     estimatedIntensityTileUrl: estimatedIntensityTile,
-    intensity: intensity?.toEarthquakeIntensityPartial(parameter: parameter),
+    intensity: intensity?.toEarthquakeIntensityPartial(
+      parameter: parameter,
+    ),
   );
 }

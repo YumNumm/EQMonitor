@@ -476,6 +476,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $DebugEarthquakeHistoryCardRoute._fromState,
         ),
         GoRouteData.$route(
+          path: 'earthquake-history-list-tile',
+          factory: $DebugEarthquakeHistoryListTileRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'shake-detection-card',
           factory: $DebugShakeDetectionCardRoute._fromState,
         ),
@@ -1042,6 +1046,28 @@ mixin $DebugEarthquakeHistoryCardRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/settings/debug/earthquake-history-card');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $DebugEarthquakeHistoryListTileRoute on GoRouteData {
+  static DebugEarthquakeHistoryListTileRoute _fromState(GoRouterState state) =>
+      const DebugEarthquakeHistoryListTileRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/earthquake-history-list-tile');
 
   @override
   void go(BuildContext context) => context.go(location);

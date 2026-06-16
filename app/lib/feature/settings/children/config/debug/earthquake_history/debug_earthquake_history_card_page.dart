@@ -37,8 +37,9 @@ class DebugEarthquakeHistoryCardPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('地震履歴 Debug')),
       body: switch (paramAsync) {
-        AsyncLoading() =>
-          const Center(child: CircularProgressIndicator.adaptive()),
+        AsyncLoading() => const Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
         AsyncError(:final error) => Center(child: Text('エラー: $error')),
         AsyncData(:final value) => _DebugBody(param: value.earthquake),
       },
@@ -188,9 +189,11 @@ class _DebugBody extends HookWidget {
       final regionsMap = <JmaIntensity, List<IntensityRegion>>{};
       for (final region in selected) {
         final i = randomIntensity();
-        regionsMap.putIfAbsent(i, () => []).add(
-          IntensityRegion(region: region, maxIntensity: i),
-        );
+        regionsMap
+            .putIfAbsent(i, () => [])
+            .add(
+              IntensityRegion(region: region, maxIntensity: i),
+            );
       }
 
       intensity = EarthquakeIntensity(
@@ -225,7 +228,12 @@ class _DebugBody extends HookWidget {
         prefAcc.cityMap
             .putIfAbsent(e.city.code, () => _CityAccumulator(city: e.city))
             .stations
-            .add(_SelectedStation(station: e.station, intensity: randomIntensity()));
+            .add(
+              _SelectedStation(
+                station: e.station,
+                intensity: randomIntensity(),
+              ),
+            );
       }
 
       final tree = <JmaIntensity, List<PrefectureIntensityNode>>{};
@@ -255,8 +263,7 @@ class _DebugBody extends HookWidget {
             );
           }
           if (prefMax == null ||
-              (cityMax != null &&
-                  cityMax.orderIndex > prefMax.orderIndex)) {
+              (cityMax != null && cityMax.orderIndex > prefMax.orderIndex)) {
             prefMax = cityMax;
           }
           cities.add(
