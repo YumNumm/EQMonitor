@@ -4,9 +4,9 @@
 
 **Goal:** `develop` への push 等で iOS ビルドを TestFlight にアップロードする際、コミットメッセージに `[external]` が含まれる場合のみ、外部テストグループへ自動配布し、テスト内容（What to Test）をコミット件名から自動生成して設定する。
 
-**Architecture:** ASC API 呼び出しロジックを単体テスト可能な Python スクリプト `scripts/testflight/distribute_external.py` に集約し、`.github/workflows/deploy-app.yaml` の `build-ios` ジョブに「altool アップロード後」の後続ステップとして組み込む（新ジョブは作らない=案A）。`[external]` 判定は `define-matrix` ジョブの output として算出する。
+**Architecture:** ASC API 呼び出しロジックを単体テスト可能な TypeScript スクリプト `scripts/testflight/distribute-external.ts` に集約し、`.github/workflows/deploy-app.yaml` の `build-ios` ジョブに「altool アップロード後」の後続ステップとして組み込む（新ジョブは作らない=案A）。`[external]` 判定は `define-matrix` ジョブの output として算出する。
 
-**Tech Stack:** GitHub Actions / bash / Python 3（uv 経由で `pyjwt[crypto]` を動的取得）/ App Store Connect REST API。
+**Tech Stack:** GitHub Actions / TypeScript / Node（mise `node lts`）/ pnpm / `tsx`（TS 直接実行）/ `jose`（ES256 JWT）/ `vitest`（テスト）/ App Store Connect REST API（Node 組み込み `fetch`）。
 
 設計 spec: `docs/superpowers/specs/2026-06-16-testflight-external-auto-distribute-design.md`
 
@@ -14,9 +14,14 @@
 
 ## File Structure
 
-- Create: `scripts/testflight/distribute_external.py` — ASC API オーケストレーター。純粋関数（`build_token` / `cap_text` / `build_whatsnew_from_git`）＋ HTTP クライアント＋メインフロー（処理完了ポーリング → What to Test 設定 → 外部グループ追加 → ベータ審査提出）。
-- Create: `scripts/testflight/tests/distribute_external_test.py` — 純粋関数の単体テスト。
-- Modify: `.github/workflows/deploy-app.yaml` — `define-matrix` に output `deploy-ios-external` を追加 / `workflow_dispatch` に input `external` 追加 / `build-ios` に配布ステップ追加・`timeout-minutes` 30→60・mise install_args に `uv` 追加。
+`scripts/testflight/` を standalone な pnpm プロジェクトとして新設する（リポジトリ root に package.json は無いため独立構成）。
+
+- Create: `scripts/testflight/package.json` — deps（`jose`）/ devDeps（`tsx` `typescript` `vitest` `@types/node`）/ scripts（`distribute` `test`）。
+- Create: `scripts/testflight/tsconfig.json` — TS 設定（ESM, strict）。
+- Create: `scripts/testflight/distribute-external.ts` — ASC API オーケストレーター。純粋関数（`buildToken` / `capText` / `buildWhatsNewFromGit`）＋ `AscClient` クラス＋メインフロー（処理完了ポーリング → What to Test 設定 → 外部グループ追加 → ベータ審査提出）。
+- Create: `scripts/testflight/distribute-external.test.ts` — 純粋関数の vitest 単体テスト。
+- Create: `scripts/testflight/pnpm-lock.yaml` — `pnpm install` 実行で自動生成（手書きしない）。
+- Modify: `.github/workflows/deploy-app.yaml` — `define-matrix` に output `deploy-ios-external` を追加 / `workflow_dispatch` に input `external` 追加 / `build-ios` に配布ステップ追加・`timeout-minutes` 30→60・mise install_args に `node pnpm` 追加。
 
 各 ASC API エンドポイント（spec §2-4 参照）:
 - `GET /v1/builds?filter[app]={app}&filter[version]={ver}&limit=1`
@@ -27,327 +32,442 @@
 
 ---
 
-## Task 1: ASC オーケストレーター Python スクリプト
+## Task 1: pnpm プロジェクトの雛形作成
 
 **Files:**
-- Create: `scripts/testflight/distribute_external.py`
-- Test: `scripts/testflight/tests/distribute_external_test.py`
+- Create: `scripts/testflight/package.json`
+- Create: `scripts/testflight/tsconfig.json`
+
+- [ ] **Step 1: package.json を作成**
+
+Create `scripts/testflight/package.json`:
+
+```json
+{
+  "name": "testflight-distribute",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "distribute": "tsx distribute-external.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "jose": "^5.9.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
+```
+
+- [ ] **Step 2: tsconfig.json を作成**
+
+Create `scripts/testflight/tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["*.ts"]
+}
+```
+
+- [ ] **Step 3: 依存をインストール（lockfile 生成）**
+
+Run: `pnpm -C scripts/testflight install`
+Expected: 正常終了し `scripts/testflight/pnpm-lock.yaml` と `node_modules` が生成される。
+
+- [ ] **Step 4: node_modules を git 管理外にする**
+
+`scripts/testflight/.gitignore` を作成:
+
+```gitignore
+node_modules/
+```
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add scripts/testflight/package.json scripts/testflight/tsconfig.json scripts/testflight/pnpm-lock.yaml scripts/testflight/.gitignore
+git commit -m "chore(ci): TestFlight配布スクリプト用pnpmプロジェクト追加"
+```
+
+---
+
+## Task 2: ASC オーケストレーター（TypeScript）
+
+**Files:**
+- Create: `scripts/testflight/distribute-external.ts`
+- Test: `scripts/testflight/distribute-external.test.ts`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `scripts/testflight/tests/distribute_external_test.py`:
+Create `scripts/testflight/distribute-external.test.ts`:
 
-```python
-"""Unit tests for distribute_external pure functions.
+```ts
+import { describe, expect, it } from 'vitest'
+import { generateKeyPair, exportPKCS8, decodeJwt, decodeProtectedHeader } from 'jose'
+import { buildToken, capText } from './distribute-external.ts'
 
-Run with: uv run --with 'pyjwt[crypto]' scripts/testflight/tests/distribute_external_test.py
-"""
-import os
-import sys
+describe('buildToken', () => {
+  it('creates an ES256 JWT with the expected header and claims', async () => {
+    const { privateKey } = await generateKeyPair('ES256', { extractable: true })
+    const pem = await exportPKCS8(privateKey)
+    const token = await buildToken('KID123', 'ISS456', pem)
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    const header = decodeProtectedHeader(token)
+    expect(header.alg).toBe('ES256')
+    expect(header.kid).toBe('KID123')
 
-import jwt  # noqa: E402  (PyJWT, provided by uv --with 'pyjwt[crypto]')
-from cryptography.hazmat.primitives import serialization  # noqa: E402
-from cryptography.hazmat.primitives.asymmetric import ec  # noqa: E402
+    const payload = decodeJwt(token)
+    expect(payload.iss).toBe('ISS456')
+    expect(payload.aud).toBe('appstoreconnect-v1')
+    expect(payload.exp! - payload.iat!).toBeGreaterThan(0)
+    expect(payload.exp! - payload.iat!).toBeLessThanOrEqual(20 * 60)
+  })
+})
 
-import distribute_external as d  # noqa: E402
+describe('capText', () => {
+  it('returns text unchanged when within the limit', () => {
+    expect(capText('abc', 10)).toBe('abc')
+  })
 
-
-def _gen_pem() -> str:
-    key = ec.generate_private_key(ec.SECP256R1())
-    return key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption(),
-    ).decode()
-
-
-def test_build_token():
-    token = d.build_token("KID123", "ISS456", _gen_pem())
-    header = jwt.get_unverified_header(token)
-    assert header["alg"] == "ES256", header
-    assert header["kid"] == "KID123", header
-    payload = jwt.decode(token, options={"verify_signature": False})
-    assert payload["iss"] == "ISS456", payload
-    assert payload["aud"] == "appstoreconnect-v1", payload
-    assert 0 < payload["exp"] - payload["iat"] <= 20 * 60, payload
-
-
-def test_cap_text():
-    assert d.cap_text("abc", 10) == "abc"
-    out = d.cap_text("x" * 5000)
-    assert len(out) == 4000, len(out)
-    assert out.endswith("..."), out
-
-
-test_build_token()
-test_cap_text()
-print("distribute_external_test: PASS")
+  it('truncates and appends an ellipsis when over the limit', () => {
+    const out = capText('x'.repeat(5000))
+    expect(out.length).toBe(4000)
+    expect(out.endsWith('...')).toBe(true)
+  })
+})
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `uv run --with 'pyjwt[crypto]' scripts/testflight/tests/distribute_external_test.py`
-Expected: FAIL with `ModuleNotFoundError: No module named 'distribute_external'`
+Run: `pnpm -C scripts/testflight test`
+Expected: FAIL（`distribute-external.ts` から `buildToken`/`capText` を解決できずエラー）
 
 - [ ] **Step 3: Write minimal implementation**
 
-Create `scripts/testflight/distribute_external.py`:
+Create `scripts/testflight/distribute-external.ts`:
 
-```python
-#!/usr/bin/env python3
-"""Distribute the just-uploaded iOS build to a TestFlight external group.
+```ts
+/**
+ * Distribute the just-uploaded iOS build to a TestFlight external group.
+ *
+ * Flow (App Store Connect API, raw REST):
+ *   1. Poll for the build (by app + version) until processingState === 'VALID'.
+ *   2. Set "What to Test" (betaBuildLocalizations, locale=ja) from commit subjects.
+ *   3. Add the build to the external beta group.
+ *   4. Submit the build for beta app review.
+ *
+ * Configuration via environment variables:
+ *   ASC_KEY_ID        App Store Connect API Key ID (JWT kid)
+ *   ASC_ISSUER_ID     Issuer ID (JWT iss)
+ *   ASC_KEY_PATH      Path to the .p8 private key
+ *   ASC_APP_ID        App Store Connect app id (e.g. 6447546703)
+ *   ASC_BUILD_VERSION Build number to locate (CFBundleVersion, e.g. run_number)
+ *   ASC_BETA_GROUP_ID External beta group id
+ *   ASC_LOCALE        Locale for whatsNew (default: ja)
+ *
+ * Run with: pnpm -C scripts/testflight run distribute
+ */
+import { readFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { importPKCS8, SignJWT } from 'jose'
 
-Flow (App Store Connect API, raw REST):
-  1. Poll for the build (by app + version) until processingState == VALID.
-  2. Set "What to Test" (betaBuildLocalizations, locale=ja) from commit subjects.
-  3. Add the build to the external beta group.
-  4. Submit the build for beta app review.
+const API_BASE = 'https://api.appstoreconnect.apple.com'
+const WHATSNEW_MAX_LEN = 4000
+const POLL_INTERVAL_MS = 30_000
+const POLL_TIMEOUT_MS = 30 * 60_000
 
-Configuration via environment variables:
-  ASC_KEY_ID        App Store Connect API Key ID (JWT kid)
-  ASC_ISSUER_ID     Issuer ID (JWT iss)
-  ASC_KEY_PATH      Path to the .p8 private key
-  ASC_APP_ID        App Store Connect app id (e.g. 6447546703)
-  ASC_BUILD_VERSION Build number to locate (CFBundleVersion, e.g. run_number)
-  ASC_BETA_GROUP_ID External beta group id
-  ASC_LOCALE        Locale for whatsNew (default: ja)
+export async function buildToken(
+  keyId: string,
+  issuerId: string,
+  privateKeyPem: string,
+): Promise<string> {
+  const key = await importPKCS8(privateKeyPem, 'ES256')
+  const now = Math.floor(Date.now() / 1000)
+  return await new SignJWT({})
+    .setProtectedHeader({ alg: 'ES256', kid: keyId, typ: 'JWT' })
+    .setIssuer(issuerId)
+    .setIssuedAt(now)
+    .setExpirationTime(now + 19 * 60) // < 20 minutes (ASC hard limit)
+    .setAudience('appstoreconnect-v1')
+    .sign(key)
+}
 
-Run with: uv run --with 'pyjwt[crypto]' scripts/testflight/distribute_external.py
-"""
-from __future__ import annotations
+export function capText(text: string, maxLen = WHATSNEW_MAX_LEN): string {
+  if (text.length > maxLen) {
+    return text.slice(0, maxLen - 3) + '...'
+  }
+  return text
+}
 
-import json
-import os
-import subprocess
-import sys
-import time
-import urllib.error
-import urllib.request
+export function buildWhatsNewFromGit(): string {
+  const lastTag = execFileSync('git', ['describe', '--tags', '--abbrev=0'], {
+    encoding: 'utf8',
+  }).trim()
+  const log = execFileSync(
+    'git',
+    ['log', `${lastTag}..HEAD`, '--pretty=format:- %s'],
+    { encoding: 'utf8' },
+  ).trim()
+  return log ? capText(log) : '- (no changes)'
+}
 
-import jwt  # PyJWT (provided via `uv run --with 'pyjwt[crypto]'`)
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-API_BASE = "https://api.appstoreconnect.apple.com"
-WHATSNEW_MAX_LEN = 4000
-POLL_INTERVAL_SEC = 30
-POLL_TIMEOUT_SEC = 30 * 60
+interface AscResponse {
+  status: number
+  body: any
+}
 
+class AscClient {
+  private readonly keyId: string
+  private readonly issuerId: string
+  private readonly privateKeyPem: string
 
-def build_token(key_id: str, issuer_id: str, private_key: str) -> str:
-    now = int(time.time())
-    payload = {
-        "iss": issuer_id,
-        "iat": now,
-        "exp": now + 19 * 60,  # < 20 minutes (ASC hard limit)
-        "aud": "appstoreconnect-v1",
+  constructor(keyId: string, issuerId: string, keyPath: string) {
+    this.keyId = keyId
+    this.issuerId = issuerId
+    this.privateKeyPem = readFileSync(keyPath, 'utf8')
+  }
+
+  private async request(
+    method: string,
+    path: string,
+    body?: unknown,
+  ): Promise<AscResponse> {
+    const url = path.startsWith('http') ? path : API_BASE + path
+    const token = await buildToken(this.keyId, this.issuerId, this.privateKeyPem)
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${token}`,
     }
-    headers = {"kid": key_id, "typ": "JWT"}
-    return jwt.encode(payload, private_key, algorithm="ES256", headers=headers)
+    if (body !== undefined) {
+      headers['Content-Type'] = 'application/json'
+    }
+    const res = await fetch(url, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    })
+    const text = await res.text()
+    let parsed: any = {}
+    if (text) {
+      try {
+        parsed = JSON.parse(text)
+      } catch {
+        parsed = { raw: text }
+      }
+    }
+    return { status: res.status, body: parsed }
+  }
 
+  async findBuild(appId: string, version: string): Promise<any | null> {
+    const { status, body } = await this.request(
+      'GET',
+      `/v1/builds?filter[app]=${appId}&filter[version]=${version}&limit=1`,
+    )
+    if (status !== 200) {
+      throw new Error(`findBuild failed: ${status} ${JSON.stringify(body)}`)
+    }
+    const data = body.data ?? []
+    return data.length > 0 ? data[0] : null
+  }
 
-def cap_text(text: str, max_len: int = WHATSNEW_MAX_LEN) -> str:
-    if len(text) > max_len:
-        return text[: max_len - 3] + "..."
-    return text
+  async getJaLocalizationId(
+    buildId: string,
+    locale: string,
+  ): Promise<string | null> {
+    const { status, body } = await this.request(
+      'GET',
+      `/v1/builds/${buildId}/betaBuildLocalizations`,
+    )
+    if (status !== 200) {
+      throw new Error(
+        `list localizations failed: ${status} ${JSON.stringify(body)}`,
+      )
+    }
+    for (const loc of body.data ?? []) {
+      if (loc.attributes?.locale === locale) {
+        return loc.id
+      }
+    }
+    return null
+  }
 
-
-def build_whatsnew_from_git() -> str:
-    last_tag = subprocess.run(
-        ["git", "describe", "--tags", "--abbrev=0"],
-        check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    log = subprocess.run(
-        ["git", "log", f"{last_tag}..HEAD", "--pretty=format:- %s"],
-        check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    return cap_text(log) if log else "- (no changes)"
-
-
-class Asc:
-    def __init__(self, key_id: str, issuer_id: str, key_path: str) -> None:
-        self._key_id = key_id
-        self._issuer_id = issuer_id
-        with open(key_path, encoding="utf-8") as f:
-            self._private_key = f.read()
-
-    def _token(self) -> str:
-        return build_token(self._key_id, self._issuer_id, self._private_key)
-
-    def request(self, method: str, path: str, body: dict | None = None):
-        url = path if path.startswith("http") else API_BASE + path
-        data = json.dumps(body).encode() if body is not None else None
-        req = urllib.request.Request(url, data=data, method=method)
-        req.add_header("Authorization", f"Bearer {self._token()}")
-        if data is not None:
-            req.add_header("Content-Type", "application/json")
-        try:
-            with urllib.request.urlopen(req) as resp:
-                raw = resp.read()
-                return resp.status, (json.loads(raw) if raw else {})
-        except urllib.error.HTTPError as e:
-            raw = e.read().decode(errors="replace")
-            try:
-                return e.code, json.loads(raw)
-            except json.JSONDecodeError:
-                return e.code, {"raw": raw}
-
-    def find_build(self, app_id: str, version: str):
-        status, payload = self.request(
-            "GET",
-            f"/v1/builds?filter[app]={app_id}&filter[version]={version}&limit=1",
-        )
-        if status != 200:
-            raise RuntimeError(f"find_build failed: {status} {payload}")
-        data = payload.get("data") or []
-        return data[0] if data else None
-
-    def get_ja_localization_id(self, build_id: str, locale: str):
-        status, payload = self.request(
-            "GET", f"/v1/builds/{build_id}/betaBuildLocalizations"
-        )
-        if status != 200:
-            raise RuntimeError(f"list localizations failed: {status} {payload}")
-        for loc in payload.get("data") or []:
-            if (loc.get("attributes") or {}).get("locale") == locale:
-                return loc["id"]
-        return None
-
-    def set_whatsnew(self, build_id: str, locale: str, whats_new: str) -> None:
-        loc_id = self.get_ja_localization_id(build_id, locale)
-        if loc_id:
-            status, payload = self.request(
-                "PATCH",
-                f"/v1/betaBuildLocalizations/{loc_id}",
-                {
-                    "data": {
-                        "type": "betaBuildLocalizations",
-                        "id": loc_id,
-                        "attributes": {"whatsNew": whats_new},
-                    }
-                },
-            )
-        else:
-            status, payload = self.request(
-                "POST",
-                "/v1/betaBuildLocalizations",
-                {
-                    "data": {
-                        "type": "betaBuildLocalizations",
-                        "attributes": {"whatsNew": whats_new, "locale": locale},
-                        "relationships": {
-                            "build": {"data": {"type": "builds", "id": build_id}}
-                        },
-                    }
-                },
-            )
-        if status not in (200, 201):
-            raise RuntimeError(f"set_whatsnew failed: {status} {payload}")
-
-    def add_to_group(self, group_id: str, build_id: str) -> None:
-        status, payload = self.request(
-            "POST",
-            f"/v1/betaGroups/{group_id}/relationships/builds",
-            {"data": [{"type": "builds", "id": build_id}]},
-        )
-        if status not in (200, 204):
-            raise RuntimeError(f"add_to_group failed: {status} {payload}")
-
-    def submit_review(self, build_id: str) -> None:
-        status, payload = self.request(
-            "POST",
-            "/v1/betaAppReviewSubmissions",
-            {
-                "data": {
-                    "type": "betaAppReviewSubmissions",
-                    "relationships": {
-                        "build": {"data": {"type": "builds", "id": build_id}}
-                    },
-                }
+  async setWhatsNew(
+    buildId: string,
+    locale: string,
+    whatsNew: string,
+  ): Promise<void> {
+    const locId = await this.getJaLocalizationId(buildId, locale)
+    const res = locId
+      ? await this.request('PATCH', `/v1/betaBuildLocalizations/${locId}`, {
+          data: {
+            type: 'betaBuildLocalizations',
+            id: locId,
+            attributes: { whatsNew },
+          },
+        })
+      : await this.request('POST', '/v1/betaBuildLocalizations', {
+          data: {
+            type: 'betaBuildLocalizations',
+            attributes: { whatsNew, locale },
+            relationships: {
+              build: { data: { type: 'builds', id: buildId } },
             },
-        )
-        # 409 = already submitted/approved for this build -> non-fatal.
-        if status not in (200, 201, 409):
-            raise RuntimeError(f"submit_review failed: {status} {payload}")
-        if status == 409:
-            print("beta review already submitted/approved; skipping", flush=True)
+          },
+        })
+    if (res.status !== 200 && res.status !== 201) {
+      throw new Error(
+        `setWhatsNew failed: ${res.status} ${JSON.stringify(res.body)}`,
+      )
+    }
+  }
 
+  async addToGroup(groupId: string, buildId: string): Promise<void> {
+    const { status, body } = await this.request(
+      'POST',
+      `/v1/betaGroups/${groupId}/relationships/builds`,
+      { data: [{ type: 'builds', id: buildId }] },
+    )
+    if (status !== 200 && status !== 204) {
+      throw new Error(`addToGroup failed: ${status} ${JSON.stringify(body)}`)
+    }
+  }
 
-def poll_build(asc: Asc, app_id: str, version: str):
-    deadline = time.time() + POLL_TIMEOUT_SEC
-    while True:
-        build = asc.find_build(app_id, version)
-        state = (build or {}).get("attributes", {}).get("processingState")
-        print(f"build version={version} state={state}", flush=True)
-        if build and state == "VALID":
-            return build
-        if state in ("INVALID", "FAILED"):
-            raise RuntimeError(f"build processing failed: state={state}")
-        if time.time() >= deadline:
-            raise RuntimeError(f"timed out waiting for build (last state={state})")
-        time.sleep(POLL_INTERVAL_SEC)
+  async submitReview(buildId: string): Promise<void> {
+    const { status, body } = await this.request(
+      'POST',
+      '/v1/betaAppReviewSubmissions',
+      {
+        data: {
+          type: 'betaAppReviewSubmissions',
+          relationships: {
+            build: { data: { type: 'builds', id: buildId } },
+          },
+        },
+      },
+    )
+    // 409 = already submitted/approved for this build -> non-fatal.
+    if (status !== 200 && status !== 201 && status !== 409) {
+      throw new Error(`submitReview failed: ${status} ${JSON.stringify(body)}`)
+    }
+    if (status === 409) {
+      console.log('beta review already submitted/approved; skipping')
+    }
+  }
+}
 
+async function pollBuild(
+  asc: AscClient,
+  appId: string,
+  version: string,
+): Promise<any> {
+  const deadline = Date.now() + POLL_TIMEOUT_MS
+  for (;;) {
+    const build = await asc.findBuild(appId, version)
+    const state = build?.attributes?.processingState
+    console.log(`build version=${version} state=${state}`)
+    if (build && state === 'VALID') {
+      return build
+    }
+    if (state === 'INVALID' || state === 'FAILED') {
+      throw new Error(`build processing failed: state=${state}`)
+    }
+    if (Date.now() >= deadline) {
+      throw new Error(`timed out waiting for build (last state=${state})`)
+    }
+    await sleep(POLL_INTERVAL_MS)
+  }
+}
 
-def main() -> int:
-    key_id = os.environ["ASC_KEY_ID"]
-    issuer_id = os.environ["ASC_ISSUER_ID"]
-    key_path = os.environ["ASC_KEY_PATH"]
-    app_id = os.environ["ASC_APP_ID"]
-    version = os.environ["ASC_BUILD_VERSION"]
-    group_id = os.environ["ASC_BETA_GROUP_ID"]
-    locale = os.environ.get("ASC_LOCALE", "ja")
+function requireEnv(name: string): string {
+  const v = process.env[name]
+  if (!v) {
+    throw new Error(`missing required env: ${name}`)
+  }
+  return v
+}
 
-    asc = Asc(key_id, issuer_id, key_path)
+async function main(): Promise<void> {
+  const keyId = requireEnv('ASC_KEY_ID')
+  const issuerId = requireEnv('ASC_ISSUER_ID')
+  const keyPath = requireEnv('ASC_KEY_PATH')
+  const appId = requireEnv('ASC_APP_ID')
+  const version = requireEnv('ASC_BUILD_VERSION')
+  const groupId = requireEnv('ASC_BETA_GROUP_ID')
+  const locale = process.env.ASC_LOCALE ?? 'ja'
 
-    build = poll_build(asc, app_id, version)
-    build_id = build["id"]
-    print(f"resolved build id={build_id}", flush=True)
+  const asc = new AscClient(keyId, issuerId, keyPath)
 
-    whats_new = build_whatsnew_from_git()
-    print(f"whatsNew ({len(whats_new)} chars):\n{whats_new}", flush=True)
-    asc.set_whatsnew(build_id, locale, whats_new)
-    print("whatsNew set", flush=True)
+  const build = await pollBuild(asc, appId, version)
+  const buildId = build.id as string
+  console.log(`resolved build id=${buildId}`)
 
-    asc.add_to_group(group_id, build_id)
-    print(f"added build to external group {group_id}", flush=True)
+  const whatsNew = buildWhatsNewFromGit()
+  console.log(`whatsNew (${whatsNew.length} chars):\n${whatsNew}`)
+  await asc.setWhatsNew(buildId, locale, whatsNew)
+  console.log('whatsNew set')
 
-    asc.submit_review(build_id)
-    print("submitted for beta app review", flush=True)
-    return 0
+  await asc.addToGroup(groupId, buildId)
+  console.log(`added build to external group ${groupId}`)
 
+  await asc.submitReview(buildId)
+  console.log('submitted for beta app review')
+}
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+// Only run main when executed directly (not when imported by tests).
+if (process.argv[1] && process.argv[1].endsWith('distribute-external.ts')) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}
 ```
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `uv run --with 'pyjwt[crypto]' scripts/testflight/tests/distribute_external_test.py`
-Expected: `distribute_external_test: PASS`
+Run: `pnpm -C scripts/testflight test`
+Expected: PASS（`buildToken` 1件 + `capText` 2件）
 
-- [ ] **Step 5: Verify git-driven whatsNew generation against the real repo**
+- [ ] **Step 5: 型チェック**
+
+Run: `pnpm -C scripts/testflight exec tsc --noEmit`
+Expected: 出力なしで終了（型エラーなし）。
+
+- [ ] **Step 6: git 連携の whatsNew 生成を実リポジトリで確認**
 
 Run:
 ```bash
-uv run --with 'pyjwt[crypto]' python -c "import sys; sys.path.insert(0,'scripts/testflight'); import distribute_external as d; t=d.build_whatsnew_from_git(); assert t and len(t)<=4000, len(t); print('whatsnew ok, len=', len(t))"
+pnpm -C scripts/testflight exec tsx -e "import('./distribute-external.ts').then(m => { const t = m.buildWhatsNewFromGit(); if (!t || t.length > 4000) throw new Error('bad len ' + t.length); console.log('whatsnew ok, len=', t.length) })"
 ```
 Expected: `whatsnew ok, len= <N>`（N は 1〜4000、空でないこと）
-
-- [ ] **Step 6: Syntax-check the module**
-
-Run: `python3 -m py_compile scripts/testflight/distribute_external.py && echo OK`
-Expected: `OK`
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add scripts/testflight/distribute_external.py scripts/testflight/tests/distribute_external_test.py
+git add scripts/testflight/distribute-external.ts scripts/testflight/distribute-external.test.ts
 git commit -m "feat(ci): TestFlight外部配布のASC APIオーケストレーター追加"
 ```
 
 ---
 
-## Task 2: deploy-app.yaml への組み込み
+## Task 3: deploy-app.yaml への組み込み
 
 **Files:**
 - Modify: `.github/workflows/deploy-app.yaml`
@@ -423,7 +543,7 @@ git commit -m "feat(ci): TestFlight外部配布のASC APIオーケストレー�
           echo "deploy-ios-external=${external}" >> "$GITHUB_OUTPUT"
 ```
 
-- [ ] **Step 4: `build-ios` の `timeout-minutes` を 60 に、mise に `uv` を追加**
+- [ ] **Step 4: `build-ios` の `timeout-minutes` を 60 に、mise に `node pnpm` を追加**
 
 `build-ios` の `timeout-minutes: 30`（現状 L71）を変更:
 
@@ -431,13 +551,13 @@ git commit -m "feat(ci): TestFlight外部配布のASC APIオーケストレー�
     timeout-minutes: 60
 ```
 
-`build-ios` の mise install ステップ（現状 L89-92）の install_args に `uv` を追加:
+`build-ios` の mise install ステップ（現状 L89-92）の install_args に `node pnpm` を追加:
 
 ```yaml
       - name: Install Mise dependencies
         uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
         with:
-          install_args: "flutter xcbeautify uv"
+          install_args: "flutter xcbeautify node pnpm"
 ```
 
 - [ ] **Step 5: 外部配布ステップを追加**
@@ -455,7 +575,8 @@ git commit -m "feat(ci): TestFlight外部配布のASC APIオーケストレー�
           export ASC_BUILD_VERSION="${{ github.run_number }}"
           export ASC_BETA_GROUP_ID="bd75f066-fd92-4175-b2d6-f34952737557"
           export ASC_LOCALE="ja"
-          uv run --with 'pyjwt[crypto]' scripts/testflight/distribute_external.py
+          pnpm -C scripts/testflight install --frozen-lockfile
+          pnpm -C scripts/testflight run distribute
 ```
 
 注: `APP_STORE_CONNECT_API_KEY_ID` / `_ISSUER_ID` は mise env 経由で `$GITHUB_ENV` に展開済み（`Set environment variables` ステップ）。`.p8` は `Extract App Store Connect API Key` ステップで `$HOME/.private_keys/` に展開済み。`build-ios` は `fetch-depth: 0` で checkout 済みのため `git describe`/`git log` が機能する。
@@ -463,7 +584,6 @@ git commit -m "feat(ci): TestFlight外部配布のASC APIオーケストレー�
 - [ ] **Step 6: actionlint で検証**
 
 Run: `mise exec -- actionlint .github/workflows/deploy-app.yaml && echo OK`
-（`actionlint` が mise 管理外の場合は `actionlint .github/workflows/deploy-app.yaml`）
 Expected: 出力なしで終了し `OK`。エラーがあれば該当箇所を修正して再実行。
 
 - [ ] **Step 7: Commit**
@@ -475,7 +595,7 @@ git commit -m "feat(ci): [external]コミットでTestFlight外部グループ�
 
 ---
 
-## Task 3: 統合動作確認（実 CI）
+## Task 4: 統合動作確認（実 CI）
 
 ASC API へのリアル通信を伴うため、ローカル単体テストでは検証不能。マージ後に実 CI で確認する。
 
@@ -498,9 +618,9 @@ ASC API へのリアル通信を伴うため、ローカル単体テストでは
 
 ## Self-Review メモ
 
-- spec §1（`[external]` ゲート）→ Task 2 Step 1-3。
-- spec §2（処理完了待ち・JWT）→ Task 1（`build_token` / `poll_build`）。
-- spec §3（What to Test 生成・設定）→ Task 1（`build_whatsnew_from_git` / `set_whatsnew`）。
-- spec §4（外部グループ追加・審査提出）→ Task 1（`add_to_group` / `submit_review`）。
-- spec §5（ランナー・タイムアウト・uv）→ Task 2 Step 4。
-- 型/名称整合: `build_token` / `cap_text` / `Asc` のメソッド名はテスト・本体・呼び出し（main）で一致。
+- spec §1（`[external]` ゲート）→ Task 3 Step 1-3。
+- spec §2（処理完了待ち・JWT・Node/jose/tsx）→ Task 1（雛形）＋ Task 2（`buildToken` / `pollBuild`）。
+- spec §3（What to Test 生成・設定）→ Task 2（`buildWhatsNewFromGit` / `setWhatsNew`）。
+- spec §4（外部グループ追加・審査提出）→ Task 2（`addToGroup` / `submitReview`）。
+- spec §5（ランナー・タイムアウト・node/pnpm・frozen-lockfile）→ Task 1 Step 3/5 ＋ Task 3 Step 4-5。
+- 型/名称整合: `buildToken` / `capText` / `buildWhatsNewFromGit` / `AscClient`（`findBuild`/`getJaLocalizationId`/`setWhatsNew`/`addToGroup`/`submitReview`）はテスト・本体・呼び出し（main）で一致。

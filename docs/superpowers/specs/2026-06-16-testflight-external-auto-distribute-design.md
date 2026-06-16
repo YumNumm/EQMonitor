@@ -34,7 +34,7 @@
 
 - **ビルド特定**: ビルド番号 = `github.run_number`。`GET /v1/builds?filter[app]=6447546703&filter[version]=<run_number>&limit=1` で `data[0].id` と `attributes.processingState` を取得。
 - **JWT 生成**: `.p8` 鍵から ES256 署名で JWT を生成。header `{alg:ES256, kid:<KEY_ID>, typ:JWT}`、payload `{iss:<ISSUER_ID>, iat, exp(<=20分), aud:"appstoreconnect-v1"}`。処理完了待ちが 20 分を超え得るため、**各 API リクエスト直前に都度生成**する。
-- **署名手段**: `uv run --with 'pyjwt[crypto]'` で Python により署名（openssl の DER→JOSE 変換を避ける）。mise の `install_args` に `uv` を追加。
+- **言語/実行**: TypeScript（Node, mise の `node lts`）。`jose` ライブラリで ES256 署名（DER→JOSE 変換を自前実装しないため）。`tsx` で TS を直接実行。HTTP は Node 組み込み `fetch`。依存は pnpm で管理。
 - **ポーリング**: `processingState` が `VALID` になるまで 30 秒間隔でポーリング（最大 ~30 分）。`INVALID` / `FAILED` は失敗終了、`PROCESSING` は待機継続。
 
 ### 3. テスト内容（What to Test）の自動生成と設定
@@ -56,7 +56,8 @@
 ### 5. ランナー・タイムアウト・依存
 
 - `build-ios` の `timeout-minutes` を **30 → 60** に引き上げる（処理完了待ちのため）。
-- mise `install_args`（build-ios）に `uv` を追加。
+- mise `install_args`（build-ios）に `node pnpm` を追加（mise.toml に `node lts`/`pnpm` 宣言済み）。
+- 配布スクリプトは `scripts/testflight/`（standalone な pnpm プロジェクト）に置き、CI では `pnpm install --frozen-lockfile` → `tsx` 実行。
 - ASC API 認証情報・`.p8` は既存ステップで取得済みのものを再利用。
 
 ## スコープ外
