@@ -288,11 +288,19 @@ jobs:
       - name: Distribute to TestFlight external group
         if: ${{ needs.define-matrix.outputs.deploy-ios-external == 'true' }}
         run: |
+          # アップロードした IPA の実際の CFBundleVersion を取得して照会する。
+          # 最終的なビルド番号は github.run_number ではなくプロジェクト側の
+          # 採番（連番）に従うため、run_number で filter すると見つからない。
+          UNZIP_DIR=$(mktemp -d)
+          unzip -q build/EQMonitor.ipa -d "$UNZIP_DIR"
+          INFO_PLIST=$(ls "$UNZIP_DIR"/Payload/*.app/Info.plist)
+          BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$INFO_PLIST")
+          echo "CFBundleVersion=${BUILD_VERSION}"
           export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
           export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
           export ASC_KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
           export ASC_APP_ID="6447546703"
-          export ASC_BUILD_VERSION="${{ github.run_number }}"
+          export ASC_BUILD_VERSION="${BUILD_VERSION}"
           export ASC_BETA_GROUP_ID="bd75f066-fd92-4175-b2d6-f34952737557"
           export ASC_LOCALE="ja"
           pnpm -C scripts/testflight install --frozen-lockfile
