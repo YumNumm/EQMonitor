@@ -16,6 +16,11 @@ on:
         required: false
         default: true
         type: boolean
+      external:
+        description: "Distribute iOS build to TestFlight external group"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -35,11 +40,15 @@ jobs:
     outputs:
       deploy-ios: ${{ steps.define-environment-matrix.outputs.deploy-ios }}
       deploy-android: ${{ steps.define-environment-matrix.outputs.deploy-android }}
+      deploy-ios-external: ${{ steps.define-environment-matrix.outputs.deploy-ios-external }}
     steps:
       - name: Decide which app to deploy
         id: define-environment-matrix
+        env:
+          COMMITS_JSON: ${{ toJSON(github.event.commits) }}
         run: |
           platforms=()
+          external="false"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ "${{ inputs.ios }}" = "true" ]; then
               platforms+=("ios")
@@ -47,10 +56,17 @@ jobs:
             if [ "${{ inputs.android }}" = "true" ]; then
               platforms+=("android")
             fi
+            if [ "${{ inputs.external }}" = "true" ]; then
+              external="true"
+            fi
           elif [ "${{ github.event_name }}" = "push" ]; then
               # [release only] タグがない場合は全プラットフォームをデプロイ
               echo "commit message does not contain [release only platform], deploy all platforms"
               platforms+=("ios" "android")
+              # push に含まれる全コミットのメッセージに [external] があれば外部配布
+              if printf '%s' "$COMMITS_JSON" | grep -qF '[external]'; then
+                external="true"
+              fi
           else
             echo "Unknown event name: ${{ github.event_name }}"
             exit 1
@@ -60,6 +76,8 @@ jobs:
           for platform in "${platforms[@]}"; do
             echo "deploy-${platform}=true" >> "$GITHUB_OUTPUT"
           done
+          echo "外部配布(external): ${external}"
+          echo "deploy-ios-external=${external}" >> "$GITHUB_OUTPUT"
 
   build-ios:
     name: Build iOS
@@ -68,7 +86,7 @@ jobs:
     runs-on: macos-26
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
@@ -89,7 +107,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
         with:
-          install_args: "flutter xcbeautify"
+          install_args: "flutter xcbeautify node pnpm"
 
       - name: Set environment variables
         run: |
@@ -198,7 +216,9 @@ jobs:
 
   deploy-ios:
     name: Deploy iOS
-    needs: build-ios
+    needs:
+      - build-ios
+      - define-matrix
     runs-on: macos-26
     permissions:
       contents: read
@@ -240,7 +260,7 @@ jobs:
       - name: Install Mise dependencies
         uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
         with:
-          install_args: "xcbeautify yq"
+          install_args: "xcbeautify yq node pnpm"
 
       - name: Set environment variables
         run: |
@@ -264,6 +284,19 @@ jobs:
             --type ios \
             --apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
             --apiKey "$APP_STORE_CONNECT_API_KEY_ID"
+
+      - name: Distribute to TestFlight external group
+        if: ${{ needs.define-matrix.outputs.deploy-ios-external == 'true' }}
+        run: |
+          export ASC_KEY_ID="$APP_STORE_CONNECT_API_KEY_ID"
+          export ASC_ISSUER_ID="$APP_STORE_CONNECT_API_ISSUER_ID"
+          export ASC_KEY_PATH="$HOME/.private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          export ASC_APP_ID="6447546703"
+          export ASC_BUILD_VERSION="${{ github.run_number }}"
+          export ASC_BETA_GROUP_ID="bd75f066-fd92-4175-b2d6-f34952737557"
+          export ASC_LOCALE="ja"
+          pnpm -C scripts/testflight install --frozen-lockfile
+          pnpm -C scripts/testflight run distribute
 
   build-android:
     name: Build Android
