@@ -21,6 +21,6 @@ abstract class EewSettingsRequest with _$EewSettingsRequest {
     @JsonKey(includeIfNull: false,name: 'one_point_enabled')
     bool? onePointEnabled,
   }) = _EewSettingsRequest;
-
+  
   factory EewSettingsRequest.fromJson(Map<String, Object?> json) => _$EewSettingsRequestFromJson(json);
 }

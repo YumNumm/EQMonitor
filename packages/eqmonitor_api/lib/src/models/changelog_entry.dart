@@ -14,6 +14,7 @@ abstract class ChangelogEntry with _$ChangelogEntry {
   const factory ChangelogEntry({
     required String version,
     required DateTime date,
+    required String url,
     required List<ChangelogSection> sections,
   }) = _ChangelogEntry;
   

@@ -2,15 +2,11 @@
   "items": [
     {
       "id": "00000000-0000-0000-0000-000000000001",
-      "event_ids": [
-        "20251215120000"
-      ],
+      "event_ids": ["20251215120000"],
       "is_canceled": true,
       "forecast_region_count": 0,
       "telegram_count": 1,
-      "telegram_types": [
-        "VTSE41"
-      ]
+      "telegram_types": ["VTSE41"]
     }
   ]
 }

@@ -2,7 +2,7 @@
   "earthquake": {
     "event_id": "20240101161000",
     "status": "NORMAL",
-    "origin_time": "2026-06-06T01:53:33.010Z",
+    "origin_time": "2023-11-14T21:43:20.000Z",
     "origin_time_precision": "SECOND",
     "hypocenter": {
       "value": {
@@ -27,62 +27,34 @@
       "intensity_tree": [
         {
           "intensity": "7",
-          "regions": [
-            "5310"
-          ],
-          "stations": [
-            "3861101"
-          ]
+          "regions": ["5310"],
+          "stations": ["3861101"]
         },
         {
           "intensity": "6+",
-          "regions": [
-            "5320",
-            "5330"
-          ]
+          "regions": ["5320", "5330"]
         },
         {
           "intensity": "6-",
-          "regions": [
-            "5340",
-            "5350",
-            "5110"
-          ]
+          "regions": ["5340", "5350", "5110"]
         },
         {
           "intensity": "5+",
-          "regions": [
-            "5120",
-            "5130",
-            "5210"
-          ]
+          "regions": ["5120", "5130", "5210"]
         },
         {
           "intensity": "5-",
-          "regions": [
-            "5220",
-            "5230",
-            "5310"
-          ]
+          "regions": ["5220", "5230", "5310"]
         },
         {
           "intensity": "4",
-          "regions": [
-            "5410",
-            "5420",
-            "5430",
-            "5110",
-            "5120"
-          ]
+          "regions": ["5410", "5420", "5430", "5110", "5120"]
         }
       ],
       "lpgm_intensity_tree": [
         {
           "lpgm_intensity": "3",
-          "regions": [
-            "5310",
-            "5320"
-          ],
+          "regions": ["5310", "5320"],
           "stations": [
             {
               "code": "3861101",
@@ -96,10 +68,7 @@
         },
         {
           "lpgm_intensity": "2",
-          "regions": [
-            "5330",
-            "5340"
-          ],
+          "regions": ["5330", "5340"],
           "stations": [
             {
               "code": "3861103",
@@ -121,9 +90,7 @@
           "status": "NORMAL",
           "info_type": "PUBLICATION",
           "editorial_office": "気象庁",
-          "publishing_office": [
-            "気象庁"
-          ],
+          "publishing_office": ["気象庁"],
           "press_at": "2025-12-15T12:01:00.000Z",
           "report_at": "2025-12-15T12:01:02.000Z",
           "info_kind": "震度速報",
@@ -143,9 +110,7 @@
           "status": "NORMAL",
           "info_type": "PUBLICATION",
           "editorial_office": "気象庁",
-          "publishing_office": [
-            "気象庁"
-          ],
+          "publishing_office": ["気象庁"],
           "press_at": "2025-12-15T12:03:00.000Z",
           "report_at": "2025-12-15T12:03:02.000Z",
           "info_kind": "震源・震度に関する情報",
@@ -165,9 +130,7 @@
           "status": "NORMAL",
           "info_type": "PUBLICATION",
           "editorial_office": "気象庁",
-          "publishing_office": [
-            "気象庁"
-          ],
+          "publishing_office": ["気象庁"],
           "press_at": "2025-12-15T12:05:00.000Z",
           "report_at": "2025-12-15T12:05:02.000Z",
           "info_kind": "長周期地震動に関する観測情報",

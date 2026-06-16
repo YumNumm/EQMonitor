@@ -5,7 +5,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'info_type.dart';
-import 'telegram_body_union.dart';
 import 'telegram_status.dart';
 import 'telegram_type.dart';
 
@@ -38,8 +37,7 @@ abstract class TelegramDetail with _$TelegramDetail {
     required String hash,
     @JsonKey(name: 'created_at')
     required DateTime createdAt,
-    @JsonKey(includeIfNull: true)
-    required TelegramBodyUnion? body,
+    required dynamic body,
     @JsonKey(includeIfNull: false,name: 'serial_no')
     num? serialNo,
     @JsonKey(includeIfNull: false,name: 'target_at')

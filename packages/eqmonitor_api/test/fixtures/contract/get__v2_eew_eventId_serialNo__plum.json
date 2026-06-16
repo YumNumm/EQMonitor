@@ -10,7 +10,7 @@
   "serial_no": 2,
   "is_warning": false,
   "is_last_info": false,
-  "origin_time": "2026-06-06T02:20:33.021Z",
+  "origin_time": "2023-11-14T22:10:20.000Z",
   "arrival_time": null,
   "hypocenter": {
     "value": {
@@ -44,5 +44,5 @@
     ]
   },
   "accuracy": null,
-  "report_time": "2026-06-06T02:21:33.021Z"
+  "report_time": "2023-11-14T22:11:20.000Z"
 }

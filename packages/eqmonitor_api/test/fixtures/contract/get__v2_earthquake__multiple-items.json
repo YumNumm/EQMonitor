@@ -3,7 +3,7 @@
     {
       "event_id": "20251215120000",
       "status": "NORMAL",
-      "origin_time": "2026-06-06T02:13:33.008Z",
+      "origin_time": "2023-11-14T22:03:20.000Z",
       "origin_time_precision": "SECOND",
       "hypocenter": {
         "value": {
@@ -31,7 +31,7 @@
     {
       "event_id": "20251215090000",
       "status": "NORMAL",
-      "origin_time": "2026-06-05T23:23:33.008Z",
+      "origin_time": "2023-11-14T19:13:20.000Z",
       "origin_time_precision": "SECOND",
       "hypocenter": {
         "value": {
@@ -59,7 +59,7 @@
     {
       "event_id": "20251214180000",
       "status": "NORMAL",
-      "origin_time": "2026-06-05T08:23:33.008Z",
+      "origin_time": "2023-11-14T04:13:20.000Z",
       "origin_time_precision": "SECOND",
       "hypocenter": {
         "value": {

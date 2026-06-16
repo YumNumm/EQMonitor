@@ -5,6 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'earthquake_datasource.dart';
+import 'earthquake_telegram_type.dart';
+import 'earthquake_type.dart';
 import 'hypocenter.dart';
 import 'intensity_partial.dart';
 import 'origin_time_precision.dart';
@@ -23,6 +25,12 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     @JsonKey(name: 'origin_time_precision')
     required OriginTimePrecision originTimePrecision,
     required EarthquakeDatasource datasource,
+
+    /// この地震イベントに紐づく電文タイプの配列
+    @JsonKey(name: 'telegram_types')
+    required List<EarthquakeTelegramType> telegramTypes,
+    @JsonKey(name: 'earthquake_type')
+    required EarthquakeType earthquakeType,
     @JsonKey(includeIfNull: false,name: 'origin_time')
     DateTime? originTime,
     @JsonKey(includeIfNull: false,name: 'arrival_time')

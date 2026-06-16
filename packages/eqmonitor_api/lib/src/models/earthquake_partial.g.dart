@@ -27,6 +27,16 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
             'datasource',
             (v) => $enumDecode(_$EarthquakeDatasourceEnumMap, v),
           ),
+          telegramTypes: $checkedConvert(
+            'telegram_types',
+            (v) => (v as List<dynamic>)
+                .map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+                .toList(),
+          ),
+          earthquakeType: $checkedConvert(
+            'earthquake_type',
+            (v) => $enumDecode(_$EarthquakeTypeEnumMap, v),
+          ),
           originTime: $checkedConvert(
             'origin_time',
             (v) => v == null ? null : DateTime.parse(v as String),
@@ -57,6 +67,8 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
       fieldKeyMap: const {
         'eventId': 'event_id',
         'originTimePrecision': 'origin_time_precision',
+        'telegramTypes': 'telegram_types',
+        'earthquakeType': 'earthquake_type',
         'originTime': 'origin_time',
         'arrivalTime': 'arrival_time',
         'estimatedIntensityTile': 'estimated_intensity_tile',
@@ -69,6 +81,8 @@ Map<String, dynamic> _$EarthquakePartialToJson(_EarthquakePartial instance) =>
       'status': instance.status,
       'origin_time_precision': instance.originTimePrecision,
       'datasource': instance.datasource,
+      'telegram_types': instance.telegramTypes,
+      'earthquake_type': instance.earthquakeType,
       'origin_time': ?instance.originTime?.toIso8601String(),
       'arrival_time': ?instance.arrivalTime?.toIso8601String(),
       'hypocenter': ?instance.hypocenter,
@@ -95,4 +109,20 @@ const _$EarthquakeDatasourceEnumMap = {
   EarthquakeDatasource.jmaIntensityDatabase: 'JMA_INTENSITY_DATABASE',
   EarthquakeDatasource.jmaDisasterInformationXml:
       'JMA_DISASTER_INFORMATION_XML',
+};
+
+const _$EarthquakeTelegramTypeEnumMap = {
+  EarthquakeTelegramType.vxse51: 'VXSE51',
+  EarthquakeTelegramType.vxse52: 'VXSE52',
+  EarthquakeTelegramType.vxse53: 'VXSE53',
+  EarthquakeTelegramType.vxse61: 'VXSE61',
+  EarthquakeTelegramType.vxse62: 'VXSE62',
+  EarthquakeTelegramType.vxse45Forecast: 'VXSE45_FORECAST',
+  EarthquakeTelegramType.vxse45Warning: 'VXSE45_WARNING',
+};
+
+const _$EarthquakeTypeEnumMap = {
+  EarthquakeType.normal: 'NORMAL',
+  EarthquakeType.distant: 'DISTANT',
+  EarthquakeType.volcano: 'VOLCANO',
 };

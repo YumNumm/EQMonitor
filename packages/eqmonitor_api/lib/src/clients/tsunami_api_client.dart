@@ -9,6 +9,8 @@ import '../models/is_canceled.dart';
 import '../models/sort_order.dart';
 import '../models/tsunami_detail_response.dart';
 import '../models/tsunami_list_response.dart';
+import '../models/tsunami_state.dart';
+import '../models/tsunami_telegrams_response.dart';
 
 import '../models/telegram_status.dart';
 
@@ -50,9 +52,15 @@ abstract class TsunamiApiClient {
   @GET(TsunamiApiClientUrls.getV2TsunamiActive)
   Future<HttpResponse<TsunamiListResponse>> getV2TsunamiActive();
 
-  /// 津波情報詳細
+  /// 津波情報の電文履歴（press_at 降順）
+  @GET(TsunamiApiClientUrls.getV2TsunamiTsunamiIdTelegrams)
+  Future<HttpResponse<TsunamiTelegramsResponse>> getV2TsunamiTsunamiIdTelegrams({
+    @Path('tsunamiId') required String tsunamiId,
+  });
+
+  /// 津波情報詳細（マージ済み状態）
   @GET(TsunamiApiClientUrls.getV2TsunamiTsunamiId)
-  Future<HttpResponse<TsunamiDetailResponse>> getV2TsunamiTsunamiId({
+  Future<HttpResponse<TsunamiState>> getV2TsunamiTsunamiId({
     @Path('tsunamiId') required String tsunamiId,
   });
 }
@@ -65,6 +73,8 @@ abstract class TsunamiApiClientUrls {
 	static const getV2TsunamiByEventIdEventId = "/v2/tsunami/by-event-id/{eventId}";
 	/// /v2/tsunami/active
 	static const getV2TsunamiActive = "/v2/tsunami/active";
+	/// /v2/tsunami/{tsunamiId}/telegrams
+	static const getV2TsunamiTsunamiIdTelegrams = "/v2/tsunami/{tsunamiId}/telegrams";
 	/// /v2/tsunami/{tsunamiId}
 	static const getV2TsunamiTsunamiId = "/v2/tsunami/{tsunamiId}";
 }

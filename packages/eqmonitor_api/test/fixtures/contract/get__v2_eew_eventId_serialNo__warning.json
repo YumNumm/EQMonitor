@@ -10,7 +10,7 @@
   "serial_no": 3,
   "is_warning": true,
   "is_last_info": false,
-  "origin_time": "2026-06-06T02:13:33.020Z",
+  "origin_time": "2023-11-14T22:03:20.000Z",
   "arrival_time": null,
   "hypocenter": {
     "value": {
@@ -102,7 +102,7 @@
     "magnitude_calculation": 5,
     "number_of_magnitude_calculation": 11
   },
-  "report_time": "2026-06-06T02:14:33.021Z",
+  "report_time": "2023-11-14T22:04:20.000Z",
   "warning": {
     "zones": [
       {

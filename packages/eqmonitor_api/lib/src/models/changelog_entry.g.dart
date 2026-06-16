@@ -13,6 +13,7 @@ _ChangelogEntry _$ChangelogEntryFromJson(Map<String, dynamic> json) =>
       final val = _ChangelogEntry(
         version: $checkedConvert('version', (v) => v as String),
         date: $checkedConvert('date', (v) => DateTime.parse(v as String)),
+        url: $checkedConvert('url', (v) => v as String),
         sections: $checkedConvert(
           'sections',
           (v) => (v as List<dynamic>)
@@ -27,5 +28,6 @@ Map<String, dynamic> _$ChangelogEntryToJson(_ChangelogEntry instance) =>
     <String, dynamic>{
       'version': instance.version,
       'date': instance.date.toIso8601String(),
+      'url': instance.url,
       'sections': instance.sections,
     };

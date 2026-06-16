@@ -51,8 +51,7 @@ abstract class TelegramApiClient {
   });
 
   @GET(TelegramApiClientUrls.getV2TelegramEventIdEventIdDetails)
-  Future<HttpResponse<TelegramEventDetailsResponse>>
-      getV2TelegramEventIdEventIdDetails({
+  Future<HttpResponse<TelegramEventDetailsResponse>> getV2TelegramEventIdEventIdDetails({
     @Path('eventId') required String eventId,
     @Query('statuses') List<TelegramStatus> statuses = const [.normal],
   });

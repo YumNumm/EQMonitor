@@ -12,7 +12,7 @@
       "serial_no": 1,
       "is_warning": false,
       "is_last_info": false,
-      "origin_time": "2026-06-06T02:08:33.019Z",
+      "origin_time": "2023-11-14T21:58:20.000Z",
       "arrival_time": null,
       "hypocenter": {
         "value": {
@@ -57,7 +57,7 @@
         "magnitude_calculation": 2,
         "number_of_magnitude_calculation": 5
       },
-      "report_time": "2026-06-06T02:09:33.019Z"
+      "report_time": "2023-11-14T21:59:20.000Z"
     },
     {
       "event_id": "20240101161000",
@@ -71,7 +71,7 @@
       "serial_no": 3,
       "is_warning": true,
       "is_last_info": false,
-      "origin_time": "2026-06-06T02:08:33.019Z",
+      "origin_time": "2023-11-14T21:58:20.000Z",
       "arrival_time": null,
       "hypocenter": {
         "value": {
@@ -163,7 +163,7 @@
         "magnitude_calculation": 5,
         "number_of_magnitude_calculation": 11
       },
-      "report_time": "2026-06-06T02:10:33.020Z"
+      "report_time": "2023-11-14T22:00:20.000Z"
     },
     {
       "event_id": "20240101161000",
@@ -177,7 +177,7 @@
       "serial_no": 8,
       "is_warning": true,
       "is_last_info": true,
-      "origin_time": "2026-06-06T02:08:33.020Z",
+      "origin_time": "2023-11-14T21:58:20.000Z",
       "arrival_time": null,
       "hypocenter": {
         "value": {
@@ -269,7 +269,7 @@
         "magnitude_calculation": 5,
         "number_of_magnitude_calculation": 11
       },
-      "report_time": "2026-06-06T02:11:33.020Z"
+      "report_time": "2023-11-14T22:01:20.000Z"
     }
   ]
 }
