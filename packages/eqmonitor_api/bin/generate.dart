@@ -99,6 +99,10 @@ void main(List<String> args) async {
     _patchStatusesQueryInApiClients(libDir);
   });
 
+  await _step('anyOf 由来の dynamic クエリパラメータを String? にパッチ', () async {
+    _patchDynamicQueryParameters(libDir);
+  });
+
   await _step('ParametersApiClient の ParameterDataResponse をパッチ', () async {
     _patchParameterDataResponseInApiClient(libDir);
   });
@@ -256,6 +260,55 @@ void _patchStatusesQueryInApiClients(Directory libDir) {
     if (content != original) {
       entity.writeAsStringSync(content);
       stdout.writeln('  Patched statuses query: ${entity.path}');
+    }
+  }
+}
+
+/// anyOf で複数の基本型（配列+単一値 等）を持つクエリパラメータは
+/// swagger_parser が `dynamic` を出力し、Retrofit が `.toJson()` を生成する。
+/// null 渡し時に NoSuchMethodError になるため、正しい型に正規化する。
+///
+/// パラメータごとに本来の型を指定する。未知の dynamic は `String?` にフォールバック。
+void _patchDynamicQueryParameters(Directory libDir) {
+  final clientsDir = Directory('${libDir.path}/clients');
+  if (!clientsDir.existsSync()) return;
+
+  const overrides = {
+    'epicenterCodes': 'List<String>?',
+    'telegramTypes': 'List<EarthquakeTelegramType>?',
+  };
+
+  const requiredImports = {
+    'EarthquakeTelegramType': "import '../models/earthquake_telegram_type.dart';",
+  };
+
+  final pattern = RegExp(r"@Query\('(\w+)'\)\s+dynamic\s+(\w+)(?=[,)])");
+
+  for (final entity in clientsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) continue;
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAllMapped(pattern, (m) {
+      final queryName = m[1];
+      final paramName = m[2];
+      final dartType = overrides[paramName] ?? 'String?';
+      return "@Query('$queryName') $dartType $paramName";
+    });
+
+    for (final entry in requiredImports.entries) {
+      if (content.contains(entry.key) && !content.contains(entry.value)) {
+        content = content.replaceFirst(
+          "\npart '",
+          '\n${entry.value}\n\npart \'',
+        );
+      }
+    }
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched dynamic query params: ${entity.path}');
     }
   }
 }
