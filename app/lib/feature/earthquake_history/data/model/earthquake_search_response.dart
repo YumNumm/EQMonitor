@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/epicenter_search_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/intensity_area_info.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/station_search_info.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
@@ -48,19 +47,6 @@ abstract class StationSearchItem with _$StationSearchItem {
 
   factory StationSearchItem.fromJson(Map<String, dynamic> json) =>
       _$StationSearchItemFromJson(json);
-}
-
-/// 震央地検索アイテム
-@freezed
-abstract class EpicenterSearchItem with _$EpicenterSearchItem {
-  const factory EpicenterSearchItem({
-    required String eventId,
-    required EpicenterSearchInfo epicenter,
-    required EarthquakePartial earthquake,
-  }) = _EpicenterSearchItem;
-
-  factory EpicenterSearchItem.fromJson(Map<String, dynamic> json) =>
-      _$EpicenterSearchItemFromJson(json);
 }
 
 // ---------------------------------------------------------------------------
@@ -160,23 +146,6 @@ extension IntensityStationSearchResponseToApp
               sva: null,
               prePeriods: null,
             ),
-            earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
-          ),
-        )
-        .toList(),
-    nextToken: nextToken,
-  );
-}
-
-extension EpicenterSearchResponseToApp on api.EpicenterSearchResponse {
-  PaginatedSearchResponse<EpicenterSearchItem> toAppResponse({
-    required EarthquakeParameter parameter,
-  }) => PaginatedSearchResponse(
-    items: items
-        .map(
-          (e) => EpicenterSearchItem(
-            eventId: e.eventId,
-            epicenter: e.epicenter.toEpicenterSearchInfo,
             earthquake: e.earthquake.toEarthquakePartial(parameter: parameter),
           ),
         )

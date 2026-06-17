@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
@@ -9,8 +10,12 @@ import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:paging_view/paging_view.dart';
@@ -30,7 +35,8 @@ Future<EarthquakeHistoryDataSource> earthquakeHistoryDataSource(
   final dataSource = EarthquakeHistoryDataSource(
     repository: repository,
     parameter: parameter,
-    onRefreshStarted: () => ref.invalidate(earthquakeHistoryDetailsProvider, asReload: true),
+    onRefreshStarted: () =>
+        ref.invalidate(earthquakeHistoryDetailsProvider, asReload: true),
   );
 
   ref.onDispose(dataSource.dispose);
@@ -117,6 +123,17 @@ class EarthquakeHistoryDataSource
     Prepend() => const None(),
   };
 
+  api.EarthquakeType? get _apiEarthquakeType =>
+      _parameter.earthquakeType?.toApiEarthquakeType;
+
+  api.EarthquakeSortBy? get _apiSortBy =>
+      _parameter.sortBy?.toApiEarthquakeSortBy;
+
+  api.SortOrder? get _apiSortOrder => _parameter.sortOrder?.toApiSortOrder;
+
+  List<int>? get _epicenterCodes =>
+      _parameter.epicenterCode != null ? [_parameter.epicenterCode!] : null;
+
   Future<LoadResult<String?, EarthquakeHistoryItem>> _fetch(
     String? cursor,
   ) async {
@@ -127,30 +144,23 @@ class EarthquakeHistoryDataSource
           ? 10
           : 50;
 
-      if (_parameter.epicenterCode != null) {
-        final result = await _repository.searchByEpicenter(
-          code: _parameter.epicenterCode!,
-          limit: limit,
-          cursor: cursor,
-        );
-        return Success(
-          page: PageData(
-            data: result.items
-                .map(
-                  (e) => EarthquakeHistoryItem(earthquake: e.earthquake),
-                )
-                .toList(),
-            appendKey: result.nextToken,
-          ),
-        );
-      }
-
       if (_parameter.regionCode != null &&
           _parameter.regionSearchType == RegionSearchType.prefecture) {
         final result = await _repository.searchByPrefecture(
           code: _parameter.regionCode!,
           limit: limit,
           cursor: cursor,
+          statuses: _parameter.statuses?.cast<api.TelegramStatus>(),
+          epicenterCodes: _epicenterCodes,
+          earthquakeType: _apiEarthquakeType,
+          originTimeGte: _parameter.originTimeGte,
+          originTimeLte: _parameter.originTimeLte,
+          maxLpgmIntensityGte:
+              _parameter.maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+          maxLpgmIntensityLte:
+              _parameter.maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+          sortBy: _apiSortBy,
+          sortOrder: _apiSortOrder,
         );
         return Success(
           page: PageData(
@@ -173,6 +183,17 @@ class EarthquakeHistoryDataSource
           code: _parameter.regionCode!,
           limit: limit,
           cursor: cursor,
+          statuses: _parameter.statuses?.cast<api.TelegramStatus>(),
+          epicenterCodes: _epicenterCodes,
+          earthquakeType: _apiEarthquakeType,
+          originTimeGte: _parameter.originTimeGte,
+          originTimeLte: _parameter.originTimeLte,
+          maxLpgmIntensityGte:
+              _parameter.maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+          maxLpgmIntensityLte:
+              _parameter.maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+          sortBy: _apiSortBy,
+          sortOrder: _apiSortOrder,
         );
         return Success(
           page: PageData(
@@ -198,6 +219,17 @@ class EarthquakeHistoryDataSource
         depthLte: _parameter.depthLte,
         intensityGte: _parameter.intensityGte,
         intensityLte: _parameter.intensityLte,
+        statuses: _parameter.statuses?.cast<api.TelegramStatus>(),
+        epicenterCodes: _epicenterCodes,
+        earthquakeType: _apiEarthquakeType,
+        originTimeGte: _parameter.originTimeGte,
+        originTimeLte: _parameter.originTimeLte,
+        maxLpgmIntensityGte:
+            _parameter.maxLpgmIntensityGte?.toApiJmaLpgmIntensity,
+        maxLpgmIntensityLte:
+            _parameter.maxLpgmIntensityLte?.toApiJmaLpgmIntensity,
+        sortBy: _apiSortBy,
+        sortOrder: _apiSortOrder,
       );
       return Success(
         page: PageData(
@@ -214,7 +246,6 @@ class EarthquakeHistoryDataSource
     }
   }
 
-  /// WebSocketやライフサイクルからのリアルタイム更新を反映する。
   void upsertItems(List<EarthquakePartial> newItems) {
     final currentItems = [...notifier.values];
     for (final item in newItems) {
@@ -240,7 +271,6 @@ class EarthquakeHistoryDataSource
     }
   }
 
-  /// WebSocketの earthquake delete イベントで地震情報をリストから削除する。
   void removeItemByEventId(String eventId) {
     removeItems((_, item) => item.earthquake.eventId == eventId);
   }

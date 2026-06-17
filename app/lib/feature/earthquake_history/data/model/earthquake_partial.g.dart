@@ -53,6 +53,12 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
             'earthquake_type',
             (v) => $enumDecode(_$EarthquakeTypeEnumMap, v),
           ),
+          telegramTypes: $checkedConvert(
+            'telegram_types',
+            (v) => (v as List<dynamic>)
+                .map((e) => $enumDecode(_$EarthquakeTelegramTypeEnumMap, e))
+                .toList(),
+          ),
           estimatedIntensityTileUrl: $checkedConvert(
             'estimated_intensity_tile_url',
             (v) => v as String?,
@@ -67,6 +73,7 @@ _EarthquakePartial _$EarthquakePartialFromJson(Map<String, dynamic> json) =>
         'arrivalTime': 'arrival_time',
         'dataSource': 'data_source',
         'earthquakeType': 'earthquake_type',
+        'telegramTypes': 'telegram_types',
         'estimatedIntensityTileUrl': 'estimated_intensity_tile_url',
       },
     );
@@ -83,6 +90,9 @@ Map<String, dynamic> _$EarthquakePartialToJson(_EarthquakePartial instance) =>
       'hypocenter': instance.hypocenter,
       'intensity': instance.intensity,
       'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType]!,
+      'telegram_types': instance.telegramTypes
+          .map((e) => _$EarthquakeTelegramTypeEnumMap[e]!)
+          .toList(),
       'estimated_intensity_tile_url': instance.estimatedIntensityTileUrl,
     };
 
@@ -111,4 +121,14 @@ const _$EarthquakeTypeEnumMap = {
   EarthquakeType.normal: 'NORMAL',
   EarthquakeType.distant: 'DISTANT',
   EarthquakeType.volcano: 'VOLCANO',
+};
+
+const _$EarthquakeTelegramTypeEnumMap = {
+  EarthquakeTelegramType.vxse51: 'vxse51',
+  EarthquakeTelegramType.vxse52: 'vxse52',
+  EarthquakeTelegramType.vxse53: 'vxse53',
+  EarthquakeTelegramType.vxse61: 'vxse61',
+  EarthquakeTelegramType.vxse62: 'vxse62',
+  EarthquakeTelegramType.vxse45Forecast: 'vxse45Forecast',
+  EarthquakeTelegramType.vxse45Warning: 'vxse45Warning',
 };
