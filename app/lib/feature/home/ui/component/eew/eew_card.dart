@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/component/decoration/warning_stripe_decoration.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/core/designsystem/extensions/typography_theme_extension.dart';
@@ -329,10 +330,10 @@ class _EewCardHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 8,
-            width: double.infinity,
-            child: _EewStripePattern(isWarning: isWarning),
+          WarningStripeDecoration(
+            colors: isWarning
+                ? const [Colors.red, Colors.black]
+                : const [Color(0xFFFFA500), Color.fromRGBO(128, 64, 0, 1)],
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -656,51 +657,4 @@ class _DepthRow extends StatelessWidget {
       ],
     );
   }
-}
-
-class _EewStripePattern extends StatelessWidget {
-  const _EewStripePattern({required this.isWarning});
-
-  final bool isWarning;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = isWarning
-        ? const [Colors.red, Colors.black]
-        : const [Color(0xFFFFA500), Color.fromRGBO(128, 64, 0, 1)];
-    return CustomPaint(
-      painter: _StripePainter(colors: colors),
-      size: const Size(double.infinity, 8),
-    );
-  }
-}
-
-class _StripePainter extends CustomPainter {
-  _StripePainter({required this.colors});
-
-  final List<Color> colors;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const stripeWidth = 8.0;
-    final h = size.height;
-    final totalWidth = size.width + h * 2;
-    var x = -h;
-    while (x < totalWidth) {
-      final path = Path()
-        ..moveTo(x, h)
-        ..lineTo(x + stripeWidth, h)
-        ..lineTo(x + h + stripeWidth, 0)
-        ..lineTo(x + h, 0)
-        ..close();
-      final colorIndex = ((x + h) / stripeWidth).floor().abs() % colors.length;
-      final paint = Paint()..color = colors[colorIndex];
-      canvas.drawPath(path, paint);
-      x += stripeWidth;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _StripePainter oldDelegate) =>
-      oldDelegate.colors != colors;
 }
