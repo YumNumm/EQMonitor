@@ -25,8 +25,9 @@ class EarthquakeSearchNotifier extends _$EarthquakeSearchNotifier {
     required int limit,
     String? cursor,
   }) async {
-    final repository =
-        await ref.read(earthquakeHistoryRepositoryProvider.future);
+    final repository = await ref.read(
+      earthquakeHistoryRepositoryProvider.future,
+    );
     final param = parameter;
 
     return switch (param.type) {

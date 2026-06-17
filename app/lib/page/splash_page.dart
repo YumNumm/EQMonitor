@@ -27,7 +27,9 @@ class SplashPage extends HookConsumerWidget {
         kyoshinPoints.hasValue && travelTime.hasValue && historyConfig.hasValue;
     final hasError =
         !allLoaded &&
-        (kyoshinPoints.hasError || travelTime.hasError || historyConfig.hasError);
+        (kyoshinPoints.hasError ||
+            travelTime.hasError ||
+            historyConfig.hasError);
     final error =
         kyoshinPoints.error ?? travelTime.error ?? historyConfig.error;
 
@@ -55,7 +57,10 @@ class SplashPage extends HookConsumerWidget {
                 onReload: () async {
                   ref.invalidate(parameterSetProvider, asReload: true);
                   ref.invalidate(travelTimeInternalProvider, asReload: true);
-                  ref.invalidate(earthquakeHistoryConfigProvider, asReload: true);
+                  ref.invalidate(
+                    earthquakeHistoryConfigProvider,
+                    asReload: true,
+                  );
                 },
               )
             : const Center(child: CircularProgressIndicator.adaptive()),

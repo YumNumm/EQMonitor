@@ -33,10 +33,12 @@ class ErrorCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final message = ref.read(errorMessageBuilderProvider).build(
-      error: error,
-      onDioExceptionStatusOverride: onDioExceptionStatusOverride,
-    );
+    final message = ref
+        .read(errorMessageBuilderProvider)
+        .build(
+          error: error,
+          onDioExceptionStatusOverride: onDioExceptionStatusOverride,
+        );
     final colorScheme = theme.colorScheme;
 
     return Center(

@@ -7,6 +7,7 @@ import 'package:jma_map/jma_map.dart';
 
 typedef FindNearestItemResult = ({
   JmaMap_JmaMapData_JmaMapDataItem? item,
+
   /// 現在地から該当ジオメトリまでの最短距離（km）。津波予報区のみ設定される。
   double? distanceKm,
 });
@@ -108,9 +109,12 @@ class JmaMapUtility {
     const r = 6371.0;
     final dLat = (lat2 - lat1) * pi / 180;
     final dLon = (lon2 - lon1) * pi / 180;
-    final a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1 * pi / 180) * cos(lat2 * pi / 180) *
-            sin(dLon / 2) * sin(dLon / 2);
+    final a =
+        sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1 * pi / 180) *
+            cos(lat2 * pi / 180) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
     return r * 2 * atan2(sqrt(a), sqrt(1 - a));
   }
 }

@@ -31,9 +31,8 @@ class EewAliveTelegram extends _$EewAliveTelegram {
     if (value == null) {
       return null;
     }
-    final now =
-        (tickerTime.value ?? ref.read(appClockProvider.notifier).now())
-            .toUtc();
+    final now = (tickerTime.value ?? ref.read(appClockProvider.notifier).now())
+        .toUtc();
 
     return value
         .where((e) => !checker.checkMarkAsEventEnded(eew: e, now: now))

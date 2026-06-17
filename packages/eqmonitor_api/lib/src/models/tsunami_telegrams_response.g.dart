@@ -15,7 +15,9 @@ _TsunamiTelegramsResponse _$TsunamiTelegramsResponseFromJson(
     telegrams: $checkedConvert(
       'telegrams',
       (v) => (v as List<dynamic>)
-          .map((e) => TsunamiTelegramItem.fromJson(e as Map<String, dynamic>))
+          .map(
+            (e) => TsunamiTelegramWithState.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
     ),
   );

@@ -69,14 +69,14 @@ class _TsunamiApiClient implements TsunamiApiClient {
   }
 
   @override
-  Future<HttpResponse<TsunamiDetailResponse>> getV2TsunamiByEventIdEventId({
+  Future<HttpResponse<TsunamiState>> getV2TsunamiByEventIdEventId({
     required String eventId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<TsunamiDetailResponse>>(
+    final _options = _setStreamType<HttpResponse<TsunamiState>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -87,9 +87,9 @@ class _TsunamiApiClient implements TsunamiApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late TsunamiDetailResponse _value;
+    late TsunamiState _value;
     try {
-      _value = TsunamiDetailResponse.fromJson(_result.data!);
+      _value = TsunamiState.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

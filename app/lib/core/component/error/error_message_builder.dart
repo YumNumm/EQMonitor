@@ -47,8 +47,7 @@ class ErrorMessageBuilder {
         DioExceptionType.connectionTimeout => 'サーバーとの接続がタイムアウトしました',
         DioExceptionType.receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
         DioExceptionType.sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
-        DioExceptionType.connectionError =>
-          'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
+        DioExceptionType.connectionError => 'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
         DioExceptionType.unknown => '不明なエラーが発生しました',
         DioExceptionType.cancel => 'キャンセルされました',
       };

@@ -17,7 +17,10 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    expect(container.read(apnsEnvironmentProvider), api.ApnsEnvironment.production);
+    expect(
+      container.read(apnsEnvironmentProvider),
+      api.ApnsEnvironment.production,
+    );
   });
 
   test('syncPushTokens sends APNs environment', () async {

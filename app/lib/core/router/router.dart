@@ -48,6 +48,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/navigation/navi
 import 'package:eqmonitor/feature/settings/children/config/debug/notification/debug_notification_delivery_log_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/shake_detection/debug_shake_detection_card_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/tsunami/debug_tsunami_details_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/websocket/debug_websocket_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
@@ -63,6 +64,7 @@ import 'package:eqmonitor/feature/shake_detection/ui/shake_detection_history_pag
 import 'package:eqmonitor/feature/subscription/ui/page/paywall_page.dart';
 import 'package:eqmonitor/feature/subscription/ui/page/subscription_settings_page.dart';
 import 'package:eqmonitor/feature/telegram_list/ui/telegram_list_by_event_id_page.dart';
+import 'package:eqmonitor/feature/tsunami/ui/tsunami_details_page.dart';
 import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/splash_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
@@ -330,6 +332,7 @@ class TalkerRoute extends GoRouteData with $TalkerRoute {
         TypedGoRoute<DebugAppGroupRoute>(path: 'app-group'),
         TypedGoRoute<DebugLiveActivityTestRoute>(path: 'live-activity-test'),
         TypedGoRoute<DebugIntensityIconRoute>(path: 'intensity-icon'),
+        TypedGoRoute<DebugTsunamiDetailsRoute>(path: 'tsunami-details'),
         TypedGoRoute<NiedRoute>(
           path: 'nied',
           routes: [
@@ -670,6 +673,16 @@ class DebugIntensityIconRoute extends GoRouteData
   }
 }
 
+class DebugTsunamiDetailsRoute extends GoRouteData
+    with $DebugTsunamiDetailsRoute {
+  const DebugTsunamiDetailsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const DebugTsunamiDetailsPage();
+  }
+}
+
 class NiedRoute extends GoRouteData with $NiedRoute {
   const NiedRoute();
 
@@ -781,6 +794,18 @@ class ChangelogRoute extends GoRouteData with $ChangelogRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ChangelogPage();
+}
+
+@TypedGoRoute<TsunamiDetailsRoute>(path: '/tsunami/:tsunamiId')
+class TsunamiDetailsRoute extends GoRouteData with $TsunamiDetailsRoute {
+  const TsunamiDetailsRoute({required this.tsunamiId});
+
+  final String tsunamiId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TsunamiDetailsPage(tsunamiId: tsunamiId);
+  }
 }
 
 @TypedGoRoute<PaywallRoute>(path: '/subscription/paywall')

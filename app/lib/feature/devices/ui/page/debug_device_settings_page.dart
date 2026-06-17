@@ -110,8 +110,9 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
     }, const []);
 
     final provisionStatus = ref.watch(deviceProvisioningProvider);
-    final provisionMutation =
-        ref.watch(DeviceProvisioningNotifier.provisionMutation);
+    final provisionMutation = ref.watch(
+      DeviceProvisioningNotifier.provisionMutation,
+    );
     final isProvisioned = ref.watch(_isProvisionedProvider);
     final legacyId = ref.watch(_legacyDeviceIdProvider);
     final tokenPresent = ref.watch(_deviceTokenPresentProvider);
@@ -172,9 +173,7 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
           _KeyValueRow(
             label: 'Bearerトークン',
             value: switch (tokenPresent) {
-              AsyncData(:final value) => value
-                  ? '存在'
-                  : '不在（再プロビジョニング必要）',
+              AsyncData(:final value) => value ? '存在' : '不在（再プロビジョニング必要）',
               AsyncError(:final error) => 'エラー: $error',
               _ => '確認中…',
             },
@@ -227,8 +226,9 @@ class _ProvisioningStartupSection extends HookConsumerWidget {
                 unawaited(
                   DeviceProvisioningNotifier.provisionMutation.run(
                     ref,
-                    (tsx) async =>
-                        tsx.get(deviceProvisioningProvider.notifier).provision(),
+                    (tsx) async => tsx
+                        .get(deviceProvisioningProvider.notifier)
+                        .provision(),
                   ),
                 );
               },
@@ -300,7 +300,8 @@ class _NotificationPermissionSection extends ConsumerWidget {
       trailing: IconButton(
         tooltip: '再取得',
         icon: const Icon(Icons.refresh),
-        onPressed: () => ref.invalidate(_osNotificationPermissionProvider, asReload: true),
+        onPressed: () =>
+            ref.invalidate(_osNotificationPermissionProvider, asReload: true),
       ),
       child: switch (permAsync) {
         AsyncData(:final value) => Column(
@@ -608,7 +609,10 @@ class _NotificationSettingsSection extends HookConsumerWidget {
       }
       switch (result) {
         case Success():
-          ref.invalidate(_notificationSettingsProvider(deviceId), asReload: true);
+          ref.invalidate(
+            _notificationSettingsProvider(deviceId),
+            asReload: true,
+          );
           messenger.showSnackBar(
             const SnackBar(content: Text('通知設定を更新しました')),
           );
@@ -771,7 +775,10 @@ class _HistorySection extends ConsumerWidget {
       title: '通知履歴',
       trailing: IconButton(
         tooltip: '更新',
-        onPressed: () => ref.invalidate(_notificationHistoryProvider(deviceId), asReload: true),
+        onPressed: () => ref.invalidate(
+          _notificationHistoryProvider(deviceId),
+          asReload: true,
+        ),
         icon: const Icon(Icons.refresh),
       ),
       child: switch (historyAsync) {
@@ -813,7 +820,10 @@ Future<List<PushNotificationLogEntry>> _notificationHistory(
     throw ArgumentError('deviceId is empty');
   }
   final repo = await ref.watch(pushNotificationRepositoryProvider.future);
-  final result = await repo.getNotificationHistory(deviceId: deviceId, limit: 50);
+  final result = await repo.getNotificationHistory(
+    deviceId: deviceId,
+    limit: 50,
+  );
   return switch (result) {
     Success(:final value) => value.items,
     Failure(:final exception) => throw exception,
@@ -933,11 +943,12 @@ class _SectionCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             subtitle!,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
+                            style:
+                                Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
+                                  color: scheme.onSurfaceVariant,
+                                ),
                           ),
                         ],
                       ],

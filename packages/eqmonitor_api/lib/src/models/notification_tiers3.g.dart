@@ -48,6 +48,7 @@ const _$MinJmaIntensityEnumMap = {
   MinJmaIntensity.value5unknown: '!5-',
   MinJmaIntensity.value5minus: '5-',
   MinJmaIntensity.value5plus: '5+',
+  MinJmaIntensity.undefined1: '!6-',
   MinJmaIntensity.value6minus: '6-',
   MinJmaIntensity.value6plus: '6+',
   MinJmaIntensity.value7: '7',

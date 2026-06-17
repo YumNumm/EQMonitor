@@ -97,20 +97,23 @@ void main() {
   final now = originTime.add(const Duration(seconds: 10));
 
   group('shakeDetectionMerged — EEW 結合判定', () {
-    test('距離 ~50km の shake は EEW にマージされる (innerBound 25 〜 outerBound 125 内)', () {
-      withClock(Clock.fixed(now), () {
-        final container = _container(
-          shakes: [
-            _shake(eventId: 'shake-near', centerLat: 35.45, centerLng: 139),
-          ],
-          eews: [
-            _eew(eventId: 'EEW-1', originTime: originTime),
-          ],
-        );
-        final result = container.read(shakeDetectionMergedProvider);
-        expect(result.single.mergedEewEventId, 'EEW-1');
-      });
-    });
+    test(
+      '距離 ~50km の shake は EEW にマージされる (innerBound 25 〜 outerBound 125 内)',
+      () {
+        withClock(Clock.fixed(now), () {
+          final container = _container(
+            shakes: [
+              _shake(eventId: 'shake-near', centerLat: 35.45, centerLng: 139),
+            ],
+            eews: [
+              _eew(eventId: 'EEW-1', originTime: originTime),
+            ],
+          );
+          final result = container.read(shakeDetectionMergedProvider);
+          expect(result.single.mergedEewEventId, 'EEW-1');
+        });
+      },
+    );
 
     test('距離 ~250km の shake はマージされない (outerBound 125 超過)', () {
       withClock(Clock.fixed(now), () {
@@ -131,7 +134,11 @@ void main() {
       withClock(Clock.fixed(now), () {
         final container = _container(
           shakes: [
-            _shake(eventId: 'shake-very-near', centerLat: 35.09, centerLng: 139),
+            _shake(
+              eventId: 'shake-very-near',
+              centerLat: 35.09,
+              centerLng: 139,
+            ),
           ],
           eews: [
             _eew(eventId: 'EEW-1', originTime: originTime),
@@ -227,5 +234,4 @@ void main() {
       });
     });
   });
-
 }

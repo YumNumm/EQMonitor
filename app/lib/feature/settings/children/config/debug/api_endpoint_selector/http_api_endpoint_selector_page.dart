@@ -146,16 +146,16 @@ class _ServerTile extends StatelessWidget {
                     Text(
                       label,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: selected ? accentColor : null,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: selected ? accentColor : null,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -192,17 +192,17 @@ class _UrlRow extends StatelessWidget {
         Text(
           '$label: ',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
-                fontWeight: FontWeight.w600,
-              ),
+            color: Theme.of(context).colorScheme.outline,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         Expanded(
           child: Text(
             url,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontFamily: 'monospace',
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontFamily: 'monospace',
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),

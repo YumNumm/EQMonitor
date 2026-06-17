@@ -27,8 +27,7 @@ class DebugAppGroupPage extends HookConsumerWidget {
       ),
       body: switch (values) {
         AsyncLoading() => const Center(child: CircularProgressIndicator()),
-        AsyncError(:final error) =>
-          Center(child: Text('エラー: $error')),
+        AsyncError(:final error) => Center(child: Text('エラー: $error')),
         AsyncData(:final value) => _Body(values: value, action: action),
       },
     );
@@ -57,8 +56,7 @@ class _Body extends ConsumerWidget {
             final url? => IconButton(
               icon: const Icon(Icons.copy),
               tooltip: 'コピー',
-              onPressed: () =>
-                  Clipboard.setData(ClipboardData(text: url)),
+              onPressed: () => Clipboard.setData(ClipboardData(text: url)),
             ),
             null => null,
           },

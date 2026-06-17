@@ -36,7 +36,9 @@ ProviderContainer _container({
     overrides: [
       isProProvider.overrideWith((ref) => isPro),
       adsServerFlagProvider.overrideWith((ref) => adsServerFlag),
-      eewAliveTelegramProvider.overrideWith(() => _StubEewAliveTelegram(eewAlive)),
+      eewAliveTelegramProvider.overrideWith(
+        () => _StubEewAliveTelegram(eewAlive),
+      ),
       adsOptOutProvider.overrideWith(() => _StubAdsOptOut(initial: adsOptOut)),
     ],
   );

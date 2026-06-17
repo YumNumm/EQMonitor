@@ -36,6 +36,7 @@ abstract class MapDataItem with _$MapDataItem {
     MapDataBounds? bounds,
     MapDataProperty? property,
     MapDataLatLng? polylabel,
+
     /// 現在地から該当海岸線までの最短距離（km）。津波予報区のみ設定される。
     double? distanceToCoastlineKm,
   }) = _MapDataItem;

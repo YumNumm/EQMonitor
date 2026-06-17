@@ -32,9 +32,9 @@ class MaintenanceBanner extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           onTap: url != null
               ? () => launchUrlString(
-                    url,
-                    mode: LaunchMode.externalApplication,
-                  )
+                  url,
+                  mode: LaunchMode.externalApplication,
+                )
               : null,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -4,7 +4,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'tsunami_telegram_item.dart';
+import 'tsunami_telegram_with_state.dart';
 
 part 'tsunami_telegrams_response.freezed.dart';
 part 'tsunami_telegrams_response.g.dart';
@@ -12,7 +12,7 @@ part 'tsunami_telegrams_response.g.dart';
 @Freezed()
 abstract class TsunamiTelegramsResponse with _$TsunamiTelegramsResponse {
   const factory TsunamiTelegramsResponse({
-    required List<TsunamiTelegramItem> telegrams,
+    required List<TsunamiTelegramWithState> telegrams,
   }) = _TsunamiTelegramsResponse;
   
   factory TsunamiTelegramsResponse.fromJson(Map<String, Object?> json) => _$TsunamiTelegramsResponseFromJson(json);

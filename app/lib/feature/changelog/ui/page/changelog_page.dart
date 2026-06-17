@@ -25,7 +25,9 @@ class ChangelogPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('変更履歴')),
       body: switch (state) {
-        AsyncLoading() => const Center(child: CircularProgressIndicator.adaptive()),
+        AsyncLoading() => const Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
         AsyncError(:final error) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -41,8 +43,7 @@ class ChangelogPage extends HookConsumerWidget {
               ),
               const SizedBox(height: 16),
               FilledButton.tonal(
-                onPressed: () =>
-                    ref.read(changelogProvider.notifier).fetch(),
+                onPressed: () => ref.read(changelogProvider.notifier).fetch(),
                 child: const Text('再試行'),
               ),
             ],

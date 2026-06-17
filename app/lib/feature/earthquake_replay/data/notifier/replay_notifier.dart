@@ -149,8 +149,9 @@ class ReplayNotifier extends _$ReplayNotifier {
     if (current == null || current.currentIndex >= current.totalFrames - 1) {
       return null;
     }
-    final diff = current.file.data[current.currentIndex + 1].time
-        .difference(current.file.data[current.currentIndex].time);
+    final diff = current.file.data[current.currentIndex + 1].time.difference(
+      current.file.data[current.currentIndex].time,
+    );
     final adjustedMs = (diff.inMilliseconds / current.playbackSpeed).round();
     return Duration(milliseconds: adjustedMs.clamp(16, 10000));
   }

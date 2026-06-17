@@ -23,8 +23,9 @@ class OnboardingPage extends HookConsumerWidget {
     final pageController = usePageController();
     final currentPage = useState(0);
     final permissionStatus = useState(_PermissionStatus.notRequested);
-    final locationPermissionStatus =
-        useState(_LocationPermissionStatus.notRequested);
+    final locationPermissionStatus = useState(
+      _LocationPermissionStatus.notRequested,
+    );
     final ds = Theme.of(context).designSystemThemeExtension;
 
     const steps = [
@@ -64,8 +65,8 @@ class OnboardingPage extends HookConsumerWidget {
         } else {
           locationPermissionStatus.value =
               permission == LocationPermission.deniedForever
-                  ? _LocationPermissionStatus.deniedForever
-                  : _LocationPermissionStatus.denied;
+              ? _LocationPermissionStatus.deniedForever
+              : _LocationPermissionStatus.denied;
           return;
         }
       }
@@ -275,8 +276,7 @@ class _LocationStepContent extends StatelessWidget {
             ),
           ),
           if (permissionStatus == _LocationPermissionStatus.denied ||
-              permissionStatus ==
-                  _LocationPermissionStatus.deniedForever) ...[
+              permissionStatus == _LocationPermissionStatus.deniedForever) ...[
             SizedBox(height: ds.spacing.sm),
             Text(
               '位置情報は設定アプリからいつでも変更できます',

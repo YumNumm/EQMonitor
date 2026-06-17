@@ -19,8 +19,7 @@ class PushNotificationRepository {
 
   Future<Result<GeneralNotificationSettings, Exception>>
   getNotificationSettings(String deviceId) => Result.capture(() async {
-    final response =
-        await _api.device.getV2DeviceMeSettingsNotification();
+    final response = await _api.device.getV2DeviceMeSettingsNotification();
     return response.data.toGeneralNotificationSettings;
   });
 

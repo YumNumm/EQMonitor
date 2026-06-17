@@ -193,9 +193,12 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   ) => [
     for (final p in points)
       if (p.station.arv400 case final arv400?)
-        (lat: p.station.location.lat, lon: p.station.location.lon, arv400: arv400),
+        (
+          lat: p.station.location.lat,
+          lon: p.station.location.lon,
+          arv400: arv400,
+        ),
   ];
-
 }
 
 @Riverpod(keepAlive: true)

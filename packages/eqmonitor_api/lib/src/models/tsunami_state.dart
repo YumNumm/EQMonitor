@@ -4,9 +4,9 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'latest_telegram.dart';
 import 'merged_forecast_region.dart';
 import 'merged_offshore_observation.dart';
-import 'tsunami_comments.dart';
 import 'tsunami_state_earthquake.dart';
 
 part 'tsunami_state.freezed.dart';
@@ -26,14 +26,12 @@ abstract class TsunamiState with _$TsunamiState {
     required DateTime updatedAt,
     @JsonKey(includeIfNull: true)
     required TsunamiStateEarthquake? earthquake,
+    @JsonKey(name: 'latest_telegrams')
+    required List<LatestTelegram> latestTelegrams,
     @JsonKey(name: 'forecast_regions')
     required List<MergedForecastRegion> forecastRegions,
     @JsonKey(name: 'offshore_observations')
     required List<MergedOffshoreObservation> offshoreObservations,
-    @JsonKey(includeIfNull: false)
-    TsunamiComments? comments,
-    @JsonKey(includeIfNull: false)
-    String? text,
   }) = _TsunamiState;
   
   factory TsunamiState.fromJson(Map<String, Object?> json) => _$TsunamiStateFromJson(json);

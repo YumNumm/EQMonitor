@@ -146,6 +146,13 @@ class _DebugWidget extends ConsumerWidget {
             onTap: () async => const DebugEewCardRoute().push(context),
           ),
           ListTile(
+            title: const Text('Tsunami Details'),
+            subtitle: const Text('津波情報詳細画面のデバッグ'),
+            leading: const Icon(Icons.tsunami),
+            onTap: () async =>
+                const DebugTsunamiDetailsRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('地震履歴 Card'),
             subtitle: Text(
               '各地の震度表示（速報値・確定値）をパラメータ検証',

@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<ProviderContainer> _container({Map<String, Object> initial = const {}}) async {
+Future<ProviderContainer> _container({
+  Map<String, Object> initial = const {},
+}) async {
   SharedPreferences.setMockInitialValues(initial);
   final prefs = await SharedPreferences.getInstance();
   return ProviderContainer(
@@ -51,15 +53,11 @@ void main() {
       final container = await _container();
       addTearDown(container.dispose);
 
-      await container
-          .read(adsOptOutProvider.notifier)
-          .setOptOut(value: true);
+      await container.read(adsOptOutProvider.notifier).setOptOut(value: true);
       expect(container.read(adsOptOutProvider), isTrue);
 
       // 冪等性: 再度 true でもクラッシュしない
-      await container
-          .read(adsOptOutProvider.notifier)
-          .setOptOut(value: true);
+      await container.read(adsOptOutProvider.notifier).setOptOut(value: true);
       expect(container.read(adsOptOutProvider), isTrue);
     });
 
@@ -67,9 +65,7 @@ void main() {
       final container = await _container(initial: {'ads_opt_out': true});
       addTearDown(container.dispose);
 
-      await container
-          .read(adsOptOutProvider.notifier)
-          .setOptOut(value: false);
+      await container.read(adsOptOutProvider.notifier).setOptOut(value: false);
       expect(container.read(adsOptOutProvider), isFalse);
     });
 
@@ -85,9 +81,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await container
-          .read(adsOptOutProvider.notifier)
-          .setOptOut(value: true);
+      await container.read(adsOptOutProvider.notifier).setOptOut(value: true);
 
       expect(prefs.getBool('ads_opt_out'), isTrue);
     });

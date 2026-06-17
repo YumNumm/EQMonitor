@@ -59,8 +59,10 @@ class _CitySelectionBody extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final prefectures =
-        parameterSet.jmaCodeTable.codeTables.areaInformationPrefectureEarthquake;
+    final prefectures = parameterSet
+        .jmaCodeTable
+        .codeTables
+        .areaInformationPrefectureEarthquake;
     final allRegions = parameterSet.earthquake.prefectures
         .expand((p) => p.regions)
         .toList();
@@ -149,8 +151,12 @@ class _CityDropdown extends StatelessWidget {
     }
 
     final prefectureName =
-        prefectures.where((p) => p.code == prefectureCode).firstOrNull?.name.ja
-        ?? '';
+        prefectures
+            .where((p) => p.code == prefectureCode)
+            .firstOrNull
+            ?.name
+            .ja ??
+        '';
 
     if (cities.isEmpty) {
       return const Text('該当する市区町村がありません');

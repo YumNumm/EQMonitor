@@ -15,6 +15,7 @@ abstract class ShakeDetectionEvent with _$ShakeDetectionEvent {
     required double maxLat,
     required double minLng,
     required double maxLng,
+
     /// 結合済み EEW の eventId。null なら未結合（表示対象）
     String? mergedEewEventId,
   }) = _ShakeDetectionEvent;

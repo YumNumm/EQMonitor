@@ -33,7 +33,9 @@ void main() {
         app_prefs.sharedPreferencesProvider.overrideWithValue(
           app_prefs.SharedPreferencesAsync(prefs),
         ),
-        deviceAuthRepositoryProvider.overrideWith((ref) async => authRepository),
+        deviceAuthRepositoryProvider.overrideWith(
+          (ref) async => authRepository,
+        ),
         deviceIdProvider.overrideWith((ref) async => 'device-id'),
         notificationTokenStreamProvider.overrideWith(
           (ref) => tokenController.stream,

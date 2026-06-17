@@ -21,7 +21,8 @@ class KnetFigView extends HookConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => _ErrorView(
         message: 'クライアント初期化エラー: $e',
-        onRetry: () => ref.invalidate(knetDownloadClientProvider, asReload: true),
+        onRetry: () =>
+            ref.invalidate(knetDownloadClientProvider, asReload: true),
       ),
       data: (client) {
         if (client == null) {

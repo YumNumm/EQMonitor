@@ -21,8 +21,10 @@ DeviceProvisioningException mapDioToProvisioningException(
     DioExceptionType.sendTimeout ||
     DioExceptionType.receiveTimeout ||
     DioExceptionType.connectionError ||
-    DioExceptionType.badCertificate =>
-      NetworkUnreachableException(cause: e, stackTrace: stack),
+    DioExceptionType.badCertificate => NetworkUnreachableException(
+      cause: e,
+      stackTrace: stack,
+    ),
     DioExceptionType.badResponse => _fromStatus(
       e.response?.statusCode,
       e,

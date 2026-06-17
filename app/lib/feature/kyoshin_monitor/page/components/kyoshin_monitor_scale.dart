@@ -165,8 +165,7 @@ enum KyoshinMonitorScaleType {
   pgv,
 
   /// 最大変位（PGD: Peak Ground Displacement）
-  pgd
-  ;
+  pgd;
 
   /// 値を0-1の範囲に正規化する
   ///

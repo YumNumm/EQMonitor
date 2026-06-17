@@ -219,8 +219,7 @@ enum IntensityColorTarget {
   fiveUpper('5強'),
   sixLower('6弱'),
   sixUpper('6強'),
-  seven('7')
-  ;
+  seven('7');
 
   const IntensityColorTarget(this.label);
   final String label;

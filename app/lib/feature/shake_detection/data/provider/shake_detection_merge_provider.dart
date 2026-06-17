@@ -58,12 +58,11 @@ String? _findMergedEew(
       continue;
     }
 
-    final distKm =
-        distance.as(
-          latlong2.LengthUnit.Kilometer,
-          latlong2.LatLng(hypo.latitude!, hypo.longitude!),
-          latlong2.LatLng(centerLat, centerLng),
-        );
+    final distKm = distance.as(
+      latlong2.LengthUnit.Kilometer,
+      latlong2.LatLng(hypo.latitude!, hypo.longitude!),
+      latlong2.LatLng(centerLat, centerLng),
+    );
 
     final outerBound = pDist + 25.0;
     final innerBound = (sDist != null && sDist > 25.0) ? sDist - 25.0 : 0.0;
@@ -79,8 +78,8 @@ String? _findMergedEew(
 @Riverpod(keepAlive: true)
 List<ShakeDetectionEvent> shakeDetectionVisible(Ref ref) {
   final tickerTime = ref.watch(timeTickerProvider());
-  final now =
-      (tickerTime.value ?? ref.read(appClockProvider.notifier).now()).toUtc();
+  final now = (tickerTime.value ?? ref.read(appClockProvider.notifier).now())
+      .toUtc();
 
   return ref
       .watch(shakeDetectionMergedProvider)

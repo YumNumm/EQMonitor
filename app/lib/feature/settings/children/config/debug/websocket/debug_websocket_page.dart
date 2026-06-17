@@ -36,7 +36,8 @@ class DebugWebSocketPage extends HookConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => ref.invalidate(eqMonitorWsStatusProvider, asReload: true),
+            onPressed: () =>
+                ref.invalidate(eqMonitorWsStatusProvider, asReload: true),
           ),
         ],
       ),

@@ -8,7 +8,6 @@ import 'package:retrofit/retrofit.dart';
 import '../models/is_active.dart';
 import '../models/is_canceled.dart';
 import '../models/sort_order.dart';
-import '../models/tsunami_detail_response.dart';
 import '../models/tsunami_list_response.dart';
 import '../models/tsunami_state.dart';
 import '../models/tsunami_telegrams_response.dart';
@@ -48,7 +47,7 @@ abstract class TsunamiApiClient {
 
   /// DMDATA eventIdから津波情報を取得
   @GET(TsunamiApiClientUrls.getV2TsunamiByEventIdEventId)
-  Future<HttpResponse<TsunamiDetailResponse>> getV2TsunamiByEventIdEventId({
+  Future<HttpResponse<TsunamiState>> getV2TsunamiByEventIdEventId({
     @Path('eventId') required String eventId,
   });
 

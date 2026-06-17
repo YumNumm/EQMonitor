@@ -302,8 +302,7 @@ class _FillModeSegmentedControl extends ConsumerWidget {
         groupValue: state.fillMode,
         padding: const EdgeInsets.all(4),
         children: {
-          for (final mode in choices)
-            mode: Text(mode.displayName),
+          for (final mode in choices) mode: Text(mode.displayName),
         },
         onValueChanged: (value) async {
           if (value != null) {
@@ -337,8 +336,7 @@ class _FillModeSegmentedControl extends ConsumerWidget {
 
 enum _IntensityMode {
   intensity('震度'),
-  lpgm('長周期地震動階級')
-  ;
+  lpgm('長周期地震動階級');
 
   const _IntensityMode(this.name);
   final String name;

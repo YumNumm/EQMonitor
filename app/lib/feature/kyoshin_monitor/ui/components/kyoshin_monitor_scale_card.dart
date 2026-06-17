@@ -29,8 +29,7 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
       RealtimeDataType.response05Hz ||
       RealtimeDataType.response1Hz ||
       RealtimeDataType.response2Hz ||
-      RealtimeDataType.response4Hz =>
-        KyoshinMonitorScaleType.pgv,
+      RealtimeDataType.response4Hz => KyoshinMonitorScaleType.pgv,
       RealtimeDataType.pgd => KyoshinMonitorScaleType.pgd,
       _ => null,
     };

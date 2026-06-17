@@ -51,7 +51,6 @@ extension DeviceApiExtension on api.DeviceMeResponse {
   );
 }
 
-
 extension DevicePlatformApiExtension on DevicePlatform {
   api.DeviceType get toDeviceType => switch (this) {
     .ios => api.DeviceType.ios,

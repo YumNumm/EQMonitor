@@ -21,6 +21,7 @@ List<RouteBase> get $appRoutes => [
   $homeRoute,
   $talkerRoute,
   $settingsRoute,
+  $tsunamiDetailsRoute,
   $paywallRoute,
   $subscriptionSettingsRoute,
 ];
@@ -522,6 +523,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'intensity-icon',
           factory: $DebugIntensityIconRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'tsunami-details',
+          factory: $DebugTsunamiDetailsRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'nied',
@@ -1319,6 +1324,28 @@ mixin $DebugIntensityIconRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $DebugTsunamiDetailsRoute on GoRouteData {
+  static DebugTsunamiDetailsRoute _fromState(GoRouterState state) =>
+      const DebugTsunamiDetailsRoute();
+
+  @override
+  String get location =>
+      GoRouteData.$location('/settings/debug/tsunami-details');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $NiedRoute on GoRouteData {
   static NiedRoute _fromState(GoRouterState state) => const NiedRoute();
 
@@ -1562,6 +1589,35 @@ bool _$boolConverter(String value) {
     default:
       throw UnsupportedError('Cannot convert "$value" into a bool.');
   }
+}
+
+RouteBase get $tsunamiDetailsRoute => GoRouteData.$route(
+  path: '/tsunami/:tsunamiId',
+  factory: $TsunamiDetailsRoute._fromState,
+);
+
+mixin $TsunamiDetailsRoute on GoRouteData {
+  static TsunamiDetailsRoute _fromState(GoRouterState state) =>
+      TsunamiDetailsRoute(tsunamiId: state.pathParameters['tsunamiId']!);
+
+  TsunamiDetailsRoute get _self => this as TsunamiDetailsRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/tsunami/${Uri.encodeComponent(_self.tsunamiId)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $paywallRoute => GoRouteData.$route(
