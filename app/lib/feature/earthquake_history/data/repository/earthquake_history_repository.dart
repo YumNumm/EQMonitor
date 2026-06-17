@@ -85,8 +85,14 @@ class EarthquakeHistoryRepository {
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
     List<api.TelegramStatus>? statuses,
+    List<int>? epicenterCodes,
+    api.EarthquakeType? earthquakeType,
     Date? originTimeGte,
     Date? originTimeLte,
+    api.JmaLpgmIntensity? maxLpgmIntensityGte,
+    api.JmaLpgmIntensity? maxLpgmIntensityLte,
+    api.EarthquakeSortBy? sortBy,
+    api.SortOrder? sortOrder,
   }) async {
     final response = await _api.earthquake.getV2Earthquake(
       limit: limit?.toString(),
@@ -98,8 +104,14 @@ class EarthquakeHistoryRepository {
       depthLte: depthLte?.toString(),
       intensityGte: intensityGte?.toApiJmaIntensity,
       intensityLte: intensityLte?.toApiJmaIntensity,
+      epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
+      earthquakeType: earthquakeType,
       originTimeGte: originTimeGte?.toString(),
       originTimeLte: originTimeLte?.toString(),
+      maxLpgmIntensityGte: maxLpgmIntensityGte,
+      maxLpgmIntensityLte: maxLpgmIntensityLte,
+      sortBy: sortBy,
+      sortOrder: sortOrder,
     );
     return response.data.toEarthquakeListResponse(
       parameter: earthquakeParameter,
@@ -122,12 +134,28 @@ class EarthquakeHistoryRepository {
     int? limit,
     String? cursor,
     List<api.TelegramStatus>? statuses,
+    List<int>? epicenterCodes,
+    api.EarthquakeType? earthquakeType,
+    Date? originTimeGte,
+    Date? originTimeLte,
+    api.JmaLpgmIntensity? maxLpgmIntensityGte,
+    api.JmaLpgmIntensity? maxLpgmIntensityLte,
+    api.EarthquakeSortBy? sortBy,
+    api.SortOrder? sortOrder,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityRegionCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
       statuses: statuses ?? const [api.TelegramStatus.normal],
+      epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
+      earthquakeType: earthquakeType,
+      originTimeGte: originTimeGte?.toString(),
+      originTimeLte: originTimeLte?.toString(),
+      maxLpgmIntensityGte: maxLpgmIntensityGte,
+      maxLpgmIntensityLte: maxLpgmIntensityLte,
+      sortBy: sortBy,
+      sortOrder: sortOrder,
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -141,6 +169,14 @@ class EarthquakeHistoryRepository {
     int? limit,
     String? cursor,
     List<api.TelegramStatus>? statuses,
+    List<int>? epicenterCodes,
+    api.EarthquakeType? earthquakeType,
+    Date? originTimeGte,
+    Date? originTimeLte,
+    api.JmaLpgmIntensity? maxLpgmIntensityGte,
+    api.JmaLpgmIntensity? maxLpgmIntensityLte,
+    api.EarthquakeSortBy? sortBy,
+    api.SortOrder? sortOrder,
   }) async {
     final response = await _api.earthquake
         .getV2EarthquakeIntensityPrefectureCode(
@@ -148,6 +184,14 @@ class EarthquakeHistoryRepository {
           limit: limit?.toString(),
           cursor: cursor,
           statuses: statuses ?? const [api.TelegramStatus.normal],
+          epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
+          earthquakeType: earthquakeType,
+          originTimeGte: originTimeGte?.toString(),
+          originTimeLte: originTimeLte?.toString(),
+          maxLpgmIntensityGte: maxLpgmIntensityGte,
+          maxLpgmIntensityLte: maxLpgmIntensityLte,
+          sortBy: sortBy,
+          sortOrder: sortOrder,
         );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -161,12 +205,28 @@ class EarthquakeHistoryRepository {
     int? limit,
     String? cursor,
     List<api.TelegramStatus>? statuses,
+    List<int>? epicenterCodes,
+    api.EarthquakeType? earthquakeType,
+    Date? originTimeGte,
+    Date? originTimeLte,
+    api.JmaLpgmIntensity? maxLpgmIntensityGte,
+    api.JmaLpgmIntensity? maxLpgmIntensityLte,
+    api.EarthquakeSortBy? sortBy,
+    api.SortOrder? sortOrder,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityCityCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
       statuses: statuses ?? const [api.TelegramStatus.normal],
+      epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
+      earthquakeType: earthquakeType,
+      originTimeGte: originTimeGte?.toString(),
+      originTimeLte: originTimeLte?.toString(),
+      maxLpgmIntensityGte: maxLpgmIntensityGte,
+      maxLpgmIntensityLte: maxLpgmIntensityLte,
+      sortBy: sortBy,
+      sortOrder: sortOrder,
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -180,12 +240,28 @@ class EarthquakeHistoryRepository {
     int? limit,
     String? cursor,
     List<api.TelegramStatus>? statuses,
+    List<int>? epicenterCodes,
+    api.EarthquakeType? earthquakeType,
+    Date? originTimeGte,
+    Date? originTimeLte,
+    api.JmaLpgmIntensity? maxLpgmIntensityGte,
+    api.JmaLpgmIntensity? maxLpgmIntensityLte,
+    api.EarthquakeSortBy? sortBy,
+    api.SortOrder? sortOrder,
   }) async {
     final response = await _api.earthquake.getV2EarthquakeIntensityStationCode(
       code: code,
       limit: limit?.toString(),
       cursor: cursor,
       statuses: statuses ?? const [api.TelegramStatus.normal],
+      epicenterCodes: epicenterCodes?.map((e) => e.toString()).toList(),
+      earthquakeType: earthquakeType,
+      originTimeGte: originTimeGte?.toString(),
+      originTimeLte: originTimeLte?.toString(),
+      maxLpgmIntensityGte: maxLpgmIntensityGte,
+      maxLpgmIntensityLte: maxLpgmIntensityLte,
+      sortBy: sortBy,
+      sortOrder: sortOrder,
     );
     return response.data.toAppResponse(
       parameter: earthquakeParameter,
@@ -194,22 +270,6 @@ class EarthquakeHistoryRepository {
     );
   }
 
-  Future<PaginatedSearchResponse<EpicenterSearchItem>> searchByEpicenter({
-    required int code,
-    int? limit,
-    String? cursor,
-    List<api.TelegramStatus>? statuses,
-  }) async {
-    final response = await _api.earthquake.getV2EarthquakeEpicenterCode(
-      code: code.toString(),
-      limit: limit?.toString(),
-      cursor: cursor,
-      statuses: statuses ?? const [api.TelegramStatus.normal],
-    );
-    return response.data.toAppResponse(parameter: earthquakeParameter);
-  }
-
-  /// [cityAreaCode] … areaInformationCity のコード、[regionAreaCode] … areaForecastLocalE のコード。
   CurrentLocationIntensityDisplay resolveCurrentLocationIntensity({
     required Map<JmaIntensity, List<IntensityRegion>> regions,
     required Map<JmaIntensity, List<PrefectureIntensityNode>> intensityTree,
@@ -227,8 +287,6 @@ class EarthquakeHistoryRepository {
           lpgmIntensity: _cityLpgmIntensity(lpgmIntensityTree, cityAreaCode),
         );
       }
-      // 市区町村が震度ツリーにない場合、親地域コードで速報震度を探す
-      // （cityAreaCode は7桁、regionCode は2〜3桁で別体系のため直接比較不可）
       final regionCode = _regionCodeForCity(cityAreaCode);
       final prefJ = regionCode != null
           ? _regionIntensity(regions, regionCode)

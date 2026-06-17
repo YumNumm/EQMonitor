@@ -56,6 +56,14 @@ final class _FakeEarthquakeHistoryRepository
     int? limit,
     String? cursor,
     List<api.TelegramStatus>? statuses,
+    List<int>? epicenterCodes,
+    api.EarthquakeType? earthquakeType,
+    DateTime? originTimeGte,
+    DateTime? originTimeLte,
+    api.JmaLpgmIntensity? maxLpgmIntensityGte,
+    api.JmaLpgmIntensity? maxLpgmIntensityLte,
+    api.EarthquakeSortBy? sortBy,
+    api.SortOrder? sortOrder,
   }) async {
     regionCursors.add(cursor);
     return PaginatedSearchResponse(
@@ -99,5 +107,6 @@ EarthquakePartial _earthquake(String eventId) => EarthquakePartial(
   hypocenter: null,
   intensity: null,
   earthquakeType: EarthquakeType.normal,
+  telegramTypes: const [],
   estimatedIntensityTileUrl: null,
 );

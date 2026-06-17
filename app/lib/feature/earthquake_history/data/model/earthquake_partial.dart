@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/model/telegram/telegram_status.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_data_source.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_hypocenter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_intensity_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_telegram_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/origin_time_precision.dart';
 import 'package:eqmonitor/feature/parameter/data/model/parameter.dart';
@@ -22,11 +23,8 @@ abstract class EarthquakePartial with _$EarthquakePartial {
     required EarthquakeDataSource dataSource,
     required EarthquakeHypocenter? hypocenter,
     required EarthquakeIntensityPartial? intensity,
-
-    /// 地震種別 (通常 / 遠地地震 / 火山噴火)
     required EarthquakeType earthquakeType,
-
-    /// 推計震度PMTilesのフルURL
+    required List<EarthquakeTelegramType> telegramTypes,
     required String? estimatedIntensityTileUrl,
   }) = _EarthquakePartial;
 
@@ -46,6 +44,9 @@ extension EarthquakePartialApiExtension on api.EarthquakePartial {
     dataSource: datasource.toEarthquakeDataSource,
     hypocenter: hypocenter?.toEarthquakeHypocenter,
     earthquakeType: earthquakeType.toEarthquakeType,
+    telegramTypes: telegramTypes
+        .map((e) => e.toEarthquakeTelegramType)
+        .toList(),
     estimatedIntensityTileUrl: estimatedIntensityTile,
     intensity: intensity?.toEarthquakeIntensityPartial(
       parameter: parameter,

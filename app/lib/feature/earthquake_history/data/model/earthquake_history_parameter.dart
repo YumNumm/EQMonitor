@@ -1,10 +1,14 @@
 import 'package:collection/collection.dart';
-import 'package:core/core.dart' show Date;
+import 'package:core/core.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor_api/eqmonitor_api.dart' show TelegramStatus;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -32,10 +36,6 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     JmaIntensity? intensityGte,
     List<TelegramStatus>? statuses,
 
-    // 日付フィルター
-    Date? originTimeGte,
-    Date? originTimeLte,
-
     // 震央地名フィルター
     int? epicenterCode,
     String? epicenterName,
@@ -46,6 +46,21 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     String? regionName,
     JmaIntensity? regionIntensityLte,
     JmaIntensity? regionIntensityGte,
+
+    // 地震種別フィルター
+    EarthquakeType? earthquakeType,
+
+    // 発生時刻範囲フィルター
+    Date? originTimeGte,
+    Date? originTimeLte,
+
+    // 長周期地震動階級フィルター
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+
+    // ソート
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
   }) = _EarthquakeHistoryParameter;
 
   const EarthquakeHistoryParameter._();
@@ -83,4 +98,22 @@ extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
         );
     return copyWith(statuses: isDefault ? null : statuses);
   }
+
+  EarthquakeHistoryParameter updateEarthquakeType(EarthquakeType? type) =>
+      copyWith(earthquakeType: type);
+
+  EarthquakeHistoryParameter updateOriginTimeRange(
+    Date? gte,
+    Date? lte,
+  ) => copyWith(originTimeGte: gte, originTimeLte: lte);
+
+  EarthquakeHistoryParameter updateLpgmIntensity(
+    JmaLpgmIntensity? min,
+    JmaLpgmIntensity? max,
+  ) => copyWith(maxLpgmIntensityGte: min, maxLpgmIntensityLte: max);
+
+  EarthquakeHistoryParameter updateSort(
+    EarthquakeSortBy? sortBy,
+    SortOrder? sortOrder,
+  ) => copyWith(sortBy: sortBy, sortOrder: sortOrder);
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_notifier.dart';
 import 'package:eqmonitor/core/realtime/data_source/eqmonitor/eqmonitor_ws_status_state.dart';
@@ -10,8 +11,12 @@ import 'package:eqmonitor/core/realtime/model/realtime_event.dart';
 import 'package:eqmonitor/core/realtime/realtime_event_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_partial.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_sort_by.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_type.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/sort_order.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/notifier/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/repository/earthquake_history_repository.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -71,27 +76,31 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       earthquakeHistoryRepositoryProvider.future,
     );
 
-    if (param.epicenterCode != null) {
-      final result = await repository.searchByEpicenter(
-        code: param.epicenterCode!,
-        limit: limit,
-        cursor: cursor,
-        statuses: param.statuses,
-      );
-      return (
-        items: result.items.map((e) => e.earthquake).toList(),
-        nextToken: result.nextToken,
-      );
-    }
+    final apiStatuses = param.statuses?.cast<api.TelegramStatus>();
+    final epicenterCodes = param.epicenterCode != null
+        ? [param.epicenterCode!]
+        : null;
+    final apiEarthquakeType = param.earthquakeType?.toApiEarthquakeType;
+    final apiSortBy = param.sortBy?.toApiEarthquakeSortBy;
+    final apiSortOrder = param.sortOrder?.toApiSortOrder;
+    final apiMaxLpgmGte = param.maxLpgmIntensityGte?.toApiJmaLpgmIntensity;
+    final apiMaxLpgmLte = param.maxLpgmIntensityLte?.toApiJmaLpgmIntensity;
 
     if (param.regionCode != null &&
-        param.regionCode != null &&
         param.regionSearchType == RegionSearchType.prefecture) {
       final result = await repository.searchByPrefecture(
         code: param.regionCode!,
         limit: limit,
         cursor: cursor,
-        statuses: param.statuses,
+        statuses: apiStatuses,
+        epicenterCodes: epicenterCodes,
+        earthquakeType: apiEarthquakeType,
+        originTimeGte: param.originTimeGte,
+        originTimeLte: param.originTimeLte,
+        maxLpgmIntensityGte: apiMaxLpgmGte,
+        maxLpgmIntensityLte: apiMaxLpgmLte,
+        sortBy: apiSortBy,
+        sortOrder: apiSortOrder,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -100,13 +109,20 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
 
     if (param.regionCode != null &&
-        param.regionCode != null &&
         param.regionSearchType == RegionSearchType.city) {
       final result = await repository.searchByCity(
         code: param.regionCode!,
         limit: limit,
         cursor: cursor,
-        statuses: param.statuses,
+        statuses: apiStatuses,
+        epicenterCodes: epicenterCodes,
+        earthquakeType: apiEarthquakeType,
+        originTimeGte: param.originTimeGte,
+        originTimeLte: param.originTimeLte,
+        maxLpgmIntensityGte: apiMaxLpgmGte,
+        maxLpgmIntensityLte: apiMaxLpgmLte,
+        sortBy: apiSortBy,
+        sortOrder: apiSortOrder,
       );
       return (
         items: result.items.map((e) => e.earthquake).toList(),
@@ -117,7 +133,21 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     final result = await repository.fetchEarthquakeList(
       limit: limit,
       cursor: cursor,
-      statuses: param.statuses,
+      statuses: apiStatuses,
+      epicenterCodes: epicenterCodes,
+      magnitudeGte: param.magnitudeGte,
+      magnitudeLte: param.magnitudeLte,
+      depthGte: param.depthGte,
+      depthLte: param.depthLte,
+      intensityGte: param.intensityGte,
+      intensityLte: param.intensityLte,
+      earthquakeType: apiEarthquakeType,
+      originTimeGte: param.originTimeGte,
+      originTimeLte: param.originTimeLte,
+      maxLpgmIntensityGte: apiMaxLpgmGte,
+      maxLpgmIntensityLte: apiMaxLpgmLte,
+      sortBy: apiSortBy,
+      sortOrder: apiSortOrder,
     );
     return (
       items: result.items,

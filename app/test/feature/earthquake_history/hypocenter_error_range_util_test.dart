@@ -32,10 +32,22 @@ void main() {
       final coords = hypocenterErrorPolygon(lat, lon);
 
       expect(coords.length, 5); // closed ring
-      expect(coords[0], [closeTo(lon - 0.05, 1e-10), closeTo(lat - 0.05, 1e-10)]);
-      expect(coords[1], [closeTo(lon + 0.05, 1e-10), closeTo(lat - 0.05, 1e-10)]);
-      expect(coords[2], [closeTo(lon + 0.05, 1e-10), closeTo(lat + 0.05, 1e-10)]);
-      expect(coords[3], [closeTo(lon - 0.05, 1e-10), closeTo(lat + 0.05, 1e-10)]);
+      expect(coords[0], [
+        closeTo(lon - 0.05, 1e-10),
+        closeTo(lat - 0.05, 1e-10),
+      ]);
+      expect(coords[1], [
+        closeTo(lon + 0.05, 1e-10),
+        closeTo(lat - 0.05, 1e-10),
+      ]);
+      expect(coords[2], [
+        closeTo(lon + 0.05, 1e-10),
+        closeTo(lat + 0.05, 1e-10),
+      ]);
+      expect(coords[3], [
+        closeTo(lon - 0.05, 1e-10),
+        closeTo(lat + 0.05, 1e-10),
+      ]);
       expect(coords[4], equals(coords[0]));
     });
 
