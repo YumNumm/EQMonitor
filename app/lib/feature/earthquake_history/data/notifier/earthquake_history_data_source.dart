@@ -198,6 +198,8 @@ class EarthquakeHistoryDataSource
         depthLte: _parameter.depthLte,
         intensityGte: _parameter.intensityGte,
         intensityLte: _parameter.intensityLte,
+        originTimeGte: _parameter.originTimeGte,
+        originTimeLte: _parameter.originTimeLte,
       );
       return Success(
         page: PageData(

@@ -11,7 +11,6 @@ part of 'date.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$Date {
 
@@ -22,8 +21,6 @@ mixin _$Date {
 @pragma('vm:prefer-inline')
 $DateCopyWith<Date> get copyWith => _$DateCopyWithImpl<Date>(this as Date, _$identity);
 
-  /// Serializes this Date to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,14 +28,10 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is Date&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.day, day) || other.day == day));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,year,month,day);
 
-@override
-String toString() {
-  return 'Date(year: $year, month: $month, day: $day)';
-}
 
 
 }
@@ -208,11 +201,11 @@ return $default(_that.year,_that.month,_that.day);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
 
-class _Date implements Date {
-  const _Date({required this.year, required this.month, required this.day});
-  factory _Date.fromJson(Map<String, dynamic> json) => _$DateFromJson(json);
+
+class _Date extends Date {
+  const _Date({required this.year, required this.month, required this.day}): super._();
+  
 
 @override final  int year;
 @override final  int month;
@@ -224,24 +217,17 @@ class _Date implements Date {
 @pragma('vm:prefer-inline')
 _$DateCopyWith<_Date> get copyWith => __$DateCopyWithImpl<_Date>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$DateToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _Date&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.day, day) || other.day == day));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,year,month,day);
 
-@override
-String toString() {
-  return 'Date(year: $year, month: $month, day: $day)';
-}
 
 
 }

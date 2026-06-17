@@ -39,6 +39,14 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
             ?.map((e) => $enumDecode(_$TelegramStatusEnumMap, e))
             .toList(),
       ),
+      originTimeGte: $checkedConvert(
+        'origin_time_gte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
+      originTimeLte: $checkedConvert(
+        'origin_time_lte',
+        (v) => v == null ? null : Date.fromJson(v),
+      ),
       epicenterCode: $checkedConvert(
         'epicenter_code',
         (v) => (v as num?)?.toInt(),
@@ -68,6 +76,8 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
     'depthGte': 'depth_gte',
     'intensityLte': 'intensity_lte',
     'intensityGte': 'intensity_gte',
+    'originTimeGte': 'origin_time_gte',
+    'originTimeLte': 'origin_time_lte',
     'epicenterCode': 'epicenter_code',
     'epicenterName': 'epicenter_name',
     'regionSearchType': 'region_search_type',
@@ -88,6 +98,8 @@ Map<String, dynamic> _$EarthquakeHistoryParameterToJson(
   'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
   'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
   'statuses': instance.statuses,
+  'origin_time_gte': instance.originTimeGte,
+  'origin_time_lte': instance.originTimeLte,
   'epicenter_code': instance.epicenterCode,
   'epicenter_name': instance.epicenterName,
   'region_search_type': _$RegionSearchTypeEnumMap[instance.regionSearchType],

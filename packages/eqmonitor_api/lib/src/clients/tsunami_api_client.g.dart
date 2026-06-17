@@ -28,6 +28,7 @@ class _TsunamiApiClient implements TsunamiApiClient {
     String? limit,
     String? cursor,
     IsCanceled? isCanceled,
+    IsActive? isActive,
     DateTime? createdAtGte,
     DateTime? createdAtLte,
   }) async {
@@ -38,6 +39,7 @@ class _TsunamiApiClient implements TsunamiApiClient {
       r'limit': limit,
       r'cursor': cursor,
       r'isCanceled': isCanceled?.toJson(),
+      r'isActive': isActive?.toJson(),
       r'createdAtGte': createdAtGte?.toIso8601String(),
       r'createdAtLte': createdAtLte?.toIso8601String(),
     };
@@ -88,34 +90,6 @@ class _TsunamiApiClient implements TsunamiApiClient {
     late TsunamiDetailResponse _value;
     try {
       _value = TsunamiDetailResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<TsunamiListResponse>> getV2TsunamiActive() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<TsunamiListResponse>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/tsunami/active',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late TsunamiListResponse _value;
-    try {
-      _value = TsunamiListResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

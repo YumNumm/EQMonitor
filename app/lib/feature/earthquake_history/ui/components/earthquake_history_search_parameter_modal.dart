@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
+import 'package:core/core.dart' show Date;
 import 'package:eqmonitor/core/component/selector/city_selector.dart';
 import 'package:eqmonitor/core/component/selector/prefecture_selector.dart';
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
@@ -48,7 +49,10 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
     final backgroundColor = colorScheme.surfaceContainerLow;
 
     // 各フィルターの有効/無効状態（初期値から判定）
-    final isDateRangeEnabled = useState<bool>(false);
+    final isDateRangeEnabled = useState<bool>(
+      initialParameter.originTimeGte != null ||
+          initialParameter.originTimeLte != null,
+    );
     final isEpicenterEnabled = useState<bool>(
       initialParameter.epicenterCode != null,
     );
@@ -70,8 +74,8 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
     // 日付範囲
     final dateRange = useState<DateTimeRange>(
       DateTimeRange(
-        start: DateTime(1919),
-        end: DateTime.now(),
+        start: initialParameter.originTimeGte?.toDateTime() ?? DateTime(1919),
+        end: initialParameter.originTimeLte?.toDateTime() ?? DateTime.now(),
       ),
     );
 
@@ -239,6 +243,12 @@ class EarthquakeHistorySearchParameterModal extends HookConsumerWidget {
                   final navigator = Navigator.of(context);
                   await HapticFeedback.lightImpact();
                   final parameter = EarthquakeHistoryParameter(
+                    originTimeGte: isDateRangeEnabled.value
+                        ? Date.fromDateTime(dateRange.value.start)
+                        : null,
+                    originTimeLte: isDateRangeEnabled.value
+                        ? Date.fromDateTime(dateRange.value.end)
+                        : null,
                     intensityGte: isIntensityEnabled.value &&
                             intensityMin.value !=
                                 _IntensityRangeSelector.initialMin

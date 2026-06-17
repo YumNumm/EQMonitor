@@ -34,8 +34,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    String? originTimeGte,
+    String? originTimeLte,
+    dynamic epicenterCodes,
+    String? epicenterDetailCode,
+    EarthquakeType? earthquakeType,
+    EarthquakeDatasource? datasource,
+    dynamic telegramTypes,
+    String? latitudeGte,
+    String? latitudeLte,
+    String? longitudeGte,
+    String? longitudeLte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -50,8 +61,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'depthGte': depthGte,
       r'intensityLte': intensityLte?.toJson(),
       r'intensityGte': intensityGte?.toJson(),
-      r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'maxLpgmIntensityLte': maxLpgmIntensityLte?.toJson(),
+      r'maxLpgmIntensityGte': maxLpgmIntensityGte?.toJson(),
+      r'originTimeGte': originTimeGte,
+      r'originTimeLte': originTimeLte,
+      r'epicenterCodes': epicenterCodes.toJson(),
+      r'epicenterDetailCode': epicenterDetailCode,
+      r'earthquakeType': earthquakeType?.toJson(),
+      r'datasource': datasource?.toJson(),
+      r'telegramTypes': telegramTypes.toJson(),
+      r'latitudeGte': latitudeGte,
+      r'latitudeLte': latitudeLte,
+      r'longitudeGte': longitudeGte,
+      r'longitudeLte': longitudeLte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -123,8 +145,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    String? originTimeGte,
+    String? originTimeLte,
+    dynamic epicenterCodes,
+    String? epicenterDetailCode,
+    EarthquakeType? earthquakeType,
+    EarthquakeDatasource? datasource,
+    dynamic telegramTypes,
+    String? latitudeGte,
+    String? latitudeLte,
+    String? longitudeGte,
+    String? longitudeLte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -139,8 +172,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'depthGte': depthGte,
       r'intensityLte': intensityLte?.toJson(),
       r'intensityGte': intensityGte?.toJson(),
-      r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'maxLpgmIntensityLte': maxLpgmIntensityLte?.toJson(),
+      r'maxLpgmIntensityGte': maxLpgmIntensityGte?.toJson(),
+      r'originTimeGte': originTimeGte,
+      r'originTimeLte': originTimeLte,
+      r'epicenterCodes': epicenterCodes.toJson(),
+      r'epicenterDetailCode': epicenterDetailCode,
+      r'earthquakeType': earthquakeType?.toJson(),
+      r'datasource': datasource?.toJson(),
+      r'telegramTypes': telegramTypes.toJson(),
+      r'latitudeGte': latitudeGte,
+      r'latitudeLte': latitudeLte,
+      r'longitudeGte': longitudeGte,
+      r'longitudeLte': longitudeLte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -185,8 +229,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    String? originTimeGte,
+    String? originTimeLte,
+    dynamic epicenterCodes,
+    String? epicenterDetailCode,
+    EarthquakeType? earthquakeType,
+    EarthquakeDatasource? datasource,
+    dynamic telegramTypes,
+    String? latitudeGte,
+    String? latitudeLte,
+    String? longitudeGte,
+    String? longitudeLte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -201,8 +256,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'depthGte': depthGte,
       r'intensityLte': intensityLte?.toJson(),
       r'intensityGte': intensityGte?.toJson(),
-      r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'maxLpgmIntensityLte': maxLpgmIntensityLte?.toJson(),
+      r'maxLpgmIntensityGte': maxLpgmIntensityGte?.toJson(),
+      r'originTimeGte': originTimeGte,
+      r'originTimeLte': originTimeLte,
+      r'epicenterCodes': epicenterCodes.toJson(),
+      r'epicenterDetailCode': epicenterDetailCode,
+      r'earthquakeType': earthquakeType?.toJson(),
+      r'datasource': datasource?.toJson(),
+      r'telegramTypes': telegramTypes.toJson(),
+      r'latitudeGte': latitudeGte,
+      r'latitudeLte': latitudeLte,
+      r'longitudeGte': longitudeGte,
+      r'longitudeLte': longitudeLte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -247,8 +313,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    String? originTimeGte,
+    String? originTimeLte,
+    dynamic epicenterCodes,
+    String? epicenterDetailCode,
+    EarthquakeType? earthquakeType,
+    EarthquakeDatasource? datasource,
+    dynamic telegramTypes,
+    String? latitudeGte,
+    String? latitudeLte,
+    String? longitudeGte,
+    String? longitudeLte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -263,8 +340,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'depthGte': depthGte,
       r'intensityLte': intensityLte?.toJson(),
       r'intensityGte': intensityGte?.toJson(),
-      r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'maxLpgmIntensityLte': maxLpgmIntensityLte?.toJson(),
+      r'maxLpgmIntensityGte': maxLpgmIntensityGte?.toJson(),
+      r'originTimeGte': originTimeGte,
+      r'originTimeLte': originTimeLte,
+      r'epicenterCodes': epicenterCodes.toJson(),
+      r'epicenterDetailCode': epicenterDetailCode,
+      r'earthquakeType': earthquakeType?.toJson(),
+      r'datasource': datasource?.toJson(),
+      r'telegramTypes': telegramTypes.toJson(),
+      r'latitudeGte': latitudeGte,
+      r'latitudeLte': latitudeLte,
+      r'longitudeGte': longitudeGte,
+      r'longitudeLte': longitudeLte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -306,8 +394,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     String? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    JmaLpgmIntensity? maxLpgmIntensityLte,
+    JmaLpgmIntensity? maxLpgmIntensityGte,
+    String? originTimeGte,
+    String? originTimeLte,
+    dynamic epicenterCodes,
+    String? epicenterDetailCode,
+    EarthquakeType? earthquakeType,
+    EarthquakeDatasource? datasource,
+    dynamic telegramTypes,
+    String? latitudeGte,
+    String? latitudeLte,
+    String? longitudeGte,
+    String? longitudeLte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -322,8 +421,19 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
       r'depthGte': depthGte,
       r'intensityLte': intensityLte?.toJson(),
       r'intensityGte': intensityGte?.toJson(),
-      r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'maxLpgmIntensityLte': maxLpgmIntensityLte?.toJson(),
+      r'maxLpgmIntensityGte': maxLpgmIntensityGte?.toJson(),
+      r'originTimeGte': originTimeGte,
+      r'originTimeLte': originTimeLte,
+      r'epicenterCodes': epicenterCodes.toJson(),
+      r'epicenterDetailCode': epicenterDetailCode,
+      r'earthquakeType': earthquakeType?.toJson(),
+      r'datasource': datasource?.toJson(),
+      r'telegramTypes': telegramTypes.toJson(),
+      r'latitudeGte': latitudeGte,
+      r'latitudeLte': latitudeLte,
+      r'longitudeGte': longitudeGte,
+      r'longitudeLte': longitudeLte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -345,64 +455,6 @@ class _EarthquakeApiClient implements EarthquakeApiClient {
     late IntensityStationSearchResponse _value;
     try {
       _value = IntensityStationSearchResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<EpicenterSearchResponse>> getV2EarthquakeEpicenterCode({
-    required String code,
-    List<TelegramStatus> statuses = const [.normal],
-    EarthquakeSortBy? sortBy = EarthquakeSortBy.eventId,
-    SortOrder? sortOrder = SortOrder.desc,
-    String? limit,
-    String? cursor,
-    String? magnitudeLte,
-    String? magnitudeGte,
-    String? depthLte,
-    String? depthGte,
-    JmaIntensity? intensityLte,
-    JmaIntensity? intensityGte,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'statuses': statuses,
-      r'sortBy': sortBy?.toJson(),
-      r'sortOrder': sortOrder?.toJson(),
-      r'limit': limit,
-      r'cursor': cursor,
-      r'magnitudeLte': magnitudeLte,
-      r'magnitudeGte': magnitudeGte,
-      r'depthLte': depthLte,
-      r'depthGte': depthGte,
-      r'intensityLte': intensityLte?.toJson(),
-      r'intensityGte': intensityGte?.toJson(),
-      r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'originTimeLte': originTimeLte?.toIso8601String(),
-    };
-    queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<EpicenterSearchResponse>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/earthquake/epicenter/${code}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, Object?>>(_options);
-    late EpicenterSearchResponse _value;
-    try {
-      _value = EpicenterSearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

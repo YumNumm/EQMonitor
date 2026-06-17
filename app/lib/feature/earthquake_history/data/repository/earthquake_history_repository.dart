@@ -1,3 +1,4 @@
+import 'package:core/core.dart' show Date;
 import 'package:eqmonitor/core/api/api_client_provider.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/intensity/jma_lpgm_intensity.dart';
@@ -84,6 +85,8 @@ class EarthquakeHistoryRepository {
     JmaIntensity? intensityGte,
     JmaIntensity? intensityLte,
     List<api.TelegramStatus>? statuses,
+    Date? originTimeGte,
+    Date? originTimeLte,
   }) async {
     final response = await _api.earthquake.getV2Earthquake(
       limit: limit?.toString(),
@@ -95,6 +98,8 @@ class EarthquakeHistoryRepository {
       depthLte: depthLte?.toString(),
       intensityGte: intensityGte?.toApiJmaIntensity,
       intensityLte: intensityLte?.toApiJmaIntensity,
+      originTimeGte: originTimeGte?.toString(),
+      originTimeLte: originTimeLte?.toString(),
     );
     return response.data.toEarthquakeListResponse(
       parameter: earthquakeParameter,

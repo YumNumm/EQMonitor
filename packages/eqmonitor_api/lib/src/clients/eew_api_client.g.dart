@@ -31,8 +31,8 @@ class _EewApiClient implements EewApiClient {
     String? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    String? originTimeGte,
+    String? originTimeLte,
     String? isWarning,
   }) async {
     final _extra = <String, dynamic>{};
@@ -45,8 +45,8 @@ class _EewApiClient implements EewApiClient {
       r'depthGte': depthGte,
       r'intensityLte': intensityLte?.toJson(),
       r'intensityGte': intensityGte?.toJson(),
-      r'originTimeGte': originTimeGte?.toIso8601String(),
-      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'originTimeGte': originTimeGte,
+      r'originTimeLte': originTimeLte,
       r'isWarning': isWarning,
     };
     queryParameters.removeWhere((k, v) => v == null);

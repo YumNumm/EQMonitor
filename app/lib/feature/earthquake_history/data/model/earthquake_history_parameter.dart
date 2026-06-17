@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:core/core.dart' show Date;
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
@@ -30,6 +31,10 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
     List<TelegramStatus>? statuses,
+
+    // 日付フィルター
+    Date? originTimeGte,
+    Date? originTimeLte,
 
     // 震央地名フィルター
     int? epicenterCode,
