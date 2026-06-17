@@ -130,6 +130,10 @@ void main(List<String> args) async {
     _patchDeviceLocaleDefault(libDir);
   });
 
+  await _step('originTime クエリパラメータを DateTime → String にパッチ', () async {
+    _patchOriginTimeDateTimeToString(libDir);
+  });
+
   await _step('build_runner で Freezed / Retrofit コードを生成', () async {
     await _run('dart', [
       'run',
@@ -575,6 +579,39 @@ void _patchTelegramBodyReference(Directory libDir) {
     if (content != original) {
       entity.writeAsStringSync(content);
       stdout.writeln('  Patched TelegramBody ref: ${entity.path}');
+    }
+  }
+}
+
+/// swagger_parser は OpenAPI の `format: "date"` も `DateTime` にマッピングする。
+/// originTimeGte / originTimeLte は `yyyy-MM-dd` 文字列として送るため
+/// `String?` に置き換える。
+void _patchOriginTimeDateTimeToString(Directory libDir) {
+  final clientsDir = Directory('${libDir.path}/clients');
+  if (!clientsDir.existsSync()) {
+    return;
+  }
+
+  for (final entity in clientsDir.listSync()) {
+    if (entity is! File || !entity.path.endsWith('_api_client.dart')) {
+      continue;
+    }
+
+    var content = entity.readAsStringSync();
+    final original = content;
+
+    content = content.replaceAll(
+      "@Query('originTimeGte') DateTime? originTimeGte",
+      "@Query('originTimeGte') String? originTimeGte",
+    );
+    content = content.replaceAll(
+      "@Query('originTimeLte') DateTime? originTimeLte",
+      "@Query('originTimeLte') String? originTimeLte",
+    );
+
+    if (content != original) {
+      entity.writeAsStringSync(content);
+      stdout.writeln('  Patched: ${entity.path}');
     }
   }
 }

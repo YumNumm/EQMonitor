@@ -20,7 +20,7 @@ mixin _$EarthquakeHistoryParameter {
  int? get epicenterCode; String? get epicenterName;// 地域の震度フィルター
  RegionSearchType? get regionSearchType; String? get regionCode; String? get regionName; JmaIntensity? get regionIntensityLte; JmaIntensity? get regionIntensityGte;// 地震種別フィルター
  EarthquakeType? get earthquakeType;// 発生時刻範囲フィルター
- DateTime? get originTimeGte; DateTime? get originTimeLte;// 長周期地震動階級フィルター
+ Date? get originTimeGte; Date? get originTimeLte;// 長周期地震動階級フィルター
  JmaLpgmIntensity? get maxLpgmIntensityGte; JmaLpgmIntensity? get maxLpgmIntensityLte;// ソート
  EarthquakeSortBy? get sortBy; SortOrder? get sortOrder;
 /// Create a copy of EarthquakeHistoryParameter
@@ -55,11 +55,11 @@ abstract mixin class $EarthquakeHistoryParameterCopyWith<$Res>  {
   factory $EarthquakeHistoryParameterCopyWith(EarthquakeHistoryParameter value, $Res Function(EarthquakeHistoryParameter) _then) = _$EarthquakeHistoryParameterCopyWithImpl;
 @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, DateTime? originTimeGte, DateTime? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, Date? originTimeGte, Date? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
 });
 
 
-
+$DateCopyWith<$Res>? get originTimeGte;$DateCopyWith<$Res>? get originTimeLte;
 
 }
 /// @nodoc
@@ -90,15 +90,39 @@ as String?,regionIntensityLte: freezed == regionIntensityLte ? _self.regionInten
 as JmaIntensity?,regionIntensityGte: freezed == regionIntensityGte ? _self.regionIntensityGte : regionIntensityGte // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,earthquakeType: freezed == earthquakeType ? _self.earthquakeType : earthquakeType // ignore: cast_nullable_to_non_nullable
 as EarthquakeType?,originTimeGte: freezed == originTimeGte ? _self.originTimeGte : originTimeGte // ignore: cast_nullable_to_non_nullable
-as DateTime?,originTimeLte: freezed == originTimeLte ? _self.originTimeLte : originTimeLte // ignore: cast_nullable_to_non_nullable
-as DateTime?,maxLpgmIntensityGte: freezed == maxLpgmIntensityGte ? _self.maxLpgmIntensityGte : maxLpgmIntensityGte // ignore: cast_nullable_to_non_nullable
+as Date?,originTimeLte: freezed == originTimeLte ? _self.originTimeLte : originTimeLte // ignore: cast_nullable_to_non_nullable
+as Date?,maxLpgmIntensityGte: freezed == maxLpgmIntensityGte ? _self.maxLpgmIntensityGte : maxLpgmIntensityGte // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,maxLpgmIntensityLte: freezed == maxLpgmIntensityLte ? _self.maxLpgmIntensityLte : maxLpgmIntensityLte // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,sortBy: freezed == sortBy ? _self.sortBy : sortBy // ignore: cast_nullable_to_non_nullable
 as EarthquakeSortBy?,sortOrder: freezed == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
 as SortOrder?,
   ));
 }
+/// Create a copy of EarthquakeHistoryParameter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DateCopyWith<$Res>? get originTimeGte {
+    if (_self.originTimeGte == null) {
+    return null;
+  }
 
+  return $DateCopyWith<$Res>(_self.originTimeGte!, (value) {
+    return _then(_self.copyWith(originTimeGte: value));
+  });
+}/// Create a copy of EarthquakeHistoryParameter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DateCopyWith<$Res>? get originTimeLte {
+    if (_self.originTimeLte == null) {
+    return null;
+  }
+
+  return $DateCopyWith<$Res>(_self.originTimeLte!, (value) {
+    return _then(_self.copyWith(originTimeLte: value));
+  });
+}
 }
 
 
@@ -180,7 +204,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  DateTime? originTimeGte,  DateTime? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.sortBy,_that.sortOrder);case _:
@@ -201,7 +225,7 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  DateTime? originTimeGte,  DateTime? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter():
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.sortBy,_that.sortOrder);case _:
@@ -221,7 +245,7 @@ return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depth
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  DateTime? originTimeGte,  DateTime? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? magnitudeLte,  double? magnitudeGte,  int? depthLte,  int? depthGte,  JmaIntensity? intensityLte,  JmaIntensity? intensityGte,  List<TelegramStatus>? statuses,  int? epicenterCode,  String? epicenterName,  RegionSearchType? regionSearchType,  String? regionCode,  String? regionName,  JmaIntensity? regionIntensityLte,  JmaIntensity? regionIntensityGte,  EarthquakeType? earthquakeType,  Date? originTimeGte,  Date? originTimeLte,  JmaLpgmIntensity? maxLpgmIntensityGte,  JmaLpgmIntensity? maxLpgmIntensityLte,  EarthquakeSortBy? sortBy,  SortOrder? sortOrder)?  $default,) {final _that = this;
 switch (_that) {
 case _EarthquakeHistoryParameter() when $default != null:
 return $default(_that.magnitudeLte,_that.magnitudeGte,_that.depthLte,_that.depthGte,_that.intensityLte,_that.intensityGte,_that.statuses,_that.epicenterCode,_that.epicenterName,_that.regionSearchType,_that.regionCode,_that.regionName,_that.regionIntensityLte,_that.regionIntensityGte,_that.earthquakeType,_that.originTimeGte,_that.originTimeLte,_that.maxLpgmIntensityGte,_that.maxLpgmIntensityLte,_that.sortBy,_that.sortOrder);case _:
@@ -267,8 +291,8 @@ class _EarthquakeHistoryParameter extends EarthquakeHistoryParameter {
 // 地震種別フィルター
 @override final  EarthquakeType? earthquakeType;
 // 発生時刻範囲フィルター
-@override final  DateTime? originTimeGte;
-@override final  DateTime? originTimeLte;
+@override final  Date? originTimeGte;
+@override final  Date? originTimeLte;
 // 長周期地震動階級フィルター
 @override final  JmaLpgmIntensity? maxLpgmIntensityGte;
 @override final  JmaLpgmIntensity? maxLpgmIntensityLte;
@@ -309,11 +333,11 @@ abstract mixin class _$EarthquakeHistoryParameterCopyWith<$Res> implements $Eart
   factory _$EarthquakeHistoryParameterCopyWith(_EarthquakeHistoryParameter value, $Res Function(_EarthquakeHistoryParameter) _then) = __$EarthquakeHistoryParameterCopyWithImpl;
 @override @useResult
 $Res call({
- double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, DateTime? originTimeGte, DateTime? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
+ double? magnitudeLte, double? magnitudeGte, int? depthLte, int? depthGte, JmaIntensity? intensityLte, JmaIntensity? intensityGte, List<TelegramStatus>? statuses, int? epicenterCode, String? epicenterName, RegionSearchType? regionSearchType, String? regionCode, String? regionName, JmaIntensity? regionIntensityLte, JmaIntensity? regionIntensityGte, EarthquakeType? earthquakeType, Date? originTimeGte, Date? originTimeLte, JmaLpgmIntensity? maxLpgmIntensityGte, JmaLpgmIntensity? maxLpgmIntensityLte, EarthquakeSortBy? sortBy, SortOrder? sortOrder
 });
 
 
-
+@override $DateCopyWith<$Res>? get originTimeGte;@override $DateCopyWith<$Res>? get originTimeLte;
 
 }
 /// @nodoc
@@ -344,8 +368,8 @@ as String?,regionIntensityLte: freezed == regionIntensityLte ? _self.regionInten
 as JmaIntensity?,regionIntensityGte: freezed == regionIntensityGte ? _self.regionIntensityGte : regionIntensityGte // ignore: cast_nullable_to_non_nullable
 as JmaIntensity?,earthquakeType: freezed == earthquakeType ? _self.earthquakeType : earthquakeType // ignore: cast_nullable_to_non_nullable
 as EarthquakeType?,originTimeGte: freezed == originTimeGte ? _self.originTimeGte : originTimeGte // ignore: cast_nullable_to_non_nullable
-as DateTime?,originTimeLte: freezed == originTimeLte ? _self.originTimeLte : originTimeLte // ignore: cast_nullable_to_non_nullable
-as DateTime?,maxLpgmIntensityGte: freezed == maxLpgmIntensityGte ? _self.maxLpgmIntensityGte : maxLpgmIntensityGte // ignore: cast_nullable_to_non_nullable
+as Date?,originTimeLte: freezed == originTimeLte ? _self.originTimeLte : originTimeLte // ignore: cast_nullable_to_non_nullable
+as Date?,maxLpgmIntensityGte: freezed == maxLpgmIntensityGte ? _self.maxLpgmIntensityGte : maxLpgmIntensityGte // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,maxLpgmIntensityLte: freezed == maxLpgmIntensityLte ? _self.maxLpgmIntensityLte : maxLpgmIntensityLte // ignore: cast_nullable_to_non_nullable
 as JmaLpgmIntensity?,sortBy: freezed == sortBy ? _self.sortBy : sortBy // ignore: cast_nullable_to_non_nullable
 as EarthquakeSortBy?,sortOrder: freezed == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
@@ -353,7 +377,31 @@ as SortOrder?,
   ));
 }
 
+/// Create a copy of EarthquakeHistoryParameter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DateCopyWith<$Res>? get originTimeGte {
+    if (_self.originTimeGte == null) {
+    return null;
+  }
 
+  return $DateCopyWith<$Res>(_self.originTimeGte!, (value) {
+    return _then(_self.copyWith(originTimeGte: value));
+  });
+}/// Create a copy of EarthquakeHistoryParameter
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DateCopyWith<$Res>? get originTimeLte {
+    if (_self.originTimeLte == null) {
+    return null;
+  }
+
+  return $DateCopyWith<$Res>(_self.originTimeLte!, (value) {
+    return _then(_self.copyWith(originTimeLte: value));
+  });
+}
 }
 
 // dart format on

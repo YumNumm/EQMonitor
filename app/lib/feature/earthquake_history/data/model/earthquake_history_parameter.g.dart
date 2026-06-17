@@ -64,11 +64,11 @@ _EarthquakeHistoryParameter _$EarthquakeHistoryParameterFromJson(
       ),
       originTimeGte: $checkedConvert(
         'origin_time_gte',
-        (v) => v == null ? null : DateTime.parse(v as String),
+        (v) => v == null ? null : Date.fromJson(v),
       ),
       originTimeLte: $checkedConvert(
         'origin_time_lte',
-        (v) => v == null ? null : DateTime.parse(v as String),
+        (v) => v == null ? null : Date.fromJson(v),
       ),
       maxLpgmIntensityGte: $checkedConvert(
         'max_lpgm_intensity_gte',
@@ -131,8 +131,8 @@ Map<String, dynamic> _$EarthquakeHistoryParameterToJson(
   'region_intensity_lte': _$JmaIntensityEnumMap[instance.regionIntensityLte],
   'region_intensity_gte': _$JmaIntensityEnumMap[instance.regionIntensityGte],
   'earthquake_type': _$EarthquakeTypeEnumMap[instance.earthquakeType],
-  'origin_time_gte': instance.originTimeGte?.toIso8601String(),
-  'origin_time_lte': instance.originTimeLte?.toIso8601String(),
+  'origin_time_gte': instance.originTimeGte,
+  'origin_time_lte': instance.originTimeLte,
   'max_lpgm_intensity_gte':
       _$JmaLpgmIntensityEnumMap[instance.maxLpgmIntensityGte],
   'max_lpgm_intensity_lte':

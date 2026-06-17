@@ -9,7 +9,6 @@ import '../models/earthquake_datasource.dart';
 import '../models/earthquake_detail_response.dart';
 import '../models/earthquake_list_response.dart';
 import '../models/earthquake_sort_by.dart';
-import '../models/earthquake_telegram_type.dart';
 import '../models/earthquake_type.dart';
 import '../models/intensity_city_search_response.dart';
 import '../models/intensity_prefecture_search_response.dart';
@@ -20,6 +19,8 @@ import '../models/jma_lpgm_intensity.dart';
 import '../models/sort_order.dart';
 
 import '../models/telegram_status.dart';
+
+import '../models/earthquake_telegram_type.dart';
 
 part 'earthquake_api_client.g.dart';
 
@@ -41,9 +42,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
-  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -67,8 +68,8 @@ abstract class EarthquakeApiClient {
     @Query('intensityGte') JmaIntensity? intensityGte,
     @Query('maxLpgmIntensityLte') JmaLpgmIntensity? maxLpgmIntensityLte,
     @Query('maxLpgmIntensityGte') JmaLpgmIntensity? maxLpgmIntensityGte,
-    @Query('originTimeGte') DateTime? originTimeGte,
-    @Query('originTimeLte') DateTime? originTimeLte,
+    @Query('originTimeGte') String? originTimeGte,
+    @Query('originTimeLte') String? originTimeLte,
     @Query('epicenterCodes') List<String>? epicenterCodes,
     @Query('epicenterDetailCode') String? epicenterDetailCode,
     @Query('earthquakeType') EarthquakeType? earthquakeType,
@@ -97,9 +98,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
-  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -124,8 +125,8 @@ abstract class EarthquakeApiClient {
     @Query('intensityGte') JmaIntensity? intensityGte,
     @Query('maxLpgmIntensityLte') JmaLpgmIntensity? maxLpgmIntensityLte,
     @Query('maxLpgmIntensityGte') JmaLpgmIntensity? maxLpgmIntensityGte,
-    @Query('originTimeGte') DateTime? originTimeGte,
-    @Query('originTimeLte') DateTime? originTimeLte,
+    @Query('originTimeGte') String? originTimeGte,
+    @Query('originTimeLte') String? originTimeLte,
     @Query('epicenterCodes') List<String>? epicenterCodes,
     @Query('epicenterDetailCode') String? epicenterDetailCode,
     @Query('earthquakeType') EarthquakeType? earthquakeType,
@@ -149,9 +150,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
-  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -176,8 +177,8 @@ abstract class EarthquakeApiClient {
     @Query('intensityGte') JmaIntensity? intensityGte,
     @Query('maxLpgmIntensityLte') JmaLpgmIntensity? maxLpgmIntensityLte,
     @Query('maxLpgmIntensityGte') JmaLpgmIntensity? maxLpgmIntensityGte,
-    @Query('originTimeGte') DateTime? originTimeGte,
-    @Query('originTimeLte') DateTime? originTimeLte,
+    @Query('originTimeGte') String? originTimeGte,
+    @Query('originTimeLte') String? originTimeLte,
     @Query('epicenterCodes') List<String>? epicenterCodes,
     @Query('epicenterDetailCode') String? epicenterDetailCode,
     @Query('earthquakeType') EarthquakeType? earthquakeType,
@@ -201,9 +202,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
-  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -228,8 +229,8 @@ abstract class EarthquakeApiClient {
     @Query('intensityGte') JmaIntensity? intensityGte,
     @Query('maxLpgmIntensityLte') JmaLpgmIntensity? maxLpgmIntensityLte,
     @Query('maxLpgmIntensityGte') JmaLpgmIntensity? maxLpgmIntensityGte,
-    @Query('originTimeGte') DateTime? originTimeGte,
-    @Query('originTimeLte') DateTime? originTimeLte,
+    @Query('originTimeGte') String? originTimeGte,
+    @Query('originTimeLte') String? originTimeLte,
     @Query('epicenterCodes') List<String>? epicenterCodes,
     @Query('epicenterDetailCode') String? epicenterDetailCode,
     @Query('earthquakeType') EarthquakeType? earthquakeType,
@@ -253,9 +254,9 @@ abstract class EarthquakeApiClient {
   ///
   /// [depthGte] - 0~2000 の実数(string).
   ///
-  /// [originTimeGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeGte] - 日付 (例: 2024-01-01).
   ///
-  /// [originTimeLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
+  /// [originTimeLte] - 日付 (例: 2024-01-01).
   ///
   /// [latitudeGte] - -180~180 の実数(string).
   ///
@@ -280,8 +281,8 @@ abstract class EarthquakeApiClient {
     @Query('intensityGte') JmaIntensity? intensityGte,
     @Query('maxLpgmIntensityLte') JmaLpgmIntensity? maxLpgmIntensityLte,
     @Query('maxLpgmIntensityGte') JmaLpgmIntensity? maxLpgmIntensityGte,
-    @Query('originTimeGte') DateTime? originTimeGte,
-    @Query('originTimeLte') DateTime? originTimeLte,
+    @Query('originTimeGte') String? originTimeGte,
+    @Query('originTimeLte') String? originTimeLte,
     @Query('epicenterCodes') List<String>? epicenterCodes,
     @Query('epicenterDetailCode') String? epicenterDetailCode,
     @Query('earthquakeType') EarthquakeType? earthquakeType,

@@ -1,3 +1,4 @@
+import 'package:core/core.dart' show Date;
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/earthquake_type_filter_chip.dart';
@@ -111,10 +112,14 @@ class _FilterChipBar extends StatelessWidget {
         isActive:
             parameter.originTimeGte != null || parameter.originTimeLte != null,
         chip: DateRangeFilterChip(
-          min: parameter.originTimeGte,
-          max: parameter.originTimeLte,
-          onChanged: (min, max) =>
-              onChanged(parameter.updateOriginTimeRange(min, max)),
+          min: parameter.originTimeGte?.toDateTime(),
+          max: parameter.originTimeLte?.toDateTime(),
+          onChanged: (min, max) => onChanged(
+            parameter.updateOriginTimeRange(
+              min != null ? Date.fromDateTime(min) : null,
+              max != null ? Date.fromDateTime(max) : null,
+            ),
+          ),
         ),
       ),
       (

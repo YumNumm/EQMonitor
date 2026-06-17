@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:core/core.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
@@ -50,8 +51,8 @@ abstract class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     EarthquakeType? earthquakeType,
 
     // 発生時刻範囲フィルター
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    Date? originTimeGte,
+    Date? originTimeLte,
 
     // 長周期地震動階級フィルター
     JmaLpgmIntensity? maxLpgmIntensityGte,
@@ -102,8 +103,8 @@ extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {
       copyWith(earthquakeType: type);
 
   EarthquakeHistoryParameter updateOriginTimeRange(
-    DateTime? gte,
-    DateTime? lte,
+    Date? gte,
+    Date? lte,
   ) => copyWith(originTimeGte: gte, originTimeLte: lte);
 
   EarthquakeHistoryParameter updateLpgmIntensity(
