@@ -1,3 +1,4 @@
+import 'package:core/core.dart';
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/model/intensity/jma_intensity.dart';
 import 'package:eqmonitor/core/model/telegram/telegram_status.dart' as app;
@@ -58,8 +59,8 @@ final class _FakeEarthquakeHistoryRepository
     List<api.TelegramStatus>? statuses,
     List<int>? epicenterCodes,
     api.EarthquakeType? earthquakeType,
-    DateTime? originTimeGte,
-    DateTime? originTimeLte,
+    Date? originTimeGte,
+    Date? originTimeLte,
     api.JmaLpgmIntensity? maxLpgmIntensityGte,
     api.JmaLpgmIntensity? maxLpgmIntensityLte,
     api.EarthquakeSortBy? sortBy,
