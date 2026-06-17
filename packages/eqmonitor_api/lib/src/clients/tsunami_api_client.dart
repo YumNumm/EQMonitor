@@ -5,6 +5,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../models/is_active.dart';
 import '../models/is_canceled.dart';
 import '../models/sort_order.dart';
 import '../models/tsunami_detail_response.dart';
@@ -28,6 +29,8 @@ abstract class TsunamiApiClient {
   ///
   /// [isCanceled] - 取消済みフィルタ.
   ///
+  /// [isActive] - アクティブ状態フィルタ.
+  ///
   /// [createdAtGte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
   ///
   /// [createdAtLte] - ISO8601形式のタイムスタンプ (例: 2024-01-01T00:00:00Z).
@@ -38,6 +41,7 @@ abstract class TsunamiApiClient {
     @Query('limit') String? limit,
     @Query('cursor') String? cursor,
     @Query('isCanceled') IsCanceled? isCanceled,
+    @Query('isActive') IsActive? isActive,
     @Query('createdAtGte') DateTime? createdAtGte,
     @Query('createdAtLte') DateTime? createdAtLte,
   });
@@ -47,10 +51,6 @@ abstract class TsunamiApiClient {
   Future<HttpResponse<TsunamiDetailResponse>> getV2TsunamiByEventIdEventId({
     @Path('eventId') required String eventId,
   });
-
-  /// 現在有効な津波情報一覧（VTSE41 の revoke_at が未経過）
-  @GET(TsunamiApiClientUrls.getV2TsunamiActive)
-  Future<HttpResponse<TsunamiListResponse>> getV2TsunamiActive();
 
   /// 津波情報の電文履歴（press_at 降順）
   @GET(TsunamiApiClientUrls.getV2TsunamiTsunamiIdTelegrams)
@@ -71,8 +71,6 @@ abstract class TsunamiApiClientUrls {
 	static const getV2Tsunami = "/v2/tsunami";
 	/// /v2/tsunami/by-event-id/{eventId}
 	static const getV2TsunamiByEventIdEventId = "/v2/tsunami/by-event-id/{eventId}";
-	/// /v2/tsunami/active
-	static const getV2TsunamiActive = "/v2/tsunami/active";
 	/// /v2/tsunami/{tsunamiId}/telegrams
 	static const getV2TsunamiTsunamiIdTelegrams = "/v2/tsunami/{tsunamiId}/telegrams";
 	/// /v2/tsunami/{tsunamiId}

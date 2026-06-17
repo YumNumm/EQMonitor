@@ -1,6 +1,10 @@
+import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/earthquake_type_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/lpgm_intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
+import 'package:eqmonitor/core/component/chip/sort_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/status_filter_chip.dart';
 import 'package:eqmonitor/core/designsystem/extensions/design_system_theme_extension.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -24,7 +28,7 @@ class EarthquakeHistoryParameterPersistentDelegate
   ) {
     return ColoredBox(
       color: Theme.of(context).colorScheme.surface,
-      child: _SearchParameter(
+      child: _FilterChipBar(
         parameter: parameter,
         onChanged: onChanged,
       ),
@@ -42,8 +46,8 @@ class EarthquakeHistoryParameterPersistentDelegate
       false;
 }
 
-class _SearchParameter extends StatelessWidget {
-  const _SearchParameter({required this.parameter, required this.onChanged});
+class _FilterChipBar extends StatelessWidget {
+  const _FilterChipBar({required this.parameter, required this.onChanged});
 
   final EarthquakeHistoryParameter parameter;
   final void Function(EarthquakeHistoryParameter) onChanged;
@@ -51,6 +55,100 @@ class _SearchParameter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spacing = Theme.of(context).designSystemThemeExtension.spacing;
+
+    final chips = <({int order, bool isActive, Widget chip})>[
+      (
+        order: 0,
+        isActive: parameter.sortBy != null || parameter.sortOrder != null,
+        chip: SortFilterChip(
+          sortBy: parameter.sortBy,
+          sortOrder: parameter.sortOrder,
+          onChanged: (sortBy, sortOrder) =>
+              onChanged(parameter.updateSort(sortBy, sortOrder)),
+        ),
+      ),
+      (
+        order: 1,
+        isActive:
+            parameter.intensityGte != null || parameter.intensityLte != null,
+        chip: IntensityFilterChip(
+          min: parameter.intensityGte,
+          max: parameter.intensityLte,
+          onChanged: (min, max) =>
+              onChanged(parameter.updateIntensity(min, max)),
+        ),
+      ),
+      (
+        order: 2,
+        isActive:
+            parameter.magnitudeGte != null || parameter.magnitudeLte != null,
+        chip: MagnitudeFilterChip(
+          min: parameter.magnitudeGte,
+          max: parameter.magnitudeLte,
+          onChanged: (min, max) =>
+              onChanged(parameter.updateMagnitude(min, max)),
+        ),
+      ),
+      (
+        order: 3,
+        isActive: parameter.depthGte != null || parameter.depthLte != null,
+        chip: DepthFilterChip(
+          min: parameter.depthGte,
+          max: parameter.depthLte,
+          onChanged: (min, max) => onChanged(parameter.updateDepth(min, max)),
+        ),
+      ),
+      (
+        order: 4,
+        isActive: parameter.earthquakeType != null,
+        chip: EarthquakeTypeFilterChip(
+          earthquakeType: parameter.earthquakeType,
+          onChanged: (type) => onChanged(parameter.updateEarthquakeType(type)),
+        ),
+      ),
+      (
+        order: 5,
+        isActive:
+            parameter.originTimeGte != null || parameter.originTimeLte != null,
+        chip: DateRangeFilterChip(
+          min: parameter.originTimeGte,
+          max: parameter.originTimeLte,
+          onChanged: (min, max) =>
+              onChanged(parameter.updateOriginTimeRange(min, max)),
+        ),
+      ),
+      (
+        order: 6,
+        isActive:
+            parameter.maxLpgmIntensityGte != null ||
+            parameter.maxLpgmIntensityLte != null,
+        chip: LpgmIntensityFilterChip(
+          min: parameter.maxLpgmIntensityGte,
+          max: parameter.maxLpgmIntensityLte,
+          onChanged: (min, max) =>
+              onChanged(parameter.updateLpgmIntensity(min, max)),
+        ),
+      ),
+      (
+        order: 7,
+        isActive: parameter.statuses != null,
+        chip: StatusFilterChip(
+          statuses: parameter.statuses,
+          onChanged: (statuses) =>
+              onChanged(parameter.updateStatuses(statuses)),
+        ),
+      ),
+    ];
+
+    chips.sort((a, b) {
+      final aActive = a.isActive ? 0 : 1;
+      final bActive = b.isActive ? 0 : 1;
+      if (aActive != bActive) {
+        return aActive.compareTo(bActive);
+      }
+      return a.order.compareTo(b.order);
+    });
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -58,33 +156,7 @@ class _SearchParameter extends StatelessWidget {
         child: Row(
           spacing: spacing.sm,
           children: [
-            IntensityFilterChip(
-              min: parameter.intensityGte,
-              max: parameter.intensityLte,
-              onChanged: (min, max) => onChanged(
-                parameter.updateIntensity(min, max),
-              ),
-            ),
-            MagnitudeFilterChip(
-              min: parameter.magnitudeGte,
-              max: parameter.magnitudeLte,
-              onChanged: (min, max) => onChanged(
-                parameter.updateMagnitude(min, max),
-              ),
-            ),
-            DepthFilterChip(
-              min: parameter.depthGte,
-              max: parameter.depthLte,
-              onChanged: (min, max) => onChanged(
-                parameter.updateDepth(min, max),
-              ),
-            ),
-            StatusFilterChip(
-              statuses: parameter.statuses,
-              onChanged: (statuses) => onChanged(
-                parameter.updateStatuses(statuses),
-              ),
-            ),
+            for (final entry in chips) entry.chip,
           ],
         ),
       ),

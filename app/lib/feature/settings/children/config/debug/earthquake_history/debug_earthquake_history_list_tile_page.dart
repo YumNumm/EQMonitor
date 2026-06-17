@@ -68,6 +68,7 @@ class DebugEarthquakeHistoryListTilePage extends ConsumerWidget {
               ),
               intensity: null,
               earthquakeType: .distant,
+              telegramTypes: const [],
               estimatedIntensityTileUrl: null,
             ),
             intensityColor: intensityColor,
@@ -121,6 +122,7 @@ EarthquakePartial _domesticEarthquake({required JmaIntensity maxIntensity}) {
       maxLpgmIntensity: null,
     ),
     earthquakeType: EarthquakeType.normal,
+    telegramTypes: const [],
     estimatedIntensityTileUrl: null,
   );
 }
@@ -168,6 +170,7 @@ EarthquakePartial _foreignVolcanoEruption() {
     ),
     intensity: null,
     earthquakeType: EarthquakeType.volcano,
+    telegramTypes: const [],
     estimatedIntensityTileUrl: null,
   );
 }

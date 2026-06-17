@@ -69,26 +69,28 @@ void main() {
       expect(roundTrip(original), original);
     });
 
-    test('不明な enum 値 (fillMode) は @JsonKey の unknownEnumValue で auto に fallback',
-        () {
-      const defaults = EarthquakeHistoryConfig(
-        list: EarthquakeHistoryListConfig(),
-        detail: EarthquakeHistoryDetailConfig(),
-      );
-      final json = jsonDecode(jsonEncode(defaults.toJson()))
-          as Map<String, dynamic>;
-      (json['detail'] as Map<String, dynamic>)['fill_mode'] = 'unknownValue';
-      final decoded = EarthquakeHistoryConfig.fromJson(json);
-      expect(decoded.detail.fillMode, EarthquakeHistoryFillMode.auto);
-    });
+    test(
+      '不明な enum 値 (fillMode) は @JsonKey の unknownEnumValue で auto に fallback',
+      () {
+        const defaults = EarthquakeHistoryConfig(
+          list: EarthquakeHistoryListConfig(),
+          detail: EarthquakeHistoryDetailConfig(),
+        );
+        final json =
+            jsonDecode(jsonEncode(defaults.toJson())) as Map<String, dynamic>;
+        (json['detail'] as Map<String, dynamic>)['fill_mode'] = 'unknownValue';
+        final decoded = EarthquakeHistoryConfig.fromJson(json);
+        expect(decoded.detail.fillMode, EarthquakeHistoryFillMode.auto);
+      },
+    );
 
     test('旧 matchIcon 値は unknownEnumValue で auto にマッピングされる', () {
       const defaults = EarthquakeHistoryConfig(
         list: EarthquakeHistoryListConfig(),
         detail: EarthquakeHistoryDetailConfig(),
       );
-      final json = jsonDecode(jsonEncode(defaults.toJson()))
-          as Map<String, dynamic>;
+      final json =
+          jsonDecode(jsonEncode(defaults.toJson())) as Map<String, dynamic>;
       (json['detail'] as Map<String, dynamic>)['fill_mode'] = 'matchIcon';
       final decoded = EarthquakeHistoryConfig.fromJson(json);
       expect(decoded.detail.fillMode, EarthquakeHistoryFillMode.auto);

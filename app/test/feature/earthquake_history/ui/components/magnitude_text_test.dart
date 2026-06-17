@@ -25,10 +25,7 @@ void main() {
 
   /// 画面上に存在する唯一の [RichText] のプレーンテキストを取り出す。
   String plainText(WidgetTester tester) {
-    return tester
-        .widget<RichText>(find.byType(RichText))
-        .text
-        .toPlainText();
+    return tester.widget<RichText>(find.byType(RichText)).text.toPlainText();
   }
 
   group('MagnitudeText compact', () {

@@ -54,8 +54,9 @@ class RegionPickerMapPage extends HookConsumerWidget {
           );
           if (city?.property != null) {
             final cityCode = city!.property!.code;
-            final prefix =
-                cityCode.length >= 2 ? cityCode.substring(0, 2) : cityCode;
+            final prefix = cityCode.length >= 2
+                ? cityCode.substring(0, 2)
+                : cityCode;
             final jmaCodeTable = ref.read(jmaCodeTableProvider).value;
             final prefecture = jmaCodeTable
                 ?.codeTables
@@ -76,10 +77,10 @@ class RegionPickerMapPage extends HookConsumerWidget {
 
     final mapConfigAsync = ref.watch(mapConfigurationProvider);
     final styleString = mapConfigAsync.value?.styleString;
-    final title =
-        selectedType == 'prefecture' ? '都道府県を地図から選択' : '市区町村を地図から選択';
-    final hint =
-        selectedType == 'prefecture' ? '地図をタップして都道府県を選択' : '地図をタップして市区町村を選択';
+    final title = selectedType == 'prefecture' ? '都道府県を地図から選択' : '市区町村を地図から選択';
+    final hint = selectedType == 'prefecture'
+        ? '地図をタップして都道府県を選択'
+        : '地図をタップして市区町村を選択';
 
     if (styleString == null) {
       return Scaffold(

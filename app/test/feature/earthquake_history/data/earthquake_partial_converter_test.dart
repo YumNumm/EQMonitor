@@ -40,7 +40,9 @@ void main() {
         EarthquakeDataSource.jmaIntensityDatabase,
       );
       expect(
-        api.EarthquakeDatasource.jmaDisasterInformationXml
+        api
+            .EarthquakeDatasource
+            .jmaDisasterInformationXml
             .toEarthquakeDataSource,
         EarthquakeDataSource.jmaDisasterInformationXml,
       );
