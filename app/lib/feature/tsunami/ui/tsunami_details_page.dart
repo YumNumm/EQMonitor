@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/feature/ads/ui/component/ad_banner.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_details_notifier.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/current_location_tsunami_card.dart';
+import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_details_map_view.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_earthquake_card.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_region_list.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_status_card.dart';
@@ -39,11 +40,7 @@ class TsunamiDetailsPage extends HookConsumerWidget {
       AsyncData(value: final tsunami) => Scaffold(
         body: Stack(
           children: [
-            // TODO: TsunamiDetailsMapView
-            const ColoredBox(
-              color: Colors.grey,
-              child: SizedBox.expand(),
-            ),
+            TsunamiDetailsMapView(tsunami: tsunami),
             SafeArea(
               bottom: false,
               child: BasicModalSheet(
