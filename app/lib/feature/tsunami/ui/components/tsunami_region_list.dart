@@ -1,0 +1,257 @@
+import 'package:eqmonitor/core/designsystem/design_system_build_context_x.dart';
+import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_observation_station_tile.dart';
+import 'package:eqmonitor/feature/tsunami/ui/utils/tsunami_warning_color.dart';
+import 'package:eqmonitor_api/eqmonitor_api.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class TsunamiRegionList extends StatelessWidget {
+  const TsunamiRegionList({required this.tsunami, super.key});
+
+  final TsunamiState tsunami;
+
+  @override
+  Widget build(BuildContext context) {
+    final grouped = _groupByWarningKind(tsunami.forecastRegions);
+    if (grouped.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final entry in grouped.entries) ...[
+            _WarningGroupHeader(kind: entry.key),
+            for (final region in entry.value)
+              _ForecastRegionCard(region: region),
+          ],
+        ],
+      ),
+    );
+  }
+
+  static Map<TsunamiWarningKind, List<MergedForecastRegion>>
+      _groupByWarningKind(List<MergedForecastRegion> regions) {
+    final grouped = <TsunamiWarningKind, List<MergedForecastRegion>>{};
+    const order = [
+      TsunamiWarningKind.majorWarning,
+      TsunamiWarningKind.warning,
+      TsunamiWarningKind.advisory,
+      TsunamiWarningKind.forecast,
+    ];
+    for (final kind in order) {
+      final matching = regions.where((r) => r.kind == kind).toList();
+      if (matching.isNotEmpty) {
+        grouped[kind] = matching;
+      }
+    }
+    return grouped;
+  }
+}
+
+class _WarningGroupHeader extends StatelessWidget {
+  const _WarningGroupHeader({required this.kind});
+
+  final TsunamiWarningKind kind;
+
+  @override
+  Widget build(BuildContext context) {
+    final headerColor = TsunamiWarningColor.headerColor(kind);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 4),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(color: headerColor, width: 4),
+          ),
+          color: headerColor.withValues(alpha: 0.1),
+        ),
+        child: Text(
+          TsunamiWarningColor.displayName(kind),
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: headerColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ForecastRegionCard extends StatelessWidget {
+  const _ForecastRegionCard({required this.region});
+
+  final MergedForecastRegion region;
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final color = designSystem.color;
+    final hasObservation = region.observation != null &&
+        region.observation!.stations.isNotEmpty;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      shape: RoundedSuperellipseBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: color.outlineSoft),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: Text(
+              region.name,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: designSystem.textColor.primary,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: _ForecastDetails(region: region),
+          ),
+          if (hasObservation)
+            _ObservationExpansion(
+              stations: region.observation!.stations,
+            ),
+          if (!hasObservation) const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class _ForecastDetails extends StatelessWidget {
+  const _ForecastDetails({required this.region});
+
+  final MergedForecastRegion region;
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final parts = <String>[];
+
+    final mh = region.maxHeight;
+    if (mh != null) {
+      if (mh.qualitative != null) {
+        parts.add(
+          '予想最大波高: ${switch (mh.qualitative!) {
+            QualitativeHeight.enormous => '巨大',
+            QualitativeHeight.high => '高い',
+          }}',
+        );
+      } else if (mh.value != null) {
+        final valueStr = '${mh.value}m';
+        parts.add(
+          '予想最大波高: ${mh.over == true ? '$valueStr超' : valueStr}',
+        );
+      }
+    }
+
+    final fh = region.firstHeight;
+    if (fh != null) {
+      if (fh.condition != null) {
+        parts.add(
+          '到達予想: ${switch (fh.condition!) {
+            FirstHeightCondition.arriving => '第一波到達中',
+            FirstHeightCondition.firstWaveConfirmed => '第一波確認',
+            FirstHeightCondition.imminent => 'まもなく到達',
+          }}',
+        );
+      } else if (fh.arrivalTime != null) {
+        parts.add(
+          '到達予想: ${DateFormat('HH:mm').format(fh.arrivalTime!.toLocal())}頃',
+        );
+      }
+    }
+
+    if (parts.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Text(
+        parts.join('\n'),
+        style: TextStyle(
+          fontSize: 13,
+          color: designSystem.textColor.secondary,
+        ),
+      ),
+    );
+  }
+}
+
+class _ObservationExpansion extends StatefulWidget {
+  const _ObservationExpansion({required this.stations});
+
+  final List<TsunamiObservationStation> stations;
+
+  @override
+  State<_ObservationExpansion> createState() => _ObservationExpansionState();
+}
+
+class _ObservationExpansionState extends State<_ObservationExpansion> {
+  var _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final designSystem = context.designSystem;
+    final observedStations = widget.stations
+        .where((s) => !(s.firstHeight.isMissing ?? false))
+        .toList();
+
+    if (observedStations.isEmpty) {
+      return const SizedBox(height: 8);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _expanded = !_expanded),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Icon(
+                  _expanded ? Icons.expand_less : Icons.expand_more,
+                  size: 18,
+                  color: designSystem.textColor.secondary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '観測点を表示 (${observedStations.length})',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: designSystem.textColor.secondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_expanded)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final station in observedStations)
+                  TsunamiObservationStationTile(station: station),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
