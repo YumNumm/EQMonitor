@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/feature/tsunami/data/notifier/tsunami_details_notifier.dart';
+import 'package:eqmonitor/feature/tsunami/ui/components/current_location_tsunami_card.dart';
 import 'package:eqmonitor/feature/tsunami/ui/components/tsunami_warning_status_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -49,7 +50,7 @@ class TsunamiDetailsPage extends HookConsumerWidget {
                     child: Column(
                       children: [
                         TsunamiWarningStatusCard(tsunami: tsunami),
-                        // TODO: CurrentLocationTsunamiCard
+                        CurrentLocationTsunamiCard(tsunami: tsunami),
                         // TODO: TsunamiRegionList
                         // TODO: AdBanner
                         // TODO: TsunamiEarthquakeCard
